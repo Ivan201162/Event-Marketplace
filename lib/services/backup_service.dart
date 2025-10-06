@@ -278,7 +278,7 @@ class BackupService {
         throw Exception('Бэкап не найден или не завершен');
       }
 
-      // TODO: Реализовать скачивание файла
+      // TODO(developer): Реализовать скачивание файла
       return backup.fileUrl!;
     } catch (e) {
       if (kDebugMode) {
@@ -375,7 +375,7 @@ class BackupService {
   /// Скачать и распарсить файл бэкапа
   Future<Map<String, dynamic>> _downloadAndParseBackup(String fileUrl) async {
     try {
-      // TODO: Реализовать скачивание и парсинг JSON файла
+      // TODO(developer): Реализовать скачивание и парсинг JSON файла
       // Пока возвращаем пустые данные
       return {};
     } catch (e) {

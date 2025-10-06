@@ -367,7 +367,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
       );
 
   void _loadMessages() {
-    // TODO: Загрузить сообщения из Firestore
+    // TODO(developer): Загрузить сообщения из Firestore
     // Пока добавляем тестовые сообщения
     setState(() {
       _messages.addAll([
@@ -411,7 +411,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
     _messageController.clear();
     _scrollToBottom();
 
-    // TODO: Отправить сообщение в Firestore
+    // TODO(developer): Отправить сообщение в Firestore
   }
 
   void _onVoiceMessageSent(ChatMessageExtended message) {
@@ -424,7 +424,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
   }
 
   void _onTextChanged(String text) {
-    // TODO: Отправить статус "печатает"
+    // TODO(developer): Отправить статус "печатает"
     setState(() {
       _isTyping = text.isNotEmpty;
     });
@@ -443,14 +443,14 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
   }
 
   void _startVideoCall() {
-    // TODO: Начать видеозвонок
+    // TODO(developer): Начать видеозвонок
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Видеозвонок (в разработке)')),
     );
   }
 
   void _startVoiceCall() {
-    // TODO: Начать голосовой звонок
+    // TODO(developer): Начать голосовой звонок
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Голосовой звонок (в разработке)')),
     );
@@ -471,7 +471,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
   }
 
   void _showChatInfo() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Информация о чате'),
@@ -531,7 +531,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
   }
 
   void _showSearchDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Поиск сообщений'),
@@ -542,7 +542,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
           ),
           onSubmitted: (query) {
             Navigator.pop(context);
-            // TODO: Выполнить поиск
+            // TODO(developer): Выполнить поиск
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Поиск: $query (в разработке)')),
             );

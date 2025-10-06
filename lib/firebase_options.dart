@@ -41,47 +41,47 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBvOkBwqBwqBwqBwqBwqBwqBwqBwqBwqBw',
-    appId: '1:123456789:web:abcdef123456789',
-    messagingSenderId: '123456789',
-    projectId: 'event-marketplace-app',
-    authDomain: 'event-marketplace-app.firebaseapp.com',
-    storageBucket: 'event-marketplace-app.appspot.com',
+    apiKey: 'AIzaSyBcNT54NuncA9Nck-5VQYdbnxwl5pdzsmA',
+    appId: '1:272201705683:web:057887a281175671f80c26',
+    messagingSenderId: '272201705683',
+    projectId: 'event-marketplace-mvp',
+    authDomain: 'event-marketplace-mvp.firebaseapp.com',
+    storageBucket: 'event-marketplace-mvp.appspot.com',
     measurementId: 'G-XXXXXXXXXX',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBvOkBwqBwqBwqBwqBwqBwqBwqBwqBwqBw',
-    appId: '1:123456789:android:abcdef123456789',
-    messagingSenderId: '123456789',
-    projectId: 'event-marketplace-app',
-    storageBucket: 'event-marketplace-app.appspot.com',
+    apiKey: 'AIzaSyBcNT54NuncA9Nck-5VQYdbnxwl5pdzsmA',
+    appId: '1:272201705683:android:057887a281175671f80c26',
+    messagingSenderId: '272201705683',
+    projectId: 'event-marketplace-mvp',
+    storageBucket: 'event-marketplace-mvp.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBvOkBwqBwqBwqBwqBwqBwqBwqBwqBwqBw',
-    appId: '1:123456789:ios:abcdef123456789',
-    messagingSenderId: '123456789',
-    projectId: 'event-marketplace-app',
-    storageBucket: 'event-marketplace-app.appspot.com',
-    iosBundleId: 'com.example.eventMarketplaceApp',
+    apiKey: 'AIzaSyBcNT54NuncA9Nck-5VQYdbnxwl5pdzsmA',
+    appId: '1:272201705683:ios:057887a281175671f80c26',
+    messagingSenderId: '272201705683',
+    projectId: 'event-marketplace-mvp',
+    storageBucket: 'event-marketplace-mvp.appspot.com',
+    iosBundleId: 'com.eventmarketplace.app',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBvOkBwqBwqBwqBwqBwqBwqBwqBwqBwqBw',
-    appId: '1:123456789:ios:abcdef123456789',
-    messagingSenderId: '123456789',
-    projectId: 'event-marketplace-app',
-    storageBucket: 'event-marketplace-app.appspot.com',
-    iosBundleId: 'com.example.eventMarketplaceApp',
+    apiKey: 'AIzaSyBcNT54NuncA9Nck-5VQYdbnxwl5pdzsmA',
+    appId: '1:272201705683:ios:057887a281175671f80c26',
+    messagingSenderId: '272201705683',
+    projectId: 'event-marketplace-mvp',
+    storageBucket: 'event-marketplace-mvp.appspot.com',
+    iosBundleId: 'com.eventmarketplace.app',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyBvOkBwqBwqBwqBwqBwqBwqBwqBwqBwqBw',
-    appId: '1:123456789:web:abcdef123456789',
-    messagingSenderId: '123456789',
-    projectId: 'event-marketplace-app',
-    authDomain: 'event-marketplace-app.firebaseapp.com',
-    storageBucket: 'event-marketplace-app.appspot.com',
+    apiKey: 'AIzaSyBcNT54NuncA9Nck-5VQYdbnxwl5pdzsmA',
+    appId: '1:272201705683:web:057887a281175671f80c26',
+    messagingSenderId: '272201705683',
+    projectId: 'event-marketplace-mvp',
+    authDomain: 'event-marketplace-mvp.firebaseapp.com',
+    storageBucket: 'event-marketplace-mvp.appspot.com',
   );
 }

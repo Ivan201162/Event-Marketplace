@@ -45,14 +45,14 @@ class EventMedia {
 
   /// Создать из Map
   factory EventMedia.fromMap(Map<String, dynamic> data) => EventMedia(
-        id: data['id'] ?? '',
-        eventId: data['eventId'] ?? '',
-        uploadedBy: data['uploadedBy'] ?? '',
-        uploadedByName: data['uploadedByName'] ?? '',
-        uploadedByPhoto: data['uploadedByPhoto'],
-        fileName: data['fileName'] ?? '',
-        fileUrl: data['fileUrl'] ?? '',
-        thumbnailUrl: data['thumbnailUrl'],
+        id: data['id'] as String? ?? '',
+        eventId: data['eventId'] as String? ?? '',
+        uploadedBy: data['uploadedBy'] as String? ?? '',
+        uploadedByName: data['uploadedByName'] as String? ?? '',
+        uploadedByPhoto: data['uploadedByPhoto'] as String?,
+        fileName: data['fileName'] as String? ?? '',
+        fileUrl: data['fileUrl'] as String? ?? '',
+        thumbnailUrl: data['thumbnailUrl'] as String?,
         type: MediaType.values.firstWhere(
           (e) => e.name == data['type'],
           orElse: () => MediaType.image,
@@ -61,17 +61,17 @@ class EventMedia {
           (e) => e.name == data['status'],
           orElse: () => MediaStatus.ready,
         ),
-        fileSize: data['fileSize'] ?? 0,
-        mimeType: data['mimeType'],
+        fileSize: data['fileSize'] as int? ?? 0,
+        mimeType: data['mimeType'] as String?,
         duration: data['duration'] != null
-            ? Duration(milliseconds: data['duration'])
+            ? Duration(milliseconds: data['duration'] as int)
             : null,
-        metadata: data['metadata'],
-        tags: List<String>.from(data['tags'] ?? []),
-        isPublic: data['isPublic'] ?? true,
-        isFeatured: data['isFeatured'] ?? false,
-        likesCount: data['likesCount'] ?? 0,
-        likedBy: List<String>.from(data['likedBy'] ?? []),
+        metadata: data['metadata'] as Map<String, dynamic>?,
+        tags: List<String>.from((data['tags'] as List<dynamic>?) ?? []),
+        isPublic: data['isPublic'] as bool? ?? true,
+        isFeatured: data['isFeatured'] as bool? ?? false,
+        likesCount: data['likesCount'] as int? ?? 0,
+        likedBy: List<String>.from((data['likedBy'] as List<dynamic>?) ?? []),
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       );

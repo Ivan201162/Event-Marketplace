@@ -1,20 +1,19 @@
 import 'dart:convert';
-import 'dart:typed_data';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'dart:ui' as ui;
 
 /// Сервис для работы с электронными подписями
 class SignatureService {
   /// Создать подпись из виджета
   static Future<String> captureSignature(GlobalKey key) async {
     try {
-      final RenderRepaintBoundary boundary =
-          key.currentContext!.findRenderObject() as RenderRepaintBoundary;
-      final ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      final ByteData? byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
-      final Uint8List pngBytes = byteData!.buffer.asUint8List();
+      final boundary =
+          key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+      final image = await boundary.toImage(pixelRatio: 3);
+      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      final pngBytes = byteData!.buffer.asUint8List();
 
       return base64Encode(pngBytes);
     } catch (e) {
@@ -86,7 +85,8 @@ class SignatureService {
         signatureType = 'digital';
       } else {
         throw Exception(
-            'Необходимо предоставить либо подпись от руки, либо цифровую подпись');
+          'Необходимо предоставить либо подпись от руки, либо цифровую подпись',
+        );
       }
 
       return {
@@ -180,50 +180,46 @@ class _SignaturePadState extends State<SignaturePad> {
   final GlobalKey _signatureKey = GlobalKey();
 
   @override
-  Widget build(BuildContext context) {
-    return RepaintBoundary(
-      key: _signatureKey,
-      child: Container(
-        width: widget.width ?? 300,
-        height: widget.height ?? 200,
-        decoration: BoxDecoration(
-          color: widget.backgroundColor ?? Colors.white,
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: GestureDetector(
-          onPanStart: (details) {
-            setState(() {
-              _points.add(details.localPosition);
-            });
-          },
-          onPanUpdate: (details) {
-            setState(() {
-              _points.add(details.localPosition);
-            });
-          },
-          onPanEnd: (details) {
-            setState(() {
-              _points.add(Offset.infinite);
-            });
-          },
-          child: CustomPaint(
-            painter: SignaturePainter(
-              points: _points,
-              penColor: widget.penColor ?? Colors.black,
-              penWidth: widget.penWidth ?? 2.0,
+  Widget build(BuildContext context) => RepaintBoundary(
+        key: _signatureKey,
+        child: Container(
+          width: widget.width ?? 300,
+          height: widget.height ?? 200,
+          decoration: BoxDecoration(
+            color: widget.backgroundColor ?? Colors.white,
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: GestureDetector(
+            onPanStart: (details) {
+              setState(() {
+                _points.add(details.localPosition);
+              });
+            },
+            onPanUpdate: (details) {
+              setState(() {
+                _points.add(details.localPosition);
+              });
+            },
+            onPanEnd: (details) {
+              setState(() {
+                _points.add(Offset.infinite);
+              });
+            },
+            child: CustomPaint(
+              painter: SignaturePainter(
+                points: _points,
+                penColor: widget.penColor ?? Colors.black,
+                penWidth: widget.penWidth ?? 2.0,
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
   /// Очистить подпись
   void clear() {
-    setState(() {
-      _points.clear();
-    });
+    setState(_points.clear);
   }
 
   /// Проверить, есть ли подпись
@@ -253,7 +249,7 @@ class SignaturePainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round;
 
-    for (int i = 0; i < points.length - 1; i++) {
+    for (var i = 0; i < points.length - 1; i++) {
       if (points[i] != Offset.infinite && points[i + 1] != Offset.infinite) {
         canvas.drawLine(points[i], points[i + 1], paint);
       }
@@ -261,9 +257,8 @@ class SignaturePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(SignaturePainter oldDelegate) {
-    return oldDelegate.points != points ||
-        oldDelegate.penColor != penColor ||
-        oldDelegate.penWidth != penWidth;
-  }
+  bool shouldRepaint(SignaturePainter oldDelegate) =>
+      oldDelegate.points != points ||
+      oldDelegate.penColor != penColor ||
+      oldDelegate.penWidth != penWidth;
 }

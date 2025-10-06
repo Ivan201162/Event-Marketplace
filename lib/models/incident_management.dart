@@ -34,25 +34,33 @@ class Incident {
   });
 
   factory Incident.fromMap(Map<String, dynamic> map) => Incident(
-        id: map['id'] ?? '',
-        title: map['title'] ?? '',
-        description: map['description'] ?? '',
-        type: IncidentType.fromString(map['type'] ?? 'technical'),
-        severity: IncidentSeverity.fromString(map['severity'] ?? 'medium'),
-        status: IncidentStatus.fromString(map['status'] ?? 'open'),
-        priority: IncidentPriority.fromString(map['priority'] ?? 'medium'),
-        assignedTo: map['assignedTo'],
-        assignedToName: map['assignedToName'],
-        reporterId: map['reporterId'],
-        reporterName: map['reporterName'],
-        reporterEmail: map['reporterEmail'],
-        affectedServices: List<String>.from(map['affectedServices'] ?? []),
-        affectedUsers: List<String>.from(map['affectedUsers'] ?? []),
-        rootCause: map['rootCause'],
-        resolution: map['resolution'],
-        tags: List<String>.from(map['tags'] ?? []),
-        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
-        attachments: List<String>.from(map['attachments'] ?? []),
+        id: map['id'] as String? ?? '',
+        title: map['title'] as String? ?? '',
+        description: map['description'] as String? ?? '',
+        type: IncidentType.fromString(map['type'] as String? ?? 'technical'),
+        severity:
+            IncidentSeverity.fromString(map['severity'] as String? ?? 'medium'),
+        status: IncidentStatus.fromString(map['status'] as String? ?? 'open'),
+        priority:
+            IncidentPriority.fromString(map['priority'] as String? ?? 'medium'),
+        assignedTo: map['assignedTo'] as String?,
+        assignedToName: map['assignedToName'] as String?,
+        reporterId: map['reporterId'] as String?,
+        reporterName: map['reporterName'] as String?,
+        reporterEmail: map['reporterEmail'] as String?,
+        affectedServices: List<String>.from(
+          (map['affectedServices'] as List<dynamic>?) ?? [],
+        ),
+        affectedUsers:
+            List<String>.from((map['affectedUsers'] as List<dynamic>?) ?? []),
+        rootCause: map['rootCause'] as String?,
+        resolution: map['resolution'] as String?,
+        tags: List<String>.from((map['tags'] as List<dynamic>?) ?? []),
+        metadata: Map<String, dynamic>.from(
+          (map['metadata'] as Map<dynamic, dynamic>?) ?? {},
+        ),
+        attachments:
+            List<String>.from((map['attachments'] as List<dynamic>?) ?? []),
         detectedAt: map['detectedAt'] != null
             ? (map['detectedAt'] as Timestamp).toDate()
             : null,
@@ -70,8 +78,8 @@ class Incident {
             : null,
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-        createdBy: map['createdBy'] ?? '',
-        updatedBy: map['updatedBy'] ?? '',
+        createdBy: map['createdBy'] as String? ?? '',
+        updatedBy: map['updatedBy'] as String? ?? '',
       );
   final String id;
   final String title;
@@ -450,16 +458,17 @@ class IncidentComment {
   });
 
   factory IncidentComment.fromMap(Map<String, dynamic> map) => IncidentComment(
-        id: map['id'] ?? '',
-        incidentId: map['incidentId'] ?? '',
-        content: map['content'] ?? '',
-        parentId: map['parentId'],
-        authorId: map['authorId'] ?? '',
-        authorName: map['authorName'] ?? '',
-        authorEmail: map['authorEmail'],
-        type: CommentType.fromString(map['type'] ?? 'comment'),
-        isInternal: map['isInternal'] ?? false,
-        attachments: List<String>.from(map['attachments'] ?? []),
+        id: map['id'] as String? ?? '',
+        incidentId: map['incidentId'] as String? ?? '',
+        content: map['content'] as String? ?? '',
+        parentId: map['parentId'] as String?,
+        authorId: map['authorId'] as String? ?? '',
+        authorName: map['authorName'] as String? ?? '',
+        authorEmail: map['authorEmail'] as String?,
+        type: CommentType.fromString(map['type'] as String? ?? 'comment'),
+        isInternal: map['isInternal'] as bool? ?? false,
+        attachments:
+            List<String>.from((map['attachments'] as List<dynamic>?) ?? []),
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         updatedAt: (map['updatedAt'] as Timestamp).toDate(),
       );
@@ -606,9 +615,9 @@ class IncidentSLA {
   });
 
   factory IncidentSLA.fromMap(Map<String, dynamic> map) => IncidentSLA(
-        id: map['id'] ?? '',
-        incidentId: map['incidentId'] ?? '',
-        status: SLAStatus.fromString(map['status'] ?? 'active'),
+        id: map['id'] as String? ?? '',
+        incidentId: map['incidentId'] as String? ?? '',
+        status: SLAStatus.fromString(map['status'] as String? ?? 'active'),
         acknowledgedDeadline: map['acknowledgedDeadline'] != null
             ? (map['acknowledgedDeadline'] as Timestamp).toDate()
             : null,
@@ -621,9 +630,9 @@ class IncidentSLA {
         resolvedAt: map['resolvedAt'] != null
             ? (map['resolvedAt'] as Timestamp).toDate()
             : null,
-        acknowledgedOnTime: map['acknowledgedOnTime'] ?? true,
-        resolvedOnTime: map['resolvedOnTime'] ?? true,
-        breachReason: map['breachReason'],
+        acknowledgedOnTime: map['acknowledgedOnTime'] as bool? ?? true,
+        resolvedOnTime: map['resolvedOnTime'] as bool? ?? true,
+        breachReason: map['breachReason'] as String?,
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         updatedAt: (map['updatedAt'] as Timestamp).toDate(),
       );

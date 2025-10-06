@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:icalendar_parser/icalendar_parser.dart' as ical;
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -81,6 +80,9 @@ class CalendarService {
 
     // Сортировка по времени начала
     query = query.orderBy('startTime', descending: false);
+
+    // Добавляем лимит для оптимизации
+    query = query.limit(50);
 
     return query.snapshots().map((snapshot) {
       var events = snapshot.docs.map(CalendarEvent.fromDocument).toList();
@@ -199,7 +201,9 @@ class CalendarService {
   /// Экспортировать события в ICS файл
   Future<String?> exportToICS(List<CalendarEvent> events) async {
     try {
-      // TODO: Implement proper calendar export
+      // TODO(developer): Implement proper calendar export
+      // Временная заглушка - возвращаем пустую строку
+      return '';
       // final calendar = ical.ICalendar(
       //   headData: ical.ICalendarHeadData(
       //     prodId: 'Event Marketplace App',
@@ -207,7 +211,9 @@ class CalendarService {
       //   ),
       // );
 
-      // TODO: Implement event export
+      // TODO(developer): Implement event export
+      // Временная заглушка - возвращаем пустую строку
+      return '';
       // for (final event in events) {
       //   final icsEvent = ical.IEventData(
       //     start: event.startTime,
@@ -219,7 +225,7 @@ class CalendarService {
       //   calendar.addEvent(icsEvent);
       // }
 
-      // TODO: Return proper ICS content
+      // TODO(developer): Return proper ICS content
       return 'BEGIN:VCALENDAR\nVERSION:2.0\nEND:VCALENDAR';
     } catch (e) {
       print('Ошибка экспорта в ICS: $e');
@@ -296,7 +302,7 @@ class CalendarService {
   /// Синхронизировать с Google Calendar
   Future<bool> syncWithGoogleCalendar(String userId, String accessToken) async {
     try {
-      // TODO: Реализовать синхронизацию с Google Calendar API
+      // TODO(developer): Реализовать синхронизацию с Google Calendar API
       print('Синхронизация с Google Calendar для пользователя: $userId');
       return true;
     } catch (e) {
@@ -311,7 +317,7 @@ class CalendarService {
     String accessToken,
   ) async {
     try {
-      // TODO: Реализовать синхронизацию с Outlook Calendar API
+      // TODO(developer): Реализовать синхронизацию с Outlook Calendar API
       print('Синхронизация с Outlook Calendar для пользователя: $userId');
       return true;
     } catch (e) {
@@ -797,6 +803,183 @@ class CalendarService {
       }
     } catch (e) {
       print('Ошибка добавления тестовых данных: $e');
+    }
+  }
+
+  /// Пометить дату как занятую
+  Future<bool> markDateBusy(String specialistId, DateTime date) async {
+    try {
+      final specialistRef =
+          _firestore.collection('specialists').doc(specialistId);
+      final normalizedDate = DateTime(date.year, date.month, date.day);
+
+      // Получаем текущие занятые даты
+      final doc = await specialistRef.get();
+      if (!doc.exists) {
+        throw Exception('Специалист не найден');
+      }
+
+      final data = doc.data()!;
+      final busyDates = (data['busyDates'] as List<dynamic>?)
+              ?.map((e) => (e as Timestamp).toDate())
+              .toList() ??
+          [];
+
+      // Проверяем, не занята ли уже эта дата
+      final isAlreadyBusy = busyDates.any(
+        (busyDate) =>
+            busyDate.year == normalizedDate.year &&
+            busyDate.month == normalizedDate.month &&
+            busyDate.day == normalizedDate.day,
+      );
+
+      if (!isAlreadyBusy) {
+        busyDates.add(normalizedDate);
+        await specialistRef.update({
+          'busyDates': busyDates.map(Timestamp.fromDate).toList(),
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
+      }
+
+      return true;
+    } catch (e) {
+      print('Ошибка пометки даты как занятой: $e');
+      return false;
+    }
+  }
+
+  /// Пометить дату как свободную
+  Future<bool> markDateFree(String specialistId, DateTime date) async {
+    try {
+      final specialistRef =
+          _firestore.collection('specialists').doc(specialistId);
+      final normalizedDate = DateTime(date.year, date.month, date.day);
+
+      // Получаем текущие занятые даты
+      final doc = await specialistRef.get();
+      if (!doc.exists) {
+        throw Exception('Специалист не найден');
+      }
+
+      final data = doc.data()!;
+      final busyDates = (data['busyDates'] as List<dynamic>?)
+              ?.map((e) => (e as Timestamp).toDate())
+              .toList() ??
+          [];
+
+      // Удаляем дату из списка занятых
+      busyDates.removeWhere(
+        (busyDate) =>
+            busyDate.year == normalizedDate.year &&
+            busyDate.month == normalizedDate.month &&
+            busyDate.day == normalizedDate.day,
+      );
+
+      await specialistRef.update({
+        'busyDates': busyDates.map(Timestamp.fromDate).toList(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      return true;
+    } catch (e) {
+      print('Ошибка пометки даты как свободной: $e');
+      return false;
+    }
+  }
+
+  /// Получить занятые даты специалиста
+  Future<List<DateTime>> getBusyDates(String specialistId) async {
+    try {
+      final doc =
+          await _firestore.collection('specialists').doc(specialistId).get();
+      if (!doc.exists) {
+        return [];
+      }
+
+      final data = doc.data()!;
+      final busyDates = (data['busyDates'] as List<dynamic>?)
+              ?.map((e) => (e as Timestamp).toDate())
+              .toList() ??
+          [];
+
+      return busyDates;
+    } catch (e) {
+      print('Ошибка получения занятых дат: $e');
+      return [];
+    }
+  }
+
+  /// Получить свободные даты специалиста в диапазоне
+  Future<List<DateTime>> getAvailableDatesInRange(
+    String specialistId,
+    DateTime startDate,
+    DateTime endDate,
+  ) async {
+    try {
+      final busyDates = await getBusyDates(specialistId);
+      final availableDates = <DateTime>[];
+
+      var current = DateTime(startDate.year, startDate.month, startDate.day);
+      final end = DateTime(endDate.year, endDate.month, endDate.day);
+
+      while (current.isBefore(end) || current.isAtSameMomentAs(end)) {
+        final isBusy = busyDates.any(
+          (busyDate) =>
+              busyDate.year == current.year &&
+              busyDate.month == current.month &&
+              busyDate.day == current.day,
+        );
+
+        if (!isBusy) {
+          availableDates
+              .add(DateTime(current.year, current.month, current.day));
+        }
+
+        current = current.add(const Duration(days: 1));
+      }
+
+      return availableDates;
+    } catch (e) {
+      print('Ошибка получения свободных дат: $e');
+      return [];
+    }
+  }
+
+  /// Синхронизировать занятые даты с бронированиями
+  Future<void> syncBusyDatesWithBookings(String specialistId) async {
+    try {
+      // Получаем все подтвержденные бронирования специалиста
+      final bookingsSnapshot = await _firestore
+          .collection('bookings')
+          .where('specialistId', isEqualTo: specialistId)
+          .where('status', isEqualTo: 'confirmed')
+          .get();
+
+      final busyDates = <DateTime>[];
+
+      for (final doc in bookingsSnapshot.docs) {
+        final data = doc.data();
+        final eventDate = (data['eventDate'] as Timestamp).toDate();
+        final normalizedDate =
+            DateTime(eventDate.year, eventDate.month, eventDate.day);
+
+        if (!busyDates.any(
+          (date) =>
+              date.year == normalizedDate.year &&
+              date.month == normalizedDate.month &&
+              date.day == normalizedDate.day,
+        )) {
+          busyDates.add(normalizedDate);
+        }
+      }
+
+      // Обновляем занятые даты в профиле специалиста
+      await _firestore.collection('specialists').doc(specialistId).update({
+        'busyDates': busyDates.map(Timestamp.fromDate).toList(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Ошибка синхронизации занятых дат: $e');
     }
   }
 }

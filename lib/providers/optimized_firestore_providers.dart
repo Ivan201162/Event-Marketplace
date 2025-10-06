@@ -4,117 +4,108 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/optimized_firestore_service.dart';
 
 /// Провайдер для получения специалистов с оптимизацией
-final specialistsProvider = StreamProvider<QuerySnapshot>((ref) {
-  return OptimizedFirestoreService.getCollectionStream(
+final specialistsProvider = StreamProvider<QuerySnapshot>(
+  (ref) => OptimizedFirestoreService.getCollectionStream(
     'specialists',
-    limit: 20,
     orderBy: [const QueryOrder(field: 'createdAt', descending: true)],
-  );
-});
+  ),
+);
 
 /// Провайдер для получения событий с оптимизацией
-final eventsProvider = StreamProvider<QuerySnapshot>((ref) {
-  return OptimizedFirestoreService.getCollectionStream(
+final eventsProvider = StreamProvider<QuerySnapshot>(
+  (ref) => OptimizedFirestoreService.getCollectionStream(
     'events',
-    limit: 20,
-    orderBy: [const QueryOrder(field: 'date', descending: false)],
-  );
-});
+    orderBy: [const QueryOrder(field: 'date')],
+  ),
+);
 
 /// Провайдер для получения чатов с оптимизацией
-final chatsProvider = StreamProvider<QuerySnapshot>((ref) {
-  return OptimizedFirestoreService.getCollectionStream(
+final chatsProvider = StreamProvider<QuerySnapshot>(
+  (ref) => OptimizedFirestoreService.getCollectionStream(
     'chats',
     limit: 50,
     orderBy: [const QueryOrder(field: 'lastMessageTime', descending: true)],
-  );
-});
+  ),
+);
 
 /// Провайдер для получения идей с оптимизацией
-final ideasProvider = StreamProvider<QuerySnapshot>((ref) {
-  return OptimizedFirestoreService.getCollectionStream(
+final ideasProvider = StreamProvider<QuerySnapshot>(
+  (ref) => OptimizedFirestoreService.getCollectionStream(
     'ideas',
-    limit: 20,
     orderBy: [const QueryOrder(field: 'createdAt', descending: true)],
-  );
-});
+  ),
+);
 
 /// Провайдер для получения бронирований с оптимизацией
-final bookingsProvider = StreamProvider<QuerySnapshot>((ref) {
-  return OptimizedFirestoreService.getCollectionStream(
+final bookingsProvider = StreamProvider<QuerySnapshot>(
+  (ref) => OptimizedFirestoreService.getCollectionStream(
     'bookings',
     limit: 50,
     orderBy: [const QueryOrder(field: 'createdAt', descending: true)],
-  );
-});
+  ),
+);
 
 /// Провайдер для получения отзывов с оптимизацией
-final reviewsProvider = StreamProvider<QuerySnapshot>((ref) {
-  return OptimizedFirestoreService.getCollectionStream(
+final reviewsProvider = StreamProvider<QuerySnapshot>(
+  (ref) => OptimizedFirestoreService.getCollectionStream(
     'reviews',
-    limit: 20,
     orderBy: [const QueryOrder(field: 'createdAt', descending: true)],
-  );
-});
+  ),
+);
 
 /// Провайдер для получения уведомлений с оптимизацией
-final notificationsProvider = StreamProvider<QuerySnapshot>((ref) {
-  return OptimizedFirestoreService.getCollectionStream(
+final notificationsProvider = StreamProvider<QuerySnapshot>(
+  (ref) => OptimizedFirestoreService.getCollectionStream(
     'notifications',
     limit: 50,
     orderBy: [const QueryOrder(field: 'createdAt', descending: true)],
-  );
-});
+  ),
+);
 
 /// Провайдер для получения сообщений чата с оптимизацией
-final chatMessagesProvider =
-    StreamProvider.family<QuerySnapshot, String>((ref, chatId) {
-  return OptimizedFirestoreService.getCollectionStream(
+final chatMessagesProvider = StreamProvider.family<QuerySnapshot, String>(
+  (ref, chatId) => OptimizedFirestoreService.getCollectionStream(
     'chats/$chatId/messages',
     limit: 50,
     orderBy: [const QueryOrder(field: 'timestamp', descending: true)],
-  );
-});
+  ),
+);
 
 /// Провайдер для получения профиля пользователя с оптимизацией
-final userProfileProvider =
-    StreamProvider.family<DocumentSnapshot?, String>((ref, userId) {
-  return Stream.fromFuture(
+final userProfileProvider = StreamProvider.family<DocumentSnapshot?, String>(
+  (ref, userId) => Stream.fromFuture(
     OptimizedFirestoreService.getDocument('users', userId),
-  );
-});
+  ),
+);
 
 /// Провайдер для получения профиля специалиста с оптимизацией
 final specialistProfileProvider =
-    StreamProvider.family<DocumentSnapshot?, String>((ref, specialistId) {
-  return Stream.fromFuture(
+    StreamProvider.family<DocumentSnapshot?, String>(
+  (ref, specialistId) => Stream.fromFuture(
     OptimizedFirestoreService.getDocument('specialists', specialistId),
-  );
-});
+  ),
+);
 
 /// Провайдер для получения деталей события с оптимизацией
-final eventDetailsProvider =
-    StreamProvider.family<DocumentSnapshot?, String>((ref, eventId) {
-  return Stream.fromFuture(
+final eventDetailsProvider = StreamProvider.family<DocumentSnapshot?, String>(
+  (ref, eventId) => Stream.fromFuture(
     OptimizedFirestoreService.getDocument('events', eventId),
-  );
-});
+  ),
+);
 
 /// Провайдер для получения деталей идеи с оптимизацией
-final ideaDetailsProvider =
-    StreamProvider.family<DocumentSnapshot?, String>((ref, ideaId) {
-  return Stream.fromFuture(
+final ideaDetailsProvider = StreamProvider.family<DocumentSnapshot?, String>(
+  (ref, ideaId) => Stream.fromFuture(
     OptimizedFirestoreService.getDocument('ideas', ideaId),
-  );
-});
+  ),
+);
 
 /// Провайдер для получения деталей бронирования с оптимизацией
-final bookingDetailsProvider =
-    StreamProvider.family<DocumentSnapshot?, String>((ref, bookingId) {
-  return Stream.fromFuture(
+final bookingDetailsProvider = StreamProvider.family<DocumentSnapshot?, String>(
+  (ref, bookingId) => Stream.fromFuture(
     OptimizedFirestoreService.getDocument('bookings', bookingId),
-  );
-});
+  ),
+);
 
 /// Провайдер для поиска специалистов с оптимизацией
 final searchSpecialistsProvider =
@@ -125,7 +116,6 @@ final searchSpecialistsProvider =
 
   return OptimizedFirestoreService.getCollectionStream(
     'specialists',
-    limit: 20,
     where: [
       QueryFilter(field: 'name', value: query),
     ],
@@ -142,11 +132,10 @@ final searchEventsProvider =
 
   return OptimizedFirestoreService.getCollectionStream(
     'events',
-    limit: 20,
     where: [
       QueryFilter(field: 'title', value: query),
     ],
-    orderBy: [const QueryOrder(field: 'date', descending: false)],
+    orderBy: [const QueryOrder(field: 'date')],
   );
 });
 
@@ -159,7 +148,6 @@ final searchIdeasProvider =
 
   return OptimizedFirestoreService.getCollectionStream(
     'ideas',
-    limit: 20,
     where: [
       QueryFilter(field: 'title', value: query),
     ],
@@ -168,8 +156,8 @@ final searchIdeasProvider =
 });
 
 /// Провайдер для получения статистики с оптимизацией
-final statisticsProvider = StreamProvider<Map<String, dynamic>>((ref) {
-  return Stream.periodic(const Duration(minutes: 5), (_) async {
+final statisticsProvider = StreamProvider<Map<String, dynamic>>(
+  (ref) => Stream.periodic(const Duration(minutes: 5), (_) async {
     final specialists =
         await OptimizedFirestoreService.getCollection('specialists', limit: 1);
     final events =
@@ -186,13 +174,12 @@ final statisticsProvider = StreamProvider<Map<String, dynamic>>((ref) {
       'bookingsCount': bookings.docs.length,
       'lastUpdated': DateTime.now(),
     };
-  }).asyncMap((event) => event);
-});
+  }).asyncMap((event) => event),
+);
 
 /// Провайдер для управления кэшем Firestore
-final firestoreCacheProvider = Provider<FirestoreCacheManager>((ref) {
-  return FirestoreCacheManager();
-});
+final firestoreCacheProvider =
+    Provider<FirestoreCacheManager>((ref) => FirestoreCacheManager());
 
 /// Менеджер кэша Firestore
 class FirestoreCacheManager {
@@ -202,9 +189,8 @@ class FirestoreCacheManager {
   }
 
   /// Получение статистики кэша
-  Map<String, dynamic> getCacheStats() {
-    return OptimizedFirestoreService.getCacheStats();
-  }
+  Map<String, dynamic> getCacheStats() =>
+      OptimizedFirestoreService.getCacheStats();
 
   /// Очистка кэша для конкретной коллекции
   void clearCollectionCache(String collection) {

@@ -1,13 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 
 /// Демо-сервис аутентификации для веб-версии
 /// Используется когда Firebase не настроен или недоступен
 class DemoAuthService {
-  static final DemoAuthService _instance = DemoAuthService._internal();
   factory DemoAuthService() => _instance;
   DemoAuthService._internal();
+  static final DemoAuthService _instance = DemoAuthService._internal();
 
   User? _currentUser;
   final StreamController<User?> _authStateController =
@@ -32,8 +32,6 @@ class DemoAuthService {
 
       return UserCredential._(
         user: demoUser,
-        credential: null,
-        additionalUserInfo: null,
       );
     }
 
@@ -53,8 +51,6 @@ class DemoAuthService {
 
       return UserCredential._(
         user: demoUser,
-        credential: null,
-        additionalUserInfo: null,
       );
     }
 
@@ -72,8 +68,6 @@ class DemoAuthService {
 
       return UserCredential._(
         user: demoUser,
-        credential: null,
-        additionalUserInfo: null,
       );
     }
 
@@ -91,8 +85,6 @@ class DemoAuthService {
 
       return UserCredential._(
         user: demoUser,
-        credential: null,
-        additionalUserInfo: null,
       );
     }
 
@@ -106,15 +98,12 @@ class DemoAuthService {
   }
 
   /// Создание демо-пользователя
-  User _createDemoUser(String email, {String? displayName}) {
-    return User._(
-      uid: 'demo_${DateTime.now().millisecondsSinceEpoch}',
-      email: email,
-      displayName: displayName ?? 'Demo User',
-      photoURL: null,
-      isAnonymous: email == 'anonymous@demo.com',
-    );
-  }
+  User _createDemoUser(String email, {String? displayName}) => User._(
+        uid: 'demo_${DateTime.now().millisecondsSinceEpoch}',
+        email: email,
+        displayName: displayName ?? 'Demo User',
+        isAnonymous: email == 'anonymous@demo.com',
+      );
 
   void dispose() {
     _authStateController.close();
@@ -123,19 +112,17 @@ class DemoAuthService {
 
 /// Демо-класс User для веб-аутентификации
 class User {
+  User._({
+    required this.uid,
+    this.email,
+    this.displayName,
+    this.isAnonymous = false,
+  });
   final String uid;
   final String? email;
   final String? displayName;
   final String? photoURL;
   final bool isAnonymous;
-
-  User._({
-    required this.uid,
-    this.email,
-    this.displayName,
-    this.photoURL,
-    this.isAnonymous = false,
-  });
 
   /// Обновление профиля (демо)
   Future<void> updateDisplayName(String displayName) async {
@@ -167,13 +154,10 @@ class User {
 
 /// Демо-класс UserCredential
 class UserCredential {
+  UserCredential._({
+    this.user,
+  });
   final User? user;
   final dynamic credential;
   final dynamic additionalUserInfo;
-
-  UserCredential._({
-    this.user,
-    this.credential,
-    this.additionalUserInfo,
-  });
 }

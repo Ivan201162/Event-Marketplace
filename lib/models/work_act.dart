@@ -1,46 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 /// Статусы акта выполненных работ
 enum WorkActStatus {
   draft, // Черновик
-  pending, // Ожидает подписания
-  signed, // Подписан
-  completed, // Завершен
-  disputed, // Оспорен
-}
-
-/// Информация о подписи
-class Signature {
-  const Signature({
-    required this.userId,
-    required this.userName,
-    required this.signature,
-    required this.signedAt,
-    this.signatureType, // 'digital' или 'drawn'
-  });
-
-  final String userId;
-  final String userName;
-  final String signature; // Base64 encoded signature image or digital signature
-  final DateTime signedAt;
-  final String? signatureType;
-
-  factory Signature.fromMap(Map<String, dynamic> map) => Signature(
-        userId: map['userId'] as String,
-        userName: map['userName'] as String,
-        signature: map['signature'] as String,
-        signedAt: (map['signedAt'] as Timestamp).toDate(),
-        signatureType: map['signatureType'] as String?,
-      );
-
-  Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'userName': userName,
-        'signature': signature,
-        'signedAt': Timestamp.fromDate(signedAt),
-        'signatureType': signatureType,
-      };
+  pending, // Ожидает подтверждения
+  completed, // Подтвержден
+  rejected, // Отклонен
 }
 
 /// Модель акта выполненных работ
@@ -48,28 +13,22 @@ class WorkAct {
   const WorkAct({
     required this.id,
     required this.actNumber,
-    required this.contractId,
     required this.bookingId,
     required this.customerId,
     required this.specialistId,
     required this.status,
     required this.title,
-    required this.content,
-    required this.workDescription,
-    required this.workResults,
     required this.totalAmount,
-    required this.currency,
     required this.createdAt,
     required this.updatedAt,
-    this.signedAt,
-    required this.workStartDate,
-    required this.workEndDate,
+    this.completedAt,
+    this.workDescription,
+    this.workStartDate,
+    this.workEndDate,
     this.customerSignature,
     this.specialistSignature,
-    this.attachments,
-    this.notes,
-    this.disputeReason,
-    this.resolution,
+    this.metadata = const {},
+    this.currency = 'RUB',
   });
 
   /// Создать из документа Firestore
@@ -78,7 +37,6 @@ class WorkAct {
     return WorkAct(
       id: doc.id,
       actNumber: data['actNumber'] as String? ?? '',
-      contractId: data['contractId'] as String? ?? '',
       bookingId: data['bookingId'] as String? ?? '',
       customerId: data['customerId'] as String? ?? '',
       specialistId: data['specialistId'] as String? ?? '',
@@ -87,187 +45,157 @@ class WorkAct {
         orElse: () => WorkActStatus.draft,
       ),
       title: data['title'] as String? ?? '',
-      content: data['content'] as String? ?? '',
-      workDescription: data['workDescription'] as String? ?? '',
-      workResults: data['workResults'] as String? ?? '',
       totalAmount: (data['totalAmount'] as num?)?.toDouble() ?? 0.0,
-      currency: data['currency'] as String? ?? 'RUB',
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      signedAt: data['signedAt'] != null
-          ? (data['signedAt'] as Timestamp).toDate()
+      completedAt: data['completedAt'] != null
+          ? (data['completedAt'] as Timestamp).toDate()
           : null,
-      workStartDate: (data['workStartDate'] as Timestamp).toDate(),
-      workEndDate: (data['workEndDate'] as Timestamp).toDate(),
-      customerSignature: data['customerSignature'] != null
-          ? Signature.fromMap(data['customerSignature'] as Map<String, dynamic>)
+      workDescription: data['workDescription'] as String?,
+      workStartDate: data['workStartDate'] != null
+          ? (data['workStartDate'] as Timestamp).toDate()
           : null,
-      specialistSignature: data['specialistSignature'] != null
-          ? Signature.fromMap(
-              data['specialistSignature'] as Map<String, dynamic>)
+      workEndDate: data['workEndDate'] != null
+          ? (data['workEndDate'] as Timestamp).toDate()
           : null,
-      attachments: data['attachments'] != null
-          ? (data['attachments'] as List<dynamic>)
-              .map((item) => item as String)
-              .toList()
-          : null,
-      notes: data['notes'] as String?,
-      disputeReason: data['disputeReason'] as String?,
-      resolution: data['resolution'] as String?,
+      customerSignature: data['customerSignature'] as String?,
+      specialistSignature: data['specialistSignature'] as String?,
+      metadata: Map<String, dynamic>.from(
+        data['metadata'] as Map<dynamic, dynamic>? ?? {},
+      ),
+      currency: data['currency'] as String? ?? 'RUB',
     );
   }
 
   final String id;
   final String actNumber;
-  final String contractId;
   final String bookingId;
   final String customerId;
   final String specialistId;
   final WorkActStatus status;
   final String title;
-  final String content;
-  final String workDescription;
-  final String workResults;
   final double totalAmount;
-  final String currency;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final DateTime? signedAt;
-  final DateTime workStartDate;
-  final DateTime workEndDate;
-  final Signature? customerSignature;
-  final Signature? specialistSignature;
-  final List<String>? attachments;
-  final String? notes;
-  final String? disputeReason;
-  final String? resolution;
+  final DateTime? completedAt;
+  final String? workDescription;
+  final DateTime? workStartDate;
+  final DateTime? workEndDate;
+  final String? customerSignature;
+  final String? specialistSignature;
+  final Map<String, dynamic> metadata;
+  final String currency;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
         'actNumber': actNumber,
-        'contractId': contractId,
         'bookingId': bookingId,
         'customerId': customerId,
         'specialistId': specialistId,
         'status': status.name,
         'title': title,
-        'content': content,
-        'workDescription': workDescription,
-        'workResults': workResults,
         'totalAmount': totalAmount,
-        'currency': currency,
         'createdAt': Timestamp.fromDate(createdAt),
         'updatedAt': Timestamp.fromDate(updatedAt),
-        'signedAt': signedAt != null ? Timestamp.fromDate(signedAt!) : null,
-        'workStartDate': Timestamp.fromDate(workStartDate),
-        'workEndDate': Timestamp.fromDate(workEndDate),
-        'customerSignature': customerSignature?.toMap(),
-        'specialistSignature': specialistSignature?.toMap(),
-        'attachments': attachments,
-        'notes': notes,
-        'disputeReason': disputeReason,
-        'resolution': resolution,
+        'completedAt':
+            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+        'workDescription': workDescription,
+        'workStartDate':
+            workStartDate != null ? Timestamp.fromDate(workStartDate!) : null,
+        'workEndDate':
+            workEndDate != null ? Timestamp.fromDate(workEndDate!) : null,
+        'customerSignature': customerSignature,
+        'specialistSignature': specialistSignature,
+        'metadata': metadata,
+        'currency': currency,
       };
 
   /// Создать копию с изменениями
   WorkAct copyWith({
     String? id,
     String? actNumber,
-    String? contractId,
     String? bookingId,
     String? customerId,
     String? specialistId,
     WorkActStatus? status,
     String? title,
-    String? content,
-    String? workDescription,
-    String? workResults,
     double? totalAmount,
-    String? currency,
     DateTime? createdAt,
     DateTime? updatedAt,
-    DateTime? signedAt,
+    DateTime? completedAt,
+    String? workDescription,
     DateTime? workStartDate,
     DateTime? workEndDate,
-    Signature? customerSignature,
-    Signature? specialistSignature,
-    List<String>? attachments,
-    String? notes,
-    String? disputeReason,
-    String? resolution,
+    String? customerSignature,
+    String? specialistSignature,
+    Map<String, dynamic>? metadata,
+    String? currency,
   }) =>
       WorkAct(
         id: id ?? this.id,
         actNumber: actNumber ?? this.actNumber,
-        contractId: contractId ?? this.contractId,
         bookingId: bookingId ?? this.bookingId,
         customerId: customerId ?? this.customerId,
         specialistId: specialistId ?? this.specialistId,
         status: status ?? this.status,
         title: title ?? this.title,
-        content: content ?? this.content,
-        workDescription: workDescription ?? this.workDescription,
-        workResults: workResults ?? this.workResults,
         totalAmount: totalAmount ?? this.totalAmount,
-        currency: currency ?? this.currency,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
-        signedAt: signedAt ?? this.signedAt,
+        completedAt: completedAt ?? this.completedAt,
+        workDescription: workDescription ?? this.workDescription,
         workStartDate: workStartDate ?? this.workStartDate,
         workEndDate: workEndDate ?? this.workEndDate,
         customerSignature: customerSignature ?? this.customerSignature,
         specialistSignature: specialistSignature ?? this.specialistSignature,
-        attachments: attachments ?? this.attachments,
-        notes: notes ?? this.notes,
-        disputeReason: disputeReason ?? this.disputeReason,
-        resolution: resolution ?? this.resolution,
+        metadata: metadata ?? this.metadata,
+        currency: currency ?? this.currency,
       );
+
+  /// Проверить, подписан ли акт обеими сторонами
+  bool get isFullySigned =>
+      customerSignature != null && specialistSignature != null;
+
+  /// Проверить, может ли пользователь подписать акт
+  bool canSignBy(String userId) {
+    if (userId == customerId && customerSignature == null) return true;
+    if (userId == specialistId && specialistSignature == null) return true;
+    return false;
+  }
+
+  /// Проверить, подписан ли акт пользователем
+  bool isSignedBy(String userId) {
+    if (userId == customerId) return customerSignature != null;
+    if (userId == specialistId) return specialistSignature != null;
+    return false;
+  }
 }
 
 /// Расширение для WorkActStatus
 extension WorkActStatusExtension on WorkActStatus {
-  Color get statusColor {
-    switch (this) {
-      case WorkActStatus.draft:
-        return Colors.grey;
-      case WorkActStatus.pending:
-        return Colors.orange;
-      case WorkActStatus.signed:
-        return Colors.green;
-      case WorkActStatus.completed:
-        return Colors.blue;
-      case WorkActStatus.disputed:
-        return Colors.red;
-    }
-  }
-
   String get statusText {
     switch (this) {
       case WorkActStatus.draft:
         return 'Черновик';
       case WorkActStatus.pending:
-        return 'Ожидает подписания';
-      case WorkActStatus.signed:
-        return 'Подписан';
+        return 'Ожидает подтверждения';
       case WorkActStatus.completed:
-        return 'Завершен';
-      case WorkActStatus.disputed:
-        return 'Оспорен';
+        return 'Подтвержден';
+      case WorkActStatus.rejected:
+        return 'Отклонен';
     }
   }
 
-  IconData get statusIcon {
+  String get statusDescription {
     switch (this) {
       case WorkActStatus.draft:
-        return Icons.edit;
+        return 'Акт создан, но еще не готов к подписанию';
       case WorkActStatus.pending:
-        return Icons.pending;
-      case WorkActStatus.signed:
-        return Icons.check_circle;
+        return 'Акт ожидает подписания сторонами';
       case WorkActStatus.completed:
-        return Icons.done_all;
-      case WorkActStatus.disputed:
-        return Icons.warning;
+        return 'Акт подписан и подтвержден обеими сторонами';
+      case WorkActStatus.rejected:
+        return 'Акт отклонен одной из сторон';
     }
   }
 }

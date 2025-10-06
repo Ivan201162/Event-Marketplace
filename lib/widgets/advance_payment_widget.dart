@@ -241,9 +241,9 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: statusColor.withOpacity(0.1),
+        color: statusColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: statusColor.withOpacity(0.3)),
+        border: Border.all(color: statusColor.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -363,8 +363,9 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
               orderId: 'advance_${widget.bookingId}',
               description: 'Авансовый платеж за бронирование',
               customerEmail:
-                  'customer@example.com', // TODO: Получить из профиля
-              customerPhone: '+7XXXXXXXXXX', // TODO: Получить из профиля
+                  'customer@example.com', // TODO(developer): Получить из профиля
+              customerPhone:
+                  '+7XXXXXXXXXX', // TODO(developer): Получить из профиля
               onPaymentInitiated: (result) {
                 _showSuccess('Авансовый платеж инициализирован');
                 _loadPaymentSummary();
@@ -413,8 +414,10 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
             currency: 'RUB',
             orderId: 'final_${widget.bookingId}',
             description: 'Финальный платеж за услугу',
-            customerEmail: 'customer@example.com', // TODO: Получить из профиля
-            customerPhone: '+7XXXXXXXXXX', // TODO: Получить из профиля
+            customerEmail:
+                'customer@example.com', // TODO(developer): Получить из профиля
+            customerPhone:
+                '+7XXXXXXXXXX', // TODO(developer): Получить из профиля
             onPaymentInitiated: (result) {
               _showSuccess('Финальный платеж инициализирован');
               _loadPaymentSummary();

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Провайдер для управления производительностью приложения
 final performanceProvider =
-    StateNotifierProvider<PerformanceNotifier, PerformanceState>((ref) {
-  return PerformanceNotifier();
-});
+    StateNotifierProvider<PerformanceNotifier, PerformanceState>(
+  (ref) => PerformanceNotifier(),
+);
 
 /// Состояние производительности
 class PerformanceState {
@@ -39,18 +39,17 @@ class PerformanceState {
     int? batteryLevel,
     ConnectionSpeed? connectionSpeed,
     OptimizationLevel? optimizationLevel,
-  }) {
-    return PerformanceState(
-      isLowMemory: isLowMemory ?? this.isLowMemory,
-      isLowBattery: isLowBattery ?? this.isLowBattery,
-      isSlowConnection: isSlowConnection ?? this.isSlowConnection,
-      fps: fps ?? this.fps,
-      memoryUsage: memoryUsage ?? this.memoryUsage,
-      batteryLevel: batteryLevel ?? this.batteryLevel,
-      connectionSpeed: connectionSpeed ?? this.connectionSpeed,
-      optimizationLevel: optimizationLevel ?? this.optimizationLevel,
-    );
-  }
+  }) =>
+      PerformanceState(
+        isLowMemory: isLowMemory ?? this.isLowMemory,
+        isLowBattery: isLowBattery ?? this.isLowBattery,
+        isSlowConnection: isSlowConnection ?? this.isSlowConnection,
+        fps: fps ?? this.fps,
+        memoryUsage: memoryUsage ?? this.memoryUsage,
+        batteryLevel: batteryLevel ?? this.batteryLevel,
+        connectionSpeed: connectionSpeed ?? this.connectionSpeed,
+        optimizationLevel: optimizationLevel ?? this.optimizationLevel,
+      );
 }
 
 /// Скорость соединения
@@ -77,9 +76,7 @@ class PerformanceNotifier extends StateNotifier<PerformanceState> {
   /// Инициализация мониторинга производительности
   void _initializePerformanceMonitoring() {
     // Мониторинг FPS
-    SchedulerBinding.instance.addPersistentFrameCallback((timeStamp) {
-      _updateFPS(timeStamp);
-    });
+    SchedulerBinding.instance.addPersistentFrameCallback(_updateFPS);
 
     // Мониторинг памяти
     _monitorMemoryUsage();
@@ -95,7 +92,7 @@ class PerformanceNotifier extends StateNotifier<PerformanceState> {
   void _updateFPS(Duration timeStamp) {
     // Простая логика для отслеживания FPS
     // В реальном приложении здесь должна быть более сложная логика
-    final currentFPS = 60.0; // Заглушка
+    const currentFPS = 60.0; // Заглушка
     if (currentFPS != state.fps) {
       state = state.copyWith(fps: currentFPS);
     }
@@ -105,8 +102,8 @@ class PerformanceNotifier extends StateNotifier<PerformanceState> {
   void _monitorMemoryUsage() {
     // Простая логика для отслеживания памяти
     // В реальном приложении здесь должна быть более сложная логика
-    final memoryUsage = 50; // Заглушка в процентах
-    final isLowMemory = memoryUsage > 80;
+    const memoryUsage = 50; // Заглушка в процентах
+    const isLowMemory = memoryUsage > 80;
 
     if (memoryUsage != state.memoryUsage || isLowMemory != state.isLowMemory) {
       state = state.copyWith(
@@ -120,8 +117,8 @@ class PerformanceNotifier extends StateNotifier<PerformanceState> {
   void _monitorBatteryLevel() {
     // Простая логика для отслеживания батареи
     // В реальном приложении здесь должна быть более сложная логика
-    final batteryLevel = 75; // Заглушка в процентах
-    final isLowBattery = batteryLevel < 20;
+    const batteryLevel = 75; // Заглушка в процентах
+    const isLowBattery = batteryLevel < 20;
 
     if (batteryLevel != state.batteryLevel ||
         isLowBattery != state.isLowBattery) {
@@ -136,8 +133,8 @@ class PerformanceNotifier extends StateNotifier<PerformanceState> {
   void _monitorConnectionSpeed() {
     // Простая логика для отслеживания соединения
     // В реальном приложении здесь должна быть более сложная логика
-    final connectionSpeed = ConnectionSpeed.fast; // Заглушка
-    final isSlowConnection = connectionSpeed == ConnectionSpeed.slow;
+    const connectionSpeed = ConnectionSpeed.fast; // Заглушка
+    const isSlowConnection = connectionSpeed == ConnectionSpeed.slow;
 
     if (connectionSpeed != state.connectionSpeed ||
         isSlowConnection != state.isSlowConnection) {
@@ -222,12 +219,14 @@ class PerformanceNotifier extends StateNotifier<PerformanceState> {
 
     if (state.isLowBattery) {
       recommendations.add(
-          'Низкий заряд батареи: рекомендуется снизить качество изображений');
+        'Низкий заряд батареи: рекомендуется снизить качество изображений',
+      );
     }
 
     if (state.isSlowConnection) {
       recommendations.add(
-          'Медленное соединение: рекомендуется использовать сжатые изображения');
+        'Медленное соединение: рекомендуется использовать сжатые изображения',
+      );
     }
 
     if (state.fps < 30) {

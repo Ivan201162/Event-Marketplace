@@ -145,7 +145,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                     ),
                   ],
                   onChanged: (value) {
-                    // TODO: Реализовать фильтрацию
+                    // TODO(developer): Реализовать фильтрацию
                   },
                 ),
                 const SizedBox(width: 8),
@@ -785,7 +785,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
   }
 
   void _viewAlert(MonitoringAlert alert) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Алерт: ${alert.name}'),
@@ -824,7 +824,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
   }
 
   void _editAlert(MonitoringAlert alert) {
-    // TODO: Реализовать редактирование алерта
+    // TODO(developer): Реализовать редактирование алерта
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content:
@@ -834,7 +834,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
   }
 
   void _resolveAlert(MonitoringAlert alert) {
-    // TODO: Реализовать решение алерта
+    // TODO(developer): Реализовать решение алерта
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Решение алерта "${alert.name}" будет реализовано'),
@@ -843,7 +843,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
   }
 
   void _disableAlert(MonitoringAlert alert) {
-    // TODO: Реализовать отключение алерта
+    // TODO(developer): Реализовать отключение алерта
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Отключение алерта "${alert.name}" будет реализовано'),
@@ -866,7 +866,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
   }
 
   void _viewDashboard(MonitoringDashboard dashboard) {
-    // TODO: Реализовать просмотр дашборда
+    // TODO(developer): Реализовать просмотр дашборда
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Просмотр дашборда "${dashboard.name}" будет реализован'),
@@ -875,7 +875,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
   }
 
   void _editDashboard(MonitoringDashboard dashboard) {
-    // TODO: Реализовать редактирование дашборда
+    // TODO(developer): Реализовать редактирование дашборда
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -886,7 +886,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
   }
 
   void _exportDashboard(MonitoringDashboard dashboard) {
-    // TODO: Реализовать экспорт дашборда
+    // TODO(developer): Реализовать экспорт дашборда
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Экспорт дашборда "${dashboard.name}" будет реализован'),
@@ -895,7 +895,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
   }
 
   void _showCreateAlertDialog() {
-    // TODO: Реализовать диалог создания алерта
+    // TODO(developer): Реализовать диалог создания алерта
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Создание алерта будет реализовано'),
@@ -904,7 +904,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
   }
 
   void _showCreateDashboardDialog() {
-    // TODO: Реализовать диалог создания дашборда
+    // TODO(developer): Реализовать диалог создания дашборда
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Создание дашборда будет реализовано'),

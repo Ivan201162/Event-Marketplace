@@ -1,109 +1,112 @@
 import 'package:flutter/material.dart';
 
-import '../models/payment_models.dart';
+import '../models/payment.dart';
 
 class PaymentMethodSelector extends StatelessWidget {
-  final PaymentMethod? selectedMethod;
-  final Function(PaymentMethod) onMethodSelected;
-
   const PaymentMethodSelector({
     super.key,
     required this.selectedMethod,
     required this.onMethodSelected,
   });
+  final PaymentMethod? selectedMethod;
+  final Function(PaymentMethod) onMethodSelected;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return Column(
-      children: PaymentMethod.values.map((method) {
-        return Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          child: InkWell(
-            onTap: () => onMethodSelected(method),
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: selectedMethod == method
-                      ? theme.colorScheme.primary
-                      : theme.colorScheme.outline.withOpacity(0.3),
-                  width: selectedMethod == method ? 2 : 1,
-                ),
+      children: PaymentMethod.values
+          .map(
+            (method) => Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              child: InkWell(
+                onTap: () => onMethodSelected(method),
                 borderRadius: BorderRadius.circular(12),
-                color: selectedMethod == method
-                    ? theme.colorScheme.primaryContainer.withOpacity(0.3)
-                    : null,
-              ),
-              child: Row(
-                children: [
-                  // Method icon
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    border: Border.all(
                       color: selectedMethod == method
                           ? theme.colorScheme.primary
-                          : theme.colorScheme.surfaceVariant,
-                      borderRadius: BorderRadius.circular(12),
+                          : theme.colorScheme.outline.withValues(alpha: 0.3),
+                      width: selectedMethod == method ? 2 : 1,
                     ),
-                    child: Icon(
-                      _getMethodIcon(method),
-                      color: selectedMethod == method
-                          ? theme.colorScheme.onPrimary
-                          : theme.colorScheme.onSurfaceVariant,
-                      size: 24,
-                    ),
+                    borderRadius: BorderRadius.circular(12),
+                    color: selectedMethod == method
+                        ? theme.colorScheme.primaryContainer
+                            .withValues(alpha: 0.3)
+                        : null,
                   ),
-
-                  const SizedBox(width: 16),
-
-                  // Method info
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _getMethodDisplayName(method),
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: selectedMethod == method
-                                ? theme.colorScheme.primary
-                                : null,
-                          ),
+                  child: Row(
+                    children: [
+                      // Method icon
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: selectedMethod == method
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          _getMethodDescription(method),
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.colorScheme.onSurface.withOpacity(0.7),
-                          ),
+                        child: Icon(
+                          _getMethodIcon(method),
+                          color: selectedMethod == method
+                              ? theme.colorScheme.onPrimary
+                              : theme.colorScheme.onSurfaceVariant,
+                          size: 24,
                         ),
-                      ],
-                    ),
+                      ),
+
+                      const SizedBox(width: 16),
+
+                      // Method info
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _getMethodDisplayName(method),
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: selectedMethod == method
+                                    ? theme.colorScheme.primary
+                                    : null,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              _getMethodDescription(method),
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.colorScheme.onSurface
+                                    .withValues(alpha: 0.7),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Selection indicator
+                      if (selectedMethod == method)
+                        Icon(
+                          Icons.check_circle,
+                          color: theme.colorScheme.primary,
+                          size: 24,
+                        )
+                      else
+                        Icon(
+                          Icons.radio_button_unchecked,
+                          color: theme.colorScheme.outline,
+                          size: 24,
+                        ),
+                    ],
                   ),
-
-                  // Selection indicator
-                  if (selectedMethod == method)
-                    Icon(
-                      Icons.check_circle,
-                      color: theme.colorScheme.primary,
-                      size: 24,
-                    )
-                  else
-                    Icon(
-                      Icons.radio_button_unchecked,
-                      color: theme.colorScheme.outline,
-                      size: 24,
-                    ),
-                ],
+                ),
               ),
             ),
-          ),
-        );
-      }).toList(),
+          )
+          .toList(),
     );
   }
 

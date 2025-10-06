@@ -1,5 +1,5 @@
 /// Утилиты для работы с типами и преобразованиями
-library type_utils;
+library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -12,7 +12,7 @@ Map<String, dynamic> safeMapFromDynamic(Map<dynamic, dynamic>? data) {
 /// Безопасное преобразование List<dynamic> в List<T>
 List<T> safeListFromDynamic<T>(
   List<dynamic>? data,
-  T Function(dynamic) converter,
+  T Function() converter,
 ) {
   if (data == null) return <T>[];
   return data.map(converter).toList().cast<T>();

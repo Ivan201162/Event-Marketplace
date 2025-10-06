@@ -65,7 +65,8 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
       final futures = await Future.wait([
         _ideasService.getPublishedIdeas(),
         _ideasService.getRecommendedIdeas(
-            'current_user_id'), // TODO: Получить реальный ID
+          'current_user_id',
+        ), // TODO(developer): Получить реальный ID
       ]);
 
       setState(() {
@@ -90,7 +91,6 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
 
     try {
       final newIdeas = await _ideasService.getPublishedIdeas(
-        limit: 20,
         lastDocument: _lastDocument,
         category: _selectedCategory,
         searchQuery: _searchQuery.isNotEmpty ? _searchQuery : null,
@@ -110,8 +110,8 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
 
   Future<void> _loadFavoriteIdeas() async {
     try {
-      final favorites = await _ideasService
-          .getFavoriteIdeas('current_user_id'); // TODO: Получить реальный ID
+      final favorites = await _ideasService.getFavoriteIdeas(
+          'current_user_id'); // TODO(developer): Получить реальный ID
       setState(() {
         _favoriteIdeas = favorites;
       });
@@ -128,7 +128,6 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
 
     try {
       final ideas = await _ideasService.getPublishedIdeas(
-        limit: 20,
         category: _selectedCategory,
         searchQuery: query.isNotEmpty ? query : null,
       );
@@ -153,7 +152,6 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
 
     try {
       final ideas = await _ideasService.getPublishedIdeas(
-        limit: 20,
         category: category,
         searchQuery: _searchQuery.isNotEmpty ? _searchQuery : null,
       );
@@ -198,7 +196,7 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
           ),
           actions: [
             IconButton(
-              onPressed: () => _showAddIdeaDialog(),
+              onPressed: _showAddIdeaDialog,
               icon: const Icon(Icons.add),
             ),
           ],
@@ -421,7 +419,7 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
 
   Future<void> _toggleLike(EventIdea idea) async {
     try {
-      const userId = 'current_user_id'; // TODO: Получить реальный ID
+      const userId = 'current_user_id'; // TODO(developer): Получить реальный ID
       final isLiked = await _ideasService.isIdeaLiked(idea.id, userId);
 
       if (isLiked) {
@@ -432,10 +430,11 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
 
       // Обновляем локальное состояние
       _updateIdeaInLists(
-          idea.id,
-          (idea) => idea.copyWith(
-                likes: isLiked ? idea.likes - 1 : idea.likes + 1,
-              ));
+        idea.id,
+        (idea) => idea.copyWith(
+          likes: isLiked ? idea.likes - 1 : idea.likes + 1,
+        ),
+      );
     } on Exception catch (e) {
       _showErrorSnackBar('Ошибка изменения лайка: $e');
     }
@@ -443,7 +442,7 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
 
   Future<void> _toggleFavorite(EventIdea idea) async {
     try {
-      const userId = 'current_user_id'; // TODO: Получить реальный ID
+      const userId = 'current_user_id'; // TODO(developer): Получить реальный ID
       final isFavorite = await _ideasService.isIdeaInFavorites(idea.id, userId);
 
       if (isFavorite) {
@@ -461,7 +460,9 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
   }
 
   void _updateIdeaInLists(
-      String ideaId, EventIdea Function(EventIdea) updater) {
+    String ideaId,
+    EventIdea Function(EventIdea) updater,
+  ) {
     setState(() {
       // Обновляем в основном списке
       final index = _ideas.indexWhere((idea) => idea.id == ideaId);
@@ -487,7 +488,7 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
   }
 
   void _showAddIdeaDialog() {
-    // TODO: Реализовать диалог добавления идеи
+    // TODO(developer): Реализовать диалог добавления идеи
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Добавление идеи будет реализовано')),
     );
@@ -532,7 +533,7 @@ class _IdeaDetailScreenState extends State<IdeaDetailScreen> {
         _comments = comments;
         _isLoadingComments = false;
       });
-    } on Exception catch (e) {
+    } on Exception {
       setState(() {
         _isLoadingComments = false;
       });
@@ -556,17 +557,15 @@ class _IdeaDetailScreenState extends State<IdeaDetailScreen> {
                 child: Image.network(
                   widget.idea.imageUrl,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color:
-                          Theme.of(context).colorScheme.surfaceContainerHighest,
-                      child: Icon(
-                        Icons.image_not_supported,
-                        size: 64,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                    );
-                  },
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color:
+                        Theme.of(context).colorScheme.surfaceContainerHighest,
+                    child: Icon(
+                      Icons.image_not_supported,
+                      size: 64,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
                 ),
               ),
 
@@ -627,7 +626,7 @@ class _IdeaDetailScreenState extends State<IdeaDetailScreen> {
                             ),
                       )
                     else
-                      ..._comments.map((comment) => _buildComment(comment)),
+                      ..._comments.map(_buildComment),
                   ],
                 ),
               ),
@@ -649,13 +648,19 @@ class _IdeaDetailScreenState extends State<IdeaDetailScreen> {
               const SizedBox(height: 12),
               if (widget.idea.budget != null)
                 _buildDetailRow(
-                    'Бюджет', '${widget.idea.budget!.toStringAsFixed(0)} ₽'),
+                  'Бюджет',
+                  '${widget.idea.budget!.toStringAsFixed(0)} ₽',
+                ),
               if (widget.idea.duration != null)
                 _buildDetailRow(
-                    'Длительность', '${widget.idea.duration} часов'),
+                  'Длительность',
+                  '${widget.idea.duration} часов',
+                ),
               if (widget.idea.guestCount != null)
                 _buildDetailRow(
-                    'Количество гостей', '${widget.idea.guestCount} человек'),
+                  'Количество гостей',
+                  '${widget.idea.guestCount} человек',
+                ),
               if (widget.idea.location != null)
                 _buildDetailRow('Локация', widget.idea.location!),
               if (widget.idea.season != null)

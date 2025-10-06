@@ -1,309 +1,463 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/booking.dart';
-import '../providers/auth_providers.dart';
-import '../providers/booking_providers.dart';
+import 'package:go_router/go_router.dart';
 
-/// Экран моих бронирований
-class MyBookingsScreen extends ConsumerWidget {
+import '../models/booking.dart';
+import '../services/booking_service.dart';
+import '../widgets/back_button_handler.dart';
+import '../widgets/booking_card.dart';
+
+class MyBookingsScreen extends ConsumerStatefulWidget {
   const MyBookingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final currentUser = ref.watch(currentUserProvider);
+  ConsumerState<MyBookingsScreen> createState() => _MyBookingsScreenState();
+}
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Мои бронирования'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
+    with TickerProviderStateMixin {
+  final BookingService _bookingService = BookingService();
+
+  List<Booking> _bookings = [];
+  bool _isLoading = true;
+  String _selectedFilter = 'Все';
+
+  late TabController _tabController;
+
+  final List<String> _filters = [
+    'Все',
+    'Ожидают подтверждения',
+    'Подтверждены',
+    'Выполнены',
+    'Отменены',
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _loadBookings();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadBookings() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // Используем тестовые данные для демонстрации
+      final testBookings = [
+        Booking(
+          id: 'booking_1',
+          customerId: 'customer_1',
+          specialistId: 'specialist_1',
+          eventDate: DateTime.now().add(const Duration(days: 7)),
+          totalPrice: 30000,
+          prepayment: 15000,
+          status: BookingStatus.pending,
+          message: 'Свадьба на 80 человек в загородном клубе',
+          createdAt: DateTime.now().subtract(const Duration(days: 2)),
+        ),
+        Booking(
+          id: 'booking_2',
+          customerId: 'customer_1',
+          specialistId: 'specialist_2',
+          eventDate: DateTime.now().add(const Duration(days: 14)),
+          totalPrice: 25000,
+          prepayment: 12500,
+          status: BookingStatus.confirmed,
+          message: 'Корпоративное мероприятие в офисе',
+          createdAt: DateTime.now().subtract(const Duration(days: 5)),
+        ),
+        Booking(
+          id: 'booking_3',
+          customerId: 'customer_1',
+          specialistId: 'specialist_3',
+          eventDate: DateTime.now().subtract(const Duration(days: 3)),
+          totalPrice: 20000,
+          prepayment: 20000,
+          status: BookingStatus.completed,
+          message: 'День рождения ребенка',
+          createdAt: DateTime.now().subtract(const Duration(days: 10)),
+        ),
+      ];
+
+      setState(() {
+        _bookings = testBookings;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Ошибка загрузки заявок: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  List<Booking> get _filteredBookings {
+    if (_selectedFilter == 'Все') {
+      return _bookings;
+    }
+
+    BookingStatus? status;
+    switch (_selectedFilter) {
+      case 'Ожидают подтверждения':
+        status = BookingStatus.pending;
+        break;
+      case 'Подтверждены':
+        status = BookingStatus.confirmed;
+        break;
+      case 'Выполнены':
+        status = BookingStatus.completed;
+        break;
+      case 'Отменены':
+        status = BookingStatus.cancelled;
+        break;
+    }
+
+    return _bookings.where((booking) => booking.status == status).toList();
+  }
+
+  Future<void> _cancelBooking(Booking booking) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Отменить заявку'),
+        content: const Text('Вы уверены, что хотите отменить эту заявку?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Нет'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Да, отменить'),
+          ),
+        ],
       ),
-      body: currentUser.when(
-        data: (user) {
-          if (user == null) {
-            return const Center(
-              child: Text('Пользователь не авторизован'),
-            );
-          }
+    );
 
-          final userBookings = ref.watch(userBookingsProvider(user.id));
+    if (result ?? false) {
+      try {
+        await _bookingService.cancelBooking(booking.id);
+        await _loadBookings();
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Заявка отменена'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Ошибка отмены заявки: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
 
-          return userBookings.when(
-            data: (bookings) {
-              if (bookings.isEmpty) {
-                return _buildEmptyState();
-              }
-
-              return RefreshIndicator(
-                onRefresh: () async {
-                  ref.invalidate(userBookingsProvider(user.id));
-                },
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: bookings.length,
-                  itemBuilder: (context, index) {
-                    final booking = bookings[index];
-                    return _buildBookingCard(context, ref, booking);
-                  },
-                ),
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, stack) => Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+  Future<void> _showBookingDetails(Booking booking) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        maxChildSize: 0.9,
+        minChildSize: 0.5,
+        builder: (context, scrollController) => Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Заголовок
+              Row(
                 children: [
-                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text('Ошибка загрузки: $error'),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      ref.invalidate(userBookingsProvider(user.id));
-                    },
-                    child: const Text('Повторить'),
+                  const Text(
+                    'Детали заявки',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.close),
                   ),
                 ],
               ),
-            ),
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Text('Ошибка: $error'),
+              const SizedBox(height: 16),
+
+              // Содержимое
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildDetailRow(
+                        'Название',
+                        booking.eventTitle ?? 'Не указано',
+                      ),
+                      _buildDetailRow('Дата', _formatDate(booking.eventDate)),
+                      _buildDetailRow('Время', _formatTime(booking.eventDate)),
+                      _buildDetailRow('Адрес', booking.address ?? 'Не указан'),
+                      _buildDetailRow(
+                        'Участники',
+                        '${booking.participantsCount} чел.',
+                      ),
+                      _buildDetailRow(
+                        'Стоимость',
+                        '${booking.totalPrice.toInt() ?? 0}₽',
+                      ),
+                      _buildDetailRow('Статус', _getStatusText(booking.status)),
+                      if (booking.description != null &&
+                          booking.description!.isNotEmpty)
+                        _buildDetailRow('Описание', booking.description!),
+                      if (booking.comment != null &&
+                          booking.comment!.isNotEmpty)
+                        _buildDetailRow('Комментарий', booking.comment!),
+                      if (booking.advancePaid == true)
+                        _buildDetailRow(
+                          'Аванс',
+                          '${booking.advanceAmount?.toInt() ?? 0}₽',
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Кнопки действий
+              if (booking.status == BookingStatus.pending ||
+                  booking.status == BookingStatus.confirmed)
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => _cancelBooking(booking),
+                        child: const Text('Отменить'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          // TODO(developer): Реализовать чат с специалистом
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Чат будет доступен после реализации',
+                              ),
+                            ),
+                          );
+                        },
+                        child: const Text('Написать'),
+                      ),
+                    ),
+                  ],
+                ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildEmptyState() => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+  Widget _buildDetailRow(String label, String value) => Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(
-              Icons.event_busy,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'У вас нет бронирований',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
+            SizedBox(
+              width: 100,
+              child: Text(
+                '$label:',
+                style: const TextStyle(fontWeight: FontWeight.w500),
               ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Найдите интересное мероприятие и забронируйте участие',
-              style: TextStyle(color: Colors.grey[500]),
-              textAlign: TextAlign.center,
-            ),
+            Expanded(child: Text(value)),
           ],
         ),
       );
 
-  Widget _buildBookingCard(
-    BuildContext context,
-    WidgetRef ref,
-    Booking booking,
-  ) =>
-      Card(
-        margin: const EdgeInsets.only(bottom: 12),
-        child: InkWell(
-          onTap: () {
-            // TODO: Переход к деталям события
-          },
-          borderRadius: BorderRadius.circular(12),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Заголовок и статус
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        booking.eventTitle,
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: _getStatusColor(booking.status).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color:
-                              _getStatusColor(booking.status).withOpacity(0.3),
-                        ),
-                      ),
-                      child: Text(
-                        booking.statusText,
-                        style: TextStyle(
-                          color: _getStatusColor(booking.status),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+  String _formatDate(DateTime? date) {
+    if (date == null) return 'Не указана';
+    return '${date.day}.${date.month}.${date.year}';
+  }
 
-                const SizedBox(height: 12),
+  String _formatTime(DateTime? date) {
+    if (date == null) return 'Не указано';
+    return '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+  }
 
-                // Дата мероприятия
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.calendar_today,
-                      size: 16,
-                      color: Colors.grey,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year}',
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                    const SizedBox(width: 16),
-                    const Icon(Icons.access_time, size: 16, color: Colors.grey),
-                    const SizedBox(width: 8),
-                    Text(
-                      '${booking.eventDate.hour.toString().padLeft(2, '0')}:${booking.eventDate.minute.toString().padLeft(2, '0')}',
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                  ],
-                ),
+  String _getStatusText(BookingStatus status) {
+    switch (status) {
+      case BookingStatus.pending:
+        return 'Ожидает подтверждения';
+      case BookingStatus.confirmed:
+        return 'Подтверждена';
+      case BookingStatus.completed:
+        return 'Выполнена';
+      case BookingStatus.cancelled:
+        return 'Отменена';
+      case BookingStatus.rejected:
+        return 'Отклонена';
+    }
+  }
 
-                const SizedBox(height: 8),
-
-                // Количество участников и стоимость
-                Row(
-                  children: [
-                    const Icon(Icons.people, size: 16, color: Colors.blue),
-                    const SizedBox(width: 8),
-                    Text(
-                      '${booking.participantsCount} участник${booking.participantsCount > 1 ? 'а' : ''}',
-                      style: const TextStyle(color: Colors.blue),
-                    ),
-                    const Spacer(),
-                    const Icon(
-                      Icons.attach_money,
-                      size: 16,
-                      color: Colors.green,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      booking.totalPrice == 0
-                          ? 'Бесплатно'
-                          : '${booking.totalPrice.toStringAsFixed(0)} ₽',
-                      style: const TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 12),
-
-                // Кнопки действий
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () {
-                          // TODO: Переход к деталям события
-                        },
-                        icon: const Icon(Icons.visibility, size: 16),
-                        label: const Text('Подробнее'),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    if (booking.canBeCancelled)
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: () =>
-                              _showCancelDialog(context, ref, booking),
-                          icon: const Icon(Icons.cancel, size: 16),
-                          label: const Text('Отменить'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
+  @override
+  Widget build(BuildContext context) => BackButtonHandler(
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Мои заявки'),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => context.pop(),
+            ),
+            bottom: TabBar(
+              controller: _tabController,
+              tabs: const [
+                Tab(text: 'Активные'),
+                Tab(text: 'Завершенные'),
               ],
             ),
+          ),
+          body: Column(
+            children: [
+              // Фильтры
+              Container(
+                padding: const EdgeInsets.all(16),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: _filters
+                        .map(
+                          (filter) => Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: FilterChip(
+                              label: Text(filter),
+                              selected: _selectedFilter == filter,
+                              onSelected: (selected) {
+                                setState(() {
+                                  _selectedFilter = filter;
+                                });
+                              },
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+              ),
+
+              // Список заявок
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    _buildBookingsList(
+                      _filteredBookings
+                          .where(
+                            (b) =>
+                                b.status == BookingStatus.pending ||
+                                b.status == BookingStatus.confirmed,
+                          )
+                          .toList(),
+                    ),
+                    _buildBookingsList(
+                      _filteredBookings
+                          .where(
+                            (b) =>
+                                b.status == BookingStatus.completed ||
+                                b.status == BookingStatus.cancelled ||
+                                b.status == BookingStatus.rejected,
+                          )
+                          .toList(),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              context.go('/search');
+            },
+            child: const Icon(Icons.add),
           ),
         ),
       );
 
-  Color _getStatusColor(BookingStatus status) {
-    switch (status) {
-      case BookingStatus.pending:
-        return Colors.orange;
-      case BookingStatus.confirmed:
-        return Colors.green;
-      case BookingStatus.cancelled:
-        return Colors.red;
-      case BookingStatus.completed:
-        return Colors.blue;
-      case BookingStatus.rejected:
-        return Colors.red;
+  Widget _buildBookingsList(List<Booking> bookings) {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
     }
-  }
 
-  void _showCancelDialog(BuildContext context, WidgetRef ref, Booking booking) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Отменить бронирование'),
-        content:
-            const Text('Вы уверены, что хотите отменить это бронирование?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Нет'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              try {
-                final bookingService = ref.read(bookingServiceProvider);
-                await bookingService.cancelBooking(booking.id);
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Бронирование отменено'),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
-                }
-              } catch (e) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Ошибка отмены: $e'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
-              }
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Да, отменить'),
-          ),
-        ],
+    if (bookings.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.event_busy, size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
+            const Text(
+              'Заявки не найдены',
+              style: TextStyle(fontSize: 18, color: Colors.grey),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Создайте новую заявку, найдя специалиста',
+              style: TextStyle(color: Colors.grey),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => context.go('/search'),
+              child: const Text('Найти специалиста'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: _loadBookings,
+      child: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: bookings.length,
+        itemBuilder: (context, index) {
+          final booking = bookings[index];
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: BookingCard(
+              booking: booking,
+              onTap: () => _showBookingDetails(booking),
+              onCancel: booking.status == BookingStatus.pending ||
+                      booking.status == BookingStatus.confirmed
+                  ? () => _cancelBooking(booking)
+                  : null,
+            ),
+          );
+        },
       ),
     );
   }

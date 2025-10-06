@@ -332,7 +332,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.green.withOpacity(0.1),
+            color: Colors.green.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
@@ -388,7 +388,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
   /// Выбрать дату
   Future<void> _selectDate() async {
     // Показываем календарь с блокировкой занятых дат
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => Dialog(
         child: Container(
@@ -477,7 +477,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
 
     try {
       // Показываем индикатор загрузки
-      showDialog(
+      showDialog<void>(
         context: context,
         barrierDismissible: false,
         builder: (context) => const Center(
@@ -510,19 +510,24 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
       // Создаем бронирование
       final booking = Booking(
         id: 'booking_${DateTime.now().millisecondsSinceEpoch}',
+        customerId:
+            'current_user_id', // TODO(developer): Получить ID текущего пользователя
+        specialistId: widget.specialist.id,
+        eventDate: _selectedTime!,
+        totalPrice: widget.specialist.hourlyRate * _selectedHours,
+        prepayment: 0, // TODO(developer): Рассчитать предоплату
+        status: BookingStatus.pending,
+        createdAt: DateTime.now(),
+        // Дополнительные поля для совместимости
         eventId: 'event_${DateTime.now().millisecondsSinceEpoch}',
         eventTitle: 'Услуга специалиста ${widget.specialist.name}',
-        userId: 'current_user_id', // TODO: Получить ID текущего пользователя
-        userName: 'Текущий пользователь', // TODO: Получить имя пользователя
-        userEmail: 'user@example.com', // TODO: Получить email пользователя
-        userPhone: '+7 (999) 123-45-67', // TODO: Получить телефон пользователя
-        status: BookingStatus.pending,
+        userId: 'current_user_id',
+        userName: 'Текущий пользователь',
+        userEmail: 'user@example.com',
+        userPhone: '+7 (999) 123-45-67',
         bookingDate: DateTime.now(),
-        eventDate: _selectedTime!,
         participantsCount: 1,
-        totalPrice: widget.specialist.hourlyRate * _selectedHours,
         notes: 'Бронирование через приложение',
-        createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
 
@@ -647,7 +652,7 @@ class TimeSlotsWidget extends ConsumerWidget {
       error: (error, stack) => Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.red.withOpacity(0.1),
+          color: Colors.red.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(

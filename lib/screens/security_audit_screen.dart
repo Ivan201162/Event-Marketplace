@@ -251,7 +251,8 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
                 width: 32,
                 height: 32,
                 decoration: BoxDecoration(
-                  color: _getEventTypeColor(event.eventType).withOpacity(0.1),
+                  color: _getEventTypeColor(event.eventType)
+                      .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -409,8 +410,9 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
     if (_searchQuery.isNotEmpty) {
       final query = _searchQuery.toLowerCase();
       filtered = filtered
-          .where((event) =>
-              (event.description ?? '').toLowerCase().contains(query))
+          .where(
+            (event) => (event.description ?? '').toLowerCase().contains(query),
+          )
           .toList();
     }
 
@@ -540,7 +542,7 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
       '${dateTime.day.toString().padLeft(2, '0')}.${dateTime.month.toString().padLeft(2, '0')}.${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
 
   void _showFilterDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Фильтры'),

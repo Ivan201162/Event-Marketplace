@@ -112,7 +112,8 @@ class GuestWidget extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 12,
                                 color: ColorUtils.getStatusColor(
-                                    guest.statusColor),
+                                  guest.statusColor,
+                                ),
                                 fontWeight: FontWeight.w500,
                               ),
                             ),

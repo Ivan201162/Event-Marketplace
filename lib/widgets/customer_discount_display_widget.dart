@@ -422,7 +422,7 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
       final service = ref.read(discountServiceProvider);
       await service.acceptDiscount(
         bookingId: bookingId,
-        customerId: 'current_user_id', // TODO: Получить из контекста
+        customerId: 'current_user_id', // TODO(developer): Получить из контекста
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -444,7 +444,7 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
   }
 
   void _rejectDiscount(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => _RejectDiscountDialog(
         bookingId: bookingId,
@@ -459,7 +459,7 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
     BuildContext context,
     List<PriceHistory> priceHistory,
   ) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('История изменений цены'),
@@ -557,7 +557,7 @@ class _RejectDiscountDialogState extends State<_RejectDiscountDialog> {
       final service = ref.read(discountServiceProvider);
       await service.rejectDiscount(
         bookingId: widget.bookingId,
-        customerId: 'current_user_id', // TODO: Получить из контекста
+        customerId: 'current_user_id', // TODO(developer): Получить из контекста
         reason: _reasonController.text.trim().isEmpty
             ? null
             : _reasonController.text.trim(),

@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
-
-import '../models/payment_models.dart';
+import '../models/payment.dart';
 import '../services/payment_service.dart';
-import '../widgets/payment_history_item.dart';
 
+/// Экран истории платежей
 class PaymentHistoryScreen extends ConsumerStatefulWidget {
-  final String userId;
-  final bool isSpecialist;
-
   const PaymentHistoryScreen({
     super.key,
     required this.userId,
     this.isSpecialist = false,
   });
+
+  final String userId;
+  final bool isSpecialist;
 
   @override
   ConsumerState<PaymentHistoryScreen> createState() =>
@@ -23,692 +21,495 @@ class PaymentHistoryScreen extends ConsumerStatefulWidget {
 
 class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
   final PaymentService _paymentService = PaymentService();
+  List<Payment> _payments = [];
+  bool _isLoading = true;
+  String? _error;
   PaymentStatus? _selectedStatus;
-  PaymentMethod? _selectedMethod;
-  DateTime? _startDate;
-  DateTime? _endDate;
+  PaymentType? _selectedType;
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.isSpecialist ? 'История платежей' : 'Мои платежи'),
-        backgroundColor: theme.colorScheme.primary,
-        foregroundColor: theme.colorScheme.onPrimary,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: _showFilters,
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Statistics Card
-          _buildStatisticsCard(),
-
-          // Payment List
-          Expanded(
-            child: _buildPaymentList(),
-          ),
-        ],
-      ),
-    );
+  void initState() {
+    super.initState();
+    _loadPayments();
   }
 
-  Widget _buildStatisticsCard() {
-    final theme = Theme.of(context);
+  Future<void> _loadPayments() async {
+    try {
+      setState(() {
+        _isLoading = true;
+        _error = null;
+      });
 
-    return FutureBuilder<PaymentStatistics>(
-      future: _paymentService.getPaymentStatistics(
-        customerId: widget.isSpecialist ? null : widget.userId,
-        specialistId: widget.isSpecialist ? widget.userId : null,
-        startDate: _startDate,
-        endDate: _endDate,
-      ),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Container(
-            height: 120,
-            margin: const EdgeInsets.all(16),
-            child: const Center(child: CircularProgressIndicator()),
-          );
-        }
-
-        if (snapshot.hasError) {
-          return Container(
-            height: 120,
-            margin: const EdgeInsets.all(16),
-            child: Center(
-              child: Text(
-                'Ошибка загрузки статистики',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.error,
-                ),
-              ),
-            ),
-          );
-        }
-
-        final stats = snapshot.data!;
-
-        return Container(
-          margin: const EdgeInsets.all(16),
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                theme.colorScheme.primary,
-                theme.colorScheme.primary.withOpacity(0.8),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: theme.colorScheme.primary.withOpacity(0.3),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Статистика',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  color: theme.colorScheme.onPrimary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildStatItem(
-                      theme,
-                      'Всего',
-                      '${stats.totalPayments}',
-                      Icons.payments,
-                    ),
-                  ),
-                  Expanded(
-                    child: _buildStatItem(
-                      theme,
-                      'Успешных',
-                      '${stats.completedPayments}',
-                      Icons.check_circle,
-                    ),
-                  ),
-                  Expanded(
-                    child: _buildStatItem(
-                      theme,
-                      'Сумма',
-                      '${stats.totalAmount.toStringAsFixed(0)} ₽',
-                      Icons.account_balance_wallet,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildStatItem(
-      ThemeData theme, String label, String value, IconData icon) {
-    return Column(
-      children: [
-        Icon(
-          icon,
-          color: theme.colorScheme.onPrimary.withOpacity(0.8),
-          size: 20,
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: theme.textTheme.titleMedium?.copyWith(
-            color: theme.colorScheme.onPrimary,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Text(
-          label,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onPrimary.withOpacity(0.8),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPaymentList() {
-    return StreamBuilder<List<Payment>>(
-      stream: widget.isSpecialist
-          ? _paymentService.getSpecialistPayments(widget.userId)
-          : _paymentService.getCustomerPayments(widget.userId),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (snapshot.hasError) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.error_outline,
-                  size: 64,
-                  color: Theme.of(context).colorScheme.error,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Ошибка загрузки платежей',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  snapshot.error.toString(),
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          );
-        }
-
-        final payments = snapshot.data ?? [];
-        final filteredPayments = _filterPayments(payments);
-
-        if (filteredPayments.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.payment,
-                  size: 64,
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Нет платежей',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Здесь будут отображаться ваши платежи',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withOpacity(0.7),
-                      ),
-                ),
-              ],
-            ),
-          );
-        }
-
-        return ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: filteredPayments.length,
-          itemBuilder: (context, index) {
-            final payment = filteredPayments[index];
-            return PaymentHistoryItem(
-              payment: payment,
-              onTap: () => _showPaymentDetails(payment),
+      final payments = widget.isSpecialist
+          ? await _paymentService.getSpecialistPayments(
+              widget.userId,
+              status: _selectedStatus,
+              type: _selectedType,
+            )
+          : await _paymentService.getUserPayments(
+              widget.userId,
+              status: _selectedStatus,
+              type: _selectedType,
             );
-          },
+
+      setState(() {
+        _payments = payments;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: Text(
+            widget.isSpecialist ? 'Платежи специалиста' : 'История платежей',
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showFilters,
+            ),
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: _loadPayments,
+            ),
+          ],
+        ),
+        body: Column(
+          children: [
+            if (_selectedStatus != null || _selectedType != null)
+              _buildActiveFilters(),
+            Expanded(
+              child: _buildContent(),
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildActiveFilters() => Container(
+        padding: const EdgeInsets.all(16),
+        color: Colors.grey[100],
+        child: Row(
+          children: [
+            const Text('Активные фильтры: '),
+            if (_selectedStatus != null)
+              Chip(
+                label: Text(_selectedStatus!.statusName),
+                onDeleted: () {
+                  setState(() {
+                    _selectedStatus = null;
+                  });
+                  _loadPayments();
+                },
+              ),
+            if (_selectedType != null)
+              Chip(
+                label: Text(_selectedType!.typeName),
+                onDeleted: () {
+                  setState(() {
+                    _selectedType = null;
+                  });
+                  _loadPayments();
+                },
+              ),
+          ],
+        ),
+      );
+
+  Widget _buildContent() {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_error != null) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error, size: 64, color: Colors.red),
+            const SizedBox(height: 16),
+            Text('Ошибка: $_error'),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _loadPayments,
+              child: const Text('Повторить'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (_payments.isEmpty) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.payment, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
+            Text('Платежи не найдены'),
+          ],
+        ),
+      );
+    }
+
+    return ListView.builder(
+      itemCount: _payments.length,
+      itemBuilder: (context, index) {
+        final payment = _payments[index];
+        return _PaymentCard(
+          payment: payment,
+          onTap: () => _showPaymentDetails(payment),
         );
       },
     );
-  }
-
-  List<Payment> _filterPayments(List<Payment> payments) {
-    return payments.where((payment) {
-      if (_selectedStatus != null && payment.status != _selectedStatus) {
-        return false;
-      }
-      if (_selectedMethod != null && payment.method != _selectedMethod) {
-        return false;
-      }
-      if (_startDate != null && payment.createdAt.isBefore(_startDate!)) {
-        return false;
-      }
-      if (_endDate != null && payment.createdAt.isAfter(_endDate!)) {
-        return false;
-      }
-      return true;
-    }).toList();
   }
 
   void _showFilters() {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
-      isScrollControlled: true,
-      builder: (context) => PaymentFiltersSheet(
+      builder: (context) => _FiltersBottomSheet(
         selectedStatus: _selectedStatus,
-        selectedMethod: _selectedMethod,
-        startDate: _startDate,
-        endDate: _endDate,
-        onApplyFilters: (status, method, startDate, endDate) {
+        selectedType: _selectedType,
+        onApply: (status, type) {
           setState(() {
             _selectedStatus = status;
-            _selectedMethod = method;
-            _startDate = startDate;
-            _endDate = endDate;
+            _selectedType = type;
           });
-          Navigator.pop(context);
-        },
-        onClearFilters: () {
-          setState(() {
-            _selectedStatus = null;
-            _selectedMethod = null;
-            _startDate = null;
-            _endDate = null;
-          });
-          Navigator.pop(context);
+          _loadPayments();
         },
       ),
     );
   }
 
   void _showPaymentDetails(Payment payment) {
-    showModalBottomSheet(
+    showDialog<void>(
       context: context,
-      isScrollControlled: true,
-      builder: (context) => PaymentDetailsSheet(payment: payment),
+      builder: (context) => _PaymentDetailsDialog(payment: payment),
     );
   }
 }
 
-class PaymentFiltersSheet extends StatefulWidget {
-  final PaymentStatus? selectedStatus;
-  final PaymentMethod? selectedMethod;
-  final DateTime? startDate;
-  final DateTime? endDate;
-  final Function(PaymentStatus?, PaymentMethod?, DateTime?, DateTime?)
-      onApplyFilters;
-  final VoidCallback onClearFilters;
-
-  const PaymentFiltersSheet({
-    super.key,
-    required this.selectedStatus,
-    required this.selectedMethod,
-    required this.startDate,
-    required this.endDate,
-    required this.onApplyFilters,
-    required this.onClearFilters,
+/// Карточка платежа
+class _PaymentCard extends StatelessWidget {
+  const _PaymentCard({
+    required this.payment,
+    required this.onTap,
   });
 
+  final Payment payment;
+  final VoidCallback onTap;
+
   @override
-  State<PaymentFiltersSheet> createState() => _PaymentFiltersSheetState();
+  Widget build(BuildContext context) => Card(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundColor: _getStatusColor(payment.status),
+            child: Text(
+              payment.typeIcon,
+              style: const TextStyle(fontSize: 20),
+            ),
+          ),
+          title: Text(payment.typeName),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(payment.description),
+              const SizedBox(height: 4),
+              Text(
+                '${payment.formattedAmount} • ${payment.statusName}',
+                style: TextStyle(
+                  color: _getStatusColor(payment.status),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              if (payment.dueDate != null)
+                Text(
+                  'Срок: ${_formatDate(payment.dueDate!)}',
+                  style: const TextStyle(fontSize: 12),
+                ),
+            ],
+          ),
+          trailing: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                payment.formattedAmount,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              Text(
+                _formatDate(payment.createdAt),
+                style: const TextStyle(fontSize: 12),
+              ),
+            ],
+          ),
+          onTap: onTap,
+        ),
+      );
+
+  Color _getStatusColor(PaymentStatus status) {
+    switch (status) {
+      case PaymentStatus.pending:
+        return Colors.orange;
+      case PaymentStatus.processing:
+        return Colors.blue;
+      case PaymentStatus.completed:
+        return Colors.green;
+      case PaymentStatus.failed:
+        return Colors.red;
+      case PaymentStatus.cancelled:
+        return Colors.grey;
+      case PaymentStatus.refunded:
+        return Colors.purple;
+    }
+  }
+
+  String _formatDate(DateTime date) =>
+      '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';
 }
 
-class _PaymentFiltersSheetState extends State<PaymentFiltersSheet> {
+/// Диалог с деталями платежа
+class _PaymentDetailsDialog extends StatelessWidget {
+  const _PaymentDetailsDialog({required this.payment});
+
+  final Payment payment;
+
+  @override
+  Widget build(BuildContext context) => AlertDialog(
+        title: Text(payment.typeName),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _DetailRow('Сумма', payment.formattedAmount),
+              _DetailRow('Статус', payment.statusName),
+              _DetailRow('Метод оплаты', payment.methodName),
+              _DetailRow('Описание', payment.description),
+              if (payment.transactionId != null)
+                _DetailRow('ID транзакции', payment.transactionId!),
+              if (payment.paymentProvider != null)
+                _DetailRow('Провайдер', payment.paymentProvider!),
+              if (payment.fee != null)
+                _DetailRow(
+                  'Комиссия',
+                  '${payment.fee!.toStringAsFixed(2)} ${payment.currency}',
+                ),
+              if (payment.tax != null)
+                _DetailRow(
+                  'Налог',
+                  '${payment.tax!.toStringAsFixed(2)} ${payment.currency}',
+                ),
+              _DetailRow('Итого', payment.formattedTotalAmount),
+              _DetailRow('Создан', _formatDate(payment.createdAt)),
+              if (payment.processedAt != null)
+                _DetailRow('Обработан', _formatDate(payment.processedAt!)),
+              if (payment.completedAt != null)
+                _DetailRow('Завершен', _formatDate(payment.completedAt!)),
+              if (payment.failedAt != null)
+                _DetailRow('Неудачен', _formatDate(payment.failedAt!)),
+              if (payment.cancelledAt != null)
+                _DetailRow('Отменен', _formatDate(payment.cancelledAt!)),
+              if (payment.refundedAt != null)
+                _DetailRow('Возвращен', _formatDate(payment.refundedAt!)),
+              if (payment.dueDate != null)
+                _DetailRow('Срок оплаты', _formatDate(payment.dueDate!)),
+              if (payment.refundReason != null)
+                _DetailRow('Причина возврата', payment.refundReason!),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Закрыть'),
+          ),
+        ],
+      );
+
+  String _formatDate(DateTime date) =>
+      '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+}
+
+/// Строка деталей
+class _DetailRow extends StatelessWidget {
+  const _DetailRow(this.label, this.value);
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 120,
+              child: Text(
+                '$label:',
+                style: const TextStyle(fontWeight: FontWeight.w500),
+              ),
+            ),
+            Expanded(
+              child: Text(value),
+            ),
+          ],
+        ),
+      );
+}
+
+/// Нижний лист с фильтрами
+class _FiltersBottomSheet extends StatefulWidget {
+  const _FiltersBottomSheet({
+    required this.selectedStatus,
+    required this.selectedType,
+    required this.onApply,
+  });
+
+  final PaymentStatus? selectedStatus;
+  final PaymentType? selectedType;
+  final Function(PaymentStatus?, PaymentType?) onApply;
+
+  @override
+  State<_FiltersBottomSheet> createState() => _FiltersBottomSheetState();
+}
+
+class _FiltersBottomSheetState extends State<_FiltersBottomSheet> {
   PaymentStatus? _selectedStatus;
-  PaymentMethod? _selectedMethod;
-  DateTime? _startDate;
-  DateTime? _endDate;
+  PaymentType? _selectedType;
 
   @override
   void initState() {
     super.initState();
     _selectedStatus = widget.selectedStatus;
-    _selectedMethod = widget.selectedMethod;
-    _startDate = widget.startDate;
-    _endDate = widget.endDate;
+    _selectedType = widget.selectedType;
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Handle bar
-          Center(
-            child: Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.outline,
-                borderRadius: BorderRadius.circular(2),
-              ),
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Фильтры',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-          ),
-          const SizedBox(height: 24),
-
-          Text(
-            'Фильтры',
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          // Status filter
-          Text(
-            'Статус',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            children: [
-              _buildFilterChip(
-                'Все',
-                _selectedStatus == null,
-                () => setState(() => _selectedStatus = null),
-              ),
-              ...PaymentStatus.values.map((status) => _buildFilterChip(
-                    _getStatusDisplayName(status),
-                    _selectedStatus == status,
-                    () => setState(() => _selectedStatus = status),
-                  )),
-            ],
-          ),
-          const SizedBox(height: 24),
-
-          // Method filter
-          Text(
-            'Способ оплаты',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            children: [
-              _buildFilterChip(
-                'Все',
-                _selectedMethod == null,
-                () => setState(() => _selectedMethod = null),
-              ),
-              ...PaymentMethod.values.map((method) => _buildFilterChip(
-                    _getMethodDisplayName(method),
-                    _selectedMethod == method,
-                    () => setState(() => _selectedMethod = method),
-                  )),
-            ],
-          ),
-          const SizedBox(height: 24),
-
-          // Date range
-          Text(
-            'Период',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () => _selectDate(true),
-                  icon: const Icon(Icons.calendar_today),
-                  label: Text(_startDate != null
-                      ? DateFormat('dd.MM.yyyy').format(_startDate!)
-                      : 'С даты'),
+            const SizedBox(height: 16),
+            const Text('Статус платежа:'),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              children: [
+                _FilterChip(
+                  label: 'Все',
+                  selected: _selectedStatus == null,
+                  onSelected: (selected) {
+                    setState(() {
+                      _selectedStatus = null;
+                    });
+                  },
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () => _selectDate(false),
-                  icon: const Icon(Icons.calendar_today),
-                  label: Text(_endDate != null
-                      ? DateFormat('dd.MM.yyyy').format(_endDate!)
-                      : 'По дату'),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 32),
-
-          // Action buttons
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: widget.onClearFilters,
-                  child: const Text('Сбросить'),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () => widget.onApplyFilters(
-                    _selectedStatus,
-                    _selectedMethod,
-                    _startDate,
-                    _endDate,
+                ...PaymentStatus.values.map(
+                  (status) => _FilterChip(
+                    label: status.statusName,
+                    selected: _selectedStatus == status,
+                    onSelected: (selected) {
+                      setState(() {
+                        _selectedStatus = selected ? status : null;
+                      });
+                    },
                   ),
-                  child: const Text('Применить'),
                 ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFilterChip(String label, bool isSelected, VoidCallback onTap) {
-    final theme = Theme.of(context);
-
-    return FilterChip(
-      label: Text(label),
-      selected: isSelected,
-      onSelected: (_) => onTap(),
-      selectedColor: theme.colorScheme.primaryContainer,
-      checkmarkColor: theme.colorScheme.primary,
-    );
-  }
-
-  Future<void> _selectDate(bool isStartDate) async {
-    final date = await showDatePicker(
-      context: context,
-      initialDate: isStartDate
-          ? _startDate ?? DateTime.now()
-          : _endDate ?? DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime.now(),
-    );
-
-    if (date != null) {
-      setState(() {
-        if (isStartDate) {
-          _startDate = date;
-        } else {
-          _endDate = date;
-        }
-      });
-    }
-  }
-
-  String _getStatusDisplayName(PaymentStatus status) {
-    switch (status) {
-      case PaymentStatus.pending:
-        return 'Ожидает';
-      case PaymentStatus.processing:
-        return 'Обрабатывается';
-      case PaymentStatus.completed:
-        return 'Завершена';
-      case PaymentStatus.failed:
-        return 'Неудачная';
-      case PaymentStatus.cancelled:
-        return 'Отменена';
-      case PaymentStatus.refunded:
-        return 'Возвращена';
-      case PaymentStatus.disputed:
-        return 'Спор';
-    }
-  }
-
-  String _getMethodDisplayName(PaymentMethod method) {
-    switch (method) {
-      case PaymentMethod.sbp:
-        return 'СБП';
-      case PaymentMethod.yookassa:
-        return 'ЮKassa';
-      case PaymentMethod.tinkoff:
-        return 'Tinkoff';
-      case PaymentMethod.card:
-        return 'Карта';
-      case PaymentMethod.cash:
-        return 'Наличные';
-      case PaymentMethod.bankTransfer:
-        return 'Перевод';
-    }
-  }
+              ],
+            ),
+            const SizedBox(height: 16),
+            const Text('Тип платежа:'),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              children: [
+                _FilterChip(
+                  label: 'Все',
+                  selected: _selectedType == null,
+                  onSelected: (selected) {
+                    setState(() {
+                      _selectedType = null;
+                    });
+                  },
+                ),
+                ...PaymentType.values.map(
+                  (type) => _FilterChip(
+                    label: type.typeName,
+                    selected: _selectedType == type,
+                    onSelected: (selected) {
+                      setState(() {
+                        _selectedType = selected ? type : null;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () {
+                      setState(() {
+                        _selectedStatus = null;
+                        _selectedType = null;
+                      });
+                    },
+                    child: const Text('Сбросить'),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      widget.onApply(_selectedStatus, _selectedType);
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Применить'),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
 }
 
-class PaymentDetailsSheet extends StatelessWidget {
-  final Payment payment;
-
-  const PaymentDetailsSheet({
-    super.key,
-    required this.payment,
+/// Чип фильтра
+class _FilterChip extends StatelessWidget {
+  const _FilterChip({
+    required this.label,
+    required this.selected,
+    required this.onSelected,
   });
 
+  final String label;
+  final bool selected;
+  final Function(bool) onSelected;
+
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Handle bar
-          Center(
-            child: Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.outline,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          Text(
-            'Детали платежа',
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          _buildDetailRow(context, 'ID', payment.id),
-          _buildDetailRow(context, 'Тип', payment.typeDisplayName),
-          _buildDetailRow(context, 'Способ', payment.methodDisplayName),
-          _buildDetailRow(
-              context, 'Статус', _getStatusDisplayName(payment.status)),
-          _buildDetailRow(
-              context, 'Сумма', '${payment.amount.toStringAsFixed(0)} ₽'),
-          if (payment.taxAmount > 0)
-            _buildDetailRow(
-                context, 'Налог', '${payment.taxAmount.toStringAsFixed(0)} ₽'),
-          if (payment.netAmount > 0)
-            _buildDetailRow(context, 'К получению',
-                '${payment.netAmount.toStringAsFixed(0)} ₽'),
-          _buildDetailRow(context, 'Создан',
-              DateFormat('dd.MM.yyyy HH:mm').format(payment.createdAt)),
-          if (payment.completedAt != null)
-            _buildDetailRow(context, 'Завершен',
-                DateFormat('dd.MM.yyyy HH:mm').format(payment.completedAt!)),
-          if (payment.failureReason != null)
-            _buildDetailRow(context, 'Причина ошибки', payment.failureReason!),
-
-          const SizedBox(height: 24),
-
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDetailRow(BuildContext context, String label, String value) {
-    final theme = Theme.of(context);
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 120,
-            child: Text(
-              label,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  String _getStatusDisplayName(PaymentStatus status) {
-    switch (status) {
-      case PaymentStatus.pending:
-        return 'Ожидает оплаты';
-      case PaymentStatus.processing:
-        return 'Обрабатывается';
-      case PaymentStatus.completed:
-        return 'Завершена';
-      case PaymentStatus.failed:
-        return 'Неудачная';
-      case PaymentStatus.cancelled:
-        return 'Отменена';
-      case PaymentStatus.refunded:
-        return 'Возвращена';
-      case PaymentStatus.disputed:
-        return 'Спор';
-    }
-  }
+  Widget build(BuildContext context) => FilterChip(
+        label: Text(label),
+        selected: selected,
+        onSelected: onSelected,
+      );
 }

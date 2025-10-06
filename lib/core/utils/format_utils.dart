@@ -1,5 +1,5 @@
 /// Утилиты для форматирования данных
-library format_utils;
+library;
 
 import 'package:intl/intl.dart';
 

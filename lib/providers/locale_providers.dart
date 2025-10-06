@@ -138,7 +138,7 @@ class LocaleNotifier extends Notifier<Locale> {
 
 /// Расширение для получения локализованных строк
 extension LocalizationExtension on BuildContext {
-  AppLocalizations get l10n => AppLocalizations.of(this)!;
+  AppLocalizations get l10n => AppLocalizations.of(this);
 }
 
 /// Расширение для получения локализованных строк из провайдера

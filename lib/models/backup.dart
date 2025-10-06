@@ -37,7 +37,8 @@ class Backup {
       collections:
           List<String>.from(data['collections'] as List<dynamic>? ?? []),
       filters: Map<String, dynamic>.from(
-          data['filters'] as Map<dynamic, dynamic>? ?? {}),
+        data['filters'] as Map<dynamic, dynamic>? ?? {},
+      ),
       createdBy: data['createdBy'] as String?,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       completedAt: data['completedAt'] != null
@@ -68,7 +69,8 @@ class Backup {
         collections:
             List<String>.from(data['collections'] as List<dynamic>? ?? []),
         filters: Map<String, dynamic>.from(
-            data['filters'] as Map<dynamic, dynamic>? ?? {}),
+          data['filters'] as Map<dynamic, dynamic>? ?? {},
+        ),
         createdBy: data['createdBy'] as String?,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         completedAt: data['completedAt'] != null
@@ -79,7 +81,8 @@ class Backup {
         errorMessage: data['errorMessage'] as String?,
         metadata: data['metadata'] != null
             ? Map<String, dynamic>.from(
-                data['metadata'] as Map<dynamic, dynamic>)
+                data['metadata'] as Map<dynamic, dynamic>,
+              )
             : null,
       );
   final String id;
@@ -276,7 +279,8 @@ class Restore {
       collections:
           List<String>.from(data['collections'] as List<dynamic>? ?? []),
       options: Map<String, dynamic>.from(
-          data['options'] as Map<dynamic, dynamic>? ?? {}),
+        data['options'] as Map<dynamic, dynamic>? ?? {},
+      ),
       createdBy: data['createdBy'] as String?,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       completedAt: data['completedAt'] != null
@@ -306,7 +310,8 @@ class Restore {
         collections:
             List<String>.from(data['collections'] as List<dynamic>? ?? []),
         options: Map<String, dynamic>.from(
-            data['options'] as Map<dynamic, dynamic>? ?? {}),
+          data['options'] as Map<dynamic, dynamic>? ?? {},
+        ),
         createdBy: data['createdBy'] as String?,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         completedAt: data['completedAt'] != null
@@ -315,7 +320,8 @@ class Restore {
         errorMessage: data['errorMessage'] as String?,
         metadata: data['metadata'] != null
             ? Map<String, dynamic>.from(
-                data['metadata'] as Map<dynamic, dynamic>)
+                data['metadata'] as Map<dynamic, dynamic>,
+              )
             : null,
       );
   final String id;

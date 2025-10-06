@@ -818,7 +818,7 @@ class _BackupManagementScreenState
   }
 
   void _showCreateBackupDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Создать бэкап'),
@@ -841,7 +841,7 @@ class _BackupManagementScreenState
   }
 
   void _createBackup() {
-    // TODO: Реализовать создание бэкапа
+    // TODO(developer): Реализовать создание бэкапа
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Функция создания бэкапа будет реализована'),
@@ -864,7 +864,7 @@ class _BackupManagementScreenState
   }
 
   void _downloadBackup(Backup backup) {
-    // TODO: Реализовать скачивание бэкапа
+    // TODO(developer): Реализовать скачивание бэкапа
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Скачивание бэкапа "${backup.name}" будет реализовано'),
@@ -873,7 +873,7 @@ class _BackupManagementScreenState
   }
 
   void _restoreBackup(Backup backup) {
-    // TODO: Реализовать восстановление из бэкапа
+    // TODO(developer): Реализовать восстановление из бэкапа
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content:
@@ -883,7 +883,7 @@ class _BackupManagementScreenState
   }
 
   void _deleteBackup(Backup backup) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить бэкап'),

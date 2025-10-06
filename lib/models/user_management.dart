@@ -234,7 +234,7 @@ class UserRoleDefinition {
       name: data['name'] ?? '',
       description: data['description'] ?? '',
       permissions: List<String>.from(data['permissions'] ?? []),
-      isSystemRole: data['isSystemRole'] ?? false,
+      isSystemRole: data['isSystemRole'] as bool? ?? false,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       createdBy: data['createdBy'],
@@ -248,7 +248,7 @@ class UserRoleDefinition {
         name: data['name'] ?? '',
         description: data['description'] ?? '',
         permissions: List<String>.from(data['permissions'] ?? []),
-        isSystemRole: data['isSystemRole'] ?? false,
+        isSystemRole: data['isSystemRole'] as bool? ?? false,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
         createdBy: data['createdBy'],
@@ -353,7 +353,7 @@ class Permission {
         (e) => e.toString().split('.').last == data['type'],
         orElse: () => PermissionType.read,
       ),
-      isSystemPermission: data['isSystemPermission'] ?? false,
+      isSystemPermission: data['isSystemPermission'] as bool? ?? false,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
     );
   }
@@ -368,7 +368,7 @@ class Permission {
           (e) => e.toString().split('.').last == data['type'],
           orElse: () => PermissionType.read,
         ),
-        isSystemPermission: data['isSystemPermission'] ?? false,
+        isSystemPermission: data['isSystemPermission'] as bool? ?? false,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
       );
   final String id;

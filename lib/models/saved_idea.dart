@@ -23,7 +23,7 @@ class SavedIdea {
           ? (data['savedAt'] as Timestamp).toDate()
           : DateTime.now(),
       notes: data['notes'] as String?,
-      isFavorite: data['isFavorite'] ?? false,
+      isFavorite: data['isFavorite'] as bool? ?? false,
       tags: List<String>.from(data['tags'] ?? []),
     );
   }

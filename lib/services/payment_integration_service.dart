@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
-import '../models/payment_models.dart';
 import '../models/booking.dart';
+import '../models/payment_models.dart';
 import 'payment_service.dart';
 import 'tax_calculation_service.dart';
 
@@ -27,7 +27,7 @@ class PaymentIntegrationService {
       }
 
       // Calculate payment amount based on type
-      double amount = _calculatePaymentAmount(booking, type);
+      final amount = _calculatePaymentAmount(booking, type);
 
       // Get specialist's tax status
       final specialistTaxStatus = await _getSpecialistTaxStatus(specialistId);
@@ -125,8 +125,11 @@ class PaymentIntegrationService {
       await _paymentService.cancelPayment(paymentId);
 
       // Update booking status
-      await _updateBookingStatus(payment.bookingId, payment.type,
-          isCancelled: true);
+      await _updateBookingStatus(
+        payment.bookingId,
+        payment.type,
+        isCancelled: true,
+      );
 
       debugPrint('Booking payment cancelled: $paymentId');
     } catch (e) {
@@ -153,7 +156,8 @@ class PaymentIntegrationService {
 
   /// Gets payment summary for a booking
   Future<BookingPaymentSummary> getBookingPaymentSummary(
-      String bookingId) async {
+    String bookingId,
+  ) async {
     try {
       final payments = await getBookingPayments(bookingId);
       final booking = await _getBooking(bookingId);
@@ -162,11 +166,11 @@ class PaymentIntegrationService {
         throw Exception('Бронирование не найдено');
       }
 
-      double totalPaid = 0.0;
-      double totalTax = 0.0;
-      double totalNet = 0.0;
-      bool hasPrepayment = false;
-      bool hasPostpayment = false;
+      var totalPaid = 0;
+      var totalTax = 0;
+      var totalNet = 0;
+      var hasPrepayment = false;
+      var hasPostpayment = false;
 
       for (final payment in payments) {
         if (payment.status == PaymentStatus.completed) {
@@ -245,7 +249,9 @@ class PaymentIntegrationService {
 
   /// Updates contract status
   Future<void> updateContractStatus(
-      String contractId, ContractStatus status) async {
+    String contractId,
+    ContractStatus status,
+  ) async {
     try {
       await _firestore.collection('contracts').doc(contractId).update({
         'status': status.toString().split('.').last,
@@ -338,7 +344,10 @@ class PaymentIntegrationService {
   }
 
   Future<void> _updateBookingPayment(
-      String bookingId, String paymentId, PaymentType type) async {
+    String bookingId,
+    String paymentId,
+    PaymentType type,
+  ) async {
     try {
       final updateData = <String, dynamic>{
         'updatedAt': Timestamp.fromDate(DateTime.now()),
@@ -362,8 +371,11 @@ class PaymentIntegrationService {
     }
   }
 
-  Future<void> _updateBookingStatus(String bookingId, PaymentType type,
-      {bool isCancelled = false}) async {
+  Future<void> _updateBookingStatus(
+    String bookingId,
+    PaymentType type, {
+    bool isCancelled = false,
+  }) async {
     try {
       final updateData = <String, dynamic>{
         'updatedAt': Timestamp.fromDate(DateTime.now()),
@@ -424,19 +436,6 @@ class PaymentIntegrationService {
 
 /// Booking Payment Summary
 class BookingPaymentSummary {
-  final String bookingId;
-  final double totalAmount;
-  final double totalPaid;
-  final double totalTax;
-  final double totalNet;
-  final double remainingAmount;
-  final double prepaymentAmount;
-  final double postpaymentAmount;
-  final bool hasPrepayment;
-  final bool hasPostpayment;
-  final List<Payment> payments;
-  final bool isFullyPaid;
-
   BookingPaymentSummary({
     required this.bookingId,
     required this.totalAmount,
@@ -451,21 +450,22 @@ class BookingPaymentSummary {
     required this.payments,
     required this.isFullyPaid,
   });
+  final String bookingId;
+  final double totalAmount;
+  final double totalPaid;
+  final double totalTax;
+  final double totalNet;
+  final double remainingAmount;
+  final double prepaymentAmount;
+  final double postpaymentAmount;
+  final bool hasPrepayment;
+  final bool hasPostpayment;
+  final List<Payment> payments;
+  final bool isFullyPaid;
 }
 
 /// Contract model
 class Contract {
-  final String id;
-  final String bookingId;
-  final String customerId;
-  final String specialistId;
-  final double totalAmount;
-  final double prepaymentAmount;
-  final double postpaymentAmount;
-  final ContractStatus status;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-
   Contract({
     required this.id,
     required this.bookingId,
@@ -479,37 +479,43 @@ class Contract {
     required this.updatedAt,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'bookingId': bookingId,
-      'customerId': customerId,
-      'specialistId': specialistId,
-      'totalAmount': totalAmount,
-      'prepaymentAmount': prepaymentAmount,
-      'postpaymentAmount': postpaymentAmount,
-      'status': status.toString().split('.').last,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-    };
-  }
+  factory Contract.fromMap(Map<String, dynamic> map) => Contract(
+        id: map['id'] as String,
+        bookingId: map['bookingId'] as String,
+        customerId: map['customerId'] as String,
+        specialistId: map['specialistId'] as String,
+        totalAmount: (map['totalAmount'] as num).toDouble(),
+        prepaymentAmount: (map['prepaymentAmount'] as num).toDouble(),
+        postpaymentAmount: (map['postpaymentAmount'] as num).toDouble(),
+        status: ContractStatus.values.firstWhere(
+          (e) => e.toString().split('.').last == map['status'] as String,
+        ),
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+      );
+  final String id;
+  final String bookingId;
+  final String customerId;
+  final String specialistId;
+  final double totalAmount;
+  final double prepaymentAmount;
+  final double postpaymentAmount;
+  final ContractStatus status;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
-  factory Contract.fromMap(Map<String, dynamic> map) {
-    return Contract(
-      id: map['id'] as String,
-      bookingId: map['bookingId'] as String,
-      customerId: map['customerId'] as String,
-      specialistId: map['specialistId'] as String,
-      totalAmount: (map['totalAmount'] as num).toDouble(),
-      prepaymentAmount: (map['prepaymentAmount'] as num).toDouble(),
-      postpaymentAmount: (map['postpaymentAmount'] as num).toDouble(),
-      status: ContractStatus.values.firstWhere(
-        (e) => e.toString().split('.').last == map['status'] as String,
-      ),
-      createdAt: (map['createdAt'] as Timestamp).toDate(),
-      updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-    );
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'bookingId': bookingId,
+        'customerId': customerId,
+        'specialistId': specialistId,
+        'totalAmount': totalAmount,
+        'prepaymentAmount': prepaymentAmount,
+        'postpaymentAmount': postpaymentAmount,
+        'status': status.toString().split('.').last,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 }
 
 /// Contract status

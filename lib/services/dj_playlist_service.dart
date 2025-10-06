@@ -291,7 +291,7 @@ class DJPlaylistService {
         },
       );
 
-      // TODO: В реальном приложении здесь будет логика импорта треков из VK
+      // TODO(developer): В реальном приложении здесь будет логика импорта треков из VK
       // Пока создаем mock медиафайлы
       final mockMediaFiles = _createMockMediaFiles(djId, mockPlaylist.tracks);
 

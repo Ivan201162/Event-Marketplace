@@ -297,7 +297,7 @@ class TrendsAnalyticsService {
     DateTime startDate,
     DateTime endDate,
   ) {
-    // TODO: Реализовать расчет роста по сравнению с предыдущим периодом
+    // TODO(developer): Реализовать расчет роста по сравнению с предыдущим периодом
     return 0;
   }
 
@@ -306,7 +306,7 @@ class TrendsAnalyticsService {
     DateTime startDate,
     DateTime endDate,
   ) {
-    // TODO: Реализовать расчет роста услуги по сравнению с предыдущим периодом
+    // TODO(developer): Реализовать расчет роста услуги по сравнению с предыдущим периодом
     return 0;
   }
 
@@ -315,7 +315,7 @@ class TrendsAnalyticsService {
     DateTime startDate,
     DateTime endDate,
   ) {
-    // TODO: Реализовать расчет средней цены для локации
+    // TODO(developer): Реализовать расчет средней цены для локации
     return 0;
   }
 }

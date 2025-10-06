@@ -234,12 +234,10 @@ class OptimizedFirestoreService {
   }
 
   /// Получение статистики кэша
-  static Map<String, dynamic> getCacheStats() {
-    return {
-      'cacheSize': _queryCache.length,
-      'cacheKeys': _queryCache.keys.toList(),
-    };
-  }
+  static Map<String, dynamic> getCacheStats() => {
+        'cacheSize': _queryCache.length,
+        'cacheKeys': _queryCache.keys.toList(),
+      };
 }
 
 /// Класс для фильтров запросов
@@ -266,6 +264,4 @@ class QueryOrder {
 
 /// Провайдер для оптимизированного сервиса Firestore
 final optimizedFirestoreServiceProvider =
-    Provider<OptimizedFirestoreService>((ref) {
-  return OptimizedFirestoreService();
-});
+    Provider<OptimizedFirestoreService>((ref) => OptimizedFirestoreService());

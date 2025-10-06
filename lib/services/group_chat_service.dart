@@ -259,14 +259,14 @@ class GroupChatService {
         id: '',
         chatId: chatId,
         senderId: uploadedBy,
-        senderName: 'Гость', // TODO: Получить реальное имя
+        senderName: 'Гость', // TODO(developer): Получить реальное имя
         content: fileName,
         type: fileType,
         createdAt: DateTime.now(),
         metadata: {
           'fileName': fileName,
           'fileUrl': fileUrl,
-          'fileSize': 0, // TODO: Получить реальный размер
+          'fileSize': 0, // TODO(developer): Получить реальный размер
         },
       );
 

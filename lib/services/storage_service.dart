@@ -1,130 +1,300 @@
 import 'dart:io';
+import 'dart:typed_data';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-/// Сервис для работы с Firebase Storage
+/// Сервис для работы с файловым хранилищем
 class StorageService {
   final FirebaseStorage _storage = FirebaseStorage.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// Загрузить изображение профиля пользователя
-  Future<String> uploadProfileImage(File imageFile) async {
-    final user = _auth.currentUser;
-    if (user == null) {
-      throw Exception('Пользователь не авторизован');
-    }
-
+  /// Загрузить PDF договора в Firebase Storage
+  Future<String> uploadContractPdf(
+    String contractId,
+    Uint8List pdfBytes,
+  ) async {
     try {
-      // Получаем расширение файла
-      final fileExtension = path.extension(imageFile.path);
-      final fileName = 'profile_${user.uid}$fileExtension';
+      final ref = _storage.ref().child('contracts').child('$contractId.pdf');
 
-      // Создаем ссылку на файл в Storage
-      final ref = _storage.ref().child('profile_images').child(fileName);
-
-      // Загружаем файл
-      final uploadTask = ref.putFile(
-        imageFile,
+      final uploadTask = ref.putData(
+        pdfBytes,
         SettableMetadata(
-          contentType: 'image/jpeg',
+          contentType: 'application/pdf',
           customMetadata: {
-            'userId': user.uid,
+            'type': 'contract',
+            'contractId': contractId,
             'uploadedAt': DateTime.now().toIso8601String(),
           },
         ),
       );
 
-      // Ждем завершения загрузки
       final snapshot = await uploadTask;
+      final downloadUrl = await snapshot.ref.getDownloadURL();
 
-      // Получаем URL загруженного файла
-      final downloadURL = await snapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      throw Exception('Ошибка загрузки PDF договора: $e');
+    }
+  }
 
-      return downloadURL;
+  /// Сохранить строку в локальное хранилище
+  Future<void> setString(String key, String value) async {
+    // Реализация для локального хранилища
+  }
+
+  /// Получить строку из локального хранилища
+  Future<String?> getString(String key) async {
+    // Реализация для локального хранилища
+    return null;
+  }
+
+  /// Сохранить число в локальное хранилище
+  Future<void> setInt(String key, int value) async {
+    // Реализация для локального хранилища
+  }
+
+  /// Получить число из локального хранилища
+  Future<int?> getInt(String key) async {
+    // Реализация для локального хранилища
+    return null;
+  }
+
+  /// Удалить значение из локального хранилища
+  Future<void> remove(String key) async {
+    // Реализация для локального хранилища
+  }
+
+  /// Загрузить изображение профиля
+  Future<String> uploadProfileImage(File imageFile) async {
+    try {
+      final ref = _storage
+          .ref()
+          .child('profile_images')
+          .child('${DateTime.now().millisecondsSinceEpoch}.jpg');
+
+      final uploadTask = ref.putFile(imageFile);
+      final snapshot = await uploadTask;
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+
+      return downloadUrl;
+    } catch (e) {
+      throw Exception('Ошибка загрузки изображения профиля: $e');
+    }
+  }
+
+  /// Загрузить PDF акта выполненных работ в Firebase Storage
+  Future<String> uploadWorkActPdf(String workActId, Uint8List pdfBytes) async {
+    try {
+      final ref = _storage.ref().child('work_acts').child('$workActId.pdf');
+
+      final uploadTask = ref.putData(
+        pdfBytes,
+        SettableMetadata(
+          contentType: 'application/pdf',
+          customMetadata: {
+            'type': 'work_act',
+            'workActId': workActId,
+            'uploadedAt': DateTime.now().toIso8601String(),
+          },
+        ),
+      );
+
+      final snapshot = await uploadTask;
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+
+      return downloadUrl;
+    } catch (e) {
+      throw Exception('Ошибка загрузки PDF акта: $e');
+    }
+  }
+
+  /// Загрузить PDF счета в Firebase Storage
+  Future<String> uploadInvoicePdf(String invoiceId, Uint8List pdfBytes) async {
+    try {
+      final ref = _storage.ref().child('invoices').child('$invoiceId.pdf');
+
+      final uploadTask = ref.putData(
+        pdfBytes,
+        SettableMetadata(
+          contentType: 'application/pdf',
+          customMetadata: {
+            'type': 'invoice',
+            'invoiceId': invoiceId,
+            'uploadedAt': DateTime.now().toIso8601String(),
+          },
+        ),
+      );
+
+      final snapshot = await uploadTask;
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+
+      return downloadUrl;
+    } catch (e) {
+      throw Exception('Ошибка загрузки PDF счета: $e');
+    }
+  }
+
+  /// Скачать файл по URL
+  Future<void> downloadFile(String downloadUrl, String fileName) async {
+    try {
+      // Запрашиваем разрешение на запись
+      final status = await Permission.storage.request();
+      if (!status.isGranted) {
+        throw Exception('Нет разрешения на запись файлов');
+      }
+
+      // Получаем директорию для загрузок
+      final directory = await getExternalStorageDirectory();
+      if (directory == null) {
+        throw Exception('Не удалось получить директорию для загрузок');
+      }
+
+      final downloadsDir = Directory('${directory.path}/Downloads');
+      if (!await downloadsDir.exists()) {
+        await downloadsDir.create(recursive: true);
+      }
+
+      final file = File('${downloadsDir.path}/$fileName');
+
+      // Скачиваем файл
+      final ref = _storage.refFromURL(downloadUrl);
+      final data = await ref.getData();
+
+      if (data != null) {
+        await file.writeAsBytes(data);
+      } else {
+        throw Exception('Не удалось получить данные файла');
+      }
+    } catch (e) {
+      throw Exception('Ошибка скачивания файла: $e');
+    }
+  }
+
+  /// Получить URL файла по пути
+  Future<String> getFileUrl(String path) async {
+    try {
+      final ref = _storage.ref().child(path);
+      return await ref.getDownloadURL();
+    } catch (e) {
+      throw Exception('Ошибка получения URL файла: $e');
+    }
+  }
+
+  /// Удалить файл из Firebase Storage
+  Future<void> deleteFile(String path) async {
+    try {
+      final ref = _storage.ref().child(path);
+      await ref.delete();
+    } catch (e) {
+      throw Exception('Ошибка удаления файла: $e');
+    }
+  }
+
+  /// Получить список файлов в папке
+  Future<List<Reference>> listFiles(String path) async {
+    try {
+      final ref = _storage.ref().child(path);
+      final result = await ref.listAll();
+      return result.items;
+    } catch (e) {
+      throw Exception('Ошибка получения списка файлов: $e');
+    }
+  }
+
+  /// Получить метаданные файла
+  Future<FullMetadata> getFileMetadata(String path) async {
+    try {
+      final ref = _storage.ref().child(path);
+      return await ref.getMetadata();
+    } catch (e) {
+      throw Exception('Ошибка получения метаданных файла: $e');
+    }
+  }
+
+  /// Загрузить изображение
+  Future<String> uploadImage(
+    String path,
+    Uint8List imageBytes,
+    String fileName,
+  ) async {
+    try {
+      final ref = _storage.ref().child(path).child(fileName);
+
+      final uploadTask = ref.putData(
+        imageBytes,
+        SettableMetadata(
+          contentType: 'image/jpeg',
+          customMetadata: {
+            'type': 'image',
+            'uploadedAt': DateTime.now().toIso8601String(),
+          },
+        ),
+      );
+
+      final snapshot = await uploadTask;
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+
+      return downloadUrl;
     } catch (e) {
       throw Exception('Ошибка загрузки изображения: $e');
     }
   }
 
-  /// Удалить изображение профиля
-  Future<void> deleteProfileImage(String imageURL) async {
+  /// Загрузить документ
+  Future<String> uploadDocument(
+    String path,
+    Uint8List documentBytes,
+    String fileName,
+    String contentType,
+  ) async {
     try {
-      // Извлекаем путь к файлу из URL
-      final ref = _storage.refFromURL(imageURL);
-      await ref.delete();
-    } catch (e) {
-      throw Exception('Ошибка удаления изображения: $e');
-    }
-  }
+      final ref = _storage.ref().child(path).child(fileName);
 
-  /// Загрузить изображение события
-  Future<String> uploadEventImage(File imageFile, String eventId) async {
-    final user = _auth.currentUser;
-    if (user == null) {
-      throw Exception('Пользователь не авторизован');
-    }
-
-    try {
-      final fileExtension = path.extension(imageFile.path);
-      final fileName =
-          'event_${eventId}_${DateTime.now().millisecondsSinceEpoch}$fileExtension';
-
-      final ref = _storage.ref().child('event_images').child(fileName);
-
-      final uploadTask = ref.putFile(
-        imageFile,
+      final uploadTask = ref.putData(
+        documentBytes,
         SettableMetadata(
-          contentType: 'image/jpeg',
+          contentType: contentType,
           customMetadata: {
-            'eventId': eventId,
-            'uploadedBy': user.uid,
+            'type': 'document',
             'uploadedAt': DateTime.now().toIso8601String(),
           },
         ),
       );
 
       final snapshot = await uploadTask;
-      final downloadURL = await snapshot.ref.getDownloadURL();
+      final downloadUrl = await snapshot.ref.getDownloadURL();
 
-      return downloadURL;
+      return downloadUrl;
     } catch (e) {
-      throw Exception('Ошибка загрузки изображения события: $e');
+      throw Exception('Ошибка загрузки документа: $e');
     }
   }
 
-  /// Загрузить несколько изображений события
-  Future<List<String>> uploadEventImages(
-    List<File> imageFiles,
-    String eventId,
-  ) async {
-    final urls = <String>[];
-
-    for (var i = 0; i < imageFiles.length; i++) {
-      final url = await uploadEventImage(imageFiles[i], '${eventId}_$i');
-      urls.add(url);
+  /// Получить размер файла в читаемом формате
+  String formatFileSize(int bytes) {
+    if (bytes < 1024) return '$bytes B';
+    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
+    if (bytes < 1024 * 1024 * 1024) {
+      return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
     }
-
-    return urls;
+    return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
   }
 
-  /// Получить размер файла
-  Future<int> getFileSize(String filePath) async {
-    final file = File(filePath);
-    return file.length();
+  /// Проверить существование файла
+  Future<bool> fileExists(String path) async {
+    try {
+      final ref = _storage.ref().child(path);
+      await ref.getMetadata();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
-  /// Проверить, является ли файл изображением
-  bool isImageFile(String filePath) {
-    final extension = path.extension(filePath).toLowerCase();
-    return ['.jpg', '.jpeg', '.png', '.gif', '.webp'].contains(extension);
-  }
-
-  /// Сжать изображение (базовая реализация)
-  Future<File> compressImage(File imageFile) async {
-    // В реальном приложении здесь можно использовать пакет image
-    // для сжатия изображения
-    return imageFile;
+  /// Получить прогресс загрузки
+  Stream<TaskSnapshot> getUploadProgress(String path) {
+    final ref = _storage.ref().child(path);
+    return ref.putData(Uint8List(0)).snapshotEvents;
   }
 }

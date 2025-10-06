@@ -12,12 +12,11 @@ import '../widgets/chat_attachment_widget.dart';
 
 /// Экран чата для гостей
 class GuestChatScreen extends ConsumerStatefulWidget {
-  final String accessCode;
-
   const GuestChatScreen({
     super.key,
     required this.accessCode,
   });
+  final String accessCode;
 
   @override
   ConsumerState<GuestChatScreen> createState() => _GuestChatScreenState();
@@ -79,8 +78,12 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
         guestEmail: _guestAccess?.guestEmail,
       );
     } on Exception catch (e, stackTrace) {
-      AppLogger.logE('Ошибка загрузки гостевого доступа', 'guest_chat_screen',
-          e, stackTrace);
+      AppLogger.logE(
+        'Ошибка загрузки гостевого доступа',
+        'guest_chat_screen',
+        e,
+        stackTrace,
+      );
       if (mounted) {
         _showErrorDialog('Ошибка загрузки чата');
       }
@@ -140,17 +143,21 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
             'message': botResponse.message,
             'timestamp': botResponse.createdAt,
             'quickReplies': botResponse.quickReplies
-                ?.map((reply) => {
-                      'title': reply.title,
-                      'payload': reply.payload,
-                    })
+                ?.map(
+                  (reply) => {
+                    'title': reply.title,
+                    'payload': reply.payload,
+                  },
+                )
                 .toList(),
             'cards': botResponse.cards
-                ?.map((card) => {
-                      'title': card.title,
-                      'subtitle': card.subtitle,
-                      'imageUrl': card.imageUrl,
-                    })
+                ?.map(
+                  (card) => {
+                    'title': card.title,
+                    'subtitle': card.subtitle,
+                    'imageUrl': card.imageUrl,
+                  },
+                )
                 .toList(),
           });
         });
@@ -159,7 +166,11 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
       }
     } on Exception catch (e, stackTrace) {
       AppLogger.logE(
-          'Ошибка отправки сообщения', 'guest_chat_screen', e, stackTrace);
+        'Ошибка отправки сообщения',
+        'guest_chat_screen',
+        e,
+        stackTrace,
+      );
       _showErrorSnackBar('Ошибка отправки сообщения');
     } finally {
       setState(() => _isSendingMessage = false);
@@ -172,10 +183,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
     try {
       setState(() => _isUploadingFile = true);
 
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.any,
-        allowMultiple: false,
-      );
+      final result = await FilePicker.platform.pickFiles();
 
       if (result != null && result.files.isNotEmpty) {
         final file = result.files.first;
@@ -221,7 +229,11 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
       }
     } catch (e, stackTrace) {
       AppLogger.logE(
-          'Ошибка прикрепления файла', 'guest_chat_screen', e, stackTrace);
+        'Ошибка прикрепления файла',
+        'guest_chat_screen',
+        e,
+        stackTrace,
+      );
       _showErrorSnackBar('Ошибка прикрепления файла');
     } finally {
       setState(() => _isUploadingFile = false);
@@ -241,7 +253,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
   }
 
   void _showErrorDialog(String message) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Ошибка'),
@@ -374,7 +386,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 4,
                   offset: const Offset(0, -2),
                 ),
@@ -430,73 +442,72 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
     }
   }
 
-  Widget _buildUserMessage(Map<String, dynamic> message) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Flexible(
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.blue[600],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                message['message'] as String,
-                style: const TextStyle(color: Colors.white),
+  Widget _buildUserMessage(Map<String, dynamic> message) => Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Flexible(
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue[600],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  message['message'] as String,
+                  style: const TextStyle(color: Colors.white),
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
-  Widget _buildBotMessage(Map<String, dynamic> message) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Flexible(
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.smart_toy, size: 16, color: Colors.grey[600]),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Бот-помощник',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+  Widget _buildBotMessage(Map<String, dynamic> message) => Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          children: [
+            Flexible(
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.smart_toy,
+                          size: 16,
                           color: Colors.grey[600],
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    message['message'] as String,
-                    style: const TextStyle(color: Colors.black87),
-                  ),
-                ],
+                        const SizedBox(width: 8),
+                        Text(
+                          'Бот-помощник',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      message['message'] as String,
+                      style: const TextStyle(color: Colors.black87),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
   Widget _buildAttachmentMessage(Map<String, dynamic> message) {
     final attachment = message['attachment'] as ChatAttachment;

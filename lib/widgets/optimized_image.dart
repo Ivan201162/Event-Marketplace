@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 
 /// Оптимизированный виджет для загрузки изображений с кэшированием
 class OptimizedImage extends StatelessWidget {
@@ -29,52 +29,46 @@ class OptimizedImage extends StatelessWidget {
   final Duration fadeOutDuration;
 
   @override
-  Widget build(BuildContext context) {
-    return CachedNetworkImage(
-      imageUrl: imageUrl,
-      width: width,
-      height: height,
-      fit: fit,
-      memCacheWidth: memCacheWidth,
-      memCacheHeight: memCacheHeight,
-      fadeInDuration: fadeInDuration,
-      fadeOutDuration: fadeOutDuration,
-      placeholder: placeholder as Widget Function(BuildContext, String)? ??
-          (context, url) => _buildPlaceholder(),
-      errorWidget:
-          errorWidget as Widget Function(BuildContext, String, Object)? ??
-              (context, url, error) => _buildErrorWidget(),
-      // Оптимизации для производительности
-      maxWidthDiskCache: 1000,
-      maxHeightDiskCache: 1000,
-    );
-  }
+  Widget build(BuildContext context) => CachedNetworkImage(
+        imageUrl: imageUrl,
+        width: width,
+        height: height,
+        fit: fit,
+        memCacheWidth: memCacheWidth,
+        memCacheHeight: memCacheHeight,
+        fadeInDuration: fadeInDuration,
+        fadeOutDuration: fadeOutDuration,
+        placeholder: placeholder as Widget Function(BuildContext, String)? ??
+            (context, url) => _buildPlaceholder(),
+        errorWidget:
+            errorWidget as Widget Function(BuildContext, String, Object)? ??
+                (context, url, error) => _buildErrorWidget(),
+        // Оптимизации для производительности
+        maxWidthDiskCache: 1000,
+        maxHeightDiskCache: 1000,
+      );
 
-  Widget _buildPlaceholder() {
-    return Container(
-      width: width,
-      height: height,
-      color: Colors.grey[300],
-      child: const Center(
-        child: CircularProgressIndicator(strokeWidth: 2),
-      ),
-    );
-  }
-
-  Widget _buildErrorWidget() {
-    return Container(
-      width: width,
-      height: height,
-      color: Colors.grey[300],
-      child: const Center(
-        child: Icon(
-          Icons.error_outline,
-          color: Colors.grey,
-          size: 32,
+  Widget _buildPlaceholder() => Container(
+        width: width,
+        height: height,
+        color: Colors.grey[300],
+        child: const Center(
+          child: CircularProgressIndicator(strokeWidth: 2),
         ),
-      ),
-    );
-  }
+      );
+
+  Widget _buildErrorWidget() => Container(
+        width: width,
+        height: height,
+        color: Colors.grey[300],
+        child: const Center(
+          child: Icon(
+            Icons.error_outline,
+            color: Colors.grey,
+            size: 32,
+          ),
+        ),
+      );
 }
 
 /// Оптимизированный виджет для аватаров пользователей
@@ -95,24 +89,21 @@ class OptimizedAvatar extends StatelessWidget {
   final Widget? errorWidget;
 
   @override
-  Widget build(BuildContext context) {
-    return CircleAvatar(
-      radius: radius,
-      backgroundColor: backgroundColor ?? Colors.grey[300],
-      child: ClipOval(
-        child: OptimizedImage(
-          imageUrl: imageUrl,
-          width: radius * 2,
-          height: radius * 2,
-          fit: BoxFit.cover,
-          memCacheWidth: (radius * 2).toInt(),
-          memCacheHeight: (radius * 2).toInt(),
-          placeholder: placeholder,
-          errorWidget: errorWidget,
+  Widget build(BuildContext context) => CircleAvatar(
+        radius: radius,
+        backgroundColor: backgroundColor ?? Colors.grey[300],
+        child: ClipOval(
+          child: OptimizedImage(
+            imageUrl: imageUrl,
+            width: radius * 2,
+            height: radius * 2,
+            memCacheWidth: (radius * 2).toInt(),
+            memCacheHeight: (radius * 2).toInt(),
+            placeholder: placeholder,
+            errorWidget: errorWidget,
+          ),
         ),
-      ),
-    );
-  }
+      );
 }
 
 /// Оптимизированный виджет для изображений в списках
@@ -133,17 +124,15 @@ class OptimizedListImage extends StatelessWidget {
   final double borderRadius;
 
   @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(borderRadius),
-      child: OptimizedImage(
-        imageUrl: imageUrl,
-        width: width,
-        height: height,
-        fit: fit,
-        memCacheWidth: width.toInt(),
-        memCacheHeight: height.toInt(),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => ClipRRect(
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: OptimizedImage(
+          imageUrl: imageUrl,
+          width: width,
+          height: height,
+          fit: fit,
+          memCacheWidth: width.toInt(),
+          memCacheHeight: height.toInt(),
+        ),
+      );
 }

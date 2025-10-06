@@ -5,9 +5,9 @@ import '../models/chat_bot.dart';
 
 /// Сервис для работы с бот-помощником в чатах
 class ChatBotService {
-  static final ChatBotService _instance = ChatBotService._internal();
   factory ChatBotService() => _instance;
   ChatBotService._internal();
+  static final ChatBotService _instance = ChatBotService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -19,7 +19,9 @@ class ChatBotService {
   }) async {
     try {
       AppLogger.logI(
-          'Обработка сообщения пользователя: $message', 'chat_bot_service');
+        'Обработка сообщения пользователя: $message',
+        'chat_bot_service',
+      );
 
       // Получаем или создаем контекст разговора
       final conversation = await _getOrCreateConversation(chatId, userId);
@@ -40,8 +42,12 @@ class ChatBotService {
 
       return response;
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка обработки сообщения пользователя',
-          'chat_bot_service', e, stackTrace);
+      AppLogger.logE(
+        'Ошибка обработки сообщения пользователя',
+        'chat_bot_service',
+        e,
+        stackTrace,
+      );
       return null;
     }
   }
@@ -111,7 +117,10 @@ class ChatBotService {
 
   /// Генерировать ответ на основе намерения
   Future<ChatBotMessage?> _generateResponse(
-      String intent, BotConversation conversation, String userMessage) async {
+    String intent,
+    BotConversation conversation,
+    String userMessage,
+  ) async {
     final messageId = 'bot_${DateTime.now().millisecondsSinceEpoch}';
 
     switch (intent) {
@@ -124,17 +133,20 @@ class ChatBotService {
           type: BotMessageType.text,
           quickReplies: [
             BotQuickReply(
-                title: 'FAQ',
-                payload: 'faq',
-                actionType: BotActionType.sendMessage),
+              title: 'FAQ',
+              payload: 'faq',
+              actionType: BotActionType.sendMessage,
+            ),
             BotQuickReply(
-                title: 'Проблема',
-                payload: 'problem',
-                actionType: BotActionType.sendMessage),
+              title: 'Проблема',
+              payload: 'problem',
+              actionType: BotActionType.sendMessage,
+            ),
             BotQuickReply(
-                title: 'Оператор',
-                payload: 'human',
-                actionType: BotActionType.transferToHuman),
+              title: 'Оператор',
+              payload: 'human',
+              actionType: BotActionType.transferToHuman,
+            ),
           ],
           createdAt: DateTime.now(),
           isFromBot: true,
@@ -188,21 +200,25 @@ class ChatBotService {
           type: BotMessageType.text,
           quickReplies: [
             BotQuickReply(
-                title: 'Не загружается страница',
-                payload: 'page_load',
-                actionType: BotActionType.sendMessage),
+              title: 'Не загружается страница',
+              payload: 'page_load',
+              actionType: BotActionType.sendMessage,
+            ),
             BotQuickReply(
-                title: 'Проблема с оплатой',
-                payload: 'payment_issue',
-                actionType: BotActionType.sendMessage),
+              title: 'Проблема с оплатой',
+              payload: 'payment_issue',
+              actionType: BotActionType.sendMessage,
+            ),
             BotQuickReply(
-                title: 'Не приходят уведомления',
-                payload: 'notifications',
-                actionType: BotActionType.sendMessage),
+              title: 'Не приходят уведомления',
+              payload: 'notifications',
+              actionType: BotActionType.sendMessage,
+            ),
             BotQuickReply(
-                title: 'Другая проблема',
-                payload: 'other',
-                actionType: BotActionType.sendMessage),
+              title: 'Другая проблема',
+              payload: 'other',
+              actionType: BotActionType.sendMessage,
+            ),
           ],
           createdAt: DateTime.now(),
           isFromBot: true,
@@ -232,17 +248,20 @@ class ChatBotService {
           type: BotMessageType.text,
           quickReplies: [
             BotQuickReply(
-                title: 'Помощь',
-                payload: 'help',
-                actionType: BotActionType.sendMessage),
+              title: 'Помощь',
+              payload: 'help',
+              actionType: BotActionType.sendMessage,
+            ),
             BotQuickReply(
-                title: 'FAQ',
-                payload: 'faq',
-                actionType: BotActionType.sendMessage),
+              title: 'FAQ',
+              payload: 'faq',
+              actionType: BotActionType.sendMessage,
+            ),
             BotQuickReply(
-                title: 'Оператор',
-                payload: 'human',
-                actionType: BotActionType.transferToHuman),
+              title: 'Оператор',
+              payload: 'human',
+              actionType: BotActionType.transferToHuman,
+            ),
           ],
           createdAt: DateTime.now(),
           isFromBot: true,
@@ -252,7 +271,9 @@ class ChatBotService {
 
   /// Обработать быстрый ответ
   Future<ChatBotMessage?> _handleQuickReply(
-      String payload, BotConversation conversation) async {
+    String payload,
+    BotConversation conversation,
+  ) async {
     // Обрабатываем различные типы быстрых ответов
     switch (payload) {
       case 'faq':
@@ -268,7 +289,9 @@ class ChatBotService {
 
   /// Получить или создать контекст разговора
   Future<BotConversation> _getOrCreateConversation(
-      String chatId, String userId) async {
+    String chatId,
+    String userId,
+  ) async {
     try {
       final querySnapshot = await _firestore
           .collection('bot_conversations')
@@ -303,8 +326,12 @@ class ChatBotService {
         return conversation;
       }
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка получения контекста разговора', 'chat_bot_service',
-          e, stackTrace);
+      AppLogger.logE(
+        'Ошибка получения контекста разговора',
+        'chat_bot_service',
+        e,
+        stackTrace,
+      );
       // Возвращаем базовый контекст в случае ошибки
       return BotConversation(
         id: 'conv_${DateTime.now().millisecondsSinceEpoch}',
@@ -327,14 +354,21 @@ class ChatBotService {
           .doc(message.id)
           .set(message.toMap());
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка сохранения сообщения бота', 'chat_bot_service', e,
-          stackTrace);
+      AppLogger.logE(
+        'Ошибка сохранения сообщения бота',
+        'chat_bot_service',
+        e,
+        stackTrace,
+      );
     }
   }
 
   /// Обновить контекст разговора
   Future<void> _updateConversationContext(
-      String conversationId, String intent, String userMessage) async {
+    String conversationId,
+    String intent,
+    String userMessage,
+  ) async {
     try {
       await _firestore
           .collection('bot_conversations')
@@ -346,8 +380,12 @@ class ChatBotService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка обновления контекста разговора',
-          'chat_bot_service', e, stackTrace);
+      AppLogger.logE(
+        'Ошибка обновления контекста разговора',
+        'chat_bot_service',
+        e,
+        stackTrace,
+      );
     }
   }
 
@@ -370,8 +408,12 @@ class ChatBotService {
 
       AppLogger.logI('Разговор с ботом завершен: $chatId', 'chat_bot_service');
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка завершения разговора с ботом', 'chat_bot_service',
-          e, stackTrace);
+      AppLogger.logE(
+        'Ошибка завершения разговора с ботом',
+        'chat_bot_service',
+        e,
+        stackTrace,
+      );
     }
   }
 }

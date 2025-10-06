@@ -114,7 +114,8 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
       );
 
   Widget _buildMySubscriptionTab(currentUser) => StreamBuilder<Subscription?>(
-        stream: _subscriptionService.getUserSubscription(currentUser.id),
+        stream: _subscriptionService.getUserSubscription(
+            currentUser.id, 'default_specialist'),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -161,8 +162,10 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
           Text(
             'Получите доступ к расширенным возможностям и улучшите свой опыт работы с платформой',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
                 ),
           ),
         ],
@@ -222,7 +225,10 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                 'Экономия 17%',
                 style: TextStyle(
                   color: isSelected
-                      ? Theme.of(context).colorScheme.onPrimary.withOpacity(0.8)
+                      ? Theme.of(context)
+                          .colorScheme
+                          .onPrimary
+                          .withValues(alpha: 0.8)
                       : Theme.of(context).colorScheme.primary,
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
@@ -313,7 +319,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                                   color: Theme.of(context)
                                       .colorScheme
                                       .onSurface
-                                      .withOpacity(0.7),
+                                      .withValues(alpha: 0.7),
                                 ),
                           ),
                         ],
@@ -339,7 +345,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                                     color: Theme.of(context)
                                         .colorScheme
                                         .onSurface
-                                        .withOpacity(0.7),
+                                        .withValues(alpha: 0.7),
                                   ),
                         ),
                         if (savings > 0) ...[
@@ -479,7 +485,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withOpacity(0.7),
+                        .withValues(alpha: 0.7),
                   ),
             ),
           ),
@@ -569,7 +575,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                                     color: Theme.of(context)
                                         .colorScheme
                                         .onSurface
-                                        .withOpacity(0.7),
+                                        .withValues(alpha: 0.7),
                                   ),
                         ),
                       ],
@@ -595,12 +601,13 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                 ],
               ),
               if (subscription.createdAt.isBefore(
-                  DateTime.now().subtract(const Duration(days: 25)))) ...[
+                DateTime.now().subtract(const Duration(days: 25)),
+              )) ...[
                 const SizedBox(height: 16),
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.orange.withOpacity(0.1),
+                    color: Colors.orange.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: Colors.orange),
                   ),
@@ -648,7 +655,8 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
               _buildDetailRow(
                 'Дата окончания',
                 _formatDate(
-                    subscription.createdAt.add(const Duration(days: 30))),
+                  subscription.createdAt.add(const Duration(days: 30)),
+                ),
               ),
               _buildDetailRow(
                 'Автопродление',
@@ -904,7 +912,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
   }
 
   void _toggleAutoRenew(Subscription subscription) {
-    // TODO: Реализовать переключение автопродления
+    // TODO(developer): Реализовать переключение автопродления
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Функция будет реализована в следующей версии'),
@@ -913,7 +921,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
   }
 
   void _cancelSubscription(Subscription subscription) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Отмена подписки'),
@@ -928,7 +936,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              // TODO: Реализовать отмену подписки
+              // TODO(developer): Реализовать отмену подписки
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Функция будет реализована в следующей версии'),

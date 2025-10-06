@@ -198,7 +198,7 @@ class IntegrationSettingsScreen extends ConsumerWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.1),
+              color: Colors.blue.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
@@ -228,12 +228,12 @@ class IntegrationSettingsScreen extends ConsumerWidget {
 
   void _navigateToScreen(BuildContext context, Widget screen) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => screen),
+      MaterialPageRoute<void>(builder: (context) => screen),
     );
   }
 
   void _showComingSoon(BuildContext context, String feature) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Скоро будет доступно'),

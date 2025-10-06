@@ -58,7 +58,8 @@ class IcsExportService {
       final icsContent = _generateBookingIcsContent(booking);
 
       // Сохраняем файл
-      final fileName = '${_sanitizeFileName(booking.eventTitle)}_booking.ics';
+      final fileName =
+          '${_sanitizeFileName(booking.eventTitle ?? 'booking')}_booking.ics';
       final file = await _saveIcsFile(fileName, icsContent);
 
       SafeLog.info(
@@ -347,7 +348,8 @@ class IcsExportService {
     }
     buffer.writeln('STATUS:${_getBookingStatusText(booking.status)}');
     buffer.writeln('CREATED:${_formatDateTime(booking.createdAt)}');
-    buffer.writeln('LAST-MODIFIED:${_formatDateTime(booking.updatedAt)}');
+    buffer.writeln(
+        'LAST-MODIFIED:${_formatDateTime(booking.updatedAt ?? booking.createdAt)}');
     buffer.writeln('END:VEVENT');
     buffer.writeln('END:VCALENDAR');
 
@@ -407,7 +409,8 @@ class IcsExportService {
       }
       buffer.writeln('STATUS:${_getBookingStatusText(booking.status)}');
       buffer.writeln('CREATED:${_formatDateTime(booking.createdAt)}');
-      buffer.writeln('LAST-MODIFIED:${_formatDateTime(booking.updatedAt)}');
+      buffer.writeln(
+          'LAST-MODIFIED:${_formatDateTime(booking.updatedAt ?? booking.createdAt)}');
       buffer.writeln('END:VEVENT');
     }
 

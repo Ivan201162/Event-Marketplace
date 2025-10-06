@@ -2,20 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../models/payment_models.dart';
 import '../services/payment_integration_service.dart';
 import '../widgets/contract_card.dart';
 import '../widgets/contract_details_dialog.dart';
 
 class ContractsScreen extends ConsumerStatefulWidget {
-  final String userId;
-  final bool isSpecialist;
-
   const ContractsScreen({
     super.key,
     required this.userId,
     this.isSpecialist = false,
   });
+  final String userId;
+  final bool isSpecialist;
 
   @override
   ConsumerState<ContractsScreen> createState() => _ContractsScreenState();
@@ -96,7 +94,7 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
             gradient: LinearGradient(
               colors: [
                 theme.colorScheme.primary,
-                theme.colorScheme.primary.withOpacity(0.8),
+                theme.colorScheme.primary.withValues(alpha: 0.8),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -104,7 +102,7 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: theme.colorScheme.primary.withOpacity(0.3),
+                color: theme.colorScheme.primary.withValues(alpha: 0.3),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -157,116 +155,119 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
   }
 
   Widget _buildStatItem(
-      ThemeData theme, String label, String value, IconData icon) {
-    return Column(
-      children: [
-        Icon(
-          icon,
-          color: theme.colorScheme.onPrimary.withOpacity(0.8),
-          size: 20,
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: theme.textTheme.titleMedium?.copyWith(
-            color: theme.colorScheme.onPrimary,
-            fontWeight: FontWeight.bold,
+    ThemeData theme,
+    String label,
+    String value,
+    IconData icon,
+  ) =>
+      Column(
+        children: [
+          Icon(
+            icon,
+            color: theme.colorScheme.onPrimary.withValues(alpha: 0.8),
+            size: 20,
           ),
-        ),
-        Text(
-          label,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onPrimary.withOpacity(0.8),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: theme.colorScheme.onPrimary,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildContractsList() {
-    return StreamBuilder<List<Contract>>(
-      stream: _getContractsStream(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (snapshot.hasError) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.error_outline,
-                  size: 64,
-                  color: Theme.of(context).colorScheme.error,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Ошибка загрузки контрактов',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  snapshot.error.toString(),
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.center,
-                ),
-              ],
+          Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onPrimary.withValues(alpha: 0.8),
             ),
-          );
-        }
+          ),
+        ],
+      );
 
-        final contracts = snapshot.data ?? [];
-        final filteredContracts = _filterContracts(contracts);
+  Widget _buildContractsList() => StreamBuilder<List<Contract>>(
+        stream: _getContractsStream(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-        if (filteredContracts.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.description,
-                  size: 64,
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Нет контрактов',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Здесь будут отображаться ваши контракты',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withOpacity(0.7),
-                      ),
-                ),
-              ],
-            ),
-          );
-        }
-
-        return ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: filteredContracts.length,
-          itemBuilder: (context, index) {
-            final contract = filteredContracts[index];
-            return ContractCard(
-              contract: contract,
-              onTap: () => _showContractDetails(contract),
-              onStatusUpdate: (status) =>
-                  _updateContractStatus(contract.id, status),
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 64,
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Ошибка загрузки контрактов',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    snapshot.error.toString(),
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             );
-          },
-        );
-      },
-    );
-  }
+          }
+
+          final contracts = snapshot.data ?? [];
+          final filteredContracts = _filterContracts(contracts);
+
+          if (filteredContracts.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.description,
+                    size: 64,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.5),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Нет контрактов',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Здесь будут отображаться ваши контракты',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.7),
+                        ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: filteredContracts.length,
+            itemBuilder: (context, index) {
+              final contract = filteredContracts[index];
+              return ContractCard(
+                contract: contract,
+                onTap: () => _showContractDetails(contract),
+                onStatusUpdate: (status) =>
+                    _updateContractStatus(contract.id, status),
+              );
+            },
+          );
+        },
+      );
 
   Stream<List<Contract>> _getContractsStream() {
     // This would typically stream from Firestore
@@ -285,23 +286,22 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
     );
   }
 
-  List<Contract> _filterContracts(List<Contract> contracts) {
-    return contracts.where((contract) {
-      if (_selectedStatus != null && contract.status != _selectedStatus) {
-        return false;
-      }
-      if (_startDate != null && contract.createdAt.isBefore(_startDate!)) {
-        return false;
-      }
-      if (_endDate != null && contract.createdAt.isAfter(_endDate!)) {
-        return false;
-      }
-      return true;
-    }).toList();
-  }
+  List<Contract> _filterContracts(List<Contract> contracts) =>
+      contracts.where((contract) {
+        if (_selectedStatus != null && contract.status != _selectedStatus) {
+          return false;
+        }
+        if (_startDate != null && contract.createdAt.isBefore(_startDate!)) {
+          return false;
+        }
+        if (_endDate != null && contract.createdAt.isAfter(_endDate!)) {
+          return false;
+        }
+        return true;
+      }).toList();
 
   void _showFilters() {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (context) => ContractFiltersSheet(
@@ -329,7 +329,7 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
   }
 
   void _showContractDetails(Contract contract) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => ContractDetailsDialog(
         contract: contract,
@@ -339,12 +339,14 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
   }
 
   Future<void> _updateContractStatus(
-      String contractId, ContractStatus status) async {
+    String contractId,
+    ContractStatus status,
+  ) async {
     try {
       await _paymentIntegrationService.updateContractStatus(contractId, status);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Статус контракта обновлен'),
             backgroundColor: Colors.green,
           ),
@@ -364,12 +366,6 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
 }
 
 class ContractFiltersSheet extends StatefulWidget {
-  final ContractStatus? selectedStatus;
-  final DateTime? startDate;
-  final DateTime? endDate;
-  final Function(ContractStatus?, DateTime?, DateTime?) onApplyFilters;
-  final VoidCallback onClearFilters;
-
   const ContractFiltersSheet({
     super.key,
     required this.selectedStatus,
@@ -378,6 +374,11 @@ class ContractFiltersSheet extends StatefulWidget {
     required this.onApplyFilters,
     required this.onClearFilters,
   });
+  final ContractStatus? selectedStatus;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final Function(ContractStatus?, DateTime?, DateTime?) onApplyFilters;
+  final VoidCallback onClearFilters;
 
   @override
   State<ContractFiltersSheet> createState() => _ContractFiltersSheetState();
@@ -447,11 +448,13 @@ class _ContractFiltersSheetState extends State<ContractFiltersSheet> {
                 _selectedStatus == null,
                 () => setState(() => _selectedStatus = null),
               ),
-              ...ContractStatus.values.map((status) => _buildFilterChip(
-                    _getStatusDisplayName(status),
-                    _selectedStatus == status,
-                    () => setState(() => _selectedStatus = status),
-                  )),
+              ...ContractStatus.values.map(
+                (status) => _buildFilterChip(
+                  _getStatusDisplayName(status),
+                  _selectedStatus == status,
+                  () => setState(() => _selectedStatus = status),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 24),
@@ -470,9 +473,11 @@ class _ContractFiltersSheetState extends State<ContractFiltersSheet> {
                 child: OutlinedButton.icon(
                   onPressed: () => _selectDate(true),
                   icon: const Icon(Icons.calendar_today),
-                  label: Text(_startDate != null
-                      ? DateFormat('dd.MM.yyyy').format(_startDate!)
-                      : 'С даты'),
+                  label: Text(
+                    _startDate != null
+                        ? DateFormat('dd.MM.yyyy').format(_startDate!)
+                        : 'С даты',
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
@@ -480,9 +485,11 @@ class _ContractFiltersSheetState extends State<ContractFiltersSheet> {
                 child: OutlinedButton.icon(
                   onPressed: () => _selectDate(false),
                   icon: const Icon(Icons.calendar_today),
-                  label: Text(_endDate != null
-                      ? DateFormat('dd.MM.yyyy').format(_endDate!)
-                      : 'По дату'),
+                  label: Text(
+                    _endDate != null
+                        ? DateFormat('dd.MM.yyyy').format(_endDate!)
+                        : 'По дату',
+                  ),
                 ),
               ),
             ],
@@ -564,15 +571,14 @@ class _ContractFiltersSheetState extends State<ContractFiltersSheet> {
 }
 
 class ContractStatistics {
-  final int totalContracts;
-  final int activeContracts;
-  final int completedContracts;
-  final int cancelledContracts;
-
   ContractStatistics({
     required this.totalContracts,
     required this.activeContracts,
     required this.completedContracts,
     required this.cancelledContracts,
   });
+  final int totalContracts;
+  final int activeContracts;
+  final int completedContracts;
+  final int cancelledContracts;
 }

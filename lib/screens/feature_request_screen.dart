@@ -189,7 +189,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: request.statusColor.withOpacity(0.1),
+                          color: request.statusColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: request.statusColor),
                         ),
@@ -209,7 +209,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: request.priorityColor.withOpacity(0.1),
+                          color: request.priorityColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: request.priorityColor),
                         ),
@@ -541,9 +541,10 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
 
     try {
       await _featureRequestService.createFeatureRequest(
-        userId: 'current_user_id', // TODO: Получить реальный ID
-        userName: 'Текущий пользователь', // TODO: Получить реальное имя
-        userType: UserType.customer, // TODO: Получить реальный тип
+        userId: 'current_user_id', // TODO(developer): Получить реальный ID
+        userName:
+            'Текущий пользователь', // TODO(developer): Получить реальное имя
+        userType: UserType.customer, // TODO(developer): Получить реальный тип
         title: title,
         description: description,
         category: _selectedCategory,
@@ -598,7 +599,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
   }
 
   void _showRequestDetails(FeatureRequest request) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (context) => DraggableScrollableSheet(
@@ -676,7 +677,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
     try {
       await _featureRequestService.voteForFeatureRequest(
         request.id,
-        'current_user_id', // TODO: Получить реальный ID
+        'current_user_id', // TODO(developer): Получить реальный ID
       );
 
       ScaffoldMessenger.of(context).showSnackBar(

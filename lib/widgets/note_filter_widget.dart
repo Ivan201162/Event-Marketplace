@@ -333,7 +333,7 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
   }
 
   void _selectEvent() {
-    // TODO: Реализовать выбор события из списка
+    // TODO(developer): Реализовать выбор события из списка
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Выбор события будет добавлен в следующей версии'),
@@ -342,7 +342,7 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
   }
 
   void _selectSpecialist() {
-    // TODO: Реализовать выбор специалиста из списка
+    // TODO(developer): Реализовать выбор специалиста из списка
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Выбор специалиста будет добавлен в следующей версии'),

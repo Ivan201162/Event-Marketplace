@@ -82,7 +82,7 @@ class FavoritesPage extends ConsumerWidget {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
+                            MaterialPageRoute<void>(
                               builder: (context) =>
                                   EventDetailScreen(event: event),
                             ),

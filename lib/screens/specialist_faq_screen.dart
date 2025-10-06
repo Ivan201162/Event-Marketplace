@@ -304,7 +304,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
       );
 
   void _showAddFAQDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => FAQEditorWidget(
         specialistId: widget.specialistId,
@@ -317,7 +317,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
   }
 
   void _showSearchDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Поиск по FAQ'),
@@ -349,7 +349,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
   }
 
   void _showFilterDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => FAQFilterWidget(
         currentFilters: ref.read(faqFiltersProvider),
@@ -361,7 +361,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
   }
 
   void _showFAQDetails(FAQItem faqItem) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => Dialog(
         child: Container(
@@ -449,7 +449,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
   }
 
   void _showEditFAQDialog(FAQItem faqItem) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => FAQEditorWidget(
         specialistId: widget.specialistId,
@@ -463,7 +463,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
   }
 
   void _deleteFAQ(FAQItem faqItem) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить вопрос?'),
@@ -501,7 +501,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
   void _showFAQByCategory(String category) {
     Navigator.push(
       context,
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => FAQByCategoryScreen(
           specialistId: widget.specialistId,
           category: category,
@@ -513,7 +513,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
   void _showSearchResults(String query) {
     Navigator.push(
       context,
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => FAQSearchResultsScreen(
           specialistId: widget.specialistId,
           query: query,
@@ -623,7 +623,7 @@ class FAQByCategoryScreen extends ConsumerWidget {
   }
 
   void _showFAQDetails(BuildContext context, FAQItem faqItem) {
-    // TODO: Показать детали FAQ
+    // TODO(developer): Показать детали FAQ
   }
 
   void _showEditFAQDialog(
@@ -631,15 +631,15 @@ class FAQByCategoryScreen extends ConsumerWidget {
     WidgetRef ref,
     FAQItem faqItem,
   ) {
-    // TODO: Редактировать FAQ
+    // TODO(developer): Редактировать FAQ
   }
 
   void _deleteFAQ(BuildContext context, WidgetRef ref, FAQItem faqItem) {
-    // TODO: Удалить FAQ
+    // TODO(developer): Удалить FAQ
   }
 
   void _togglePublish(BuildContext context, WidgetRef ref, FAQItem faqItem) {
-    // TODO: Переключить публикацию
+    // TODO(developer): Переключить публикацию
   }
 }
 
@@ -694,7 +694,7 @@ class FAQSearchResultsScreen extends ConsumerWidget {
   }
 
   void _showFAQDetails(BuildContext context, FAQItem faqItem) {
-    // TODO: Показать детали FAQ
+    // TODO(developer): Показать детали FAQ
   }
 
   void _showEditFAQDialog(
@@ -702,14 +702,14 @@ class FAQSearchResultsScreen extends ConsumerWidget {
     WidgetRef ref,
     FAQItem faqItem,
   ) {
-    // TODO: Редактировать FAQ
+    // TODO(developer): Редактировать FAQ
   }
 
   void _deleteFAQ(BuildContext context, WidgetRef ref, FAQItem faqItem) {
-    // TODO: Удалить FAQ
+    // TODO(developer): Удалить FAQ
   }
 
   void _togglePublish(BuildContext context, WidgetRef ref, FAQItem faqItem) {
-    // TODO: Переключить публикацию
+    // TODO(developer): Переключить публикацию
   }
 }

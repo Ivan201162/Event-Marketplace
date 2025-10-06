@@ -3,8 +3,9 @@ import '../models/recommendation_interaction.dart';
 
 /// Провайдер для управления взаимодействиями с рекомендациями
 final recommendationInteractionProvider = StateNotifierProvider<
-        RecommendationInteractionNotifier, List<RecommendationInteraction>>(
-    (ref) => RecommendationInteractionNotifier());
+    RecommendationInteractionNotifier, List<RecommendationInteraction>>(
+  (ref) => RecommendationInteractionNotifier(),
+);
 
 /// Нотификатор для взаимодействий с рекомендациями
 class RecommendationInteractionNotifier

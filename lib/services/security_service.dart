@@ -127,7 +127,7 @@ class SecurityService {
 
     // Проверяем роли пользователя
     if (policy.affectedRoles.isNotEmpty && audit.userId != null) {
-      // TODO: Получить роли пользователя и проверить пересечение
+      // TODO(developer): Получить роли пользователя и проверить пересечение
     }
 
     return true;
@@ -196,7 +196,7 @@ class SecurityService {
     SecurityAudit audit,
   ) async {
     try {
-      // TODO: Интеграция с системой уведомлений
+      // TODO(developer): Интеграция с системой уведомлений
       if (kDebugMode) {
         print('Security alert: ${policy.name} - ${audit.description}');
       }
@@ -218,7 +218,7 @@ class SecurityService {
       final limit = rules['limit'] as int? ?? 10;
       final window = Duration(minutes: rules['windowMinutes'] as int? ?? 5);
 
-      // TODO: Реализовать rate limiting
+      // TODO(developer): Реализовать rate limiting
       if (kDebugMode) {
         print(
           'Rate limit applied to user $userId: $limit requests per ${window.inMinutes} minutes',
@@ -394,7 +394,7 @@ class SecurityService {
       for (final doc in snapshot.docs) {
         final key = EncryptionKey.fromDocument(doc);
         if (key.isValid) {
-          // TODO: Загрузить реальный ключ из безопасного хранилища
+          // TODO(developer): Загрузить реальный ключ из безопасного хранилища
           _encryptionKeys[key.id] = 'key_${key.id}';
         }
       }
@@ -714,19 +714,21 @@ class SecurityService {
           .limit(limit);
 
       if (fromDate != null) {
-        query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate));
+        query = query.where(
+          'timestamp',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate),
+        );
       }
 
       if (toDate != null) {
-        query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(toDate));
+        query = query.where(
+          'timestamp',
+          isLessThanOrEqualTo: Timestamp.fromDate(toDate),
+        );
       }
 
       final snapshot = await query.get();
-      return snapshot.docs
-          .map((doc) => SecurityAudit.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(SecurityAudit.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения логов аудита безопасности: $e');
     }
@@ -742,10 +744,12 @@ class SecurityService {
           .get();
 
       return snapshot.docs
-          .map((doc) => {
-                'id': doc.id,
-                ...doc.data() as Map<String, dynamic>,
-              })
+          .map(
+            (doc) => {
+              'id': doc.id,
+              ...doc.data(),
+            },
+          )
           .toList();
     } catch (e) {
       throw Exception('Ошибка получения устройств пользователя: $e');
@@ -970,6 +974,236 @@ class SecurityService {
       }
     } catch (e) {
       throw Exception('Ошибка очистки безопасных данных: $e');
+    }
+  }
+
+  /// Включить двухфакторную аутентификацию
+  Future<bool> enable2FA({
+    required String userId,
+    required String method, // 'sms' или 'email'
+    required String contact, // номер телефона или email
+  }) async {
+    try {
+      // Генерируем секретный ключ для 2FA
+      final secretKey = generateRandomString(32);
+
+      // Сохраняем настройки 2FA в Firestore
+      await _firestore.collection('user_2fa').doc(userId).set({
+        'userId': userId,
+        'method': method,
+        'contact': contact,
+        'secretKey': secretKey,
+        'isEnabled': true,
+        'backupCodes': _generateBackupCodes(),
+        'createdAt': Timestamp.fromDate(DateTime.now()),
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
+      });
+
+      // Логируем событие
+      await logSecurityEvent(
+        eventType: '2fa_enabled',
+        description: 'Двухфакторная аутентификация включена: $method',
+        level: SecurityLevel.high,
+        userId: userId,
+        metadata: {'method': method, 'contact': contact},
+      );
+
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка включения 2FA: $e');
+      }
+      return false;
+    }
+  }
+
+  /// Отключить двухфакторную аутентификацию
+  Future<bool> disable2FA(String userId) async {
+    try {
+      // Удаляем настройки 2FA
+      await _firestore.collection('user_2fa').doc(userId).delete();
+
+      // Логируем событие
+      await logSecurityEvent(
+        eventType: '2fa_disabled',
+        description: 'Двухфакторная аутентификация отключена',
+        level: SecurityLevel.medium,
+        userId: userId,
+      );
+
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка отключения 2FA: $e');
+      }
+      return false;
+    }
+  }
+
+  /// Проверить, включена ли 2FA
+  Future<bool> is2FAEnabled(String userId) async {
+    try {
+      final doc = await _firestore.collection('user_2fa').doc(userId).get();
+      return doc.exists && (doc.data()?['isEnabled'] ?? false);
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Логировать пользовательскую сессию
+  Future<void> logUserSession({
+    required String userId,
+    required String sessionId,
+    required String deviceInfo,
+    required String ipAddress,
+    required String userAgent,
+    required String action, // 'login', 'logout', 'activity'
+    Map<String, dynamic>? metadata,
+  }) async {
+    try {
+      final sessionLog = {
+        'userId': userId,
+        'sessionId': sessionId,
+        'deviceInfo': deviceInfo,
+        'ipAddress': ipAddress,
+        'userAgent': userAgent,
+        'action': action,
+        'metadata': metadata ?? {},
+        'timestamp': Timestamp.fromDate(DateTime.now()),
+      };
+
+      // Сохраняем в коллекцию user_sessions
+      await _firestore.collection('user_sessions').add(sessionLog);
+
+      // Логируем событие безопасности
+      await logSecurityEvent(
+        eventType: 'user_session_$action',
+        description: 'Пользовательская сессия: $action',
+        level: _getSessionLogLevel(action),
+        userId: userId,
+        sessionId: sessionId,
+        ipAddress: ipAddress,
+        userAgent: userAgent,
+        metadata: metadata,
+      );
+
+      if (kDebugMode) {
+        print('User session logged: $action for user $userId');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка логирования сессии: $e');
+      }
+    }
+  }
+
+  /// Получить логи сессий пользователя
+  Future<List<Map<String, dynamic>>> getUserSessionLogs({
+    required String userId,
+    int limit = 50,
+    DateTime? fromDate,
+    DateTime? toDate,
+  }) async {
+    try {
+      var query = _firestore
+          .collection('user_sessions')
+          .where('userId', isEqualTo: userId)
+          .orderBy('timestamp', descending: true)
+          .limit(limit);
+
+      if (fromDate != null) {
+        query = query.where(
+          'timestamp',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate),
+        );
+      }
+
+      if (toDate != null) {
+        query = query.where(
+          'timestamp',
+          isLessThanOrEqualTo: Timestamp.fromDate(toDate),
+        );
+      }
+
+      final snapshot = await query.get();
+      return snapshot.docs
+          .map(
+            (doc) => {
+              'id': doc.id,
+              ...doc.data(),
+            },
+          )
+          .toList();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка получения логов сессий: $e');
+      }
+      return [];
+    }
+  }
+
+  /// Завершить все сессии пользователя
+  Future<void> terminateAllUserSessions(String userId) async {
+    try {
+      // Получаем все активные сессии
+      final sessions = await _firestore
+          .collection('user_sessions')
+          .where('userId', isEqualTo: userId)
+          .where('action', isEqualTo: 'login')
+          .get();
+
+      // Завершаем каждую сессию
+      final batch = _firestore.batch();
+      for (final doc in sessions.docs) {
+        batch.update(doc.reference, {
+          'action': 'terminated',
+          'terminatedAt': Timestamp.fromDate(DateTime.now()),
+        });
+      }
+
+      await batch.commit();
+
+      // Логируем событие
+      await logSecurityEvent(
+        eventType: 'all_sessions_terminated',
+        description: 'Все сессии пользователя завершены',
+        level: SecurityLevel.high,
+        userId: userId,
+        metadata: {'terminatedSessions': sessions.docs.length},
+      );
+
+      if (kDebugMode) {
+        print('All sessions terminated for user $userId');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка завершения сессий: $e');
+      }
+    }
+  }
+
+  /// Генерировать резервные коды для 2FA
+  List<String> _generateBackupCodes() {
+    final codes = <String>[];
+    for (var i = 0; i < 10; i++) {
+      codes.add(generateRandomString(8));
+    }
+    return codes;
+  }
+
+  /// Получить уровень логирования для действия сессии
+  SecurityLevel _getSessionLogLevel(String action) {
+    switch (action) {
+      case 'login':
+        return SecurityLevel.info;
+      case 'logout':
+        return SecurityLevel.info;
+      case 'activity':
+        return SecurityLevel.low;
+      case 'terminated':
+        return SecurityLevel.medium;
+      default:
+        return SecurityLevel.low;
     }
   }
 

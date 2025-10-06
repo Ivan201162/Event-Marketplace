@@ -25,8 +25,8 @@ class Integration {
 
     return Integration(
       id: doc.id,
-      name: data['name'] ?? '',
-      description: data['description'] ?? '',
+      name: data['name'] as String? ?? '',
+      description: data['description'] as String? ?? '',
       type: IntegrationType.values.firstWhere(
         (t) => t.name == data['type'],
         orElse: () => IntegrationType.other,
@@ -35,13 +35,16 @@ class Integration {
         (s) => s.name == data['status'],
         orElse: () => IntegrationStatus.disconnected,
       ),
-      config: Map<String, dynamic>.from(data['config'] ?? {}),
-      permissions: List<String>.from(data['permissions'] ?? []),
-      iconUrl: data['iconUrl'],
-      websiteUrl: data['websiteUrl'],
-      documentationUrl: data['documentationUrl'],
-      isEnabled: data['isEnabled'] ?? false,
-      isRequired: data['isRequired'] ?? false,
+      config: Map<String, dynamic>.from(
+        (data['config'] as Map<dynamic, dynamic>?) ?? {},
+      ),
+      permissions:
+          List<String>.from((data['permissions'] as List<dynamic>?) ?? []),
+      iconUrl: data['iconUrl'] as String?,
+      websiteUrl: data['websiteUrl'] as String?,
+      documentationUrl: data['documentationUrl'] as String?,
+      isEnabled: data['isEnabled'] as bool? ?? false,
+      isRequired: data['isRequired'] as bool? ?? false,
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
@@ -224,10 +227,12 @@ class IntegrationSettings {
     final data = doc.data()! as Map<String, dynamic>;
 
     return IntegrationSettings(
-      integrationId: data['integrationId'] ?? '',
-      userId: data['userId'] ?? '',
-      settings: Map<String, dynamic>.from(data['settings'] ?? {}),
-      isEnabled: data['isEnabled'] ?? false,
+      integrationId: data['integrationId'] as String? ?? '',
+      userId: data['userId'] as String? ?? '',
+      settings: Map<String, dynamic>.from(
+        (data['settings'] as Map<dynamic, dynamic>?) ?? {},
+      ),
+      isEnabled: data['isEnabled'] as bool? ?? false,
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
@@ -285,18 +290,20 @@ class IntegrationEvent {
 
     return IntegrationEvent(
       id: doc.id,
-      integrationId: data['integrationId'] ?? '',
-      userId: data['userId'] ?? '',
+      integrationId: data['integrationId'] as String? ?? '',
+      userId: data['userId'] as String? ?? '',
       type: IntegrationEventType.values.firstWhere(
         (t) => t.name == data['type'],
         orElse: () => IntegrationEventType.other,
       ),
-      data: Map<String, dynamic>.from(data['data'] ?? {}),
+      data: Map<String, dynamic>.from(
+        (data['data'] as Map<dynamic, dynamic>?) ?? {},
+      ),
       status: IntegrationEventStatus.values.firstWhere(
         (s) => s.name == data['status'],
         orElse: () => IntegrationEventStatus.pending,
       ),
-      errorMessage: data['errorMessage'],
+      errorMessage: data['errorMessage'] as String?,
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
@@ -375,12 +382,13 @@ class LocationData {
   });
 
   factory LocationData.fromMap(Map<String, dynamic> map) => LocationData(
-        latitude: map['latitude']?.toDouble() ?? 0.0,
-        longitude: map['longitude']?.toDouble() ?? 0.0,
-        accuracy: map['accuracy']?.toDouble(),
-        altitude: map['altitude']?.toDouble(),
-        speed: map['speed']?.toDouble(),
-        timestamp: DateTime.fromMillisecondsSinceEpoch(map['timestamp'] ?? 0),
+        latitude: (map['latitude'] as num?)?.toDouble() ?? 0.0,
+        longitude: (map['longitude'] as num?)?.toDouble() ?? 0.0,
+        accuracy: (map['accuracy'] as num?)?.toDouble(),
+        altitude: (map['altitude'] as num?)?.toDouble(),
+        speed: (map['speed'] as num?)?.toDouble(),
+        timestamp:
+            DateTime.fromMillisecondsSinceEpoch(map['timestamp'] as int? ?? 0),
       );
   final double latitude;
   final double longitude;
@@ -411,12 +419,12 @@ class AddressData {
   });
 
   factory AddressData.fromMap(Map<String, dynamic> map) => AddressData(
-        street: map['street'],
-        city: map['city'],
-        state: map['state'],
-        country: map['country'],
-        postalCode: map['postalCode'],
-        formattedAddress: map['formattedAddress'],
+        street: map['street'] as String?,
+        city: map['city'] as String?,
+        state: map['state'] as String?,
+        country: map['country'] as String?,
+        postalCode: map['postalCode'] as String?,
+        formattedAddress: map['formattedAddress'] as String?,
       );
   final String? street;
   final String? city;

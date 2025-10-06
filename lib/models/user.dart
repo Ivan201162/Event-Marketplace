@@ -191,35 +191,45 @@ class AppUser {
   /// Создать пользователя из документа Firestore
   factory AppUser.fromDocument(DocumentSnapshot doc) {
     final data = doc.data()! as Map<String, dynamic>;
-    return AppUser(
-      id: doc.id,
-      email: data['email'] ?? '',
-      displayName: data['displayName'],
-      photoURL: data['photoURL'],
-      role: _parseUserRole(data['role']),
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
-      lastLoginAt: data['lastLoginAt'] != null
-          ? (data['lastLoginAt'] as Timestamp).toDate()
-          : null,
-      isActive: data['isActive'] ?? true,
-      socialProvider: data['socialProvider'],
-      socialId: data['socialId'],
-      additionalData: data['additionalData'],
-      maritalStatus: data['maritalStatus'] != null
-          ? MaritalStatus.values.firstWhere(
-              (e) => e.name == data['maritalStatus'],
-              orElse: () => MaritalStatus.single,
-            )
-          : null,
-      weddingDate: data['weddingDate'] != null
-          ? (data['weddingDate'] as Timestamp).toDate()
-          : null,
-      partnerName: data['partnerName'],
-      anniversaryRemindersEnabled: data['anniversaryRemindersEnabled'] ?? false,
-    );
+    return AppUser.fromMap(data, doc.id);
   }
+
+  /// Создать пользователя из Map
+  factory AppUser.fromMap(Map<String, dynamic> data, [String? id]) => AppUser(
+        id: id ?? data['id'] ?? '',
+        email: data['email'] ?? '',
+        displayName: data['displayName'],
+        photoURL: data['photoURL'],
+        role: _parseUserRole(data['role']),
+        createdAt: data['createdAt'] != null
+            ? (data['createdAt'] is Timestamp
+                ? (data['createdAt'] as Timestamp).toDate()
+                : DateTime.parse(data['createdAt'].toString()))
+            : DateTime.now(),
+        lastLoginAt: data['lastLoginAt'] != null
+            ? (data['lastLoginAt'] is Timestamp
+                ? (data['lastLoginAt'] as Timestamp).toDate()
+                : DateTime.parse(data['lastLoginAt'].toString()))
+            : null,
+        isActive: data['isActive'] as bool? ?? true,
+        socialProvider: data['socialProvider'],
+        socialId: data['socialId'],
+        additionalData: data['additionalData'],
+        maritalStatus: data['maritalStatus'] != null
+            ? MaritalStatus.values.firstWhere(
+                (e) => e.name == data['maritalStatus'],
+                orElse: () => MaritalStatus.single,
+              )
+            : null,
+        weddingDate: data['weddingDate'] != null
+            ? (data['weddingDate'] is Timestamp
+                ? (data['weddingDate'] as Timestamp).toDate()
+                : DateTime.parse(data['weddingDate'].toString()))
+            : null,
+        partnerName: data['partnerName'],
+        anniversaryRemindersEnabled:
+            data['anniversaryRemindersEnabled'] as bool? ?? false,
+      );
 
   /// Создать пользователя из Firebase User
   factory AppUser.fromFirebaseUser(
@@ -244,6 +254,9 @@ class AppUser {
       );
   final String id;
   final String email;
+
+  /// Геттер для совместимости с uid
+  String get uid => id;
   final String? displayName;
   final String? photoURL;
   final UserRole role;
@@ -259,6 +272,12 @@ class AppUser {
   final DateTime? weddingDate;
   final String? partnerName;
   final bool anniversaryRemindersEnabled;
+
+  /// Геттер для номера телефона
+  String? get phoneNumber => additionalData?['phoneNumber'];
+
+  /// Геттер для совместимости с кодом, использующим lastLogin
+  DateTime? get lastLogin => lastLoginAt;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -320,17 +339,11 @@ class AppUser {
   /// Получить отображаемое имя
   String get displayNameOrEmail => displayName ?? email.split('@').first;
 
-  /// Геттер для совместимости с кодом, использующим uid
-  String get uid => id;
-
   /// Геттер для совместимости с кодом, использующим name
   String get name => displayName ?? email.split('@').first;
 
   /// Геттер для совместимости с кодом, использующим photoUrl
   String? get photoUrl => photoURL;
-
-  /// Геттер для совместимости с кодом, использующим lastLogin
-  DateTime? get lastLogin => lastLoginAt;
 
   /// Геттер для проверки заблокированности пользователя
   bool get isBanned => !isActive;

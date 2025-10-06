@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'responsive_text.dart';
-import '../models/security.dart';
+
 import '../models/security_password_strength.dart';
 import '../services/security_service.dart';
 
@@ -38,7 +37,7 @@ class _PasswordStrengthWidgetState extends State<PasswordStrengthWidget> {
     }
   }
 
-  void _updateStrength() async {
+  Future<void> _updateStrength() async {
     final result =
         await _securityService.checkPasswordStrength(widget.password);
     setState(() {
@@ -134,10 +133,10 @@ class _PasswordStrengthWidgetState extends State<PasswordStrengthWidget> {
   Widget _buildRecommendations() => Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.orange.withOpacity(0.1),
+          color: Colors.orange.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: Colors.orange.withOpacity(0.3),
+            color: Colors.orange.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -307,7 +306,7 @@ class _PasswordGeneratorWidgetState extends State<PasswordGeneratorWidget> {
                     IconButton(
                       icon: const Icon(Icons.copy),
                       onPressed: () {
-                        // TODO: Копировать в буфер обмена
+                        // TODO(developer): Копировать в буфер обмена
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Пароль скопирован')),
                         );

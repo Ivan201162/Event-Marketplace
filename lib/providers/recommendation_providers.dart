@@ -1,47 +1,209 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/specialist.dart';
-import '../models/specialist_recommendation.dart';
-import '../services/recommendation_engine.dart';
 
-/// Провайдер движка рекомендаций
-final recommendationEngineProvider =
-    Provider<RecommendationEngine>((ref) => RecommendationEngine());
+import '../models/recommendation.dart';
+import '../services/recommendation_service.dart';
 
-/// Провайдер рекомендаций для текущего пользователя
+/// Провайдер для RecommendationService
+final recommendationServiceProvider =
+    Provider<RecommendationService>((ref) => RecommendationService());
+
+/// Провайдер для получения рекомендаций пользователя
 final userRecommendationsProvider =
-    FutureProvider.family<List<SpecialistRecommendation>, String>(
-        (ref, userId) async {
-  final engine = ref.read(recommendationEngineProvider);
-  return engine.getRecommendations(userId: userId);
-});
+    FutureProvider.family<List<Recommendation>, String>(
+  (ref, userId) => ref
+      .watch(recommendationServiceProvider)
+      .getRecommendationsForUser(userId),
+);
 
-/// Провайдер популярных специалистов
+/// Провайдер для получения популярных специалистов
 final popularSpecialistsProvider =
-    FutureProvider<List<Specialist>>((ref) async {
-  final engine = ref.read(recommendationEngineProvider);
-  return engine.getPopularSpecialists();
+    FutureProvider.family<List<Recommendation>, String?>(
+  (ref, userId) => ref
+      .watch(recommendationServiceProvider)
+      .getPopularSpecialists(userId: userId),
+);
+
+/// Провайдер для получения рекомендаций на основе истории
+final historyBasedRecommendationsProvider =
+    FutureProvider.family<List<Recommendation>, String>(
+  (ref, userId) => ref
+      .watch(recommendationServiceProvider)
+      .getRecommendationsBasedOnHistory(userId),
+);
+
+/// Провайдер для получения статистики рекомендаций
+final recommendationStatsProvider =
+    FutureProvider.family<RecommendationStats, String>(
+  (ref, userId) =>
+      ref.watch(recommendationServiceProvider).getRecommendationStats(userId),
+);
+
+/// Провайдер для группированных рекомендаций
+final groupedRecommendationsProvider =
+    FutureProvider.family<List<RecommendationGroup>, String>(
+        (ref, userId) async {
+  final service = ref.watch(recommendationServiceProvider);
+
+  // Получаем все типы рекомендаций
+  final userRecommendations = await service.getRecommendationsForUser(userId);
+  final popularRecommendations =
+      await service.getPopularSpecialists(userId: userId);
+  final historyRecommendations =
+      await service.getRecommendationsBasedOnHistory(userId);
+
+  // Группируем по типам
+  final groups = <RecommendationGroup>[];
+
+  // Рекомендации на основе истории
+  if (historyRecommendations.isNotEmpty) {
+    groups.add(
+      RecommendationGroup(
+        type: RecommendationType.basedOnHistory,
+        title: 'На основе ваших заказов',
+        recommendations: historyRecommendations.take(6).toList(),
+        description: 'Специалисты, похожие на тех, кого вы уже заказывали',
+        icon: '📋',
+      ),
+    );
+  }
+
+  // Популярные специалисты
+  if (popularRecommendations.isNotEmpty) {
+    groups.add(
+      RecommendationGroup(
+        type: RecommendationType.popular,
+        title: 'Популярные специалисты',
+        recommendations: popularRecommendations.take(6).toList(),
+        description: 'Самые популярные специалисты в приложении',
+        icon: '⭐',
+      ),
+    );
+  }
+
+  // Общие рекомендации
+  if (userRecommendations.isNotEmpty) {
+    final otherRecommendations = userRecommendations
+        .where(
+          (r) =>
+              r.type != RecommendationType.basedOnHistory &&
+              r.type != RecommendationType.popular,
+        )
+        .take(6)
+        .toList();
+
+    if (otherRecommendations.isNotEmpty) {
+      groups.add(
+        RecommendationGroup(
+          type: RecommendationType.categoryBased,
+          title: 'Рекомендуем для вас',
+          recommendations: otherRecommendations,
+          description: 'Персональные рекомендации',
+          icon: '🎯',
+        ),
+      );
+    }
+  }
+
+  return groups;
 });
 
-/// Провайдер ближайших специалистов
-final nearbySpecialistsProvider =
-    FutureProvider.family<List<Specialist>, NearbySpecialistsParams>(
-        (ref, params) async {
-  final engine = ref.read(recommendationEngineProvider);
-  return engine.getNearbySpecialists(
-    latitude: params.latitude,
-    longitude: params.longitude,
-    radiusKm: params.radiusKm,
-  );
+/// Провайдер для получения рекомендаций по категориям
+final categoryRecommendationsProvider =
+    FutureProvider.family<List<Recommendation>, Map<String, dynamic>>(
+        (ref, params) {
+  final userId = params['userId'] as String;
+  final categoryPreferences = params['categoryPreferences'] as Map<String, int>;
+
+  return ref
+      .watch(recommendationServiceProvider)
+      .getRecommendationsByCategories(userId, categoryPreferences);
 });
 
-/// Параметры для поиска ближайших специалистов
-class NearbySpecialistsParams {
-  const NearbySpecialistsParams({
-    required this.latitude,
-    required this.longitude,
-    this.radiusKm = 50,
+/// Провайдер для управления состоянием рекомендаций
+final recommendationStateProvider =
+    StateNotifierProvider<RecommendationStateNotifier, RecommendationState>(
+  (ref) =>
+      RecommendationStateNotifier(ref.watch(recommendationServiceProvider)),
+);
+
+/// Состояние рекомендаций
+class RecommendationState {
+  const RecommendationState({
+    this.isLoading = false,
+    this.error,
+    this.lastUpdated,
   });
-  final double latitude;
-  final double longitude;
-  final double radiusKm;
+
+  final bool isLoading;
+  final String? error;
+  final DateTime? lastUpdated;
+
+  RecommendationState copyWith({
+    bool? isLoading,
+    String? error,
+    DateTime? lastUpdated,
+  }) =>
+      RecommendationState(
+        isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error,
+        lastUpdated: lastUpdated ?? this.lastUpdated,
+      );
+}
+
+/// StateNotifier для управления состоянием рекомендаций
+class RecommendationStateNotifier extends StateNotifier<RecommendationState> {
+  RecommendationStateNotifier(this._service)
+      : super(const RecommendationState());
+
+  final RecommendationService _service;
+
+  /// Обновить рекомендации
+  Future<void> refreshRecommendations(String userId) async {
+    state = state.copyWith(isLoading: true);
+
+    try {
+      await _service.getRecommendationsForUser(userId);
+      state = state.copyWith(
+        isLoading: false,
+        lastUpdated: DateTime.now(),
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: e.toString(),
+      );
+    }
+  }
+
+  /// Отметить рекомендацию как просмотренную
+  Future<void> markAsViewed(String recommendationId) async {
+    try {
+      await _service.markAsViewed(recommendationId);
+    } catch (e) {
+      state = state.copyWith(error: e.toString());
+    }
+  }
+
+  /// Отметить рекомендацию как кликнутую
+  Future<void> markAsClicked(String recommendationId) async {
+    try {
+      await _service.markAsClicked(recommendationId);
+    } catch (e) {
+      state = state.copyWith(error: e.toString());
+    }
+  }
+
+  /// Отметить рекомендацию как забронированную
+  Future<void> markAsBooked(String recommendationId) async {
+    try {
+      await _service.markAsBooked(recommendationId);
+    } catch (e) {
+      state = state.copyWith(error: e.toString());
+    }
+  }
+
+  /// Очистить ошибку
+  void clearError() {
+    state = state.copyWith();
+  }
 }

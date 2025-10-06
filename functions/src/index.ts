@@ -636,8 +636,18 @@ export const processPayment = functions.firestore
     const paymentId = context.params.paymentId;
 
     try {
-      // Здесь должна быть интеграция с платежной системой
-      // Пока просто обновляем статус
+      // Обрабатываем разные типы платежей
+      if (payment.type === 'hold') {
+        // Для заморозок сразу устанавливаем статус pending
+        await snap.ref.update({
+          status: 'pending',
+          updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+        console.log(`Hold payment ${paymentId} created`);
+        return;
+      }
+
+      // Для обычных платежей запускаем обработку
       await snap.ref.update({
         status: 'processing',
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -671,6 +681,28 @@ export const processPayment = functions.firestore
               },
             });
           }
+
+          // Если это предоплата, уведомляем специалиста
+          if (payment.type === 'deposit') {
+            const specialistDoc = await db.collection('users').doc(payment.specialistId).get();
+            const specialist = specialistDoc.data();
+
+            if (specialist && specialist.fcmToken) {
+              await messaging.send({
+                token: specialist.fcmToken,
+                notification: {
+                  title: 'Получена предоплата',
+                  body: `Предоплата ${payment.amount} ${payment.currency} от клиента получена`,
+                },
+                data: {
+                  type: 'deposit_received',
+                  paymentId: paymentId,
+                  amount: payment.amount.toString(),
+                  currency: payment.currency,
+                },
+              });
+            }
+          }
         } catch (error) {
           console.error('Payment completion error:', error);
           await snap.ref.update({
@@ -691,6 +723,98 @@ export const processPayment = functions.firestore
       });
     }
   });
+
+/**
+ * Cloud Function для обработки возвратов
+ */
+export const processRefund = functions.https.onCall(async (data, context) => {
+  try {
+    const { paymentId, reason, amount } = data;
+
+    if (!paymentId || !reason) {
+      throw new functions.https.HttpsError('invalid-argument', 'Payment ID and reason are required');
+    }
+
+    // Получаем оригинальный платеж
+    const paymentDoc = await db.collection('payments').doc(paymentId).get();
+    const payment = paymentDoc.data();
+
+    if (!payment) {
+      throw new functions.https.HttpsError('not-found', 'Payment not found');
+    }
+
+    if (payment.status !== 'completed') {
+      throw new functions.https.HttpsError('failed-precondition', 'Can only refund completed payments');
+    }
+
+    const refundAmount = amount || payment.amount;
+
+    if (refundAmount > payment.amount) {
+      throw new functions.https.HttpsError('invalid-argument', 'Refund amount cannot exceed original payment amount');
+    }
+
+    // Создаем возврат
+    const refundData = {
+      bookingId: payment.bookingId,
+      userId: payment.userId,
+      specialistId: payment.specialistId,
+      type: 'refund',
+      amount: refundAmount,
+      currency: payment.currency,
+      status: 'pending',
+      method: payment.method,
+      description: `Возврат: ${reason}`,
+      paymentProvider: payment.paymentProvider,
+      metadata: {
+        originalPaymentId: paymentId,
+        refundReason: reason,
+        originalAmount: payment.amount,
+        refundPercentage: ((refundAmount / payment.amount) * 100).toFixed(2),
+      },
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    };
+
+    const refundRef = await db.collection('payments').add(refundData);
+
+    // Обновляем статус оригинального платежа
+    await db.collection('payments').doc(paymentId).update({
+      status: 'refunded',
+      refundedAt: admin.firestore.FieldValue.serverTimestamp(),
+      refundReason: reason,
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+
+    // Отправляем уведомления
+    const userDoc = await db.collection('users').doc(payment.userId).get();
+    const user = userDoc.data();
+
+    if (user && user.fcmToken) {
+      await messaging.send({
+        token: user.fcmToken,
+        notification: {
+          title: 'Возврат создан',
+          body: `Возврат на сумму ${refundAmount} ${payment.currency} создан. Причина: ${reason}`,
+        },
+        data: {
+          type: 'refund_created',
+          refundId: refundRef.id,
+          amount: refundAmount.toString(),
+          currency: payment.currency,
+        },
+      });
+    }
+
+    return {
+      refundId: refundRef.id,
+      amount: refundAmount,
+      currency: payment.currency,
+      status: 'pending',
+    };
+  } catch (error) {
+    console.error('Refund processing error:', error);
+    throw new functions.https.HttpsError('internal', 'Failed to process refund');
+  }
+});
 
 /**
  * Cloud Function для очистки истекших бронирований
@@ -737,7 +861,7 @@ export const sendAnniversaryReminders = functions.pubsub
     try {
       const today = new Date();
       const todayString = `${today.getMonth() + 1}-${today.getDate()}`;
-      
+
       // Находим пользователей с годовщинами сегодня
       const usersSnapshot = await db
         .collection('users')
@@ -749,10 +873,10 @@ export const sendAnniversaryReminders = functions.pubsub
         const user = doc.data();
         const weddingDate = user.weddingDate.toDate();
         const weddingString = `${weddingDate.getMonth() + 1}-${weddingDate.getDate()}`;
-        
+
         if (weddingString === todayString && user.fcmToken) {
           const years = today.getFullYear() - weddingDate.getFullYear();
-          
+
           await messaging.send({
             token: user.fcmToken,
             notification: {
@@ -782,16 +906,16 @@ export const calculateAveragePrices = functions.pubsub
   .onRun(async (context) => {
     try {
       console.log('Starting average prices calculation...');
-      
+
       // Получаем всех специалистов
       const specialistsSnapshot = await db.collection('specialists').get();
-      
+
       const batch = db.batch();
       let updatedCount = 0;
 
       for (const specialistDoc of specialistsSnapshot.docs) {
         const specialistId = specialistDoc.id;
-        
+
         // Получаем завершенные бронирования специалиста
         const bookingsSnapshot = await db
           .collection('bookings')
@@ -803,11 +927,11 @@ export const calculateAveragePrices = functions.pubsub
 
         // Группируем по категориям услуг
         const pricesByCategory: { [key: string]: number[] } = {};
-        
+
         for (const bookingDoc of bookingsSnapshot.docs) {
           const booking = bookingDoc.data();
           const category = booking.eventType || 'other';
-          
+
           if (!pricesByCategory[category]) {
             pricesByCategory[category] = [];
           }
@@ -870,11 +994,11 @@ export const updateSpecialistAveragePrice = functions.firestore
 
         // Группируем по категориям услуг
         const pricesByCategory: { [key: string]: number[] } = {};
-        
+
         for (const bookingDoc of bookingsSnapshot.docs) {
           const booking = bookingDoc.data();
           const category = booking.eventType || 'other';
-          
+
           if (!pricesByCategory[category]) {
             pricesByCategory[category] = [];
           }
@@ -901,6 +1025,284 @@ export const updateSpecialistAveragePrice = functions.firestore
         console.log(`Average prices updated for specialist ${specialistId}`);
       } catch (error) {
         console.error('Error updating specialist average price:', error);
+      }
+    }
+  });
+
+/**
+ * Cloud Function для пересчёта рейтинга специалиста при создании отзыва
+ */
+export const onReviewCreated = functions.firestore
+  .document('reviews/{reviewId}')
+  .onCreate(async (snap, context) => {
+    const review = snap.data();
+    const reviewId = context.params.reviewId;
+
+    try {
+      const specialistId = review.specialistId;
+      if (!specialistId) {
+        console.error('Specialist ID not found in review');
+        return;
+      }
+
+      console.log(`Recalculating rating for specialist ${specialistId} after review ${reviewId} creation`);
+
+      // Получаем все отзывы специалиста (исключая жалобы)
+      const reviewsSnapshot = await db
+        .collection('reviews')
+        .where('specialistId', '==', specialistId)
+        .where('reported', '==', false)
+        .get();
+
+      if (reviewsSnapshot.docs.length === 0) {
+        console.log('No reviews found for specialist');
+        return;
+      }
+
+      // Рассчитываем средний рейтинг
+      let totalRating = 0;
+      let reviewsCount = 0;
+
+      for (const reviewDoc of reviewsSnapshot.docs) {
+        const reviewData = reviewDoc.data();
+        totalRating += reviewData.rating;
+        reviewsCount++;
+      }
+
+      const avgRating = totalRating / reviewsCount;
+
+      // Обновляем специалиста
+      await db.collection('specialists').doc(specialistId).update({
+        avgRating: Math.round(avgRating * 10) / 10, // Округляем до 1 знака после запятой
+        reviewsCount: reviewsCount,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+
+      console.log(`Rating updated for specialist ${specialistId}: ${avgRating.toFixed(1)} (${reviewsCount} reviews)`);
+
+      // Отправляем уведомление специалисту о новом отзыве
+      const specialistDoc = await db.collection('specialists').doc(specialistId).get();
+      const specialist = specialistDoc.data();
+
+      if (specialist && specialist.fcmToken) {
+        await messaging.send({
+          token: specialist.fcmToken,
+          notification: {
+            title: 'Новый отзыв',
+            body: `Получен новый отзыв с оценкой ${review.rating} звезд`,
+          },
+          data: {
+            type: 'new_review',
+            reviewId: reviewId,
+            rating: review.rating.toString(),
+            avgRating: avgRating.toFixed(1),
+            reviewsCount: reviewsCount.toString(),
+          },
+        });
+      }
+    } catch (error) {
+      console.error('Error recalculating specialist rating:', error);
+    }
+  });
+
+/**
+ * Cloud Function для пересчёта рейтинга специалиста при обновлении отзыва
+ */
+export const onReviewUpdated = functions.firestore
+  .document('reviews/{reviewId}')
+  .onUpdate(async (change, context) => {
+    const before = change.before.data();
+    const after = change.after.data();
+    const reviewId = context.params.reviewId;
+
+    // Проверяем, изменился ли рейтинг
+    if (before.rating === after.rating && before.reported === after.reported) {
+      return;
+    }
+
+    try {
+      const specialistId = after.specialistId;
+      if (!specialistId) {
+        console.error('Specialist ID not found in review');
+        return;
+      }
+
+      console.log(`Recalculating rating for specialist ${specialistId} after review ${reviewId} update`);
+
+      // Получаем все отзывы специалиста (исключая жалобы)
+      const reviewsSnapshot = await db
+        .collection('reviews')
+        .where('specialistId', '==', specialistId)
+        .where('reported', '==', false)
+        .get();
+
+      if (reviewsSnapshot.docs.length === 0) {
+        // Если нет отзывов, устанавливаем рейтинг в 0
+        await db.collection('specialists').doc(specialistId).update({
+          avgRating: 0.0,
+          reviewsCount: 0,
+          updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+        return;
+      }
+
+      // Рассчитываем средний рейтинг
+      let totalRating = 0;
+      let reviewsCount = 0;
+
+      for (const reviewDoc of reviewsSnapshot.docs) {
+        const reviewData = reviewDoc.data();
+        totalRating += reviewData.rating;
+        reviewsCount++;
+      }
+
+      const avgRating = totalRating / reviewsCount;
+
+      // Обновляем специалиста
+      await db.collection('specialists').doc(specialistId).update({
+        avgRating: Math.round(avgRating * 10) / 10, // Округляем до 1 знака после запятой
+        reviewsCount: reviewsCount,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+
+      console.log(`Rating updated for specialist ${specialistId}: ${avgRating.toFixed(1)} (${reviewsCount} reviews)`);
+    } catch (error) {
+      console.error('Error recalculating specialist rating after update:', error);
+    }
+  });
+
+/**
+ * Cloud Function для пересчёта рейтинга специалиста при удалении отзыва
+ */
+export const onReviewDeleted = functions.firestore
+  .document('reviews/{reviewId}')
+  .onDelete(async (snap, context) => {
+    const review = snap.data();
+    const reviewId = context.params.reviewId;
+
+    try {
+      const specialistId = review.specialistId;
+      if (!specialistId) {
+        console.error('Specialist ID not found in deleted review');
+        return;
+      }
+
+      console.log(`Recalculating rating for specialist ${specialistId} after review ${reviewId} deletion`);
+
+      // Получаем все оставшиеся отзывы специалиста (исключая жалобы)
+      const reviewsSnapshot = await db
+        .collection('reviews')
+        .where('specialistId', '==', specialistId)
+        .where('reported', '==', false)
+        .get();
+
+      if (reviewsSnapshot.docs.length === 0) {
+        // Если нет отзывов, устанавливаем рейтинг в 0
+        await db.collection('specialists').doc(specialistId).update({
+          avgRating: 0.0,
+          reviewsCount: 0,
+          updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+        return;
+      }
+
+      // Рассчитываем средний рейтинг
+      let totalRating = 0;
+      let reviewsCount = 0;
+
+      for (const reviewDoc of reviewsSnapshot.docs) {
+        const reviewData = reviewDoc.data();
+        totalRating += reviewData.rating;
+        reviewsCount++;
+      }
+
+      const avgRating = totalRating / reviewsCount;
+
+      // Обновляем специалиста
+      await db.collection('specialists').doc(specialistId).update({
+        avgRating: Math.round(avgRating * 10) / 10, // Округляем до 1 знака после запятой
+        reviewsCount: reviewsCount,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+
+      console.log(`Rating updated for specialist ${specialistId}: ${avgRating.toFixed(1)} (${reviewsCount} reviews)`);
+    } catch (error) {
+      console.error('Error recalculating specialist rating after deletion:', error);
+    }
+  });
+
+/**
+ * Cloud Function для отправки напоминания об отзыве после завершения заказа
+ */
+export const sendReviewReminder = functions.firestore
+  .document('bookings/{bookingId}')
+  .onUpdate(async (change, context) => {
+    const before = change.before.data();
+    const after = change.after.data();
+    const bookingId = context.params.bookingId;
+
+    // Проверяем, изменился ли статус на completed
+    if (before.status !== 'completed' && after.status === 'completed') {
+      try {
+        const customerId = after.customerId;
+        const specialistId = after.specialistId;
+
+        if (!customerId || !specialistId) {
+          console.error('Customer ID or Specialist ID not found in booking');
+          return;
+        }
+
+        // Проверяем, есть ли уже отзыв для этого заказа
+        const existingReview = await db
+          .collection('reviews')
+          .where('bookingId', '==', bookingId)
+          .limit(1)
+          .get();
+
+        if (!existingReview.empty) {
+          console.log('Review already exists for booking', bookingId);
+          return;
+        }
+
+        // Получаем данные клиента
+        const customerDoc = await db.collection('users').doc(customerId).get();
+        const customer = customerDoc.data();
+
+        // Получаем данные специалиста
+        const specialistDoc = await db.collection('specialists').doc(specialistId).get();
+        const specialist = specialistDoc.data();
+
+        if (!customer || !specialist) {
+          console.error('Customer or specialist not found');
+          return;
+        }
+
+        // Отправляем напоминание об отзыве через 24 часа
+        setTimeout(async () => {
+          try {
+            if (customer.fcmToken) {
+              await messaging.send({
+                token: customer.fcmToken,
+                notification: {
+                  title: 'Оцените специалиста',
+                  body: `Пожалуйста, оставьте отзыв о работе ${specialist.name}`,
+                },
+                data: {
+                  type: 'review_reminder',
+                  bookingId: bookingId,
+                  specialistId: specialistId,
+                  specialistName: specialist.name,
+                },
+              });
+            }
+          } catch (error) {
+            console.error('Error sending review reminder:', error);
+          }
+        }, 24 * 60 * 60 * 1000); // 24 часа
+
+        console.log(`Review reminder scheduled for booking ${bookingId}`);
+      } catch (error) {
+        console.error('Error scheduling review reminder:', error);
       }
     }
   });

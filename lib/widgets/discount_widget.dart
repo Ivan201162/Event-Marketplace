@@ -265,7 +265,7 @@ class DiscountWidget extends ConsumerWidget {
       final service = ref.read(discountServiceProvider);
       await service.acceptDiscount(
         bookingId: bookingId,
-        customerId: 'current_user_id', // TODO: Получить из контекста
+        customerId: 'current_user_id', // TODO(developer): Получить из контекста
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -281,7 +281,7 @@ class DiscountWidget extends ConsumerWidget {
   }
 
   void _rejectDiscount(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => _RejectDiscountDialog(
         bookingId: bookingId,
@@ -365,7 +365,7 @@ class _RejectDiscountDialogState extends State<_RejectDiscountDialog> {
       final service = ref.read(discountServiceProvider);
       await service.rejectDiscount(
         bookingId: widget.bookingId,
-        customerId: 'current_user_id', // TODO: Получить из контекста
+        customerId: 'current_user_id', // TODO(developer): Получить из контекста
         reason: _reasonController.text.trim().isEmpty
             ? null
             : _reasonController.text.trim(),
@@ -431,7 +431,7 @@ class OfferDiscountWidget extends ConsumerWidget {
       );
 
   void _showOfferDiscountDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => _OfferDiscountDialog(
         bookingId: bookingId,
@@ -607,8 +607,10 @@ class _OfferDiscountDialogState extends State<_OfferDiscountDialog> {
         bookingId: widget.bookingId,
         oldPrice: widget.currentPrice,
         newPrice: double.parse(_newPriceController.text),
-        specialistId: 'current_specialist_id', // TODO: Получить из контекста
-        customerId: 'current_customer_id', // TODO: Получить из контекста
+        specialistId:
+            'current_specialist_id', // TODO(developer): Получить из контекста
+        customerId:
+            'current_customer_id', // TODO(developer): Получить из контекста
         reason: _reasonController.text.trim().isEmpty
             ? null
             : _reasonController.text.trim(),

@@ -9,7 +9,7 @@ class VideoCallService {
     }
 
     try {
-      // TODO: Проверить поддержку WebRTC на устройстве
+      // TODO(developer): Проверить поддержку WebRTC на устройстве
       return true;
     } catch (e) {
       return false;
@@ -42,9 +42,9 @@ class VideoCallService {
         metadata: {},
       );
 
-      // TODO: Создать звонок в Firestore
-      // TODO: Отправить уведомление получателю
-      // TODO: Инициализировать WebRTC соединение
+      // TODO(developer): Создать звонок в Firestore
+      // TODO(developer): Отправить уведомление получателю
+      // TODO(developer): Инициализировать WebRTC соединение
 
       return call;
     } catch (e) {
@@ -78,9 +78,9 @@ class VideoCallService {
         metadata: {},
       );
 
-      // TODO: Создать звонок в Firestore
-      // TODO: Отправить уведомление получателю
-      // TODO: Инициализировать WebRTC соединение
+      // TODO(developer): Создать звонок в Firestore
+      // TODO(developer): Отправить уведомление получателю
+      // TODO(developer): Инициализировать WebRTC соединение
 
       return call;
     } catch (e) {
@@ -91,8 +91,8 @@ class VideoCallService {
   /// Принять звонок
   Future<void> acceptCall(String callId) async {
     try {
-      // TODO: Обновить статус звонка в Firestore
-      // TODO: Установить WebRTC соединение
+      // TODO(developer): Обновить статус звонка в Firestore
+      // TODO(developer): Установить WebRTC соединение
     } catch (e) {
       throw Exception('Ошибка принятия звонка: $e');
     }
@@ -101,8 +101,8 @@ class VideoCallService {
   /// Отклонить звонок
   Future<void> rejectCall(String callId) async {
     try {
-      // TODO: Обновить статус звонка в Firestore
-      // TODO: Завершить WebRTC соединение
+      // TODO(developer): Обновить статус звонка в Firestore
+      // TODO(developer): Завершить WebRTC соединение
     } catch (e) {
       throw Exception('Ошибка отклонения звонка: $e');
     }
@@ -111,9 +111,9 @@ class VideoCallService {
   /// Завершить звонок
   Future<void> endCall(String callId) async {
     try {
-      // TODO: Обновить статус звонка в Firestore
-      // TODO: Завершить WebRTC соединение
-      // TODO: Сохранить длительность звонка
+      // TODO(developer): Обновить статус звонка в Firestore
+      // TODO(developer): Завершить WebRTC соединение
+      // TODO(developer): Сохранить длительность звонка
     } catch (e) {
       throw Exception('Ошибка завершения звонка: $e');
     }
@@ -122,7 +122,7 @@ class VideoCallService {
   /// Получить активные звонки пользователя
   Future<List<VideoCall>> getActiveCalls(String userId) async {
     try {
-      // TODO: Получить активные звонки из Firestore
+      // TODO(developer): Получить активные звонки из Firestore
       return [];
     } catch (e) {
       throw Exception('Ошибка получения активных звонков: $e');
@@ -135,7 +135,7 @@ class VideoCallService {
     int limit = 50,
   }) async {
     try {
-      // TODO: Получить историю звонков из Firestore
+      // TODO(developer): Получить историю звонков из Firestore
       return [];
     } catch (e) {
       throw Exception('Ошибка получения истории звонков: $e');

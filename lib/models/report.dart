@@ -243,7 +243,7 @@ class ReportData {
       columns: List<String>.from(data['columns'] ?? []),
       summary: Map<String, dynamic>.from(data['summary'] ?? {}),
       generatedAt: (data['generatedAt'] as Timestamp).toDate(),
-      totalRows: data['totalRows'] ?? 0,
+      totalRows: data['totalRows'] as int? ?? 0,
     );
   }
 
@@ -254,7 +254,7 @@ class ReportData {
         columns: List<String>.from(data['columns'] ?? []),
         summary: Map<String, dynamic>.from(data['summary'] ?? {}),
         generatedAt: (data['generatedAt'] as Timestamp).toDate(),
-        totalRows: data['totalRows'] ?? 0,
+        totalRows: data['totalRows'] as int? ?? 0,
       );
   final String reportId;
   final List<Map<String, dynamic>> rows;
@@ -370,7 +370,7 @@ class ReportTemplate {
       defaultParameters:
           Map<String, dynamic>.from(data['defaultParameters'] ?? {}),
       requiredParameters: List<String>.from(data['requiredParameters'] ?? []),
-      isActive: data['isActive'] ?? true,
+      isActive: data['isActive'] as bool? ?? true,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
     );
@@ -392,7 +392,7 @@ class ReportTemplate {
         defaultParameters:
             Map<String, dynamic>.from(data['defaultParameters'] ?? {}),
         requiredParameters: List<String>.from(data['requiredParameters'] ?? []),
-        isActive: data['isActive'] ?? true,
+        isActive: data['isActive'] as bool? ?? true,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       );

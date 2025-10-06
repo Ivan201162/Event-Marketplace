@@ -3,19 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 enum AttachmentType { image, video, document, audio, other }
 
 class ChatAttachment {
-  final String id;
-  final String messageId;
-  final String fileName;
-  final String originalFileName;
-  final String fileUrl;
-  final String? thumbnailUrl;
-  final AttachmentType type;
-  final int fileSize;
-  final String mimeType;
-  final DateTime uploadedAt;
-  final String uploadedBy;
-  final Map<String, dynamic>? metadata;
-
   ChatAttachment({
     required this.id,
     required this.messageId,
@@ -31,41 +18,50 @@ class ChatAttachment {
     this.metadata,
   });
 
-  factory ChatAttachment.fromMap(Map<String, dynamic> map, String id) {
-    return ChatAttachment(
-      id: id,
-      messageId: map['messageId'] as String,
-      fileName: map['fileName'] as String,
-      originalFileName: map['originalFileName'] as String,
-      fileUrl: map['fileUrl'] as String,
-      thumbnailUrl: map['thumbnailUrl'] as String?,
-      type: AttachmentType.values.firstWhere(
-        (e) => e.toString() == 'AttachmentType.${map['type']}',
-        orElse: () => AttachmentType.other,
-      ),
-      fileSize: map['fileSize'] as int,
-      mimeType: map['mimeType'] as String,
-      uploadedAt: (map['uploadedAt'] as Timestamp).toDate(),
-      uploadedBy: map['uploadedBy'] as String,
-      metadata: map['metadata'] as Map<String, dynamic>?,
-    );
-  }
+  factory ChatAttachment.fromMap(Map<String, dynamic> map, String id) =>
+      ChatAttachment(
+        id: id,
+        messageId: map['messageId'] as String,
+        fileName: map['fileName'] as String,
+        originalFileName: map['originalFileName'] as String,
+        fileUrl: map['fileUrl'] as String,
+        thumbnailUrl: map['thumbnailUrl'] as String?,
+        type: AttachmentType.values.firstWhere(
+          (e) => e.toString() == 'AttachmentType.${map['type']}',
+          orElse: () => AttachmentType.other,
+        ),
+        fileSize: map['fileSize'] as int,
+        mimeType: map['mimeType'] as String,
+        uploadedAt: (map['uploadedAt'] as Timestamp).toDate(),
+        uploadedBy: map['uploadedBy'] as String,
+        metadata: map['metadata'] as Map<String, dynamic>?,
+      );
+  final String id;
+  final String messageId;
+  final String fileName;
+  final String originalFileName;
+  final String fileUrl;
+  final String? thumbnailUrl;
+  final AttachmentType type;
+  final int fileSize;
+  final String mimeType;
+  final DateTime uploadedAt;
+  final String uploadedBy;
+  final Map<String, dynamic>? metadata;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'messageId': messageId,
-      'fileName': fileName,
-      'originalFileName': originalFileName,
-      'fileUrl': fileUrl,
-      'thumbnailUrl': thumbnailUrl,
-      'type': type.toString().split('.').last,
-      'fileSize': fileSize,
-      'mimeType': mimeType,
-      'uploadedAt': Timestamp.fromDate(uploadedAt),
-      'uploadedBy': uploadedBy,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'messageId': messageId,
+        'fileName': fileName,
+        'originalFileName': originalFileName,
+        'fileUrl': fileUrl,
+        'thumbnailUrl': thumbnailUrl,
+        'type': type.toString().split('.').last,
+        'fileSize': fileSize,
+        'mimeType': mimeType,
+        'uploadedAt': Timestamp.fromDate(uploadedAt),
+        'uploadedBy': uploadedBy,
+        'metadata': metadata,
+      };
 
   /// Получить иконку для типа файла
   String getFileIcon() {

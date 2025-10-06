@@ -365,7 +365,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
     return guests
         .where(
           (guest) =>
-              (guest.guestName?.toLowerCase() ?? '').contains(query) ||
+              (guest.guestName.toLowerCase() ?? '').contains(query) ||
               (guest.guestEmail?.toLowerCase() ?? '').contains(query),
         )
         .toList();
@@ -374,7 +374,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
   void _createEvent() {
     Navigator.of(context)
         .push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => CreateGuestEventScreen(
           organizerId: widget.organizerId,
         ),
@@ -390,7 +390,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
   void _addGuest() {
     Navigator.of(context)
         .push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => GuestRegistrationScreen(
           eventId: _selectedEventId,
         ),
@@ -404,7 +404,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
   }
 
   void _showGuestDetails(Guest guest) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(guest.guestName),
@@ -446,7 +446,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
   }
 
   void _checkInGuest(Guest guest) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Регистрация гостя'),
@@ -476,7 +476,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
   }
 
   void _checkOutGuest(Guest guest) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Выход гостя'),
@@ -505,7 +505,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
   }
 
   void _cancelGuest(Guest guest) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Отмена участия'),
@@ -534,14 +534,14 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
   }
 
   void _shareGuestInfo(Guest guest) {
-    // TODO: Реализовать шаринг информации о госте
+    // TODO(developer): Реализовать шаринг информации о госте
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Информация о госте скопирована')),
     );
   }
 
   void _showSearchDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Поиск гостей'),
@@ -571,7 +571,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
   }
 
   void _showFilterDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => _FilterDialog(
         filter: _filter,
@@ -585,7 +585,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
   }
 
   void _showQRScanner() {
-    // TODO: Реализовать QR сканер для регистрации гостей
+    // TODO(developer): Реализовать QR сканер для регистрации гостей
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('QR сканер')),
     );

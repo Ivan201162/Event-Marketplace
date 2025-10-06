@@ -83,7 +83,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
   Widget _buildMyAnniversariesTab() => StreamBuilder<List<WeddingAnniversary>>(
         stream: _anniversaryService.getCustomerAnniversaries(
           'current_user_id',
-        ), // TODO: Получить реальный ID
+        ), // TODO(developer): Получить реальный ID
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -275,7 +275,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
 
   Widget _buildUpcomingAnniversariesTab() =>
       StreamBuilder<List<WeddingAnniversary>>(
-        stream: _anniversaryService.getUpcomingAnniversaries(),
+        stream: _anniversaryService.getUpcomingAnniversaries('current_user'),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -592,8 +592,9 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
 
     try {
       await _anniversaryService.addWeddingAnniversary(
-        customerId: 'current_user_id', // TODO: Получить реальный ID
-        spouseName: 'Текущий пользователь', // TODO: Получить реальное имя
+        customerId: 'current_user_id', // TODO(developer): Получить реальный ID
+        spouseName:
+            'Текущий пользователь', // TODO(developer): Получить реальное имя
         weddingDate: _selectedWeddingDate!,
       );
 
@@ -632,14 +633,14 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
   }
 
   void _editAnniversary(WeddingAnniversary anniversary) {
-    // TODO: Реализовать редактирование годовщины
+    // TODO(developer): Реализовать редактирование годовщины
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Функция редактирования будет добавлена')),
     );
   }
 
   void _deleteAnniversary(WeddingAnniversary anniversary) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить годовщину'),
@@ -678,7 +679,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
   }
 
   void _showRecommendations(WeddingAnniversary anniversary) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (context) => DraggableScrollableSheet(
@@ -724,7 +725,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
   }
 
   void _showSpecialists(WeddingAnniversary anniversary) {
-    // TODO: Показать специалистов для организации годовщины
+    // TODO(developer): Показать специалистов для организации годовщины
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Функция поиска специалистов будет добавлена'),

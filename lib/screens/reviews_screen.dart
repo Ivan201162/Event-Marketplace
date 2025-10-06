@@ -305,7 +305,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                       color: Theme.of(context)
                           .colorScheme
                           .onSurface
-                          .withOpacity(0.5),
+                          .withValues(alpha: 0.5),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -315,7 +315,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                           color: Theme.of(context)
                               .colorScheme
                               .onSurface
-                              .withOpacity(0.7),
+                              .withValues(alpha: 0.7),
                         ),
                   ),
                 ],
@@ -452,7 +452,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                           color: Theme.of(context)
                               .colorScheme
                               .onSurface
-                              .withOpacity(0.7),
+                              .withValues(alpha: 0.7),
                         ),
                   ),
               ],
@@ -484,7 +484,10 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
             Icon(
               Icons.thumb_up,
               size: 16,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.5),
             ),
             const SizedBox(width: 4),
             Text(
@@ -493,14 +496,17 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withOpacity(0.5),
+                        .withValues(alpha: 0.5),
                   ),
             ),
             const SizedBox(width: 16),
             Icon(
               Icons.thumb_down,
               size: 16,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.5),
             ),
             const SizedBox(width: 4),
             Text(
@@ -509,7 +515,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withOpacity(0.5),
+                        .withValues(alpha: 0.5),
                   ),
             ),
           ],
@@ -561,7 +567,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                               color: Theme.of(context)
                                   .colorScheme
                                   .onSurface
-                                  .withOpacity(0.7),
+                                  .withValues(alpha: 0.7),
                             ),
                       ),
                     ],
@@ -746,7 +752,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
   }
 
   void _showSearchDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Поиск отзывов'),
@@ -775,7 +781,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
   }
 
   void _showFilterDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Фильтры'),
@@ -793,7 +799,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
   void _createReview() {
     Navigator.of(context)
         .push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => ReviewFormScreen(
           targetId: widget.targetId,
           type: widget.type,
@@ -811,7 +817,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
   void _editReview(Review review) {
     Navigator.of(context)
         .push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => ReviewFormScreen(
           targetId: widget.targetId,
           type: widget.type,

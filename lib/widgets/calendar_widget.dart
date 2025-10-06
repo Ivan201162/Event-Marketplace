@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../models/specialist_schedule.dart';
-import '../providers/calendar_providers.dart';
-import '../providers/firestore_providers.dart';
 
 class CalendarWidget extends ConsumerStatefulWidget {
   const CalendarWidget({
@@ -39,12 +37,13 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final scheduleAsync =
-        ref.watch(specialistScheduleProvider(widget.specialistId));
-    final busyDatesAsync = ref.watch(busyDatesProvider(widget.specialistId));
-    final busyDateRangesAsync =
-        ref.watch(busyDateRangesProvider(widget.specialistId));
-    final calendarState = ref.watch(calendarStateProvider);
+    // TODO(developer): Подключить провайдеры для календаря
+    // final scheduleAsync =
+    //     ref.watch(specialistScheduleProvider(widget.specialistId));
+    // final busyDatesAsync = ref.watch(busyDatesProvider(widget.specialistId));
+    // final busyDateRangesAsync =
+    //     ref.watch(busyDateRangesProvider(widget.specialistId));
+    // final calendarState = ref.watch(calendarStateProvider);
 
     return Column(
       children: [
@@ -58,7 +57,8 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
               lastDay: DateTime.utc(2030, 12, 31),
               focusedDay: _focusedDay,
               calendarFormat: _calendarFormat,
-              eventLoader: (day) => _getEventsForDay(day, scheduleAsync),
+              eventLoader: (day) =>
+                  _getEventsForDay(day, const AsyncValue.loading()),
               startingDayOfWeek: StartingDayOfWeek.monday,
               calendarStyle: CalendarStyle(
                 outsideDaysVisible: false,
@@ -73,7 +73,10 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                   shape: BoxShape.circle,
                 ),
                 todayDecoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withValues(alpha: 0.5),
                   shape: BoxShape.circle,
                 ),
                 markerDecoration: BoxDecoration(
@@ -83,11 +86,11 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                 markersMaxCount: 3,
                 // Стили для занятых дат
                 disabledDecoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.3),
+                  color: Colors.grey.withValues(alpha: 0.3),
                   shape: BoxShape.circle,
                 ),
                 disabledTextStyle: TextStyle(
-                  color: Colors.grey.withOpacity(0.6),
+                  color: Colors.grey.withValues(alpha: 0.6),
                 ),
               ),
               headerStyle: HeaderStyle(
@@ -103,15 +106,16 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
               ),
               onDaySelected: (selectedDay, focusedDay) {
                 // Проверяем, не занята ли дата
-                if (_isDateBusy(selectedDay, busyDatesAsync)) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Эта дата уже занята'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                  return;
-                }
+                // TODO(developer): Подключить провайдер для занятых дат
+                // if (_isDateBusy(selectedDay, busyDatesAsync)) {
+                //   ScaffoldMessenger.of(context).showSnackBar(
+                //     const SnackBar(
+                //       content: Text('Эта дата уже занята'),
+                //       backgroundColor: Colors.red,
+                //     ),
+                //   );
+                //   return;
+                // }
 
                 if (!isSameDay(_selectedDay, selectedDay)) {
                   setState(() {
@@ -119,10 +123,10 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                     _focusedDay = focusedDay;
                   });
 
-                  // Обновляем состояние календаря
-                  ref
-                      .read(calendarStateProvider.notifier)
-                      .selectDate(selectedDay);
+                  // TODO(developer): Обновить состояние календаря
+                  // ref
+                  //     .read(calendarStateProvider.notifier)
+                  //     .selectDate(selectedDay);
 
                   // Вызываем callback
                   widget.onDateSelected?.call(selectedDay);
@@ -158,14 +162,16 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.7),
+                            .withValues(alpha: 0.7),
                       ),
                     ),
                   );
                 },
                 // Кастомный билдер для дней
                 defaultBuilder: (context, day, focusedDay) {
-                  final isBusy = _isDateBusy(day, busyDatesAsync);
+                  // TODO(developer): Подключить провайдер для занятых дат
+                  // final isBusy = _isDateBusy(day, busyDatesAsync);
+                  const isBusy = false;
                   final isPast = day.isBefore(
                     DateTime.now().subtract(const Duration(days: 1)),
                   );
@@ -174,9 +180,9 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                     margin: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       color: isBusy
-                          ? Colors.red.withOpacity(0.3)
+                          ? Colors.red.withValues(alpha: 0.3)
                           : isPast
-                              ? Colors.grey.withOpacity(0.2)
+                              ? Colors.grey.withValues(alpha: 0.2)
                               : null,
                       shape: BoxShape.circle,
                       border: isBusy
@@ -192,7 +198,6 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                               : isPast
                                   ? Colors.grey
                                   : null,
-                          fontWeight: isBusy ? FontWeight.bold : null,
                         ),
                       ),
                     ),
@@ -207,7 +212,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
 
         // События на выбранную дату
         if (widget.showEvents && _selectedDay != null) ...[
-          _buildEventsForSelectedDay(scheduleAsync),
+          _buildEventsForSelectedDay(const AsyncValue.loading()),
           const SizedBox(height: 16),
         ],
 
@@ -363,10 +368,10 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: _getEventColor(event.type).withOpacity(0.1),
+          color: _getEventColor(event.type).withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: _getEventColor(event.type).withOpacity(0.3),
+            color: _getEventColor(event.type).withValues(alpha: 0.3),
           ),
         ),
         child: Row(
@@ -399,7 +404,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.7),
+                            .withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -411,7 +416,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                       color: Theme.of(context)
                           .colorScheme
                           .onSurface
-                          .withOpacity(0.7),
+                          .withValues(alpha: 0.7),
                     ),
                   ),
                 ],
@@ -423,76 +428,26 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
 
   /// Построить временные слоты на выбранную дату
   Widget _buildTimeSlotsForSelectedDay() {
-    final timeSlotsAsync = ref.watch(
-      availableTimeSlotsProvider(
-        AvailableTimeSlotsParams(
-          specialistId: widget.specialistId,
-          date: _selectedDay!,
-        ),
-      ),
-    );
+    // TODO(developer): Подключить провайдер для временных слотов
+    // final timeSlotsAsync = ref.watch(
+    //   availableTimeSlotsProvider(
+    //     AvailableTimeSlotsParams(
+    //       specialistId: widget.specialistId,
+    //       date: _selectedDay!,
+    //     ),
+    //   ),
+    // );
 
-    return timeSlotsAsync.when(
-      data: (timeSlots) {
-        if (timeSlots.isEmpty) {
-          return const Card(
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Icon(Icons.schedule, color: Colors.orange),
-                  SizedBox(width: 12),
-                  Text('Нет доступных временных слотов'),
-                ],
-              ),
-            ),
-          );
-        }
-
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Доступные временные слоты',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                const SizedBox(height: 12),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: timeSlots.map(_buildTimeSlotChip).toList(),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-      loading: () => const Card(
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: Center(child: CircularProgressIndicator()),
-        ),
-      ),
-      error: (error, stack) => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              const Icon(Icons.error, color: Colors.red),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  'Ошибка загрузки временных слотов: $error',
-                  style: const TextStyle(color: Colors.red),
-                ),
-              ),
-            ],
-          ),
+    // TODO(developer): Вернуть временные слоты когда провайдер будет подключен
+    return const Card(
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Icon(Icons.schedule, color: Colors.orange),
+            SizedBox(width: 8),
+            Text('Временные слоты в разработке'),
+          ],
         ),
       ),
     );
@@ -502,12 +457,13 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
   Widget _buildTimeSlotChip(DateTime timeSlot) => ActionChip(
         label: Text(_formatTime(timeSlot)),
         onPressed: () {
-          // TODO: Обработка выбора временного слота
+          // TODO(developer): Обработка выбора временного слота
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Выбран слот: ${_formatTime(timeSlot)}')),
           );
         },
-        backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+        backgroundColor:
+            Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
         labelStyle: TextStyle(
           color: Theme.of(context).colorScheme.primary,
           fontWeight: FontWeight.w500,

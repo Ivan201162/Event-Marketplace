@@ -2,84 +2,86 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/story.dart';
 import '../services/story_service.dart';
 
-/// Провайдер сервиса историй
+/// Провайдер сервиса сторис
 final storyServiceProvider = Provider<StoryService>((ref) => StoryService());
 
-/// Провайдер для историй специалиста
-final specialistStoriesProvider =
-    StreamProvider.family<List<Story>, String>((ref, specialistId) {
+/// Провайдер сторис пользователя
+final userStoriesProvider =
+    FutureProvider.family<List<Story>, String>((ref, userId) async {
   final storyService = ref.read(storyServiceProvider);
-  return storyService.getSpecialistStories(specialistId);
+  return storyService.getUserStories(userId);
 });
 
-/// Провайдер для всех историй
-final allStoriesProvider = StreamProvider<List<Story>>((ref) {
+/// Провайдер всех активных сторис
+final allStoriesProvider = FutureProvider<List<Story>>((ref) async {
   final storyService = ref.read(storyServiceProvider);
-  return storyService.getAllStories();
+  return storyService.getAllActiveStories();
 });
 
-/// Провайдер для состояния историй
-final storyStateProvider = NotifierProvider<StoryStateNotifier, StoryState>(
-  StoryStateNotifier.new,
-);
+/// Провайдер сторис по ID
+final storyByIdProvider =
+    FutureProvider.family<Story?, String>((ref, storyId) async {
+  final storyService = ref.read(storyServiceProvider);
+  return await storyService.getStoryById(storyId);
+});
 
-/// Состояние историй
-class StoryState {
-  const StoryState({
-    this.stories = const [],
-    this.isLoading = false,
-    this.error,
-    this.viewedStories = const {},
+/// Провайдер просмотров сторис
+final storyViewsProvider =
+    FutureProvider.family<List<StoryView>, String>((ref, storyId) async {
+  final storyService = ref.read(storyServiceProvider);
+  return await storyService.getStoryViews(storyId);
+});
+
+/// Провайдер для создания сторис
+final createStoryProvider =
+    FutureProvider.family<String, CreateStory>((ref, createStory) async {
+  final storyService = ref.read(storyServiceProvider);
+  return await storyService.createStory(
+    specialistId: createStory.specialistId,
+    mediaUrl: createStory.mediaUrl,
+    text: createStory.text,
+    metadata: createStory.metadata,
+  );
+});
+
+/// Провайдер для загрузки изображения сторис
+final uploadStoryImageProvider =
+    FutureProvider.family<String, UploadStoryImageParams>((ref, params) async {
+  final storyService = ref.read(storyServiceProvider);
+  return await storyService.uploadStoryImage(
+    authorId: params.authorId,
+    imageFile: params.imageFile as dynamic,
+  );
+});
+
+/// Провайдер для загрузки видео сторис
+final uploadStoryVideoProvider =
+    FutureProvider.family<String, UploadStoryVideoParams>((ref, params) async {
+  final storyService = ref.read(storyServiceProvider);
+  return await storyService.uploadStoryVideo(
+    authorId: params.authorId,
+    videoFile: params.videoFile as dynamic,
+  );
+});
+
+/// Параметры для загрузки изображения сторис
+class UploadStoryImageParams {
+  const UploadStoryImageParams({
+    required this.authorId,
+    required this.imageFile,
   });
-  final List<Story> stories;
-  final bool isLoading;
-  final String? error;
-  final Map<String, bool> viewedStories;
 
-  StoryState copyWith({
-    List<Story>? stories,
-    bool? isLoading,
-    String? error,
-    Map<String, bool>? viewedStories,
-  }) =>
-      StoryState(
-        stories: stories ?? this.stories,
-        isLoading: isLoading ?? this.isLoading,
-        error: error ?? this.error,
-        viewedStories: viewedStories ?? this.viewedStories,
-      );
+  final String authorId;
+  final dynamic imageFile; // XFile
 }
 
-/// Нотификатор для состояния историй
-class StoryStateNotifier extends Notifier<StoryState> {
-  @override
-  StoryState build() => const StoryState();
+/// Параметры для загрузки видео сторис
+class UploadStoryVideoParams {
+  const UploadStoryVideoParams({
+    required this.authorId,
+    required this.videoFile,
+  });
 
-  void setStories(List<Story> stories) {
-    state = state.copyWith(stories: stories);
-  }
-
-  void addStory(Story story) {
-    final updatedStories = [story, ...state.stories];
-    state = state.copyWith(stories: updatedStories);
-  }
-
-  void removeStory(String storyId) {
-    final updatedStories = state.stories.where((s) => s.id != storyId).toList();
-    state = state.copyWith(stories: updatedStories);
-  }
-
-  void markAsViewed(String storyId) {
-    final updatedViewedStories = Map<String, bool>.from(state.viewedStories);
-    updatedViewedStories[storyId] = true;
-    state = state.copyWith(viewedStories: updatedViewedStories);
-  }
-
-  void setLoading(bool isLoading) {
-    state = state.copyWith(isLoading: isLoading);
-  }
-
-  void setError(String? error) {
-    state = state.copyWith(error: error);
-  }
+  final String authorId;
+  final dynamic videoFile; // XFile
 }

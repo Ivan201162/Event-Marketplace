@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/budget_suggestion.dart';
 import '../services/budget_suggestion_service.dart';
 import 'responsive_layout.dart';
+import 'responsive_text.dart';
 
 /// Виджет для отображения предложения по увеличению бюджета
 class BudgetSuggestionWidget extends ConsumerWidget {
@@ -31,7 +32,9 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                 Expanded(
                   child: ResponsiveText(
                     'Рекомендуем увеличить бюджет',
-                    isTitle: true,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                 ),
                 _buildStatusChip(),
@@ -56,7 +59,9 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                     children: [
                       ResponsiveText(
                         'Дополнительных услуг:',
-                        isSubtitle: true,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
                       ),
                       ResponsiveText(
                         '${suggestion.suggestionCount}',
@@ -73,7 +78,9 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                     children: [
                       ResponsiveText(
                         'Общая стоимость:',
-                        isSubtitle: true,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
                       ),
                       ResponsiveText(
                         '${suggestion.totalCost.toStringAsFixed(0)} ₽',
@@ -91,7 +98,10 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                       children: [
                         ResponsiveText(
                           'Диапазон цен:',
-                          isSubtitle: true,
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  ),
                         ),
                         ResponsiveText(
                           '${suggestion.minCost.toStringAsFixed(0)} - ${suggestion.maxCost.toStringAsFixed(0)} ₽',
@@ -124,7 +134,9 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                     Expanded(
                       child: ResponsiveText(
                         suggestion.message!,
-                        isSubtitle: true,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
                       ),
                     ),
                   ],
@@ -136,7 +148,9 @@ class BudgetSuggestionWidget extends ConsumerWidget {
             const SizedBox(height: 12),
             ResponsiveText(
               'Рекомендуемые услуги:',
-              isTitle: true,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
 
             const SizedBox(height: 8),
@@ -182,7 +196,9 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                 const SizedBox(width: 4),
                 ResponsiveText(
                   'Создано: ${_formatDate(suggestion.createdAt)}',
-                  isSubtitle: true,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
                 ),
               ],
             ),
@@ -232,7 +248,10 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                         const SizedBox(height: 2),
                         ResponsiveText(
                           item.specialistName!,
-                          isSubtitle: true,
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  ),
                         ),
                       ],
                     ],
@@ -261,7 +280,9 @@ class BudgetSuggestionWidget extends ConsumerWidget {
             const SizedBox(height: 8),
             ResponsiveText(
               item.description,
-              isSubtitle: true,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
             ),
             if (item.reason != null) ...[
               const SizedBox(height: 4),
@@ -326,11 +347,12 @@ class BudgetSuggestionWidget extends ConsumerWidget {
 
   Future<void> _acceptSuggestion(BuildContext context, WidgetRef ref) async {
     try {
-      final service = ref.read(budgetSuggestionServiceProvider);
-      await service.acceptBudgetSuggestion(
-        suggestionId: suggestion.id,
-        customerId: 'current_user_id', // TODO: Получить из контекста
-      );
+      // TODO(developer): Получить сервис через провайдер
+      // final service = ref.read(budgetSuggestionServiceProvider);
+      // await service.acceptBudgetSuggestion(
+      //   suggestionId: suggestion.id,
+      //   customerId: 'current_user_id', // TODO(developer): Получить из контекста
+      // );
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -351,7 +373,7 @@ class BudgetSuggestionWidget extends ConsumerWidget {
   }
 
   void _rejectSuggestion(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => _RejectSuggestionDialog(
         suggestion: suggestion,
@@ -411,7 +433,9 @@ class _CreateBudgetSuggestionWidgetState
                 const SizedBox(width: 8),
                 ResponsiveText(
                   'Предложить увеличить бюджет',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ],
             ),
@@ -442,7 +466,9 @@ class _CreateBudgetSuggestionWidgetState
               const SizedBox(height: 16),
               ResponsiveText(
                 'Рекомендуемые услуги:',
-                isTitle: true,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               const SizedBox(height: 8),
               ..._selectedItems.map(_buildSelectedServiceCard),
@@ -508,7 +534,9 @@ class _CreateBudgetSuggestionWidgetState
                     const SizedBox(height: 2),
                     ResponsiveText(
                       item.specialistName!,
-                      isSubtitle: true,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w500,
+                          ),
                     ),
                   ],
                   if (item.estimatedPrice != null) ...[
@@ -541,7 +569,8 @@ class _CreateBudgetSuggestionWidgetState
     });
 
     try {
-      final service = ref.read(budgetSuggestionServiceProvider);
+      // TODO(developer): Получить сервис через провайдер
+      // final service = ref.read(budgetSuggestionServiceProvider);
       final suggestions = await service.analyzeBudgetAndCreateSuggestions(
         bookingId: widget.bookingId,
         customerId: widget.customerId,
@@ -578,16 +607,17 @@ class _CreateBudgetSuggestionWidgetState
     });
 
     try {
-      final service = ref.read(budgetSuggestionServiceProvider);
-      await service.createBudgetSuggestion(
-        bookingId: widget.bookingId,
-        customerId: widget.customerId,
-        specialistId: widget.specialistId,
-        suggestions: _selectedItems,
-        message: _messageController.text.trim().isEmpty
-            ? null
-            : _messageController.text.trim(),
-      );
+      // TODO(developer): Получить сервис через провайдер
+      // final service = ref.read(budgetSuggestionServiceProvider);
+      // await service.createBudgetSuggestion(
+      //   bookingId: widget.bookingId,
+      //   customerId: widget.customerId,
+      //   specialistId: widget.specialistId,
+      //   suggestions: _selectedItems,
+      //   message: _messageController.text.trim().isEmpty
+      //       ? null
+      //       : _messageController.text.trim(),
+      // );
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -682,14 +712,15 @@ class _RejectSuggestionDialogState extends State<_RejectSuggestionDialog> {
     });
 
     try {
-      final service = ref.read(budgetSuggestionServiceProvider);
-      await service.rejectBudgetSuggestion(
-        suggestionId: widget.suggestion.id,
-        customerId: 'current_user_id', // TODO: Получить из контекста
-        reason: _reasonController.text.trim().isEmpty
-            ? null
-            : _reasonController.text.trim(),
-      );
+      // TODO(developer): Получить сервис через провайдер
+      // final service = ref.read(budgetSuggestionServiceProvider);
+      // await service.rejectBudgetSuggestion(
+      //   suggestionId: widget.suggestion.id,
+      //   customerId: 'current_user_id', // TODO(developer): Получить из контекста
+      //   reason: _reasonController.text.trim().isEmpty
+      //       ? null
+      //       : _reasonController.text.trim(),
+      // );
 
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(

@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/booking.dart';
 import '../providers/auth_providers.dart';
 import '../providers/firestore_providers.dart';
+import '../services/discount_recommendation_service.dart';
+import '../services/notification_service.dart';
 
 class BookingRequestsScreen extends ConsumerStatefulWidget {
   const BookingRequestsScreen({super.key});
@@ -16,11 +18,14 @@ class BookingRequestsScreen extends ConsumerStatefulWidget {
 class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late DiscountRecommendationService _recommendationService;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _recommendationService =
+        DiscountRecommendationService(NotificationService());
   }
 
   @override
@@ -31,13 +36,31 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = ref.watch(currentUserProvider).value;
-
-    if (currentUser == null) {
-      return const Scaffold(
-        body: Center(child: Text('Пользователь не авторизован')),
-      );
-    }
+    // Используем тестовые данные для демонстрации
+    final testBookings = [
+      Booking(
+        id: 'request_1',
+        customerId: 'customer_1',
+        specialistId: 'specialist_1',
+        eventDate: DateTime.now().add(const Duration(days: 10)),
+        totalPrice: 35000,
+        prepayment: 17500,
+        status: BookingStatus.pending,
+        message: 'Свадьба в стиле "Великий Гэтсби"',
+        createdAt: DateTime.now().subtract(const Duration(hours: 2)),
+      ),
+      Booking(
+        id: 'request_2',
+        customerId: 'customer_2',
+        specialistId: 'specialist_1',
+        eventDate: DateTime.now().add(const Duration(days: 21)),
+        totalPrice: 28000,
+        prepayment: 14000,
+        status: BookingStatus.pending,
+        message: 'Корпоратив IT-компании',
+        createdAt: DateTime.now().subtract(const Duration(hours: 5)),
+      ),
+    ];
 
     return Scaffold(
       appBar: AppBar(
@@ -255,15 +278,74 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                           fontWeight: FontWeight.w600,
                         ),
                   ),
-                  Text(
-                    '${booking.totalPrice.toStringAsFixed(0)} ₽',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      if (booking.hasDiscount) ...[
+                        Text(
+                          '${booking.totalPrice.toStringAsFixed(0)} ₽',
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    decoration: TextDecoration.lineThrough,
+                                    color: Colors.grey[600],
+                                  ),
                         ),
+                        Text(
+                          '${booking.effectivePrice.toStringAsFixed(0)} ₽',
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green,
+                                  ),
+                        ),
+                      ] else
+                        Text(
+                          '${booking.totalPrice.toStringAsFixed(0)} ₽',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                        ),
+                    ],
                   ),
                 ],
               ),
+
+              // Информация о скидке
+              if (booking.hasDiscount) ...[
+                const SizedBox(height: 4),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.green.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.green),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.local_offer,
+                        size: 16,
+                        color: Colors.green,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Скидка ${booking.discount!.toStringAsFixed(0)}% (${booking.discountAmount.toStringAsFixed(0)} ₽)',
+                        style: const TextStyle(
+                          color: Colors.green,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
 
               if ((booking.prepayment ?? 0) > 0) ...[
                 const SizedBox(height: 4),
@@ -303,7 +385,19 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => _offerDiscount(booking),
+                        icon: const Icon(Icons.local_offer, size: 16),
+                        label: const Text('Скидка'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.orange,
+                          side: const BorderSide(color: Colors.orange),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: ElevatedButton.icon(
                         onPressed: () => _confirmBooking(booking),
@@ -311,6 +405,37 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                         label: const Text('Подтвердить'),
                       ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => _showRecommendations(booking),
+                        icon: const Icon(Icons.lightbulb, size: 16),
+                        label: const Text('Рекомендации'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.blue,
+                          side: const BorderSide(color: Colors.blue),
+                        ),
+                      ),
+                    ),
+                    if (_recommendationService
+                        .shouldOfferDiscount(booking)) ...[
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () => _applyRecommendedDiscount(booking),
+                          icon: const Icon(Icons.auto_awesome, size: 16),
+                          label: const Text('Авто-скидка'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.purple,
+                            side: const BorderSide(color: Colors.purple),
+                          ),
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ],
@@ -414,7 +539,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
   }
 
   void _viewBookingDetails(Booking booking) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(booking.title ?? 'Без названия'),
@@ -458,10 +583,355 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
   }
 
   void _contactCustomer(Booking booking) {
-    // TODO: Реализовать переход в чат с заказчиком
+    // TODO(developer): Реализовать переход в чат с заказчиком
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Переход в чат будет реализован позже')),
     );
+  }
+
+  Future<void> _offerDiscount(Booking booking) async {
+    final discountController = TextEditingController();
+    double? discountPercent;
+
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: const Text('Предложить скидку'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Текущая стоимость: ${booking.totalPrice.toStringAsFixed(0)} ₽',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: discountController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Размер скидки (%)',
+                  hintText: 'Введите процент скидки',
+                  border: OutlineInputBorder(),
+                  suffixText: '%',
+                ),
+                onChanged: (value) {
+                  final discount = double.tryParse(value);
+                  if (discount != null && discount >= 0 && discount <= 100) {
+                    setState(() {
+                      discountPercent = discount;
+                    });
+                  } else {
+                    setState(() {
+                      discountPercent = null;
+                    });
+                  }
+                },
+              ),
+              if (discountPercent != null) ...[
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.green.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.green),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Скидка:'),
+                          Text(
+                            '${discountPercent!.toStringAsFixed(0)}%',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Экономия:'),
+                          Text(
+                            '${(booking.totalPrice * discountPercent! / 100).toStringAsFixed(0)} ₽',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Итоговая цена:'),
+                          Text(
+                            '${(booking.totalPrice * (1 - discountPercent! / 100)).toStringAsFixed(0)} ₽',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Отмена'),
+            ),
+            ElevatedButton(
+              onPressed: discountPercent != null
+                  ? () => Navigator.of(context).pop(true)
+                  : null,
+              child: const Text('Применить скидку'),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (result ?? false && discountPercent != null) {
+      try {
+        final firestoreService = ref.read(firestoreServiceProvider);
+        final updatedBooking = booking.applyDiscount(discountPercent!);
+
+        await firestoreService.updateBooking(
+          booking.id,
+          {
+            'discount': discountPercent,
+            'finalPrice': updatedBooking.finalPrice,
+            'updatedAt': DateTime.now(),
+          },
+        );
+
+        // Отправляем уведомление заказчику
+        await _recommendationService.sendDiscountNotification(updatedBooking);
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Скидка ${discountPercent!.toStringAsFixed(0)}% применена',
+              ),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Ошибка применения скидки: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  Future<void> _showRecommendations(Booking booking) async {
+    final suggestions =
+        await _recommendationService.analyzeBookingAndSuggest(booking);
+
+    if (mounted) {
+      showDialog<void>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Рекомендации по заявке'),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Анализ заявки:',
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const SizedBox(height: 8),
+                Text('• Стоимость: ${booking.totalPrice.toStringAsFixed(0)}₽'),
+                Text('• Участники: ${booking.participantsCount} чел.'),
+                Text('• Дата: ${_formatDateTime(booking.eventDate)}'),
+                const SizedBox(height: 16),
+                if (suggestions.isNotEmpty) ...[
+                  Text(
+                    'Рекомендации:',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  ...suggestions.map(
+                    (suggestion) => Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('• '),
+                          Expanded(child: Text(suggestion)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ] else
+                  const Text('Специальных рекомендаций нет.'),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Закрыть'),
+            ),
+            if (suggestions.isNotEmpty)
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _recommendationService.sendBudgetRecommendation(
+                    booking,
+                    suggestions,
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Рекомендации отправлены заказчику'),
+                      backgroundColor: Colors.blue,
+                    ),
+                  );
+                },
+                child: const Text('Отправить заказчику'),
+              ),
+          ],
+        ),
+      );
+    }
+  }
+
+  Future<void> _applyRecommendedDiscount(Booking booking) async {
+    final recommendedDiscount =
+        _recommendationService.calculateRecommendedDiscount(booking);
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Применить рекомендуемую скидку'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Рекомендуемый размер скидки: ${recommendedDiscount.toStringAsFixed(0)}%',
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.green.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.green),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Исходная цена:'),
+                      Text('${booking.totalPrice.toStringAsFixed(0)} ₽'),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Скидка:'),
+                      Text(
+                        '${(booking.totalPrice * recommendedDiscount / 100).toStringAsFixed(0)} ₽',
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Итоговая цена:'),
+                      Text(
+                        '${(booking.totalPrice * (1 - recommendedDiscount / 100)).toStringAsFixed(0)} ₽',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Применить'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed ?? false) {
+      try {
+        final firestoreService = ref.read(firestoreServiceProvider);
+        final updatedBooking = booking.applyDiscount(recommendedDiscount);
+
+        await firestoreService.updateBooking(
+          booking.id,
+          {
+            'discount': recommendedDiscount,
+            'finalPrice': updatedBooking.finalPrice,
+            'updatedAt': DateTime.now(),
+          },
+        );
+
+        // Отправляем уведомление заказчику
+        await _recommendationService.sendDiscountNotification(updatedBooking);
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Автоматическая скидка ${recommendedDiscount.toStringAsFixed(0)}% применена',
+              ),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Ошибка применения скидки: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
   }
 
   Widget _buildDetailRow(String label, String value) => Padding(

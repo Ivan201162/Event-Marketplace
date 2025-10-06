@@ -2,462 +2,207 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Тип отзыва
 enum ReviewType {
-  event,
   specialist,
+  event,
   service,
-}
-
-/// Теги отзывов
-class ReviewTags {
-  static const List<String> eventTags = [
-    'отличная организация',
-    'интересная программа',
-    'хорошее место',
-    'дружелюбная атмосфера',
-    'полезная информация',
-    'профессиональный подход',
-  ];
-
-  static const List<String> specialistTags = [
-    'профессионализм',
-    'вежливость',
-    'пунктуальность',
-    'качество работы',
-    'коммуникабельность',
-    'креативность',
-  ];
-
-  static const List<String> serviceTags = [
-    'быстрое обслуживание',
-    'качественный сервис',
-    'доступные цены',
-    'удобство',
-    'надежность',
-    'индивидуальный подход',
-  ];
-
-  static List<String> getTagsForType(ReviewType type) {
-    switch (type) {
-      case ReviewType.event:
-        return eventTags;
-      case ReviewType.specialist:
-        return specialistTags;
-      case ReviewType.service:
-        return serviceTags;
-    }
-  }
-
-  static List<String> getTagsByRating(int rating) {
-    // Возвращаем теги в зависимости от рейтинга
-    if (rating >= 4) {
-      return [
-        'отличная организация',
-        'профессионализм',
-        'качественный сервис',
-        'вежливость',
-        'пунктуальность',
-      ];
-    } else if (rating >= 3) {
-      return [
-        'хорошее место',
-        'коммуникабельность',
-        'быстрое обслуживание',
-      ];
-    } else {
-      return [
-        'требует улучшения',
-        'медленное обслуживание',
-      ];
-    }
-  }
-}
-
-/// Статус отзыва
-enum ReviewStatus {
-  pending,
-  approved,
-  rejected,
-  hidden,
-}
-
-/// Детальный рейтинг
-class DetailedRating {
-  const DetailedRating({
-    required this.professionalism,
-    required this.communication,
-    required this.punctuality,
-    required this.quality,
-    required this.creativity,
-    required this.value,
-  });
-
-  /// Создать из Map
-  factory DetailedRating.fromMap(Map<String, dynamic> data) => DetailedRating(
-        professionalism: (data['professionalism'] as num? ?? 0.0).toDouble(),
-        communication: (data['communication'] as num? ?? 0.0).toDouble(),
-        punctuality: (data['punctuality'] as num? ?? 0.0).toDouble(),
-        quality: (data['quality'] as num? ?? 0.0).toDouble(),
-        creativity: (data['creativity'] as num? ?? 0.0).toDouble(),
-        value: (data['value'] as num? ?? 0.0).toDouble(),
-      );
-  final double professionalism;
-  final double communication;
-  final double punctuality;
-  final double quality;
-  final double creativity;
-  final double value;
-
-  /// Преобразовать в Map
-  Map<String, dynamic> toMap() => {
-        'professionalism': professionalism,
-        'communication': communication,
-        'punctuality': punctuality,
-        'quality': quality,
-        'creativity': creativity,
-        'value': value,
-      };
-
-  /// Получить средний рейтинг
-  double get averageRating =>
-      (professionalism +
-          communication +
-          punctuality +
-          quality +
-          creativity +
-          value) /
-      6;
 }
 
 /// Модель отзыва
 class Review {
   const Review({
     required this.id,
-    required this.bookingId,
-    required this.reviewerId,
-    required this.reviewerName,
-    this.reviewerAvatar,
-    required this.targetId,
-    required this.type,
+    required this.specialistId,
+    required this.customerId,
+    required this.customerName,
     required this.rating,
-    required this.title,
-    required this.content,
-    this.images = const [],
-    this.tags = const [],
-    required this.status,
+    required this.comment,
+    this.serviceTags = const [],
     required this.createdAt,
-    this.updatedAt,
-    this.isVerified = false,
-    this.reportCount = 0,
-    this.isHelpful = false,
-    this.helpfulCount = 0,
-    this.isReported = false,
-    this.notHelpfulCount = 0,
-    this.helpfulVotes = const {},
-    this.response,
-    this.responseAuthorId,
-    this.responseDate,
-    this.metadata,
-    this.eventId,
-    this.specialistId,
-    this.detailedRating,
+    this.bookingId, // Связь с заказом
+    this.eventTitle, // Название события
+    this.editedAt, // Дата редактирования
+    this.isEdited = false, // Флаг редактирования
+    this.isDeleted = false, // Флаг удаления
+    this.customerAvatar, // Аватар заказчика
+    this.specialistName, // Имя специалиста
+    this.response, // Ответ специалиста на отзыв
+    this.responseAt, // Дата ответа
+    this.metadata = const {}, // Дополнительные данные
   });
 
-  /// Создать отзыв из документа Firestore
-  factory Review.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data()! as Map<String, dynamic>;
-
+  /// Создать отзыв из Map
+  factory Review.fromMap(Map<String, dynamic> data) {
     return Review(
-      id: doc.id,
-      reviewerId: data['reviewerId'] as String? ?? '',
-      reviewerName: data['reviewerName'] as String? ?? '',
-      reviewerAvatar: data['reviewerAvatar'] as String?,
-      targetId: data['targetId'] as String? ?? '',
-      bookingId: data['bookingId'] as String? ?? '',
-      type: ReviewType.values.firstWhere(
-        (e) => e.name == data['type'],
-        orElse: () => ReviewType.event,
-      ),
-      rating: data['rating'] ?? 5,
-      title: data['title'] ?? '',
-      content: data['content'] ?? '',
-      images: List<String>.from(data['images'] ?? []),
-      tags: List<String>.from(data['tags'] ?? []),
-      status: ReviewStatus.values.firstWhere(
-        (e) => e.name == data['status'],
-        orElse: () => ReviewStatus.pending,
-      ),
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: data['updatedAt'] != null
-          ? (data['updatedAt'] as Timestamp).toDate()
+      id: data['id'] ?? '',
+      specialistId: data['specialistId'] ?? '',
+      customerId: data['customerId'] ?? '',
+      customerName: data['customerName'] ?? '',
+      rating: data['rating'] as int? ?? 0,
+      comment: data['comment'] ?? '',
+      serviceTags: List<String>.from(data['serviceTags'] ?? []),
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] is Timestamp
+              ? (data['createdAt'] as Timestamp).toDate()
+              : DateTime.parse(data['createdAt'].toString()))
+          : DateTime.now(),
+      bookingId: data['bookingId'] as String?,
+      eventTitle: data['eventTitle'] as String?,
+      editedAt: data['editedAt'] != null
+          ? (data['editedAt'] is Timestamp
+              ? (data['editedAt'] as Timestamp).toDate()
+              : DateTime.parse(data['editedAt'].toString()))
           : null,
-      isVerified: data['isVerified'] ?? false,
-      isHelpful: data['isHelpful'] ?? false,
-      helpfulCount: data['helpfulCount'] ?? 0,
-      notHelpfulCount: data['notHelpfulCount'] ?? 0,
-      helpfulVotes: Map<String, bool>.from(data['helpfulVotes'] ?? {}),
-      response: data['response'],
-      responseAuthorId: data['responseAuthorId'],
-      responseDate: data['responseDate'] != null
-          ? (data['responseDate'] as Timestamp).toDate()
+      isEdited: data['isEdited'] as bool? ?? false,
+      isDeleted: data['isDeleted'] as bool? ?? false,
+      customerAvatar: data['customerAvatar'] as String?,
+      specialistName: data['specialistName'] as String?,
+      response: data['response'] as String?,
+      responseAt: data['responseAt'] != null
+          ? (data['responseAt'] is Timestamp
+              ? (data['responseAt'] as Timestamp).toDate()
+              : DateTime.parse(data['responseAt'].toString()))
           : null,
-      metadata: data['metadata'],
-      eventId: data['eventId'],
-      specialistId: data['specialistId'],
-      detailedRating: data['detailedRating'] != null
-          ? DetailedRating.fromMap(data['detailedRating'])
-          : null,
+      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
   }
 
-  /// Создать объект из Map
-  factory Review.fromMap(Map<String, dynamic> map) => Review(
-        id: map['id'] ?? '',
-        bookingId: map['bookingId'] ?? '',
-        reviewerId: map['customerId'] ?? map['reviewerId'] ?? '',
-        reviewerName: map['customerName'] ?? map['reviewerName'] ?? '',
-        targetId: map['targetId'] ?? map['specialistId'] ?? '',
-        type: ReviewType.values.firstWhere(
-          (e) => e.name == map['type'],
-          orElse: () => ReviewType.service,
-        ),
-        rating: (map['rating'] ?? 0).toDouble(),
-        title: map['title'] ?? '',
-        content: map['content'] ?? '',
-        tags: (map['tags'] as List<dynamic>?)
-                ?.map((tag) => tag.toString())
-                .toList() ??
-            [],
-        status: ReviewStatus.values.firstWhere(
-          (e) => e.name == map['status'],
-          orElse: () => ReviewStatus.pending,
-        ),
-        createdAt: map['createdAt'] != null
-            ? DateTime.parse(map['createdAt'])
-            : DateTime.now(),
-        isVerified: map['isVerified'] ?? false,
-        response: map['response'],
-        responseDate: map['responseDate'] != null
-            ? (map['responseDate'] as Timestamp).toDate()
-            : null,
-        helpfulCount: map['helpfulCount'] ?? 0,
-        reportCount: map['reportCount'] ?? 0,
-        isReported: map['isReported'] ?? false,
-        updatedAt: map['updatedAt'] != null
-            ? (map['updatedAt'] as Timestamp).toDate()
-            : DateTime.now(),
-      );
+  /// Создать отзыв из документа Firestore
+  factory Review.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data();
+    if (data == null) {
+      throw Exception('Document data is null');
+    }
+
+    // Безопасное преобразование данных
+    Map<String, dynamic> safeData;
+    if (data is Map<String, dynamic>) {
+      safeData = data;
+    } else if (data is Map<dynamic, dynamic>) {
+      safeData = data.map((key, value) => MapEntry(key.toString(), value));
+    } else {
+      throw Exception('Document data is not a Map: ${data.runtimeType}');
+    }
+
+    return Review(
+      id: doc.id,
+      specialistId: safeData['specialistId'] ?? '',
+      customerId: safeData['customerId'] ?? '',
+      customerName: safeData['customerName'] ?? '',
+      rating: safeData['rating'] as int? ?? 0,
+      comment: safeData['comment'] ?? '',
+      serviceTags: List<String>.from(safeData['serviceTags'] ?? []),
+      createdAt: safeData['createdAt'] != null
+          ? (safeData['createdAt'] is Timestamp
+              ? (safeData['createdAt'] as Timestamp).toDate()
+              : DateTime.parse(safeData['createdAt'].toString()))
+          : DateTime.now(),
+      bookingId: safeData['bookingId'] as String?,
+      eventTitle: safeData['eventTitle'] as String?,
+      editedAt: safeData['editedAt'] != null
+          ? (safeData['editedAt'] is Timestamp
+              ? (safeData['editedAt'] as Timestamp).toDate()
+              : DateTime.parse(safeData['editedAt'].toString()))
+          : null,
+      isEdited: safeData['isEdited'] as bool? ?? false,
+      isDeleted: safeData['isDeleted'] as bool? ?? false,
+      customerAvatar: safeData['customerAvatar'] as String?,
+      specialistName: safeData['specialistName'] as String?,
+      response: safeData['response'] as String?,
+      responseAt: safeData['responseAt'] != null
+          ? (safeData['responseAt'] is Timestamp
+              ? (safeData['responseAt'] as Timestamp).toDate()
+              : DateTime.parse(safeData['responseAt'].toString()))
+          : null,
+      metadata: Map<String, dynamic>.from(safeData['metadata'] ?? {}),
+    );
+  }
+
   final String id;
-  final String bookingId;
-  final String reviewerId;
-  final String reviewerName;
-  final String? reviewerAvatar;
-  final String targetId; // ID события, специалиста или сервиса
-  final ReviewType type;
+  final String specialistId;
+  final String customerId;
+  final String customerName;
   final int rating; // 1-5 звезд
-  final String title;
-  final String content;
-  final List<String> images; // URL изображений
-  final List<String> tags; // Теги отзыва
-  final ReviewStatus status;
+  final String comment;
+  final List<String> serviceTags;
   final DateTime createdAt;
-  final DateTime? updatedAt;
-  final bool isVerified; // Проверенный отзыв
-  final int reportCount; // Количество жалоб
-  final bool isHelpful; // Полезный отзыв
-  final int helpfulCount; // Количество "полезно"
-  final bool isReported; // Отмечен как жалоба
-  final int notHelpfulCount; // Количество "не полезно"
-  final Map<String, bool> helpfulVotes; // Кто проголосовал
-  final String? response; // Ответ на отзыв
-  final String? responseAuthorId; // ID автора ответа
-  final DateTime? responseDate; // Дата ответа
-  final Map<String, dynamic>? metadata; // Дополнительные данные
-  final String? eventId;
-  final String? specialistId;
-  final DetailedRating? detailedRating;
+  final String? bookingId; // Связь с заказом
+  final String? eventTitle; // Название события
+  final DateTime? editedAt; // Дата редактирования
+  final bool isEdited; // Флаг редактирования
+  final bool isDeleted; // Флаг удаления
+  final String? customerAvatar; // Аватар заказчика
+  final String? specialistName; // Имя специалиста
+  final String? response; // Ответ специалиста на отзыв
+  final DateTime? responseAt; // Дата ответа
+  final Map<String, dynamic> metadata; // Дополнительные данные
+
+  // Дополнительные методы для совместимости
+  bool get hasComment => comment.isNotEmpty;
+  DateTime? get updatedAt => editedAt;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'reviewerId': reviewerId,
-        'reviewerName': reviewerName,
-        'reviewerAvatar': reviewerAvatar,
-        'targetId': targetId,
-        'type': type.name,
-        'rating': rating,
-        'title': title,
-        'content': content,
-        'images': images,
-        'tags': tags,
-        'status': status.name,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-        'isVerified': isVerified,
-        'isHelpful': isHelpful,
-        'helpfulCount': helpfulCount,
-        'notHelpfulCount': notHelpfulCount,
-        'helpfulVotes': helpfulVotes,
-        'response': response,
-        'responseAuthorId': responseAuthorId,
-        'responseDate':
-            responseDate != null ? Timestamp.fromDate(responseDate!) : null,
-        'metadata': metadata,
-        'eventId': eventId,
         'specialistId': specialistId,
-        'detailedRating': detailedRating?.toMap(),
+        'customerId': customerId,
+        'customerName': customerName,
+        'rating': rating,
+        'comment': comment,
+        'serviceTags': serviceTags,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'bookingId': bookingId,
+        'eventTitle': eventTitle,
+        'editedAt': editedAt != null ? Timestamp.fromDate(editedAt!) : null,
+        'isEdited': isEdited,
+        'isDeleted': isDeleted,
+        'customerAvatar': customerAvatar,
+        'specialistName': specialistName,
+        'response': response,
+        'responseAt':
+            responseAt != null ? Timestamp.fromDate(responseAt!) : null,
+        'metadata': metadata,
       };
 
-  /// Создать копию с изменениями
+  /// Копировать с изменениями
   Review copyWith({
     String? id,
-    String? reviewerId,
-    String? reviewerName,
-    String? reviewerAvatar,
-    String? targetId,
-    ReviewType? type,
-    int? rating,
-    String? title,
-    String? content,
-    List<String>? images,
-    List<String>? tags,
-    ReviewStatus? status,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    bool? isVerified,
-    bool? isHelpful,
-    int? helpfulCount,
-    int? notHelpfulCount,
-    Map<String, bool>? helpfulVotes,
-    String? response,
-    String? responseAuthorId,
-    DateTime? responseDate,
-    Map<String, dynamic>? metadata,
-    String? eventId,
     String? specialistId,
-    DetailedRating? detailedRating,
+    String? customerId,
+    String? customerName,
+    int? rating,
+    String? comment,
+    List<String>? serviceTags,
+    DateTime? createdAt,
+    String? bookingId,
+    String? eventTitle,
+    DateTime? editedAt,
+    bool? isEdited,
+    bool? isDeleted,
+    String? customerAvatar,
+    String? specialistName,
+    String? response,
+    DateTime? responseAt,
+    Map<String, dynamic>? metadata,
   }) =>
       Review(
         id: id ?? this.id,
-        bookingId: bookingId ?? bookingId,
-        reviewerId: reviewerId ?? this.reviewerId,
-        reviewerName: reviewerName ?? this.reviewerName,
-        reviewerAvatar: reviewerAvatar ?? this.reviewerAvatar,
-        targetId: targetId ?? this.targetId,
-        type: type ?? this.type,
-        rating: rating ?? this.rating,
-        title: title ?? this.title,
-        content: content ?? this.content,
-        images: images ?? this.images,
-        tags: tags ?? this.tags,
-        status: status ?? this.status,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        isVerified: isVerified ?? this.isVerified,
-        isHelpful: isHelpful ?? this.isHelpful,
-        helpfulCount: helpfulCount ?? this.helpfulCount,
-        notHelpfulCount: notHelpfulCount ?? this.notHelpfulCount,
-        helpfulVotes: helpfulVotes ?? this.helpfulVotes,
-        response: response ?? this.response,
-        responseAuthorId: responseAuthorId ?? this.responseAuthorId,
-        responseDate: responseDate ?? this.responseDate,
-        metadata: metadata ?? this.metadata,
-        eventId: eventId ?? this.eventId,
         specialistId: specialistId ?? this.specialistId,
-        detailedRating: detailedRating ?? this.detailedRating,
+        customerId: customerId ?? this.customerId,
+        customerName: customerName ?? this.customerName,
+        rating: rating ?? this.rating,
+        comment: comment ?? this.comment,
+        serviceTags: serviceTags ?? this.serviceTags,
+        createdAt: createdAt ?? this.createdAt,
+        bookingId: bookingId ?? this.bookingId,
+        eventTitle: eventTitle ?? this.eventTitle,
+        editedAt: editedAt ?? this.editedAt,
+        isEdited: isEdited ?? this.isEdited,
+        isDeleted: isDeleted ?? this.isDeleted,
+        customerAvatar: customerAvatar ?? this.customerAvatar,
+        specialistName: specialistName ?? this.specialistName,
+        response: response ?? this.response,
+        responseAt: responseAt ?? this.responseAt,
+        metadata: metadata ?? this.metadata,
       );
-
-  /// Проверить, может ли пользователь голосовать за полезность
-  bool canVoteHelpful(String userId) =>
-      !helpfulVotes.containsKey(userId) && reviewerId != userId;
-
-  /// Проверить, проголосовал ли пользователь
-  bool? getUserVote(String userId) => helpfulVotes[userId];
-
-  /// Получить процент полезности
-  double get helpfulPercentage {
-    final total = helpfulCount + notHelpfulCount;
-    if (total == 0) return 0;
-    return (helpfulCount / total) * 100;
-  }
-
-  /// Проверить, есть ли ответ
-  bool get hasResponse => response != null && response!.isNotEmpty;
-
-  /// Проверить, является ли отзыв проверенным
-  bool get isVerifiedReview => isVerified;
-
-  /// Получить название типа отзыва
-  String get typeDisplayName {
-    switch (type) {
-      case ReviewType.event:
-        return 'Событие';
-      case ReviewType.specialist:
-        return 'Специалист';
-      case ReviewType.service:
-        return 'Сервис';
-    }
-  }
-
-  /// Получить имя пользователя (для совместимости)
-  String get userName => reviewerName;
-
-  /// Получить URL фото пользователя (для совместимости)
-  String? get userPhotoUrl => reviewerAvatar;
-
-  /// Получить ID клиента (для совместимости)
-  String get customerId => reviewerId;
-
-  /// Получить текст рейтинга
-  String get ratingText {
-    switch (rating) {
-      case 1:
-        return 'Ужасно';
-      case 2:
-        return 'Плохо';
-      case 3:
-        return 'Нормально';
-      case 4:
-        return 'Хорошо';
-      case 5:
-        return 'Отлично';
-      default:
-        return '';
-    }
-  }
-
-  /// Получить комментарий (для совместимости)
-  String? get comment => content;
-
-  /// Получить название статуса
-  String get statusDisplayName {
-    switch (status) {
-      case ReviewStatus.pending:
-        return 'На рассмотрении';
-      case ReviewStatus.approved:
-        return 'Одобрен';
-      case ReviewStatus.rejected:
-        return 'Отклонен';
-      case ReviewStatus.hidden:
-        return 'Скрыт';
-    }
-  }
-
-  /// Получить цвет статуса
-  String get statusColor {
-    switch (status) {
-      case ReviewStatus.pending:
-        return 'orange';
-      case ReviewStatus.approved:
-        return 'green';
-      case ReviewStatus.rejected:
-        return 'red';
-      case ReviewStatus.hidden:
-        return 'grey';
-    }
-  }
-
-  /// Геттеры для совместимости с виджетами
-  bool get hasComment => content.isNotEmpty;
-  bool get isPublic => status == ReviewStatus.approved;
 
   @override
   bool operator ==(Object other) {
@@ -468,170 +213,140 @@ class Review {
   @override
   int get hashCode => id.hashCode;
 
+  /// Получить заголовок отзыва
+  String get title => eventTitle ?? 'Отзыв';
+
+  /// Получить теги сервиса
+  List<String> get tags => serviceTags;
+
   @override
   String toString() =>
-      'Review(id: $id, type: $type, rating: $rating, title: $title)';
+      'Review(id: $id, specialistId: $specialistId, rating: $rating)';
+
+  /// Проверить, можно ли редактировать отзыв (в течение 24 часов)
+  bool get canEdit {
+    if (isDeleted) return false;
+    final now = DateTime.now();
+    final hoursSinceCreation = now.difference(createdAt).inHours;
+    return hoursSinceCreation < 24;
+  }
+
+  /// Проверить, можно ли удалить отзыв (в течение 24 часов)
+  bool get canDelete {
+    if (isDeleted) return false;
+    final now = DateTime.now();
+    final hoursSinceCreation = now.difference(createdAt).inHours;
+    return hoursSinceCreation < 24;
+  }
+
+  /// Проверить, есть ли ответ специалиста
+  bool get hasResponse => response != null && response!.isNotEmpty;
+
+  /// Получить отформатированную дату создания
+  String get formattedCreatedAt {
+    final now = DateTime.now();
+    final difference = now.difference(createdAt);
+
+    if (difference.inDays > 0) {
+      return '${difference.inDays} дн. назад';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours} ч. назад';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes} мин. назад';
+    } else {
+      return 'Только что';
+    }
+  }
+
+  /// Получить отформатированную дату редактирования
+  String? get formattedEditedAt {
+    if (editedAt == null) return null;
+    final now = DateTime.now();
+    final difference = now.difference(editedAt!);
+
+    if (difference.inDays > 0) {
+      return 'отредактировано ${difference.inDays} дн. назад';
+    } else if (difference.inHours > 0) {
+      return 'отредактировано ${difference.inHours} ч. назад';
+    } else if (difference.inMinutes > 0) {
+      return 'отредактировано ${difference.inMinutes} мин. назад';
+    } else {
+      return 'отредактировано только что';
+    }
+  }
+
+  /// Получить звезды рейтинга как строку
+  String get ratingStars => '★' * rating + '☆' * (5 - rating);
+
+  /// Получить цвет рейтинга
+  String get ratingColor {
+    if (rating >= 4) return 'green';
+    if (rating >= 3) return 'orange';
+    return 'red';
+  }
+
+  /// Проверить, есть ли комментарий
+  bool get hasComment => comment.isNotEmpty;
+
+  /// Проверить, верифицирован ли отзыв
+  bool get isVerified => metadata['isVerified'] == true;
+
+  /// Проверить, публичный ли отзыв
+  bool get isPublic => metadata['isPublic'] != false;
+
+  /// Проверить валидность рейтинга
+  bool isValidRating(int rating) => rating >= 1 && rating <= 5;
+
+  /// Проверить валидность комментария
+  bool isValidComment(String comment) => comment.isNotEmpty && comment.length >= 10;
+
+  /// Проверить, можно ли пожаловаться на отзыв
+  bool canReport() => !isDeleted && !metadata['reported'] == true;
 }
 
-/// Статистика отзывов
+/// Статистика отзывов специалиста
 class ReviewStats {
   const ReviewStats({
+    required this.specialistId,
     required this.averageRating,
     required this.totalReviews,
     required this.ratingDistribution,
-    required this.verifiedReviews,
-    required this.helpfulReviews,
-    required this.helpfulPercentage,
     required this.lastUpdated,
+    this.tags = const [],
   });
 
-  /// Создать статистику из документа Firestore
-  factory ReviewStats.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data()! as Map<String, dynamic>;
+  factory ReviewStats.fromMap(Map<String, dynamic> map) => ReviewStats(
+        specialistId: map['specialistId'] ?? '',
+        averageRating: (map['averageRating'] ?? 0.0).toDouble(),
+        totalReviews: map['totalReviews'] ?? 0,
+        ratingDistribution:
+            Map<String, int>.from(map['ratingDistribution'] ?? {}),
+        lastUpdated: map['lastUpdated'] != null
+            ? (map['lastUpdated'] as Timestamp).toDate()
+            : DateTime.now(),
+        tags: List<String>.from(map['tags'] ?? []),
+      );
 
-    return ReviewStats(
-      averageRating: (data['averageRating'] ?? 0.0).toDouble(),
-      totalReviews: data['totalReviews'] ?? 0,
-      ratingDistribution: Map<int, int>.from(data['ratingDistribution'] ?? {}),
-      verifiedReviews: data['verifiedReviews'] ?? 0,
-      helpfulReviews: data['helpfulReviews'] ?? 0,
-      helpfulPercentage: (data['helpfulPercentage'] ?? 0.0).toDouble(),
-      lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
-    );
-  }
+  final String specialistId;
   final double averageRating;
   final int totalReviews;
-  final Map<int, int> ratingDistribution; // рейтинг -> количество
-  final int verifiedReviews;
-  final int helpfulReviews;
-  final double helpfulPercentage;
+  final Map<String, int> ratingDistribution;
   final DateTime lastUpdated;
+  final List<String> tags;
 
-  /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
+        'specialistId': specialistId,
         'averageRating': averageRating,
         'totalReviews': totalReviews,
         'ratingDistribution': ratingDistribution,
-        'verifiedReviews': verifiedReviews,
-        'helpfulReviews': helpfulReviews,
-        'helpfulPercentage': helpfulPercentage,
         'lastUpdated': Timestamp.fromDate(lastUpdated),
+        'tags': tags,
       };
 
-  /// Получить процент для конкретного рейтинга
+  /// Получить процент рейтинга
   double getRatingPercentage(int rating) {
     if (totalReviews == 0) return 0;
-    final count = ratingDistribution[rating] ?? 0;
+    final count = ratingDistribution[rating.toString()] ?? 0;
     return (count / totalReviews) * 100;
   }
-
-  /// Проверить, есть ли отзывы
-  bool get hasReviews => totalReviews > 0;
-
-  /// Получить округленный средний рейтинг
-  double get roundedAverageRating => (averageRating * 10).round() / 10;
-
-  @override
-  String toString() =>
-      'ReviewStats(average: $averageRating, total: $totalReviews)';
-}
-
-/// Фильтр для отзывов
-class ReviewFilter {
-  const ReviewFilter({
-    this.minRating,
-    this.maxRating,
-    this.tags,
-    this.verifiedOnly,
-    this.withImages,
-    this.withResponse,
-    this.fromDate,
-    this.toDate,
-    this.searchQuery,
-  });
-
-  /// Создать пустой фильтр
-  factory ReviewFilter.empty() => const ReviewFilter();
-
-  /// Создать фильтр по рейтингу
-  factory ReviewFilter.byRating(int rating) =>
-      ReviewFilter(minRating: rating, maxRating: rating);
-
-  /// Создать фильтр по диапазону рейтингов
-  factory ReviewFilter.byRatingRange(int minRating, int maxRating) =>
-      ReviewFilter(minRating: minRating, maxRating: maxRating);
-
-  /// Создать фильтр по тегам
-  factory ReviewFilter.byTags(List<String> tags) => ReviewFilter(tags: tags);
-
-  /// Создать фильтр по дате
-  factory ReviewFilter.byDateRange(DateTime fromDate, DateTime toDate) =>
-      ReviewFilter(fromDate: fromDate, toDate: toDate);
-  final int? minRating;
-  final int? maxRating;
-  final List<String>? tags;
-  final bool? verifiedOnly;
-  final bool? withImages;
-  final bool? withResponse;
-  final DateTime? fromDate;
-  final DateTime? toDate;
-  final String? searchQuery;
-
-  /// Проверить, есть ли активные фильтры
-  bool get hasActiveFilters =>
-      minRating != null ||
-      maxRating != null ||
-      (tags != null && tags!.isNotEmpty) ||
-      (verifiedOnly ?? false) ||
-      (withImages ?? false) ||
-      (withResponse ?? false) ||
-      fromDate != null ||
-      toDate != null ||
-      (searchQuery != null && searchQuery!.isNotEmpty);
-
-  /// Сбросить все фильтры
-  ReviewFilter clear() => const ReviewFilter();
-
-  /// Применить фильтр по рейтингу
-  ReviewFilter withRating(int? minRating, int? maxRating) => ReviewFilter(
-        minRating: minRating ?? this.minRating,
-        maxRating: maxRating ?? this.maxRating,
-        tags: tags,
-        verifiedOnly: verifiedOnly,
-        withImages: withImages,
-        withResponse: withResponse,
-        fromDate: fromDate,
-        toDate: toDate,
-        searchQuery: searchQuery,
-      );
-
-  /// Применить фильтр по тегам
-  ReviewFilter withTags(List<String>? tags) => ReviewFilter(
-        minRating: minRating,
-        maxRating: maxRating,
-        tags: tags,
-        verifiedOnly: verifiedOnly,
-        withImages: withImages,
-        withResponse: withResponse,
-        fromDate: fromDate,
-        toDate: toDate,
-        searchQuery: searchQuery,
-      );
-
-  /// Применить поисковый запрос
-  ReviewFilter withSearch(String? query) => ReviewFilter(
-        minRating: minRating,
-        maxRating: maxRating,
-        tags: tags,
-        verifiedOnly: verifiedOnly,
-        withImages: withImages,
-        withResponse: withResponse,
-        fromDate: fromDate,
-        toDate: toDate,
-        searchQuery: query,
-      );
-
-  @override
-  String toString() =>
-      'ReviewFilter(minRating: $minRating, maxRating: $maxRating, tags: $tags, verifiedOnly: $verifiedOnly, withImages: $withImages, withResponse: $withResponse, fromDate: $fromDate, toDate: $toDate, searchQuery: $searchQuery)';
 }

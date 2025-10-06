@@ -65,7 +65,7 @@ class AppUtils {
     for (var i = 0; i < str.length; i++) {
       hash = str.codeUnitAt(i) + ((hash << 5) - hash);
     }
-    return Color(hash & 0x00FFFFFF).withOpacity(1);
+    return Color(hash & 0x00FFFFFF).withValues(alpha: 1);
   }
 
   /// Проверка платформы

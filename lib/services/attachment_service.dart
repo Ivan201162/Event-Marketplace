@@ -10,9 +10,9 @@ import '../models/chat_attachment.dart';
 
 /// Сервис для работы с вложениями в чатах
 class AttachmentService {
-  static final AttachmentService _instance = AttachmentService._internal();
   factory AttachmentService() => _instance;
   AttachmentService._internal();
+  static final AttachmentService _instance = AttachmentService._internal();
 
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -39,14 +39,19 @@ class AttachmentService {
   }) async {
     try {
       AppLogger.logI(
-          'Начало загрузки файла: $originalFileName', 'attachment_service');
+        'Начало загрузки файла: $originalFileName',
+        'attachment_service',
+      );
 
       // Проверяем размер файла
       if (fileData.length > maxFileSize) {
-        AppLogger.logE('Файл слишком большой: ${fileData.length} байт',
-            'attachment_service');
+        AppLogger.logE(
+          'Файл слишком большой: ${fileData.length} байт',
+          'attachment_service',
+        );
         throw Exception(
-            'Файл слишком большой. Максимальный размер: ${maxFileSize ~/ (1024 * 1024)} MB');
+          'Файл слишком большой. Максимальный размер: ${maxFileSize ~/ (1024 * 1024)} MB',
+        );
       }
 
       // Определяем тип файла
@@ -56,7 +61,7 @@ class AttachmentService {
       // Генерируем уникальное имя файла
       final fileExtension = path.extension(originalFileName);
       final fileName =
-          '${DateTime.now().millisecondsSinceEpoch}_${userId}$fileExtension';
+          '${DateTime.now().millisecondsSinceEpoch}_$userId$fileExtension';
 
       // Загружаем основной файл
       final fileRef = _storage.ref().child('chat_attachments/$fileName');
@@ -95,7 +100,7 @@ class AttachmentService {
               : null,
           'duration': fileType == AttachmentType.video
               ? null
-              : null, // TODO: Получить длительность видео
+              : null, // TODO(developer): Получить длительность видео
         },
       );
 
@@ -108,7 +113,11 @@ class AttachmentService {
       return attachment;
     } catch (e, stackTrace) {
       AppLogger.logE(
-          'Ошибка загрузки файла', 'attachment_service', e, stackTrace);
+        'Ошибка загрузки файла',
+        'attachment_service',
+        e,
+        stackTrace,
+      );
       return null;
     }
   }
@@ -152,7 +161,11 @@ class AttachmentService {
           .toList();
     } catch (e, stackTrace) {
       AppLogger.logE(
-          'Ошибка получения вложений', 'attachment_service', e, stackTrace);
+        'Ошибка получения вложений',
+        'attachment_service',
+        e,
+        stackTrace,
+      );
       return [];
     }
   }
@@ -192,7 +205,11 @@ class AttachmentService {
       return true;
     } catch (e, stackTrace) {
       AppLogger.logE(
-          'Ошибка удаления вложения', 'attachment_service', e, stackTrace);
+        'Ошибка удаления вложения',
+        'attachment_service',
+        e,
+        stackTrace,
+      );
       return false;
     }
   }
@@ -290,7 +307,6 @@ class AttachmentService {
   }
 
   /// Получить список поддерживаемых расширений
-  List<String> getSupportedExtensions() {
-    return supportedFileTypes.values.expand((types) => types).toList();
-  }
+  List<String> getSupportedExtensions() =>
+      supportedFileTypes.values.expand((types) => types).toList();
 }

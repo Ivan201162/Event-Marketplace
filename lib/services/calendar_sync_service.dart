@@ -18,7 +18,7 @@ class CalendarSyncService {
     }
 
     try {
-      // TODO: Реальная интеграция с Google Calendar API
+      // TODO(developer): Реальная интеграция с Google Calendar API
       // Пока что возвращаем mock результат
       debugPrint('Exporting to Google Calendar: ${event.title}');
       await Future.delayed(const Duration(seconds: 1));
@@ -37,7 +37,7 @@ class CalendarSyncService {
     }
 
     try {
-      // TODO: Реальная интеграция с Outlook Calendar API
+      // TODO(developer): Реальная интеграция с Outlook Calendar API
       // Пока что возвращаем mock результат
       debugPrint('Exporting to Outlook Calendar: ${event.title}');
       await Future.delayed(const Duration(seconds: 1));
@@ -96,7 +96,7 @@ class CalendarSyncService {
     }
 
     try {
-      // TODO: Реальная интеграция с Google Calendar API
+      // TODO(developer): Реальная интеграция с Google Calendar API
       // Пока что возвращаем пустой список
       debugPrint('Importing from Google Calendar');
       await Future.delayed(const Duration(seconds: 1));
@@ -115,7 +115,7 @@ class CalendarSyncService {
     }
 
     try {
-      // TODO: Реальная интеграция с Outlook Calendar API
+      // TODO(developer): Реальная интеграция с Outlook Calendar API
       // Пока что возвращаем пустой список
       debugPrint('Importing from Outlook Calendar');
       await Future.delayed(const Duration(seconds: 1));
@@ -143,7 +143,7 @@ class CalendarSyncService {
   /// Синхронизация с Google Calendar
   Future<bool> _syncGoogleCalendar() async {
     try {
-      // TODO: Реальная синхронизация
+      // TODO(developer): Реальная синхронизация
       debugPrint('Syncing with Google Calendar');
       await Future.delayed(const Duration(seconds: 2));
       return true;
@@ -156,7 +156,7 @@ class CalendarSyncService {
   /// Синхронизация с Outlook Calendar
   Future<bool> _syncOutlookCalendar() async {
     try {
-      // TODO: Реальная синхронизация
+      // TODO(developer): Реальная синхронизация
       debugPrint('Syncing with Outlook Calendar');
       await Future.delayed(const Duration(seconds: 2));
       return true;
@@ -169,8 +169,11 @@ class CalendarSyncService {
   /// Получить статус синхронизации
   Future<Map<String, dynamic>> getSyncStatus() async => {
         'enabled': FeatureFlags.calendarSyncEnabled,
-        'googleConnected': false, // TODO: Проверить реальное подключение
-        'outlookConnected': false, // TODO: Проверить реальное подключение
-        'lastSync': null, // TODO: Получить время последней синхронизации
+        'googleConnected':
+            false, // TODO(developer): Проверить реальное подключение
+        'outlookConnected':
+            false, // TODO(developer): Проверить реальное подключение
+        'lastSync':
+            null, // TODO(developer): Получить время последней синхронизации
       };
 }

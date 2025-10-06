@@ -17,7 +17,7 @@ class MonitoringService {
   static final MonitoringService _instance = MonitoringService._internal();
 
   bool _isInitialized = false;
-  bool _isAvailable = true;
+  final bool _isAvailable = true;
   bool _isMonitoring = false;
 
   /// Проверить, инициализирован ли сервис
@@ -480,7 +480,7 @@ class MonitoringService {
   /// Отправить уведомления об алерте
   Future<void> _sendAlertNotifications(MonitoringAlert alert) async {
     try {
-      // TODO: Реализовать отправку уведомлений
+      // TODO(developer): Реализовать отправку уведомлений
       // - Email уведомления
       // - Push уведомления
       // - SMS уведомления
@@ -711,8 +711,11 @@ class MonitoringService {
   }
 
   /// Записать ошибку
-  Future<void> recordError(dynamic error, StackTrace? stackTrace,
-      {String? context}) async {
+  Future<void> recordError(
+    error,
+    StackTrace? stackTrace, {
+    String? context,
+  }) async {
     try {
       final errorData = {
         'id': _uuid.v4(),
@@ -733,7 +736,10 @@ class MonitoringService {
 
   /// Логировать действие пользователя
   Future<void> logUserAction(
-      String userId, String action, Map<String, dynamic>? data) async {
+    String userId,
+    String action,
+    Map<String, dynamic>? data,
+  ) async {
     try {
       final actionData = {
         'id': _uuid.v4(),

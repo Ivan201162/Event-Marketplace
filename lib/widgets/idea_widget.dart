@@ -65,8 +65,8 @@ class IdeaWidget extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: ColorUtils.getCategoryColor(
-                                      idea.categoryColor)
-                                  .withValues(alpha: 0.3),
+                                idea.categoryColor,
+                              ).withValues(alpha: 0.3),
                             ),
                           ),
                           child: Row(
@@ -76,7 +76,8 @@ class IdeaWidget extends StatelessWidget {
                                 ColorUtils.getCategoryIcon(idea.category),
                                 size: 14,
                                 color: ColorUtils.getCategoryColor(
-                                    idea.categoryColor),
+                                  idea.categoryColor,
+                                ),
                               ),
                               const SizedBox(width: 4),
                               Text(
@@ -84,7 +85,8 @@ class IdeaWidget extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: ColorUtils.getCategoryColor(
-                                      idea.categoryColor),
+                                    idea.categoryColor,
+                                  ),
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -551,7 +553,8 @@ class IdeaGridTile extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 32,
                               color: ColorUtils.getCategoryColor(
-                                  idea.categoryColor),
+                                idea.categoryColor,
+                              ),
                             ),
                           ),
                         ),

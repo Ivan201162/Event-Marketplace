@@ -13,15 +13,6 @@ class FavoriteIdea {
     this.attachedBookingId,
   });
 
-  final String id;
-  final String userId;
-  final String ideaId;
-  final DateTime addedAt;
-  final String? notes; // Заметки пользователя
-  final List<String> tags; // Пользовательские теги
-  final bool isAttachedToBooking;
-  final String? attachedBookingId;
-
   /// Создать из Map (Firestore)
   factory FavoriteIdea.fromMap(Map<String, dynamic> map) => FavoriteIdea(
         id: map['id'] as String,
@@ -33,6 +24,15 @@ class FavoriteIdea {
         isAttachedToBooking: (map['isAttachedToBooking'] ?? false) as bool,
         attachedBookingId: map['attachedBookingId'] as String?,
       );
+
+  final String id;
+  final String userId;
+  final String ideaId;
+  final DateTime addedAt;
+  final String? notes; // Заметки пользователя
+  final List<String> tags; // Пользовательские теги
+  final bool isAttachedToBooking;
+  final String? attachedBookingId;
 
   /// Преобразовать в Map (Firestore)
   Map<String, dynamic> toMap() => {

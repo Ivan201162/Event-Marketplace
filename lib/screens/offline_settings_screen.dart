@@ -248,9 +248,9 @@ class OfflineSettingsScreen extends ConsumerWidget {
               title: const Text('Автосинхронизация'),
               subtitle:
                   const Text('Автоматическая синхронизация при подключении'),
-              value: true, // TODO: Получить из настроек
+              value: true, // TODO(developer): Получить из настроек
               onChanged: (value) {
-                // TODO: Сохранить настройку
+                // TODO(developer): Сохранить настройку
               },
             ),
 
@@ -258,9 +258,9 @@ class OfflineSettingsScreen extends ConsumerWidget {
             SwitchListTile(
               title: const Text('Кэш изображений'),
               subtitle: const Text('Сохранять изображения локально'),
-              value: true, // TODO: Получить из настроек
+              value: true, // TODO(developer): Получить из настроек
               onChanged: (value) {
-                // TODO: Сохранить настройку
+                // TODO(developer): Сохранить настройку
               },
             ),
 
@@ -268,9 +268,9 @@ class OfflineSettingsScreen extends ConsumerWidget {
             SwitchListTile(
               title: const Text('Кэш видео'),
               subtitle: const Text('Сохранять видео локально'),
-              value: false, // TODO: Получить из настроек
+              value: false, // TODO(developer): Получить из настроек
               onChanged: (value) {
-                // TODO: Сохранить настройку
+                // TODO(developer): Сохранить настройку
               },
             ),
 
@@ -278,9 +278,9 @@ class OfflineSettingsScreen extends ConsumerWidget {
             SwitchListTile(
               title: const Text('Уведомления'),
               subtitle: const Text('Уведомления о статусе подключения'),
-              value: true, // TODO: Получить из настроек
+              value: true, // TODO(developer): Получить из настроек
               onChanged: (value) {
-                // TODO: Сохранить настройку
+                // TODO(developer): Сохранить настройку
               },
             ),
           ],
@@ -288,7 +288,7 @@ class OfflineSettingsScreen extends ConsumerWidget {
       );
 
   void _showClearCacheDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Очистить кэш'),

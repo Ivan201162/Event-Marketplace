@@ -1,6 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 import '../models/notification_template.dart';
 import '../models/subscription.dart';
@@ -266,7 +266,7 @@ class SubscriptionTile extends StatelessWidget {
                 onUnsubscribe?.call();
                 break;
               case 'view_profile':
-                // TODO: Перейти к профилю специалиста
+                // TODO(developer): Перейти к профилю специалиста
                 break;
             }
           },
@@ -364,7 +364,7 @@ class SubscriptionNotificationsWidget extends ConsumerWidget {
       final service = ref.read(subscriptionServiceProvider);
       await service.markNotificationAsRead(notification.id);
 
-      // TODO: Перейти к соответствующему экрану
+      // TODO(developer): Перейти к соответствующему экрану
       switch (notification.type) {
         case NotificationType.system:
           // Перейти к системному уведомлению

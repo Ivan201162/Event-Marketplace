@@ -1,358 +1,225 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/calendar_event.dart';
-import '../models/specialist_schedule.dart';
 import '../services/calendar_service.dart';
 
-/// Провайдер сервиса календаря
+/// Провайдер для сервиса календаря
 final calendarServiceProvider =
     Provider<CalendarService>((ref) => CalendarService());
 
-/// Провайдер расписания специалиста
-final specialistScheduleProvider =
-    StreamProvider.family<SpecialistSchedule?, String>((ref, specialistId) {
+/// Провайдер для получения занятых дат специалиста
+final specialistBusyDatesProvider =
+    FutureProvider.family<List<DateTime>, String>((ref, specialistId) async {
   final calendarService = ref.watch(calendarServiceProvider);
-  return calendarService.getSpecialistSchedule(specialistId);
+  return calendarService.getBusyDates(specialistId);
 });
 
-/// Провайдер доступности даты
+/// Провайдер для получения свободных дат специалиста в диапазоне
+final specialistAvailableDatesProvider =
+    FutureProvider.family<List<DateTime>, Map<String, dynamic>>(
+        (ref, params) async {
+  final calendarService = ref.watch(calendarServiceProvider);
+  final specialistId = params['specialistId'] as String;
+  final startDate = params['startDate'] as DateTime;
+  final endDate = params['endDate'] as DateTime;
+
+  return calendarService.getAvailableDates(specialistId, 30);
+});
+
+/// Провайдер для проверки доступности даты
 final dateAvailabilityProvider =
-    FutureProvider.family<bool, DateAvailabilityParams>((ref, params) {
+    FutureProvider.family<bool, Map<String, dynamic>>((ref, params) async {
   final calendarService = ref.watch(calendarServiceProvider);
-  return calendarService.isDateAvailable(params.specialistId, params.date);
+  final specialistId = params['specialistId'] as String;
+  final date = params['date'] as DateTime;
+
+  return calendarService.isDateAvailable(specialistId, date);
 });
 
-/// Провайдер доступности времени
+/// Провайдер для проверки доступности даты и времени
 final dateTimeAvailabilityProvider =
-    FutureProvider.family<bool, DateTimeAvailabilityParams>((ref, params) {
+    FutureProvider.family<bool, Map<String, dynamic>>((ref, params) async {
   final calendarService = ref.watch(calendarServiceProvider);
-  return calendarService.isDateTimeAvailable(
-    params.specialistId,
-    params.dateTime,
-  );
+  final specialistId = params['specialistId'] as String;
+  final dateTime = params['dateTime'] as DateTime;
+
+  return calendarService.isDateTimeAvailable(specialistId, dateTime);
 });
 
-/// Провайдер доступных дат в диапазоне
-final availableDatesProvider =
-    FutureProvider.family<List<DateTime>, AvailableDatesParams>((ref, params) {
-  final calendarService = ref.watch(calendarServiceProvider);
-  return calendarService.getAvailableDates(
-    params.specialistId,
-    30, // days ahead
-  );
-});
-
-/// Провайдер доступных временных слотов
+/// Провайдер для получения доступных временных слотов
 final availableTimeSlotsProvider =
-    FutureProvider.family<List<DateTime>, AvailableTimeSlotsParams>(
-        (ref, params) {
+    FutureProvider.family<List<DateTime>, Map<String, dynamic>>(
+        (ref, params) async {
   final calendarService = ref.watch(calendarServiceProvider);
+  final specialistId = params['specialistId'] as String;
+  final date = params['date'] as DateTime;
+  final slotDuration = params['slotDuration'] as Duration;
+
   return calendarService.getAvailableTimeSlots(
-    params.specialistId,
-    params.date,
-    params.slotDuration,
+    specialistId,
+    date,
+    slotDuration,
   );
 });
 
-/// Провайдер событий на дату
-final eventsForDateProvider =
-    FutureProvider.family<List<CalendarEvent>, EventsForDateParams>(
-        (ref, params) {
+/// Провайдер для управления занятыми датами
+final busyDatesManagerProvider =
+    StateNotifierProvider<BusyDatesManager, AsyncValue<void>>((ref) {
   final calendarService = ref.watch(calendarServiceProvider);
-  return calendarService.getEventsForDate(params.specialistId, params.date);
+  return BusyDatesManager(calendarService);
 });
 
-/// Провайдер всех расписаний (для админов)
-final allSchedulesProvider = StreamProvider<List<SpecialistSchedule>>((ref) {
-  final calendarService = ref.watch(calendarServiceProvider);
-  return calendarService.getAllSchedules();
-});
+/// Менеджер для управления занятыми датами
+class BusyDatesManager extends StateNotifier<AsyncValue<void>> {
+  BusyDatesManager(this._calendarService) : super(const AsyncValue.data(null));
 
-/// Провайдер для управления состоянием календаря
-final calendarStateProvider =
-    NotifierProvider<CalendarStateNotifier, CalendarState>(
-  CalendarStateNotifier.new,
-);
+  final CalendarService _calendarService;
 
-/// Состояние календаря
-class CalendarState {
-  const CalendarState({
-    required this.selectedDate,
-    required this.focusedDate,
-    this.selectedSpecialistId,
-    this.availableDates = const [],
-    this.availableTimeSlots = const [],
-    this.eventsForSelectedDate = const [],
-    this.isLoading = false,
-    this.errorMessage,
-  });
-  final DateTime selectedDate;
-  final DateTime focusedDate;
-  final String? selectedSpecialistId;
-  final List<DateTime> availableDates;
-  final List<DateTime> availableTimeSlots;
-  final List<CalendarEvent> eventsForSelectedDate;
-  final bool isLoading;
-  final String? errorMessage;
+  /// Пометить дату как занятую
+  Future<void> markDateBusy(String specialistId, DateTime date) async {
+    state = const AsyncValue.loading();
 
-  CalendarState copyWith({
-    DateTime? selectedDate,
-    DateTime? focusedDate,
-    String? selectedSpecialistId,
-    List<DateTime>? availableDates,
-    List<DateTime>? availableTimeSlots,
-    List<CalendarEvent>? eventsForSelectedDate,
-    bool? isLoading,
-    String? errorMessage,
-  }) =>
-      CalendarState(
-        selectedDate: selectedDate ?? this.selectedDate,
-        focusedDate: focusedDate ?? this.focusedDate,
-        selectedSpecialistId: selectedSpecialistId ?? this.selectedSpecialistId,
-        availableDates: availableDates ?? this.availableDates,
-        availableTimeSlots: availableTimeSlots ?? this.availableTimeSlots,
-        eventsForSelectedDate:
-            eventsForSelectedDate ?? this.eventsForSelectedDate,
-        isLoading: isLoading ?? this.isLoading,
-        errorMessage: errorMessage,
-      );
+    try {
+      final success = await _calendarService.markDateBusy(specialistId, date);
+      if (success) {
+        state = const AsyncValue.data(null);
+      } else {
+        state = const AsyncValue.error(
+          'Не удалось пометить дату как занятую',
+          StackTrace.current,
+        );
+      }
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
+
+  /// Пометить дату как свободную
+  Future<void> markDateFree(String specialistId, DateTime date) async {
+    state = const AsyncValue.loading();
+
+    try {
+      final success = await _calendarService.markDateFree(specialistId, date);
+      if (success) {
+        state = const AsyncValue.data(null);
+      } else {
+        state = const AsyncValue.error(
+          'Не удалось пометить дату как свободную',
+          StackTrace.current,
+        );
+      }
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
+
+  /// Синхронизировать занятые даты с бронированиями
+  Future<void> syncBusyDatesWithBookings(String specialistId) async {
+    state = const AsyncValue.loading();
+
+    try {
+      await _calendarService.syncBusyDatesWithBookings(specialistId);
+      state = const AsyncValue.data(null);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
 }
 
-/// Нотификатор состояния календаря
-class CalendarStateNotifier extends Notifier<CalendarState> {
-  late final CalendarService _calendarService;
+/// Провайдер для получения календарных данных специалиста
+final specialistCalendarDataProvider =
+    FutureProvider.family<SpecialistCalendarData, String>(
+        (ref, specialistId) async {
+  final calendarService = ref.watch(calendarServiceProvider);
 
-  @override
-  CalendarState build() {
-    _calendarService = ref.read(calendarServiceProvider);
-    final now = DateTime.now();
-    return CalendarState(
-      selectedDate: now,
-      focusedDate: now,
+  // Получаем занятые даты
+  final busyDates = await calendarService.getBusyDates(specialistId);
+
+  // Получаем доступные даты на следующий месяц
+  final now = DateTime.now();
+  final nextMonth = DateTime(now.year, now.month + 1);
+  final endOfNextMonth = DateTime(now.year, now.month + 2, 0);
+  final availableDates = await calendarService.getAvailableDates(
+    specialistId,
+    30,
+  );
+
+  return SpecialistCalendarData(
+    specialistId: specialistId,
+    busyDates: busyDates,
+    availableDates: availableDates,
+    lastUpdated: DateTime.now(),
+  );
+});
+
+/// Модель данных календаря специалиста
+class SpecialistCalendarData {
+  const SpecialistCalendarData({
+    required this.specialistId,
+    required this.busyDates,
+    required this.availableDates,
+    required this.lastUpdated,
+  });
+
+  final String specialistId;
+  final List<DateTime> busyDates;
+  final List<DateTime> availableDates;
+  final DateTime lastUpdated;
+
+  /// Проверить, занята ли дата
+  bool isDateBusy(DateTime date) {
+    final normalizedDate = DateTime(date.year, date.month, date.day);
+    return busyDates.any(
+      (busyDate) =>
+          busyDate.year == normalizedDate.year &&
+          busyDate.month == normalizedDate.month &&
+          busyDate.day == normalizedDate.day,
     );
   }
 
-  /// Выбрать дату
-  void selectDate(DateTime date) {
-    state = state.copyWith(selectedDate: date);
-    _loadDataForSelectedDate();
-  }
+  /// Проверить, доступна ли дата
+  bool isDateAvailable(DateTime date) => !isDateBusy(date);
 
-  /// Выбрать специалиста
-  void selectSpecialist(String specialistId) {
-    state = state.copyWith(selectedSpecialistId: specialistId);
-    _loadDataForSelectedDate();
-  }
+  /// Получить статистику доступности
+  AvailabilityStats get availabilityStats {
+    final totalDays = availableDates.length + busyDates.length;
+    final availableCount = availableDates.length;
+    final busyCount = busyDates.length;
 
-  /// Загрузить данные для выбранной даты
-  Future<void> _loadDataForSelectedDate() async {
-    if (state.selectedSpecialistId == null) return;
-
-    state = state.copyWith(isLoading: true);
-
-    try {
-      // Загружаем доступные временные слоты
-      final timeSlots = await _calendarService.getAvailableTimeSlots(
-        state.selectedSpecialistId!,
-        state.selectedDate,
-        const Duration(hours: 1), // По умолчанию 1 час
-      );
-
-      // Загружаем события на дату
-      final events = await _calendarService.getEventsForDate(
-        state.selectedSpecialistId!,
-        state.selectedDate,
-      );
-
-      state = state.copyWith(
-        availableTimeSlots: timeSlots,
-        eventsForSelectedDate: events,
-        isLoading: false,
-      );
-    } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: e.toString(),
-      );
-    }
-  }
-
-  /// Загрузить доступные даты в диапазоне
-  Future<void> loadAvailableDates(DateTime startDate, DateTime endDate) async {
-    if (state.selectedSpecialistId == null) return;
-
-    state = state.copyWith(isLoading: true);
-
-    try {
-      final availableDates = await _calendarService.getAvailableDates(
-        state.selectedSpecialistId!,
-        30, // days ahead
-      );
-
-      state = state.copyWith(
-        availableDates: availableDates,
-        isLoading: false,
-      );
-    } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: e.toString(),
-      );
-    }
-  }
-
-  /// Добавить событие
-  Future<void> addEvent(ScheduleEvent event) async {
-    if (state.selectedSpecialistId == null) return;
-
-    state = state.copyWith(isLoading: true);
-
-    try {
-      await _calendarService.addEvent(
-        state.selectedSpecialistId!,
-        event as CalendarEvent,
-      );
-      await _loadDataForSelectedDate(); // Обновляем данные
-    } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: e.toString(),
-      );
-    }
-  }
-
-  /// Удалить событие
-  Future<void> removeEvent(String eventId) async {
-    if (state.selectedSpecialistId == null) return;
-
-    state = state.copyWith(isLoading: true);
-
-    try {
-      await _calendarService.removeEvent(state.selectedSpecialistId!, eventId);
-      await _loadDataForSelectedDate(); // Обновляем данные
-    } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: e.toString(),
-      );
-    }
-  }
-
-  /// Очистить ошибку
-  void clearError() {
-    state = state.copyWith();
+    return AvailabilityStats(
+      totalDays: totalDays,
+      availableDays: availableCount,
+      busyDays: busyCount,
+      availabilityPercentage:
+          totalDays > 0 ? (availableCount / totalDays * 100) : 0.0,
+    );
   }
 }
 
-/// Параметры для проверки доступности даты
-class DateAvailabilityParams {
-  const DateAvailabilityParams({
-    required this.specialistId,
-    required this.date,
+/// Статистика доступности
+class AvailabilityStats {
+  const AvailabilityStats({
+    required this.totalDays,
+    required this.availableDays,
+    required this.busyDays,
+    required this.availabilityPercentage,
   });
-  final String specialistId;
-  final DateTime date;
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is DateAvailabilityParams &&
-        other.specialistId == specialistId &&
-        other.date == date;
+  final int totalDays;
+  final int availableDays;
+  final int busyDays;
+  final double availabilityPercentage;
+
+  /// Получить цвет для отображения статистики
+  String get availabilityColor {
+    if (availabilityPercentage >= 80) return 'green';
+    if (availabilityPercentage >= 60) return 'orange';
+    return 'red';
   }
 
-  @override
-  int get hashCode => specialistId.hashCode ^ date.hashCode;
-}
-
-/// Параметры для проверки доступности времени
-class DateTimeAvailabilityParams {
-  const DateTimeAvailabilityParams({
-    required this.specialistId,
-    required this.dateTime,
-  });
-  final String specialistId;
-  final DateTime dateTime;
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is DateTimeAvailabilityParams &&
-        other.specialistId == specialistId &&
-        other.dateTime == dateTime;
+  /// Получить текст статуса доступности
+  String get availabilityStatus {
+    if (availabilityPercentage >= 80) return 'Высокая доступность';
+    if (availabilityPercentage >= 60) return 'Средняя доступность';
+    return 'Низкая доступность';
   }
-
-  @override
-  int get hashCode => specialistId.hashCode ^ dateTime.hashCode;
-}
-
-/// Параметры для получения доступных дат
-class AvailableDatesParams {
-  const AvailableDatesParams({
-    required this.specialistId,
-    required this.startDate,
-    required this.endDate,
-  });
-  final String specialistId;
-  final DateTime startDate;
-  final DateTime endDate;
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is AvailableDatesParams &&
-        other.specialistId == specialistId &&
-        other.startDate == startDate &&
-        other.endDate == endDate;
-  }
-
-  @override
-  int get hashCode =>
-      specialistId.hashCode ^ startDate.hashCode ^ endDate.hashCode;
-}
-
-/// Параметры для получения доступных временных слотов
-class AvailableTimeSlotsParams {
-  const AvailableTimeSlotsParams({
-    required this.specialistId,
-    required this.date,
-    this.slotDuration = const Duration(hours: 1),
-  });
-  final String specialistId;
-  final DateTime date;
-  final Duration slotDuration;
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is AvailableTimeSlotsParams &&
-        other.specialistId == specialistId &&
-        other.date == date &&
-        other.slotDuration == slotDuration;
-  }
-
-  @override
-  int get hashCode =>
-      specialistId.hashCode ^ date.hashCode ^ slotDuration.hashCode;
-}
-
-/// Параметры для получения событий на дату
-class EventsForDateParams {
-  const EventsForDateParams({
-    required this.specialistId,
-    required this.date,
-  });
-  final String specialistId;
-  final DateTime date;
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is EventsForDateParams &&
-        other.specialistId == specialistId &&
-        other.date == date;
-  }
-
-  @override
-  int get hashCode => specialistId.hashCode ^ date.hashCode;
 }

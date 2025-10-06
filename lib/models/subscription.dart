@@ -25,8 +25,8 @@ class Subscription {
       specialistName: data['specialistName'] as String,
       specialistPhotoUrl: data['specialistPhotoUrl'] as String?,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      isActive: data['isActive'] ?? true,
-      notificationsEnabled: data['notificationsEnabled'] ?? true,
+      isActive: data['isActive'] as bool? ?? true,
+      notificationsEnabled: data['notificationsEnabled'] as bool? ?? true,
       planType: data['planType'] ?? 'basic',
     );
   }

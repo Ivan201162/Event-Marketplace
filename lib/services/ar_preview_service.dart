@@ -9,7 +9,7 @@ class ArPreviewService {
     }
 
     try {
-      // TODO: Проверить поддержку AR на устройстве
+      // TODO(developer): Проверить поддержку AR на устройстве
       // Пока возвращаем заглушку
       return true;
     } catch (e) {
@@ -51,8 +51,8 @@ class ArPreviewService {
         metadata: {},
       );
 
-      // TODO: Сохранить в Firestore
-      // TODO: Запустить генерацию AR-модели
+      // TODO(developer): Сохранить в Firestore
+      // TODO(developer): Запустить генерацию AR-модели
 
       return preview;
     } catch (e) {
@@ -67,7 +67,7 @@ class ArPreviewService {
     }
 
     try {
-      // TODO: Получить из Firestore
+      // TODO(developer): Получить из Firestore
       // Пока возвращаем заглушку
       return null;
     } catch (e) {
@@ -85,7 +85,7 @@ class ArPreviewService {
     }
 
     try {
-      // TODO: Запустить AR-просмотрщик
+      // TODO(developer): Запустить AR-просмотрщик
       // Интеграция с ARCore/ARKit
     } catch (e) {
       throw Exception('Ошибка запуска AR-просмотра: $e');
@@ -138,7 +138,7 @@ class ArPreviewService {
     }
 
     try {
-      // TODO: Получить из Firestore
+      // TODO(developer): Получить из Firestore
       // Пока возвращаем заглушку
       return [];
     } catch (e) {
@@ -192,7 +192,7 @@ class ArPreviewService {
     }
 
     try {
-      // TODO: Получить из Firestore
+      // TODO(developer): Получить из Firestore
       // Пока возвращаем заглушку
       return [];
     } catch (e) {
@@ -246,7 +246,7 @@ class ArPreviewService {
     }
 
     try {
-      // TODO: Сохранить AR-сцену в Firestore
+      // TODO(developer): Сохранить AR-сцену в Firestore
     } catch (e) {
       throw Exception('Ошибка сохранения AR-сцены: $e');
     }
@@ -259,7 +259,7 @@ class ArPreviewService {
     }
 
     try {
-      // TODO: Загрузить AR-сцену из Firestore
+      // TODO(developer): Загрузить AR-сцену из Firestore
       return null;
     } catch (e) {
       return null;
@@ -269,12 +269,12 @@ class ArPreviewService {
   // Приватные методы
 
   String _generateArModelUrl(String eventId) {
-    // TODO: Генерировать URL для AR-модели
+    // TODO(developer): Генерировать URL для AR-модели
     return 'https://ar-models.example.com/events/$eventId/model.glb';
   }
 
   String _generatePreviewImageUrl(String eventId) {
-    // TODO: Генерировать URL для превью изображения
+    // TODO(developer): Генерировать URL для превью изображения
     return 'https://ar-preview.example.com/events/$eventId/preview.jpg';
   }
 }

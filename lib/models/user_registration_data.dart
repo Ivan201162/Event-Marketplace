@@ -74,9 +74,9 @@ class UserRegistrationData {
         orElse: () => UserType.customer,
       ),
       profileImageUrl: data['profileImageUrl'] as String?,
-      agreeToTerms: data['agreeToTerms'] ?? false,
-      agreeToPrivacy: data['agreeToPrivacy'] ?? false,
-      agreeToMarketing: data['agreeToMarketing'] ?? false,
+      agreeToTerms: data['agreeToTerms'] as bool? ?? false,
+      agreeToPrivacy: data['agreeToPrivacy'] as bool? ?? false,
+      agreeToMarketing: data['agreeToMarketing'] as bool? ?? false,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       businessName: data['businessName'] as String?,
@@ -99,8 +99,8 @@ class UserRegistrationData {
       portfolioVideos: List<String>.from(data['portfolioVideos'] ?? []),
       rating: (data['rating'] as num?)?.toDouble(),
       completedBookings: data['completedBookings'] as int?,
-      isVerified: data['isVerified'] ?? false,
-      isActive: data['isActive'] ?? true,
+      isVerified: data['isVerified'] as bool? ?? false,
+      isActive: data['isActive'] as bool? ?? true,
     );
   }
   final String? id;

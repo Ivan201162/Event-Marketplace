@@ -66,15 +66,15 @@ class PaymentCard extends ConsumerWidget {
                 const SizedBox(height: 8),
 
                 // Описание
-                if (payment.description != null) ...[
+                ...[
                   Text(
-                    payment.description!,
+                    payment.description,
                     style: TextStyle(
                       fontSize: 14,
                       color: Theme.of(context)
                           .colorScheme
                           .onSurface
-                          .withOpacity(0.7),
+                          .withValues(alpha: 0.7),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -89,7 +89,7 @@ class PaymentCard extends ConsumerWidget {
                       color: Theme.of(context)
                           .colorScheme
                           .onSurface
-                          .withOpacity(0.7),
+                          .withValues(alpha: 0.7),
                     ),
                     const SizedBox(width: 8),
                     Text(
@@ -99,7 +99,7 @@ class PaymentCard extends ConsumerWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.7),
+                            .withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -167,14 +167,18 @@ class PaymentCard extends ConsumerWidget {
         color = Colors.purple;
         icon = Icons.undo;
         break;
+      case PaymentStatus.disputed:
+        color = Colors.amber;
+        icon = Icons.gavel;
+        break;
     }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -224,7 +228,7 @@ class PaymentCard extends ConsumerWidget {
 
   /// Показать диалог оплаты
   void _showPaymentDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => PaymentDialog(payment: payment),
     );
@@ -232,7 +236,7 @@ class PaymentCard extends ConsumerWidget {
 
   /// Показать диалог отмены
   void _showCancelDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Отмена платежа'),
@@ -246,7 +250,7 @@ class PaymentCard extends ConsumerWidget {
             onPressed: () async {
               Navigator.of(context).pop();
               try {
-                // TODO: Implement payment cancellation
+                // TODO(developer): Implement payment cancellation
                 // await ref.read(paymentServiceProvider).cancelPayment(payment.id);
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -284,6 +288,8 @@ class PaymentCard extends ConsumerWidget {
         return 'Отменен';
       case PaymentStatus.refunded:
         return 'Возвращен';
+      case PaymentStatus.disputed:
+        return 'Оспорен';
     }
   }
 
@@ -309,7 +315,7 @@ class _PaymentDialogState extends ConsumerState<PaymentDialog> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Implement payment form provider
+    // TODO(developer): Implement payment form provider
     // final formState = ref.watch(paymentFormProvider);
 
     return AlertDialog(
@@ -325,7 +331,7 @@ class _PaymentDialogState extends ConsumerState<PaymentDialog> {
           const Text('Выберите способ оплаты:'),
           const SizedBox(height: 12),
           _buildPaymentMethodSelector(),
-          // TODO: Add error message display when payment form provider is implemented
+          // TODO(developer): Add error message display when payment form provider is implemented
         ],
       ),
       actions: [
@@ -376,11 +382,11 @@ class _PaymentDialogState extends ConsumerState<PaymentDialog> {
 
   /// Обработать платеж
   Future<void> _processPayment() async {
-    // TODO: Implement payment form provider
+    // TODO(developer): Implement payment form provider
     // ref.read(paymentFormProvider.notifier).startProcessing();
 
     try {
-      // TODO: Implement payment processing
+      // TODO(developer): Implement payment processing
       // await ref.read(paymentServiceProvider).processPayment(
       //       widget.payment.id,
       //       _selectedPaymentMethod,
@@ -393,7 +399,7 @@ class _PaymentDialogState extends ConsumerState<PaymentDialog> {
         );
       }
     } catch (e) {
-      // TODO: Implement payment form provider
+      // TODO(developer): Implement payment form provider
       // ref.read(paymentFormProvider.notifier).setError(e.toString());
     }
   }
@@ -470,7 +476,7 @@ class PaymentStatisticsWidget extends ConsumerWidget {
               const SizedBox(height: 16),
               LinearProgressIndicator(
                 value: (statistics['completionRate'] as num? ?? 0) / 100,
-                backgroundColor: Colors.grey.withOpacity(0.3),
+                backgroundColor: Colors.grey.withValues(alpha: 0.3),
                 valueColor: AlwaysStoppedAnimation<Color>(
                   (statistics['completionRate'] as num? ?? 0) > 80
                       ? Colors.green
@@ -482,8 +488,10 @@ class PaymentStatisticsWidget extends ConsumerWidget {
                 'Процент завершенных: ${(statistics['completionRate'] as num? ?? 0).toStringAsFixed(1)}%',
                 style: TextStyle(
                   fontSize: 12,
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
                 ),
               ),
             ],
@@ -502,9 +510,9 @@ class PaymentStatisticsWidget extends ConsumerWidget {
       Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: color.withOpacity(0.3)),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
         child: Column(
           children: [
@@ -521,7 +529,10 @@ class PaymentStatisticsWidget extends ConsumerWidget {
               label,
               style: TextStyle(
                 fontSize: 12,
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.7),
               ),
             ),
             const SizedBox(height: 4),
@@ -550,7 +561,7 @@ class PaymentCalculationWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: Implement payment calculation provider
+    // TODO(developer): Implement payment calculation provider
     final calculation = {
       'prepaymentAmount': totalAmount * 0.3,
       'finalPaymentAmount': totalAmount * 0.7,
@@ -575,7 +586,10 @@ class PaymentCalculationWidget extends ConsumerWidget {
                   'Расчет платежей',
               style: TextStyle(
                 fontSize: 12,
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.7),
               ),
             ),
             const SizedBox(height: 16),

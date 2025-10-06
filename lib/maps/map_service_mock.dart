@@ -30,8 +30,8 @@ class MapServiceMock implements MapService {
     List<MapMarker> markers = const [],
     bool showUserLocation = true,
     bool showTraffic = false,
-    Function(MapMarker)? onMarkerTap,
-    Function(MapCoordinates)? onMapTap,
+    void Function(MapMarker)? onMarkerTap,
+    void Function(MapCoordinates)? onMapTap,
     Function(MapCoordinates, double)? onCameraMove,
   }) {
     if (!FeatureFlags.mapsEnabled) {
@@ -338,8 +338,8 @@ class MapServiceMock implements MapService {
     required MapCoordinates center,
     required double zoom,
     required List<MapMarker> markers,
-    Function(MapMarker)? onMarkerTap,
-    Function(MapCoordinates)? onMapTap,
+    void Function(MapMarker)? onMarkerTap,
+    void Function(MapCoordinates)? onMapTap,
   }) =>
       Container(
         decoration: BoxDecoration(

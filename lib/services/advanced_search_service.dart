@@ -125,7 +125,7 @@ class AdvancedSearchService {
 
         // Фильтр по дате доступности
         if (filters.availableFrom != null || filters.availableTo != null) {
-          // TODO: Реализовать проверку доступности по датам
+          // TODO(developer): Реализовать проверку доступности по датам
           // Это требует интеграции с календарем специалиста
         }
 

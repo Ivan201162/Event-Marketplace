@@ -164,7 +164,8 @@ class _AdminPanelScreenState extends ConsumerState<AdminPanelScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        selectedTileColor: Theme.of(context).primaryColor.withOpacity(0.1),
+        selectedTileColor:
+            Theme.of(context).primaryColor.withValues(alpha: 0.1),
       ),
     );
   }
@@ -279,7 +280,7 @@ class _AdminPanelScreenState extends ConsumerState<AdminPanelScreen> {
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: () {
-                    // TODO: Реализовать поиск пользователей
+                    // TODO(developer): Реализовать поиск пользователей
                   },
                   icon: const Icon(Icons.search),
                   label: const Text('Поиск'),
@@ -345,7 +346,7 @@ class _AdminPanelScreenState extends ConsumerState<AdminPanelScreen> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Color(user.statusColor).withOpacity(0.1),
+                      color: Color(user.statusColor).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: Color(user.statusColor)),
                     ),
@@ -429,7 +430,7 @@ class _AdminPanelScreenState extends ConsumerState<AdminPanelScreen> {
             const SizedBox(height: 16),
             ElevatedButton.icon(
               onPressed: () {
-                // TODO: Реализовать массовые действия
+                // TODO(developer): Реализовать массовые действия
               },
               icon: const Icon(Icons.block),
               label: const Text('Массовая блокировка'),
@@ -441,7 +442,7 @@ class _AdminPanelScreenState extends ConsumerState<AdminPanelScreen> {
             const SizedBox(height: 8),
             ElevatedButton.icon(
               onPressed: () {
-                // TODO: Реализовать экспорт данных
+                // TODO(developer): Реализовать экспорт данных
               },
               icon: const Icon(Icons.download),
               label: const Text('Экспорт данных'),
@@ -449,7 +450,7 @@ class _AdminPanelScreenState extends ConsumerState<AdminPanelScreen> {
             const SizedBox(height: 8),
             ElevatedButton.icon(
               onPressed: () {
-                // TODO: Реализовать резервное копирование
+                // TODO(developer): Реализовать резервное копирование
               },
               icon: const Icon(Icons.backup),
               label: const Text('Резервное копирование'),
@@ -476,7 +477,7 @@ class _AdminPanelScreenState extends ConsumerState<AdminPanelScreen> {
   }
 
   void _showUserDetails(ManagedUser user) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(user.fullName),
@@ -504,7 +505,7 @@ class _AdminPanelScreenState extends ConsumerState<AdminPanelScreen> {
   void _showBanDialog(ManagedUser user) {
     final reasonController = TextEditingController();
 
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Заблокировать ${user.fullName}'),
@@ -566,7 +567,7 @@ class _AdminPanelScreenState extends ConsumerState<AdminPanelScreen> {
   }
 
   void _verifyUser(ManagedUser user) {
-    // TODO: Реализовать верификацию пользователя
+    // TODO(developer): Реализовать верификацию пользователя
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Пользователь ${user.fullName} верифицирован')),
     );

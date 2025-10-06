@@ -343,12 +343,12 @@ class _TranslationManagementScreenState
   }
 
   void _addTranslation() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => _TranslationDialog(
         language: _selectedLanguage,
         onSave: (key, value) {
-          // TODO: Реализовать добавление перевода
+          // TODO(developer): Реализовать добавление перевода
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -362,14 +362,14 @@ class _TranslationManagementScreenState
   }
 
   void _editTranslation(String key, String value) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => _TranslationDialog(
         language: _selectedLanguage,
         initialKey: key,
         initialValue: value,
         onSave: (newKey, newValue) {
-          // TODO: Реализовать редактирование перевода
+          // TODO(developer): Реализовать редактирование перевода
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -383,7 +383,7 @@ class _TranslationManagementScreenState
   }
 
   void _copyTranslation(String key, String value) {
-    // TODO: Реализовать копирование перевода
+    // TODO(developer): Реализовать копирование перевода
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text(

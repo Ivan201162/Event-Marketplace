@@ -1,5 +1,5 @@
-import 'package:event_marketplace_app/widgets/language_selector.dart';
 import 'package:event_marketplace_app/ui/responsive/responsive_widgets.dart';
+import 'package:event_marketplace_app/widgets/language_selector.dart';
 import 'package:event_marketplace_app/widgets/theme_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -191,6 +191,7 @@ class ChartData {
 
 /// Период для аналитики
 enum AnalyticsPeriod {
+  day, // День
   week, // Неделя
   month, // Месяц
   quarter, // Квартал

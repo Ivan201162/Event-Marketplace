@@ -20,7 +20,7 @@ class AdminPanelService {
       final doc = await _firestore.collection('admins').doc(userId).get();
       return doc.exists && (doc.data()?['isActive'] ?? false);
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return false;
     }
   }
@@ -34,7 +34,7 @@ class AdminPanelService {
       }
       return null;
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return null;
     }
   }
@@ -50,7 +50,7 @@ class AdminPanelService {
 
       return adminInfo.permissions.contains(permission.name);
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return false;
     }
   }
@@ -134,7 +134,7 @@ class AdminPanelService {
         lastUpdated: DateTime.now(),
       );
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return AdminStats.empty();
     }
   }
@@ -197,7 +197,7 @@ class AdminPanelService {
 
       return true;
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return false;
     }
   }
@@ -222,7 +222,7 @@ class AdminPanelService {
 
       return true;
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return false;
     }
   }
@@ -246,7 +246,7 @@ class AdminPanelService {
 
       return true;
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return false;
     }
   }
@@ -275,7 +275,7 @@ class AdminPanelService {
 
       return true;
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return false;
     }
   }
@@ -307,7 +307,7 @@ class AdminPanelService {
 
       return true;
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return false;
     }
   }
@@ -336,7 +336,7 @@ class AdminPanelService {
 
       return true;
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return false;
     }
   }
@@ -370,7 +370,7 @@ class AdminPanelService {
       });
       return true;
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return false;
     }
   }
@@ -385,7 +385,7 @@ class AdminPanelService {
       }
       return AdminSettings(lastUpdated: DateTime.now());
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return AdminSettings(lastUpdated: DateTime.now());
     }
   }
@@ -412,7 +412,7 @@ class AdminPanelService {
 
       return true;
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return false;
     }
   }
@@ -444,7 +444,7 @@ class AdminPanelService {
           .set(notification.toMap());
       return true;
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return false;
     }
   }
@@ -479,7 +479,7 @@ class AdminPanelService {
           .doc(action.id)
           .set(action.toMap());
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
     }
   }
 
@@ -530,7 +530,7 @@ class AdminPanelService {
 
       return exportData;
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return {};
     }
   }

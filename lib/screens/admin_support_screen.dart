@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'support_ticket_detail_screen.dart';
+
 import '../models/support_ticket.dart';
 import '../services/support_service.dart';
 import '../widgets/support_ticket_widget.dart';
+import 'support_ticket_detail_screen.dart';
 
 /// Экран админ-панели поддержки
 class AdminSupportScreen extends ConsumerStatefulWidget {
@@ -52,7 +53,7 @@ class _AdminSupportScreenState extends ConsumerState<AdminSupportScreen> {
       );
 
   Widget _buildStatsSection() => FutureBuilder<SupportStats>(
-        future: _supportService.getSupportStats(),
+        future: _supportService.getSupportStats('admin'),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const SizedBox.shrink();
@@ -386,7 +387,7 @@ class _AdminSupportScreenState extends ConsumerState<AdminSupportScreen> {
   void _showTicketDetail(SupportTicket ticket) {
     Navigator.of(context)
         .push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => SupportTicketDetailScreen(
           ticketId: ticket.id,
         ),
@@ -400,7 +401,7 @@ class _AdminSupportScreenState extends ConsumerState<AdminSupportScreen> {
   }
 
   void _showFilterDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Фильтры'),

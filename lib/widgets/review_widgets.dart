@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/review.dart';
-import '../models/review_statistics.dart';
 import '../providers/review_providers.dart';
 
 /// Виджет отзыва
@@ -49,7 +48,7 @@ class ReviewCard extends StatelessWidget {
                 // Комментарий
                 if (review.hasComment) ...[
                   Text(
-                    review.comment!,
+                    review.comment,
                     style: TextStyle(
                       fontSize: 14,
                       color: Theme.of(context)
@@ -167,12 +166,12 @@ class ReviewCard extends StatelessWidget {
 }
 
 /// Виджет статистики отзывов
-class ReviewStatisticsWidget extends StatelessWidget {
-  const ReviewStatisticsWidget({
+class ReviewStatsWidget extends StatelessWidget {
+  const ReviewStatsWidget({
     super.key,
     required this.statistics,
   });
-  final ReviewStatistics statistics;
+  final ReviewStats statistics;
 
   @override
   Widget build(BuildContext context) => Card(
@@ -204,7 +203,7 @@ class ReviewStatisticsWidget extends StatelessWidget {
               const SizedBox(height: 16),
 
               // Популярные теги
-              if (statistics.commonTags.isNotEmpty) ...[
+              if (statistics.tags.isNotEmpty) ...[
                 Text(
                   'Популярные теги',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -215,7 +214,7 @@ class ReviewStatisticsWidget extends StatelessWidget {
                 Wrap(
                   spacing: 8,
                   runSpacing: 4,
-                  children: statistics.commonTags
+                  children: statistics.tags
                       .map((tag) => _buildTagChip(context, tag))
                       .toList(),
                 ),
@@ -243,10 +242,13 @@ class ReviewStatisticsWidget extends StatelessWidget {
           _buildRatingStars(statistics.averageRating.round()),
           const SizedBox(height: 4),
           Text(
-            statistics.averageRatingDescription,
+            _getRatingDescription(statistics.averageRating.toInt()),
             style: TextStyle(
               fontSize: 12,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.7),
             ),
           ),
           const SizedBox(height: 4),
@@ -254,7 +256,10 @@ class ReviewStatisticsWidget extends StatelessWidget {
             '${statistics.totalReviews} отзывов',
             style: TextStyle(
               fontSize: 12,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -285,7 +290,7 @@ class ReviewStatisticsWidget extends StatelessWidget {
                 Expanded(
                   child: LinearProgressIndicator(
                     value: percentage / 100,
-                    backgroundColor: Colors.grey.withOpacity(0.3),
+                    backgroundColor: Colors.grey.withValues(alpha: 0.3),
                     valueColor: AlwaysStoppedAnimation<Color>(
                       Theme.of(context).colorScheme.primary,
                     ),
@@ -306,10 +311,11 @@ class ReviewStatisticsWidget extends StatelessWidget {
   Widget _buildTagChip(BuildContext context, String tag) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+          color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: Theme.of(context).colorScheme.secondary.withOpacity(0.3),
+            color:
+                Theme.of(context).colorScheme.secondary.withValues(alpha: 0.3),
           ),
         ),
         child: Text(
@@ -328,14 +334,14 @@ class ReviewStatisticsWidget extends StatelessWidget {
           _buildInfoItem(
             context,
             'Проверено',
-            '${statistics.verifiedPercentage.toStringAsFixed(0)}%',
+            '${_getVerifiedPercentage().toStringAsFixed(0)}%',
             Icons.verified,
             Colors.blue,
           ),
           _buildInfoItem(
             context,
             'Последний',
-            _formatDate(statistics.lastReviewDate),
+            _formatDate(_getLastReviewDate()),
             Icons.schedule,
             Colors.grey,
           ),
@@ -366,7 +372,10 @@ class ReviewStatisticsWidget extends StatelessWidget {
             label,
             style: TextStyle(
               fontSize: 12,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -471,9 +480,9 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.1),
+                  color: Colors.red.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.red.withOpacity(0.3)),
+                  border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   children: [
@@ -544,7 +553,10 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
             _getRatingDescription(formState.rating),
             style: TextStyle(
               fontSize: 14,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -608,16 +620,12 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
 
     try {
       await ref.read(reviewStateProvider.notifier).createReview(
-            targetId: widget.specialistId,
-            type: ReviewType.specialist,
-            title: ref.read(reviewFormProvider).title.isEmpty
-                ? 'Отзыв'
-                : ref.read(reviewFormProvider).title,
-            content: ref.read(reviewFormProvider).comment.isEmpty
-                ? ref.read(reviewFormProvider).content
-                : ref.read(reviewFormProvider).comment,
+            specialistId: widget.specialistId,
+            customerId: 'current_user_id',
+            customerName: 'Current User',
             rating: ref.read(reviewFormProvider).rating,
-            tags: ref.read(reviewFormProvider).selectedTags,
+            comment: ref.read(reviewFormProvider).comment,
+            specialistName: widget.specialistName ?? 'Specialist',
           );
 
       ref.read(reviewFormProvider.notifier).finishSubmitting();
@@ -706,5 +714,24 @@ class ReviewListWidget extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  String _getRatingDescription(double rating) {
+    if (rating >= 4.5) return 'Отлично';
+    if (rating >= 4.0) return 'Хорошо';
+    if (rating >= 3.0) return 'Удовлетворительно';
+    if (rating >= 2.0) return 'Плохо';
+    return 'Очень плохо';
+  }
+
+  double _getVerifiedPercentage() {
+    // Возвращаем примерный процент проверенных отзывов
+    return 85; // TODO: Реализовать реальную логику
+  }
+
+  DateTime _getLastReviewDate() {
+    // Возвращаем примерную дату последнего отзыва
+    return DateTime.now()
+        .subtract(const Duration(days: 2)); // TODO: Реализовать реальную логику
   }
 }

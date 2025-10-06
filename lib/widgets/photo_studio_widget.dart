@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/photo_studio.dart';
@@ -30,17 +31,17 @@ class PhotoStudioCard extends ConsumerWidget {
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                   ),
-                  if (studio.rating != null) ...[
+                  ...[
                     const Icon(Icons.star, color: Colors.amber, size: 16),
                     const SizedBox(width: 4),
                     Text(
-                      studio.rating!.toStringAsFixed(1),
+                      studio.rating.toStringAsFixed(1),
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.amber,
                       ),
                     ),
-                    if (studio.reviewCount != null) ...[
+                    ...[
                       const SizedBox(width: 4),
                       Text(
                         '(${studio.reviewCount})',
@@ -98,7 +99,7 @@ class PhotoStudioCard extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        studio.priceRange!,
+                        studio.priceRange!.formattedRange,
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -209,18 +210,18 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                                         .headlineSmall,
                                   ),
                                 ),
-                                if (studio.rating != null) ...[
+                                ...[
                                   const Icon(Icons.star, color: Colors.amber),
                                   const SizedBox(width: 4),
                                   Text(
-                                    studio.rating!.toStringAsFixed(1),
+                                    studio.rating.toStringAsFixed(1),
                                     style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.amber,
                                     ),
                                   ),
-                                  if (studio.reviewCount != null) ...[
+                                  ...[
                                     const SizedBox(width: 4),
                                     Text(
                                       '(${studio.reviewCount} отзывов)',
@@ -368,7 +369,7 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    '${option.pricePerHour.toStringAsFixed(0)} ₽/час',
+                    '${option.price.toStringAsFixed(0)} ₽/час',
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
@@ -383,10 +384,11 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
               option.description ?? 'Описание отсутствует',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-            if (option.photos.isNotEmpty) ...[
-              const SizedBox(height: 8),
-              _buildOptionPhotos(option.photos),
-            ],
+            // TODO(developer): Добавить поддержку фотографий для опций студии
+            // if (option.photos.isNotEmpty) ...[
+            //   const SizedBox(height: 8),
+            //   _buildOptionPhotos(option.photos),
+            // ],
           ],
         ),
       );
@@ -406,10 +408,16 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                photos[index],
+              child: CachedNetworkImage(
+                imageUrl: photos[index],
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) =>
+                placeholder: (context, url) => Container(
+                  color: Colors.grey[300],
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+                errorWidget: (context, url, error) =>
                     const Center(child: Icon(Icons.broken_image)),
               ),
             ),
@@ -435,10 +443,16 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                photos[index],
+              child: CachedNetworkImage(
+                imageUrl: photos[index],
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) =>
+                placeholder: (context, url) => Container(
+                  color: Colors.grey[300],
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+                errorWidget: (context, url, error) =>
                     const Center(child: Icon(Icons.broken_image)),
               ),
             ),
@@ -447,7 +461,7 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
       );
 
   void _showPhotoPreview(BuildContext context, String photoUrl) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => Dialog(
         child: Container(
@@ -466,10 +480,16 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                 ],
               ),
               Expanded(
-                child: Image.network(
-                  photoUrl,
+                child: CachedNetworkImage(
+                  imageUrl: photoUrl,
                   fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) =>
+                  placeholder: (context, url) => Container(
+                    color: Colors.grey[300],
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) =>
                       const Center(child: Icon(Icons.broken_image)),
                 ),
               ),
@@ -485,7 +505,7 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
     WidgetRef ref,
     PhotoStudio studio,
   ) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => _BookingDialog(
         studio: studio,
@@ -579,6 +599,16 @@ class _BookingDialogState extends ConsumerState<_BookingDialog> {
     super.dispose();
   }
 
+  double _calculateDuration() {
+    if (_startTime == null || _endTime == null) return 1;
+    final start = _startTime!;
+    final end = _endTime!;
+    final startMinutes = start.hour * 60 + start.minute;
+    final endMinutes = end.hour * 60 + end.minute;
+    final durationMinutes = endMinutes - startMinutes;
+    return (durationMinutes / 60).clamp(1.0, 24.0);
+  }
+
   @override
   Widget build(BuildContext context) => AlertDialog(
         title: Text('Бронирование ${widget.studio.name}'),
@@ -599,7 +629,7 @@ class _BookingDialogState extends ConsumerState<_BookingDialog> {
                       (option) => DropdownMenuItem(
                         value: option,
                         child: Text(
-                          '${option.name} - ${option.pricePerHour.toStringAsFixed(0)} ₽/час',
+                          '${option.name} - ${option.price.toStringAsFixed(0)} ₽/час',
                         ),
                       ),
                     )
@@ -759,10 +789,10 @@ class _BookingDialogState extends ConsumerState<_BookingDialog> {
 
       await service.createStudioBooking(
         studioId: widget.studio.id,
-        customerId: 'current_user_id', // TODO: Получить из контекста
-        optionId: _selectedOption!.id,
+        customerId: 'current_user_id', // TODO(developer): Получить из контекста
         startTime: startDateTime,
         endTime: endDateTime,
+        totalPrice: _selectedOption!.price * _calculateDuration(),
         notes: _notesController.text.trim().isEmpty
             ? null
             : _notesController.text.trim(),
@@ -797,9 +827,6 @@ final photoStudiosProvider =
         (ref, params) async {
   final service = ref.read(photoStudioServiceProvider);
   return service.getPhotoStudios(
-    location: params['location'] as String?,
-    minPrice: params['minPrice'] as double?,
-    maxPrice: params['maxPrice'] as double?,
     limit: params['limit'] as int? ?? 20,
   );
 });

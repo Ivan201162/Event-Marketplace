@@ -40,7 +40,7 @@ class ABTestService {
       }
 
       final totalTraffic =
-          variants.fold(0.0, (sum, variant) => sum + variant.trafficPercentage);
+          variants.fold(0, (sum, variant) => sum + variant.trafficPercentage);
       if (totalTraffic > 100.0) {
         throw Exception('Общий трафик вариантов не может превышать 100%');
       }
@@ -249,7 +249,7 @@ class ABTestService {
       return false;
     }
 
-    // TODO: Добавить проверку сегментов пользователей, платформ, версий приложения
+    // TODO(developer): Добавить проверку сегментов пользователей, платформ, версий приложения
 
     return true;
   }

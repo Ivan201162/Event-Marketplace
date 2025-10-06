@@ -375,11 +375,11 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
           isPublic: _isPublic,
         );
 
-        // TODO: Implement updatePortfolioVideo method
+        // TODO(developer): Implement updatePortfolioVideo method
         // await service.updatePortfolioVideo(widget.specialistId, updatedVideo);
       } else {
         // Создаём новое видео
-        // TODO: Implement addPortfolioVideo method
+        // TODO(developer): Implement addPortfolioVideo method
         // await service.addPortfolioVideo(
         //   specialistId: widget.specialistId,
         //   title: title,

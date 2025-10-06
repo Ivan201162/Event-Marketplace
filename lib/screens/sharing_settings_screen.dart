@@ -387,7 +387,7 @@ https://eventmarketplace.com
   }
 
   void _editSharingTemplate(String type) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Редактировать шаблон для $type'),

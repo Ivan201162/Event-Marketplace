@@ -1,9 +1,8 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:flutter/foundation.dart';
-import 'package:crypto/crypto.dart';
 
-import '../models/payment_models.dart';
+import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 
 class TinkoffPaymentService {
   static const String _baseUrl =
@@ -62,7 +61,8 @@ class TinkoffPaymentService {
         return TinkoffPaymentResponse.fromJson(responseData);
       } else {
         throw Exception(
-            'Tinkoff API error: ${response.statusCode} - ${response.body}');
+          'Tinkoff API error: ${response.statusCode} - ${response.body}',
+        );
       }
     } catch (e) {
       debugPrint('Tinkoff payment creation error: $e');
@@ -94,7 +94,8 @@ class TinkoffPaymentService {
         return TinkoffPaymentStatus.fromJson(responseData);
       } else {
         throw Exception(
-            'Tinkoff API error: ${response.statusCode} - ${response.body}');
+          'Tinkoff API error: ${response.statusCode} - ${response.body}',
+        );
       }
     } catch (e) {
       debugPrint('Tinkoff payment status error: $e');
@@ -124,7 +125,8 @@ class TinkoffPaymentService {
 
       if (response.statusCode != 200) {
         throw Exception(
-            'Tinkoff confirm error: ${response.statusCode} - ${response.body}');
+          'Tinkoff confirm error: ${response.statusCode} - ${response.body}',
+        );
       }
     } catch (e) {
       debugPrint('Tinkoff payment confirm error: $e');
@@ -153,7 +155,8 @@ class TinkoffPaymentService {
 
       if (response.statusCode != 200) {
         throw Exception(
-            'Tinkoff cancel error: ${response.statusCode} - ${response.body}');
+          'Tinkoff cancel error: ${response.statusCode} - ${response.body}',
+        );
       }
     } catch (e) {
       debugPrint('Tinkoff payment cancel error: $e');
@@ -191,7 +194,8 @@ class TinkoffPaymentService {
         return TinkoffRefundResponse.fromJson(responseData);
       } else {
         throw Exception(
-            'Tinkoff refund error: ${response.statusCode} - ${response.body}');
+          'Tinkoff refund error: ${response.statusCode} - ${response.body}',
+        );
       }
     } catch (e) {
       debugPrint('Tinkoff refund creation error: $e');
@@ -209,8 +213,8 @@ class TinkoffPaymentService {
     final sortedKeys = cleanBody.keys.toList()..sort();
 
     // Create string for hashing
-    String dataString = '';
-    for (String key in sortedKeys) {
+    var dataString = '';
+    for (final key in sortedKeys) {
       if (cleanBody[key] is Map) {
         // Handle nested objects (like Receipt)
         dataString += _flattenMap(cleanBody[key] as Map<String, dynamic>);
@@ -231,13 +235,13 @@ class TinkoffPaymentService {
   /// Flattens nested map for token generation
   String _flattenMap(Map<String, dynamic> map) {
     final sortedKeys = map.keys.toList()..sort();
-    String result = '';
+    var result = '';
 
-    for (String key in sortedKeys) {
+    for (final key in sortedKeys) {
       if (map[key] is List) {
         // Handle arrays
         final list = map[key] as List;
-        for (var item in list) {
+        for (final item in list) {
           if (item is Map) {
             result += _flattenMap(item as Map<String, dynamic>);
           } else {
@@ -271,17 +275,6 @@ class TinkoffPaymentService {
 
 /// Tinkoff Payment Response
 class TinkoffPaymentResponse {
-  final bool success;
-  final String? errorCode;
-  final String? message;
-  final String? details;
-  final String? terminalKey;
-  final String? status;
-  final String? paymentId;
-  final String? orderId;
-  final double amount;
-  final String? paymentUrl;
-
   TinkoffPaymentResponse({
     required this.success,
     this.errorCode,
@@ -295,39 +288,19 @@ class TinkoffPaymentResponse {
     this.paymentUrl,
   });
 
-  factory TinkoffPaymentResponse.fromJson(Map<String, dynamic> json) {
-    return TinkoffPaymentResponse(
-      success: json['Success'] as bool,
-      errorCode: json['ErrorCode'] as String?,
-      message: json['Message'] as String?,
-      details: json['Details'] as String?,
-      terminalKey: json['TerminalKey'] as String?,
-      status: json['Status'] as String?,
-      paymentId: json['PaymentId'] as String?,
-      orderId: json['OrderId'] as String?,
-      amount: json['Amount'] != null ? (json['Amount'] as int) / 100.0 : 0.0,
-      paymentUrl: json['PaymentURL'] as String?,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'Success': success,
-      'ErrorCode': errorCode,
-      'Message': message,
-      'Details': details,
-      'TerminalKey': terminalKey,
-      'Status': status,
-      'PaymentId': paymentId,
-      'OrderId': orderId,
-      'Amount': (amount * 100).toInt(),
-      'PaymentURL': paymentUrl,
-    };
-  }
-}
-
-/// Tinkoff Payment Status
-class TinkoffPaymentStatus {
+  factory TinkoffPaymentResponse.fromJson(Map<String, dynamic> json) =>
+      TinkoffPaymentResponse(
+        success: json['Success'] as bool,
+        errorCode: json['ErrorCode'] as String?,
+        message: json['Message'] as String?,
+        details: json['Details'] as String?,
+        terminalKey: json['TerminalKey'] as String?,
+        status: json['Status'] as String?,
+        paymentId: json['PaymentId'] as String?,
+        orderId: json['OrderId'] as String?,
+        amount: json['Amount'] != null ? (json['Amount'] as int) / 100.0 : 0.0,
+        paymentUrl: json['PaymentURL'] as String?,
+      );
   final bool success;
   final String? errorCode;
   final String? message;
@@ -337,8 +310,24 @@ class TinkoffPaymentStatus {
   final String? paymentId;
   final String? orderId;
   final double amount;
-  final DateTime? created;
+  final String? paymentUrl;
 
+  Map<String, dynamic> toJson() => {
+        'Success': success,
+        'ErrorCode': errorCode,
+        'Message': message,
+        'Details': details,
+        'TerminalKey': terminalKey,
+        'Status': status,
+        'PaymentId': paymentId,
+        'OrderId': orderId,
+        'Amount': (amount * 100).toInt(),
+        'PaymentURL': paymentUrl,
+      };
+}
+
+/// Tinkoff Payment Status
+class TinkoffPaymentStatus {
   TinkoffPaymentStatus({
     required this.success,
     this.errorCode,
@@ -352,37 +341,44 @@ class TinkoffPaymentStatus {
     this.created,
   });
 
-  factory TinkoffPaymentStatus.fromJson(Map<String, dynamic> json) {
-    return TinkoffPaymentStatus(
-      success: json['Success'] as bool,
-      errorCode: json['ErrorCode'] as String?,
-      message: json['Message'] as String?,
-      details: json['Details'] as String?,
-      terminalKey: json['TerminalKey'] as String?,
-      status: json['Status'] as String?,
-      paymentId: json['PaymentId'] as String?,
-      orderId: json['OrderId'] as String?,
-      amount: json['Amount'] != null ? (json['Amount'] as int) / 100.0 : 0.0,
-      created: json['Created'] != null
-          ? DateTime.parse(json['Created'] as String)
-          : null,
-    );
-  }
+  factory TinkoffPaymentStatus.fromJson(Map<String, dynamic> json) =>
+      TinkoffPaymentStatus(
+        success: json['Success'] as bool,
+        errorCode: json['ErrorCode'] as String?,
+        message: json['Message'] as String?,
+        details: json['Details'] as String?,
+        terminalKey: json['TerminalKey'] as String?,
+        status: json['Status'] as String?,
+        paymentId: json['PaymentId'] as String?,
+        orderId: json['OrderId'] as String?,
+        amount: json['Amount'] != null ? (json['Amount'] as int) / 100.0 : 0.0,
+        created: json['Created'] != null
+            ? DateTime.parse(json['Created'] as String)
+            : null,
+      );
+  final bool success;
+  final String? errorCode;
+  final String? message;
+  final String? details;
+  final String? terminalKey;
+  final String? status;
+  final String? paymentId;
+  final String? orderId;
+  final double amount;
+  final DateTime? created;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'Success': success,
-      'ErrorCode': errorCode,
-      'Message': message,
-      'Details': details,
-      'TerminalKey': terminalKey,
-      'Status': status,
-      'PaymentId': paymentId,
-      'OrderId': orderId,
-      'Amount': (amount * 100).toInt(),
-      'Created': created?.toIso8601String(),
-    };
-  }
+  Map<String, dynamic> toJson() => {
+        'Success': success,
+        'ErrorCode': errorCode,
+        'Message': message,
+        'Details': details,
+        'TerminalKey': terminalKey,
+        'Status': status,
+        'PaymentId': paymentId,
+        'OrderId': orderId,
+        'Amount': (amount * 100).toInt(),
+        'Created': created?.toIso8601String(),
+      };
 
   bool get isCompleted => status == 'CONFIRMED';
   bool get isFailed => status == 'REJECTED' || status == 'CANCELED';
@@ -394,15 +390,6 @@ class TinkoffPaymentStatus {
 
 /// Tinkoff Refund Response
 class TinkoffRefundResponse {
-  final bool success;
-  final String? errorCode;
-  final String? message;
-  final String? details;
-  final String? terminalKey;
-  final String? status;
-  final String? paymentId;
-  final double amount;
-
   TinkoffRefundResponse({
     required this.success,
     this.errorCode,
@@ -414,29 +401,34 @@ class TinkoffRefundResponse {
     required this.amount,
   });
 
-  factory TinkoffRefundResponse.fromJson(Map<String, dynamic> json) {
-    return TinkoffRefundResponse(
-      success: json['Success'] as bool,
-      errorCode: json['ErrorCode'] as String?,
-      message: json['Message'] as String?,
-      details: json['Details'] as String?,
-      terminalKey: json['TerminalKey'] as String?,
-      status: json['Status'] as String?,
-      paymentId: json['PaymentId'] as String?,
-      amount: json['Amount'] != null ? (json['Amount'] as int) / 100.0 : 0.0,
-    );
-  }
+  factory TinkoffRefundResponse.fromJson(Map<String, dynamic> json) =>
+      TinkoffRefundResponse(
+        success: json['Success'] as bool,
+        errorCode: json['ErrorCode'] as String?,
+        message: json['Message'] as String?,
+        details: json['Details'] as String?,
+        terminalKey: json['TerminalKey'] as String?,
+        status: json['Status'] as String?,
+        paymentId: json['PaymentId'] as String?,
+        amount: json['Amount'] != null ? (json['Amount'] as int) / 100.0 : 0.0,
+      );
+  final bool success;
+  final String? errorCode;
+  final String? message;
+  final String? details;
+  final String? terminalKey;
+  final String? status;
+  final String? paymentId;
+  final double amount;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'Success': success,
-      'ErrorCode': errorCode,
-      'Message': message,
-      'Details': details,
-      'TerminalKey': terminalKey,
-      'Status': status,
-      'PaymentId': paymentId,
-      'Amount': (amount * 100).toInt(),
-    };
-  }
+  Map<String, dynamic> toJson() => {
+        'Success': success,
+        'ErrorCode': errorCode,
+        'Message': message,
+        'Details': details,
+        'TerminalKey': terminalKey,
+        'Status': status,
+        'PaymentId': paymentId,
+        'Amount': (amount * 100).toInt(),
+      };
 }

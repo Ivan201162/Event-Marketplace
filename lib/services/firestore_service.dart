@@ -3,20 +3,23 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../core/safe_log.dart';
-import '../models/app_notification.dart';
+import '../models/app_notification.dart' as model;
 import '../models/booking.dart';
 import '../models/calendar_event.dart' as calendar;
 import '../models/notification_template.dart' as template;
+import '../models/payment.dart';
 import '../models/specialist_schedule.dart';
 import 'calendar_service.dart';
 import 'fcm_service.dart';
 import 'notification_service.dart';
+import 'payment_service.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final CalendarService _calendarService = CalendarService();
   final NotificationService _notificationService = NotificationService();
   final FCMService _fcmService = FCMService();
+  final PaymentService _paymentService = PaymentService();
 
   // Stream: заявки по customerId
   Stream<List<Booking>> bookingsByCustomerStream(String customerId) => _db
@@ -209,7 +212,6 @@ class FirestoreService {
         bookingId: b1.id,
         status: calendar.EventStatus.confirmed,
         type: calendar.EventType.booking,
-        isAllDay: false,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       ),
@@ -230,7 +232,6 @@ class FirestoreService {
         bookingId: b2.id,
         status: calendar.EventStatus.confirmed,
         type: calendar.EventType.booking,
-        isAllDay: false,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       ),
@@ -272,6 +273,20 @@ class FirestoreService {
       // Сохраняем заявку
       await addOrUpdateBooking(booking);
 
+      // Создаем предоплату (30% от суммы)
+      await _paymentService.createPrepaymentForBooking(
+        bookingId: booking.id,
+        customerId: booking.customerId,
+        specialistId: booking.specialistId,
+        totalAmount: booking.totalPrice,
+        customerName: booking.customerName,
+        specialistName: booking.specialistName,
+        bookingTitle: booking.title ?? booking.eventTitle,
+      );
+
+      // Синхронизируем занятые даты с бронированиями
+      await _calendarService.syncBusyDatesWithBookings(booking.specialistId);
+
       // Если заявка подтверждена, добавляем событие в календарь
       if (booking.status == 'confirmed') {
         await _calendarService.createBookingEvent(
@@ -289,7 +304,6 @@ class FirestoreService {
             bookingId: booking.id,
             status: calendar.EventStatus.confirmed,
             type: calendar.EventType.booking,
-            isAllDay: false,
             createdAt: DateTime.now(),
             updatedAt: DateTime.now(),
           ),
@@ -318,6 +332,9 @@ class FirestoreService {
       // Обновляем статус
       await updateBookingStatus(bookingId, status);
 
+      // Синхронизируем занятые даты с бронированиями
+      await _calendarService.syncBusyDatesWithBookings(booking.specialistId);
+
       // Управляем событием в календаре
       if (status == 'confirmed') {
         // Добавляем событие в календарь
@@ -336,7 +353,6 @@ class FirestoreService {
             bookingId: booking.id,
             status: calendar.EventStatus.confirmed,
             type: calendar.EventType.booking,
-            isAllDay: false,
             createdAt: DateTime.now(),
             updatedAt: DateTime.now(),
           ),
@@ -381,13 +397,15 @@ class FirestoreService {
     final calendarEvents =
         await _calendarService.getEventsForDate(specialistId, date);
     return calendarEvents
-        .map((event) => ScheduleEvent(
-              id: event.id,
-              title: event.title,
-              startTime: event.startTime,
-              endTime: event.endTime,
-              type: ScheduleEventType.booking,
-            ))
+        .map(
+          (event) => ScheduleEvent(
+            id: event.id,
+            title: event.title,
+            startTime: event.startTime,
+            endTime: event.endTime,
+            type: ScheduleEventType.booking,
+          ),
+        )
         .toList();
   }
 
@@ -426,9 +444,9 @@ class FirestoreService {
 
       // Отправляем уведомление клиенту
       await _notificationService.sendNotification(
-        userId: booking.customerId ?? '',
-        title: title,
-        body: body,
+        booking.customerId ?? '',
+        title,
+        body,
         type: template.NotificationType.booking,
         channel: template.NotificationChannel.push,
       );
@@ -447,11 +465,9 @@ class FirestoreService {
       // Отправляем уведомление специалисту (если статус изменил клиент)
       if (status == 'cancelled') {
         await _notificationService.sendNotification(
-          userId: booking.specialistId ?? '',
-          title: title,
-          body: body,
-          type: template.NotificationType.booking,
-          channel: template.NotificationChannel.push,
+          booking.specialistId ?? '',
+          title,
+          body,
         );
 
         // Отправляем push-уведомление специалисту
@@ -494,24 +510,20 @@ class FirestoreService {
 
       // Отправляем уведомление клиенту
       await _notificationService.sendNotification(
-        userId: customerId,
-        title: status == 'completed' ? 'Платеж завершен' : 'Ошибка платежа',
-        body: status == 'completed'
+        customerId,
+        status == 'completed' ? 'Платеж завершен' : 'Ошибка платежа',
+        status == 'completed'
             ? 'Ваш платеж успешно обработан'
             : 'Произошла ошибка при обработке платежа',
-        type: template.NotificationType.payment,
-        channel: template.NotificationChannel.push,
       );
 
       // Отправляем уведомление специалисту
       await _notificationService.sendNotification(
-        userId: specialistId,
-        title: status == 'completed' ? 'Платеж получен' : 'Ошибка платежа',
-        body: status == 'completed'
+        specialistId,
+        status == 'completed' ? 'Платеж получен' : 'Ошибка платежа',
+        status == 'completed'
             ? 'Платеж от клиента успешно обработан'
             : 'Произошла ошибка при обработке платежа',
-        type: template.NotificationType.payment,
-        channel: template.NotificationChannel.push,
       );
     } catch (e) {
       print('Ошибка отправки уведомлений о платеже: $e');
@@ -648,7 +660,7 @@ class FirestoreService {
   }
 
   /// Получить уведомления с пагинацией
-  Future<PaginatedResult<AppNotification>> getNotificationsPaginated({
+  Future<PaginatedResult<model.AppNotification>> getNotificationsPaginated({
     required String userId,
     int limit = 20,
     DocumentSnapshot? startAfter,
@@ -665,15 +677,14 @@ class FirestoreService {
       }
 
       final snapshot = await query.get();
-      final notifications = snapshot.docs
-          .map((doc) => AppNotification.fromDocument(doc))
-          .toList();
+      final notifications =
+          snapshot.docs.map(model.AppNotification.fromDocument).toList();
 
       SafeLog.debug(
         'Получено ${notifications.length} уведомлений с пагинацией',
       );
 
-      return PaginatedResult<AppNotification>(
+      return PaginatedResult<model.AppNotification>(
         items: notifications,
         lastDocument: snapshot.docs.isNotEmpty ? snapshot.docs.last : null,
         hasMore: snapshot.docs.length == limit,
@@ -733,6 +744,175 @@ class FirestoreService {
   void dispose() {
     // Закрываем все активные таймеры и контроллеры
     // В реальном приложении здесь можно добавить управление ресурсами
+  }
+
+  // ========== МЕТОДЫ ДЛЯ РАБОТЫ С ПЛАТЕЖАМИ ==========
+
+  /// Получить платежи пользователя
+  Stream<List<Payment>> paymentsByUserStream(String userId) => _db
+      .collection('payments')
+      .where('customerId', isEqualTo: userId)
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map((qs) => qs.docs.map(Payment.fromDocument).toList());
+
+  /// Получить платежи специалиста
+  Stream<List<Payment>> paymentsBySpecialistStream(String specialistId) => _db
+      .collection('payments')
+      .where('specialistId', isEqualTo: specialistId)
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map((qs) => qs.docs.map(Payment.fromDocument).toList());
+
+  /// Получить платежи по бронированию
+  Stream<List<Payment>> paymentsByBookingStream(String bookingId) => _db
+      .collection('payments')
+      .where('bookingId', isEqualTo: bookingId)
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map((qs) => qs.docs.map(Payment.fromDocument).toList());
+
+  /// Создать платеж
+  Future<String?> createPayment(Payment payment) async {
+    try {
+      final paymentRef = _db.collection('payments').doc();
+      final paymentWithId = payment.copyWith(id: paymentRef.id);
+
+      await paymentRef.set(paymentWithId.toMap());
+      return paymentRef.id;
+    } catch (e) {
+      print('Ошибка создания платежа: $e');
+      return null;
+    }
+  }
+
+  /// Обновить платеж
+  Future<void> updatePayment(Payment payment) async {
+    await _db.collection('payments').doc(payment.id).update(payment.toMap());
+  }
+
+  /// Пометить платеж как оплаченный
+  Future<bool> markPaymentAsPaid({
+    required String paymentId,
+    String? transactionId,
+    String? receiptUrl,
+  }) async {
+    try {
+      await _db.collection('payments').doc(paymentId).update({
+        'status': PaymentStatus.completed.name,
+        'transactionId': transactionId,
+        'receiptUrl': receiptUrl,
+        'paidAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+      return true;
+    } catch (e) {
+      print('Ошибка обновления статуса платежа: $e');
+      return false;
+    }
+  }
+
+  /// Получить платеж по ID
+  Future<Payment?> getPaymentById(String paymentId) async {
+    try {
+      final doc = await _db.collection('payments').doc(paymentId).get();
+      if (!doc.exists) return null;
+      return Payment.fromDocument(doc);
+    } catch (e) {
+      print('Ошибка получения платежа: $e');
+      return null;
+    }
+  }
+
+  /// Проверить, оплачена ли предоплата для бронирования
+  Future<bool> isPrepaymentPaid(String bookingId) async {
+    try {
+      final querySnapshot = await _db
+          .collection('payments')
+          .where('bookingId', isEqualTo: bookingId)
+          .where('type', isEqualTo: PaymentType.prepayment.name)
+          .get();
+
+      if (querySnapshot.docs.isEmpty) return false;
+
+      final prepayment = Payment.fromDocument(querySnapshot.docs.first);
+      return prepayment.isCompleted;
+    } catch (e) {
+      print('Ошибка проверки предоплаты: $e');
+      return false;
+    }
+  }
+
+  /// Получить статистику платежей пользователя
+  Future<PaymentStats> getUserPaymentStats(String userId) async {
+    try {
+      final querySnapshot = await _db
+          .collection('payments')
+          .where('customerId', isEqualTo: userId)
+          .get();
+
+      final payments = querySnapshot.docs.map(Payment.fromDocument).toList();
+
+      final totalAmount =
+          payments.fold(0, (sum, payment) => sum + payment.amount);
+      final completedPayments = payments.where((p) => p.isCompleted).toList();
+      final completedAmount =
+          completedPayments.fold(0, (sum, payment) => sum + payment.amount);
+      final pendingPayments = payments.where((p) => p.isPending).toList();
+      final pendingAmount =
+          pendingPayments.fold(0, (sum, payment) => sum + payment.amount);
+
+      return PaymentStats(
+        totalPayments: payments.length,
+        completedPayments: completedPayments.length,
+        pendingPayments: pendingPayments.length,
+        totalAmount: totalAmount,
+        completedAmount: completedAmount,
+        pendingAmount: pendingAmount,
+        averagePayment:
+            payments.isNotEmpty ? totalAmount / payments.length : 0.0,
+      );
+    } catch (e) {
+      print('Ошибка получения статистики платежей: $e');
+      return PaymentStats.empty();
+    }
+  }
+
+  /// Получить статистику платежей специалиста
+  Future<PaymentStats> getSpecialistPaymentStats(String specialistId) async {
+    try {
+      final querySnapshot = await _db
+          .collection('payments')
+          .where('specialistId', isEqualTo: specialistId)
+          .get();
+
+      final payments = querySnapshot.docs.map(Payment.fromDocument).toList();
+
+      final totalAmount =
+          payments.fold(0, (sum, payment) => sum + payment.amount);
+      final completedPayments = payments.where((p) => p.isCompleted).toList();
+      final completedAmount = completedPayments.fold(
+        0,
+        (sum, payment) => sum + payment.calculatedNetAmount,
+      );
+      final pendingPayments = payments.where((p) => p.isPending).toList();
+      final pendingAmount =
+          pendingPayments.fold(0, (sum, payment) => sum + payment.amount);
+
+      return PaymentStats(
+        totalPayments: payments.length,
+        completedPayments: completedPayments.length,
+        pendingPayments: pendingPayments.length,
+        totalAmount: totalAmount,
+        completedAmount: completedAmount,
+        pendingAmount: pendingAmount,
+        averagePayment:
+            payments.isNotEmpty ? totalAmount / payments.length : 0.0,
+      );
+    } catch (e) {
+      print('Ошибка получения статистики платежей специалиста: $e');
+      return PaymentStats.empty();
+    }
   }
 }
 

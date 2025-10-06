@@ -456,7 +456,8 @@ class GuestService {
 
   /// Получить события организатора
   Future<List<Map<String, dynamic>>> getOrganizerEvents(
-      String organizerId) async {
+    String organizerId,
+  ) async {
     try {
       final snapshot = await _firestore
           .collection('events')
@@ -465,10 +466,12 @@ class GuestService {
           .get();
 
       return snapshot.docs
-          .map((doc) => {
-                'id': doc.id,
-                ...doc.data(),
-              })
+          .map(
+            (doc) => {
+              'id': doc.id,
+              ...doc.data(),
+            },
+          )
           .toList();
     } catch (e) {
       throw Exception('Ошибка получения событий организатора: $e');

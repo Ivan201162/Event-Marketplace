@@ -1,272 +1,348 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/review.dart';
-import '../providers/review_providers.dart';
+import '../models/booking.dart';
+import '../services/review_service.dart';
 
 /// Экран создания отзыва
 class CreateReviewScreen extends ConsumerStatefulWidget {
   const CreateReviewScreen({
     super.key,
-    required this.targetId,
+    required this.booking,
   });
-  final String targetId;
+
+  final Booking booking;
 
   @override
   ConsumerState<CreateReviewScreen> createState() => _CreateReviewScreenState();
 }
 
 class _CreateReviewScreenState extends ConsumerState<CreateReviewScreen> {
+  final ReviewService _reviewService = ReviewService();
+  final TextEditingController _commentController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final _titleController = TextEditingController();
-  final _commentController = TextEditingController();
 
-  int _rating = 5;
-  final List<String> _selectedTags = [];
-  bool _isPublic = true;
-
-  final List<String> _availableTags = [
-    'Профессионализм',
-    'Пунктуальность',
-    'Качество работы',
-    'Общение',
-    'Цена',
-    'Рекомендую',
-  ];
+  double _rating = 5;
+  bool _isSubmitting = false;
+  String? _error;
 
   @override
   void dispose() {
-    _titleController.dispose();
     _commentController.dispose();
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final reviewFormState = ref.watch(reviewFormProvider);
+  Future<void> _submitReview() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Создать отзыв'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        actions: [
-          TextButton(
-            onPressed: reviewFormState.isLoading ? null : _submitReview,
-            child: const Text('Отправить'),
+    setState(() {
+      _isSubmitting = true;
+      _error = null;
+    });
+
+    try {
+      await _reviewService.createReview(
+        bookingId: widget.booking.id,
+        userId: widget.booking.customerId ?? widget.booking.userId,
+        userName: widget.booking.customerName ?? widget.booking.userName,
+        specialistId: widget.booking.specialistId ?? '',
+        specialistName: widget.booking.specialistName ?? '',
+        rating: _rating,
+        comment: _commentController.text.trim(),
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Отзыв успешно добавлен'),
+            backgroundColor: Colors.green,
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Form(
+        );
+        Navigator.of(context).pop(true);
+      }
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+      });
+    } finally {
+      setState(() {
+        _isSubmitting = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Оставить отзыв'),
+          elevation: 0,
+        ),
+        body: Form(
           key: _formKey,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Информация о заказе
+                _buildBookingInfo(),
+                const SizedBox(height: 24),
+
+                // Рейтинг
+                _buildRatingSection(),
+                const SizedBox(height: 24),
+
+                // Комментарий
+                _buildCommentSection(),
+                const SizedBox(height: 24),
+
+                // Ошибка
+                if (_error != null) ...[
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.red[50],
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.red[200]!),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.error_outline, color: Colors.red[600]),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            _error!,
+                            style: TextStyle(color: Colors.red[600]),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+
+                // Кнопка отправки
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _isSubmitting ? null : _submitReview,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    child: _isSubmitting
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          )
+                        : const Text(
+                            'Отправить отзыв',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+  Widget _buildBookingInfo() => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Рейтинг
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Оцените качество работы',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(
-                          5,
-                          (index) => IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _rating = index + 1;
-                              });
-                            },
-                            icon: Icon(
-                              index < _rating ? Icons.star : Icons.star_border,
-                              color: Colors.amber,
-                              size: 40,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        _getRatingText(_rating),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Заголовок отзыва
               Text(
-                'Заголовок отзыва',
-                style: Theme.of(context).textTheme.titleMedium,
+                'Информация о заказе',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Icon(
+                    Icons.person,
+                    size: 16,
+                    color: Colors.grey[600],
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Специалист: ${widget.booking.specialistName ?? 'Не указан'}',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 8),
-              TextFormField(
-                controller: _titleController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Краткое описание вашего опыта',
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Введите заголовок отзыва';
-                  }
-                  return null;
-                },
-              ),
-
-              const SizedBox(height: 24),
-
-              // Комментарий
-              Text(
-                'Подробный отзыв',
-                style: Theme.of(context).textTheme.titleMedium,
+              Row(
+                children: [
+                  Icon(
+                    Icons.event,
+                    size: 16,
+                    color: Colors.grey[600],
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Услуга: ${widget.booking.eventTitle}',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 8),
-              TextFormField(
-                controller: _commentController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Расскажите подробнее о вашем опыте...',
-                ),
-                maxLines: 5,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Введите текст отзыва';
-                  }
-                  return null;
-                },
+              Row(
+                children: [
+                  Icon(
+                    Icons.calendar_today,
+                    size: 16,
+                    color: Colors.grey[600],
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Дата: ${_formatDate(widget.booking.eventDate)}',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                ],
               ),
-
-              const SizedBox(height: 24),
-
-              // Теги
-              Text(
-                'Отметьте подходящие характеристики',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: _availableTags.map((tag) {
-                  final isSelected = _selectedTags.contains(tag);
-                  return FilterChip(
-                    label: Text(tag),
-                    selected: isSelected,
-                    onSelected: (selected) {
-                      setState(() {
-                        if (selected) {
-                          _selectedTags.add(tag);
-                        } else {
-                          _selectedTags.remove(tag);
-                        }
-                      });
-                    },
-                  );
-                }).toList(),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Настройки приватности
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Настройки приватности',
-                        style: Theme.of(context).textTheme.titleMedium,
+              if (widget.booking.totalPrice > 0) ...[
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.payments,
+                      size: 16,
+                      color: Colors.grey[600],
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Стоимость: ${widget.booking.totalPrice.toStringAsFixed(0)} ₽',
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                      const SizedBox(height: 12),
-                      SwitchListTile(
-                        title: const Text('Публичный отзыв'),
-                        subtitle: const Text(
-                          'Отзыв будет виден другим пользователям',
-                        ),
-                        value: _isPublic,
-                        onChanged: (value) {
-                          setState(() {
-                            _isPublic = value;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 32),
-
-              // Кнопка отправки
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: reviewFormState.isLoading ? null : _submitReview,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  child: reviewFormState.isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text('Отправить отзыв'),
-                ),
-              ),
-
-              if (reviewFormState.errorMessage != null) ...[
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.red[50],
-                    border: Border.all(color: Colors.red[200]!),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.error_outline, color: Colors.red[700]),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          reviewFormState.errorMessage!,
-                          style: TextStyle(color: Colors.red[700]),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ],
           ),
         ),
-      ),
-    );
-  }
+      );
 
-  String _getRatingText(int rating) {
-    switch (rating) {
+  Widget _buildRatingSection() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Оцените качество услуги',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(height: 16),
+          Center(
+            child: Column(
+              children: [
+                // Звезды для выбора рейтинга
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(5, (index) {
+                    final rating = index + 1;
+                    final isSelected = rating <= _rating;
+
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _rating = rating.toDouble();
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Icon(
+                          isSelected ? Icons.star : Icons.star_border,
+                          size: 40,
+                          color: isSelected ? Colors.amber : Colors.grey[400],
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  _getRatingText(_rating),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+
+  Widget _buildCommentSection() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Комментарий (необязательно)',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(height: 8),
+          TextFormField(
+            controller: _commentController,
+            maxLines: 4,
+            decoration: InputDecoration(
+              hintText:
+                  'Поделитесь своими впечатлениями о работе специалиста...',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.primary,
+                  width: 2,
+                ),
+              ),
+            ),
+            validator: (value) {
+              if (value != null && value.trim().length > 500) {
+                return 'Комментарий не должен превышать 500 символов';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '${_commentController.text.length}/500',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Colors.grey[600],
+                ),
+          ),
+        ],
+      );
+
+  String _getRatingText(double rating) {
+    switch (rating.toInt()) {
       case 1:
-        return 'Очень плохо';
+        return 'Ужасно';
       case 2:
         return 'Плохо';
       case 3:
-        return 'Удовлетворительно';
+        return 'Нормально';
       case 4:
         return 'Хорошо';
       case 5:
@@ -276,28 +352,6 @@ class _CreateReviewScreenState extends ConsumerState<CreateReviewScreen> {
     }
   }
 
-  void _submitReview() {
-    if (!_formKey.currentState!.validate()) return;
-
-    ref
-        .read(reviewFormProvider.notifier)
-        .createReview(
-          targetId: widget.targetId,
-          type: ReviewType.specialist,
-        )
-        .then((_) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Отзыв отправлен успешно')),
-        );
-        Navigator.of(context).pop();
-      }
-    }).catchError((error) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка: $error')),
-        );
-      }
-    });
-  }
+  String _formatDate(DateTime date) =>
+      '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';
 }

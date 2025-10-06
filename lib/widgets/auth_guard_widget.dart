@@ -92,14 +92,14 @@ class AuthGuard extends ConsumerWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.7),
+                            .withValues(alpha: 0.7),
                       ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 32),
                 ElevatedButton.icon(
                   onPressed: () {
-                    // TODO: Навигация к экрану авторизации
+                    // TODO(developer): Навигация к экрану авторизации
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Переход к экрану авторизации'),
@@ -144,7 +144,7 @@ class AuthGuard extends ConsumerWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.7),
+                            .withValues(alpha: 0.7),
                       ),
                   textAlign: TextAlign.center,
                 ),
@@ -190,14 +190,14 @@ class AuthGuard extends ConsumerWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.7),
+                            .withValues(alpha: 0.7),
                       ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 32),
                 ElevatedButton.icon(
                   onPressed: () {
-                    // TODO: Попытка повторной авторизации
+                    // TODO(developer): Попытка повторной авторизации
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Попытка повторной авторизации'),

@@ -37,13 +37,13 @@ class TaxCalculationService {
   double _getTaxRate(TaxStatus taxStatus) {
     switch (taxStatus) {
       case TaxStatus.none:
-        return 0.0;
+        return 0;
       case TaxStatus.professionalIncome:
-        return 4.0; // НПД для самозанятых
+        return 4; // НПД для самозанятых
       case TaxStatus.simplifiedTax:
-        return 6.0; // УСН 6%
+        return 6; // УСН 6%
       case TaxStatus.vat:
-        return 20.0; // НДС 20%
+        return 20; // НДС 20%
     }
   }
 

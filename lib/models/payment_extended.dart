@@ -28,9 +28,9 @@ class PaymentExtended {
       bookingId: data['bookingId'] ?? '',
       customerId: data['customerId'] ?? '',
       specialistId: data['specialistId'] ?? '',
-      totalAmount: (data['totalAmount'] ?? 0.0).toDouble(),
-      paidAmount: (data['paidAmount'] ?? 0.0).toDouble(),
-      remainingAmount: (data['remainingAmount'] ?? 0.0).toDouble(),
+      totalAmount: (data['totalAmount'] as num? ?? 0.0).toDouble(),
+      paidAmount: (data['paidAmount'] as num? ?? 0.0).toDouble(),
+      remainingAmount: (data['remainingAmount'] as num? ?? 0.0).toDouble(),
       status: PaymentStatus.values.firstWhere(
         (s) => s.name == data['status'],
         orElse: () => PaymentStatus.pending,

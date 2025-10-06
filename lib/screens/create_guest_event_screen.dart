@@ -253,10 +253,10 @@ class _CreateGuestEventScreenState
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.1),
+                  color: Colors.blue.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: Colors.blue.withOpacity(0.3),
+                    color: Colors.blue.withValues(alpha: 0.3),
                   ),
                 ),
                 child: const Column(
@@ -367,25 +367,17 @@ class _CreateGuestEventScreenState
         startDate: _startTime,
         endDate: _endTime,
         location: _locationController.text.trim(),
-        organizerName: 'Демо Организатор', // TODO: Получить из контекста
+        organizerName:
+            'Демо Организатор', // TODO(developer): Получить из контекста
       );
 
-      if (eventId != null) {
-        Navigator.pop(context, true);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Событие успешно создано'),
-            backgroundColor: Colors.green,
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Ошибка создания события'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      Navigator.pop(context, true);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Событие успешно создано'),
+          backgroundColor: Colors.green,
+        ),
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

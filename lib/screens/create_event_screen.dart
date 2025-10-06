@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/event.dart';
 import '../models/calendar_event.dart' as calendar;
+import '../models/event.dart';
 import '../providers/auth_providers.dart';
 import '../providers/event_providers.dart';
 
@@ -171,9 +171,10 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.1),
+                    color: Colors.red.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.red.withOpacity(0.3)),
+                    border:
+                        Border.all(color: Colors.red.withValues(alpha: 0.3)),
                   ),
                   child: Row(
                     children: [
@@ -553,7 +554,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
 
       final createEventNotifier = ref.read(createEventProvider.notifier);
 
-      // TODO: Implement event creation methods
+      // TODO(developer): Implement event creation methods
       // createEventNotifier.updateTitle(_titleController.text.trim());
       // createEventNotifier.updateDescription(_descriptionController.text.trim());
       // createEventNotifier.updateDate(_eventDate);
@@ -612,8 +613,8 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
         }
       } else {
         // Создание нового события
-        // TODO: Implement event creation
-        final eventId =
+        // TODO(developer): Implement event creation
+        const eventId =
             'stub-event-id'; // await createEventNotifier.createEvent(
         final event = Event(
           id: '',
@@ -642,7 +643,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
         );
         // );
 
-        if (eventId != null && context.mounted) {
+        if (context.mounted) {
           Navigator.pop(context, true);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(

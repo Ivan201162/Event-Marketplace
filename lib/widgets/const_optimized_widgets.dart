@@ -18,16 +18,14 @@ class OptimizedButton extends StatelessWidget {
   final EdgeInsetsGeometry padding;
 
   @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: style,
-      child: Padding(
-        padding: padding,
-        child: child,
-      ),
-    );
-  }
+  Widget build(BuildContext context) => ElevatedButton(
+        onPressed: onPressed,
+        style: style,
+        child: Padding(
+          padding: padding,
+          child: child,
+        ),
+      );
 }
 
 /// Оптимизированная карточка
@@ -48,19 +46,17 @@ class OptimizedCard extends StatelessWidget {
   final double borderRadius;
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: margin,
-      elevation: elevation,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(borderRadius),
-      ),
-      child: Padding(
-        padding: padding,
-        child: child,
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Card(
+        margin: margin,
+        elevation: elevation,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
+        child: Padding(
+          padding: padding,
+          child: child,
+        ),
+      );
 }
 
 /// Оптимизированный список элементов
@@ -83,16 +79,14 @@ class OptimizedListTile extends StatelessWidget {
   final EdgeInsetsGeometry padding;
 
   @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: leading,
-      title: title,
-      subtitle: subtitle,
-      trailing: trailing,
-      onTap: onTap,
-      contentPadding: padding,
-    );
-  }
+  Widget build(BuildContext context) => ListTile(
+        leading: leading,
+        title: title,
+        subtitle: subtitle,
+        trailing: trailing,
+        onTap: onTap,
+        contentPadding: padding,
+      );
 }
 
 /// Оптимизированный контейнер с градиентом
@@ -111,16 +105,14 @@ class OptimizedGradientContainer extends StatelessWidget {
   final double borderRadius;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: padding,
-      decoration: BoxDecoration(
-        gradient: gradient,
-        borderRadius: BorderRadius.circular(borderRadius),
-      ),
-      child: child,
-    );
-  }
+  Widget build(BuildContext context) => Container(
+        padding: padding,
+        decoration: BoxDecoration(
+          gradient: gradient,
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
+        child: child,
+      );
 }
 
 /// Оптимизированный текст с стилизацией
@@ -141,15 +133,13 @@ class OptimizedText extends StatelessWidget {
   final TextOverflow overflow;
 
   @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: style,
-      textAlign: textAlign,
-      maxLines: maxLines,
-      overflow: overflow,
-    );
-  }
+  Widget build(BuildContext context) => Text(
+        text,
+        style: style,
+        textAlign: textAlign,
+        maxLines: maxLines,
+        overflow: overflow,
+      );
 }
 
 /// Оптимизированная иконка
@@ -166,13 +156,11 @@ class OptimizedIcon extends StatelessWidget {
   final Color? color;
 
   @override
-  Widget build(BuildContext context) {
-    return Icon(
-      icon,
-      size: size,
-      color: color,
-    );
-  }
+  Widget build(BuildContext context) => Icon(
+        icon,
+        size: size,
+        color: color,
+      );
 }
 
 /// Оптимизированный разделитель
@@ -193,15 +181,13 @@ class OptimizedDivider extends StatelessWidget {
   final double endIndent;
 
   @override
-  Widget build(BuildContext context) {
-    return Divider(
-      height: height,
-      thickness: thickness,
-      color: color,
-      indent: indent,
-      endIndent: endIndent,
-    );
-  }
+  Widget build(BuildContext context) => Divider(
+        height: height,
+        thickness: thickness,
+        color: color,
+        indent: indent,
+        endIndent: endIndent,
+      );
 }
 
 /// Оптимизированный отступ
@@ -216,12 +202,10 @@ class OptimizedSpacing extends StatelessWidget {
   final double? height;
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: width,
-      height: height,
-    );
-  }
+  Widget build(BuildContext context) => SizedBox(
+        width: width,
+        height: height,
+      );
 }
 
 /// Оптимизированный контейнер с тенью
@@ -244,23 +228,21 @@ class OptimizedShadowContainer extends StatelessWidget {
   final Color? shadowColor;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: margin,
-      padding: padding,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(borderRadius),
-        boxShadow: [
-          BoxShadow(
-            color: shadowColor ?? Colors.black.withOpacity(0.1),
-            blurRadius: elevation,
-            offset: Offset(0, elevation / 2),
-          ),
-        ],
-      ),
-      child: child,
-    );
-  }
+  Widget build(BuildContext context) => Container(
+        margin: margin,
+        padding: padding,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(borderRadius),
+          boxShadow: [
+            BoxShadow(
+              color: shadowColor ?? Colors.black.withValues(alpha: 0.1),
+              blurRadius: elevation,
+              offset: Offset(0, elevation / 2),
+            ),
+          ],
+        ),
+        child: child,
+      );
 }
 
 /// Оптимизированный индикатор загрузки
@@ -277,18 +259,16 @@ class OptimizedLoadingIndicator extends StatelessWidget {
   final Color? color;
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: size,
-      height: size,
-      child: CircularProgressIndicator(
-        strokeWidth: strokeWidth,
-        valueColor: AlwaysStoppedAnimation<Color>(
-          color ?? Theme.of(context).primaryColor,
+  Widget build(BuildContext context) => SizedBox(
+        width: size,
+        height: size,
+        child: CircularProgressIndicator(
+          strokeWidth: strokeWidth,
+          valueColor: AlwaysStoppedAnimation<Color>(
+            color ?? Theme.of(context).primaryColor,
+          ),
         ),
-      ),
-    );
-  }
+      );
 }
 
 /// Оптимизированный пустой виджет
@@ -307,32 +287,30 @@ class OptimizedEmptyWidget extends StatelessWidget {
   final double iconSize;
 
   @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          OptimizedIcon(
-            icon,
-            size: iconSize,
-            color: Colors.grey,
-          ),
-          const OptimizedSpacing(height: 16),
-          OptimizedText(
-            title,
-            style: Theme.of(context).textTheme.headlineSmall,
-            textAlign: TextAlign.center,
-          ),
-          if (subtitle != null) ...[
-            const OptimizedSpacing(height: 8),
+  Widget build(BuildContext context) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            OptimizedIcon(
+              icon,
+              size: iconSize,
+              color: Colors.grey,
+            ),
+            const OptimizedSpacing(height: 16),
             OptimizedText(
-              subtitle!,
-              style: Theme.of(context).textTheme.bodyMedium,
+              title,
+              style: Theme.of(context).textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
+            if (subtitle != null) ...[
+              const OptimizedSpacing(height: 8),
+              OptimizedText(
+                subtitle!,
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.center,
+              ),
+            ],
           ],
-        ],
-      ),
-    );
-  }
+        ),
+      );
 }

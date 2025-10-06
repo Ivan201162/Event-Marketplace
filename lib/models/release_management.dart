@@ -46,7 +46,8 @@ class Release {
         dependencies:
             List<String>.from(map['dependencies'] as List<dynamic>? ?? []),
         metadata: Map<String, dynamic>.from(
-            map['metadata'] as Map<dynamic, dynamic>? ?? {}),
+          map['metadata'] as Map<dynamic, dynamic>? ?? {},
+        ),
         tags: List<String>.from(map['tags'] as List<dynamic>? ?? []),
         isPreRelease: map['isPreRelease'] as bool? ?? false,
         isDraft: map['isDraft'] as bool? ?? true,

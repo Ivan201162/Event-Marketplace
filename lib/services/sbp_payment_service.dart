@@ -1,8 +1,7 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:flutter/foundation.dart';
 
-import '../models/payment_models.dart';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 
 class SBPPaymentService {
   static const String _baseUrl = 'https://api.sbp.nspk.ru'; // SBP API base URL
@@ -42,7 +41,8 @@ class SBPPaymentService {
         return SBPaymentResponse.fromJson(responseData);
       } else {
         throw Exception(
-            'SBP API error: ${response.statusCode} - ${response.body}');
+          'SBP API error: ${response.statusCode} - ${response.body}',
+        );
       }
     } catch (e) {
       debugPrint('SBP payment creation error: $e');
@@ -65,7 +65,8 @@ class SBPPaymentService {
         return SBPaymentStatus.fromJson(responseData);
       } else {
         throw Exception(
-            'SBP API error: ${response.statusCode} - ${response.body}');
+          'SBP API error: ${response.statusCode} - ${response.body}',
+        );
       }
     } catch (e) {
       debugPrint('SBP payment status error: $e');
@@ -102,12 +103,6 @@ class SBPPaymentService {
 
 /// SBP Payment Response
 class SBPaymentResponse {
-  final String paymentId;
-  final String qrCodeUrl;
-  final String paymentUrl;
-  final String status;
-  final String? errorMessage;
-
   SBPaymentResponse({
     required this.paymentId,
     required this.qrCodeUrl,
@@ -116,36 +111,31 @@ class SBPaymentResponse {
     this.errorMessage,
   });
 
-  factory SBPaymentResponse.fromJson(Map<String, dynamic> json) {
-    return SBPaymentResponse(
-      paymentId: json['paymentId'] as String,
-      qrCodeUrl: json['qrCodeUrl'] as String,
-      paymentUrl: json['paymentUrl'] as String,
-      status: json['status'] as String,
-      errorMessage: json['errorMessage'] as String?,
-    );
-  }
+  factory SBPaymentResponse.fromJson(Map<String, dynamic> json) =>
+      SBPaymentResponse(
+        paymentId: json['paymentId'] as String,
+        qrCodeUrl: json['qrCodeUrl'] as String,
+        paymentUrl: json['paymentUrl'] as String,
+        status: json['status'] as String,
+        errorMessage: json['errorMessage'] as String?,
+      );
+  final String paymentId;
+  final String qrCodeUrl;
+  final String paymentUrl;
+  final String status;
+  final String? errorMessage;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'paymentId': paymentId,
-      'qrCodeUrl': qrCodeUrl,
-      'paymentUrl': paymentUrl,
-      'status': status,
-      'errorMessage': errorMessage,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+        'paymentId': paymentId,
+        'qrCodeUrl': qrCodeUrl,
+        'paymentUrl': paymentUrl,
+        'status': status,
+        'errorMessage': errorMessage,
+      };
 }
 
 /// SBP Payment Status
 class SBPaymentStatus {
-  final String paymentId;
-  final String status;
-  final double amount;
-  final String? transactionId;
-  final DateTime? completedAt;
-  final String? errorMessage;
-
   SBPaymentStatus({
     required this.paymentId,
     required this.status,
@@ -155,29 +145,32 @@ class SBPaymentStatus {
     this.errorMessage,
   });
 
-  factory SBPaymentStatus.fromJson(Map<String, dynamic> json) {
-    return SBPaymentStatus(
-      paymentId: json['paymentId'] as String,
-      status: json['status'] as String,
-      amount: (json['amount'] as int) / 100.0, // Convert from kopecks
-      transactionId: json['transactionId'] as String?,
-      completedAt: json['completedAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(json['completedAt'] as int)
-          : null,
-      errorMessage: json['errorMessage'] as String?,
-    );
-  }
+  factory SBPaymentStatus.fromJson(Map<String, dynamic> json) =>
+      SBPaymentStatus(
+        paymentId: json['paymentId'] as String,
+        status: json['status'] as String,
+        amount: (json['amount'] as int) / 100.0, // Convert from kopecks
+        transactionId: json['transactionId'] as String?,
+        completedAt: json['completedAt'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(json['completedAt'] as int)
+            : null,
+        errorMessage: json['errorMessage'] as String?,
+      );
+  final String paymentId;
+  final String status;
+  final double amount;
+  final String? transactionId;
+  final DateTime? completedAt;
+  final String? errorMessage;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'paymentId': paymentId,
-      'status': status,
-      'amount': (amount * 100).toInt(),
-      'transactionId': transactionId,
-      'completedAt': completedAt?.millisecondsSinceEpoch,
-      'errorMessage': errorMessage,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+        'paymentId': paymentId,
+        'status': status,
+        'amount': (amount * 100).toInt(),
+        'transactionId': transactionId,
+        'completedAt': completedAt?.millisecondsSinceEpoch,
+        'errorMessage': errorMessage,
+      };
 
   bool get isCompleted => status == 'COMPLETED';
   bool get isFailed => status == 'FAILED';

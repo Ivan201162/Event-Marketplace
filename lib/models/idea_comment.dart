@@ -18,20 +18,6 @@ class IdeaComment {
     this.isDeleted = false,
   });
 
-  final String id;
-  final String ideaId;
-  final String userId;
-  final String userName;
-  final String? userAvatar;
-  final String content;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
-  final int likes;
-  final List<String> replies; // ID ответов
-  final String? parentCommentId; // ID родительского комментария
-  final bool isEdited;
-  final bool isDeleted;
-
   /// Создать из Map (Firestore)
   factory IdeaComment.fromMap(Map<String, dynamic> map) => IdeaComment(
         id: map['id'] as String,
@@ -50,6 +36,20 @@ class IdeaComment {
         isEdited: (map['isEdited'] ?? false) as bool,
         isDeleted: (map['isDeleted'] ?? false) as bool,
       );
+
+  final String id;
+  final String ideaId;
+  final String userId;
+  final String userName;
+  final String? userAvatar;
+  final String content;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
+  final int likes;
+  final List<String> replies; // ID ответов
+  final String? parentCommentId; // ID родительского комментария
+  final bool isEdited;
+  final bool isDeleted;
 
   /// Преобразовать в Map (Firestore)
   Map<String, dynamic> toMap() => {

@@ -85,8 +85,8 @@ class _SpecialistSearchResultsWidgetState
         // Результаты поиска
         Expanded(
           child: searchState.when(
-            data: (state) => _buildResults(state),
-            loading: () => _buildLoadingState(),
+            data: _buildResults,
+            loading: _buildLoadingState,
             error: (error, stack) => _buildErrorState(error),
           ),
         ),
@@ -94,45 +94,44 @@ class _SpecialistSearchResultsWidgetState
     );
   }
 
-  Widget _buildSearchStats(AsyncValue<AdvancedSearchState> searchState) {
-    return searchState.when(
-      data: (state) {
-        if (state.results.isEmpty && !state.isLoading) {
-          return const SizedBox.shrink();
-        }
+  Widget _buildSearchStats(AsyncValue<AdvancedSearchState> searchState) =>
+      searchState.when(
+        data: (state) {
+          if (state.results.isEmpty && !state.isLoading) {
+            return const SizedBox.shrink();
+          }
 
-        return Container(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            children: [
-              Icon(
-                Icons.search,
-                size: 20,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'Найдено ${state.totalCount} специалистов',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-              ),
-              const Spacer(),
-              if (state.searchTime > 0)
+          return Container(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.search,
+                  size: 20,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(width: 8),
                 Text(
-                  'за ${state.searchTime}мс',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  'Найдено ${state.totalCount} специалистов',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                 ),
-            ],
-          ),
-        );
-      },
-      loading: () => const SizedBox.shrink(),
-      error: (error, stack) => const SizedBox.shrink(),
-    );
-  }
+                const Spacer(),
+                if (state.searchTime > 0)
+                  Text(
+                    'за ${state.searchTime}мс',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                  ),
+              ],
+            ),
+          );
+        },
+        loading: () => const SizedBox.shrink(),
+        error: (error, stack) => const SizedBox.shrink(),
+      );
 
   Widget _buildResults(AdvancedSearchState state) {
     if (state.results.isEmpty && !state.isLoading) {
@@ -165,12 +164,12 @@ class _SpecialistSearchResultsWidgetState
     final theme = Theme.of(context);
 
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: InkWell(
         onTap: () => widget.onSpecialistSelected?.call(specialist),
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(12),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -180,7 +179,7 @@ class _SpecialistSearchResultsWidgetState
                   // Аватар
                   CircleAvatar(
                     radius: 30,
-                    backgroundColor: theme.primaryColor.withOpacity(0.1),
+                    backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
                     backgroundImage: specialist.avatarUrl != null
                         ? NetworkImage(specialist.avatarUrl!)
                         : null,
@@ -249,7 +248,7 @@ class _SpecialistSearchResultsWidgetState
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.star,
                             size: 16,
                             color: Colors.amber,
@@ -272,7 +271,7 @@ class _SpecialistSearchResultsWidgetState
                       ),
                       if (specialist.isVerified) ...[
                         const SizedBox(height: 4),
-                        Icon(
+                        const Icon(
                           Icons.verified,
                           size: 16,
                           color: Colors.blue,
@@ -302,16 +301,21 @@ class _SpecialistSearchResultsWidgetState
                 Wrap(
                   spacing: 8,
                   runSpacing: 4,
-                  children: specialist.categories.take(3).map((category) {
-                    return Chip(
-                      label: Text(
-                        '${category.icon} ${category.displayName}',
-                        style: theme.textTheme.bodySmall,
-                      ),
-                      backgroundColor: theme.primaryColor.withOpacity(0.1),
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    );
-                  }).toList(),
+                  children: specialist.categories
+                      .take(3)
+                      .map(
+                        (category) => Chip(
+                          label: Text(
+                            '${category.icon} ${category.displayName}',
+                            style: theme.textTheme.bodySmall,
+                          ),
+                          backgroundColor:
+                              theme.primaryColor.withValues(alpha: 0.1),
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                        ),
+                      )
+                      .toList(),
                 ),
                 const SizedBox(height: 12),
               ],
@@ -391,7 +395,7 @@ class _SpecialistSearchResultsWidgetState
                 const SizedBox(height: 8),
                 LinearProgressIndicator(
                   value: result.relevanceScore,
-                  backgroundColor: theme.colorScheme.surfaceVariant,
+                  backgroundColor: theme.colorScheme.surfaceContainerHighest,
                   valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor),
                 ),
                 const SizedBox(height: 4),
@@ -412,7 +416,7 @@ class _SpecialistSearchResultsWidgetState
   Widget _buildLoadMoreIndicator() {
     if (_isLoadingMore) {
       return const Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16),
         child: Center(child: CircularProgressIndicator()),
       );
     }
@@ -420,88 +424,82 @@ class _SpecialistSearchResultsWidgetState
     return const SizedBox.shrink();
   }
 
-  Widget _buildLoadingState() {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(),
-          SizedBox(height: 16),
-          Text('Поиск специалистов...'),
-        ],
-      ),
-    );
-  }
+  Widget _buildLoadingState() => const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Поиск специалистов...'),
+          ],
+        ),
+      );
 
-  Widget _buildErrorState(Object error) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error_outline,
-            size: 64,
-            color: Theme.of(context).colorScheme.error,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Ошибка поиска',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            error.toString(),
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              ref
-                  .read(advancedSearchProvider.notifier)
-                  .searchSpecialists(widget.filters);
-            },
-            child: const Text('Повторить'),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildErrorState(Object error) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 64,
+              color: Theme.of(context).colorScheme.error,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Ошибка поиска',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              error.toString(),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                ref
+                    .read(advancedSearchProvider.notifier)
+                    .searchSpecialists(widget.filters);
+              },
+              child: const Text('Повторить'),
+            ),
+          ],
+        ),
+      );
 
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.search_off,
-            size: 64,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Специалисты не найдены',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Попробуйте изменить параметры поиска',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              widget.onFiltersChanged?.call(const AdvancedSearchFilters());
-            },
-            child: const Text('Сбросить фильтры'),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildEmptyState() => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.search_off,
+              size: 64,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Специалисты не найдены',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Попробуйте изменить параметры поиска',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                widget.onFiltersChanged?.call(const AdvancedSearchFilters());
+              },
+              child: const Text('Сбросить фильтры'),
+            ),
+          ],
+        ),
+      );
 }

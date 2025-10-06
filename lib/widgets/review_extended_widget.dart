@@ -269,10 +269,11 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
               (tag) => Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: Theme.of(context).primaryColor.withOpacity(0.3),
+                    color:
+                        Theme.of(context).primaryColor.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Text(
@@ -463,7 +464,7 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
 
   void _showMediaViewer(ReviewMedia media, List<ReviewMedia> allMedia) {
     Navigator.of(context).push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => MediaViewerScreen(
           media: media,
           allMedia: allMedia,
@@ -484,7 +485,7 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
   }
 
   void _showReportDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Пожаловаться на отзыв'),

@@ -286,6 +286,9 @@ class EventService {
       query = query.where('organizerId', isEqualTo: filter.organizerId);
     }
 
+    // Добавляем лимит для оптимизации
+    query = query.limit(20);
+
     return query.orderBy('date').snapshots().map(
           (snapshot) => snapshot.docs.map(Event.fromDocument).toList(),
         );

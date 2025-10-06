@@ -1,5 +1,5 @@
 /// Общие утилиты
-library utils;
+library;
 
 export 'format_utils.dart';
 export 'type_utils.dart';

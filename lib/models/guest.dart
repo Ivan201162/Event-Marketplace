@@ -17,19 +17,21 @@ class Guest {
 
   /// Создать из Map
   factory Guest.fromMap(Map<String, dynamic> data) => Guest(
-        id: data['id'] ?? '',
-        eventId: data['eventId'] ?? '',
-        name: data['name'] ?? '',
-        email: data['email'],
-        phone: data['phone'],
-        avatar: data['avatar'],
+        id: data['id'] as String? ?? '',
+        eventId: data['eventId'] as String? ?? '',
+        name: data['name'] as String? ?? '',
+        email: data['email'] as String?,
+        phone: data['phone'] as String?,
+        avatar: data['avatar'] as String?,
         status: GuestStatus.values.firstWhere(
-          (e) => e.name == data['status'],
+          (e) => e.name == data['status'] as String?,
           orElse: () => GuestStatus.invited,
         ),
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+        metadata: Map<String, dynamic>.from(
+          (data['metadata'] as Map<dynamic, dynamic>?) ?? {},
+        ),
       );
   final String id;
   final String eventId;
@@ -181,23 +183,23 @@ class GuestGreeting {
 
   /// Создать из Map
   factory GuestGreeting.fromMap(Map<String, dynamic> data) => GuestGreeting(
-        id: data['id'] ?? '',
-        eventId: data['eventId'] ?? '',
-        guestId: data['guestId'] ?? '',
-        guestName: data['guestName'] ?? '',
-        guestAvatar: data['guestAvatar'],
+        id: data['id'] as String? ?? '',
+        eventId: data['eventId'] as String? ?? '',
+        guestId: data['guestId'] as String? ?? '',
+        guestName: data['guestName'] as String? ?? '',
+        guestAvatar: data['guestAvatar'] as String?,
         type: GreetingType.values.firstWhere(
-          (e) => e.name == data['type'],
+          (e) => e.name == data['type'] as String?,
           orElse: () => GreetingType.text,
         ),
-        text: data['text'],
-        imageUrl: data['imageUrl'],
-        videoUrl: data['videoUrl'],
-        audioUrl: data['audioUrl'],
+        text: data['text'] as String?,
+        imageUrl: data['imageUrl'] as String?,
+        videoUrl: data['videoUrl'] as String?,
+        audioUrl: data['audioUrl'] as String?,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
-        likedBy: List<String>.from(data['likedBy'] ?? []),
-        likesCount: data['likesCount'] ?? 0,
-        isPublic: data['isPublic'] ?? true,
+        likedBy: List<String>.from((data['likedBy'] as List<dynamic>?) ?? []),
+        likesCount: data['likesCount'] as int? ?? 0,
+        isPublic: data['isPublic'] as bool? ?? true,
       );
   final String id;
   final String eventId;
@@ -306,14 +308,14 @@ class GuestEventAccess {
   /// Создать из Map
   factory GuestEventAccess.fromMap(Map<String, dynamic> data) =>
       GuestEventAccess(
-        id: data['id'] ?? '',
-        eventId: data['eventId'] ?? '',
-        accessCode: data['accessCode'] ?? '',
-        qrCode: data['qrCode'] ?? '',
+        id: data['id'] as String? ?? '',
+        eventId: data['eventId'] as String? ?? '',
+        accessCode: data['accessCode'] as String? ?? '',
+        qrCode: data['qrCode'] as String? ?? '',
         expiresAt: (data['expiresAt'] as Timestamp).toDate(),
-        isActive: data['isActive'] ?? true,
-        maxUses: data['maxUses'] ?? 1,
-        currentUses: data['currentUses'] ?? 0,
+        isActive: data['isActive'] as bool? ?? true,
+        maxUses: data['maxUses'] as int? ?? 1,
+        currentUses: data['currentUses'] as int? ?? 0,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       );

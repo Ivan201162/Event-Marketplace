@@ -152,7 +152,7 @@ class _VersionManagementScreenState
                     ),
                   ],
                   onChanged: (value) {
-                    // TODO: Реализовать фильтрацию
+                    // TODO(developer): Реализовать фильтрацию
                   },
                 ),
                 const SizedBox(width: 8),
@@ -818,7 +818,7 @@ class _VersionManagementScreenState
   }
 
   void _viewVersion(AppVersion version) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Версия ${version.fullVersion}'),
@@ -876,7 +876,7 @@ class _VersionManagementScreenState
   }
 
   void _editVersion(AppVersion version) {
-    // TODO: Реализовать редактирование версии
+    // TODO(developer): Реализовать редактирование версии
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -887,7 +887,7 @@ class _VersionManagementScreenState
   }
 
   void _activateVersion(AppVersion version) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Активировать версию'),
@@ -904,7 +904,7 @@ class _VersionManagementScreenState
                 await _versionService.activateVersion(
                   version.id,
                   activatedBy:
-                      'current_user', // TODO: Получить ID текущего пользователя
+                      'current_user', // TODO(developer): Получить ID текущего пользователя
                 );
                 _loadData();
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -930,7 +930,7 @@ class _VersionManagementScreenState
   }
 
   void _viewVersionStatistics(AppVersion version) {
-    // TODO: Реализовать просмотр статистики версии
+    // TODO(developer): Реализовать просмотр статистики версии
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content:
@@ -940,7 +940,7 @@ class _VersionManagementScreenState
   }
 
   void _showCreateVersionDialog() {
-    // TODO: Реализовать диалог создания версии
+    // TODO(developer): Реализовать диалог создания версии
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Создание версии будет реализовано'),

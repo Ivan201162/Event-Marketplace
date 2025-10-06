@@ -105,7 +105,7 @@ class EventDetailScreen extends ConsumerWidget {
                   case 'edit':
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
+                      MaterialPageRoute<void>(
                         builder: (context) => CreateEventScreen(event: event),
                       ),
                     );
@@ -234,10 +234,10 @@ class EventDetailScreen extends ConsumerWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: event.statusColor.withOpacity(0.1),
+                      color: event.statusColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: event.statusColor.withOpacity(0.3),
+                        color: event.statusColor.withValues(alpha: 0.3),
                       ),
                     ),
                     child: Text(
@@ -532,7 +532,7 @@ class EventDetailScreen extends ConsumerWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
+                    MaterialPageRoute<void>(
                       builder: (context) => CreateEventScreen(event: event),
                     ),
                   );
@@ -615,7 +615,7 @@ class EventDetailScreen extends ConsumerWidget {
       );
 
   void _completeEvent(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Завершить мероприятие'),
@@ -656,7 +656,7 @@ class EventDetailScreen extends ConsumerWidget {
   }
 
   void _cancelEvent(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Отменить мероприятие'),
@@ -697,7 +697,7 @@ class EventDetailScreen extends ConsumerWidget {
   }
 
   void _showDeleteDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить мероприятие'),
@@ -769,12 +769,13 @@ class EventDetailScreen extends ConsumerWidget {
 
             // Средний рейтинг
             FutureBuilder<Map<String, dynamic>>(
-              future:
-                  reviewService.getEventReviewStats(event.id).then((stats) => {
-                        'averageRating': stats.averageRating,
-                        'totalReviews': stats.totalReviews,
-                        'ratingDistribution': stats.ratingDistribution,
-                      }),
+              future: reviewService.getEventReviewStats(event.id).then(
+                    (stats) => {
+                      'averageRating': stats.averageRating,
+                      'totalReviews': stats.totalReviews,
+                      'ratingDistribution': stats.ratingDistribution,
+                    },
+                  ),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -960,7 +961,7 @@ class EventDetailScreen extends ConsumerWidget {
   }
 
   void _showAllReviews(BuildContext context, WidgetRef ref) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (context) => DraggableScrollableSheet(
@@ -1092,7 +1093,7 @@ class EventDetailScreen extends ConsumerWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
+                    MaterialPageRoute<void>(
                       builder: (context) => CreateBookingScreen(event: event),
                     ),
                   ).then((result) {

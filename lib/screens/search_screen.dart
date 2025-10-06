@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-import '../core/app_theme.dart';
+import '../core/navigation/app_navigator.dart';
 import '../models/specialist.dart';
-import '../providers/specialist_providers.dart';
-import '../widgets/search_filters_widget.dart';
+import '../providers/search_providers.dart';
+import '../widgets/search/filters.dart';
+import '../widgets/search/sorting.dart';
 import '../widgets/specialist_card.dart';
-import 'specialist_profile_screen.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -18,6 +19,13 @@ class SearchScreen extends ConsumerStatefulWidget {
 class _SearchScreenState extends ConsumerState<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   bool _showFilters = false;
+  bool _showSorting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_onSearchChanged);
+  }
 
   @override
   void dispose() {
@@ -25,353 +33,272 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     super.dispose();
   }
 
+  void _onSearchChanged() {
+    ref.read(searchQueryProvider.notifier).state = _searchController.text;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final searchResults = ref.watch(searchResultsProvider);
+    final isTablet = MediaQuery.of(context).size.width > 600;
+    final isDesktop = MediaQuery.of(context).size.width > 1200;
+    final specialistsAsync = ref.watch(filteredSpecialistsProvider);
     final searchStats = ref.watch(searchStatsProvider);
-    final searchHistory = ref.watch(searchHistoryProvider);
+    final hasActiveFilters = ref.watch(hasActiveFiltersProvider);
+    final activeFiltersCount = ref.watch(activeFiltersCountProvider);
 
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          // Современный AppBar с градиентом
-          SliverAppBar(
-            expandedHeight: 120,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              title: const Text(
-                'Поиск специалистов',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+      appBar: AppNavigator.buildAppBar(
+        context,
+        title: 'Найди своего специалиста 🎯',
+        actions: [
+          if (hasActiveFilters)
+            Container(
+              margin: const EdgeInsets.only(right: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                '$activeFiltersCount',
+                style: const TextStyle(
                   color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              background: Container(
-                decoration: const BoxDecoration(
-                  gradient: BrandColors.primaryGradient,
+            ),
+          IconButton(
+            icon: Icon(_showSorting ? Icons.sort : Icons.sort),
+            onPressed: () {
+              setState(() {
+                _showSorting = !_showSorting;
+              });
+            },
+          ),
+          IconButton(
+            icon: Icon(
+              _showFilters ? Icons.filter_list_off : Icons.filter_list,
+            ),
+            onPressed: () {
+              setState(() {
+                _showFilters = !_showFilters;
+              });
+            },
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          // Поисковая строка
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: TextFormField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                labelText: 'Поиск по имени, категории или услугам...',
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: _searchController.text.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: _searchController.clear,
+                      )
+                    : null,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                child: SafeArea(
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(top: 40, left: 16, right: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Поиск специалистов',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: IconButton(
-                            icon: Icon(
-                              _showFilters
-                                  ? Icons.filter_list_off
-                                  : Icons.filter_list,
-                              color: Colors.white,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _showFilters = !_showFilters;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
+              ),
+              onChanged: (value) {
+                setState(() {});
+                ref.read(searchQueryProvider.notifier).state = value;
+              },
+            ),
+          ),
+
+          // Быстрые фильтры
+          const QuickFiltersWidget(),
+
+          // Активные фильтры
+          const ActiveFiltersWidget(),
+
+          // Статистика поиска
+          if (searchStats.totalCount > 0)
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.info_outline,
+                    size: 16,
+                    color: Colors.grey.shade600,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Найдено: ${searchStats.totalCount} специалистов',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey.shade700,
                     ),
                   ),
-                ),
+                  const Spacer(),
+                  if (searchStats.priceRange != null)
+                    Text(
+                      'Цена: ${searchStats.priceRange!.minPrice.toInt()} - ${searchStats.priceRange!.maxPrice.toInt()}₽',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                ],
               ),
             ),
-          ),
 
-          // Основной контент
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                // Поисковая строка
-                _buildSearchBar(),
+          // Сортировка
+          if (_showSorting) const SearchSortingWidget(showTitle: false),
 
-                // Статистика поиска
-                if (searchStats.hasActiveFilters || searchResults.hasValue)
-                  _buildSearchStats(searchStats),
+          // Фильтры
+          if (_showFilters) const SearchFiltersWidget(showTitle: false),
 
-                // Фильтры
-                if (_showFilters) _buildFiltersSection(),
+          // Список специалистов
+          Expanded(
+            child: specialistsAsync.when(
+              data: (specialists) {
+                if (specialists.isEmpty) {
+                  return _buildEmptyState();
+                }
 
-                const SizedBox(height: 16),
-              ],
+                return isTablet
+                    ? _buildGridLayout(specialists)
+                    : _buildListLayout(specialists);
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stack) => _buildErrorState(error.toString()),
             ),
           ),
-
-          // Результаты поиска
-          _buildSearchResults(searchResults, searchHistory),
         ],
       ),
     );
   }
 
-  /// Построить поисковую строку
-  Widget _buildSearchBar() => Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Поиск специалистов...',
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: _searchController.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          _searchController.clear();
-                          _performSearch();
-                        },
-                      )
-                    : null,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                filled: true,
-                fillColor: Colors.grey[100],
-              ),
-              onChanged: (value) {
-                setState(() {});
-                if (value.length >= 2) {
-                  _performSearch();
-                }
-              },
-              onSubmitted: (value) {
-                if (value.isNotEmpty) {
-                  ref.read(searchHistoryProvider.notifier).addToHistory(value);
-                  _performSearch();
-                }
-              },
-            ),
-
-            // История поиска
-            if (_searchController.text.isEmpty &&
-                ref.watch(searchHistoryProvider).isNotEmpty)
-              _buildSearchHistory(),
-          ],
-        ),
-      );
-
-  /// Построить историю поиска
-  Widget _buildSearchHistory() {
-    final history = ref.watch(searchHistoryProvider);
-
-    return Container(
-      margin: const EdgeInsets.only(top: 8),
-      height: 40,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: history.length,
-        itemBuilder: (context, index) {
-          final query = history[index];
-          return Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: Chip(
-              label: Text(query),
-              deleteIcon: const Icon(Icons.close),
-              onDeleted: () {
-                ref
-                    .read(searchHistoryProvider.notifier)
-                    .removeFromHistory(query);
-              },
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  /// Построить статистику поиска
-  Widget _buildSearchStats(SearchStats stats) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          children: [
-            Icon(Icons.info_outline, size: 16, color: Colors.grey[600]),
-            const SizedBox(width: 8),
-            Text(
-              'Найдено: ${stats.totalResults} специалистов',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-              ),
-            ),
-            const Spacer(),
-            if (stats.hasActiveFilters)
-              TextButton(
-                onPressed: () {
-                  ref.read(specialistFiltersProvider.notifier).state =
-                      const SpecialistFilters();
-                  _performSearch();
-                },
-                child: const Text('Сбросить фильтры'),
-              ),
-          ],
-        ),
-      );
-
-  /// Построить секцию фильтров
-  Widget _buildFiltersSection() => Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.grey[50],
-          border: Border(
-            top: BorderSide(color: Colors.grey[300]!),
-            bottom: BorderSide(color: Colors.grey[300]!),
-          ),
-        ),
-        child: SearchFiltersWidget(
-          onFiltersChanged: (filters) {
-            ref.read(specialistFiltersProvider.notifier).state = filters;
-            _performSearch();
-          },
-        ),
-      );
-
-  /// Построить результаты поиска
-  Widget _buildSearchResults(
-    AsyncValue<List<Specialist>> searchResults,
-    List<String> searchHistory,
-  ) =>
-      searchResults.when(
-        data: (specialists) {
-          if (specialists.isEmpty) {
-            return SliverFillRemaining(
-              child: _buildEmptyState(searchHistory),
-            );
-          }
-
-          return SliverPadding(
-            padding: const EdgeInsets.all(16),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final specialist = specialists[index];
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: SpecialistCard(
-                      specialist: specialist,
-                      onTap: () => _navigateToSpecialistProfile(specialist),
-                    ),
-                  );
-                },
-                childCount: specialists.length,
-              ),
-            ),
-          );
-        },
-        loading: () => const SliverFillRemaining(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(),
-                SizedBox(height: 16),
-                Text('Поиск специалистов...'),
-              ],
-            ),
-          ),
-        ),
-        error: (error, stack) => SliverFillRemaining(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                const SizedBox(height: 16),
-                Text('Ошибка поиска: $error'),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: _performSearch,
-                  child: const Text('Повторить'),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-
-  /// Построить пустое состояние
-  Widget _buildEmptyState(List<String> searchHistory) => Center(
+  Widget _buildEmptyState() => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               Icons.search_off,
               size: 64,
-              color: Colors.grey[400],
+              color: Colors.grey.shade400,
             ),
             const SizedBox(height: 16),
             Text(
               'Специалисты не найдены',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.grey.shade600,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
               'Попробуйте изменить параметры поиска',
-              style: TextStyle(color: Colors.grey[500]),
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade500,
+              ),
             ),
             const SizedBox(height: 24),
-            if (searchHistory.isNotEmpty) ...[
-              const Text('Недавние поиски:'),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                children: searchHistory
-                    .take(5)
-                    .map(
-                      (query) => ActionChip(
-                        label: Text(query),
-                        onPressed: () {
-                          _searchController.text = query;
-                          _performSearch();
-                        },
-                      ),
-                    )
-                    .toList(),
-              ),
-            ],
+            ElevatedButton.icon(
+              onPressed: () {
+                ref.read(searchControllerProvider).clearFilters();
+                _searchController.clear();
+              },
+              icon: const Icon(Icons.clear),
+              label: const Text('Сбросить фильтры'),
+            ),
           ],
         ),
       );
 
-  /// Выполнить поиск
-  void _performSearch() {
-    final query = _searchController.text.trim();
-    final currentFilters = ref.read(specialistFiltersProvider);
+  Widget _buildErrorState(String error) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 64,
+              color: Colors.red.shade400,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Ошибка загрузки',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.red.shade600,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              error,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade600,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: () {
+                // Перезагрузить данные
+                ref.invalidate(allSpecialistsProvider);
+              },
+              icon: const Icon(Icons.refresh),
+              label: const Text('Повторить'),
+            ),
+          ],
+        ),
+      );
 
-    final updatedFilters = currentFilters.copyWith(
-      searchQuery: query.isEmpty ? null : query,
-    );
+  Widget _buildListLayout(List<Specialist> specialists) => ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: specialists.length,
+        itemBuilder: (context, index) {
+          final specialist = specialists[index];
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: SpecialistCard(
+              specialist: specialist,
+              onTap: () {
+                context.go('/specialist/${specialist.id}');
+              },
+            ),
+          );
+        },
+      );
 
-    ref.read(specialistFiltersProvider.notifier).state = updatedFilters;
-
-    if (query.isNotEmpty) {
-      ref.read(searchHistoryProvider.notifier).addToHistory(query);
-    }
-  }
-
-  /// Перейти к профилю специалиста
-  void _navigateToSpecialistProfile(Specialist specialist) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) =>
-            SpecialistProfileScreen(specialistId: specialist.id),
-      ),
-    );
-  }
+  Widget _buildGridLayout(List<Specialist> specialists) => GridView.builder(
+        padding: const EdgeInsets.all(16),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 0.8,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+        ),
+        itemCount: specialists.length,
+        itemBuilder: (context, index) {
+          final specialist = specialists[index];
+          return SpecialistCard(
+            specialist: specialist,
+            onTap: () {
+              context.go('/specialist/${specialist.id}');
+            },
+          );
+        },
+      );
 }

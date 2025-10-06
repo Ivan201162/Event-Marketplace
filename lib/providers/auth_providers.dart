@@ -1,273 +1,204 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../models/user.dart';
 import '../services/auth_service.dart';
 
 /// Провайдер сервиса аутентификации
 final authServiceProvider = Provider<AuthService>((ref) => AuthService());
 
-/// Провайдер текущего пользователя Firebase
-final currentFirebaseUserProvider = StreamProvider<User?>((ref) {
+/// Провайдер текущего пользователя приложения
+final currentUserProvider = StreamProvider<AppUser?>((ref) {
   final authService = ref.watch(authServiceProvider);
   return authService.authStateChanges;
 });
 
-/// Провайдер текущего пользователя приложения
-final currentUserProvider = StreamProvider<AppUser?>((ref) {
-  final authService = ref.watch(authServiceProvider);
-  return authService.currentUserStream;
-});
+/// Провайдер состояния авторизации
+final authStateProvider = StreamProvider<bool>((ref) {
+  final currentUserAsync = ref.watch(currentUserProvider);
 
-/// Провайдер состояния аутентификации
-final authStateProvider = Provider<AuthState>((ref) {
-  final userAsync = ref.watch(currentUserProvider);
-
-  return userAsync.when(
-    data: (user) =>
-        user != null ? AuthState.authenticated : AuthState.unauthenticated,
-    loading: () => AuthState.loading,
-    error: (_, __) => AuthState.error,
+  return currentUserAsync.when(
+    data: (user) => Stream.value(user != null),
+    loading: () => Stream.value(false),
+    error: (_, __) => Stream.value(false),
   );
 });
 
-/// Провайдер роли текущего пользователя
-final currentUserRoleProvider = Provider<UserRole?>((ref) {
-  final userAsync = ref.watch(currentUserProvider);
-  return userAsync.whenOrNull(
-    data: (user) => user?.role,
-  );
-});
-
-/// Провайдер для проверки, является ли пользователь специалистом
-final isSpecialistProvider = Provider<bool>((ref) {
-  final role = ref.watch(currentUserRoleProvider);
-  return role == UserRole.specialist;
-});
-
-/// Провайдер для проверки, является ли пользователь заказчиком
-final isCustomerProvider = Provider<bool>((ref) {
-  final role = ref.watch(currentUserRoleProvider);
-  return role == UserRole.customer;
-});
-
-/// Провайдер для восстановления сессии
-final sessionRestoreProvider = FutureProvider<AppUser?>((ref) async {
-  final authService = ref.watch(authServiceProvider);
-  return authService.restoreSession();
-});
-
-/// Провайдер для проверки валидности сессии
-final sessionValidProvider = FutureProvider<bool>((ref) async {
-  final authService = ref.watch(authServiceProvider);
-  return authService.isSessionValid();
-});
-
-/// Провайдер для проверки, является ли пользователь гостем
-final isGuestProvider = Provider<bool>((ref) {
-  final role = ref.watch(currentUserRoleProvider);
-  return role == UserRole.guest;
-});
-
-/// Провайдер для проверки, авторизован ли пользователь
-final isAuthenticatedProvider = Provider<bool>((ref) {
-  final authState = ref.watch(authStateProvider);
-  return authState == AuthState.authenticated;
-});
-
-/// Провайдер для проверки, загружается ли аутентификация
-final isLoadingAuthProvider = Provider<bool>((ref) {
-  final authState = ref.watch(authStateProvider);
-  return authState == AuthState.loading;
-});
-
-/// Провайдер для проверки, есть ли ошибка аутентификации
-final hasAuthErrorProvider = Provider<bool>((ref) {
-  final authState = ref.watch(authStateProvider);
-  return authState == AuthState.error;
-});
-
-/// Состояния аутентификации
-enum AuthState {
-  loading, // Загрузка
-  authenticated, // Авторизован
-  unauthenticated, // Не авторизован
-  error, // Ошибка
-}
-
-/// Провайдер для управления состоянием формы входа
-final loginFormProvider =
-    NotifierProvider<LoginFormNotifier, LoginFormState>(LoginFormNotifier.new);
+/// Провайдер для формы входа
+final loginFormNotifierProvider =
+    StateNotifierProvider<LoginFormNotifier, LoginFormState>(
+  (ref) => LoginFormNotifier(ref.read(authServiceProvider)),
+);
 
 /// Состояние формы входа
 class LoginFormState {
   const LoginFormState({
-    this.email = '',
-    this.password = '',
-    this.errorMessage,
     this.isLoading = false,
-    this.isSignUpMode = false,
+    this.error,
+    this.isEmailMode = true,
+    this.isPhoneMode = false,
+    this.isGuestMode = false,
+    this.phoneVerificationId,
   });
-  final String email;
-  final String password;
-  final String? errorMessage;
   final bool isLoading;
-  final bool isSignUpMode;
+  final String? error;
+  final bool isEmailMode;
+  final bool isPhoneMode;
+  final bool isGuestMode;
+  final String? phoneVerificationId;
 
   LoginFormState copyWith({
-    String? email,
-    String? password,
-    String? errorMessage,
     bool? isLoading,
-    bool? isSignUpMode,
+    String? error,
+    bool? isEmailMode,
+    bool? isPhoneMode,
+    bool? isGuestMode,
+    String? phoneVerificationId,
   }) =>
       LoginFormState(
-        email: email ?? this.email,
-        password: password ?? this.password,
-        errorMessage: errorMessage,
         isLoading: isLoading ?? this.isLoading,
-        isSignUpMode: isSignUpMode ?? this.isSignUpMode,
+        error: error,
+        isEmailMode: isEmailMode ?? this.isEmailMode,
+        isPhoneMode: isPhoneMode ?? this.isPhoneMode,
+        isGuestMode: isGuestMode ?? this.isGuestMode,
+        phoneVerificationId: phoneVerificationId ?? this.phoneVerificationId,
       );
 }
 
-/// Нотификатор для управления формой входа
-class LoginFormNotifier extends Notifier<LoginFormState> {
-  late final AuthService _authService;
+/// Нотификатор формы входа
+class LoginFormNotifier extends StateNotifier<LoginFormState> {
+  LoginFormNotifier(this._authService) : super(const LoginFormState());
+  final AuthService _authService;
 
-  @override
-  LoginFormState build() {
-    _authService = ref.read(authServiceProvider);
-    return const LoginFormState();
-  }
-
-  /// Обновить email
-  void updateEmail(String email) {
-    state = state.copyWith(email: email);
-  }
-
-  /// Обновить пароль
-  void updatePassword(String password) {
-    state = state.copyWith(password: password);
-  }
-
-  /// Переключить режим регистрации/входа
-  void toggleSignUpMode() {
-    state = state.copyWith(
-      isSignUpMode: !state.isSignUpMode,
-    );
-  }
-
-  /// Войти
-  Future<void> signIn() async {
-    if (state.email.isEmpty || state.password.isEmpty) {
-      state = state.copyWith(errorMessage: 'Заполните все поля');
-      return;
-    }
-
+  /// Вход по email и паролю
+  Future<void> signInWithEmail(String email, String password) async {
     state = state.copyWith(isLoading: true);
 
     try {
-      await _authService.signInWithEmailAndPassword(
-        email: state.email,
-        password: state.password,
-      );
-      // Сброс состояния после успешного входа
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: null,
-      );
-    } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: e.toString(),
-      );
+      await _authService.signInWithEmail(email, password);
+      state = state.copyWith(isLoading: false);
+    } on Exception catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
-  /// Зарегистрироваться
-  Future<void> signUp({
-    required String displayName,
-    required UserRole role,
+  /// Регистрация по email и паролю
+  Future<void> signUpWithEmail(
+    String email,
+    String password, {
+    String? displayName,
   }) async {
-    if (state.email.isEmpty || state.password.isEmpty || displayName.isEmpty) {
-      state = state.copyWith(errorMessage: 'Заполните все поля');
-      return;
-    }
-
     state = state.copyWith(isLoading: true);
 
     try {
-      await _authService.signUpWithEmailAndPassword(
-        email: state.email,
-        password: state.password,
+      await _authService.signUpWithEmail(
+        email,
+        password,
         displayName: displayName,
-        role: role,
       );
-      // Сброс состояния после успешной регистрации
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: null,
-      );
-    } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: e.toString(),
-      );
+      state = state.copyWith(isLoading: false);
+    } on Exception catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
-  /// Войти как гость
+  /// Отправка SMS кода
+  Future<void> sendPhoneCode(String phoneNumber) async {
+    state = state.copyWith(isLoading: true);
+
+    try {
+      await _authService.signInWithPhone(phoneNumber);
+      state = state.copyWith(isLoading: false);
+    } on Exception catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+    }
+  }
+
+  /// Подтверждение SMS кода
+  Future<void> confirmPhoneCode(String smsCode) async {
+    state = state.copyWith(isLoading: true);
+
+    try {
+      await _authService.confirmPhoneCode(smsCode);
+      state = state.copyWith(isLoading: false);
+    } on Exception catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+    }
+  }
+
+  /// Вход как гость
   Future<void> signInAsGuest() async {
     state = state.copyWith(isLoading: true);
 
     try {
       await _authService.signInAsGuest();
-      // Сброс состояния после успешного входа как гость
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: null,
-      );
-    } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: e.toString(),
-      );
+      state = state.copyWith(isLoading: false);
+    } on Exception catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
-  /// Сбросить пароль
-  Future<void> resetPassword() async {
-    if (state.email.isEmpty) {
-      state = state.copyWith(errorMessage: 'Введите email для сброса пароля');
-      return;
-    }
+  /// Переключение режима входа
+  void setEmailMode() {
+    state = state.copyWith(
+      isEmailMode: true,
+      isPhoneMode: false,
+      isGuestMode: false,
+    );
+  }
 
+  void setPhoneMode() {
+    state = state.copyWith(
+      isEmailMode: false,
+      isPhoneMode: true,
+      isGuestMode: false,
+    );
+  }
+
+  void setGuestMode() {
+    state = state.copyWith(
+      isEmailMode: false,
+      isPhoneMode: false,
+      isGuestMode: true,
+    );
+  }
+
+  /// Вход с тестовым email
+  Future<void> signInWithTestEmail() async {
     state = state.copyWith(isLoading: true);
 
     try {
-      await _authService.resetPassword(state.email);
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: 'Письмо для сброса пароля отправлено на ${state.email}',
-      );
-    } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: e.toString(),
-      );
+      await _authService.signInWithTestEmail();
+      state = state.copyWith(isLoading: false);
+    } on Exception catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
-  /// Очистить ошибку
+  /// Регистрация с тестовым email
+  Future<void> signUpWithTestEmail() async {
+    state = state.copyWith(isLoading: true);
+
+    try {
+      await _authService.signUpWithTestEmail();
+      state = state.copyWith(isLoading: false);
+    } on Exception catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+    }
+  }
+
+  /// Вход с тестовым телефоном
+  Future<void> signInWithTestPhone() async {
+    state = state.copyWith(isLoading: true);
+
+    try {
+      await _authService.signInWithTestPhone();
+      state = state.copyWith(isLoading: false);
+    } on Exception catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+    }
+  }
+
+  /// Очистка ошибки
   void clearError() {
     state = state.copyWith();
   }
-
-  /// Обновить имя пользователя
-  void updateDisplayName(String displayName) {
-    _displayName = displayName;
-  }
-
-  String _displayName = '';
-  String get displayName => _displayName;
 }

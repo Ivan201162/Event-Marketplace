@@ -147,7 +147,7 @@ class StudioRecommendationWidget extends ConsumerWidget {
   String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
 
   void _openStudioUrl(String url) {
-    // TODO: Реализовать открытие URL
+    // TODO(developer): Реализовать открытие URL
     print('Открытие URL: $url');
   }
 }

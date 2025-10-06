@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('BookingFormScreen', () {
-    late Specialist testSpecialist;
+    Specialist? testSpecialist;
 
     setUp(() {
       testSpecialist = Specialist(
@@ -14,11 +14,13 @@ void main() {
         userId: 'user_1',
         name: 'Test Specialist',
         description: 'Test description',
+        bio: 'Test bio',
         category: SpecialistCategory.photographer,
         subcategories: ['свадебная фотография'],
         experienceLevel: ExperienceLevel.advanced,
         yearsOfExperience: 5,
         hourlyRate: 3000,
+        price: 3000,
         minBookingHours: 2,
         maxBookingHours: 12,
         serviceAreas: ['Москва'],

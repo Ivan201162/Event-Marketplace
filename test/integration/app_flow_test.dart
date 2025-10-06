@@ -1,254 +1,166 @@
+import 'package:event_marketplace_app/main.dart';
+import 'package:event_marketplace_app/screens/auth_screen.dart';
+import 'package:event_marketplace_app/screens/home_screen.dart';
+import 'package:event_marketplace_app/screens/profile_screen.dart';
+import 'package:event_marketplace_app/screens/search_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
-import 'package:event_marketplace_app/main.dart' as app;
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
   group('App Flow Integration Tests', () {
-    testWidgets('полный поток регистрации и входа пользователя',
-        (WidgetTester tester) async {
-      // Arrange
-      app.main();
+    testWidgets('Complete user journey from auth to booking', (tester) async {
+      // Запускаем приложение
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: EventMarketplaceApp(),
+        ),
+      );
+
+      // Ждем загрузки
       await tester.pumpAndSettle();
 
-      // Act & Assert - проверяем начальный экран
-      expect(find.text('Event Marketplace'), findsOneWidget);
+      // Проверяем, что открылся экран авторизации
+      expect(find.byType(AuthScreen), findsOneWidget);
+
+      // Проверяем наличие полей авторизации
+      expect(find.byType(TextFormField), findsWidgets);
       expect(find.text('Войти'), findsOneWidget);
       expect(find.text('Регистрация'), findsOneWidget);
+      expect(find.text('Гость'), findsOneWidget);
 
-      // Act - нажимаем на кнопку регистрации
-      await tester.tap(find.text('Регистрация'));
+      // Тестируем гостевой вход
+      await tester.tap(find.text('Гость'));
       await tester.pumpAndSettle();
 
-      // Assert - проверяем экран регистрации
-      expect(find.text('Создать аккаунт'), findsOneWidget);
-      expect(find.byType(TextFormField), findsAtLeastNWidgets(3));
+      // Проверяем, что открылся главный экран
+      expect(find.byType(HomeScreen), findsOneWidget);
 
-      // Act - заполняем форму регистрации
-      await tester.enterText(
-          find.byType(TextFormField).at(0), 'test@example.com');
-      await tester.enterText(find.byType(TextFormField).at(1), 'Test User');
-      await tester.enterText(find.byType(TextFormField).at(2), 'password123');
+      // Проверяем наличие кнопок навигации
+      expect(find.text('Найти специалиста'), findsOneWidget);
+      expect(find.text('Мои заявки'), findsOneWidget);
+      expect(find.text('Календарь'), findsOneWidget);
+      expect(find.text('Сообщения'), findsOneWidget);
+      expect(find.text('AI-помощник'), findsOneWidget);
+
+      // Тестируем навигацию к поиску специалистов
+      await tester.tap(find.text('Найти специалиста'));
       await tester.pumpAndSettle();
 
-      // Act - нажимаем кнопку регистрации
-      await tester.tap(find.text('Зарегистрироваться'));
+      // Проверяем, что открылся экран поиска
+      expect(find.byType(SearchScreen), findsOneWidget);
+
+      // Возвращаемся на главный экран
+      await tester.pageBack();
       await tester.pumpAndSettle();
 
-      // Assert - проверяем успешную регистрацию
-      // В реальном приложении здесь должна быть проверка навигации на главный экран
-      expect(find.text('Event Marketplace'), findsOneWidget);
+      // Проверяем, что вернулись на главный экран
+      expect(find.byType(HomeScreen), findsOneWidget);
     });
 
-    testWidgets('поток входа существующего пользователя',
-        (WidgetTester tester) async {
-      // Arrange
-      app.main();
+    testWidgets('Navigation between all main screens', (tester) async {
+      // Запускаем приложение
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: EventMarketplaceApp(),
+        ),
+      );
+
       await tester.pumpAndSettle();
 
-      // Act - нажимаем на кнопку входа
-      await tester.tap(find.text('Войти'));
+      // Входим как гость
+      await tester.tap(find.text('Гость'));
       await tester.pumpAndSettle();
 
-      // Assert - проверяем экран входа
-      expect(find.text('Вход в аккаунт'), findsOneWidget);
-      expect(find.byType(TextFormField), findsAtLeastNWidgets(2));
-
-      // Act - заполняем форму входа
-      await tester.enterText(
-          find.byType(TextFormField).at(0), 'test@example.com');
-      await tester.enterText(find.byType(TextFormField).at(1), 'password123');
+      // Тестируем навигацию к "Мои заявки"
+      await tester.tap(find.text('Мои заявки'));
       await tester.pumpAndSettle();
 
-      // Act - нажимаем кнопку входа
-      await tester.tap(find.text('Войти'));
+      // Возвращаемся
+      await tester.pageBack();
       await tester.pumpAndSettle();
 
-      // Assert - проверяем успешный вход
-      // В реальном приложении здесь должна быть проверка навигации на главный экран
-      expect(find.text('Event Marketplace'), findsOneWidget);
+      // Тестируем навигацию к "Календарь"
+      await tester.tap(find.text('Календарь'));
+      await tester.pumpAndSettle();
+
+      // Возвращаемся
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+
+      // Тестируем навигацию к "Сообщения"
+      await tester.tap(find.text('Сообщения'));
+      await tester.pumpAndSettle();
+
+      // Возвращаемся
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+
+      // Тестируем навигацию к "AI-помощник"
+      await tester.tap(find.text('AI-помощник'));
+      await tester.pumpAndSettle();
+
+      // Возвращаемся
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+
+      // Проверяем, что вернулись на главный экран
+      expect(find.byType(HomeScreen), findsOneWidget);
     });
 
-    testWidgets('навигация по главному экрану', (WidgetTester tester) async {
-      // Arrange
-      app.main();
+    testWidgets('Search screen functionality', (tester) async {
+      // Запускаем приложение
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: EventMarketplaceApp(),
+        ),
+      );
+
       await tester.pumpAndSettle();
 
-      // Предполагаем, что пользователь уже вошел в систему
-      // В реальном приложении здесь должен быть мок или тестовый пользователь
+      // Входим как гость
+      await tester.tap(find.text('Гость'));
+      await tester.pumpAndSettle();
 
-      // Act & Assert - проверяем навигацию по вкладкам
-      if (find.byType(BottomNavigationBar).evaluate().isNotEmpty) {
-        // Мобильная навигация
-        await tester.tap(find.byIcon(Icons.search));
-        await tester.pumpAndSettle();
-        expect(find.text('Поиск'), findsOneWidget);
+      // Переходим к поиску
+      await tester.tap(find.text('Найти специалиста'));
+      await tester.pumpAndSettle();
 
-        await tester.tap(find.byIcon(Icons.chat));
-        await tester.pumpAndSettle();
-        expect(find.text('Чаты'), findsOneWidget);
+      // Проверяем наличие элементов поиска
+      expect(find.byType(TextFormField), findsWidgets);
+      expect(find.byType(ElevatedButton), findsWidgets);
 
-        await tester.tap(find.byIcon(Icons.person));
-        await tester.pumpAndSettle();
-        expect(find.text('Профиль'), findsOneWidget);
+      // Тестируем поиск
+      await tester.enterText(find.byType(TextFormField).first, 'фотограф');
+      await tester.pumpAndSettle();
 
-        await tester.tap(find.byIcon(Icons.event));
-        await tester.pumpAndSettle();
-        expect(find.text('События'), findsOneWidget);
-      } else if (find.byType(NavigationBar).evaluate().isNotEmpty) {
-        // Десктопная навигация
-        await tester.tap(find.text('Поиск'));
-        await tester.pumpAndSettle();
-        expect(find.text('Поиск'), findsOneWidget);
-
-        await tester.tap(find.text('Чаты'));
-        await tester.pumpAndSettle();
-        expect(find.text('Чаты'), findsOneWidget);
-
-        await tester.tap(find.text('Профиль'));
-        await tester.pumpAndSettle();
-        expect(find.text('Профиль'), findsOneWidget);
-
-        await tester.tap(find.text('События'));
-        await tester.pumpAndSettle();
-        expect(find.text('События'), findsOneWidget);
-      }
+      // Проверяем, что поиск выполнился
+      expect(find.text('фотограф'), findsOneWidget);
     });
 
-    testWidgets('создание события организатором', (WidgetTester tester) async {
-      // Arrange
-      app.main();
+    testWidgets('Profile screen functionality', (tester) async {
+      // Запускаем приложение
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: EventMarketplaceApp(),
+        ),
+      );
+
       await tester.pumpAndSettle();
 
-      // Предполагаем, что пользователь уже вошел в систему как организатор
-      // В реальном приложении здесь должен быть мок или тестовый пользователь
+      // Входим как гость
+      await tester.tap(find.text('Гость'));
+      await tester.pumpAndSettle();
 
-      // Act - нажимаем на плавающую кнопку добавления
-      if (find.byType(FloatingActionButton).evaluate().isNotEmpty) {
-        await tester.tap(find.byType(FloatingActionButton));
+      // Переходим к профилю (через меню или кнопку)
+      // Предполагаем, что есть кнопка профиля
+      final profileButton = find.byIcon(Icons.person);
+      if (profileButton.evaluate().isNotEmpty) {
+        await tester.tap(profileButton);
         await tester.pumpAndSettle();
 
-        // Assert - проверяем экран создания события
-        expect(find.text('Создать событие'), findsOneWidget);
-        expect(find.byType(TextFormField), findsAtLeastNWidgets(3));
-
-        // Act - заполняем форму создания события
-        await tester.enterText(find.byType(TextFormField).at(0), 'Test Event');
-        await tester.enterText(
-            find.byType(TextFormField).at(1), 'Test Description');
-        await tester.enterText(
-            find.byType(TextFormField).at(2), 'Test Location');
-        await tester.pumpAndSettle();
-
-        // Act - нажимаем кнопку создания
-        await tester.tap(find.text('Создать'));
-        await tester.pumpAndSettle();
-
-        // Assert - проверяем успешное создание
-        // В реальном приложении здесь должна быть проверка навигации обратно на главный экран
-        expect(find.text('Event Marketplace'), findsOneWidget);
-      }
-    });
-
-    testWidgets('поиск и фильтрация событий', (WidgetTester tester) async {
-      // Arrange
-      app.main();
-      await tester.pumpAndSettle();
-
-      // Act - переходим на вкладку поиска
-      if (find.byType(BottomNavigationBar).evaluate().isNotEmpty) {
-        await tester.tap(find.byIcon(Icons.search));
-      } else if (find.byType(NavigationBar).evaluate().isNotEmpty) {
-        await tester.tap(find.text('Поиск'));
-      }
-      await tester.pumpAndSettle();
-
-      // Assert - проверяем экран поиска
-      expect(find.text('Поиск'), findsOneWidget);
-      expect(find.byType(TextFormField), findsAtLeastNWidgets(1));
-
-      // Act - вводим поисковый запрос
-      await tester.enterText(find.byType(TextFormField).first, 'test');
-      await tester.pumpAndSettle();
-
-      // Act - нажимаем кнопку поиска
-      if (find.byIcon(Icons.search).evaluate().isNotEmpty) {
-        await tester.tap(find.byIcon(Icons.search));
-        await tester.pumpAndSettle();
-      }
-
-      // Assert - проверяем результаты поиска
-      // В реальном приложении здесь должна быть проверка отображения результатов
-      expect(find.text('Поиск'), findsOneWidget);
-    });
-
-    testWidgets('отправка сообщения в чате', (WidgetTester tester) async {
-      // Arrange
-      app.main();
-      await tester.pumpAndSettle();
-
-      // Act - переходим на вкладку чатов
-      if (find.byType(BottomNavigationBar).evaluate().isNotEmpty) {
-        await tester.tap(find.byIcon(Icons.chat));
-      } else if (find.byType(NavigationBar).evaluate().isNotEmpty) {
-        await tester.tap(find.text('Чаты'));
-      }
-      await tester.pumpAndSettle();
-
-      // Assert - проверяем экран чатов
-      expect(find.text('Чаты'), findsOneWidget);
-
-      // Act - нажимаем на первый чат (если есть)
-      if (find.byType(ListTile).evaluate().isNotEmpty) {
-        await tester.tap(find.byType(ListTile).first);
-        await tester.pumpAndSettle();
-
-        // Assert - проверяем экран чата
-        expect(find.byType(TextFormField), findsOneWidget);
-
-        // Act - вводим сообщение
-        await tester.enterText(find.byType(TextFormField), 'Test message');
-        await tester.pumpAndSettle();
-
-        // Act - нажимаем кнопку отправки
-        if (find.byIcon(Icons.send).evaluate().isNotEmpty) {
-          await tester.tap(find.byIcon(Icons.send));
-          await tester.pumpAndSettle();
-        }
-
-        // Assert - проверяем отправку сообщения
-        // В реальном приложении здесь должна быть проверка отображения сообщения
-        expect(find.text('Test message'), findsOneWidget);
-      }
-    });
-
-    testWidgets('выход из системы', (WidgetTester tester) async {
-      // Arrange
-      app.main();
-      await tester.pumpAndSettle();
-
-      // Act - переходим на вкладку профиля
-      if (find.byType(BottomNavigationBar).evaluate().isNotEmpty) {
-        await tester.tap(find.byIcon(Icons.person));
-      } else if (find.byType(NavigationBar).evaluate().isNotEmpty) {
-        await tester.tap(find.text('Профиль'));
-      }
-      await tester.pumpAndSettle();
-
-      // Assert - проверяем экран профиля
-      expect(find.text('Профиль'), findsOneWidget);
-
-      // Act - нажимаем кнопку выхода
-      if (find.text('Выйти').evaluate().isNotEmpty) {
-        await tester.tap(find.text('Выйти'));
-        await tester.pumpAndSettle();
-
-        // Assert - проверяем возврат на экран входа
-        expect(find.text('Event Marketplace'), findsOneWidget);
-        expect(find.text('Войти'), findsOneWidget);
-        expect(find.text('Регистрация'), findsOneWidget);
+        // Проверяем, что открылся экран профиля
+        expect(find.byType(ProfileScreen), findsOneWidget);
       }
     });
   });

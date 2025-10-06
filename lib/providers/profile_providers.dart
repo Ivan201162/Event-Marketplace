@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/customer_profile.dart';
-import '../models/security.dart';
 import '../models/specialist_profile.dart';
 import '../models/user.dart' as user_model;
 import '../services/profile_service.dart';
@@ -286,6 +285,7 @@ class SpecialistProfileEditNotifier
 
   /// Обновить поле профиля
   void updateField({
+    String? name,
     String? photoURL,
     String? bio,
     List<SpecialistCategory>? categories,
@@ -293,13 +293,31 @@ class SpecialistProfileEditNotifier
     double? hourlyRate,
     String? phoneNumber,
     String? location,
+    String? email,
+    String? website,
+    String? instagram,
+    String? vk,
+    String? telegram,
+    String? whatsapp,
+    String? skype,
+    String? zoom,
     Map<String, String>? socialLinks,
     List<String>? services,
     Map<String, dynamic>? workingHours,
+    bool? isAvailable,
+    Map<String, dynamic>? availability,
+    List<String>? languages,
+    List<String>? equipment,
+    bool? insurance,
+    List<String>? licenses,
+    List<String>? certifications,
+    List<String>? awards,
+    List<String>? testimonials,
   }) {
     if (state.profile == null) return;
 
     final updatedProfile = state.profile!.copyWith(
+      name: name,
       photoURL: photoURL,
       bio: bio,
       categories: categories,
@@ -307,9 +325,26 @@ class SpecialistProfileEditNotifier
       hourlyRate: hourlyRate,
       phoneNumber: phoneNumber,
       location: location,
+      email: email,
+      website: website,
+      instagram: instagram,
+      vk: vk,
+      telegram: telegram,
+      whatsapp: whatsapp,
+      skype: skype,
+      zoom: zoom,
       socialLinks: socialLinks,
       services: services,
       workingHours: workingHours,
+      isAvailable: isAvailable,
+      availability: availability,
+      languages: languages,
+      equipment: equipment,
+      insurance: insurance,
+      licenses: licenses,
+      certifications: certifications,
+      awards: awards,
+      testimonials: testimonials,
       updatedAt: DateTime.now(),
     );
 

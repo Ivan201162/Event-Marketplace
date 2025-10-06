@@ -86,22 +86,26 @@ service cloud.firestore {
         get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
     }
     
-    // Правила для сообщений
-    match /chats/{chatId}/messages/{messageId} {
+    // Правила для сообщений (новая структура)
+    match /messages/{messageId} {
       // Участники чата могут читать сообщения
       allow read: if request.auth != null && 
-        request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants;
+        request.auth.uid in get(/databases/$(database)/documents/chats/$(resource.data.chatId)).data.participants;
       
       // Участники чата могут отправлять сообщения
       allow create: if request.auth != null && 
-        request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants &&
+        request.auth.uid in get(/databases/$(database)/documents/chats/$(request.resource.data.chatId)).data.participants &&
         request.auth.uid == request.resource.data.senderId &&
-        request.resource.data.keys().hasAll(['senderId', 'text', 'timestamp']);
+        request.resource.data.keys().hasAll(['chatId', 'senderId', 'senderName', 'type', 'content', 'timestamp']);
       
       // Отправитель может обновлять свои сообщения
       allow update: if request.auth != null && 
         request.auth.uid == resource.data.senderId &&
         request.resource.data.keys().hasAll(['updatedAt']);
+      
+      // Отправитель может удалять свои сообщения
+      allow delete: if request.auth != null && 
+        request.auth.uid == resource.data.senderId;
       
       // Администраторы могут читать все сообщения
       allow read: if request.auth != null && 
@@ -114,18 +118,29 @@ service cloud.firestore {
       // Все аутентифицированные пользователи могут читать отзывы
       allow read: if request.auth != null;
       
-      // Пользователи могут создавать отзывы
+      // Пользователи могут создавать отзывы только для завершенных заказов
       allow create: if request.auth != null && 
-        request.auth.uid == request.resource.data.userId &&
-        request.resource.data.keys().hasAll(['userId', 'specialistId', 'rating', 'text', 'createdAt', 'updatedAt']);
+        request.auth.uid == request.resource.data.customerId &&
+        request.resource.data.keys().hasAll(['bookingId', 'specialistId', 'customerId', 'rating', 'comment', 'createdAt']) &&
+        request.resource.data.rating >= 1.0 &&
+        request.resource.data.rating <= 5.0 &&
+        // Проверяем, что заказ завершен
+        get(/databases/$(database)/documents/bookings/$(request.resource.data.bookingId)).data.status == 'completed';
       
-      // Автор отзыва может обновлять свой отзыв
+      // Автор отзыва может редактировать свой отзыв один раз
       allow update: if request.auth != null && 
-        request.auth.uid == resource.data.userId &&
-        request.resource.data.keys().hasAll(['updatedAt']);
+        request.auth.uid == resource.data.customerId &&
+        request.resource.data.keys().hasAll(['updatedAt']) &&
+        request.resource.data.edited == true &&
+        resource.data.edited == false;
+      
+      // Пользователи могут жаловаться на отзывы
+      allow update: if request.auth != null && 
+        request.resource.data.keys().hasAll(['reported', 'reportReason']) &&
+        request.resource.data.reported == true;
       
       // Администраторы могут читать и обновлять все отзывы
-      allow read, update: if request.auth != null && 
+      allow read, update, delete: if request.auth != null && 
         exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
         get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
     }
@@ -162,14 +177,14 @@ service cloud.firestore {
       
       // Система может создавать договоры
       allow create: if request.auth != null && 
-        request.resource.data.keys().hasAll(['customerId', 'specialistId', 'bookingId', 'type', 'status', 'title', 'content', 'createdAt', 'updatedAt', 'expiresAt']);
+        request.resource.data.keys().hasAll(['customerId', 'specialistId', 'bookingId', 'type', 'status', 'title', 'content', 'createdAt', 'updatedAt', 'expiresAt', 'signedByCustomer', 'signedBySpecialist']);
       
       // Участники договора могут подписывать договор
       allow update: if request.auth != null && 
         (request.auth.uid == resource.data.customerId || 
          request.auth.uid == resource.data.specialistId) &&
-        request.resource.data.keys().hasAll(['status', 'signedAt', 'signatures', 'updatedAt']) &&
-        request.resource.data.status == 'signed';
+        request.resource.data.keys().hasAll(['updatedAt']) &&
+        (request.resource.data.keys().hasAny(['signedByCustomer', 'signedBySpecialist', 'status', 'signedAt']));
       
       // Система может обновлять статус договора
       allow update: if request.auth != null && 
@@ -423,13 +438,52 @@ service cloud.firestore {
     
     // Правила для аналитики
     match /analytics/{analyticsId} {
-      // Только администраторы могут читать аналитику
+      // Пользователи могут читать свою аналитику
+      allow read: if request.auth != null && 
+        (analyticsId.matches('specialist_' + request.auth.uid) || 
+         analyticsId.matches('customer_' + request.auth.uid));
+      
+      // Администраторы могут читать всю аналитику
       allow read: if request.auth != null && 
         exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
         get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
       
-      // Система может создавать записи аналитики
+      // Система может создавать и обновлять записи аналитики
+      allow create, update: if request.auth != null;
+    }
+    
+    // Правила для токенов устройств
+    match /user_tokens/{tokenId} {
+      // Пользователи могут читать и обновлять свои токены
+      allow read, write: if request.auth != null && 
+        request.auth.uid == resource.data.userId;
+      
+      // Система может создавать токены
       allow create: if request.auth != null;
+    }
+    
+    // Правила для напоминаний
+    match /reminders/{reminderId} {
+      // Пользователи могут читать свои напоминания
+      allow read: if request.auth != null && 
+        request.auth.uid == resource.data.customerId;
+      
+      // Система может создавать и обновлять напоминания
+      allow create, update: if request.auth != null;
+      
+      // Пользователи могут удалять свои напоминания
+      allow delete: if request.auth != null && 
+        request.auth.uid == resource.data.customerId;
+    }
+    
+    // Правила для доступности специалистов
+    match /specialist_availability/{specialistId} {
+      // Специалисты могут читать и обновлять свою доступность
+      allow read, write: if request.auth != null && 
+        request.auth.uid == specialistId;
+      
+      // Все аутентифицированные пользователи могут читать доступность
+      allow read: if request.auth != null;
     }
     
     // Правила для кэша
@@ -450,6 +504,109 @@ service cloud.firestore {
       allow update: if request.auth != null && 
         exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
         get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'superAdmin';
+    }
+    
+    // Правила для аудита безопасности
+    match /securityAudits/{auditId} {
+      // Только администраторы могут читать аудит безопасности
+      allow read: if request.auth != null && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
+      
+      // Система может создавать записи аудита
+      allow create: if request.auth != null;
+    }
+    
+    // Правила для политик безопасности
+    match /securityPolicies/{policyId} {
+      // Только администраторы могут читать политики безопасности
+      allow read: if request.auth != null && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
+      
+      // Только супер-администраторы могут создавать и обновлять политики
+      allow create, update: if request.auth != null && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'superAdmin';
+    }
+    
+    // Правила для ключей шифрования
+    match /encryptionKeys/{keyId} {
+      // Только администраторы могут читать ключи шифрования
+      allow read: if request.auth != null && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
+      
+      // Только супер-администраторы могут создавать и обновлять ключи
+      allow create, update: if request.auth != null && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'superAdmin';
+    }
+    
+    // Правила для пользовательских сессий
+    match /user_sessions/{sessionId} {
+      // Пользователи могут читать свои сессии
+      allow read: if request.auth != null && 
+        request.auth.uid == resource.data.userId;
+      
+      // Система может создавать записи сессий
+      allow create: if request.auth != null;
+      
+      // Система может обновлять статус сессий
+      allow update: if request.auth != null && 
+        request.resource.data.keys().hasAll(['action', 'terminatedAt']);
+      
+      // Администраторы могут читать все сессии
+      allow read: if request.auth != null && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
+    }
+    
+    // Правила для двухфакторной аутентификации
+    match /user_2fa/{userId} {
+      // Пользователи могут читать свои настройки 2FA
+      allow read: if request.auth != null && request.auth.uid == userId;
+      
+      // Пользователи могут создавать и обновлять свои настройки 2FA
+      allow create, update: if request.auth != null && 
+        request.auth.uid == userId &&
+        request.resource.data.keys().hasAll(['userId', 'method', 'contact', 'isEnabled', 'createdAt', 'updatedAt']);
+      
+      // Пользователи могут удалять свои настройки 2FA
+      allow delete: if request.auth != null && request.auth.uid == userId;
+      
+      // Администраторы могут читать настройки 2FA всех пользователей
+      allow read: if request.auth != null && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
+    }
+    
+    // Правила для заблокированных пользователей
+    match /blockedUsers/{userId} {
+      // Только администраторы могут читать и управлять заблокированными пользователями
+      allow read, write: if request.auth != null && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
+    }
+    
+    // Правила для устройств пользователей
+    match /user_devices/{deviceId} {
+      // Пользователи могут читать свои устройства
+      allow read: if request.auth != null && 
+        request.auth.uid == resource.data.userId;
+      
+      // Система может создавать записи устройств
+      allow create: if request.auth != null;
+      
+      // Пользователи могут обновлять свои устройства
+      allow update: if request.auth != null && 
+        request.auth.uid == resource.data.userId &&
+        request.resource.data.keys().hasAll(['lastSeen', 'updatedAt']);
+      
+      // Администраторы могут читать все устройства
+      allow read: if request.auth != null && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
     }
     
     // Запрет доступа ко всем остальным документам

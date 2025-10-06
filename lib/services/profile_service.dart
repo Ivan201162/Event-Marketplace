@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../models/customer_profile.dart';
+import '../models/organizer_profile.dart';
 import '../models/specialist_profile.dart';
 import '../models/user.dart';
+import 'organizer_service.dart';
 
 /// Сервис для управления профилями пользователей
 class ProfileService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final OrganizerService _organizerService = OrganizerService();
 
   /// Получить профиль заказчика
   Future<CustomerProfile?> getCustomerProfile(String userId) async {
@@ -57,10 +61,15 @@ class ProfileService {
     SpecialistProfile profile,
   ) async {
     try {
+      // Обновляем время последнего изменения
+      final updatedProfile = profile.copyWith(
+        updatedAt: DateTime.now(),
+      );
+
       await _firestore
           .collection('specialist_profiles')
           .doc(profile.userId)
-          .set(profile.toMap());
+          .set(updatedProfile.toMap(), SetOptions(merge: true));
     } catch (e) {
       print('Ошибка сохранения профиля специалиста: $e');
       throw Exception('Ошибка сохранения профиля: $e');
@@ -75,8 +84,7 @@ class ProfileService {
       case UserRole.specialist:
         return getSpecialistProfile(userId);
       case UserRole.organizer:
-        return getCustomerProfile(
-            userId); // Используем customer profile для organizer
+        return _organizerService.getOrganizerProfileByUserId(userId);
       case UserRole.moderator:
         return null;
       case UserRole.guest:
@@ -100,8 +108,8 @@ class ProfileService {
         }
         break;
       case UserRole.organizer:
-        if (profile is CustomerProfile) {
-          await createOrUpdateCustomerProfile(profile);
+        if (profile is OrganizerProfile) {
+          await _organizerService.createOrganizerProfile(profile);
         }
         break;
       case UserRole.moderator:
@@ -144,19 +152,100 @@ class ProfileService {
 
   /// Получить всех специалистов по категории
   Future<List<SpecialistProfile>> getSpecialistsByCategory(
-    SpecialistCategory category,
-  ) async {
+    SpecialistCategory category, {
+    int limit = 20,
+    bool onlyAvailable = true,
+    bool onlyVerified = false,
+  }) async {
     try {
-      final querySnapshot = await _firestore
+      var query = _firestore
           .collection('specialist_profiles')
-          .where('categories', arrayContains: category.name)
-          .orderBy('rating', descending: true)
-          .limit(20)
-          .get();
+          .where('categories', arrayContains: category.name);
+
+      if (onlyAvailable) {
+        query = query.where('isAvailable', isEqualTo: true);
+      }
+
+      if (onlyVerified) {
+        query = query.where('isVerified', isEqualTo: true);
+      }
+
+      final querySnapshot =
+          await query.orderBy('rating', descending: true).limit(limit).get();
 
       return querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
     } catch (e) {
       print('Ошибка получения специалистов по категории: $e');
+      return [];
+    }
+  }
+
+  /// Получить специалистов по нескольким категориям
+  Future<List<SpecialistProfile>> getSpecialistsByCategories(
+    List<SpecialistCategory> categories, {
+    int limit = 20,
+    bool onlyAvailable = true,
+    bool onlyVerified = false,
+  }) async {
+    try {
+      var query = _firestore.collection('specialist_profiles').where(
+            'categories',
+            arrayContainsAny: categories.map((e) => e.name).toList(),
+          );
+
+      if (onlyAvailable) {
+        query = query.where('isAvailable', isEqualTo: true);
+      }
+
+      if (onlyVerified) {
+        query = query.where('isVerified', isEqualTo: true);
+      }
+
+      final querySnapshot =
+          await query.orderBy('rating', descending: true).limit(limit).get();
+
+      return querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
+    } catch (e) {
+      print('Ошибка получения специалистов по категориям: $e');
+      return [];
+    }
+  }
+
+  /// Получить популярные категории специалистов
+  Future<List<Map<String, dynamic>>> getPopularCategories({
+    int limit = 10,
+  }) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('specialist_profiles')
+          .where('isAvailable', isEqualTo: true)
+          .get();
+
+      final categoryCounts = <String, int>{};
+
+      for (final doc in querySnapshot.docs) {
+        final data = doc.data();
+        final categories = List<String>.from(data['categories'] ?? []);
+
+        for (final category in categories) {
+          categoryCounts[category] = (categoryCounts[category] ?? 0) + 1;
+        }
+      }
+
+      final sortedCategories = categoryCounts.entries.toList()
+        ..sort((a, b) => b.value.compareTo(a.value));
+
+      return sortedCategories
+          .take(limit)
+          .map(
+            (entry) => {
+              'category': entry.key,
+              'count': entry.value,
+            },
+          )
+          .toList();
+    } catch (e) {
+      print('Ошибка получения популярных категорий: $e');
       return [];
     }
   }
@@ -168,10 +257,27 @@ class ProfileService {
     double? minRating,
     double? maxHourlyRate,
     String? location,
+    bool? isAvailable,
+    bool? isVerified,
+    int? minExperienceYears,
+    int? maxExperienceYears,
+    List<String>? languages,
+    List<String>? equipment,
+    DateTime? availableDate,
   }) async {
     try {
       Query<Map<String, dynamic>> queryRef =
           _firestore.collection('specialist_profiles');
+
+      // Фильтр по доступности
+      if (isAvailable != null) {
+        queryRef = queryRef.where('isAvailable', isEqualTo: isAvailable);
+      }
+
+      // Фильтр по верификации
+      if (isVerified != null) {
+        queryRef = queryRef.where('isVerified', isEqualTo: isVerified);
+      }
 
       // Фильтр по категориям
       if (categories != null && categories.isNotEmpty) {
@@ -192,9 +298,33 @@ class ProfileService {
             queryRef.where('hourlyRate', isLessThanOrEqualTo: maxHourlyRate);
       }
 
+      // Фильтр по опыту
+      if (minExperienceYears != null) {
+        queryRef = queryRef.where(
+          'experienceYears',
+          isGreaterThanOrEqualTo: minExperienceYears,
+        );
+      }
+      if (maxExperienceYears != null) {
+        queryRef = queryRef.where(
+          'experienceYears',
+          isLessThanOrEqualTo: maxExperienceYears,
+        );
+      }
+
       // Фильтр по локации
       if (location != null && location.isNotEmpty) {
         queryRef = queryRef.where('location', isEqualTo: location);
+      }
+
+      // Фильтр по языкам
+      if (languages != null && languages.isNotEmpty) {
+        queryRef = queryRef.where('languages', arrayContainsAny: languages);
+      }
+
+      // Фильтр по оборудованию
+      if (equipment != null && equipment.isNotEmpty) {
+        queryRef = queryRef.where('equipment', arrayContainsAny: equipment);
       }
 
       final querySnapshot =
@@ -209,7 +339,8 @@ class ProfileService {
         specialists = specialists
             .where(
               (specialist) =>
-                  specialist.bio?.toLowerCase().contains(lowerQuery) ??
+                  specialist.name?.toLowerCase().contains(lowerQuery) ??
+                  false || specialist.bio?.toLowerCase().contains(lowerQuery) ??
                   false ||
                       specialist.services.any(
                         (service) => service.toLowerCase().contains(lowerQuery),
@@ -217,7 +348,29 @@ class ProfileService {
                       specialist.categoryDisplayNames.any(
                         (category) =>
                             category.toLowerCase().contains(lowerQuery),
+                      ) ||
+                      specialist.languages.any(
+                        (lang) => lang.toLowerCase().contains(lowerQuery),
+                      ) ||
+                      specialist.equipment.any(
+                        (eq) => eq.toLowerCase().contains(lowerQuery),
                       ),
+            )
+            .toList();
+      }
+
+      // Фильтр по доступности на дату
+      if (availableDate != null) {
+        specialists = specialists
+            .where(
+              (specialist) =>
+                  specialist.isAvailable &&
+                  !specialist.busyDates.any(
+                    (busyDate) =>
+                        busyDate.year == availableDate.year &&
+                        busyDate.month == availableDate.month &&
+                        busyDate.day == availableDate.day,
+                  ),
             )
             .toList();
       }
@@ -328,6 +481,80 @@ class ProfileService {
     } catch (e) {
       print('Ошибка получения статистики профиля: $e');
       return {};
+    }
+  }
+
+  /// Обновить доступность специалиста
+  Future<void> updateSpecialistAvailability(
+    String userId,
+    Map<String, dynamic> availability,
+  ) async {
+    try {
+      await _firestore.collection('specialist_profiles').doc(userId).update({
+        'availability': availability,
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
+      });
+    } catch (e) {
+      print('Ошибка обновления доступности: $e');
+      throw Exception('Не удалось обновить доступность');
+    }
+  }
+
+  /// Добавить занятую дату
+  Future<void> addBusyDate(String userId, DateTime date) async {
+    try {
+      final profile = await getSpecialistProfile(userId);
+      if (profile != null) {
+        final updatedProfile = profile.addBusyDate(date);
+        await createOrUpdateSpecialistProfile(updatedProfile);
+      }
+    } catch (e) {
+      print('Ошибка добавления занятой даты: $e');
+      throw Exception('Не удалось добавить занятую дату');
+    }
+  }
+
+  /// Удалить занятую дату
+  Future<void> removeBusyDate(String userId, DateTime date) async {
+    try {
+      final profile = await getSpecialistProfile(userId);
+      if (profile != null) {
+        final updatedProfile = profile.removeBusyDate(date);
+        await createOrUpdateSpecialistProfile(updatedProfile);
+      }
+    } catch (e) {
+      print('Ошибка удаления занятой даты: $e');
+      throw Exception('Не удалось удалить занятую дату');
+    }
+  }
+
+  /// Получить занятые даты специалиста
+  Future<List<DateTime>> getSpecialistBusyDates(String userId) async {
+    try {
+      final profile = await getSpecialistProfile(userId);
+      return profile?.busyDates ?? [];
+    } catch (e) {
+      print('Ошибка получения занятых дат: $e');
+      return [];
+    }
+  }
+
+  /// Проверить доступность специалиста на дату
+  Future<bool> isSpecialistAvailable(String userId, DateTime date) async {
+    try {
+      final profile = await getSpecialistProfile(userId);
+      if (profile == null) return false;
+
+      return profile.isAvailable &&
+          !profile.busyDates.any(
+            (busyDate) =>
+                busyDate.year == date.year &&
+                busyDate.month == date.month &&
+                busyDate.day == date.day,
+          );
+    } catch (e) {
+      print('Ошибка проверки доступности: $e');
+      return false;
     }
   }
 }

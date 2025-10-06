@@ -25,9 +25,9 @@ class WeddingAnniversary {
         customerName: data['customerName'] ?? '',
         customerEmail: data['customerEmail'],
         weddingDate: (data['weddingDate'] as Timestamp).toDate(),
-        yearsMarried: data['yearsMarried'] ?? 0,
+        yearsMarried: data['yearsMarried'] as int? ?? 0,
         nextAnniversary: (data['nextAnniversary'] as Timestamp).toDate(),
-        isActive: data['isActive'] ?? true,
+        isActive: data['isActive'] as bool? ?? true,
         reminderDates:
             List<String>.from(data['reminderDates'] ?? ['30', '7', '1']),
         createdAt: (data['createdAt'] as Timestamp).toDate(),
@@ -268,7 +268,7 @@ class AnniversaryReminder {
         customerId: data['customerId'] ?? '',
         reminderDate: (data['reminderDate'] as Timestamp).toDate(),
         message: data['message'] ?? '',
-        isSent: data['isSent'] ?? false,
+        isSent: data['isSent'] as bool? ?? false,
         sentAt: data['sentAt'] != null
             ? (data['sentAt'] as Timestamp).toDate()
             : null,

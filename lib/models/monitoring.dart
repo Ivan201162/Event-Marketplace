@@ -31,11 +31,13 @@ class MonitoringMetric {
       value: (data['value'] as num?)?.toDouble() ?? 0.0,
       unit: data['unit'] as String? ?? '',
       tags: Map<String, dynamic>.from(
-          data['tags'] as Map<dynamic, dynamic>? ?? {}),
+        data['tags'] as Map<dynamic, dynamic>? ?? {},
+      ),
       timestamp: (data['timestamp'] as Timestamp).toDate(),
       source: data['source'] as String?,
       metadata: Map<String, dynamic>.from(
-          data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+        data['metadata'] as Map<dynamic, dynamic>? ?? {},
+      ),
     );
   }
 
@@ -421,7 +423,7 @@ class MonitoringDashboard {
         (e) => e.toString().split('.').last == data['layout'],
         orElse: () => DashboardLayout.grid,
       ),
-      isPublic: data['isPublic'] ?? false,
+      isPublic: data['isPublic'] as bool? ?? false,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       createdBy: data['createdBy'],
@@ -441,7 +443,7 @@ class MonitoringDashboard {
           (e) => e.toString().split('.').last == data['layout'],
           orElse: () => DashboardLayout.grid,
         ),
-        isPublic: data['isPublic'] ?? false,
+        isPublic: data['isPublic'] as bool? ?? false,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
         createdBy: data['createdBy'],

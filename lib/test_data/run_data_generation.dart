@@ -1,7 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'test_data_generator.dart';
-import 'chat_data_generator.dart';
+
 import '../firebase_options.dart';
+import 'chat_data_generator.dart';
+import 'test_data_generator.dart';
 
 /// Главный файл для запуска генерации тестовых данных
 Future<void> main() async {
@@ -23,12 +24,12 @@ Future<void> main() async {
     print('\n📊 ЭТАП 1: Генерация основных данных');
     print('-' * 40);
 
-    final specialists = await generator.generateSpecialists(count: 2000);
-    final customers = await generator.generateCustomers(count: 500);
+    final specialists = await generator.generateSpecialists();
+    final customers = await generator.generateCustomers();
     final bookings = await generator.generateBookings(customers, specialists);
     final reviews =
         await generator.generateReviews(bookings, customers, specialists);
-    final ideas = await generator.generateEventIdeas(count: 1000);
+    final ideas = await generator.generateEventIdeas();
 
     print('\n📤 ЭТАП 2: Загрузка данных в Firestore');
     print('-' * 40);
@@ -54,7 +55,7 @@ Future<void> main() async {
     await generator.verifyTestData();
 
     // Финальный отчет
-    print('\n' + '=' * 60);
+    print('\n${'=' * 60}');
     print('🎉 ГЕНЕРАЦИЯ ТЕСТОВЫХ ДАННЫХ ЗАВЕРШЕНА УСПЕШНО!');
     print('=' * 60);
 
@@ -94,8 +95,7 @@ Future<void> _printFinalReport() async {
   print('🚀 Приложение готово к тестированию!');
 }
 
-String _getCategoriesInfo() {
-  return '''
+String _getCategoriesInfo() => '''
 • Фотографы и видеографы
 • DJ и ведущие
 • Флористы и декораторы
@@ -104,7 +104,6 @@ String _getCategoriesInfo() {
 • Визажисты и стилисты
 • Фаер-шоу и салюты
 • И многие другие (40+ категорий)''';
-}
 
 /// Дополнительные утилиты для генерации данных
 

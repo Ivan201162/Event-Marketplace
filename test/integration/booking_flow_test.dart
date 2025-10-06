@@ -1,382 +1,273 @@
 import 'package:event_marketplace_app/main.dart';
+import 'package:event_marketplace_app/screens/booking_screen.dart';
+import 'package:event_marketplace_app/screens/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   group('Booking Flow Integration Tests', () {
-    testWidgets('should complete full booking flow from search to confirmation',
+    testWidgets('Complete booking flow from search to confirmation',
         (tester) async {
-      // Arrange
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
-
+      // Запускаем приложение
       await tester.pumpWidget(
-        ProviderScope(
-          child: EventMarketplaceApp(prefs: prefs),
+        const ProviderScope(
+          child: EventMarketplaceApp(),
         ),
       );
 
       await tester.pumpAndSettle();
 
-      // Act 1: Navigate to search screen
-      await tester.tap(find.text('Поиск'));
+      // Входим как гость
+      await tester.tap(find.text('Гость'));
       await tester.pumpAndSettle();
 
-      // Act 2: Search for specialist
-      await tester.enterText(find.byType(TextField), 'photographer');
+      // Переходим к поиску специалистов
+      await tester.tap(find.text('Найти специалиста'));
       await tester.pumpAndSettle();
 
-      // Act 3: Select specialist from results
+      // Проверяем, что открылся экран поиска
+      expect(find.byType(SearchScreen), findsOneWidget);
+
+      // Выполняем поиск
+      final searchField = find.byType(TextFormField).first;
+      await tester.enterText(searchField, 'фотограф');
+      await tester.pumpAndSettle();
+
+      // Нажимаем кнопку поиска
+      final searchButton = find.text('Поиск');
+      if (searchButton.evaluate().isNotEmpty) {
+        await tester.tap(searchButton);
+        await tester.pumpAndSettle();
+      }
+
+      // Проверяем, что появились результаты поиска
+      // (в реальном приложении здесь будут карточки специалистов)
+      expect(find.byType(Card), findsWidgets);
+
+      // Нажимаем на карточку специалиста
       final specialistCard = find.byType(Card).first;
-      if (specialistCard.evaluate().isNotEmpty) {
-        await tester.tap(specialistCard);
+      await tester.tap(specialistCard);
+      await tester.pumpAndSettle();
+
+      // Проверяем, что открылся экран бронирования
+      expect(find.byType(BookingScreen), findsOneWidget);
+
+      // Заполняем форму бронирования
+      final dateField = find.byType(TextFormField).first;
+      final timeField = find.byType(TextFormField).at(1);
+      final durationField = find.byType(TextFormField).at(2);
+
+      await tester.enterText(dateField, '2024-12-31');
+      await tester.enterText(timeField, '14:00');
+      await tester.enterText(durationField, '2');
+      await tester.pumpAndSettle();
+
+      // Проверяем, что поля заполнились
+      expect(find.text('2024-12-31'), findsOneWidget);
+      expect(find.text('14:00'), findsOneWidget);
+      expect(find.text('2'), findsOneWidget);
+
+      // Нажимаем кнопку "Забронировать"
+      final bookButton = find.text('Забронировать');
+      if (bookButton.evaluate().isNotEmpty) {
+        await tester.tap(bookButton);
         await tester.pumpAndSettle();
 
-        // Act 4: Navigate to specialist profile
-        expect(find.text('Профиль специалиста'), findsOneWidget);
-
-        // Act 5: Start booking process
-        await tester.tap(find.text('Забронировать'));
-        await tester.pumpAndSettle();
-
-        // Act 6: Fill booking form
-        await tester.enterText(
-          find.byType(TextFormField).first,
-          'Wedding Photography',
-        );
-        await tester.enterText(
-          find.byType(TextFormField).at(1),
-          'Beautiful wedding ceremony',
-        );
-        await tester.enterText(
-          find.byType(TextFormField).at(2),
-          'Moscow, Russia',
-        );
-        await tester.enterText(
-          find.byType(TextFormField).at(3),
-          '+7 (999) 123-45-67',
-        );
-        await tester.enterText(
-          find.byType(TextFormField).at(4),
-          'test@example.com',
-        );
-        await tester.enterText(
-          find.byType(TextFormField).last,
-          'Special requests',
-        );
-
-        // Act 7: Select date and time
-        await tester.tap(find.text('Выберите дату'));
-        await tester.pumpAndSettle();
-
-        // Act 8: Submit booking
-        await tester.tap(find.text('Создать заявку'));
-        await tester.pumpAndSettle();
-
-        // Assert: Booking should be created successfully
-        expect(find.text('Заявка создана успешно'), findsOneWidget);
+        // Проверяем, что появилось подтверждение
+        expect(find.text('Бронирование создано'), findsOneWidget);
       }
     });
 
-    testWidgets('should handle booking confirmation flow', (tester) async {
-      // Arrange
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
-
+    testWidgets('Booking form validation', (tester) async {
+      // Запускаем приложение
       await tester.pumpWidget(
-        ProviderScope(
-          child: EventMarketplaceApp(prefs: prefs),
+        const ProviderScope(
+          child: EventMarketplaceApp(),
         ),
       );
 
       await tester.pumpAndSettle();
 
-      // Act 1: Navigate to booking requests (as specialist)
-      await tester.tap(find.text('Заявки'));
+      // Входим как гость
+      await tester.tap(find.text('Гость'));
       await tester.pumpAndSettle();
 
-      // Act 2: View booking request
-      final bookingCard = find.byType(Card).first;
-      if (bookingCard.evaluate().isNotEmpty) {
-        await tester.tap(bookingCard);
+      // Переходим к поиску
+      await tester.tap(find.text('Найти специалиста'));
+      await tester.pumpAndSettle();
+
+      // Нажимаем на карточку специалиста
+      final specialistCard = find.byType(Card).first;
+      await tester.tap(specialistCard);
+      await tester.pumpAndSettle();
+
+      // Проверяем, что открылся экран бронирования
+      expect(find.byType(BookingScreen), findsOneWidget);
+
+      // Нажимаем кнопку "Забронировать" без заполнения полей
+      final bookButton = find.text('Забронировать');
+      if (bookButton.evaluate().isNotEmpty) {
+        await tester.tap(bookButton);
         await tester.pumpAndSettle();
 
-        // Act 3: Confirm booking
-        await tester.tap(find.text('Подтвердить'));
-        await tester.pumpAndSettle();
-
-        // Act 4: Confirm in dialog
-        await tester.tap(find.text('Подтвердить'));
-        await tester.pumpAndSettle();
-
-        // Assert: Booking should be confirmed
-        expect(find.text('Заявка подтверждена'), findsOneWidget);
+        // Проверяем, что появились сообщения об ошибках валидации
+        final errorMessages = find.textContaining('обязательно');
+        if (errorMessages.evaluate().isNotEmpty) {
+          expect(errorMessages, findsWidgets);
+        }
       }
     });
 
-    testWidgets('should handle booking rejection flow', (tester) async {
-      // Arrange
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
-
+    testWidgets('Date and time picker functionality', (tester) async {
+      // Запускаем приложение
       await tester.pumpWidget(
-        ProviderScope(
-          child: EventMarketplaceApp(prefs: prefs),
+        const ProviderScope(
+          child: EventMarketplaceApp(),
         ),
       );
 
       await tester.pumpAndSettle();
 
-      // Act 1: Navigate to booking requests (as specialist)
-      await tester.tap(find.text('Заявки'));
+      // Входим как гость
+      await tester.tap(find.text('Гость'));
       await tester.pumpAndSettle();
 
-      // Act 2: View booking request
-      final bookingCard = find.byType(Card).first;
-      if (bookingCard.evaluate().isNotEmpty) {
-        await tester.tap(bookingCard);
+      // Переходим к поиску
+      await tester.tap(find.text('Найти специалиста'));
+      await tester.pumpAndSettle();
+
+      // Нажимаем на карточку специалиста
+      final specialistCard = find.byType(Card).first;
+      await tester.tap(specialistCard);
+      await tester.pumpAndSettle();
+
+      // Проверяем, что открылся экран бронирования
+      expect(find.byType(BookingScreen), findsOneWidget);
+
+      // Ищем кнопки выбора даты и времени
+      final dateButton = find.text('Выбрать дату');
+      final timeButton = find.text('Выбрать время');
+
+      if (dateButton.evaluate().isNotEmpty) {
+        // Нажимаем на кнопку выбора даты
+        await tester.tap(dateButton);
         await tester.pumpAndSettle();
 
-        // Act 3: Reject booking
-        await tester.tap(find.text('Отклонить'));
+        // Проверяем, что открылся календарь
+        expect(find.byType(CalendarDatePicker), findsOneWidget);
+
+        // Выбираем дату
+        final today = find.text('31');
+        if (today.evaluate().isNotEmpty) {
+          await tester.tap(today);
+          await tester.pumpAndSettle();
+        }
+
+        // Подтверждаем выбор
+        final okButton = find.text('OK');
+        if (okButton.evaluate().isNotEmpty) {
+          await tester.tap(okButton);
+          await tester.pumpAndSettle();
+        }
+      }
+
+      if (timeButton.evaluate().isNotEmpty) {
+        // Нажимаем на кнопку выбора времени
+        await tester.tap(timeButton);
         await tester.pumpAndSettle();
 
-        // Act 4: Confirm rejection in dialog
-        await tester.tap(find.text('Отклонить'));
-        await tester.pumpAndSettle();
+        // Проверяем, что открылся селектор времени
+        expect(find.byType(TimePickerDialog), findsOneWidget);
 
-        // Assert: Booking should be rejected
-        expect(find.text('Заявка отклонена'), findsOneWidget);
+        // Подтверждаем выбор времени
+        final okButton = find.text('OK');
+        if (okButton.evaluate().isNotEmpty) {
+          await tester.tap(okButton);
+          await tester.pumpAndSettle();
+        }
       }
     });
 
-    testWidgets('should handle booking cancellation flow', (tester) async {
-      // Arrange
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
-
+    testWidgets('Duration selection', (tester) async {
+      // Запускаем приложение
       await tester.pumpWidget(
-        ProviderScope(
-          child: EventMarketplaceApp(prefs: prefs),
+        const ProviderScope(
+          child: EventMarketplaceApp(),
         ),
       );
 
       await tester.pumpAndSettle();
 
-      // Act 1: Navigate to my bookings (as customer)
-      await tester.tap(find.text('Мои заявки'));
+      // Входим как гость
+      await tester.tap(find.text('Гость'));
       await tester.pumpAndSettle();
 
-      // Act 2: View booking
-      final bookingCard = find.byType(Card).first;
-      if (bookingCard.evaluate().isNotEmpty) {
-        await tester.tap(bookingCard);
+      // Переходим к поиску
+      await tester.tap(find.text('Найти специалиста'));
+      await tester.pumpAndSettle();
+
+      // Нажимаем на карточку специалиста
+      final specialistCard = find.byType(Card).first;
+      await tester.tap(specialistCard);
+      await tester.pumpAndSettle();
+
+      // Проверяем, что открылся экран бронирования
+      expect(find.byType(BookingScreen), findsOneWidget);
+
+      // Ищем селектор продолжительности
+      final durationDropdown = find.byType(DropdownButtonFormField);
+      if (durationDropdown.evaluate().isNotEmpty) {
+        // Нажимаем на выпадающий список
+        await tester.tap(durationDropdown);
         await tester.pumpAndSettle();
 
-        // Act 3: Cancel booking
-        await tester.tap(find.text('Отменить'));
-        await tester.pumpAndSettle();
+        // Выбираем продолжительность
+        final durationOption = find.text('2 часа');
+        if (durationOption.evaluate().isNotEmpty) {
+          await tester.tap(durationOption);
+          await tester.pumpAndSettle();
 
-        // Act 4: Confirm cancellation in dialog
-        await tester.tap(find.text('Отменить'));
-        await tester.pumpAndSettle();
-
-        // Assert: Booking should be cancelled
-        expect(find.text('Заявка отменена'), findsOneWidget);
+          // Проверяем, что продолжительность выбрана
+          expect(find.text('2 часа'), findsOneWidget);
+        }
       }
     });
 
-    testWidgets('should handle payment flow', (tester) async {
-      // Arrange
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
-
+    testWidgets('Price calculation', (tester) async {
+      // Запускаем приложение
       await tester.pumpWidget(
-        ProviderScope(
-          child: EventMarketplaceApp(prefs: prefs),
+        const ProviderScope(
+          child: EventMarketplaceApp(),
         ),
       );
 
       await tester.pumpAndSettle();
 
-      // Act 1: Navigate to my bookings
-      await tester.tap(find.text('Мои заявки'));
+      // Входим как гость
+      await tester.tap(find.text('Гость'));
       await tester.pumpAndSettle();
 
-      // Act 2: View booking with payment
-      final bookingCard = find.byType(Card).first;
-      if (bookingCard.evaluate().isNotEmpty) {
-        await tester.tap(bookingCard);
-        await tester.pumpAndSettle();
-
-        // Act 3: Make payment
-        await tester.tap(find.text('Оплатить'));
-        await tester.pumpAndSettle();
-
-        // Act 4: Fill payment form
-        await tester.enterText(
-          find.byType(TextFormField).first,
-          '1234 5678 9012 3456',
-        );
-        await tester.enterText(find.byType(TextFormField).at(1), '12/25');
-        await tester.enterText(find.byType(TextFormField).at(2), '123');
-
-        // Act 5: Submit payment
-        await tester.tap(find.text('Оплатить'));
-        await tester.pumpAndSettle();
-
-        // Assert: Payment should be processed
-        expect(find.text('Платеж успешно обработан'), findsOneWidget);
-      }
-    });
-
-    testWidgets('should handle review submission flow', (tester) async {
-      // Arrange
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
-
-      await tester.pumpWidget(
-        ProviderScope(
-          child: EventMarketplaceApp(prefs: prefs),
-        ),
-      );
-
+      // Переходим к поиску
+      await tester.tap(find.text('Найти специалиста'));
       await tester.pumpAndSettle();
 
-      // Act 1: Navigate to reviews
-      await tester.tap(find.text('Отзывы'));
+      // Нажимаем на карточку специалиста
+      final specialistCard = find.byType(Card).first;
+      await tester.tap(specialistCard);
       await tester.pumpAndSettle();
 
-      // Act 2: Submit review
-      await tester.tap(find.text('Оставить отзыв'));
+      // Проверяем, что открылся экран бронирования
+      expect(find.byType(BookingScreen), findsOneWidget);
+
+      // Заполняем форму
+      final durationField = find.byType(TextFormField).at(2);
+      await tester.enterText(durationField, '3');
       await tester.pumpAndSettle();
 
-      // Act 3: Fill review form
-      await tester.enterText(
-        find.byType(TextFormField).first,
-        'Great service!',
-      );
-      await tester.enterText(
-        find.byType(TextFormField).at(1),
-        'Excellent photographer, very professional',
-      );
-
-      // Act 4: Submit review
-      await tester.tap(find.text('Отправить отзыв'));
-      await tester.pumpAndSettle();
-
-      // Assert: Review should be submitted
-      expect(find.text('Отзыв отправлен'), findsOneWidget);
-    });
-
-    testWidgets('should handle chat flow', (tester) async {
-      // Arrange
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
-
-      await tester.pumpWidget(
-        ProviderScope(
-          child: EventMarketplaceApp(prefs: prefs),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      // Act 1: Navigate to chat
-      await tester.tap(find.text('Чаты'));
-      await tester.pumpAndSettle();
-
-      // Act 2: Select chat
-      final chatCard = find.byType(Card).first;
-      if (chatCard.evaluate().isNotEmpty) {
-        await tester.tap(chatCard);
-        await tester.pumpAndSettle();
-
-        // Act 3: Send message
-        await tester.enterText(find.byType(TextField), 'Hello, how are you?');
-        await tester.tap(find.byIcon(Icons.send));
-        await tester.pumpAndSettle();
-
-        // Assert: Message should be sent
-        expect(find.text('Hello, how are you?'), findsOneWidget);
-      }
-    });
-
-    testWidgets('should handle notification flow', (tester) async {
-      // Arrange
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
-
-      await tester.pumpWidget(
-        ProviderScope(
-          child: EventMarketplaceApp(prefs: prefs),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      // Act 1: Navigate to notifications
-      await tester.tap(find.text('Уведомления'));
-      await tester.pumpAndSettle();
-
-      // Act 2: View notification
-      final notificationCard = find.byType(Card).first;
-      if (notificationCard.evaluate().isNotEmpty) {
-        await tester.tap(notificationCard);
-        await tester.pumpAndSettle();
-
-        // Assert: Notification should be marked as read
-        expect(find.text('Уведомления'), findsOneWidget);
-      }
-    });
-
-    testWidgets('should handle analytics flow', (tester) async {
-      // Arrange
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
-
-      await tester.pumpWidget(
-        ProviderScope(
-          child: EventMarketplaceApp(prefs: prefs),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      // Act 1: Navigate to analytics
-      await tester.tap(find.text('Аналитика'));
-      await tester.pumpAndSettle();
-
-      // Assert: Analytics should be displayed
-      expect(find.text('Аналитика'), findsOneWidget);
-      expect(find.text('KPI'), findsOneWidget);
-      expect(find.text('Метрики'), findsOneWidget);
-      expect(find.text('Отчеты'), findsOneWidget);
-    });
-
-    testWidgets('should handle profile flow', (tester) async {
-      // Arrange
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
-
-      await tester.pumpWidget(
-        ProviderScope(
-          child: EventMarketplaceApp(prefs: prefs),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      // Act 1: Navigate to profile
-      await tester.tap(find.text('Профиль'));
-      await tester.pumpAndSettle();
-
-      // Assert: Profile should be displayed
-      expect(find.text('Профиль'), findsOneWidget);
-      expect(find.text('Настройки'), findsOneWidget);
-      expect(find.text('Выйти'), findsOneWidget);
+      // Проверяем, что цена пересчиталась
+      // (в реальном приложении здесь будет отображаться обновленная цена)
+      expect(find.textContaining('₽'), findsWidgets);
     });
   });
 }

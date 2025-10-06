@@ -62,7 +62,7 @@ class BankIntegrationService {
     }
 
     try {
-      // TODO: Реализовать реальную интеграцию с API банка
+      // TODO(developer): Реализовать реальную интеграцию с API банка
       // Пока возвращаем заглушку
       return PaymentInitiationResult(
         paymentId: 'payment_${DateTime.now().millisecondsSinceEpoch}',
@@ -88,7 +88,7 @@ class BankIntegrationService {
     }
 
     try {
-      // TODO: Реализовать проверку статуса через API банка
+      // TODO(developer): Реализовать проверку статуса через API банка
       // Пока возвращаем заглушку
       return PaymentStatusResult(
         paymentId: paymentId,
@@ -115,7 +115,7 @@ class BankIntegrationService {
     }
 
     try {
-      // TODO: Реализовать отмену платежа через API банка
+      // TODO(developer): Реализовать отмену платежа через API банка
       // Пока возвращаем заглушку
       return PaymentCancellationResult(
         paymentId: paymentId,
@@ -158,7 +158,7 @@ class BankIntegrationService {
     }
 
     try {
-      // TODO: Реализовать проверку доступности API банка
+      // TODO(developer): Реализовать проверку доступности API банка
       // Пока возвращаем true для всех банков
       return true;
     } catch (e) {
@@ -182,7 +182,7 @@ class BankIntegrationService {
     }
 
     try {
-      // TODO: Реализовать получение комиссии через API банка
+      // TODO(developer): Реализовать получение комиссии через API банка
       // Пока возвращаем заглушку
       var feePercentage = 0;
       const fixedFee = 0;
@@ -238,7 +238,7 @@ class BankIntegrationService {
     }
 
     try {
-      // TODO: Реализовать создание QR-кода через API банка
+      // TODO(developer): Реализовать создание QR-кода через API банка
       // Пока возвращаем заглушку
       return QRCodeResult(
         qrCode:

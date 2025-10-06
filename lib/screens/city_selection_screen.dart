@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
 
 import '../models/city_region.dart';
 import '../providers/city_region_providers.dart';
-import '../widgets/city_search_widget.dart';
 import '../widgets/city_list_widget.dart';
 import '../widgets/city_map_widget.dart';
+import '../widgets/city_search_widget.dart';
 
 /// Экран выбора города с поиском, картой и списком
 class CitySelectionScreen extends ConsumerStatefulWidget {
@@ -84,7 +82,7 @@ class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
         children: [
           // Поисковая строка
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16),
             child: CitySearchWidget(
               controller: _searchController,
               onSearchChanged: _onSearchChanged,
@@ -96,12 +94,13 @@ class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
           if (_selectedCity != null)
             Container(
               width: double.infinity,
-              margin: const EdgeInsets.symmetric(horizontal: 16.0),
-              padding: const EdgeInsets.all(12.0),
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: theme.primaryColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8.0),
-                border: Border.all(color: theme.primaryColor.withOpacity(0.3)),
+                color: theme.primaryColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                    color: theme.primaryColor.withValues(alpha: 0.3)),
               ),
               child: Row(
                 children: [
@@ -147,52 +146,92 @@ class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
     );
   }
 
-  Widget _buildSearchTab() {
-    return Consumer(
-      builder: (context, ref, child) {
-        final searchState = ref.watch(citySearchProvider);
-        final popularCitiesState = ref.watch(popularCitiesProvider);
+  Widget _buildSearchTab() => Consumer(
+        builder: (context, ref, child) {
+          final searchState = ref.watch(citySearchProvider);
+          final popularCitiesState = ref.watch(popularCitiesProvider);
 
-        return Column(
-          children: [
-            // Результаты поиска
-            if (_isSearching)
+          return Column(
+            children: [
+              // Результаты поиска
+              if (_isSearching)
+                Expanded(
+                  child: searchState.when(
+                    data: (cities) => CityListWidget(
+                      cities: cities,
+                      onCitySelected: _onCitySelected,
+                    ),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (error, stack) => Center(
+                      child: Text('Ошибка поиска: $error'),
+                    ),
+                  ),
+                )
+              else
+                // Популярные города
+                Expanded(
+                  child: popularCitiesState.when(
+                    data: (cities) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Text(
+                            'Популярные города',
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                        ),
+                        Expanded(
+                          child: CityListWidget(
+                            cities: cities,
+                            onCitySelected: _onCitySelected,
+                          ),
+                        ),
+                      ],
+                    ),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (error, stack) => Center(
+                      child: Text('Ошибка загрузки: $error'),
+                    ),
+                  ),
+                ),
+            ],
+          );
+        },
+      );
+
+  Widget _buildMapTab() => Consumer(
+        builder: (context, ref, child) {
+          final currentLocationState = ref.watch(currentLocationProvider);
+          final nearbyCitiesState = ref.watch(nearbyCitiesProvider);
+
+          return CityMapWidget(
+            selectedCity: _selectedCity,
+            onCitySelected: _onCitySelected,
+            currentLocation: currentLocationState.valueOrNull,
+            nearbyCities: nearbyCitiesState.valueOrNull ?? [],
+            onLocationRequested: _getCurrentLocation,
+          );
+        },
+      );
+
+  Widget _buildListTab() => Consumer(
+        builder: (context, ref, child) {
+          final filteredCitiesState = ref.watch(filteredCitiesProvider);
+
+          return Column(
+            children: [
+              // Фильтры
+              _buildFilters(),
+
+              // Список городов
               Expanded(
-                child: searchState.when(
+                child: filteredCitiesState.when(
                   data: (cities) => CityListWidget(
                     cities: cities,
                     onCitySelected: _onCitySelected,
-                    showDistance: false,
-                  ),
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  error: (error, stack) => Center(
-                    child: Text('Ошибка поиска: $error'),
-                  ),
-                ),
-              )
-            else
-              // Популярные города
-              Expanded(
-                child: popularCitiesState.when(
-                  data: (cities) => Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          'Популярные города',
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                      ),
-                      Expanded(
-                        child: CityListWidget(
-                          cities: cities,
-                          onCitySelected: _onCitySelected,
-                          showDistance: false,
-                        ),
-                      ),
-                    ],
                   ),
                   loading: () =>
                       const Center(child: CircularProgressIndicator()),
@@ -201,124 +240,72 @@ class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
                   ),
                 ),
               ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildMapTab() {
-    return Consumer(
-      builder: (context, ref, child) {
-        final currentLocationState = ref.watch(currentLocationProvider);
-        final nearbyCitiesState = ref.watch(nearbyCitiesProvider);
-
-        return CityMapWidget(
-          selectedCity: _selectedCity,
-          onCitySelected: _onCitySelected,
-          currentLocation: currentLocationState.valueOrNull,
-          nearbyCities: nearbyCitiesState.valueOrNull ?? [],
-          onLocationRequested: _getCurrentLocation,
-        );
-      },
-    );
-  }
-
-  Widget _buildListTab() {
-    return Consumer(
-      builder: (context, ref, child) {
-        final filteredCitiesState = ref.watch(filteredCitiesProvider);
-
-        return Column(
-          children: [
-            // Фильтры
-            _buildFilters(),
-
-            // Список городов
-            Expanded(
-              child: filteredCitiesState.when(
-                data: (cities) => CityListWidget(
-                  cities: cities,
-                  onCitySelected: _onCitySelected,
-                  showDistance: false,
-                ),
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, stack) => Center(
-                  child: Text('Ошибка загрузки: $error'),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildFilters() {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          // Фильтр по региону
-          Consumer(
-            builder: (context, ref, child) {
-              final regionsState = ref.watch(regionsProvider);
-
-              return DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: 'Регион',
-                  border: OutlineInputBorder(),
-                ),
-                items: [
-                  const DropdownMenuItem<String>(
-                    value: null,
-                    child: Text('Все регионы'),
-                  ),
-                  ...regionsState.valueOrNull?.map(
-                        (region) => DropdownMenuItem<String>(
-                          value: region,
-                          child: Text(region),
-                        ),
-                      ) ??
-                      [],
-                ],
-                onChanged: (region) {
-                  ref
-                      .read(filteredCitiesProvider.notifier)
-                      .updateRegion(region);
-                },
-              );
-            },
-          ),
-
-          const SizedBox(height: 16),
-
-          // Фильтр по размеру города
-          DropdownButtonFormField<CitySize>(
-            decoration: const InputDecoration(
-              labelText: 'Размер города',
-              border: OutlineInputBorder(),
-            ),
-            items: [
-              const DropdownMenuItem<CitySize>(
-                value: null,
-                child: Text('Все размеры'),
-              ),
-              ...CitySize.values.map(
-                (size) => DropdownMenuItem<CitySize>(
-                  value: size,
-                  child: Text('${size.icon} ${size.displayName}'),
-                ),
-              ),
             ],
-            onChanged: (size) {
-              ref.read(filteredCitiesProvider.notifier).updateCitySize(size);
-            },
-          ),
-        ],
-      ),
-    );
-  }
+          );
+        },
+      );
+
+  Widget _buildFilters() => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            // Фильтр по региону
+            Consumer(
+              builder: (context, ref, child) {
+                final regionsState = ref.watch(regionsProvider);
+
+                return DropdownButtonFormField<String>(
+                  decoration: const InputDecoration(
+                    labelText: 'Регион',
+                    border: OutlineInputBorder(),
+                  ),
+                  items: [
+                    const DropdownMenuItem<String>(
+                      child: Text('Все регионы'),
+                    ),
+                    ...regionsState.valueOrNull?.map(
+                          (region) => DropdownMenuItem<String>(
+                            value: region,
+                            child: Text(region),
+                          ),
+                        ) ??
+                        [],
+                  ],
+                  onChanged: (region) {
+                    ref
+                        .read(filteredCitiesProvider.notifier)
+                        .updateRegion(region);
+                  },
+                );
+              },
+            ),
+
+            const SizedBox(height: 16),
+
+            // Фильтр по размеру города
+            DropdownButtonFormField<CitySize>(
+              decoration: const InputDecoration(
+                labelText: 'Размер города',
+                border: OutlineInputBorder(),
+              ),
+              items: [
+                const DropdownMenuItem<CitySize>(
+                  child: Text('Все размеры'),
+                ),
+                ...CitySize.values.map(
+                  (size) => DropdownMenuItem<CitySize>(
+                    value: size,
+                    child: Text('${size.icon} ${size.displayName}'),
+                  ),
+                ),
+              ],
+              onChanged: (size) {
+                ref.read(filteredCitiesProvider.notifier).updateCitySize(size);
+              },
+            ),
+          ],
+        ),
+      );
 
   void _onSearchChanged(String query) {
     setState(() => _isSearching = query.isNotEmpty);
@@ -337,7 +324,7 @@ class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
     _tabController.animateTo(1);
   }
 
-  void _getCurrentLocation() async {
+  Future<void> _getCurrentLocation() async {
     try {
       final location = await ref.read(currentLocationProvider.future);
       if (location != null) {

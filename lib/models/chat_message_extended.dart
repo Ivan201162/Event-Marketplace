@@ -67,7 +67,8 @@ class ChatMessageExtended {
       attachments:
           List<String>.from(data['attachments'] as List<dynamic>? ?? []),
       metadata: Map<String, dynamic>.from(
-          data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+        data['metadata'] as Map<dynamic, dynamic>? ?? {},
+      ),
     );
   }
   final String id;
@@ -246,7 +247,7 @@ class AudioWaveform {
   });
 
   factory AudioWaveform.fromJson() {
-    // TODO: Реализовать парсинг JSON
+    // TODO(developer): Реализовать парсинг JSON
     return const AudioWaveform(
       samples: [],
       duration: 0,
@@ -258,7 +259,7 @@ class AudioWaveform {
   final int sampleRate;
 
   String toJson() {
-    // TODO: Реализовать сериализацию в JSON
+    // TODO(developer): Реализовать сериализацию в JSON
     return '{}';
   }
 

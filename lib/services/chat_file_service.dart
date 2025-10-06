@@ -202,7 +202,7 @@ class ChatFileService {
   /// Создать миниатюру для изображения
   Future<Uint8List?> createImageThumbnail(Uint8List imageBytes) async {
     try {
-      // TODO: Реализовать создание миниатюры изображения
+      // TODO(developer): Реализовать создание миниатюры изображения
       // Пока возвращаем null
       return null;
     } catch (e) {
@@ -213,7 +213,7 @@ class ChatFileService {
   /// Создать миниатюру для видео
   Future<Uint8List?> createVideoThumbnail(String videoPath) async {
     try {
-      // TODO: Реализовать создание миниатюры видео
+      // TODO(developer): Реализовать создание миниатюры видео
       // Пока возвращаем null
       return null;
     } catch (e) {
@@ -228,7 +228,7 @@ class ChatFileService {
     final filePath = 'chat_files/$chatId/$fileNameWithTimestamp';
     final ref = _storage.ref().child(filePath);
 
-    // TODO: Реализовать отслеживание прогресса загрузки
+    // TODO(developer): Реализовать отслеживание прогресса загрузки
     // Пока возвращаем заглушку
     return Stream.value(1);
   }

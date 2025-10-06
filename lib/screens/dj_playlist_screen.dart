@@ -745,7 +745,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
         final fileName = result.files.first.name;
 
         // Показываем диалог загрузки
-        showDialog(
+        showDialog<void>(
           context: context,
           barrierDismissible: false,
           builder: (context) => const AlertDialog(
@@ -816,7 +816,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
 
     try {
       // Показываем диалог импорта
-      showDialog(
+      showDialog<void>(
         context: context,
         barrierDismissible: false,
         builder: (context) => const AlertDialog(
@@ -895,7 +895,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
   }
 
   void _editPlaylist(DJPlaylist playlist) {
-    // TODO: Реализовать редактирование плейлиста
+    // TODO(developer): Реализовать редактирование плейлиста
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Функция редактирования будет добавлена')),
     );
@@ -928,7 +928,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
   }
 
   void _deletePlaylist(DJPlaylist playlist) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить плейлист'),
@@ -967,14 +967,14 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
   }
 
   void _downloadMediaFile(MediaFile mediaFile) {
-    // TODO: Реализовать скачивание медиафайла
+    // TODO(developer): Реализовать скачивание медиафайла
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Функция скачивания будет добавлена')),
     );
   }
 
   void _deleteMediaFile(MediaFile mediaFile) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить файл'),
@@ -1013,7 +1013,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
   }
 
   void _showPlaylistDetails(DJPlaylist playlist) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (context) => DraggableScrollableSheet(

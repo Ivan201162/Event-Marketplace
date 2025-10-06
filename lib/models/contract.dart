@@ -33,6 +33,22 @@ class PartyInfo {
     this.bankDetails,
   });
 
+  factory PartyInfo.fromMap(Map<String, dynamic> map) => PartyInfo(
+        id: map['id'] as String? ?? '',
+        name: map['name'] as String? ?? '',
+        type: map['type'] as String? ?? '',
+        inn: map['inn'] as String?,
+        ogrn: map['ogrn'] as String?,
+        address: map['address'] as String?,
+        phone: map['phone'] as String?,
+        email: map['email'] as String?,
+        bankDetails: map['bankDetails'] != null
+            ? Map<String, dynamic>.from(
+                map['bankDetails'] as Map<dynamic, dynamic>,
+              )
+            : null,
+      );
+
   final String id;
   final String name; // ФИО или название организации
   final String type; // физлицо/ИП/самозанятый/госучреждение
@@ -42,20 +58,6 @@ class PartyInfo {
   final String? phone;
   final String? email;
   final Map<String, dynamic>? bankDetails;
-
-  factory PartyInfo.fromMap(Map<String, dynamic> map) => PartyInfo(
-        id: map['id'] ?? '',
-        name: map['name'] ?? '',
-        type: map['type'] ?? '',
-        inn: map['inn'],
-        ogrn: map['ogrn'],
-        address: map['address'],
-        phone: map['phone'],
-        email: map['email'],
-        bankDetails: map['bankDetails'] != null
-            ? Map<String, dynamic>.from(map['bankDetails'])
-            : null,
-      );
 
   Map<String, dynamic> toMap() => {
         'id': id,
@@ -80,7 +82,17 @@ class ServiceInfo {
     required this.price,
     required this.total,
     this.unit,
-  });
+  }); // единица измерения
+
+  factory ServiceInfo.fromMap(Map<String, dynamic> map) => ServiceInfo(
+        id: map['id'] as String? ?? '',
+        name: map['name'] as String? ?? '',
+        description: map['description'] as String? ?? '',
+        quantity: (map['quantity'] as num?)?.toDouble() ?? 0.0,
+        price: (map['price'] as num?)?.toDouble() ?? 0.0,
+        total: (map['total'] as num?)?.toDouble() ?? 0.0,
+        unit: map['unit'] as String?,
+      );
 
   final String id;
   final String name;
@@ -88,17 +100,7 @@ class ServiceInfo {
   final double quantity;
   final double price;
   final double total;
-  final String? unit; // единица измерения
-
-  factory ServiceInfo.fromMap(Map<String, dynamic> map) => ServiceInfo(
-        id: map['id'] ?? '',
-        name: map['name'] ?? '',
-        description: map['description'] ?? '',
-        quantity: (map['quantity'] as num?)?.toDouble() ?? 0.0,
-        price: (map['price'] as num?)?.toDouble() ?? 0.0,
-        total: (map['total'] as num?)?.toDouble() ?? 0.0,
-        unit: map['unit'],
-      );
+  final String? unit;
 
   Map<String, dynamic> toMap() => {
         'id': id,
@@ -136,6 +138,8 @@ class Contract {
     this.currency,
     this.partiesInfo,
     this.servicesList,
+    this.signedByCustomer = false,
+    this.signedBySpecialist = false,
   });
 
   /// Создать из документа Firestore
@@ -158,7 +162,8 @@ class Contract {
       title: data['title'] as String? ?? '',
       content: data['content'] as String? ?? '',
       terms: Map<String, dynamic>.from(
-          data['terms'] as Map<dynamic, dynamic>? ?? {}),
+        data['terms'] as Map<dynamic, dynamic>? ?? {},
+      ),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       signedAt: data['signedAt'] != null
@@ -166,7 +171,8 @@ class Contract {
           : null,
       expiresAt: (data['expiresAt'] as Timestamp).toDate(),
       metadata: Map<String, dynamic>.from(
-          data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+        data['metadata'] as Map<dynamic, dynamic>? ?? {},
+      ),
       specialistName: data['specialistName'] as String?,
       startDate: data['startDate'] != null
           ? (data['startDate'] as Timestamp).toDate()
@@ -177,14 +183,20 @@ class Contract {
       totalAmount: data['totalAmount'] as double?,
       currency: data['currency'] as String?,
       partiesInfo: data['partiesInfo'] != null
-          ? (data['partiesInfo'] as Map<String, dynamic>).map((key, value) =>
-              MapEntry(key, PartyInfo.fromMap(value as Map<String, dynamic>)))
+          ? (data['partiesInfo'] as Map<String, dynamic>).map(
+              (key, value) => MapEntry(
+                key,
+                PartyInfo.fromMap(value as Map<String, dynamic>),
+              ),
+            )
           : null,
       servicesList: data['servicesList'] != null
           ? (data['servicesList'] as List<dynamic>)
               .map((item) => ServiceInfo.fromMap(item as Map<String, dynamic>))
               .toList()
           : null,
+      signedByCustomer: data['signedByCustomer'] as bool? ?? false,
+      signedBySpecialist: data['signedBySpecialist'] as bool? ?? false,
     );
   }
   final String id;
@@ -209,6 +221,8 @@ class Contract {
   final String? currency;
   final Map<String, PartyInfo>? partiesInfo;
   final List<ServiceInfo>? servicesList;
+  final bool signedByCustomer;
+  final bool signedBySpecialist;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -235,6 +249,8 @@ class Contract {
             partiesInfo?.map((key, value) => MapEntry(key, value.toMap())),
         'servicesList':
             servicesList?.map((service) => service.toMap()).toList(),
+        'signedByCustomer': signedByCustomer,
+        'signedBySpecialist': signedBySpecialist,
       };
 
   /// Создать копию с изменениями
@@ -256,6 +272,8 @@ class Contract {
     Map<String, dynamic>? metadata,
     Map<String, PartyInfo>? partiesInfo,
     List<ServiceInfo>? servicesList,
+    bool? signedByCustomer,
+    bool? signedBySpecialist,
   }) =>
       Contract(
         id: id ?? this.id,
@@ -273,14 +291,33 @@ class Contract {
         signedAt: signedAt ?? this.signedAt,
         expiresAt: expiresAt ?? this.expiresAt,
         metadata: metadata ?? this.metadata,
-        specialistName: specialistName ?? this.specialistName,
-        startDate: startDate ?? this.startDate,
-        endDate: endDate ?? this.endDate,
-        totalAmount: totalAmount ?? this.totalAmount,
-        currency: currency ?? this.currency,
+        specialistName: specialistName ?? specialistName,
+        startDate: startDate ?? startDate,
+        endDate: endDate ?? endDate,
+        totalAmount: totalAmount ?? totalAmount,
+        currency: currency ?? currency,
         partiesInfo: partiesInfo ?? this.partiesInfo,
         servicesList: servicesList ?? this.servicesList,
+        signedByCustomer: signedByCustomer ?? this.signedByCustomer,
+        signedBySpecialist: signedBySpecialist ?? this.signedBySpecialist,
       );
+
+  /// Проверить, подписан ли договор обеими сторонами
+  bool get isFullySigned => signedByCustomer && signedBySpecialist;
+
+  /// Проверить, может ли пользователь подписать договор
+  bool canSignBy(String userId) {
+    if (userId == customerId && !signedByCustomer) return true;
+    if (userId == specialistId && !signedBySpecialist) return true;
+    return false;
+  }
+
+  /// Получить статус подписи для пользователя
+  bool isSignedBy(String userId) {
+    if (userId == customerId) return signedByCustomer;
+    if (userId == specialistId) return signedBySpecialist;
+    return false;
+  }
 }
 
 /// Расширение для ContractStatus

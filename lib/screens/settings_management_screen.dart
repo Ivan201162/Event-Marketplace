@@ -704,7 +704,7 @@ class _SettingsManagementScreenState
   }
 
   void _editSetting(AppSettings setting) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => _buildEditSettingDialog(setting),
     );
@@ -740,7 +740,7 @@ class _SettingsManagementScreenState
           onPressed: () async {
             Navigator.pop(context);
             try {
-              // TODO: Парсинг значения в зависимости от типа
+              // TODO(developer): Парсинг значения в зависимости от типа
               await _settingsService.setSetting(
                 setting.key,
                 valueController.text,
@@ -751,7 +751,7 @@ class _SettingsManagementScreenState
                 isRequired: setting.isRequired,
                 validation: setting.validation,
                 updatedBy:
-                    'current_user', // TODO: Получить ID текущего пользователя
+                    'current_user', // TODO(developer): Получить ID текущего пользователя
               );
               _loadData();
               ScaffoldMessenger.of(context).showSnackBar(
@@ -776,7 +776,7 @@ class _SettingsManagementScreenState
   }
 
   void _viewSettingHistory(AppSettings setting) {
-    // TODO: Реализовать просмотр истории настройки
+    // TODO(developer): Реализовать просмотр истории настройки
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('История настройки "${setting.key}" будет реализована'),
@@ -785,7 +785,7 @@ class _SettingsManagementScreenState
   }
 
   void _exportSetting(AppSettings setting) {
-    // TODO: Реализовать экспорт настройки
+    // TODO(developer): Реализовать экспорт настройки
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Экспорт настройки "${setting.key}" будет реализован'),
@@ -794,7 +794,7 @@ class _SettingsManagementScreenState
   }
 
   void _deleteSetting(AppSettings setting) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить настройку'),
@@ -812,7 +812,7 @@ class _SettingsManagementScreenState
                 await _settingsService.removeSetting(
                   setting.key,
                   removedBy:
-                      'current_user', // TODO: Получить ID текущего пользователя
+                      'current_user', // TODO(developer): Получить ID текущего пользователя
                 );
                 _loadData();
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -865,7 +865,7 @@ class _SettingsManagementScreenState
   }
 
   void _viewConfiguration(AppConfiguration configuration) {
-    // TODO: Реализовать просмотр конфигурации
+    // TODO(developer): Реализовать просмотр конфигурации
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -876,7 +876,7 @@ class _SettingsManagementScreenState
   }
 
   void _editConfiguration(AppConfiguration configuration) {
-    // TODO: Реализовать редактирование конфигурации
+    // TODO(developer): Реализовать редактирование конфигурации
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -887,7 +887,7 @@ class _SettingsManagementScreenState
   }
 
   void _activateConfiguration(AppConfiguration configuration) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Активировать конфигурацию'),
@@ -904,7 +904,7 @@ class _SettingsManagementScreenState
                 await _settingsService.activateConfiguration(
                   configuration.id,
                   activatedBy:
-                      'current_user', // TODO: Получить ID текущего пользователя
+                      'current_user', // TODO(developer): Получить ID текущего пользователя
                 );
                 _loadData();
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -930,7 +930,7 @@ class _SettingsManagementScreenState
   }
 
   void _exportConfiguration(AppConfiguration configuration) {
-    // TODO: Реализовать экспорт конфигурации
+    // TODO(developer): Реализовать экспорт конфигурации
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -941,7 +941,7 @@ class _SettingsManagementScreenState
   }
 
   void _deleteConfiguration(AppConfiguration configuration) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить конфигурацию'),
@@ -956,7 +956,7 @@ class _SettingsManagementScreenState
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
-              // TODO: Реализовать удаление конфигурации
+              // TODO(developer): Реализовать удаление конфигурации
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Удаление конфигурации будет реализовано'),
@@ -975,7 +975,7 @@ class _SettingsManagementScreenState
   }
 
   void _showCreateSettingDialog() {
-    // TODO: Реализовать диалог создания настройки
+    // TODO(developer): Реализовать диалог создания настройки
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Создание настройки будет реализовано'),
@@ -984,7 +984,7 @@ class _SettingsManagementScreenState
   }
 
   void _showCreateConfigurationDialog() {
-    // TODO: Реализовать диалог создания конфигурации
+    // TODO(developer): Реализовать диалог создания конфигурации
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Создание конфигурации будет реализовано'),

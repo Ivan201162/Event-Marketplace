@@ -98,10 +98,12 @@ class AdminService {
           .orderBy('createdAt', descending: true)
           .get();
       return snapshot.docs
-          .map((doc) => {
-                'id': doc.id,
-                ...doc.data() as Map<String, dynamic>,
-              })
+          .map(
+            (doc) => {
+              'id': doc.id,
+              ...doc.data(),
+            },
+          )
           .toList();
     } catch (e) {
       throw Exception('Ошибка получения событий: $e');
@@ -116,10 +118,12 @@ class AdminService {
           .orderBy('createdAt', descending: true)
           .get();
       return snapshot.docs
-          .map((doc) => {
-                'id': doc.id,
-                ...doc.data() as Map<String, dynamic>,
-              })
+          .map(
+            (doc) => {
+              'id': doc.id,
+              ...doc.data(),
+            },
+          )
           .toList();
     } catch (e) {
       throw Exception('Ошибка получения бронирований: $e');
@@ -147,11 +151,13 @@ class AdminService {
 
       if (searchQuery != null && searchQuery.isNotEmpty) {
         users = users
-            .where((user) =>
-                user.displayName
-                    .toLowerCase()
-                    .contains(searchQuery.toLowerCase()) ||
-                user.email.toLowerCase().contains(searchQuery.toLowerCase()))
+            .where(
+              (user) =>
+                  user.displayName
+                      .toLowerCase()
+                      .contains(searchQuery.toLowerCase()) ||
+                  user.email.toLowerCase().contains(searchQuery.toLowerCase()),
+            )
             .toList();
       }
 
@@ -179,25 +185,29 @@ class AdminService {
 
       final snapshot = await query.get();
       var events = snapshot.docs
-          .map((doc) => {
-                'id': doc.id,
-                ...doc.data() as Map<String, dynamic>,
-              })
+          .map(
+            (doc) => {
+              'id': doc.id,
+              ...doc.data(),
+            },
+          )
           .toList();
 
       if (searchQuery != null && searchQuery.isNotEmpty) {
         events = events
-            .where((event) =>
-                event['title']
-                        ?.toString()
-                        .toLowerCase()
-                        .contains(searchQuery.toLowerCase()) ==
-                    true ||
-                event['description']
-                        ?.toString()
-                        .toLowerCase()
-                        .contains(searchQuery.toLowerCase()) ==
-                    true)
+            .where(
+              (event) =>
+                  event['title']
+                      ?.toString()
+                      .toLowerCase()
+                      .contains(searchQuery.toLowerCase()) ??
+                  false ||
+                      event['description']
+                          ?.toString()
+                          .toLowerCase()
+                          .contains(searchQuery.toLowerCase()) ??
+                  false,
+            )
             .toList();
       }
 
@@ -242,10 +252,12 @@ class AdminService {
           .limit(limit)
           .get();
       return snapshot.docs
-          .map((doc) => {
-                'id': doc.id,
-                ...doc.data() as Map<String, dynamic>,
-              })
+          .map(
+            (doc) => {
+              'id': doc.id,
+              ...doc.data(),
+            },
+          )
           .toList();
     } catch (e) {
       throw Exception('Ошибка получения логов: $e');
@@ -272,7 +284,7 @@ class AdminService {
       if (doc.exists) {
         return {
           'id': doc.id,
-          ...doc.data() as Map<String, dynamic>,
+          ...doc.data()!,
         };
       }
       return null;
@@ -288,7 +300,7 @@ class AdminService {
       if (doc.exists) {
         return {
           'id': doc.id,
-          ...doc.data() as Map<String, dynamic>,
+          ...doc.data()!,
         };
       }
       return null;
@@ -302,7 +314,7 @@ class AdminService {
     try {
       final doc = await _firestore.collection('users').doc(userId).get();
       if (doc.exists) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data()!;
         return data['role'] == 'admin' || data['isAdmin'] == true;
       }
       return false;
@@ -317,7 +329,7 @@ class AdminService {
       final doc =
           await _firestore.collection('admin_settings').doc('main').get();
       if (doc.exists) {
-        return doc.data() as Map<String, dynamic>;
+        return doc.data()!;
       }
       return {};
     } catch (e) {

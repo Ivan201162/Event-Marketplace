@@ -335,7 +335,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: isSelected
-                ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
+                ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
                 : null,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
@@ -451,7 +451,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: statusInfo.color.withOpacity(0.1),
+                    color: statusInfo.color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(color: statusInfo.color),
                   ),
@@ -504,7 +504,9 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
           _buildDetailRow('Дата', _formatDate(booking.startTime)),
           _buildDetailRow('Время', _formatTime(booking.startTime)),
           _buildDetailRow(
-              'Длительность', '${booking.duration?.inHours ?? 0} ч'),
+            'Длительность',
+            '${booking.duration?.inHours ?? 0} ч',
+          ),
           _buildDetailRow('Стоимость', '${booking.totalPrice} ₽'),
           if (booking.location?.isNotEmpty ?? false)
             _buildDetailRow('Место', booking.location),
@@ -534,7 +536,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: action.color.withOpacity(0.1),
+            color: action.color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: action.color),
           ),
@@ -611,7 +613,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
           label: Text(label),
           selected: isSelected,
           onSelected: (selected) {
-            // TODO: Реализовать фильтрацию
+            // TODO(developer): Реализовать фильтрацию
           },
         ),
       );
@@ -677,13 +679,10 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
   }
 
   void _showConfirmDialog(Booking booking) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => ResponsiveDialog(
         title: 'Подтвердить бронирование',
-        child: Text(
-          'Вы уверены, что хотите подтвердить бронирование "${booking.specialistName}"?',
-        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -699,18 +698,18 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
             child: const Text('Подтвердить'),
           ),
         ],
+        child: Text(
+          'Вы уверены, что хотите подтвердить бронирование "${booking.specialistName}"?',
+        ),
       ),
     );
   }
 
   void _showRejectDialog(Booking booking) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => ResponsiveDialog(
         title: 'Отклонить бронирование',
-        child: Text(
-          'Вы уверены, что хотите отклонить бронирование "${booking.specialistName}"?',
-        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -727,18 +726,18 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
             child: const Text('Отклонить'),
           ),
         ],
+        child: Text(
+          'Вы уверены, что хотите отклонить бронирование "${booking.specialistName}"?',
+        ),
       ),
     );
   }
 
   void _showCancelDialog(Booking booking) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => ResponsiveDialog(
         title: 'Отменить бронирование',
-        child: Text(
-          'Вы уверены, что хотите отменить бронирование "${booking.specialistName}"?',
-        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -755,18 +754,18 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
             child: const Text('Отменить'),
           ),
         ],
+        child: Text(
+          'Вы уверены, что хотите отменить бронирование "${booking.specialistName}"?',
+        ),
       ),
     );
   }
 
   void _showCompleteDialog(Booking booking) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => ResponsiveDialog(
         title: 'Завершить бронирование',
-        child: Text(
-          'Вы уверены, что хотите завершить бронирование "${booking.specialistName}"?',
-        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -783,18 +782,18 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
             child: const Text('Завершить'),
           ),
         ],
+        child: Text(
+          'Вы уверены, что хотите завершить бронирование "${booking.specialistName}"?',
+        ),
       ),
     );
   }
 
   void _showDeleteDialog(Booking booking) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => ResponsiveDialog(
         title: 'Удалить бронирование',
-        child: Text(
-          'Вы уверены, что хотите удалить бронирование "${booking.specialistName}"? Это действие нельзя отменить.',
-        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -811,12 +810,15 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
             child: const Text('Удалить'),
           ),
         ],
+        child: Text(
+          'Вы уверены, что хотите удалить бронирование "${booking.specialistName}"? Это действие нельзя отменить.',
+        ),
       ),
     );
   }
 
   void _viewBooking(Booking booking) {
-    // TODO: Реализовать просмотр деталей бронирования
+    // TODO(developer): Реализовать просмотр деталей бронирования
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Просмотр бронирования: ${booking.specialistName}'),
@@ -825,7 +827,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
   }
 
   void _editBooking(Booking booking) {
-    // TODO: Реализовать редактирование бронирования
+    // TODO(developer): Реализовать редактирование бронирования
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Редактирование бронирования: ${booking.specialistName}'),

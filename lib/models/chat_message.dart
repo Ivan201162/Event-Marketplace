@@ -7,6 +7,7 @@ enum MessageType {
   video,
   audio,
   file,
+  document,
   attachment,
   location,
   system,
@@ -32,6 +33,7 @@ class ChatMessage {
     required this.type,
     required this.content,
     this.fileUrl,
+    this.fileType,
     this.fileName,
     this.fileSize,
     this.thumbnailUrl,
@@ -43,6 +45,7 @@ class ChatMessage {
     this.replyToMessageId,
     this.readBy = const [],
     this.isDeleted = false,
+    this.isFromCurrentUser = false,
   });
 
   /// Создать сообщение из документа Firestore
@@ -61,6 +64,7 @@ class ChatMessage {
       ),
       content: data['content'] as String? ?? '',
       fileUrl: data['fileUrl'] as String?,
+      fileType: data['fileType'] as String?,
       fileName: data['fileName'] as String?,
       fileSize: data['fileSize'] as int?,
       thumbnailUrl: data['thumbnailUrl'] as String?,
@@ -77,8 +81,47 @@ class ChatMessage {
       replyToMessageId: data['replyToMessageId'] as String?,
       readBy: List<String>.from(data['readBy'] as List<dynamic>? ?? []),
       isDeleted: data['isDeleted'] as bool? ?? false,
+      isFromCurrentUser: data['isFromCurrentUser'] as bool? ?? false,
     );
   }
+
+  /// Создать сообщение из Map (для кэширования)
+  factory ChatMessage.fromMap(Map<String, dynamic> data) => ChatMessage(
+        id: data['id'] as String? ?? '',
+        chatId: data['chatId'] as String? ?? '',
+        senderId: data['senderId'] as String? ?? '',
+        senderName: data['senderName'] as String? ?? '',
+        senderAvatar: data['senderAvatar'] as String?,
+        type: MessageType.values.firstWhere(
+          (e) => e.name == data['type'],
+          orElse: () => MessageType.text,
+        ),
+        content: data['content'] as String? ?? '',
+        fileUrl: data['fileUrl'] as String?,
+        fileType: data['fileType'] as String?,
+        fileName: data['fileName'] as String?,
+        fileSize: data['fileSize'] as int?,
+        thumbnailUrl: data['thumbnailUrl'] as String?,
+        attachmentId: data['attachmentId'] as String?,
+        metadata: data['metadata'] as Map<String, dynamic>?,
+        status: MessageStatus.values.firstWhere(
+          (e) => e.name == data['status'],
+          orElse: () => MessageStatus.sent,
+        ),
+        timestamp: data['timestamp'] is Timestamp
+            ? (data['timestamp'] as Timestamp).toDate()
+            : DateTime.parse(data['timestamp'] as String),
+        editedAt: data['editedAt'] != null
+            ? (data['editedAt'] is Timestamp
+                ? (data['editedAt'] as Timestamp).toDate()
+                : DateTime.parse(data['editedAt'] as String))
+            : null,
+        replyToMessageId: data['replyToMessageId'] as String?,
+        readBy: List<String>.from(data['readBy'] as List<dynamic>? ?? []),
+        isDeleted: data['isDeleted'] as bool? ?? false,
+        isFromCurrentUser: data['isFromCurrentUser'] as bool? ?? false,
+      );
+
   final String id;
   final String chatId;
   final String senderId;
@@ -87,6 +130,7 @@ class ChatMessage {
   final MessageType type;
   final String content;
   final String? fileUrl;
+  final String? fileType;
   final String? fileName;
   final int? fileSize;
   final String? thumbnailUrl;
@@ -98,6 +142,7 @@ class ChatMessage {
   final String? replyToMessageId;
   final List<String> readBy;
   final bool isDeleted;
+  final bool isFromCurrentUser;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -108,6 +153,7 @@ class ChatMessage {
         'type': type.name,
         'content': content,
         'fileUrl': fileUrl,
+        'fileType': fileType,
         'fileName': fileName,
         'fileSize': fileSize,
         'thumbnailUrl': thumbnailUrl,
@@ -131,6 +177,7 @@ class ChatMessage {
     MessageType? type,
     String? content,
     String? fileUrl,
+    String? fileType,
     String? fileName,
     int? fileSize,
     String? thumbnailUrl,
@@ -152,6 +199,7 @@ class ChatMessage {
         type: type ?? this.type,
         content: content ?? this.content,
         fileUrl: fileUrl ?? this.fileUrl,
+        fileType: fileType ?? this.fileType,
         fileName: fileName ?? this.fileName,
         fileSize: fileSize ?? this.fileSize,
         thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
@@ -204,6 +252,8 @@ class ChatMessage {
         return '🎵';
       case MessageType.file:
         return '📎';
+      case MessageType.document:
+        return '📄';
       case MessageType.attachment:
         return '📎';
       case MessageType.location:
@@ -226,6 +276,8 @@ class ChatMessage {
         return 'Аудио';
       case MessageType.file:
         return 'Файл';
+      case MessageType.document:
+        return 'Документ';
       case MessageType.attachment:
         return 'Вложение';
       case MessageType.location:
@@ -293,9 +345,11 @@ class Chat {
       participants:
           List<String>.from(data['participants'] as List<dynamic>? ?? []),
       participantNames: Map<String, String>.from(
-          data['participantNames'] as Map<dynamic, dynamic>? ?? {}),
+        data['participantNames'] as Map<dynamic, dynamic>? ?? {},
+      ),
       participantAvatars: Map<String, String>.from(
-          data['participantAvatars'] as Map<dynamic, dynamic>? ?? {}),
+        data['participantAvatars'] as Map<dynamic, dynamic>? ?? {},
+      ),
       lastMessageId: data['lastMessageId'] as String?,
       lastMessageContent: data['lastMessageContent'] as String?,
       lastMessageType: data['lastMessageType'] != null

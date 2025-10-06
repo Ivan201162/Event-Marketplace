@@ -1,5 +1,5 @@
 /// Утилиты для валидации данных
-library validation_utils;
+library;
 
 /// Валидация email адреса
 bool isValidEmail(String email) {

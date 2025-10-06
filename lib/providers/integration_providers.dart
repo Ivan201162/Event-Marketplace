@@ -23,8 +23,9 @@ final userIntegrationsProvider =
 /// Провайдер событий интеграции пользователя
 final userIntegrationEventsProvider =
     StreamProvider.family<List<IntegrationEvent>, String>(
-  (ref, userId) =>
-      ref.watch(integrationServiceProvider).getUserIntegrationEvents(userId),
+  (ref, userId) => ref
+      .watch(integrationServiceProvider)
+      .getUserIntegrationEvents(userId, 'default'),
 );
 
 /// Провайдер статистики интеграций

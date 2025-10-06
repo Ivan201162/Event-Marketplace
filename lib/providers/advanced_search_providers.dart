@@ -4,10 +4,9 @@ import '../models/advanced_search_filters.dart';
 import '../services/advanced_specialist_search_service.dart';
 
 /// Провайдер сервиса расширенного поиска
-final advancedSearchServiceProvider =
-    Provider<AdvancedSpecialistSearchService>((ref) {
-  return AdvancedSpecialistSearchService();
-});
+final advancedSearchServiceProvider = Provider<AdvancedSpecialistSearchService>(
+  (ref) => AdvancedSpecialistSearchService(),
+);
 
 /// Провайдер состояния расширенного поиска
 final advancedSearchProvider = StateNotifierProvider<AdvancedSearchNotifier,
@@ -18,14 +17,15 @@ final advancedSearchProvider = StateNotifierProvider<AdvancedSearchNotifier,
 
 /// Провайдер для фильтров поиска
 final searchFiltersProvider = StateProvider<AdvancedSearchFilters>(
-    (ref) => const AdvancedSearchFilters());
+  (ref) => const AdvancedSearchFilters(),
+);
 
 /// Провайдер для статистики поиска
 final searchStatsProvider =
     FutureProvider.family<Map<String, dynamic>, AdvancedSearchFilters>(
         (ref, filters) async {
   final service = ref.read(advancedSearchServiceProvider);
-  return await service.getSearchStats(filters: filters);
+  return service.getSearchStats(filters: filters);
 });
 
 /// Провайдер для популярных категорий в регионе
@@ -33,7 +33,7 @@ final popularCategoriesProvider =
     FutureProvider.family<List<SpecialistCategory>, Map<String, dynamic>>(
         (ref, params) async {
   final service = ref.read(advancedSearchServiceProvider);
-  return await service.getPopularCategoriesInRegion(
+  return service.getPopularCategoriesInRegion(
     regionName: params['regionName'] as String?,
     city: params['city'] as CityRegion?,
     limit: params['limit'] as int? ?? 10,
@@ -79,11 +79,9 @@ class AdvancedSearchNotifier
 
       final searchState = AdvancedSearchState(
         results: _allResults,
-        isLoading: false,
         hasMore: _hasMore,
         filters: filters,
         totalCount: _allResults.length,
-        searchTime: 0, // TODO: Измерить время поиска
       );
 
       state = AsyncValue.data(searchState);
@@ -167,7 +165,9 @@ class AdvancedSearchNotifier
 
   /// Обновить сортировку
   Future<void> updateSorting(
-      AdvancedSearchSortBy sortBy, bool ascending) async {
+    AdvancedSearchSortBy sortBy,
+    bool ascending,
+  ) async {
     final newFilters = _currentFilters.copyWith(
       sortBy: sortBy,
       sortAscending: ascending,
@@ -294,7 +294,6 @@ class QuickSearchNotifier
       final filters = AdvancedSearchFilters(
         searchQuery: query,
         selectedCity: city,
-        sortBy: AdvancedSearchSortBy.relevance,
       );
 
       final results = await _service.searchSpecialists(
@@ -324,11 +323,11 @@ final recommendedSpecialistsProvider =
     selectedCity: params['city'] as CityRegion?,
     selectedRegion: params['region'] as String?,
     sortBy: AdvancedSearchSortBy.popularity,
-    minRating: 4.0,
+    minRating: 4,
     hasReviews: true,
   );
 
-  return await service.searchSpecialists(
+  return service.searchSpecialists(
     filters: filters,
     limit: params['limit'] as int? ?? 10,
   );
@@ -346,7 +345,6 @@ final similarSpecialistsProvider =
   final filters = AdvancedSearchFilters(
     categories: specialist.categories,
     selectedCity: city,
-    sortBy: AdvancedSearchSortBy.relevance,
     minRating: specialist.rating - 0.5,
     maxRating: specialist.rating + 0.5,
   );
@@ -378,12 +376,12 @@ final categoryStatsProvider =
     selectedRegion: region,
   );
 
-  return await service.getSearchStats(filters: filters);
+  return service.getSearchStats(filters: filters);
 });
 
 /// Провайдер для трендов поиска
 final searchTrendsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
-  // TODO: Реализовать получение трендов поиска
+  // TODO(developer): Реализовать получение трендов поиска
   // Это может включать популярные запросы, категории, города и т.д.
   return {
     'popularQueries': ['фотограф', 'dj', 'ведущий', 'декоратор'],

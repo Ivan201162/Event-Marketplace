@@ -340,7 +340,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
 
   /// Показывает диалог очистки уведомлений
   void _showClearNotificationsDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Очистить уведомления'),

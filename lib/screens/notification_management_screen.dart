@@ -581,7 +581,7 @@ class _NotificationManagementScreenState
 
   Future<void> _loadNotifications() async {
     try {
-      // TODO: Получить ID текущего пользователя
+      // TODO(developer): Получить ID текущего пользователя
       final notifications =
           await _notificationService.getUserNotifications('current_user_id');
       setState(() {
@@ -598,11 +598,11 @@ class _NotificationManagementScreenState
   }
 
   Future<void> _loadStatistics() async {
-    // TODO: Реализовать загрузку статистики
+    // TODO(developer): Реализовать загрузку статистики
   }
 
   void _addTemplate() {
-    // TODO: Реализовать добавление шаблона
+    // TODO(developer): Реализовать добавление шаблона
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Функция добавления шаблона будет реализована'),
@@ -613,13 +613,13 @@ class _NotificationManagementScreenState
   void _handleTemplateAction(String action, NotificationTemplate template) {
     switch (action) {
       case 'edit':
-        // TODO: Реализовать редактирование шаблона
+        // TODO(developer): Реализовать редактирование шаблона
         break;
       case 'toggle':
-        // TODO: Реализовать переключение статуса шаблона
+        // TODO(developer): Реализовать переключение статуса шаблона
         break;
       case 'delete':
-        // TODO: Реализовать удаление шаблона
+        // TODO(developer): Реализовать удаление шаблона
         break;
     }
   }

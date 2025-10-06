@@ -282,7 +282,7 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
       );
 
   void _showAddNoteDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => NoteEditorWidget(
         userId: widget.userId,
@@ -295,7 +295,7 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
   }
 
   void _showSearchDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Поиск заметок'),
@@ -327,7 +327,7 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
   }
 
   void _showFilterDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => NoteFilterWidget(
         currentFilters: ref.read(noteFiltersProvider),
@@ -339,7 +339,7 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
   }
 
   void _showNoteDetails(CustomerNote note) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => Dialog(
         child: Container(
@@ -425,7 +425,7 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
   }
 
   void _showEditNoteDialog(CustomerNote note) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => NoteEditorWidget(
         userId: widget.userId,
@@ -439,7 +439,7 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
   }
 
   void _deleteNote(CustomerNote note) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить заметку?'),
@@ -476,7 +476,7 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
   void _showNotesByTag(String tag) {
     Navigator.push(
       context,
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => NotesByTagScreen(
           userId: widget.userId,
           tag: tag,
@@ -488,7 +488,7 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
   void _showSearchResults(String query) {
     Navigator.push(
       context,
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => NoteSearchResultsScreen(
           userId: widget.userId,
           query: query,
@@ -550,7 +550,7 @@ class NotesByTagScreen extends ConsumerWidget {
   }
 
   void _showNoteDetails(BuildContext context, CustomerNote note) {
-    // TODO: Показать детали заметки
+    // TODO(developer): Показать детали заметки
   }
 
   void _showEditNoteDialog(
@@ -558,15 +558,15 @@ class NotesByTagScreen extends ConsumerWidget {
     WidgetRef ref,
     CustomerNote note,
   ) {
-    // TODO: Редактировать заметку
+    // TODO(developer): Редактировать заметку
   }
 
   void _deleteNote(BuildContext context, WidgetRef ref, CustomerNote note) {
-    // TODO: Удалить заметку
+    // TODO(developer): Удалить заметку
   }
 
   void _togglePin(BuildContext context, WidgetRef ref, CustomerNote note) {
-    // TODO: Переключить закрепление
+    // TODO(developer): Переключить закрепление
   }
 }
 
@@ -620,7 +620,7 @@ class NoteSearchResultsScreen extends ConsumerWidget {
   }
 
   void _showNoteDetails(BuildContext context, CustomerNote note) {
-    // TODO: Показать детали заметки
+    // TODO(developer): Показать детали заметки
   }
 
   void _showEditNoteDialog(
@@ -628,14 +628,14 @@ class NoteSearchResultsScreen extends ConsumerWidget {
     WidgetRef ref,
     CustomerNote note,
   ) {
-    // TODO: Редактировать заметку
+    // TODO(developer): Редактировать заметку
   }
 
   void _deleteNote(BuildContext context, WidgetRef ref, CustomerNote note) {
-    // TODO: Удалить заметку
+    // TODO(developer): Удалить заметку
   }
 
   void _togglePin(BuildContext context, WidgetRef ref, CustomerNote note) {
-    // TODO: Переключить закрепление
+    // TODO(developer): Переключить закрепление
   }
 }

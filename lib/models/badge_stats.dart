@@ -11,15 +11,6 @@ class BadgeStats {
     this.progress = 0.0,
   });
 
-  final int totalBadges;
-  final int earnedBadges;
-  final int availableBadges;
-  final int points;
-  final int level;
-  final String currentLevel;
-  final int nextLevelPoints;
-  final double progress;
-
   factory BadgeStats.fromJson(Map<String, dynamic> json) => BadgeStats(
         totalBadges: json['totalBadges'] as int? ?? 0,
         earnedBadges: json['earnedBadges'] as int? ?? 0,
@@ -30,6 +21,15 @@ class BadgeStats {
         nextLevelPoints: json['nextLevelPoints'] as int? ?? 0,
         progress: (json['progress'] as num?)?.toDouble() ?? 0.0,
       );
+
+  final int totalBadges;
+  final int earnedBadges;
+  final int availableBadges;
+  final int points;
+  final int level;
+  final String currentLevel;
+  final int nextLevelPoints;
+  final double progress;
 
   Map<String, dynamic> toJson() => {
         'totalBadges': totalBadges,
@@ -55,14 +55,6 @@ class BadgeLeaderboardEntry {
     this.position = 0,
   });
 
-  final String userId;
-  final String userName;
-  final String userAvatar;
-  final int totalBadges;
-  final int points;
-  final int level;
-  final int position;
-
   factory BadgeLeaderboardEntry.fromJson(Map<String, dynamic> json) =>
       BadgeLeaderboardEntry(
         userId: json['userId'] as String,
@@ -73,6 +65,14 @@ class BadgeLeaderboardEntry {
         level: json['level'] as int? ?? 0,
         position: json['position'] as int? ?? 0,
       );
+
+  final String userId;
+  final String userName;
+  final String userAvatar;
+  final int totalBadges;
+  final int points;
+  final int level;
+  final int position;
 
   Map<String, dynamic> toJson() => {
         'userId': userId,

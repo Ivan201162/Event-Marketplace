@@ -140,7 +140,7 @@ class ShareWidget extends ConsumerWidget {
         }
         onError?.call();
       }
-    } catch (e, stackTrace) {
+    } on Exception catch (e, stackTrace) {
       SafeLog.error('ShareWidget: Error sharing content', e, stackTrace);
 
       if (context.mounted) {
@@ -469,7 +469,7 @@ class ShareDialog extends StatelessWidget {
           ),
         );
       }
-    } catch (e, stackTrace) {
+    } on Exception catch (e, stackTrace) {
       SafeLog.error('ShareDialog: Error sharing content', e, stackTrace);
 
       if (context.mounted) {
@@ -532,7 +532,7 @@ class ShareDialog extends StatelessWidget {
 class ShareUtils {
   /// Показать диалог шаринга для события
   static void showShareDialog(BuildContext context, Event event) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => ShareDialog(event: event),
     );
@@ -540,7 +540,7 @@ class ShareUtils {
 
   /// Показать диалог шаринга для профиля
   static void showProfileShareDialog(BuildContext context, AppUser user) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => ShareDialog(user: user),
     );
@@ -548,7 +548,7 @@ class ShareUtils {
 
   /// Показать диалог шаринга для бронирования
   static void showBookingShareDialog(BuildContext context, Booking booking) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => ShareDialog(booking: booking),
     );
@@ -556,7 +556,7 @@ class ShareUtils {
 
   /// Показать диалог шаринга для текста
   static void showTextShareDialog(BuildContext context, String text) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => ShareDialog(text: text),
     );
@@ -569,7 +569,7 @@ class ShareUtils {
     String? title,
     String? description,
   }) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => ShareDialog(
         url: url,

@@ -441,7 +441,7 @@ class _GuestEventSearchScreenState
   }
 
   Future<void> _scanQRCode() async {
-    // TODO: Реализовать сканирование QR-кода
+    // TODO(developer): Реализовать сканирование QR-кода
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text(
@@ -459,7 +459,7 @@ class _GuestEventSearchScreenState
       final success = await _guestService.useAccessCode(accessCode);
 
       if (success) {
-        // TODO: Перейти к экрану гостевого доступа к событию
+        // TODO(developer): Перейти к экрану гостевого доступа к событию
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content:

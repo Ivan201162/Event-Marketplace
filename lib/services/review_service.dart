@@ -1,614 +1,402 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
-import '../core/safe_log.dart';
+import '../models/booking.dart';
 import '../models/review.dart';
+import 'notification_service.dart';
 
 /// Сервис для работы с отзывами
 class ReviewService {
+  factory ReviewService() => _instance;
+  ReviewService._internal();
+  static final ReviewService _instance = ReviewService._internal();
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final NotificationService _notificationService = NotificationService();
 
-  // Коллекции
-  static const String _reviewsCollection = 'reviews';
-  static const String _reviewStatsCollection = 'review_stats';
-
-  /// Создать отзыв
-  Future<Review> createReview({
-    required String reviewerId,
-    required String reviewerName,
-    String? reviewerAvatar,
-    required String targetId,
-    required ReviewType type,
-    required int rating,
-    required String title,
-    required String content,
-    List<String>? images,
+  /// Создать отзыв (перегруженный метод для совместимости)
+  Future<String> createReview({
+    String? targetId,
+    String? type,
+    String? title,
+    String? content,
+    int? rating,
     List<String>? tags,
-    Map<String, dynamic>? metadata,
+    required String specialistId,
+    required String customerId,
+    required String customerName,
+    required int rating,
+    required String comment,
+    String? bookingId,
+    String? eventTitle,
+    String? specialistName,
+    String? customerAvatar,
+    List<String> serviceTags = const [],
   }) async {
     try {
-      SafeLog.info(
-        'ReviewService: Creating review for $targetId by $reviewerId',
-      );
+      // Если есть bookingId, проверяем статус бронирования
+      if (bookingId != null) {
+        final bookingDoc =
+            await _firestore.collection('bookings').doc(bookingId).get();
+        if (!bookingDoc.exists) {
+          throw Exception('Бронирование не найдено');
+        }
 
-      // Проверяем, не оставлял ли пользователь уже отзыв
-      final existingReview =
-          await _getUserReviewForTarget(reviewerId, targetId);
-      if (existingReview != null) {
-        throw Exception('Вы уже оставили отзыв для этого ${type.name}');
+        final booking = Booking.fromDocument(bookingDoc);
+        if (booking.status != BookingStatus.completed) {
+          throw Exception(
+            'Отзыв можно оставить только после завершения заказа',
+          );
+        }
+
+        // Проверяем, что пользователь не оставлял отзыв для этого бронирования
+        final existingReview = await _firestore
+            .collection('reviews')
+            .where('bookingId', isEqualTo: bookingId)
+            .where('customerId', isEqualTo: customerId)
+            .get();
+
+        if (existingReview.docs.isNotEmpty) {
+          throw Exception('Вы уже оставили отзыв для этого заказа');
+        }
+
+        // Защита от накруток: проверяем, что пользователь действительно был заказчиком
+        if (booking.customerId != customerId) {
+          throw Exception('Отзыв может оставить только заказчик');
+        }
+
+        // Защита от накруток: проверяем, что прошло достаточно времени с завершения заказа
+        final now = DateTime.now();
+        final timeSinceCompletion =
+            now.difference(booking.endDate ?? booking.startDate);
+        if (timeSinceCompletion.inHours < 1) {
+          throw Exception(
+            'Отзыв можно оставить не ранее чем через час после завершения заказа',
+          );
+        }
+      }
+
+      // Защита от накруток: проверяем количество отзывов от пользователя за последние 24 часа
+      final now = DateTime.now();
+      final yesterday = now.subtract(const Duration(hours: 24));
+
+      final recentReviews = await _firestore
+          .collection('reviews')
+          .where('customerId', isEqualTo: customerId)
+          .where('createdAt', isGreaterThan: Timestamp.fromDate(yesterday))
+          .get();
+
+      if (recentReviews.docs.length >= 10) {
+        throw Exception('Превышен лимит отзывов. Попробуйте позже.');
       }
 
       // Создаем отзыв
-      final review = Review(
-        id: '', // Будет установлен Firestore
-        bookingId: '', // TODO: Получить из контекста
-        reviewerId: reviewerId,
-        reviewerName: reviewerName,
-        reviewerAvatar: reviewerAvatar,
-        targetId: targetId,
-        type: type,
+      final reviewData = {
+        'bookingId': bookingId,
+        'customerId': customerId,
+        'customerName': customerName,
+        'customerAvatar': customerAvatar,
+        'specialistId': specialistId,
+        'specialistName': specialistName,
+        'rating': rating,
+        'comment': comment,
+        'createdAt': Timestamp.fromDate(DateTime.now()),
+        'isEdited': false,
+        'isDeleted': false,
+        'serviceTags': serviceTags,
+        'eventTitle': eventTitle,
+        'metadata': {},
+      };
+
+      final docRef = await _firestore.collection('reviews').add(reviewData);
+
+      // Обновляем статистику специалиста
+      await _updateSpecialistRating(specialistId);
+
+      // Отправляем уведомление специалисту о новом отзыве
+      await _notificationService.sendNewReviewNotification(
+        specialistId: specialistId,
+        customerName: customerName,
         rating: rating,
-        title: title,
-        content: content,
-        images: images ?? [],
-        tags: tags ?? [],
-        status: ReviewStatus.pending,
-        createdAt: DateTime.now(),
-        metadata: metadata,
+        reviewId: docRef.id,
       );
 
-      // Сохраняем в Firestore
-      final docRef =
-          await _firestore.collection(_reviewsCollection).add(review.toMap());
-
-      // Обновляем ID
-      final createdReview = review.copyWith(id: docRef.id);
-
-      // Обновляем статистику
-      await _updateReviewStats(targetId, type);
-
-      SafeLog.info('ReviewService: Review created successfully: ${docRef.id}');
-
-      return createdReview;
-    } catch (e, stackTrace) {
-      SafeLog.error('ReviewService: Error creating review', e, stackTrace);
-      rethrow;
+      debugPrint('Review created: ${docRef.id}');
+      return docRef.id;
+    } catch (e) {
+      debugPrint('Error creating review: $e');
+      throw Exception('Ошибка создания отзыва: $e');
     }
   }
 
-  /// Получить отзывы для цели
-  Stream<List<Review>> getReviewsForTarget(
-    String targetId,
-    ReviewType type, {
-    ReviewFilter? filter,
+  /// Получить отзывы специалиста
+  Future<List<Review>> getSpecialistReviews(
+    String specialistId, {
     int limit = 20,
-    DocumentSnapshot? startAfter,
-  }) {
-    var query = _firestore
-        .collection(_reviewsCollection)
-        .where('targetId', isEqualTo: targetId)
-        .where('type', isEqualTo: type.name)
-        .where('status', isEqualTo: ReviewStatus.approved.name)
-        .orderBy('createdAt', descending: true);
-
-    // Применяем фильтры
-    if (filter != null) {
-      if (filter.minRating != null) {
-        query = query.where('rating', isGreaterThanOrEqualTo: filter.minRating);
-      }
-      if (filter.maxRating != null) {
-        query = query.where('rating', isLessThanOrEqualTo: filter.maxRating);
-      }
-      if (filter.verifiedOnly ?? false) {
-        query = query.where('isVerified', isEqualTo: true);
-      }
-      if (filter.withImages ?? false) {
-        query = query.where('images', isNotEqualTo: []);
-      }
-      if (filter.withResponse ?? false) {
-        query = query.where('response', isNotEqualTo: null);
-      }
-      if (filter.fromDate != null) {
-        query = query.where(
-          'createdAt',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(filter.fromDate!),
-        );
-      }
-      if (filter.toDate != null) {
-        query = query.where(
-          'createdAt',
-          isLessThanOrEqualTo: Timestamp.fromDate(filter.toDate!),
-        );
-      }
-    }
-
-    // Пагинация
-    if (startAfter != null) {
-      query = query.startAfterDocument(startAfter);
-    }
-    query = query.limit(limit);
-
-    return query.snapshots().map((snapshot) {
-      var reviews = snapshot.docs.map(Review.fromDocument).toList();
-
-      // Применяем клиентские фильтры
-      if (filter != null) {
-        reviews = _applyClientFilters(reviews, filter);
-      }
-
-      return reviews;
-    });
-  }
-
-  /// Получить отзыв пользователя для цели
-  Future<Review?> getUserReviewForTarget(String userId, String targetId) async {
+  }) async {
     try {
-      return await _getUserReviewForTarget(userId, targetId);
-    } catch (e, stackTrace) {
-      SafeLog.error('ReviewService: Error getting user review', e, stackTrace);
-      return null;
+      final querySnapshot = await _firestore
+          .collection('reviews')
+          .where('specialistId', isEqualTo: specialistId)
+          .where('isDeleted', isEqualTo: false)
+          .orderBy('createdAt', descending: true)
+          .limit(limit)
+          .get();
+
+      return querySnapshot.docs.map(Review.fromDocument).toList();
+    } catch (e) {
+      debugPrint('Error getting specialist reviews: $e');
+      throw Exception('Ошибка получения отзывов: $e');
     }
   }
 
-  /// Внутренний метод для получения отзыва пользователя
-  Future<Review?> _getUserReviewForTarget(
-    String userId,
-    String targetId,
-  ) async {
-    final query = await _firestore
-        .collection(_reviewsCollection)
-        .where('reviewerId', isEqualTo: userId)
-        .where('targetId', isEqualTo: targetId)
-        .limit(1)
-        .get();
+  /// Получить статистику отзывов специалиста
+  Future<ReviewStats> getSpecialistReviewStats(String specialistId) async {
+    try {
+      final reviewsSnapshot = await _firestore
+          .collection('reviews')
+          .where('specialistId', isEqualTo: specialistId)
+          .where('isDeleted', isEqualTo: false)
+          .get();
 
-    if (query.docs.isNotEmpty) {
-      return Review.fromDocument(query.docs.first);
+      if (reviewsSnapshot.docs.isEmpty) {
+        return ReviewStats(
+          specialistId: specialistId,
+          averageRating: 0,
+          totalReviews: 0,
+          ratingDistribution: {},
+          lastUpdated: DateTime.now(),
+        );
+      }
+
+      final reviews = reviewsSnapshot.docs.map(Review.fromDocument).toList();
+
+      // Рассчитываем средний рейтинг
+      final totalRating = reviews.fold<double>(
+        0,
+        (sum, review) => sum + review.rating.toDouble(),
+      );
+      final averageRating = totalRating / reviews.length;
+
+      // Рассчитываем распределение рейтингов
+      final ratingDistribution = <String, int>{};
+      for (var i = 1; i <= 5; i++) {
+        ratingDistribution[i.toString()] =
+            reviews.where((r) => r.rating == i).length;
+      }
+
+      return ReviewStats(
+        specialistId: specialistId,
+        averageRating: averageRating,
+        totalReviews: reviews.length,
+        ratingDistribution: ratingDistribution,
+        lastUpdated: DateTime.now(),
+      );
+    } catch (e) {
+      debugPrint('Error getting review stats: $e');
+      throw Exception('Ошибка получения статистики отзывов: $e');
     }
-    return null;
+  }
+
+  /// Получить отзыв по ID бронирования
+  Future<Review?> getReviewByBookingId(String bookingId, String userId) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('reviews')
+          .where('bookingId', isEqualTo: bookingId)
+          .where('customerId', isEqualTo: userId)
+          .get();
+
+      if (querySnapshot.docs.isEmpty) {
+        return null;
+      }
+
+      return Review.fromDocument(querySnapshot.docs.first);
+    } catch (e) {
+      debugPrint('Error getting review by booking ID: $e');
+      throw Exception('Ошибка получения отзыва: $e');
+    }
   }
 
   /// Обновить отзыв
-  Future<Review> updateReview(
+  Future<void> updateReview(
     String reviewId, {
     int? rating,
-    String? title,
-    String? content,
-    List<String>? images,
-    List<String>? tags,
-    Map<String, dynamic>? metadata,
+    String? comment,
   }) async {
     try {
-      SafeLog.info('ReviewService: Updating review $reviewId');
+      // Проверяем, что отзыв существует и не удален
+      final reviewDoc =
+          await _firestore.collection('reviews').doc(reviewId).get();
+      if (!reviewDoc.exists) {
+        throw Exception('Отзыв не найден');
+      }
+
+      final review = Review.fromDocument(reviewDoc);
+      if (review.isDeleted) {
+        throw Exception('Отзыв был удален');
+      }
+
+      // Проверяем, что прошло не более 24 часов с момента создания
+      final now = DateTime.now();
+      final timeSinceCreation = now.difference(review.createdAt);
+      if (timeSinceCreation.inHours > 24) {
+        throw Exception('Отзыв можно редактировать только в течение 24 часов');
+      }
 
       final updateData = <String, dynamic>{
-        'updatedAt': FieldValue.serverTimestamp(),
+        'editedAt': Timestamp.fromDate(now),
+        'isEdited': true,
       };
 
       if (rating != null) updateData['rating'] = rating;
-      if (title != null) updateData['title'] = title;
-      if (content != null) updateData['content'] = content;
-      if (images != null) updateData['images'] = images;
-      if (tags != null) updateData['tags'] = tags;
-      if (metadata != null) updateData['metadata'] = metadata;
+      if (comment != null) updateData['comment'] = comment;
 
-      await _firestore
-          .collection(_reviewsCollection)
-          .doc(reviewId)
-          .update(updateData);
+      await _firestore.collection('reviews').doc(reviewId).update(updateData);
 
-      // Получаем обновленный отзыв
-      final doc =
-          await _firestore.collection(_reviewsCollection).doc(reviewId).get();
-      final updatedReview = Review.fromDocument(doc);
+      // Обновляем статистику специалиста
+      await _updateSpecialistRating(review.specialistId);
 
-      // Обновляем статистику
-      await _updateReviewStats(updatedReview.targetId, updatedReview.type);
-
-      SafeLog.info('ReviewService: Review updated successfully');
-
-      return updatedReview;
-    } catch (e, stackTrace) {
-      SafeLog.error('ReviewService: Error updating review', e, stackTrace);
-      rethrow;
+      debugPrint('Review updated: $reviewId');
+    } catch (e) {
+      debugPrint('Error updating review: $e');
+      throw Exception('Ошибка обновления отзыва: $e');
     }
   }
 
   /// Удалить отзыв
   Future<void> deleteReview(String reviewId) async {
     try {
-      SafeLog.info('ReviewService: Deleting review $reviewId');
-
-      // Получаем отзыв для обновления статистики
-      final doc =
-          await _firestore.collection(_reviewsCollection).doc(reviewId).get();
-      if (doc.exists) {
-        final review = Review.fromDocument(doc);
-
-        // Удаляем отзыв
-        await _firestore.collection(_reviewsCollection).doc(reviewId).delete();
-
-        // Обновляем статистику
-        await _updateReviewStats(review.targetId, review.type);
+      // Получаем отзыв перед удалением
+      final reviewDoc =
+          await _firestore.collection('reviews').doc(reviewId).get();
+      if (!reviewDoc.exists) {
+        throw Exception('Отзыв не найден');
       }
 
-      SafeLog.info('ReviewService: Review deleted successfully');
-    } catch (e, stackTrace) {
-      SafeLog.error('ReviewService: Error deleting review', e, stackTrace);
-      rethrow;
-    }
-  }
-
-  /// Одобрить отзыв
-  Future<void> approveReview(String reviewId) async {
-    try {
-      SafeLog.info('ReviewService: Approving review $reviewId');
-
-      await _firestore.collection(_reviewsCollection).doc(reviewId).update({
-        'status': ReviewStatus.approved.name,
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
-
-      // Получаем отзыв для обновления статистики
-      final doc =
-          await _firestore.collection(_reviewsCollection).doc(reviewId).get();
-      if (doc.exists) {
-        final review = Review.fromDocument(doc);
-        await _updateReviewStats(review.targetId, review.type);
+      final review = Review.fromDocument(reviewDoc);
+      if (review.isDeleted) {
+        throw Exception('Отзыв уже удален');
       }
 
-      SafeLog.info('ReviewService: Review approved successfully');
-    } catch (e, stackTrace) {
-      SafeLog.error('ReviewService: Error approving review', e, stackTrace);
-      rethrow;
-    }
-  }
+      // Проверяем, что прошло не более 24 часов с момента создания
+      final now = DateTime.now();
+      final timeSinceCreation = now.difference(review.createdAt);
+      if (timeSinceCreation.inHours > 24) {
+        throw Exception('Отзыв можно удалить только в течение 24 часов');
+      }
 
-  /// Отклонить отзыв
-  Future<void> rejectReview(String reviewId) async {
-    try {
-      SafeLog.info('ReviewService: Rejecting review $reviewId');
-
-      await _firestore.collection(_reviewsCollection).doc(reviewId).update({
-        'status': ReviewStatus.rejected.name,
-        'updatedAt': FieldValue.serverTimestamp(),
+      // Помечаем отзыв как удаленный (мягкое удаление)
+      await _firestore.collection('reviews').doc(reviewId).update({
+        'isDeleted': true,
+        'deletedAt': Timestamp.fromDate(now),
       });
 
-      SafeLog.info('ReviewService: Review rejected successfully');
-    } catch (e, stackTrace) {
-      SafeLog.error('ReviewService: Error rejecting review', e, stackTrace);
-      rethrow;
+      // Обновляем статистику специалиста
+      await _updateSpecialistRating(review.specialistId);
+
+      debugPrint('Review deleted: $reviewId');
+    } catch (e) {
+      debugPrint('Error deleting review: $e');
+      throw Exception('Ошибка удаления отзыва: $e');
     }
   }
 
-  /// Добавить ответ на отзыв
-  Future<void> addResponseToReview(
-    String reviewId,
-    String response,
-    String responseAuthorId,
-  ) async {
+  /// Добавить ответ специалиста на отзыв
+  Future<void> addResponseToReview(String reviewId, String response) async {
     try {
-      SafeLog.info('ReviewService: Adding response to review $reviewId');
+      // Проверяем, что отзыв существует и не удален
+      final reviewDoc =
+          await _firestore.collection('reviews').doc(reviewId).get();
+      if (!reviewDoc.exists) {
+        throw Exception('Отзыв не найден');
+      }
 
-      await _firestore.collection(_reviewsCollection).doc(reviewId).update({
+      final review = Review.fromDocument(reviewDoc);
+      if (review.isDeleted) {
+        throw Exception('Отзыв был удален');
+      }
+
+      await _firestore.collection('reviews').doc(reviewId).update({
         'response': response,
-        'responseAuthorId': responseAuthorId,
-        'responseDate': FieldValue.serverTimestamp(),
-        'updatedAt': FieldValue.serverTimestamp(),
+        'responseAt': Timestamp.fromDate(DateTime.now()),
       });
 
-      SafeLog.info('ReviewService: Response added successfully');
-    } catch (e, stackTrace) {
-      SafeLog.error('ReviewService: Error adding response', e, stackTrace);
-      rethrow;
+      debugPrint('Response added to review: $reviewId');
+    } catch (e) {
+      debugPrint('Error adding response to review: $e');
+      throw Exception('Ошибка добавления ответа: $e');
     }
   }
 
-  /// Голосовать за полезность отзыва
-  Future<void> voteHelpful(
-    String reviewId,
-    String userId,
-    bool isHelpful,
-  ) async {
+  /// Обновить рейтинг специалиста в профиле
+  Future<void> _updateSpecialistRating(String specialistId) async {
     try {
-      SafeLog.info('ReviewService: Voting helpful for review $reviewId');
+      final stats = await getSpecialistReviewStats(specialistId);
 
-      final reviewDoc = _firestore.collection(_reviewsCollection).doc(reviewId);
-
-      await _firestore.runTransaction((transaction) async {
-        final snapshot = await transaction.get(reviewDoc);
-        if (!snapshot.exists) {
-          throw Exception('Отзыв не найден');
-        }
-
-        final review = Review.fromDocument(snapshot);
-        final currentVote = review.helpfulVotes[userId];
-
-        // Если пользователь уже голосовал, отменяем предыдущий голос
-        if (currentVote != null) {
-          if (currentVote == isHelpful) {
-            // Отменяем голос
-            final newVotes = Map<String, bool>.from(review.helpfulVotes);
-            newVotes.remove(userId);
-
-            transaction.update(reviewDoc, {
-              'helpfulVotes': newVotes,
-              'helpfulCount':
-                  isHelpful ? review.helpfulCount - 1 : review.helpfulCount,
-              'notHelpfulCount': !isHelpful
-                  ? review.notHelpfulCount - 1
-                  : review.notHelpfulCount,
-            });
-          } else {
-            // Меняем голос
-            final newVotes = Map<String, bool>.from(review.helpfulVotes);
-            newVotes[userId] = isHelpful;
-
-            transaction.update(reviewDoc, {
-              'helpfulVotes': newVotes,
-              'helpfulCount':
-                  isHelpful ? review.helpfulCount + 1 : review.helpfulCount - 1,
-              'notHelpfulCount': !isHelpful
-                  ? review.notHelpfulCount + 1
-                  : review.notHelpfulCount - 1,
-            });
-          }
-        } else {
-          // Новый голос
-          final newVotes = Map<String, bool>.from(review.helpfulVotes);
-          newVotes[userId] = isHelpful;
-
-          transaction.update(reviewDoc, {
-            'helpfulVotes': newVotes,
-            'helpfulCount':
-                isHelpful ? review.helpfulCount + 1 : review.helpfulCount,
-            'notHelpfulCount': !isHelpful
-                ? review.notHelpfulCount + 1
-                : review.notHelpfulCount,
-          });
-        }
+      await _firestore.collection('specialists').doc(specialistId).update({
+        'rating': stats.averageRating,
+        'reviewCount': stats.totalReviews,
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
 
-      SafeLog.info('ReviewService: Vote recorded successfully');
-    } catch (e, stackTrace) {
-      SafeLog.error('ReviewService: Error voting helpful', e, stackTrace);
-      rethrow;
+      debugPrint('Specialist rating updated: $specialistId');
+    } catch (e) {
+      debugPrint('Error updating specialist rating: $e');
+      // Не выбрасываем исключение, так как это не критично
     }
   }
-
-  /// Получить статистику отзывов
-  Future<ReviewStats> getReviewStats(String targetId, ReviewType type) async {
-    try {
-      SafeLog.info('ReviewService: Getting review stats for $targetId');
-
-      final doc = await _firestore
-          .collection(_reviewStatsCollection)
-          .doc('${targetId}_${type.name}')
-          .get();
-
-      if (doc.exists) {
-        return ReviewStats.fromDocument(doc);
-      } else {
-        // Создаем пустую статистику
-        return ReviewStats(
-          averageRating: 0,
-          totalReviews: 0,
-          ratingDistribution: {},
-          verifiedReviews: 0,
-          helpfulReviews: 0,
-          helpfulPercentage: 0,
-          lastUpdated: DateTime.now(),
-        );
-      }
-    } catch (e, stackTrace) {
-      SafeLog.error('ReviewService: Error getting review stats', e, stackTrace);
-      rethrow;
-    }
-  }
-
-  /// Получить статистику отзывов (Stream)
-  Stream<ReviewStats> getReviewStatsStream(String targetId, ReviewType type) =>
-      _firestore
-          .collection(_reviewStatsCollection)
-          .doc('${targetId}_${type.name}')
-          .snapshots()
-          .map((doc) {
-        if (doc.exists) {
-          return ReviewStats.fromDocument(doc);
-        } else {
-          return ReviewStats(
-            averageRating: 0,
-            totalReviews: 0,
-            ratingDistribution: {},
-            verifiedReviews: 0,
-            helpfulReviews: 0,
-            helpfulPercentage: 0,
-            lastUpdated: DateTime.now(),
-          );
-        }
-      });
-
-  /// Поиск отзывов
-  Stream<List<Review>> searchReviews({
-    String? query,
-    ReviewType? type,
-    ReviewFilter? filter,
-    int limit = 20,
-  }) {
-    var queryBuilder = _firestore
-        .collection(_reviewsCollection)
-        .where('status', isEqualTo: ReviewStatus.approved.name)
-        .orderBy('createdAt', descending: true);
-
-    if (type != null) {
-      queryBuilder = queryBuilder.where('type', isEqualTo: type.name);
-    }
-
-    if (query != null && query.isNotEmpty) {
-      // Для поиска по тексту используем клиентскую фильтрацию
-      // В реальном приложении лучше использовать Algolia или Elasticsearch
-    }
-
-    queryBuilder = queryBuilder.limit(limit);
-
-    return queryBuilder.snapshots().map((snapshot) {
-      var reviews = snapshot.docs.map(Review.fromDocument).toList();
-
-      // Применяем клиентские фильтры
-      if (filter != null) {
-        reviews = _applyClientFilters(reviews, filter);
-      }
-
-      // Применяем поисковый запрос
-      if (query != null && query.isNotEmpty) {
-        reviews = reviews
-            .where(
-              (review) =>
-                  review.title.toLowerCase().contains(query.toLowerCase()) ||
-                  review.content.toLowerCase().contains(query.toLowerCase()) ||
-                  review.tags.any(
-                    (tag) => tag.toLowerCase().contains(query.toLowerCase()),
-                  ),
-            )
-            .toList();
-      }
-
-      return reviews;
-    });
-  }
-
-  /// Обновить статистику отзывов
-  Future<void> _updateReviewStats(String targetId, ReviewType type) async {
-    try {
-      SafeLog.info('ReviewService: Updating review stats for $targetId');
-
-      // Получаем все одобренные отзывы
-      final reviewsQuery = await _firestore
-          .collection(_reviewsCollection)
-          .where('targetId', isEqualTo: targetId)
-          .where('type', isEqualTo: type.name)
-          .where('status', isEqualTo: ReviewStatus.approved.name)
-          .get();
-
-      final reviews = reviewsQuery.docs.map(Review.fromDocument).toList();
-
-      // Вычисляем статистику
-      final totalReviews = reviews.length;
-      if (totalReviews == 0) {
-        // Удаляем документ статистики, если нет отзывов
-        await _firestore
-            .collection(_reviewStatsCollection)
-            .doc('${targetId}_${type.name}')
-            .delete();
-        return;
-      }
-
-      final totalRating = reviews.fold(0, (sum, review) => sum + review.rating);
-      final averageRating = totalRating / totalReviews;
-
-      final ratingDistribution = <int, int>{};
-      for (var i = 1; i <= 5; i++) {
-        ratingDistribution[i] = reviews.where((r) => r.rating == i).length;
-      }
-
-      final verifiedReviews = reviews.where((r) => r.isVerified).length;
-      final helpfulReviews = reviews.where((r) => r.isHelpful).length;
-      final helpfulPercentage =
-          totalReviews > 0 ? (helpfulReviews / totalReviews) * 100 : 0.0;
-
-      final stats = ReviewStats(
-        averageRating: averageRating,
-        totalReviews: totalReviews,
-        ratingDistribution: ratingDistribution,
-        verifiedReviews: verifiedReviews,
-        helpfulReviews: helpfulReviews,
-        helpfulPercentage: helpfulPercentage,
-        lastUpdated: DateTime.now(),
-      );
-
-      // Сохраняем статистику
-      await _firestore
-          .collection(_reviewStatsCollection)
-          .doc('${targetId}_${type.name}')
-          .set(stats.toMap());
-
-      SafeLog.info('ReviewService: Review stats updated successfully');
-    } catch (e, stackTrace) {
-      SafeLog.error(
-        'ReviewService: Error updating review stats',
-        e,
-        stackTrace,
-      );
-    }
-  }
-
-  /// Применить клиентские фильтры
-  List<Review> _applyClientFilters(List<Review> reviews, ReviewFilter filter) =>
-      reviews.where((review) {
-        // Фильтр по тегам
-        if (filter.tags != null && filter.tags!.isNotEmpty) {
-          if (!filter.tags!.any((tag) => review.tags.contains(tag))) {
-            return false;
-          }
-        }
-
-        return true;
-      }).toList();
 
   /// Получить отзывы пользователя
-  Stream<List<Review>> getUserReviews(String userId, {int limit = 20}) =>
-      _firestore
-          .collection(_reviewsCollection)
-          .where('reviewerId', isEqualTo: userId)
+  Future<List<Review>> getUserReviews(String userId, {int limit = 20}) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('reviews')
+          .where('customerId', isEqualTo: userId)
           .orderBy('createdAt', descending: true)
           .limit(limit)
-          .snapshots()
-          .map((snapshot) => snapshot.docs.map(Review.fromDocument).toList());
+          .get();
 
-  /// Получить отзывы на рассмотрении (для админов)
-  Stream<List<Review>> getPendingReviews({int limit = 20}) => _firestore
-      .collection(_reviewsCollection)
-      .where('status', isEqualTo: ReviewStatus.pending.name)
-      .orderBy('createdAt', descending: true)
-      .limit(limit)
-      .snapshots()
-      .map((snapshot) => snapshot.docs.map(Review.fromDocument).toList());
-
-  /// Отметить отзыв как проверенный
-  Future<void> markAsVerified(String reviewId) async {
-    try {
-      SafeLog.info('ReviewService: Marking review as verified: $reviewId');
-
-      await _firestore.collection(_reviewsCollection).doc(reviewId).update({
-        'isVerified': true,
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
-
-      // Получаем отзыв для обновления статистики
-      final doc =
-          await _firestore.collection(_reviewsCollection).doc(reviewId).get();
-      if (doc.exists) {
-        final review = Review.fromDocument(doc);
-        await _updateReviewStats(review.targetId, review.type);
-      }
-
-      SafeLog.info('ReviewService: Review marked as verified successfully');
-    } catch (e, stackTrace) {
-      SafeLog.error(
-        'ReviewService: Error marking review as verified',
-        e,
-        stackTrace,
-      );
-      rethrow;
+      return querySnapshot.docs.map(Review.fromDocument).toList();
+    } catch (e) {
+      debugPrint('Error getting user reviews: $e');
+      throw Exception('Ошибка получения отзывов пользователя: $e');
     }
   }
 
-  /// Получить статистику отзывов события (для совместимости)
-  Future<ReviewStats> getEventReviewStats(String eventId) async =>
-      getReviewStats(eventId, ReviewType.event);
+  /// Проверить, может ли пользователь оставить отзыв для бронирования
+  Future<bool> canUserReviewBooking(String bookingId, String userId) async {
+    try {
+      // Проверяем существование бронирования
+      final bookingDoc =
+          await _firestore.collection('bookings').doc(bookingId).get();
+      if (!bookingDoc.exists) {
+        return false;
+      }
 
-  /// Получить отзывы события (для совместимости)
-  Stream<List<Review>> getEventReviews(String eventId) =>
-      getReviewsForTarget(eventId, ReviewType.event);
+      final booking = Booking.fromDocument(bookingDoc);
+
+      // Проверяем, что бронирование завершено
+      if (booking.status != BookingStatus.completed) {
+        return false;
+      }
+
+      // Проверяем, что пользователь - заказчик
+      if (booking.customerId != userId) {
+        return false;
+      }
+
+      // Проверяем, что отзыв еще не оставлен
+      final existingReview = await _firestore
+          .collection('reviews')
+          .where('bookingId', isEqualTo: bookingId)
+          .where('customerId', isEqualTo: userId)
+          .get();
+
+      return existingReview.docs.isEmpty;
+    } catch (e) {
+      debugPrint('Error checking if user can review: $e');
+      return false;
+    }
+  }
 }

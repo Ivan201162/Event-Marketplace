@@ -410,9 +410,9 @@ class IntegrationService {
         final data = json.decode(response.body);
         await _processJsonData(integration, endpointData, data, syncDirection);
       } else if (dataType == 'xml') {
-        // TODO: Обработка XML
+        // TODO(developer): Обработка XML
       } else if (dataType == 'csv') {
-        // TODO: Обработка CSV
+        // TODO(developer): Обработка CSV
       }
     } catch (e) {
       if (kDebugMode) {
@@ -521,7 +521,7 @@ class IntegrationService {
 
   /// Синхронизация SFTP данных
   Future<void> _syncSftpData(ExternalIntegration integration) async {
-    // TODO: Реализовать SFTP синхронизацию
+    // TODO(developer): Реализовать SFTP синхронизацию
     if (kDebugMode) {
       print('SFTP sync not implemented yet');
     }
@@ -529,7 +529,7 @@ class IntegrationService {
 
   /// Синхронизация Email данных
   Future<void> _syncEmailData(ExternalIntegration integration) async {
-    // TODO: Реализовать Email синхронизацию
+    // TODO(developer): Реализовать Email синхронизацию
     if (kDebugMode) {
       print('Email sync not implemented yet');
     }
@@ -537,7 +537,7 @@ class IntegrationService {
 
   /// Синхронизация SMS данных
   Future<void> _syncSmsData(ExternalIntegration integration) async {
-    // TODO: Реализовать SMS синхронизацию
+    // TODO(developer): Реализовать SMS синхронизацию
     if (kDebugMode) {
       print('SMS sync not implemented yet');
     }
@@ -545,7 +545,7 @@ class IntegrationService {
 
   /// Синхронизация платежных данных
   Future<void> _syncPaymentData(ExternalIntegration integration) async {
-    // TODO: Реализовать синхронизацию платежей
+    // TODO(developer): Реализовать синхронизацию платежей
     if (kDebugMode) {
       print('Payment sync not implemented yet');
     }
@@ -553,7 +553,7 @@ class IntegrationService {
 
   /// Синхронизация календарных данных
   Future<void> _syncCalendarData(ExternalIntegration integration) async {
-    // TODO: Реализовать синхронизацию календаря
+    // TODO(developer): Реализовать синхронизацию календаря
     if (kDebugMode) {
       print('Calendar sync not implemented yet');
     }
@@ -561,7 +561,7 @@ class IntegrationService {
 
   /// Синхронизация социальных данных
   Future<void> _syncSocialData(ExternalIntegration integration) async {
-    // TODO: Реализовать синхронизацию социальных сетей
+    // TODO(developer): Реализовать синхронизацию социальных сетей
     if (kDebugMode) {
       print('Social sync not implemented yet');
     }
@@ -569,7 +569,7 @@ class IntegrationService {
 
   /// Синхронизация аналитических данных
   Future<void> _syncAnalyticsData(ExternalIntegration integration) async {
-    // TODO: Реализовать синхронизацию аналитики
+    // TODO(developer): Реализовать синхронизацию аналитики
     if (kDebugMode) {
       print('Analytics sync not implemented yet');
     }
@@ -577,7 +577,7 @@ class IntegrationService {
 
   /// Синхронизация CRM данных
   Future<void> _syncCrmData(ExternalIntegration integration) async {
-    // TODO: Реализовать синхронизацию CRM
+    // TODO(developer): Реализовать синхронизацию CRM
     if (kDebugMode) {
       print('CRM sync not implemented yet');
     }
@@ -585,7 +585,7 @@ class IntegrationService {
 
   /// Синхронизация ERP данных
   Future<void> _syncErpData(ExternalIntegration integration) async {
-    // TODO: Реализовать синхронизацию ERP
+    // TODO(developer): Реализовать синхронизацию ERP
     if (kDebugMode) {
       print('ERP sync not implemented yet');
     }
@@ -593,7 +593,7 @@ class IntegrationService {
 
   /// Синхронизация других данных
   Future<void> _syncOtherData(ExternalIntegration integration) async {
-    // TODO: Реализовать пользовательскую синхронизацию
+    // TODO(developer): Реализовать пользовательскую синхронизацию
     if (kDebugMode) {
       print('Other sync not implemented yet');
     }
@@ -759,9 +759,7 @@ class IntegrationService {
           .collection('integrations')
           .where('isActive', isEqualTo: true)
           .get();
-      return snapshot.docs
-          .map((doc) => ExternalIntegration.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(ExternalIntegration.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения доступных интеграций: $e');
     }
@@ -774,9 +772,7 @@ class IntegrationService {
           .collection('user_integrations')
           .where('userId', isEqualTo: userId)
           .get();
-      return snapshot.docs
-          .map((doc) => ExternalIntegration.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(ExternalIntegration.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения интеграций пользователя: $e');
     }
@@ -784,7 +780,9 @@ class IntegrationService {
 
   /// Получить события интеграции пользователя
   Future<List<Map<String, dynamic>>> getUserIntegrationEvents(
-      String userId, String integrationId) async {
+    String userId,
+    String integrationId,
+  ) async {
     try {
       final snapshot = await _firestore
           .collection('integration_events')
@@ -793,10 +791,12 @@ class IntegrationService {
           .orderBy('timestamp', descending: true)
           .get();
       return snapshot.docs
-          .map((doc) => {
-                'id': doc.id,
-                ...doc.data() as Map<String, dynamic>,
-              })
+          .map(
+            (doc) => {
+              'id': doc.id,
+              ...doc.data(),
+            },
+          )
           .toList();
     } catch (e) {
       throw Exception('Ошибка получения событий интеграции: $e');
@@ -933,7 +933,9 @@ class IntegrationService {
 
   /// Получить адрес по координатам
   Future<String> getAddressFromCoordinates(
-      double latitude, double longitude) async {
+    double latitude,
+    double longitude,
+  ) async {
     try {
       // Заглушка для получения адреса по координатам
       // В реальном приложении здесь будет использоваться geocoding
@@ -973,16 +975,14 @@ class IntegrationService {
   }
 
   /// Создать мок VK профиль
-  Map<String, dynamic> createMockVKProfile(String url) {
-    return {
-      'id': '123456789',
-      'firstName': 'Иван',
-      'lastName': 'Петров',
-      'photoUrl': 'https://via.placeholder.com/100',
-      'url': url,
-      'followersCount': 150,
-      'postsCount': 25,
-      'isVerified': false,
-    };
-  }
+  Map<String, dynamic> createMockVKProfile(String url) => {
+        'id': '123456789',
+        'firstName': 'Иван',
+        'lastName': 'Петров',
+        'photoUrl': 'https://via.placeholder.com/100',
+        'url': url,
+        'followersCount': 150,
+        'postsCount': 25,
+        'isVerified': false,
+      };
 }

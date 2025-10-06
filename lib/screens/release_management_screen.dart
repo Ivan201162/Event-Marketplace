@@ -1114,7 +1114,7 @@ class _ReleaseManagementScreenState
   }
 
   void _viewRelease(Release release) {
-    // TODO: Реализовать просмотр релиза
+    // TODO(developer): Реализовать просмотр релиза
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Просмотр релиза "${release.name}" будет реализован'),
@@ -1123,7 +1123,7 @@ class _ReleaseManagementScreenState
   }
 
   void _editRelease(Release release) {
-    // TODO: Реализовать редактирование релиза
+    // TODO(developer): Реализовать редактирование релиза
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content:
@@ -1180,7 +1180,7 @@ class _ReleaseManagementScreenState
   }
 
   void _viewPlan(ReleasePlan plan) {
-    // TODO: Реализовать просмотр плана
+    // TODO(developer): Реализовать просмотр плана
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Просмотр плана "${plan.name}" будет реализован'),
@@ -1189,7 +1189,7 @@ class _ReleaseManagementScreenState
   }
 
   void _editPlan(ReleasePlan plan) {
-    // TODO: Реализовать редактирование плана
+    // TODO(developer): Реализовать редактирование плана
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Редактирование плана "${plan.name}" будет реализовано'),
@@ -1198,7 +1198,7 @@ class _ReleaseManagementScreenState
   }
 
   void _viewDeployment(Deployment deployment) {
-    // TODO: Реализовать просмотр деплоя
+    // TODO(developer): Реализовать просмотр деплоя
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Просмотр деплоя будет реализован'),
@@ -1227,7 +1227,7 @@ class _ReleaseManagementScreenState
   }
 
   void _showCreateReleaseDialog() {
-    // TODO: Реализовать диалог создания релиза
+    // TODO(developer): Реализовать диалог создания релиза
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Создание релиза будет реализовано'),
@@ -1236,7 +1236,7 @@ class _ReleaseManagementScreenState
   }
 
   void _showCreatePlanDialog() {
-    // TODO: Реализовать диалог создания плана
+    // TODO(developer): Реализовать диалог создания плана
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Создание плана будет реализовано'),

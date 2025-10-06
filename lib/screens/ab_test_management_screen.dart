@@ -795,7 +795,7 @@ class _ABTestManagementScreenState
   }
 
   void _showTestStatistics(ABTest test) {
-    // TODO: Показать детальную статистику теста
+    // TODO(developer): Показать детальную статистику теста
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Статистика для теста "${test.name}" будет показана'),
@@ -804,7 +804,7 @@ class _ABTestManagementScreenState
   }
 
   void _editTest(ABTest test) {
-    // TODO: Реализовать редактирование теста
+    // TODO(developer): Реализовать редактирование теста
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Редактирование теста "${test.name}" будет реализовано'),
@@ -813,7 +813,7 @@ class _ABTestManagementScreenState
   }
 
   void _deleteTest(ABTest test) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить A/B тест'),

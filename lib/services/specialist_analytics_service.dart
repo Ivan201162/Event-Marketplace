@@ -268,7 +268,7 @@ class SpecialistAnalyticsService {
     // Общие показатели
     final totalIncome = payments
         .where((p) => p.status == PaymentStatus.completed)
-        .fold(0.0, (sum, p) => sum + p.amount);
+        .fold(0, (sum, p) => sum + p.amount);
 
     final monthlyIncome = payments
         .where(
@@ -276,7 +276,7 @@ class SpecialistAnalyticsService {
               p.status == PaymentStatus.completed &&
               p.createdAt.isAfter(thisMonth),
         )
-        .fold(0.0, (sum, p) => sum + p.amount);
+        .fold(0, (sum, p) => sum + p.amount);
 
     final weeklyIncome = payments
         .where(
@@ -284,7 +284,7 @@ class SpecialistAnalyticsService {
               p.status == PaymentStatus.completed &&
               p.createdAt.isAfter(lastWeek),
         )
-        .fold(0.0, (sum, p) => sum + p.amount);
+        .fold(0, (sum, p) => sum + p.amount);
 
     final completedBookings =
         bookings.where((b) => b.status == BookingStatus.completed).length;
@@ -315,7 +315,7 @@ class SpecialistAnalyticsService {
                 p.createdAt.year == month.year &&
                 p.createdAt.month == month.month,
           )
-          .fold(0.0, (sum, p) => sum + p.amount);
+          .fold(0, (sum, p) => sum + p.amount);
 
       final monthBookings = bookings
           .where(
@@ -401,7 +401,7 @@ class SpecialistAnalyticsService {
       ..sort((a, b) => b.value.compareTo(a.value));
 
     // Процент ответов (заглушка)
-    const responseRate = 0.85; // TODO: Реальная логика
+    const responseRate = 0.85; // TODO(developer): Реальная логика
 
     return SpecialistReviewStats(
       averageRating: averageRating,
@@ -553,5 +553,119 @@ class SpecialistAnalyticsService {
     if (index == 0) return 0;
 
     return (index / sortedValues.length) * 100.0;
+  }
+
+  /// Получить статистику доходов по месяцам за последние 12 месяцев
+  Future<Map<String, double>> getMonthlyIncomeStats(String specialistId) async {
+    try {
+      final now = DateTime.now();
+      final twelveMonthsAgo = DateTime(now.year - 1, now.month, now.day);
+
+      // Получаем все завершенные платежи за последние 12 месяцев
+      final paymentsSnapshot = await _firestore
+          .collection('payments')
+          .where('specialistId', isEqualTo: specialistId)
+          .where('status', isEqualTo: 'completed')
+          .where('type', whereIn: ['deposit', 'finalPayment'])
+          .where(
+            'createdAt',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(twelveMonthsAgo),
+          )
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      final monthlyIncome = <String, double>{};
+
+      for (final doc in paymentsSnapshot.docs) {
+        final payment = Payment.fromDocument(doc);
+        final monthKey =
+            '${payment.createdAt.year}-${payment.createdAt.month.toString().padLeft(2, '0')}';
+        monthlyIncome[monthKey] =
+            (monthlyIncome[monthKey] ?? 0.0) + payment.amount;
+      }
+
+      return monthlyIncome;
+    } catch (e) {
+      debugPrint('Error getting monthly income stats: $e');
+      return {};
+    }
+  }
+
+  /// Получить статистику заказов по месяцам за последние 12 месяцев
+  Future<Map<String, int>> getMonthlyBookingsStats(String specialistId) async {
+    try {
+      final now = DateTime.now();
+      final twelveMonthsAgo = DateTime(now.year - 1, now.month, now.day);
+
+      // Получаем все завершенные бронирования за последние 12 месяцев
+      final bookingsSnapshot = await _firestore
+          .collection('bookings')
+          .where('specialistId', isEqualTo: specialistId)
+          .where('status', isEqualTo: 'completed')
+          .where(
+            'createdAt',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(twelveMonthsAgo),
+          )
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      final monthlyBookings = <String, int>{};
+
+      for (final doc in bookingsSnapshot.docs) {
+        final booking = Booking.fromDocument(doc);
+        final monthKey =
+            '${booking.createdAt.year}-${booking.createdAt.month.toString().padLeft(2, '0')}';
+        monthlyBookings[monthKey] = (monthlyBookings[monthKey] ?? 0) + 1;
+      }
+
+      return monthlyBookings;
+    } catch (e) {
+      debugPrint('Error getting monthly bookings stats: $e');
+      return {};
+    }
+  }
+
+  /// Получить статистику рейтинга по месяцам за последние 12 месяцев
+  Future<Map<String, double>> getMonthlyRatingStats(String specialistId) async {
+    try {
+      final now = DateTime.now();
+      final twelveMonthsAgo = DateTime(now.year - 1, now.month, now.day);
+
+      // Получаем все отзывы за последние 12 месяцев
+      final reviewsSnapshot = await _firestore
+          .collection('reviews')
+          .where('specialistId', isEqualTo: specialistId)
+          .where('isPublic', isEqualTo: true)
+          .where(
+            'createdAt',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(twelveMonthsAgo),
+          )
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      final monthlyRatings = <String, List<double>>{};
+
+      for (final doc in reviewsSnapshot.docs) {
+        final review = Review.fromDocument(doc);
+        final monthKey =
+            '${review.createdAt.year}-${review.createdAt.month.toString().padLeft(2, '0')}';
+        monthlyRatings[monthKey] = monthlyRatings[monthKey] ?? [];
+        monthlyRatings[monthKey]!.add(review.rating);
+      }
+
+      // Вычисляем средний рейтинг для каждого месяца
+      final monthlyAverageRating = <String, double>{};
+      monthlyRatings.forEach((month, ratings) {
+        if (ratings.isNotEmpty) {
+          monthlyAverageRating[month] =
+              ratings.reduce((a, b) => a + b) / ratings.length;
+        }
+      });
+
+      return monthlyAverageRating;
+    } catch (e) {
+      debugPrint('Error getting monthly rating stats: $e');
+      return {};
+    }
   }
 }

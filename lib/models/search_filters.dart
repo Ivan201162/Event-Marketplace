@@ -18,22 +18,6 @@ class SpecialistSearchFilters {
     this.sortBy = SearchSortBy.relevance,
   });
 
-  final List<String> categories;
-  final List<String> services;
-  final List<String> locations;
-  final double minRating;
-  final double maxRating;
-  final int minPrice;
-  final int maxPrice;
-  final DateTime? availableFrom;
-  final DateTime? availableTo;
-  final bool isAvailableNow;
-  final bool hasPortfolio;
-  final bool isVerified;
-  final bool hasReviews;
-  final String searchQuery;
-  final SearchSortBy sortBy;
-
   factory SpecialistSearchFilters.fromJson(Map<String, dynamic> json) =>
       SpecialistSearchFilters(
         categories:
@@ -60,6 +44,22 @@ class SpecialistSearchFilters {
           orElse: () => SearchSortBy.relevance,
         ),
       );
+
+  final List<String> categories;
+  final List<String> services;
+  final List<String> locations;
+  final double minRating;
+  final double maxRating;
+  final int minPrice;
+  final int maxPrice;
+  final DateTime? availableFrom;
+  final DateTime? availableTo;
+  final bool isAvailableNow;
+  final bool hasPortfolio;
+  final bool isVerified;
+  final bool hasReviews;
+  final String searchQuery;
+  final SearchSortBy sortBy;
 
   Map<String, dynamic> toJson() => {
         'categories': categories,
@@ -110,21 +110,6 @@ class SpecialistSearchResult {
     this.distance,
   });
 
-  final String specialistId;
-  final String name;
-  final String avatar;
-  final double rating;
-  final int reviewCount;
-  final int priceFrom;
-  final List<String> categories;
-  final List<String> services;
-  final String location;
-  final bool isAvailable;
-  final bool isVerified;
-  final bool hasPortfolio;
-  final DateTime? nextAvailableDate;
-  final double? distance;
-
   factory SpecialistSearchResult.fromJson(Map<String, dynamic> json) =>
       SpecialistSearchResult(
         specialistId: json['specialistId'] as String,
@@ -144,6 +129,21 @@ class SpecialistSearchResult {
             : null,
         distance: (json['distance'] as num?)?.toDouble(),
       );
+
+  final String specialistId;
+  final String name;
+  final String avatar;
+  final double rating;
+  final int reviewCount;
+  final int priceFrom;
+  final List<String> categories;
+  final List<String> services;
+  final String location;
+  final bool isAvailable;
+  final bool isVerified;
+  final bool hasPortfolio;
+  final DateTime? nextAvailableDate;
+  final double? distance;
 
   Map<String, dynamic> toJson() => {
         'specialistId': specialistId,
@@ -174,17 +174,13 @@ class SearchState {
     this.totalCount = 0,
   });
 
-  final List<SpecialistSearchResult> results;
-  final bool isLoading;
-  final bool hasMore;
-  final String error;
-  final SpecialistSearchFilters filters;
-  final int totalCount;
-
   factory SearchState.fromJson(Map<String, dynamic> json) => SearchState(
         results: (json['results'] as List<dynamic>?)
-                ?.map((e) =>
-                    SpecialistSearchResult.fromJson(e as Map<String, dynamic>))
+                ?.map(
+                  (e) => SpecialistSearchResult.fromJson(
+                    e as Map<String, dynamic>,
+                  ),
+                )
                 .toList() ??
             [],
         isLoading: json['isLoading'] as bool? ?? false,
@@ -192,10 +188,18 @@ class SearchState {
         error: json['error'] as String? ?? '',
         filters: json['filters'] != null
             ? SpecialistSearchFilters.fromJson(
-                json['filters'] as Map<String, dynamic>)
+                json['filters'] as Map<String, dynamic>,
+              )
             : const SpecialistSearchFilters(),
         totalCount: json['totalCount'] as int? ?? 0,
       );
+
+  final List<SpecialistSearchResult> results;
+  final bool isLoading;
+  final bool hasMore;
+  final String error;
+  final SpecialistSearchFilters filters;
+  final int totalCount;
 
   Map<String, dynamic> toJson() => {
         'results': results.map((e) => e.toJson()).toList(),

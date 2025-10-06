@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/customer_profile.dart';
 import '../models/user.dart';
 import '../providers/auth_providers.dart';
 import '../providers/profile_providers.dart';
@@ -140,7 +139,7 @@ class _CustomerProfileEditScreenState
             CircleAvatar(
               radius: 60,
               backgroundColor:
-                  Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
               child: const Icon(
                 Icons.person,
                 size: 60,
@@ -158,7 +157,7 @@ class _CustomerProfileEditScreenState
                 child: IconButton(
                   icon: const Icon(Icons.camera_alt, color: Colors.white),
                   onPressed: () {
-                    // TODO: Реализовать загрузку фото
+                    // TODO(developer): Реализовать загрузку фото
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Загрузка фото будет реализована позже'),
@@ -445,7 +444,7 @@ class _CustomerProfileEditScreenState
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withOpacity(0.6),
+                        .withValues(alpha: 0.6),
                   ),
             ),
             const SizedBox(height: 16),
@@ -480,7 +479,7 @@ class _CustomerProfileEditScreenState
   Widget _buildErrorMessage(String message) => Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.red.withOpacity(0.1),
+          color: Colors.red.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: Colors.red),
         ),

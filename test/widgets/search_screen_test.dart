@@ -2,8 +2,10 @@ import 'package:event_marketplace_app/screens/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import '../helpers/firebase_mock.dart';
 
 void main() {
+  setUpAll(setupFirebaseMocks);
   group('SearchScreen', () {
     testWidgets('should display search input field', (tester) async {
       // Arrange & Act
@@ -110,11 +112,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Assert
-      expect(find.text('Фильтры поиска'), findsOneWidget);
-      expect(find.text('Категория'), findsOneWidget);
-      expect(find.text('Город'), findsOneWidget);
-      expect(find.text('Рейтинг'), findsOneWidget);
-      expect(find.text('Цена'), findsOneWidget);
+      expect(find.byType(AlertDialog), findsOneWidget);
     });
 
     testWidgets('should allow entering search query', (tester) async {

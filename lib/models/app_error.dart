@@ -19,19 +19,44 @@ class AppError {
 
   /// Создать из документа Firestore
   factory AppError.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>? ?? {};
+    final data = doc.data();
+    if (data == null) {
+      return AppError(
+        id: doc.id,
+        device: '',
+        screen: '',
+        errorMessage: '',
+        errorType: 'unknown',
+        timestamp: DateTime.now(),
+      );
+    }
+
+    // Безопасное преобразование данных
+    Map<String, dynamic> safeData;
+    if (data is Map<String, dynamic>) {
+      safeData = data;
+    } else if (data is Map<dynamic, dynamic>) {
+      safeData = data.map((key, value) => MapEntry(key.toString(), value));
+    } else {
+      throw Exception('Document data is not a Map: ${data.runtimeType}');
+    }
+
     return AppError(
       id: doc.id,
-      userId: data['userId'] as String?,
-      device: data['device'] as String? ?? '',
-      screen: data['screen'] as String? ?? '',
-      errorMessage: data['errorMessage'] as String? ?? '',
-      stackTrace: data['stackTrace'] as String?,
-      errorType: data['errorType'] as String? ?? 'unknown',
-      resolved: data['resolved'] as bool? ?? false,
-      timestamp: (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      metadata: data['metadata'] != null
-          ? Map<String, dynamic>.from(data['metadata'] as Map)
+      userId: safeData['userId'] as String?,
+      device: safeData['device'] as String? ?? '',
+      screen: safeData['screen'] as String? ?? '',
+      errorMessage: safeData['errorMessage'] as String? ?? '',
+      stackTrace: safeData['stackTrace'] as String?,
+      errorType: safeData['errorType'] as String? ?? 'unknown',
+      resolved: safeData['resolved'] as bool? ?? false,
+      timestamp: safeData['timestamp'] != null
+          ? (safeData['timestamp'] is Timestamp
+              ? (safeData['timestamp'] as Timestamp).toDate()
+              : DateTime.parse(safeData['timestamp'].toString()))
+          : DateTime.now(),
+      metadata: safeData['metadata'] != null
+          ? Map<String, dynamic>.from(safeData['metadata'] as Map)
           : null,
     );
   }

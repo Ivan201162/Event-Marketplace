@@ -298,7 +298,7 @@ class MediaOptimizationSettingsNotifier
 
   /// Получить рекомендуемые настройки для устройства
   MediaOptimizationSettings getRecommendedSettings() {
-    // TODO: Определить характеристики устройства и вернуть оптимальные настройки
+    // TODO(developer): Определить характеристики устройства и вернуть оптимальные настройки
     return const MediaOptimizationSettings(
       autoClearCache: true,
     );

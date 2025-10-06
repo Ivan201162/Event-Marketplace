@@ -63,7 +63,8 @@ class ContentCreator {
             [],
         pricing: data['pricing'] != null
             ? Map<String, dynamic>.from(
-                data['pricing'] as Map<dynamic, dynamic>)
+                data['pricing'] as Map<dynamic, dynamic>,
+              )
             : null,
         location: data['location'] as String?,
         rating: data['rating'] as double?,
@@ -212,7 +213,8 @@ class ContentFormat {
         platforms: List<String>.from(data['platforms'] as List<dynamic>? ?? []),
         specifications: data['specifications'] != null
             ? Map<String, dynamic>.from(
-                data['specifications'] as Map<dynamic, dynamic>)
+                data['specifications'] as Map<dynamic, dynamic>,
+              )
             : null,
       );
   final String name;
@@ -271,7 +273,8 @@ class MediaShowcase {
         description: data['description'] as String?,
         metadata: data['metadata'] != null
             ? Map<String, dynamic>.from(
-                data['metadata'] as Map<dynamic, dynamic>)
+                data['metadata'] as Map<dynamic, dynamic>,
+              )
             : null,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
       );

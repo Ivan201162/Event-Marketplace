@@ -268,7 +268,7 @@ class _InspirationPhotosScreenState
       );
 
   void _showAddPhotoDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => PhotoUploadWidget(
         userId: widget.userId,
@@ -281,7 +281,7 @@ class _InspirationPhotosScreenState
   }
 
   void _showSearchDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Поиск фото'),
@@ -313,7 +313,7 @@ class _InspirationPhotosScreenState
   }
 
   void _showFilterDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => PhotoFilterWidget(
         currentFilters: ref.read(photoFiltersProvider),
@@ -325,7 +325,7 @@ class _InspirationPhotosScreenState
   }
 
   void _showPhotoDetails(InspirationPhoto photo) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => Dialog(
         child: Column(
@@ -402,7 +402,7 @@ class _InspirationPhotosScreenState
   }
 
   void _showEditPhotoDialog(InspirationPhoto photo) {
-    // TODO: Реализовать редактирование фото
+    // TODO(developer): Реализовать редактирование фото
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Редактирование фото будет добавлено в следующей версии'),
@@ -411,7 +411,7 @@ class _InspirationPhotosScreenState
   }
 
   void _deletePhoto(InspirationPhoto photo) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить фото?'),
@@ -440,7 +440,7 @@ class _InspirationPhotosScreenState
   void _showPhotosByTag(String tag) {
     Navigator.push(
       context,
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => PhotosByTagScreen(
           userId: widget.userId,
           tag: tag,
@@ -452,7 +452,7 @@ class _InspirationPhotosScreenState
   void _showSearchResults(String query) {
     Navigator.push(
       context,
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => PhotoSearchResultsScreen(
           userId: widget.userId,
           query: query,
@@ -506,11 +506,11 @@ class PhotosByTagScreen extends ConsumerWidget {
   }
 
   void _showPhotoDetails(BuildContext context, InspirationPhoto photo) {
-    // TODO: Показать детали фото
+    // TODO(developer): Показать детали фото
   }
 
   void _showEditPhotoDialog(BuildContext context, InspirationPhoto photo) {
-    // TODO: Редактировать фото
+    // TODO(developer): Редактировать фото
   }
 
   void _deletePhoto(
@@ -518,7 +518,7 @@ class PhotosByTagScreen extends ConsumerWidget {
     WidgetRef ref,
     InspirationPhoto photo,
   ) {
-    // TODO: Удалить фото
+    // TODO(developer): Удалить фото
   }
 }
 
@@ -564,11 +564,11 @@ class PhotoSearchResultsScreen extends ConsumerWidget {
   }
 
   void _showPhotoDetails(BuildContext context, InspirationPhoto photo) {
-    // TODO: Показать детали фото
+    // TODO(developer): Показать детали фото
   }
 
   void _showEditPhotoDialog(BuildContext context, InspirationPhoto photo) {
-    // TODO: Редактировать фото
+    // TODO(developer): Редактировать фото
   }
 
   void _deletePhoto(
@@ -576,6 +576,6 @@ class PhotoSearchResultsScreen extends ConsumerWidget {
     WidgetRef ref,
     InspirationPhoto photo,
   ) {
-    // TODO: Удалить фото
+    // TODO(developer): Удалить фото
   }
 }

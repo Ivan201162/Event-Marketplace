@@ -308,7 +308,7 @@ class _SpecialistPortfolioVideosScreenState
       );
 
   void _showAddVideoDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => VideoEditorWidget(
         specialistId: widget.specialistId,
@@ -321,7 +321,7 @@ class _SpecialistPortfolioVideosScreenState
   }
 
   void _showSearchDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Поиск видео'),
@@ -353,7 +353,7 @@ class _SpecialistPortfolioVideosScreenState
   }
 
   void _showFilterDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => VideoFilterWidget(
         currentFilters: ref.read(videoFiltersProvider),
@@ -365,7 +365,7 @@ class _SpecialistPortfolioVideosScreenState
   }
 
   void _showVideoDetails(PortfolioVideo video) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => Dialog(
         child: Container(
@@ -492,7 +492,7 @@ class _SpecialistPortfolioVideosScreenState
   }
 
   void _showEditVideoDialog(PortfolioVideo video) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => VideoEditorWidget(
         specialistId: widget.specialistId,
@@ -506,7 +506,7 @@ class _SpecialistPortfolioVideosScreenState
   }
 
   void _deleteVideo(PortfolioVideo video) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить видео?'),
@@ -546,7 +546,7 @@ class _SpecialistPortfolioVideosScreenState
   void _showVideosByPlatform(String platform) {
     Navigator.push(
       context,
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => VideosByPlatformScreen(
           specialistId: widget.specialistId,
           platform: platform,
@@ -558,7 +558,7 @@ class _SpecialistPortfolioVideosScreenState
   void _showSearchResults(String query) {
     Navigator.push(
       context,
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => VideoSearchResultsScreen(
           specialistId: widget.specialistId,
           query: query,
@@ -686,7 +686,7 @@ class VideosByPlatformScreen extends ConsumerWidget {
   }
 
   void _showVideoDetails(BuildContext context, PortfolioVideo video) {
-    // TODO: Показать детали видео
+    // TODO(developer): Показать детали видео
   }
 
   void _showEditVideoDialog(
@@ -694,11 +694,11 @@ class VideosByPlatformScreen extends ConsumerWidget {
     WidgetRef ref,
     PortfolioVideo video,
   ) {
-    // TODO: Редактировать видео
+    // TODO(developer): Редактировать видео
   }
 
   void _deleteVideo(BuildContext context, WidgetRef ref, PortfolioVideo video) {
-    // TODO: Удалить видео
+    // TODO(developer): Удалить видео
   }
 
   void _togglePublish(
@@ -706,7 +706,7 @@ class VideosByPlatformScreen extends ConsumerWidget {
     WidgetRef ref,
     PortfolioVideo video,
   ) {
-    // TODO: Переключить публикацию
+    // TODO(developer): Переключить публикацию
   }
 }
 
@@ -761,7 +761,7 @@ class VideoSearchResultsScreen extends ConsumerWidget {
   }
 
   void _showVideoDetails(BuildContext context, PortfolioVideo video) {
-    // TODO: Показать детали видео
+    // TODO(developer): Показать детали видео
   }
 
   void _showEditVideoDialog(
@@ -769,11 +769,11 @@ class VideoSearchResultsScreen extends ConsumerWidget {
     WidgetRef ref,
     PortfolioVideo video,
   ) {
-    // TODO: Редактировать видео
+    // TODO(developer): Редактировать видео
   }
 
   void _deleteVideo(BuildContext context, WidgetRef ref, PortfolioVideo video) {
-    // TODO: Удалить видео
+    // TODO(developer): Удалить видео
   }
 
   void _togglePublish(
@@ -781,6 +781,6 @@ class VideoSearchResultsScreen extends ConsumerWidget {
     WidgetRef ref,
     PortfolioVideo video,
   ) {
-    // TODO: Переключить публикацию
+    // TODO(developer): Переключить публикацию
   }
 }

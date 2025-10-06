@@ -204,7 +204,16 @@ class CreateBookingNotifier extends Notifier<CreateBookingState> {
         organizerName: organizerName,
       );
 
-      final bookingId = await _bookingService.createBooking(booking);
+      final bookingId = await _bookingService.createBooking(
+        customerId: booking.customerId,
+        specialistId: booking.specialistId,
+        eventDate: booking.eventDate,
+        totalPrice: booking.totalPrice,
+        prepayment: booking.prepayment,
+        message: booking.message,
+        title: booking.title,
+        location: booking.location,
+      );
       state = state.copyWith(isLoading: false);
       return bookingId;
     } catch (e) {

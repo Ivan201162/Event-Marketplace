@@ -1,8 +1,10 @@
 import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/user.dart';
-import '../models/specialist.dart';
+
 import '../models/booking.dart';
+import '../models/specialist.dart';
+import '../models/user.dart';
 
 /// Генератор данных для чатов
 class ChatDataGenerator {
@@ -15,7 +17,7 @@ class ChatDataGenerator {
     'Добрый день! Можете рассказать подробнее о ваших услугах?',
     'Привет! Видел ваше портфолио, очень понравилось.',
     'Здравствуйте! Ищу специалиста для мероприятия.',
-    'Добрый день! Подходите ли вы для нашего события?'
+    'Добрый день! Подходите ли вы для нашего события?',
   ];
 
   static const List<String> specialistResponses = [
@@ -23,7 +25,7 @@ class ChatDataGenerator {
     'Добрый день! Буду рад помочь. Когда планируется событие?',
     'Привет! Спасибо за интерес. Какие у вас пожелания?',
     'Здравствуйте! Давайте обсудим детали вашего мероприятия.',
-    'Добрый день! Да, я специализируюсь на таких событиях.'
+    'Добрый день! Да, я специализируюсь на таких событиях.',
   ];
 
   static const List<String> detailQuestions = [
@@ -32,7 +34,7 @@ class ChatDataGenerator {
     'Где планируется мероприятие?',
     'На сколько часов нужны услуги?',
     'Есть ли особые пожелания?',
-    'Какая тематика мероприятия?'
+    'Какая тематика мероприятия?',
   ];
 
   static const List<String> customerAnswers = [
@@ -41,7 +43,7 @@ class ChatDataGenerator {
     'Мероприятие в ресторане в центре города.',
     'Нужно на 6 часов.',
     'Хотим что-то в классическом стиле.',
-    'Это свадебное торжество.'
+    'Это свадебное торжество.',
   ];
 
   static const List<String> negotiationMessages = [
@@ -49,7 +51,7 @@ class ChatDataGenerator {
     'Можете сделать скидку?',
     'Когда можем встретиться для обсуждения?',
     'Нужна ли предоплата?',
-    'Какие гарантии вы даете?'
+    'Какие гарантии вы даете?',
   ];
 
   static const List<String> finalMessages = [
@@ -57,7 +59,7 @@ class ChatDataGenerator {
     'Спасибо, буду ждать от вас предложение.',
     'Хорошо, свяжемся для уточнения деталей.',
     'Пока думаем, спасибо за информацию.',
-    'Забронируем ваши услуги!'
+    'Забронируем ваши услуги!',
   ];
 
   /// Генерация чатов между заказчиками и специалистами
@@ -68,7 +70,7 @@ class ChatDataGenerator {
   ) async {
     print('💬 Генерация чатов...');
 
-    int chatCount = 0;
+    var chatCount = 0;
 
     // Создаем чаты для существующих бронирований
     for (final booking in bookings) {
@@ -86,7 +88,7 @@ class ChatDataGenerator {
 
     // Создаем дополнительные чаты без бронирований (потенциальные клиенты)
     final additionalChats = _random.nextInt(200) + 100;
-    for (int i = 0; i < additionalChats; i++) {
+    for (var i = 0; i < additionalChats; i++) {
       final customer = customers[_random.nextInt(customers.length)];
       final specialist = specialists[_random.nextInt(specialists.length)];
 
@@ -132,10 +134,10 @@ class ChatDataGenerator {
     };
 
     // Генерируем сообщения
-    DateTime messageTime = _generateRandomDate();
-    bool isCustomerTurn = true;
+    var messageTime = _generateRandomDate();
+    var isCustomerTurn = true;
 
-    for (int i = 0; i < messageCount; i++) {
+    for (var i = 0; i < messageCount; i++) {
       final message = _generateMessage(i, isCustomerTurn, booking != null);
 
       messages.add({
@@ -153,9 +155,11 @@ class ChatDataGenerator {
       });
 
       // Обновляем время для следующего сообщения
-      messageTime = messageTime.add(Duration(
-        minutes: _random.nextInt(60) + 5, // 5-65 минут между сообщениями
-      ));
+      messageTime = messageTime.add(
+        Duration(
+          minutes: _random.nextInt(60) + 5, // 5-65 минут между сообщениями
+        ),
+      );
 
       isCustomerTurn = !isCustomerTurn;
     }
@@ -189,7 +193,10 @@ class ChatDataGenerator {
 
   /// Генерация сообщения в зависимости от номера и контекста
   String _generateMessage(
-      int messageIndex, bool isFromCustomer, bool hasBooking) {
+    int messageIndex,
+    bool isFromCustomer,
+    bool hasBooking,
+  ) {
     if (messageIndex == 0) {
       // Первое сообщение - приветствие от заказчика
       return greetingMessages[_random.nextInt(greetingMessages.length)];
@@ -262,12 +269,12 @@ class ChatDataGenerator {
   ) async {
     print('🔔 Генерация уведомлений...');
 
-    int notificationCount = 0;
+    var notificationCount = 0;
 
     for (final booking in bookings) {
       // Уведомления для заказчика
       await _createNotification(
-        userId: booking.customerId!,
+        userId: booking.customerId,
         title: 'Бронирование подтверждено',
         body: 'Ваше бронирование на ${booking.eventTitle} подтверждено',
         type: 'booking_confirmed',

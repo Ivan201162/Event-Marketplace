@@ -169,7 +169,7 @@ final securityInitializationProvider = FutureProvider<void>((ref) async {
 
 /// Провайдер для получения статистики безопасности
 final securityStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
-  // TODO: Реализовать получение статистики безопасности
+  // TODO(developer): Реализовать получение статистики безопасности
   return {
     'totalEvents': 0,
     'criticalEvents': 0,
@@ -183,7 +183,7 @@ final securityStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
 /// Провайдер для получения рекомендаций по безопасности
 final securityRecommendationsProvider =
     FutureProvider<List<SecurityRecommendation>>((ref) async {
-  // TODO: Реализовать получение рекомендаций по безопасности
+  // TODO(developer): Реализовать получение рекомендаций по безопасности
   return [
     const SecurityRecommendation(
       id: '1',

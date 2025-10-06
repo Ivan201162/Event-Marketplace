@@ -77,7 +77,7 @@ class VkIntegrationService {
       return null;
     }
 
-    // TODO: Реализовать получение информации о плейлисте через VK API
+    // TODO(developer): Реализовать получение информации о плейлисте через VK API
     // Пока возвращаем заглушку
     final playlistId = extractPlaylistId(url);
     final ownerId = extractOwnerId(url);
@@ -91,9 +91,9 @@ class VkIntegrationService {
       'ownerId': ownerId,
       'title': 'Плейлист VK',
       'description': 'Музыкальный плейлист из ВКонтакте',
-      'trackCount': 0, // TODO: Получить реальное количество треков
+      'trackCount': 0, // TODO(developer): Получить реальное количество треков
       'url': normalizePlaylistUrl(url),
-      'thumbnail': null, // TODO: Получить обложку плейлиста
+      'thumbnail': null, // TODO(developer): Получить обложку плейлиста
     };
   }
 
@@ -103,7 +103,7 @@ class VkIntegrationService {
       return false;
     }
 
-    // TODO: Реализовать проверку доступности плейлиста
+    // TODO(developer): Реализовать проверку доступности плейлиста
     // Пока возвращаем true для валидных URL
     return isValidVkPlaylistUrl(url);
   }
@@ -114,7 +114,7 @@ class VkIntegrationService {
       return [];
     }
 
-    // TODO: Реализовать получение треков через VK API
+    // TODO(developer): Реализовать получение треков через VK API
     // Пока возвращаем пустой список
     return [];
   }

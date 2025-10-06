@@ -263,7 +263,7 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
               child: StreamBuilder<List<SupportTicket>>(
                 stream: _supportService.getUserTickets(
                   'demo_user_id',
-                ), // TODO: Получить из контекста
+                ), // TODO(developer): Получить из контекста
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -338,7 +338,7 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
   void _createTicket() {
     Navigator.of(context)
         .push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => const CreateSupportTicketScreen(),
       ),
     )
@@ -352,7 +352,7 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
   void _showTicketDetail(SupportTicket ticket) {
     Navigator.of(context)
         .push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => SupportTicketDetailScreen(
           ticketId: ticket.id,
         ),
@@ -367,14 +367,14 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
 
   void _showFAQ() {
     Navigator.of(context).push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => const FAQScreen(),
       ),
     );
   }
 
   void _showFAQDetail(FAQItem faqItem) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(faqItem.question),
@@ -405,14 +405,14 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
   }
 
   void _createTicketFromFAQ(FAQItem faqItem) {
-    // TODO: Перейти к созданию тикета с предзаполненной информацией
+    // TODO(developer): Перейти к созданию тикета с предзаполненной информацией
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Создание тикета для: ${faqItem.question}')),
     );
   }
 
   void _contactSupport() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Связаться с поддержкой'),
@@ -448,7 +448,7 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
 
   void _showAdminPanel() {
     Navigator.of(context).push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => const AdminSupportScreen(),
       ),
     );

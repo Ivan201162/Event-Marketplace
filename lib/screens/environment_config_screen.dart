@@ -993,7 +993,7 @@ class _EnvironmentConfigScreenState
   }
 
   void _viewEnvironment(EnvironmentConfig environment) {
-    // TODO: Реализовать просмотр окружения
+    // TODO(developer): Реализовать просмотр окружения
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content:
@@ -1003,7 +1003,7 @@ class _EnvironmentConfigScreenState
   }
 
   void _editEnvironment(EnvironmentConfig environment) {
-    // TODO: Реализовать редактирование окружения
+    // TODO(developer): Реализовать редактирование окружения
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -1037,7 +1037,7 @@ class _EnvironmentConfigScreenState
     try {
       final exportData =
           await _configService.exportEnvironmentConfig(environment.id);
-      // TODO: Реализовать сохранение файла
+      // TODO(developer): Реализовать сохранение файла
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Экспорт окружения "${environment.name}" завершен'),
@@ -1065,7 +1065,7 @@ class _EnvironmentConfigScreenState
           ),
         );
       } else {
-        showDialog(
+        showDialog<void>(
           context: context,
           builder: (context) => AlertDialog(
             title: Text('Ошибки валидации: ${environment.name}'),
@@ -1095,7 +1095,7 @@ class _EnvironmentConfigScreenState
   }
 
   void _viewVariable(EnvironmentVariable variable) {
-    // TODO: Реализовать просмотр переменной
+    // TODO(developer): Реализовать просмотр переменной
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Просмотр переменной "${variable.key}" будет реализован'),
@@ -1104,7 +1104,7 @@ class _EnvironmentConfigScreenState
   }
 
   void _editVariable(EnvironmentVariable variable) {
-    // TODO: Реализовать редактирование переменной
+    // TODO(developer): Реализовать редактирование переменной
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -1115,7 +1115,7 @@ class _EnvironmentConfigScreenState
   }
 
   void _viewDeployment(DeploymentConfig deployment) {
-    // TODO: Реализовать просмотр развертывания
+    // TODO(developer): Реализовать просмотр развертывания
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -1126,7 +1126,7 @@ class _EnvironmentConfigScreenState
   }
 
   void _editDeployment(DeploymentConfig deployment) {
-    // TODO: Реализовать редактирование развертывания
+    // TODO(developer): Реализовать редактирование развертывания
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -1137,7 +1137,7 @@ class _EnvironmentConfigScreenState
   }
 
   void _showCreateEnvironmentDialog() {
-    // TODO: Реализовать диалог создания окружения
+    // TODO(developer): Реализовать диалог создания окружения
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Создание окружения будет реализовано'),
@@ -1146,7 +1146,7 @@ class _EnvironmentConfigScreenState
   }
 
   void _showCreateVariableDialog() {
-    // TODO: Реализовать диалог создания переменной
+    // TODO(developer): Реализовать диалог создания переменной
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Создание переменной будет реализовано'),
@@ -1155,7 +1155,7 @@ class _EnvironmentConfigScreenState
   }
 
   void _showCreateDeploymentDialog() {
-    // TODO: Реализовать диалог создания развертывания
+    // TODO(developer): Реализовать диалог создания развертывания
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Создание развертывания будет реализовано'),

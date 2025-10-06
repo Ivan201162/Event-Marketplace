@@ -1,495 +1,388 @@
-import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:uuid/uuid.dart';
 
-import '../models/support_ticket.dart';
-
-/// Сервис поддержки
+/// Сервис системы поддержки
 class SupportService {
-  factory SupportService() => _instance;
-  SupportService._internal();
-  static final SupportService _instance = SupportService._internal();
-
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
-  final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
-  final Uuid _uuid = const Uuid();
 
-  /// Создать тикет поддержки
-  Future<String?> createTicket({
+  /// Отправить сообщение в чат поддержки
+  Future<String> sendMessage({
     required String userId,
-    required String userName,
-    required String userEmail,
-    required String subject,
-    required String description,
-    required SupportCategory category,
-    SupportPriority priority = SupportPriority.medium,
-    List<File>? attachments,
+    required String message,
+    required MessageType type,
+    String? attachmentUrl,
+    Map<String, dynamic>? metadata,
   }) async {
     try {
-      final ticketRef = _firestore.collection('support_tickets').doc();
-
-      // Загружаем вложения
-      final attachmentUrls = <String>[];
-      if (attachments != null) {
-        for (final file in attachments) {
-          final url = await _uploadAttachment(file, ticketRef.id);
-          if (url != null) {
-            attachmentUrls.add(url);
-          }
-        }
-      }
-
-      // Получаем информацию об устройстве
-      final deviceInfo = await _getDeviceInfo();
-
-      final ticket = SupportTicket(
-        id: ticketRef.id,
+      final supportMessage = SupportMessage(
+        id: '', // Будет сгенерирован Firestore
         userId: userId,
-        userName: userName,
-        userEmail: userEmail,
-        subject: subject,
-        description: description,
-        category: category,
-        priority: priority,
-        status: SupportStatus.open,
-        attachments: attachmentUrls,
-        metadata: deviceInfo,
+        message: message,
+        type: type,
+        attachmentUrl: attachmentUrl,
+        metadata: metadata ?? {},
+        isFromUser: true,
+        isRead: false,
         createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
       );
 
-      await ticketRef.set(ticket.toMap());
+      final docRef = await _firestore
+          .collection('support_messages')
+          .add(supportMessage.toMap());
 
-      // Отправляем уведомление на email
-      await _sendTicketCreatedEmail(ticket);
+      // Если сообщение от пользователя, генерируем ответ бота
+      if (type == MessageType.text && isFromUser) {
+        await _generateBotResponse(userId, message, docRef.id);
+      }
 
-      return ticketRef.id;
+      return docRef.id;
     } catch (e) {
-      print('Ошибка создания тикета поддержки: $e');
-      return null;
+      print('Ошибка отправки сообщения в поддержку: $e');
+      rethrow;
     }
   }
 
-  /// Получить тикеты пользователя
-  Stream<List<SupportTicket>> getUserTickets(String userId) => _firestore
-      .collection('support_tickets')
-      .where('userId', isEqualTo: userId)
-      .orderBy('createdAt', descending: true)
-      .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map(SupportTicket.fromDocument).toList(),
-      );
-
-  /// Получить все тикеты (для админов)
-  Stream<List<SupportTicket>> getAllTickets() => _firestore
-      .collection('support_tickets')
-      .orderBy('createdAt', descending: true)
-      .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map(SupportTicket.fromDocument).toList(),
-      );
-
-  /// Получить тикет по ID
-  Future<SupportTicket?> getTicket(String ticketId) async {
-    try {
-      final doc =
-          await _firestore.collection('support_tickets').doc(ticketId).get();
-      if (doc.exists) {
-        return SupportTicket.fromDocument(doc);
-      }
-      return null;
-    } catch (e) {
-      print('Ошибка получения тикета: $e');
-      return null;
-    }
-  }
-
-  /// Обновить тикет
-  Future<bool> updateTicket(SupportTicket ticket) async {
-    try {
-      await _firestore
-          .collection('support_tickets')
-          .doc(ticket.id)
-          .update(ticket.toMap());
-      return true;
-    } catch (e) {
-      print('Ошибка обновления тикета: $e');
-      return false;
-    }
-  }
-
-  /// Добавить сообщение в тикет
-  Future<String?> addMessage({
-    required String ticketId,
-    required String authorId,
-    required String authorName,
-    required String authorEmail,
-    required String content,
-    required bool isFromSupport,
-    List<File>? attachments,
-  }) async {
-    try {
-      final messageRef = _firestore.collection('support_messages').doc();
-
-      // Загружаем вложения
-      final attachmentUrls = <String>[];
-      if (attachments != null) {
-        for (final file in attachments) {
-          final url = await _uploadAttachment(file, ticketId);
-          if (url != null) {
-            attachmentUrls.add(url);
-          }
-        }
-      }
-
-      final message = SupportMessage(
-        id: messageRef.id,
-        ticketId: ticketId,
-        authorId: authorId,
-        authorName: authorName,
-        authorEmail: authorEmail,
-        isFromSupport: isFromSupport,
-        content: content,
-        attachments: attachmentUrls,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
-
-      await messageRef.set(message.toMap());
-
-      // Обновляем тикет
-      final ticket = await getTicket(ticketId);
-      if (ticket != null) {
-        final updatedMessages = [...ticket.messages, message];
-        final updatedTicket = ticket.copyWith(
-          messages: updatedMessages,
-          updatedAt: DateTime.now(),
-        );
-        await updateTicket(updatedTicket);
-      }
-
-      // Отправляем уведомление на email
-      if (isFromSupport) {
-        await _sendMessageNotificationEmail(ticketId, message);
-      }
-
-      return messageRef.id;
-    } catch (e) {
-      print('Ошибка добавления сообщения: $e');
-      return null;
-    }
-  }
-
-  /// Получить сообщения тикета
-  Stream<List<SupportMessage>> getTicketMessages(String ticketId) => _firestore
+  /// Получить сообщения чата поддержки
+  Stream<List<SupportMessage>> getSupportMessages(String userId) => _firestore
       .collection('support_messages')
-      .where('ticketId', isEqualTo: ticketId)
-      .orderBy('createdAt', ascending: true)
+      .where('userId', isEqualTo: userId)
+      .orderBy('createdAt', descending: false)
       .snapshots()
       .map(
-        (snapshot) => snapshot.docs
-            .map((doc) => SupportMessage.fromMap(doc.data()))
-            .toList(),
+        (snapshot) => snapshot.docs.map(SupportMessage.fromDocument).toList(),
       );
-
-  /// Изменить статус тикета
-  Future<bool> updateTicketStatus(String ticketId, SupportStatus status) async {
-    try {
-      final ticket = await getTicket(ticketId);
-      if (ticket == null) return false;
-
-      final updatedTicket = ticket.copyWith(
-        status: status,
-        updatedAt: DateTime.now(),
-        resolvedAt: status == SupportStatus.resolved ? DateTime.now() : null,
-      );
-
-      return await updateTicket(updatedTicket);
-    } catch (e) {
-      print('Ошибка обновления статуса тикета: $e');
-      return false;
-    }
-  }
-
-  /// Назначить тикет агенту поддержки
-  Future<bool> assignTicket(
-    String ticketId,
-    String agentId,
-    String agentName,
-  ) async {
-    try {
-      final ticket = await getTicket(ticketId);
-      if (ticket == null) return false;
-
-      final updatedTicket = ticket.copyWith(
-        assignedTo: agentId,
-        assignedToName: agentName,
-        status: SupportStatus.inProgress,
-        updatedAt: DateTime.now(),
-      );
-
-      return await updateTicket(updatedTicket);
-    } catch (e) {
-      print('Ошибка назначения тикета: $e');
-      return false;
-    }
-  }
 
   /// Получить FAQ
-  Stream<List<FAQItem>> getFAQ({SupportCategory? category}) {
-    var query =
-        _firestore.collection('faq').where('isPublished', isEqualTo: true);
+  Future<List<FAQItem>> getFAQ() async {
+    try {
+      final snapshot =
+          await _firestore.collection('faq').orderBy('order').get();
 
-    if (category != null) {
-      query = query.where('category', isEqualTo: category.name);
+      return snapshot.docs.map(FAQItem.fromDocument).toList();
+    } catch (e) {
+      print('Ошибка получения FAQ: $e');
+      return [];
     }
-
-    return query
-        .orderBy('viewsCount', descending: true)
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map(FAQItem.fromDocument).toList());
   }
 
-  /// Увеличить счетчик просмотров FAQ
-  Future<void> incrementFAQViews(String faqId) async {
+  /// Поиск в FAQ
+  Future<List<FAQItem>> searchFAQ(String query) async {
     try {
-      await _firestore.collection('faq').doc(faqId).update({
-        'viewsCount': FieldValue.increment(1),
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
+      final snapshot = await _firestore.collection('faq').get();
+
+      final allFAQ = snapshot.docs.map(FAQItem.fromDocument).toList();
+
+      // Простой поиск по заголовку и содержанию
+      return allFAQ.where((item) {
+        final titleMatch =
+            item.title.toLowerCase().contains(query.toLowerCase());
+        final contentMatch =
+            item.content.toLowerCase().contains(query.toLowerCase());
+        return titleMatch || contentMatch;
+      }).toList();
+    } catch (e) {
+      print('Ошибка поиска в FAQ: $e');
+      return [];
+    }
+  }
+
+  /// Передать чат live-оператору
+  Future<void> transferToLiveOperator(String userId, String reason) async {
+    try {
+      await _firestore.collection('support_transfers').add({
+        'userId': userId,
+        'reason': reason,
+        'status': 'pending',
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+      // Отправляем уведомление операторам
+      await _firestore.collection('support_messages').add({
+        'userId': userId,
+        'message': 'Запрос на передачу чата live-оператору: $reason',
+        'type': 'system',
+        'isFromUser': false,
+        'isRead': false,
+        'createdAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      print('Ошибка увеличения счетчика просмотров FAQ: $e');
+      print('Ошибка передачи чата оператору: $e');
+      rethrow;
     }
   }
 
-  /// Создать FAQ
-  Future<String?> createFAQ({
-    required String question,
-    required String answer,
-    required SupportCategory category,
-    List<String>? tags,
-  }) async {
+  /// Получить статус передачи чата
+  Future<TransferStatus> getTransferStatus(String userId) async {
     try {
-      final faqRef = _firestore.collection('faq').doc();
+      final snapshot = await _firestore
+          .collection('support_transfers')
+          .where('userId', isEqualTo: userId)
+          .orderBy('createdAt', descending: true)
+          .limit(1)
+          .get();
 
-      final faq = FAQItem(
-        id: faqRef.id,
-        question: question,
-        answer: answer,
-        category: category,
-        tags: tags ?? [],
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
+      if (snapshot.docs.isEmpty) {
+        return TransferStatus.notRequested;
+      }
 
-      await faqRef.set(faq.toMap());
-      return faqRef.id;
+      final data = snapshot.docs.first.data();
+      final status = data['status'] as String?;
+
+      switch (status) {
+        case 'pending':
+          return TransferStatus.pending;
+        case 'accepted':
+          return TransferStatus.accepted;
+        case 'rejected':
+          return TransferStatus.rejected;
+        default:
+          return TransferStatus.notRequested;
+      }
     } catch (e) {
-      print('Ошибка создания FAQ: $e');
-      return null;
+      print('Ошибка получения статуса передачи: $e');
+      return TransferStatus.notRequested;
+    }
+  }
+
+  /// Отметить сообщение как прочитанное
+  Future<void> markMessageAsRead(String messageId) async {
+    try {
+      await _firestore.collection('support_messages').doc(messageId).update({
+        'isRead': true,
+        'readAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Ошибка отметки сообщения как прочитанного: $e');
     }
   }
 
   /// Получить статистику поддержки
-  Future<SupportStats> getSupportStats() async {
+  Future<SupportStats> getSupportStats(String userId) async {
     try {
-      final snapshot = await _firestore.collection('support_tickets').get();
-      final tickets = snapshot.docs.map(SupportTicket.fromDocument).toList();
+      final messagesSnapshot = await _firestore
+          .collection('support_messages')
+          .where('userId', isEqualTo: userId)
+          .get();
 
-      return _calculateSupportStats(tickets);
+      final messages =
+          messagesSnapshot.docs.map(SupportMessage.fromDocument).toList();
+
+      final totalMessages = messages.length;
+      final unreadMessages =
+          messages.where((m) => !m.isRead && !m.isFromUser).length;
+      final lastMessage = messages.isNotEmpty ? messages.last.createdAt : null;
+
+      return SupportStats(
+        userId: userId,
+        totalMessages: totalMessages,
+        unreadMessages: unreadMessages,
+        lastMessageAt: lastMessage,
+        lastUpdated: DateTime.now(),
+      );
     } catch (e) {
       print('Ошибка получения статистики поддержки: $e');
       return SupportStats.empty();
     }
   }
 
-  /// Загрузить вложение
-  Future<String?> _uploadAttachment(File file, String ticketId) async {
-    try {
-      final fileName =
-          'support_attachments/$ticketId/${_uuid.v4()}_${file.path.split('/').last}';
-      final uploadTask = _storage.ref().child(fileName).putFile(file);
-      final snapshot = await uploadTask;
-      return await snapshot.ref.getDownloadURL();
-    } catch (e) {
-      print('Ошибка загрузки вложения: $e');
-      return null;
-    }
-  }
+  // ========== ПРИВАТНЫЕ МЕТОДЫ ==========
 
-  /// Получить информацию об устройстве
-  Future<Map<String, dynamic>> _getDeviceInfo() async {
-    try {
-      final deviceInfo = <String, dynamic>{};
-
-      if (Platform.isAndroid) {
-        final androidInfo = await _deviceInfo.androidInfo;
-        deviceInfo['platform'] = 'Android';
-        deviceInfo['version'] = androidInfo.version.release;
-        deviceInfo['model'] = androidInfo.model;
-        deviceInfo['brand'] = androidInfo.brand;
-      } else if (Platform.isIOS) {
-        final iosInfo = await _deviceInfo.iosInfo;
-        deviceInfo['platform'] = 'iOS';
-        deviceInfo['version'] = iosInfo.systemVersion;
-        deviceInfo['model'] = iosInfo.model;
-        deviceInfo['name'] = iosInfo.name;
-      } else if (Platform.isWeb) {
-        final webInfo = await _deviceInfo.webBrowserInfo;
-        deviceInfo['platform'] = 'Web';
-        deviceInfo['browser'] = webInfo.browserName.name;
-        deviceInfo['version'] = webInfo.appVersion;
-      }
-
-      return deviceInfo;
-    } catch (e) {
-      print('Ошибка получения информации об устройстве: $e');
-      return {};
-    }
-  }
-
-  /// Отправить email о создании тикета
-  Future<void> _sendTicketCreatedEmail(SupportTicket ticket) async {
-    try {
-      // TODO: Настроить SMTP сервер
-      // final smtpServer = SmtpServer('smtp.gmail.com', username: 'support@example.com', password: 'password');
-
-      // final message = Message()
-      //   ..from = Address('support@example.com', 'Event Marketplace Support')
-      //   ..recipients.add(ticket.userEmail)
-      //   ..subject = 'Тикет поддержки создан: ${ticket.subject}'
-      //   ..html = _buildTicketCreatedEmailHtml(ticket);
-
-      // await send(message, smtpServer);
-    } catch (e) {
-      print('Ошибка отправки email: $e');
-    }
-  }
-
-  /// Отправить уведомление о новом сообщении
-  Future<void> _sendMessageNotificationEmail(
-    String ticketId,
-    SupportMessage message,
+  /// Генерировать ответ бота
+  Future<void> _generateBotResponse(
+    String userId,
+    String userMessage,
+    String messageId,
   ) async {
     try {
-      // TODO: Настроить SMTP сервер
-      // final smtpServer = SmtpServer('smtp.gmail.com', username: 'support@example.com', password: 'password');
+      // Простая логика ответов бота на основе ключевых слов
+      final response = _getBotResponse(userMessage);
 
-      // final message = Message()
-      //   ..from = Address('support@example.com', 'Event Marketplace Support')
-      //   ..recipients.add(message.authorEmail)
-      //   ..subject = 'Новый ответ в тикете поддержки'
-      //   ..html = _buildMessageNotificationEmailHtml(ticketId, message);
+      if (response != null) {
+        await Future.delayed(const Duration(seconds: 2)); // Имитация задержки
 
-      // await send(message, smtpServer);
+        final botMessage = SupportMessage(
+          id: '', // Будет сгенерирован Firestore
+          userId: userId,
+          message: response,
+          type: MessageType.text,
+          isFromUser: false,
+          isRead: false,
+          createdAt: DateTime.now(),
+        );
+
+        await _firestore.collection('support_messages').add(botMessage.toMap());
+      }
     } catch (e) {
-      print('Ошибка отправки уведомления: $e');
+      print('Ошибка генерации ответа бота: $e');
     }
   }
 
-  /// Подсчитать статистику поддержки
-  SupportStats _calculateSupportStats(List<SupportTicket> tickets) {
-    final totalTickets = tickets.length;
-    final openTickets =
-        tickets.where((t) => t.status == SupportStatus.open).length;
-    final inProgressTickets =
-        tickets.where((t) => t.status == SupportStatus.inProgress).length;
-    final resolvedTickets =
-        tickets.where((t) => t.status == SupportStatus.resolved).length;
-    final closedTickets =
-        tickets.where((t) => t.status == SupportStatus.closed).length;
+  /// Получить ответ бота на основе сообщения пользователя
+  String? _getBotResponse(String userMessage) {
+    final message = userMessage.toLowerCase();
 
-    // Среднее время решения
-    var averageResolutionTime = 0;
-    final resolvedTicketsWithTime =
-        tickets.where((t) => t.resolvedAt != null).toList();
-    if (resolvedTicketsWithTime.isNotEmpty) {
-      final totalResolutionTime = resolvedTicketsWithTime.fold<int>(
-        0,
-        (sum, ticket) =>
-            sum + ticket.resolvedAt!.difference(ticket.createdAt).inHours,
-      );
-      averageResolutionTime =
-          totalResolutionTime / resolvedTicketsWithTime.length;
+    // Простые правила для ответов бота
+    if (message.contains('привет') || message.contains('здравствуйте')) {
+      return 'Привет! Я бот поддержки Event Marketplace. Чем могу помочь?';
     }
 
-    // Статистика по категориям
-    final ticketsByCategory = <SupportCategory, int>{};
-    for (final ticket in tickets) {
-      ticketsByCategory[ticket.category] =
-          (ticketsByCategory[ticket.category] ?? 0) + 1;
+    if (message.contains('заказ') || message.contains('бронирование')) {
+      return 'Для вопросов по заказам и бронированию, пожалуйста, укажите номер заказа или опишите проблему подробнее.';
     }
 
-    // Статистика по приоритетам
-    final ticketsByPriority = <SupportPriority, int>{};
-    for (final ticket in tickets) {
-      ticketsByPriority[ticket.priority] =
-          (ticketsByPriority[ticket.priority] ?? 0) + 1;
+    if (message.contains('оплата') || message.contains('деньги')) {
+      return 'Вопросы по оплате решаются в разделе "Мои заказы". Если проблема не решается, передам вас live-оператору.';
     }
 
-    // Топ проблемы
-    final issueCounts = <String, int>{};
-    for (final ticket in tickets) {
-      issueCounts[ticket.subject] = (issueCounts[ticket.subject] ?? 0) + 1;
+    if (message.contains('отмена') || message.contains('возврат')) {
+      return 'Для отмены заказа или возврата средств обратитесь к live-оператору. Нажмите кнопку "Передать оператору".';
     }
-    final sortedIssues = issueCounts.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
-    final topIssues = sortedIssues.take(10).map((e) => e.key).toList();
 
-    return SupportStats(
-      totalTickets: totalTickets,
-      openTickets: openTickets,
-      inProgressTickets: inProgressTickets,
-      resolvedTickets: resolvedTickets,
-      closedTickets: closedTickets,
-      averageResolutionTime: averageResolutionTime,
-      ticketsByCategory: ticketsByCategory,
-      ticketsByPriority: ticketsByPriority,
-      topIssues: topIssues,
+    if (message.contains('техническая') ||
+        message.contains('ошибка') ||
+        message.contains('не работает')) {
+      return 'Технические проблемы передам разработчикам. Опишите проблему подробнее или передайте чат live-оператору.';
+    }
+
+    if (message.contains('спасибо') || message.contains('благодарю')) {
+      return 'Пожалуйста! Рад был помочь. Если возникнут еще вопросы, обращайтесь!';
+    }
+
+    // Если не найдено подходящего ответа, предлагаем передать оператору
+    return 'Я не совсем понял ваш вопрос. Могу передать вас live-оператору для более детальной помощи.';
+  }
+}
+
+/// Тип сообщения
+enum MessageType {
+  text,
+  image,
+  file,
+  system,
+}
+
+/// Статус передачи чата
+enum TransferStatus {
+  notRequested,
+  pending,
+  accepted,
+  rejected,
+}
+
+/// Модель сообщения поддержки
+class SupportMessage {
+  const SupportMessage({
+    required this.id,
+    required this.userId,
+    required this.message,
+    required this.type,
+    this.attachmentUrl,
+    this.metadata = const {},
+    required this.isFromUser,
+    required this.isRead,
+    required this.createdAt,
+    this.readAt,
+  });
+
+  factory SupportMessage.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data()! as Map<String, dynamic>;
+    return SupportMessage(
+      id: doc.id,
+      userId: data['userId'] as String? ?? '',
+      message: data['message'] as String? ?? '',
+      type: MessageType.values.firstWhere(
+        (e) => e.name == data['type'],
+        orElse: () => MessageType.text,
+      ),
+      attachmentUrl: data['attachmentUrl'] as String?,
+      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      isFromUser: data['isFromUser'] as bool? ?? true,
+      isRead: data['isRead'] as bool? ?? false,
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
+      readAt: data['readAt'] != null
+          ? (data['readAt'] as Timestamp).toDate()
+          : null,
     );
   }
 
-  /// HTML для email о создании тикета
-  String _buildTicketCreatedEmailHtml(SupportTicket ticket) => '''
-    <html>
-      <body>
-        <h2>Тикет поддержки создан</h2>
-        <p>Здравствуйте, ${ticket.userName}!</p>
-        <p>Ваш тикет поддержки был успешно создан:</p>
-        <ul>
-          <li><strong>Номер тикета:</strong> ${ticket.id}</li>
-          <li><strong>Тема:</strong> ${ticket.subject}</li>
-          <li><strong>Категория:</strong> ${ticket.categoryText}</li>
-          <li><strong>Приоритет:</strong> ${ticket.priorityText}</li>
-          <li><strong>Статус:</strong> ${ticket.statusText}</li>
-        </ul>
-        <p>Мы свяжемся с вами в ближайшее время.</p>
-        <p>С уважением,<br>Команда поддержки Event Marketplace</p>
-      </body>
-    </html>
-    ''';
+  final String id;
+  final String userId;
+  final String message;
+  final MessageType type;
+  final String? attachmentUrl;
+  final Map<String, dynamic> metadata;
+  final bool isFromUser;
+  final bool isRead;
+  final DateTime createdAt;
+  final DateTime? readAt;
 
-  /// HTML для уведомления о новом сообщении
-  String _buildMessageNotificationEmailHtml(
-    String ticketId,
-    SupportMessage message,
-  ) =>
-      '''
-    <html>
-      <body>
-        <h2>Новый ответ в тикете поддержки</h2>
-        <p>Здравствуйте!</p>
-        <p>В вашем тикете поддержки появился новый ответ:</p>
-        <div style="background-color: #f5f5f5; padding: 15px; margin: 15px 0;">
-          ${message.content}
-        </div>
-        <p>Номер тикета: $ticketId</p>
-        <p>С уважением,<br>Команда поддержки Event Marketplace</p>
-      </body>
-    </html>
-    ''';
+  Map<String, dynamic> toMap() => {
+        'userId': userId,
+        'message': message,
+        'type': type.name,
+        'attachmentUrl': attachmentUrl,
+        'metadata': metadata,
+        'isFromUser': isFromUser,
+        'isRead': isRead,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
+      };
+}
+
+/// Модель FAQ
+class FAQItem {
+  const FAQItem({
+    required this.id,
+    required this.title,
+    required this.content,
+    required this.category,
+    required this.order,
+    this.tags = const [],
+  });
+
+  factory FAQItem.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data()! as Map<String, dynamic>;
+    return FAQItem(
+      id: doc.id,
+      title: data['title'] as String? ?? '',
+      content: data['content'] as String? ?? '',
+      category: data['category'] as String? ?? '',
+      order: data['order'] as int? ?? 0,
+      tags: List<String>.from(data['tags'] ?? []),
+    );
+  }
+
+  final String id;
+  final String title;
+  final String content;
+  final String category;
+  final int order;
+  final List<String> tags;
+}
+
+/// Статистика поддержки
+class SupportStats {
+  const SupportStats({
+    required this.userId,
+    required this.totalMessages,
+    required this.unreadMessages,
+    this.lastMessageAt,
+    required this.lastUpdated,
+  });
+
+  factory SupportStats.empty() => SupportStats(
+        userId: '',
+        totalMessages: 0,
+        unreadMessages: 0,
+        lastUpdated: DateTime.now(),
+      );
+
+  final String userId;
+  final int totalMessages;
+  final int unreadMessages;
+  final DateTime? lastMessageAt;
+  final DateTime lastUpdated;
 }

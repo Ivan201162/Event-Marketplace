@@ -1,610 +1,492 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/user.dart';
+import '../core/constants/app_routes.dart';
 import '../providers/auth_providers.dart';
-import 'reset_password_screen.dart';
+import '../widgets/custom_button.dart';
+import '../widgets/custom_text_field.dart';
 
-class AuthScreen extends ConsumerWidget {
+enum AuthFormType { login, phoneInput, phoneVerify }
+
+class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final formState = ref.watch(loginFormProvider);
-    final isLoading = ref.watch(isLoadingAuthProvider);
+  ConsumerState<AuthScreen> createState() => _AuthScreenState();
+}
 
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 60),
+class _AuthScreenState extends ConsumerState<AuthScreen> {
+  AuthFormType _currentForm = AuthFormType.login;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _smsCodeController = TextEditingController();
+  final TextEditingController _displayNameController = TextEditingController();
+  String? _errorMessage;
+  bool _isLoading = false;
 
-              // Логотип и заголовок
-              _buildHeader(context),
+  @override
+  void initState() {
+    super.initState();
+  }
 
-              const SizedBox(height: 48),
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _phoneController.dispose();
+    _smsCodeController.dispose();
+    _displayNameController.dispose();
+    super.dispose();
+  }
 
-              // Форма входа/регистрации
-              _buildAuthForm(context, ref, formState),
-
-              const SizedBox(height: 24),
-
-              // Кнопка входа через Google
-              _buildGoogleSignInButton(context, ref),
-              const SizedBox(height: 16),
-
-              // Кнопка входа как гость
-              if (!formState.isSignUpMode) ...[
-                _buildGuestButton(context, ref),
-                const SizedBox(height: 16),
-              ],
-
-              // Дополнительные действия
-              _buildAdditionalActions(context, ref, formState),
-            ],
-          ),
-        ),
-      ),
+  void _showError(String message) {
+    setState(() {
+      _errorMessage = message;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
     );
   }
 
-  /// Построение заголовка
-  Widget _buildHeader(BuildContext context) => Column(
-        children: [
-          Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Icon(
-              Icons.event,
-              size: 40,
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            'Event Marketplace',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Найдите идеального специалиста для вашего мероприятия',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      );
-
-  /// Построение формы аутентификации
-  Widget _buildAuthForm(
-    BuildContext context,
-    WidgetRef ref,
-    LoginFormState formState,
-  ) =>
-      Card(
-        elevation: 4,
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Заголовок формы
-              Text(
-                formState.isSignUpMode ? 'Регистрация' : 'Вход',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                textAlign: TextAlign.center,
-              ),
-
-              const SizedBox(height: 24),
-
-              // Поля формы
-              if (formState.isSignUpMode) ...[
-                _buildDisplayNameField(context, ref),
-                const SizedBox(height: 16),
-                _buildRoleSelector(context, ref),
-                const SizedBox(height: 16),
-              ],
-
-              _buildEmailField(context, ref, formState),
-              const SizedBox(height: 16),
-              _buildPasswordField(context, ref, formState),
-
-              const SizedBox(height: 24),
-
-              // Кнопка отправки
-              _buildSubmitButton(context, ref, formState),
-
-              // Ошибка
-              if (formState.errorMessage != null) ...[
-                const SizedBox(height: 16),
-                _buildErrorMessage(context, formState.errorMessage!),
-              ],
-
-              // Разделитель
-              const SizedBox(height: 24),
-              _buildDivider(context),
-              const SizedBox(height: 24),
-
-              // Кнопки социальных сетей
-              _buildSocialButtons(context, ref, formState),
-            ],
-          ),
-        ),
-      );
-
-  /// Поле для имени пользователя
-  Widget _buildDisplayNameField(BuildContext context, WidgetRef ref) =>
-      TextFormField(
-        decoration: const InputDecoration(
-          labelText: 'Имя',
-          hintText: 'Введите ваше имя',
-          prefixIcon: Icon(Icons.person),
-          border: OutlineInputBorder(),
-        ),
-        onChanged: (value) {
-          // Сохраняем имя в локальном состоянии
-          ref.read(loginFormProvider.notifier).updateDisplayName(value);
-        },
-      );
-
-  /// Селектор роли
-  Widget _buildRoleSelector(BuildContext context, WidgetRef ref) => Consumer(
-        builder: (context, ref, child) {
-          final selectedRole = ref.watch(selectedRoleProvider);
-
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Роль',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: RadioListTile<UserRole>(
-                      title: const Text('Заказчик'),
-                      subtitle: const Text('Ищу специалистов'),
-                      value: UserRole.customer,
-                      groupValue: selectedRole,
-                      onChanged: (value) {
-                        if (value != null) {
-                          ref.read(selectedRoleProvider.notifier).state = value;
-                        }
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: RadioListTile<UserRole>(
-                      title: const Text('Специалист'),
-                      subtitle: const Text('Предоставляю услуги'),
-                      value: UserRole.specialist,
-                      groupValue: selectedRole,
-                      onChanged: (value) {
-                        if (value != null) {
-                          ref.read(selectedRoleProvider.notifier).state = value;
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          );
-        },
-      );
-
-  /// Поле для email
-  Widget _buildEmailField(
-    BuildContext context,
-    WidgetRef ref,
-    LoginFormState formState,
-  ) =>
-      TextFormField(
-        keyboardType: TextInputType.emailAddress,
-        decoration: const InputDecoration(
-          labelText: 'Email',
-          hintText: 'Введите ваш email',
-          prefixIcon: Icon(Icons.email),
-          border: OutlineInputBorder(),
-        ),
-        onChanged: (value) =>
-            ref.read(loginFormProvider.notifier).updateEmail(value),
-      );
-
-  /// Поле для пароля
-  Widget _buildPasswordField(
-    BuildContext context,
-    WidgetRef ref,
-    LoginFormState formState,
-  ) =>
-      TextFormField(
-        obscureText: true,
-        decoration: const InputDecoration(
-          labelText: 'Пароль',
-          hintText: 'Введите пароль',
-          prefixIcon: Icon(Icons.lock),
-          border: OutlineInputBorder(),
-        ),
-        onChanged: (value) =>
-            ref.read(loginFormProvider.notifier).updatePassword(value),
-      );
-
-  /// Кнопка отправки
-  Widget _buildSubmitButton(
-    BuildContext context,
-    WidgetRef ref,
-    LoginFormState formState,
-  ) =>
-      ElevatedButton(
-        onPressed: formState.isLoading
-            ? null
-            : () {
-                if (formState.isSignUpMode) {
-                  _handleSignUp(context, ref);
-                } else {
-                  ref.read(loginFormProvider.notifier).signIn();
-                }
-              },
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-        child: formState.isLoading
-            ? const SizedBox(
-                height: 20,
-                width: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
-            : Text(
-                formState.isSignUpMode ? 'Зарегистрироваться' : 'Войти',
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-      );
-
-  /// Кнопка входа как гость
-  Widget _buildGuestButton(BuildContext context, WidgetRef ref) =>
-      OutlinedButton.icon(
-        onPressed: () => ref.read(loginFormProvider.notifier).signInAsGuest(),
-        icon: const Icon(Icons.person_outline),
-        label: const Text('Войти как гость'),
-        style: OutlinedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-      );
-
-  /// Дополнительные действия
-  Widget _buildAdditionalActions(
-    BuildContext context,
-    WidgetRef ref,
-    LoginFormState formState,
-  ) =>
-      Column(
-        children: [
-          // Переключение режима
-          TextButton(
-            onPressed: () {
-              if (formState.isSignUpMode) {
-                ref.read(loginFormProvider.notifier).toggleSignUpMode();
-              } else {
-                context.go('/register');
-              }
-            },
-            child: Text(
-              formState.isSignUpMode
-                  ? 'Уже есть аккаунт? Войти'
-                  : 'Нет аккаунта? Зарегистрироваться',
-            ),
-          ),
-
-          // Сброс пароля
-          if (!formState.isSignUpMode) ...[
-            TextButton(
-              onPressed: () => _showResetPasswordDialog(context, ref),
-              child: const Text('Забыли пароль?'),
-            ),
-          ],
-        ],
-      );
-
-  /// Сообщение об ошибке
-  Widget _buildErrorMessage(BuildContext context, String message) {
-    final isSuccess = message.contains('отправлено');
-
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: isSuccess
-            ? Colors.green.withOpacity(0.1)
-            : Colors.red.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: isSuccess ? Colors.green : Colors.red,
-        ),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            isSuccess ? Icons.check_circle : Icons.error,
-            color: isSuccess ? Colors.green : Colors.red,
-            size: 20,
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              message,
-              style: TextStyle(
-                color: isSuccess ? Colors.green : Colors.red,
-                fontSize: 14,
-              ),
-            ),
-          ),
-        ],
-      ),
+  void _showSuccess(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.green),
     );
   }
 
-  /// Обработка регистрации
-  void _handleSignUp(BuildContext context, WidgetRef ref) {
-    final displayName = ref.read(loginFormProvider.notifier).displayName;
-    final role = ref.read(selectedRoleProvider);
-
-    if (displayName.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Введите имя')),
-      );
+  Future<void> _handleEmailLogin() async {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      _showError('Заполните все поля');
       return;
     }
 
-    ref.read(loginFormProvider.notifier).signUp(
-          displayName: displayName,
-          role: role,
-        );
-  }
+    setState(() {
+      _errorMessage = null;
+      _isLoading = true;
+    });
 
-  /// Показать диалог сброса пароля
-  void _showResetPasswordDialog(BuildContext context, WidgetRef ref) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const ResetPasswordScreen(),
-      ),
-    );
-  }
-
-  /// Разделитель
-  Widget _buildDivider(BuildContext context) => Row(
-        children: [
-          Expanded(
-            child: Divider(color: Theme.of(context).colorScheme.outline),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              'или',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Divider(color: Theme.of(context).colorScheme.outline),
-          ),
-        ],
-      );
-
-  /// Кнопки социальных сетей
-  Widget _buildSocialButtons(
-    BuildContext context,
-    WidgetRef ref,
-    LoginFormState formState,
-  ) =>
-      Column(
-        children: [
-          // Кнопка Google
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton.icon(
-              onPressed: formState.isLoading
-                  ? null
-                  : () => _handleGoogleSignIn(context, ref),
-              icon: Container(
-                width: 20,
-                height: 20,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(4),
-                  border: Border.all(color: Colors.grey[300]!),
-                ),
-                child: const Center(
-                  child: Text(
-                    'G',
-                    style: TextStyle(
-                      color: Color(0xFF4285F4),
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              label: const Text('Войти через Google'),
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 12),
-
-          // Кнопка ВКонтакте
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton.icon(
-              onPressed: formState.isLoading
-                  ? null
-                  : () => _handleVKSignIn(context, ref),
-              icon: Container(
-                width: 20,
-                height: 20,
-                decoration: const BoxDecoration(
-                  color: Color(0xFF0077FF),
-                  shape: BoxShape.circle,
-                ),
-                child: const Center(
-                  child: Text(
-                    'VK',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              label: const Text('Войти через ВКонтакте'),
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
-          ),
-        ],
-      );
-
-  /// Обработка входа через Google
-  Future<void> _handleGoogleSignIn(BuildContext context, WidgetRef ref) async {
     try {
-      final role = ref.read(selectedRoleProvider);
-      final authService = ref.read(authServiceProvider);
+      await ref.read(loginFormNotifierProvider.notifier).signInWithEmail(
+            _emailController.text,
+            _passwordController.text,
+          );
 
-      final user = await authService.signInWithGoogle();
-      if (user != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Добро пожаловать, ${user.displayNameOrEmail}!'),
-            backgroundColor: Colors.green,
-          ),
-        );
+      _showSuccess('Успешный вход!');
+
+      // Переходим на главный экран
+      if (mounted) {
+        context.go(AppRoutes.home);
       }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка входа через Google: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+    } on Exception catch (e) {
+      _showError(e.toString());
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
-  /// Кнопка входа через Google (удален дублирующий метод)
+  Future<void> _handleEmailRegister() async {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      _showError('Заполните все поля');
+      return;
+    }
 
-  /// Обработка входа через ВКонтакте
-  Future<void> _handleVKSignIn(BuildContext context, WidgetRef ref) async {
+    setState(() {
+      _errorMessage = null;
+      _isLoading = true;
+    });
+
     try {
-      final role = ref.read(selectedRoleProvider);
-      final authService = ref.read(authServiceProvider);
+      await ref.read(loginFormNotifierProvider.notifier).signUpWithEmail(
+            _emailController.text,
+            _passwordController.text,
+            displayName: _displayNameController.text.isNotEmpty
+                ? _displayNameController.text
+                : null,
+          );
 
-      final user = await authService.signInWithVK(role: role);
-      if (user != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Добро пожаловать, ${user.displayNameOrEmail}!'),
-            backgroundColor: Colors.green,
-          ),
-        );
+      _showSuccess('Успешная регистрация!');
+
+      // Переходим на главный экран
+      if (mounted) {
+        context.go(AppRoutes.home);
       }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка входа через ВКонтакте: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+    } on Exception catch (e) {
+      _showError(e.toString());
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
-}
 
-/// Провайдеры для локального состояния формы
-final displayNameProvider =
-    NotifierProvider<DisplayNameNotifier, String>(DisplayNameNotifier.new);
+  Future<void> _handlePhoneSendCode() async {
+    if (_phoneController.text.isEmpty) {
+      _showError('Введите номер телефона');
+      return;
+    }
 
-final selectedRoleProvider =
-    NotifierProvider<SelectedRoleNotifier, UserRole>(SelectedRoleNotifier.new);
+    setState(() {
+      _errorMessage = null;
+      _isLoading = true;
+    });
 
-class DisplayNameNotifier extends Notifier<String> {
-  @override
-  String build() => '';
+    try {
+      await ref.read(loginFormNotifierProvider.notifier).sendPhoneCode(
+            _phoneController.text,
+          );
 
-  void setDisplayName(String name) {
-    state = name;
+      if (mounted) {
+        setState(() {
+          _currentForm = AuthFormType.phoneVerify;
+        });
+        _showSuccess('Код отправлен на ваш номер');
+      }
+    } on Exception catch (e) {
+      _showError(e.toString());
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
-}
 
-class SelectedRoleNotifier extends Notifier<UserRole> {
-  @override
-  UserRole build() => UserRole.customer;
+  Future<void> _handlePhoneVerifyCode() async {
+    if (_smsCodeController.text.isEmpty) {
+      _showError('Введите код из SMS');
+      return;
+    }
 
-  void setRole(UserRole role) {
-    state = role;
+    setState(() {
+      _errorMessage = null;
+      _isLoading = true;
+    });
+
+    try {
+      await ref.read(loginFormNotifierProvider.notifier).confirmPhoneCode(
+            _smsCodeController.text,
+          );
+
+      _showSuccess('Успешный вход по телефону!');
+
+      // Переходим на главный экран
+      if (mounted) {
+        context.go(AppRoutes.home);
+      }
+    } on Exception catch (e) {
+      _showError(e.toString());
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
-}
 
-/// Кнопка входа через Google
-Widget _buildGoogleSignInButton(BuildContext context, WidgetRef ref) {
-  return SizedBox(
-    width: double.infinity,
-    child: ElevatedButton.icon(
-      onPressed: () async {
-        try {
-          await ref.read(authServiceProvider).signInWithGoogle();
-        } catch (e) {
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Ошибка входа через Google: $e')),
-            );
-          }
-        }
-      },
-      icon: const Icon(Icons.login),
-      label: const Text('Войти через Google'),
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-      ),
-    ),
-  );
-}
+  Future<void> _handleGuestSignIn() async {
+    setState(() {
+      _errorMessage = null;
+      _isLoading = true;
+    });
 
-/// Расширение для LoginFormNotifier
-extension LoginFormNotifierExtension on LoginFormNotifier {
-  String get displayName => '';
+    try {
+      await ref.read(loginFormNotifierProvider.notifier).signInAsGuest();
 
-  void updateDisplayName(String displayName) {
-    // Сохраняем имя в локальном состоянии для использования в _handleSignUp
+      _showSuccess('Успешный вход как гость!');
+
+      // Переходим на главный экран
+      if (mounted) {
+        context.go(AppRoutes.home);
+      }
+    } on Exception catch (e) {
+      _showError(e.toString());
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  Future<void> _handleTestEmailLogin() async {
+    setState(() {
+      _errorMessage = null;
+      _isLoading = true;
+    });
+
+    try {
+      await ref.read(loginFormNotifierProvider.notifier).signInWithTestEmail();
+
+      _showSuccess('Успешный вход с тестовым email!');
+
+      // Переходим на главный экран
+      if (mounted) {
+        context.go(AppRoutes.home);
+      }
+    } on Exception catch (e) {
+      _showError(e.toString());
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  Future<void> _handleTestPhoneLogin() async {
+    setState(() {
+      _errorMessage = null;
+      _isLoading = true;
+    });
+
+    try {
+      await ref.read(loginFormNotifierProvider.notifier).signInWithTestPhone();
+
+      _showSuccess('Успешный вход с тестовым телефоном!');
+
+      // Переходим на главный экран
+      if (mounted) {
+        context.go(AppRoutes.home);
+      }
+    } on Exception catch (e) {
+      _showError(e.toString());
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Авторизация'),
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          centerTitle: true,
+          automaticallyImplyLeading:
+              false, // Убираем кнопку назад на экране авторизации
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 20),
+
+              // Логотип или заголовок
+              const Icon(
+                Icons.event,
+                size: 80,
+                color: Colors.blue,
+              ),
+              const SizedBox(height: 20),
+
+              const Text(
+                'Event Marketplace',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+
+              const Text(
+                'Найдите идеального специалиста для вашего мероприятия',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 40),
+
+              // Отображение ошибки
+              if (_errorMessage != null)
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade50,
+                    border: Border.all(color: Colors.red.shade200),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    _errorMessage!,
+                    style: TextStyle(color: Colors.red.shade700),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+
+              _buildAuthForm(),
+              const SizedBox(height: 20),
+
+              if (_currentForm != AuthFormType.phoneVerify) ...[
+                // Тестовые кнопки для быстрого входа
+                const Text(
+                  'Тестовые аккаунты:',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+
+                CustomButton(
+                  text: 'Войти тестовым email (test@example.com)',
+                  onPressed: _isLoading ? null : _handleTestEmailLogin,
+                  isLoading: _isLoading,
+                ),
+                const SizedBox(height: 10),
+
+                CustomButton(
+                  text: 'Войти тестовым телефоном (+79998887766)',
+                  onPressed: _isLoading ? null : _handleTestPhoneLogin,
+                  isLoading: _isLoading,
+                ),
+                const SizedBox(height: 10),
+
+                CustomButton(
+                  text: 'Войти как гость',
+                  onPressed: _isLoading ? null : _handleGuestSignIn,
+                  isPrimary: false,
+                  isLoading: _isLoading,
+                ),
+                const SizedBox(height: 20),
+
+                // Разделитель
+                const Row(
+                  children: [
+                    Expanded(child: Divider()),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text('или'),
+                    ),
+                    Expanded(child: Divider()),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                // Обычные кнопки
+                CustomButton(
+                  text: 'Войти по Email',
+                  onPressed: _isLoading
+                      ? null
+                      : () {
+                          setState(() {
+                            _currentForm = AuthFormType.login;
+                            _errorMessage = null;
+                          });
+                        },
+                  isPrimary: _currentForm == AuthFormType.login,
+                  isLoading: _isLoading && _currentForm == AuthFormType.login,
+                ),
+                const SizedBox(height: 10),
+                CustomButton(
+                  text: 'Войти по телефону',
+                  onPressed: _isLoading
+                      ? null
+                      : () {
+                          setState(() {
+                            _currentForm = AuthFormType.phoneInput;
+                            _errorMessage = null;
+                          });
+                        },
+                  isPrimary: _currentForm == AuthFormType.phoneInput,
+                  isLoading:
+                      _isLoading && _currentForm == AuthFormType.phoneInput,
+                ),
+              ],
+            ],
+          ),
+        ),
+      );
+
+  Widget _buildAuthForm() {
+    switch (_currentForm) {
+      case AuthFormType.login:
+        return Column(
+          children: [
+            CustomTextField(
+              controller: _emailController,
+              labelText: 'Email',
+              keyboardType: TextInputType.emailAddress,
+            ),
+            const SizedBox(height: 10),
+            CustomTextField(
+              controller: _passwordController,
+              labelText: 'Пароль',
+              obscureText: true,
+            ),
+            const SizedBox(height: 10),
+            CustomTextField(
+              controller: _displayNameController,
+              labelText: 'Имя (необязательно)',
+            ),
+            const SizedBox(height: 20),
+            CustomButton(
+              text: 'Войти',
+              onPressed: _isLoading ? null : _handleEmailLogin,
+              isLoading: _isLoading,
+            ),
+            const SizedBox(height: 10),
+            CustomButton(
+              text: 'Зарегистрироваться',
+              onPressed: _isLoading ? null : _handleEmailRegister,
+              isPrimary: false,
+              isLoading: _isLoading,
+            ),
+          ],
+        );
+      case AuthFormType.phoneInput:
+        return Column(
+          children: [
+            CustomTextField(
+              controller: _phoneController,
+              labelText: 'Номер телефона (+7XXXXXXXXXX)',
+              keyboardType: TextInputType.phone,
+            ),
+            const SizedBox(height: 10),
+            CustomButton(
+              text: 'Получить код',
+              onPressed: _isLoading ? null : _handlePhoneSendCode,
+              isLoading: _isLoading,
+            ),
+          ],
+        );
+      case AuthFormType.phoneVerify:
+        return Column(
+          children: [
+            CustomTextField(
+              controller: _smsCodeController,
+              labelText: 'Код из SMS',
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 10),
+            CustomButton(
+              text: 'Подтвердить код',
+              onPressed: _isLoading ? null : _handlePhoneVerifyCode,
+              isLoading: _isLoading,
+            ),
+            const SizedBox(height: 10),
+            CustomButton(
+              text: 'Отменить',
+              onPressed: _isLoading
+                  ? null
+                  : () {
+                      setState(() {
+                        _currentForm = AuthFormType.phoneInput;
+                        _smsCodeController.clear();
+                        _errorMessage = null;
+                      });
+                    },
+              isPrimary: false,
+            ),
+          ],
+        );
+    }
   }
 }

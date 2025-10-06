@@ -20,13 +20,6 @@ class RecommendationInteraction {
     required this.timestamp,
   });
 
-  final String id;
-  final String userId;
-  final String recommendationId;
-  final String specialistId;
-  final RecommendationInteractionType type;
-  final DateTime timestamp;
-
   factory RecommendationInteraction.fromMap(Map<String, dynamic> map) =>
       RecommendationInteraction(
         id: map['id'] as String,
@@ -39,6 +32,13 @@ class RecommendationInteraction {
         ),
         timestamp: DateTime.parse(map['timestamp'] as String),
       );
+
+  final String id;
+  final String userId;
+  final String recommendationId;
+  final String specialistId;
+  final RecommendationInteractionType type;
+  final DateTime timestamp;
 
   Map<String, dynamic> toMap() => {
         'id': id,

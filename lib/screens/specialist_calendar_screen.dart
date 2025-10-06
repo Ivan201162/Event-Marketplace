@@ -200,7 +200,7 @@ class _SpecialistCalendarScreenState
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Text(
@@ -217,7 +217,10 @@ class _SpecialistCalendarScreenState
             label,
             style: TextStyle(
               fontSize: 12,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.7),
             ),
             textAlign: TextAlign.center,
           ),
@@ -285,7 +288,7 @@ class _SpecialistCalendarScreenState
 
   /// Показать диалог добавления события
   void _showAddEventDialog(BuildContext context) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Добавить событие'),
@@ -298,7 +301,7 @@ class _SpecialistCalendarScreenState
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
-              // TODO: Показать форму добавления события
+              // TODO(developer): Показать форму добавления события
             },
             child: const Text('Добавить'),
           ),
@@ -314,7 +317,7 @@ class _SpecialistCalendarScreenState
     DateTime? startDate;
     DateTime? endDate;
 
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
@@ -439,7 +442,7 @@ class _SpecialistCalendarScreenState
     DateTime? startDate;
     DateTime? endDate;
 
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
@@ -557,7 +560,7 @@ class _SpecialistCalendarScreenState
 
   /// Показать диалог тестовых данных
   void _showTestDataDialog(BuildContext context) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Тестовые данные'),
@@ -571,7 +574,9 @@ class _SpecialistCalendarScreenState
           ElevatedButton(
             onPressed: () async {
               try {
-                await ref.read(calendarServiceProvider).addTestData();
+                await ref
+                    .read(calendarServiceProvider)
+                    .addTestData('current_specialist');
                 if (context.mounted) {
                   Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -598,12 +603,13 @@ class _SpecialistCalendarScreenState
 
   /// Показать диалог аналитики
   void _showAnalyticsDialog(BuildContext context) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Аналитика календаря'),
         content: const Text(
-            'Здесь будет отображаться аналитика календаря специалиста'),
+          'Здесь будет отображаться аналитика календаря специалиста',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

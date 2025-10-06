@@ -626,7 +626,7 @@ class _AvailabilityFilterScreenState
   }
 
   void _showSpecialistDetails(SpecialistAvailability specialist) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (context) => DraggableScrollableSheet(
@@ -668,7 +668,7 @@ class _AvailabilityFilterScreenState
   }
 
   void _bookSpecialist(SpecialistAvailability specialist) {
-    // TODO: Реализовать бронирование специалиста
+    // TODO(developer): Реализовать бронирование специалиста
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Функция бронирования будет добавлена'),

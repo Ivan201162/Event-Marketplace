@@ -32,31 +32,42 @@ class EnvironmentConfig {
         type:
             EnvironmentType.fromString(map['type'] as String? ?? 'development'),
         config: Map<String, dynamic>.from(
-            map['config'] as Map<dynamic, dynamic>? ?? {}),
+          map['config'] as Map<dynamic, dynamic>? ?? {},
+        ),
         secrets: Map<String, dynamic>.from(
-            map['secrets'] as Map<dynamic, dynamic>? ?? {}),
+          map['secrets'] as Map<dynamic, dynamic>? ?? {},
+        ),
         featureFlags: Map<String, dynamic>.from(
-            map['featureFlags'] as Map<dynamic, dynamic>? ?? {}),
+          map['featureFlags'] as Map<dynamic, dynamic>? ?? {},
+        ),
         apiEndpoints: Map<String, dynamic>.from(
-            map['apiEndpoints'] as Map<dynamic, dynamic>? ?? {}),
+          map['apiEndpoints'] as Map<dynamic, dynamic>? ?? {},
+        ),
         databaseConfig: Map<String, dynamic>.from(
-            map['databaseConfig'] as Map<dynamic, dynamic>? ?? {}),
+          map['databaseConfig'] as Map<dynamic, dynamic>? ?? {},
+        ),
         cacheConfig: Map<String, dynamic>.from(
-            map['cacheConfig'] as Map<dynamic, dynamic>? ?? {}),
+          map['cacheConfig'] as Map<dynamic, dynamic>? ?? {},
+        ),
         loggingConfig: Map<String, dynamic>.from(
-            map['loggingConfig'] as Map<dynamic, dynamic>? ?? {}),
+          map['loggingConfig'] as Map<dynamic, dynamic>? ?? {},
+        ),
         monitoringConfig: Map<String, dynamic>.from(
-            map['monitoringConfig'] as Map<dynamic, dynamic>? ?? {}),
+          map['monitoringConfig'] as Map<dynamic, dynamic>? ?? {},
+        ),
         securityConfig: Map<String, dynamic>.from(
-            map['securityConfig'] as Map<dynamic, dynamic>? ?? {}),
+          map['securityConfig'] as Map<dynamic, dynamic>? ?? {},
+        ),
         isActive: map['isActive'] as bool? ?? false,
         description: map['description'] as String?,
-        tags: List<String>.from(map['tags'] ?? []),
-        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+        tags: List<String>.from((map['tags'] as List<dynamic>?) ?? []),
+        metadata: Map<String, dynamic>.from(
+          (map['metadata'] as Map<dynamic, dynamic>?) ?? {},
+        ),
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-        createdBy: map['createdBy'] ?? '',
-        updatedBy: map['updatedBy'] ?? '',
+        createdBy: map['createdBy'] as String? ?? '',
+        updatedBy: map['updatedBy'] as String? ?? '',
       );
   final String id;
   final String name;
@@ -233,21 +244,26 @@ class EnvironmentVariable {
 
   factory EnvironmentVariable.fromMap(Map<String, dynamic> map) =>
       EnvironmentVariable(
-        id: map['id'] ?? '',
-        key: map['key'] ?? '',
-        value: map['value'] ?? '',
-        type: EnvironmentVariableType.fromString(map['type'] ?? 'string'),
-        isSecret: map['isSecret'] ?? false,
-        description: map['description'],
-        defaultValue: map['defaultValue'],
-        isRequired: map['isRequired'] ?? false,
-        allowedValues: List<String>.from(map['allowedValues'] ?? []),
-        validationPattern: map['validationPattern'],
-        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+        id: map['id'] as String? ?? '',
+        key: map['key'] as String? ?? '',
+        value: map['value'] as String? ?? '',
+        type: EnvironmentVariableType.fromString(
+          map['type'] as String? ?? 'string',
+        ),
+        isSecret: map['isSecret'] as bool? ?? false,
+        description: map['description'] as String?,
+        defaultValue: map['defaultValue'] as String?,
+        isRequired: map['isRequired'] as bool? ?? false,
+        allowedValues:
+            List<String>.from((map['allowedValues'] as List<dynamic>?) ?? []),
+        validationPattern: map['validationPattern'] as String?,
+        metadata: Map<String, dynamic>.from(
+          (map['metadata'] as Map<dynamic, dynamic>?) ?? {},
+        ),
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-        createdBy: map['createdBy'] ?? '',
-        updatedBy: map['updatedBy'] ?? '',
+        createdBy: map['createdBy'] as String? ?? '',
+        updatedBy: map['updatedBy'] as String? ?? '',
       );
   final String id;
   final String key;
@@ -404,26 +420,41 @@ class DeploymentConfig {
 
   factory DeploymentConfig.fromMap(Map<String, dynamic> map) =>
       DeploymentConfig(
-        id: map['id'] ?? '',
-        environmentId: map['environmentId'] ?? '',
-        version: map['version'] ?? '',
-        status: DeploymentStatus.fromString(map['status'] ?? 'draft'),
-        config: Map<String, dynamic>.from(map['config'] ?? {}),
-        secrets: Map<String, dynamic>.from(map['secrets'] ?? {}),
-        dependencies: List<String>.from(map['dependencies'] ?? []),
-        healthChecks: List<String>.from(map['healthChecks'] ?? []),
-        scalingConfig: Map<String, dynamic>.from(map['scalingConfig'] ?? {}),
-        networkingConfig:
-            Map<String, dynamic>.from(map['networkingConfig'] ?? {}),
-        storageConfig: Map<String, dynamic>.from(map['storageConfig'] ?? {}),
-        monitoringConfig:
-            Map<String, dynamic>.from(map['monitoringConfig'] ?? {}),
-        description: map['description'],
-        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+        id: map['id'] as String? ?? '',
+        environmentId: map['environmentId'] as String? ?? '',
+        version: map['version'] as String? ?? '',
+        status:
+            DeploymentStatus.fromString(map['status'] as String? ?? 'draft'),
+        config: Map<String, dynamic>.from(
+          (map['config'] as Map<dynamic, dynamic>?) ?? {},
+        ),
+        secrets: Map<String, dynamic>.from(
+          (map['secrets'] as Map<dynamic, dynamic>?) ?? {},
+        ),
+        dependencies:
+            List<String>.from((map['dependencies'] as List<dynamic>?) ?? []),
+        healthChecks:
+            List<String>.from((map['healthChecks'] as List<dynamic>?) ?? []),
+        scalingConfig: Map<String, dynamic>.from(
+          (map['scalingConfig'] as Map<dynamic, dynamic>?) ?? {},
+        ),
+        networkingConfig: Map<String, dynamic>.from(
+          (map['networkingConfig'] as Map<dynamic, dynamic>?) ?? {},
+        ),
+        storageConfig: Map<String, dynamic>.from(
+          (map['storageConfig'] as Map<dynamic, dynamic>?) ?? {},
+        ),
+        monitoringConfig: Map<String, dynamic>.from(
+          (map['monitoringConfig'] as Map<dynamic, dynamic>?) ?? {},
+        ),
+        description: map['description'] as String?,
+        metadata: Map<String, dynamic>.from(
+          (map['metadata'] as Map<dynamic, dynamic>?) ?? {},
+        ),
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-        createdBy: map['createdBy'] ?? '',
-        updatedBy: map['updatedBy'] ?? '',
+        createdBy: map['createdBy'] as String? ?? '',
+        updatedBy: map['updatedBy'] as String? ?? '',
       );
   final String id;
   final String environmentId;

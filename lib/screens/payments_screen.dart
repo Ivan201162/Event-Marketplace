@@ -2,25 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/payment.dart';
-import '../providers/auth_providers.dart';
 import '../providers/payment_providers.dart';
-import '../widgets/payment_widgets.dart';
 
+/// Экран для отображения платежей пользователя
 class PaymentsScreen extends ConsumerStatefulWidget {
-  const PaymentsScreen({super.key});
+  const PaymentsScreen({
+    super.key,
+    this.userId,
+    this.specialistId,
+  });
+
+  final String? userId;
+  final String? specialistId;
 
   @override
   ConsumerState<PaymentsScreen> createState() => _PaymentsScreenState();
 }
 
 class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late TabController _tabController;
+  final PaymentFilter _currentFilter = const PaymentFilter();
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -30,438 +37,451 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
   }
 
   @override
-  Widget build(BuildContext context) {
-    final currentUser = ref.watch(currentUserProvider);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Платежи'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        elevation: 0,
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(icon: Icon(Icons.list), text: 'Все'),
-            Tab(icon: Icon(Icons.schedule), text: 'Ожидают'),
-            Tab(icon: Icon(Icons.analytics), text: 'Статистика'),
-          ],
-        ),
-      ),
-      body: currentUser.when(
-        data: (user) {
-          if (user == null) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.person_off, size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
-                  Text(
-                    'Необходима авторизация',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return TabBarView(
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: Text(
+            widget.specialistId != null ? 'Платежи специалиста' : 'Мои платежи',
+          ),
+          bottom: TabBar(
             controller: _tabController,
-            children: [
-              _buildAllPaymentsTab(user.id, user.isSpecialist),
-              _buildPendingPaymentsTab(user.id, user.isSpecialist),
-              _buildStatisticsTab(user.id, user.isSpecialist),
-            ],
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.error_outline, size: 64, color: Colors.red),
-              const SizedBox(height: 16),
-              Text('Ошибка загрузки: $error'),
+            tabs: const [
+              Tab(text: 'Все', icon: Icon(Icons.list)),
+              Tab(text: 'Ожидают', icon: Icon(Icons.schedule)),
+              Tab(text: 'Оплачены', icon: Icon(Icons.check_circle)),
+              Tab(text: 'Предоплаты', icon: Icon(Icons.payment)),
             ],
           ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showFilterDialog,
+            ),
+          ],
         ),
-      ),
-    );
-  }
+        body: TabBarView(
+          controller: _tabController,
+          children: [
+            _buildAllPaymentsTab(),
+            _buildPendingPaymentsTab(),
+            _buildCompletedPaymentsTab(),
+            _buildPrepaymentsTab(),
+          ],
+        ),
+      );
 
-  /// Вкладка всех платежей
-  Widget _buildAllPaymentsTab(String userId, bool isSpecialist) {
-    final paymentsAsync = isSpecialist
-        ? ref.watch(paymentsBySpecialistProvider(userId))
-        : ref.watch(paymentsByCustomerProvider(userId));
+  Widget _buildAllPaymentsTab() {
+    final paymentsAsync = widget.userId != null
+        ? ref.watch(userPaymentsProvider(widget.userId!))
+        : ref.watch(specialistPaymentsProvider(widget.specialistId!));
 
     return paymentsAsync.when(
       data: (payments) {
         if (payments.isEmpty) {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.payment, size: 64, color: Colors.grey),
-                SizedBox(height: 16),
-                Text(
-                  'Платежей пока нет',
-                  style: TextStyle(fontSize: 18, color: Colors.grey),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'Платежи появятся после создания заявок',
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ],
-            ),
-          );
+          return _buildEmptyState('Нет платежей', 'У вас пока нет платежей');
         }
 
         return RefreshIndicator(
           onRefresh: () async {
-            ref.invalidate(
-              isSpecialist
-                  ? paymentsBySpecialistProvider(userId)
-                  : paymentsByCustomerProvider(userId),
-            );
+            ref.invalidate(userPaymentsProvider);
+            ref.invalidate(specialistPaymentsProvider);
           },
           child: ListView.builder(
             padding: const EdgeInsets.all(16),
             itemCount: payments.length,
             itemBuilder: (context, index) {
               final payment = payments[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: PaymentCard(
-                  payment: payment,
-                  showActions: !isSpecialist, // Только клиенты могут оплачивать
-                  onTap: () => _showPaymentDetails(context, payment),
-                ),
-              );
+              return _buildPaymentCard(payment);
             },
           ),
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 64, color: Colors.red),
-            const SizedBox(height: 16),
-            Text('Ошибка загрузки платежей: $error'),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                ref.invalidate(
-                  isSpecialist
-                      ? paymentsBySpecialistProvider(userId)
-                      : paymentsByCustomerProvider(userId),
-                );
-              },
-              child: const Text('Повторить'),
-            ),
-          ],
-        ),
-      ),
+      error: (error, stack) => _buildErrorState(error),
     );
   }
 
-  /// Вкладка ожидающих платежей
-  Widget _buildPendingPaymentsTab(String userId, bool isSpecialist) {
-    final paymentsAsync = isSpecialist
-        ? ref.watch(paymentsBySpecialistProvider(userId))
-        : ref.watch(paymentsByCustomerProvider(userId));
+  Widget _buildPendingPaymentsTab() {
+    final userId = widget.userId ?? widget.specialistId ?? '';
+    final pendingPaymentsAsync = ref.watch(pendingPaymentsProvider(userId));
 
-    return paymentsAsync.when(
+    return pendingPaymentsAsync.when(
       data: (payments) {
-        final pendingPayments =
-            payments.where((p) => p.status == 'pending').toList();
-
-        if (pendingPayments.isEmpty) {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.check_circle, size: 64, color: Colors.green),
-                SizedBox(height: 16),
-                Text(
-                  'Нет ожидающих платежей',
-                  style: TextStyle(fontSize: 18, color: Colors.grey),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'Все платежи обработаны',
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ],
-            ),
+        if (payments.isEmpty) {
+          return _buildEmptyState(
+            'Нет ожидающих платежей',
+            'Все платежи обработаны',
           );
         }
 
         return RefreshIndicator(
           onRefresh: () async {
-            ref.invalidate(
-              isSpecialist
-                  ? paymentsBySpecialistProvider(userId)
-                  : paymentsByCustomerProvider(userId),
-            );
+            ref.invalidate(pendingPaymentsProvider);
           },
           child: ListView.builder(
             padding: const EdgeInsets.all(16),
-            itemCount: pendingPayments.length,
+            itemCount: payments.length,
             itemBuilder: (context, index) {
-              final payment = pendingPayments[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: PaymentCard(
-                  payment: payment,
-                  showActions: !isSpecialist,
-                  onTap: () => _showPaymentDetails(context, payment),
-                ),
-              );
+              final payment = payments[index];
+              return _buildPaymentCard(payment);
             },
           ),
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 64, color: Colors.red),
-            const SizedBox(height: 16),
-            Text('Ошибка загрузки: $error'),
-          ],
-        ),
-      ),
+      error: (error, stack) => _buildErrorState(error),
     );
   }
 
-  /// Вкладка статистики
-  Widget _buildStatisticsTab(String userId, bool isSpecialist) {
-    final statisticsAsync = ref.watch(
-      paymentStatisticsProvider(
-        PaymentStatisticsParams(userId: userId, isSpecialist: isSpecialist),
-      ),
-    );
+  Widget _buildCompletedPaymentsTab() {
+    final userId = widget.userId ?? widget.specialistId ?? '';
+    final completedPaymentsAsync = ref.watch(completedPaymentsProvider(userId));
 
-    return statisticsAsync.when(
-      data: (statistics) => SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Статистика
-            PaymentStatisticsWidget(statistics: statistics),
+    return completedPaymentsAsync.when(
+      data: (payments) {
+        if (payments.isEmpty) {
+          return _buildEmptyState(
+            'Нет завершенных платежей',
+            'Завершенные платежи появятся здесь',
+          );
+        }
 
-            const SizedBox(height: 16),
-
-            // Быстрые действия
-            _buildQuickActionsCard(context, userId, isSpecialist),
-
-            const SizedBox(height: 16),
-
-            // Информация о типах организаций
-            _buildOrganizationTypesCard(context),
-          ],
-        ),
-      ),
+        return RefreshIndicator(
+          onRefresh: () async {
+            ref.invalidate(completedPaymentsProvider);
+          },
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: payments.length,
+            itemBuilder: (context, index) {
+              final payment = payments[index];
+              return _buildPaymentCard(payment);
+            },
+          ),
+        );
+      },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 64, color: Colors.red),
-            const SizedBox(height: 16),
-            Text('Ошибка загрузки статистики: $error'),
-          ],
-        ),
-      ),
+      error: (error, stack) => _buildErrorState(error),
     );
   }
 
-  /// Карточка быстрых действий
-  Widget _buildQuickActionsCard(
-    BuildContext context,
-    String userId,
-    bool isSpecialist,
-  ) =>
-      Card(
-        elevation: 4,
+  Widget _buildPrepaymentsTab() {
+    final userId = widget.userId ?? widget.specialistId ?? '';
+    final prepaymentsAsync = ref.watch(prepaymentsProvider(userId));
+
+    return prepaymentsAsync.when(
+      data: (payments) {
+        if (payments.isEmpty) {
+          return _buildEmptyState('Нет предоплат', 'Предоплаты появятся здесь');
+        }
+
+        return RefreshIndicator(
+          onRefresh: () async {
+            ref.invalidate(prepaymentsProvider);
+          },
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: payments.length,
+            itemBuilder: (context, index) {
+              final payment = payments[index];
+              return _buildPaymentCard(payment);
+            },
+          ),
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => _buildErrorState(error),
+    );
+  }
+
+  Widget _buildPaymentCard(Payment payment) => Card(
+        margin: const EdgeInsets.only(bottom: 12),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Быстрые действия',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 16),
-              if (!isSpecialist) ...[
-                ElevatedButton.icon(
-                  onPressed: () => _showPaymentCalculationDialog(context),
-                  icon: const Icon(Icons.calculate),
-                  label: const Text('Рассчитать платежи'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 12),
-              ],
-              OutlinedButton.icon(
-                onPressed: () => _showTestDataDialog(context),
-                icon: const Icon(Icons.science),
-                label: const Text('Добавить тестовые данные'),
-              ),
-            ],
-          ),
-        ),
-      );
-
-  /// Карточка типов организаций
-  Widget _buildOrganizationTypesCard(BuildContext context) => Card(
-        elevation: 4,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Типы организаций и платежи',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 16),
-              _buildOrganizationTypeInfo(
-                context,
-                'Физические лица',
-                'Аванс 30% + доплата 70%',
-                Colors.blue,
-              ),
-              const SizedBox(height: 12),
-              _buildOrganizationTypeInfo(
-                context,
-                'Коммерческие организации',
-                'Аванс 30% + доплата 70%',
-                Colors.green,
-              ),
-              const SizedBox(height: 12),
-              _buildOrganizationTypeInfo(
-                context,
-                'Государственные учреждения',
-                'Постоплата 100% (или 70/30)',
-                Colors.orange,
-              ),
-              const SizedBox(height: 12),
-              _buildOrganizationTypeInfo(
-                context,
-                'Некоммерческие организации',
-                'Аванс 20% + доплата 80%',
-                Colors.purple,
-              ),
-            ],
-          ),
-        ),
-      );
-
-  /// Информация о типе организации
-  Widget _buildOrganizationTypeInfo(
-    BuildContext context,
-    String title,
-    String description,
-    Color color,
-  ) =>
-      Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: color.withOpacity(0.3)),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 8,
-              height: 8,
-              decoration: BoxDecoration(
-                color: color,
-                shape: BoxShape.circle,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              // Заголовок
+              Row(
                 children: [
                   Text(
-                    title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
+                    payment.type.icon,
+                    style: const TextStyle(fontSize: 24),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          payment.type.displayName,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        if (payment.bookingTitle != null) ...[
+                          const SizedBox(height: 2),
+                          Text(
+                            payment.bookingTitle!,
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    description,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withOpacity(0.7),
-                    ),
-                  ),
+                  _buildStatusChip(payment.status),
                 ],
               ),
+
+              const SizedBox(height: 12),
+
+              // Сумма и информация
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Сумма: ${payment.amount.toStringAsFixed(0)} ₽',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                          ),
+                        ),
+                        if (payment.fee != null && payment.fee! > 0) ...[
+                          const SizedBox(height: 2),
+                          Text(
+                            'Комиссия: ${payment.fee!.toStringAsFixed(0)} ₽',
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  if (payment.status == PaymentStatus.pending)
+                    ElevatedButton(
+                      onPressed: () => _handlePayment(payment),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                      ),
+                      child: const Text('Оплатить'),
+                    ),
+                ],
+              ),
+
+              const SizedBox(height: 12),
+
+              // Дополнительная информация
+              Row(
+                children: [
+                  Icon(Icons.access_time, size: 16, color: Colors.grey[500]),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Создан: ${_formatDate(payment.createdAt)}',
+                    style: TextStyle(
+                      color: Colors.grey[500],
+                      fontSize: 12,
+                    ),
+                  ),
+                  if (payment.paidAt != null) ...[
+                    const SizedBox(width: 16),
+                    Icon(
+                      Icons.check_circle,
+                      size: 16,
+                      color: Colors.green[500],
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Оплачен: ${_formatDate(payment.paidAt!)}',
+                      style: TextStyle(
+                        color: Colors.green[500],
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+
+              // Описание
+              ...[
+                const SizedBox(height: 8),
+                Text(
+                  payment.description,
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      );
+
+  Widget _buildStatusChip(PaymentStatus status) {
+    Color backgroundColor;
+    Color textColor;
+    IconData icon;
+
+    switch (status) {
+      case PaymentStatus.pending:
+        backgroundColor = Colors.orange.withValues(alpha: 0.1);
+        textColor = Colors.orange[700]!;
+        icon = Icons.schedule;
+        break;
+      case PaymentStatus.partial:
+        backgroundColor = Colors.blue.withValues(alpha: 0.1);
+        textColor = Colors.blue[700]!;
+        icon = Icons.payment;
+        break;
+      case PaymentStatus.processing:
+        backgroundColor = Colors.blue.withValues(alpha: 0.1);
+        textColor = Colors.blue[700]!;
+        icon = Icons.hourglass_empty;
+        break;
+      case PaymentStatus.completed:
+        backgroundColor = Colors.green.withValues(alpha: 0.1);
+        textColor = Colors.green[700]!;
+        icon = Icons.check_circle;
+        break;
+      case PaymentStatus.paid:
+        backgroundColor = Colors.green.withValues(alpha: 0.1);
+        textColor = Colors.green[700]!;
+        icon = Icons.check_circle;
+        break;
+      case PaymentStatus.failed:
+        backgroundColor = Colors.red.withValues(alpha: 0.1);
+        textColor = Colors.red[700]!;
+        icon = Icons.error;
+        break;
+      case PaymentStatus.cancelled:
+        backgroundColor = Colors.grey.withValues(alpha: 0.1);
+        textColor = Colors.grey[700]!;
+        icon = Icons.cancel;
+        break;
+      case PaymentStatus.refunded:
+        backgroundColor = Colors.purple.withValues(alpha: 0.1);
+        textColor = Colors.purple[700]!;
+        icon = Icons.undo;
+        break;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: textColor.withValues(alpha: 0.3)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: textColor),
+          const SizedBox(width: 4),
+          Text(
+            status.displayName,
+            style: TextStyle(
+              fontSize: 12,
+              color: textColor,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(String title, String subtitle) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.payment,
+              size: 64,
+              color: Colors.grey[400],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              title,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: Colors.grey[600],
+                  ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              subtitle,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.grey[500],
+                  ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
       );
 
-  /// Показать детали платежа
-  void _showPaymentDetails(BuildContext context, Payment payment) {
-    showDialog(
+  Widget _buildErrorState(Object error) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 64,
+              color: Colors.red[400],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Ошибка загрузки',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: Colors.red[600],
+                  ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              error.toString(),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.red[500],
+                  ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                ref.invalidate(userPaymentsProvider);
+                ref.invalidate(specialistPaymentsProvider);
+              },
+              child: const Text('Повторить'),
+            ),
+          ],
+        ),
+      );
+
+  void _showFilterDialog() {
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(payment.typeDisplayName),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildDetailRow('ID платежа', payment.id),
-              _buildDetailRow(
-                'Сумма',
-                '${payment.amount.toStringAsFixed(0)} ${payment.currency}',
-              ),
-              _buildDetailRow('Статус', payment.statusDisplayName),
-              _buildDetailRow(
-                'Тип организации',
-                _getOrganizationTypeName(payment.organizationType),
-              ),
-              if (payment.description != null)
-                _buildDetailRow('Описание', payment.description!),
-              if (payment.paymentMethod != null)
-                _buildDetailRow('Способ оплаты', payment.paymentMethod!),
-              if (payment.transactionId != null)
-                _buildDetailRow('ID транзакции', payment.transactionId!),
-              _buildDetailRow('Создан', _formatDate(payment.createdAt)),
-              if (payment.completedAt != null)
-                _buildDetailRow('Завершен', _formatDate(payment.completedAt!)),
-              if (payment.failedAt != null)
-                _buildDetailRow('Неудачен', _formatDate(payment.failedAt!)),
-            ],
-          ),
+        title: const Text('Фильтры'),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Здесь можно добавить фильтры по статусу, типу, дате и т.д.
+            Text('Фильтры будут добавлены в следующей версии'),
+          ],
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.pop(context),
             child: const Text('Закрыть'),
           ),
         ],
@@ -469,129 +489,57 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
     );
   }
 
-  /// Показать диалог расчета платежей
-  void _showPaymentCalculationDialog(BuildContext context) {
-    final amountController = TextEditingController();
-    var selectedType = OrganizationType.individual;
-
-    showDialog(
-      context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: const Text('Расчет платежей'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: amountController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Общая сумма (₽)',
-                    hintText: 'Введите сумму',
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const Text('Тип организации:'),
-                const SizedBox(height: 8),
-                ...OrganizationType.values.map(
-                  (type) => RadioListTile<OrganizationType>(
-                    title: Text(_getOrganizationTypeName(type)),
-                    value: type,
-                    groupValue: selectedType,
-                    onChanged: (value) {
-                      setState(() => selectedType = value!);
-                    },
-                  ),
-                ),
-                if (amountController.text.isNotEmpty) ...[
-                  const SizedBox(height: 16),
-                  PaymentCalculationWidget(
-                    totalAmount: double.tryParse(amountController.text) ?? 0,
-                    organizationType: selectedType,
-                  ),
-                ],
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена'),
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Показать диалог тестовых данных
-  void _showTestDataDialog(BuildContext context) {
-    showDialog(
+  void _handlePayment(Payment payment) {
+    // В реальном приложении здесь будет переход к платежному провайдеру
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Тестовые данные'),
-        content:
-            const Text('Добавить тестовые данные платежей для разработки?'),
+        title: const Text('Оплата'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Тип: ${payment.type.displayName}'),
+            Text('Сумма: ${payment.amount.toStringAsFixed(0)} ₽'),
+            ...[
+              const SizedBox(height: 8),
+              Text('Описание: ${payment.description}'),
+            ],
+          ],
+        ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.pop(context),
             child: const Text('Отмена'),
           ),
           ElevatedButton(
-            onPressed: () async {
-              // TODO: Добавить тестовые данные платежей
-              if (context.mounted) {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Тестовые данные добавлены')),
-                );
-              }
+            onPressed: () {
+              Navigator.pop(context);
+              // Здесь будет логика оплаты
+              _simulatePayment(payment);
             },
-            child: const Text('Добавить'),
+            child: const Text('Оплатить'),
           ),
         ],
       ),
     );
   }
 
-  /// Построить строку деталей
-  Widget _buildDetailRow(String label, String value) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 120,
-              child: Text(
-                '$label:',
-                style: const TextStyle(fontWeight: FontWeight.w500),
-              ),
-            ),
-            Expanded(child: Text(value)),
-          ],
-        ),
-      );
+  void _simulatePayment(Payment payment) {
+    // Симуляция успешной оплаты
+    final paymentManager = ref.read(paymentManagerProvider.notifier);
+    paymentManager.markAsPaid(
+      paymentId: payment.id,
+      transactionId: 'TXN_${DateTime.now().millisecondsSinceEpoch}',
+    );
 
-  /// Получить название типа организации
-  String _getOrganizationTypeName(OrganizationType type) {
-    switch (type) {
-      case OrganizationType.individual:
-        return 'Физическое лицо';
-      case OrganizationType.commercial:
-        return 'Коммерческая организация';
-      case OrganizationType.government:
-        return 'Государственное учреждение';
-      case OrganizationType.nonProfit:
-        return 'Некоммерческая организация';
-    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Платеж успешно обработан'),
+        backgroundColor: Colors.green,
+      ),
+    );
   }
 
-  /// Форматировать дату
   String _formatDate(DateTime date) =>
-      '${date.day}.${date.month}.${date.year} ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
+      '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';
 }

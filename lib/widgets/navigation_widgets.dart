@@ -56,22 +56,51 @@ class AdaptiveBottomNavigationBar extends StatelessWidget {
     this.onTap,
     required this.items,
     this.showLabels = true,
+    this.enableHapticFeedback = true,
   });
   final int currentIndex;
   final ValueChanged<int>? onTap;
   final List<BottomNavigationBarItem> items;
   final bool showLabels;
+  final bool enableHapticFeedback;
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isTablet = screenWidth > 600;
+    final isDesktop = screenWidth > 1024;
 
-    if (isTablet) {
+    if (isDesktop) {
+      // На десктопе используем NavigationRail
+      return NavigationRail(
+        selectedIndex: currentIndex,
+        onDestinationSelected: (index) {
+          if (enableHapticFeedback) {
+            // HapticFeedback.lightImpact();
+          }
+          onTap?.call(index);
+        },
+        labelType: NavigationRailLabelType.all,
+        destinations: items
+            .map(
+              (item) => NavigationRailDestination(
+                icon: item.icon,
+                selectedIcon: item.activeIcon,
+                label: Text(item.label ?? ''),
+              ),
+            )
+            .toList(),
+      );
+    } else if (isTablet) {
       // На планшетах используем NavigationBar
       return NavigationBar(
         selectedIndex: currentIndex,
-        onDestinationSelected: onTap,
+        onDestinationSelected: (index) {
+          if (enableHapticFeedback) {
+            // HapticFeedback.lightImpact();
+          }
+          onTap?.call(index);
+        },
         destinations: items
             .map(
               (item) => NavigationDestination(
@@ -86,11 +115,24 @@ class AdaptiveBottomNavigationBar extends StatelessWidget {
       // На телефонах используем BottomNavigationBar
       return BottomNavigationBar(
         currentIndex: currentIndex,
-        onTap: onTap,
+        onTap: (index) {
+          if (enableHapticFeedback) {
+            // HapticFeedback.lightImpact();
+          }
+          onTap?.call(index);
+        },
         type: BottomNavigationBarType.fixed,
         showSelectedLabels: showLabels,
         showUnselectedLabels: showLabels,
         items: items,
+        elevation: 8,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: Theme.of(context).colorScheme.onSurfaceVariant,
+        selectedLabelStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+        unselectedLabelStyle: Theme.of(context).textTheme.labelSmall,
       );
     }
   }

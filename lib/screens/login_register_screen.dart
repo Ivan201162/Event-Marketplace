@@ -33,48 +33,46 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 60),
+  Widget build(BuildContext context) => Scaffold(
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 60),
 
-                // Логотип и заголовок
-                _buildHeader(context),
+                  // Логотип и заголовок
+                  _buildHeader(context),
 
-                const SizedBox(height: 48),
+                  const SizedBox(height: 48),
 
-                // Форма входа/регистрации
-                _buildAuthForm(context),
+                  // Форма входа/регистрации
+                  _buildAuthForm(context),
 
-                const SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
-                // Кнопка входа через Google
-                _buildGoogleSignInButton(context),
+                  // Кнопка входа через Google
+                  _buildGoogleSignInButton(context),
 
-                const SizedBox(height: 16),
-
-                // Кнопка входа как гость
-                if (!_isSignUpMode) ...[
-                  _buildGuestButton(context),
                   const SizedBox(height: 16),
-                ],
 
-                // Дополнительные действия
-                _buildAdditionalActions(context),
-              ],
+                  // Кнопка входа как гость
+                  if (!_isSignUpMode) ...[
+                    _buildGuestButton(context),
+                    const SizedBox(height: 16),
+                  ],
+
+                  // Дополнительные действия
+                  _buildAdditionalActions(context),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
   /// Построение заголовка
   Widget _buildHeader(BuildContext context) => Column(
@@ -194,37 +192,54 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 8),
-          Row(
+          Column(
             children: [
-              Expanded(
-                child: RadioListTile<UserRole>(
-                  title: const Text('Заказчик'),
-                  subtitle: const Text('Ищу специалистов'),
-                  value: UserRole.customer,
-                  groupValue: _selectedRole,
-                  onChanged: (value) {
-                    if (value != null) {
-                      setState(() {
-                        _selectedRole = value;
-                      });
-                    }
-                  },
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: RadioListTile<UserRole>(
+                      title: const Text('Заказчик'),
+                      subtitle: const Text('Ищу специалистов'),
+                      value: UserRole.customer,
+                      groupValue: _selectedRole,
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() {
+                            _selectedRole = value;
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: RadioListTile<UserRole>(
+                      title: const Text('Специалист'),
+                      subtitle: const Text('Предоставляю услуги'),
+                      value: UserRole.specialist,
+                      groupValue: _selectedRole,
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() {
+                            _selectedRole = value;
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
-              Expanded(
-                child: RadioListTile<UserRole>(
-                  title: const Text('Специалист'),
-                  subtitle: const Text('Предоставляю услуги'),
-                  value: UserRole.specialist,
-                  groupValue: _selectedRole,
-                  onChanged: (value) {
-                    if (value != null) {
-                      setState(() {
-                        _selectedRole = value;
-                      });
-                    }
-                  },
-                ),
+              RadioListTile<UserRole>(
+                title: const Text('Организатор'),
+                subtitle: const Text('Организую мероприятия'),
+                value: UserRole.organizer,
+                groupValue: _selectedRole,
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      _selectedRole = value;
+                    });
+                  }
+                },
               ),
             ],
           ),
@@ -500,11 +515,10 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
 
       if (_isSignUpMode) {
         // Регистрация
-        final user = await authService.signUpWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text,
+        final user = await authService.signUpWithEmail(
+          _emailController.text.trim(),
+          _passwordController.text,
           displayName: _displayNameController.text.trim(),
-          role: _selectedRole,
         );
 
         if (user != null && mounted) {
@@ -518,9 +532,9 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
         }
       } else {
         // Вход
-        final user = await authService.signInWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text,
+        final user = await authService.signInWithEmail(
+          _emailController.text.trim(),
+          _passwordController.text,
         );
 
         if (user != null && mounted) {
@@ -579,75 +593,23 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
     }
   }
 
-  /// Обработка входа через Google
+  /// Обработка входа через Google (временно отключено)
   Future<void> _handleGoogleSignIn() async {
     setState(() {
-      _isLoading = true;
-      _errorMessage = null;
+      _errorMessage = 'Вход через Google временно отключен';
     });
-
-    try {
-      final authService = ref.read(authServiceProvider);
-      final user = await authService.signInWithGoogleWeb();
-
-      if (user != null && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Добро пожаловать, ${user.displayNameOrEmail}!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-        context.go('/home');
-      }
-    } catch (e) {
-      setState(() {
-        _errorMessage = e.toString();
-      });
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
   }
 
-  /// Обработка входа через ВКонтакте
+  /// Обработка входа через ВКонтакте (временно отключено)
   Future<void> _handleVKSignIn() async {
     setState(() {
-      _isLoading = true;
-      _errorMessage = null;
+      _errorMessage = 'Вход через ВКонтакте временно отключен';
     });
-
-    try {
-      final authService = ref.read(authServiceProvider);
-      final user = await authService.signInWithVK(role: _selectedRole);
-
-      if (user != null && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Добро пожаловать, ${user.displayNameOrEmail}!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-        context.go('/home');
-      }
-    } catch (e) {
-      setState(() {
-        _errorMessage = e.toString();
-      });
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
   }
 
   /// Показать диалог сброса пароля
   void _showResetPasswordDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Сброс пароля'),
@@ -681,7 +643,8 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                          'Письмо для сброса пароля отправлено на ${_emailController.text}'),
+                        'Письмо для сброса пароля отправлено на ${_emailController.text}',
+                      ),
                       backgroundColor: Colors.green,
                     ),
                   );

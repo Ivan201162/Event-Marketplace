@@ -52,7 +52,8 @@ class CalendarEvent {
       ),
       attendees: List<String>.from(data['attendees'] as List<dynamic>? ?? []),
       metadata: Map<String, dynamic>.from(
-          data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+        data['metadata'] as Map<dynamic, dynamic>? ?? {},
+      ),
       isAllDay: data['isAllDay'] as bool? ?? false,
       recurrenceRule: data['recurrenceRule'] as String?,
       reminderTime: data['reminderTime'] as String?,
@@ -369,7 +370,8 @@ class CalendarSync {
         isActive: map['isActive'] as bool? ?? false,
         lastSync: (map['lastSync'] as Timestamp?)?.toDate() ?? DateTime.now(),
         settings: Map<String, dynamic>.from(
-            map['settings'] as Map<dynamic, dynamic>? ?? {}),
+          map['settings'] as Map<dynamic, dynamic>? ?? {},
+        ),
       );
   final String id;
   final String userId;

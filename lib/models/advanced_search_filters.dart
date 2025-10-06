@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'city_region.dart';
 import 'specialist.dart';
 
@@ -34,42 +32,17 @@ class AdvancedSearchFilters {
     this.maxDistance = 200.0,
   });
 
-  final String searchQuery;
-  final List<SpecialistCategory> categories;
-  final List<String> subcategories;
-  final CityRegion? selectedCity;
-  final String? selectedRegion;
-  final double radiusKm;
-  final int minPrice;
-  final int maxPrice;
-  final double minRating;
-  final double maxRating;
-  final int minExperience;
-  final int maxExperience;
-  final ExperienceLevel? experienceLevel;
-  final bool isAvailableNow;
-  final DateTime? availableFrom;
-  final DateTime? availableTo;
-  final bool hasPortfolio;
-  final bool isVerified;
-  final bool hasReviews;
-  final List<String> languages;
-  final List<String> equipment;
-  final List<String> services;
-  final AdvancedSearchSortBy sortBy;
-  final bool sortAscending;
-  final bool includeNearbyCities;
-  final double maxDistance;
-
   /// Создать из JSON
   factory AdvancedSearchFilters.fromJson(Map<String, dynamic> json) =>
       AdvancedSearchFilters(
         searchQuery: json['searchQuery'] as String? ?? '',
         categories: (json['categories'] as List<dynamic>?)
-                ?.map((e) => SpecialistCategory.values.firstWhere(
-                      (cat) => cat.name == e,
-                      orElse: () => SpecialistCategory.other,
-                    ))
+                ?.map(
+                  (e) => SpecialistCategory.values.firstWhere(
+                    (cat) => cat.name == e,
+                    orElse: () => SpecialistCategory.other,
+                  ),
+                )
                 .toList() ??
             [],
         subcategories:
@@ -112,6 +85,33 @@ class AdvancedSearchFilters {
         includeNearbyCities: json['includeNearbyCities'] as bool? ?? true,
         maxDistance: (json['maxDistance'] as num?)?.toDouble() ?? 200.0,
       );
+
+  final String searchQuery;
+  final List<SpecialistCategory> categories;
+  final List<String> subcategories;
+  final CityRegion? selectedCity;
+  final String? selectedRegion;
+  final double radiusKm;
+  final int minPrice;
+  final int maxPrice;
+  final double minRating;
+  final double maxRating;
+  final int minExperience;
+  final int maxExperience;
+  final ExperienceLevel? experienceLevel;
+  final bool isAvailableNow;
+  final DateTime? availableFrom;
+  final DateTime? availableTo;
+  final bool hasPortfolio;
+  final bool isVerified;
+  final bool hasReviews;
+  final List<String> languages;
+  final List<String> equipment;
+  final List<String> services;
+  final AdvancedSearchSortBy sortBy;
+  final bool sortAscending;
+  final bool includeNearbyCities;
+  final double maxDistance;
 
   /// Преобразовать в JSON
   Map<String, dynamic> toJson() => {
@@ -341,18 +341,6 @@ class AdvancedSearchResult {
     this.experienceScore = 0.0,
   });
 
-  final Specialist specialist;
-  final double relevanceScore;
-  final double? distance;
-  final String? city;
-  final String? region;
-  final List<String> matchingCategories;
-  final List<String> matchingServices;
-  final double availabilityScore;
-  final double priceScore;
-  final double ratingScore;
-  final double experienceScore;
-
   /// Создать из JSON
   factory AdvancedSearchResult.fromJson(Map<String, dynamic> json) =>
       AdvancedSearchResult(
@@ -374,6 +362,18 @@ class AdvancedSearchResult {
         experienceScore: (json['experienceScore'] as num?)?.toDouble() ?? 0.0,
       );
 
+  final Specialist specialist;
+  final double relevanceScore;
+  final double? distance;
+  final String? city;
+  final String? region;
+  final List<String> matchingCategories;
+  final List<String> matchingServices;
+  final double availabilityScore;
+  final double priceScore;
+  final double ratingScore;
+  final double experienceScore;
+
   /// Преобразовать в JSON
   Map<String, dynamic> toJson() => {
         'specialist': specialist.toMap(),
@@ -390,13 +390,12 @@ class AdvancedSearchResult {
       };
 
   /// Получить общий балл релевантности
-  double get totalScore {
-    return (relevanceScore * 0.4) +
-        (ratingScore * 0.2) +
-        (availabilityScore * 0.2) +
-        (priceScore * 0.1) +
-        (experienceScore * 0.1);
-  }
+  double get totalScore =>
+      (relevanceScore * 0.4) +
+      (ratingScore * 0.2) +
+      (availabilityScore * 0.2) +
+      (priceScore * 0.1) +
+      (experienceScore * 0.1);
 
   /// Получить отображаемое расстояние
   String get distanceDisplay {
@@ -438,6 +437,41 @@ class AdvancedSearchState {
     this.popularCategories = const [],
   });
 
+  /// Создать из JSON
+  factory AdvancedSearchState.fromJson(Map<String, dynamic> json) =>
+      AdvancedSearchState(
+        results: (json['results'] as List<dynamic>?)
+                ?.map(
+                  (e) =>
+                      AdvancedSearchResult.fromJson(e as Map<String, dynamic>),
+                )
+                .toList() ??
+            [],
+        isLoading: json['isLoading'] as bool? ?? false,
+        hasMore: json['hasMore'] as bool? ?? false,
+        error: json['error'] as String? ?? '',
+        filters: json['filters'] != null
+            ? AdvancedSearchFilters.fromJson(
+                json['filters'] as Map<String, dynamic>,
+              )
+            : const AdvancedSearchFilters(),
+        totalCount: json['totalCount'] as int? ?? 0,
+        searchTime: json['searchTime'] as int? ?? 0,
+        suggestedCities: (json['suggestedCities'] as List<dynamic>?)
+                ?.map((e) => CityRegion.fromMap(e as Map<String, dynamic>))
+                .toList() ??
+            [],
+        popularCategories: (json['popularCategories'] as List<dynamic>?)
+                ?.map(
+                  (e) => SpecialistCategory.values.firstWhere(
+                    (cat) => cat.name == e,
+                    orElse: () => SpecialistCategory.other,
+                  ),
+                )
+                .toList() ??
+            [],
+      );
+
   final List<AdvancedSearchResult> results;
   final bool isLoading;
   final bool hasMore;
@@ -447,36 +481,6 @@ class AdvancedSearchState {
   final int searchTime; // в миллисекундах
   final List<CityRegion> suggestedCities;
   final List<SpecialistCategory> popularCategories;
-
-  /// Создать из JSON
-  factory AdvancedSearchState.fromJson(Map<String, dynamic> json) =>
-      AdvancedSearchState(
-        results: (json['results'] as List<dynamic>?)
-                ?.map((e) =>
-                    AdvancedSearchResult.fromJson(e as Map<String, dynamic>))
-                .toList() ??
-            [],
-        isLoading: json['isLoading'] as bool? ?? false,
-        hasMore: json['hasMore'] as bool? ?? false,
-        error: json['error'] as String? ?? '',
-        filters: json['filters'] != null
-            ? AdvancedSearchFilters.fromJson(
-                json['filters'] as Map<String, dynamic>)
-            : const AdvancedSearchFilters(),
-        totalCount: json['totalCount'] as int? ?? 0,
-        searchTime: json['searchTime'] as int? ?? 0,
-        suggestedCities: (json['suggestedCities'] as List<dynamic>?)
-                ?.map((e) => CityRegion.fromMap(e as Map<String, dynamic>))
-                .toList() ??
-            [],
-        popularCategories: (json['popularCategories'] as List<dynamic>?)
-                ?.map((e) => SpecialistCategory.values.firstWhere(
-                      (cat) => cat.name == e,
-                      orElse: () => SpecialistCategory.other,
-                    ))
-                .toList() ??
-            [],
-      );
 
   /// Преобразовать в JSON
   Map<String, dynamic> toJson() => {

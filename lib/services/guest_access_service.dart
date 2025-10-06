@@ -6,9 +6,9 @@ import '../models/guest_access.dart';
 
 /// Сервис для работы с гостевым доступом
 class GuestAccessService {
-  static final GuestAccessService _instance = GuestAccessService._internal();
   factory GuestAccessService() => _instance;
   GuestAccessService._internal();
+  static final GuestAccessService _instance = GuestAccessService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -21,8 +21,10 @@ class GuestAccessService {
     Duration? expirationDuration,
   }) async {
     try {
-      AppLogger.logI('Создание гостевого доступа для мероприятия $eventId',
-          'guest_access_service');
+      AppLogger.logI(
+        'Создание гостевого доступа для мероприятия $eventId',
+        'guest_access_service',
+      );
 
       final accessCode = _generateAccessCode();
       final now = DateTime.now();
@@ -45,7 +47,7 @@ class GuestAccessService {
         usageCount: 0,
         metadata: {
           'createdBy': organizerId,
-          'eventTitle': null, // TODO: Получить название мероприятия
+          'eventTitle': null, // TODO(developer): Получить название мероприятия
         },
       );
 
@@ -55,11 +57,17 @@ class GuestAccessService {
           .set(guestAccess.toMap());
 
       AppLogger.logI(
-          'Гостевой доступ создан: $accessCode', 'guest_access_service');
+        'Гостевой доступ создан: $accessCode',
+        'guest_access_service',
+      );
       return guestAccess;
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка создания гостевого доступа',
-          'guest_access_service', e, stackTrace);
+      AppLogger.logE(
+        'Ошибка создания гостевого доступа',
+        'guest_access_service',
+        e,
+        stackTrace,
+      );
       return null;
     }
   }
@@ -93,15 +101,22 @@ class GuestAccessService {
 
       return guestAccess;
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка получения гостевого доступа',
-          'guest_access_service', e, stackTrace);
+      AppLogger.logE(
+        'Ошибка получения гостевого доступа',
+        'guest_access_service',
+        e,
+        stackTrace,
+      );
       return null;
     }
   }
 
   /// Использовать гостевой доступ
-  Future<bool> useGuestAccess(String accessCode,
-      {String? guestName, String? guestEmail}) async {
+  Future<bool> useGuestAccess(
+    String accessCode, {
+    String? guestName,
+    String? guestEmail,
+  }) async {
     try {
       final guestAccess = await getGuestAccessByCode(accessCode);
       if (guestAccess == null) {
@@ -117,11 +132,17 @@ class GuestAccessService {
       });
 
       AppLogger.logI(
-          'Гостевой доступ использован: $accessCode', 'guest_access_service');
+        'Гостевой доступ использован: $accessCode',
+        'guest_access_service',
+      );
       return true;
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка использования гостевого доступа',
-          'guest_access_service', e, stackTrace);
+      AppLogger.logE(
+        'Ошибка использования гостевого доступа',
+        'guest_access_service',
+        e,
+        stackTrace,
+      );
       return false;
     }
   }
@@ -139,15 +160,20 @@ class GuestAccessService {
           .map((doc) => GuestAccess.fromMap(doc.data(), doc.id))
           .toList();
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка получения гостевых доступов мероприятия',
-          'guest_access_service', e, stackTrace);
+      AppLogger.logE(
+        'Ошибка получения гостевых доступов мероприятия',
+        'guest_access_service',
+        e,
+        stackTrace,
+      );
       return [];
     }
   }
 
   /// Получить все гостевые доступы организатора
   Future<List<GuestAccess>> getOrganizerGuestAccesses(
-      String organizerId) async {
+    String organizerId,
+  ) async {
     try {
       final querySnapshot = await _firestore
           .collection('guest_access')
@@ -159,15 +185,21 @@ class GuestAccessService {
           .map((doc) => GuestAccess.fromMap(doc.data(), doc.id))
           .toList();
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка получения гостевых доступов организатора',
-          'guest_access_service', e, stackTrace);
+      AppLogger.logE(
+        'Ошибка получения гостевых доступов организатора',
+        'guest_access_service',
+        e,
+        stackTrace,
+      );
       return [];
     }
   }
 
   /// Обновить статус гостевого доступа
   Future<bool> updateGuestAccessStatus(
-      String guestAccessId, GuestAccessStatus status) async {
+    String guestAccessId,
+    GuestAccessStatus status,
+  ) async {
     try {
       await _firestore.collection('guest_access').doc(guestAccessId).update({
         'status': status.toString().split('.').last,
@@ -175,12 +207,17 @@ class GuestAccessService {
       });
 
       AppLogger.logI(
-          'Статус гостевого доступа обновлен: $guestAccessId -> $status',
-          'guest_access_service');
+        'Статус гостевого доступа обновлен: $guestAccessId -> $status',
+        'guest_access_service',
+      );
       return true;
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка обновления статуса гостевого доступа',
-          'guest_access_service', e, stackTrace);
+      AppLogger.logE(
+        'Ошибка обновления статуса гостевого доступа',
+        'guest_access_service',
+        e,
+        stackTrace,
+      );
       return false;
     }
   }
@@ -190,18 +227,26 @@ class GuestAccessService {
     try {
       await _firestore.collection('guest_access').doc(guestAccessId).delete();
       AppLogger.logI(
-          'Гостевой доступ удален: $guestAccessId', 'guest_access_service');
+        'Гостевой доступ удален: $guestAccessId',
+        'guest_access_service',
+      );
       return true;
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка удаления гостевого доступа',
-          'guest_access_service', e, stackTrace);
+      AppLogger.logE(
+        'Ошибка удаления гостевого доступа',
+        'guest_access_service',
+        e,
+        stackTrace,
+      );
       return false;
     }
   }
 
   /// Продлить срок действия гостевого доступа
   Future<bool> extendGuestAccess(
-      String guestAccessId, Duration extension) async {
+    String guestAccessId,
+    Duration extension,
+  ) async {
     try {
       final doc =
           await _firestore.collection('guest_access').doc(guestAccessId).get();
@@ -216,12 +261,18 @@ class GuestAccessService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      AppLogger.logI('Срок действия гостевого доступа продлен: $guestAccessId',
-          'guest_access_service');
+      AppLogger.logI(
+        'Срок действия гостевого доступа продлен: $guestAccessId',
+        'guest_access_service',
+      );
       return true;
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка продления гостевого доступа',
-          'guest_access_service', e, stackTrace);
+      AppLogger.logE(
+        'Ошибка продления гостевого доступа',
+        'guest_access_service',
+        e,
+        stackTrace,
+      );
       return false;
     }
   }
@@ -232,7 +283,9 @@ class GuestAccessService {
     final random = Random();
     return String.fromCharCodes(
       Iterable.generate(
-          8, (_) => chars.codeUnitAt(random.nextInt(chars.length))),
+        8,
+        (_) => chars.codeUnitAt(random.nextInt(chars.length)),
+      ),
     );
   }
 
@@ -265,13 +318,16 @@ class GuestAccessService {
         'usageCount': guestAccess.usageCount,
         'lastUsedAt': guestAccess.lastUsedAt,
         'isActive': guestAccess.isActive,
-        'daysRemaining': guestAccess.expiresAt != null
-            ? guestAccess.expiresAt!.difference(DateTime.now()).inDays
-            : null,
+        'daysRemaining':
+            guestAccess.expiresAt?.difference(DateTime.now()).inDays,
       };
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка получения статистики гостевого доступа',
-          'guest_access_service', e, stackTrace);
+      AppLogger.logE(
+        'Ошибка получения статистики гостевого доступа',
+        'guest_access_service',
+        e,
+        stackTrace,
+      );
       return {};
     }
   }

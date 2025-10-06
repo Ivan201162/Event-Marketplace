@@ -367,7 +367,7 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
   void _createIdea() {
     if (widget.userId != null) {
       Navigator.of(context).push(
-        MaterialPageRoute(
+        MaterialPageRoute<void>(
           builder: (context) => CreateIdeaScreen(
             userId: widget.userId!,
           ),
@@ -379,10 +379,10 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
   void _showIdeaDetail(Idea idea) {
     if (widget.userId != null) {
       Navigator.of(context).push(
-        MaterialPageRoute(
+        MaterialPageRoute<void>(
           builder: (context) => IdeaDetailScreen(
             idea: idea,
-            userId: widget.userId!,
+            userId: widget.userId,
           ),
         ),
       );
@@ -402,7 +402,7 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
   }
 
   void _shareIdea(Idea idea) {
-    // TODO: Реализовать шаринг идеи
+    // TODO(developer): Реализовать шаринг идеи
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Идея скопирована в буфер обмена')),
     );
@@ -410,7 +410,7 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
 
   void _showTopIdeasScreen() {
     Navigator.of(context).push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => TopIdeasScreen(
           userId: widget.userId,
         ),
@@ -421,7 +421,7 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
   void _showSavedIdeasScreen() {
     if (widget.userId != null) {
       Navigator.of(context).push(
-        MaterialPageRoute(
+        MaterialPageRoute<void>(
           builder: (context) => SavedIdeasScreen(
             userId: widget.userId!,
           ),
@@ -433,7 +433,7 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
   void _showCollectionsScreen() {
     if (widget.userId != null) {
       Navigator.of(context).push(
-        MaterialPageRoute(
+        MaterialPageRoute<void>(
           builder: (context) => IdeaCollectionsScreen(
             userId: widget.userId!,
           ),
@@ -444,7 +444,7 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
 
   void _showCategoriesScreen() {
     Navigator.of(context).push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => IdeaCategoriesScreen(
           userId: widget.userId,
         ),
@@ -454,7 +454,7 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
 
   void _showSearchScreen() {
     Navigator.of(context).push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => IdeaSearchScreen(
           userId: widget.userId,
         ),
@@ -463,7 +463,7 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
   }
 
   void _showCategoryIdeas(String category) {
-    // TODO: Реализовать экран идей по категории
+    // TODO(developer): Реализовать экран идей по категории
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Идеи категории: $category')),
     );

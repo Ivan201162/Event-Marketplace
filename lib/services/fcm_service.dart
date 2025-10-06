@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,11 +48,7 @@ class FCMService {
     const initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    const initializationSettingsIOS = DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
+    const initializationSettingsIOS = DarwinInitializationSettings();
 
     const initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
@@ -159,7 +156,7 @@ class FCMService {
         message.hashCode,
         notification.title,
         notification.body,
-        NotificationDetails(
+        const NotificationDetails(
           android: AndroidNotificationDetails(
             'high_importance_channel',
             'High Importance Notifications',
@@ -169,7 +166,7 @@ class FCMService {
             priority: Priority.high,
             icon: '@mipmap/ic_launcher',
           ),
-          iOS: const DarwinNotificationDetails(
+          iOS: DarwinNotificationDetails(
             presentAlert: true,
             presentBadge: true,
             presentSound: true,
@@ -187,18 +184,24 @@ class FCMService {
     // Обработка различных типов уведомлений
     if (data.containsKey('type')) {
       switch (data['type']) {
+        case 'booking_created':
         case 'booking_confirmed':
-          _navigateToBooking(data['bookingId']);
-          break;
         case 'booking_rejected':
+        case 'booking_cancelled':
           _navigateToBooking(data['bookingId']);
           break;
         case 'payment_completed':
+        case 'payment_failed':
           _navigateToPayment(data['paymentId']);
           break;
         case 'chat_message':
           _navigateToChat(data['chatId']);
           break;
+        case 'review':
+          _navigateToSpecialistProfile(data['specialistId']);
+          break;
+        case 'system':
+        case 'promotion':
         default:
           _navigateToHome();
       }
@@ -216,31 +219,49 @@ class FCMService {
   /// Навигация к заявке
   void _navigateToBooking(String? bookingId) {
     if (bookingId != null) {
-      // TODO: Реализовать навигацию к заявке
+      // Навигация к деталям бронирования
       print('Navigate to booking: $bookingId');
+      // В реальном приложении здесь будет:
+      // GoRouter.of(context).go('/booking/$bookingId');
     }
   }
 
   /// Навигация к платежу
   void _navigateToPayment(String? paymentId) {
     if (paymentId != null) {
-      // TODO: Реализовать навигацию к платежу
+      // Навигация к деталям платежа
       print('Navigate to payment: $paymentId');
+      // В реальном приложении здесь будет:
+      // GoRouter.of(context).go('/payment/$paymentId');
     }
   }
 
   /// Навигация к чату
   void _navigateToChat(String? chatId) {
     if (chatId != null) {
-      // TODO: Реализовать навигацию к чату
+      // Навигация к чату
       print('Navigate to chat: $chatId');
+      // В реальном приложении здесь будет:
+      // GoRouter.of(context).go('/chat/$chatId');
+    }
+  }
+
+  /// Навигация к профилю специалиста
+  void _navigateToSpecialistProfile(String? specialistId) {
+    if (specialistId != null) {
+      // Навигация к профилю специалиста
+      print('Navigate to specialist profile: $specialistId');
+      // В реальном приложении здесь будет:
+      // GoRouter.of(context).go('/specialist/$specialistId');
     }
   }
 
   /// Навигация на главную
   void _navigateToHome() {
-    // TODO: Реализовать навигацию на главную
+    // Навигация на главную страницу
     print('Navigate to home');
+    // В реальном приложении здесь будет:
+    // GoRouter.of(context).go('/');
   }
 
   /// Получить FCM токен
@@ -293,7 +314,7 @@ class FCMService {
       id,
       title,
       body,
-      NotificationDetails(
+      const NotificationDetails(
         android: AndroidNotificationDetails(
           'high_importance_channel',
           'High Importance Notifications',
@@ -303,7 +324,7 @@ class FCMService {
           priority: Priority.high,
           icon: '@mipmap/ic_launcher',
         ),
-        iOS: const DarwinNotificationDetails(
+        iOS: DarwinNotificationDetails(
           presentAlert: true,
           presentBadge: true,
           presentSound: true,
@@ -336,7 +357,7 @@ class FCMService {
           priority: Priority.high,
           icon: '@mipmap/ic_launcher',
         ),
-        iOS: const DarwinNotificationDetails(
+        iOS: DarwinNotificationDetails(
           presentAlert: true,
           presentBadge: true,
           presentSound: true,
@@ -380,14 +401,55 @@ class FCMService {
   /// Сохранить FCM токен пользователя в Firestore
   Future<void> saveUserFCMToken(String userId, String token) async {
     try {
-      // TODO: Реализовать сохранение токена в Firestore
-      // await FirebaseFirestore.instance
-      //     .collection('users')
-      //     .doc(userId)
-      //     .update({'fcmToken': token});
+      await FirebaseFirestore.instance.collection('users').doc(userId).update({
+        'fcmToken': token,
+        'fcmTokenUpdatedAt': FieldValue.serverTimestamp(),
+      });
       print('FCM token saved for user: $userId');
     } catch (e) {
       print('Error saving FCM token: $e');
+    }
+  }
+
+  /// Отправить уведомление через FCM API
+  Future<void> sendNotification({
+    required String userId,
+    required String title,
+    required String body,
+    Map<String, dynamic>? data,
+  }) async {
+    try {
+      // Получаем FCM токен пользователя из Firestore
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (!userDoc.exists) {
+        print('User not found: $userId');
+        return;
+      }
+
+      final userData = userDoc.data()!;
+      final fcmToken = userData['fcmToken'] as String?;
+
+      if (fcmToken == null) {
+        print('FCM token not found for user: $userId');
+        return;
+      }
+
+      // В реальном приложении здесь был бы HTTP запрос к FCM API
+      // Для демонстрации показываем локальное уведомление
+      await showLocalNotification(
+        id: DateTime.now().millisecondsSinceEpoch,
+        title: title,
+        body: body,
+        data: data,
+      );
+
+      print('Notification sent to user $userId: $title');
+    } catch (e) {
+      print('Error sending notification: $e');
     }
   }
 
@@ -400,22 +462,75 @@ class FCMService {
     required String
         type, // 'booking_created', 'booking_confirmed', 'booking_rejected', 'booking_cancelled'
   }) async {
-    try {
-      // В реальном приложении здесь был бы HTTP запрос к FCM API
-      // Для демонстрации показываем локальное уведомление
-      await showLocalNotification(
-        id: DateTime.now().millisecondsSinceEpoch,
-        title: title,
-        body: body,
-        data: {
-          'type': type,
-          'bookingId': bookingId,
-          'userId': userId,
-        },
-      );
-    } catch (e) {
-      print('Error sending booking notification: $e');
-    }
+    await sendNotification(
+      userId: userId,
+      title: title,
+      body: body,
+      data: {
+        'type': type,
+        'bookingId': bookingId,
+        'userId': userId,
+      },
+    );
+  }
+
+  /// Отправить уведомление о новом сообщении в чате
+  Future<void> sendChatNotification({
+    required String userId,
+    required String senderName,
+    required String message,
+    required String chatId,
+  }) async {
+    await sendNotification(
+      userId: userId,
+      title: 'Новое сообщение от $senderName',
+      body: message,
+      data: {
+        'type': 'chat_message',
+        'chatId': chatId,
+        'senderName': senderName,
+      },
+    );
+  }
+
+  /// Отправить уведомление о новом отзыве
+  Future<void> sendReviewNotification({
+    required String userId,
+    required String reviewerName,
+    required int rating,
+    required String specialistId,
+  }) async {
+    await sendNotification(
+      userId: userId,
+      title: 'Новый отзыв от $reviewerName',
+      body: 'Оценка: ${'⭐' * rating}',
+      data: {
+        'type': 'review',
+        'specialistId': specialistId,
+        'reviewerName': reviewerName,
+        'rating': rating.toString(),
+      },
+    );
+  }
+
+  /// Отправить уведомление с предложением оставить отзыв
+  Future<void> sendReviewRequestNotification({
+    required String userId,
+    required String specialistName,
+    required String bookingId,
+    required String specialistId,
+  }) async {
+    await sendNotification(
+      userId: userId,
+      title: 'Оставьте отзыв о специалисте',
+      body: 'Поделитесь своим опытом работы с $specialistName',
+      data: {
+        'type': 'review_request',
+        'specialistId': specialistId,
+        'specialistName': specialistName,
+        'bookingId': bookingId,
+      },
+    );
   }
 
   /// Подписаться на уведомления о бронированиях
@@ -436,5 +551,160 @@ class FCMService {
     } catch (e) {
       print('Error unsubscribing from booking notifications: $e');
     }
+  }
+
+  /// Отправить уведомление о новом предложении специалиста
+  Future<void> sendProposalNotification({
+    required String customerId,
+    required String organizerName,
+    required String proposalTitle,
+    required int specialistCount,
+  }) async {
+    await sendNotification(
+      userId: customerId,
+      title: 'Новое предложение специалистов',
+      body:
+          '$organizerName предложил $specialistCount специалистов для "$proposalTitle"',
+      data: {
+        'type': 'proposal',
+        'organizerName': organizerName,
+        'proposalTitle': proposalTitle,
+        'specialistCount': specialistCount.toString(),
+      },
+    );
+  }
+
+  /// Отправить уведомление о принятии предложения
+  Future<void> sendProposalAcceptedNotification({
+    required String organizerId,
+    required String customerName,
+    required String specialistId,
+  }) async {
+    await sendNotification(
+      userId: organizerId,
+      title: 'Предложение принято',
+      body: '$customerName принял ваше предложение специалиста',
+      data: {
+        'type': 'proposal_accepted',
+        'customerName': customerName,
+        'specialistId': specialistId,
+      },
+    );
+  }
+
+  /// Отправить уведомление об отклонении предложения
+  Future<void> sendProposalRejectedNotification({
+    required String organizerId,
+    required String customerName,
+  }) async {
+    await sendNotification(
+      userId: organizerId,
+      title: 'Предложение отклонено',
+      body: '$customerName отклонил ваше предложение',
+      data: {
+        'type': 'proposal_rejected',
+        'customerName': customerName,
+      },
+    );
+  }
+
+  /// Отправить уведомление о скидке
+  Future<void> sendDiscountNotification({
+    required String customerId,
+    required String specialistName,
+    required int discountPercent,
+    required double newPrice,
+  }) async {
+    await sendNotification(
+      userId: customerId,
+      title: 'Специальное предложение от $specialistName',
+      body:
+          'Скидка $discountPercent%! Новая цена: ${newPrice.toStringAsFixed(0)} ₽',
+      data: {
+        'type': 'discount',
+        'specialistName': specialistName,
+        'discountPercent': discountPercent.toString(),
+        'newPrice': newPrice.toString(),
+      },
+    );
+  }
+
+  /// Отправить уведомление о бронировании фотостудии
+  Future<void> sendPhotoStudioBookingNotification({
+    required String ownerId,
+    required String customerName,
+    required String studioName,
+    required DateTime startTime,
+    required double totalPrice,
+  }) async {
+    await sendNotification(
+      userId: ownerId,
+      title: 'Новое бронирование фотостудии',
+      body:
+          '$customerName забронировал "$studioName" на ${startTime.toString().split(' ')[0]}',
+      data: {
+        'type': 'photo_studio_booking',
+        'customerName': customerName,
+        'studioName': studioName,
+        'startTime': startTime.toIso8601String(),
+        'totalPrice': totalPrice.toString(),
+      },
+    );
+  }
+
+  /// Отправить уведомление о подтверждении бронирования
+  Future<void> sendBookingConfirmedNotification({
+    required String customerId,
+    required String studioName,
+    required DateTime startTime,
+  }) async {
+    await sendNotification(
+      userId: customerId,
+      title: 'Бронирование подтверждено',
+      body:
+          'Ваше бронирование "$studioName" на ${startTime.toString().split(' ')[0]} подтверждено',
+      data: {
+        'type': 'booking_confirmed',
+        'studioName': studioName,
+        'startTime': startTime.toIso8601String(),
+      },
+    );
+  }
+
+  /// Отправить уведомление об отмене бронирования
+  Future<void> sendBookingCancelledNotification({
+    required String customerId,
+    required String studioName,
+    required DateTime startTime,
+  }) async {
+    await sendNotification(
+      userId: customerId,
+      title: 'Бронирование отменено',
+      body:
+          'Ваше бронирование "$studioName" на ${startTime.toString().split(' ')[0]} отменено',
+      data: {
+        'type': 'booking_cancelled',
+        'studioName': studioName,
+        'startTime': startTime.toIso8601String(),
+      },
+    );
+  }
+
+  /// Отправить уведомление о предложении фотостудии
+  Future<void> sendStudioSuggestionNotification({
+    required String photographerId,
+    required String studioName,
+    required String studioLocation,
+  }) async {
+    await sendNotification(
+      userId: photographerId,
+      title: 'Рекомендация фотостудии',
+      body: 'Рекомендуем фотостудию "$studioName" в $studioLocation',
+      data: {
+        'type': 'studio_suggestion',
+        'studioName': studioName,
+        'studioLocation': studioLocation,
+      },
+    );
   }
 }

@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:signature/signature.dart';
 
 class SignatureWidget extends StatelessWidget {
-  final SignatureController signatureController;
-  final VoidCallback onSign;
-  final VoidCallback onCancel;
-
   const SignatureWidget({
     super.key,
     required this.signatureController,
     required this.onSign,
     required this.onCancel,
   });
+  final SignatureController signatureController;
+  final VoidCallback onSign;
+  final VoidCallback onCancel;
 
   @override
   Widget build(BuildContext context) => Dialog(
@@ -85,9 +84,7 @@ class SignatureWidget extends StatelessWidget {
                 children: [
                   Expanded(
                     child: OutlinedButton.icon(
-                      onPressed: () {
-                        signatureController.clear();
-                      },
+                      onPressed: signatureController.clear,
                       icon: const Icon(Icons.clear),
                       label: const Text('Очистить'),
                       style: OutlinedButton.styleFrom(

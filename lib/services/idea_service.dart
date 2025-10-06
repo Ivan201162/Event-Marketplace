@@ -1,654 +1,537 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
-import '../core/feature_flags.dart';
-import '../models/collection.dart';
 import '../models/idea.dart';
-import '../models/idea_filter.dart';
-import '../models/idea_stats.dart';
 
-/// Сервис для работы с идеями
+/// Сервис для управления идеями
 class IdeaService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  static const String _ideasCollection = 'ideas';
+  static const String _collectionsCollection = 'idea_collections';
+  static const String _ideasStoragePath = 'ideas';
 
-  /// Получить все публичные идеи с пагинацией
-  Stream<List<Idea>> getPublicIdeas({
-    int limit = 20,
-    DocumentSnapshot? lastDocument,
-    String? category,
-    List<String>? tags,
-  }) {
-    if (!FeatureFlags.ideasEnabled) {
-      return Stream.value([]);
+  /// Создать новую идею
+  Future<String> createIdea({
+    required String title,
+    required String description,
+    required List<File> imageFiles,
+    File? videoFile,
+    required IdeaCategory category,
+    required List<String> tags,
+    required String authorId,
+    required String authorName,
+    String? authorAvatar,
+    Map<String, dynamic>? metadata,
+  }) async {
+    try {
+      // Загружаем изображения
+      final imageUrls = <String>[];
+      for (final imageFile in imageFiles) {
+        final fileName =
+            '${DateTime.now().millisecondsSinceEpoch}_${imageFile.path.split('/').last}';
+        final storageRef = _storage
+            .ref()
+            .child('$_ideasStoragePath/$authorId/images/$fileName');
+
+        final uploadTask = await storageRef.putFile(imageFile);
+        final downloadUrl = await uploadTask.ref.getDownloadURL();
+        imageUrls.add(downloadUrl);
+      }
+
+      // Загружаем видео (если есть)
+      String? videoUrl;
+      if (videoFile != null) {
+        final fileName =
+            '${DateTime.now().millisecondsSinceEpoch}_${videoFile.path.split('/').last}';
+        final storageRef = _storage
+            .ref()
+            .child('$_ideasStoragePath/$authorId/videos/$fileName');
+
+        final uploadTask = await storageRef.putFile(videoFile);
+        videoUrl = await uploadTask.ref.getDownloadURL();
+      }
+
+      // Создаем идею
+      final ideaId = '${authorId}_${DateTime.now().millisecondsSinceEpoch}';
+      final idea = Idea(
+        id: ideaId,
+        title: title,
+        description: description,
+        imageUrls: imageUrls,
+        videoUrl: videoUrl,
+        category: category,
+        tags: tags,
+        authorId: authorId,
+        authorName: authorName,
+        authorAvatar: authorAvatar,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        status: IdeaStatus.active,
+        metadata: metadata,
+      );
+
+      await _firestore
+          .collection(_ideasCollection)
+          .doc(ideaId)
+          .set(idea.toMap());
+
+      return ideaId;
+    } catch (e) {
+      print('Ошибка создания идеи: $e');
+      rethrow;
     }
+  }
 
+  /// Получить все активные идеи
+  Future<List<Idea>> getAllIdeas({
+    IdeaCategory? category,
+    List<String>? tags,
+    int limit = 50,
+  }) async {
+    try {
+      var query = _firestore
+          .collection(_ideasCollection)
+          .where('status', isEqualTo: IdeaStatus.active.name)
+          .orderBy('createdAt', descending: true);
+
+      if (category != null) {
+        query = query.where('category', isEqualTo: category.name);
+      }
+
+      if (tags != null && tags.isNotEmpty) {
+        query = query.where('tags', arrayContainsAny: tags);
+      }
+
+      query = query.limit(limit);
+
+      final querySnapshot = await query.get();
+      return querySnapshot.docs.map(Idea.fromDocument).toList();
+    } catch (e) {
+      print('Ошибка получения идей: $e');
+      return [];
+    }
+  }
+
+  /// Поток всех активных идей
+  Stream<List<Idea>> getAllIdeasStream({
+    IdeaCategory? category,
+    List<String>? tags,
+    int limit = 50,
+  }) {
     var query = _firestore
-        .collection('ideas')
-        .where('isPublic', isEqualTo: true)
+        .collection(_ideasCollection)
+        .where('status', isEqualTo: IdeaStatus.active.name)
         .orderBy('createdAt', descending: true);
 
     if (category != null) {
-      query = query.where('category', isEqualTo: category);
+      query = query.where('category', isEqualTo: category.name);
     }
 
-    if (lastDocument != null) {
-      query = query.startAfterDocument(lastDocument);
+    if (tags != null && tags.isNotEmpty) {
+      query = query.where('tags', arrayContainsAny: tags);
     }
 
     query = query.limit(limit);
 
     return query.snapshots().map(
-          (snapshot) => snapshot.docs
-              .map(
-                (doc) => Idea.fromMap({
-                  'id': doc.id,
-                  ...doc.data(),
-                }),
-              )
-              .toList(),
+          (snapshot) => snapshot.docs.map(Idea.fromDocument).toList(),
         );
   }
 
   /// Получить идеи пользователя
-  Stream<List<Idea>> getUserIdeas(String userId) {
-    if (!FeatureFlags.ideasEnabled) {
-      return Stream.value([]);
-    }
-
-    return _firestore
-        .collection('ideas')
-        .where('authorId', isEqualTo: userId)
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map(
-          (snapshot) => snapshot.docs
-              .map(
-                (doc) => Idea.fromMap({
-                  'id': doc.id,
-                  ...doc.data(),
-                }),
-              )
-              .toList(),
-        );
-  }
-
-  /// Получить сохраненные идеи пользователя
-  Stream<List<Idea>> getSavedIdeas(String userId) {
-    if (!FeatureFlags.ideasEnabled) {
-      return Stream.value([]);
-    }
-
-    return _firestore
-        .collection('ideas')
-        .where('savedBy', arrayContains: userId)
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map(
-          (snapshot) => snapshot.docs
-              .map(
-                (doc) => Idea.fromMap({
-                  'id': doc.id,
-                  ...doc.data(),
-                }),
-              )
-              .toList(),
-        );
-  }
-
-  /// Создать новую идею
-  Future<String> createIdea(Idea idea) async {
-    if (!FeatureFlags.ideasEnabled) {
-      throw Exception('Функция идей отключена');
-    }
-
+  Future<List<Idea>> getUserIdeas(String userId) async {
     try {
-      final docRef = await _firestore.collection('ideas').add(idea.toMap());
-      return docRef.id;
+      final querySnapshot = await _firestore
+          .collection(_ideasCollection)
+          .where('authorId', isEqualTo: userId)
+          .where('status', isEqualTo: IdeaStatus.active.name)
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      return querySnapshot.docs.map(Idea.fromDocument).toList();
     } catch (e) {
-      debugPrint('Error creating idea: $e');
-      throw Exception('Ошибка создания идеи: $e');
+      print('Ошибка получения идей пользователя: $e');
+      return [];
     }
   }
 
-  /// Обновить идею
-  Future<void> updateIdea(String ideaId, Map<String, dynamic> updates) async {
-    if (!FeatureFlags.ideasEnabled) {
-      throw Exception('Функция идей отключена');
-    }
-
-    try {
-      await _firestore.collection('ideas').doc(ideaId).update({
-        ...updates,
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
-    } catch (e) {
-      debugPrint('Error updating idea: $e');
-      throw Exception('Ошибка обновления идеи: $e');
-    }
-  }
-
-  /// Удалить идею
-  Future<void> deleteIdea(String ideaId) async {
-    if (!FeatureFlags.ideasEnabled) {
-      throw Exception('Функция идей отключена');
-    }
-
-    try {
-      await _firestore.collection('ideas').doc(ideaId).delete();
-    } catch (e) {
-      debugPrint('Error deleting idea: $e');
-      throw Exception('Ошибка удаления идеи: $e');
-    }
-  }
-
-  /// Лайкнуть/убрать лайк с идеи
-  Future<void> toggleLike(String ideaId, String userId) async {
-    if (!FeatureFlags.ideasEnabled) {
-      throw Exception('Функция идей отключена');
-    }
-
-    try {
-      final ideaRef = _firestore.collection('ideas').doc(ideaId);
-
-      await _firestore.runTransaction((transaction) async {
-        final ideaDoc = await transaction.get(ideaRef);
-        if (!ideaDoc.exists) {
-          throw Exception('Идея не найдена');
-        }
-
-        final idea = Idea.fromMap({
-          'id': ideaDoc.id,
-          ...ideaDoc.data()!,
-        });
-
-        final isLiked = idea.likedBy.contains(userId);
-        final newLikedBy = List<String>.from(idea.likedBy);
-
-        if (isLiked) {
-          newLikedBy.remove(userId);
-        } else {
-          newLikedBy.add(userId);
-        }
-
-        transaction.update(ideaRef, {
-          'likedBy': newLikedBy,
-          'likesCount': newLikedBy.length,
-          'updatedAt': FieldValue.serverTimestamp(),
-        });
-      });
-    } catch (e) {
-      debugPrint('Error toggling like: $e');
-      throw Exception('Ошибка изменения лайка: $e');
-    }
-  }
-
-  /// Сохранить/убрать из сохраненных идею
-  Future<void> toggleSave(String ideaId, String userId) async {
-    if (!FeatureFlags.ideasEnabled) {
-      throw Exception('Функция идей отключена');
-    }
-
-    try {
-      final ideaRef = _firestore.collection('ideas').doc(ideaId);
-
-      await _firestore.runTransaction((transaction) async {
-        final ideaDoc = await transaction.get(ideaRef);
-        if (!ideaDoc.exists) {
-          throw Exception('Идея не найдена');
-        }
-
-        final idea = Idea.fromMap({
-          'id': ideaDoc.id,
-          ...ideaDoc.data()!,
-        });
-
-        final isSaved = idea.savedBy.contains(userId);
-        final newSavedBy = List<String>.from(idea.savedBy);
-
-        if (isSaved) {
-          newSavedBy.remove(userId);
-        } else {
-          newSavedBy.add(userId);
-        }
-
-        transaction.update(ideaRef, {
-          'savedBy': newSavedBy,
-          'savesCount': newSavedBy.length,
-          'updatedAt': FieldValue.serverTimestamp(),
-        });
-      });
-    } catch (e) {
-      debugPrint('Error toggling save: $e');
-      throw Exception('Ошибка изменения сохранения: $e');
-    }
-  }
-
-  /// Поиск идей
-  Stream<List<Idea>> searchIdeas({
-    required String query,
-    String? category,
-    List<String>? tags,
-    int limit = 20,
-  }) {
-    if (!FeatureFlags.ideasEnabled) {
-      return Stream.value([]);
-    }
-
-    var firestoreQuery =
-        _firestore.collection('ideas').where('isPublic', isEqualTo: true);
-
-    if (category != null) {
-      firestoreQuery = firestoreQuery.where('category', isEqualTo: category);
-    }
-
-    if (tags != null && tags.isNotEmpty) {
-      firestoreQuery = firestoreQuery.where('tags', arrayContainsAny: tags);
-    }
-
-    firestoreQuery =
-        firestoreQuery.orderBy('createdAt', descending: true).limit(limit);
-
-    return firestoreQuery.snapshots().map((snapshot) {
-      final ideas = snapshot.docs
-          .map(
-            (doc) => Idea.fromMap({
-              'id': doc.id,
-              ...doc.data(),
-            }),
-          )
-          .toList();
-
-      // Фильтруем по тексту поиска
-      if (query.isNotEmpty) {
-        final lowercaseQuery = query.toLowerCase();
-        ideas.removeWhere(
-          (idea) =>
-              !idea.title.toLowerCase().contains(lowercaseQuery) &&
-              !idea.description.toLowerCase().contains(lowercaseQuery) &&
-              !idea.tags
-                  .any((tag) => tag.toLowerCase().contains(lowercaseQuery)),
-        );
-      }
-
-      return ideas;
-    });
-  }
-
-  /// Получить популярные идеи
-  Stream<List<Idea>> getPopularIdeas({int limit = 20}) {
-    if (!FeatureFlags.ideasEnabled) {
-      return Stream.value([]);
-    }
-
-    return _firestore
-        .collection('ideas')
-        .where('isPublic', isEqualTo: true)
-        .orderBy('likesCount', descending: true)
-        .orderBy('createdAt', descending: true)
-        .limit(limit)
-        .snapshots()
-        .map(
-          (snapshot) => snapshot.docs
-              .map(
-                (doc) => Idea.fromMap({
-                  'id': doc.id,
-                  ...doc.data(),
-                }),
-              )
-              .toList(),
-        );
-  }
-
-  /// Получить идеи по категории
-  Stream<List<Idea>> getIdeasByCategory(String category, {int limit = 20}) {
-    if (!FeatureFlags.ideasEnabled) {
-      return Stream.value([]);
-    }
-
-    return _firestore
-        .collection('ideas')
-        .where('isPublic', isEqualTo: true)
-        .where('category', isEqualTo: category)
-        .orderBy('createdAt', descending: true)
-        .limit(limit)
-        .snapshots()
-        .map(
-          (snapshot) => snapshot.docs
-              .map(
-                (doc) => Idea.fromMap({
-                  'id': doc.id,
-                  ...doc.data(),
-                }),
-              )
-              .toList(),
-        );
-  }
-
-  /// Получить идею по ID
-  Future<Idea?> getIdeaById(String ideaId) async {
-    if (!FeatureFlags.ideasEnabled) {
-      return null;
-    }
-
-    try {
-      final doc = await _firestore.collection('ideas').doc(ideaId).get();
-      if (!doc.exists) {
-        return null;
-      }
-
-      return Idea.fromMap({
-        'id': doc.id,
-        ...doc.data()!,
-      });
-    } catch (e) {
-      debugPrint('Error getting idea: $e');
-      return null;
-    }
-  }
-
-  /// Получить комментарии к идее
-  Stream<List<IdeaComment>> getIdeaComments(String ideaId) {
-    if (!FeatureFlags.ideasEnabled) {
-      return Stream.value([]);
-    }
-
-    return _firestore
-        .collection('idea_comments')
-        .where('ideaId', isEqualTo: ideaId)
-        .where('parentCommentId', isNull: true) // Только основные комментарии
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map(
-          (snapshot) => snapshot.docs
-              .map(
-                (doc) => IdeaComment.fromMap({
-                  'id': doc.id,
-                  ...doc.data(),
-                }),
-              )
-              .toList(),
-        );
-  }
-
-  /// Добавить комментарий к идее
-  Future<String> addComment(IdeaComment comment) async {
-    if (!FeatureFlags.ideasEnabled) {
-      throw Exception('Функция идей отключена');
-    }
-
-    try {
-      final docRef =
-          await _firestore.collection('idea_comments').add(comment.toMap());
-
-      // Увеличиваем счетчик комментариев
-      await _firestore.collection('ideas').doc(comment.ideaId).update({
-        'commentsCount': FieldValue.increment(1),
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
-
-      return docRef.id;
-    } catch (e) {
-      debugPrint('Error adding comment: $e');
-      throw Exception('Ошибка добавления комментария: $e');
-    }
-  }
-
-  /// Лайкнуть/убрать лайк с комментария
-  Future<void> toggleCommentLike(String commentId, String userId) async {
-    if (!FeatureFlags.ideasEnabled) {
-      throw Exception('Функция идей отключена');
-    }
-
-    try {
-      final commentRef = _firestore.collection('idea_comments').doc(commentId);
-
-      await _firestore.runTransaction((transaction) async {
-        final commentDoc = await transaction.get(commentRef);
-        if (!commentDoc.exists) {
-          throw Exception('Комментарий не найден');
-        }
-
-        final comment = IdeaComment.fromMap({
-          'id': commentDoc.id,
-          ...commentDoc.data()!,
-        });
-
-        final isLiked = comment.likedBy.contains(userId);
-        final newLikedBy = List<String>.from(comment.likedBy);
-
-        if (isLiked) {
-          newLikedBy.remove(userId);
-        } else {
-          newLikedBy.add(userId);
-        }
-
-        transaction.update(commentRef, {
-          'likedBy': newLikedBy,
-          'likesCount': newLikedBy.length,
-          'updatedAt': FieldValue.serverTimestamp(),
-        });
-      });
-    } catch (e) {
-      debugPrint('Error toggling comment like: $e');
-      throw Exception('Ошибка изменения лайка комментария: $e');
-    }
-  }
-
-  /// Получить идеи с фильтром
-  Stream<List<Idea>> getIdeas(IdeaFilter filter) {
-    Query<Map<String, dynamic>> query = _firestore.collection('ideas');
-
-    if (filter.category != null) {
-      query = query.where('category', isEqualTo: filter.category);
-    }
-
-    if (filter.authorId != null) {
-      query = query.where('authorId', isEqualTo: filter.authorId);
-    }
-
-    if (filter.tags != null && filter.tags!.isNotEmpty) {
-      query = query.where('tags', arrayContainsAny: filter.tags);
-    }
-
-    if (filter.isPublic != null) {
-      query = query.where('isPublic', isEqualTo: filter.isPublic);
-    }
-
-    query = query.orderBy('createdAt', descending: true);
-
-    if (filter.limit != null) {
-      query = query.limit(filter.limit!);
-    }
-
-    return query.snapshots().map(
-          (snapshot) =>
-              snapshot.docs.map((doc) => Idea.fromMap(doc.data())).toList(),
-        );
-  }
-
-  /// Получить идею по ID
-  Future<Idea?> getIdea(String ideaId) async {
-    try {
-      final doc = await _firestore.collection('ideas').doc(ideaId).get();
-      if (doc.exists) {
-        return Idea.fromMap(doc.data()!);
-      }
-      return null;
-    } catch (e) {
-      debugPrint('Error getting idea: $e');
-      return null;
-    }
-  }
-
-  /// Получить топ идеи недели
-  Stream<List<Idea>> getTopIdeasOfWeek({int limit = 10}) {
-    final weekAgo = DateTime.now().subtract(const Duration(days: 7));
-
-    return _firestore
-        .collection('ideas')
-        .where('isPublic', isEqualTo: true)
-        .where('createdAt', isGreaterThan: Timestamp.fromDate(weekAgo))
-        .orderBy('createdAt')
-        .orderBy('likesCount', descending: true)
-        .limit(limit)
-        .snapshots()
-        .map(
-          (snapshot) =>
-              snapshot.docs.map((doc) => Idea.fromMap(doc.data())).toList(),
-        );
-  }
-
-  /// Получить коллекции пользователя
-  Stream<List<Collection>> getUserCollections(String userId) => _firestore
-      .collection('collections')
+  /// Поток идей пользователя
+  Stream<List<Idea>> getUserIdeasStream(String userId) => _firestore
+      .collection(_ideasCollection)
       .where('authorId', isEqualTo: userId)
+      .where('status', isEqualTo: IdeaStatus.active.name)
       .orderBy('createdAt', descending: true)
       .snapshots()
       .map(
-        (snapshot) =>
-            snapshot.docs.map((doc) => Collection.fromMap(doc.data())).toList(),
+        (snapshot) => snapshot.docs.map(Idea.fromDocument).toList(),
       );
 
-  /// Получить статистику идей
-  Future<IdeaStats> getIdeaStats(String ideaId) async {
+  /// Получить сохраненные идеи пользователя
+  Future<List<Idea>> getSavedIdeas(String userId) async {
     try {
-      final idea = await getIdea(ideaId);
-      if (idea == null) {
-        throw Exception('Идея не найдена');
+      final querySnapshot = await _firestore
+          .collection(_ideasCollection)
+          .where('savedBy', arrayContains: userId)
+          .where('status', isEqualTo: IdeaStatus.active.name)
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      return querySnapshot.docs.map(Idea.fromDocument).toList();
+    } catch (e) {
+      print('Ошибка получения сохраненных идей: $e');
+      return [];
+    }
+  }
+
+  /// Поток сохраненных идей пользователя
+  Stream<List<Idea>> getSavedIdeasStream(String userId) => _firestore
+      .collection(_ideasCollection)
+      .where('savedBy', arrayContains: userId)
+      .where('status', isEqualTo: IdeaStatus.active.name)
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(Idea.fromDocument).toList(),
+      );
+
+  /// Получить идею по ID
+  Future<Idea?> getIdeaById(String ideaId) async {
+    try {
+      final doc =
+          await _firestore.collection(_ideasCollection).doc(ideaId).get();
+      if (doc.exists) {
+        return Idea.fromDocument(doc);
       }
-
-      // Получить количество комментариев
-      final commentsSnapshot = await _firestore
-          .collection('idea_comments')
-          .where('ideaId', isEqualTo: ideaId)
-          .get();
-
-      // Получить количество сохранений
-      final savesSnapshot = await _firestore
-          .collection('idea_saves')
-          .where('ideaId', isEqualTo: ideaId)
-          .get();
-
-      return IdeaStats(
-        ideaId: ideaId,
-        likesCount: idea.likesCount,
-        commentsCount: commentsSnapshot.docs.length,
-        savesCount: savesSnapshot.docs.length,
-        viewsCount: idea.viewsCount,
-      );
+      return null;
     } catch (e) {
-      debugPrint('Error getting idea stats: $e');
-      throw Exception('Ошибка получения статистики идеи: $e');
+      print('Ошибка получения идеи по ID: $e');
+      return null;
     }
   }
 
-  /// Выбрать изображения (заглушка)
-  Future<List<String>> pickImages({int? maxImages}) async {
-    // В реальном приложении здесь будет логика выбора изображений
-    // Пока возвращаем пустой список
-    return [];
-  }
-
-  /// Загрузить изображение идеи (заглушка)
-  Future<String> uploadIdeaImage(String imagePath) async {
-    // В реальном приложении здесь будет логика загрузки изображения
-    // Пока возвращаем заглушку
-    return 'uploaded_image_${DateTime.now().millisecondsSinceEpoch}.jpg';
-  }
-
-  /// Сделать фото (заглушка)
-  Future<String> takePhoto() async {
-    // В реальном приложении здесь будет логика съемки фото
-    // Пока возвращаем заглушку
-    return 'photo_${DateTime.now().millisecondsSinceEpoch}.jpg';
-  }
-
-  /// Создать коллекцию идей
-  Future<String> createIdeaCollection({
-    required String name,
-    required String description,
-    required String userId,
-    List<String>? ideaIds,
-  }) async {
-    try {
-      final collectionData = {
-        'name': name,
-        'description': description,
-        'userId': userId,
-        'ideaIds': ideaIds ?? [],
-        'createdAt': FieldValue.serverTimestamp(),
-        'updatedAt': FieldValue.serverTimestamp(),
-      };
-
-      final docRef =
-          await _firestore.collection('idea_collections').add(collectionData);
-      return docRef.id;
-    } catch (e) {
-      throw Exception('Ошибка создания коллекции идей: $e');
-    }
-  }
-
-  /// Увеличить счетчик просмотров
-  Future<void> incrementViewsCount(String ideaId) async {
-    try {
-      await _firestore.collection('ideas').doc(ideaId).update({
-        'viewsCount': FieldValue.increment(1),
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
-    } catch (e) {
-      throw Exception('Ошибка увеличения счетчика просмотров: $e');
-    }
-  }
+  /// Поток идеи по ID
+  Stream<Idea?> getIdeaStream(String ideaId) => _firestore
+      .collection(_ideasCollection)
+      .doc(ideaId)
+      .snapshots()
+      .map((doc) => doc.exists ? Idea.fromDocument(doc) : null);
 
   /// Лайкнуть идею
   Future<void> likeIdea(String ideaId, String userId) async {
     try {
-      await _firestore.collection('ideas').doc(ideaId).update({
-        'likedBy': FieldValue.arrayUnion([userId]),
-        'likesCount': FieldValue.increment(1),
-        'updatedAt': FieldValue.serverTimestamp(),
+      final ideaDoc =
+          await _firestore.collection(_ideasCollection).doc(ideaId).get();
+      if (!ideaDoc.exists) return;
+
+      final idea = Idea.fromDocument(ideaDoc);
+      if (idea.isLikedBy(userId)) return;
+
+      final updatedIdea = idea.addLike(userId);
+
+      await _firestore.collection(_ideasCollection).doc(ideaId).update({
+        'likesCount': updatedIdea.likesCount,
+        'likedBy': updatedIdea.likedBy,
       });
     } catch (e) {
-      throw Exception('Ошибка лайка идеи: $e');
+      print('Ошибка лайка идеи: $e');
+      rethrow;
     }
   }
 
   /// Убрать лайк с идеи
   Future<void> unlikeIdea(String ideaId, String userId) async {
     try {
-      await _firestore.collection('ideas').doc(ideaId).update({
-        'likedBy': FieldValue.arrayRemove([userId]),
-        'likesCount': FieldValue.increment(-1),
-        'updatedAt': FieldValue.serverTimestamp(),
+      final ideaDoc =
+          await _firestore.collection(_ideasCollection).doc(ideaId).get();
+      if (!ideaDoc.exists) return;
+
+      final idea = Idea.fromDocument(ideaDoc);
+      if (!idea.isLikedBy(userId)) return;
+
+      final updatedIdea = idea.removeLike(userId);
+
+      await _firestore.collection(_ideasCollection).doc(ideaId).update({
+        'likesCount': updatedIdea.likesCount,
+        'likedBy': updatedIdea.likedBy,
       });
     } catch (e) {
-      throw Exception('Ошибка удаления лайка идеи: $e');
+      print('Ошибка убирания лайка с идеи: $e');
+      rethrow;
     }
   }
 
   /// Сохранить идею
   Future<void> saveIdea(String ideaId, String userId) async {
     try {
-      await _firestore.collection('ideas').doc(ideaId).update({
-        'savedBy': FieldValue.arrayUnion([userId]),
-        'savesCount': FieldValue.increment(1),
-        'updatedAt': FieldValue.serverTimestamp(),
+      final ideaDoc =
+          await _firestore.collection(_ideasCollection).doc(ideaId).get();
+      if (!ideaDoc.exists) return;
+
+      final idea = Idea.fromDocument(ideaDoc);
+      if (idea.isSavedBy(userId)) return;
+
+      final updatedIdea = idea.addSave(userId);
+
+      await _firestore.collection(_ideasCollection).doc(ideaId).update({
+        'savesCount': updatedIdea.savesCount,
+        'savedBy': updatedIdea.savedBy,
       });
     } catch (e) {
-      throw Exception('Ошибка сохранения идеи: $e');
+      print('Ошибка сохранения идеи: $e');
+      rethrow;
     }
   }
 
-  /// Убрать из сохраненных
+  /// Убрать идею из сохраненных
   Future<void> unsaveIdea(String ideaId, String userId) async {
     try {
-      await _firestore.collection('ideas').doc(ideaId).update({
-        'savedBy': FieldValue.arrayRemove([userId]),
-        'savesCount': FieldValue.increment(-1),
-        'updatedAt': FieldValue.serverTimestamp(),
+      final ideaDoc =
+          await _firestore.collection(_ideasCollection).doc(ideaId).get();
+      if (!ideaDoc.exists) return;
+
+      final idea = Idea.fromDocument(ideaDoc);
+      if (!idea.isSavedBy(userId)) return;
+
+      final updatedIdea = idea.removeSave(userId);
+
+      await _firestore.collection(_ideasCollection).doc(ideaId).update({
+        'savesCount': updatedIdea.savesCount,
+        'savedBy': updatedIdea.savedBy,
       });
     } catch (e) {
-      throw Exception('Ошибка удаления из сохраненных: $e');
+      print('Ошибка убирания идеи из сохраненных: $e');
+      rethrow;
+    }
+  }
+
+  /// Добавить просмотр идеи
+  Future<void> addView(String ideaId) async {
+    try {
+      await _firestore.collection(_ideasCollection).doc(ideaId).update({
+        'viewsCount': FieldValue.increment(1),
+      });
+    } catch (e) {
+      print('Ошибка добавления просмотра: $e');
+    }
+  }
+
+  /// Удалить идею
+  Future<void> deleteIdea(String ideaId) async {
+    try {
+      final ideaDoc =
+          await _firestore.collection(_ideasCollection).doc(ideaId).get();
+      if (!ideaDoc.exists) return;
+
+      final idea = Idea.fromDocument(ideaDoc);
+
+      // Удаляем файлы из Storage
+      try {
+        for (final imageUrl in idea.imageUrls) {
+          final storageRef = _storage.refFromURL(imageUrl);
+          await storageRef.delete();
+        }
+
+        if (idea.videoUrl != null) {
+          final videoRef = _storage.refFromURL(idea.videoUrl!);
+          await videoRef.delete();
+        }
+      } catch (e) {
+        print('Ошибка удаления файлов из Storage: $e');
+      }
+
+      // Удаляем документ из Firestore
+      await _firestore.collection(_ideasCollection).doc(ideaId).delete();
+    } catch (e) {
+      print('Ошибка удаления идеи: $e');
+      rethrow;
+    }
+  }
+
+  /// Создать коллекцию идей
+  Future<String> createCollection({
+    required String userId,
+    required String name,
+    String? description,
+    bool isPublic = false,
+  }) async {
+    try {
+      final collectionId = '${userId}_${DateTime.now().millisecondsSinceEpoch}';
+
+      final collection = IdeaCollection(
+        id: collectionId,
+        userId: userId,
+        name: name,
+        description: description,
+        ideaIds: [],
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        isPublic: isPublic,
+      );
+
+      await _firestore
+          .collection(_collectionsCollection)
+          .doc(collectionId)
+          .set(collection.toMap());
+
+      return collectionId;
+    } catch (e) {
+      print('Ошибка создания коллекции: $e');
+      rethrow;
+    }
+  }
+
+  /// Получить коллекции пользователя
+  Future<List<IdeaCollection>> getUserCollections(String userId) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection(_collectionsCollection)
+          .where('userId', isEqualTo: userId)
+          .orderBy('updatedAt', descending: true)
+          .get();
+
+      return querySnapshot.docs.map(IdeaCollection.fromDocument).toList();
+    } catch (e) {
+      print('Ошибка получения коллекций пользователя: $e');
+      return [];
+    }
+  }
+
+  /// Добавить идею в коллекцию
+  Future<void> addIdeaToCollection(String collectionId, String ideaId) async {
+    try {
+      final collectionDoc = await _firestore
+          .collection(_collectionsCollection)
+          .doc(collectionId)
+          .get();
+      if (!collectionDoc.exists) return;
+
+      final collection = IdeaCollection.fromDocument(collectionDoc);
+      if (collection.containsIdea(ideaId)) return;
+
+      final updatedCollection = collection.addIdea(ideaId);
+
+      await _firestore
+          .collection(_collectionsCollection)
+          .doc(collectionId)
+          .update({
+        'ideaIds': updatedCollection.ideaIds,
+        'updatedAt': Timestamp.fromDate(updatedCollection.updatedAt),
+      });
+    } catch (e) {
+      print('Ошибка добавления идеи в коллекцию: $e');
+      rethrow;
+    }
+  }
+
+  /// Удалить идею из коллекции
+  Future<void> removeIdeaFromCollection(
+    String collectionId,
+    String ideaId,
+  ) async {
+    try {
+      final collectionDoc = await _firestore
+          .collection(_collectionsCollection)
+          .doc(collectionId)
+          .get();
+      if (!collectionDoc.exists) return;
+
+      final collection = IdeaCollection.fromDocument(collectionDoc);
+      if (!collection.containsIdea(ideaId)) return;
+
+      final updatedCollection = collection.removeIdea(ideaId);
+
+      await _firestore
+          .collection(_collectionsCollection)
+          .doc(collectionId)
+          .update({
+        'ideaIds': updatedCollection.ideaIds,
+        'updatedAt': Timestamp.fromDate(updatedCollection.updatedAt),
+      });
+    } catch (e) {
+      print('Ошибка удаления идеи из коллекции: $e');
+      rethrow;
+    }
+  }
+
+  /// Поиск идей
+  Future<List<Idea>> searchIdeas(String query) async {
+    try {
+      // Простой поиск по заголовку и описанию
+      final titleQuery = await _firestore
+          .collection(_ideasCollection)
+          .where('status', isEqualTo: IdeaStatus.active.name)
+          .where('title', isGreaterThanOrEqualTo: query)
+          .where('title', isLessThan: '$query\uf8ff')
+          .limit(20)
+          .get();
+
+      final descriptionQuery = await _firestore
+          .collection(_ideasCollection)
+          .where('status', isEqualTo: IdeaStatus.active.name)
+          .where('description', isGreaterThanOrEqualTo: query)
+          .where('description', isLessThan: '$query\uf8ff')
+          .limit(20)
+          .get();
+
+      final ideas = <Idea>[];
+      final ideaIds = <String>{};
+
+      for (final doc in titleQuery.docs) {
+        if (!ideaIds.contains(doc.id)) {
+          ideas.add(Idea.fromDocument(doc));
+          ideaIds.add(doc.id);
+        }
+      }
+
+      for (final doc in descriptionQuery.docs) {
+        if (!ideaIds.contains(doc.id)) {
+          ideas.add(Idea.fromDocument(doc));
+          ideaIds.add(doc.id);
+        }
+      }
+
+      return ideas;
+    } catch (e) {
+      print('Ошибка поиска идей: $e');
+      return [];
+    }
+  }
+
+  /// Получить популярные идеи
+  Future<List<Idea>> getPopularIdeas({int limit = 20}) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection(_ideasCollection)
+          .where('status', isEqualTo: IdeaStatus.active.name)
+          .orderBy('likesCount', descending: true)
+          .orderBy('viewsCount', descending: true)
+          .limit(limit)
+          .get();
+
+      return querySnapshot.docs.map(Idea.fromDocument).toList();
+    } catch (e) {
+      print('Ошибка получения популярных идей: $e');
+      return [];
+    }
+  }
+
+  /// Получить статистику идей
+  Future<IdeaStats> getIdeaStats(String userId) async {
+    try {
+      final ideas = await getUserIdeas(userId);
+      return IdeaStats.fromIdeas(ideas);
+    } catch (e) {
+      print('Ошибка получения статистики идей: $e');
+      return const IdeaStats(
+        totalIdeas: 0,
+        totalLikes: 0,
+        totalSaves: 0,
+        totalViews: 0,
+        categoryStats: {},
+        topTags: [],
+      );
     }
   }
 }

@@ -272,7 +272,8 @@ class SystemLog {
         message: (map['message'] as String?) ?? '',
         level: SystemLogLevel.fromString((map['level'] as String?) ?? 'info'),
         category: SystemLogCategory.fromString(
-            (map['category'] as String?) ?? 'general'),
+          (map['category'] as String?) ?? 'general',
+        ),
         context: map['context'] as Map<String, dynamic>?,
         stackTrace: map['stackTrace'] as String?,
         timestamp: (map['timestamp'] as Timestamp).toDate(),

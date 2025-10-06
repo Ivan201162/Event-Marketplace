@@ -490,7 +490,7 @@ class StudioRecommendationService {
       );
 
       // Уведомление студии (если есть владелец)
-      // TODO: Добавить поле ownerId в PhotoStudio
+      // TODO(developer): Добавить поле ownerId в PhotoStudio
     } catch (e) {
       print('Ошибка отправки уведомлений о двойном бронировании: $e');
     }

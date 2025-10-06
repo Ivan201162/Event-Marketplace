@@ -30,7 +30,7 @@ class PerformanceMonitor extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.7),
+          color: Colors.black.withValues(alpha: 0.7),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Column(
@@ -42,7 +42,9 @@ class PerformanceMonitor extends ConsumerWidget {
               _buildDetailRow('Memory', '${state.memoryUsage}%'),
               _buildDetailRow('Battery', '${state.batteryLevel}%'),
               _buildDetailRow(
-                  'Connection', _getConnectionSpeedText(state.connectionSpeed)),
+                'Connection',
+                _getConnectionSpeedText(state.connectionSpeed),
+              ),
               const SizedBox(height: 4),
             ],
             _buildStatusIndicator(needsOptimization),
@@ -52,42 +54,38 @@ class PerformanceMonitor extends ConsumerWidget {
     );
   }
 
-  Widget _buildDetailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            '$label: ',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 12,
+  Widget _buildDetailRow(String label, String value) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '$label: ',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+              ),
             ),
-          ),
-          Text(
-            value,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
+            Text(
+              value,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
-  Widget _buildStatusIndicator(bool needsOptimization) {
-    return Container(
-      width: 8,
-      height: 8,
-      decoration: BoxDecoration(
-        color: needsOptimization ? Colors.red : Colors.green,
-        shape: BoxShape.circle,
-      ),
-    );
-  }
+  Widget _buildStatusIndicator(bool needsOptimization) => Container(
+        width: 8,
+        height: 8,
+        decoration: BoxDecoration(
+          color: needsOptimization ? Colors.red : Colors.green,
+          shape: BoxShape.circle,
+        ),
+      );
 
   String _getConnectionSpeedText(ConnectionSpeed speed) {
     switch (speed) {
@@ -141,13 +139,11 @@ class OptimizationRecommendations extends ConsumerWidget {
             child: ListView.builder(
               shrinkWrap: true,
               itemCount: recommendations.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: const Icon(Icons.info_outline),
-                  title: Text(recommendations[index]),
-                  dense: true,
-                );
-              },
+              itemBuilder: (context, index) => ListTile(
+                leading: const Icon(Icons.info_outline),
+                title: Text(recommendations[index]),
+                dense: true,
+              ),
             ),
           ),
         ],
@@ -193,45 +189,44 @@ class OptimizationControls extends ConsumerWidget {
   Widget _buildOptimizationLevelSelector(
     PerformanceState state,
     PerformanceNotifier notifier,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Уровень оптимизации:'),
-        const SizedBox(height: 8),
-        DropdownButton<OptimizationLevel>(
-          value: state.optimizationLevel,
-          onChanged: (level) {
-            if (level != null) {
-              notifier.setOptimizationLevel(level);
-            }
-          },
-          items: OptimizationLevel.values.map((level) {
-            return DropdownMenuItem(
-              value: level,
-              child: Text(_getOptimizationLevelText(level)),
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
+  ) =>
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Уровень оптимизации:'),
+          const SizedBox(height: 8),
+          DropdownButton<OptimizationLevel>(
+            value: state.optimizationLevel,
+            onChanged: (level) {
+              if (level != null) {
+                notifier.setOptimizationLevel(level);
+              }
+            },
+            items: OptimizationLevel.values
+                .map(
+                  (level) => DropdownMenuItem(
+                    value: level,
+                    child: Text(_getOptimizationLevelText(level)),
+                  ),
+                )
+                .toList(),
+          ),
+        ],
+      );
 
-  Widget _buildActionButtons(PerformanceNotifier notifier) {
-    return Row(
-      children: [
-        ElevatedButton(
-          onPressed: () => notifier.clearCache(),
-          child: const Text('Очистить кэш'),
-        ),
-        const SizedBox(width: 8),
-        ElevatedButton(
-          onPressed: () => notifier.forceCleanup(),
-          child: const Text('Очистить память'),
-        ),
-      ],
-    );
-  }
+  Widget _buildActionButtons(PerformanceNotifier notifier) => Row(
+        children: [
+          ElevatedButton(
+            onPressed: () => notifier.clearCache(),
+            child: const Text('Очистить кэш'),
+          ),
+          const SizedBox(width: 8),
+          ElevatedButton(
+            onPressed: () => notifier.forceCleanup(),
+            child: const Text('Очистить память'),
+          ),
+        ],
+      );
 
   String _getOptimizationLevelText(OptimizationLevel level) {
     switch (level) {
@@ -272,46 +267,54 @@ class PerformanceStats extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             _buildStatRow(
-                'FPS', '${state.fps.toInt()}', _getFPSColor(state.fps)),
-            _buildStatRow('Память', '${state.memoryUsage}%',
-                _getMemoryColor(state.memoryUsage)),
-            _buildStatRow('Батарея', '${state.batteryLevel}%',
-                _getBatteryColor(state.batteryLevel)),
+              'FPS',
+              '${state.fps.toInt()}',
+              _getFPSColor(state.fps),
+            ),
             _buildStatRow(
-                'Соединение',
-                _getConnectionSpeedText(state.connectionSpeed),
-                _getConnectionColor(state.connectionSpeed)),
+              'Память',
+              '${state.memoryUsage}%',
+              _getMemoryColor(state.memoryUsage),
+            ),
+            _buildStatRow(
+              'Батарея',
+              '${state.batteryLevel}%',
+              _getBatteryColor(state.batteryLevel),
+            ),
+            _buildStatRow(
+              'Соединение',
+              _getConnectionSpeedText(state.connectionSpeed),
+              _getConnectionColor(state.connectionSpeed),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildStatRow(String label, String value, Color color) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Text(
-              value,
-              style: TextStyle(
-                color: color,
-                fontWeight: FontWeight.bold,
+  Widget _buildStatRow(String label, String value, Color color) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(label),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                value,
+                style: TextStyle(
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
   Color _getFPSColor(double fps) {
     if (fps >= 50) return Colors.green;

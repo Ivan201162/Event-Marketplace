@@ -38,19 +38,17 @@ class _SecuritySettingsScreenState
       if (currentUser != null) {
         final settings =
             await _securityService.getSecuritySettings();
-        if (settings != null) {
-          setState(() {
-            _biometricAuth = settings['biometricAuth'] ?? false;
-            _pinAuth = settings['pinAuth'] ?? false;
-            _twoFactorAuth = settings['twoFactorAuth'] ?? false;
-            _autoLock = settings['autoLock'] ?? false;
-            _autoLockTimeout = settings['autoLockTimeout'] ?? 5;
-            _secureStorage = settings['secureStorage'] ?? false;
-            _dataEncryption = settings['dataEncryption'] ?? false;
-            _auditLogging = settings['auditLogging'] ?? false;
-          });
-        }
-      }
+        setState(() {
+          _biometricAuth = settings['biometricAuth'] ?? false;
+          _pinAuth = settings['pinAuth'] ?? false;
+          _twoFactorAuth = settings['twoFactorAuth'] ?? false;
+          _autoLock = settings['autoLock'] ?? false;
+          _autoLockTimeout = settings['autoLockTimeout'] ?? 5;
+          _secureStorage = settings['secureStorage'] ?? false;
+          _dataEncryption = settings['dataEncryption'] ?? false;
+          _auditLogging = settings['auditLogging'] ?? false;
+        });
+            }
     } catch (e) {
       print('Ошибка загрузки настроек безопасности: $e');
     }
@@ -405,6 +403,16 @@ class _SecuritySettingsScreenState
                 trailing: const Icon(Icons.chevron_right),
                 onTap: _exportSecurityData,
               ),
+
+              const Divider(),
+
+              // Выйти со всех устройств
+              ListTile(
+                title: const Text('Выйти со всех устройств'),
+                subtitle: const Text('Завершить все активные сессии'),
+                trailing: const Icon(Icons.logout),
+                onTap: _signOutFromAllDevices,
+              ),
             ],
           ),
         ),
@@ -440,7 +448,6 @@ class _SecuritySettingsScreenState
             ),
           );
         }
-      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -453,10 +460,10 @@ class _SecuritySettingsScreenState
     }
   }
 
-  Future<void> _showPinSetupDialog() async {
+  Future<void> showPinSetupDialog() async {
     final pinController = TextEditingController();
 
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Установка PIN-кода'),
@@ -520,8 +527,8 @@ class _SecuritySettingsScreenState
     );
   }
 
-  Future<void> _showPinRemovalDialog() async {
-    showDialog(
+  Future<void> showPinRemovalDialog() async {
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удаление PIN-кода'),
@@ -558,44 +565,195 @@ class _SecuritySettingsScreenState
     );
   }
 
-  Future<void> _showTwoFactorSetupDialog() async {
-    await showDialog(
+  Future<void> showTwoFactorSetupDialog() async {
+    var selectedMethod = 'sms';
+    final contactController = TextEditingController();
+
+    await showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Двухфакторная аутентификация'),
-        content: const Text(
-          'Функция двухфакторной аутентификации будет доступна в следующих обновлениях.',
+        title: const Text('Настройка двухфакторной аутентификации'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Выберите метод двухфакторной аутентификации:'),
+            const SizedBox(height: 16),
+            RadioListTile<String>(
+              title: const Text('SMS'),
+              subtitle: const Text('Код будет отправлен на номер телефона'),
+              value: 'sms',
+              groupValue: selectedMethod,
+              onChanged: (value) {
+                selectedMethod = value!;
+                contactController.text = '';
+                contactController.hintText = 'Введите номер телефона';
+              },
+            ),
+            RadioListTile<String>(
+              title: const Text('Email'),
+              subtitle: const Text('Код будет отправлен на email'),
+              value: 'email',
+              groupValue: selectedMethod,
+              onChanged: (value) {
+                selectedMethod = value!;
+                contactController.text = '';
+                contactController.hintText = 'Введите email';
+              },
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: contactController,
+              decoration: InputDecoration(
+                labelText: selectedMethod == 'sms' ? 'Номер телефона' : 'Email',
+                hintText: selectedMethod == 'sms' 
+                    ? '+7 (999) 123-45-67' 
+                    : 'example@email.com',
+                border: const OutlineInputBorder(),
+              ),
+              keyboardType: selectedMethod == 'sms' 
+                  ? TextInputType.phone 
+                  : TextInputType.emailAddress,
+            ),
+          ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Закрыть'),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final contact = contactController.text.trim();
+              if (contact.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Введите контактную информацию'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+                return;
+              }
+
+              try {
+                final currentUser = await ref.read(authServiceProvider).getCurrentUser();
+                if (currentUser != null) {
+                  final success = await _securityService.enable2FA(
+                    userId: currentUser.id,
+                    method: selectedMethod,
+                    contact: contact,
+                  );
+
+                  if (success) {
+                    setState(() {
+                      _twoFactorAuth = true;
+                    });
+                    _updateSecuritySettings();
+                    Navigator.pop(context);
+                    
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Двухфакторная аутентификация включена'),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    }
+                  } else {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Ошибка включения 2FA'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  }
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Ошибка: $e'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
+            },
+            child: const Text('Включить'),
           ),
         ],
       ),
     );
   }
 
-  Future<void> _showTwoFactorDisableDialog() async {
-    await showDialog(
+  Future<void> showTwoFactorDisableDialog() async {
+    await showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Отключение двухфакторной аутентификации'),
         content: const Text(
-          'Функция двухфакторной аутентификации будет доступна в следующих обновлениях.',
+          'Вы уверены, что хотите отключить двухфакторную аутентификацию? Это снизит безопасность вашего аккаунта.',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Закрыть'),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              try {
+                final currentUser = await ref.read(authServiceProvider).getCurrentUser();
+                if (currentUser != null) {
+                  final success = await _securityService.disable2FA(currentUser.id);
+
+                  if (success) {
+                    setState(() {
+                      _twoFactorAuth = false;
+                    });
+                    _updateSecuritySettings();
+                    Navigator.pop(context);
+                    
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Двухфакторная аутентификация отключена'),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    }
+                  } else {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Ошибка отключения 2FA'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  }
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Ошибка: $e'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Отключить'),
           ),
         ],
       ),
     );
   }
 
-  void _showTimeoutDialog() {
-    showDialog(
+  void showTimeoutDialog() {
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Время автоблокировки'),
@@ -631,8 +789,8 @@ class _SecuritySettingsScreenState
     );
   }
 
-  void _showSecurityInfo() {
-    showDialog(
+  void showSecurityInfo() {
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('О безопасности'),
@@ -659,8 +817,8 @@ class _SecuritySettingsScreenState
     );
   }
 
-  void _showAuditLogs() {
-    // TODO: Реализовать просмотр логов аудита
+  void showAuditLogs() {
+    // TODO(developer): Реализовать просмотр логов аудита
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text(
@@ -670,8 +828,8 @@ class _SecuritySettingsScreenState
     );
   }
 
-  void _showDevicesManagement() {
-    // TODO: Реализовать управление устройствами
+  void showDevicesManagement() {
+    // TODO(developer): Реализовать управление устройствами
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text(
@@ -681,8 +839,8 @@ class _SecuritySettingsScreenState
     );
   }
 
-  void _showCurrentDeviceInfo() {
-    // TODO: Реализовать отображение информации об устройстве
+  void showCurrentDeviceInfo() {
+    // TODO(developer): Реализовать отображение информации об устройстве
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text(
@@ -692,8 +850,8 @@ class _SecuritySettingsScreenState
     );
   }
 
-  void _changePassword() {
-    // TODO: Реализовать изменение пароля
+  void changePassword() {
+    // TODO(developer): Реализовать изменение пароля
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content:
@@ -702,8 +860,8 @@ class _SecuritySettingsScreenState
     );
   }
 
-  void _clearSecureData() {
-    showDialog(
+  void clearSecureData() {
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Очистка данных'),
@@ -736,13 +894,70 @@ class _SecuritySettingsScreenState
     );
   }
 
-  void _exportSecurityData() {
-    // TODO: Реализовать экспорт данных безопасности
+  void exportSecurityData() {
+    // TODO(developer): Реализовать экспорт данных безопасности
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text(
           'Экспорт данных безопасности будет доступен в следующих обновлениях',
         ),
+      ),
+    );
+  }
+
+  void signOutFromAllDevices() {
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Выйти со всех устройств'),
+        content: const Text(
+          'Вы уверены, что хотите завершить все активные сессии? Вам потребуется войти заново на всех устройствах.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              try {
+                // Логируем событие выхода со всех устройств
+                await _securityService.logSecurityEvent(
+                  eventType: 'sign_out_all_devices',
+                  description: 'Пользователь завершил все активные сессии',
+                  level: SecurityLevel.medium,
+                  userId: (await ref.read(authServiceProvider).getCurrentUser())?.id,
+                );
+
+                // Выходим из всех устройств
+                await ref.read(authServiceProvider).signOutFromAll();
+                
+                Navigator.pop(context);
+                
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Все сессии завершены'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                }
+              } catch (e) {
+                Navigator.pop(context);
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Ошибка завершения сессий: $e'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Выйти'),
+          ),
+        ],
       ),
     );
   }

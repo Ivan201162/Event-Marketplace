@@ -192,9 +192,9 @@ class _ConnectionSettingsScreenState
       );
 
   Widget _buildConnectionTypeInfo(ConnectivityResult connectionType) {
-    IconData icon = Icons.help;
-    String title = 'Неизвестно';
-    String description = 'Неизвестный тип подключения';
+    var icon = Icons.help;
+    var title = 'Неизвестно';
+    var description = 'Неизвестный тип подключения';
     Color color = Colors.grey;
 
     switch (connectionType) {
@@ -298,9 +298,9 @@ class _ConnectionSettingsScreenState
                 subtitle: const Text(
                   'Автоматически синхронизировать данные при подключении к Wi-Fi',
                 ),
-                value: true, // TODO: Получить из настроек
+                value: true, // TODO(developer): Получить из настроек
                 onChanged: (value) {
-                  // TODO: Сохранить настройку
+                  // TODO(developer): Сохранить настройку
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Настройка сохранена')),
                   );
@@ -315,9 +315,9 @@ class _ConnectionSettingsScreenState
                 subtitle: const Text(
                   'Синхронизировать данные только при подключении к Wi-Fi',
                 ),
-                value: false, // TODO: Получить из настроек
+                value: false, // TODO(developer): Получить из настроек
                 onChanged: (value) {
-                  // TODO: Сохранить настройку
+                  // TODO(developer): Сохранить настройку
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Настройка сохранена')),
                   );
@@ -332,9 +332,9 @@ class _ConnectionSettingsScreenState
                 subtitle: const Text(
                   'Разрешить синхронизацию данных в фоновом режиме',
                 ),
-                value: true, // TODO: Получить из настроек
+                value: true, // TODO(developer): Получить из настроек
                 onChanged: (value) {
-                  // TODO: Сохранить настройку
+                  // TODO(developer): Сохранить настройку
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Настройка сохранена')),
                   );
@@ -418,7 +418,7 @@ class _ConnectionSettingsScreenState
   }
 
   void _checkConnection() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Проверка подключения'),
@@ -452,7 +452,7 @@ class _ConnectionSettingsScreenState
   }
 
   void _testSpeed() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Тест скорости'),
@@ -476,7 +476,7 @@ class _ConnectionSettingsScreenState
     // Имитация теста скорости
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.pop(context);
-      showDialog(
+      showDialog<void>(
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Результаты теста скорости'),
@@ -502,7 +502,7 @@ class _ConnectionSettingsScreenState
   }
 
   void _resetNetworkSettings() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Сброс сетевых настроек'),
@@ -517,7 +517,7 @@ class _ConnectionSettingsScreenState
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              // TODO: Реализовать сброс сетевых настроек
+              // TODO(developer): Реализовать сброс сетевых настроек
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Сетевые настройки сброшены'),
@@ -534,7 +534,7 @@ class _ConnectionSettingsScreenState
   }
 
   void _showConnectionLogs() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Логи подключения'),

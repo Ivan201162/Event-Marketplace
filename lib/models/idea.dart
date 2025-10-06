@@ -1,417 +1,379 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// Модель идеи для мероприятий
+/// Категория идеи
+enum IdeaCategory {
+  wedding('Свадьба', '💒'),
+  birthday('День рождения', '🎂'),
+  corporate('Корпоратив', '🏢'),
+  children('Детский праздник', '🎈'),
+  photo('Фотосессия', '📸'),
+  video('Видеосъемка', '🎥'),
+  decoration('Оформление', '🎨'),
+  music('Музыка', '🎵'),
+  food('Кейтеринг', '🍽️'),
+  flowers('Цветы', '🌸'),
+  other('Другое', '💡');
+
+  const IdeaCategory(this.displayName, this.emoji);
+
+  final String displayName;
+  final String emoji;
+}
+
+/// Статус идеи
+enum IdeaStatus {
+  active, // Активная
+  archived, // Архивированная
+  deleted, // Удаленная
+}
+
+/// Модель идеи
 class Idea {
   const Idea({
     required this.id,
     required this.title,
     required this.description,
-    required this.images,
+    required this.imageUrls,
+    this.videoUrl,
     required this.category,
     required this.tags,
     required this.authorId,
     required this.authorName,
     this.authorAvatar,
-    required this.likesCount,
-    required this.savesCount,
-    required this.commentsCount,
-    required this.likedBy,
-    required this.savedBy,
     required this.createdAt,
     required this.updatedAt,
-    required this.isPublic,
-    this.sourceUrl,
-    this.metadata = const {},
+    required this.status,
+    this.likesCount = 0,
+    this.savesCount = 0,
+    this.viewsCount = 0,
+    this.likedBy = const [],
+    this.savedBy = const [],
+    this.metadata,
   });
 
-  /// Создать из Map
-  factory Idea.fromMap(Map<String, dynamic> data) => Idea(
-        id: data['id'] ?? '',
-        title: data['title'] ?? '',
-        description: data['description'] ?? '',
-        images: List<String>.from(data['images'] ?? []),
-        category: data['category'] ?? '',
-        tags: List<String>.from(data['tags'] ?? []),
-        authorId: data['authorId'] ?? '',
-        authorName: data['authorName'] ?? '',
-        authorAvatar: data['authorAvatar'],
-        likesCount: data['likesCount'] ?? 0,
-        savesCount: data['savesCount'] ?? 0,
-        commentsCount: data['commentsCount'] ?? 0,
-        likedBy: List<String>.from(data['likedBy'] ?? []),
-        savedBy: List<String>.from(data['savedBy'] ?? []),
-        createdAt: (data['createdAt'] as Timestamp).toDate(),
-        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-        isPublic: data['isPublic'] ?? true,
-        sourceUrl: data['sourceUrl'],
-        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-      );
+  /// Создать из документа Firestore
+  factory Idea.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data()! as Map<String, dynamic>;
+    return Idea(
+      id: doc.id,
+      title: data['title'] ?? '',
+      description: data['description'] ?? '',
+      imageUrls: List<String>.from(data['imageUrls'] ?? []),
+      videoUrl: data['videoUrl'],
+      category: IdeaCategory.values.firstWhere(
+        (e) => e.name == data['category'],
+        orElse: () => IdeaCategory.other,
+      ),
+      tags: List<String>.from(data['tags'] ?? []),
+      authorId: data['authorId'] ?? '',
+      authorName: data['authorName'] ?? '',
+      authorAvatar: data['authorAvatar'],
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      status: IdeaStatus.values.firstWhere(
+        (e) => e.name == data['status'],
+        orElse: () => IdeaStatus.active,
+      ),
+      likesCount: data['likesCount'] as int? ?? 0,
+      savesCount: data['savesCount'] as int? ?? 0,
+      viewsCount: data['viewsCount'] as int? ?? 0,
+      likedBy: List<String>.from(data['likedBy'] ?? []),
+      savedBy: List<String>.from(data['savedBy'] ?? []),
+      metadata: data['metadata'],
+    );
+  }
   final String id;
   final String title;
   final String description;
-  final List<String> images;
-  final String category;
+  final List<String> imageUrls;
+  final String? videoUrl;
+  final IdeaCategory category;
   final List<String> tags;
   final String authorId;
   final String authorName;
   final String? authorAvatar;
-  final int likesCount;
-  final int savesCount;
-  final int commentsCount;
-  final List<String> likedBy;
-  final List<String> savedBy;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final bool isPublic;
-  final String? sourceUrl;
-  final Map<String, dynamic> metadata;
+  final IdeaStatus status;
+  final int likesCount;
+  final int savesCount;
+  final int viewsCount;
+  final List<String> likedBy;
+  final List<String> savedBy;
+  final Map<String, dynamic>? metadata;
 
-  /// Преобразовать в Map
+  /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'id': id,
         'title': title,
         'description': description,
-        'images': images,
-        'category': category,
+        'imageUrls': imageUrls,
+        'videoUrl': videoUrl,
+        'category': category.name,
         'tags': tags,
         'authorId': authorId,
         'authorName': authorName,
         'authorAvatar': authorAvatar,
-        'likesCount': likesCount,
-        'savesCount': savesCount,
-        'commentsCount': commentsCount,
-        'likedBy': likedBy,
-        'savedBy': savedBy,
         'createdAt': Timestamp.fromDate(createdAt),
         'updatedAt': Timestamp.fromDate(updatedAt),
-        'isPublic': isPublic,
-        'sourceUrl': sourceUrl,
+        'status': status.name,
+        'likesCount': likesCount,
+        'savesCount': savesCount,
+        'viewsCount': viewsCount,
+        'likedBy': likedBy,
+        'savedBy': savedBy,
         'metadata': metadata,
       };
 
-  /// Геттеры для совместимости с виджетами
-  String? get authorPhotoUrl => authorAvatar;
-  int get viewsCount => metadata['viewsCount'] as int? ?? 0;
-  String? get url => sourceUrl;
-
-  /// Цвет категории
-  String get categoryColor {
-    switch (category.toLowerCase()) {
-      case 'декор':
-        return 'pink';
-      case 'еда':
-        return 'orange';
-      case 'развлечения':
-        return 'purple';
-      case 'фото':
-        return 'blue';
-      case 'музыка':
-        return 'green';
-      case 'одежда':
-        return 'red';
-      default:
-        return 'grey';
-    }
-  }
-
-  /// Иконка категории
-  String get categoryIcon {
-    switch (category.toLowerCase()) {
-      case 'декор':
-        return '🎨';
-      case 'еда':
-        return '🍰';
-      case 'развлечения':
-        return '🎪';
-      case 'фото':
-        return '📸';
-      case 'музыка':
-        return '🎵';
-      case 'одежда':
-        return '👗';
-      default:
-        return '💡';
-    }
-  }
-
-  /// Проверить, лайкнул ли пользователь
-  bool isLikedBy(String userId) => likedBy.contains(userId);
-
-  /// Проверить, сохранил ли пользователь
-  bool isSavedBy(String userId) => savedBy.contains(userId);
-
-  /// Копировать с изменениями
+  /// Создать копию с изменениями
   Idea copyWith({
     String? id,
     String? title,
     String? description,
-    List<String>? images,
-    String? category,
+    List<String>? imageUrls,
+    String? videoUrl,
+    IdeaCategory? category,
     List<String>? tags,
     String? authorId,
     String? authorName,
     String? authorAvatar,
-    int? likesCount,
-    int? savesCount,
-    int? commentsCount,
-    List<String>? likedBy,
-    List<String>? savedBy,
     DateTime? createdAt,
     DateTime? updatedAt,
-    bool? isPublic,
-    String? sourceUrl,
+    IdeaStatus? status,
+    int? likesCount,
+    int? savesCount,
+    int? viewsCount,
+    List<String>? likedBy,
+    List<String>? savedBy,
     Map<String, dynamic>? metadata,
   }) =>
       Idea(
         id: id ?? this.id,
         title: title ?? this.title,
         description: description ?? this.description,
-        images: images ?? this.images,
+        imageUrls: imageUrls ?? this.imageUrls,
+        videoUrl: videoUrl ?? this.videoUrl,
         category: category ?? this.category,
         tags: tags ?? this.tags,
         authorId: authorId ?? this.authorId,
         authorName: authorName ?? this.authorName,
         authorAvatar: authorAvatar ?? this.authorAvatar,
-        likesCount: likesCount ?? this.likesCount,
-        savesCount: savesCount ?? this.savesCount,
-        commentsCount: commentsCount ?? this.commentsCount,
-        likedBy: likedBy ?? this.likedBy,
-        savedBy: savedBy ?? this.savedBy,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
-        isPublic: isPublic ?? this.isPublic,
-        sourceUrl: sourceUrl ?? this.sourceUrl,
+        status: status ?? this.status,
+        likesCount: likesCount ?? this.likesCount,
+        savesCount: savesCount ?? this.savesCount,
+        viewsCount: viewsCount ?? this.viewsCount,
+        likedBy: likedBy ?? this.likedBy,
+        savedBy: savedBy ?? this.savedBy,
         metadata: metadata ?? this.metadata,
       );
+
+  /// Проверить, лайкнул ли пользователь идею
+  bool isLikedBy(String userId) => likedBy.contains(userId);
+
+  /// Проверить, сохранил ли пользователь идею
+  bool isSavedBy(String userId) => savedBy.contains(userId);
+
+  /// Добавить лайк
+  Idea addLike(String userId) {
+    if (likedBy.contains(userId)) return this;
+
+    return copyWith(
+      likesCount: likesCount + 1,
+      likedBy: [...likedBy, userId],
+    );
+  }
+
+  /// Убрать лайк
+  Idea removeLike(String userId) {
+    if (!likedBy.contains(userId)) return this;
+
+    return copyWith(
+      likesCount: likesCount - 1,
+      likedBy: likedBy.where((id) => id != userId).toList(),
+    );
+  }
+
+  /// Добавить в сохраненные
+  Idea addSave(String userId) {
+    if (savedBy.contains(userId)) return this;
+
+    return copyWith(
+      savesCount: savesCount + 1,
+      savedBy: [...savedBy, userId],
+    );
+  }
+
+  /// Убрать из сохраненных
+  Idea removeSave(String userId) {
+    if (!savedBy.contains(userId)) return this;
+
+    return copyWith(
+      savesCount: savesCount - 1,
+      savedBy: savedBy.where((id) => id != userId).toList(),
+    );
+  }
+
+  /// Добавить просмотр
+  Idea addView() => copyWith(viewsCount: viewsCount + 1);
+
+  /// Получить основное изображение
+  String? get mainImageUrl => imageUrls.isNotEmpty ? imageUrls.first : null;
+
+  /// Проверить, есть ли видео
+  bool get hasVideo => videoUrl != null && videoUrl!.isNotEmpty;
+
+  /// Проверить, есть ли изображения
+  bool get hasImages => imageUrls.isNotEmpty;
+
+  /// Получить количество медиафайлов
+  int get mediaCount => imageUrls.length + (hasVideo ? 1 : 0);
 }
 
-/// Модель коллекции идей
+/// Коллекция идей пользователя
 class IdeaCollection {
   const IdeaCollection({
     required this.id,
+    required this.userId,
     required this.name,
-    required this.description,
-    required this.ownerId,
-    required this.ownerName,
-    this.ownerAvatar,
+    this.description,
     required this.ideaIds,
-    required this.images,
-    required this.isPublic,
-    required this.followersCount,
-    required this.followers,
     required this.createdAt,
     required this.updatedAt,
-    this.metadata = const {},
+    this.isPublic = false,
   });
 
-  /// Создать из Map
-  factory IdeaCollection.fromMap(Map<String, dynamic> data) => IdeaCollection(
-        id: data['id'] ?? '',
-        name: data['name'] ?? '',
-        description: data['description'] ?? '',
-        ownerId: data['ownerId'] ?? '',
-        ownerName: data['ownerName'] ?? '',
-        ownerAvatar: data['ownerAvatar'],
-        ideaIds: List<String>.from(data['ideaIds'] ?? []),
-        images: List<String>.from(data['images'] ?? []),
-        isPublic: data['isPublic'] ?? true,
-        followersCount: data['followersCount'] ?? 0,
-        followers: List<String>.from(data['followers'] ?? []),
-        createdAt: (data['createdAt'] as Timestamp).toDate(),
-        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-      );
+  /// Создать из документа Firestore
+  factory IdeaCollection.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data()! as Map<String, dynamic>;
+    return IdeaCollection(
+      id: doc.id,
+      userId: data['userId'] ?? '',
+      name: data['name'] ?? '',
+      description: data['description'],
+      ideaIds: List<String>.from(data['ideaIds'] ?? []),
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      isPublic: data['isPublic'] as bool? ?? false,
+    );
+  }
   final String id;
+  final String userId;
   final String name;
-  final String description;
-  final String ownerId;
-  final String ownerName;
-  final String? ownerAvatar;
+  final String? description;
   final List<String> ideaIds;
-  final List<String> images; // Превью изображений
-  final bool isPublic;
-  final int followersCount;
-  final List<String> followers;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final Map<String, dynamic> metadata;
+  final bool isPublic;
 
-  /// Преобразовать в Map
+  /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'id': id,
+        'userId': userId,
         'name': name,
         'description': description,
-        'ownerId': ownerId,
-        'ownerName': ownerName,
-        'ownerAvatar': ownerAvatar,
         'ideaIds': ideaIds,
-        'images': images,
-        'isPublic': isPublic,
-        'followersCount': followersCount,
-        'followers': followers,
         'createdAt': Timestamp.fromDate(createdAt),
         'updatedAt': Timestamp.fromDate(updatedAt),
-        'metadata': metadata,
+        'isPublic': isPublic,
       };
 
-  /// Копировать с изменениями
+  /// Создать копию с изменениями
   IdeaCollection copyWith({
     String? id,
+    String? userId,
     String? name,
     String? description,
-    String? ownerId,
-    String? ownerName,
-    String? ownerAvatar,
     List<String>? ideaIds,
-    List<String>? images,
-    bool? isPublic,
-    int? followersCount,
-    List<String>? followers,
     DateTime? createdAt,
     DateTime? updatedAt,
-    Map<String, dynamic>? metadata,
+    bool? isPublic,
   }) =>
       IdeaCollection(
         id: id ?? this.id,
+        userId: userId ?? this.userId,
         name: name ?? this.name,
         description: description ?? this.description,
-        ownerId: ownerId ?? this.ownerId,
-        ownerName: ownerName ?? this.ownerName,
-        ownerAvatar: ownerAvatar ?? this.ownerAvatar,
         ideaIds: ideaIds ?? this.ideaIds,
-        images: images ?? this.images,
-        isPublic: isPublic ?? this.isPublic,
-        followersCount: followersCount ?? this.followersCount,
-        followers: followers ?? this.followers,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
-        metadata: metadata ?? this.metadata,
+        isPublic: isPublic ?? this.isPublic,
       );
+
+  /// Добавить идею в коллекцию
+  IdeaCollection addIdea(String ideaId) {
+    if (ideaIds.contains(ideaId)) return this;
+
+    return copyWith(
+      ideaIds: [...ideaIds, ideaId],
+      updatedAt: DateTime.now(),
+    );
+  }
+
+  /// Удалить идею из коллекции
+  IdeaCollection removeIdea(String ideaId) => copyWith(
+        ideaIds: ideaIds.where((id) => id != ideaId).toList(),
+        updatedAt: DateTime.now(),
+      );
+
+  /// Проверить, содержит ли коллекция идею
+  bool containsIdea(String ideaId) => ideaIds.contains(ideaId);
+
+  /// Получить количество идей
+  int get ideasCount => ideaIds.length;
 }
 
-/// Модель комментария к идее
-class IdeaComment {
-  // Для ответов на комментарии
-
-  const IdeaComment({
-    required this.id,
-    required this.ideaId,
-    required this.authorId,
-    required this.authorName,
-    this.authorAvatar,
-    required this.content,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.likedBy,
-    required this.likesCount,
-    this.parentCommentId,
+/// Статистика идей
+class IdeaStats {
+  const IdeaStats({
+    required this.totalIdeas,
+    required this.totalLikes,
+    required this.totalSaves,
+    required this.totalViews,
+    required this.categoryStats,
+    required this.topTags,
+    this.lastIdeaAt,
   });
 
-  /// Создать из Map
-  factory IdeaComment.fromMap(Map<String, dynamic> data) => IdeaComment(
-        id: data['id'] ?? '',
-        ideaId: data['ideaId'] ?? '',
-        authorId: data['authorId'] ?? '',
-        authorName: data['authorName'] ?? '',
-        authorAvatar: data['authorAvatar'],
-        content: data['content'] ?? '',
-        createdAt: (data['createdAt'] as Timestamp).toDate(),
-        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-        likedBy: List<String>.from(data['likedBy'] ?? []),
-        likesCount: data['likesCount'] ?? 0,
-        parentCommentId: data['parentCommentId'],
-      );
-  final String id;
-  final String ideaId;
-  final String authorId;
-  final String authorName;
-  final String? authorAvatar;
-  final String content;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final List<String> likedBy;
-  final int likesCount;
-  final String? parentCommentId;
+  /// Создать из списка идей
+  factory IdeaStats.fromIdeas(List<Idea> ideas) {
+    final totalLikes = ideas.fold(0, (sum, idea) => sum + idea.likesCount);
+    final totalSaves = ideas.fold(0, (sum, idea) => sum + idea.savesCount);
+    final totalViews = ideas.fold(0, (sum, idea) => sum + idea.viewsCount);
 
-  /// Геттеры для совместимости с виджетами
-  String? get authorPhotoUrl => authorAvatar;
-
-  /// Проверить, лайкнул ли пользователь
-  bool isLikedBy(String userId) => likedBy.contains(userId);
-
-  /// Преобразовать в Map
-  Map<String, dynamic> toMap() => {
-        'id': id,
-        'ideaId': ideaId,
-        'authorId': authorId,
-        'authorName': authorName,
-        'authorAvatar': authorAvatar,
-        'content': content,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-        'likedBy': likedBy,
-        'likesCount': likesCount,
-        'parentCommentId': parentCommentId,
-      };
-
-  /// Копировать с изменениями
-  IdeaComment copyWith({
-    String? id,
-    String? ideaId,
-    String? authorId,
-    String? authorName,
-    String? authorAvatar,
-    String? content,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    List<String>? likedBy,
-    int? likesCount,
-    String? parentCommentId,
-  }) =>
-      IdeaComment(
-        id: id ?? this.id,
-        ideaId: ideaId ?? this.ideaId,
-        authorId: authorId ?? this.authorId,
-        authorName: authorName ?? this.authorName,
-        authorAvatar: authorAvatar ?? this.authorAvatar,
-        content: content ?? this.content,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        likedBy: likedBy ?? this.likedBy,
-        likesCount: likesCount ?? this.likesCount,
-        parentCommentId: parentCommentId ?? this.parentCommentId,
-      );
-}
-
-/// Категории идей
-enum IdeaCategory {
-  wedding,
-  birthday,
-  corporate,
-  holiday,
-  graduation,
-  anniversary,
-  babyShower,
-  other;
-
-  String get displayName {
-    switch (this) {
-      case IdeaCategory.wedding:
-        return 'Свадьба';
-      case IdeaCategory.birthday:
-        return 'День рождения';
-      case IdeaCategory.corporate:
-        return 'Корпоратив';
-      case IdeaCategory.holiday:
-        return 'Праздник';
-      case IdeaCategory.graduation:
-        return 'Выпускной';
-      case IdeaCategory.anniversary:
-        return 'Юбилей';
-      case IdeaCategory.babyShower:
-        return 'Baby Shower';
-      case IdeaCategory.other:
-        return 'Другое';
+    final categoryStats = <IdeaCategory, int>{};
+    for (final idea in ideas) {
+      categoryStats[idea.category] = (categoryStats[idea.category] ?? 0) + 1;
     }
+
+    final tagCounts = <String, int>{};
+    for (final idea in ideas) {
+      for (final tag in idea.tags) {
+        tagCounts[tag] = (tagCounts[tag] ?? 0) + 1;
+      }
+    }
+
+    final topTags = tagCounts.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+
+    final lastIdea = ideas.isNotEmpty
+        ? ideas.reduce((a, b) => a.createdAt.isAfter(b.createdAt) ? a : b)
+        : null;
+
+    return IdeaStats(
+      totalIdeas: ideas.length,
+      totalLikes: totalLikes,
+      totalSaves: totalSaves,
+      totalViews: totalViews,
+      categoryStats: categoryStats,
+      topTags: topTags.take(10).map((e) => e.key).toList(),
+      lastIdeaAt: lastIdea?.createdAt,
+    );
   }
+  final int totalIdeas;
+  final int totalLikes;
+  final int totalSaves;
+  final int totalViews;
+  final Map<IdeaCategory, int> categoryStats;
+  final List<String> topTags;
+  final DateTime? lastIdeaAt;
 }

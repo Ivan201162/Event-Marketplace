@@ -5,14 +5,13 @@ import '../models/payment_models.dart';
 import '../services/payment_integration_service.dart';
 
 class ContractDetailsDialog extends StatefulWidget {
-  final Contract contract;
-  final Function(ContractStatus)? onStatusUpdate;
-
   const ContractDetailsDialog({
     super.key,
     required this.contract,
     this.onStatusUpdate,
   });
+  final Contract contract;
+  final Function(ContractStatus)? onStatusUpdate;
 
   @override
   State<ContractDetailsDialog> createState() => _ContractDetailsDialogState();
@@ -81,11 +80,12 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: _getStatusColor(widget.contract.status).withOpacity(0.1),
+                color: _getStatusColor(widget.contract.status)
+                    .withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color:
-                      _getStatusColor(widget.contract.status).withOpacity(0.3),
+                  color: _getStatusColor(widget.contract.status)
+                      .withValues(alpha: 0.3),
                 ),
               ),
               child: Text(
@@ -110,23 +110,37 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
                       'Основная информация',
                       [
                         _buildDetailRow(
-                            theme, 'ID контракта', widget.contract.id),
-                        _buildDetailRow(theme, 'ID бронирования',
-                            widget.contract.bookingId),
+                          theme,
+                          'ID контракта',
+                          widget.contract.id,
+                        ),
                         _buildDetailRow(
-                            theme, 'ID заказчика', widget.contract.customerId),
-                        _buildDetailRow(theme, 'ID специалиста',
-                            widget.contract.specialistId),
+                          theme,
+                          'ID бронирования',
+                          widget.contract.bookingId,
+                        ),
                         _buildDetailRow(
-                            theme,
-                            'Дата создания',
-                            DateFormat('dd.MM.yyyy HH:mm')
-                                .format(widget.contract.createdAt)),
+                          theme,
+                          'ID заказчика',
+                          widget.contract.customerId,
+                        ),
                         _buildDetailRow(
-                            theme,
-                            'Дата обновления',
-                            DateFormat('dd.MM.yyyy HH:mm')
-                                .format(widget.contract.updatedAt)),
+                          theme,
+                          'ID специалиста',
+                          widget.contract.specialistId,
+                        ),
+                        _buildDetailRow(
+                          theme,
+                          'Дата создания',
+                          DateFormat('dd.MM.yyyy HH:mm')
+                              .format(widget.contract.createdAt),
+                        ),
+                        _buildDetailRow(
+                          theme,
+                          'Дата обновления',
+                          DateFormat('dd.MM.yyyy HH:mm')
+                              .format(widget.contract.updatedAt),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 24),
@@ -134,12 +148,21 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
                       theme,
                       'Финансовая информация',
                       [
-                        _buildDetailRow(theme, 'Общая сумма',
-                            '${widget.contract.totalAmount.toStringAsFixed(0)} ₽'),
-                        _buildDetailRow(theme, 'Предоплата',
-                            '${widget.contract.prepaymentAmount.toStringAsFixed(0)} ₽'),
-                        _buildDetailRow(theme, 'Остаток к доплате',
-                            '${widget.contract.postpaymentAmount.toStringAsFixed(0)} ₽'),
+                        _buildDetailRow(
+                          theme,
+                          'Общая сумма',
+                          '${widget.contract.totalAmount.toStringAsFixed(0)} ₽',
+                        ),
+                        _buildDetailRow(
+                          theme,
+                          'Предоплата',
+                          '${widget.contract.prepaymentAmount.toStringAsFixed(0)} ₽',
+                        ),
+                        _buildDetailRow(
+                          theme,
+                          'Остаток к доплате',
+                          '${widget.contract.postpaymentAmount.toStringAsFixed(0)} ₽',
+                        ),
                       ],
                     ),
                     const SizedBox(height: 24),
@@ -202,59 +225,61 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
   }
 
   Widget _buildDetailSection(
-      ThemeData theme, String title, List<Widget> children) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.primary,
-          ),
-        ),
-        const SizedBox(height: 12),
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            children: children,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDetailRow(ThemeData theme, String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
+    ThemeData theme,
+    String title,
+    List<Widget> children,
+  ) =>
+      Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 140,
-            child: Text(
-              label,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
-              ),
+          Text(
+            title,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.primary,
             ),
           ),
-          Expanded(
-            child: Text(
-              value,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest
+                  .withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              children: children,
             ),
           ),
         ],
-      ),
-    );
-  }
+      );
+
+  Widget _buildDetailRow(ThemeData theme, String label, String value) =>
+      Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 140,
+              child: Text(
+                label,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                value,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
 
   List<Widget> _buildPaymentsList(ThemeData theme) {
     if (_isLoadingPayments) {
@@ -276,7 +301,7 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
             child: Text(
               'Платежи не найдены',
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ),
           ),
@@ -289,58 +314,56 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
         .toList();
   }
 
-  Widget _buildPaymentItem(ThemeData theme, Payment payment) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: theme.colorScheme.outline.withOpacity(0.2),
+  Widget _buildPaymentItem(ThemeData theme, Payment payment) => Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: theme.colorScheme.outline.withValues(alpha: 0.2),
+          ),
         ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 8,
-            height: 8,
-            decoration: BoxDecoration(
-              color: _getPaymentStatusColor(payment.status),
-              shape: BoxShape.circle,
+        child: Row(
+          children: [
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: _getPaymentStatusColor(payment.status),
+                shape: BoxShape.circle,
+              ),
             ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _getPaymentTypeDisplayName(payment.type),
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _getPaymentTypeDisplayName(payment.type),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                Text(
-                  '${payment.amount.toStringAsFixed(0)} ₽ • ${_getPaymentMethodDisplayName(payment.method)}',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.7),
+                  Text(
+                    '${payment.amount.toStringAsFixed(0)} ₽ • ${_getPaymentMethodDisplayName(payment.method)}',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Text(
-            _getPaymentStatusDisplayName(payment.status),
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: _getPaymentStatusColor(payment.status),
-              fontWeight: FontWeight.w500,
+            Text(
+              _getPaymentStatusDisplayName(payment.status),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: _getPaymentStatusColor(payment.status),
+                fontWeight: FontWeight.w500,
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
   Color _getStatusColor(ContractStatus status) {
     switch (status) {

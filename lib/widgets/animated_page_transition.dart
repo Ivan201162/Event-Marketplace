@@ -1,87 +1,144 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:page_transition/page_transition.dart';
 
 /// Анимированные переходы между страницами
 class AnimatedPageTransitions {
   /// Переход с анимацией скольжения влево
-  static PageTransition slideLeftTransition({
+  static PageRouteBuilder slideLeftTransition({
     required Widget child,
     required BuildContext context,
     Duration duration = const Duration(milliseconds: 300),
   }) =>
-      PageTransition(
-        child: child,
-        type: PageTransitionType.leftToRight,
-        duration: duration,
-        reverseDuration: duration,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => child,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1, 0);
+          const end = Offset.zero;
+          const curve = Curves.easeInOut;
+          final tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+        transitionDuration: duration,
+        reverseTransitionDuration: duration,
       );
 
   /// Переход с анимацией скольжения вправо
-  static PageTransition slideRightTransition({
+  static PageRouteBuilder slideRightTransition({
     required Widget child,
     required BuildContext context,
     Duration duration = const Duration(milliseconds: 300),
   }) =>
-      PageTransition(
-        child: child,
-        type: PageTransitionType.rightToLeft,
-        duration: duration,
-        reverseDuration: duration,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => child,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(-1, 0);
+          const end = Offset.zero;
+          const curve = Curves.easeInOut;
+          final tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+        transitionDuration: duration,
+        reverseTransitionDuration: duration,
       );
 
   /// Переход с анимацией появления снизу
-  static PageTransition slideUpTransition({
+  static PageRouteBuilder slideUpTransition({
     required Widget child,
     required BuildContext context,
     Duration duration = const Duration(milliseconds: 300),
   }) =>
-      PageTransition(
-        child: child,
-        type: PageTransitionType.bottomToTop,
-        duration: duration,
-        reverseDuration: duration,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => child,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(0, 1);
+          const end = Offset.zero;
+          const curve = Curves.easeInOut;
+          final tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+        transitionDuration: duration,
+        reverseTransitionDuration: duration,
       );
 
   /// Переход с анимацией масштабирования
-  static PageTransition scaleTransition({
+  static PageRouteBuilder scaleTransition({
     required Widget child,
     required BuildContext context,
     Duration duration = const Duration(milliseconds: 300),
   }) =>
-      PageTransition(
-        child: child,
-        type: PageTransitionType.scale,
-        alignment: Alignment.center,
-        duration: duration,
-        reverseDuration: duration,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => child,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = 0.0;
+          const end = 1.0;
+          const curve = Curves.easeInOut;
+          final tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          return ScaleTransition(
+            scale: animation.drive(tween),
+            child: child,
+          );
+        },
+        transitionDuration: duration,
+        reverseTransitionDuration: duration,
       );
 
   /// Переход с анимацией поворота
-  static PageTransition rotateTransition({
+  static PageRouteBuilder rotateTransition({
     required Widget child,
     required BuildContext context,
     Duration duration = const Duration(milliseconds: 300),
   }) =>
-      PageTransition(
-        child: child,
-        type: PageTransitionType.rotate,
-        alignment: Alignment.center,
-        duration: duration,
-        reverseDuration: duration,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => child,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = 0.0;
+          const end = 1.0;
+          const curve = Curves.easeInOut;
+          final tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          return RotationTransition(
+            turns: animation.drive(tween),
+            child: child,
+          );
+        },
+        transitionDuration: duration,
+        reverseTransitionDuration: duration,
       );
 
   /// Переход с анимацией затухания
-  static PageTransition fadeTransition({
+  static PageRouteBuilder fadeTransition({
     required Widget child,
     required BuildContext context,
     Duration duration = const Duration(milliseconds: 300),
   }) =>
-      PageTransition(
-        child: child,
-        type: PageTransitionType.fade,
-        duration: duration,
-        reverseDuration: duration,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => child,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = 0.0;
+          const end = 1.0;
+          const curve = Curves.easeInOut;
+          final tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          return FadeTransition(
+            opacity: animation.drive(tween),
+            child: child,
+          );
+        },
+        transitionDuration: duration,
+        reverseTransitionDuration: duration,
       );
 }
 
@@ -102,25 +159,23 @@ class AnimatedAppearance extends StatelessWidget {
   final double opacity;
 
   @override
-  Widget build(BuildContext context) => Animate(
-        child: child,
+  Widget build(BuildContext context) => child
+      .animate()
+      .fadeIn(
+        duration: duration,
+        delay: delay,
+        begin: opacity,
       )
-          .animate()
-          .fadeIn(
-            duration: duration,
-            delay: delay,
-            begin: opacity,
-          )
-          .slideY(
-            duration: duration,
-            delay: delay,
-            begin: offset.dy / 100,
-          )
-          .slideX(
-            duration: duration,
-            delay: delay,
-            begin: offset.dx / 100,
-          );
+      .slideY(
+        duration: duration,
+        delay: delay,
+        begin: offset.dy / 100,
+      )
+      .slideX(
+        duration: duration,
+        delay: delay,
+        begin: offset.dx / 100,
+      );
 }
 
 /// Анимированная кнопка с эффектом нажатия

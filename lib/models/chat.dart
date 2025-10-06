@@ -38,26 +38,44 @@ class ChatMessage {
 
   /// Создать из документа Firestore
   factory ChatMessage.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data()! as Map<String, dynamic>;
+    final data = doc.data();
+    if (data == null) {
+      throw Exception('Document data is null');
+    }
+
+    // Безопасное преобразование данных
+    Map<String, dynamic> safeData;
+    if (data is Map<String, dynamic>) {
+      safeData = data;
+    } else if (data is Map<dynamic, dynamic>) {
+      safeData = data.map((key, value) => MapEntry(key.toString(), value));
+    } else {
+      throw Exception('Document data is not a Map: ${data.runtimeType}');
+    }
+
     return ChatMessage(
       id: doc.id,
-      chatId: data['chatId'] as String? ?? '',
-      senderId: data['senderId'] as String? ?? '',
-      receiverId: data['receiverId'] as String?,
-      type: _parseMessageType(data['type']),
-      content: data['content'] as String? ?? '',
-      status: _parseMessageStatus(data['status']),
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] as Timestamp).toDate()
+      chatId: safeData['chatId'] as String? ?? '',
+      senderId: safeData['senderId'] as String? ?? '',
+      receiverId: safeData['receiverId'] as String?,
+      type: _parseMessageType(safeData['type']),
+      content: safeData['content'] as String? ?? '',
+      status: _parseMessageStatus(safeData['status']),
+      createdAt: safeData['createdAt'] != null
+          ? (safeData['createdAt'] is Timestamp
+              ? (safeData['createdAt'] as Timestamp).toDate()
+              : DateTime.parse(safeData['createdAt'].toString()))
           : DateTime.now(),
-      readAt: data['readAt'] != null
-          ? (data['readAt'] as Timestamp).toDate()
+      readAt: safeData['readAt'] != null
+          ? (safeData['readAt'] is Timestamp
+              ? (safeData['readAt'] as Timestamp).toDate()
+              : DateTime.parse(safeData['readAt'].toString()))
           : null,
-      metadata: data['metadata'] as Map<String, dynamic>?,
-      replyToMessageId: data['replyToMessageId'] as String?,
+      metadata: safeData['metadata'] as Map<String, dynamic>?,
+      replyToMessageId: safeData['replyToMessageId'] as String?,
       attachments:
-          List<String>.from(data['attachments'] as List<dynamic>? ?? []),
-      senderName: data['senderName'] as String?,
+          List<String>.from(safeData['attachments'] as List<dynamic>? ?? []),
+      senderName: safeData['senderName'] as String?,
     );
   }
   final String id;
@@ -222,25 +240,44 @@ class Chat {
 
   /// Создать из документа Firestore
   factory Chat.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data()! as Map<String, dynamic>;
+    final data = doc.data();
+    if (data == null) {
+      throw Exception('Document data is null');
+    }
+
+    // Безопасное преобразование данных
+    Map<String, dynamic> safeData;
+    if (data is Map<String, dynamic>) {
+      safeData = data;
+    } else if (data is Map<dynamic, dynamic>) {
+      safeData = data.map((key, value) => MapEntry(key.toString(), value));
+    } else {
+      throw Exception('Document data is not a Map: ${data.runtimeType}');
+    }
+
     return Chat(
       id: doc.id,
-      customerId: data['customerId'] as String? ?? '',
-      specialistId: data['specialistId'] as String? ?? '',
-      bookingId: data['bookingId'] as String?,
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] as Timestamp).toDate()
+      customerId: safeData['customerId'] as String? ?? '',
+      specialistId: safeData['specialistId'] as String? ?? '',
+      bookingId: safeData['bookingId'] as String?,
+      createdAt: safeData['createdAt'] != null
+          ? (safeData['createdAt'] is Timestamp
+              ? (safeData['createdAt'] as Timestamp).toDate()
+              : DateTime.parse(safeData['createdAt'].toString()))
           : DateTime.now(),
-      updatedAt: data['updatedAt'] != null
-          ? (data['updatedAt'] as Timestamp).toDate()
+      updatedAt: safeData['updatedAt'] != null
+          ? (safeData['updatedAt'] is Timestamp
+              ? (safeData['updatedAt'] as Timestamp).toDate()
+              : DateTime.parse(safeData['updatedAt'].toString()))
           : DateTime.now(),
-      lastMessage: data['lastMessage'] != null
-          ? ChatMessage.fromDocument(data['lastMessage'] as DocumentSnapshot)
+      lastMessage: safeData['lastMessage'] != null
+          ? ChatMessage.fromDocument(
+              safeData['lastMessage'] as DocumentSnapshot)
           : null,
-      unreadCount: data['unreadCount'] as int? ?? 0,
-      isActive: data['isActive'] as bool? ?? true,
-      metadata: data['metadata'] as Map<String, dynamic>?,
-      title: data['title'] as String?,
+      unreadCount: safeData['unreadCount'] as int? ?? 0,
+      isActive: safeData['isActive'] as bool? ?? true,
+      metadata: safeData['metadata'] as Map<String, dynamic>?,
+      title: safeData['title'] as String?,
     );
   }
   final String id;

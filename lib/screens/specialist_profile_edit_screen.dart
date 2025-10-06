@@ -1,17 +1,15 @@
-import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:table_calendar/table_calendar.dart';
-
-import '../models/specialist_profile.dart';
-import '../providers/auth_providers.dart';
-import '../providers/profile_providers.dart';
+import '../models/specialist.dart';
+import '../services/specialist_profile_service.dart';
+import '../services/specialist_service.dart';
 
 class SpecialistProfileEditScreen extends ConsumerStatefulWidget {
-  const SpecialistProfileEditScreen({super.key});
+  const SpecialistProfileEditScreen({
+    super.key,
+    required this.specialistId,
+  });
+  final String specialistId;
 
   @override
   ConsumerState<SpecialistProfileEditScreen> createState() =>
@@ -20,907 +18,196 @@ class SpecialistProfileEditScreen extends ConsumerStatefulWidget {
 
 class _SpecialistProfileEditScreenState
     extends ConsumerState<SpecialistProfileEditScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _bioController = TextEditingController();
-  final _phoneController = TextEditingController();
-  final _locationController = TextEditingController();
-  final _hourlyRateController = TextEditingController();
-  final _vkController = TextEditingController();
-  final _instagramController = TextEditingController();
-  final _telegramController = TextEditingController();
+  final SpecialistProfileService _profileService = SpecialistProfileService();
+  final SpecialistService _specialistService = SpecialistService();
 
-  List<SpecialistCategory> _selectedCategories = [];
-  int _experienceYears = 0;
-  List<String> _services = [];
+  Specialist? _specialist;
+  bool _isLoading = true;
 
-  // Портфолио
-  final List<File> _portfolioImages = [];
-  final List<File> _portfolioVideos = [];
-  final List<File> _portfolioFiles = [];
-
-  // Календарь занятости
-  final List<DateTime> _unavailableDates = [];
-  bool _isCalendarExpanded = false;
+  final Map<String, TextEditingController> _contactControllers = {};
+  final Map<String, TextEditingController> _serviceControllers = {};
+  final Map<String, TextEditingController> _priceControllers = {};
 
   @override
   void initState() {
     super.initState();
-    _loadProfile();
+    _loadSpecialist();
   }
 
   @override
   void dispose() {
-    _bioController.dispose();
-    _phoneController.dispose();
-    _locationController.dispose();
-    _hourlyRateController.dispose();
-    _vkController.dispose();
-    _instagramController.dispose();
-    _telegramController.dispose();
+    // Очищаем контроллеры
+    for (final controller in _contactControllers.values) {
+      controller.dispose();
+    }
+    for (final controller in _serviceControllers.values) {
+      controller.dispose();
+    }
+    for (final controller in _priceControllers.values) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
-  void _loadProfile() {
-    final currentUser = ref.read(currentUserProvider).value;
-    if (currentUser != null) {
-      ref
-          .read(specialistProfileEditProvider.notifier)
-          .loadProfile(currentUser.id);
-    }
-  }
-
-  /// Загрузка изображений для портфолио
-  Future<void> _pickImages() async {
-    final picker = ImagePicker();
-    final images = await picker.pickMultiImage();
-
-    if (images.isNotEmpty) {
+  Future<void> _loadSpecialist() async {
+    try {
+      final specialist =
+          await _specialistService.getSpecialistById(widget.specialistId);
       setState(() {
-        _portfolioImages.addAll(images.map((image) => File(image.path)));
+        _specialist = specialist;
+        _isLoading = false;
       });
-    }
-  }
 
-  /// Загрузка видео для портфолио
-  Future<void> _pickVideos() async {
-    final picker = ImagePicker();
-    final video = await picker.pickVideo(source: ImageSource.gallery);
-
-    if (video != null) {
-      setState(() {
-        _portfolioVideos.add(File(video.path));
-      });
-    }
-  }
-
-  /// Загрузка файлов для портфолио
-  Future<void> _pickFiles() async {
-    final result = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-      type: FileType.custom,
-      allowedExtensions: ['pdf', 'doc', 'docx', 'txt'],
-    );
-
-    if (result != null) {
-      setState(() {
-        _portfolioFiles.addAll(result.files.map((file) => File(file.path!)));
-      });
-    }
-  }
-
-  /// Удаление файла из портфолио
-  void _removePortfolioItem(List<File> list, int index) {
-    setState(() {
-      list.removeAt(index);
-    });
-  }
-
-  /// Добавление даты недоступности
-  void _addUnavailableDate(DateTime date) {
-    setState(() {
-      if (!_unavailableDates.any(
-        (d) =>
-            d.year == date.year && d.month == date.month && d.day == date.day,
-      )) {
-        _unavailableDates.add(date);
+      // Инициализируем контроллеры для контактов
+      for (final contact in specialist?.contacts.entries ?? []) {
+        _contactControllers[contact.key] =
+            TextEditingController(text: contact.value);
       }
-    });
-  }
 
-  /// Удаление даты недоступности
-  void _removeUnavailableDate(DateTime date) {
-    setState(() {
-      _unavailableDates.removeWhere(
-        (d) =>
-            d.year == date.year && d.month == date.month && d.day == date.day,
-      );
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final editState = ref.watch(specialistProfileEditProvider);
-    final currentUser = ref.watch(currentUserProvider).value;
-
-    // Инициализация полей при загрузке профиля
-    if (editState.profile != null && !editState.isDirty) {
-      final profile = editState.profile!;
-      _bioController.text = profile.bio ?? '';
-      _phoneController.text = profile.phoneNumber ?? '';
-      _locationController.text = profile.location ?? '';
-      _hourlyRateController.text = profile.hourlyRate.toString();
-      _vkController.text = profile.socialLinks['vk'] ?? '';
-      _instagramController.text = profile.socialLinks['instagram'] ?? '';
-      _telegramController.text = profile.socialLinks['telegram'] ?? '';
-      _selectedCategories = List.from(profile.categories);
-      _experienceYears = profile.experienceYears;
-      _services = List.from(profile.services);
+      // Инициализируем контроллеры для услуг
+      for (final service in specialist?.servicesWithPrices.entries ?? []) {
+        _serviceControllers[service.key] =
+            TextEditingController(text: service.key);
+        _priceControllers[service.key] =
+            TextEditingController(text: service.value.toString());
+      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Ошибка загрузки профиля: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Редактирование профиля'),
-        actions: [
-          if (editState.isDirty)
-            TextButton(
-              onPressed: editState.isLoading
-                  ? null
-                  : () {
-                      ref
-                          .read(specialistProfileEditProvider.notifier)
-                          .saveProfile();
-                    },
-              child: editState.isLoading
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Text('Сохранить'),
-            ),
-        ],
-      ),
-      body: editState.isLoading && editState.profile == null
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Фото профиля
-                    _buildProfilePhoto(),
-                    const SizedBox(height: 24),
-
-                    // Основная информация
-                    _buildBasicInfo(),
-                    const SizedBox(height: 24),
-
-                    // Категории и опыт
-                    _buildCategoriesAndExperience(),
-                    const SizedBox(height: 24),
-
-                    // Ценообразование
-                    _buildPricing(),
-                    const SizedBox(height: 24),
-
-                    // Социальные сети
-                    _buildSocialLinks(),
-                    const SizedBox(height: 24),
-
-                    // Услуги
-                    _buildServices(),
-                    const SizedBox(height: 24),
-
-                    // Портфолио
-                    _buildPortfolio(),
-                    const SizedBox(height: 24),
-
-                    // Календарь занятости
-                    _buildAvailabilityCalendar(),
-                    const SizedBox(height: 24),
-
-                    // Ошибка
-                    if (editState.errorMessage != null)
-                      _buildErrorMessage(editState.errorMessage!),
-                  ],
-                ),
-              ),
-            ),
-    );
   }
 
-  Widget _buildProfilePhoto() => Center(
-        child: Stack(
-          children: [
-            CircleAvatar(
-              radius: 60,
-              backgroundColor:
-                  Theme.of(context).colorScheme.primary.withOpacity(0.1),
-              child: const Icon(
-                Icons.person,
-                size: 60,
-                color: Colors.grey,
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                  shape: BoxShape.circle,
-                ),
-                child: IconButton(
-                  icon: const Icon(Icons.camera_alt, color: Colors.white),
-                  onPressed: () {
-                    // TODO: Реализовать загрузку фото
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Загрузка фото будет реализована позже'),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
+  Future<void> _saveContacts() async {
+    try {
+      final contacts = <String, String>{};
+      for (final entry in _contactControllers.entries) {
+        if (entry.value.text.trim().isNotEmpty) {
+          contacts[entry.key] = entry.value.text.trim();
+        }
+      }
 
-  Widget _buildBasicInfo() => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Основная информация',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 16),
+      await _profileService.updateContacts(widget.specialistId, contacts);
 
-              // Биография
-              TextFormField(
-                controller: _bioController,
-                decoration: const InputDecoration(
-                  labelText: 'О себе',
-                  hintText: 'Расскажите о своем опыте и услугах',
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: 3,
-                onChanged: (value) {
-                  ref
-                      .read(specialistProfileEditProvider.notifier)
-                      .updateField(bio: value);
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // Телефон
-              TextFormField(
-                controller: _phoneController,
-                decoration: const InputDecoration(
-                  labelText: 'Телефон',
-                  hintText: '+7 (999) 123-45-67',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.phone),
-                ),
-                keyboardType: TextInputType.phone,
-                onChanged: (value) {
-                  ref
-                      .read(specialistProfileEditProvider.notifier)
-                      .updateField(phoneNumber: value);
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // Локация
-              TextFormField(
-                controller: _locationController,
-                decoration: const InputDecoration(
-                  labelText: 'Город',
-                  hintText: 'Москва',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.location_on),
-                ),
-                onChanged: (value) {
-                  ref
-                      .read(specialistProfileEditProvider.notifier)
-                      .updateField(location: value);
-                },
-              ),
-            ],
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Контакты сохранены'),
+            backgroundColor: Colors.green,
           ),
-        ),
-      );
-
-  Widget _buildCategoriesAndExperience() => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Категории и опыт',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 16),
-
-              // Категории
-              Text(
-                'Категории услуг',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                children: SpecialistCategory.values.map((category) {
-                  final isSelected = _selectedCategories.contains(category);
-                  return FilterChip(
-                    label: Text(_getCategoryDisplayName(category)),
-                    selected: isSelected,
-                    onSelected: (selected) {
-                      setState(() {
-                        if (selected) {
-                          _selectedCategories.add(category);
-                        } else {
-                          _selectedCategories.remove(category);
-                        }
-                      });
-                      ref
-                          .read(specialistProfileEditProvider.notifier)
-                          .updateField(
-                            categories: _selectedCategories,
-                          );
-                    },
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 16),
-
-              // Опыт работы
-              Text(
-                'Опыт работы (лет)',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
-              ),
-              const SizedBox(height: 8),
-              Slider(
-                value: _experienceYears.toDouble(),
-                max: 50,
-                divisions: 50,
-                label: '$_experienceYears лет',
-                onChanged: (value) {
-                  setState(() {
-                    _experienceYears = value.round();
-                  });
-                  ref.read(specialistProfileEditProvider.notifier).updateField(
-                        experienceYears: _experienceYears,
-                      );
-                },
-              ),
-            ],
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Ошибка сохранения контактов: $e'),
+            backgroundColor: Colors.red,
           ),
-        ),
-      );
+        );
+      }
+    }
+  }
 
-  Widget _buildPricing() => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Ценообразование',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _hourlyRateController,
-                decoration: const InputDecoration(
-                  labelText: 'Почасовая ставка (₽)',
-                  hintText: '5000',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.attach_money),
-                ),
-                keyboardType: TextInputType.number,
-                onChanged: (value) {
-                  final rate = double.tryParse(value) ?? 0.0;
-                  ref.read(specialistProfileEditProvider.notifier).updateField(
-                        hourlyRate: rate,
-                      );
-                },
-              ),
-            ],
-          ),
-        ),
-      );
+  Future<void> _saveServices() async {
+    try {
+      final services = <String, double>{};
+      for (final serviceKey in _serviceControllers.keys) {
+        final serviceName = _serviceControllers[serviceKey]!.text.trim();
+        final priceText = _priceControllers[serviceKey]!.text.trim();
 
-  Widget _buildSocialLinks() => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Социальные сети',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 16),
-
-              // ВКонтакте
-              TextFormField(
-                controller: _vkController,
-                decoration: const InputDecoration(
-                  labelText: 'ВКонтакте',
-                  hintText: 'https://vk.com/username',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.link),
-                ),
-                onChanged: (value) {
-                  final socialLinks = <String, String>{};
-                  if (value.isNotEmpty) socialLinks['vk'] = value;
-                  ref.read(specialistProfileEditProvider.notifier).updateField(
-                        socialLinks: socialLinks,
-                      );
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // Instagram
-              TextFormField(
-                controller: _instagramController,
-                decoration: const InputDecoration(
-                  labelText: 'Instagram',
-                  hintText: 'https://instagram.com/username',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.link),
-                ),
-                onChanged: (value) {
-                  final socialLinks = <String, String>{};
-                  if (value.isNotEmpty) socialLinks['instagram'] = value;
-                  ref.read(specialistProfileEditProvider.notifier).updateField(
-                        socialLinks: socialLinks,
-                      );
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // Telegram
-              TextFormField(
-                controller: _telegramController,
-                decoration: const InputDecoration(
-                  labelText: 'Telegram',
-                  hintText: '@username',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.link),
-                ),
-                onChanged: (value) {
-                  final socialLinks = <String, String>{};
-                  if (value.isNotEmpty) socialLinks['telegram'] = value;
-                  ref.read(specialistProfileEditProvider.notifier).updateField(
-                        socialLinks: socialLinks,
-                      );
-                },
-              ),
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildServices() => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Услуги',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: _showAddServiceDialog,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              if (_services.isEmpty)
-                const Text('Добавьте услуги, которые вы предоставляете')
-              else
-                Wrap(
-                  spacing: 8,
-                  children: _services
-                      .map(
-                        (service) => Chip(
-                          label: Text(service),
-                          deleteIcon: const Icon(Icons.close, size: 18),
-                          onDeleted: () {
-                            setState(() {
-                              _services.remove(service);
-                            });
-                            ref
-                                .read(specialistProfileEditProvider.notifier)
-                                .updateField(
-                                  services: _services,
-                                );
-                          },
-                        ),
-                      )
-                      .toList(),
-                ),
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildPortfolio() => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Портфолио',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 16),
-
-              // Изображения
-              _buildPortfolioSection(
-                'Фотографии',
-                Icons.photo,
-                _portfolioImages,
-                _pickImages,
-              ),
-              const SizedBox(height: 16),
-
-              // Видео
-              _buildPortfolioSection(
-                'Видео',
-                Icons.videocam,
-                _portfolioVideos,
-                _pickVideos,
-              ),
-              const SizedBox(height: 16),
-
-              // Файлы
-              _buildPortfolioSection(
-                'Документы',
-                Icons.description,
-                _portfolioFiles,
-                _pickFiles,
-              ),
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildPortfolioSection(
-    String title,
-    IconData icon,
-    List<File> files,
-    VoidCallback onAdd,
-  ) =>
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Icon(icon, size: 20),
-                  const SizedBox(width: 8),
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                  ),
-                ],
-              ),
-              TextButton.icon(
-                onPressed: onAdd,
-                icon: const Icon(Icons.add, size: 16),
-                label: const Text('Добавить'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          if (files.isEmpty)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.withOpacity(0.3)),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                'Нет файлов',
-                style: TextStyle(
-                  color: Colors.grey.withOpacity(0.7),
-                ),
-                textAlign: TextAlign.center,
-              ),
-            )
-          else
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-              ),
-              itemCount: files.length,
-              itemBuilder: (context, index) {
-                final file = files[index];
-                return Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.grey.withOpacity(0.1),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(icon, size: 24, color: Colors.grey),
-                          const SizedBox(height: 4),
-                          Text(
-                            file.path.split('/').last,
-                            style: const TextStyle(fontSize: 10),
-                            textAlign: TextAlign.center,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Positioned(
-                      top: 4,
-                      right: 4,
-                      child: GestureDetector(
-                        onTap: () => _removePortfolioItem(files, index),
-                        child: Container(
-                          padding: const EdgeInsets.all(2),
-                          decoration: const BoxDecoration(
-                            color: Colors.red,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.close,
-                            size: 12,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-        ],
-      );
-
-  Widget _buildAvailabilityCalendar() => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Календарь занятости',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      _isCalendarExpanded
-                          ? Icons.expand_less
-                          : Icons.expand_more,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isCalendarExpanded = !_isCalendarExpanded;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Отметьте даты, когда вы недоступны для работы',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
-                    ),
-              ),
-              if (_isCalendarExpanded) ...[
-                const SizedBox(height: 16),
-                _buildSimpleCalendar(),
-                const SizedBox(height: 16),
-
-                // Список недоступных дат
-                if (_unavailableDates.isNotEmpty) ...[
-                  Text(
-                    'Недоступные даты:',
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                  ),
-                  const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 4,
-                    children: _unavailableDates
-                        .map(
-                          (date) => Chip(
-                            label: Text(
-                              '${date.day}.${date.month}.${date.year}',
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                            deleteIcon: const Icon(Icons.close, size: 16),
-                            onDeleted: () => _removeUnavailableDate(date),
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
-                          ),
-                        )
-                        .toList(),
-                  ),
-                ],
-              ],
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildSimpleCalendar() => TableCalendar<dynamic>(
-        firstDay: DateTime.utc(2020),
-        lastDay: DateTime.utc(2030, 12, 31),
-        focusedDay: DateTime.now(),
-        startingDayOfWeek: StartingDayOfWeek.monday,
-        calendarStyle: CalendarStyle(
-          outsideDaysVisible: false,
-          selectedDecoration: const BoxDecoration(
-            color: Colors.red,
-            shape: BoxShape.circle,
-          ),
-          todayDecoration: const BoxDecoration(
-            color: Colors.blue,
-            shape: BoxShape.circle,
-          ),
-          weekendDecoration: BoxDecoration(
-            color: Colors.grey.withOpacity(0.1),
-            shape: BoxShape.circle,
-          ),
-        ),
-        headerStyle: const HeaderStyle(
-          formatButtonVisible: false,
-          titleCentered: true,
-        ),
-        onDaySelected: (selectedDay, focusedDay) {
-          if (_unavailableDates.any(
-            (d) =>
-                d.year == selectedDay.year &&
-                d.month == selectedDay.month &&
-                d.day == selectedDay.day,
-          )) {
-            _removeUnavailableDate(selectedDay);
-          } else {
-            _addUnavailableDate(selectedDay);
+        if (serviceName.isNotEmpty && priceText.isNotEmpty) {
+          final price = double.tryParse(priceText);
+          if (price != null && price > 0) {
+            services[serviceName] = price;
           }
-        },
-        selectedDayPredicate: (day) => _unavailableDates.any(
-          (d) => d.year == day.year && d.month == day.month && d.day == day.day,
-        ),
-        calendarBuilders: CalendarBuilders(
-          defaultBuilder: (context, day, focusedDay) {
-            final isUnavailable = _unavailableDates.any(
-              (d) =>
-                  d.year == day.year &&
-                  d.month == day.month &&
-                  d.day == day.day,
-            );
+        }
+      }
 
-            if (isUnavailable) {
-              return Container(
-                margin: const EdgeInsets.all(2),
-                decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Center(
-                  child: Text(
-                    '${day.day}',
-                    style: const TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              );
-            }
-            return null;
-          },
-        ),
+      await _profileService.updateServicesWithPrices(
+        widget.specialistId,
+        services,
       );
 
-  Widget _buildErrorMessage(String message) => Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.red.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.red),
-        ),
-        child: Row(
-          children: [
-            const Icon(Icons.error, color: Colors.red),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                message,
-                style: const TextStyle(color: Colors.red),
-              ),
-            ),
-          ],
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Услуги сохранены'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Ошибка сохранения услуг: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
 
-  void _showAddServiceDialog() {
-    final controller = TextEditingController();
+  void _addContact() {
+    final contactTypes = [
+      'Телефон',
+      'Email',
+      'Instagram',
+      'VK',
+      'Telegram',
+      'Другое',
+    ];
 
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Добавить услугу'),
-        content: TextField(
-          controller: controller,
-          decoration: const InputDecoration(
-            labelText: 'Название услуги',
-            hintText: 'Например: Фотосъемка свадьбы',
-          ),
+        title: const Text('Добавить контакт'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(labelText: 'Тип контакта'),
+              items: contactTypes
+                  .map(
+                    (type) => DropdownMenuItem(
+                      value: type,
+                      child: Text(type),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (value) {
+                if (value != null && !_contactControllers.containsKey(value)) {
+                  setState(() {
+                    _contactControllers[value] = TextEditingController();
+                  });
+                }
+              },
+            ),
+            if (_contactControllers.isNotEmpty)
+              TextField(
+                controller: _contactControllers.values.last,
+                decoration: const InputDecoration(labelText: 'Значение'),
+              ),
+          ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text('Отмена'),
           ),
-          ElevatedButton(
+          TextButton(
             onPressed: () {
-              if (controller.text.isNotEmpty) {
-                setState(() {
-                  _services.add(controller.text);
-                });
-                ref.read(specialistProfileEditProvider.notifier).updateField(
-                      services: _services,
-                    );
-                Navigator.of(context).pop();
-              }
+              Navigator.of(context).pop();
+              setState(() {});
             },
             child: const Text('Добавить'),
           ),
@@ -929,101 +216,217 @@ class _SpecialistProfileEditScreenState
     );
   }
 
-  void _showAddPortfolioDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Добавить в портфолио'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.image),
-              title: const Text('Фото'),
-              onTap: () {
-                Navigator.of(context).pop();
-                _addPortfolioItem('photo');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.videocam),
-              title: const Text('Видео'),
-              onTap: () {
-                Navigator.of(context).pop();
-                _addPortfolioItem('video');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.description),
-              title: const Text('Документ'),
-              onTap: () {
-                Navigator.of(context).pop();
-                _addPortfolioItem('document');
-              },
-            ),
-          ],
+  void _addService() {
+    final serviceKey = 'service_${DateTime.now().millisecondsSinceEpoch}';
+    setState(() {
+      _serviceControllers[serviceKey] = TextEditingController();
+      _priceControllers[serviceKey] = TextEditingController();
+    });
+  }
+
+  void _removeContact(String contactType) {
+    setState(() {
+      _contactControllers[contactType]?.dispose();
+      _contactControllers.remove(contactType);
+    });
+  }
+
+  void _removeService(String serviceKey) {
+    setState(() {
+      _serviceControllers[serviceKey]?.dispose();
+      _priceControllers[serviceKey]?.dispose();
+      _serviceControllers.remove(serviceKey);
+      _priceControllers.remove(serviceKey);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (_specialist == null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Редактирование профиля'),
         ),
+        body: const Center(
+          child: Text('Специалист не найден'),
+        ),
+      );
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Редактирование профиля'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Отмена'),
+            onPressed: () async {
+              await _saveContacts();
+              await _saveServices();
+            },
+            child: const Text(
+              'Сохранить',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Контакты
+            _buildContactsSection(),
+            const SizedBox(height: 24),
+            // Услуги
+            _buildServicesSection(),
+          ],
+        ),
       ),
     );
   }
 
-  void _addPortfolioItem(String type) {
-    // TODO: Реализовать загрузку файлов
-    final item = PortfolioItem(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      type: type,
-      url:
-          'https://example.com/portfolio/${type}_${DateTime.now().millisecondsSinceEpoch}',
-      title: 'Новая работа',
-      description: 'Описание работы',
-      createdAt: DateTime.now(),
-    );
+  Widget _buildContactsSection() => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Контакты',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: _addContact,
+                    icon: const Icon(Icons.add),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              if (_contactControllers.isEmpty)
+                const Center(
+                  child: Text(
+                    'Контакты не добавлены',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                )
+              else
+                ..._contactControllers.entries.map(
+                  (entry) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            entry.key,
+                            style: const TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: TextField(
+                            controller: entry.value,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              isDense: true,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => _removeContact(entry.key),
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      );
 
-    ref.read(specialistProfileEditProvider.notifier).addPortfolioItem(item);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Загрузка файлов будет реализована позже')),
-    );
-  }
-
-  String _getCategoryDisplayName(SpecialistCategory category) {
-    switch (category) {
-      case SpecialistCategory.host:
-        return 'Ведущий';
-      case SpecialistCategory.photographer:
-        return 'Фотограф';
-      case SpecialistCategory.animator:
-        return 'Аниматор';
-      case SpecialistCategory.dj:
-        return 'Диджей';
-      case SpecialistCategory.decorator:
-        return 'Оформитель';
-      case SpecialistCategory.catering:
-        return 'Кейтеринг';
-      case SpecialistCategory.cleaning:
-        return 'Клининг';
-      case SpecialistCategory.equipment:
-        return 'Аренда свет/звук';
-      case SpecialistCategory.clothing:
-        return 'Платья/костюмы';
-      case SpecialistCategory.fireShow:
-        return 'Фаер-шоу';
-      case SpecialistCategory.fireworks:
-        return 'Салюты';
-      case SpecialistCategory.lightShow:
-        return 'Световые шоу';
-      case SpecialistCategory.florist:
-        return 'Флорист';
-      case SpecialistCategory.coverBand:
-        return 'Кавер-группа';
-      case SpecialistCategory.teamBuilding:
-        return 'Тимбилдинг';
-    }
-  }
+  Widget _buildServicesSection() => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Услуги и цены',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: _addService,
+                    icon: const Icon(Icons.add),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              if (_serviceControllers.isEmpty)
+                const Center(
+                  child: Text(
+                    'Услуги не добавлены',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                )
+              else
+                ..._serviceControllers.keys.map(
+                  (serviceKey) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: TextField(
+                            controller: _serviceControllers[serviceKey],
+                            decoration: const InputDecoration(
+                              labelText: 'Название услуги',
+                              border: OutlineInputBorder(),
+                              isDense: true,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          flex: 2,
+                          child: TextField(
+                            controller: _priceControllers[serviceKey],
+                            decoration: const InputDecoration(
+                              labelText: 'Цена (₽)',
+                              border: OutlineInputBorder(),
+                              isDense: true,
+                            ),
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => _removeService(serviceKey),
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      );
 }

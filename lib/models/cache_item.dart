@@ -29,7 +29,8 @@ class CacheItem<T> {
           orElse: () => CacheType.memory,
         ),
         metadata: Map<String, dynamic>.from(
-            data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+          data['metadata'] as Map<dynamic, dynamic>? ?? {},
+        ),
         size: data['size'] as int?,
         etag: data['etag'] as String?,
         lastAccessed: data['lastAccessed'] != null

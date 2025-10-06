@@ -24,17 +24,17 @@ class GroupChatParticipant {
   /// Создать из Map
   factory GroupChatParticipant.fromMap(Map<String, dynamic> data) =>
       GroupChatParticipant(
-        userId: data['userId'] ?? '',
-        userName: data['userName'] ?? '',
-        userPhoto: data['userPhoto'],
+        userId: data['userId'] as String? ?? '',
+        userName: data['userName'] as String? ?? '',
+        userPhoto: data['userPhoto'] as String?,
         type: GroupChatParticipantType.values.firstWhere(
-          (e) => e.name == data['type'],
+          (e) => e.name == data['type'] as String?,
           orElse: () => GroupChatParticipantType.guest,
         ),
         joinedAt: (data['joinedAt'] as Timestamp).toDate(),
-        isActive: data['isActive'] ?? true,
-        canSendMessages: data['canSendMessages'] ?? true,
-        canUploadFiles: data['canUploadFiles'] ?? true,
+        isActive: data['isActive'] as bool? ?? true,
+        canSendMessages: data['canSendMessages'] as bool? ?? true,
+        canUploadFiles: data['canUploadFiles'] as bool? ?? true,
       );
   final String userId;
   final String userName;
@@ -114,25 +114,25 @@ class GroupChatMessage {
   /// Создать из Map
   factory GroupChatMessage.fromMap(Map<String, dynamic> data) =>
       GroupChatMessage(
-        id: data['id'] ?? '',
-        chatId: data['chatId'] ?? '',
-        senderId: data['senderId'] ?? '',
-        senderName: data['senderName'] ?? '',
-        senderPhoto: data['senderPhoto'],
-        content: data['content'] ?? '',
+        id: data['id'] as String? ?? '',
+        chatId: data['chatId'] as String? ?? '',
+        senderId: data['senderId'] as String? ?? '',
+        senderName: data['senderName'] as String? ?? '',
+        senderPhoto: data['senderPhoto'] as String?,
+        content: data['content'] as String? ?? '',
         type: GroupChatMessageType.values.firstWhere(
-          (e) => e.name == data['type'],
+          (e) => e.name == data['type'] as String?,
           orElse: () => GroupChatMessageType.text,
         ),
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         editedAt: data['editedAt'] != null
             ? (data['editedAt'] as Timestamp).toDate()
             : null,
-        isEdited: data['isEdited'] ?? false,
-        replyToMessageId: data['replyToMessageId'],
-        metadata: data['metadata'],
-        readBy: List<String>.from(data['readBy'] ?? []),
-        isPinned: data['isPinned'] ?? false,
+        isEdited: data['isEdited'] as bool? ?? false,
+        replyToMessageId: data['replyToMessageId'] as String?,
+        metadata: data['metadata'] as Map<String, dynamic>?,
+        readBy: List<String>.from((data['readBy'] as List<dynamic>?) ?? []),
+        isPinned: data['isPinned'] as bool? ?? false,
       );
   final String id;
   final String chatId;
@@ -224,11 +224,11 @@ class GroupChat {
 
   /// Создать из Map
   factory GroupChat.fromMap(Map<String, dynamic> data) => GroupChat(
-        id: data['id'] ?? '',
-        eventId: data['eventId'] ?? '',
-        eventTitle: data['eventTitle'] ?? '',
-        organizerId: data['organizerId'] ?? '',
-        organizerName: data['organizerName'] ?? '',
+        id: data['id'] as String? ?? '',
+        eventId: data['eventId'] as String? ?? '',
+        eventTitle: data['eventTitle'] as String? ?? '',
+        organizerId: data['organizerId'] as String? ?? '',
+        organizerName: data['organizerName'] as String? ?? '',
         participants: (data['participants'] as List<dynamic>?)
                 ?.map(
                   (p) =>
@@ -242,13 +242,13 @@ class GroupChat {
               )
             : null,
         lastActivityAt: (data['lastActivityAt'] as Timestamp).toDate(),
-        unreadCount: data['unreadCount'] ?? 0,
-        isActive: data['isActive'] ?? true,
-        allowGuestUploads: data['allowGuestUploads'] ?? true,
-        allowGuestMessages: data['allowGuestMessages'] ?? true,
+        unreadCount: data['unreadCount'] as int? ?? 0,
+        isActive: data['isActive'] as bool? ?? true,
+        allowGuestUploads: data['allowGuestUploads'] as bool? ?? true,
+        allowGuestMessages: data['allowGuestMessages'] as bool? ?? true,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-        settings: data['settings'],
+        settings: data['settings'] as Map<String, dynamic>?,
       );
   final String id;
   final String eventId;

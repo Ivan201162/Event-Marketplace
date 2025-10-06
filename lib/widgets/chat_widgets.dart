@@ -149,7 +149,7 @@ class ChatListItem extends StatelessWidget {
                               color: Theme.of(context)
                                   .colorScheme
                                   .onSurface
-                                  .withOpacity(0.6),
+                                  .withValues(alpha: 0.6),
                             ),
                           ),
                       ],
@@ -166,7 +166,7 @@ class ChatListItem extends StatelessWidget {
                                 color: Theme.of(context)
                                     .colorScheme
                                     .onSurface
-                                    .withOpacity(0.7),
+                                    .withValues(alpha: 0.7),
                                 fontWeight: hasUnread
                                     ? FontWeight.w500
                                     : FontWeight.normal,
@@ -206,7 +206,7 @@ class ChatListItem extends StatelessWidget {
                           color: Theme.of(context)
                               .colorScheme
                               .onSurface
-                              .withOpacity(0.5),
+                              .withValues(alpha: 0.5),
                           fontStyle: FontStyle.italic,
                         ),
                       ),
@@ -383,7 +383,7 @@ class MessageBubble extends StatelessWidget {
                           color: Theme.of(context)
                               .colorScheme
                               .outline
-                              .withOpacity(0.2),
+                              .withValues(alpha: 0.2),
                         )
                       : null,
                 ),
@@ -429,11 +429,11 @@ class MessageBubble extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 11,
                             color: isCurrentUser
-                                ? Colors.white.withOpacity(0.7)
+                                ? Colors.white.withValues(alpha: 0.7)
                                 : Theme.of(context)
                                     .colorScheme
                                     .onSurface
-                                    .withOpacity(0.5),
+                                    .withValues(alpha: 0.5),
                           ),
                         ),
                         if (isCurrentUser) ...[
@@ -499,9 +499,9 @@ class MessageBubble extends StatelessWidget {
 
     switch (status) {
       case MessageStatus.sent:
-        return Colors.white.withOpacity(0.7);
+        return Colors.white.withValues(alpha: 0.7);
       case MessageStatus.delivered:
-        return Colors.white.withOpacity(0.7);
+        return Colors.white.withValues(alpha: 0.7);
       case MessageStatus.read:
         return Colors.blue;
       case MessageStatus.failed:
@@ -673,7 +673,10 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
             color: Theme.of(context).colorScheme.surface,
             border: Border(
               top: BorderSide(
-                color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                color: Theme.of(context)
+                    .colorScheme
+                    .outline
+                    .withValues(alpha: 0.2),
               ),
             ),
           ),
@@ -762,9 +765,8 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
 
     try {
       await ref.read(chatStateProvider.notifier).sendMessage(
-            chatId: widget.chatId,
-            senderId: widget.senderId,
-            content: content,
+            widget.chatId,
+            content,
             receiverId: widget.receiverId,
             attachments: _attachments.map((file) => file.path).toList(),
           );
@@ -788,7 +790,8 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
           color: Theme.of(context).colorScheme.surface,
           border: Border(
             bottom: BorderSide(
-              color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+              color:
+                  Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
             ),
           ),
         ),
@@ -805,7 +808,7 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
-                      color: Colors.grey.withOpacity(0.1),
+                      color: Colors.grey.withValues(alpha: 0.1),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -859,7 +862,8 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
           color: Theme.of(context).colorScheme.surface,
           border: Border(
             bottom: BorderSide(
-              color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+              color:
+                  Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
             ),
           ),
         ),
@@ -949,7 +953,7 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 12),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.withOpacity(0.3)),
+              border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
@@ -1046,7 +1050,7 @@ class NotificationWidget extends StatelessWidget {
                   height: 40,
                   decoration: BoxDecoration(
                     color: _getPriorityColor(notification.priority)
-                        .withOpacity(0.1),
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Center(
@@ -1084,7 +1088,7 @@ class NotificationWidget extends StatelessWidget {
                               color: Theme.of(context)
                                   .colorScheme
                                   .onSurface
-                                  .withOpacity(0.6),
+                                  .withValues(alpha: 0.6),
                             ),
                           ),
                         ],
@@ -1097,7 +1101,7 @@ class NotificationWidget extends StatelessWidget {
                           color: Theme.of(context)
                               .colorScheme
                               .onSurface
-                              .withOpacity(0.7),
+                              .withValues(alpha: 0.7),
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,

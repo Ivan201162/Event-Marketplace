@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../core/constants/app_routes.dart';
 import '../providers/recommendation_providers.dart';
-import 'specialist_card.dart';
+import 'recommendation_section.dart';
 
 /// Секция рекомендаций на главном экране
 class RecommendationsSection extends ConsumerWidget {
@@ -11,195 +11,123 @@ class RecommendationsSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recommendationsAsync = ref.watch(userRecommendationsProvider(
-        'current_user_id')); // TODO: Get actual user ID
+    final recommendationsAsync = ref.watch(
+      userRecommendationsProvider(
+        'current_user_id',
+      ),
+    ); // TODO(developer): Get actual user ID
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Рекомендуем вам',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  context.push(AppRoutes.recommendations);
-                },
-                child: const Text('Все рекомендации'),
-              ),
-            ],
-          ),
-        ),
-        recommendationsAsync.when(
-          data: (recommendations) {
-            if (recommendations.isEmpty) {
-              return _buildEmptyState();
-            }
+    return recommendationsAsync.when(
+      data: (recommendations) {
+        if (recommendations.isEmpty) {
+          return _buildEmptyState();
+        }
 
-            return SizedBox(
-              height: 200,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemCount: recommendations.length,
-                itemBuilder: (context, index) {
-                  final recommendation = recommendations[index];
-                  return Container(
-                    width: 280,
-                    margin: const EdgeInsets.only(right: 12),
-                    child: SpecialistCard(
-                      specialist: recommendation.specialist!,
-                      onTap: () {
-                        // TODO: Переход к профилю специалиста
-                      },
-                    ),
-                  );
-                },
-              ),
-            );
+        return RecommendationSection(
+          title: 'Мы рекомендуем',
+          subtitle: 'Специалисты, которые могут вам понравиться',
+          icon: '🎯',
+          recommendations: recommendations,
+          compact: true,
+          onViewAll: () {
+            context.push(AppRoutes.recommendations);
           },
-          loading: _buildLoadingState,
-          error: (error, stack) => _buildErrorState(error.toString()),
-        ),
-      ],
+          onRecommendationTap: (recommendation) {
+            _onRecommendationTap(context, recommendation);
+          },
+          onRecommendationBook: (recommendation) {
+            _onRecommendationBook(context, recommendation);
+          },
+        );
+      },
+      loading: _buildLoadingState,
+      error: (error, stack) => _buildErrorState(error),
     );
   }
 
-  Widget _buildEmptyState() => Container(
-        height: 120,
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(12),
+  void _onRecommendationTap(BuildContext context, recommendation) {
+    // TODO(developer): Navigate to specialist profile
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Переход к профилю: ${recommendation.specialist.name}'),
+      ),
+    );
+  }
+
+  void _onRecommendationBook(BuildContext context, recommendation) {
+    // TODO(developer): Navigate to booking form
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Бронирование: ${recommendation.specialist.name}'),
+      ),
+    );
+  }
+
+  Widget _buildLoadingState() => const Padding(
+        padding: EdgeInsets.all(16),
+        child: Center(
+          child: CircularProgressIndicator(),
         ),
-        child: const Center(
+      );
+
+  Widget _buildErrorState(Object error) => Padding(
+        padding: const EdgeInsets.all(16),
+        child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.recommend,
+              const Icon(
+                Icons.error_outline,
                 size: 48,
-                color: Colors.grey,
+                color: Colors.red,
               ),
-              SizedBox(height: 8),
-              Text(
-                'Пока нет рекомендаций',
+              const SizedBox(height: 16),
+              const Text(
+                'Ошибка загрузки рекомендаций',
                 style: TextStyle(
-                  color: Colors.grey,
                   fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
+              const SizedBox(height: 8),
               Text(
-                'Забронируйте услугу, чтобы получить персональные рекомендации',
-                textAlign: TextAlign.center,
+                error.toString(),
                 style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 12,
+                  fontSize: 14,
+                  color: Colors.grey[600],
                 ),
+                textAlign: TextAlign.center,
               ),
             ],
           ),
         ),
       );
 
-  Widget _buildLoadingState() => SizedBox(
-        height: 200,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: 3,
-          itemBuilder: (context, index) => Container(
-            width: 280,
-            margin: const EdgeInsets.only(right: 12),
-            child: Card(
-              child: Column(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(12),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 16,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Container(
-                            height: 12,
-                            width: 120,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-
-  Widget _buildErrorState(String error) => Container(
-        height: 120,
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: BoxDecoration(
-          color: Colors.red[50],
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.red[200]!),
-        ),
+  Widget _buildEmptyState() => Padding(
+        padding: const EdgeInsets.all(16),
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.error_outline,
+              const Icon(
+                Icons.recommend_outlined,
                 size: 48,
-                color: Colors.red[400],
+                color: Colors.grey,
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Пока нет рекомендаций',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Ошибка загрузки рекомендаций',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
               Text(
-                error,
-                textAlign: TextAlign.center,
+                'Закажите услуги, чтобы получать персональные рекомендации',
                 style: TextStyle(
-                  color: Colors.red[600],
-                  fontSize: 12,
+                  fontSize: 14,
+                  color: Colors.grey[600],
                 ),
+                textAlign: TextAlign.center,
               ),
             ],
           ),

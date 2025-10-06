@@ -1,74 +1,451 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../models/event_idea.dart';
+import '../models/idea.dart';
 
-/// Карточка идеи для отображения в сетке
 class IdeaCard extends StatelessWidget {
   const IdeaCard({
     super.key,
     required this.idea,
-    required this.onTap,
-    required this.onLike,
-    required this.onFavorite,
+    this.onTap,
+    this.onLike,
+    this.onSave,
+    this.showAuthor = true,
+    this.isLiked = false,
+    this.isSaved = false,
   });
-
-  final EventIdea idea;
-  final VoidCallback onTap;
-  final VoidCallback onLike;
-  final VoidCallback onFavorite;
+  final Idea idea;
+  final VoidCallback? onTap;
+  final VoidCallback? onLike;
+  final VoidCallback? onSave;
+  final bool showAuthor;
+  final bool isLiked;
+  final bool isSaved;
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+  Widget build(BuildContext context) => Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Изображение
+              Expanded(
+                flex: 3,
+                child: _buildImage(context),
+              ),
 
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: InkWell(
-        onTap: onTap,
+              // Контент
+              Expanded(
+                flex: 2,
+                child: _buildContent(context),
+              ),
+            ],
+          ),
+        ),
+      );
+
+  Widget _buildImage(BuildContext context) => Stack(
+        children: [
+          // Основное изображение
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+            child: idea.mainImageUrl != null
+                ? CachedNetworkImage(
+                    imageUrl: idea.mainImageUrl!,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
+                    placeholder: (context, url) => Container(
+                      color: Colors.grey.shade200,
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      color: Colors.grey.shade200,
+                      child: const Icon(Icons.error),
+                    ),
+                  )
+                : Container(
+                    color: Colors.grey.shade200,
+                    child: const Center(
+                      child: Icon(Icons.image, size: 48, color: Colors.grey),
+                    ),
+                  ),
+          ),
+
+          // Индикатор типа контента
+          Positioned(
+            top: 8,
+            left: 8,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.black54,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    idea.category.emoji,
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    idea.category.displayName,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Индикатор видео
+          if (idea.hasVideo)
+            Positioned(
+              top: 8,
+              right: 8,
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.play_circle_filled,
+                  color: Colors.white,
+                  size: 16,
+                ),
+              ),
+            ),
+
+          // Кнопки действий
+          Positioned(
+            bottom: 8,
+            right: 8,
+            child: Column(
+              children: [
+                // Кнопка сохранения
+                if (onSave != null)
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.black54,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        isSaved ? Icons.bookmark : Icons.bookmark_border,
+                        color: isSaved ? Colors.amber : Colors.white,
+                        size: 20,
+                      ),
+                      onPressed: onSave,
+                      constraints: const BoxConstraints(
+                        minWidth: 32,
+                        minHeight: 32,
+                      ),
+                      padding: EdgeInsets.zero,
+                    ),
+                  ),
+
+                // Кнопка лайка
+                if (onLike != null)
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black54,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        isLiked ? Icons.favorite : Icons.favorite_border,
+                        color: isLiked ? Colors.red : Colors.white,
+                        size: 20,
+                      ),
+                      onPressed: onLike,
+                      constraints: const BoxConstraints(
+                        minWidth: 32,
+                        minHeight: 32,
+                      ),
+                      padding: EdgeInsets.zero,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+
+          // Счетчик медиафайлов
+          if (idea.mediaCount > 1)
+            Positioned(
+              bottom: 8,
+              left: 8,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  '${idea.mediaCount}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      );
+
+  Widget _buildContent(BuildContext context) => Padding(
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Изображение
-            Expanded(
-              flex: 3,
-              child: Stack(
-                children: [
-                  Image.network(
-                    idea.imageUrl,
-                    width: double.infinity,
-                    height: double.infinity,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: theme.colorScheme.surfaceContainerHighest,
-                        child: Icon(
-                          Icons.image_not_supported,
-                          size: 32,
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      );
-                    },
-                  ),
+            // Заголовок
+            Text(
+              idea.title,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
 
-                  // Категория
-                  Positioned(
-                    top: 8,
-                    left: 8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
+            const SizedBox(height: 4),
+
+            // Описание
+            Expanded(
+              child: Text(
+                idea.description,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            // Теги
+            if (idea.tags.isNotEmpty)
+              Wrap(
+                spacing: 4,
+                runSpacing: 4,
+                children: idea.tags
+                    .take(2)
+                    .map(
+                      (tag) => Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          tag,
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
                       ),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withValues(alpha: 0.9),
-                        borderRadius: BorderRadius.circular(12),
+                    )
+                    .toList(),
+              ),
+
+            const SizedBox(height: 8),
+
+            // Статистика и автор
+            Row(
+              children: [
+                // Статистика
+                Expanded(
+                  child: Row(
+                    children: [
+                      if (idea.likesCount > 0) ...[
+                        Icon(
+                          Icons.favorite,
+                          size: 12,
+                          color: Colors.red.shade400,
+                        ),
+                        const SizedBox(width: 2),
+                        Text(
+                          '${idea.likesCount}',
+                          style: const TextStyle(fontSize: 10),
+                        ),
+                        const SizedBox(width: 8),
+                      ],
+                      if (idea.savesCount > 0) ...[
+                        Icon(
+                          Icons.bookmark,
+                          size: 12,
+                          color: Colors.amber.shade600,
+                        ),
+                        const SizedBox(width: 2),
+                        Text(
+                          '${idea.savesCount}',
+                          style: const TextStyle(fontSize: 10),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+
+                // Автор
+                if (showAuthor)
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 8,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        backgroundImage: idea.authorAvatar != null
+                            ? NetworkImage(idea.authorAvatar!)
+                            : null,
+                        child: idea.authorAvatar == null
+                            ? Text(
+                                idea.authorName.isNotEmpty
+                                    ? idea.authorName[0].toUpperCase()
+                                    : '?',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 8,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            : null,
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
+                      const SizedBox(width: 4),
+                      Text(
+                        idea.authorName,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+          ],
+        ),
+      );
+}
+
+/// Компактная карточка идеи для списков
+class CompactIdeaCard extends StatelessWidget {
+  const CompactIdeaCard({
+    super.key,
+    required this.idea,
+    this.onTap,
+    this.onLike,
+    this.onSave,
+    this.isLiked = false,
+    this.isSaved = false,
+  });
+  final Idea idea;
+  final VoidCallback? onTap;
+  final VoidCallback? onLike;
+  final VoidCallback? onSave;
+  final bool isLiked;
+  final bool isSaved;
+
+  @override
+  Widget build(BuildContext context) => Card(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Row(
+              children: [
+                // Изображение
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: idea.mainImageUrl != null
+                      ? CachedNetworkImage(
+                          imageUrl: idea.mainImageUrl!,
+                          width: 60,
+                          height: 60,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => Container(
+                            width: 60,
+                            height: 60,
+                            color: Colors.grey.shade200,
+                            child: const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                            width: 60,
+                            height: 60,
+                            color: Colors.grey.shade200,
+                            child: const Icon(Icons.error),
+                          ),
+                        )
+                      : Container(
+                          width: 60,
+                          height: 60,
+                          color: Colors.grey.shade200,
+                          child: const Icon(Icons.image),
+                        ),
+                ),
+
+                const SizedBox(width: 12),
+
+                // Контент
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        idea.title,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        idea.description,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.7),
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
                         children: [
                           Text(
                             idea.category.emoji,
@@ -78,161 +455,63 @@ class IdeaCard extends StatelessWidget {
                           Text(
                             idea.category.displayName,
                             style: TextStyle(
-                              color: theme.colorScheme.onPrimary,
                               fontSize: 10,
-                              fontWeight: FontWeight.w500,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                           ),
+                          const Spacer(),
+                          if (idea.likesCount > 0) ...[
+                            Icon(
+                              Icons.favorite,
+                              size: 12,
+                              color: Colors.red.shade400,
+                            ),
+                            const SizedBox(width: 2),
+                            Text(
+                              '${idea.likesCount}',
+                              style: const TextStyle(fontSize: 10),
+                            ),
+                          ],
                         ],
                       ),
-                    ),
+                    ],
                   ),
+                ),
 
-                  // Кнопки действий
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: Column(
-                      children: [
-                        _buildActionButton(
-                          icon: Icons.favorite_border,
-                          onPressed: onFavorite,
-                          color: theme.colorScheme.error,
-                        ),
-                        const SizedBox(height: 4),
-                        _buildActionButton(
-                          icon: Icons.thumb_up_outlined,
-                          onPressed: onLike,
-                          color: theme.colorScheme.primary,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Контент
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                // Кнопки действий
+                Column(
                   children: [
-                    // Заголовок
-                    Text(
-                      idea.title,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
+                    if (onSave != null)
+                      IconButton(
+                        icon: Icon(
+                          isSaved ? Icons.bookmark : Icons.bookmark_border,
+                          color: isSaved ? Colors.amber : null,
+                          size: 20,
+                        ),
+                        onPressed: onSave,
+                        constraints: const BoxConstraints(
+                          minWidth: 32,
+                          minHeight: 32,
+                        ),
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-
-                    const SizedBox(height: 4),
-
-                    // Описание
-                    Expanded(
-                      child: Text(
-                        idea.description,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
+                    if (onLike != null)
+                      IconButton(
+                        icon: Icon(
+                          isLiked ? Icons.favorite : Icons.favorite_border,
+                          color: isLiked ? Colors.red : null,
+                          size: 20,
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                        onPressed: onLike,
+                        constraints: const BoxConstraints(
+                          minWidth: 32,
+                          minHeight: 32,
+                        ),
                       ),
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    // Статистика
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.thumb_up,
-                          size: 14,
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          idea.likes.toString(),
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Icon(
-                          Icons.comment,
-                          size: 14,
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          idea.commentsCount.toString(),
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                        const Spacer(),
-                        if (idea.budget != null)
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.primaryContainer,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              '${idea.budget!.toStringAsFixed(0)} ₽',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onPrimaryContainer,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
                   ],
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActionButton({
-    required IconData icon,
-    required VoidCallback onPressed,
-    required Color color,
-  }) =>
-      Container(
-        width: 32,
-        height: 32,
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.9),
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: IconButton(
-          onPressed: onPressed,
-          icon: Icon(
-            icon,
-            size: 16,
-            color: color,
           ),
-          padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(),
         ),
       );
 }

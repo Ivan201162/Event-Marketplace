@@ -273,7 +273,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
 
   void _showIntegrationDetail(Integration integration) {
     Navigator.of(context).push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => IntegrationDetailScreen(
           integration: integration,
         ),
@@ -282,7 +282,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
   }
 
   void _showSearchDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Поиск интеграций'),
@@ -312,7 +312,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
   }
 
   void _showFilterDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Фильтр интеграций'),
@@ -328,7 +328,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
   }
 
   void _showLocationSettings() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Настройки геолокации'),
@@ -359,7 +359,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
   }
 
   void _showSharingOptions() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Настройки шаринга'),
@@ -384,7 +384,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
   }
 
   void _showConnectionStatus() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Статус подключения'),

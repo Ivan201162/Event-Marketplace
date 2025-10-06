@@ -1132,7 +1132,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
   }
 
   void _viewMetric(KPIMetric metric) {
-    // TODO: Реализовать просмотр метрики
+    // TODO(developer): Реализовать просмотр метрики
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Просмотр метрики "${metric.name}" будет реализован'),
@@ -1141,7 +1141,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
   }
 
   void _editMetric(KPIMetric metric) {
-    // TODO: Реализовать редактирование метрики
+    // TODO(developer): Реализовать редактирование метрики
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content:
@@ -1151,7 +1151,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
   }
 
   void _viewDashboard(KPIDashboard dashboard) {
-    // TODO: Реализовать просмотр дашборда
+    // TODO(developer): Реализовать просмотр дашборда
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Просмотр дашборда "${dashboard.name}" будет реализован'),
@@ -1160,7 +1160,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
   }
 
   void _editDashboard(KPIDashboard dashboard) {
-    // TODO: Реализовать редактирование дашборда
+    // TODO(developer): Реализовать редактирование дашборда
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -1171,7 +1171,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
   }
 
   void _viewReport(KPIReport report) {
-    // TODO: Реализовать просмотр отчета
+    // TODO(developer): Реализовать просмотр отчета
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Просмотр отчета "${report.name}" будет реализован'),
@@ -1200,7 +1200,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
   }
 
   void _downloadReport(KPIReport report) {
-    // TODO: Реализовать скачивание отчета
+    // TODO(developer): Реализовать скачивание отчета
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Скачивание отчета "${report.name}" будет реализовано'),
@@ -1209,7 +1209,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
   }
 
   void _showAddMetricDialog() {
-    // TODO: Реализовать диалог добавления метрики
+    // TODO(developer): Реализовать диалог добавления метрики
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Добавление метрики будет реализовано'),
@@ -1218,7 +1218,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
   }
 
   void _showCreateDashboardDialog() {
-    // TODO: Реализовать диалог создания дашборда
+    // TODO(developer): Реализовать диалог создания дашборда
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Создание дашборда будет реализовано'),
@@ -1227,7 +1227,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
   }
 
   void _showCreateReportDialog() {
-    // TODO: Реализовать диалог создания отчета
+    // TODO(developer): Реализовать диалог создания отчета
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Создание отчета будет реализовано'),

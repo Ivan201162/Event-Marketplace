@@ -362,7 +362,7 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
   }
 
   void _showUserDetails(AppUser user) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Пользователь: ${user.displayName}'),
@@ -435,7 +435,7 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
   void _showBanUserDialog(AppUser user) {
     final reasonController = TextEditingController();
 
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Заблокировать пользователя'),
@@ -475,7 +475,7 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
   }
 
   void _showEditUserDialog(AppUser user) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Редактирование пользователя'),
@@ -494,7 +494,7 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
 
   Future<void> _banUser(AppUser user, String reason) async {
     try {
-      // TODO: Получить ID текущего администратора
+      // TODO(developer): Получить ID текущего администратора
       const adminId = 'demo_admin_id';
 
       final success = await _adminService.banUser(user.uid, adminId, reason);
@@ -511,7 +511,7 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
 
   Future<void> _unbanUser(AppUser user) async {
     try {
-      // TODO: Получить ID текущего администратора
+      // TODO(developer): Получить ID текущего администратора
       const adminId = 'demo_admin_id';
 
       final success = await _adminService.unbanUser(user.uid, adminId);

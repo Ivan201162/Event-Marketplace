@@ -1,262 +1,80 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 /// Типы платежей
 enum PaymentType {
-  advance, // Аванс
-  finalPayment, // Финальный платеж
+  deposit, // Предоплата
+  finalPayment, // Окончательный платеж
   fullPayment, // Полная оплата
+  prepayment, // Предоплата
   refund, // Возврат
+  penalty, // Штраф
+  bonus, // Бонус
+  hold, // Заморозка средств
+}
+
+extension PaymentTypeExtension on PaymentType {
+  String get displayName {
+    switch (this) {
+      case PaymentType.deposit:
+        return 'Предоплата';
+      case PaymentType.finalPayment:
+        return 'Окончательный платеж';
+      case PaymentType.fullPayment:
+        return 'Полная оплата';
+      case PaymentType.prepayment:
+        return 'Предоплата';
+      case PaymentType.refund:
+        return 'Возврат';
+      case PaymentType.penalty:
+        return 'Штраф';
+      case PaymentType.bonus:
+        return 'Бонус';
+      case PaymentType.hold:
+        return 'Заморозка средств';
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case PaymentType.deposit:
+        return Icons.payment;
+      case PaymentType.finalPayment:
+        return Icons.check_circle;
+      case PaymentType.fullPayment:
+        return Icons.account_balance_wallet;
+      case PaymentType.prepayment:
+        return Icons.payment;
+      case PaymentType.refund:
+        return Icons.undo;
+      case PaymentType.penalty:
+        return Icons.warning;
+      case PaymentType.bonus:
+        return Icons.card_giftcard;
+      case PaymentType.hold:
+        return Icons.pause_circle;
+    }
+  }
 }
 
 /// Статусы платежей
 enum PaymentStatus {
   pending, // Ожидает оплаты
-  processing, // Обрабатывается
+  processing, // В обработке
   completed, // Завершен
   failed, // Неудачный
   cancelled, // Отменен
   refunded, // Возвращен
+  disputed, // Оспорен
 }
 
-/// Типы организаций для расчета платежей
-enum OrganizationType {
-  individual, // Физическое лицо
-  commercial, // Коммерческая организация
-  government, // Государственное учреждение
-  nonProfit, // Некоммерческая организация
-  selfEmployed, // Самозанятый
-  entrepreneur, // ИП
-}
-
-/// Типы налогов
-enum TaxType {
-  none, // Без налога
-  professionalIncome, // Налог на профессиональный доход (самозанятые)
-  simplifiedTax, // Упрощенная система налогообложения (ИП)
-  vat, // НДС
-}
-
-/// Провайдеры платежей
-enum PaymentProvider {
-  yooKassa, // ЮKassa
-  cloudPayments, // CloudPayments
-  mock, // Имитация для тестирования
-}
-
-/// Модель платежа
-class Payment {
-  const Payment({
-    required this.id,
-    required this.bookingId,
-    required this.userId,
-    required this.customerId,
-    required this.specialistId,
-    required this.type,
-    required this.status,
-    required this.amount,
-    this.originalAmount,
-    required this.currency,
-    required this.createdAt,
-    this.completedAt,
-    this.failedAt,
-    this.paymentMethod,
-    this.transactionId,
-    this.description,
-    this.metadata,
-    this.organizationType = OrganizationType.individual,
-    this.prepaymentAmount = 0.0,
-    this.taxAmount = 0.0,
-    this.taxRate = 0.0,
-    this.taxType,
-  });
-
-  /// Создать из документа Firestore
-  factory Payment.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data()! as Map<String, dynamic>;
-    return Payment(
-      id: doc.id,
-      bookingId: data['bookingId'] ?? '',
-      userId: data['userId'] ?? '',
-      customerId: data['customerId'] ?? '',
-      specialistId: data['specialistId'] ?? '',
-      type: _parsePaymentType(data['type']),
-      status: _parsePaymentStatus(data['status']),
-      amount:
-          (data['amount'] is num) ? (data['amount'] as num).toDouble() : 0.0,
-      originalAmount: data['originalAmount'] != null
-          ? (data['originalAmount'] as num).toDouble()
-          : null,
-      currency: data['currency'] ?? 'RUB',
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
-      completedAt: data['completedAt'] != null
-          ? (data['completedAt'] as Timestamp).toDate()
-          : null,
-      failedAt: data['failedAt'] != null
-          ? (data['failedAt'] as Timestamp).toDate()
-          : null,
-      paymentMethod: data['paymentMethod'],
-      transactionId: data['transactionId'],
-      description: data['description'],
-      metadata: data['metadata'],
-      organizationType: _parseOrganizationType(data['organizationType']),
-      prepaymentAmount: (data['prepaymentAmount'] as num?)?.toDouble() ?? 0.0,
-      taxAmount: (data['taxAmount'] as num?)?.toDouble() ?? 0.0,
-      taxRate: (data['taxRate'] as num?)?.toDouble() ?? 0.0,
-      taxType: _parseTaxType(data['taxType']),
-    );
-  }
-
-  /// Создать объект из Map
-  factory Payment.fromMap(Map<String, dynamic> map) => Payment(
-        id: map['id'] ?? '',
-        bookingId: map['bookingId'] ?? '',
-        userId: map['userId'] ?? '',
-        customerId: map['customerId'] ?? map['userId'] ?? '',
-        specialistId: map['specialistId'] ?? '',
-        amount: (map['amount'] ?? 0).toDouble(),
-        currency: map['currency'] ?? 'RUB',
-        type: PaymentType.values.firstWhere(
-          (e) => e.name == map['type'],
-          orElse: () => PaymentType.fullPayment,
-        ),
-        status: PaymentStatus.values.firstWhere(
-          (e) => e.name == map['status'],
-          orElse: () => PaymentStatus.pending,
-        ),
-        paymentMethod: map['paymentMethod'] ?? '',
-        transactionId: map['transactionId'],
-        description: map['description'] ?? '',
-        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
-        createdAt: map['createdAt'] != null
-            ? (map['createdAt'] as Timestamp).toDate()
-            : DateTime.now(),
-        prepaymentAmount: (map['prepaymentAmount'] as num?)?.toDouble() ?? 0.0,
-        taxAmount: (map['taxAmount'] as num?)?.toDouble() ?? 0.0,
-        taxRate: (map['taxRate'] as num?)?.toDouble() ?? 0.0,
-        taxType: _parseTaxType(map['taxType']),
-      );
-  final String id;
-  final String bookingId;
-  final String userId;
-  final String customerId;
-  final String specialistId;
-  final PaymentType type;
-  final PaymentStatus status;
-  final double amount;
-  final double? originalAmount; // Оригинальная сумма до скидок/комиссий
-  final String currency;
-  final DateTime createdAt;
-  final DateTime? completedAt;
-  final DateTime? failedAt;
-  final String? paymentMethod;
-  final String? transactionId;
-  final String? description;
-  final Map<String, dynamic>? metadata;
-  final OrganizationType organizationType;
-  final double prepaymentAmount;
-  final double taxAmount;
-  final double taxRate;
-  final TaxType? taxType;
-
-  /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() => {
-        'bookingId': bookingId,
-        'userId': userId,
-        'customerId': customerId,
-        'specialistId': specialistId,
-        'type': type.name,
-        'status': status.name,
-        'amount': amount,
-        'originalAmount': originalAmount,
-        'currency': currency,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'completedAt':
-            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
-        'failedAt': failedAt != null ? Timestamp.fromDate(failedAt!) : null,
-        'paymentMethod': paymentMethod,
-        'transactionId': transactionId,
-        'description': description,
-        'metadata': metadata,
-        'organizationType': organizationType.name,
-        'prepaymentAmount': prepaymentAmount,
-        'taxAmount': taxAmount,
-        'taxRate': taxRate,
-        'taxType': taxType?.name,
-      };
-
-  /// Копировать с изменениями
-  Payment copyWith({
-    String? id,
-    String? bookingId,
-    String? userId,
-    String? customerId,
-    String? specialistId,
-    PaymentType? type,
-    PaymentStatus? status,
-    double? amount,
-    double? originalAmount,
-    String? currency,
-    DateTime? createdAt,
-    DateTime? completedAt,
-    DateTime? failedAt,
-    String? paymentMethod,
-    String? transactionId,
-    String? description,
-    Map<String, dynamic>? metadata,
-    OrganizationType? organizationType,
-    double? prepaymentAmount,
-    double? taxAmount,
-    double? taxRate,
-    TaxType? taxType,
-  }) =>
-      Payment(
-        id: id ?? this.id,
-        bookingId: bookingId ?? this.bookingId,
-        userId: userId ?? this.userId,
-        customerId: customerId ?? this.customerId,
-        specialistId: specialistId ?? this.specialistId,
-        type: type ?? this.type,
-        status: status ?? this.status,
-        amount: amount ?? this.amount,
-        originalAmount: originalAmount ?? this.originalAmount,
-        currency: currency ?? this.currency,
-        createdAt: createdAt ?? this.createdAt,
-        completedAt: completedAt ?? this.completedAt,
-        failedAt: failedAt ?? this.failedAt,
-        paymentMethod: paymentMethod ?? this.paymentMethod,
-        transactionId: transactionId ?? this.transactionId,
-        description: description ?? this.description,
-        metadata: metadata ?? this.metadata,
-        organizationType: organizationType ?? this.organizationType,
-        prepaymentAmount: prepaymentAmount ?? this.prepaymentAmount,
-        taxAmount: taxAmount ?? this.taxAmount,
-        taxRate: taxRate ?? this.taxRate,
-        taxType: taxType ?? this.taxType,
-      );
-
-  /// Получить отображаемое название типа платежа
-  String get typeDisplayName {
-    switch (type) {
-      case PaymentType.advance:
-        return 'Аванс';
-      case PaymentType.finalPayment:
-        return 'Финальный платеж';
-      case PaymentType.fullPayment:
-        return 'Полная оплата';
-      case PaymentType.refund:
-        return 'Возврат';
-    }
-  }
-
-  /// Получить отображаемое название статуса
-  String get statusDisplayName {
-    switch (status) {
+extension PaymentStatusExtension on PaymentStatus {
+  String get displayName {
+    switch (this) {
       case PaymentStatus.pending:
         return 'Ожидает оплаты';
       case PaymentStatus.processing:
-        return 'Обрабатывается';
+        return 'В обработке';
       case PaymentStatus.completed:
         return 'Завершен';
       case PaymentStatus.failed:
@@ -265,10 +83,419 @@ class Payment {
         return 'Отменен';
       case PaymentStatus.refunded:
         return 'Возвращен';
+      case PaymentStatus.disputed:
+        return 'Оспорен';
+    }
+  }
+}
+
+/// Методы оплаты
+enum PaymentMethod {
+  card, // Банковская карта
+  bankTransfer, // Банковский перевод
+  cash, // Наличные
+  digitalWallet, // Электронный кошелек
+  cryptocurrency, // Криптовалюта
+}
+
+/// Статус налогообложения
+enum TaxStatus {
+  none, // Без налога
+  individual, // Физическое лицо
+  individualEntrepreneur, // ИП
+  selfEmployed, // Самозанятый
+  legalEntity, // Юридическое лицо
+  professionalIncome, // НПД (самозанятые)
+  simplifiedTax, // УСН (ИП)
+  vat, // НДС
+}
+
+/// Тип организации
+enum OrganizationType {
+  individual, // Физическое лицо
+  individualEntrepreneur, // ИП
+  selfEmployed, // Самозанятый
+  legalEntity, // Юридическое лицо
+  government, // Государственное учреждение
+  nonProfit, // Некоммерческая организация
+}
+
+/// Информация о методе платежа
+class PaymentMethodInfo {
+  const PaymentMethodInfo({
+    required this.method,
+    required this.name,
+    required this.description,
+    required this.isAvailable,
+    this.fee,
+    this.iconUrl,
+  });
+
+  factory PaymentMethodInfo.fromMap(Map<String, dynamic> map) =>
+      PaymentMethodInfo(
+        method: PaymentMethod.values.firstWhere(
+          (e) => e.name == map['method'],
+          orElse: () => PaymentMethod.card,
+        ),
+        name: map['name'] as String,
+        description: map['description'] as String,
+        isAvailable: map['isAvailable'] as bool,
+        fee: map['fee'] != null ? (map['fee'] as num).toDouble() : null,
+        iconUrl: map['iconUrl'] as String?,
+      );
+
+  final PaymentMethod method;
+  final String name;
+  final String description;
+  final bool isAvailable;
+  final double? fee;
+  final String? iconUrl;
+
+  Map<String, dynamic> toMap() => {
+        'method': method.name,
+        'name': name,
+        'description': description,
+        'isAvailable': isAvailable,
+        'fee': fee,
+        'iconUrl': iconUrl,
+      };
+}
+
+/// Модель платежа
+class Payment {
+  const Payment({
+    required this.id,
+    required this.bookingId,
+    required this.userId,
+    required this.specialistId,
+    required this.type,
+    required this.amount,
+    required this.currency,
+    required this.status,
+    required this.method,
+    required this.description,
+    this.transactionId,
+    this.paymentProvider,
+    this.providerTransactionId,
+    this.fee,
+    this.tax,
+    this.totalAmount,
+    this.metadata,
+    required this.createdAt,
+    this.processedAt,
+    this.completedAt,
+    this.failedAt,
+    this.cancelledAt,
+    this.refundedAt,
+    this.dueDate,
+    this.refundReason,
+  });
+
+  /// Создать платеж из документа Firestore
+  factory Payment.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data()! as Map<String, dynamic>;
+
+    return Payment(
+      id: doc.id,
+      bookingId: data['bookingId'] as String? ?? '',
+      userId: data['userId'] as String? ?? '',
+      specialistId: data['specialistId'] as String? ?? '',
+      type: PaymentType.values.firstWhere(
+        (e) => e.name == data['type'],
+        orElse: () => PaymentType.deposit,
+      ),
+      amount: (data['amount'] as num).toDouble(),
+      currency: data['currency'] as String? ?? 'RUB',
+      status: PaymentStatus.values.firstWhere(
+        (e) => e.name == data['status'],
+        orElse: () => PaymentStatus.pending,
+      ),
+      method: PaymentMethod.values.firstWhere(
+        (e) => e.name == data['method'],
+        orElse: () => PaymentMethod.card,
+      ),
+      description: data['description'] as String? ?? '',
+      transactionId: data['transactionId'] as String?,
+      paymentProvider: data['paymentProvider'] as String?,
+      providerTransactionId: data['providerTransactionId'] as String?,
+      fee: data['fee'] != null ? (data['fee'] as num).toDouble() : null,
+      tax: data['tax'] != null ? (data['tax'] as num).toDouble() : null,
+      totalAmount: data['totalAmount'] != null
+          ? (data['totalAmount'] as num).toDouble()
+          : null,
+      metadata: data['metadata'] as Map<String, dynamic>?,
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      processedAt: data['processedAt'] != null
+          ? (data['processedAt'] as Timestamp).toDate()
+          : null,
+      completedAt: data['completedAt'] != null
+          ? (data['completedAt'] as Timestamp).toDate()
+          : null,
+      failedAt: data['failedAt'] != null
+          ? (data['failedAt'] as Timestamp).toDate()
+          : null,
+      cancelledAt: data['cancelledAt'] != null
+          ? (data['cancelledAt'] as Timestamp).toDate()
+          : null,
+      refundedAt: data['refundedAt'] != null
+          ? (data['refundedAt'] as Timestamp).toDate()
+          : null,
+      dueDate: data['dueDate'] != null
+          ? (data['dueDate'] as Timestamp).toDate()
+          : null,
+      refundReason: data['refundReason'] as String?,
+    );
+  }
+
+  final String id;
+  final String bookingId;
+  final String userId;
+  final String specialistId;
+  final PaymentType type;
+  final double amount;
+  final String currency;
+  final PaymentStatus status;
+  final PaymentMethod method;
+  final String description;
+  final String? transactionId;
+  final String? paymentProvider;
+  final String? providerTransactionId;
+  final double? fee;
+  final double? tax;
+  final double? totalAmount;
+  final Map<String, dynamic>? metadata;
+  final DateTime createdAt;
+  final DateTime? processedAt;
+  final DateTime? completedAt;
+  final DateTime? failedAt;
+  final DateTime? cancelledAt;
+  final DateTime? refundedAt;
+  final DateTime? dueDate;
+  final String? refundReason;
+
+  // Дополнительные методы для совместимости
+  String get typeDisplayName {
+    switch (type) {
+      case PaymentType.deposit:
+        return 'Предоплата';
+      case PaymentType.finalPayment:
+        return 'Окончательный платеж';
+      case PaymentType.fullPayment:
+        return 'Полная оплата';
+      case PaymentType.prepayment:
+        return 'Предоплата';
+      case PaymentType.refund:
+        return 'Возврат';
+      case PaymentType.penalty:
+        return 'Штраф';
+      case PaymentType.bonus:
+        return 'Бонус';
+      case PaymentType.hold:
+        return 'Заморозка средств';
     }
   }
 
-  /// Получить цвет статуса
+  String get methodDisplayName {
+    switch (method) {
+      case PaymentMethod.card:
+        return 'Банковская карта';
+      case PaymentMethod.bankTransfer:
+        return 'Банковский перевод';
+      case PaymentMethod.cash:
+        return 'Наличные';
+      case PaymentMethod.digitalWallet:
+        return 'Электронный кошелек';
+      case PaymentMethod.cryptocurrency:
+        return 'Криптовалюта';
+    }
+  }
+
+  String? get failureReason => failedAt != null ? 'Платеж не прошел' : null;
+  bool get isPending => status == PaymentStatus.pending;
+  DateTime? get paidAt => completedAt;
+  
+  // Tax-related getters
+  String get taxStatusDisplayName {
+    // TODO: Implement tax status logic
+    return 'Без налога';
+  }
+  
+  double get taxAmount => tax ?? 0.0;
+  double get netAmount => amount - taxAmount;
+
+  /// Преобразовать в Map для Firestore
+  Map<String, dynamic> toMap() => {
+        'bookingId': bookingId,
+        'userId': userId,
+        'specialistId': specialistId,
+        'type': type.name,
+        'amount': amount,
+        'currency': currency,
+        'status': status.name,
+        'method': method.name,
+        'description': description,
+        'transactionId': transactionId,
+        'paymentProvider': paymentProvider,
+        'providerTransactionId': providerTransactionId,
+        'fee': fee,
+        'tax': tax,
+        'totalAmount': totalAmount,
+        'metadata': metadata,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'processedAt':
+            processedAt != null ? Timestamp.fromDate(processedAt!) : null,
+        'completedAt':
+            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+        'failedAt': failedAt != null ? Timestamp.fromDate(failedAt!) : null,
+        'cancelledAt':
+            cancelledAt != null ? Timestamp.fromDate(cancelledAt!) : null,
+        'refundedAt':
+            refundedAt != null ? Timestamp.fromDate(refundedAt!) : null,
+        'dueDate': dueDate != null ? Timestamp.fromDate(dueDate!) : null,
+        'refundReason': refundReason,
+      };
+
+  /// Создать копию с изменениями
+  Payment copyWith({
+    String? id,
+    String? bookingId,
+    String? userId,
+    String? specialistId,
+    PaymentType? type,
+    double? amount,
+    String? currency,
+    PaymentStatus? status,
+    PaymentMethod? method,
+    String? description,
+    String? transactionId,
+    String? paymentProvider,
+    String? providerTransactionId,
+    double? fee,
+    double? tax,
+    double? totalAmount,
+    Map<String, dynamic>? metadata,
+    DateTime? createdAt,
+    DateTime? processedAt,
+    DateTime? completedAt,
+    DateTime? failedAt,
+    DateTime? cancelledAt,
+    DateTime? refundedAt,
+    DateTime? dueDate,
+    String? refundReason,
+  }) =>
+      Payment(
+        id: id ?? this.id,
+        bookingId: bookingId ?? this.bookingId,
+        userId: userId ?? this.userId,
+        specialistId: specialistId ?? this.specialistId,
+        type: type ?? this.type,
+        amount: amount ?? this.amount,
+        currency: currency ?? this.currency,
+        status: status ?? this.status,
+        method: method ?? this.method,
+        description: description ?? this.description,
+        transactionId: transactionId ?? this.transactionId,
+        paymentProvider: paymentProvider ?? this.paymentProvider,
+        providerTransactionId:
+            providerTransactionId ?? this.providerTransactionId,
+        fee: fee ?? this.fee,
+        tax: tax ?? this.tax,
+        totalAmount: totalAmount ?? this.totalAmount,
+        metadata: metadata ?? this.metadata,
+        createdAt: createdAt ?? this.createdAt,
+        processedAt: processedAt ?? this.processedAt,
+        completedAt: completedAt ?? this.completedAt,
+        failedAt: failedAt ?? this.failedAt,
+        cancelledAt: cancelledAt ?? this.cancelledAt,
+        refundedAt: refundedAt ?? this.refundedAt,
+        dueDate: dueDate ?? this.dueDate,
+        refundReason: refundReason ?? this.refundReason,
+      );
+
+  /// Получить итоговую сумму к оплате
+  double get finalAmount {
+    if (totalAmount != null) return totalAmount!;
+
+    var total = amount;
+    if (fee != null) total += fee!;
+    if (tax != null) total += tax!;
+
+    return total;
+  }
+
+  /// Проверить, является ли платеж активным
+  bool get isActive =>
+      status == PaymentStatus.pending || status == PaymentStatus.processing;
+
+  /// Проверить, завершен ли платеж
+  bool get isCompleted => status == PaymentStatus.completed;
+
+  /// Проверить, неудачен ли платеж
+  bool get isFailed => status == PaymentStatus.failed;
+
+  /// Проверить, отменен ли платеж
+  bool get isCancelled => status == PaymentStatus.cancelled;
+
+  /// Проверить, возвращен ли платеж
+  bool get isRefunded => status == PaymentStatus.refunded;
+
+  /// Проверить, просрочен ли платеж
+  bool get isOverdue =>
+      dueDate != null && DateTime.now().isAfter(dueDate!) && isActive;
+
+  /// Получить иконку для типа платежа
+  String get typeIcon {
+    switch (type) {
+      case PaymentType.deposit:
+        return '💰';
+      case PaymentType.finalPayment:
+        return '💳';
+      case PaymentType.refund:
+        return '↩️';
+      case PaymentType.penalty:
+        return '⚠️';
+      case PaymentType.bonus:
+        return '🎁';
+      case PaymentType.hold:
+        return '🔒';
+    }
+  }
+
+  /// Получить название типа платежа
+  String get typeName {
+    switch (type) {
+      case PaymentType.deposit:
+        return 'Предоплата';
+      case PaymentType.finalPayment:
+        return 'Окончательный платеж';
+      case PaymentType.refund:
+        return 'Возврат';
+      case PaymentType.penalty:
+        return 'Штраф';
+      case PaymentType.bonus:
+        return 'Бонус';
+      case PaymentType.hold:
+        return 'Заморозка средств';
+    }
+  }
+
+  /// Получить название метода оплаты
+  String get methodName {
+    switch (method) {
+      case PaymentMethod.card:
+        return 'Банковская карта';
+      case PaymentMethod.bankTransfer:
+        return 'Банковский перевод';
+      case PaymentMethod.cash:
+        return 'Наличные';
+      case PaymentMethod.digitalWallet:
+        return 'Электронный кошелек';
+      case PaymentMethod.cryptocurrency:
+        return 'Криптовалюта';
+    }
+  }
+
+  /// Получить цвет для статуса
   String get statusColor {
     switch (status) {
       case PaymentStatus.pending:
@@ -286,98 +513,30 @@ class Payment {
     }
   }
 
-  /// Проверить, завершен ли платеж
-  bool get isCompleted => status == PaymentStatus.completed;
-
-  /// Проверить, ожидает ли платеж
-  bool get isPending => status == PaymentStatus.pending;
-
-  /// Проверить, неудачный ли платеж
-  bool get isFailed => status == PaymentStatus.failed;
-
-  /// Парсинг типа платежа
-  static PaymentType _parsePaymentType(typeData) {
-    if (typeData == null) return PaymentType.advance;
-
-    final typeString = typeData.toString().toLowerCase();
-    switch (typeString) {
-      case 'finalPayment':
-        return PaymentType.finalPayment;
-      case 'fullPayment':
-        return PaymentType.fullPayment;
-      case 'refund':
-        return PaymentType.refund;
-      case 'advance':
-      default:
-        return PaymentType.advance;
+  /// Получить название статуса
+  String get statusName {
+    switch (status) {
+      case PaymentStatus.pending:
+        return 'Ожидает оплаты';
+      case PaymentStatus.processing:
+        return 'В обработке';
+      case PaymentStatus.completed:
+        return 'Завершен';
+      case PaymentStatus.failed:
+        return 'Неудачный';
+      case PaymentStatus.cancelled:
+        return 'Отменен';
+      case PaymentStatus.refunded:
+        return 'Возвращен';
     }
   }
 
-  /// Парсинг статуса платежа
-  static PaymentStatus _parsePaymentStatus(statusData) {
-    if (statusData == null) return PaymentStatus.pending;
+  /// Форматировать сумму
+  String get formattedAmount => '${amount.toStringAsFixed(2)} $currency';
 
-    final statusString = statusData.toString().toLowerCase();
-    switch (statusString) {
-      case 'processing':
-        return PaymentStatus.processing;
-      case 'completed':
-        return PaymentStatus.completed;
-      case 'failed':
-        return PaymentStatus.failed;
-      case 'cancelled':
-        return PaymentStatus.cancelled;
-      case 'refunded':
-        return PaymentStatus.refunded;
-      case 'pending':
-      default:
-        return PaymentStatus.pending;
-    }
-  }
-
-  /// Парсинг типа организации
-  static OrganizationType _parseOrganizationType(typeData) {
-    if (typeData == null) return OrganizationType.individual;
-
-    final typeString = typeData.toString().toLowerCase();
-    switch (typeString) {
-      case 'commercial':
-        return OrganizationType.commercial;
-      case 'government':
-        return OrganizationType.government;
-      case 'nonprofit':
-      case 'non_profit':
-        return OrganizationType.nonProfit;
-      case 'selfemployed':
-      case 'self_employed':
-        return OrganizationType.selfEmployed;
-      case 'entrepreneur':
-        return OrganizationType.entrepreneur;
-      case 'individual':
-      default:
-        return OrganizationType.individual;
-    }
-  }
-
-  /// Парсинг типа налога
-  static TaxType? _parseTaxType(typeData) {
-    if (typeData == null) return null;
-
-    final typeString = typeData.toString().toLowerCase();
-    switch (typeString) {
-      case 'professionalincome':
-      case 'professional_income':
-        return TaxType.professionalIncome;
-      case 'simplifiedtax':
-      case 'simplified_tax':
-        return TaxType.simplifiedTax;
-      case 'vat':
-        return TaxType.vat;
-      case 'none':
-      default:
-        return TaxType.none;
-    }
-  }
+  /// Форматировать итоговую сумму
+  String get formattedTotalAmount =>
+      '${finalAmount.toStringAsFixed(2)} $currency';
 
   @override
   bool operator ==(Object other) {
@@ -390,170 +549,86 @@ class Payment {
 
   @override
   String toString() =>
-      'Payment(id: $id, type: $type, status: $status, amount: $amount)';
+      'Payment(id: $id, type: $type, amount: $amount, status: $status)';
 }
 
-/// Конфигурация платежей для разных типов организаций
-class PaymentConfiguration {
-  // Срок финального платежа
-
-  const PaymentConfiguration({
-    required this.organizationType,
-    required this.advancePercentage,
-    required this.requiresAdvance,
-    required this.allowsPostPayment,
-    this.maxAdvanceAmount,
-    this.advanceDeadline,
-    this.finalPaymentDeadline,
+/// Модель финансового отчета
+class FinancialReport {
+  const FinancialReport({
+    required this.userId,
+    required this.period,
+    required this.totalIncome,
+    required this.totalExpenses,
+    required this.netIncome,
+    required this.paymentCount,
+    required this.completedPayments,
+    required this.pendingPayments,
+    required this.failedPayments,
+    required this.refundedPayments,
+    required this.currency,
+    required this.generatedAt,
+    this.breakdown,
   });
-  final OrganizationType organizationType;
-  final double advancePercentage; // Процент аванса
-  final bool requiresAdvance; // Требуется ли аванс
-  final bool allowsPostPayment; // Разрешена ли постоплата
-  final double? maxAdvanceAmount; // Максимальная сумма аванса
-  final Duration? advanceDeadline; // Срок оплаты аванса
-  final Duration? finalPaymentDeadline;
 
-  /// Получить конфигурацию по умолчанию для типа организации
-  static PaymentConfiguration getDefault(OrganizationType type) {
-    switch (type) {
-      case OrganizationType.individual:
-        return const PaymentConfiguration(
-          organizationType: OrganizationType.individual,
-          advancePercentage: 30,
-          requiresAdvance: true,
-          allowsPostPayment: false,
-          advanceDeadline: Duration(days: 3),
-          finalPaymentDeadline: Duration(days: 1),
-        );
-      case OrganizationType.commercial:
-        return const PaymentConfiguration(
-          organizationType: OrganizationType.commercial,
-          advancePercentage: 30,
-          requiresAdvance: true,
-          allowsPostPayment: false,
-          advanceDeadline: Duration(days: 7),
-          finalPaymentDeadline: Duration(days: 3),
-        );
-      case OrganizationType.government:
-        return const PaymentConfiguration(
-          organizationType: OrganizationType.government,
-          advancePercentage: 0, // Госучреждения часто работают по постоплате
-          requiresAdvance: false,
-          allowsPostPayment: true,
-          finalPaymentDeadline: Duration(days: 30),
-        );
-      case OrganizationType.nonProfit:
-        return const PaymentConfiguration(
-          organizationType: OrganizationType.nonProfit,
-          advancePercentage: 20,
-          requiresAdvance: true,
-          allowsPostPayment: true,
-          advanceDeadline: Duration(days: 5),
-          finalPaymentDeadline: Duration(days: 7),
-        );
-      case OrganizationType.selfEmployed:
-        return const PaymentConfiguration(
-          organizationType: OrganizationType.selfEmployed,
-          advancePercentage: 30,
-          requiresAdvance: true,
-          allowsPostPayment: false,
-          advanceDeadline: Duration(days: 3),
-          finalPaymentDeadline: Duration(days: 1),
-        );
-      case OrganizationType.entrepreneur:
-        return const PaymentConfiguration(
-          organizationType: OrganizationType.entrepreneur,
-          advancePercentage: 30,
-          requiresAdvance: true,
-          allowsPostPayment: false,
-          advanceDeadline: Duration(days: 5),
-          finalPaymentDeadline: Duration(days: 3),
-        );
-    }
+  /// Создать из документа Firestore
+  factory FinancialReport.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data()! as Map<String, dynamic>;
+
+    return FinancialReport(
+      userId: data['userId'] as String? ?? '',
+      period: data['period'] as String? ?? '',
+      totalIncome: (data['totalIncome'] as num).toDouble(),
+      totalExpenses: (data['totalExpenses'] as num).toDouble(),
+      netIncome: (data['netIncome'] as num).toDouble(),
+      paymentCount: data['paymentCount'] as int? ?? 0,
+      completedPayments: data['completedPayments'] as int? ?? 0,
+      pendingPayments: data['pendingPayments'] as int? ?? 0,
+      failedPayments: data['failedPayments'] as int? ?? 0,
+      refundedPayments: data['refundedPayments'] as int? ?? 0,
+      currency: data['currency'] as String? ?? 'RUB',
+      generatedAt: (data['generatedAt'] as Timestamp).toDate(),
+      breakdown: data['breakdown'] as Map<String, dynamic>?,
+    );
   }
 
-  /// Рассчитать сумму аванса
-  double calculateAdvanceAmount(double totalAmount) {
-    if (!requiresAdvance) return 0;
+  final String userId;
+  final String period; // например, "2024-01" для января 2024
+  final double totalIncome;
+  final double totalExpenses;
+  final double netIncome;
+  final int paymentCount;
+  final int completedPayments;
+  final int pendingPayments;
+  final int failedPayments;
+  final int refundedPayments;
+  final String currency;
+  final DateTime generatedAt;
+  final Map<String, dynamic>? breakdown;
 
-    final advanceAmount = totalAmount * (advancePercentage / 100);
+  /// Преобразовать в Map для Firestore
+  Map<String, dynamic> toMap() => {
+        'userId': userId,
+        'period': period,
+        'totalIncome': totalIncome,
+        'totalExpenses': totalExpenses,
+        'netIncome': netIncome,
+        'paymentCount': paymentCount,
+        'completedPayments': completedPayments,
+        'pendingPayments': pendingPayments,
+        'failedPayments': failedPayments,
+        'refundedPayments': refundedPayments,
+        'currency': currency,
+        'generatedAt': Timestamp.fromDate(generatedAt),
+        'breakdown': breakdown,
+      };
 
-    if (maxAdvanceAmount != null && advanceAmount > maxAdvanceAmount!) {
-      return maxAdvanceAmount!;
-    }
+  /// Форматировать доходы
+  String get formattedIncome => '${totalIncome.toStringAsFixed(2)} $currency';
 
-    return advanceAmount;
-  }
+  /// Форматировать расходы
+  String get formattedExpenses =>
+      '${totalExpenses.toStringAsFixed(2)} $currency';
 
-  /// Рассчитать сумму финального платежа
-  double calculateFinalAmount(double totalAmount, double advanceAmount) =>
-      totalAmount - advanceAmount;
-}
-
-/// Класс для расчёта налогов
-class TaxCalculator {
-  /// Рассчитать налог для самозанятого (налог на профессиональный доход)
-  static double calculateProfessionalIncomeTax(double amount) {
-    // Налог на профессиональный доход: 4% с доходов от физлиц, 6% с доходов от ИП/юрлиц
-    return amount * 0.04; // По умолчанию 4% для физлиц
-  }
-
-  /// Рассчитать налог для ИП (УСН 6%)
-  static double calculateSimplifiedTax(double amount) {
-    // УСН "Доходы" - 6% с доходов
-    return amount * 0.06;
-  }
-
-  /// Рассчитать НДС
-  static double calculateVAT(double amount) {
-    // НДС 20%
-    return amount * 0.20;
-  }
-
-  /// Рассчитать налог в зависимости от типа
-  static double calculateTax(double amount, TaxType taxType,
-      {bool isFromLegalEntity = false}) {
-    switch (taxType) {
-      case TaxType.professionalIncome:
-        return isFromLegalEntity ? amount * 0.06 : amount * 0.04;
-      case TaxType.simplifiedTax:
-        return calculateSimplifiedTax(amount);
-      case TaxType.vat:
-        return calculateVAT(amount);
-      case TaxType.none:
-      default:
-        return 0.0;
-    }
-  }
-
-  /// Получить ставку налога в процентах
-  static double getTaxRate(TaxType taxType, {bool isFromLegalEntity = false}) {
-    switch (taxType) {
-      case TaxType.professionalIncome:
-        return isFromLegalEntity ? 6.0 : 4.0;
-      case TaxType.simplifiedTax:
-        return 6.0;
-      case TaxType.vat:
-        return 20.0;
-      case TaxType.none:
-      default:
-        return 0.0;
-    }
-  }
-
-  /// Получить название налога
-  static String getTaxName(TaxType taxType) {
-    switch (taxType) {
-      case TaxType.professionalIncome:
-        return 'Налог на профессиональный доход';
-      case TaxType.simplifiedTax:
-        return 'УСН (6%)';
-      case TaxType.vat:
-        return 'НДС (20%)';
-      case TaxType.none:
-      default:
-        return 'Без налога';
-    }
-  }
+  /// Форматировать чистый доход
+  String get formattedNetIncome => '${netIncome.toStringAsFixed(2)} $currency';
 }

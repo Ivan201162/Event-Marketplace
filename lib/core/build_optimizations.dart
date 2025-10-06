@@ -1,16 +1,17 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 /// Оптимизации для сборки приложения
 class BuildOptimizations {
-  static const BuildOptimizations _instance = BuildOptimizations._internal();
   factory BuildOptimizations() => _instance;
   const BuildOptimizations._internal();
+  static const BuildOptimizations _instance = BuildOptimizations._internal();
 
   /// Инициализация оптимизаций для release сборки
   static void initializeReleaseOptimizations() {
     // Отключаем debug режим
-    debugPrint = (String? message, {int? wrapWidth}) {};
+    debugPrint = (message, {wrapWidth}) {};
 
     // Оптимизируем рендеринг
     _optimizeRendering();
@@ -25,7 +26,7 @@ class BuildOptimizations {
   /// Инициализация оптимизаций для debug сборки
   static void initializeDebugOptimizations() {
     // Включаем debug режим
-    debugPrint = debugPrintThrottled;
+    debugPrint = kDebugMode ? debugPrint : (message, {wrapWidth}) {};
 
     // Оптимизируем рендеринг для debug
     _optimizeDebugRendering();
@@ -34,19 +35,15 @@ class BuildOptimizations {
   /// Оптимизация рендеринга
   static void _optimizeRendering() {
     // Устанавливаем оптимальные настройки рендеринга
-    WidgetsBinding.instance.renderView.configuration =
-        WidgetsBinding.instance.renderView.configuration.copyWith(
-      devicePixelRatio: 1.0, // Оптимизация для производительности
-    );
+    final view = WidgetsBinding.instance.platformDispatcher.views.first;
+    // ViewConfiguration не имеет copyWith, поэтому просто используем текущую конфигурацию
   }
 
   /// Оптимизация рендеринга для debug
   static void _optimizeDebugRendering() {
     // Настройки для debug режима
-    WidgetsBinding.instance.renderView.configuration =
-        WidgetsBinding.instance.renderView.configuration.copyWith(
-      devicePixelRatio: 1.0,
-    );
+    final view = WidgetsBinding.instance.platformDispatcher.views.first;
+    // ViewConfiguration не имеет copyWith, поэтому просто используем текущую конфигурацию
   }
 
   /// Оптимизация памяти
@@ -71,24 +68,23 @@ class BuildOptimizations {
 
   /// Оптимизация для разных платформ
   static void initializePlatformOptimizations() {
+    final platform = WidgetsBinding.instance.platformDispatcher.defaultRouteName
+            .contains('android')
+        ? TargetPlatform.android
+        : TargetPlatform.iOS;
+
     // Оптимизации для Android
-    if (Theme.of(WidgetsBinding.instance.platformDispatcher.views.first)
-            .platform ==
-        TargetPlatform.android) {
+    if (platform == TargetPlatform.android) {
       _optimizeForAndroid();
     }
 
     // Оптимизации для iOS
-    if (Theme.of(WidgetsBinding.instance.platformDispatcher.views.first)
-            .platform ==
-        TargetPlatform.iOS) {
+    if (platform == TargetPlatform.iOS) {
       _optimizeForIOS();
     }
 
     // Оптимизации для Web
-    if (Theme.of(WidgetsBinding.instance.platformDispatcher.views.first)
-            .platform ==
-        TargetPlatform.web) {
+    if (kIsWeb) {
       _optimizeForWeb();
     }
   }
@@ -134,6 +130,10 @@ class BuildOptimizations {
 
   /// Получение информации о производительности
   static Map<String, dynamic> getPerformanceInfo() {
+    final platform = WidgetsBinding.instance.platformDispatcher.defaultRouteName
+            .contains('android')
+        ? TargetPlatform.android
+        : TargetPlatform.iOS;
     return {
       'imageCacheSize': PaintingBinding.instance.imageCache.currentSize,
       'imageCacheSizeBytes':
@@ -141,10 +141,7 @@ class BuildOptimizations {
       'imageCacheMaxSize': PaintingBinding.instance.imageCache.maximumSize,
       'imageCacheMaxSizeBytes':
           PaintingBinding.instance.imageCache.maximumSizeBytes,
-      'platform':
-          Theme.of(WidgetsBinding.instance.platformDispatcher.views.first)
-              .platform
-              .toString(),
+      'platform': platform.toString(),
     };
   }
 
@@ -206,18 +203,16 @@ class OptimizedListView extends StatelessWidget {
   final double cacheExtent;
 
   @override
-  Widget build(BuildContext context) {
-    return ListView.separated(
-      controller: scrollController,
-      physics: physics,
-      padding: padding,
-      cacheExtent: cacheExtent,
-      itemCount: itemCount,
-      separatorBuilder:
-          separatorBuilder ?? (context, index) => const SizedBox.shrink(),
-      itemBuilder: itemBuilder,
-    );
-  }
+  Widget build(BuildContext context) => ListView.separated(
+        controller: scrollController,
+        physics: physics,
+        padding: padding,
+        cacheExtent: cacheExtent,
+        itemCount: itemCount,
+        separatorBuilder:
+            separatorBuilder ?? (context, index) => const SizedBox.shrink(),
+        itemBuilder: itemBuilder,
+      );
 }
 
 /// Оптимизированный виджет для сетки
@@ -248,20 +243,18 @@ class OptimizedGridView extends StatelessWidget {
   final double cacheExtent;
 
   @override
-  Widget build(BuildContext context) {
-    return GridView.builder(
-      controller: scrollController,
-      physics: physics,
-      padding: padding,
-      cacheExtent: cacheExtent,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
-        crossAxisSpacing: crossAxisSpacing,
-        mainAxisSpacing: mainAxisSpacing,
-        childAspectRatio: childAspectRatio,
-      ),
-      itemCount: itemCount,
-      itemBuilder: itemBuilder,
-    );
-  }
+  Widget build(BuildContext context) => GridView.builder(
+        controller: scrollController,
+        physics: physics,
+        padding: padding,
+        cacheExtent: cacheExtent,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: crossAxisCount,
+          crossAxisSpacing: crossAxisSpacing,
+          mainAxisSpacing: mainAxisSpacing,
+          childAspectRatio: childAspectRatio,
+        ),
+        itemCount: itemCount,
+        itemBuilder: itemBuilder,
+      );
 }

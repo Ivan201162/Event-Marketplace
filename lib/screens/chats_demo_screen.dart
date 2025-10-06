@@ -44,7 +44,7 @@ class ChatsDemoScreen extends ConsumerWidget {
                           ),
                           Container(
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: IconButton(
@@ -172,7 +172,8 @@ class ChatsDemoScreen extends ConsumerWidget {
         margin: const EdgeInsets.only(bottom: 8),
         child: ListTile(
           leading: CircleAvatar(
-            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+            backgroundColor:
+                Theme.of(context).primaryColor.withValues(alpha: 0.1),
             child: Text(
               chat['name'][0].toUpperCase(),
               style: TextStyle(
@@ -245,7 +246,7 @@ class ChatsDemoScreen extends ConsumerWidget {
   void _openChat(BuildContext context, Map<String, dynamic> chat) {
     Navigator.push(
       context,
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => ChatExtendedScreen(
           chatId: 'demo_chat_${chat['name'].hashCode}',
           currentUserId: 'current_user',
@@ -258,7 +259,7 @@ class ChatsDemoScreen extends ConsumerWidget {
   }
 
   void _showNewChatDialog(BuildContext context) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Новый чат'),

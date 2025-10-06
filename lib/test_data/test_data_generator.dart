@@ -1,11 +1,13 @@
 import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../models/user.dart';
-import '../models/specialist.dart';
+
 import '../models/booking.dart';
-import '../models/review.dart';
 import '../models/event_idea.dart';
+import '../models/review.dart';
+import '../models/specialist.dart';
+import '../models/user.dart';
 
 /// Генератор тестовых данных для Event Marketplace
 class TestDataGenerator {
@@ -18,7 +20,7 @@ class TestDataGenerator {
   int _generatedBookings = 0;
   int _generatedReviews = 0;
   int _generatedIdeas = 0;
-  int _generatedChats = 0;
+  final int _generatedChats = 0;
 
   /// Русские города для генерации данных
   static const List<String> russianCities = [
@@ -145,7 +147,7 @@ class TestDataGenerator {
     'Пятигорск',
     'Минеральные Воды',
     'Ессентуки',
-    'Железноводск'
+    'Железноводск',
   ];
 
   /// Мужские имена
@@ -191,7 +193,7 @@ class TestDataGenerator {
     'Захар',
     'Богдан',
     'Савелий',
-    'Давид'
+    'Давид',
   ];
 
   /// Женские имена
@@ -241,7 +243,7 @@ class TestDataGenerator {
     'Людмила',
     'Любовь',
     'Галина',
-    'Тамара'
+    'Тамара',
   ];
 
   /// Фамилии
@@ -295,7 +297,7 @@ class TestDataGenerator {
     'Титов',
     'Марков',
     'Миронов',
-    'Крылов'
+    'Крылов',
   ];
 
   /// Генерация случайного имени
@@ -306,15 +308,14 @@ class TestDataGenerator {
     final lastName = lastNames[_random.nextInt(lastNames.length)];
 
     // Для женщин добавляем окончание -а к фамилии
-    final adjustedLastName = isMale ? lastName : lastName + 'а';
+    final adjustedLastName = isMale ? lastName : '$lastNameа';
 
     return '$firstName $adjustedLastName';
   }
 
   /// Генерация случайного города
-  String _generateRandomCity() {
-    return russianCities[_random.nextInt(russianCities.length)];
-  }
+  String _generateRandomCity() =>
+      russianCities[_random.nextInt(russianCities.length)];
 
   /// Генерация URL фото-заглушки
   String _generatePhotoUrl() {
@@ -327,9 +328,9 @@ class TestDataGenerator {
     print('🚀 Генерация $count специалистов...');
 
     final specialists = <Specialist>[];
-    final categories = SpecialistCategory.values;
+    const categories = SpecialistCategory.values;
 
-    for (int i = 0; i < count; i++) {
+    for (var i = 0; i < count; i++) {
       final category = categories[_random.nextInt(categories.length)];
       final isMale = _random.nextBool();
       final name = _generateRandomName(isMale: isMale);
@@ -385,7 +386,7 @@ class TestDataGenerator {
 
     final customers = <AppUser>[];
 
-    for (int i = 0; i < count; i++) {
+    for (var i = 0; i < count; i++) {
       final isMale = _random.nextBool();
       final name = _generateRandomName(isMale: isMale);
 
@@ -397,7 +398,6 @@ class TestDataGenerator {
         role: UserRole.customer,
         createdAt: _generateRandomDate(),
         lastLoginAt: _generateRecentDate(),
-        isActive: true,
         maritalStatus: _generateMaritalStatus(),
       );
 
@@ -415,31 +415,33 @@ class TestDataGenerator {
 
   /// Генерация бронирований
   Future<List<Booking>> generateBookings(
-      List<AppUser> customers, List<Specialist> specialists,
-      {int maxBookingsPerPair = 3}) async {
+    List<AppUser> customers,
+    List<Specialist> specialists, {
+    int maxBookingsPerPair = 3,
+  }) async {
     print('🚀 Генерация бронирований...');
 
     final bookings = <Booking>[];
-    int bookingId = 0;
+    var bookingId = 0;
 
     for (final customer in customers) {
       // Каждый заказчик может иметь бронирования с несколькими специалистами
       final specialistCount = _random.nextInt(5) + 1;
       final selectedSpecialists = specialists..shuffle();
 
-      for (int i = 0;
+      for (var i = 0;
           i < specialistCount && i < selectedSpecialists.length;
           i++) {
         final specialist = selectedSpecialists[i];
         final bookingCount = _random.nextInt(maxBookingsPerPair) + 1;
 
-        for (int j = 0; j < bookingCount; j++) {
+        for (var j = 0; j < bookingCount; j++) {
           final eventDate = _generateFutureDate();
           final totalPrice = _generateBookingPrice(specialist.hourlyRate);
 
           final booking = Booking(
             id: 'booking_${bookingId++}',
-            eventId: 'event_${bookingId}',
+            eventId: 'event_$bookingId',
             eventTitle: _generateEventTitle(),
             userId: customer.id,
             userName: customer.displayName ?? 'Пользователь',
@@ -475,8 +477,11 @@ class TestDataGenerator {
   }
 
   /// Генерация отзывов
-  Future<List<Review>> generateReviews(List<Booking> bookings,
-      List<AppUser> customers, List<Specialist> specialists) async {
+  Future<List<Review>> generateReviews(
+    List<Booking> bookings,
+    List<AppUser> customers,
+    List<Specialist> specialists,
+  ) async {
     print('🚀 Генерация отзывов...');
 
     final reviews = <Review>[];
@@ -533,7 +538,7 @@ class TestDataGenerator {
     final seasons = EventIdeaCategories.seasons;
     final venues = EventIdeaCategories.venues;
 
-    for (int i = 0; i < count; i++) {
+    for (var i = 0; i < count; i++) {
       final category = categories[_random.nextInt(categories.length)];
       final eventType = eventTypes[_random.nextInt(eventTypes.length)];
 
@@ -549,7 +554,6 @@ class TestDataGenerator {
         tags: _generateIdeaTags(category),
         likesCount: _random.nextInt(1000),
         savesCount: _random.nextInt(500),
-        isPublic: true,
         eventType: eventType,
         budget: budgets[_random.nextInt(budgets.length)],
         season: seasons[_random.nextInt(seasons.length)],
@@ -574,11 +578,11 @@ class TestDataGenerator {
 
     try {
       // 1. Генерируем данные
-      final specialists = await generateSpecialists(count: 2000);
-      final customers = await generateCustomers(count: 500);
+      final specialists = await generateSpecialists();
+      final customers = await generateCustomers();
       final bookings = await generateBookings(customers, specialists);
       final reviews = await generateReviews(bookings, customers, specialists);
-      final ideas = await generateEventIdeas(count: 1000);
+      final ideas = await generateEventIdeas();
 
       // 2. Загружаем в Firestore батчами
       await uploadSpecialists(specialists);
@@ -645,7 +649,7 @@ class TestDataGenerator {
         return [
           'Свадебная фотография',
           'Портретная съемка',
-          'Событийная фотография'
+          'Событийная фотография',
         ];
       case SpecialistCategory.videographer:
         return ['Свадебное видео', 'Корпоративные ролики', 'Музыкальные клипы'];
@@ -653,13 +657,13 @@ class TestDataGenerator {
         return [
           'Свадебный диджей',
           'Корпоративные мероприятия',
-          'Клубная музыка'
+          'Клубная музыка',
         ];
       case SpecialistCategory.host:
         return [
           'Свадебный ведущий',
           'Корпоративные мероприятия',
-          'Детские праздники'
+          'Детские праздники',
         ];
       case SpecialistCategory.florist:
         return ['Свадебная флористика', 'Букеты', 'Декор мероприятий'];
@@ -686,19 +690,19 @@ class TestDataGenerator {
     switch (category) {
       case SpecialistCategory.photographer:
       case SpecialistCategory.videographer:
-        return 5000.0;
+        return 5000;
       case SpecialistCategory.dj:
       case SpecialistCategory.host:
-        return 3000.0;
+        return 3000;
       case SpecialistCategory.florist:
       case SpecialistCategory.decorator:
-        return 2500.0;
+        return 2500;
       case SpecialistCategory.musician:
-        return 4000.0;
+        return 4000;
       case SpecialistCategory.caterer:
-        return 1500.0;
+        return 1500;
       default:
-        return 2000.0;
+        return 2000;
     }
   }
 
@@ -709,7 +713,7 @@ class TestDataGenerator {
           'Профессиональный фотоаппарат',
           'Штатив',
           'Освещение',
-          'Объективы'
+          'Объективы',
         ];
       case SpecialistCategory.videographer:
         return ['Видеокамера 4K', 'Стабилизатор', 'Микрофоны', 'Освещение'];
@@ -732,7 +736,7 @@ class TestDataGenerator {
         return [
           'Музыкальное сопровождение',
           'Световое шоу',
-          'Ведение программы'
+          'Ведение программы',
         ];
       case SpecialistCategory.host:
         return ['Ведение мероприятий', 'Конкурсы', 'Интерактивы'];
@@ -741,25 +745,21 @@ class TestDataGenerator {
     }
   }
 
-  List<String> _generatePortfolioImages() {
-    return List.generate(5, (index) => _generatePhotoUrl());
-  }
+  List<String> _generatePortfolioImages() =>
+      List.generate(5, (index) => _generatePhotoUrl());
 
-  Map<String, String> _generateWorkingHours() {
-    return {
-      'monday': '09:00-18:00',
-      'tuesday': '09:00-18:00',
-      'wednesday': '09:00-18:00',
-      'thursday': '09:00-18:00',
-      'friday': '09:00-18:00',
-      'saturday': '10:00-16:00',
-      'sunday': 'выходной',
-    };
-  }
+  Map<String, String> _generateWorkingHours() => {
+        'monday': '09:00-18:00',
+        'tuesday': '09:00-18:00',
+        'wednesday': '09:00-18:00',
+        'thursday': '09:00-18:00',
+        'friday': '09:00-18:00',
+        'saturday': '10:00-16:00',
+        'sunday': 'выходной',
+      };
 
-  String _generatePhoneNumber() {
-    return '+7${_random.nextInt(900) + 100}${_random.nextInt(900) + 100}${_random.nextInt(10000).toString().padLeft(4, '0')}';
-  }
+  String _generatePhoneNumber() =>
+      '+7${_random.nextInt(900) + 100}${_random.nextInt(900) + 100}${_random.nextInt(10000).toString().padLeft(4, '0')}';
 
   String _generateEmail(String name) {
     final cleanName = name.toLowerCase().replaceAll(' ', '.');
@@ -787,7 +787,7 @@ class TestDataGenerator {
   }
 
   MaritalStatus _generateMaritalStatus() {
-    final statuses = MaritalStatus.values;
+    const statuses = MaritalStatus.values;
     return statuses[_random.nextInt(statuses.length)];
   }
 
@@ -800,9 +800,9 @@ class TestDataGenerator {
     final weights = [0.2, 0.5, 0.3]; // Веса для статусов
 
     final random = _random.nextDouble();
-    double cumulative = 0.0;
+    var cumulative = 0;
 
-    for (int i = 0; i < statuses.length; i++) {
+    for (var i = 0; i < statuses.length; i++) {
       cumulative += weights[i];
       if (random <= cumulative) {
         return statuses[i];
@@ -823,7 +823,7 @@ class TestDataGenerator {
       'Презентация',
       'Конференция',
       'Семинар',
-      'Тимбилдинг'
+      'Тимбилдинг',
     ];
     return titles[_random.nextInt(titles.length)];
   }
@@ -844,7 +844,7 @@ class TestDataGenerator {
       'Важное событие, все должно быть идеально',
       'Много гостей, учесть логистику',
       'Тематическое оформление',
-      'Детское мероприятие, безопасность важна'
+      'Детское мероприятие, безопасность важна',
     ];
 
     if (_random.nextDouble() > 0.3) return '';
@@ -868,7 +868,7 @@ class TestDataGenerator {
         'Превзошел ожидания',
         'Рекомендую всем',
         'Профессионал своего дела',
-        'Очень довольны результатом'
+        'Очень довольны результатом',
       ];
       return titles[_random.nextInt(titles.length)];
     } else {
@@ -876,7 +876,7 @@ class TestDataGenerator {
         'Неплохо, но есть замечания',
         'Средний результат',
         'Можно лучше',
-        'Есть над чем работать'
+        'Есть над чем работать',
       ];
       return titles[_random.nextInt(titles.length)];
     }
@@ -917,7 +917,7 @@ class TestDataGenerator {
           'Классическая свадьба в ресторане',
           'Выездная церемония на природе',
           'Свадьба в стиле лофт',
-          'Морская свадьба'
+          'Морская свадьба',
         ];
         return titles[_random.nextInt(titles.length)];
       case 'День рождения':
@@ -926,7 +926,7 @@ class TestDataGenerator {
           'Детский праздник с аниматорами',
           'Стильная вечеринка в клубе',
           'Домашний уютный праздник',
-          'Тематическая вечеринка'
+          'Тематическая вечеринка',
         ];
         return titles[_random.nextInt(titles.length)];
       case 'Корпоратив':
@@ -935,7 +935,7 @@ class TestDataGenerator {
           'День компании на природе',
           'Элегантный банкет',
           'Активный тимбилдинг',
-          'Презентация нового продукта'
+          'Презентация нового продукта',
         ];
         return titles[_random.nextInt(titles.length)];
       default:
@@ -956,9 +956,8 @@ class TestDataGenerator {
     }
   }
 
-  List<String> _generateIdeaImages() {
-    return List.generate(3, (index) => _generatePhotoUrl());
-  }
+  List<String> _generateIdeaImages() =>
+      List.generate(3, (index) => _generatePhotoUrl());
 
   List<String> _generateIdeaTags(String category) {
     switch (category) {
@@ -1008,7 +1007,7 @@ class TestDataGenerator {
     const batchSize = 500;
     final totalBatches = (items.length / batchSize).ceil();
 
-    for (int i = 0; i < totalBatches; i++) {
+    for (var i = 0; i < totalBatches; i++) {
       final start = i * batchSize;
       final end = (i + 1) * batchSize;
       final batch =
@@ -1029,7 +1028,7 @@ class TestDataGenerator {
       } catch (e) {
         print('❌ Ошибка загрузки батча ${i + 1}: $e');
         // Повторная попытка
-        await Future.delayed(Duration(seconds: 2));
+        await Future.delayed(const Duration(seconds: 2));
         try {
           await writeBatch.commit();
           print('✅ Повторная загрузка батча ${i + 1} успешна');

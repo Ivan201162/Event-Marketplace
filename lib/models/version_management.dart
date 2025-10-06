@@ -66,8 +66,8 @@ class AppVersion {
         features: List<String>.from(data['features'] ?? []),
         bugFixes: List<String>.from(data['bugFixes'] ?? []),
         breakingChanges: List<String>.from(data['breakingChanges'] ?? []),
-        isForced: data['isForced'] ?? false,
-        isAvailable: data['isAvailable'] ?? true,
+        isForced: data['isForced'] as bool? ?? false,
+        isAvailable: data['isAvailable'] as bool? ?? true,
         downloadUrl: data['downloadUrl'],
         releaseNotes: data['releaseNotes'],
         releaseDate: (data['releaseDate'] as Timestamp).toDate(),
@@ -424,13 +424,13 @@ class VersionStatistics {
     return VersionStatistics(
       version: data['version'] ?? '',
       platform: data['platform'] ?? '',
-      totalUsers: data['totalUsers'] ?? 0,
-      activeUsers: data['activeUsers'] ?? 0,
-      crashCount: data['crashCount'] ?? 0,
+      totalUsers: data['totalUsers'] as int? ?? 0,
+      activeUsers: data['activeUsers'] as int? ?? 0,
+      crashCount: data['crashCount'] as int? ?? 0,
       crashRate: (data['crashRate'] as num?)?.toDouble() ?? 0.0,
       averageSessionDuration:
           (data['averageSessionDuration'] as num?)?.toDouble() ?? 0.0,
-      totalSessions: data['totalSessions'] ?? 0,
+      totalSessions: data['totalSessions'] as int? ?? 0,
       lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
     );
   }
@@ -440,13 +440,13 @@ class VersionStatistics {
       VersionStatistics(
         version: data['version'] ?? '',
         platform: data['platform'] ?? '',
-        totalUsers: data['totalUsers'] ?? 0,
-        activeUsers: data['activeUsers'] ?? 0,
-        crashCount: data['crashCount'] ?? 0,
+        totalUsers: data['totalUsers'] as int? ?? 0,
+        activeUsers: data['activeUsers'] as int? ?? 0,
+        crashCount: data['crashCount'] as int? ?? 0,
         crashRate: (data['crashRate'] as num?)?.toDouble() ?? 0.0,
         averageSessionDuration:
             (data['averageSessionDuration'] as num?)?.toDouble() ?? 0.0,
-        totalSessions: data['totalSessions'] ?? 0,
+        totalSessions: data['totalSessions'] as int? ?? 0,
         lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
       );
   final String version;

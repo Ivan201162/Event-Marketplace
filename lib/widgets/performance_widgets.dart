@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 
 /// Виджет с ленивой загрузкой
 class LazyLoadWidget extends StatefulWidget {
@@ -184,7 +184,7 @@ class PaginatedList extends StatefulWidget {
     this.emptyWidget,
   });
   final Future<List<dynamic>> Function(int page, int limit) loadData;
-  final Widget Function(BuildContext context, dynamic item) itemBuilder;
+  final Widget Function(BuildContext context, item) itemBuilder;
   final int itemsPerPage;
   final Widget? loadingWidget;
   final Widget? errorWidget;

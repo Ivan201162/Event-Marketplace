@@ -27,10 +27,11 @@ class VideoOptimizationService {
         path: videoPath,
         fileName: fileName,
         fileSize: fileSize,
-        duration: const Duration(), // TODO: Получить реальную длительность
+        duration:
+            const Duration(), // TODO(developer): Получить реальную длительность
         format: fileExtension,
-        resolution:
-            const Size(1920, 1080), // TODO: Получить реальное разрешение
+        resolution: const Size(
+            1920, 1080), // TODO(developer): Получить реальное разрешение
       );
     } catch (e) {
       debugPrint('Ошибка получения информации о видео: $e');
@@ -48,7 +49,7 @@ class VideoOptimizationService {
     int? frameRate,
   }) async {
     try {
-      // TODO: Реализовать сжатие видео с помощью FFmpeg
+      // TODO(developer): Реализовать сжатие видео с помощью FFmpeg
       // Пока просто копируем файл
       final inputFile = File(inputPath);
       final outputFile = File(outputPath);
@@ -70,7 +71,7 @@ class VideoOptimizationService {
     Duration? timeOffset,
   }) async {
     try {
-      // TODO: Реализовать создание миниатюры с помощью FFmpeg
+      // TODO(developer): Реализовать создание миниатюры с помощью FFmpeg
       // Пока возвращаем заглушку
       return _createPlaceholderThumbnail(width, height);
     } catch (e) {
@@ -490,7 +491,7 @@ class _OptimizedVideoPlayerState extends State<OptimizedVideoPlayer> {
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.6),
+                  color: Colors.black.withValues(alpha: 0.6),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -507,7 +508,7 @@ class _OptimizedVideoPlayerState extends State<OptimizedVideoPlayer> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.7),
+                  color: Colors.black.withValues(alpha: 0.7),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Row(

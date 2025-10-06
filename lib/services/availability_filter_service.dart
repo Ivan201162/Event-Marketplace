@@ -255,7 +255,7 @@ class AvailabilityFilterService {
 
       final specialists = specialistsQuery.docs
           .map(
-            (doc) => AppUser.fromDocument(doc),
+            AppUser.fromDocument,
           )
           .toList();
 

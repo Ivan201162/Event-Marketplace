@@ -26,7 +26,7 @@ class ServiceTemplate {
       description: data['description'] ?? '',
       requiredFields: List<String>.from(data['requiredFields'] ?? []),
       defaultPricing: Map<String, dynamic>.from(data['defaultPricing'] ?? {}),
-      isActive: data['isActive'] ?? true,
+      isActive: data['isActive'] as bool? ?? true,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
     );
@@ -97,7 +97,7 @@ class SpecialistService {
       priceMax: (data['priceMax'] as num).toDouble(),
       currency: data['currency'] ?? 'RUB',
       pricingDetails: Map<String, dynamic>.from(data['pricingDetails'] ?? {}),
-      isActive: data['isActive'] ?? true,
+      isActive: data['isActive'] as bool? ?? true,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
     );

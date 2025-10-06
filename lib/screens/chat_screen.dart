@@ -1,38 +1,52 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:file_picker/file_picker.dart';
-import 'dart:typed_data';
+import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 
-import '../models/chat.dart';
-import '../models/chat_message.dart' as chat_message;
-import '../models/chat_attachment.dart';
-import '../models/chat_bot.dart';
-import '../providers/auth_providers.dart';
-import '../providers/chat_providers.dart';
-import '../services/attachment_service.dart';
-import '../services/chat_bot_service.dart';
-import '../widgets/chat_attachment_widget.dart';
-import '../widgets/chat_bot_message_widget.dart';
+import '../core/navigation/app_navigator.dart';
+import '../models/chat_message.dart';
+import '../services/chat_media_service.dart';
+import '../services/chat_service.dart';
+import '../services/firebase_auth_service.dart';
+import '../widgets/attachment_picker.dart';
+import '../widgets/message_bubble.dart';
 
-/// Экран чата
+/// Экран конкретного чата
 class ChatScreen extends ConsumerStatefulWidget {
   const ChatScreen({
     super.key,
     required this.chatId,
+    required this.otherParticipantId,
+    required this.otherParticipantName,
+    this.otherParticipantAvatar,
   });
   final String chatId;
+  final String otherParticipantId;
+  final String otherParticipantName;
+  final String? otherParticipantAvatar;
 
   @override
   ConsumerState<ChatScreen> createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends ConsumerState<ChatScreen> {
+  final ChatService _chatService = ChatService();
+  final FirebaseAuthService _authService = FirebaseAuthService();
+  final ChatMediaService _mediaService = ChatMediaService();
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  final ImagePicker _imagePicker = ImagePicker();
 
-  bool _isUploadingFile = false;
-  final AttachmentService _attachmentService = AttachmentService();
-  final ChatBotService _chatBotService = ChatBotService();
+  bool _isLoading = false;
+  List<ChatMessage> _messages = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCachedMessages();
+    _markMessagesAsRead();
+  }
 
   @override
   void dispose() {
@@ -41,37 +55,133 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     super.dispose();
   }
 
+  Future<void> _loadCachedMessages() async {
+    final cachedMessages = await _chatService.getCachedMessages(widget.chatId);
+    if (mounted) {
+      setState(() {
+        _messages = cachedMessages;
+      });
+    }
+  }
+
+  Future<void> _markMessagesAsRead() async {
+    final currentUser = _authService.currentUser;
+    if (currentUser != null) {
+      await _chatService.markMessagesAsRead(widget.chatId, currentUser.id);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final chatAsync = ref.watch(chatProvider(widget.chatId));
-    final messagesAsync = ref.watch(chatMessagesProvider(widget.chatId));
+    final currentUser = _authService.currentUser;
+
+    if (currentUser == null) {
+      return const Scaffold(
+        body: Center(
+          child: Text('Необходимо войти в систему'),
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: chatAsync.when(
-          data: (chat) => Text(chat?.title ?? 'Чат'),
-          loading: () => const Text('Загрузка...'),
-          error: (_, __) => const Text('Ошибка'),
+        leading: AppNavigator.buildBackButton(context),
+        title: Row(
+          children: [
+            CircleAvatar(
+              radius: 18,
+              backgroundImage: widget.otherParticipantAvatar != null
+                  ? NetworkImage(widget.otherParticipantAvatar!)
+                  : null,
+              child: widget.otherParticipantAvatar == null
+                  ? Text(
+                      widget.otherParticipantName.isNotEmpty
+                          ? widget.otherParticipantName[0].toUpperCase()
+                          : '?',
+                    )
+                  : null,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.otherParticipantName,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const Text(
+                    'в сети',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white70,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
+        elevation: 0,
         actions: [
           IconButton(
-            icon: _isUploadingFile
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.attach_file),
-            onPressed: _isUploadingFile ? null : _attachFile,
+            icon: const Icon(Icons.videocam),
+            onPressed: _startVideoCall,
           ),
           IconButton(
-            icon: const Icon(Icons.smart_toy),
-            onPressed: _showBotHelp,
+            icon: const Icon(Icons.phone),
+            onPressed: _startVoiceCall,
           ),
-          IconButton(
-            icon: const Icon(Icons.info_outline),
-            onPressed: _showChatInfo,
+          PopupMenuButton<String>(
+            onSelected: _handleMenuAction,
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'info',
+                child: Row(
+                  children: [
+                    Icon(Icons.info),
+                    SizedBox(width: 8),
+                    Text('Информация о чате'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'search',
+                child: Row(
+                  children: [
+                    Icon(Icons.search),
+                    SizedBox(width: 8),
+                    Text('Поиск в чате'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'media',
+                child: Row(
+                  children: [
+                    Icon(Icons.photo_library),
+                    SizedBox(width: 8),
+                    Text('Медиафайлы'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'block',
+                child: Row(
+                  children: [
+                    Icon(Icons.block),
+                    SizedBox(width: 8),
+                    Text('Заблокировать'),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -79,46 +189,59 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         children: [
           // Список сообщений
           Expanded(
-            child: messagesAsync.when(
-              data: (messages) {
-                if (messages.isEmpty) {
-                  return _buildEmptyState();
+            child: StreamBuilder<List<ChatMessage>>(
+              stream: _chatService.getChatMessages(widget.chatId),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  _messages = snapshot.data!;
+                }
+
+                if (_messages.isEmpty && !snapshot.hasData) {
+                  return const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.chat_bubble_outline,
+                          size: 64,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          'Начните общение',
+                          style: TextStyle(fontSize: 18, color: Colors.grey),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          'Отправьте первое сообщение',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  );
                 }
 
                 return ListView.builder(
                   controller: _scrollController,
                   padding: const EdgeInsets.all(16),
-                  itemCount: messages.length,
+                  itemCount: _messages.length,
                   itemBuilder: (context, index) {
-                    final message = messages[index];
-                    return _buildMessageBubble(message);
+                    final message = _messages[index];
+                    final isFromCurrentUser =
+                        message.senderId == currentUser.id;
+
+                    return MessageBubble(
+                      message: message,
+                      isFromCurrentUser: isFromCurrentUser,
+                      onTap: () => _showMessageOptions(context, message),
+                      onLongPress: () =>
+                          _showMessageContextMenu(context, message),
+                    );
                   },
                 );
               },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) => Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.error_outline,
-                      size: 64,
-                      color: Colors.red,
-                    ),
-                    const SizedBox(height: 16),
-                    Text('Ошибка загрузки: $error'),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () =>
-                          ref.invalidate(chatMessagesProvider(widget.chatId)),
-                      child: const Text('Повторить'),
-                    ),
-                  ],
-                ),
-              ),
             ),
           ),
-
           // Поле ввода сообщения
           _buildMessageInput(),
         ],
@@ -126,293 +249,560 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     );
   }
 
-  Widget _buildEmptyState() => const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey),
-            SizedBox(height: 16),
-            Text(
-              'Начните общение',
-              style: TextStyle(fontSize: 18, color: Colors.grey),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Отправьте первое сообщение',
-              style: TextStyle(color: Colors.grey),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildMessageBubble(chat_message.ChatMessage message) {
-    // Получаем ID текущего пользователя из провайдера
-    final currentUserId = ref.read(currentUserProvider).value?.id ?? '';
-    final isMe = message.senderId == currentUserId;
-
-    return Align(
-      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.75,
-          minWidth: 100,
-        ),
-        decoration: BoxDecoration(
-          color:
-              isMe ? Theme.of(context).colorScheme.primary : Colors.grey[200],
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (!isMe) ...[
-              Text(
-                message.senderName ?? 'Неизвестный',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey[600],
-                ),
-              ),
-              const SizedBox(height: 4),
-            ],
-            Text(
-              message.content,
-              style: TextStyle(
-                color: isMe ? Colors.white : Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              _formatTime(message.timestamp),
-              style: TextStyle(
-                fontSize: 10,
-                color: isMe ? Colors.white70 : Colors.grey[600],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildMessageInput() => Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          border: Border(
-            top: BorderSide(color: Colors.grey[300]!),
-          ),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withValues(alpha: 0.2),
+              spreadRadius: 1,
+              blurRadius: 5,
+              offset: const Offset(0, -2),
+            ),
+          ],
         ),
         child: Row(
           children: [
+            // Кнопка прикрепления
+            IconButton(
+              icon: const Icon(Icons.attach_file),
+              onPressed: _showAttachmentOptions,
+              color: Theme.of(context).primaryColor,
+            ),
+            // Поле ввода
             Expanded(
               child: TextField(
                 controller: _messageController,
                 decoration: InputDecoration(
                   hintText: 'Введите сообщение...',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: BorderRadius.circular(25),
+                    borderSide: BorderSide.none,
                   ),
+                  filled: true,
+                  fillColor: Colors.grey[100],
                   contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
+                    horizontal: 20,
+                    vertical: 10,
                   ),
                 ),
                 maxLines: null,
-                onSubmitted: (_) => _sendMessage(),
+                textCapitalization: TextCapitalization.sentences,
+                onSubmitted: _sendTextMessage,
               ),
             ),
             const SizedBox(width: 8),
-            FloatingActionButton.small(
-              onPressed: _sendMessage,
-              child: const Icon(Icons.send),
+            // Кнопка отправки
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                shape: BoxShape.circle,
+              ),
+              child: IconButton(
+                icon: _isLoading
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      )
+                    : const Icon(Icons.send, color: Colors.white),
+                onPressed: _isLoading
+                    ? null
+                    : () => _sendTextMessage(_messageController.text),
+              ),
             ),
           ],
         ),
       );
 
-  String _formatTime(DateTime dateTime) {
-    final now = DateTime.now();
-    final difference = now.difference(dateTime);
+  Future<void> _sendTextMessage(String text) async {
+    if (text.trim().isEmpty || _isLoading) return;
 
-    if (difference.inDays > 0) {
-      return '${dateTime.day}.${dateTime.month} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
-    } else {
-      return '${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
-    }
-  }
+    final currentUser = _authService.currentUser;
+    if (currentUser == null) return;
 
-  void _sendMessage() {
-    final content = _messageController.text.trim();
-    if (content.isEmpty) return;
-
-    // Отправка сообщения через провайдер
-    try {
-      ref.read(chatStateProvider.notifier).sendMessage(
-            widget.chatId,
-            content,
-          );
-
-      _messageController.clear();
-      _scrollToBottom();
-    } catch (e) {
-      // Показываем ошибку пользователю
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка отправки сообщения: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
-
-  void _scrollToBottom() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      }
+    setState(() {
+      _isLoading = true;
     });
-  }
 
-  Future<void> _attachFile() async {
-    if (_isUploadingFile) return;
+    _messageController.clear();
 
     try {
-      setState(() => _isUploadingFile = true);
-
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.any,
-        allowMultiple: false,
+      await _chatService.sendTextMessage(
+        chatId: widget.chatId,
+        senderId: currentUser.id,
+        text: text.trim(),
+        senderName: currentUser.displayName,
       );
 
-      if (result != null && result.files.isNotEmpty) {
-        final file = result.files.first;
-        final fileData = file.bytes;
-        final fileName = file.name;
-
-        if (fileData == null) {
-          _showErrorSnackBar('Не удалось загрузить файл');
-          return;
+      // Прокручиваем вниз
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scrollController.hasClients) {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
         }
-
-        // Проверяем поддержку типа файла
-        if (!_attachmentService.isFileTypeSupported(fileName)) {
-          _showErrorSnackBar('Неподдерживаемый тип файла');
-          return;
-        }
-
-        // Загружаем файл
-        final currentUserId = ref.read(currentUserProvider).value?.id ?? '';
-        final attachment = await _attachmentService.uploadFile(
-          messageId: 'msg_${DateTime.now().millisecondsSinceEpoch}',
-          userId: currentUserId,
-          filePath: file.path ?? '',
-          originalFileName: fileName,
-          fileData: fileData,
+      });
+    } on Exception catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Ошибка отправки сообщения: $e')),
         );
-
-        if (attachment != null) {
-          // Отправляем сообщение с вложением
-          ref.read(chatStateProvider.notifier).sendMessage(
-                widget.chatId,
-                '📎 ${attachment.originalFileName}',
-                attachment: attachment,
-              );
-
-          _showSuccessSnackBar('Файл загружен успешно');
-        } else {
-          _showErrorSnackBar('Ошибка загрузки файла');
-        }
       }
-    } catch (e) {
-      _showErrorSnackBar('Ошибка прикрепления файла');
     } finally {
-      setState(() => _isUploadingFile = false);
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
-  void _showBotHelp() {
-    showDialog(
+  void _showAttachmentOptions() {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (context) => AttachmentPicker(
+        onImageSelected: _sendImageMessage,
+        onVideoSelected: _sendVideoMessage,
+        onFileSelected: _sendFileMessage,
+        onAudioSelected: _sendAudioMessage,
+      ),
+    );
+  }
+
+  Future<void> _sendImageMessage() async {
+    try {
+      final imageFile = await _mediaService.pickImage();
+      if (imageFile == null) return;
+
+      final currentUser = _authService.currentUser;
+      if (currentUser == null) return;
+
+      setState(() {
+        _isLoading = true;
+      });
+
+      final success = await _mediaService.sendImageMessage(
+        chatId: widget.chatId,
+        senderId: currentUser.id,
+        senderName: currentUser.displayName ?? 'Пользователь',
+        imageFile: imageFile,
+      );
+
+      if (success && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Изображение отправлено')),
+        );
+        _loadCachedMessages(); // Обновляем список сообщений
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Ошибка отправки изображения')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Ошибка отправки изображения: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _sendVideoMessage() async {
+    try {
+      final videoFile = await _mediaService.pickVideo();
+      if (videoFile == null) return;
+
+      final currentUser = _authService.currentUser;
+      if (currentUser == null) return;
+
+      setState(() {
+        _isLoading = true;
+      });
+
+      final success = await _mediaService.sendVideoMessage(
+        chatId: widget.chatId,
+        senderId: currentUser.id,
+        senderName: currentUser.displayName ?? 'Пользователь',
+        videoFile: videoFile,
+      );
+
+      if (success && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Видео отправлено')),
+        );
+        _loadCachedMessages(); // Обновляем список сообщений
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Ошибка отправки видео')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Ошибка отправки видео: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _sendFileMessage() async {
+    try {
+      final currentUser = _authService.currentUser;
+      if (currentUser == null) return;
+
+      setState(() {
+        _isLoading = true;
+      });
+
+      await _chatService.pickAndSendFile(
+        chatId: widget.chatId,
+        senderId: currentUser.id,
+        senderName: currentUser.displayName,
+      );
+    } on Exception catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Ошибка отправки файла: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _sendAudioMessage() async {
+    // TODO(developer): Реализовать запись и отправку аудио
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content:
+            Text('Функция записи аудио будет добавлена в следующих версиях'),
+      ),
+    );
+  }
+
+  void _showMessageOptions(BuildContext context, ChatMessage message) {
+    if (message.type == MessageType.image ||
+        message.type == MessageType.video) {
+      _showMediaViewer(context, message);
+    }
+  }
+
+  void _showMessageContextMenu(BuildContext context, ChatMessage message) {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (context) => PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (!didPop) {
+            Navigator.of(context).pop();
+          }
+        },
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.copy),
+                title: const Text('Копировать'),
+                onTap: () {
+                  context.pop();
+                  // TODO(developer): Реализовать копирование
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.reply),
+                title: const Text('Ответить'),
+                onTap: () {
+                  context.pop();
+                  // TODO(developer): Реализовать ответ на сообщение
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.forward),
+                title: const Text('Переслать'),
+                onTap: () {
+                  context.pop();
+                  // TODO(developer): Реализовать пересылку
+                },
+              ),
+              if (message.senderId == _authService.currentUser?.id) ...[
+                ListTile(
+                  leading: const Icon(Icons.edit),
+                  title: const Text('Редактировать'),
+                  onTap: () {
+                    context.pop();
+                    _editMessage(message);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.delete, color: Colors.red),
+                  title: const Text(
+                    'Удалить',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                  onTap: () {
+                    context.pop();
+                    _deleteMessage(message);
+                  },
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showMediaViewer(BuildContext context, ChatMessage message) {
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (context) => MediaViewerScreen(
+          message: message,
+        ),
+      ),
+    );
+  }
+
+  void _editMessage(ChatMessage message) {
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Row(
-          children: [
-            Icon(Icons.smart_toy, color: Colors.blue),
-            SizedBox(width: 8),
-            Text('Бот-помощник'),
-          ],
-        ),
-        content: const Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Я могу помочь вам с:'),
-            SizedBox(height: 8),
-            Text('• Часто задаваемыми вопросами'),
-            Text('• Техническими проблемами'),
-            Text('• Бронированием услуг'),
-            Text('• Оплатой'),
-            Text('• Связью с оператором'),
-            SizedBox(height: 16),
-            Text('Просто напишите мне сообщение!'),
-          ],
+        title: const Text('Редактировать сообщение'),
+        content: TextField(
+          controller: TextEditingController(text: message.content),
+          decoration: const InputDecoration(
+            hintText: 'Введите новый текст...',
+          ),
+          maxLines: 3,
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Закрыть'),
+            onPressed: () => context.pop(),
+            child: const Text('Отмена'),
           ),
-          ElevatedButton(
+          TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
-              _messageController.text = 'Помощь';
-              _sendMessage();
+              context.pop();
+              // TODO(developer): Реализовать редактирование сообщения
             },
-            child: const Text('Написать боту'),
+            child: const Text('Сохранить'),
           ),
         ],
       ),
     );
   }
 
-  void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
+  void _deleteMessage(ChatMessage message) {
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Удалить сообщение'),
+        content: const Text('Вы уверены, что хотите удалить это сообщение?'),
+        actions: [
+          TextButton(
+            onPressed: () => context.pop(),
+            child: const Text('Отмена'),
+          ),
+          TextButton(
+            onPressed: () {
+              context.pop();
+              _chatService.deleteMessage(message.id);
+            },
+            child: const Text('Удалить'),
+          ),
+        ],
       ),
     );
   }
 
-  void _showSuccessSnackBar(String message) {
+  void _startVideoCall() {
+    // TODO(developer): Реализовать видеозвонок
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green,
+      const SnackBar(
+        content:
+            Text('Функция видеозвонка будет добавлена в следующих версиях'),
       ),
     );
+  }
+
+  void _startVoiceCall() {
+    // TODO(developer): Реализовать голосовой звонок
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Функция голосового звонка будет добавлена в следующих версиях',
+        ),
+      ),
+    );
+  }
+
+  void _handleMenuAction(String action) {
+    switch (action) {
+      case 'info':
+        _showChatInfo();
+        break;
+      case 'search':
+        _searchInChat();
+        break;
+      case 'media':
+        _showMediaFiles();
+        break;
+      case 'block':
+        _blockUser();
+        break;
+    }
   }
 
   void _showChatInfo() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Информация о чате'),
-        content: const Text('Здесь будет информация о чате и участниках'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Участник: ${widget.otherParticipantName}'),
+            Text('ID чата: ${widget.chatId}'),
+            Text('Сообщений: ${_messages.length}'),
+          ],
+        ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => context.pop(),
             child: const Text('Закрыть'),
           ),
         ],
       ),
     );
   }
+
+  void _searchInChat() {
+    // TODO(developer): Реализовать поиск в чате
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Функция поиска в чате будет добавлена в следующих версиях',
+        ),
+      ),
+    );
+  }
+
+  void _showMediaFiles() {
+    // TODO(developer): Реализовать показ медиафайлов
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Функция просмотра медиафайлов будет добавлена в следующих версиях',
+        ),
+      ),
+    );
+  }
+
+  void _blockUser() {
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Заблокировать пользователя'),
+        content: Text(
+          'Вы уверены, что хотите заблокировать ${widget.otherParticipantName}?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => context.pop(),
+            child: const Text('Отмена'),
+          ),
+          TextButton(
+            onPressed: () {
+              context.pop();
+              // TODO(developer): Реализовать блокировку пользователя
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Пользователь заблокирован')),
+              );
+            },
+            child: const Text('Заблокировать'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Экран просмотра медиафайлов
+class MediaViewerScreen extends StatelessWidget {
+  const MediaViewerScreen({
+    super.key,
+    required this.message,
+  });
+  final ChatMessage message;
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: Text(message.typeName),
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
+        ),
+        backgroundColor: Colors.black,
+        body: Center(
+          child: message.fileUrl != null
+              ? InteractiveViewer(
+                  child: message.type == MessageType.image
+                      ? CachedNetworkImage(
+                          imageUrl: message.fileUrl!,
+                          fit: BoxFit.contain,
+                          placeholder: (context, url) => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          errorWidget: (context, url, error) => const Icon(
+                            Icons.error,
+                            color: Colors.white,
+                            size: 64,
+                          ),
+                        )
+                      : message.type == MessageType.video
+                          ? const Icon(
+                              Icons.play_circle_filled,
+                              color: Colors.white,
+                              size: 64,
+                            )
+                          : const Icon(
+                              Icons.file_present,
+                              color: Colors.white,
+                              size: 64,
+                            ),
+                )
+              : const Icon(
+                  Icons.error,
+                  color: Colors.white,
+                  size: 64,
+                ),
+        ),
+      );
 }

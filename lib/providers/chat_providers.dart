@@ -1,7 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/chat.dart';
-import '../models/chat_message.dart' as chat_message;
 import '../models/chat_attachment.dart';
+import '../models/chat_message.dart' as chat_message;
 import '../services/chat_service.dart';
 
 /// Провайдер сервиса чата
@@ -161,26 +162,30 @@ class ChatStateNotifier extends Notifier<ChatState> {
     state = state.copyWith(error: error);
   }
 
-  Future<void> sendMessage(String chatId, String text,
-      {ChatAttachment? attachment}) async {
+  Future<void> sendMessage(
+    String chatId,
+    String text, {
+    ChatAttachment? attachment,
+  }) async {
     try {
       setLoading(true);
       final chatService = ref.read(chatServiceProvider);
       await chatService.sendMessage(
-          chatId,
-          chat_message.ChatMessage(
-            id: '',
-            chatId: chatId,
-            senderId: 'current_user_id',
-            type: attachment != null
-                ? chat_message.MessageType.attachment
-                : chat_message.MessageType.text,
-            content: text,
-            status: chat_message.MessageStatus.sent,
-            timestamp: DateTime.now(),
-            senderName: 'Current User',
-            attachmentId: attachment?.id,
-          ));
+        chatId,
+        chat_message.ChatMessage(
+          id: '',
+          chatId: chatId,
+          senderId: 'current_user_id',
+          type: attachment != null
+              ? chat_message.MessageType.attachment
+              : chat_message.MessageType.text,
+          content: text,
+          status: chat_message.MessageStatus.sent,
+          timestamp: DateTime.now(),
+          senderName: 'Current User',
+          attachmentId: attachment?.id,
+        ),
+      );
       setLoading(false);
     } catch (e) {
       setError(e.toString());

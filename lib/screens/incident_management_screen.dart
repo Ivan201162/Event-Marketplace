@@ -1162,7 +1162,7 @@ class _IncidentManagementScreenState
   }
 
   void _viewIncident(Incident incident) {
-    // TODO: Реализовать просмотр инцидента
+    // TODO(developer): Реализовать просмотр инцидента
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content:
@@ -1172,7 +1172,7 @@ class _IncidentManagementScreenState
   }
 
   void _editIncident(Incident incident) {
-    // TODO: Реализовать редактирование инцидента
+    // TODO(developer): Реализовать редактирование инцидента
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -1183,7 +1183,7 @@ class _IncidentManagementScreenState
   }
 
   void _addComment(Incident incident) {
-    // TODO: Реализовать добавление комментария
+    // TODO(developer): Реализовать добавление комментария
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -1240,7 +1240,7 @@ class _IncidentManagementScreenState
   }
 
   void _showCreateIncidentDialog() {
-    // TODO: Реализовать диалог создания инцидента
+    // TODO(developer): Реализовать диалог создания инцидента
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Создание инцидента будет реализовано'),

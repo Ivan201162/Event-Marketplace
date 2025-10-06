@@ -1,286 +1,23 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../models/idea.dart';
+import '../models/idea_comment.dart';
 
 /// Виджет комментария к идее
 class IdeaCommentWidget extends StatelessWidget {
   const IdeaCommentWidget({
     super.key,
     required this.comment,
-    required this.userId,
-    this.onLike,
-  });
-  final IdeaComment comment;
-  final String userId;
-  final VoidCallback? onLike;
-
-  @override
-  Widget build(BuildContext context) => Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Аватар автора
-            CircleAvatar(
-              radius: 16,
-              backgroundImage: comment.authorPhotoUrl != null
-                  ? CachedNetworkImageProvider(comment.authorPhotoUrl!)
-                  : null,
-              child: comment.authorPhotoUrl == null
-                  ? Text(
-                      comment.authorName.isNotEmpty
-                          ? comment.authorName[0].toUpperCase()
-                          : '?',
-                      style: const TextStyle(fontSize: 12),
-                    )
-                  : null,
-            ),
-
-            const SizedBox(width: 12),
-
-            // Содержимое комментария
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Имя автора и дата
-                  Row(
-                    children: [
-                      Text(
-                        comment.authorName,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        _formatDate(comment.createdAt),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 4),
-
-                  // Текст комментария
-                  Text(
-                    comment.content,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      height: 1.4,
-                    ),
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  // Действия
-                  Row(
-                    children: [
-                      // Лайк
-                      GestureDetector(
-                        onTap: onLike,
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.favorite,
-                              size: 16,
-                              color: comment.likedBy.contains(userId)
-                                  ? Colors.red
-                                  : Colors.grey[600],
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              comment.likesCount.toString(),
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(width: 16),
-
-                      // Ответить
-                      GestureDetector(
-                        onTap: () {
-                          // TODO: Реализовать ответ на комментарий
-                        },
-                        child: Text(
-                          'Ответить',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-
-  String _formatDate(DateTime date) {
-    final now = DateTime.now();
-    final difference = now.difference(date);
-
-    if (difference.inMinutes < 1) {
-      return 'только что';
-    } else if (difference.inMinutes < 60) {
-      return '${difference.inMinutes} мин. назад';
-    } else if (difference.inHours < 24) {
-      return '${difference.inHours} ч. назад';
-    } else if (difference.inDays == 1) {
-      return 'Вчера';
-    } else if (difference.inDays < 7) {
-      return '${difference.inDays} дн. назад';
-    } else {
-      return '${date.day}.${date.month}.${date.year}';
-    }
-  }
-}
-
-/// Виджет для отображения комментария в списке
-class IdeaCommentListTile extends StatelessWidget {
-  const IdeaCommentListTile({
-    super.key,
-    required this.comment,
-    required this.userId,
     this.onLike,
     this.onReply,
+    this.onDelete,
+    this.showReplies = true,
   });
+
   final IdeaComment comment;
-  final String userId;
   final VoidCallback? onLike;
   final VoidCallback? onReply;
-
-  @override
-  Widget build(BuildContext context) => ListTile(
-        leading: CircleAvatar(
-          radius: 20,
-          backgroundImage: comment.authorAvatar != null
-              ? CachedNetworkImageProvider(comment.authorAvatar!)
-              : null,
-          child: comment.authorAvatar == null
-              ? Text(
-                  comment.authorName.isNotEmpty
-                      ? comment.authorName[0].toUpperCase()
-                      : '?',
-                  style: const TextStyle(fontSize: 14),
-                )
-              : null,
-        ),
-        title: Text(
-          comment.authorName,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              comment.content,
-              style: const TextStyle(
-                fontSize: 14,
-                height: 1.4,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Text(
-                  _formatDate(comment.createdAt),
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
-                ),
-                const Spacer(),
-                // Лайк
-                GestureDetector(
-                  onTap: onLike,
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.favorite,
-                        size: 16,
-                        color: comment.likedBy.contains(userId)
-                            ? Colors.red
-                            : Colors.grey[600],
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        comment.likesCount.toString(),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 16),
-                // Ответить
-                GestureDetector(
-                  onTap: onReply,
-                  child: Text(
-                    'Ответить',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
-
-  String _formatDate(DateTime date) {
-    final now = DateTime.now();
-    final difference = now.difference(date);
-
-    if (difference.inMinutes < 1) {
-      return 'только что';
-    } else if (difference.inMinutes < 60) {
-      return '${difference.inMinutes} мин. назад';
-    } else if (difference.inHours < 24) {
-      return '${difference.inHours} ч. назад';
-    } else if (difference.inDays == 1) {
-      return 'Вчера';
-    } else if (difference.inDays < 7) {
-      return '${difference.inDays} дн. назад';
-    } else {
-      return '${date.day}.${date.month}.${date.year}';
-    }
-  }
-}
-
-/// Виджет для отображения комментария в карточке
-class IdeaCommentCard extends StatelessWidget {
-  const IdeaCommentCard({
-    super.key,
-    required this.comment,
-    required this.userId,
-    this.onLike,
-    this.onReply,
-  });
-  final IdeaComment comment;
-  final String userId;
-  final VoidCallback? onLike;
-  final VoidCallback? onReply;
+  final VoidCallback? onDelete;
+  final bool showReplies;
 
   @override
   Widget build(BuildContext context) => Card(
@@ -290,20 +27,19 @@ class IdeaCommentCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Заголовок
+              // Заголовок комментария
               Row(
                 children: [
                   CircleAvatar(
                     radius: 16,
-                    backgroundImage: comment.authorPhotoUrl != null
-                        ? CachedNetworkImageProvider(comment.authorPhotoUrl!)
+                    backgroundImage: comment.authorAvatar != null
+                        ? NetworkImage(comment.authorAvatar!)
                         : null,
-                    child: comment.authorPhotoUrl == null
+                    child: comment.authorAvatar == null
                         ? Text(
                             comment.authorName.isNotEmpty
                                 ? comment.authorName[0].toUpperCase()
                                 : '?',
-                            style: const TextStyle(fontSize: 12),
                           )
                         : null,
                   ),
@@ -314,33 +50,38 @@ class IdeaCommentCard extends StatelessWidget {
                       children: [
                         Text(
                           comment.authorName,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  ),
                         ),
                         Text(
                           _formatDate(comment.createdAt),
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
+                                  ),
                         ),
                       ],
                     ),
                   ),
+                  if (onDelete != null)
+                    IconButton(
+                      onPressed: onDelete,
+                      icon: const Icon(Icons.delete_outline),
+                      iconSize: 18,
+                    ),
                 ],
               ),
 
               const SizedBox(height: 8),
 
-              // Содержимое
+              // Содержимое комментария
               Text(
                 comment.content,
-                style: const TextStyle(
-                  fontSize: 14,
-                  height: 1.4,
-                ),
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
 
               const SizedBox(height: 8),
@@ -348,43 +89,67 @@ class IdeaCommentCard extends StatelessWidget {
               // Действия
               Row(
                 children: [
-                  // Лайк
                   GestureDetector(
                     onTap: onLike,
                     child: Row(
                       children: [
                         Icon(
-                          Icons.favorite,
+                          Icons.thumb_up_outlined,
                           size: 16,
-                          color: comment.likedBy.contains(userId)
-                              ? Colors.red
-                              : Colors.grey[600],
+                          color: comment.likesCount > 0
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                         const SizedBox(width: 4),
                         Text(
                           comment.likesCount.toString(),
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: comment.likesCount > 0
+                                        ? Theme.of(context).colorScheme.primary
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant,
+                                  ),
                         ),
                       ],
                     ),
                   ),
-
                   const SizedBox(width: 16),
-
-                  // Ответить
-                  GestureDetector(
-                    onTap: onReply,
-                    child: Text(
-                      'Ответить',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
+                  if (onReply != null && showReplies)
+                    GestureDetector(
+                      onTap: onReply,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.reply,
+                            size: 16,
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Ответить',
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant,
+                                    ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
+                  const Spacer(),
+                  if (comment.updatedAt != comment.createdAt)
+                    Text(
+                      'изменено',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                            fontStyle: FontStyle.italic,
+                          ),
+                    ),
                 ],
               ),
             ],
@@ -396,18 +161,203 @@ class IdeaCommentCard extends StatelessWidget {
     final now = DateTime.now();
     final difference = now.difference(date);
 
-    if (difference.inMinutes < 1) {
-      return 'только что';
-    } else if (difference.inMinutes < 60) {
-      return '${difference.inMinutes} мин. назад';
-    } else if (difference.inHours < 24) {
-      return '${difference.inHours} ч. назад';
-    } else if (difference.inDays == 1) {
-      return 'Вчера';
-    } else if (difference.inDays < 7) {
+    if (difference.inDays > 0) {
       return '${difference.inDays} дн. назад';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours} ч. назад';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes} мин. назад';
     } else {
-      return '${date.day}.${date.month}.${date.year}';
+      return 'Только что';
     }
+  }
+}
+
+/// Виджет для добавления комментария
+class AddCommentWidget extends StatefulWidget {
+  const AddCommentWidget({
+    super.key,
+    required this.onCommentAdded,
+    this.replyTo,
+    this.hintText = 'Добавить комментарий...',
+  });
+
+  final Function(String) onCommentAdded;
+  final IdeaComment? replyTo;
+  final String hintText;
+
+  @override
+  State<AddCommentWidget> createState() => _AddCommentWidgetState();
+}
+
+class _AddCommentWidgetState extends State<AddCommentWidget> {
+  final TextEditingController _controller = TextEditingController();
+  bool _isSubmitting = false;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (widget.replyTo != null) ...[
+                Text(
+                  'Ответ на комментарий ${widget.replyTo!.authorName}',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                ),
+                const SizedBox(height: 8),
+              ],
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _controller,
+                      decoration: InputDecoration(
+                        hintText: widget.hintText,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                      ),
+                      maxLines: null,
+                      textInputAction: TextInputAction.newline,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  IconButton(
+                    onPressed: _isSubmitting ? null : _submitComment,
+                    icon: _isSubmitting
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.send),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+
+  Future<void> _submitComment() async {
+    final content = _controller.text.trim();
+    if (content.isEmpty) return;
+
+    setState(() {
+      _isSubmitting = true;
+    });
+
+    try {
+      await widget.onCommentAdded(content);
+      _controller.clear();
+    } finally {
+      setState(() {
+        _isSubmitting = false;
+      });
+    }
+  }
+}
+
+/// Виджет для отображения списка комментариев
+class CommentsListWidget extends StatelessWidget {
+  const CommentsListWidget({
+    super.key,
+    required this.comments,
+    this.onCommentLike,
+    this.onCommentReply,
+    this.onCommentDelete,
+    this.onAddComment,
+    this.isLoading = false,
+  });
+
+  final List<IdeaComment> comments;
+  final Function(IdeaComment)? onCommentLike;
+  final Function(IdeaComment)? onCommentReply;
+  final Function(IdeaComment)? onCommentDelete;
+  final Function(String)? onAddComment;
+  final bool isLoading;
+
+  @override
+  Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (comments.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.comment_outlined,
+              size: 64,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Пока нет комментариев',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Будьте первым, кто оставит комментарий',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Column(
+      children: [
+        // Поле для добавления комментария
+        if (onAddComment != null)
+          AddCommentWidget(
+            onCommentAdded: onAddComment!,
+          ),
+
+        const SizedBox(height: 16),
+
+        // Список комментариев
+        Expanded(
+          child: ListView.builder(
+            itemCount: comments.length,
+            itemBuilder: (context, index) {
+              final comment = comments[index];
+              return IdeaCommentWidget(
+                comment: comment,
+                onLike: onCommentLike != null
+                    ? () => onCommentLike!(comment)
+                    : null,
+                onReply: onCommentReply != null
+                    ? () => onCommentReply!(comment)
+                    : null,
+                onDelete: onCommentDelete != null
+                    ? () => onCommentDelete!(comment)
+                    : null,
+              );
+            },
+          ),
+        ),
+      ],
+    );
   }
 }

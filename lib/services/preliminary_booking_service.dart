@@ -2,10 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../core/feature_flags.dart';
 import '../models/booking.dart';
+import 'contract_service.dart';
 
 /// Сервис для предварительного бронирования
 class PreliminaryBookingService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final ContractService _contractService = ContractService();
 
   /// Создать предварительное бронирование
   Future<PreliminaryBooking> createPreliminaryBooking({
@@ -153,6 +155,14 @@ class PreliminaryBookingService {
         preliminaryBooking.customerId,
         specialistId,
       );
+
+      // Автоматически генерируем договор
+      try {
+        await _contractService.generateContract(bookingDocRef.id);
+      } catch (e) {
+        // Логируем ошибку, но не прерываем процесс
+        print('Ошибка автоматической генерации договора: $e');
+      }
 
       return booking.copyWith(id: bookingDocRef.id);
     } catch (e) {
@@ -305,7 +315,7 @@ class PreliminaryBookingService {
     required Duration duration,
   }) async {
     try {
-      // TODO: Интегрировать с SpecialistScheduleService
+      // TODO(developer): Интегрировать с SpecialistScheduleService
       // Пока возвращаем true
       return true;
     } catch (e) {
@@ -319,8 +329,8 @@ class PreliminaryBookingService {
     String customerId,
   ) async {
     try {
-      // TODO: Отправить push-уведомление специалисту
-      // TODO: Отправить email уведомление
+      // TODO(developer): Отправить push-уведомление специалисту
+      // TODO(developer): Отправить email уведомление
     } catch (e) {
       // Игнорируем ошибки уведомлений
     }
@@ -332,8 +342,8 @@ class PreliminaryBookingService {
     String specialistId,
   ) async {
     try {
-      // TODO: Отправить push-уведомление заказчику
-      // TODO: Отправить email уведомление
+      // TODO(developer): Отправить push-уведомление заказчику
+      // TODO(developer): Отправить email уведомление
     } catch (e) {
       // Игнорируем ошибки уведомлений
     }
@@ -345,8 +355,8 @@ class PreliminaryBookingService {
     String reason,
   ) async {
     try {
-      // TODO: Отправить push-уведомление заказчику об отклонении
-      // TODO: Отправить email уведомление
+      // TODO(developer): Отправить push-уведомление заказчику об отклонении
+      // TODO(developer): Отправить email уведомление
     } catch (e) {
       // Игнорируем ошибки уведомлений
     }
@@ -358,8 +368,8 @@ class PreliminaryBookingService {
     String? reason,
   ) async {
     try {
-      // TODO: Отправить push-уведомление специалисту об отмене
-      // TODO: Отправить email уведомление
+      // TODO(developer): Отправить push-уведомление специалисту об отмене
+      // TODO(developer): Отправить email уведомление
     } catch (e) {
       // Игнорируем ошибки уведомлений
     }

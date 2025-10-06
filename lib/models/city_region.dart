@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель города/региона для поиска специалистов по России
@@ -37,7 +39,7 @@ class CityRegion {
       regionName: data['regionName'] as String? ?? '',
       coordinates: data['coordinates'] != null
           ? Coordinates.fromMap(data['coordinates'] as Map<String, dynamic>)
-          : const Coordinates(latitude: 0.0, longitude: 0.0),
+          : const Coordinates(latitude: 0, longitude: 0),
       population: data['population'] as int? ?? 0,
       isCapital: data['isCapital'] as bool? ?? false,
       isMajorCity: data['isMajorCity'] as bool? ?? false,
@@ -47,12 +49,18 @@ class CityRegion {
       density: (data['density'] as num?)?.toDouble(),
       foundedYear: data['foundedYear'] as int?,
       description: data['description'] as String?,
-      attractions: List<String>.from(data['attractions'] ?? []),
-      neighboringCities: List<String>.from(data['neighboringCities'] ?? []),
-      transportHubs: List<String>.from(data['transportHubs'] ?? []),
-      economicSectors: List<String>.from(data['economicSectors'] ?? []),
-      specialistCategories:
-          List<String>.from(data['specialistCategories'] ?? []),
+      attractions:
+          List<String>.from((data['attractions'] as List<dynamic>?) ?? []),
+      neighboringCities: List<String>.from(
+        (data['neighboringCities'] as List<dynamic>?) ?? [],
+      ),
+      transportHubs:
+          List<String>.from((data['transportHubs'] as List<dynamic>?) ?? []),
+      economicSectors:
+          List<String>.from((data['economicSectors'] as List<dynamic>?) ?? []),
+      specialistCategories: List<String>.from(
+        (data['specialistCategories'] as List<dynamic>?) ?? [],
+      ),
       avgSpecialistRating:
           (data['avgSpecialistRating'] as num?)?.toDouble() ?? 0.0,
       totalSpecialists: data['totalSpecialists'] as int? ?? 0,
@@ -73,7 +81,7 @@ class CityRegion {
         regionName: data['regionName'] as String? ?? '',
         coordinates: data['coordinates'] != null
             ? Coordinates.fromMap(data['coordinates'] as Map<String, dynamic>)
-            : const Coordinates(latitude: 0.0, longitude: 0.0),
+            : const Coordinates(latitude: 0, longitude: 0),
         population: data['population'] as int? ?? 0,
         isCapital: data['isCapital'] as bool? ?? false,
         isMajorCity: data['isMajorCity'] as bool? ?? false,
@@ -83,12 +91,19 @@ class CityRegion {
         density: (data['density'] as num?)?.toDouble(),
         foundedYear: data['foundedYear'] as int?,
         description: data['description'] as String?,
-        attractions: List<String>.from(data['attractions'] ?? []),
-        neighboringCities: List<String>.from(data['neighboringCities'] ?? []),
-        transportHubs: List<String>.from(data['transportHubs'] ?? []),
-        economicSectors: List<String>.from(data['economicSectors'] ?? []),
-        specialistCategories:
-            List<String>.from(data['specialistCategories'] ?? []),
+        attractions:
+            List<String>.from((data['attractions'] as List<dynamic>?) ?? []),
+        neighboringCities: List<String>.from(
+          (data['neighboringCities'] as List<dynamic>?) ?? [],
+        ),
+        transportHubs:
+            List<String>.from((data['transportHubs'] as List<dynamic>?) ?? []),
+        economicSectors: List<String>.from(
+          (data['economicSectors'] as List<dynamic>?) ?? [],
+        ),
+        specialistCategories: List<String>.from(
+          (data['specialistCategories'] as List<dynamic>?) ?? [],
+        ),
         avgSpecialistRating:
             (data['avgSpecialistRating'] as num?)?.toDouble() ?? 0.0,
         totalSpecialists: data['totalSpecialists'] as int? ?? 0,
@@ -229,19 +244,17 @@ class CityRegion {
   }
 
   /// Проверить, является ли город популярным для событий
-  bool get isPopularForEvents {
-    return isCapital ||
-        isMajorCity ||
-        population > 500000 ||
-        attractions.isNotEmpty ||
-        economicSectors.contains('туризм') ||
-        economicSectors.contains('развлечения');
-  }
+  bool get isPopularForEvents =>
+      isCapital ||
+      isMajorCity ||
+      population > 500000 ||
+      attractions.isNotEmpty ||
+      economicSectors.contains('туризм') ||
+      economicSectors.contains('развлечения');
 
   /// Получить расстояние до другого города (приблизительно)
-  double distanceTo(CityRegion other) {
-    return coordinates.distanceTo(other.coordinates);
-  }
+  double distanceTo(CityRegion other) =>
+      coordinates.distanceTo(other.coordinates);
 
   @override
   bool operator ==(Object other) =>
@@ -284,19 +297,17 @@ class Coordinates {
   double distanceTo(Coordinates other) {
     const double earthRadius = 6371; // Радиус Земли в км
 
-    final double lat1Rad = latitude * (3.14159265359 / 180);
-    final double lat2Rad = other.latitude * (3.14159265359 / 180);
-    final double deltaLatRad =
-        (other.latitude - latitude) * (3.14159265359 / 180);
-    final double deltaLonRad =
-        (other.longitude - longitude) * (3.14159265359 / 180);
+    final lat1Rad = latitude * (3.14159265359 / 180);
+    final lat2Rad = other.latitude * (3.14159265359 / 180);
+    final deltaLatRad = (other.latitude - latitude) * (3.14159265359 / 180);
+    final deltaLonRad = (other.longitude - longitude) * (3.14159265359 / 180);
 
-    final double a = (deltaLatRad / 2).sin() * (deltaLatRad / 2).sin() +
-        lat1Rad.cos() *
-            lat2Rad.cos() *
-            (deltaLonRad / 2).sin() *
-            (deltaLonRad / 2).sin();
-    final double c = 2 * (a.sqrt()).asin();
+    final a = math.sin(deltaLatRad / 2) * math.sin(deltaLatRad / 2) +
+        math.cos(lat1Rad) *
+            math.cos(lat2Rad) *
+            math.sin(deltaLonRad / 2) *
+            math.sin(deltaLonRad / 2);
+    final c = 2 * math.asin(math.sqrt(a));
 
     return earthRadius * c;
   }

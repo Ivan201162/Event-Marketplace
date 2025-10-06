@@ -478,8 +478,8 @@ class FAQItem {
         orElse: () => SupportCategory.general,
       ),
       tags: List<String>.from(data['tags'] ?? []),
-      viewsCount: data['viewsCount'] ?? 0,
-      isPublished: data['isPublished'] ?? true,
+      viewsCount: data['viewsCount'] as int? ?? 0,
+      isPublished: data['isPublished'] as bool? ?? true,
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );

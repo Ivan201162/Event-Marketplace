@@ -3,781 +3,630 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/app_theme.dart';
-import '../core/constants/app_routes.dart';
-import '../core/responsive_utils.dart';
+import '../models/specialist.dart';
 import '../models/user.dart';
-import '../providers/user_role_provider.dart';
-import '../widgets/enhanced_page_transition.dart';
-import '../widgets/recommendations_section.dart';
-import '../widgets/responsive_layout.dart';
-import '../widgets/role_switcher.dart';
-import '../widgets/theme_switch_widget.dart';
+import '../providers/auth_providers.dart';
+import '../providers/search_providers.dart';
+import '../services/test_data_service.dart';
+import '../widgets/modern_specialist_card.dart';
 
-class HomeScreen extends ConsumerWidget {
+/// Современная главная страница
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final userRole = ref.watch(userRoleProvider);
-    final roleString = userRole == UserRole.customer ? 'Клиент' : 'Специалист';
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
 
-    return ResponsiveLayout(
-      mobile: _buildMobileLayout(context, userRole, roleString),
-      tablet: _buildTabletLayout(context, userRole, roleString),
-      desktop: _buildDesktopLayout(context, userRole, roleString),
-      largeDesktop: _buildLargeDesktopLayout(context, userRole, roleString),
+class _HomeScreenState extends ConsumerState<HomeScreen>
+    with TickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  final ScrollController _scrollController = ScrollController();
+  final TestDataService _testDataService = TestDataService();
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: const Interval(0, 0.6, curve: Curves.easeOut),
+      ),
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: const Interval(0.2, 0.8, curve: Curves.easeOut),
+      ),
+    );
+
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    _scrollController.dispose();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final currentUserAsync = ref.watch(currentUserProvider);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Главная'),
+        automaticallyImplyLeading:
+            false, // Не показываем стрелку в главной вкладке
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () => context.go('/search'),
+          ),
+        ],
+      ),
+      body: currentUserAsync.when(
+        data: _buildHomeContent,
+        loading: _buildLoadingState,
+        error: (error, stack) => _buildErrorState(error.toString()),
+      ),
     );
   }
 
-  Widget _buildMobileLayout(
-    BuildContext context,
-    UserRole userRole,
-    String roleString,
-  ) =>
-      Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            // Современный AppBar с градиентом
-            SliverAppBar(
-              expandedHeight: 120,
-              pinned: true,
-              flexibleSpace: FlexibleSpaceBar(
-                title: const Text(
-                  'Event Marketplace',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                background: Container(
-                  decoration: const BoxDecoration(
-                    gradient: BrandColors.primaryGradient,
-                  ),
-                  child: SafeArea(
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(top: 40, left: 16, right: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Event Marketplace',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: const QuickThemeToggle(
-                                  iconColor: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: IconButton(
-                                  icon: const Icon(
-                                    Icons.notifications_outlined,
-                                    color: Colors.white,
-                                  ),
-                                  onPressed: () {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          'Уведомления пока не реализованы',
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            // Основной контент
-            SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Переключатель ролей
-                  const RoleSwitcher(),
-
-                  // Приветственная карточка с градиентом
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: BrandColors.secondaryGradient,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: BrandColors.secondary.withOpacity(0.3),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Icon(
-                                userRole == UserRole.customer
-                                    ? Icons.person_outline
-                                    : Icons.work_outline,
-                                size: 32,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Добро пожаловать!',
-                                    style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    'Вы вошли как $roleString',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white.withOpacity(0.9),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Быстрые действия
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Быстрые действия',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall
-                              ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            context.push(AppRoutes.search);
-                          },
-                          child: const Text('Все'),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Сетка быстрых действий
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: GridView.count(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                      childAspectRatio: 1.2,
-                      children: [
-                        AnimatedButton(
-                          onPressed: () {
-                            context.push(AppRoutes.search);
-                          },
-                          child: _buildModernQuickActionCard(
-                            context,
-                            icon: Icons.search_rounded,
-                            title: 'Найти специалиста',
-                            subtitle: 'Поиск по категориям',
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)],
-                            ),
-                            onTap: () {
-                              context.push(AppRoutes.search);
-                            },
-                          ),
-                        ),
-                        AnimatedButton(
-                          onPressed: () {
-                            if (userRole == UserRole.customer) {
-                              context.push(AppRoutes.myBookings);
-                            } else {
-                              context.push(AppRoutes.bookingRequests);
-                            }
-                          },
-                          child: _buildModernQuickActionCard(
-                            context,
-                            icon: userRole == UserRole.customer
-                                ? Icons.book_online_rounded
-                                : Icons.assignment_rounded,
-                            title: userRole == UserRole.customer
-                                ? 'Мои заявки'
-                                : 'Заявки клиентов',
-                            subtitle: userRole == UserRole.customer
-                                ? 'Просмотр заявок'
-                                : 'Управление заявками',
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF10B981), Color(0xFF059669)],
-                            ),
-                            onTap: () {
-                              if (userRole == UserRole.customer) {
-                                context.push(AppRoutes.myBookings);
-                              } else {
-                                context.push(AppRoutes.bookingRequests);
-                              }
-                            },
-                          ),
-                        ),
-                        AnimatedButton(
-                          onPressed: () {
-                            context.push(AppRoutes.calendar);
-                          },
-                          child: _buildModernQuickActionCard(
-                            context,
-                            icon: Icons.calendar_today_rounded,
-                            title: 'Календарь',
-                            subtitle: 'Расписание событий',
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
-                            ),
-                            onTap: () {
-                              context.push(AppRoutes.calendar);
-                            },
-                          ),
-                        ),
-                        AnimatedButton(
-                          onPressed: () {
-                            context.push(AppRoutes.chat);
-                          },
-                          child: _buildModernQuickActionCard(
-                            context,
-                            icon: Icons.chat_bubble_outline_rounded,
-                            title: 'Сообщения',
-                            subtitle: 'Общение с клиентами',
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
-                            ),
-                            onTap: () {
-                              context.push(AppRoutes.chat);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 32),
-
-                  // Статистика
-                  AnimatedContent(
-                    delay: const Duration(milliseconds: 200),
-                    type: AnimationType.slideUp,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        'Статистика',
-                        style:
-                            Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  AnimatedContent(
-                    delay: const Duration(milliseconds: 400),
-                    type: AnimationType.scale,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 20,
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              _buildModernStatItem(
-                                context,
-                                'Активных заявок',
-                                '0',
-                                Icons.assignment_rounded,
-                                BrandColors.primary,
-                              ),
-                              _buildModernStatItem(
-                                context,
-                                'Завершенных',
-                                '0',
-                                Icons.check_circle_rounded,
-                                BrandColors.secondary,
-                              ),
-                              _buildModernStatItem(
-                                context,
-                                'В ожидании',
-                                '0',
-                                Icons.schedule_rounded,
-                                BrandColors.accent,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 32),
-
-                  // Секция рекомендаций
-                  const RecommendationsSection(),
-
-                  const SizedBox(height: 100), // Отступ для нижней навигации
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildTabletLayout(
-    BuildContext context,
-    UserRole userRole,
-    String roleString,
-  ) =>
-      Scaffold(
-        body: ResponsiveContainer(
-          child: CustomScrollView(
-            slivers: [
-              // Адаптивный AppBar для планшета
-              SliverAppBar(
-                expandedHeight: 140,
-                pinned: true,
-                flexibleSpace: FlexibleSpaceBar(
-                  title: const Text(
-                    'Event Marketplace',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  background: Container(
-                    decoration: const BoxDecoration(
-                      gradient: BrandColors.primaryGradient,
-                    ),
-                  ),
-                ),
-              ),
-              // Основной контент для планшета
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    // Приветственная карточка
-                    _buildWelcomeCard(context, userRole, roleString),
-                    const SizedBox(height: 24),
-                    // Быстрые действия в сетке 2x2
-                    _buildQuickActionsGrid(context, userRole, 2),
-                    const SizedBox(height: 32),
-                    // Статистика
-                    _buildStatsSection(context),
-                    const SizedBox(height: 32),
-                    // Секция рекомендаций
-                    const RecommendationsSection(),
-                    const SizedBox(height: 100),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildDesktopLayout(
-    BuildContext context,
-    UserRole userRole,
-    String roleString,
-  ) =>
-      Scaffold(
-        body: ResponsiveContainer(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Левая панель с быстрыми действиями
-              SizedBox(
-                width: 300,
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    _buildWelcomeCard(context, userRole, roleString),
-                    const SizedBox(height: 24),
-                    _buildQuickActionsList(context, userRole),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 24),
-              // Основной контент
-              Expanded(
-                child: CustomScrollView(
-                  slivers: [
-                    SliverAppBar(
-                      expandedHeight: 160,
-                      pinned: true,
-                      flexibleSpace: FlexibleSpaceBar(
-                        title: const Text(
-                          'Event Marketplace',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        background: Container(
-                          decoration: const BoxDecoration(
-                            gradient: BrandColors.primaryGradient,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 20),
-                          _buildStatsSection(context),
-                          const SizedBox(height: 32),
-                          const RecommendationsSection(),
-                          const SizedBox(height: 100),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildLargeDesktopLayout(
-    BuildContext context,
-    UserRole userRole,
-    String roleString,
-  ) =>
-      Scaffold(
-        body: ResponsiveContainer(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Левая панель
-              SizedBox(
-                width: 350,
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    _buildWelcomeCard(context, userRole, roleString),
-                    const SizedBox(height: 24),
-                    _buildQuickActionsList(context, userRole),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 32),
-              // Основной контент
-              Expanded(
-                child: CustomScrollView(
-                  slivers: [
-                    SliverAppBar(
-                      expandedHeight: 180,
-                      pinned: true,
-                      flexibleSpace: FlexibleSpaceBar(
-                        title: const Text(
-                          'Event Marketplace',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        background: Container(
-                          decoration: const BoxDecoration(
-                            gradient: BrandColors.primaryGradient,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 20),
-                          _buildStatsSection(context),
-                          const SizedBox(height: 32),
-                          const RecommendationsSection(),
-                          const SizedBox(height: 100),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 32),
-              // Правая панель с дополнительной информацией
-              SizedBox(
-                width: 300,
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    _buildInfoPanel(context),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildWelcomeCard(
-    BuildContext context,
-    UserRole userRole,
-    String roleString,
-  ) =>
-      ResponsiveCard(
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: BrandColors.secondary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Icon(
-                userRole == UserRole.customer
-                    ? Icons.person_outline
-                    : Icons.work_outline,
-                size: 32,
-                color: BrandColors.secondary,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const ResponsiveText(
-                    'Добро пожаловать!',
-                    isTitle: true,
-                  ),
-                  const SizedBox(height: 4),
-                  ResponsiveText(
-                    'Вы вошли как $roleString',
-                    isSubtitle: true,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildQuickActionsGrid(
-    BuildContext context,
-    UserRole userRole,
-    int crossAxisCount,
-  ) =>
-      ResponsiveGrid(
-        crossAxisCount: crossAxisCount,
-        children: [
-          _buildQuickActionCard(
-            context,
-            userRole,
-            'Найти специалиста',
-            'Поиск по категориям',
-            Icons.search_rounded,
-            const LinearGradient(
-              colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)],
-            ),
-          ),
-          _buildQuickActionCard(
-            context,
-            userRole,
-            userRole == UserRole.customer ? 'Мои заявки' : 'Заявки клиентов',
-            userRole == UserRole.customer
-                ? 'Просмотр заявок'
-                : 'Управление заявками',
-            userRole == UserRole.customer
-                ? Icons.book_online_rounded
-                : Icons.assignment_rounded,
-            const LinearGradient(
-              colors: [Color(0xFF10B981), Color(0xFF059669)],
-            ),
-          ),
-          _buildQuickActionCard(
-            context,
-            userRole,
-            'Календарь',
-            'Расписание событий',
-            Icons.calendar_today_rounded,
-            const LinearGradient(
-              colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
-            ),
-          ),
-          _buildQuickActionCard(
-            context,
-            userRole,
-            'Сообщения',
-            'Общение с клиентами',
-            Icons.chat_bubble_outline_rounded,
-            const LinearGradient(
-              colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
-            ),
-          ),
+  Widget _buildHomeContent(AppUser? user) => CustomScrollView(
+        controller: _scrollController,
+        slivers: [
+          _buildSearchSection(user),
+          _buildSearchResults(),
+          _buildQuickFilters(),
+          _buildRecommendedSection(),
+          _buildCategoriesSection(),
+          _buildPopularSpecialists(),
+          const SliverToBoxAdapter(child: SizedBox(height: 100)),
         ],
       );
 
-  Widget _buildQuickActionsList(BuildContext context, UserRole userRole) =>
-      ResponsiveCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const ResponsiveText(
-              'Быстрые действия',
-              isTitle: true,
-            ),
-            const SizedBox(height: 16),
-            _buildQuickActionItem(
-              context,
-              userRole,
-              'Найти специалиста',
-              Icons.search_rounded,
-              const LinearGradient(
-                colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)],
+  Widget _buildSearchSection(AppUser? user) => SliverToBoxAdapter(
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: SlideTransition(
+            position: _slideAnimation,
+            child: Container(
+              margin: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                gradient: BrandColors.heroGradient,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: BrandColors.cardShadow,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.white.withOpacity(0.2),
+                        backgroundImage: user?.photoURL != null
+                            ? NetworkImage(user!.photoURL!)
+                            : null,
+                        child: user?.photoURL == null
+                            ? Text(
+                                user?.displayName?.isNotEmpty ?? false
+                                    ? user!.displayName![0].toUpperCase()
+                                    : 'Г',
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : null,
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _getGreeting(),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.white70,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              user?.displayName ?? 'Гость',
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.notifications_outlined,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                        onPressed: () {
+                          context.push('/notifications');
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Найди специалиста для своего праздника 🎉',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      height: 1.4,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: '🔍 Найдите специалиста...',
+                      hintStyle:
+                          TextStyle(color: Colors.white.withOpacity(0.8)),
+                      prefixIcon: const Icon(Icons.search, color: Colors.white),
+                      suffixIcon: _searchController.text.isNotEmpty
+                          ? IconButton(
+                              icon:
+                                  const Icon(Icons.clear, color: Colors.white),
+                              onPressed: () {
+                                _searchController.clear();
+                                ref.read(searchQueryProvider.notifier).state =
+                                    '';
+                              },
+                            )
+                          : null,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide:
+                            BorderSide(color: Colors.white.withOpacity(0.3)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide:
+                            BorderSide(color: Colors.white.withOpacity(0.3)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide:
+                            const BorderSide(color: Colors.white, width: 2),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white.withOpacity(0.15),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 16),
+                    ),
+                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                    onChanged: (query) {
+                      setState(() {});
+                      ref.read(searchQueryProvider.notifier).state = query;
+                    },
+                  ),
+                ],
               ),
             ),
-            _buildQuickActionItem(
-              context,
-              userRole,
-              userRole == UserRole.customer ? 'Мои заявки' : 'Заявки клиентов',
-              userRole == UserRole.customer
-                  ? Icons.book_online_rounded
-                  : Icons.assignment_rounded,
-              const LinearGradient(
-                colors: [Color(0xFF10B981), Color(0xFF059669)],
-              ),
-            ),
-            _buildQuickActionItem(
-              context,
-              userRole,
-              'Календарь',
-              Icons.calendar_today_rounded,
-              const LinearGradient(
-                colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
-              ),
-            ),
-            _buildQuickActionItem(
-              context,
-              userRole,
-              'Сообщения',
-              Icons.chat_bubble_outline_rounded,
-              const LinearGradient(
-                colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
-              ),
-            ),
-          ],
+          ),
         ),
       );
 
-  Widget _buildQuickActionItem(
-    BuildContext context,
-    UserRole userRole,
-    String title,
-    IconData icon,
-    LinearGradient gradient,
-  ) =>
-      Padding(
-        padding: const EdgeInsets.only(bottom: 12),
-        child: AnimatedButton(
-          onPressed: () {
-            // Навигация в зависимости от типа действия
-            switch (title) {
-              case 'Найти специалиста':
-                context.push(AppRoutes.search);
-                break;
-              case 'Мои заявки':
-                context.push(AppRoutes.myBookings);
-                break;
-              case 'Заявки клиентов':
-                context.push(AppRoutes.bookingRequests);
-                break;
-              case 'Календарь':
-                context.push(AppRoutes.calendar);
-                break;
-              case 'Сообщения':
-                context.push(AppRoutes.chat);
-                break;
-              default:
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('$title - функция в разработке')),
-                );
-            }
-          },
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              gradient: gradient,
-              borderRadius: BorderRadius.circular(12),
+  Widget _buildQuickFilters() => SliverToBoxAdapter(
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Популярные категории',
+                      style: context.textTheme.titleMedium,
+                    ),
+                    TextButton(
+                      onPressed: () => context.go('/search'),
+                      child: const Text('Все категории'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      _buildFilterChip('Ведущие', Icons.mic),
+                      const SizedBox(width: 8),
+                      _buildFilterChip('Фотографы', Icons.camera_alt),
+                      const SizedBox(width: 8),
+                      _buildFilterChip('Диджеи', Icons.music_note),
+                      const SizedBox(width: 8),
+                      _buildFilterChip('Оформители', Icons.local_florist),
+                      const SizedBox(width: 8),
+                      _buildFilterChip('Кавер-группы', Icons.group),
+                      const SizedBox(width: 8),
+                      _buildFilterChip('Видеографы', Icons.videocam),
+                      const SizedBox(width: 8),
+                      _buildFilterChip('Аниматоры', Icons.child_care),
+                      const SizedBox(width: 8),
+                      _buildFilterChip('Кейтеринг', Icons.restaurant),
+                    ],
+                  ),
+                ),
+              ],
             ),
+          ),
+        ),
+      );
+
+  Widget _buildFilterChip(String label, IconData icon) => Container(
+        margin: const EdgeInsets.only(right: 8),
+        child: FilterChip(
+          label: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 16, color: BrandColors.primary),
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          onSelected: (selected) {
+            context.push('/search?category=${Uri.encodeComponent(label)}');
+          },
+          backgroundColor: Colors.white,
+          selectedColor: BrandColors.primaryLight,
+          checkmarkColor: BrandColors.primary,
+          side: BorderSide(color: Colors.grey.shade300),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        ),
+      );
+
+  Widget _buildSearchResults() => SliverToBoxAdapter(
+        child: Consumer(
+          builder: (context, ref, _) {
+            final searchQuery = ref.watch(searchQueryProvider);
+
+            // Используем тестовые данные для поиска
+            final specialists = _testDataService.getSpecialists();
+            final filteredSpecialists = specialists.where((specialist) {
+              if (searchQuery.isEmpty) {
+                return true; // Показываем всех специалистов, если поиск пустой
+              }
+              final query = searchQuery.toLowerCase();
+              return (specialist['name'] as String)
+                      .toLowerCase()
+                      .contains(query) ||
+                  (specialist['category'] as String)
+                      .toLowerCase()
+                      .contains(query) ||
+                  (specialist['city'] as String)
+                      .toLowerCase()
+                      .contains(query) ||
+                  (specialist['about'] as String).toLowerCase().contains(query);
+            }).toList();
+
+            if (filteredSpecialists.isEmpty) {
+              return Container(
+                margin: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: context.surfaceColor,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .surfaceContainerHighest),
+                ),
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.search_off,
+                      size: 48,
+                      color: Colors.grey.shade400,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Никого не найдено 😅',
+                      style: context.textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Попробуйте изменить поисковый запрос',
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        searchQuery.isEmpty
+                            ? 'Все специалисты (${filteredSpecialists.length})'
+                            : 'Найдено специалистов: ${filteredSpecialists.length}',
+                        style: context.textTheme.titleMedium,
+                      ),
+                      TextButton(
+                        onPressed: () => context.go('/search'),
+                        child: const Text('Все результаты'),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8),
+                ...filteredSpecialists.take(5).map(
+                      (specialistData) => Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 6),
+                        child: Card(
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(16),
+                            onTap: () {
+                              context.push(
+                                  '/specialist/specialist_${filteredSpecialists.indexOf(specialistData) + 1}');
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        specialistData['avatarUrl'] as String),
+                                    radius: 30,
+                                    backgroundColor:
+                                        BrandColors.primary.withOpacity(0.1),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          specialistData['name'] as String,
+                                          style: context.textTheme.titleMedium
+                                              ?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          '${specialistData['category'] as String} • ${specialistData['city'] as String}',
+                                          style: context.textTheme.bodyMedium
+                                              ?.copyWith(
+                                            color: BrandColors.textSecondary,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.star,
+                                                color: Colors.amber, size: 16),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              '${specialistData['rating']}',
+                                              style:
+                                                  context.textTheme.bodySmall,
+                                            ),
+                                            const SizedBox(width: 16),
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8,
+                                                      vertical: 4),
+                                              decoration: BoxDecoration(
+                                                color: BrandColors.primaryLight,
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              child: Text(
+                                                specialistData['priceRange']
+                                                    as String,
+                                                style: context
+                                                    .textTheme.bodySmall
+                                                    ?.copyWith(
+                                                  color: BrandColors.primary,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const Icon(Icons.arrow_forward_ios,
+                                      size: 16,
+                                      color: BrandColors.textSecondary),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                if (filteredSpecialists.length > 5)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: TextButton(
+                      onPressed: () => context.go('/search'),
+                      child: Text(
+                          'Показать все ${filteredSpecialists.length} результатов'),
+                    ),
+                  ),
+              ],
+            );
+          },
+        ),
+      );
+
+  Widget _buildQuickActions() => SliverToBoxAdapter(
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
-                Icon(icon, color: Colors.white, size: 24),
+                Expanded(
+                  child: _buildQuickActionCard(
+                    icon: Icons.search,
+                    title: 'Найти специалиста',
+                    subtitle: 'Поиск по категориям',
+                    onTap: () => context.push('/search'),
+                    color: BrandColors.primary,
+                  ),
+                ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: ResponsiveText(
-                    title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
+                  child: _buildQuickActionCard(
+                    icon: Icons.add_task,
+                    title: 'Создать заявку',
+                    subtitle: 'Разместить задачу',
+                    onTap: () {
+                      context.push('/booking-form');
+                    },
+                    color: BrandColors.secondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+  Widget _buildQuickActionCard({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+    required Color color,
+  }) =>
+      GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: context.surfaceColor,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+                color: Theme.of(context).colorScheme.surfaceContainerHighest),
+            boxShadow: BrandColors.cardShadow,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  icon,
+                  color: color,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                title,
+                style: context.textTheme.titleMedium,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                subtitle,
+                style: context.textTheme.bodySmall,
+              ),
+            ],
+          ),
+        ),
+      );
+
+  Widget _buildRecommendedSection() => SliverToBoxAdapter(
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Рекомендуем вам',
+                      style: context.textTheme.headlineSmall,
+                    ),
+                    TextButton(
+                      onPressed: () => context.push('/search'),
+                      child: const Text('Смотреть все'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  height: 280,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 5,
+                    itemBuilder: (context, index) => Container(
+                      width: 200,
+                      margin: const EdgeInsets.only(right: 16),
+                      child: _buildRecommendedCard(index),
                     ),
                   ),
                 ),
@@ -787,302 +636,283 @@ class HomeScreen extends ConsumerWidget {
         ),
       );
 
-  Widget _buildStatsSection(BuildContext context) => ResponsiveCard(
+  Widget _buildRecommendedCard(int index) {
+    final specialists = _testDataService.getSpecialists();
+    final specialist = specialists[index % specialists.length];
+
+    return GestureDetector(
+      onTap: () {
+        context.push('/specialist/specialist_${index + 1}');
+      },
+      child: Card(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const ResponsiveText(
-              'Статистика',
-              isTitle: true,
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildStatItemStub(
-                  context,
-                  'Активных заявок',
-                  '0',
-                  Icons.assignment_rounded,
-                  BrandColors.primary,
-                ),
-                _buildStatItemStub(
-                  context,
-                  'Завершенных',
-                  '0',
-                  Icons.check_circle_rounded,
-                  BrandColors.secondary,
-                ),
-                _buildStatItemStub(
-                  context,
-                  'В ожидании',
-                  '0',
-                  Icons.schedule_rounded,
-                  BrandColors.accent,
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildInfoPanel(BuildContext context) => ResponsiveCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const ResponsiveText(
-              'Информация',
-              isTitle: true,
-            ),
-            const SizedBox(height: 16),
-            _buildInfoItem('Версия приложения', '1.0.0'),
-            _buildInfoItem('Последнее обновление', 'Сегодня'),
-            _buildInfoItem('Активных пользователей', '1,234'),
-          ],
-        ),
-      );
-
-  Widget _buildInfoItem(String label, String value) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            ResponsiveText(label, isSubtitle: true),
-            ResponsiveText(
-              value,
-              style: const TextStyle(fontWeight: FontWeight.w500),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildQuickActionCard(
-    BuildContext context,
-    UserRole userRole,
-    String title,
-    String subtitle,
-    IconData icon,
-    LinearGradient gradient,
-  ) =>
-      AnimatedButton(
-        onPressed: () {
-          // Навигация в зависимости от типа действия
-          switch (title) {
-            case 'Найти специалиста':
-              context.push(AppRoutes.search);
-              break;
-            case 'Мои заявки':
-              context.push(AppRoutes.myBookings);
-              break;
-            case 'Заявки клиентов':
-              context.push(AppRoutes.bookingRequests);
-              break;
-            case 'Календарь':
-              context.push(AppRoutes.calendar);
-              break;
-            case 'Сообщения':
-              context.push(AppRoutes.chat);
-              break;
-            default:
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('$title - функция в разработке')),
-              );
-          }
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: gradient,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: gradient.colors.first.withOpacity(0.3),
-                blurRadius: 15,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(12),
+            Expanded(
+              flex: 3,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(16),
                   ),
-                  child: Icon(icon, color: Colors.white, size: 28),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ResponsiveText(
-                      title,
+                child: Center(
+                  child: CircleAvatar(
+                    radius: 40,
+                    backgroundColor: context.primaryColor,
+                    child: Text(
+                      specialist['name'].toString().isNotEmpty
+                          ? specialist['name'].toString()[0].toUpperCase()
+                          : 'С',
                       style: const TextStyle(
+                        fontSize: 24,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      specialist['name'] as String,
+                      style: context.textTheme.titleMedium,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     const SizedBox(height: 4),
-                    ResponsiveText(
-                      subtitle,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.8),
-                      ),
+                    Text(
+                      specialist['category'] as String,
+                      style: context.textTheme.bodySmall,
+                    ),
+                    const Spacer(),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          specialist['rating'].toString(),
+                          style: context.textTheme.bodySmall,
+                        ),
+                        const Spacer(),
+                        Text(
+                          '${specialist['price'].toInt()}₽/ч',
+                          style: context.textTheme.titleSmall?.copyWith(
+                            color: context.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoriesSection() {
+    final categories = [
+      {'icon': Icons.cake, 'name': 'Торты', 'color': BrandColors.primary},
+      {
+        'icon': Icons.music_note,
+        'name': 'Музыка',
+        'color': BrandColors.secondary
+      },
+      {'icon': Icons.photo_camera, 'name': 'Фото', 'color': BrandColors.accent},
+      {
+        'icon': Icons.local_florist,
+        'name': 'Цветы',
+        'color': BrandColors.success
+      },
+      {
+        'icon': Icons.design_services,
+        'name': 'Декор',
+        'color': BrandColors.warning
+      },
+      {'icon': Icons.videocam, 'name': 'Видео', 'color': BrandColors.info},
+    ];
+
+    return SliverToBoxAdapter(
+      child: FadeTransition(
+        opacity: _fadeAnimation,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Популярные категории',
+                style: context.textTheme.headlineSmall,
+              ),
+              const SizedBox(height: 16),
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 1.2,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                ),
+                itemCount: categories.length,
+                itemBuilder: (context, index) {
+                  final category = categories[index];
+                  return _buildCategoryCard(
+                    icon: category['icon']! as IconData,
+                    name: category['name']! as String,
+                    color: category['color']! as Color,
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryCard({
+    required IconData icon,
+    required String name,
+    required Color color,
+  }) =>
+      GestureDetector(
+        onTap: () {
+          context.push('/search?category=${Uri.encodeComponent(name)}');
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: context.surfaceColor,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+                color: Theme.of(context).colorScheme.surfaceContainerHighest),
+            boxShadow: BrandColors.cardShadow,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  icon,
+                  color: color,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                name,
+                style: context.textTheme.bodySmall,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+
+  Widget _buildPopularSpecialists() => SliverToBoxAdapter(
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Популярные специалисты',
+                      style: context.textTheme.headlineSmall,
+                    ),
+                    TextButton(
+                      onPressed: () => context.push('/search'),
+                      child: const Text('Смотреть все'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                ...List.generate(5, (index) {
+                  final specialists = _testDataService.getSpecialists();
+                  final specialistData =
+                      specialists[index % specialists.length];
+                  final specialist = Specialist.fromMap(specialistData);
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: ModernSpecialistCard(
+                      specialist: specialist,
+                    ),
+                  );
+                }),
               ],
             ),
           ),
         ),
       );
 
-  Widget _buildModernQuickActionCard(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required LinearGradient gradient,
-    required VoidCallback onTap,
-  }) =>
-      Container(
-        decoration: BoxDecoration(
-          gradient: gradient,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: gradient.colors.first.withOpacity(0.3),
-              blurRadius: 15,
-              offset: const Offset(0, 8),
+  Widget _buildLoadingState() => const Center(
+        child: CircularProgressIndicator(),
+      );
+
+  Widget _buildErrorState(String error) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.error_outline,
+              size: 64,
+              color: BrandColors.error,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Ошибка загрузки',
+              style: context.textTheme.headlineSmall,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              error,
+              style: context.textTheme.bodyMedium,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            FilledButton(
+              onPressed: () {
+                ref.invalidate(currentUserProvider);
+              },
+              child: const Text('Повторить'),
             ),
           ],
         ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: onTap,
-            borderRadius: BorderRadius.circular(20),
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(icon, color: Colors.white, size: 28),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        subtitle,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white.withOpacity(0.8),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
       );
 
-  Widget _buildModernStatItem(
-    BuildContext context,
-    String label,
-    String value,
-    IconData icon,
-    Color color,
-  ) =>
-      Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icon, color: color, size: 24),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[600],
-              fontWeight: FontWeight.w500,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      );
-
-  Widget _buildStatItemStub(
-    BuildContext context,
-    String title,
-    String value,
-    IconData icon,
-    Color color,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[600],
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) {
+      return 'Доброе утро';
+    } else if (hour < 18) {
+      return 'Добрый день';
+    } else {
+      return 'Добрый вечер';
+    }
   }
 }

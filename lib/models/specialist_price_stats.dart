@@ -25,7 +25,7 @@ class SpecialistPriceStats {
       minPrice: (data['minPrice'] as num).toDouble(),
       maxPrice: (data['maxPrice'] as num).toDouble(),
       averagePrice: (data['averagePrice'] as num).toDouble(),
-      completedBookings: data['completedBookings'] ?? 0,
+      completedBookings: data['completedBookings'] as int? ?? 0,
       totalRevenue: (data['totalRevenue'] as num).toDouble(),
       lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
       additionalStats: data['additionalStats'] != null
@@ -43,7 +43,7 @@ class SpecialistPriceStats {
         minPrice: (data['minPrice'] as num).toDouble(),
         maxPrice: (data['maxPrice'] as num).toDouble(),
         averagePrice: (data['averagePrice'] as num).toDouble(),
-        completedBookings: data['completedBookings'] ?? 0,
+        completedBookings: data['completedBookings'] as int? ?? 0,
         totalRevenue: (data['totalRevenue'] as num).toDouble(),
         lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
         additionalStats: data['additionalStats'] != null

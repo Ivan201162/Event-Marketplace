@@ -138,7 +138,7 @@ class _ContentManagementScreenState
                     ),
                   ],
                   onChanged: (value) {
-                    // TODO: Реализовать фильтрацию
+                    // TODO(developer): Реализовать фильтрацию
                   },
                 ),
                 const SizedBox(width: 8),
@@ -680,7 +680,7 @@ class _ContentManagementScreenState
 
     try {
       await _contentService.initialize();
-      // TODO: Загрузить медиа и галереи для текущего пользователя
+      // TODO(developer): Загрузить медиа и галереи для текущего пользователя
       setState(() {
         _mediaContent = [];
         _galleries = [];
@@ -700,7 +700,7 @@ class _ContentManagementScreenState
   }
 
   void _showMediaDetails(MediaContent media) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(media.title),
@@ -733,7 +733,7 @@ class _ContentManagementScreenState
   }
 
   void _addToGallery(MediaContent media) {
-    // TODO: Реализовать добавление в галерею
+    // TODO(developer): Реализовать добавление в галерею
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content:
@@ -743,7 +743,7 @@ class _ContentManagementScreenState
   }
 
   void _deleteMedia(MediaContent media) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить медиа'),
@@ -791,7 +791,7 @@ class _ContentManagementScreenState
     var selectedType = GalleryType.portfolio;
     var isPublic = false;
 
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
@@ -910,7 +910,7 @@ class _ContentManagementScreenState
   }
 
   void _editGallery(ContentGallery gallery) {
-    // TODO: Реализовать редактирование галереи
+    // TODO(developer): Реализовать редактирование галереи
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content:
@@ -920,7 +920,7 @@ class _ContentManagementScreenState
   }
 
   void _manageGalleryMedia(ContentGallery gallery) {
-    // TODO: Реализовать управление медиа в галерее
+    // TODO(developer): Реализовать управление медиа в галерее
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -931,7 +931,7 @@ class _ContentManagementScreenState
   }
 
   void _deleteGallery(ContentGallery gallery) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить галерею'),

@@ -98,7 +98,7 @@ class _TopIdeasScreenState extends ConsumerState<TopIdeasScreen> {
             const SizedBox(height: 16),
             ElevatedButton.icon(
               onPressed: () {
-                // TODO: Перейти к экрану идей
+                // TODO(developer): Перейти к экрану идей
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Переход к экрану идей')),
                 );
@@ -113,10 +113,10 @@ class _TopIdeasScreenState extends ConsumerState<TopIdeasScreen> {
   void _showIdeaDetail(Idea idea) {
     if (widget.userId != null) {
       Navigator.of(context).push(
-        MaterialPageRoute(
+        MaterialPageRoute<void>(
           builder: (context) => IdeaDetailScreen(
             idea: idea,
-            userId: widget.userId!,
+            userId: widget.userId,
           ),
         ),
       );
@@ -136,7 +136,7 @@ class _TopIdeasScreenState extends ConsumerState<TopIdeasScreen> {
   }
 
   void _shareIdea(Idea idea) {
-    // TODO: Реализовать шаринг идеи
+    // TODO(developer): Реализовать шаринг идеи
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Идея скопирована в буфер обмена')),
     );
@@ -262,7 +262,7 @@ class _IdeaCategoriesScreenState extends ConsumerState<IdeaCategoriesScreen> {
   }
 
   void _showCategoryIdeas(String category) {
-    // TODO: Реализовать экран идей по категории
+    // TODO(developer): Реализовать экран идей по категории
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Идеи категории: $category')),
     );
@@ -367,7 +367,7 @@ class _IdeaSearchScreenState extends ConsumerState<IdeaSearchScreen> {
       _searchQuery = query;
     });
 
-    // TODO: Реализовать поиск идей
+    // TODO(developer): Реализовать поиск идей
     Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         _isSearching = false;
@@ -379,10 +379,10 @@ class _IdeaSearchScreenState extends ConsumerState<IdeaSearchScreen> {
   void _showIdeaDetail(Idea idea) {
     if (widget.userId != null) {
       Navigator.of(context).push(
-        MaterialPageRoute(
+        MaterialPageRoute<void>(
           builder: (context) => IdeaDetailScreen(
             idea: idea,
-            userId: widget.userId!,
+            userId: widget.userId,
           ),
         ),
       );
@@ -402,7 +402,7 @@ class _IdeaSearchScreenState extends ConsumerState<IdeaSearchScreen> {
   }
 
   void _shareIdea(Idea idea) {
-    // TODO: Реализовать шаринг идеи
+    // TODO(developer): Реализовать шаринг идеи
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Идея скопирована в буфер обмена')),
     );

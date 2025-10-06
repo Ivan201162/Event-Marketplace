@@ -37,7 +37,7 @@ class _ChatBotWidgetState extends ConsumerState<ChatBotWidget> {
   }
 
   void _addWelcomeMessage() {
-    final welcomeResponse = _botService.getWelcomeMessage();
+    final welcomeResponse = _botService.getWelcomeMessage('default_chat');
     _messages.add(
       BotMessage(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -220,12 +220,14 @@ class _ChatBotWidgetState extends ConsumerState<ChatBotWidget> {
                                       decoration: BoxDecoration(
                                         color: message.isBot
                                             ? Colors.blue[50]
-                                            : Colors.white.withOpacity(0.2),
+                                            : Colors.white
+                                                .withValues(alpha: 0.2),
                                         borderRadius: BorderRadius.circular(16),
                                         border: Border.all(
                                           color: message.isBot
                                               ? Colors.blue[200]!
-                                              : Colors.white.withOpacity(0.3),
+                                              : Colors.white
+                                                  .withValues(alpha: 0.3),
                                         ),
                                       ),
                                       child: Text(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/event_providers.dart';
+
 import '../models/event.dart';
 import '../models/event_filter.dart';
 import '../widgets/event_card.dart';
@@ -419,7 +419,7 @@ class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
   /// Перейти к деталям мероприятия
   void _navigateToEventDetail(Event event) {
     Navigator.of(context).push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => EventDetailScreen(event: event),
       ),
     );

@@ -78,7 +78,8 @@ class _IntegrationDetailScreenState
                     width: 64,
                     height: 64,
                     decoration: BoxDecoration(
-                      color: widget.integration.typeColor.withOpacity(0.1),
+                      color:
+                          widget.integration.typeColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -109,12 +110,12 @@ class _IntegrationDetailScreenState
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color:
-                                widget.integration.statusColor.withOpacity(0.1),
+                            color: widget.integration.statusColor
+                                .withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
                               color: widget.integration.statusColor
-                                  .withOpacity(0.3),
+                                  .withValues(alpha: 0.3),
                             ),
                           ),
                           child: Text(
@@ -268,7 +269,7 @@ class _IntegrationDetailScreenState
                 subtitle: const Text('Разрешить использование этой интеграции'),
                 value: widget.integration.isEnabled,
                 onChanged: (value) {
-                  // TODO: Реализовать включение/выключение интеграции
+                  // TODO(developer): Реализовать включение/выключение интеграции
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Настройка сохранена')),
                   );
@@ -292,7 +293,7 @@ class _IntegrationDetailScreenState
                     subtitle: Text(entry.value.toString()),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {
-                      // TODO: Реализовать редактирование настроек
+                      // TODO(developer): Реализовать редактирование настроек
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Редактирование ${entry.key}')),
                       );
@@ -533,7 +534,7 @@ class _IntegrationDetailScreenState
   }
 
   void _shareIntegration() {
-    // TODO: Реализовать шаринг интеграции
+    // TODO(developer): Реализовать шаринг интеграции
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Интеграция скопирована в буфер обмена')),
     );

@@ -175,7 +175,7 @@ class AnalyticsNavigator extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) => Navigator(
         onGenerateRoute: (settings) {
           _trackNavigation(ref, settings.name ?? 'unknown');
-          return MaterialPageRoute(
+          return MaterialPageRoute<void>(
             builder: (context) => child,
             settings: settings,
           );

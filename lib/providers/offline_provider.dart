@@ -361,7 +361,7 @@ class SyncNotifier extends Notifier<SyncState> {
         currentOperation: 'Синхронизация пользовательских данных...',
       );
 
-      // TODO: Реализовать синхронизацию пользовательских данных
+      // TODO(developer): Реализовать синхронизацию пользовательских данных
       await Future.delayed(const Duration(seconds: 1));
 
       state = state.copyWith(
@@ -369,7 +369,7 @@ class SyncNotifier extends Notifier<SyncState> {
         currentOperation: 'Синхронизация бронирований...',
       );
 
-      // TODO: Реализовать синхронизацию бронирований
+      // TODO(developer): Реализовать синхронизацию бронирований
       await Future.delayed(const Duration(seconds: 1));
 
       state = state.copyWith(
@@ -377,7 +377,7 @@ class SyncNotifier extends Notifier<SyncState> {
         currentOperation: 'Синхронизация сообщений...',
       );
 
-      // TODO: Реализовать синхронизацию сообщений
+      // TODO(developer): Реализовать синхронизацию сообщений
       await Future.delayed(const Duration(seconds: 1));
 
       state = state.copyWith(

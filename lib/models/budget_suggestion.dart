@@ -79,7 +79,8 @@ class BudgetSuggestion {
             : null,
         metadata: data['metadata'] != null
             ? Map<String, dynamic>.from(
-                data['metadata'] as Map<dynamic, dynamic>)
+                data['metadata'] as Map<dynamic, dynamic>,
+              )
             : null,
       );
   final String id;
@@ -233,7 +234,8 @@ class BudgetSuggestionItem {
         reason: data['reason'] as String?,
         metadata: data['metadata'] != null
             ? Map<String, dynamic>.from(
-                data['metadata'] as Map<dynamic, dynamic>)
+                data['metadata'] as Map<dynamic, dynamic>,
+              )
             : null,
       );
   final String id;

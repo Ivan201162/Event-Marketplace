@@ -275,7 +275,7 @@ class ErrorLoggerService {
   /// Получить текущий экран
   String _getCurrentScreen() {
     try {
-      // TODO: Реализовать получение текущего экрана из роутера
+      // TODO(developer): Реализовать получение текущего экрана из роутера
       return 'Unknown screen';
     } catch (e) {
       return 'Unknown screen';
@@ -285,7 +285,7 @@ class ErrorLoggerService {
   /// Проверить, включено ли логирование
   Future<bool> _isLoggingEnabled() async {
     try {
-      // TODO: Реализовать проверку настроек логирования
+      // TODO(developer): Реализовать проверку настроек логирования
       return true;
     } catch (e) {
       return false;

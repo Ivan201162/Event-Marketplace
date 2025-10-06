@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/user_management.dart';
 import '../models/user.dart';
+import '../models/user_management.dart';
 import '../services/user_management_service.dart';
 import '../ui/ui.dart' hide ResponsiveCard;
 import '../widgets/responsive_layout.dart';
@@ -147,7 +147,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
                     ),
                   ],
                   onChanged: (value) {
-                    // TODO: Реализовать фильтрацию
+                    // TODO(developer): Реализовать фильтрацию
                   },
                 ),
                 const SizedBox(width: 8),
@@ -890,7 +890,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
   }
 
   void _viewUser(ManagedUser user) {
-    // TODO: Реализовать просмотр пользователя
+    // TODO(developer): Реализовать просмотр пользователя
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Просмотр пользователя "${user.email}" будет реализован'),
@@ -899,7 +899,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
   }
 
   void _editUser(ManagedUser user) {
-    // TODO: Реализовать редактирование пользователя
+    // TODO(developer): Реализовать редактирование пользователя
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -910,7 +910,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
   }
 
   void _blockUser(ManagedUser user) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) {
         final reasonController = TextEditingController();
@@ -944,7 +944,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
                   await _userService.blockUser(
                     user.id,
                     reasonController.text,
-                    'current_user', // TODO: Получить ID текущего пользователя
+                    'current_user', // TODO(developer): Получить ID текущего пользователя
                   );
                   _loadData();
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -975,7 +975,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
   }
 
   void _unblockUser(ManagedUser user) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Разблокировать пользователя'),
@@ -991,7 +991,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
               try {
                 await _userService.unblockUser(
                   user.id,
-                  'current_user', // TODO: Получить ID текущего пользователя
+                  'current_user', // TODO(developer): Получить ID текущего пользователя
                 );
                 _loadData();
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -1021,7 +1021,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
   }
 
   void _manageUserPermissions(ManagedUser user) {
-    // TODO: Реализовать управление разрешениями пользователя
+    // TODO(developer): Реализовать управление разрешениями пользователя
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -1032,7 +1032,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
   }
 
   void _viewUserActions(ManagedUser user) {
-    // TODO: Реализовать просмотр действий пользователя
+    // TODO(developer): Реализовать просмотр действий пользователя
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -1057,7 +1057,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
   }
 
   void _viewRole(UserRoleDefinition role) {
-    // TODO: Реализовать просмотр роли
+    // TODO(developer): Реализовать просмотр роли
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Просмотр роли "${role.name}" будет реализован'),
@@ -1066,7 +1066,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
   }
 
   void _editRole(UserRoleDefinition role) {
-    // TODO: Реализовать редактирование роли
+    // TODO(developer): Реализовать редактирование роли
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Редактирование роли "${role.name}" будет реализовано'),
@@ -1075,7 +1075,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
   }
 
   void _deleteRole(UserRoleDefinition role) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить роль'),
@@ -1091,7 +1091,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
               try {
                 await _userService.deleteRole(
                   role.id,
-                  'current_user', // TODO: Получить ID текущего пользователя
+                  'current_user', // TODO(developer): Получить ID текущего пользователя
                 );
                 _loadData();
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -1121,7 +1121,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
   }
 
   void _showCreateRoleDialog() {
-    // TODO: Реализовать диалог создания роли
+    // TODO(developer): Реализовать диалог создания роли
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Создание роли будет реализовано'),
@@ -1130,7 +1130,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
   }
 
   void _showCreatePermissionDialog() {
-    // TODO: Реализовать диалог создания разрешения
+    // TODO(developer): Реализовать диалог создания разрешения
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Создание разрешения будет реализовано'),

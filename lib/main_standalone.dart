@@ -304,7 +304,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           action: SnackBarAction(
                             label: 'Забронировать',
                             onPressed: () {
-                              // TODO: Реализовать навигацию к форме бронирования
+                              // TODO(developer): Реализовать навигацию к форме бронирования
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content:

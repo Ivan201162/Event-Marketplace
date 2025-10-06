@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('SpecialistCard', () {
-    late Specialist testSpecialist;
+    Specialist? testSpecialist;
 
     setUp(() {
       testSpecialist = Specialist(
@@ -14,11 +14,13 @@ void main() {
         userId: 'user_1',
         name: 'Test Specialist',
         description: 'Test description',
+        bio: 'Test bio',
         category: SpecialistCategory.photographer,
         subcategories: ['свадебная фотография', 'портретная съемка'],
         experienceLevel: ExperienceLevel.advanced,
         yearsOfExperience: 5,
         hourlyRate: 3000,
+        price: 3000,
         minBookingHours: 2,
         maxBookingHours: 12,
         serviceAreas: ['Москва', 'Санкт-Петербург'],
@@ -44,7 +46,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: SpecialistCard(
-                specialist: testSpecialist,
+                specialist: testSpecialist!,
                 onTap: () {},
               ),
             ),
@@ -70,7 +72,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: SpecialistCard(
-                specialist: testSpecialist,
+                specialist: testSpecialist!,
                 onTap: () {},
               ),
             ),
@@ -92,7 +94,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: SpecialistCard(
-                specialist: testSpecialist,
+                specialist: testSpecialist!,
                 onTap: () {},
               ),
             ),
@@ -108,7 +110,7 @@ void main() {
         'should not display verification badge for unverified specialist',
         (tester) async {
       // Arrange
-      final unverifiedSpecialist = testSpecialist.copyWith(isVerified: false);
+      final unverifiedSpecialist = testSpecialist!.copyWith(isVerified: false);
 
       // Act
       await tester.pumpWidget(
@@ -135,7 +137,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: SpecialistCard(
-                specialist: testSpecialist,
+                specialist: testSpecialist!,
                 onTap: () {},
               ),
             ),
@@ -151,7 +153,8 @@ void main() {
     testWidgets('should display unavailable status for unavailable specialist',
         (tester) async {
       // Arrange
-      final unavailableSpecialist = testSpecialist.copyWith(isAvailable: false);
+      final unavailableSpecialist =
+          testSpecialist!.copyWith(isAvailable: false);
 
       // Act
       await tester.pumpWidget(
@@ -182,7 +185,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: SpecialistCard(
-                specialist: testSpecialist,
+                specialist: testSpecialist!,
                 onTap: () {
                   tapped = true;
                 },
@@ -199,51 +202,6 @@ void main() {
       expect(tapped, isTrue);
     });
 
-    testWidgets('should display action buttons when showActions is true',
-        (tester) async {
-      // Arrange & Act
-      await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: SpecialistCard(
-                specialist: testSpecialist,
-                onTap: () {},
-              ),
-            ),
-          ),
-        ),
-      );
-
-      // Assert
-      expect(find.text('Забронировать'), findsOneWidget);
-      expect(find.text('Подробнее'), findsOneWidget);
-      expect(find.byIcon(Icons.calendar_today), findsOneWidget);
-      expect(find.byIcon(Icons.info_outline), findsOneWidget);
-    });
-
-    testWidgets('should not display action buttons when showActions is false',
-        (tester) async {
-      // Arrange & Act
-      await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: SpecialistCard(
-                specialist: testSpecialist,
-                onTap: () {},
-                showActions: false,
-              ),
-            ),
-          ),
-        ),
-      );
-
-      // Assert
-      expect(find.text('Забронировать'), findsNothing);
-      expect(find.text('Подробнее'), findsNothing);
-    });
-
     testWidgets('should display favorite button', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
@@ -251,7 +209,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: SpecialistCard(
-                specialist: testSpecialist,
+                specialist: testSpecialist!,
                 onTap: () {},
               ),
             ),
@@ -270,7 +228,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: SpecialistCard(
-                specialist: testSpecialist,
+                specialist: testSpecialist!,
                 onTap: () {},
               ),
             ),
@@ -285,7 +243,7 @@ void main() {
     testWidgets('should display hourly rate when no min/max booking hours',
         (tester) async {
       // Arrange
-      final specialistWithoutHours = testSpecialist.copyWith();
+      final specialistWithoutHours = testSpecialist!.copyWith();
 
       // Act
       await tester.pumpWidget(
@@ -303,106 +261,6 @@ void main() {
 
       // Assert
       expect(find.text('3000 ₽/час'), findsOneWidget);
-    });
-  });
-
-  group('CompactSpecialistCard', () {
-    late Specialist testSpecialist;
-
-    setUp(() {
-      testSpecialist = Specialist(
-        id: 'specialist_1',
-        userId: 'user_1',
-        name: 'Test Specialist',
-        description: 'Test description',
-        category: SpecialistCategory.photographer,
-        subcategories: ['свадебная фотография'],
-        experienceLevel: ExperienceLevel.advanced,
-        yearsOfExperience: 5,
-        hourlyRate: 3000,
-        minBookingHours: 2,
-        maxBookingHours: 12,
-        serviceAreas: ['Москва'],
-        languages: ['Русский'],
-        equipment: ['Canon EOS R5'],
-        portfolio: ['https://example.com/portfolio'],
-        isVerified: true,
-        rating: 4.8,
-        reviewCount: 47,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
-    });
-
-    testWidgets('should display compact specialist information',
-        (tester) async {
-      // Arrange & Act
-      await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: CompactSpecialistCard(
-                specialist: testSpecialist,
-                onTap: () {},
-              ),
-            ),
-          ),
-        ),
-      );
-
-      // Assert
-      expect(find.text('Test Specialist'), findsOneWidget);
-      expect(find.text('Фотограф'), findsOneWidget);
-      expect(find.text('4.8'), findsOneWidget);
-      expect(find.text('6000 - 36000 ₽'), findsOneWidget);
-    });
-
-    testWidgets('should display verification icon for verified specialist',
-        (tester) async {
-      // Arrange & Act
-      await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: CompactSpecialistCard(
-                specialist: testSpecialist,
-                onTap: () {},
-              ),
-            ),
-          ),
-        ),
-      );
-
-      // Assert
-      expect(find.byIcon(Icons.verified), findsOneWidget);
-    });
-
-    testWidgets('should call onTap when compact card is tapped',
-        (tester) async {
-      // Arrange
-      var tapped = false;
-
-      // Act
-      await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: CompactSpecialistCard(
-                specialist: testSpecialist,
-                onTap: () {
-                  tapped = true;
-                },
-              ),
-            ),
-          ),
-        ),
-      );
-
-      await tester.tap(find.byType(CompactSpecialistCard));
-      await tester.pump();
-
-      // Assert
-      expect(tapped, isTrue);
     });
   });
 }

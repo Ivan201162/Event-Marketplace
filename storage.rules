@@ -40,7 +40,17 @@ service firebase.storage {
         && isEventOwner(eventId);
     }
     
-    // Вложения чатов
+    // Вложения чатов (новая структура)
+    match /chat_files/{chatId}/{allPaths=**} {
+      allow read: if request.auth != null
+        && isChatParticipant(chatId);
+      allow write: if request.auth != null
+        && isChatParticipant(chatId)
+        && isValidFileType(resource.contentType)
+        && resource.size <= 25 * 1024 * 1024; // 25 MB
+    }
+    
+    // Старая структура чатов (для совместимости)
     match /chat/{chatId}/{allPaths=**} {
       allow read: if request.auth != null
         && isChatParticipant(chatId);
@@ -121,6 +131,6 @@ service firebase.storage {
   // Проверка участника чата
   function isChatParticipant(chatId) {
     let chatData = firestore.get(/databases/(default)/documents/chats/$(chatId)).data;
-    return chatData.participants[request.auth.uid] != null;
+    return request.auth.uid in chatData.participants;
   }
 }

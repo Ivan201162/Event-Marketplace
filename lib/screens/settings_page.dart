@@ -6,8 +6,6 @@ import '../core/i18n/app_localizations.dart';
 import '../models/user.dart';
 import '../providers/auth_providers.dart';
 import '../providers/locale_provider.dart';
-import '../providers/theme_provider.dart';
-import '../widgets/theme_switch_widget.dart';
 import 'admin_panel_screen.dart';
 
 /// Экран настроек
@@ -139,7 +137,7 @@ class SettingsPage extends ConsumerWidget {
                             color: Theme.of(context)
                                 .colorScheme
                                 .primary
-                                .withOpacity(0.1),
+                                .withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -178,9 +176,10 @@ class SettingsPage extends ConsumerWidget {
               SwitchListTile(
                 title: const Text('Push-уведомления'),
                 subtitle: const Text('Получать уведомления о новых событиях'),
-                value: true, // TODO: Получить из настроек пользователя
+                value:
+                    true, // TODO(developer): Получить из настроек пользователя
                 onChanged: (value) {
-                  // TODO: Сохранить настройку
+                  // TODO(developer): Сохранить настройку
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
@@ -194,9 +193,10 @@ class SettingsPage extends ConsumerWidget {
               SwitchListTile(
                 title: const Text('Email-уведомления'),
                 subtitle: const Text('Получать уведомления на email'),
-                value: true, // TODO: Получить из настроек пользователя
+                value:
+                    true, // TODO(developer): Получить из настроек пользователя
                 onChanged: (value) {
-                  // TODO: Сохранить настройку
+                  // TODO(developer): Сохранить настройку
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
@@ -211,9 +211,10 @@ class SettingsPage extends ConsumerWidget {
                 title: const Text('Уведомления о бронированиях'),
                 subtitle:
                     const Text('Получать уведомления о новых бронированиях'),
-                value: true, // TODO: Получить из настроек пользователя
+                value:
+                    true, // TODO(developer): Получить из настроек пользователя
                 onChanged: (value) {
-                  // TODO: Сохранить настройку
+                  // TODO(developer): Сохранить настройку
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
@@ -248,7 +249,7 @@ class SettingsPage extends ConsumerWidget {
                 subtitle: const Text('Язык'),
                 trailing: const Icon(Icons.check, color: Colors.green),
                 onTap: () {
-                  // TODO: Implement locale change
+                  // TODO(developer): Implement locale change
                   // ref
                   //     .read(localeProvider.notifier)
                   //     .setLocale(const Locale('ru'));
@@ -263,14 +264,13 @@ class SettingsPage extends ConsumerWidget {
                 title: const Text('English'),
                 subtitle: const Text('Язык'),
                 trailing: Consumer(
-                  builder: (context, ref, child) {
-                    return ref.watch(localeProvider).languageCode == 'en'
-                        ? const Icon(Icons.check, color: Colors.green)
-                        : const SizedBox.shrink();
-                  },
+                  builder: (context, ref, child) =>
+                      ref.watch(localeProvider).languageCode == 'en'
+                          ? const Icon(Icons.check, color: Colors.green)
+                          : const SizedBox.shrink(),
                 ),
                 onTap: () {
-                  // TODO: Implement locale change
+                  // TODO(developer): Implement locale change
                   // ref
                   //     .read(localeProvider.notifier)
                   //     .setLocale(const Locale('en'));
@@ -329,7 +329,7 @@ class SettingsPage extends ConsumerWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
+                    MaterialPageRoute<void>(
                       builder: (context) => const AdminPanelScreen(),
                     ),
                   );
@@ -390,7 +390,7 @@ class SettingsPage extends ConsumerWidget {
                 subtitle: const Text('Как мы используем ваши данные'),
                 trailing: const Icon(Icons.arrow_forward_ios),
                 onTap: () {
-                  // TODO: Открыть политику конфиденциальности
+                  // TODO(developer): Открыть политику конфиденциальности
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Функция в разработке')),
                   );
@@ -443,7 +443,7 @@ class SettingsPage extends ConsumerWidget {
   }
 
   void _showLogoutDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Выйти'),

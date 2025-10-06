@@ -42,7 +42,7 @@ class CalendarEventWidget extends StatelessWidget {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: event.eventColor.withOpacity(0.1),
+                    color: event.eventColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Icon(
@@ -128,11 +128,11 @@ class CalendarEventWidget extends StatelessWidget {
                             ),
                             decoration: BoxDecoration(
                               color: _getStatusColor(event.status)
-                                  .withOpacity(0.1),
+                                  .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
                                 color: _getStatusColor(event.status)
-                                    .withOpacity(0.3),
+                                    .withValues(alpha: 0.3),
                               ),
                             ),
                             child: Text(
@@ -152,10 +152,10 @@ class CalendarEventWidget extends StatelessWidget {
                                 vertical: 2,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.blue.withOpacity(0.1),
+                                color: Colors.blue.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
-                                  color: Colors.blue.withOpacity(0.3),
+                                  color: Colors.blue.withValues(alpha: 0.3),
                                 ),
                               ),
                               child: const Text(
@@ -280,7 +280,7 @@ class CalendarEventListTile extends StatelessWidget {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: event.eventColor.withOpacity(0.1),
+            color: event.eventColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Icon(
@@ -306,10 +306,10 @@ class CalendarEventListTile extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
-                color: _getStatusColor(event.status).withOpacity(0.1),
+                color: _getStatusColor(event.status).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: _getStatusColor(event.status).withOpacity(0.3),
+                  color: _getStatusColor(event.status).withValues(alpha: 0.3),
                 ),
               ),
               child: Text(

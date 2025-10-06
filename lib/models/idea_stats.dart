@@ -10,11 +10,11 @@ class IdeaStats {
 
   /// Создать из Map
   factory IdeaStats.fromMap(Map<String, dynamic> map) => IdeaStats(
-        ideaId: map['ideaId'] ?? '',
-        likesCount: map['likesCount'] ?? 0,
-        commentsCount: map['commentsCount'] ?? 0,
-        savesCount: map['savesCount'] ?? 0,
-        viewsCount: map['viewsCount'] ?? 0,
+        ideaId: map['ideaId'] as String? ?? '',
+        likesCount: map['likesCount'] as int? ?? 0,
+        commentsCount: map['commentsCount'] as int? ?? 0,
+        savesCount: map['savesCount'] as int? ?? 0,
+        viewsCount: map['viewsCount'] as int? ?? 0,
       );
   final String ideaId;
   final int likesCount;

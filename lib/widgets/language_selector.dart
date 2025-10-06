@@ -180,7 +180,7 @@ class LanguageSelector extends ConsumerWidget {
   }
 
   void _showLanguageDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(AppLocalizations.of(context).language),
@@ -303,7 +303,7 @@ class CompactLanguageSelector extends ConsumerWidget {
   String _getLanguageCode(Locale locale) => locale.languageCode.toUpperCase();
 
   void _showLanguageDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(AppLocalizations.of(context).language),

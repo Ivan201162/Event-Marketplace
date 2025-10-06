@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/specialist.dart';
+import '../models/specialist_filters.dart';
 
 /// Виджет фильтров поиска
 class SearchFiltersWidget extends StatefulWidget {
@@ -176,7 +177,7 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
           runSpacing: 8,
           children: subcategories.map((subcategory) {
             final isSelected =
-                _filters.subcategories?.contains(subcategory) ?? false;
+                _filters.subcategories.contains(subcategory) ?? false;
             return FilterChip(
               label: Text(subcategory),
               selected: isSelected,
@@ -327,7 +328,7 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
           spacing: 8,
           runSpacing: 8,
           children: serviceAreas.map((area) {
-            final isSelected = _filters.serviceAreas?.contains(area) ?? false;
+            final isSelected = _filters.serviceAreas.contains(area) ?? false;
             return FilterChip(
               label: Text(area),
               selected: isSelected,
@@ -374,7 +375,7 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
           spacing: 8,
           runSpacing: 8,
           children: languages.map((language) {
-            final isSelected = _filters.languages?.contains(language) ?? false;
+            final isSelected = _filters.languages.contains(language) ?? false;
             return FilterChip(
               label: Text(language),
               selected: isSelected,
@@ -462,7 +463,7 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
             children: [
               Expanded(
                 child: DropdownButtonFormField<String>(
-                  initialValue: _filters.sortBy,
+                  initialValue: _filters.sortBy?.value,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     contentPadding:
@@ -485,7 +486,12 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
                   ],
                   onChanged: (value) {
                     setState(() {
-                      _filters = _filters.copyWith(sortBy: value);
+                      _filters = _filters.copyWith(
+                        sortBy: value != null ? SpecialistSortOption.values.firstWhere(
+                          (option) => option.name == value,
+                          orElse: () => SpecialistSortOption.rating,
+                        ) : null,
+                      );
                     });
                     widget.onFiltersChanged(_filters);
                   },

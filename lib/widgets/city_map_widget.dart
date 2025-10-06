@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../models/city_region.dart';
 
@@ -31,7 +31,7 @@ class CityMapWidget extends StatefulWidget {
 class _CityMapWidgetState extends State<CityMapWidget> {
   late MapController _mapController;
   LatLng? _currentCenter;
-  double _currentZoom = 6.0;
+  double _currentZoom = 6;
   bool _isLoading = false;
 
   @override
@@ -78,13 +78,13 @@ class _CityMapWidgetState extends State<CityMapWidget> {
         widget.selectedCity!.coordinates.latitude,
         widget.selectedCity!.coordinates.longitude,
       );
-      _mapController.move(newCenter, 10.0);
+      _mapController.move(newCenter, 10);
     } else if (widget.currentLocation != null) {
       final newCenter = LatLng(
         widget.currentLocation!.latitude,
         widget.currentLocation!.longitude,
       );
-      _mapController.move(newCenter, 8.0);
+      _mapController.move(newCenter, 8);
     }
   }
 
@@ -100,8 +100,8 @@ class _CityMapWidgetState extends State<CityMapWidget> {
           options: MapOptions(
             initialCenter: _currentCenter ?? const LatLng(64.6863, 97.7453),
             initialZoom: _currentZoom,
-            minZoom: 3.0,
-            maxZoom: 18.0,
+            minZoom: 3,
+            maxZoom: 18,
             onTap: (tapPosition, point) {
               // Можно добавить логику для выбора точки на карте
             },
@@ -137,7 +137,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
                         border: Border.all(color: Colors.white, width: 3),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
+                            color: Colors.black.withValues(alpha: 0.3),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -193,7 +193,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
+                    color: Colors.black.withValues(alpha: 0.3),
                     blurRadius: 6,
                     offset: const Offset(0, 2),
                   ),
@@ -230,7 +230,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
               border: Border.all(color: Colors.white, width: 3),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.4),
+                  color: Colors.black.withValues(alpha: 0.4),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -251,43 +251,41 @@ class _CityMapWidgetState extends State<CityMapWidget> {
     return markers;
   }
 
-  Widget _buildMapControls(ThemeData theme) {
-    return Positioned(
-      right: 16,
-      top: 16,
-      child: Column(
-        children: [
-          // Кнопка "Мое местоположение"
-          FloatingActionButton.small(
-            onPressed: widget.onLocationRequested,
-            backgroundColor: theme.cardColor,
-            child: Icon(
-              Icons.my_location,
-              color: theme.colorScheme.primary,
+  Widget _buildMapControls(ThemeData theme) => Positioned(
+        right: 16,
+        top: 16,
+        child: Column(
+          children: [
+            // Кнопка "Мое местоположение"
+            FloatingActionButton.small(
+              onPressed: widget.onLocationRequested,
+              backgroundColor: theme.cardColor,
+              child: Icon(
+                Icons.my_location,
+                color: theme.colorScheme.primary,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
+            const SizedBox(height: 8),
 
-          // Кнопка "Центр России"
-          FloatingActionButton.small(
-            onPressed: _centerOnRussia,
-            backgroundColor: theme.cardColor,
-            child: Icon(
-              Icons.public,
-              color: theme.colorScheme.primary,
+            // Кнопка "Центр России"
+            FloatingActionButton.small(
+              onPressed: _centerOnRussia,
+              backgroundColor: theme.cardColor,
+              child: Icon(
+                Icons.public,
+                color: theme.colorScheme.primary,
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
   void _centerOnRussia() {
     setState(() {
       _isLoading = true;
     });
 
-    _mapController.move(const LatLng(64.6863, 97.7453), 4.0);
+    _mapController.move(const LatLng(64.6863, 97.7453), 4);
 
     Future.delayed(const Duration(milliseconds: 500), () {
       if (mounted) {

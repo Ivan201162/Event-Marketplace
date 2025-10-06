@@ -37,7 +37,8 @@ class Dependency {
         licenses: List<String>.from(map['licenses'] as List<dynamic>? ?? []),
         authors: List<String>.from(map['authors'] as List<dynamic>? ?? []),
         metadata: Map<String, dynamic>.from(
-            map['metadata'] as Map<dynamic, dynamic>? ?? {}),
+          map['metadata'] as Map<dynamic, dynamic>? ?? {},
+        ),
         dependencies:
             List<String>.from(map['dependencies'] as List<dynamic>? ?? []),
         dependents:
@@ -317,7 +318,8 @@ class DependencyUpdate {
         newFeatures:
             List<String>.from(map['newFeatures'] as List<dynamic>? ?? []),
         metadata: Map<String, dynamic>.from(
-            map['metadata'] as Map<dynamic, dynamic>? ?? {}),
+          map['metadata'] as Map<dynamic, dynamic>? ?? {},
+        ),
         releaseDate: (map['releaseDate'] as Timestamp).toDate(),
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         updatedAt: (map['updatedAt'] as Timestamp).toDate(),
@@ -528,11 +530,11 @@ class DependencyConfig {
 
   factory DependencyConfig.fromMap(Map<String, dynamic> map) =>
       DependencyConfig(
-        id: map['id'] ?? '',
-        enableAutoUpdates: map['enableAutoUpdates'] ?? false,
-        enableSecurityUpdates: map['enableSecurityUpdates'] ?? true,
+        id: map['id'] as String? ?? '',
+        enableAutoUpdates: map['enableAutoUpdates'] as bool? ?? false,
+        enableSecurityUpdates: map['enableSecurityUpdates'] as bool? ?? true,
         enableBreakingChangeNotifications:
-            map['enableBreakingChangeNotifications'] ?? true,
+            map['enableBreakingChangeNotifications'] as bool? ?? true,
         allowedUpdateTypes: (map['allowedUpdateTypes'] as List<dynamic>?)
                 ?.map((e) => UpdateType.fromString(e as String))
                 .toList() ??
@@ -541,19 +543,26 @@ class DependencyConfig {
                 ?.map((e) => UpdatePriority.fromString(e as String))
                 .toList() ??
             UpdatePriority.values,
-        maxConcurrentUpdates: map['maxConcurrentUpdates'] ?? 3,
-        updateRetryAttempts: map['updateRetryAttempts'] ?? 3,
-        updateTimeout: Duration(seconds: map['updateTimeoutSeconds'] ?? 300),
-        excludedDependencies:
-            List<String>.from(map['excludedDependencies'] ?? []),
-        requiredApprovals: List<String>.from(map['requiredApprovals'] ?? []),
-        updatePolicies: Map<String, dynamic>.from(map['updatePolicies'] ?? {}),
-        notificationSettings:
-            Map<String, dynamic>.from(map['notificationSettings'] ?? {}),
+        maxConcurrentUpdates: map['maxConcurrentUpdates'] as int? ?? 3,
+        updateRetryAttempts: map['updateRetryAttempts'] as int? ?? 3,
+        updateTimeout:
+            Duration(seconds: map['updateTimeoutSeconds'] as int? ?? 300),
+        excludedDependencies: List<String>.from(
+          (map['excludedDependencies'] as List<dynamic>?) ?? [],
+        ),
+        requiredApprovals: List<String>.from(
+          (map['requiredApprovals'] as List<dynamic>?) ?? [],
+        ),
+        updatePolicies: Map<String, dynamic>.from(
+          (map['updatePolicies'] as Map<dynamic, dynamic>?) ?? {},
+        ),
+        notificationSettings: Map<String, dynamic>.from(
+          (map['notificationSettings'] as Map<dynamic, dynamic>?) ?? {},
+        ),
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-        createdBy: map['createdBy'] ?? '',
-        updatedBy: map['updatedBy'] ?? '',
+        createdBy: map['createdBy'] as String? ?? '',
+        updatedBy: map['updatedBy'] as String? ?? '',
       );
   final String id;
   final bool enableAutoUpdates;

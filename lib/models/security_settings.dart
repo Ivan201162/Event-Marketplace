@@ -22,14 +22,14 @@ class SecuritySettings {
     return SecuritySettings(
       id: doc.id,
       userId: data['userId'] ?? '',
-      twoFactorEnabled: data['twoFactorEnabled'] ?? false,
-      biometricEnabled: data['biometricEnabled'] ?? false,
-      pinCodeEnabled: data['pinCodeEnabled'] ?? false,
-      sessionTimeout: data['sessionTimeout'] ?? 30,
-      loginNotifications: data['loginNotifications'] ?? true,
-      securityAlerts: data['securityAlerts'] ?? true,
-      dataEncryption: data['dataEncryption'] ?? true,
-      auditLogging: data['auditLogging'] ?? true,
+      twoFactorEnabled: data['twoFactorEnabled'] as bool? ?? false,
+      biometricEnabled: data['biometricEnabled'] as bool? ?? false,
+      pinCodeEnabled: data['pinCodeEnabled'] as bool? ?? false,
+      sessionTimeout: data['sessionTimeout'] as int? ?? 30,
+      loginNotifications: data['loginNotifications'] as bool? ?? true,
+      securityAlerts: data['securityAlerts'] as bool? ?? true,
+      dataEncryption: data['dataEncryption'] as bool? ?? true,
+      auditLogging: data['auditLogging'] as bool? ?? true,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
     );
@@ -121,7 +121,7 @@ class SecurityDevice {
       deviceName: data['deviceName'] ?? '',
       deviceType: data['deviceType'] ?? '',
       platform: data['platform'] ?? '',
-      isTrusted: data['isTrusted'] ?? false,
+      isTrusted: data['isTrusted'] as bool? ?? false,
       lastSeen: (data['lastSeen'] as Timestamp).toDate(),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
@@ -131,7 +131,7 @@ class SecurityDevice {
           ? (data['firstSeen'] as Timestamp).toDate()
           : null,
       lastIpAddress: data['lastIpAddress'],
-      isBlocked: data['isBlocked'] ?? false,
+      isBlocked: data['isBlocked'] as bool? ?? false,
     );
   }
 

@@ -29,16 +29,27 @@ class AppUser {
   }
 
   /// Создать из Map
-  factory AppUser.fromMap(Map<String, dynamic> data) => AppUser(
-        id: (data['id'] as String?) ?? '',
-        email: (data['email'] as String?) ?? '',
-        displayName: data['displayName'] as String?,
-        photoUrl: data['photoUrl'] as String?,
-        createdAt: (data['createdAt'] as Timestamp).toDate(),
-        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-        isActive: (data['isActive'] as bool?) ?? true,
-        preferences: data['preferences'] as Map<String, dynamic>?,
-      );
+  factory AppUser.fromMap(Map<String, dynamic> data) {
+    // Безопасное преобразование данных
+    return AppUser(
+      id: (data['id'] as String?) ?? '',
+      email: (data['email'] as String?) ?? '',
+      displayName: data['displayName'] as String?,
+      photoUrl: data['photoUrl'] as String?,
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] is Timestamp
+              ? (data['createdAt'] as Timestamp).toDate()
+              : DateTime.parse(data['createdAt'].toString()))
+          : DateTime.now(),
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] is Timestamp
+              ? (data['updatedAt'] as Timestamp).toDate()
+              : DateTime.parse(data['updatedAt'].toString()))
+          : DateTime.now(),
+      isActive: (data['isActive'] as bool?) ?? true,
+      preferences: data['preferences'] as Map<String, dynamic>?,
+    );
+  }
   final String id;
   final String email;
   final String? displayName;
@@ -47,6 +58,9 @@ class AppUser {
   final DateTime updatedAt;
   final bool isActive;
   final Map<String, dynamic>? preferences;
+
+  /// Геттер для номера телефона
+  String? get phoneNumber => preferences?['phoneNumber'];
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {

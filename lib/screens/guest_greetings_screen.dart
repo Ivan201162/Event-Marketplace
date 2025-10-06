@@ -181,7 +181,7 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
                   Chip(
                     label: Text(greeting.type.displayName),
                     backgroundColor:
-                        _getTypeColor(greeting.type).withOpacity(0.1),
+                        _getTypeColor(greeting.type).withValues(alpha: 0.1),
                     labelStyle: TextStyle(
                       color: _getTypeColor(greeting.type),
                       fontSize: 12,
@@ -324,7 +324,7 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
                     IconButton(
                       icon: const Icon(Icons.play_arrow),
                       onPressed: () {
-                        // TODO: Воспроизвести аудио
+                        // TODO(developer): Воспроизвести аудио
                       },
                     ),
                   ],
@@ -412,7 +412,7 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
                         });
                       }
                     },
-                    selectedColor: Colors.blue.withOpacity(0.2),
+                    selectedColor: Colors.blue.withValues(alpha: 0.2),
                     checkmarkColor: Colors.blue,
                   );
                 }).toList(),
@@ -581,7 +581,7 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
   }
 
   Future<void> _uploadMedia() async {
-    // TODO: Реализовать загрузку медиафайлов
+    // TODO(developer): Реализовать загрузку медиафайлов
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text(

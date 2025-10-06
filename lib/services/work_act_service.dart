@@ -1,11 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
+import 'dart:typed_data';
 
-import '../core/feature_flags.dart';
-import '../models/booking.dart';
-import '../models/contract.dart';
-import '../models/specialist.dart';
-import '../models/user.dart';
-import '../models/work_act.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 
 /// Сервис для управления актами выполненных работ
 class WorkActService {
@@ -13,292 +12,751 @@ class WorkActService {
 
   /// Создать акт выполненных работ
   Future<WorkAct> createWorkAct({
-    required String contractId,
     required String bookingId,
-    required String customerId,
     required String specialistId,
-    required String workDescription,
-    required String workResults,
+    required String customerId,
+    required String eventName,
+    required String eventDate,
+    required String eventLocation,
+    required List<ServiceItem> services,
     required double totalAmount,
-    required DateTime workStartDate,
-    required DateTime workEndDate,
     String? notes,
-    List<String>? attachments,
   }) async {
-    if (!FeatureFlags.contractGenerationEnabled) {
-      throw Exception('Создание актов выполненных работ отключено');
-    }
-
     try {
-      // Получаем данные бронирования
-      final booking = await _getBooking(bookingId);
-      if (booking == null) {
-        throw Exception('Бронирование не найдено');
-      }
-
-      // Генерируем номер акта
-      final actNumber = _generateActNumber();
-
-      // Создаем акт
       final workAct = WorkAct(
-        id: '',
-        actNumber: actNumber,
-        contractId: contractId,
+        id: '', // Будет сгенерирован Firestore
         bookingId: bookingId,
-        customerId: customerId,
         specialistId: specialistId,
-        status: WorkActStatus.draft,
-        title: 'Акт выполненных работ № $actNumber',
-        content: _generateActContent(
-          actNumber: actNumber,
-          booking: booking,
-          workDescription: workDescription,
-          workResults: workResults,
-          totalAmount: totalAmount,
-          workStartDate: workStartDate,
-          workEndDate: workEndDate,
-        ),
-        workDescription: workDescription,
-        workResults: workResults,
+        customerId: customerId,
+        eventName: eventName,
+        eventDate: eventDate,
+        eventLocation: eventLocation,
+        services: services,
         totalAmount: totalAmount,
-        currency: 'RUB',
+        notes: notes,
+        status: WorkActStatus.draft,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        workStartDate: workStartDate,
-        workEndDate: workEndDate,
-        attachments: attachments,
-        notes: notes,
       );
 
-      // Сохраняем в Firestore
       final docRef =
-          await _firestore.collection('workActs').add(workAct.toMap());
+          await _firestore.collection('work_acts').add(workAct.toMap());
 
       return workAct.copyWith(id: docRef.id);
     } catch (e) {
-      throw Exception('Ошибка создания акта выполненных работ: $e');
+      print('Ошибка создания акта выполненных работ: $e');
+      rethrow;
     }
   }
 
-  /// Подписать акт выполненных работ
-  Future<void> signWorkAct({
-    required String workActId,
-    required String userId,
-    required String userName,
-    required String signature,
-    String? signatureType,
-  }) async {
+  /// Получить акт выполненных работ
+  Future<WorkAct?> getWorkAct(String workActId) async {
     try {
-      final workAct = await _getWorkAct(workActId);
-      if (workAct == null) {
-        throw Exception('Акт выполненных работ не найден');
-      }
+      final doc = await _firestore.collection('work_acts').doc(workActId).get();
 
-      // Проверяем, что пользователь имеет право подписывать акт
-      if (userId != workAct.customerId && userId != workAct.specialistId) {
-        throw Exception('Недостаточно прав для подписания акта');
-      }
+      if (!doc.exists) return null;
 
-      // Создаем подпись
-      final signatureData = Signature(
-        userId: userId,
-        userName: userName,
-        signature: signature,
-        signedAt: DateTime.now(),
-        signatureType: signatureType ?? 'drawn',
-      );
-
-      // Определяем, чья это подпись
-      final isCustomer = userId == workAct.customerId;
-      final isSpecialist = userId == workAct.specialistId;
-
-      final updateData = <String, dynamic>{
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      };
-
-      if (isCustomer) {
-        updateData['customerSignature'] = signatureData.toMap();
-      }
-
-      if (isSpecialist) {
-        updateData['specialistSignature'] = signatureData.toMap();
-      }
-
-      // Проверяем, подписан ли акт обеими сторонами
-      final hasCustomerSignature =
-          isCustomer || workAct.customerSignature != null;
-      final hasSpecialistSignature =
-          isSpecialist || workAct.specialistSignature != null;
-
-      if (hasCustomerSignature && hasSpecialistSignature) {
-        updateData['status'] = WorkActStatus.signed.name;
-        updateData['signedAt'] = Timestamp.fromDate(DateTime.now());
-      } else {
-        updateData['status'] = WorkActStatus.pending.name;
-      }
-
-      await _firestore.collection('workActs').doc(workActId).update(updateData);
+      return WorkAct.fromDocument(doc);
     } catch (e) {
-      throw Exception('Ошибка подписания акта выполненных работ: $e');
+      print('Ошибка получения акта выполненных работ: $e');
+      return null;
     }
   }
 
-  /// Получить акт выполненных работ по ID
-  Future<WorkAct?> getWorkAct(String workActId) async => _getWorkAct(workActId);
-
-  /// Получить акты по договору
-  Future<List<WorkAct>> getWorkActsByContract(String contractId) async {
-    try {
-      final snapshot = await _firestore
-          .collection('workActs')
-          .where('contractId', isEqualTo: contractId)
-          .orderBy('createdAt', descending: true)
-          .get();
-
-      return snapshot.docs.map(WorkAct.fromDocument).toList();
-    } catch (e) {
-      throw Exception('Ошибка получения актов по договору: $e');
-    }
-  }
-
-  /// Получить акты по бронированию
+  /// Получить акты по заказу
   Future<List<WorkAct>> getWorkActsByBooking(String bookingId) async {
     try {
       final snapshot = await _firestore
-          .collection('workActs')
+          .collection('work_acts')
           .where('bookingId', isEqualTo: bookingId)
           .orderBy('createdAt', descending: true)
           .get();
 
       return snapshot.docs.map(WorkAct.fromDocument).toList();
     } catch (e) {
-      throw Exception('Ошибка получения актов по бронированию: $e');
-    }
-  }
-
-  /// Получить акты пользователя
-  Future<List<WorkAct>> getUserWorkActs(String userId) async {
-    try {
-      final snapshot = await _firestore
-          .collection('workActs')
-          .where('customerId', isEqualTo: userId)
-          .orderBy('createdAt', descending: true)
-          .get();
-
-      return snapshot.docs.map(WorkAct.fromDocument).toList();
-    } catch (e) {
-      throw Exception('Ошибка получения актов пользователя: $e');
+      print('Ошибка получения актов по заказу: $e');
+      return [];
     }
   }
 
   /// Получить акты специалиста
-  Future<List<WorkAct>> getSpecialistWorkActs(String specialistId) async {
+  Future<List<WorkAct>> getWorkActsBySpecialist(String specialistId) async {
     try {
       final snapshot = await _firestore
-          .collection('workActs')
+          .collection('work_acts')
           .where('specialistId', isEqualTo: specialistId)
           .orderBy('createdAt', descending: true)
           .get();
 
       return snapshot.docs.map(WorkAct.fromDocument).toList();
     } catch (e) {
-      throw Exception('Ошибка получения актов специалиста: $e');
+      print('Ошибка получения актов специалиста: $e');
+      return [];
     }
   }
 
-  /// Оспорить акт выполненных работ
-  Future<void> disputeWorkAct({
+  /// Получить акты заказчика
+  Future<List<WorkAct>> getWorkActsByCustomer(String customerId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('work_acts')
+          .where('customerId', isEqualTo: customerId)
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      return snapshot.docs.map(WorkAct.fromDocument).toList();
+    } catch (e) {
+      print('Ошибка получения актов заказчика: $e');
+      return [];
+    }
+  }
+
+  /// Подписать акт выполненных работ
+  Future<void> signWorkAct({
     required String workActId,
-    required String userId,
-    required String disputeReason,
+    required String signedBy,
+    required String signature,
   }) async {
     try {
-      final workAct = await _getWorkAct(workActId);
-      if (workAct == null) {
-        throw Exception('Акт выполненных работ не найден');
-      }
-
-      // Проверяем, что пользователь имеет право оспаривать акт
-      if (userId != workAct.customerId && userId != workAct.specialistId) {
-        throw Exception('Недостаточно прав для оспаривания акта');
-      }
-
-      await _firestore.collection('workActs').doc(workActId).update({
-        'status': WorkActStatus.disputed.name,
-        'disputeReason': disputeReason,
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
+      await _firestore.collection('work_acts').doc(workActId).update({
+        'status': WorkActStatus.signed.name,
+        'signedAt': FieldValue.serverTimestamp(),
+        'signedBy': signedBy,
+        'signature': signature,
+        'updatedAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      throw Exception('Ошибка оспаривания акта: $e');
+      print('Ошибка подписания акта: $e');
+      rethrow;
     }
   }
 
-  /// Разрешить спор по акту
-  Future<void> resolveWorkActDispute({
+  /// Отклонить акт выполненных работ
+  Future<void> rejectWorkAct({
     required String workActId,
-    required String resolution,
+    required String reason,
   }) async {
     try {
-      await _firestore.collection('workActs').doc(workActId).update({
+      await _firestore.collection('work_acts').doc(workActId).update({
+        'status': WorkActStatus.rejected.name,
+        'rejectionReason': reason,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Ошибка отклонения акта: $e');
+      rethrow;
+    }
+  }
+
+  /// Обновить акт выполненных работ
+  Future<void> updateWorkAct({
+    required String workActId,
+    String? eventName,
+    String? eventDate,
+    String? eventLocation,
+    List<ServiceItem>? services,
+    double? totalAmount,
+    String? notes,
+  }) async {
+    try {
+      final updateData = <String, dynamic>{
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+
+      if (eventName != null) updateData['eventName'] = eventName;
+      if (eventDate != null) updateData['eventDate'] = eventDate;
+      if (eventLocation != null) updateData['eventLocation'] = eventLocation;
+      if (services != null) {
+        updateData['services'] = services.map((s) => s.toMap()).toList();
+      }
+      if (totalAmount != null) updateData['totalAmount'] = totalAmount;
+      if (notes != null) updateData['notes'] = notes;
+
+      await _firestore
+          .collection('work_acts')
+          .doc(workActId)
+          .update(updateData);
+    } catch (e) {
+      print('Ошибка обновления акта: $e');
+      rethrow;
+    }
+  }
+
+  /// Создать PDF акта выполненных работ
+  Future<Uint8List> generateWorkActPDF(WorkAct workAct) async {
+    try {
+      final pdf = pw.Document();
+
+      pdf.addPage(
+        pw.Page(
+          pageFormat: PdfPageFormat.a4,
+          build: (pw.Context context) => _buildWorkActContent(workAct),
+        ),
+      );
+
+      return await pdf.save();
+    } catch (e) {
+      print('Ошибка создания PDF: $e');
+      rethrow;
+    }
+  }
+
+  /// Содержимое акта выполненных работ
+  pw.Widget _buildWorkActContent(WorkAct workAct) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          _buildHeader(),
+          pw.SizedBox(height: 20),
+          _buildTitle(),
+          pw.SizedBox(height: 20),
+          _buildEventInfo(workAct),
+          pw.SizedBox(height: 20),
+          _buildServicesTable(workAct),
+          pw.SizedBox(height: 20),
+          _buildTotalAmount(workAct),
+          pw.SizedBox(height: 20),
+          _buildNotes(workAct),
+          pw.SizedBox(height: 40),
+          _buildSignatures(workAct),
+        ],
+      );
+
+  pw.Widget _buildHeader() => pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+        children: [
+          pw.Text(
+            'АКТ ВЫПОЛНЕННЫХ РАБОТ',
+            style: pw.TextStyle(
+              fontSize: 18,
+              fontWeight: pw.FontWeight.bold,
+            ),
+          ),
+          pw.Text(
+            '№ ${DateTime.now().millisecondsSinceEpoch}',
+            style: pw.TextStyle(fontSize: 12),
+          ),
+        ],
+      );
+
+  pw.Widget _buildTitle() => pw.Center(
+        child: pw.Text(
+          'АКТ ВЫПОЛНЕННЫХ РАБОТ',
+          style: pw.TextStyle(
+            fontSize: 24,
+            fontWeight: pw.FontWeight.bold,
+          ),
+        ),
+      );
+
+  pw.Widget _buildEventInfo(WorkAct workAct) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Text(
+            'Информация о мероприятии:',
+            style: pw.TextStyle(
+              fontSize: 14,
+              fontWeight: pw.FontWeight.bold,
+            ),
+          ),
+          pw.SizedBox(height: 8),
+          _buildInfoRow('Название:', workAct.eventName),
+          _buildInfoRow('Дата:', workAct.eventDate),
+          _buildInfoRow('Место проведения:', workAct.eventLocation),
+          _buildInfoRow('Дата составления:', _formatDate(workAct.createdAt)),
+        ],
+      );
+
+  pw.Widget _buildInfoRow(String label, String value) => pw.Padding(
+        padding: const pw.EdgeInsets.symmetric(vertical: 2),
+        child: pw.Row(
+          children: [
+            pw.SizedBox(
+              width: 120,
+              child: pw.Text(
+                label,
+                style: pw.TextStyle(fontSize: 12),
+              ),
+            ),
+            pw.Expanded(
+              child: pw.Text(
+                value,
+                style: pw.TextStyle(fontSize: 12),
+              ),
+            ),
+          ],
+        ),
+      );
+
+  pw.Widget _buildServicesTable(WorkAct workAct) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Text(
+            'Выполненные работы:',
+            style: pw.TextStyle(
+              fontSize: 14,
+              fontWeight: pw.FontWeight.bold,
+            ),
+          ),
+          pw.SizedBox(height: 8),
+          pw.Table(
+            border: pw.TableBorder.all(),
+            columnWidths: {
+              0: const pw.FlexColumnWidth(1),
+              1: const pw.FlexColumnWidth(3),
+              2: const pw.FlexColumnWidth(1),
+              3: const pw.FlexColumnWidth(1),
+            },
+            children: [
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(color: PdfColors.grey300),
+                children: [
+                  _buildTableCell('№', isHeader: true),
+                  _buildTableCell('Наименование работы', isHeader: true),
+                  _buildTableCell('Количество', isHeader: true),
+                  _buildTableCell('Стоимость', isHeader: true),
+                ],
+              ),
+              ...workAct.services.asMap().entries.map((entry) {
+                final index = entry.key;
+                final service = entry.value;
+                return pw.TableRow(
+                  children: [
+                    _buildTableCell('${index + 1}'),
+                    _buildTableCell(service.name),
+                    _buildTableCell(service.quantity.toString()),
+                    _buildTableCell('${service.price.toStringAsFixed(2)} ₽'),
+                  ],
+                );
+              }),
+            ],
+          ),
+        ],
+      );
+
+  pw.Widget _buildTableCell(String text, {bool isHeader = false}) => pw.Padding(
+        padding: const pw.EdgeInsets.all(4),
+        child: pw.Text(
+          text,
+          style: pw.TextStyle(
+            fontSize: isHeader ? 12 : 10,
+            fontWeight: isHeader ? pw.FontWeight.bold : pw.FontWeight.normal,
+          ),
+        ),
+      );
+
+  pw.Widget _buildTotalAmount(WorkAct workAct) => pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.end,
+        children: [
+          pw.Text(
+            'Итого: ${workAct.totalAmount.toStringAsFixed(2)} ₽',
+            style: pw.TextStyle(
+              fontSize: 16,
+              fontWeight: pw.FontWeight.bold,
+            ),
+          ),
+        ],
+      );
+
+  pw.Widget _buildNotes(WorkAct workAct) {
+    if (workAct.notes == null || workAct.notes!.isEmpty) {
+      return pw.SizedBox.shrink();
+    }
+
+    return pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        pw.Text(
+          'Примечания:',
+          style: pw.TextStyle(
+            fontSize: 14,
+            fontWeight: pw.FontWeight.bold,
+          ),
+        ),
+        pw.SizedBox(height: 8),
+        pw.Text(
+          workAct.notes!,
+          style: pw.TextStyle(fontSize: 12),
+        ),
+      ],
+    );
+  }
+
+  pw.Widget _buildSignatures(WorkAct workAct) => pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+        children: [
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(
+                'Исполнитель:',
+                style: pw.TextStyle(fontSize: 12),
+              ),
+              pw.SizedBox(height: 40),
+              pw.Text(
+                '_________________',
+                style: pw.TextStyle(fontSize: 12),
+              ),
+              pw.Text(
+                'Подпись',
+                style: pw.TextStyle(fontSize: 10),
+              ),
+            ],
+          ),
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(
+                'Заказчик:',
+                style: pw.TextStyle(fontSize: 12),
+              ),
+              pw.SizedBox(height: 40),
+              pw.Text(
+                '_________________',
+                style: pw.TextStyle(fontSize: 12),
+              ),
+              pw.Text(
+                'Подпись',
+                style: pw.TextStyle(fontSize: 10),
+              ),
+            ],
+          ),
+        ],
+      );
+
+  String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
+
+  /// Получить статистику актов
+  Future<WorkActStats> getWorkActStats(String specialistId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('work_acts')
+          .where('specialistId', isEqualTo: specialistId)
+          .get();
+
+      final acts = snapshot.docs.map(WorkAct.fromDocument).toList();
+
+      final totalActs = acts.length;
+      final signedActs =
+          acts.where((act) => act.status == WorkActStatus.signed).length;
+      final draftActs =
+          acts.where((act) => act.status == WorkActStatus.draft).length;
+      final rejectedActs =
+          acts.where((act) => act.status == WorkActStatus.rejected).length;
+      final totalAmount = acts
+          .where((act) => act.status == WorkActStatus.signed)
+          .fold<double>(0, (sum, act) => sum + act.totalAmount);
+
+      return WorkActStats(
+        specialistId: specialistId,
+        totalActs: totalActs,
+        signedActs: signedActs,
+        draftActs: draftActs,
+        rejectedActs: rejectedActs,
+        totalAmount: totalAmount,
+        lastUpdated: DateTime.now(),
+      );
+    } catch (e) {
+      print('Ошибка получения статистики актов: $e');
+      return WorkActStats.empty();
+    }
+  }
+}
+
+/// Статус акта выполненных работ
+enum WorkActStatus {
+  draft,
+  signed,
+  rejected,
+}
+
+/// Модель акта выполненных работ
+class WorkAct {
+  const WorkAct({
+    required this.id,
+    required this.bookingId,
+    required this.specialistId,
+    required this.customerId,
+    required this.eventName,
+    required this.eventDate,
+    required this.eventLocation,
+    required this.services,
+    required this.totalAmount,
+    this.notes,
+    required this.status,
+    required this.createdAt,
+    required this.updatedAt,
+    this.signedAt,
+    this.signedBy,
+    this.signature,
+    this.rejectionReason,
+  });
+
+  factory WorkAct.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data()! as Map<String, dynamic>;
+    return WorkAct(
+      id: doc.id,
+      bookingId: data['bookingId'] as String? ?? '',
+      specialistId: data['specialistId'] as String? ?? '',
+      customerId: data['customerId'] as String? ?? '',
+      eventName: data['eventName'] as String? ?? '',
+      eventDate: data['eventDate'] as String? ?? '',
+      eventLocation: data['eventLocation'] as String? ?? '',
+      services: (data['services'] as List<dynamic>?)
+              ?.map((item) => ServiceItem.fromMap(item as Map<String, dynamic>))
+              .toList() ??
+          [],
+      totalAmount: (data['totalAmount'] as num?)?.toDouble() ?? 0.0,
+      notes: data['notes'] as String?,
+      status: WorkActStatus.values.firstWhere(
+        (status) => status.name == data['status'],
+        orElse: () => WorkActStatus.draft,
+      ),
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] as Timestamp).toDate()
+          : DateTime.now(),
+      signedAt: data['signedAt'] != null
+          ? (data['signedAt'] as Timestamp).toDate()
+          : null,
+      signedBy: data['signedBy'] as String?,
+      signature: data['signature'] as String?,
+      rejectionReason: data['rejectionReason'] as String?,
+    );
+  }
+
+  final String id;
+  final String bookingId;
+  final String specialistId;
+  final String customerId;
+  final String eventName;
+  final String eventDate;
+  final String eventLocation;
+  final List<ServiceItem> services;
+  final double totalAmount;
+  final String? notes;
+  final WorkActStatus status;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime? signedAt;
+  final String? signedBy;
+  final String? signature;
+  final String? rejectionReason;
+
+  WorkAct copyWith({
+    String? id,
+    String? bookingId,
+    String? specialistId,
+    String? customerId,
+    String? eventName,
+    String? eventDate,
+    String? eventLocation,
+    List<ServiceItem>? services,
+    double? totalAmount,
+    String? notes,
+    WorkActStatus? status,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DateTime? signedAt,
+    String? signedBy,
+    String? signature,
+    String? rejectionReason,
+  }) =>
+      WorkAct(
+        id: id ?? this.id,
+        bookingId: bookingId ?? this.bookingId,
+        specialistId: specialistId ?? this.specialistId,
+        customerId: customerId ?? this.customerId,
+        eventName: eventName ?? this.eventName,
+        eventDate: eventDate ?? this.eventDate,
+        eventLocation: eventLocation ?? this.eventLocation,
+        services: services ?? this.services,
+        totalAmount: totalAmount ?? this.totalAmount,
+        notes: notes ?? this.notes,
+        status: status ?? this.status,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        signedAt: signedAt ?? this.signedAt,
+        signedBy: signedBy ?? this.signedBy,
+        signature: signature ?? this.signature,
+        rejectionReason: rejectionReason ?? this.rejectionReason,
+      );
+
+  Map<String, dynamic> toMap() => {
+        'bookingId': bookingId,
+        'specialistId': specialistId,
+        'customerId': customerId,
+        'eventName': eventName,
+        'eventDate': eventDate,
+        'eventLocation': eventLocation,
+        'services': services.map((s) => s.toMap()).toList(),
+        'totalAmount': totalAmount,
+        'notes': notes,
+        'status': status.name,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'signedAt': signedAt != null ? Timestamp.fromDate(signedAt!) : null,
+        'signedBy': signedBy,
+        'signature': signature,
+        'rejectionReason': rejectionReason,
+      };
+
+  bool get isSigned => status == WorkActStatus.signed;
+  bool get isDraft => status == WorkActStatus.draft;
+  bool get isRejected => status == WorkActStatus.rejected;
+}
+
+/// Элемент услуги в акте
+class ServiceItem {
+  const ServiceItem({
+    required this.name,
+    required this.quantity,
+    required this.price,
+    this.description,
+  });
+
+  factory ServiceItem.fromMap(Map<String, dynamic> map) => ServiceItem(
+        name: map['name'] as String? ?? '',
+        quantity: map['quantity'] as int? ?? 1,
+        price: (map['price'] as num?)?.toDouble() ?? 0.0,
+        description: map['description'] as String?,
+      );
+
+  final String name;
+  final int quantity;
+  final double price;
+  final String? description;
+
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'quantity': quantity,
+        'price': price,
+        'description': description,
+      };
+
+  double get totalPrice => quantity * price;
+}
+
+/// Статистика актов выполненных работ
+class WorkActStats {
+  const WorkActStats({
+    required this.specialistId,
+    required this.totalActs,
+    required this.signedActs,
+    required this.draftActs,
+    required this.rejectedActs,
+    required this.totalAmount,
+    required this.lastUpdated,
+  });
+
+  factory WorkActStats.empty() => WorkActStats(
+        specialistId: '',
+        totalActs: 0,
+        signedActs: 0,
+        draftActs: 0,
+        rejectedActs: 0,
+        totalAmount: 0,
+        lastUpdated: DateTime.now(),
+      );
+
+  final String specialistId;
+  final int totalActs;
+  final int signedActs;
+  final int draftActs;
+  final int rejectedActs;
+  final double totalAmount;
+  final DateTime lastUpdated;
+
+  double get signedPercentage =>
+      totalActs > 0 ? (signedActs / totalActs) * 100 : 0.0;
+}
+
+/// Сервис для управления актами выполненных работ (расширенная версия)
+class WorkActServiceExtended {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  /// Получить акты выполненных работ по бронированию
+  Future<List<WorkAct>> getWorkActsByBooking(String bookingId) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('work_acts')
+          .where('bookingId', isEqualTo: bookingId)
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      return querySnapshot.docs
+          .map((doc) => WorkAct.fromMap(doc.data(), doc.id))
+          .toList();
+    } catch (e) {
+      print('Ошибка получения актов выполненных работ по бронированию: $e');
+      return [];
+    }
+  }
+
+  /// Сгенерировать акт выполненных работ
+  Future<WorkAct> generateWorkAct(String bookingId) async {
+    try {
+      // Получить данные бронирования
+      final bookingDoc =
+          await _firestore.collection('bookings').doc(bookingId).get();
+
+      if (!bookingDoc.exists) {
+        throw Exception('Бронирование не найдено');
+      }
+
+      final bookingData = bookingDoc.data()!;
+
+      // Создать акт выполненных работ
+      final workAct = WorkAct(
+        id: '',
+        actNumber: _generateActNumber(),
+        bookingId: bookingId,
+        customerId: bookingData['userId'] ?? '',
+        specialistId: bookingData['specialistId'] ?? '',
+        status: WorkActStatus.pending,
+        title: 'Акт выполненных работ',
+        totalAmount: (bookingData['totalPrice'] as num?)?.toDouble() ?? 0.0,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        completedAt: null,
+        workDescription: 'Выполненные работы по заказу',
+        workStartDate: null,
+        workEndDate: null,
+        customerSignature: null,
+        specialistSignature: null,
+        metadata: const {},
+        currency: 'RUB',
+      );
+
+      final docRef =
+          await _firestore.collection('work_acts').add(workAct.toMap());
+
+      return workAct.copyWith(id: docRef.id);
+    } catch (e) {
+      print('Ошибка генерации акта выполненных работ: $e');
+      rethrow;
+    }
+  }
+
+  /// Подтвердить акт выполненных работ
+  Future<void> approveWorkAct(String workActId) async {
+    try {
+      await _firestore.collection('work_acts').doc(workActId).update({
         'status': WorkActStatus.completed.name,
-        'resolution': resolution,
+        'completedAt': Timestamp.fromDate(DateTime.now()),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
-      throw Exception('Ошибка разрешения спора: $e');
+      print('Ошибка подтверждения акта выполненных работ: $e');
+      rethrow;
     }
   }
 
-  /// Сгенерировать PDF акта
-  Future<String> generateWorkActPDF(String workActId) async {
-    try {
-      // Получаем акт
-      final workActDoc =
-          await _firestore.collection('workActs').doc(workActId).get();
-
-      if (!workActDoc.exists) {
-        throw Exception('Акт выполненных работ не найден');
-      }
-
-      final workAct = WorkAct.fromDocument(workActDoc);
-
-      // Здесь должна быть логика генерации PDF
-      // Пока возвращаем заглушку
-      return 'work_act_${workActId}.pdf';
-    } catch (e) {
-      throw Exception('Ошибка генерации PDF акта: $e');
-    }
-  }
-
-  // Приватные методы
-
-  Future<Booking?> _getBooking(String bookingId) async {
-    try {
-      final doc = await _firestore.collection('bookings').doc(bookingId).get();
-      if (doc.exists) {
-        return Booking.fromDocument(doc);
-      }
-      return null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  Future<WorkAct?> _getWorkAct(String workActId) async {
-    try {
-      final doc = await _firestore.collection('workActs').doc(workActId).get();
-      if (doc.exists) {
-        return WorkAct.fromDocument(doc);
-      }
-      return null;
-    } catch (e) {
-      return null;
-    }
-  }
-
+  /// Сгенерировать номер акта
   String _generateActNumber() {
     final now = DateTime.now();
-    final year = now.year;
+    final year = now.year.toString().substring(2);
     final month = now.month.toString().padLeft(2, '0');
     final day = now.day.toString().padLeft(2, '0');
     final random =
@@ -306,51 +764,4 @@ class WorkActService {
 
     return 'АВР-$year$month$day-$random';
   }
-
-  String _generateActContent({
-    required String actNumber,
-    required Booking booking,
-    required String workDescription,
-    required String workResults,
-    required double totalAmount,
-    required DateTime workStartDate,
-    required DateTime workEndDate,
-  }) =>
-      '''
-АКТ ВЫПОЛНЕННЫХ РАБОТ № $actNumber
-
-г. Москва                                    ${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year} г.
-
-Мы, нижеподписавшиеся, составили настоящий акт о том, что:
-
-ИСПОЛНИТЕЛЬ: ${booking.specialistName ?? 'Не указан'}
-ЗАКАЗЧИК: ${booking.customerName ?? 'Не указан'}
-
-ПРЕДМЕТ ДОГОВОРА:
-- Наименование мероприятия: ${booking.eventTitle}
-- Дата проведения: ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year}
-- Место проведения: ${booking.eventLocation ?? 'Не указано'}
-
-ВЫПОЛНЕННЫЕ РАБОТЫ:
-$workDescription
-
-РЕЗУЛЬТАТЫ РАБОТ:
-$workResults
-
-ПЕРИОД ВЫПОЛНЕНИЯ:
-- Начало работ: ${workStartDate.day}.${workStartDate.month}.${workStartDate.year}
-- Окончание работ: ${workEndDate.day}.${workEndDate.month}.${workEndDate.year}
-
-СТОИМОСТЬ ВЫПОЛНЕННЫХ РАБОТ:
-${totalAmount.toStringAsFixed(2)} рублей
-
-РАБОТЫ ВЫПОЛНЕНЫ В ПОЛНОМ ОБЪЕМЕ, В СООТВЕТСТВИИ С ДОГОВОРОМ.
-КАЧЕСТВО РАБОТ СООТВЕТСТВУЕТ ТРЕБОВАНИЯМ ДОГОВОРА.
-
-ПОДПИСИ СТОРОН:
-
-Исполнитель: _________________ ${booking.specialistName ?? 'Не указан'}
-
-Заказчик: _________________ ${booking.customerName ?? 'Не указан'}
-''';
 }

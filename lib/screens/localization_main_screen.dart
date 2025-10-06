@@ -132,7 +132,7 @@ class LocalizationMainScreen extends ConsumerWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.1),
+              color: Colors.blue.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
@@ -174,7 +174,7 @@ class LocalizationMainScreen extends ConsumerWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
@@ -247,7 +247,8 @@ class LocalizationMainScreen extends ConsumerWidget {
                                       width: 40,
                                       height: 40,
                                       decoration: BoxDecoration(
-                                        color: Colors.blue.withOpacity(0.1),
+                                        color:
+                                            Colors.blue.withValues(alpha: 0.1),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: Center(
@@ -375,7 +376,7 @@ class LocalizationMainScreen extends ConsumerWidget {
                         .map(
                           (language) => Chip(
                             label: Text(language.displayName),
-                            backgroundColor: Colors.blue.withOpacity(0.1),
+                            backgroundColor: Colors.blue.withValues(alpha: 0.1),
                             labelStyle: const TextStyle(
                               fontSize: 12,
                               color: Colors.blue,
@@ -413,12 +414,12 @@ class LocalizationMainScreen extends ConsumerWidget {
 
   void _navigateToScreen(BuildContext context, Widget screen) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => screen),
+      MaterialPageRoute<void>(builder: (context) => screen),
     );
   }
 
   void _exportTranslations(BuildContext context) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Экспорт переводов'),
@@ -436,7 +437,7 @@ class LocalizationMainScreen extends ConsumerWidget {
   }
 
   void _importTranslations(BuildContext context) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Импорт переводов'),
@@ -454,7 +455,7 @@ class LocalizationMainScreen extends ConsumerWidget {
   }
 
   void _clearCache(BuildContext context) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Очистить кэш'),
@@ -469,7 +470,7 @@ class LocalizationMainScreen extends ConsumerWidget {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              // TODO: Реализовать очистку кэша
+              // TODO(developer): Реализовать очистку кэша
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Кэш очищен'),
@@ -486,7 +487,7 @@ class LocalizationMainScreen extends ConsumerWidget {
   }
 
   void _refreshTranslations(BuildContext context) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Обновить переводы'),
@@ -499,7 +500,7 @@ class LocalizationMainScreen extends ConsumerWidget {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              // TODO: Реализовать обновление переводов
+              // TODO(developer): Реализовать обновление переводов
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Переводы обновлены'),

@@ -67,16 +67,16 @@ class FeatureRequest {
 
   /// Создать из Map
   factory FeatureRequest.fromMap(Map<String, dynamic> data) => FeatureRequest(
-        id: data['id'] ?? '',
-        userId: data['userId'] ?? '',
-        userName: data['userName'] ?? '',
-        userEmail: data['userEmail'],
+        id: data['id'] as String? ?? '',
+        userId: data['userId'] as String? ?? '',
+        userName: data['userName'] as String? ?? '',
+        userEmail: data['userEmail'] as String?,
         userType: UserType.values.firstWhere(
-          (e) => e.name == data['userType'],
+          (e) => e.name == data['userType'] as String?,
           orElse: () => UserType.customer,
         ),
-        title: data['title'] ?? '',
-        description: data['description'] ?? '',
+        title: data['title'] as String? ?? '',
+        description: data['description'] as String? ?? '',
         category: FeatureCategory.values.firstWhere(
           (e) => e.name == data['category'],
           orElse: () => FeatureCategory.other,
@@ -89,13 +89,16 @@ class FeatureRequest {
           (e) => e.name == data['status'],
           orElse: () => FeatureStatus.submitted,
         ),
-        tags: List<String>.from(data['tags'] ?? []),
-        attachments: List<String>.from(data['attachments'] ?? []),
-        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-        votes: data['votes'] ?? 0,
-        voters: List<String>.from(data['voters'] ?? []),
-        adminComment: data['adminComment'],
-        assignedTo: data['assignedTo'],
+        tags: List<String>.from((data['tags'] as List<dynamic>?) ?? []),
+        attachments:
+            List<String>.from((data['attachments'] as List<dynamic>?) ?? []),
+        metadata: Map<String, dynamic>.from(
+          (data['metadata'] as Map<dynamic, dynamic>?) ?? {},
+        ),
+        votes: data['votes'] as int? ?? 0,
+        voters: List<String>.from((data['voters'] as List<dynamic>?) ?? []),
+        adminComment: data['adminComment'] as String?,
+        assignedTo: data['assignedTo'] as String?,
         estimatedCompletion: data['estimatedCompletion'] != null
             ? (data['estimatedCompletion'] as Timestamp).toDate()
             : null,
@@ -320,13 +323,13 @@ class FeatureRequestStats {
   /// Создать из Map
   factory FeatureRequestStats.fromMap(Map<String, dynamic> data) =>
       FeatureRequestStats(
-        totalRequests: data['totalRequests'] ?? 0,
-        submittedRequests: data['submittedRequests'] ?? 0,
-        underReviewRequests: data['underReviewRequests'] ?? 0,
-        approvedRequests: data['approvedRequests'] ?? 0,
-        inDevelopmentRequests: data['inDevelopmentRequests'] ?? 0,
-        completedRequests: data['completedRequests'] ?? 0,
-        rejectedRequests: data['rejectedRequests'] ?? 0,
+        totalRequests: data['totalRequests'] as int? ?? 0,
+        submittedRequests: data['submittedRequests'] as int? ?? 0,
+        underReviewRequests: data['underReviewRequests'] as int? ?? 0,
+        approvedRequests: data['approvedRequests'] as int? ?? 0,
+        inDevelopmentRequests: data['inDevelopmentRequests'] as int? ?? 0,
+        completedRequests: data['completedRequests'] as int? ?? 0,
+        rejectedRequests: data['rejectedRequests'] as int? ?? 0,
         categoryStats: Map<FeatureCategory, int>.from(
           (data['categoryStats'] as Map?)?.map(
                 (key, value) => MapEntry(
@@ -363,9 +366,9 @@ class FeatureRequestStats {
               ) ??
               {},
         ),
-        totalVotes: data['totalVotes'] ?? 0,
+        totalVotes: data['totalVotes'] as int? ?? 0,
         averageVotesPerRequest:
-            (data['averageVotesPerRequest'] ?? 0.0).toDouble(),
+            (data['averageVotesPerRequest'] as num? ?? 0.0).toDouble(),
       );
   final int totalRequests;
   final int submittedRequests;

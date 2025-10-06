@@ -856,7 +856,7 @@ class _EnhancedRegistrationScreenState
   }
 
   void _completeRegistration() {
-    // TODO: Реализовать завершение регистрации
+    // TODO(developer): Реализовать завершение регистрации
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Регистрация завершена!')),
     );

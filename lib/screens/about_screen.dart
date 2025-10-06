@@ -309,7 +309,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
       );
 
   void _showPrivacyPolicy() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Политика конфиденциальности'),
@@ -331,7 +331,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
   }
 
   void _showTermsOfService() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Условия использования'),

@@ -1,9 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../generated/l10n/app_localizations.dart';
-import '../models/media_type.dart';
 import '../models/story.dart';
 import '../models/story_type.dart';
 import '../providers/story_providers.dart';
@@ -22,7 +22,7 @@ class StoryWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final timeLeft = story.expiresAt.difference(DateTime.now());
 
     return GestureDetector(
@@ -42,10 +42,16 @@ class StoryWidget extends ConsumerWidget {
             children: [
               // Медиа контент
               if (story.type == StoryType.image)
-                Image.network(
-                  story.mediaUrl,
+                CachedNetworkImage(
+                  imageUrl: story.mediaUrl,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
+                  placeholder: (context, url) => Container(
+                    color: Colors.grey[300],
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
                     color: Colors.grey[300],
                     child: const Icon(Icons.image, color: Colors.grey),
                   ),
@@ -53,20 +59,20 @@ class StoryWidget extends ConsumerWidget {
               else if (story.type == StoryType.video)
                 Stack(
                   children: [
-                    if (story.thumbnailUrl != null)
-                      Image.network(
-                        story.thumbnailUrl!,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          color: Colors.grey[300],
-                          child: const Icon(Icons.videocam, color: Colors.grey),
+                    CachedNetworkImage(
+                      imageUrl: story.thumbnailUrl,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Container(
+                        color: Colors.grey[300],
+                        child: const Center(
+                          child: CircularProgressIndicator(),
                         ),
-                      )
-                    else
-                      Container(
+                      ),
+                      errorWidget: (context, url, error) => Container(
                         color: Colors.grey[300],
                         child: const Icon(Icons.videocam, color: Colors.grey),
                       ),
+                    ),
                     const Positioned(
                       bottom: 4,
                       right: 4,
@@ -92,7 +98,7 @@ class StoryWidget extends ConsumerWidget {
                   right: 4,
                   child: LinearProgressIndicator(
                     value: 1.0 - (timeLeft.inMinutes / (24 * 60)),
-                    backgroundColor: Colors.white.withOpacity(0.3),
+                    backgroundColor: Colors.white.withValues(alpha: 0.3),
                     valueColor: const AlwaysStoppedAnimation<Color>(Colors.red),
                     minHeight: 2,
                   ),
@@ -141,7 +147,7 @@ class _CreateStoryWidgetState extends ConsumerState<CreateStoryWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return FloatingActionButton(
       onPressed: _isUploading ? null : _showCreateStoryDialog,
@@ -152,9 +158,9 @@ class _CreateStoryWidgetState extends ConsumerState<CreateStoryWidget> {
   }
 
   void _showCreateStoryDialog() {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       builder: (context) => SafeArea(
         child: Column(
@@ -204,29 +210,27 @@ class _CreateStoryWidgetState extends ConsumerState<CreateStoryWidget> {
       if (file == null) return;
 
       final service = ref.read(storyServiceProvider);
-      final story = Story(
-        id: '', // Будет установлен при создании
+      await service.createStory(
         specialistId: widget.specialistId,
-        specialistName: widget.specialistName,
-        specialistPhotoUrl: widget.specialistPhotoUrl,
         mediaUrl: file.path,
-        mediaType: type == StoryType.image ? MediaType.image : MediaType.video,
-        createdAt: DateTime.now(),
-        expiresAt: DateTime.now().add(const Duration(hours: 24)),
+        metadata: {
+          'specialistName': widget.specialistName,
+          'specialistPhotoUrl': widget.specialistPhotoUrl,
+          'mediaType': type == StoryType.image ? 'image' : 'video',
+        },
       );
-      await service.createStory(story);
 
       widget.onStoryCreated?.call();
 
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
+        final l10n = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(l10n.storyCreatedSuccessfully)),
         );
       }
     } catch (e) {
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
+        final l10n = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${l10n.errorCreatingStory}: $e'),
@@ -307,7 +311,7 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
       final service = ref.read(storyServiceProvider);
       await service.markStoryAsViewed(
         widget.story.id,
-        'current_user', // TODO: Получить реальный ID пользователя
+        'current_user', // TODO(developer): Получить реальный ID пользователя
       );
     } catch (e) {
       // Игнорируем ошибки
@@ -322,11 +326,13 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
             // Медиа контент
             Center(
               child: widget.story.type == StoryType.image
-                  ? Image.network(
-                      widget.story.mediaUrl,
+                  ? CachedNetworkImage(
+                      imageUrl: widget.story.mediaUrl,
                       fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Center(
+                      placeholder: (context, url) => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      errorWidget: (context, url, error) => const Center(
                         child: Icon(Icons.error, color: Colors.white, size: 64),
                       ),
                     )
@@ -358,12 +364,8 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
               child: Row(
                 children: [
                   CircleAvatar(
-                    backgroundImage: widget.story.specialistPhotoUrl != null
-                        ? NetworkImage(widget.story.specialistPhotoUrl!)
-                        : null,
-                    child: widget.story.specialistPhotoUrl == null
-                        ? const Icon(Icons.person)
-                        : null,
+                    backgroundImage:
+                        NetworkImage(widget.story.specialistPhotoUrl),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -397,8 +399,7 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
             ),
 
             // Подпись
-            if (widget.story.caption != null &&
-                widget.story.caption!.isNotEmpty)
+            if (widget.story.caption.isNotEmpty)
               Positioned(
                 bottom: 100,
                 left: 16,
@@ -406,11 +407,11 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.5),
+                    color: Colors.black.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    widget.story.caption!,
+                    widget.story.caption,
                     style: const TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),
@@ -448,7 +449,7 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
       final service = ref.read(storyServiceProvider);
       await service.likeStory(
         widget.story.id,
-        'current_user', // TODO: Получить реальный ID пользователя
+        'current_user', // TODO(developer): Получить реальный ID пользователя
       );
     } catch (e) {
       if (mounted) {

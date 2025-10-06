@@ -96,13 +96,13 @@ final bookingByIdProvider =
 final isUserAdminProvider =
     FutureProvider.family<bool, String>((ref, userId) async {
   final adminService = ref.read(adminServiceProvider);
-  return await adminService.isUserAdmin(userId);
+  return adminService.isUserAdmin(userId);
 });
 
 /// Провайдер для получения настроек админ-панели
 final adminSettingsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
   final adminService = ref.read(adminServiceProvider);
-  return await adminService.getAdminSettings();
+  return adminService.getAdminSettings();
 });
 
 /// Нотификатор для статуса админ-действий

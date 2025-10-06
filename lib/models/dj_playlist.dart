@@ -38,12 +38,12 @@ class MediaFile {
 
   /// Создать из Map
   factory MediaFile.fromMap(Map<String, dynamic> data) => MediaFile(
-        id: data['id'] ?? '',
-        djId: data['djId'] ?? '',
-        fileName: data['fileName'] ?? '',
-        originalName: data['originalName'] ?? '',
-        filePath: data['filePath'] ?? '',
-        thumbnailPath: data['thumbnailPath'],
+        id: data['id'] as String? ?? '',
+        djId: data['djId'] as String? ?? '',
+        fileName: data['fileName'] as String? ?? '',
+        originalName: data['originalName'] as String? ?? '',
+        filePath: data['filePath'] as String? ?? '',
+        thumbnailPath: data['thumbnailPath'] as String?,
         type: MediaType.values.firstWhere(
           (e) => e.name == data['type'],
           orElse: () => MediaType.audio,
@@ -52,12 +52,14 @@ class MediaFile {
           (e) => e.name == data['status'],
           orElse: () => MediaStatus.pending,
         ),
-        fileSize: data['fileSize'] ?? 0,
+        fileSize: data['fileSize'] as int? ?? 0,
         duration: data['duration'] != null
-            ? Duration(milliseconds: data['duration'])
+            ? Duration(milliseconds: data['duration'] as int)
             : null,
-        mimeType: data['mimeType'],
-        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+        mimeType: data['mimeType'] as String?,
+        metadata: Map<String, dynamic>.from(
+          (data['metadata'] as Map<dynamic, dynamic>?) ?? {},
+        ),
         uploadedAt: (data['uploadedAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       );
@@ -185,19 +187,22 @@ class DJPlaylist {
 
   /// Создать из Map
   factory DJPlaylist.fromMap(Map<String, dynamic> data) => DJPlaylist(
-        id: data['id'] ?? '',
-        djId: data['djId'] ?? '',
-        name: data['name'] ?? '',
-        description: data['description'],
-        coverImagePath: data['coverImagePath'],
-        mediaFileIds: List<String>.from(data['mediaFileIds'] ?? []),
+        id: data['id'] as String? ?? '',
+        djId: data['djId'] as String? ?? '',
+        name: data['name'] as String? ?? '',
+        description: data['description'] as String?,
+        coverImagePath: data['coverImagePath'] as String?,
+        mediaFileIds:
+            List<String>.from((data['mediaFileIds'] as List<dynamic>?) ?? []),
         mediaFiles: [], // Будет заполнено отдельно
-        settings: Map<String, dynamic>.from(data['settings'] ?? {}),
-        isPublic: data['isPublic'] ?? false,
-        isDefault: data['isDefault'] ?? false,
-        playCount: data['playCount'] ?? 0,
-        averageRating: data['averageRating']?.toDouble(),
-        ratingCount: data['ratingCount'] ?? 0,
+        settings: Map<String, dynamic>.from(
+          (data['settings'] as Map<dynamic, dynamic>?) ?? {},
+        ),
+        isPublic: data['isPublic'] as bool? ?? false,
+        isDefault: data['isDefault'] as bool? ?? false,
+        playCount: data['playCount'] as int? ?? 0,
+        averageRating: (data['averageRating'] as num?)?.toDouble(),
+        ratingCount: data['ratingCount'] as int? ?? 0,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       );
@@ -335,17 +340,19 @@ class VKPlaylist {
   /// Создать из Map
   factory VKPlaylist.fromMap(Map<String, dynamic> data) => VKPlaylist(
         id: data['id']?.toString() ?? '',
-        title: data['title'] ?? '',
-        description: data['description'],
-        coverImageUrl: data['cover_image']?[0]?['url'],
-        trackCount: data['count'] ?? 0,
+        title: data['title'] as String? ?? '',
+        description: data['description'] as String?,
+        coverImageUrl: data['cover_image']?[0]?['url'] as String?,
+        trackCount: data['count'] as int? ?? 0,
         ownerId: data['owner_id']?.toString(),
-        ownerName: data['owner_name'],
+        ownerName: data['owner_name'] as String?,
         createdAt: data['create_time'] != null
-            ? DateTime.fromMillisecondsSinceEpoch(data['create_time'] * 1000)
+            ? DateTime.fromMillisecondsSinceEpoch(
+                (data['create_time'] as int) * 1000,
+              )
             : null,
-        tracks: (data['tracks'] as List?)
-                ?.map((track) => VKTrack.fromMap(track))
+        tracks: (data['tracks'] as List<dynamic>?)
+                ?.map((track) => VKTrack.fromMap(track as Map<String, dynamic>))
                 .toList() ??
             [],
       );
@@ -394,12 +401,12 @@ class VKTrack {
   /// Создать из Map
   factory VKTrack.fromMap(Map<String, dynamic> data) => VKTrack(
         id: data['id']?.toString() ?? '',
-        title: data['title'] ?? '',
-        artist: data['artist'] ?? '',
-        duration: Duration(seconds: data['duration'] ?? 0),
-        url: data['url'],
-        albumTitle: data['album']?['title'],
-        albumCoverUrl: data['album']?['thumb']?['photo_300'],
+        title: data['title'] as String? ?? '',
+        artist: data['artist'] as String? ?? '',
+        duration: Duration(seconds: data['duration'] as int? ?? 0),
+        url: data['url'] as String?,
+        albumTitle: data['album']?['title'] as String?,
+        albumCoverUrl: data['album']?['thumb']?['photo_300'] as String?,
       );
   final String id;
   final String title;

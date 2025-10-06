@@ -750,7 +750,7 @@ class ReportService {
     Map<String, dynamic> parameters,
   ) async {
     try {
-      // TODO: Реализовать сбор метрик производительности
+      // TODO(developer): Реализовать сбор метрик производительности
       return ReportData(
         reportId: '',
         rows: [],
@@ -774,7 +774,7 @@ class ReportService {
     Map<String, dynamic> parameters,
   ) async {
     try {
-      // TODO: Реализовать генерацию пользовательских отчетов
+      // TODO(developer): Реализовать генерацию пользовательских отчетов
       return ReportData(
         reportId: '',
         rows: [],
@@ -811,7 +811,7 @@ class ReportService {
         csv.writeln(values.join(','));
       }
 
-      // TODO: Сохранить файл в Firebase Storage и вернуть URL
+      // TODO(developer): Сохранить файл в Firebase Storage и вернуть URL
       return 'https://storage.googleapis.com/reports/$reportId.csv';
     } catch (e) {
       if (kDebugMode) {

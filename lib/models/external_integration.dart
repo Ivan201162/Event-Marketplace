@@ -26,8 +26,8 @@ class ExternalIntegration {
     final data = doc.data()! as Map<String, dynamic>;
     return ExternalIntegration(
       id: doc.id,
-      name: data['name'] ?? '',
-      description: data['description'] ?? '',
+      name: data['name'] as String? ?? '',
+      description: data['description'] as String? ?? '',
       type: IntegrationType.values.firstWhere(
         (e) => e.toString().split('.').last == data['type'],
         orElse: () => IntegrationType.api,
@@ -36,31 +36,39 @@ class ExternalIntegration {
         (e) => e.toString().split('.').last == data['status'],
         orElse: () => IntegrationStatus.inactive,
       ),
-      baseUrl: data['baseUrl'] ?? '',
-      headers: Map<String, String>.from(data['headers'] ?? {}),
-      configuration: Map<String, dynamic>.from(data['configuration'] ?? {}),
+      baseUrl: data['baseUrl'] as String? ?? '',
+      headers: Map<String, String>.from(
+        (data['headers'] as Map<dynamic, dynamic>?) ?? {},
+      ),
+      configuration: Map<String, dynamic>.from(
+        (data['configuration'] as Map<dynamic, dynamic>?) ?? {},
+      ),
       authType: AuthenticationType.values.firstWhere(
         (e) => e.toString().split('.').last == data['authType'],
         orElse: () => AuthenticationType.none,
       ),
-      credentials: Map<String, String>.from(data['credentials'] ?? {}),
+      credentials: Map<String, String>.from(
+        (data['credentials'] as Map<dynamic, dynamic>?) ?? {},
+      ),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      createdBy: data['createdBy'],
+      createdBy: data['createdBy'] as String?,
       lastSyncAt: data['lastSyncAt'] != null
           ? (data['lastSyncAt'] as Timestamp).toDate()
           : null,
-      lastError: data['lastError'],
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      lastError: data['lastError'] as String?,
+      metadata: Map<String, dynamic>.from(
+        (data['metadata'] as Map<dynamic, dynamic>?) ?? {},
+      ),
     );
   }
 
   /// Создать из Map
   factory ExternalIntegration.fromMap(Map<String, dynamic> data) =>
       ExternalIntegration(
-        id: data['id'] ?? '',
-        name: data['name'] ?? '',
-        description: data['description'] ?? '',
+        id: data['id'] as String? ?? '',
+        name: data['name'] as String? ?? '',
+        description: data['description'] as String? ?? '',
         type: IntegrationType.values.firstWhere(
           (e) => e.toString().split('.').last == data['type'],
           orElse: () => IntegrationType.api,
@@ -69,22 +77,30 @@ class ExternalIntegration {
           (e) => e.toString().split('.').last == data['status'],
           orElse: () => IntegrationStatus.inactive,
         ),
-        baseUrl: data['baseUrl'] ?? '',
-        headers: Map<String, String>.from(data['headers'] ?? {}),
-        configuration: Map<String, dynamic>.from(data['configuration'] ?? {}),
+        baseUrl: data['baseUrl'] as String? ?? '',
+        headers: Map<String, String>.from(
+          (data['headers'] as Map<dynamic, dynamic>?) ?? {},
+        ),
+        configuration: Map<String, dynamic>.from(
+          (data['configuration'] as Map<dynamic, dynamic>?) ?? {},
+        ),
         authType: AuthenticationType.values.firstWhere(
           (e) => e.toString().split('.').last == data['authType'],
           orElse: () => AuthenticationType.none,
         ),
-        credentials: Map<String, String>.from(data['credentials'] ?? {}),
+        credentials: Map<String, String>.from(
+          (data['credentials'] as Map<dynamic, dynamic>?) ?? {},
+        ),
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-        createdBy: data['createdBy'],
+        createdBy: data['createdBy'] as String?,
         lastSyncAt: data['lastSyncAt'] != null
             ? (data['lastSyncAt'] as Timestamp).toDate()
             : null,
-        lastError: data['lastError'],
-        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+        lastError: data['lastError'] as String?,
+        metadata: Map<String, dynamic>.from(
+          (data['metadata'] as Map<dynamic, dynamic>?) ?? {},
+        ),
       );
   final String id;
   final String name;
@@ -242,32 +258,34 @@ class DataSync {
     final data = doc.data()! as Map<String, dynamic>;
     return DataSync(
       id: doc.id,
-      integrationId: data['integrationId'] ?? '',
+      integrationId: data['integrationId'] as String? ?? '',
       direction: SyncDirection.values.firstWhere(
-        (e) => e.toString().split('.').last == data['direction'],
+        (e) => e.toString().split('.').last == data['direction'] as String?,
         orElse: () => SyncDirection.bidirectional,
       ),
       status: SyncStatus.values.firstWhere(
-        (e) => e.toString().split('.').last == data['status'],
+        (e) => e.toString().split('.').last == data['status'] as String?,
         orElse: () => SyncStatus.pending,
       ),
-      dataType: data['dataType'] ?? '',
-      totalRecords: data['totalRecords'] ?? 0,
-      syncedRecords: data['syncedRecords'] ?? 0,
-      failedRecords: data['failedRecords'] ?? 0,
+      dataType: data['dataType'] as String? ?? '',
+      totalRecords: data['totalRecords'] as int? ?? 0,
+      syncedRecords: data['syncedRecords'] as int? ?? 0,
+      failedRecords: data['failedRecords'] as int? ?? 0,
       startedAt: (data['startedAt'] as Timestamp).toDate(),
       completedAt: data['completedAt'] != null
           ? (data['completedAt'] as Timestamp).toDate()
           : null,
-      errorMessage: data['errorMessage'],
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      errorMessage: data['errorMessage'] as String?,
+      metadata: Map<String, dynamic>.from(
+        (data['metadata'] as Map<dynamic, dynamic>?) ?? {},
+      ),
     );
   }
 
   /// Создать из Map
   factory DataSync.fromMap(Map<String, dynamic> data) => DataSync(
-        id: data['id'] ?? '',
-        integrationId: data['integrationId'] ?? '',
+        id: data['id'] as String? ?? '',
+        integrationId: data['integrationId'] as String? ?? '',
         direction: SyncDirection.values.firstWhere(
           (e) => e.toString().split('.').last == data['direction'],
           orElse: () => SyncDirection.bidirectional,
@@ -276,16 +294,18 @@ class DataSync {
           (e) => e.toString().split('.').last == data['status'],
           orElse: () => SyncStatus.pending,
         ),
-        dataType: data['dataType'] ?? '',
-        totalRecords: data['totalRecords'] ?? 0,
-        syncedRecords: data['syncedRecords'] ?? 0,
-        failedRecords: data['failedRecords'] ?? 0,
+        dataType: data['dataType'] as String? ?? '',
+        totalRecords: data['totalRecords'] as int? ?? 0,
+        syncedRecords: data['syncedRecords'] as int? ?? 0,
+        failedRecords: data['failedRecords'] as int? ?? 0,
         startedAt: (data['startedAt'] as Timestamp).toDate(),
         completedAt: data['completedAt'] != null
             ? (data['completedAt'] as Timestamp).toDate()
             : null,
-        errorMessage: data['errorMessage'],
-        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+        errorMessage: data['errorMessage'] as String?,
+        metadata: Map<String, dynamic>.from(
+          (data['metadata'] as Map<dynamic, dynamic>?) ?? {},
+        ),
       );
   final String id;
   final String integrationId;

@@ -20,6 +20,26 @@ class SecurityPasswordStrength {
     this.hasNoCommonPatterns = false,
   });
 
+  factory SecurityPasswordStrength.fromJson(Map<String, dynamic> json) =>
+      SecurityPasswordStrength(
+        strength: PasswordStrength.values.firstWhere(
+          (e) => e.name == json['strength'],
+          orElse: () => PasswordStrength.weak,
+        ),
+        score: json['score'] as int? ?? 0,
+        suggestions:
+            (json['suggestions'] as List<dynamic>?)?.cast<String>() ?? [],
+        hasMinLength: json['hasMinLength'] as bool? ?? false,
+        hasUppercase: json['hasUppercase'] as bool? ?? false,
+        hasLowercase: json['hasLowercase'] as bool? ?? false,
+        hasNumbers: json['hasNumbers'] as bool? ?? false,
+        hasSpecialChars: json['hasSpecialChars'] as bool? ?? false,
+        hasNoCommonPatterns: json['hasNoCommonPatterns'] as bool? ?? false,
+      );
+
+  factory SecurityPasswordStrength.fromMap(Map<String, dynamic> map) =>
+      SecurityPasswordStrength.fromJson(map);
+
   final PasswordStrength strength;
   final int score;
   final List<String> suggestions;
@@ -41,26 +61,6 @@ class SecurityPasswordStrength {
 
   /// Максимальный балл
   int get maxScore => 100;
-
-  factory SecurityPasswordStrength.fromJson(Map<String, dynamic> json) =>
-      SecurityPasswordStrength(
-        strength: PasswordStrength.values.firstWhere(
-          (e) => e.name == json['strength'],
-          orElse: () => PasswordStrength.weak,
-        ),
-        score: json['score'] as int? ?? 0,
-        suggestions:
-            (json['suggestions'] as List<dynamic>?)?.cast<String>() ?? [],
-        hasMinLength: json['hasMinLength'] as bool? ?? false,
-        hasUppercase: json['hasUppercase'] as bool? ?? false,
-        hasLowercase: json['hasLowercase'] as bool? ?? false,
-        hasNumbers: json['hasNumbers'] as bool? ?? false,
-        hasSpecialChars: json['hasSpecialChars'] as bool? ?? false,
-        hasNoCommonPatterns: json['hasNoCommonPatterns'] as bool? ?? false,
-      );
-
-  factory SecurityPasswordStrength.fromMap(Map<String, dynamic> map) =>
-      SecurityPasswordStrength.fromJson(map);
 
   Map<String, dynamic> toJson() => {
         'strength': strength.name,

@@ -111,8 +111,8 @@ class _SupportTicketsScreenState extends ConsumerState<SupportTicketsScreen> {
       );
 
   Widget _buildTicketsList() => StreamBuilder<List<SupportTicket>>(
-        stream: _supportService
-            .getUserTickets('demo_user_id'), // TODO: Получить из контекста
+        stream: _supportService.getUserTickets(
+            'demo_user_id'), // TODO(developer): Получить из контекста
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -184,7 +184,7 @@ class _SupportTicketsScreenState extends ConsumerState<SupportTicketsScreen> {
   void _createTicket() {
     Navigator.of(context)
         .push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => const CreateSupportTicketScreen(),
       ),
     )
@@ -198,7 +198,7 @@ class _SupportTicketsScreenState extends ConsumerState<SupportTicketsScreen> {
   void _showTicketDetail(SupportTicket ticket) {
     Navigator.of(context)
         .push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => SupportTicketDetailScreen(
           ticket: ticket,
         ),
@@ -212,14 +212,14 @@ class _SupportTicketsScreenState extends ConsumerState<SupportTicketsScreen> {
   }
 
   void _showFAQ() {
-    // TODO: Реализовать экран FAQ
+    // TODO(developer): Реализовать экран FAQ
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('FAQ пока не реализован')),
     );
   }
 
   void _contactSupport() {
-    // TODO: Реализовать контакты поддержки
+    // TODO(developer): Реализовать контакты поддержки
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Контакты поддержки пока не реализованы')),
     );
@@ -312,10 +312,10 @@ class _SupportTicketDetailScreenState
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: widget.ticket.statusColor.withOpacity(0.1),
+                    color: widget.ticket.statusColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: widget.ticket.statusColor.withOpacity(0.3),
+                      color: widget.ticket.statusColor.withValues(alpha: 0.3),
                     ),
                   ),
                   child: Text(
@@ -525,7 +525,7 @@ class _SupportTicketDetailScreenState
     try {
       await _supportService.addMessage(
         ticketId: widget.ticket.id,
-        authorId: 'demo_user_id', // TODO: Получить из контекста
+        authorId: 'demo_user_id', // TODO(developer): Получить из контекста
         authorName: 'Пользователь',
         authorEmail: 'user@example.com',
         content: content,
@@ -549,7 +549,7 @@ class _SupportTicketDetailScreenState
   }
 
   void _closeTicket() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Закрыть тикет'),

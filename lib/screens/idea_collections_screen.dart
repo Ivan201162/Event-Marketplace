@@ -116,7 +116,7 @@ class _IdeaCollectionsScreenState extends ConsumerState<IdeaCollectionsScreen> {
   void _createCollection() {
     Navigator.of(context)
         .push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => CreateIdeaCollectionScreen(
           userId: widget.userId,
         ),
@@ -130,21 +130,21 @@ class _IdeaCollectionsScreenState extends ConsumerState<IdeaCollectionsScreen> {
   }
 
   void _showCollectionDetail(IdeaCollection collection) {
-    // TODO: Реализовать экран детального просмотра коллекции
+    // TODO(developer): Реализовать экран детального просмотра коллекции
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Коллекция: ${collection.name}')),
     );
   }
 
   void _editCollection(IdeaCollection collection) {
-    // TODO: Реализовать редактирование коллекции
+    // TODO(developer): Реализовать редактирование коллекции
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Редактирование: ${collection.name}')),
     );
   }
 
   void _deleteCollection(IdeaCollection collection) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить коллекцию'),
@@ -159,7 +159,7 @@ class _IdeaCollectionsScreenState extends ConsumerState<IdeaCollectionsScreen> {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              // TODO: Реализовать удаление коллекции
+              // TODO(developer): Реализовать удаление коллекции
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Коллекция "${collection.name}" удалена'),

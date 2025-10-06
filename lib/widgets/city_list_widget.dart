@@ -62,7 +62,7 @@ class CityListWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: ListTile(
         leading: _buildCityIcon(city, theme),
         title: Text(
@@ -92,62 +92,58 @@ class CityListWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildCityIcon(CityRegion city, ThemeData theme) {
-    return Container(
-      width: 48,
-      height: 48,
-      decoration: BoxDecoration(
-        color: _getCityColor(city, theme).withOpacity(0.1),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: _getCityColor(city, theme).withOpacity(0.3),
-          width: 2,
+  Widget _buildCityIcon(CityRegion city, ThemeData theme) => Container(
+        width: 48,
+        height: 48,
+        decoration: BoxDecoration(
+          color: _getCityColor(city, theme).withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: _getCityColor(city, theme).withValues(alpha: 0.3),
+            width: 2,
+          ),
         ),
-      ),
-      child: Center(
-        child: Text(
-          city.citySize.icon,
-          style: const TextStyle(fontSize: 20),
+        child: Center(
+          child: Text(
+            city.citySize.icon,
+            style: const TextStyle(fontSize: 20),
+          ),
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildCityInfo(CityRegion city, ThemeData theme) {
-    return Row(
-      children: [
-        if (city.population > 0) ...[
-          Icon(
-            Icons.people,
-            size: 14,
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-          const SizedBox(width: 4),
-          Text(
-            _formatPopulation(city.population),
-            style: theme.textTheme.bodySmall?.copyWith(
+  Widget _buildCityInfo(CityRegion city, ThemeData theme) => Row(
+        children: [
+          if (city.population > 0) ...[
+            Icon(
+              Icons.people,
+              size: 14,
               color: theme.colorScheme.onSurfaceVariant,
             ),
-          ),
-          const SizedBox(width: 16),
-        ],
-        if (city.totalSpecialists > 0) ...[
-          Icon(
-            Icons.work,
-            size: 14,
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-          const SizedBox(width: 4),
-          Text(
-            '${city.totalSpecialists} специалистов',
-            style: theme.textTheme.bodySmall?.copyWith(
+            const SizedBox(width: 4),
+            Text(
+              _formatPopulation(city.population),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(width: 16),
+          ],
+          if (city.totalSpecialists > 0) ...[
+            Icon(
+              Icons.work,
+              size: 14,
               color: theme.colorScheme.onSurfaceVariant,
             ),
-          ),
+            const SizedBox(width: 4),
+            Text(
+              '${city.totalSpecialists} специалистов',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
         ],
-      ],
-    );
-  }
+      );
 
   Widget _buildDistanceInfo(CityRegion city, ThemeData theme) {
     if (userLocation == null) return const SizedBox.shrink();
@@ -155,7 +151,7 @@ class CityListWidget extends StatelessWidget {
     final distance = city.coordinates.distanceTo(userLocation!);
 
     return Padding(
-      padding: const EdgeInsets.only(top: 4.0),
+      padding: const EdgeInsets.only(top: 4),
       child: Row(
         children: [
           Icon(
@@ -176,46 +172,44 @@ class CityListWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildTrailingInfo(CityRegion city, ThemeData theme) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        if (city.isCapital)
-          Icon(
-            Icons.star,
-            color: Colors.amber,
-            size: 20,
-          )
-        else if (city.isMajorCity)
-          Icon(
-            Icons.star_border,
-            color: theme.colorScheme.primary,
-            size: 20,
-          ),
-        if (city.avgSpecialistRating > 0) ...[
-          const SizedBox(height: 4),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.star_rate,
-                size: 14,
-                color: Colors.amber,
-              ),
-              const SizedBox(width: 2),
-              Text(
-                city.avgSpecialistRating.toStringAsFixed(1),
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+  Widget _buildTrailingInfo(CityRegion city, ThemeData theme) => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          if (city.isCapital)
+            const Icon(
+              Icons.star,
+              color: Colors.amber,
+              size: 20,
+            )
+          else if (city.isMajorCity)
+            Icon(
+              Icons.star_border,
+              color: theme.colorScheme.primary,
+              size: 20,
+            ),
+          if (city.avgSpecialistRating > 0) ...[
+            const SizedBox(height: 4),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.star_rate,
+                  size: 14,
+                  color: Colors.amber,
                 ),
-              ),
-            ],
-          ),
+                const SizedBox(width: 2),
+                Text(
+                  city.avgSpecialistRating.toStringAsFixed(1),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ],
-      ],
-    );
-  }
+      );
 
   Color _getCityColor(CityRegion city, ThemeData theme) {
     if (city.isCapital) return Colors.amber;

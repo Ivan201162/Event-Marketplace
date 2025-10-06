@@ -3,9 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 /// Провайдер для управления кэшем изображений
-final imageCacheProvider = Provider<ImageCacheManager>((ref) {
-  return ImageCacheManager();
-});
+final imageCacheProvider =
+    Provider<ImageCacheManager>((ref) => ImageCacheManager());
 
 /// Менеджер кэша изображений
 class ImageCacheManager {
@@ -61,7 +60,10 @@ final imagePreloadProvider =
   try {
     await precacheImage(
       CachedNetworkImageProvider(imageUrl),
-      ref.read(imageCacheProvider).initializeCache() as BuildContext,
+      ref
+              .read(imageCacheProvider)
+              .initializeCache()!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          as BuildContext,
     );
   } catch (e) {
     // Игнорируем ошибки предварительной загрузки
@@ -70,9 +72,7 @@ final imagePreloadProvider =
 });
 
 /// Провайдер для управления памятью
-final memoryManagerProvider = Provider<MemoryManager>((ref) {
-  return MemoryManager();
-});
+final memoryManagerProvider = Provider<MemoryManager>((ref) => MemoryManager());
 
 /// Менеджер памяти
 class MemoryManager {

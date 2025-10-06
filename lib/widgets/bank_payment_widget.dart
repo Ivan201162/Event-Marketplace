@@ -397,7 +397,7 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
 
   void _openPaymentPage() {
     if (_paymentResult != null) {
-      // TODO: Открыть страницу оплаты или внешний браузер
+      // TODO(developer): Открыть страницу оплаты или внешний браузер
       _showInfo('Переход к оплате...');
     }
   }

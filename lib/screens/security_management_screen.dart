@@ -1007,7 +1007,7 @@ class _SecurityManagementScreenState
   }
 
   void _resolveAudit(SecurityAudit audit) {
-    // TODO: Реализовать разрешение события аудита
+    // TODO(developer): Реализовать разрешение события аудита
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content:
@@ -1032,7 +1032,7 @@ class _SecurityManagementScreenState
   }
 
   void _editPolicy(SecurityPolicy policy) {
-    // TODO: Реализовать редактирование политики
+    // TODO(developer): Реализовать редактирование политики
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content:
@@ -1042,7 +1042,7 @@ class _SecurityManagementScreenState
   }
 
   void _togglePolicy(SecurityPolicy policy) {
-    // TODO: Реализовать включение/отключение политики
+    // TODO(developer): Реализовать включение/отключение политики
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -1053,7 +1053,7 @@ class _SecurityManagementScreenState
   }
 
   void _deletePolicy(SecurityPolicy policy) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить политику'),
@@ -1097,7 +1097,7 @@ class _SecurityManagementScreenState
   }
 
   void _showCreatePolicyDialog() {
-    // TODO: Реализовать диалог создания политики
+    // TODO(developer): Реализовать диалог создания политики
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Создание политики безопасности будет реализовано'),
@@ -1106,7 +1106,7 @@ class _SecurityManagementScreenState
   }
 
   void _showCreateKeyDialog() {
-    // TODO: Реализовать диалог создания ключа шифрования
+    // TODO(developer): Реализовать диалог создания ключа шифрования
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Создание ключа шифрования будет реализовано'),
@@ -1115,7 +1115,7 @@ class _SecurityManagementScreenState
   }
 
   void _testEncryption() {
-    // TODO: Реализовать тест шифрования
+    // TODO(developer): Реализовать тест шифрования
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Тест шифрования будет реализован'),

@@ -1,8 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 /// Оптимизации производительности для Event Marketplace App
 class PerformanceOptimizations {
@@ -51,16 +51,15 @@ class PerformanceOptimizations {
             child: CircularProgressIndicator(),
           ),
         ),
-        errorBuilder: (context, error, stackTrace) => Container(
+        errorWidget: (context, url, error) => Container(
           width: width,
           height: height,
           color: Colors.grey[300],
           child: const Icon(Icons.error),
         ),
         // Оптимизации для производительности
-        cacheWidth: width?.toInt(),
-        cacheHeight: height?.toInt(),
-        filterQuality: FilterQuality.low,
+        memCacheWidth: width?.toInt(),
+        memCacheHeight: height?.toInt(),
       );
 
   /// Оптимизация списков

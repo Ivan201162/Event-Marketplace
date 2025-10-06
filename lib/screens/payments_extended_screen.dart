@@ -361,14 +361,14 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
   }
 
   void _showCreatePaymentDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Создать платеж'),
         content: SizedBox(
           width: double.maxFinite,
           child: PaymentTypeSelector(
-            totalAmount: 50000, // TODO: Получить из контекста
+            totalAmount: 50000, // TODO(developer): Получить из контекста
             settings: _settings,
             onPaymentTypeSelected:
                 (type, advancePercentage, installments) async {
@@ -382,7 +382,7 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
   }
 
   void _showPaymentDetails(PaymentExtended payment) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Платеж ${payment.id}'),
@@ -422,7 +422,7 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
   }
 
   void _showPaymentDialog(PaymentExtended payment) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Оплата'),
@@ -447,7 +447,7 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
   }
 
   void _showSettingsDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Настройки предоплаты'),

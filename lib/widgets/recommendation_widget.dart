@@ -37,7 +37,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
               RecommendationInteraction(
                 id: '${recommendation.id}_${DateTime.now().millisecondsSinceEpoch}',
                 userId:
-                    'current_user', // TODO: Получить реальный ID пользователя
+                    'current_user', // TODO(developer): Получить реальный ID пользователя
                 recommendationId: recommendation.id,
                 specialistId: specialist.id,
                 type: RecommendationInteractionType.viewed,
@@ -76,18 +76,20 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
     BuildContext context,
     Recommendation recommendation,
   ) {
-    final typeInfo = recommendation.type.info;
+    final typeName = recommendation.type.displayName;
+    final typeColor = _getRecommendationTypeColor(recommendation.type);
+    final typeIcon = _getRecommendationTypeIcon(recommendation.type);
 
     return Row(
       children: [
         Container(
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-            color: _parseColor(typeInfo.color).withOpacity(0.1),
+            color: typeColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(6),
           ),
           child: Text(
-            typeInfo.icon,
+            typeIcon,
             style: const TextStyle(fontSize: 16),
           ),
         ),
@@ -97,10 +99,10 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                typeInfo.title,
+                typeName,
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: _parseColor(typeInfo.color),
+                      color: typeColor,
                     ),
               ),
               Text(
@@ -109,7 +111,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
                       color: Theme.of(context)
                           .colorScheme
                           .onSurface
-                          .withOpacity(0.6),
+                          .withValues(alpha: 0.6),
                     ),
               ),
             ],
@@ -149,7 +151,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.7),
+                            .withValues(alpha: 0.7),
                       ),
                 ),
                 Row(
@@ -173,7 +175,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
                             color: Theme.of(context)
                                 .colorScheme
                                 .onSurface
-                                .withOpacity(0.6),
+                                .withValues(alpha: 0.6),
                           ),
                     ),
                   ],
@@ -196,7 +198,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: Colors.green.withOpacity(0.1),
+                    color: Colors.green.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -223,7 +225,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
           color: Theme.of(context)
               .colorScheme
               .surfaceContainerHighest
-              .withOpacity(0.3),
+              .withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
@@ -241,7 +243,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
                       color: Theme.of(context)
                           .colorScheme
                           .onSurface
-                          .withOpacity(0.8),
+                          .withValues(alpha: 0.8),
                     ),
               ),
             ),
@@ -260,7 +262,8 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
                     .recordInteraction(
                       RecommendationInteraction(
                         id: '${recommendation.id}_clicked_${DateTime.now().millisecondsSinceEpoch}',
-                        userId: 'current_user_id', // TODO: Get actual user ID
+                        userId:
+                            'current_user_id', // TODO(developer): Get actual user ID
                         recommendationId: recommendation.id,
                         specialistId: recommendation.specialist!.id,
                         type: RecommendationInteractionType.clicked,
@@ -294,7 +297,8 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
                   .recordInteraction(
                     RecommendationInteraction(
                       id: '${recommendation.id}_saved_${DateTime.now().millisecondsSinceEpoch}',
-                      userId: 'current_user_id', // TODO: Get actual user ID
+                      userId:
+                          'current_user_id', // TODO(developer): Get actual user ID
                       recommendationId: recommendation.id,
                       specialistId: recommendation.specialist!.id,
                       type: RecommendationInteractionType.saved,
@@ -313,7 +317,8 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
                   .recordInteraction(
                     RecommendationInteraction(
                       id: '${recommendation.id}_dismissed_${DateTime.now().millisecondsSinceEpoch}',
-                      userId: 'current_user_id', // TODO: Get actual user ID
+                      userId:
+                          'current_user_id', // TODO(developer): Get actual user ID
                       recommendationId: recommendation.id,
                       specialistId: recommendation.specialist!.id,
                       type: RecommendationInteractionType.dismissed,
@@ -362,7 +367,8 @@ class RecommendationCollectionWidget extends ConsumerWidget {
         var filteredRecommendations = recommendations;
 
         if (type != null) {
-          filteredRecommendations = filteredRecommendations.byType(type!);
+          filteredRecommendations =
+              filteredRecommendations.where((r) => r.type == type).toList();
         }
 
         if (limit != null) {
@@ -390,18 +396,18 @@ class RecommendationCollectionWidget extends ConsumerWidget {
               (recommendation) => Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: SpecialistRecommendationWidget(
-                  recommendation: recommendation,
+                  recommendation: recommendation as SpecialistRecommendation,
                   onTap: () => _showSpecialistProfile(
                     context,
-                    recommendation.specialist!,
+                    recommendation.specialist,
                   ),
                   onDismiss: () => _dismissRecommendation(
                     context,
                     ref,
-                    recommendation,
+                    recommendation as SpecialistRecommendation,
                   ),
-                  onSave: () =>
-                      _saveRecommendation(context, ref, recommendation),
+                  onSave: () => _saveRecommendation(
+                      context, ref, recommendation as SpecialistRecommendation),
                 ),
               ),
             ),
@@ -419,7 +425,10 @@ class RecommendationCollectionWidget extends ConsumerWidget {
             Icon(
               Icons.recommend_outlined,
               size: 64,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.3),
             ),
             const SizedBox(height: 16),
             Text(
@@ -428,7 +437,7 @@ class RecommendationCollectionWidget extends ConsumerWidget {
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withOpacity(0.5),
+                        .withValues(alpha: 0.5),
                   ),
             ),
             const SizedBox(height: 8),
@@ -438,7 +447,7 @@ class RecommendationCollectionWidget extends ConsumerWidget {
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withOpacity(0.5),
+                        .withValues(alpha: 0.5),
                   ),
               textAlign: TextAlign.center,
             ),
@@ -489,6 +498,12 @@ class RecommendationCollectionWidget extends ConsumerWidget {
         return 'В вашем ценовом диапазоне';
       case RecommendationType.availability:
         return 'Доступные сейчас';
+      case RecommendationType.popular:
+        return 'Популярные специалисты';
+      case RecommendationType.categoryBased:
+        return 'В ваших категориях';
+      case RecommendationType.similarUsers:
+        return 'Похожие пользователи';
     }
   }
 
@@ -588,5 +603,35 @@ class SimilarSpecialistsWidget extends ConsumerWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Открыть профиль ${specialist.name}')),
     );
+  }
+
+  Color _getRecommendationTypeColor(RecommendationType type) {
+    switch (type) {
+      case RecommendationType.similarSpecialists:
+        return Colors.blue;
+      case RecommendationType.popular:
+        return Colors.green;
+      case RecommendationType.trending:
+        return Colors.orange;
+      case RecommendationType.basedOnHistory:
+        return Colors.purple;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  String _getRecommendationTypeIcon(RecommendationType type) {
+    switch (type) {
+      case RecommendationType.similarSpecialists:
+        return '🔍';
+      case RecommendationType.popular:
+        return '⭐';
+      case RecommendationType.trending:
+        return '📈';
+      case RecommendationType.basedOnHistory:
+        return '💡';
+      default:
+        return '📌';
+    }
   }
 }

@@ -120,7 +120,7 @@ class VoiceMessageService {
       // final snapshot = await uploadTask;
       // final downloadUrl = await snapshot.ref.getDownloadURL();
       final downloadUrl =
-          'https://example.com/voice_messages/$fileName'; // TODO: Implement actual upload
+          await _uploadVoiceMessage(File(_currentRecordingPath!));
 
       // Удаляем временный файл
       await file.delete();
@@ -235,7 +235,7 @@ class VoiceMessageService {
   /// Генерировать waveform для аудио
   Future<String?> generateWaveform(String audioPath) async {
     try {
-      // TODO: Реализовать генерацию waveform
+      // TODO(developer): Реализовать генерацию waveform
       // Пока возвращаем пустую строку
       return '';
     } catch (e) {
@@ -264,9 +264,27 @@ class VoiceMessageService {
   /// Получить текущий путь записи
   String? get currentRecordingPath => _currentRecordingPath;
 
+  /// Загрузить голосовое сообщение в Firebase Storage
+  Future<String> _uploadVoiceMessage(File voiceFile) async {
+    try {
+      // TODO(developer): Implement actual Firebase Storage upload
+      // final ref = _storage.ref().child('voice_messages').child('${DateTime.now().millisecondsSinceEpoch}.m4a');
+      // final uploadTask = ref.putFile(voiceFile);
+      // final snapshot = await uploadTask;
+      // final downloadUrl = await snapshot.ref.getDownloadURL();
+      // return downloadUrl;
+
+      // Временная заглушка
+      return 'https://example.com/voice_messages/${DateTime.now().millisecondsSinceEpoch}.m4a';
+    } catch (e) {
+      print('Ошибка загрузки голосового сообщения: $e');
+      rethrow;
+    }
+  }
+
   /// Освободить ресурсы
   Future<void> dispose() async {
-    await _recorder.dispose();
+    // await _recorder.dispose(); // Temporarily disabled
     await _player.dispose();
   }
 }

@@ -377,7 +377,7 @@ class PerformanceAlert {
       resolvedAt: data['resolvedAt'] != null
           ? (data['resolvedAt'] as Timestamp).toDate()
           : null,
-      isActive: data['isActive'] ?? true,
+      isActive: data['isActive'] as bool? ?? true,
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
   }
@@ -399,7 +399,7 @@ class PerformanceAlert {
         resolvedAt: data['resolvedAt'] != null
             ? (data['resolvedAt'] as Timestamp).toDate()
             : null,
-        isActive: data['isActive'] ?? true,
+        isActive: data['isActive'] as bool? ?? true,
         metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       );
   final String id;

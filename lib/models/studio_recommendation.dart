@@ -28,7 +28,7 @@ class StudioRecommendation {
       expiresAt: data['expiresAt'] != null
           ? (data['expiresAt'] as Timestamp).toDate()
           : null,
-      isActive: data['isActive'] ?? true,
+      isActive: data['isActive'] as bool? ?? true,
     );
   }
 
@@ -45,7 +45,7 @@ class StudioRecommendation {
         expiresAt: data['expiresAt'] != null
             ? (data['expiresAt'] as Timestamp).toDate()
             : null,
-        isActive: data['isActive'] ?? true,
+        isActive: data['isActive'] as bool? ?? true,
       );
   final String id;
   final String photographerId;

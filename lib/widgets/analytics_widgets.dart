@@ -51,7 +51,7 @@ class KPIWidget extends StatelessWidget {
                       color: Theme.of(context)
                           .colorScheme
                           .onSurface
-                          .withOpacity(0.7),
+                          .withValues(alpha: 0.7),
                     ),
                   ),
                 ],
@@ -69,7 +69,7 @@ class KPIWidget extends StatelessWidget {
                       color: Theme.of(context)
                           .colorScheme
                           .onSurface
-                          .withOpacity(0.7),
+                          .withValues(alpha: 0.7),
                     ),
                   ),
                   _buildChangeIndicator(context, kpi.percentageChange),
@@ -111,7 +111,7 @@ class KPIWidget extends StatelessWidget {
   Widget _buildProgressBar(BuildContext context, double percentage) =>
       LinearProgressIndicator(
         value: percentage / 100,
-        backgroundColor: Colors.grey.withOpacity(0.3),
+        backgroundColor: Colors.grey.withValues(alpha: 0.3),
         valueColor: AlwaysStoppedAnimation<Color>(
           percentage >= 100
               ? Colors.green
@@ -266,8 +266,10 @@ class PeriodStatisticsWidget extends StatelessWidget {
                 '${_formatDate(statistics.startDate)} - ${_formatDate(statistics.endDate)}',
                 style: TextStyle(
                   fontSize: 14,
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
                 ),
               ),
               const SizedBox(height: 16),
@@ -374,7 +376,7 @@ class ReportWidget extends StatelessWidget {
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withOpacity(0.7),
+                        .withValues(alpha: 0.7),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -388,7 +390,7 @@ class ReportWidget extends StatelessWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.6),
+                            .withValues(alpha: 0.6),
                       ),
                     ),
                     Text(
@@ -398,7 +400,7 @@ class ReportWidget extends StatelessWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.6),
+                            .withValues(alpha: 0.6),
                       ),
                     ),
                   ],
@@ -440,9 +442,9 @@ class ReportWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Text(
         label,
@@ -508,7 +510,7 @@ class DashboardWidget extends StatelessWidget {
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withOpacity(0.7),
+                        .withValues(alpha: 0.7),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -522,7 +524,7 @@ class DashboardWidget extends StatelessWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.6),
+                            .withValues(alpha: 0.6),
                       ),
                     ),
                     Text(
@@ -532,7 +534,7 @@ class DashboardWidget extends StatelessWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.6),
+                            .withValues(alpha: 0.6),
                       ),
                     ),
                   ],
@@ -669,9 +671,9 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.1),
+                  color: Colors.red.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.red.withOpacity(0.3)),
+                  border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   children: [

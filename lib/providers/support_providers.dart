@@ -36,5 +36,5 @@ final faqProvider = StreamProvider.family<List<FAQItem>, SupportCategory?>(
 
 /// Провайдер для получения статистики поддержки
 final supportStatsProvider = FutureProvider<SupportStats>(
-  (ref) => ref.watch(supportServiceProvider).getSupportStats(),
+  (ref) => ref.watch(supportServiceProvider).getSupportStats('current_user'),
 );

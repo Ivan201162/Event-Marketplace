@@ -330,7 +330,7 @@ class _SpecialistServicesScreenState
   }
 
   void _showAddServiceDialog(BuildContext context) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => _ServiceDialog(
         specialistId: widget.specialistId,
@@ -340,7 +340,7 @@ class _SpecialistServicesScreenState
   }
 
   void _showEditServiceDialog(BuildContext context, SpecialistService service) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => _ServiceDialog(
         specialistId: widget.specialistId,
@@ -354,7 +354,7 @@ class _SpecialistServicesScreenState
     BuildContext context,
     SpecialistService service,
   ) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить услугу'),

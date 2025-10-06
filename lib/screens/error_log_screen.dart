@@ -580,7 +580,7 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
   Future<void> _exportErrors() async {
     try {
       final csv = await _errorLogger.exportErrorsToCSV(_errors);
-      // TODO: Реализовать сохранение файла
+      // TODO(developer): Реализовать сохранение файла
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Экспорт завершен'),

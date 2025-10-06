@@ -1,260 +1,236 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uuid/uuid.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../models/specialist_proposal.dart';
+import 'notification_service.dart';
 
-import '../models/proposal.dart';
-import '../models/booking.dart';
-import '../core/logger.dart';
-
-/// Сервис для работы с предложениями специалистов
 class ProposalService {
-  factory ProposalService() => _instance;
-  ProposalService._internal();
-  static final ProposalService _instance = ProposalService._internal();
+  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
+  static const String _collection = 'specialist_proposals';
 
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final Uuid _uuid = const Uuid();
-
-  /// Создать предложение с скидкой
-  Future<Proposal> createProposal({
-    required String bookingId,
-    required String specialistId,
+  // Создание нового предложения
+  static Future<String> createProposal({
     required String customerId,
-    required double originalPrice,
-    required double discountPercent,
+    required String eventId,
+    required List<String> specialistIds,
     String? message,
-    String? notes,
-    Duration? expiresIn,
+    Map<String, dynamic>? metadata,
   }) async {
     try {
-      AppLogger.logI('Создание предложения с скидкой $discountPercent%',
-          'proposal_service');
+      final currentUser = _auth.currentUser;
+      if (currentUser == null) {
+        throw Exception('Пользователь не авторизован');
+      }
 
-      final finalPrice = originalPrice * (1 - discountPercent / 100);
-      final expiresAt = expiresIn != null
-          ? DateTime.now().add(expiresIn)
-          : DateTime.now().add(const Duration(days: 7)); // По умолчанию 7 дней
-
-      final proposal = Proposal(
-        id: _uuid.v4(),
-        bookingId: bookingId,
-        specialistId: specialistId,
+      final proposalId = _firestore.collection(_collection).doc().id;
+      final proposal = SpecialistProposal(
+        id: proposalId,
+        organizerId: currentUser.uid,
         customerId: customerId,
-        originalPrice: originalPrice,
-        discountPercent: discountPercent,
-        finalPrice: finalPrice,
-        status: ProposalStatus.pending,
+        eventId: eventId,
+        specialistIds: specialistIds,
+        status: 'pending',
         createdAt: DateTime.now(),
-        expiresAt: expiresAt,
         message: message,
-        notes: notes,
+        metadata: metadata,
       );
 
       await _firestore
-          .collection('proposals')
-          .doc(proposal.id)
+          .collection(_collection)
+          .doc(proposalId)
           .set(proposal.toMap());
 
-      AppLogger.logI('Предложение создано: ${proposal.id}', 'proposal_service');
-      return proposal;
-    } catch (e, stackTrace) {
-      AppLogger.logE(
-          'Ошибка создания предложения', 'proposal_service', e, stackTrace);
-      rethrow;
+      // Отправляем уведомление заказчику
+      await NotificationService.sendProposalNotification(
+        customerId: customerId,
+        organizerId: currentUser.uid,
+        proposalId: proposalId,
+        specialistCount: specialistIds.length,
+      );
+
+      return proposalId;
+    } catch (e) {
+      throw Exception('Ошибка создания предложения: $e');
     }
   }
 
-  /// Получить предложения по бронированию
-  Future<List<Proposal>> getProposalsByBooking(String bookingId) async {
+  // Принятие предложения
+  static Future<void> acceptProposal(String proposalId) async {
     try {
-      final snapshot = await _firestore
-          .collection('proposals')
-          .where('bookingId', isEqualTo: bookingId)
-          .orderBy('createdAt', descending: true)
-          .get();
+      final currentUser = _auth.currentUser;
+      if (currentUser == null) {
+        throw Exception('Пользователь не авторизован');
+      }
 
-      return snapshot.docs.map((doc) => Proposal.fromDocument(doc)).toList();
-    } catch (e, stackTrace) {
-      AppLogger.logE(
-          'Ошибка получения предложений', 'proposal_service', e, stackTrace);
-      return [];
-    }
-  }
-
-  /// Получить предложения специалиста
-  Future<List<Proposal>> getProposalsBySpecialist(String specialistId) async {
-    try {
-      final snapshot = await _firestore
-          .collection('proposals')
-          .where('specialistId', isEqualTo: specialistId)
-          .orderBy('createdAt', descending: true)
-          .get();
-
-      return snapshot.docs.map((doc) => Proposal.fromDocument(doc)).toList();
-    } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка получения предложений специалиста',
-          'proposal_service', e, stackTrace);
-      return [];
-    }
-  }
-
-  /// Получить предложения заказчика
-  Future<List<Proposal>> getProposalsByCustomer(String customerId) async {
-    try {
-      final snapshot = await _firestore
-          .collection('proposals')
-          .where('customerId', isEqualTo: customerId)
-          .orderBy('createdAt', descending: true)
-          .get();
-
-      return snapshot.docs.map((doc) => Proposal.fromDocument(doc)).toList();
-    } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка получения предложений заказчика',
-          'proposal_service', e, stackTrace);
-      return [];
-    }
-  }
-
-  /// Принять предложение
-  Future<void> acceptProposal(String proposalId) async {
-    try {
-      AppLogger.logI('Принятие предложения: $proposalId', 'proposal_service');
-
-      await _firestore.collection('proposals').doc(proposalId).update({
-        'status': ProposalStatus.accepted.name,
+      await _firestore.collection(_collection).doc(proposalId).update({
+        'status': 'accepted',
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
 
-      // Обновляем бронирование с финальной ценой
-      final proposalDoc =
-          await _firestore.collection('proposals').doc(proposalId).get();
-      if (proposalDoc.exists) {
-        final proposal = Proposal.fromDocument(proposalDoc);
-        await _firestore.collection('bookings').doc(proposal.bookingId).update({
-          'totalPrice': proposal.finalPrice,
-          'discountPercent': proposal.discountPercent,
-          'updatedAt': Timestamp.fromDate(DateTime.now()),
-        });
+      // Отправляем уведомление организатору
+      final proposal = await getProposal(proposalId);
+      if (proposal != null) {
+        await NotificationService.sendProposalAcceptedNotification(
+          organizerId: proposal.organizerId,
+          customerId: currentUser.uid,
+          proposalId: proposalId,
+        );
       }
-
-      AppLogger.logI('Предложение принято: $proposalId', 'proposal_service');
-    } catch (e, stackTrace) {
-      AppLogger.logE(
-          'Ошибка принятия предложения', 'proposal_service', e, stackTrace);
-      rethrow;
+    } catch (e) {
+      throw Exception('Ошибка принятия предложения: $e');
     }
   }
 
-  /// Отклонить предложение
-  Future<void> rejectProposal(String proposalId) async {
+  // Отклонение предложения
+  static Future<void> rejectProposal(String proposalId) async {
     try {
-      AppLogger.logI('Отклонение предложения: $proposalId', 'proposal_service');
+      final currentUser = _auth.currentUser;
+      if (currentUser == null) {
+        throw Exception('Пользователь не авторизован');
+      }
 
-      await _firestore.collection('proposals').doc(proposalId).update({
-        'status': ProposalStatus.rejected.name,
+      await _firestore.collection(_collection).doc(proposalId).update({
+        'status': 'rejected',
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
 
-      AppLogger.logI('Предложение отклонено: $proposalId', 'proposal_service');
-    } catch (e, stackTrace) {
-      AppLogger.logE(
-          'Ошибка отклонения предложения', 'proposal_service', e, stackTrace);
-      rethrow;
-    }
-  }
-
-  /// Получить активные предложения (не истекшие)
-  Future<List<Proposal>> getActiveProposals(String customerId) async {
-    try {
-      final now = DateTime.now();
-      final snapshot = await _firestore
-          .collection('proposals')
-          .where('customerId', isEqualTo: customerId)
-          .where('status', isEqualTo: ProposalStatus.pending.name)
-          .get();
-
-      return snapshot.docs
-          .map((doc) => Proposal.fromDocument(doc))
-          .where((proposal) =>
-              proposal.expiresAt == null || proposal.expiresAt!.isAfter(now))
-          .toList();
-    } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка получения активных предложений',
-          'proposal_service', e, stackTrace);
-      return [];
-    }
-  }
-
-  /// Очистить истекшие предложения
-  Future<void> cleanupExpiredProposals() async {
-    try {
-      final now = DateTime.now();
-      final snapshot = await _firestore
-          .collection('proposals')
-          .where('status', isEqualTo: ProposalStatus.pending.name)
-          .get();
-
-      final batch = _firestore.batch();
-
-      for (final doc in snapshot.docs) {
-        final proposal = Proposal.fromDocument(doc);
-        if (proposal.expiresAt != null && proposal.expiresAt!.isBefore(now)) {
-          batch.update(doc.reference, {
-            'status': ProposalStatus.expired.name,
-            'updatedAt': Timestamp.fromDate(DateTime.now()),
-          });
-        }
+      // Отправляем уведомление организатору
+      final proposal = await getProposal(proposalId);
+      if (proposal != null) {
+        await NotificationService.sendProposalRejectedNotification(
+          organizerId: proposal.organizerId,
+          customerId: currentUser.uid,
+          proposalId: proposalId,
+        );
       }
-
-      await batch.commit();
-      AppLogger.logI('Истекшие предложения очищены', 'proposal_service');
-    } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка очистки истекших предложений', 'proposal_service',
-          e, stackTrace);
+    } catch (e) {
+      throw Exception('Ошибка отклонения предложения: $e');
     }
   }
 
-  /// Получить статистику предложений специалиста
-  Future<Map<String, dynamic>> getSpecialistProposalStats(
-      String specialistId) async {
+  // Получение предложения по ID
+  static Future<SpecialistProposal?> getProposal(String proposalId) async {
     try {
-      final snapshot = await _firestore
-          .collection('proposals')
-          .where('specialistId', isEqualTo: specialistId)
+      final doc =
+          await _firestore.collection(_collection).doc(proposalId).get();
+      if (doc.exists) {
+        return SpecialistProposal.fromFirestore(doc);
+      }
+      return null;
+    } catch (e) {
+      throw Exception('Ошибка получения предложения: $e');
+    }
+  }
+
+  // Получение всех предложений для заказчика
+  static Stream<List<SpecialistProposal>> getCustomerProposals(
+    String customerId,
+  ) =>
+      _firestore
+          .collection(_collection)
+          .where('customerId', isEqualTo: customerId)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map(
+            (snapshot) =>
+                snapshot.docs.map(SpecialistProposal.fromFirestore).toList(),
+          );
+
+  // Получение всех предложений от организатора
+  static Stream<List<SpecialistProposal>> getOrganizerProposals(
+    String organizerId,
+  ) =>
+      _firestore
+          .collection(_collection)
+          .where('organizerId', isEqualTo: organizerId)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map(
+            (snapshot) =>
+                snapshot.docs.map(SpecialistProposal.fromFirestore).toList(),
+          );
+
+  // Получение предложений по статусу
+  static Stream<List<SpecialistProposal>> getProposalsByStatus(
+    String userId,
+    String status, {
+    bool isCustomer = true,
+  }) {
+    final field = isCustomer ? 'customerId' : 'organizerId';
+    return _firestore
+        .collection(_collection)
+        .where(field, isEqualTo: userId)
+        .where('status', isEqualTo: status)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map(
+          (snapshot) =>
+              snapshot.docs.map(SpecialistProposal.fromFirestore).toList(),
+        );
+  }
+
+  // Получение активных предложений (pending)
+  static Stream<List<SpecialistProposal>> getActiveProposals(String userId) =>
+      getProposalsByStatus(userId, 'pending');
+
+  // Удаление предложения
+  static Future<void> deleteProposal(String proposalId) async {
+    try {
+      await _firestore.collection(_collection).doc(proposalId).delete();
+    } catch (e) {
+      throw Exception('Ошибка удаления предложения: $e');
+    }
+  }
+
+  // Обновление предложения
+  static Future<void> updateProposal(
+    String proposalId,
+    Map<String, dynamic> updates,
+  ) async {
+    try {
+      updates['updatedAt'] = Timestamp.fromDate(DateTime.now());
+      await _firestore.collection(_collection).doc(proposalId).update(updates);
+    } catch (e) {
+      throw Exception('Ошибка обновления предложения: $e');
+    }
+  }
+
+  // Получение статистики предложений
+  static Future<Map<String, int>> getProposalStats(String userId) async {
+    try {
+      final organizerProposals = await _firestore
+          .collection(_collection)
+          .where('organizerId', isEqualTo: userId)
           .get();
 
-      final proposals =
-          snapshot.docs.map((doc) => Proposal.fromDocument(doc)).toList();
+      final customerProposals = await _firestore
+          .collection(_collection)
+          .where('customerId', isEqualTo: userId)
+          .get();
 
-      final totalProposals = proposals.length;
-      final acceptedProposals =
-          proposals.where((p) => p.status == ProposalStatus.accepted).length;
-      final rejectedProposals =
-          proposals.where((p) => p.status == ProposalStatus.rejected).length;
-      final pendingProposals =
-          proposals.where((p) => p.status == ProposalStatus.pending).length;
-      final expiredProposals =
-          proposals.where((p) => p.status == ProposalStatus.expired).length;
-
-      final avgDiscount = proposals.isNotEmpty
-          ? proposals.map((p) => p.discountPercent).reduce((a, b) => a + b) /
-              proposals.length
-          : 0.0;
-
-      return {
-        'totalProposals': totalProposals,
-        'acceptedProposals': acceptedProposals,
-        'rejectedProposals': rejectedProposals,
-        'pendingProposals': pendingProposals,
-        'expiredProposals': expiredProposals,
-        'acceptanceRate': totalProposals > 0
-            ? (acceptedProposals / totalProposals) * 100
-            : 0.0,
-        'avgDiscount': avgDiscount,
+      final stats = <String, int>{
+        'totalSent': organizerProposals.docs.length,
+        'totalReceived': customerProposals.docs.length,
+        'pending': 0,
+        'accepted': 0,
+        'rejected': 0,
       };
-    } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка получения статистики предложений',
-          'proposal_service', e, stackTrace);
-      return {};
+
+      // Подсчет статусов для отправленных предложений
+      for (final doc in organizerProposals.docs) {
+        final status = doc.data()['status'] as String;
+        stats[status] = (stats[status] ?? 0) + 1;
+      }
+
+      // Подсчет статусов для полученных предложений
+      for (final doc in customerProposals.docs) {
+        final status = doc.data()['status'] as String;
+        stats['received_$status'] = (stats['received_$status'] ?? 0) + 1;
+      }
+
+      return stats;
+    } catch (e) {
+      throw Exception('Ошибка получения статистики: $e');
     }
   }
 }

@@ -179,7 +179,7 @@ class _HelpScreenState extends ConsumerState<HelpScreen> {
       );
 
   void _showContactSupportDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Связаться с поддержкой'),

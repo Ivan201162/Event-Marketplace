@@ -105,6 +105,9 @@ class FeatureRequestService {
         query = query.orderBy('createdAt', descending: true);
     }
 
+    // Добавляем лимит для оптимизации
+    query = query.limit(30);
+
     return query.snapshots().map(
           (snapshot) => snapshot.docs
               .map(

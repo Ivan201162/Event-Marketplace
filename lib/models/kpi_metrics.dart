@@ -26,9 +26,9 @@ class KPIMetric {
   });
 
   factory KPIMetric.fromMap(Map<String, dynamic> map) => KPIMetric(
-        id: map['id'] ?? '',
-        name: map['name'] ?? '',
-        description: map['description'] ?? '',
+        id: map['id'] as String? ?? '',
+        name: map['name'] as String? ?? '',
+        description: map['description'] as String? ?? '',
         type: MetricType.fromString(map['type'] ?? 'counter'),
         category: MetricCategory.fromString(map['category'] ?? 'business'),
         unit: map['unit'] ?? '',

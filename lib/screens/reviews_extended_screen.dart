@@ -256,7 +256,7 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
                                 label: Text(tag),
                                 backgroundColor: Theme.of(context)
                                     .primaryColor
-                                    .withOpacity(0.1),
+                                    .withValues(alpha: 0.1),
                               ),
                             )
                             .toList(),
@@ -358,10 +358,11 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
   void _showCreateReviewDialog() {
     Navigator.of(context)
         .push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => CreateReviewExtendedScreen(
           specialistId: widget.specialistId,
-          bookingId: 'demo_booking_id', // TODO: Получить из контекста
+          bookingId:
+              'demo_booking_id', // TODO(developer): Получить из контекста
         ),
       ),
     )
@@ -373,7 +374,7 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
   }
 
   void _showFilterDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => _FilterDialog(
         filter: _filter,
@@ -387,22 +388,22 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
   }
 
   void _handleLike(String reviewId) {
-    // TODO: Реализовать лайк
+    // TODO(developer): Реализовать лайк
     _showInfoSnackBar('Лайк добавлен');
   }
 
   void _handleShare(String reviewId) {
-    // TODO: Реализовать шаринг
+    // TODO(developer): Реализовать шаринг
     _showInfoSnackBar('Отзыв скопирован в буфер обмена');
   }
 
   void _handleReport(String reviewId) {
-    // TODO: Реализовать жалобу
+    // TODO(developer): Реализовать жалобу
     _showInfoSnackBar('Жалоба отправлена');
   }
 
   void _handleViewMedia(String reviewId) {
-    // TODO: Реализовать просмотр медиа
+    // TODO(developer): Реализовать просмотр медиа
     _showInfoSnackBar('Просмотр медиа');
   }
 

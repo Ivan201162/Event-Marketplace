@@ -329,7 +329,7 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (value) {
-                  // TODO: Implement user search
+                  // TODO(developer): Implement user search
                 },
               ),
             ),
@@ -349,7 +349,7 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
                 ),
               ],
               onChanged: (value) {
-                // TODO: Implement user filtering
+                // TODO(developer): Implement user filtering
               },
             ),
           ],
@@ -368,7 +368,7 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (value) {
-                  // TODO: Implement event search
+                  // TODO(developer): Implement event search
                 },
               ),
             ),
@@ -385,7 +385,7 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
                 ),
               ],
               onChanged: (value) {
-                // TODO: Implement event filtering
+                // TODO(developer): Implement event filtering
               },
             ),
           ],
@@ -608,7 +608,7 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
     try {
       switch (action) {
         case 'view':
-          // TODO: Navigate to user profile
+          // TODO(developer): Navigate to user profile
           break;
         case 'verify':
           await _adminService.verifyUser(user.id);
@@ -637,7 +637,7 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
     try {
       switch (action) {
         case 'view':
-          // TODO: Navigate to event details
+          // TODO(developer): Navigate to event details
           break;
         case 'hide':
           await _adminService.hideEvent(event.id);
@@ -663,7 +663,7 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
   }
 
   void _updateSetting(String key, bool value) {
-    // TODO: Implement settings update
+    // TODO(developer): Implement settings update
     SafeLog.info('AdminPanelPage: Setting $key updated to $value');
   }
 

@@ -292,7 +292,7 @@ class CrossSellSuggestionWidget extends ConsumerWidget {
       final service = ref.read(crossSellServiceProvider);
       await service.acceptCrossSellSuggestion(
         suggestionId: suggestion.id,
-        customerId: 'current_user_id', // TODO: Получить из контекста
+        customerId: 'current_user_id', // TODO(developer): Получить из контекста
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -314,7 +314,7 @@ class CrossSellSuggestionWidget extends ConsumerWidget {
   }
 
   void _rejectSuggestion(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => _RejectSuggestionDialog(
         suggestion: suggestion,
@@ -645,7 +645,7 @@ class _RejectSuggestionDialogState extends State<_RejectSuggestionDialog> {
       final service = ref.read(crossSellServiceProvider);
       await service.rejectCrossSellSuggestion(
         suggestionId: widget.suggestion.id,
-        customerId: 'current_user_id', // TODO: Получить из контекста
+        customerId: 'current_user_id', // TODO(developer): Получить из контекста
         reason: _reasonController.text.trim().isEmpty
             ? null
             : _reasonController.text.trim(),

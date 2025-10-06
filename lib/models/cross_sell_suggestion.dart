@@ -76,7 +76,8 @@ class CrossSellSuggestion {
             : null,
         metadata: data['metadata'] != null
             ? Map<String, dynamic>.from(
-                data['metadata'] as Map<dynamic, dynamic>)
+                data['metadata'] as Map<dynamic, dynamic>,
+              )
             : null,
       );
   final String id;
@@ -213,7 +214,8 @@ class CrossSellItem {
         imageUrl: data['imageUrl'] as String?,
         metadata: data['metadata'] != null
             ? Map<String, dynamic>.from(
-                data['metadata'] as Map<dynamic, dynamic>)
+                data['metadata'] as Map<dynamic, dynamic>,
+              )
             : null,
       );
   final String id;

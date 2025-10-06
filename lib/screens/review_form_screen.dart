@@ -197,8 +197,10 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
           Text(
             _getRatingText(_rating),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
                 ),
           ),
         ],
@@ -305,8 +307,10 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
           Text(
             'Добавьте фотографии (максимум 5)',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
                 ),
           ),
           const SizedBox(height: 12),
@@ -576,7 +580,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
   }
 
   void _showDeleteDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить отзыв'),

@@ -88,9 +88,9 @@ abstract class MapService {
     List<MapMarker> markers = const [],
     bool showUserLocation = true,
     bool showTraffic = false,
-    Function(MapMarker)? onMarkerTap,
-    Function(MapCoordinates)? onMapTap,
-    Function(MapCoordinates, double)? onCameraMove,
+    void Function(MapMarker)? onMarkerTap,
+    void Function(MapCoordinates)? onMapTap,
+    void Function(MapCoordinates, double)? onCameraMove,
   });
 
   /// Получить виджет карты для событий
@@ -98,8 +98,8 @@ abstract class MapService {
     required List<Event> events,
     MapCoordinates? center,
     double zoom = 12.0,
-    Function(Event)? onEventTap,
-    Function(MapCoordinates)? onMapTap,
+    void Function(Event)? onEventTap,
+    void Function(MapCoordinates)? onMapTap,
   });
 
   /// Поиск мест по запросу

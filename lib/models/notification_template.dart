@@ -32,7 +32,7 @@ class NotificationTemplate {
         orElse: () => NotificationChannel.push,
       ),
       variables: Map<String, String>.from(data['variables'] ?? {}),
-      isActive: data['isActive'] ?? true,
+      isActive: data['isActive'] as bool? ?? true,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
     );
@@ -54,7 +54,7 @@ class NotificationTemplate {
           orElse: () => NotificationChannel.push,
         ),
         variables: Map<String, String>.from(data['variables'] ?? {}),
-        isActive: data['isActive'] ?? true,
+        isActive: data['isActive'] as bool? ?? true,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       );

@@ -1,0 +1,372 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: 'Type of tests to run'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+        - all
+        - unit
+        - widget
+        - integration
+      platform:
+        description: 'Platform to test on'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+        - all
+        - android
+        - ios
+        - web
+
+env:
+  FLUTTER_VERSION: '3.35.3'
+
+jobs:
+  # Unit Tests Job
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    if: github.event.inputs.test_type == 'all' || github.event.inputs.test_type == 'unit' || github.event.inputs.test_type == ''
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: 'stable'
+        
+    - name: Install dependencies
+      run: flutter pub get
+      
+    - name: Verify Flutter installation
+      run: flutter doctor -v
+      
+    - name: Run Flutter analyze
+      run: flutter analyze
+      
+    - name: Run unit tests with coverage
+      run: flutter test --coverage test/unit/
+      
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: coverage/lcov.info
+        flags: unit
+        name: unit-coverage
+        fail_ci_if_error: false
+
+  # Widget Tests Job
+  widget-tests:
+    name: Widget Tests
+    runs-on: ubuntu-latest
+    if: github.event.inputs.test_type == 'all' || github.event.inputs.test_type == 'widget' || github.event.inputs.test_type == ''
+    needs: unit-tests
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: 'stable'
+        
+    - name: Install dependencies
+      run: flutter pub get
+      
+    - name: Run widget tests with coverage
+      run: flutter test --coverage test/widget/
+      
+    - name: Run golden tests
+      run: flutter test --update-goldens test/widget/
+      continue-on-error: true
+      
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: coverage/lcov.info
+        flags: widget
+        name: widget-coverage
+        fail_ci_if_error: false
+
+  # Integration Tests - Android
+  integration-tests-android:
+    name: Integration Tests (Android)
+    runs-on: ubuntu-latest
+    if: (github.event.inputs.test_type == 'all' || github.event.inputs.test_type == 'integration' || github.event.inputs.test_type == '') && (github.event.inputs.platform == 'all' || github.event.inputs.platform == 'android' || github.event.inputs.platform == '')
+    needs: [unit-tests, widget-tests]
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: 'stable'
+        
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+        
+    - name: Install dependencies
+      run: flutter pub get
+      
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      
+    - name: Build APK for testing
+      run: flutter build apk --debug
+      
+    - name: Run integration tests on Android
+      run: flutter test integration_test/
+      env:
+        FLUTTER_TEST_DEVICE: android
+
+  # Integration Tests - iOS
+  integration-tests-ios:
+    name: Integration Tests (iOS)
+    runs-on: macos-latest
+    if: (github.event.inputs.test_type == 'all' || github.event.inputs.test_type == 'integration' || github.event.inputs.test_type == '') && (github.event.inputs.platform == 'all' || github.event.inputs.platform == 'ios' || github.event.inputs.platform == '')
+    needs: [unit-tests, widget-tests]
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: 'stable'
+        
+    - name: Install dependencies
+      run: flutter pub get
+      
+    - name: Setup iOS Simulator
+      run: |
+        xcrun simctl create "iPhone 15" "iPhone 15" "iOS-17-0" || true
+        xcrun simctl boot "iPhone 15" || true
+        
+    - name: Build iOS app for testing
+      run: flutter build ios --debug --no-codesign
+      
+    - name: Run integration tests on iOS
+      run: flutter test integration_test/
+      env:
+        FLUTTER_TEST_DEVICE: ios
+
+  # Integration Tests - Web
+  integration-tests-web:
+    name: Integration Tests (Web)
+    runs-on: ubuntu-latest
+    if: (github.event.inputs.test_type == 'all' || github.event.inputs.test_type == 'integration' || github.event.inputs.test_type == '') && (github.event.inputs.platform == 'all' || github.event.inputs.platform == 'web' || github.event.inputs.platform == '')
+    needs: [unit-tests, widget-tests]
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: 'stable'
+        
+    - name: Install dependencies
+      run: flutter pub get
+      
+    - name: Install Chrome
+      run: |
+        wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+        echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+        sudo apt-get update
+        sudo apt-get install -y google-chrome-stable
+        
+    - name: Build web app for testing
+      run: flutter build web --debug
+      
+    - name: Run integration tests on Web
+      run: flutter test integration_test/
+      env:
+        FLUTTER_TEST_DEVICE: web
+
+  # Performance Tests
+  performance-tests:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    if: github.event.inputs.test_type == 'all' || github.event.inputs.test_type == ''
+    needs: [unit-tests, widget-tests]
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: 'stable'
+        
+    - name: Install dependencies
+      run: flutter pub get
+      
+    - name: Run performance tests
+      run: flutter test test/performance/
+      continue-on-error: true
+      
+    - name: Generate performance report
+      run: |
+        flutter test --coverage
+        genhtml coverage/lcov.info -o coverage/html
+      continue-on-error: true
+      
+    - name: Upload performance results
+      uses: actions/upload-artifact@v4
+      with:
+        name: performance-results
+        path: coverage/
+        retention-days: 30
+
+  # Test Results Summary
+  test-summary:
+    name: Test Results Summary
+    runs-on: ubuntu-latest
+    needs: [unit-tests, widget-tests, integration-tests-android, integration-tests-ios, integration-tests-web, performance-tests]
+    if: always()
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: 'stable'
+        
+    - name: Install dependencies
+      run: flutter pub get
+      
+    - name: Generate test report
+      run: |
+        echo "# Test Results Summary" > test_report.md
+        echo "" >> test_report.md
+        echo "## Unit Tests" >> test_report.md
+        echo "- Status: ${{ needs.unit-tests.result }}" >> test_report.md
+        echo "" >> test_report.md
+        echo "## Widget Tests" >> test_report.md
+        echo "- Status: ${{ needs.widget-tests.result }}" >> test_report.md
+        echo "" >> test_report.md
+        echo "## Integration Tests" >> test_report.md
+        echo "- Android: ${{ needs.integration-tests-android.result }}" >> test_report.md
+        echo "- iOS: ${{ needs.integration-tests-ios.result }}" >> test_report.md
+        echo "- Web: ${{ needs.integration-tests-web.result }}" >> test_report.md
+        echo "" >> test_report.md
+        echo "## Performance Tests" >> test_report.md
+        echo "- Status: ${{ needs.performance-tests.result }}" >> test_report.md
+        
+    - name: Upload test report
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-report
+        path: test_report.md
+        retention-days: 30
+
+  # Coverage Report
+  coverage-report:
+    name: Coverage Report
+    runs-on: ubuntu-latest
+    needs: [unit-tests, widget-tests]
+    if: always()
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: 'stable'
+        
+    - name: Install dependencies
+      run: flutter pub get
+      
+    - name: Generate combined coverage report
+      run: |
+        flutter test --coverage
+        genhtml coverage/lcov.info -o coverage/html
+        echo "Coverage report generated successfully"
+        
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage/
+        retention-days: 30
+
+  # Notify Results
+  notify-results:
+    name: Notify Test Results
+    runs-on: ubuntu-latest
+    needs: [test-summary, coverage-report]
+    if: always()
+    
+    steps:
+    - name: Notify test results
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        channel: '#testing'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        fields: repo,message,commit,author,action,eventName,ref,workflow
+        custom_payload: |
+          {
+            "text": "Test Results for Event Marketplace App",
+            "attachments": [
+              {
+                "color": "${{ needs.unit-tests.result == 'success' && 'good' || 'danger' }}",
+                "title": "Unit Tests",
+                "text": "Status: ${{ needs.unit-tests.result }}"
+              },
+              {
+                "color": "${{ needs.widget-tests.result == 'success' && 'good' || 'danger' }}",
+                "title": "Widget Tests", 
+                "text": "Status: ${{ needs.widget-tests.result }}"
+              },
+              {
+                "color": "${{ needs.integration-tests-android.result == 'success' && 'good' || 'danger' }}",
+                "title": "Integration Tests (Android)",
+                "text": "Status: ${{ needs.integration-tests-android.result }}"
+              },
+              {
+                "color": "${{ needs.integration-tests-ios.result == 'success' && 'good' || 'danger' }}",
+                "title": "Integration Tests (iOS)",
+                "text": "Status: ${{ needs.integration-tests-ios.result }}"
+              },
+              {
+                "color": "${{ needs.integration-tests-web.result == 'success' && 'good' || 'danger' }}",
+                "title": "Integration Tests (Web)",
+                "text": "Status: ${{ needs.integration-tests-web.result }}"
+              }
+            ]
+          }
+

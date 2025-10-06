@@ -1,405 +1,371 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-/// Уровни логирования ошибок
-enum ErrorLevel {
-  debug,
-  info,
-  warning,
-  error,
-  critical,
-}
-
-/// Типы ошибок
-enum ErrorType {
-  authentication,
-  network,
-  database,
-  validation,
-  payment,
-  fileUpload,
-  unknown,
-}
-
-/// Модель ошибки для логирования
-class ErrorLog {
-  final String id;
-  final ErrorLevel level;
-  final ErrorType type;
-  final String message;
-  final String? stackTrace;
-  final String? userId;
-  final String? deviceInfo;
-  final String? appVersion;
-  final Map<String, dynamic>? metadata;
-  final DateTime timestamp;
-
-  const ErrorLog({
-    required this.id,
-    required this.level,
-    required this.type,
-    required this.message,
-    this.stackTrace,
-    this.userId,
-    this.deviceInfo,
-    this.appVersion,
-    this.metadata,
-    required this.timestamp,
-  });
-
-  Map<String, dynamic> toMap() => {
-        'id': id,
-        'level': level.name,
-        'type': type.name,
-        'message': message,
-        'stackTrace': stackTrace,
-        'userId': userId,
-        'deviceInfo': deviceInfo,
-        'appVersion': appVersion,
-        'metadata': metadata,
-        'timestamp': Timestamp.fromDate(timestamp),
-      };
-
-  factory ErrorLog.fromMap(Map<String, dynamic> map) => ErrorLog(
-        id: map['id'] as String,
-        level: ErrorLevel.values.firstWhere(
-          (e) => e.name == map['level'],
-          orElse: () => ErrorLevel.error,
-        ),
-        type: ErrorType.values.firstWhere(
-          (e) => e.name == map['type'],
-          orElse: () => ErrorType.unknown,
-        ),
-        message: map['message'] as String,
-        stackTrace: map['stackTrace'] as String?,
-        userId: map['userId'] as String?,
-        deviceInfo: map['deviceInfo'] as String?,
-        appVersion: map['appVersion'] as String?,
-        metadata: map['metadata'] as Map<String, dynamic>?,
-        timestamp: (map['timestamp'] as Timestamp).toDate(),
-      );
-}
-
-/// Сервис для логирования ошибок в Firestore
+/// Система логирования ошибок в файл
 class ErrorLogger {
-  static final ErrorLogger _instance = ErrorLogger._internal();
   factory ErrorLogger() => _instance;
   ErrorLogger._internal();
+  static final ErrorLogger _instance = ErrorLogger._internal();
 
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
-
-  String? _appVersion;
-  String? _deviceInfoString;
-
-  /// Инициализация логгера
-  Future<void> initialize() async {
-    try {
-      final packageInfo = await PackageInfo.fromPlatform();
-      _appVersion = '${packageInfo.version}+${packageInfo.buildNumber}';
-
-      if (kIsWeb) {
-        final webBrowserInfo = await _deviceInfo.webBrowserInfo;
-        _deviceInfoString =
-            'Web: ${webBrowserInfo.browserName.name} ${webBrowserInfo.appVersion}';
-      } else {
-        _deviceInfoString = await _getDeviceInfo();
-      }
-    } catch (e) {
-      debugPrint('Error initializing ErrorLogger: $e');
-    }
-  }
-
-  /// Получение информации об устройстве
-  Future<String> _getDeviceInfo() async {
-    try {
-      if (defaultTargetPlatform == TargetPlatform.android) {
-        final androidInfo = await _deviceInfo.androidInfo;
-        return 'Android: ${androidInfo.model} ${androidInfo.version.release}';
-      } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-        final iosInfo = await _deviceInfo.iosInfo;
-        return 'iOS: ${iosInfo.model} ${iosInfo.systemVersion}';
-      } else if (defaultTargetPlatform == TargetPlatform.windows) {
-        final windowsInfo = await _deviceInfo.windowsInfo;
-        return 'Windows: ${windowsInfo.computerName} ${windowsInfo.displayVersion}';
-      } else if (defaultTargetPlatform == TargetPlatform.macOS) {
-        final macosInfo = await _deviceInfo.macOsInfo;
-        return 'macOS: ${macosInfo.model} ${macosInfo.osRelease}';
-      } else if (defaultTargetPlatform == TargetPlatform.linux) {
-        final linuxInfo = await _deviceInfo.linuxInfo;
-        return 'Linux: ${linuxInfo.name} ${linuxInfo.version}';
-      }
-    } catch (e) {
-      debugPrint('Error getting device info: $e');
-    }
-    return 'Unknown device';
-  }
+  static const String _logFileName = 'error_logs.json';
+  static const String _maxLogsKey = 'max_error_logs';
+  static const int _defaultMaxLogs = 1000;
 
   /// Логирование ошибки
-  Future<void> logError({
-    required ErrorLevel level,
-    required ErrorType type,
-    required String message,
+  static Future<void> logError({
+    required String errorType,
+    required String errorMessage,
+    String? context,
     String? stackTrace,
-    Map<String, dynamic>? metadata,
+    Map<String, dynamic>? additionalData,
   }) async {
     try {
-      final errorLog = ErrorLog(
-        id: _generateId(),
-        level: level,
-        type: type,
-        message: message,
-        stackTrace: stackTrace,
-        userId: _auth.currentUser?.uid,
-        deviceInfo: _deviceInfoString,
-        appVersion: _appVersion,
-        metadata: metadata,
-        timestamp: DateTime.now(),
-      );
+      final errorLog = {
+        'timestamp': DateTime.now().toIso8601String(),
+        'errorType': errorType,
+        'errorMessage': errorMessage,
+        'context': context ?? 'Unknown',
+        'stackTrace': stackTrace,
+        'additionalData': additionalData ?? {},
+        'platform': defaultTargetPlatform.name,
+        'isDebug': kDebugMode,
+        'appVersion': '1.0.0', // Можно получить из pubspec.yaml
+      };
 
-      await _firestore
-          .collection('errors_log')
-          .doc(errorLog.id)
-          .set(errorLog.toMap());
-
-      // Также логируем в консоль для разработки
-      if (kDebugMode) {
-        debugPrint(
-            'Error logged: ${errorLog.level.name} - ${errorLog.message}');
-      }
+      await _writeToFile(errorLog);
+      await _cleanupOldLogs();
     } catch (e) {
-      // Если не удалось записать в Firestore, логируем в консоль
-      debugPrint('Failed to log error to Firestore: $e');
-      debugPrint('Original error: $message');
+      // Если не удалось записать в файл, логируем в консоль
+      if (kDebugMode) {
+        print('Failed to log error to file: $e');
+      }
     }
   }
 
-  /// Логирование критической ошибки
-  Future<void> logCriticalError({
-    required String message,
-    String? stackTrace,
-    Map<String, dynamic>? metadata,
-  }) async {
-    await logError(
-      level: ErrorLevel.critical,
-      type: ErrorType.unknown,
-      message: message,
-      stackTrace: stackTrace,
-      metadata: metadata,
-    );
-  }
-
-  /// Логирование ошибки аутентификации
-  Future<void> logAuthError({
-    required String message,
-    String? stackTrace,
-    Map<String, dynamic>? metadata,
-  }) async {
-    await logError(
-      level: ErrorLevel.error,
-      type: ErrorType.authentication,
-      message: message,
-      stackTrace: stackTrace,
-      metadata: metadata,
-    );
-  }
-
-  /// Логирование сетевой ошибки
-  Future<void> logNetworkError({
-    required String message,
-    String? stackTrace,
-    Map<String, dynamic>? metadata,
-  }) async {
-    await logError(
-      level: ErrorLevel.warning,
-      type: ErrorType.network,
-      message: message,
-      stackTrace: stackTrace,
-      metadata: metadata,
-    );
-  }
-
-  /// Логирование ошибки базы данных
-  Future<void> logDatabaseError({
-    required String message,
-    String? stackTrace,
-    Map<String, dynamic>? metadata,
-  }) async {
-    await logError(
-      level: ErrorLevel.error,
-      type: ErrorType.database,
-      message: message,
-      stackTrace: stackTrace,
-      metadata: metadata,
-    );
-  }
-
-  /// Логирование ошибки валидации
-  Future<void> logValidationError({
-    required String message,
-    String? stackTrace,
-    Map<String, dynamic>? metadata,
-  }) async {
-    await logError(
-      level: ErrorLevel.warning,
-      type: ErrorType.validation,
-      message: message,
-      stackTrace: stackTrace,
-      metadata: metadata,
-    );
-  }
-
-  /// Логирование ошибки платежа
-  Future<void> logPaymentError({
-    required String message,
-    String? stackTrace,
-    Map<String, dynamic>? metadata,
-  }) async {
-    await logError(
-      level: ErrorLevel.error,
-      type: ErrorType.payment,
-      message: message,
-      stackTrace: stackTrace,
-      metadata: metadata,
-    );
-  }
-
-  /// Логирование ошибки загрузки файла
-  Future<void> logFileUploadError({
-    required String message,
-    String? stackTrace,
-    Map<String, dynamic>? metadata,
-  }) async {
-    await logError(
-      level: ErrorLevel.warning,
-      type: ErrorType.fileUpload,
-      message: message,
-      stackTrace: stackTrace,
-      metadata: metadata,
-    );
-  }
-
-  /// Генерация уникального ID
-  String _generateId() {
-    return '${DateTime.now().millisecondsSinceEpoch}_${_auth.currentUser?.uid ?? 'anonymous'}';
-  }
-
-  /// Получение логов ошибок (только для администраторов)
-  Future<List<ErrorLog>> getErrorLogs({
-    ErrorLevel? level,
-    ErrorType? type,
-    String? userId,
-    DateTime? startDate,
-    DateTime? endDate,
-    int limit = 100,
-  }) async {
+  /// Запись ошибки в файл
+  static Future<void> _writeToFile(Map<String, dynamic> errorLog) async {
     try {
-      Query query = _firestore.collection('errors_log');
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/$_logFileName');
 
-      if (level != null) {
-        query = query.where('level', isEqualTo: level.name);
+      var logs = <Map<String, dynamic>>[];
+
+      // Читаем существующие логи
+      if (await file.exists()) {
+        final content = await file.readAsString();
+        if (content.isNotEmpty) {
+          try {
+            final dynamic decoded = json.decode(content);
+            if (decoded is List) {
+              final jsonList = decoded;
+              logs = jsonList.cast<Map<String, dynamic>>();
+            } else {
+              logs = [];
+            }
+          } catch (e) {
+            // Если файл поврежден, создаем новый
+            logs = [];
+          }
+        }
       }
 
-      if (type != null) {
-        query = query.where('type', isEqualTo: type.name);
+      // Добавляем новый лог
+      logs.add(errorLog);
+
+      // Записываем обратно в файл
+      await file.writeAsString(json.encode(logs));
+
+      if (kDebugMode) {
+        print('Error logged to file: ${errorLog['errorType']}');
       }
-
-      if (userId != null) {
-        query = query.where('userId', isEqualTo: userId);
-      }
-
-      if (startDate != null) {
-        query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
-      }
-
-      if (endDate != null) {
-        query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
-      }
-
-      query = query.orderBy('timestamp', descending: true).limit(limit);
-
-      final snapshot = await query.get();
-      return snapshot.docs
-          .map((doc) => ErrorLog.fromMap(doc.data() as Map<String, dynamic>))
-          .toList();
     } catch (e) {
-      debugPrint('Error getting error logs: $e');
+      if (kDebugMode) {
+        print('Error writing to log file: $e');
+      }
+    }
+  }
+
+  /// Очистка старых логов
+  static Future<void> _cleanupOldLogs() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final maxLogs = prefs.getInt(_maxLogsKey) ?? _defaultMaxLogs;
+
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/$_logFileName');
+
+      if (await file.exists()) {
+        final content = await file.readAsString();
+        if (content.isNotEmpty) {
+          final dynamic decoded = json.decode(content);
+          if (decoded is List) {
+            final jsonList = decoded;
+            final logs = jsonList.cast<Map<String, dynamic>>();
+
+            // Если логов больше максимального количества, удаляем старые
+            if (logs.length > maxLogs) {
+              final recentLogs = logs.skip(logs.length - maxLogs).toList();
+              await file.writeAsString(json.encode(recentLogs));
+            }
+          }
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error cleaning up old logs: $e');
+      }
+    }
+  }
+
+  /// Получение всех логов ошибок
+  static Future<List<Map<String, dynamic>>> getAllLogs() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/$_logFileName');
+
+      if (await file.exists()) {
+        final content = await file.readAsString();
+        if (content.isNotEmpty) {
+          final List<dynamic> jsonList = json.decode(content);
+          return jsonList.cast<Map<String, dynamic>>();
+        }
+      }
+
+      return [];
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error reading logs: $e');
+      }
       return [];
     }
   }
 
-  /// Очистка старых логов (только для администраторов)
-  Future<void> cleanupOldLogs({int daysToKeep = 30}) async {
+  /// Получение логов за определенный период
+  static Future<List<Map<String, dynamic>>> getLogsSince(DateTime since) async {
     try {
-      final cutoffDate = DateTime.now().subtract(Duration(days: daysToKeep));
-      final cutoffTimestamp = Timestamp.fromDate(cutoffDate);
-
-      final query = _firestore
-          .collection('errors_log')
-          .where('timestamp', isLessThan: cutoffTimestamp);
-
-      final snapshot = await query.get();
-      final batch = _firestore.batch();
-
-      for (final doc in snapshot.docs) {
-        batch.delete(doc.reference);
-      }
-
-      await batch.commit();
-      debugPrint('Cleaned up ${snapshot.docs.length} old error logs');
+      final allLogs = await getAllLogs();
+      return allLogs.where((log) {
+        final timestamp = DateTime.tryParse(log['timestamp'] ?? '');
+        return timestamp != null && timestamp.isAfter(since);
+      }).toList();
     } catch (e) {
-      debugPrint('Error cleaning up old logs: $e');
+      if (kDebugMode) {
+        print('Error filtering logs: $e');
+      }
+      return [];
     }
   }
-}
 
-/// Глобальный экземпляр логгера ошибок
-final errorLogger = ErrorLogger();
-
-/// Расширение для удобного логирования исключений
-extension ExceptionLogging on Exception {
-  /// Логирование исключения как ошибки
-  Future<void> logAsError({
-    ErrorType type = ErrorType.unknown,
-    Map<String, dynamic>? metadata,
-  }) async {
-    await errorLogger.logError(
-      level: ErrorLevel.error,
-      type: type,
-      message: toString(),
-      stackTrace: StackTrace.current.toString(),
-      metadata: metadata,
-    );
+  /// Получение логов по типу ошибки
+  static Future<List<Map<String, dynamic>>> getLogsByType(
+    String errorType,
+  ) async {
+    try {
+      final allLogs = await getAllLogs();
+      return allLogs.where((log) => log['errorType'] == errorType).toList();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error filtering logs by type: $e');
+      }
+      return [];
+    }
   }
 
-  /// Логирование исключения как критической ошибки
-  Future<void> logAsCritical({
-    Map<String, dynamic>? metadata,
-  }) async {
-    await errorLogger.logCriticalError(
-      message: toString(),
-      stackTrace: StackTrace.current.toString(),
-      metadata: metadata,
-    );
-  }
-}
+  /// Очистка всех логов
+  static Future<void> clearAllLogs() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/$_logFileName');
 
-/// Расширение для удобного логирования ошибок
-extension ErrorLogging on Error {
-  /// Логирование ошибки как критической
-  Future<void> logAsCritical({
-    Map<String, dynamic>? metadata,
-  }) async {
-    await errorLogger.logCriticalError(
-      message: toString(),
-      stackTrace: stackTrace?.toString(),
-      metadata: metadata,
-    );
+      if (await file.exists()) {
+        await file.delete();
+      }
+
+      if (kDebugMode) {
+        print('All error logs cleared');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error clearing logs: $e');
+      }
+    }
+  }
+
+  /// Экспорт логов в JSON
+  static Future<String> exportLogsAsJson() async {
+    try {
+      final logs = await getAllLogs();
+      return json.encode(logs);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error exporting logs: $e');
+      }
+      return '[]';
+    }
+  }
+
+  /// Экспорт логов в текстовый формат
+  static Future<String> exportLogsAsText() async {
+    try {
+      final logs = await getAllLogs();
+      final buffer = StringBuffer();
+
+      buffer.writeln('=== ERROR LOGS EXPORT ===');
+      buffer.writeln('Generated: ${DateTime.now().toIso8601String()}');
+      buffer.writeln('Total logs: ${logs.length}');
+      buffer.writeln('========================\n');
+
+      for (final log in logs) {
+        buffer.writeln('Timestamp: ${log['timestamp']}');
+        buffer.writeln('Type: ${log['errorType']}');
+        buffer.writeln('Message: ${log['errorMessage']}');
+        buffer.writeln('Context: ${log['context']}');
+        buffer.writeln('Platform: ${log['platform']}');
+
+        if (log['stackTrace'] != null) {
+          buffer.writeln('Stack Trace:');
+          buffer.writeln(log['stackTrace']);
+        }
+
+        if (log['additionalData'] != null && log['additionalData'].isNotEmpty) {
+          buffer.writeln('Additional Data:');
+          buffer.writeln(json.encode(log['additionalData']));
+        }
+
+        buffer.writeln('---');
+      }
+
+      return buffer.toString();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error exporting logs as text: $e');
+      }
+      return 'Error exporting logs';
+    }
+  }
+
+  /// Установка максимального количества логов
+  static Future<void> setMaxLogs(int maxLogs) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(_maxLogsKey, maxLogs);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error setting max logs: $e');
+      }
+    }
+  }
+
+  /// Получение максимального количества логов
+  static Future<int> getMaxLogs() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getInt(_maxLogsKey) ?? _defaultMaxLogs;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error getting max logs: $e');
+      }
+      return _defaultMaxLogs;
+    }
+  }
+
+  /// Получение статистики логов
+  static Future<Map<String, dynamic>> getLogStatistics() async {
+    try {
+      final logs = await getAllLogs();
+
+      if (logs.isEmpty) {
+        return {
+          'totalLogs': 0,
+          'errorTypes': {},
+          'contexts': {},
+          'dateRange': null,
+        };
+      }
+
+      final errorTypes = <String, int>{};
+      final contexts = <String, int>{};
+      DateTime? earliestDate;
+      DateTime? latestDate;
+
+      for (final log in logs) {
+        // Подсчет типов ошибок
+        final errorType = log['errorType'] ?? 'Unknown';
+        errorTypes[errorType] = (errorTypes[errorType] ?? 0) + 1;
+
+        // Подсчет контекстов
+        final context = log['context'] ?? 'Unknown';
+        contexts[context] = (contexts[context] ?? 0) + 1;
+
+        // Определение диапазона дат
+        final timestamp = DateTime.tryParse(log['timestamp'] ?? '');
+        if (timestamp != null) {
+          if (earliestDate == null || timestamp.isBefore(earliestDate)) {
+            earliestDate = timestamp;
+          }
+          if (latestDate == null || timestamp.isAfter(latestDate)) {
+            latestDate = timestamp;
+          }
+        }
+      }
+
+      return {
+        'totalLogs': logs.length,
+        'errorTypes': errorTypes,
+        'contexts': contexts,
+        'dateRange': earliestDate != null && latestDate != null
+            ? {
+                'earliest': earliestDate.toIso8601String(),
+                'latest': latestDate.toIso8601String(),
+              }
+            : null,
+      };
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error getting log statistics: $e');
+      }
+      return {
+        'totalLogs': 0,
+        'errorTypes': {},
+        'contexts': {},
+        'dateRange': null,
+      };
+    }
+  }
+
+  /// Проверка размера файла логов
+  static Future<int> getLogFileSize() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/$_logFileName');
+
+      if (await file.exists()) {
+        return await file.length();
+      }
+
+      return 0;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error getting log file size: $e');
+      }
+      return 0;
+    }
+  }
+
+  /// Получение пути к файлу логов
+  static Future<String> getLogFilePath() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      return '${directory.path}/$_logFileName';
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error getting log file path: $e');
+      }
+      return '';
+    }
   }
 }

@@ -1083,7 +1083,7 @@ class _DocumentationManagementScreenState
   }
 
   void _viewDocument(Documentation document) {
-    // TODO: Реализовать просмотр документа
+    // TODO(developer): Реализовать просмотр документа
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content:
@@ -1093,7 +1093,7 @@ class _DocumentationManagementScreenState
   }
 
   void _editDocument(Documentation document) {
-    // TODO: Реализовать редактирование документа
+    // TODO(developer): Реализовать редактирование документа
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -1104,7 +1104,7 @@ class _DocumentationManagementScreenState
   }
 
   void _viewDocumentComments(Documentation document) {
-    // TODO: Реализовать просмотр комментариев к документу
+    // TODO(developer): Реализовать просмотр комментариев к документу
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -1115,7 +1115,7 @@ class _DocumentationManagementScreenState
   }
 
   void _viewTemplate(DocumentTemplate template) {
-    // TODO: Реализовать просмотр шаблона
+    // TODO(developer): Реализовать просмотр шаблона
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Просмотр шаблона "${template.name}" будет реализован'),
@@ -1124,7 +1124,7 @@ class _DocumentationManagementScreenState
   }
 
   void _editTemplate(DocumentTemplate template) {
-    // TODO: Реализовать редактирование шаблона
+    // TODO(developer): Реализовать редактирование шаблона
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content:
@@ -1154,7 +1154,7 @@ class _DocumentationManagementScreenState
   }
 
   void _viewComment(DocumentComment comment) {
-    // TODO: Реализовать просмотр комментария
+    // TODO(developer): Реализовать просмотр комментария
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Просмотр комментария будет реализован'),
@@ -1186,7 +1186,7 @@ class _DocumentationManagementScreenState
   }
 
   void _showAddDocumentDialog() {
-    // TODO: Реализовать диалог добавления документа
+    // TODO(developer): Реализовать диалог добавления документа
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Добавление документа будет реализовано'),
@@ -1195,7 +1195,7 @@ class _DocumentationManagementScreenState
   }
 
   void _showAddTemplateDialog() {
-    // TODO: Реализовать диалог добавления шаблона
+    // TODO(developer): Реализовать диалог добавления шаблона
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Добавление шаблона будет реализовано'),

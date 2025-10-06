@@ -831,7 +831,7 @@ class _IntegrationManagementScreenState
   }
 
   void _editIntegration(ExternalIntegration integration) {
-    // TODO: Реализовать редактирование интеграции
+    // TODO(developer): Реализовать редактирование интеграции
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -842,7 +842,7 @@ class _IntegrationManagementScreenState
   }
 
   void _testIntegration(ExternalIntegration integration) {
-    // TODO: Реализовать тестирование интеграции
+    // TODO(developer): Реализовать тестирование интеграции
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -853,7 +853,7 @@ class _IntegrationManagementScreenState
   }
 
   void _deleteIntegration(ExternalIntegration integration) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить интеграцию'),

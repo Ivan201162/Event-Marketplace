@@ -517,22 +517,14 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
 
     try {
       final ideaId = await _ideaService.createIdea(
-        Idea(
-          id: '',
-          title: _titleController.text.trim(),
-          description: _descriptionController.text.trim(),
-          category: _selectedCategory,
-          authorId: widget.userId,
-          authorName: 'Демо Пользователь', // TODO: Получить из контекста
-          tags: _tags,
-          images: _images,
-          isPublic: _isPublic,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-          likesCount: 0,
-          savesCount: 0,
-          commentsCount: 0,
-        ),
+        title: _titleController.text.trim(),
+        description: _descriptionController.text.trim(),
+        imageFiles: _selectedImages,
+        videoFile: _selectedVideo,
+        category: _selectedCategory,
+        tags: _selectedTags,
+        authorId: 'current_user',
+        authorName: 'Current User',
       );
 
       Navigator.pop(context, true);

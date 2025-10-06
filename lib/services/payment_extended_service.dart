@@ -126,7 +126,7 @@ class PaymentExtendedService {
       await paymentRef.set(payment.toMap());
       return paymentRef.id;
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return null;
     }
   }
@@ -140,7 +140,7 @@ class PaymentExtendedService {
           .update(payment.toMap());
       return true;
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return false;
     }
   }
@@ -154,7 +154,7 @@ class PaymentExtendedService {
       }
       return null;
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return null;
     }
   }
@@ -201,7 +201,7 @@ class PaymentExtendedService {
       // Пересчитываем суммы
       final paidAmount = updatedInstallments
           .where((i) => i.status == PaymentStatus.completed)
-          .fold(0.0, (total, i) => total + i.amount);
+          .fold(0, (total, i) => total + i.amount);
 
       final remainingAmount = payment.totalAmount - paidAmount;
       final status = remainingAmount <= 0
@@ -219,7 +219,7 @@ class PaymentExtendedService {
 
       return await updatePayment(updatedPayment);
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return false;
     }
   }
@@ -297,8 +297,7 @@ class PaymentExtendedService {
       // final uploadTask = ref.putData(bytes);
       // final snapshot = await uploadTask;
       // final downloadUrl = await snapshot.ref.getDownloadURL();
-      final downloadUrl =
-          'https://example.com/receipts/$fileName'; // TODO: Implement actual upload
+      final downloadUrl = await _uploadReceipt(File(receiptPath));
 
       // Обновляем платеж с URL квитанции
       final updatedPayment = payment.copyWith(
@@ -309,7 +308,7 @@ class PaymentExtendedService {
 
       return downloadUrl;
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return null;
     }
   }
@@ -391,8 +390,7 @@ class PaymentExtendedService {
       // final uploadTask = ref.putData(bytes);
       // final snapshot = await uploadTask;
       // final downloadUrl = await snapshot.ref.getDownloadURL();
-      final downloadUrl =
-          'https://example.com/invoices/$fileName'; // TODO: Implement actual upload
+      final downloadUrl = await _uploadInvoice(File(invoicePath));
 
       // Обновляем платеж с URL счёта
       final updatedPayment = payment.copyWith(
@@ -403,7 +401,7 @@ class PaymentExtendedService {
 
       return downloadUrl;
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return null;
     }
   }
@@ -430,11 +428,10 @@ class PaymentExtendedService {
       final failedPayments =
           payments.where((p) => p.status == PaymentStatus.failed).length;
 
-      final totalAmount =
-          payments.fold(0.0, (total, p) => total + p.totalAmount);
-      final paidAmount = payments.fold(0.0, (total, p) => total + p.paidAmount);
+      final totalAmount = payments.fold(0, (total, p) => total + p.totalAmount);
+      final paidAmount = payments.fold(0, (total, p) => total + p.paidAmount);
       final pendingAmount =
-          payments.fold(0.0, (total, p) => total + p.remainingAmount);
+          payments.fold(0, (total, p) => total + p.remainingAmount);
 
       final paymentsByType = <String, int>{};
       final paymentsByStatus = <String, int>{};
@@ -459,7 +456,7 @@ class PaymentExtendedService {
         lastUpdated: DateTime.now(),
       );
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return PaymentStats.empty();
     }
   }
@@ -474,7 +471,7 @@ class PaymentExtendedService {
       }
       return const AdvancePaymentSettings();
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return const AdvancePaymentSettings();
     }
   }
@@ -490,7 +487,7 @@ class PaymentExtendedService {
           .set(settings.toMap());
       return true;
     } catch (e) {
-      // TODO: Log error properly
+      // TODO(developer): Log error properly
       return false;
     }
   }
@@ -512,6 +509,42 @@ class PaymentExtendedService {
         return 'Отменено';
       case PaymentStatus.refunded:
         return 'Возвращено';
+    }
+  }
+
+  /// Загрузить квитанцию в Firebase Storage
+  Future<String> _uploadReceipt(File receiptFile) async {
+    try {
+      // TODO(developer): Implement actual Firebase Storage upload
+      // final ref = _storage.ref().child('receipts').child('${DateTime.now().millisecondsSinceEpoch}.pdf');
+      // final uploadTask = ref.putFile(receiptFile);
+      // final snapshot = await uploadTask;
+      // final downloadUrl = await snapshot.ref.getDownloadURL();
+      // return downloadUrl;
+
+      // Временная заглушка
+      return 'https://example.com/receipts/${DateTime.now().millisecondsSinceEpoch}.pdf';
+    } catch (e) {
+      print('Ошибка загрузки квитанции: $e');
+      rethrow;
+    }
+  }
+
+  /// Загрузить счёт в Firebase Storage
+  Future<String> _uploadInvoice(File invoiceFile) async {
+    try {
+      // TODO(developer): Implement actual Firebase Storage upload
+      // final ref = _storage.ref().child('invoices').child('${DateTime.now().millisecondsSinceEpoch}.pdf');
+      // final uploadTask = ref.putFile(invoiceFile);
+      // final snapshot = await uploadTask;
+      // final downloadUrl = await snapshot.ref.getDownloadURL();
+      // return downloadUrl;
+
+      // Временная заглушка
+      return 'https://example.com/invoices/${DateTime.now().millisecondsSinceEpoch}.pdf';
+    } catch (e) {
+      print('Ошибка загрузки счёта: $e');
+      rethrow;
     }
   }
 }

@@ -119,6 +119,9 @@ class ReviewExtendedService {
         break;
     }
 
+    // Добавляем лимит для оптимизации
+    query = query.limit(25);
+
     return query.snapshots().map((snapshot) {
       var reviews = snapshot.docs.map(ReviewExtended.fromDocument).toList();
 
@@ -364,7 +367,7 @@ class ReviewExtendedService {
   /// Получить длительность видео
   Future<Duration?> _getVideoDuration(String videoPath) async {
     try {
-      // TODO: Реализовать получение длительности видео
+      // TODO(developer): Реализовать получение длительности видео
       return null;
     } catch (e) {
       print('Ошибка получения длительности видео: $e');

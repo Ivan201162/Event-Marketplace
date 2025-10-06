@@ -360,7 +360,7 @@ class _LocationSettingsScreenState
               ),
               const SizedBox(height: 16),
 
-              // TODO: Реализовать отображение истории местоположений
+              // TODO(developer): Реализовать отображение истории местоположений
               const Center(
                 child: Text(
                   'История местоположений пока не реализована',
@@ -438,40 +438,31 @@ class _LocationSettingsScreenState
         location.longitude,
       );
 
-      if (address != null) {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Адрес'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Адрес: $address'),
-                const SizedBox(height: 8),
-                const Text(
-                  'Полный адрес:',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text(address),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Закрыть'),
+      showDialog<void>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Адрес'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Адрес: $address'),
+              const SizedBox(height: 8),
+              const Text(
+                'Полный адрес:',
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
+              Text(address),
             ],
           ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Не удалось получить адрес'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Закрыть'),
+            ),
+          ],
+        ),
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -483,7 +474,7 @@ class _LocationSettingsScreenState
   }
 
   void _clearLocationHistory() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Очистить историю'),
@@ -498,7 +489,7 @@ class _LocationSettingsScreenState
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              // TODO: Реализовать очистку истории
+              // TODO(developer): Реализовать очистку истории
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('История очищена')),
               );

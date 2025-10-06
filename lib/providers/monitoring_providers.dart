@@ -122,7 +122,7 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
   Future<void> startTrace(String traceName) async {
     try {
       final monitoringService = ref.read(monitoringServiceProvider);
-      await monitoringService.startTrace(traceName);
+      monitoringService.startTrace(traceName);
 
       final updatedTraces = List<String>.from(state.activeTraces)
         ..add(traceName);
@@ -139,7 +139,7 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
   Future<void> stopTrace(String traceName) async {
     try {
       final monitoringService = ref.read(monitoringServiceProvider);
-      await monitoringService.stopTrace(traceName);
+      monitoringService.stopTrace(traceName);
 
       final updatedTraces = List<String>.from(state.activeTraces)
         ..remove(traceName);
@@ -170,7 +170,7 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
   Future<void> setUserId(String userId) async {
     try {
       final monitoringService = ref.read(monitoringServiceProvider);
-      await monitoringService.setUserId(userId);
+      monitoringService.setUserId(userId);
     } catch (e) {
       state = state.copyWith(
         lastError: e.toString(),
@@ -183,7 +183,7 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
   Future<void> clearData() async {
     try {
       final monitoringService = ref.read(monitoringServiceProvider);
-      await monitoringService.clearData();
+      monitoringService.clearData();
 
       state = state.copyWith(
         metrics: {},
@@ -208,17 +208,17 @@ final monitoringAvailableProvider = Provider<bool>(
 /// Провайдер для получения метрик приложения
 final appMetricsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
   final monitoringService = ref.watch(monitoringServiceProvider);
-  return await monitoringService.getAppMetrics();
+  return monitoringService.getAppMetrics();
 });
 
 /// Провайдер для мониторинга состояния сети
 final networkStatusProvider = FutureProvider<Map<String, dynamic>>((ref) async {
   final monitoringService = ref.watch(monitoringServiceProvider);
-  return await monitoringService.getNetworkStatus();
+  return monitoringService.getNetworkStatus();
 });
 
 /// Провайдер для мониторинга использования памяти
 final memoryUsageProvider = FutureProvider<Map<String, dynamic>>((ref) async {
   final monitoringService = ref.watch(monitoringServiceProvider);
-  return await monitoringService.getMemoryUsage();
+  return monitoringService.getMemoryUsage();
 });

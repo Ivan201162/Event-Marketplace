@@ -206,8 +206,8 @@ class GuestModeService {
     GuestAccess guestAccess,
   ) async {
     try {
-      // TODO: Отправить email с кодом доступа
-      // TODO: Отправить SMS с кодом доступа (если указан телефон)
+      // TODO(developer): Отправить email с кодом доступа
+      // TODO(developer): Отправить SMS с кодом доступа (если указан телефон)
     } catch (e) {
       // Игнорируем ошибки отправки
     }

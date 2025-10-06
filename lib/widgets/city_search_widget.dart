@@ -76,7 +76,7 @@ class _CitySearchWidgetState extends ConsumerState<CitySearchWidget> {
                   )
                 : null,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.0),
+              borderRadius: BorderRadius.circular(12),
             ),
             filled: true,
             fillColor: theme.cardColor,
@@ -102,13 +102,13 @@ class _CitySearchWidgetState extends ConsumerState<CitySearchWidget> {
         final searchState = ref.watch(citySearchProvider);
 
         return searchState.when(
-          data: (cities) => _buildSearchSuggestions(cities),
+          data: _buildSearchSuggestions,
           loading: () => const Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16),
             child: Center(child: CircularProgressIndicator()),
           ),
           error: (error, stack) => Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16),
             child: Text(
               'Ошибка поиска: $error',
               style: TextStyle(color: Theme.of(context).colorScheme.error),
@@ -119,51 +119,52 @@ class _CitySearchWidgetState extends ConsumerState<CitySearchWidget> {
     );
   }
 
-  Widget _buildQuickSuggestions() {
-    return Consumer(
-      builder: (context, ref, child) {
-        final popularCitiesState = ref.watch(popularCitiesProvider);
+  Widget _buildQuickSuggestions() => Consumer(
+        builder: (context, ref, child) {
+          final popularCitiesState = ref.watch(popularCitiesProvider);
 
-        return popularCitiesState.when(
-          data: (cities) => Container(
-            constraints: const BoxConstraints(maxHeight: 200),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 8.0),
-                  child: Text(
-                    'Популярные города',
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
+          return popularCitiesState.when(
+            data: (cities) => Container(
+              constraints: const BoxConstraints(maxHeight: 200),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    child: Text(
+                      'Популярные города',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: cities.take(5).length,
-                    itemBuilder: (context, index) {
-                      final city = cities[index];
-                      return _buildCityTile(city);
-                    },
+                  Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: cities.take(5).length,
+                      itemBuilder: (context, index) {
+                        final city = cities[index];
+                        return _buildCityTile(city);
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          loading: () => const SizedBox.shrink(),
-          error: (error, stack) => const SizedBox.shrink(),
-        );
-      },
-    );
-  }
+            loading: () => const SizedBox.shrink(),
+            error: (error, stack) => const SizedBox.shrink(),
+          );
+        },
+      );
 
   Widget _buildSearchSuggestions(List<CityRegion> cities) {
     if (cities.isEmpty) {
       return Container(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Text(
           'Город не найден',
           style:
@@ -176,11 +177,11 @@ class _CitySearchWidgetState extends ConsumerState<CitySearchWidget> {
       constraints: const BoxConstraints(maxHeight: 300),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 8.0,
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 8,
             offset: const Offset(0, 2),
           ),
         ],
@@ -201,7 +202,7 @@ class _CitySearchWidgetState extends ConsumerState<CitySearchWidget> {
 
     return ListTile(
       leading: CircleAvatar(
-        backgroundColor: theme.primaryColor.withOpacity(0.1),
+        backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
         child: Text(
           city.citySize.icon,
           style: const TextStyle(fontSize: 16),

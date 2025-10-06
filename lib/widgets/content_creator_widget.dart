@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/content_creator.dart';
 import '../services/content_creator_service.dart';
 import 'responsive_layout.dart';
+import 'responsive_text.dart';
 
 /// Виджет для отображения карточки контент-мейкера
 class ContentCreatorCard extends ConsumerWidget {
@@ -26,7 +27,9 @@ class ContentCreatorCard extends ConsumerWidget {
                 Expanded(
                   child: ResponsiveText(
                     creator.name,
-                    isTitle: true,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                 ),
                 if (creator.rating != null) ...[
@@ -238,7 +241,7 @@ class ContentCreatorDetailWidget extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            ResponsiveText(
+                            const ResponsiveText(
                               'Поддерживаемые форматы',
                               isTitle: true,
                             ),
@@ -261,7 +264,7 @@ class ContentCreatorDetailWidget extends ConsumerWidget {
                           children: [
                             Row(
                               children: [
-                                ResponsiveText(
+                                const ResponsiveText(
                                   'Портфолио',
                                   isTitle: true,
                                 ),
@@ -293,7 +296,7 @@ class ContentCreatorDetailWidget extends ConsumerWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ResponsiveText(
+                              const ResponsiveText(
                                 'Цены',
                                 isTitle: true,
                               ),
@@ -513,7 +516,7 @@ class ContentCreatorDetailWidget extends ConsumerWidget {
       );
 
   void _showMediaPreview(MediaShowcase item) {
-    // TODO: Реализовать полноэкранный просмотр медиа
+    // TODO(developer): Реализовать полноэкранный просмотр медиа
     print('Просмотр медиа: ${item.title}');
   }
 }
@@ -536,10 +539,10 @@ class ContentCreatorListWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) => Consumer(
         builder: (context, ref, child) => ref
             .watch(
-              contentCreatorsProvider(
-                location: location,
-                categories: categories,
-                formats: formats,
+              contentCreatorsProvider({
+                'location': location,
+                'categories': categories,
+                'formats': formats,
               ),
             )
             .when(

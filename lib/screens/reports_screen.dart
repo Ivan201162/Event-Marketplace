@@ -516,7 +516,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
   }
 
   void _showCreateReportDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Создать отчет'),
@@ -539,7 +539,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
   }
 
   void _createCustomReport() {
-    // TODO: Реализовать создание пользовательского отчета
+    // TODO(developer): Реализовать создание пользовательского отчета
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content:
@@ -549,7 +549,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
   }
 
   void _createReportFromTemplate(ReportTemplate template) {
-    // TODO: Реализовать создание отчета по шаблону
+    // TODO(developer): Реализовать создание отчета по шаблону
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -574,7 +574,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
   }
 
   void _viewReport(Report report) {
-    // TODO: Реализовать просмотр отчета
+    // TODO(developer): Реализовать просмотр отчета
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Просмотр отчета "${report.name}" будет реализован'),
@@ -583,7 +583,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
   }
 
   void _downloadReport(Report report) {
-    // TODO: Реализовать скачивание отчета
+    // TODO(developer): Реализовать скачивание отчета
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Скачивание отчета "${report.name}" будет реализовано'),
@@ -592,7 +592,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
   }
 
   void _deleteReport(Report report) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить отчет'),

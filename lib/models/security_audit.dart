@@ -34,7 +34,8 @@ class SecurityAudit {
       ipAddress: data['ipAddress'] as String?,
       userAgent: data['userAgent'] as String?,
       metadata: Map<String, dynamic>.from(
-          data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+        data['metadata'] as Map<dynamic, dynamic>? ?? {},
+      ),
       timestamp: (data['timestamp'] as Timestamp).toDate(),
       resolvedBy: data['resolvedBy'] as String?,
       resolvedAt: data['resolvedAt'] != null
@@ -63,7 +64,7 @@ class SecurityAudit {
         resolvedAt: data['resolvedAt'] != null
             ? (data['resolvedAt'] as Timestamp).toDate()
             : null,
-        isResolved: data['isResolved'] ?? false,
+        isResolved: data['isResolved'] as bool? ?? false,
       );
   final String id;
   final String eventType;
@@ -210,7 +211,7 @@ class SecurityPolicy {
         orElse: () => SecurityPolicyType.authentication,
       ),
       rules: Map<String, dynamic>.from(data['rules'] ?? {}),
-      isEnabled: data['isEnabled'] ?? true,
+      isEnabled: data['isEnabled'] as bool? ?? true,
       severity: SecurityLevel.values.firstWhere(
         (e) => e.toString().split('.').last == data['severity'],
         orElse: () => SecurityLevel.medium,
@@ -232,7 +233,7 @@ class SecurityPolicy {
           orElse: () => SecurityPolicyType.authentication,
         ),
         rules: Map<String, dynamic>.from(data['rules'] ?? {}),
-        isEnabled: data['isEnabled'] ?? true,
+        isEnabled: data['isEnabled'] as bool? ?? true,
         severity: SecurityLevel.values.firstWhere(
           (e) => e.toString().split('.').last == data['severity'],
           orElse: () => SecurityLevel.medium,
@@ -358,7 +359,7 @@ class EncryptionKey {
       expiresAt: data['expiresAt'] != null
           ? (data['expiresAt'] as Timestamp).toDate()
           : null,
-      isActive: data['isActive'] ?? true,
+      isActive: data['isActive'] as bool? ?? true,
       description: data['description'],
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
@@ -374,7 +375,7 @@ class EncryptionKey {
         expiresAt: data['expiresAt'] != null
             ? (data['expiresAt'] as Timestamp).toDate()
             : null,
-        isActive: data['isActive'] ?? true,
+        isActive: data['isActive'] as bool? ?? true,
         description: data['description'],
         metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       );

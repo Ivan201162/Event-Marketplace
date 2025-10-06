@@ -214,7 +214,7 @@ class AppUpdateService {
   /// Открыть страницу загрузки
   static Future<void> openDownloadPage(String? downloadUrl) async {
     if (downloadUrl != null) {
-      // TODO: Реализовать открытие страницы загрузки
+      // TODO(developer): Реализовать открытие страницы загрузки
       debugPrint('Открытие страницы загрузки: $downloadUrl');
     }
   }

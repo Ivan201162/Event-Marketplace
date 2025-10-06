@@ -808,7 +808,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
   }
 
   void _viewCacheItem(String key) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Элемент кэша: $key'),
@@ -834,7 +834,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
   }
 
   void _removeCacheItem(String key) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить элемент'),
@@ -897,7 +897,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
   }
 
   void _clearAll() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Очистить весь кэш'),
@@ -942,7 +942,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
   }
 
   void _showCacheInfo() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Информация о кэше'),
@@ -971,7 +971,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
   }
 
   void _resetConfig() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Сбросить настройки'),
@@ -1016,7 +1016,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
   }
 
   void _showConfigDialog() {
-    // TODO: Реализовать диалог изменения настроек
+    // TODO(developer): Реализовать диалог изменения настроек
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Функция изменения настроек будет реализована'),

@@ -955,7 +955,7 @@ class _DependencyManagementScreenState
   }
 
   void _viewDependency(Dependency dependency) {
-    // TODO: Реализовать просмотр зависимости
+    // TODO(developer): Реализовать просмотр зависимости
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content:
@@ -965,7 +965,7 @@ class _DependencyManagementScreenState
   }
 
   void _editDependency(Dependency dependency) {
-    // TODO: Реализовать редактирование зависимости
+    // TODO(developer): Реализовать редактирование зависимости
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -976,7 +976,7 @@ class _DependencyManagementScreenState
   }
 
   void _updateDependency(Dependency dependency) {
-    // TODO: Реализовать обновление зависимости
+    // TODO(developer): Реализовать обновление зависимости
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -987,7 +987,7 @@ class _DependencyManagementScreenState
   }
 
   void _viewUpdate(DependencyUpdate update) {
-    // TODO: Реализовать просмотр обновления
+    // TODO(developer): Реализовать просмотр обновления
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Просмотр обновления будет реализован'),
@@ -1025,7 +1025,7 @@ class _DependencyManagementScreenState
   }
 
   void _showAddDependencyDialog() {
-    // TODO: Реализовать диалог добавления зависимости
+    // TODO(developer): Реализовать диалог добавления зависимости
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Добавление зависимости будет реализовано'),

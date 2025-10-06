@@ -116,7 +116,8 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
             Icon(
               Icons.map_outlined,
               size: 120,
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+              color:
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
             ),
             const SizedBox(height: 32),
             Text(
@@ -133,7 +134,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withOpacity(0.7),
+                        .withValues(alpha: 0.7),
                   ),
               textAlign: TextAlign.center,
             ),
@@ -179,7 +180,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withOpacity(0.7),
+                        .withValues(alpha: 0.7),
                   ),
               textAlign: TextAlign.center,
             ),
@@ -213,7 +214,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -273,7 +274,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 8,
               offset: const Offset(0, -2),
             ),
@@ -345,7 +346,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
           color: Theme.of(context)
               .colorScheme
               .surfaceContainerHighest
-              .withOpacity(0.3),
+              .withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Column(
@@ -362,7 +363,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withOpacity(0.7),
+                        .withValues(alpha: 0.7),
                   ),
               textAlign: TextAlign.center,
             ),
@@ -381,7 +382,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
   void _onEventTap(Event event) {
     SafeLog.info('EventsMapPage: Event tapped: ${event.title}');
 
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(event.title),
@@ -436,7 +437,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
-              // TODO: Переход к детальной странице события
+              // TODO(developer): Переход к детальной странице события
             },
             child: const Text('Подробнее'),
           ),
@@ -460,13 +461,13 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
 
   void _onSearchChanged(String query) {
     SafeLog.info('EventsMapPage: Search query changed: $query');
-    // TODO: Реализовать поиск событий на карте
+    // TODO(developer): Реализовать поиск событий на карте
   }
 
   void _showFilters() {
     SafeLog.info('EventsMapPage: Showing filters');
 
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       builder: (context) => Container(
         padding: const EdgeInsets.all(24),

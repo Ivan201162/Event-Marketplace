@@ -222,7 +222,7 @@ class PriceReminderAdminWidget extends ConsumerWidget {
   }
 
   void _showSpecialistsList(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Специалисты с устаревшими ценами'),

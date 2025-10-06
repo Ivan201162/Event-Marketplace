@@ -712,7 +712,7 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
 
     try {
       // В демо-режиме используем mock данные
-      final profile = _vkService.createMockVKProfile();
+      final profile = _vkService.createMockVKProfile('https://vk.com/demo');
 
       setState(() {
         _vkProfile = profile;
@@ -730,7 +730,7 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
     if (_vkProfile == null) return;
 
     try {
-      // TODO: Сохранить VK профиль в базу данных
+      // TODO(developer): Сохранить VK профиль в базу данных
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('VK профиль успешно сохранен!'),

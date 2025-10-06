@@ -30,16 +30,16 @@ class FeedPost {
       specialistName: data['specialistName'] as String,
       specialistPhotoUrl: data['specialistPhotoUrl'] as String?,
       content: data['content'] as String,
-      images: List<String>.from(data['images'] ?? []),
-      videos: List<String>.from(data['videos'] ?? []),
+      images: List<String>.from((data['images'] as List<dynamic>?) ?? []),
+      videos: List<String>.from((data['videos'] as List<dynamic>?) ?? []),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      likesCount: data['likesCount'] ?? 0,
-      commentsCount: data['commentsCount'] ?? 0,
-      likedBy: List<String>.from(data['likedBy'] ?? []),
-      isPinned: data['isPinned'] ?? false,
-      tags: List<String>.from(data['tags'] ?? []),
-      shares: data['shares'] ?? 0,
+      likesCount: data['likesCount'] as int? ?? 0,
+      commentsCount: data['commentsCount'] as int? ?? 0,
+      likedBy: List<String>.from((data['likedBy'] as List<dynamic>?) ?? []),
+      isPinned: data['isPinned'] as bool? ?? false,
+      tags: List<String>.from((data['tags'] as List<dynamic>?) ?? []),
+      shares: data['shares'] as int? ?? 0,
     );
   }
   final String id;
@@ -166,8 +166,8 @@ class FeedComment {
       content: data['content'] as String,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      likesCount: data['likesCount'] ?? 0,
-      likedBy: List<String>.from(data['likedBy'] ?? []),
+      likesCount: data['likesCount'] as int? ?? 0,
+      likedBy: List<String>.from((data['likedBy'] as List<dynamic>?) ?? []),
     );
   }
   final String id;

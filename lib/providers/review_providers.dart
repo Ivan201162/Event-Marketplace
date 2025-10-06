@@ -1,232 +1,199 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../core/feature_flags.dart';
 import '../models/review.dart';
 import '../services/review_service.dart';
 
-/// Провайдер сервиса отзывов
+/// Теги для отзывов
+class ReviewTags {
+  static const List<String> commonTags = [
+    'Качество работы',
+    'Пунктуальность',
+    'Коммуникация',
+    'Профессионализм',
+    'Цена/качество',
+    'Креативность',
+    'Организация',
+    'Гибкость',
+    'Техническое оснащение',
+    'Атмосфера',
+  ];
+
+  /// Получить теги по рейтингу
+  static List<String> getTagsByRating(int rating) {
+    switch (rating) {
+      case 5:
+        return ['Отлично', 'Превосходно', 'Рекомендую'];
+      case 4:
+        return ['Хорошо', 'Качественно', 'Доволен'];
+      case 3:
+        return ['Нормально', 'Удовлетворительно'];
+      case 2:
+        return ['Плохо', 'Не рекомендую'];
+      case 1:
+        return ['Ужасно', 'Очень плохо'];
+      default:
+        return commonTags;
+    }
+  }
+}
+
+/// Провайдер для получения отзывов специалиста
+final specialistReviewsProvider = StreamProvider.family<List<Review>, String>(
+  (ref, specialistId) => FirebaseFirestore.instance
+      .collection('reviews')
+      .where('specialistId', isEqualTo: specialistId)
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map((snapshot) => snapshot.docs.map(Review.fromDocument).toList()),
+);
+
+/// Провайдер для получения статистики отзывов специалиста
+final specialistReviewStatsProvider =
+    FutureProvider.family<SpecialistReviewStats, String>(
+        (ref, specialistId) async {
+  final reviews =
+      await ref.read(specialistReviewsProvider(specialistId).future);
+  return SpecialistReviewStats.fromReviews(reviews);
+});
+
+/// Провайдер для получения отзывов заказчика
+final customerReviewsProvider = StreamProvider.family<List<Review>, String>(
+  (ref, customerId) => FirebaseFirestore.instance
+      .collection('reviews')
+      .where('customerId', isEqualTo: customerId)
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map((snapshot) => snapshot.docs.map(Review.fromDocument).toList()),
+);
+
+/// Провайдер для создания отзыва
+final createReviewProvider =
+    FutureProvider.family<void, CreateReviewParams>((ref, params) async {
+  final review = Review(
+    id: '',
+    specialistId: params.specialistId,
+    customerId: params.customerId,
+    customerName: params.customerName,
+    rating: params.rating,
+    comment: params.comment,
+    serviceTags: params.serviceTags,
+    createdAt: DateTime.now(),
+  );
+
+  await FirebaseFirestore.instance.collection('reviews').add(review.toMap());
+});
+
+/// Провайдер для сервиса отзывов
 final reviewServiceProvider = Provider<ReviewService>((ref) => ReviewService());
 
-/// Провайдер для проверки доступности отзывов
-final reviewsAvailableProvider =
-    Provider<bool>((ref) => FeatureFlags.reviewsEnabled);
+/// Провайдер для состояния формы отзыва
+final reviewFormProvider =
+    StateNotifierProvider<ReviewFormNotifier, ReviewFormState>(
+        (ref) => ReviewFormNotifier(ref.read(reviewServiceProvider)));
 
-/// Провайдер отзывов для цели
-final reviewsForTargetProvider = StreamProvider.family<List<Review>,
-    ({String targetId, ReviewType type, ReviewFilter? filter})>((ref, params) {
-  final reviewService = ref.read(reviewServiceProvider);
-  return reviewService.getReviewsForTarget(
-    params.targetId,
-    params.type,
-    filter: params.filter,
-  );
-});
-
-/// Провайдер статистики отзывов
-final reviewStatsProvider =
-    StreamProvider.family<ReviewStats, ({String targetId, ReviewType type})>(
-        (ref, params) {
-  final reviewService = ref.read(reviewServiceProvider);
-  return reviewService.getReviewStatsStream(params.targetId, params.type);
-});
-
-/// Провайдер отзыва пользователя для цели
-final userReviewForTargetProvider =
-    FutureProvider.family<Review?, ({String userId, String targetId})>(
-        (ref, params) async {
-  final reviewService = ref.read(reviewServiceProvider);
-  return reviewService.getUserReviewForTarget(
-    params.userId,
-    params.targetId,
-  );
-});
-
-/// Провайдер отзывов пользователя
-final userReviewsProvider =
-    StreamProvider.family<List<Review>, String>((ref, userId) {
-  final reviewService = ref.read(reviewServiceProvider);
-  return reviewService.getUserReviews(userId);
-});
-
-/// Провайдер отзывов на рассмотрении
-final pendingReviewsProvider = StreamProvider<List<Review>>((ref) {
-  final reviewService = ref.read(reviewServiceProvider);
-  return reviewService.getPendingReviews();
-});
-
-/// Провайдер поиска отзывов
-final searchReviewsProvider = StreamProvider.family<List<Review>,
-    ({String? query, ReviewType? type, ReviewFilter? filter})>((ref, params) {
-  final reviewService = ref.read(reviewServiceProvider);
-  return reviewService.searchReviews(
-    query: params.query,
-    type: params.type,
-    filter: params.filter,
-  );
-});
+/// Провайдер для состояния отзывов
+final reviewStateProvider =
+    StateNotifierProvider<ReviewStateNotifier, ReviewState>(
+        (ref) => ReviewStateNotifier(ref.read(reviewServiceProvider)));
 
 /// Состояние формы отзыва
 class ReviewFormState {
   const ReviewFormState({
-    this.title = '',
-    this.content = '',
+    this.rating = 0,
     this.comment = '',
-    this.rating = 5,
-    this.tags = const [],
+    this.serviceTags = const [],
     this.selectedTags = const [],
-    this.images = const [],
-    this.isSubmitting = false,
-    this.isPublic = true,
-    this.error,
-    this.errorMessage,
     this.isLoading = false,
+    this.error,
+    this.title = '',
+    this.isPublic = true,
+    this.isSubmitting = false,
   });
-  final String title;
-  final String content;
-  final String comment;
+
   final int rating;
-  final List<String> tags;
+  final String comment;
+  final List<String> serviceTags;
   final List<String> selectedTags;
-  final List<String> images;
-  final bool isSubmitting;
-  final bool isPublic;
-  final String? error;
-  final String? errorMessage;
   final bool isLoading;
+  final String? error;
+  final String title;
+  final bool isPublic;
+  final bool isSubmitting;
+
+  String? get errorMessage => error;
 
   ReviewFormState copyWith({
-    String? title,
-    String? content,
-    String? comment,
     int? rating,
-    List<String>? tags,
+    String? comment,
+    List<String>? serviceTags,
     List<String>? selectedTags,
-    List<String>? images,
-    bool? isSubmitting,
-    bool? isPublic,
+    bool? isLoading,
     String? error,
-    String? errorMessage,
+    String? title,
+    bool? isPublic,
+    bool? isSubmitting,
   }) =>
       ReviewFormState(
-        title: title ?? this.title,
-        content: content ?? this.content,
-        comment: comment ?? this.comment,
         rating: rating ?? this.rating,
-        tags: tags ?? this.tags,
+        comment: comment ?? this.comment,
+        serviceTags: serviceTags ?? this.serviceTags,
         selectedTags: selectedTags ?? this.selectedTags,
-        images: images ?? this.images,
-        isSubmitting: isSubmitting ?? this.isSubmitting,
-        isPublic: isPublic ?? this.isPublic,
-        error: error ?? this.error,
-        errorMessage: errorMessage ?? this.errorMessage,
         isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error,
+        title: title ?? this.title,
+        isPublic: isPublic ?? this.isPublic,
+        isSubmitting: isSubmitting ?? this.isSubmitting,
       );
 }
 
-/// Провайдер состояния формы отзыва
-final reviewFormProvider =
-    NotifierProvider<ReviewFormNotifier, ReviewFormState>(
-  ReviewFormNotifier.new,
-);
+/// Нотификатор для формы отзыва
+class ReviewFormNotifier extends StateNotifier<ReviewFormState> {
+  ReviewFormNotifier(this._reviewService) : super(const ReviewFormState());
 
-/// Notifier для формы отзыва
-class ReviewFormNotifier extends Notifier<ReviewFormState> {
-  @override
-  ReviewFormState build() => const ReviewFormState();
-
-  void updateTitle(String title) {
-    state = state.copyWith(title: title);
-  }
-
-  void updateContent(String content) {
-    state = state.copyWith(content: content);
-  }
+  final ReviewService _reviewService;
 
   void updateRating(int rating) {
     state = state.copyWith(rating: rating);
-  }
-
-  void updateTags(List<String> tags) {
-    state = state.copyWith(tags: tags);
-  }
-
-  void updateImages(List<String> images) {
-    state = state.copyWith(images: images);
-  }
-
-  void setSubmitting(bool isSubmitting) {
-    state = state.copyWith(isSubmitting: isSubmitting);
-  }
-
-  void setError(String? error) {
-    state = state.copyWith(error: error);
-  }
-
-  void reset() {
-    state = const ReviewFormState();
   }
 
   void updateComment(String comment) {
     state = state.copyWith(comment: comment);
   }
 
-  void updateSelectedTags(List<String> selectedTags) {
-    state = state.copyWith(selectedTags: selectedTags);
+  void updateServiceTags(List<String> tags) {
+    state = state.copyWith(serviceTags: tags);
   }
 
-  void updateIsPublic(bool isPublic) {
-    state = state.copyWith(isPublic: isPublic);
+  void updateSelectedTags(List<String> tags) {
+    state = state.copyWith(selectedTags: tags);
   }
 
-  /// Создать отзыв
-  Future<void> createReview({
-    required String targetId,
-    required ReviewType type,
-  }) async {
-    try {
-      state = state.copyWith(error: null);
-
-      final reviewService = ref.read(reviewServiceProvider);
-      await reviewService.createReview(
-        targetId: targetId,
-        type: type,
-        title: state.title,
-        content: state.content,
-        rating: state.rating,
-        tags: state.selectedTags,
-        images: state.images,
-      );
-
-      state = state.copyWith();
-    } catch (e) {
-      state = state.copyWith(error: e.toString());
-    }
+  void updateTitle(String title) {
+    state = state.copyWith(title: title);
   }
 
-  void setErrorMessage(String? errorMessage) {
-    state = state.copyWith(errorMessage: errorMessage);
+  void setRating(int rating) {
+    state = state.copyWith(rating: rating);
   }
 
   void addTag(String tag) {
-    final tags = List<String>.from(state.tags);
+    final tags = List<String>.from(state.serviceTags);
     if (!tags.contains(tag)) {
       tags.add(tag);
-      state = state.copyWith(tags: tags);
+      state = state.copyWith(serviceTags: tags);
     }
   }
 
   void removeTag(String tag) {
-    final tags = List<String>.from(state.tags);
+    final tags = List<String>.from(state.serviceTags);
     tags.remove(tag);
-    state = state.copyWith(tags: tags);
+    state = state.copyWith(serviceTags: tags);
   }
 
   void togglePublic() {
     state = state.copyWith(isPublic: !state.isPublic);
   }
-
-  bool get isValid =>
-      state.title.isNotEmpty && state.content.isNotEmpty && state.rating > 0;
 
   void startSubmitting() {
     state = state.copyWith(isSubmitting: true);
@@ -236,14 +203,30 @@ class ReviewFormNotifier extends Notifier<ReviewFormState> {
     state = state.copyWith(isSubmitting: false);
   }
 
-  void setRating(int rating) {
-    state = state.copyWith(rating: rating);
+  void setError(String error) {
+    state = state.copyWith(error: error);
   }
 
-  String? get errorMessage => state.error;
-  String get comment => state.content;
-  List<String> get selectedTags => state.tags;
-  bool get isPublic => true; // По умолчанию публичный
+  bool get isValid => state.rating > 0 && state.comment.isNotEmpty;
+
+  Future<void> submitReview(
+      String specialistId, String customerId, String customerName) async {
+    state = state.copyWith(isLoading: true);
+
+    try {
+      await _reviewService.createReview(
+        specialistId: specialistId,
+        customerId: customerId,
+        customerName: customerName,
+        rating: state.rating,
+        comment: state.comment,
+        serviceTags: state.serviceTags,
+      );
+      state = state.copyWith(isLoading: false);
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+    }
+  }
 }
 
 /// Состояние отзывов
@@ -253,6 +236,7 @@ class ReviewState {
     this.isLoading = false,
     this.error,
   });
+
   final List<Review> reviews;
   final bool isLoading;
   final String? error;
@@ -269,54 +253,98 @@ class ReviewState {
       );
 }
 
-/// Провайдер состояния отзывов
-final reviewStateProvider =
-    NotifierProvider<ReviewStateNotifier, ReviewState>(ReviewStateNotifier.new);
+/// Нотификатор для состояния отзывов
+class ReviewStateNotifier extends StateNotifier<ReviewState> {
+  ReviewStateNotifier(this._reviewService) : super(const ReviewState());
 
-/// Notifier для состояния отзывов
-class ReviewStateNotifier extends Notifier<ReviewState> {
-  @override
-  ReviewState build() => const ReviewState();
+  final ReviewService _reviewService;
 
-  void setLoading(bool isLoading) {
-    state = state.copyWith(isLoading: isLoading);
+  Future<void> loadReviews(String specialistId) async {
+    state = state.copyWith(isLoading: true);
+
+    try {
+      final reviews = await _reviewService.getReviews(specialistId);
+      state = state.copyWith(reviews: reviews, isLoading: false);
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+    }
   }
 
-  void setReviews(List<Review> reviews) {
-    state = state.copyWith(reviews: reviews);
-  }
+  Future<void> createReview(Review review) async {
+    state = state.copyWith(isLoading: true);
 
-  void setError(String? error) {
-    state = state.copyWith(error: error);
-  }
-
-  Future<void> createReview({
-    required String targetId,
-    required ReviewType type,
-    required String title,
-    required String content,
-    required int rating,
-    List<String> tags = const [],
-    List<String> images = const [],
-  }) async {
-    // Здесь должна быть логика создания отзыва
-    // Пока что просто заглушка
+    try {
+      await _reviewService.createReview(
+        specialistId: review.specialistId,
+        customerId: review.customerId,
+        customerName: review.customerName,
+        rating: review.rating,
+        comment: review.comment,
+        serviceTags: review.serviceTags,
+      );
+      state = state.copyWith(isLoading: false);
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+    }
   }
 }
 
-/// Провайдер отзывов специалиста
-final specialistReviewsProvider =
-    StreamProvider.family<List<Review>, String>((ref, specialistId) {
-  final reviewService = ref.read(reviewServiceProvider);
-  return reviewService.getReviewsForTarget(specialistId, ReviewType.specialist);
-});
-
-/// Параметры отзывов специалиста
-class SpecialistReviewsParams {
-  const SpecialistReviewsParams({
-    required this.targetId,
-    required this.type,
+/// Параметры для создания отзыва
+class CreateReviewParams {
+  const CreateReviewParams({
+    required this.specialistId,
+    required this.customerId,
+    required this.customerName,
+    required this.rating,
+    required this.comment,
+    this.serviceTags = const [],
   });
-  final String targetId;
-  final ReviewType type;
+
+  final String specialistId;
+  final String customerId;
+  final String customerName;
+  final int rating;
+  final String comment;
+  final List<String> serviceTags;
+}
+
+/// Статистика отзывов специалиста
+class SpecialistReviewStats {
+  const SpecialistReviewStats({
+    required this.averageRating,
+    required this.totalReviews,
+    required this.ratingDistribution,
+  });
+
+  factory SpecialistReviewStats.fromReviews(List<Review> reviews) {
+    if (reviews.isEmpty) {
+      return const SpecialistReviewStats(
+        averageRating: 0,
+        totalReviews: 0,
+        ratingDistribution: {},
+      );
+    }
+
+    // Вычисляем средний рейтинг
+    final totalRating =
+        reviews.fold<int>(0, (sum, review) => sum + review.rating);
+    final averageRating = totalRating / reviews.length;
+
+    // Подсчитываем распределение по звездам
+    final ratingDistribution = <int, int>{};
+    for (final review in reviews) {
+      ratingDistribution[review.rating] =
+          (ratingDistribution[review.rating] ?? 0) + 1;
+    }
+
+    return SpecialistReviewStats(
+      averageRating: averageRating,
+      totalReviews: reviews.length,
+      ratingDistribution: ratingDistribution,
+    );
+  }
+
+  final double averageRating;
+  final int totalReviews;
+  final Map<int, int> ratingDistribution;
 }

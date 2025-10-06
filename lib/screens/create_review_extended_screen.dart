@@ -536,7 +536,7 @@ class _CreateReviewExtendedScreenState
     });
 
     try {
-      // TODO: Получить данные текущего пользователя
+      // TODO(developer): Получить данные текущего пользователя
       const customerId = 'demo_customer_id';
       const customerName = 'Демо Пользователь';
       const customerPhotoUrl = '';

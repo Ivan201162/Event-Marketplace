@@ -4,14 +4,13 @@ import 'package:intl/intl.dart';
 import '../models/payment_models.dart';
 
 class PaymentHistoryItem extends StatelessWidget {
-  final Payment payment;
-  final VoidCallback? onTap;
-
   const PaymentHistoryItem({
     super.key,
     required this.payment,
     this.onTap,
   });
+  final Payment payment;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +59,8 @@ class PaymentHistoryItem extends StatelessWidget {
                         Text(
                           payment.methodDisplayName,
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.colorScheme.onSurface.withOpacity(0.7),
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.7),
                           ),
                         ),
                       ],
@@ -82,7 +82,8 @@ class PaymentHistoryItem extends StatelessWidget {
                         Text(
                           'налог: ${payment.taxAmount.toStringAsFixed(0)} ₽',
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withOpacity(0.6),
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.6),
                           ),
                         ),
                     ],
@@ -100,11 +101,12 @@ class PaymentHistoryItem extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: _getStatusColor(payment.status).withOpacity(0.1),
+                      color: _getStatusColor(payment.status)
+                          .withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: _getStatusColor(payment.status).withOpacity(0.3),
-                        width: 1,
+                        color: _getStatusColor(payment.status)
+                            .withValues(alpha: 0.3),
                       ),
                     ),
                     child: Text(
@@ -122,7 +124,7 @@ class PaymentHistoryItem extends StatelessWidget {
                   Text(
                     DateFormat('dd.MM.yyyy HH:mm').format(payment.createdAt),
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.6),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                 ],
@@ -135,7 +137,8 @@ class PaymentHistoryItem extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.errorContainer.withOpacity(0.3),
+                    color:
+                        theme.colorScheme.errorContainer.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(

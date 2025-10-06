@@ -139,7 +139,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                     DropdownMenuItem<String?>(
                       child: Text('Все пользователи'),
                     ),
-                    // TODO: Загрузить список пользователей
+                    // TODO(developer): Загрузить список пользователей
                   ],
                   onChanged: (value) {
                     setState(() {
@@ -918,7 +918,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
         includeSystemLogs: _selectedTab == 'system',
       );
 
-      // TODO: Реализовать сохранение файла
+      // TODO(developer): Реализовать сохранение файла
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content:
@@ -958,7 +958,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
   }
 
   void _viewAuditLog(AuditLog log) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Аудит лог: ${log.action}'),
@@ -1010,7 +1010,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
   }
 
   void _viewSystemLog(SystemLog log) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Системный лог: ${log.component}'),
@@ -1049,7 +1049,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
   }
 
   void _exportSingleLog(AuditLog log) {
-    // TODO: Реализовать экспорт отдельного лога
+    // TODO(developer): Реализовать экспорт отдельного лога
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Экспорт лога "${log.action}" будет реализован'),
@@ -1058,7 +1058,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
   }
 
   void _exportSingleSystemLog(SystemLog log) {
-    // TODO: Реализовать экспорт отдельного системного лога
+    // TODO(developer): Реализовать экспорт отдельного системного лога
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content:

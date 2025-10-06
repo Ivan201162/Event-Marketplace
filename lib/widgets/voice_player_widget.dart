@@ -61,13 +61,13 @@ class _VoicePlayerWidgetState extends ConsumerState<VoicePlayerWidget>
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: widget.isOwnMessage
-              ? Theme.of(context).primaryColor.withOpacity(0.1)
+              ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
               : Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: widget.isOwnMessage
-                ? Theme.of(context).primaryColor.withOpacity(0.3)
-                : Colors.grey.withOpacity(0.3),
+                ? Theme.of(context).primaryColor.withValues(alpha: 0.3)
+                : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -230,7 +230,7 @@ class _VoicePlayerWidgetState extends ConsumerState<VoicePlayerWidget>
     Future.doWhile(() async {
       if (_isPlaying) {
         await Future.delayed(const Duration(milliseconds: 100));
-        // TODO: Получать реальную позицию воспроизведения
+        // TODO(developer): Получать реальную позицию воспроизведения
         setState(() {
           _currentPosition = Duration(
             milliseconds: _currentPosition.inMilliseconds + 100,
@@ -273,8 +273,8 @@ class WaveformPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = isOwnMessage
-          ? Colors.blue.withOpacity(0.7)
-          : Colors.grey.withOpacity(0.7)
+          ? Colors.blue.withValues(alpha: 0.7)
+          : Colors.grey.withValues(alpha: 0.7)
       ..strokeWidth = 2.0
       ..strokeCap = StrokeCap.round;
 

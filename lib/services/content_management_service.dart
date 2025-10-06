@@ -32,10 +32,15 @@ class ContentManagementService {
       await _loadProcessingCache();
 
       AppLogger.logI(
-          'Content management service initialized', 'content_management');
+        'Content management service initialized',
+        'content_management',
+      );
     } catch (e) {
-      AppLogger.logE('Ошибка инициализации сервиса управления контентом',
-          'content_management', e);
+      AppLogger.logE(
+        'Ошибка инициализации сервиса управления контентом',
+        'content_management',
+        e,
+      );
     }
   }
 
@@ -389,7 +394,7 @@ class ContentManagementService {
 
       // Для видео создаем кадр
       if (mediaContent.type == MediaType.video) {
-        // TODO: Реализовать извлечение кадра из видео
+        // TODO(developer): Реализовать извлечение кадра из видео
         return null;
       }
 
@@ -405,7 +410,7 @@ class ContentManagementService {
   /// Создать миниатюру изображения
   Future<String> _createImageThumbnail(String imageUrl) async {
     try {
-      // TODO: Реализовать создание миниатюры изображения
+      // TODO(developer): Реализовать создание миниатюры изображения
       // Здесь должна быть логика загрузки изображения, изменения размера и загрузки обратно
       return imageUrl; // Временная заглушка
     } catch (e) {
@@ -427,7 +432,7 @@ class ContentManagementService {
       final width = parameters['width'] as int? ?? 800;
       final height = parameters['height'] as int? ?? 600;
 
-      // TODO: Реализовать изменение размера изображения
+      // TODO(developer): Реализовать изменение размера изображения
       return mediaContent.url; // Временная заглушка
     } catch (e) {
       if (kDebugMode) {
@@ -445,7 +450,7 @@ class ContentManagementService {
     try {
       final quality = parameters['quality'] as int? ?? 80;
 
-      // TODO: Реализовать сжатие медиа
+      // TODO(developer): Реализовать сжатие медиа
       return mediaContent.url; // Временная заглушка
     } catch (e) {
       if (kDebugMode) {
@@ -463,7 +468,7 @@ class ContentManagementService {
     try {
       if (mediaContent.type != MediaType.image) return null;
 
-      // TODO: Реализовать добавление водяного знака
+      // TODO(developer): Реализовать добавление водяного знака
       return mediaContent.url; // Временная заглушка
     } catch (e) {
       if (kDebugMode) {
@@ -481,7 +486,7 @@ class ContentManagementService {
     try {
       if (mediaContent.type != MediaType.image) return null;
 
-      // TODO: Реализовать применение фильтров
+      // TODO(developer): Реализовать применение фильтров
       return mediaContent.url; // Временная заглушка
     } catch (e) {
       if (kDebugMode) {
@@ -499,7 +504,7 @@ class ContentManagementService {
     try {
       if (mediaContent.type != MediaType.image) return null;
 
-      // TODO: Реализовать обрезку изображения
+      // TODO(developer): Реализовать обрезку изображения
       return mediaContent.url; // Временная заглушка
     } catch (e) {
       if (kDebugMode) {
@@ -517,7 +522,7 @@ class ContentManagementService {
     try {
       if (mediaContent.type != MediaType.image) return null;
 
-      // TODO: Реализовать поворот изображения
+      // TODO(developer): Реализовать поворот изображения
       return mediaContent.url; // Временная заглушка
     } catch (e) {
       if (kDebugMode) {
@@ -533,7 +538,7 @@ class ContentManagementService {
     Map<String, dynamic> parameters,
   ) async {
     try {
-      // TODO: Реализовать конвертацию медиа
+      // TODO(developer): Реализовать конвертацию медиа
       return mediaContent.url; // Временная заглушка
     } catch (e) {
       if (kDebugMode) {

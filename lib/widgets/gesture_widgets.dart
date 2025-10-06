@@ -70,7 +70,7 @@ class _SwipeableWidgetState extends State<SwipeableWidget>
                     if (widget.leftAction != null)
                       Expanded(
                         child: Container(
-                          color: Colors.red.withOpacity(0.1),
+                          color: Colors.red.withValues(alpha: 0.1),
                           child: widget.leftAction,
                         ),
                       ),
@@ -78,7 +78,7 @@ class _SwipeableWidgetState extends State<SwipeableWidget>
                     if (widget.rightAction != null)
                       Expanded(
                         child: Container(
-                          color: Colors.green.withOpacity(0.1),
+                          color: Colors.green.withValues(alpha: 0.1),
                           child: widget.rightAction,
                         ),
                       ),

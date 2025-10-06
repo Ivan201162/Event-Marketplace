@@ -64,7 +64,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           ),
                           Container(
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: IconButton(
@@ -141,10 +141,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: _getRoleColor(appUser.role).withOpacity(0.1),
+                        color:
+                            _getRoleColor(appUser.role).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: _getRoleColor(appUser.role).withOpacity(0.3),
+                          color: _getRoleColor(appUser.role)
+                              .withValues(alpha: 0.3),
                         ),
                       ),
                       child: Text(
@@ -300,7 +302,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   void _navigateToEditProfile() {
     Navigator.push(
       context,
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => const ProfileEditScreen(),
       ),
     );

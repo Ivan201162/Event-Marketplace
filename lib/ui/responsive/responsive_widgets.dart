@@ -264,7 +264,7 @@ class ResponsiveList extends StatelessWidget {
       padding: responsivePadding!,
       child: Column(
         children: children
-            .expand((child) => [child, SizedBox(height: responsiveSpacing!)])
+            .expand((child) => [child, SizedBox(height: responsiveSpacing)])
             .take(children.length * 2 - 1)
             .toList(),
       ),

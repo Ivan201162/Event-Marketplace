@@ -96,7 +96,7 @@ class RecommendationEngine {
 
     // Анализируем бронирования
     for (final booking in history.bookings) {
-      // TODO: Получить категории и услуги из события
+      // TODO(developer): Получить категории и услуги из события
       // Пока используем заглушку
       categoryCount['Свадьба'] = (categoryCount['Свадьба'] ?? 0) + 1;
       serviceCount['Фотограф'] = (serviceCount['Фотограф'] ?? 0) + 1;
@@ -235,7 +235,7 @@ class RecommendationEngine {
     int limit = 10,
   }) async {
     try {
-      // TODO: Реализовать геопространственный поиск
+      // TODO(developer): Реализовать геопространственный поиск
       // Пока возвращаем всех специалистов
       final snapshot =
           await _firestore.collection('specialists').limit(limit).get();

@@ -52,13 +52,13 @@ class ThemeSwitch extends ConsumerWidget {
           ),
           child: isExpanded
               ? DropdownButtonHideUnderline(
-                  child: DropdownButton<AppThemeMode>(
+                  child: DropdownButton<ThemeMode>(
                     value: themeMode,
                     isExpanded: true,
                     items: _buildThemeItems(context),
                     onChanged: (mode) {
                       if (mode != null) {
-                        _setAppThemeMode(ref, mode);
+                        _setThemeMode(ref, mode);
                         onChanged?.call();
                       }
                     },
@@ -98,23 +98,22 @@ class ThemeSwitch extends ConsumerWidget {
     );
   }
 
-  List<DropdownMenuItem<AppThemeMode>> _buildThemeItems(BuildContext context) =>
-      [
+  List<DropdownMenuItem<ThemeMode>> _buildThemeItems(BuildContext context) => [
         DropdownMenuItem(
-          value: AppThemeMode.light,
-          child: _buildThemeItem(AppThemeMode.light),
+          value: ThemeMode.light,
+          child: _buildThemeItem(ThemeMode.light),
         ),
         DropdownMenuItem(
-          value: AppThemeMode.dark,
-          child: _buildThemeItem(AppThemeMode.dark),
+          value: ThemeMode.dark,
+          child: _buildThemeItem(ThemeMode.dark),
         ),
         DropdownMenuItem(
-          value: AppThemeMode.system,
-          child: _buildThemeItem(AppThemeMode.system),
+          value: ThemeMode.system,
+          child: _buildThemeItem(ThemeMode.system),
         ),
       ];
 
-  Widget _buildThemeItem(AppThemeMode themeMode) => Row(
+  Widget _buildThemeItem(ThemeMode themeMode) => Row(
         children: [
           _buildThemeIcon(themeMode),
           const SizedBox(width: 12),
@@ -125,16 +124,16 @@ class ThemeSwitch extends ConsumerWidget {
         ],
       );
 
-  Widget _buildThemeIcon(AppThemeMode themeMode) {
+  Widget _buildThemeIcon(ThemeMode themeMode) {
     IconData icon;
     switch (themeMode) {
-      case AppThemeMode.light:
+      case ThemeMode.light:
         icon = Icons.light_mode;
         break;
-      case AppThemeMode.dark:
+      case ThemeMode.dark:
         icon = Icons.dark_mode;
         break;
-      case AppThemeMode.system:
+      case ThemeMode.system:
         icon = Icons.brightness_auto;
         break;
     }
@@ -146,33 +145,33 @@ class ThemeSwitch extends ConsumerWidget {
     );
   }
 
-  String _getThemeName(AppThemeMode themeMode) {
+  String _getThemeName(ThemeMode themeMode) {
     switch (themeMode) {
-      case AppThemeMode.light:
+      case ThemeMode.light:
         return 'Светлая';
-      case AppThemeMode.dark:
+      case ThemeMode.dark:
         return 'Темная';
-      case AppThemeMode.system:
+      case ThemeMode.system:
         return 'Системная';
     }
   }
 
-  void _setAppThemeMode(WidgetRef ref, AppThemeMode themeMode) {
+  void _setThemeMode(WidgetRef ref, ThemeMode themeMode) {
     switch (themeMode) {
-      case AppThemeMode.light:
+      case ThemeMode.light:
         ref.read(themeProvider.notifier).setLightTheme();
         break;
-      case AppThemeMode.dark:
+      case ThemeMode.dark:
         ref.read(themeProvider.notifier).setDarkTheme();
         break;
-      case AppThemeMode.system:
+      case ThemeMode.system:
         ref.read(themeProvider.notifier).setSystemTheme();
         break;
     }
   }
 
   void _showThemeDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Выберите тему'),
@@ -182,7 +181,7 @@ class ThemeSwitch extends ConsumerWidget {
             _buildThemeOption(
               dialogContext,
               ref,
-              AppThemeMode.light,
+              ThemeMode.light,
               Icons.light_mode,
               'Светлая',
               'Использовать светлую тему',
@@ -191,7 +190,7 @@ class ThemeSwitch extends ConsumerWidget {
             _buildThemeOption(
               dialogContext,
               ref,
-              AppThemeMode.dark,
+              ThemeMode.dark,
               Icons.dark_mode,
               'Темная',
               'Использовать темную тему',
@@ -200,7 +199,7 @@ class ThemeSwitch extends ConsumerWidget {
             _buildThemeOption(
               dialogContext,
               ref,
-              AppThemeMode.system,
+              ThemeMode.system,
               Icons.brightness_auto,
               'Системная',
               'Следовать системным настройкам',
@@ -220,13 +219,13 @@ class ThemeSwitch extends ConsumerWidget {
   Widget _buildThemeOption(
     BuildContext context,
     WidgetRef ref,
-    AppThemeMode AppThemeMode,
+    ThemeMode ThemeMode,
     IconData icon,
     String title,
     String subtitle,
   ) {
-    final currentAppThemeMode = ref.watch(themeProvider);
-    final isSelected = currentAppThemeMode == AppThemeMode;
+    final currentThemeMode = ref.watch(themeProvider);
+    final isSelected = currentThemeMode == ThemeMode;
 
     return ListTile(
       leading: Icon(icon, size: 24),
@@ -235,7 +234,7 @@ class ThemeSwitch extends ConsumerWidget {
       trailing: isSelected ? const Icon(Icons.check, color: Colors.blue) : null,
       selected: isSelected,
       onTap: () {
-        _setAppThemeMode(ref, AppThemeMode);
+        _setThemeMode(ref, ThemeMode);
         Navigator.of(context).pop();
         onChanged?.call();
       },
@@ -282,16 +281,16 @@ class CompactThemeSwitch extends ConsumerWidget {
     );
   }
 
-  Widget _buildThemeIcon(AppThemeMode themeMode) {
+  Widget _buildThemeIcon(ThemeMode themeMode) {
     IconData icon;
     switch (themeMode) {
-      case AppThemeMode.light:
+      case ThemeMode.light:
         icon = Icons.light_mode;
         break;
-      case AppThemeMode.dark:
+      case ThemeMode.dark:
         icon = Icons.dark_mode;
         break;
-      case AppThemeMode.system:
+      case ThemeMode.system:
         icon = Icons.brightness_auto;
         break;
     }
@@ -303,19 +302,19 @@ class CompactThemeSwitch extends ConsumerWidget {
     );
   }
 
-  String _getThemeCode(AppThemeMode themeMode) {
+  String _getThemeCode(ThemeMode themeMode) {
     switch (themeMode) {
-      case AppThemeMode.light:
+      case ThemeMode.light:
         return 'L';
-      case AppThemeMode.dark:
+      case ThemeMode.dark:
         return 'D';
-      case AppThemeMode.system:
+      case ThemeMode.system:
         return 'A';
     }
   }
 
   void _showThemeDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Выберите тему'),
@@ -325,7 +324,7 @@ class CompactThemeSwitch extends ConsumerWidget {
             _buildThemeOption(
               dialogContext,
               ref,
-              AppThemeMode.light,
+              ThemeMode.light,
               Icons.light_mode,
               'Светлая',
             ),
@@ -333,7 +332,7 @@ class CompactThemeSwitch extends ConsumerWidget {
             _buildThemeOption(
               dialogContext,
               ref,
-              AppThemeMode.dark,
+              ThemeMode.dark,
               Icons.dark_mode,
               'Темная',
             ),
@@ -341,7 +340,7 @@ class CompactThemeSwitch extends ConsumerWidget {
             _buildThemeOption(
               dialogContext,
               ref,
-              AppThemeMode.system,
+              ThemeMode.system,
               Icons.brightness_auto,
               'Системная',
             ),
@@ -360,12 +359,12 @@ class CompactThemeSwitch extends ConsumerWidget {
   Widget _buildThemeOption(
     BuildContext context,
     WidgetRef ref,
-    AppThemeMode themeMode,
+    ThemeMode themeMode,
     IconData icon,
     String title,
   ) {
-    final currentAppThemeMode = ref.watch(themeProvider);
-    final isSelected = currentAppThemeMode == themeMode;
+    final currentThemeMode = ref.watch(themeProvider);
+    final isSelected = currentThemeMode == themeMode;
 
     return ListTile(
       leading: Icon(icon, size: 24),
@@ -374,13 +373,13 @@ class CompactThemeSwitch extends ConsumerWidget {
       selected: isSelected,
       onTap: () {
         switch (themeMode) {
-          case AppThemeMode.light:
+          case ThemeMode.light:
             ref.read(themeProvider.notifier).setLightTheme();
             break;
-          case AppThemeMode.dark:
+          case ThemeMode.dark:
             ref.read(themeProvider.notifier).setDarkTheme();
             break;
-          case AppThemeMode.system:
+          case ThemeMode.system:
             ref.read(themeProvider.notifier).setSystemTheme();
             break;
         }
@@ -428,16 +427,16 @@ class CurrentThemeDisplay extends ConsumerWidget {
     );
   }
 
-  Widget _buildThemeIcon(AppThemeMode themeMode) {
+  Widget _buildThemeIcon(ThemeMode themeMode) {
     IconData icon;
     switch (themeMode) {
-      case AppThemeMode.light:
+      case ThemeMode.light:
         icon = Icons.light_mode;
         break;
-      case AppThemeMode.dark:
+      case ThemeMode.dark:
         icon = Icons.dark_mode;
         break;
-      case AppThemeMode.system:
+      case ThemeMode.system:
         icon = Icons.brightness_auto;
         break;
     }
@@ -449,24 +448,24 @@ class CurrentThemeDisplay extends ConsumerWidget {
     );
   }
 
-  String _getThemeDisplay(AppThemeMode themeMode) {
+  String _getThemeDisplay(ThemeMode themeMode) {
     if (showCode) {
       switch (themeMode) {
-        case AppThemeMode.light:
+        case ThemeMode.light:
           return 'L';
-        case AppThemeMode.dark:
+        case ThemeMode.dark:
           return 'D';
-        case AppThemeMode.system:
+        case ThemeMode.system:
           return 'A';
       }
     }
 
     switch (themeMode) {
-      case AppThemeMode.light:
+      case ThemeMode.light:
         return 'Светлая';
-      case AppThemeMode.dark:
+      case ThemeMode.dark:
         return 'Темная';
-      case AppThemeMode.system:
+      case ThemeMode.system:
         return 'Системная';
     }
   }
@@ -487,7 +486,7 @@ class QuickThemeToggle extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeProvider);
-    final isDark = themeMode == AppThemeMode.dark;
+    final isDark = themeMode == ThemeMode.dark;
 
     return IconButton(
       onPressed: () {

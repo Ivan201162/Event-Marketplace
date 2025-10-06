@@ -316,7 +316,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
                             color: Theme.of(context)
                                 .colorScheme
                                 .onSurface
-                                .withOpacity(0.7),
+                                .withValues(alpha: 0.7),
                           ),
                     ),
                 ],
@@ -453,7 +453,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
                       subtitle: const Text('Отслеживать использование памяти'),
                       value: true,
                       onChanged: (value) {
-                        // TODO: Implement memory monitoring toggle
+                        // TODO(developer): Implement memory monitoring toggle
                       },
                     ),
                     SwitchListTile(
@@ -462,7 +462,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
                           const Text('Отслеживать время выполнения операций'),
                       value: true,
                       onChanged: (value) {
-                        // TODO: Implement performance monitoring toggle
+                        // TODO(developer): Implement performance monitoring toggle
                       },
                     ),
                   ],
@@ -486,7 +486,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
                       subtitle: Text(_selectedLogLevel.name.toUpperCase()),
                       trailing: const Icon(Icons.arrow_forward_ios),
                       onTap: () {
-                        // TODO: Show log level selection dialog
+                        // TODO(developer): Show log level selection dialog
                       },
                     ),
                     SwitchListTile(
@@ -495,7 +495,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
                           const Text('Выводить логи в консоль разработчика'),
                       value: true,
                       onChanged: (value) {
-                        // TODO: Implement console logging toggle
+                        // TODO(developer): Implement console logging toggle
                       },
                     ),
                   ],
@@ -552,30 +552,24 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
                     ),
                     FutureBuilder<Map<String, dynamic>>(
                       future: _monitoring.getPerformanceMetrics(),
-                      builder: (context, snapshot) {
-                        return _buildInfoItem(
-                          'Метрики производительности',
-                          snapshot.hasData ? '${snapshot.data!.length}' : '0',
-                        );
-                      },
+                      builder: (context, snapshot) => _buildInfoItem(
+                        'Метрики производительности',
+                        snapshot.hasData ? '${snapshot.data!.length}' : '0',
+                      ),
                     ),
                     FutureBuilder<Map<String, dynamic>>(
                       future: _monitoring.getErrorMetrics(),
-                      builder: (context, snapshot) {
-                        return _buildInfoItem(
-                          'Метрики ошибок',
-                          snapshot.hasData ? '${snapshot.data!.length}' : '0',
-                        );
-                      },
+                      builder: (context, snapshot) => _buildInfoItem(
+                        'Метрики ошибок',
+                        snapshot.hasData ? '${snapshot.data!.length}' : '0',
+                      ),
                     ),
                     FutureBuilder<Map<String, dynamic>>(
                       future: _monitoring.getMemoryMetrics(),
-                      builder: (context, snapshot) {
-                        return _buildInfoItem(
-                          'Метрики памяти',
-                          snapshot.hasData ? '${snapshot.data!.length}' : '0',
-                        );
-                      },
+                      builder: (context, snapshot) => _buildInfoItem(
+                        'Метрики памяти',
+                        snapshot.hasData ? '${snapshot.data!.length}' : '0',
+                      ),
                     ),
                   ],
                 ),
@@ -723,7 +717,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
                       child: ElevatedButton.icon(
                         onPressed: () {
                           Navigator.of(context).push(
-                            MaterialPageRoute(
+                            MaterialPageRoute<void>(
                               builder: (context) =>
                                   const IntegrationTestScreen(),
                             ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/specialist.dart';
 import '../providers/auth_providers.dart';
+import '../providers/specialist_comparison_provider.dart';
 import '../providers/specialist_providers.dart';
 
 class SpecialistsScreen extends ConsumerStatefulWidget {
@@ -52,6 +53,53 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
             ],
           ),
           actions: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                Navigator.pushNamed(context, '/advanced-search');
+              },
+              tooltip: 'Расширенный поиск',
+            ),
+            Consumer(
+              builder: (context, ref, child) {
+                final comparisonCount = ref.watch(comparisonCountProvider);
+                return Stack(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.compare_arrows),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/specialist-comparison');
+                      },
+                      tooltip: 'Сравнить специалистов',
+                    ),
+                    if (comparisonCount > 0)
+                      Positioned(
+                        right: 8,
+                        top: 8,
+                        child: Container(
+                          padding: const EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 16,
+                            minHeight: 16,
+                          ),
+                          child: Text(
+                            '$comparisonCount',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
             IconButton(
               icon: const Icon(Icons.filter_list),
               onPressed: _showFiltersDialog,
@@ -173,7 +221,7 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
       );
     }
 
-    // TODO: Реализовать рекомендации на основе истории заказов
+    // TODO(developer): Реализовать рекомендации на основе истории заказов
     return const Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -403,7 +451,7 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
 
   void _showSpecialistsByCategory(SpecialistCategory category) {
     Navigator.of(context).push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => SpecialistsByCategoryScreen(category: category),
       ),
     );
@@ -411,14 +459,14 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
 
   void _showSpecialistDetails(Specialist specialist) {
     Navigator.of(context).push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => SpecialistDetailsScreen(specialist: specialist),
       ),
     );
   }
 
   void _showFiltersDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Фильтры'),
@@ -574,7 +622,7 @@ class SpecialistsByCategoryScreen extends ConsumerWidget {
         child: InkWell(
           onTap: () {
             Navigator.of(context).push(
-              MaterialPageRoute(
+              MaterialPageRoute<void>(
                 builder: (context) =>
                     SpecialistDetailsScreen(specialist: specialist),
               ),
@@ -691,7 +739,7 @@ class SpecialistDetailsScreen extends ConsumerWidget {
             IconButton(
               icon: const Icon(Icons.share),
               onPressed: () {
-                // TODO: Реализовать шаринг профиля
+                // TODO(developer): Реализовать шаринг профиля
               },
             ),
           ],
@@ -850,7 +898,7 @@ class SpecialistDetailsScreen extends ConsumerWidget {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    // TODO: Реализовать бронирование
+                    // TODO(developer): Реализовать бронирование
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Бронирование будет реализовано позже'),
@@ -881,7 +929,7 @@ class SpecialistDetailsScreen extends ConsumerWidget {
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
           ),
         ),
         child: Column(

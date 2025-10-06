@@ -80,7 +80,7 @@ class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -128,7 +128,7 @@ class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.red.withOpacity(0.3),
+                    color: Colors.red.withValues(alpha: 0.3),
                     blurRadius: 12,
                     spreadRadius: 2,
                   ),
@@ -158,8 +158,8 @@ class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color:
-                          Colors.red.withOpacity(_pulseAnimation.value * 0.5),
+                      color: Colors.red
+                          .withValues(alpha: _pulseAnimation.value * 0.5),
                       blurRadius: 20,
                       spreadRadius: 5,
                     ),

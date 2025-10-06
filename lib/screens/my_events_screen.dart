@@ -28,7 +28,7 @@ class MyEventsScreen extends ConsumerWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
+                MaterialPageRoute<void>(
                   builder: (context) => const CreateEventScreen(),
                 ),
               );
@@ -166,7 +166,8 @@ class MyEventsScreen extends ConsumerWidget {
                                     vertical: 2,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: event.statusColor.withOpacity(0.1),
+                                    color: event.statusColor
+                                        .withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
@@ -198,7 +199,7 @@ class MyEventsScreen extends ConsumerWidget {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
+                            MaterialPageRoute<void>(
                               builder: (context) =>
                                   EventDetailScreen(event: event),
                             ),
@@ -332,7 +333,8 @@ class MyEventsScreen extends ConsumerWidget {
                                     vertical: 2,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: event.statusColor.withOpacity(0.1),
+                                    color: event.statusColor
+                                        .withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
@@ -364,7 +366,7 @@ class MyEventsScreen extends ConsumerWidget {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
+                            MaterialPageRoute<void>(
                               builder: (context) =>
                                   EventDetailScreen(event: event),
                             ),
@@ -414,7 +416,7 @@ class MyEventsScreen extends ConsumerWidget {
       );
 
   void _showEventMenu(BuildContext context, WidgetRef ref, Event event) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       builder: (context) => Column(
         mainAxisSize: MainAxisSize.min,
@@ -426,7 +428,7 @@ class MyEventsScreen extends ConsumerWidget {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(
+                MaterialPageRoute<void>(
                   builder: (context) => EventDetailScreen(event: event),
                 ),
               );
@@ -439,7 +441,7 @@ class MyEventsScreen extends ConsumerWidget {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(
+                MaterialPageRoute<void>(
                   builder: (context) => CreateEventScreen(event: event),
                 ),
               );
@@ -482,7 +484,7 @@ class MyEventsScreen extends ConsumerWidget {
 
   /// Завершить событие
   void _completeEvent(BuildContext context, WidgetRef ref, Event event) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Завершить мероприятие'),
@@ -524,7 +526,7 @@ class MyEventsScreen extends ConsumerWidget {
 
   /// Отменить событие
   void _cancelEvent(BuildContext context, WidgetRef ref, Event event) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Отменить мероприятие'),
@@ -566,7 +568,7 @@ class MyEventsScreen extends ConsumerWidget {
 
   /// Удалить событие
   void _deleteEvent(BuildContext context, WidgetRef ref, Event event) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить мероприятие'),

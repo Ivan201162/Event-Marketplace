@@ -165,7 +165,7 @@ class _FAQScreenState extends ConsumerState<FAQScreen> {
   }
 
   void _showFAQDetail(FAQItem faqItem) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(faqItem.question),
@@ -196,14 +196,14 @@ class _FAQScreenState extends ConsumerState<FAQScreen> {
   }
 
   void _createTicketFromFAQ(FAQItem faqItem) {
-    // TODO: Перейти к созданию тикета с предзаполненной информацией
+    // TODO(developer): Перейти к созданию тикета с предзаполненной информацией
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Создание тикета для: ${faqItem.question}')),
     );
   }
 
   void _showSearchDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Поиск в FAQ'),
@@ -262,10 +262,10 @@ class FAQDetailScreen extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.1),
+                  color: Colors.blue.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: Colors.blue.withOpacity(0.3),
+                    color: Colors.blue.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Row(
@@ -414,14 +414,14 @@ class FAQDetailScreen extends StatelessWidget {
       );
 
   void _createTicketFromFAQ(BuildContext context) {
-    // TODO: Перейти к созданию тикета с предзаполненной информацией
+    // TODO(developer): Перейти к созданию тикета с предзаполненной информацией
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Создание тикета для: ${faqItem.question}')),
     );
   }
 
   void _shareFAQ(BuildContext context) {
-    // TODO: Реализовать шаринг FAQ
+    // TODO(developer): Реализовать шаринг FAQ
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('FAQ скопирован в буфер обмена')),
     );
