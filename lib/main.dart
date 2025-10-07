@@ -15,42 +15,91 @@ import 'services/reminder_service.dart';
 import 'services/test_data_service.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
 
-  // Инициализация оптимизатора производительности
-  await PerformanceOptimizer.initialize();
+    // Инициализация оптимизатора производительности
+    try {
+      await PerformanceOptimizer.initialize();
+    } catch (e) {
+      print('Ошибка инициализации PerformanceOptimizer: $e');
+    }
 
-  // Инициализация Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+    // Инициализация Firebase
+    try {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      print('Firebase инициализирован успешно');
+    } catch (e) {
+      print('Ошибка инициализации Firebase: $e');
+      // Продолжаем без Firebase для отладки
+    }
 
-  // Инициализация сервиса уведомлений
-  await NotificationService().initialize();
+    // Инициализация сервиса уведомлений
+    try {
+      await NotificationService().initialize();
+    } catch (e) {
+      print('Ошибка инициализации NotificationService: $e');
+    }
 
-  // Инициализация сервиса напоминаний
-  await ReminderService().initialize();
+    // Инициализация сервиса напоминаний
+    try {
+      await ReminderService().initialize();
+    } catch (e) {
+      print('Ошибка инициализации ReminderService: $e');
+    }
 
-  // Инициализация тестовых данных
-  await _initializeTestData();
+    // Инициализация тестовых данных
+    await _initializeTestData();
 
-  runApp(const ProviderScope(child: EventMarketplaceApp()));
+    runApp(const ProviderScope(child: EventMarketplaceApp()));
+  } catch (e, stackTrace) {
+    print('Критическая ошибка при запуске приложения: $e');
+    print('Stack trace: $stackTrace');
+    
+    // Запускаем минимальную версию приложения
+    runApp(const MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Text('Ошибка инициализации приложения'),
+        ),
+      ),
+    ));
+  }
 }
 
 /// Инициализация тестовых данных
 Future<void> _initializeTestData() async {
   try {
+    print('Начинаем инициализацию тестовых данных...');
     final testDataService = TestDataService();
-    final hasData = await testDataService.hasTestData();
+    
+    // Проверяем наличие данных с таймаутом
+    final hasData = await testDataService.hasTestData().timeout(
+      const Duration(seconds: 10),
+      onTimeout: () {
+        print('Таймаут при проверке тестовых данных');
+        return false;
+      },
+    );
 
     if (!hasData) {
       print('Загружаем тестовые данные...');
-      await testDataService.populateAll();
+      await testDataService.populateAll().timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          print('Таймаут при загрузке тестовых данных');
+        },
+      );
+      print('Тестовые данные загружены успешно');
     } else {
       print('Тестовые данные уже загружены');
     }
-  } catch (e) {
+  } catch (e, stackTrace) {
     print('Ошибка при инициализации тестовых данных: $e');
+    print('Stack trace: $stackTrace');
+    // Не прерываем запуск приложения из-за ошибки тестовых данных
   }
 }
 

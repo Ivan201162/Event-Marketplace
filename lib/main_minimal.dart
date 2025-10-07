@@ -1,44 +1,76 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'core/app_theme.dart';
-import 'generated/l10n/app_localizations.dart';
-import 'providers/locale_provider.dart';
-import 'providers/theme_provider.dart';
-import 'screens/main_navigation_screen.dart';
 
 void main() {
-  runApp(const ProviderScope(child: EventMarketplaceApp()));
+  runApp(const MinimalApp());
 }
 
-class EventMarketplaceApp extends ConsumerWidget {
-  const EventMarketplaceApp({super.key});
+class MinimalApp extends StatelessWidget {
+  const MinimalApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeProvider);
-    final locale = ref.watch(localeProvider);
-
+  Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Event Marketplace',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: themeMode,
-      locale: locale,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('ru'),
-        Locale('en'),
-        Locale('kk'),
-      ],
-      home: const MainNavigationScreen(),
+      title: 'Event Marketplace - Minimal',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        useMaterial3: true,
+      ),
+      home: const MinimalHomePage(),
       debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class MinimalHomePage extends StatelessWidget {
+  const MinimalHomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Event Marketplace - Test'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.event,
+              size: 100,
+              color: Colors.blue,
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Приложение запущено успешно!',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Минимальная версия без Firebase',
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Если вы видите этот экран, значит\nбазовая функциональность работает',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 14),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Кнопка работает!'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        },
+        tooltip: 'Тест',
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
