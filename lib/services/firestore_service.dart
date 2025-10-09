@@ -309,7 +309,7 @@ class FirestoreService {
           ),
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка добавления заявки с календарем: $e');
       throw Exception('Не удалось создать заявку: $e');
     }
@@ -364,7 +364,7 @@ class FirestoreService {
 
       // Отправляем уведомления
       await _sendBookingStatusNotifications(booking, status);
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка обновления статуса заявки с календарем: $e');
       throw Exception('Не удалось обновить статус заявки: $e');
     }
@@ -482,7 +482,7 @@ class FirestoreService {
           },
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка отправки уведомлений о заявке: $e');
     }
   }
@@ -525,7 +525,7 @@ class FirestoreService {
             ? 'Платеж от клиента успешно обработан'
             : 'Произошла ошибка при обработке платежа',
       );
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка отправки уведомлений о платеже: $e');
     }
   }
@@ -546,7 +546,7 @@ class FirestoreService {
         bookingId: data?['bookingId'] ?? '',
         type: data?['type'] ?? 'booking_update',
       );
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('Ошибка отправки push-уведомления', e);
     }
   }
@@ -780,7 +780,7 @@ class FirestoreService {
 
       await paymentRef.set(paymentWithId.toMap());
       return paymentRef.id;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка создания платежа: $e');
       return null;
     }
@@ -806,7 +806,7 @@ class FirestoreService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка обновления статуса платежа: $e');
       return false;
     }
@@ -818,7 +818,7 @@ class FirestoreService {
       final doc = await _db.collection('payments').doc(paymentId).get();
       if (!doc.exists) return null;
       return Payment.fromDocument(doc);
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения платежа: $e');
       return null;
     }
@@ -837,7 +837,7 @@ class FirestoreService {
 
       final prepayment = Payment.fromDocument(querySnapshot.docs.first);
       return prepayment.isCompleted;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка проверки предоплаты: $e');
       return false;
     }
@@ -872,7 +872,7 @@ class FirestoreService {
         averagePayment:
             payments.isNotEmpty ? totalAmount / payments.length : 0.0,
       );
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения статистики платежей: $e');
       return PaymentStats.empty();
     }
@@ -909,7 +909,7 @@ class FirestoreService {
         averagePayment:
             payments.isNotEmpty ? totalAmount / payments.length : 0.0,
       );
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения статистики платежей специалиста: $e');
       return PaymentStats.empty();
     }

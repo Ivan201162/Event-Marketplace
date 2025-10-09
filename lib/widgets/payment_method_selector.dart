@@ -112,12 +112,10 @@ class PaymentMethodSelector extends StatelessWidget {
 
   IconData _getMethodIcon(PaymentMethod method) {
     switch (method) {
-      case PaymentMethod.sbp:
+      case PaymentMethod.digitalWallet:
         return Icons.qr_code;
-      case PaymentMethod.yookassa:
-        return Icons.payment;
-      case PaymentMethod.tinkoff:
-        return Icons.account_balance;
+      case PaymentMethod.cryptocurrency:
+        return Icons.currency_bitcoin;
       case PaymentMethod.card:
         return Icons.credit_card;
       case PaymentMethod.cash:
@@ -129,12 +127,10 @@ class PaymentMethodSelector extends StatelessWidget {
 
   String _getMethodDisplayName(PaymentMethod method) {
     switch (method) {
-      case PaymentMethod.sbp:
-        return 'СБП (Система быстрых платежей)';
-      case PaymentMethod.yookassa:
-        return 'ЮKassa';
-      case PaymentMethod.tinkoff:
-        return 'Tinkoff Pay';
+      case PaymentMethod.digitalWallet:
+        return 'Электронный кошелек';
+      case PaymentMethod.cryptocurrency:
+        return 'Криптовалюта';
       case PaymentMethod.card:
         return 'Банковская карта';
       case PaymentMethod.cash:
@@ -146,12 +142,10 @@ class PaymentMethodSelector extends StatelessWidget {
 
   String _getMethodDescription(PaymentMethod method) {
     switch (method) {
-      case PaymentMethod.sbp:
-        return 'Мгновенная оплата через приложение банка';
-      case PaymentMethod.yookassa:
-        return 'Безопасная оплата через ЮKassa';
-      case PaymentMethod.tinkoff:
-        return 'Оплата через приложение Tinkoff';
+      case PaymentMethod.digitalWallet:
+        return 'Оплата через электронный кошелек';
+      case PaymentMethod.cryptocurrency:
+        return 'Оплата криптовалютой';
       case PaymentMethod.card:
         return 'Оплата банковской картой';
       case PaymentMethod.cash:

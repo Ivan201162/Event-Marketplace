@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/payment_models.dart';
+import '../models/payment.dart';
 
 class PaymentMethodCard extends StatelessWidget {
   const PaymentMethodCard({
@@ -9,7 +9,7 @@ class PaymentMethodCard extends StatelessWidget {
     required this.isSelected,
     required this.onTap,
   });
-  final PaymentMethodInfo methodInfo;
+  final PaymentMethod methodInfo;
   final bool isSelected;
   final VoidCallback onTap;
 
@@ -47,7 +47,7 @@ class PaymentMethodCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
-                  _getMethodIcon(methodInfo.method),
+                  _getMethodIcon(methodInfo),
                   color: isSelected
                       ? theme.colorScheme.primary
                       : theme.colorScheme.onSurfaceVariant,
@@ -81,10 +81,10 @@ class PaymentMethodCard extends StatelessWidget {
                                 .withValues(alpha: 0.3),
                       ),
                     ),
-                    if (methodInfo.fee != null && methodInfo.fee! > 0) ...[
+                    if (methodInfo.fee > 0) ...[
                       const SizedBox(height: 4),
                       Text(
-                        'Комиссия: ${(methodInfo.fee! * 100).toStringAsFixed(1)}%',
+                        'Комиссия: ${(methodInfo.fee * 100).toStringAsFixed(1)}%',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.secondary,
                           fontWeight: FontWeight.w500,
@@ -135,20 +135,5 @@ class PaymentMethodCard extends StatelessWidget {
     );
   }
 
-  IconData _getMethodIcon(PaymentMethod method) {
-    switch (method) {
-      case PaymentMethod.sbp:
-        return Icons.phone_android;
-      case PaymentMethod.yookassa:
-        return Icons.account_balance_wallet;
-      case PaymentMethod.tinkoff:
-        return Icons.credit_card;
-      case PaymentMethod.card:
-        return Icons.credit_card;
-      case PaymentMethod.cash:
-        return Icons.money;
-      case PaymentMethod.bankTransfer:
-        return Icons.account_balance;
-    }
-  }
+  IconData _getMethodIcon(PaymentMethod method) => method.icon;
 }

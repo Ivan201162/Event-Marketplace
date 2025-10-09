@@ -64,7 +64,7 @@ class _EditReviewScreenState extends ConsumerState<EditReviewScreen> {
         );
         Navigator.of(context).pop(true);
       }
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _error = e.toString();
       });
@@ -115,7 +115,7 @@ class _EditReviewScreenState extends ConsumerState<EditReviewScreen> {
           );
           Navigator.of(context).pop(true);
         }
-      } catch (e) {
+      } on Exception catch (e) {
         setState(() {
           _error = e.toString();
         });

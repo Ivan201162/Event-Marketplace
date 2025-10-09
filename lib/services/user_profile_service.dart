@@ -27,8 +27,8 @@ class UserProfileService {
         return UserProfile.fromDocument(doc);
       }
       return null;
-    } catch (e) {
-      print('Ошибка получения профиля: $e');
+    } on Exception {
+      // Логирование:'Ошибка получения профиля: $e');
       return null;
     }
   }
@@ -41,8 +41,8 @@ class UserProfileService {
           .doc(profile.id)
           .set(profile.toMap(), SetOptions(merge: true));
       return true;
-    } catch (e) {
-      print('Ошибка сохранения профиля: $e');
+    } on Exception {
+      // Логирование:'Ошибка сохранения профиля: $e');
       return false;
     }
   }
@@ -52,8 +52,8 @@ class UserProfileService {
     try {
       final profile = UserProfile.fromAppUser(user);
       return await saveUserProfile(profile);
-    } catch (e) {
-      print('Ошибка создания профиля из пользователя: $e');
+    } on Exception {
+      // Логирование:'Ошибка создания профиля из пользователя: $e');
       return false;
     }
   }
@@ -71,8 +71,8 @@ class UserProfileService {
           .update({'avatarUrl': downloadUrl});
 
       return downloadUrl;
-    } catch (e) {
-      print('Ошибка обновления аватара: $e');
+    } on Exception {
+      // Логирование:'Ошибка обновления аватара: $e');
       return null;
     }
   }
@@ -90,8 +90,8 @@ class UserProfileService {
           .update({'coverUrl': downloadUrl});
 
       return downloadUrl;
-    } catch (e) {
-      print('Ошибка обновления обложки: $e');
+    } on Exception {
+      // Логирование:'Ошибка обновления обложки: $e');
       return null;
     }
   }
@@ -115,8 +115,8 @@ class UserProfileService {
           .doc(post.id)
           .set(post.toMap());
       return true;
-    } catch (e) {
-      print('Ошибка создания поста: $e');
+    } on Exception {
+      // Логирование:'Ошибка создания поста: $e');
       return false;
     }
   }
@@ -129,8 +129,8 @@ class UserProfileService {
           .doc(post.id)
           .update(post.toMap());
       return true;
-    } catch (e) {
-      print('Ошибка обновления поста: $e');
+    } on Exception {
+      // Логирование:'Ошибка обновления поста: $e');
       return false;
     }
   }
@@ -140,8 +140,8 @@ class UserProfileService {
     try {
       await _firestore.collection(_postsCollection).doc(postId).delete();
       return true;
-    } catch (e) {
-      print('Ошибка удаления поста: $e');
+    } on Exception {
+      // Логирование:'Ошибка удаления поста: $e');
       return false;
     }
   }
@@ -172,8 +172,8 @@ class UserProfileService {
       }
 
       return true;
-    } catch (e) {
-      print('Ошибка лайка поста: $e');
+    } on Exception {
+      // Логирование:'Ошибка лайка поста: $e');
       return false;
     }
   }
@@ -199,8 +199,8 @@ class UserProfileService {
           .doc(story.id)
           .set(story.toMap());
       return true;
-    } catch (e) {
-      print('Ошибка создания сторис: $e');
+    } on Exception {
+      // Логирование:'Ошибка создания сторис: $e');
       return false;
     }
   }
@@ -210,8 +210,8 @@ class UserProfileService {
     try {
       await _firestore.collection(_storiesCollection).doc(storyId).delete();
       return true;
-    } catch (e) {
-      print('Ошибка удаления сторис: $e');
+    } on Exception {
+      // Логирование:'Ошибка удаления сторис: $e');
       return false;
     }
   }
@@ -223,8 +223,8 @@ class UserProfileService {
         'viewedBy': FieldValue.arrayUnion([userId]),
       });
       return true;
-    } catch (e) {
-      print('Ошибка отметки сторис как просмотренной: $e');
+    } on Exception {
+      // Логирование:'Ошибка отметки сторис как просмотренной: $e');
       return false;
     }
   }
@@ -254,8 +254,8 @@ class UserProfileService {
       await _updateSpecialistRating(review.specialistId);
 
       return true;
-    } catch (e) {
-      print('Ошибка создания отзыва: $e');
+    } on Exception {
+      // Логирование:'Ошибка создания отзыва: $e');
       return false;
     }
   }
@@ -282,8 +282,8 @@ class UserProfileService {
           .collection(_profilesCollection)
           .doc(specialistId)
           .update({'rating': averageRating});
-    } catch (e) {
-      print('Ошибка обновления рейтинга: $e');
+    } on Exception {
+      // Логирование:'Ошибка обновления рейтинга: $e');
     }
   }
 
@@ -298,8 +298,8 @@ class UserProfileService {
         'updatedAt': Timestamp.now(),
       });
       return true;
-    } catch (e) {
-      print('Ошибка обновления прайс-листа: $e');
+    } on Exception {
+      // Логирование:'Ошибка обновления прайс-листа: $e');
       return false;
     }
   }
@@ -362,8 +362,8 @@ class UserProfileService {
 
       await batch.commit();
       return true;
-    } catch (e) {
-      print('Ошибка подписки/отписки: $e');
+    } on Exception {
+      // Логирование:'Ошибка подписки/отписки: $e');
       return false;
     }
   }
@@ -382,8 +382,8 @@ class UserProfileService {
           .get();
 
       return snapshot.docs.map(UserProfile.fromDocument).toList();
-    } catch (e) {
-      print('Ошибка получения рекомендуемых специалистов: $e');
+    } on Exception {
+      // Логирование:'Ошибка получения рекомендуемых специалистов: $e');
       return [];
     }
   }
@@ -405,8 +405,8 @@ class UserProfileService {
             profile.bio.toLowerCase().contains(searchText) ||
             profile.city.toLowerCase().contains(searchText);
       }).toList();
-    } catch (e) {
-      print('Ошибка поиска специалистов: $e');
+    } on Exception {
+      // Логирование:'Ошибка поиска специалистов: $e');
       return [];
     }
   }
@@ -422,8 +422,8 @@ class UserProfileService {
       final ref = _storage.ref().child('$type/$userId/$fileName');
       await ref.putFile(File(filePath));
       return await ref.getDownloadURL();
-    } catch (e) {
-      print('Ошибка загрузки медиа: $e');
+    } on Exception {
+      // Логирование:'Ошибка загрузки медиа: $e');
       return null;
     }
   }
@@ -434,8 +434,8 @@ class UserProfileService {
       final ref = _storage.refFromURL(url);
       await ref.delete();
       return true;
-    } catch (e) {
-      print('Ошибка удаления медиа: $e');
+    } on Exception {
+      // Логирование:'Ошибка удаления медиа: $e');
       return false;
     }
   }

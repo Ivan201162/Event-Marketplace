@@ -46,7 +46,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: SpecialistCard(
-                specialist: testSpecialist!,
+                specialist: testSpecialist,
                 onTap: () {},
               ),
             ),
@@ -72,7 +72,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: SpecialistCard(
-                specialist: testSpecialist!,
+                specialist: testSpecialist,
                 onTap: () {},
               ),
             ),
@@ -94,7 +94,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: SpecialistCard(
-                specialist: testSpecialist!,
+                specialist: testSpecialist,
                 onTap: () {},
               ),
             ),
@@ -137,7 +137,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: SpecialistCard(
-                specialist: testSpecialist!,
+                specialist: testSpecialist,
                 onTap: () {},
               ),
             ),
@@ -185,7 +185,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: SpecialistCard(
-                specialist: testSpecialist!,
+                specialist: testSpecialist,
                 onTap: () {
                   tapped = true;
                 },
@@ -209,7 +209,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: SpecialistCard(
-                specialist: testSpecialist!,
+                specialist: testSpecialist,
                 onTap: () {},
               ),
             ),
@@ -228,7 +228,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: SpecialistCard(
-                specialist: testSpecialist!,
+                specialist: testSpecialist,
                 onTap: () {},
               ),
             ),

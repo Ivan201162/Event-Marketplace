@@ -76,7 +76,6 @@ class _ReviewsToWriteScreenState extends State<ReviewsToWriteScreen> {
                         final booking = _bookings[index];
                         return BookingCard(
                           booking: booking,
-                          showActions: false,
                           onTap: () => _writeReview(booking),
                           trailing: ElevatedButton(
                             onPressed: () => _writeReview(booking),

@@ -217,18 +217,21 @@ class RatingSummaryWidget extends StatelessWidget {
         }),
       );
 
-  Color _getRatingColor() {
-    if (averageRating >= 4.5) return Colors.green;
-    if (averageRating >= 3.5) return Colors.lightGreen;
-    if (averageRating >= 2.5) return Colors.orange;
-    if (averageRating >= 1.5) return Colors.red;
-    return Colors.red[700]!;
-  }
+  Color _getRatingColor() => averageRating >= 4.5
+      ? Colors.green
+      : averageRating >= 3.5
+          ? Colors.lightGreen
+          : averageRating >= 2.5
+              ? Colors.orange
+              : averageRating >= 1.5
+                  ? Colors.red
+                  : Colors.red[700]!;
 
-  String _getReviewsText(int count) {
-    if (count == 0) return 'отзывов';
-    if (count == 1) return 'отзыв';
-    if (count >= 2 && count <= 4) return 'отзыва';
-    return 'отзывов';
-  }
+  String _getReviewsText(int count) => count == 0
+      ? 'отзывов'
+      : count == 1
+          ? 'отзыв'
+          : count >= 2 && count <= 4
+              ? 'отзыва'
+              : 'отзывов';
 }

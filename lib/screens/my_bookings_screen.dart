@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../models/booking.dart';
 import '../services/booking_service.dart';
+import '../widgets/auth_gate.dart';
 import '../widgets/back_button_handler.dart';
 import '../widgets/booking_card.dart';
 
@@ -51,48 +53,55 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
     });
 
     try {
-      // Используем тестовые данные для демонстрации
-      final testBookings = [
-        Booking(
-          id: 'booking_1',
-          customerId: 'customer_1',
-          specialistId: 'specialist_1',
-          eventDate: DateTime.now().add(const Duration(days: 7)),
-          totalPrice: 30000,
-          prepayment: 15000,
-          status: BookingStatus.pending,
-          message: 'Свадьба на 80 человек в загородном клубе',
-          createdAt: DateTime.now().subtract(const Duration(days: 2)),
-        ),
-        Booking(
-          id: 'booking_2',
-          customerId: 'customer_1',
-          specialistId: 'specialist_2',
-          eventDate: DateTime.now().add(const Duration(days: 14)),
-          totalPrice: 25000,
-          prepayment: 12500,
-          status: BookingStatus.confirmed,
-          message: 'Корпоративное мероприятие в офисе',
-          createdAt: DateTime.now().subtract(const Duration(days: 5)),
-        ),
-        Booking(
-          id: 'booking_3',
-          customerId: 'customer_1',
-          specialistId: 'specialist_3',
-          eventDate: DateTime.now().subtract(const Duration(days: 3)),
-          totalPrice: 20000,
-          prepayment: 20000,
-          status: BookingStatus.completed,
-          message: 'День рождения ребенка',
-          createdAt: DateTime.now().subtract(const Duration(days: 10)),
-        ),
-      ];
+      // Получаем текущего пользователя
+      final currentUserAsync = ref.read(currentUserProvider);
+      final currentUser = currentUserAsync.value;
+      
+      if (currentUser == null) {
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
 
-      setState(() {
-        _bookings = testBookings;
-        _isLoading = false;
-      });
-    } catch (e) {
+      // Загружаем заявки из Firestore
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('bookings')
+          .where('customerId', isEqualTo: currentUser.uid)
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      final bookings = querySnapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>? ?? {};
+        return Booking.fromMap({...data, 'id': doc.id});
+      }).toList();
+
+      // Если заявок нет, создаем тестовые данные
+      if (bookings.isEmpty) {
+        await _createTestBookings(currentUser.uid);
+        // Перезагружаем после создания тестовых данных
+        final newQuerySnapshot = await FirebaseFirestore.instance
+            .collection('bookings')
+            .where('customerId', isEqualTo: currentUser.uid)
+            .orderBy('createdAt', descending: true)
+            .get();
+
+        final newBookings = newQuerySnapshot.docs.map((doc) {
+          final data = doc.data() as Map<String, dynamic>? ?? {};
+          return Booking.fromMap({...data, 'id': doc.id});
+        }).toList();
+
+        setState(() {
+          _bookings = newBookings;
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _bookings = bookings;
+          _isLoading = false;
+        });
+      }
+    } on Exception catch (e) {
       setState(() {
         _isLoading = false;
       });
@@ -104,6 +113,52 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
           ),
         );
       }
+    }
+  }
+
+  Future<void> _createTestBookings(String uid) async {
+    try {
+      // Создаем тестовые заявки
+      await FirebaseFirestore.instance.collection('bookings').add({
+        'customerId': uid,
+        'specialistId': 'spec_test_1',
+        'eventDate': Timestamp.fromDate(DateTime.now().add(const Duration(days: 7))),
+        'status': 'pending',
+        'details': 'Тестовая заявка на фотосессию',
+        'totalPrice': 15000.0,
+        'createdAt': Timestamp.now(),
+        'eventTitle': 'Фотосессия на природе',
+        'customerName': 'Тестовый клиент',
+        'customerPhone': '+7 (999) 123-45-67',
+      });
+
+      await FirebaseFirestore.instance.collection('bookings').add({
+        'customerId': uid,
+        'specialistId': 'spec_test_2',
+        'eventDate': Timestamp.fromDate(DateTime.now().add(const Duration(days: 14))),
+        'status': 'confirmed',
+        'details': 'Тестовая заявка на видеосъемку',
+        'totalPrice': 25000.0,
+        'createdAt': Timestamp.now(),
+        'eventTitle': 'Видеосъемка свадьбы',
+        'customerName': 'Тестовый клиент',
+        'customerPhone': '+7 (999) 123-45-67',
+      });
+
+      await FirebaseFirestore.instance.collection('bookings').add({
+        'customerId': uid,
+        'specialistId': 'spec_test_3',
+        'eventDate': Timestamp.fromDate(DateTime.now().subtract(const Duration(days: 7))),
+        'status': 'completed',
+        'details': 'Завершенная тестовая заявка',
+        'totalPrice': 10000.0,
+        'createdAt': Timestamp.fromDate(DateTime.now().subtract(const Duration(days: 10))),
+        'eventTitle': 'Фотосессия в студии',
+        'customerName': 'Тестовый клиент',
+        'customerPhone': '+7 (999) 123-45-67',
+      });
+    } on Exception catch (e) {
+      print('Ошибка создания тестовых заявок: $e');
     }
   }
 
@@ -162,7 +217,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
             ),
           );
         }
-      } catch (e) {
+      } on Exception catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -401,7 +456,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              context.go('/search');
+              context.push('/create_booking');
             },
             child: const Icon(Icons.add),
           ),

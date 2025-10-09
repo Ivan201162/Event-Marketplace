@@ -305,7 +305,7 @@ class StoryCircle extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: story.isExpired ? Colors.grey : Colors.blue,
+              color: story.expiresAt.isBefore(DateTime.now()) ? Colors.grey : Colors.blue,
               width: 3,
             ),
           ),
@@ -313,9 +313,9 @@ class StoryCircle extends StatelessWidget {
             children: [
               // Основное изображение
               ClipOval(
-                child: story.isImage
+                child: story.mediaUrl.isNotEmpty
                     ? Image.network(
-                        story.content,
+                        story.mediaUrl,
                         width: 80,
                         height: 80,
                         fit: BoxFit.cover,
@@ -343,14 +343,14 @@ class StoryCircle extends StatelessWidget {
                     : Container(
                         width: 80,
                         height: 80,
-                        color: story.backgroundColor,
-                        child: story.isText
+                        color: Colors.black,
+                        child: story.title.isNotEmpty
                             ? Center(
                                 child: Text(
-                                  story.text ?? '',
-                                  style: TextStyle(
-                                    color: story.textColor,
-                                    fontSize: story.fontSize,
+                                  story.title,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),
                                   textAlign: TextAlign.center,
@@ -368,7 +368,7 @@ class StoryCircle extends StatelessWidget {
               ),
 
               // Индикатор истечения времени
-              if (!story.isExpired)
+              if (!story.expiresAt.isBefore(DateTime.now()))
                 Positioned(
                   top: 4,
                   right: 4,

@@ -33,7 +33,7 @@ class StorageService {
       final downloadUrl = await snapshot.ref.getDownloadURL();
 
       return downloadUrl;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка загрузки PDF договора: $e');
     }
   }
@@ -78,7 +78,7 @@ class StorageService {
       final downloadUrl = await snapshot.ref.getDownloadURL();
 
       return downloadUrl;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка загрузки изображения профиля: $e');
     }
   }
@@ -104,7 +104,7 @@ class StorageService {
       final downloadUrl = await snapshot.ref.getDownloadURL();
 
       return downloadUrl;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка загрузки PDF акта: $e');
     }
   }
@@ -130,7 +130,7 @@ class StorageService {
       final downloadUrl = await snapshot.ref.getDownloadURL();
 
       return downloadUrl;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка загрузки PDF счета: $e');
     }
   }
@@ -166,7 +166,7 @@ class StorageService {
       } else {
         throw Exception('Не удалось получить данные файла');
       }
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка скачивания файла: $e');
     }
   }
@@ -176,7 +176,7 @@ class StorageService {
     try {
       final ref = _storage.ref().child(path);
       return await ref.getDownloadURL();
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка получения URL файла: $e');
     }
   }
@@ -186,7 +186,7 @@ class StorageService {
     try {
       final ref = _storage.ref().child(path);
       await ref.delete();
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка удаления файла: $e');
     }
   }
@@ -197,7 +197,7 @@ class StorageService {
       final ref = _storage.ref().child(path);
       final result = await ref.listAll();
       return result.items;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка получения списка файлов: $e');
     }
   }
@@ -207,7 +207,7 @@ class StorageService {
     try {
       final ref = _storage.ref().child(path);
       return await ref.getMetadata();
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка получения метаданных файла: $e');
     }
   }
@@ -236,7 +236,7 @@ class StorageService {
       final downloadUrl = await snapshot.ref.getDownloadURL();
 
       return downloadUrl;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка загрузки изображения: $e');
     }
   }
@@ -266,7 +266,7 @@ class StorageService {
       final downloadUrl = await snapshot.ref.getDownloadURL();
 
       return downloadUrl;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка загрузки документа: $e');
     }
   }
@@ -287,7 +287,7 @@ class StorageService {
       final ref = _storage.ref().child(path);
       await ref.getMetadata();
       return true;
-    } catch (e) {
+    } on Exception {
       return false;
     }
   }

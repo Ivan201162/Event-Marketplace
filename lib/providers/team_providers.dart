@@ -115,7 +115,7 @@ class TeamCreationNotifier extends StateNotifier<TeamCreationState> {
         isLoading: false,
         createdTeam: team,
       );
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(
         isLoading: false,
         error: e.toString(),
@@ -185,7 +185,7 @@ class TeamManagementNotifier extends StateNotifier<TeamManagementState> {
         isLoading: false,
         successMessage: 'Специалист добавлен в команду',
       );
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(
         isLoading: false,
         error: e.toString(),
@@ -209,7 +209,7 @@ class TeamManagementNotifier extends StateNotifier<TeamManagementState> {
         isLoading: false,
         successMessage: 'Специалист удален из команды',
       );
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(
         isLoading: false,
         error: e.toString(),
@@ -233,7 +233,7 @@ class TeamManagementNotifier extends StateNotifier<TeamManagementState> {
         isLoading: false,
         successMessage: 'Команда подтверждена',
       );
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(
         isLoading: false,
         error: e.toString(),
@@ -257,7 +257,7 @@ class TeamManagementNotifier extends StateNotifier<TeamManagementState> {
         isLoading: false,
         successMessage: 'Команда отклонена',
       );
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(
         isLoading: false,
         error: e.toString(),
@@ -291,7 +291,7 @@ class TeamManagementNotifier extends StateNotifier<TeamManagementState> {
         isLoading: false,
         successMessage: 'Команда обновлена',
       );
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(
         isLoading: false,
         error: e.toString(),

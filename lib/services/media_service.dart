@@ -64,7 +64,7 @@ class MediaService {
         title: title,
         description: description,
       );
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('MediaService: Error uploading media from gallery: $e');
       rethrow;
     }
@@ -112,7 +112,7 @@ class MediaService {
         title: title,
         description: description,
       );
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('MediaService: Error uploading media from camera: $e');
       rethrow;
     }
@@ -209,7 +209,7 @@ class MediaService {
         'MediaService: Media uploaded successfully: ${mediaItem.id}',
       );
       return mediaItem;
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('MediaService: Error uploading media file: $e');
       rethrow;
     }
@@ -233,7 +233,7 @@ class MediaService {
       if (storagePath != null) {
         try {
           await _storage.ref().child(storagePath).delete();
-        } catch (e) {
+        } on Exception catch (e) {
           SafeLog.warning('MediaService: Error deleting file from storage: $e');
         }
       }
@@ -246,7 +246,7 @@ class MediaService {
           if (thumbnailPath != null) {
             await _storage.ref().child(thumbnailPath).delete();
           }
-        } catch (e) {
+        } on Exception catch (e) {
           SafeLog.warning('MediaService: Error deleting thumbnail: $e');
         }
       }
@@ -255,7 +255,7 @@ class MediaService {
       await _firestore.collection(_collection).doc(mediaId).delete();
 
       SafeLog.info('MediaService: Media deleted successfully: $mediaId');
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('MediaService: Error deleting media: $e');
       rethrow;
     }
@@ -277,7 +277,7 @@ class MediaService {
 
       SafeLog.info('MediaService: Found ${mediaItems.length} media items');
       return mediaItems;
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('MediaService: Error getting media for user: $e');
       rethrow;
     }
@@ -300,7 +300,7 @@ class MediaService {
 
       SafeLog.info('MediaService: Found ${mediaItems.length} $type items');
       return mediaItems;
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('MediaService: Error getting media by type: $e');
       rethrow;
     }
@@ -327,7 +327,7 @@ class MediaService {
       }
 
       SafeLog.info('MediaService: Media updated successfully: $mediaId');
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('MediaService: Error updating media: $e');
       rethrow;
     }
@@ -340,7 +340,7 @@ class MediaService {
       // для создания превью видео. Для демонстрации возвращаем null.
       SafeLog.info('MediaService: Video thumbnail creation not implemented');
       return null;
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('MediaService: Error creating video thumbnail: $e');
       return null;
     }
@@ -353,7 +353,7 @@ class MediaService {
       // для получения размеров изображения. Для демонстрации возвращаем null.
       SafeLog.info('MediaService: Image dimensions extraction not implemented');
       return {'width': null, 'height': null};
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('MediaService: Error getting image dimensions: $e');
       return {'width': null, 'height': null};
     }
@@ -372,7 +372,7 @@ class MediaService {
       }
 
       return null;
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('MediaService: Error extracting storage path: $e');
       return null;
     }
@@ -415,7 +415,7 @@ class MediaService {
 
       SafeLog.info('MediaService: Media stats: $stats');
       return stats;
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('MediaService: Error getting media stats: $e');
       rethrow;
     }

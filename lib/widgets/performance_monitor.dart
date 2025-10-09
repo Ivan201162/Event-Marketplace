@@ -317,20 +317,32 @@ class PerformanceStats extends ConsumerWidget {
       );
 
   Color _getFPSColor(double fps) {
-    if (fps >= 50) return Colors.green;
-    if (fps >= 30) return Colors.orange;
+    if (fps >= 50) {
+      return Colors.green;
+    }
+    if (fps >= 30) {
+      return Colors.orange;
+    }
     return Colors.red;
   }
 
   Color _getMemoryColor(int usage) {
-    if (usage < 50) return Colors.green;
-    if (usage < 80) return Colors.orange;
+    if (usage < 50) {
+      return Colors.green;
+    }
+    if (usage < 80) {
+      return Colors.orange;
+    }
     return Colors.red;
   }
 
   Color _getBatteryColor(int level) {
-    if (level > 50) return Colors.green;
-    if (level > 20) return Colors.orange;
+    if (level > 50) {
+      return Colors.green;
+    }
+    if (level > 20) {
+      return Colors.orange;
+    }
     return Colors.red;
   }
 

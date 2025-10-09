@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../core/app_theme.dart';
 import '../models/specialist.dart';
 
 /// Современная карточка специалиста в едином стиле
@@ -38,7 +37,7 @@ class ModernSpecialistCard extends ConsumerWidget {
                 // Заголовок с аватаром и основной информацией
                 Row(
                   children: [
-                    _buildAvatar(),
+                    _buildAvatar(context),
                     const SizedBox(width: 12),
                     Expanded(
                       child: _buildSpecialistInfo(context),
@@ -59,11 +58,11 @@ class ModernSpecialistCard extends ConsumerWidget {
         ),
       );
 
-  Widget _buildAvatar() => Stack(
+  Widget _buildAvatar(BuildContext context) => Stack(
         children: [
           CircleAvatar(
             radius: isCompact ? 25 : 32,
-            backgroundColor: BrandColors.primary.withOpacity(0.1),
+            backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
             backgroundImage: specialist.imageUrlValue != null
                 ? NetworkImage(specialist.imageUrlValue!)
                 : null,
@@ -75,7 +74,7 @@ class ModernSpecialistCard extends ConsumerWidget {
                     style: TextStyle(
                       fontSize: isCompact ? 18 : 22,
                       fontWeight: FontWeight.bold,
-                      color: BrandColors.primary,
+                      color: Theme.of(context).primaryColor,
                     ),
                   )
                 : null,
@@ -87,7 +86,7 @@ class ModernSpecialistCard extends ConsumerWidget {
               child: Container(
                 padding: const EdgeInsets.all(2),
                 decoration: BoxDecoration(
-                  color: BrandColors.primary,
+                  color: Theme.of(context).primaryColor,
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 2),
                 ),
@@ -112,7 +111,7 @@ class ModernSpecialistCard extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: isCompact ? 16 : 18,
                     fontWeight: FontWeight.bold,
-                    color: BrandColors.textPrimary,
+                    color: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -125,21 +124,21 @@ class ModernSpecialistCard extends ConsumerWidget {
             specialist.category.displayName ?? 'Категория',
             style: TextStyle(
               fontSize: isCompact ? 12 : 14,
-              color: BrandColors.textSecondary,
+              color: Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey,
             ),
           ),
           const SizedBox(height: 4),
           Row(
             children: [
-              const Icon(Icons.location_on,
-                  size: 14, color: BrandColors.textSecondary),
+              Icon(Icons.location_on,
+                  size: 14, color: Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey,),
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
                   specialist.city ?? 'Город не указан',
                   style: TextStyle(
                     fontSize: isCompact ? 12 : 14,
-                    color: BrandColors.textSecondary,
+                    color: Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -153,7 +152,7 @@ class ModernSpecialistCard extends ConsumerWidget {
   Widget _buildFavoriteButton() => IconButton(
         icon: const Icon(
           Icons.favorite_border,
-          color: BrandColors.textSecondary,
+          color: Colors.grey,
           size: 20,
         ),
         onPressed: () {
@@ -167,9 +166,9 @@ class ModernSpecialistCard extends ConsumerWidget {
         (specialist.description?.isNotEmpty ?? false)
             ? specialist.description!
             : 'Опытный специалист в области ${specialist.category.displayName.toLowerCase() ?? 'услуг'}',
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 14,
-          color: BrandColors.textSecondary,
+          color: Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey,
           height: 1.4,
         ),
         maxLines: 2,
@@ -182,7 +181,7 @@ class ModernSpecialistCard extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: Colors.amber.withOpacity(0.1),
+              color: Colors.amber.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -208,15 +207,15 @@ class ModernSpecialistCard extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: BrandColors.primary.withOpacity(0.1),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
               '${specialist.reviewCount} отзывов',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: BrandColors.primary,
+                color: Theme.of(context).primaryColor,
               ),
             ),
           ),
@@ -227,15 +226,15 @@ class ModernSpecialistCard extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: BrandColors.primaryLight,
+              color: Theme.of(context).primaryColorLight,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
               '${(specialist.pricePerHour ?? specialist.hourlyRate ?? 0).toInt()}₽/ч',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
-                color: BrandColors.primary,
+                color: Theme.of(context).primaryColor,
               ),
             ),
           ),

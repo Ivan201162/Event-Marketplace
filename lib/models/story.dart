@@ -1,17 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
-/// Модель сторис специалиста
+/// Модель сторис
 class Story {
   const Story({
     required this.id,
     required this.specialistId,
+    required this.title,
     required this.mediaUrl,
-    this.text,
+    required this.thumbnailUrl,
     required this.createdAt,
     required this.expiresAt,
     this.viewsCount = 0,
-    this.viewedBy = const [],
     this.metadata,
   });
 
@@ -25,8 +24,9 @@ class Story {
   factory Story.fromMap(Map<String, dynamic> data, [String? id]) => Story(
         id: id ?? data['id'] ?? '',
         specialistId: data['specialistId'] ?? '',
+        title: data['title'] ?? '',
         mediaUrl: data['mediaUrl'] ?? '',
-        text: data['text'],
+        thumbnailUrl: data['thumbnailUrl'] ?? '',
         createdAt: data['createdAt'] != null
             ? (data['createdAt'] is Timestamp
                 ? (data['createdAt'] as Timestamp).toDate()
@@ -38,53 +38,57 @@ class Story {
                 : DateTime.parse(data['expiresAt'].toString()))
             : DateTime.now().add(const Duration(hours: 24)),
         viewsCount: data['viewsCount'] as int? ?? 0,
-        viewedBy: List<String>.from(data['viewedBy'] ?? []),
         metadata: data['metadata'],
       );
 
-  /// Создать новый сторис с автоматическим временем истечения
-  factory Story.create({
-    required String id,
-    required String specialistId,
-    required String mediaUrl,
-    String? text,
-    Map<String, dynamic>? metadata,
-  }) {
-    final now = DateTime.now();
-    return Story(
-      id: id,
-      specialistId: specialistId,
-      mediaUrl: mediaUrl,
-      text: text,
-      createdAt: now,
-      expiresAt: now.add(const Duration(hours: 24)),
-      metadata: metadata,
-    );
-  }
   final String id;
   final String specialistId;
-  final String mediaUrl; // фото/видео
-  final String? text;
+  final String title;
+  final String mediaUrl; // URL видео или изображения
+  final String thumbnailUrl; // URL превью
   final DateTime createdAt;
-  final DateTime expiresAt; // автоматически удаляется через 24 часа
+  final DateTime expiresAt; // Время истечения (24 часа)
   final int viewsCount;
-  final List<String> viewedBy; // список ID пользователей, которые просмотрели
   final Map<String, dynamic>? metadata;
 
-  /// Проверить, истек ли сторис
-  bool get isExpired => DateTime.now().isAfter(expiresAt);
+  /// Преобразовать в Map для Firestore
+  Map<String, dynamic> toMap() => {
+        'specialistId': specialistId,
+        'title': title,
+        'mediaUrl': mediaUrl,
+        'thumbnailUrl': thumbnailUrl,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'expiresAt': Timestamp.fromDate(expiresAt),
+        'viewsCount': viewsCount,
+        'metadata': metadata,
+      };
 
-  /// Проверить, просмотрел ли пользователь сторис
-  bool hasViewedBy(String userId) => viewedBy.contains(userId);
+  /// Копировать с изменениями
+  Story copyWith({
+    String? id,
+    String? specialistId,
+    String? title,
+    String? mediaUrl,
+    String? thumbnailUrl,
+    DateTime? createdAt,
+    DateTime? expiresAt,
+    int? viewsCount,
+    Map<String, dynamic>? metadata,
+  }) =>
+      Story(
+        id: id ?? this.id,
+        specialistId: specialistId ?? this.specialistId,
+        title: title ?? this.title,
+        mediaUrl: mediaUrl ?? this.mediaUrl,
+        thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+        createdAt: createdAt ?? this.createdAt,
+        expiresAt: expiresAt ?? this.expiresAt,
+        viewsCount: viewsCount ?? this.viewsCount,
+        metadata: metadata ?? this.metadata,
+      );
 
-  /// Проверить, просмотрел ли пользователь сторис (альтернативное название)
-  bool isViewedBy(String userId) => viewedBy.contains(userId);
-
-  /// Получить заголовок сторис
-  String get caption => text ?? '';
-
-  /// Получить количество просмотров
-  int get viewCount => viewsCount;
+  /// Проверить, активна ли история
+  bool get isActive => expiresAt.isAfter(DateTime.now());
 
   /// Получить время до истечения
   Duration get timeUntilExpiry => expiresAt.difference(DateTime.now());
@@ -93,7 +97,7 @@ class Story {
   String get timeAgo {
     final now = DateTime.now();
     final difference = now.difference(createdAt);
-
+    
     if (difference.inDays > 0) {
       return '${difference.inDays}д назад';
     } else if (difference.inHours > 0) {
@@ -105,91 +109,44 @@ class Story {
     }
   }
 
-  /// Проверить, является ли сторис изображением
-  bool get isImage {
-    final extension = mediaUrl.split('.').last.toLowerCase();
-    return ['jpg', 'jpeg', 'png', 'gif', 'webp'].contains(extension);
-  }
+  /// Получить тип контента
+  String get type => mediaUrl.contains('video') ? 'video' : 'image';
 
-  /// Проверить, является ли сторис видео
-  bool get isVideo {
-    final extension = mediaUrl.split('.').last.toLowerCase();
-    return ['mp4', 'mov', 'avi', 'mkv', 'webm'].contains(extension);
-  }
-
-  /// Проверить, является ли сторис текстом
-  bool get isText => text != null && text!.isNotEmpty && mediaUrl.isEmpty;
-
-  /// Получить содержимое (URL медиа или текст)
-  String get content => mediaUrl.isNotEmpty ? mediaUrl : (text ?? '');
+  /// Получить текст (для текстовых историй)
+  String get text => title;
 
   /// Получить цвет фона
-  Color get backgroundColor => const Color(0xFF1A1A1A);
+  String get backgroundColor => '#FF6B6B';
 
   /// Получить цвет текста
-  Color get textColor => Colors.white;
+  String get textColor => '#FFFFFF';
 
   /// Получить размер шрифта
   double get fontSize => 16;
 
-  /// Получить URL миниатюры
-  String get thumbnailUrl => mediaUrl;
+  /// Получить подпись
+  String get caption => title;
 
-  /// Получить имя специалиста
-  String get specialistName => metadata?['specialistName'] ?? '';
-
-  /// Получить URL фото специалиста
-  String get specialistPhotoUrl => metadata?['specialistPhotoUrl'] ?? '';
-
-  /// Получить тип медиа
-  String get type {
-    if (isImage) return 'image';
-    if (isVideo) return 'video';
-    if (isText) return 'text';
-    return 'unknown';
-  }
+  /// Получить количество просмотров
+  int get viewCount => viewsCount;
 
   /// Получить количество лайков
-  int get likes => metadata?['likes'] ?? 0;
+  int get likes => 0;
 
-  /// Получить ID автора (альтернативное название для specialistId)
-  String get authorId => specialistId;
+  /// Проверить, просмотрена ли история пользователем
+  bool isViewedBy(String userId) => false;
 
-  /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() => {
-        'specialistId': specialistId,
-        'mediaUrl': mediaUrl,
-        'text': text,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'expiresAt': Timestamp.fromDate(expiresAt),
-        'viewsCount': viewsCount,
-        'viewedBy': viewedBy,
-        'metadata': metadata,
-      };
+  /// Получить URL фото специалиста
+  String get specialistPhotoUrl => '';
 
-  /// Копировать с изменениями
-  Story copyWith({
-    String? id,
-    String? specialistId,
-    String? mediaUrl,
-    String? text,
-    DateTime? createdAt,
-    DateTime? expiresAt,
-    int? viewsCount,
-    List<String>? viewedBy,
-    Map<String, dynamic>? metadata,
-  }) =>
-      Story(
-        id: id ?? this.id,
-        specialistId: specialistId ?? this.specialistId,
-        mediaUrl: mediaUrl ?? this.mediaUrl,
-        text: text ?? this.text,
-        createdAt: createdAt ?? this.createdAt,
-        expiresAt: expiresAt ?? this.expiresAt,
-        viewsCount: viewsCount ?? this.viewsCount,
-        viewedBy: viewedBy ?? this.viewedBy,
-        metadata: metadata ?? this.metadata,
-      );
+  /// Получить имя специалиста
+  String get specialistName => '';
+
+  /// Проверить, является ли сторис видео
+  bool get isVideo => mediaUrl.contains('video');
+
+  /// Проверить, является ли сторис изображением
+  bool get isImage => !mediaUrl.contains('video');
 
   @override
   bool operator ==(Object other) {
@@ -201,6 +158,5 @@ class Story {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() =>
-      'Story(id: $id, specialistId: $specialistId, expiresAt: $expiresAt)';
+  String toString() => 'Story(id: $id, title: $title, specialistId: $specialistId)';
 }

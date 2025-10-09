@@ -23,7 +23,7 @@ class CalendarSyncService {
       debugPrint('Exporting to Google Calendar: ${event.title}');
       await Future.delayed(const Duration(seconds: 1));
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error exporting to Google Calendar: $e');
       return false;
     }
@@ -42,7 +42,7 @@ class CalendarSyncService {
       debugPrint('Exporting to Outlook Calendar: ${event.title}');
       await Future.delayed(const Duration(seconds: 1));
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error exporting to Outlook Calendar: $e');
       return false;
     }
@@ -82,7 +82,7 @@ class CalendarSyncService {
       final outlookResult = await exportToOutlookCalendar(event);
 
       return googleResult || outlookResult;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error exporting booking to calendar: $e');
       return false;
     }
@@ -101,7 +101,7 @@ class CalendarSyncService {
       debugPrint('Importing from Google Calendar');
       await Future.delayed(const Duration(seconds: 1));
       return [];
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error importing from Google Calendar: $e');
       return [];
     }
@@ -120,7 +120,7 @@ class CalendarSyncService {
       debugPrint('Importing from Outlook Calendar');
       await Future.delayed(const Duration(seconds: 1));
       return [];
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error importing from Outlook Calendar: $e');
       return [];
     }
@@ -133,7 +133,7 @@ class CalendarSyncService {
     try {
       results['google'] = await _syncGoogleCalendar();
       results['outlook'] = await _syncOutlookCalendar();
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error syncing calendars: $e');
     }
 
@@ -147,7 +147,7 @@ class CalendarSyncService {
       debugPrint('Syncing with Google Calendar');
       await Future.delayed(const Duration(seconds: 2));
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error syncing with Google Calendar: $e');
       return false;
     }
@@ -160,7 +160,7 @@ class CalendarSyncService {
       debugPrint('Syncing with Outlook Calendar');
       await Future.delayed(const Duration(seconds: 2));
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error syncing with Outlook Calendar: $e');
       return false;
     }

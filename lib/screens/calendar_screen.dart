@@ -60,7 +60,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
       setState(() {
         _isLoading = false;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _isLoading = false;
       });

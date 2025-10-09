@@ -71,7 +71,7 @@ class _SpecialistProfileEditScreenState
         _priceControllers[service.key] =
             TextEditingController(text: service.value.toString());
       }
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _isLoading = false;
       });
@@ -105,7 +105,7 @@ class _SpecialistProfileEditScreenState
           ),
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -145,7 +145,7 @@ class _SpecialistProfileEditScreenState
           ),
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

@@ -111,7 +111,7 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
   Future<void> _loadFavoriteIdeas() async {
     try {
       final favorites = await _ideasService.getFavoriteIdeas(
-          'current_user_id'); // TODO(developer): Получить реальный ID
+          'current_user_id',); // TODO(developer): Получить реальный ID
       setState(() {
         _favoriteIdeas = favorites;
       });

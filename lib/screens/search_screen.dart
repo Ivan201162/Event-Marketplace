@@ -1,184 +1,171 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../core/navigation/app_navigator.dart';
-import '../models/specialist.dart';
-import '../providers/search_providers.dart';
-import '../widgets/search/filters.dart';
-import '../widgets/search/sorting.dart';
-import '../widgets/specialist_card.dart';
-
-class SearchScreen extends ConsumerStatefulWidget {
+/// Экран поиска специалистов
+class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
 
   @override
-  ConsumerState<SearchScreen> createState() => _SearchScreenState();
+  State<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _SearchScreenState extends ConsumerState<SearchScreen> {
+class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
-  bool _showFilters = false;
-  bool _showSorting = false;
+  String _selectedCategory = 'Все';
+  double _priceRange = 5000;
+  final double _ratingFilter = 4;
 
-  @override
-  void initState() {
-    super.initState();
-    _searchController.addListener(_onSearchChanged);
-  }
+  final List<String> _categories = [
+    'Все',
+    'Фотографы',
+    'Видеографы',
+    'Организаторы',
+    'Декораторы',
+    'Музыканты',
+  ];
 
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  void _onSearchChanged() {
-    ref.read(searchQueryProvider.notifier).state = _searchController.text;
-  }
+  final List<Map<String, dynamic>> _specialists = [
+    {
+      'name': 'Анна Петрова',
+      'category': 'Фотограф',
+      'rating': 4.9,
+      'price': 3000,
+      'avatar': 'https://placehold.co/100x100/4CAF50/white?text=AP',
+      'isVerified': true,
+    },
+    {
+      'name': 'Михаил Соколов',
+      'category': 'Видеограф',
+      'rating': 4.8,
+      'price': 5000,
+      'avatar': 'https://placehold.co/100x100/2196F3/white?text=MS',
+      'isVerified': true,
+    },
+    {
+      'name': 'Елена Козлова',
+      'category': 'Организатор',
+      'rating': 4.7,
+      'price': 2500,
+      'avatar': 'https://placehold.co/100x100/FF9800/white?text=EK',
+      'isVerified': false,
+    },
+    {
+      'name': 'Дмитрий Волков',
+      'category': 'Декоратор',
+      'rating': 4.6,
+      'price': 2000,
+      'avatar': 'https://placehold.co/100x100/9C27B0/white?text=DV',
+      'isVerified': true,
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final isTablet = MediaQuery.of(context).size.width > 600;
-    final isDesktop = MediaQuery.of(context).size.width > 1200;
-    final specialistsAsync = ref.watch(filteredSpecialistsProvider);
-    final searchStats = ref.watch(searchStatsProvider);
-    final hasActiveFilters = ref.watch(hasActiveFiltersProvider);
-    final activeFiltersCount = ref.watch(activeFiltersCountProvider);
-
+    final theme = Theme.of(context);
+    
     return Scaffold(
-      appBar: AppNavigator.buildAppBar(
-        context,
-        title: 'Найди своего специалиста 🎯',
-        actions: [
-          if (hasActiveFilters)
-            Container(
-              margin: const EdgeInsets.only(right: 8),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                '$activeFiltersCount',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          IconButton(
-            icon: Icon(_showSorting ? Icons.sort : Icons.sort),
-            onPressed: () {
-              setState(() {
-                _showSorting = !_showSorting;
-              });
-            },
-          ),
-          IconButton(
-            icon: Icon(
-              _showFilters ? Icons.filter_list_off : Icons.filter_list,
-            ),
-            onPressed: () {
-              setState(() {
-                _showFilters = !_showFilters;
-              });
-            },
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
+      body: CustomScrollView(
+        slivers: [
           // Поисковая строка
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: TextFormField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                labelText: 'Поиск по имени, категории или услугам...',
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: _searchController.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: _searchController.clear,
-                      )
-                    : null,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              onChanged: (value) {
-                setState(() {});
-                ref.read(searchQueryProvider.notifier).state = value;
-              },
-            ),
-          ),
-
-          // Быстрые фильтры
-          const QuickFiltersWidget(),
-
-          // Активные фильтры
-          const ActiveFiltersWidget(),
-
-          // Статистика поиска
-          if (searchStats.totalCount > 0)
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade50,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey.shade300),
-              ),
-              child: Row(
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(
-                    Icons.info_outline,
-                    size: 16,
-                    color: Colors.grey.shade600,
-                  ),
-                  const SizedBox(width: 8),
                   Text(
-                    'Найдено: ${searchStats.totalCount} специалистов',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey.shade700,
+                    'Найдите идеального специалиста',
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const Spacer(),
-                  if (searchStats.priceRange != null)
-                    Text(
-                      'Цена: ${searchStats.priceRange!.minPrice.toInt()} - ${searchStats.priceRange!.maxPrice.toInt()}₽',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade600,
+                  const SizedBox(height: 16),
+                  
+                  // Поисковая строка
+                  TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Поиск по имени или специализации...',
+                      prefixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
+                      filled: true,
+                      fillColor: theme.colorScheme.surface,
                     ),
+                    onChanged: (value) {
+                      setState(() {});
+                    },
+                  ),
+                  
+                  const SizedBox(height: 16),
+                  
+                  // Фильтры
+                  Row(
+                    children: [
+                      Expanded(
+                        child: DropdownButtonFormField<String>(
+                          initialValue: _selectedCategory,
+                          decoration: InputDecoration(
+                            labelText: 'Категория',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            filled: true,
+                            fillColor: theme.colorScheme.surface,
+                          ),
+                          items: _categories.map((category) => DropdownMenuItem(
+                              value: category,
+                              child: Text(category),
+                            ),).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedCategory = value!;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Макс. цена: ${_priceRange.toInt()}₽',
+                              style: theme.textTheme.bodyMedium,
+                            ),
+                            Slider(
+                              value: _priceRange,
+                              min: 1000,
+                              max: 10000,
+                              divisions: 18,
+                              onChanged: (value) {
+                                setState(() {
+                                  _priceRange = value;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
-
-          // Сортировка
-          if (_showSorting) const SearchSortingWidget(showTitle: false),
-
-          // Фильтры
-          if (_showFilters) const SearchFiltersWidget(showTitle: false),
-
+          ),
+          
           // Список специалистов
-          Expanded(
-            child: specialistsAsync.when(
-              data: (specialists) {
-                if (specialists.isEmpty) {
-                  return _buildEmptyState();
-                }
-
-                return isTablet
-                    ? _buildGridLayout(specialists)
-                    : _buildListLayout(specialists);
-              },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) => _buildErrorState(error.toString()),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final specialist = _specialists[index];
+                  return _buildSpecialistCard(specialist, theme);
+                },
+                childCount: _specialists.length,
+              ),
             ),
           ),
         ],
@@ -186,119 +173,192 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     );
   }
 
-  Widget _buildEmptyState() => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.search_off,
-              size: 64,
-              color: Colors.grey.shade400,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Специалисты не найдены',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey.shade600,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Попробуйте изменить параметры поиска',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade500,
-              ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: () {
-                ref.read(searchControllerProvider).clearFilters();
-                _searchController.clear();
-              },
-              icon: const Icon(Icons.clear),
-              label: const Text('Сбросить фильтры'),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildErrorState(String error) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red.shade400,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Ошибка загрузки',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.red.shade600,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade600,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: () {
-                // Перезагрузить данные
-                ref.invalidate(allSpecialistsProvider);
-              },
-              icon: const Icon(Icons.refresh),
-              label: const Text('Повторить'),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildListLayout(List<Specialist> specialists) => ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: specialists.length,
-        itemBuilder: (context, index) {
-          final specialist = specialists[index];
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: SpecialistCard(
-              specialist: specialist,
-              onTap: () {
-                context.go('/specialist/${specialist.id}');
-              },
-            ),
-          );
+  Widget _buildSpecialistCard(Map<String, dynamic> specialist, ThemeData theme) => Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      elevation: 2,
+      child: InkWell(
+        onTap: () {
+          _showSpecialistDetails(specialist);
         },
-      );
-
-  Widget _buildGridLayout(List<Specialist> specialists) => GridView.builder(
-        padding: const EdgeInsets.all(16),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.8,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              // Аватар
+              Stack(
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage(specialist['avatar']),
+                  ),
+                  if (specialist['isVerified'])
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(
+                          Icons.verified,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              
+              const SizedBox(width: 16),
+              
+              // Информация
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      specialist['name'],
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      specialist['category'],
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          specialist['rating'].toString(),
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                        const SizedBox(width: 16),
+                        Text(
+                          '${specialist['price']}₽/час',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              
+              // Кнопка действия
+              IconButton(
+                onPressed: () {
+                  context.push('/specialist/${specialist['name'].toLowerCase().replaceAll(' ', '_')}');
+                },
+                icon: const Icon(Icons.arrow_forward_ios),
+              ),
+            ],
+          ),
         ),
-        itemCount: specialists.length,
-        itemBuilder: (context, index) {
-          final specialist = specialists[index];
-          return SpecialistCard(
-            specialist: specialist,
-            onTap: () {
-              context.go('/specialist/${specialist.id}');
-            },
-          );
-        },
-      );
+      ),
+    );
+
+  void _showSpecialistDetails(Map<String, dynamic> specialist) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        maxChildSize: 0.9,
+        minChildSize: 0.5,
+        builder: (context, scrollController) => Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Заголовок
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage(specialist['avatar']),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          specialist['name'],
+                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          specialist['category'],
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
+              ),
+              
+              const SizedBox(height: 24),
+              
+              // Действия
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Заявка отправлена!'),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.send),
+                      label: const Text('Отправить заявку'),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Чат открыт!'),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.chat),
+                      label: const Text('Написать'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

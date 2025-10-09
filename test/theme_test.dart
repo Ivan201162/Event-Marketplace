@@ -274,7 +274,7 @@ class TestThemeWidget extends ConsumerWidget {
           Text('Current theme: ${themeMode.name}'),
           ElevatedButton(
             onPressed: () {
-              ref.read(themeProvider.notifier).toggleTheme();
+              ref.read(themeProvider.notifier).changeTheme(ThemeMode.dark);
             },
             child: const Text('Toggle Theme'),
           ),

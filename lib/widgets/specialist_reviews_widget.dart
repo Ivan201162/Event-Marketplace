@@ -10,6 +10,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
     super.key,
     required this.specialistId,
   });
+  
   final String specialistId;
 
   @override
@@ -36,7 +37,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
 
           // Статистика отзывов
           statisticsAsync.when(
-            data: _buildReviewStatistics,
+            data: (stats) => _buildReviewStatistics(stats),
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stack) => _buildErrorWidget(error),
           ),
@@ -45,7 +46,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
 
           // Список отзывов
           reviewsAsync.when(
-            data: _buildReviewsList,
+            data: (reviews) => _buildReviewsList(reviews),
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stack) => _buildErrorWidget(error),
           ),
@@ -106,8 +107,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: List.generate(5, (index) {
                       final rating = 5 - index;
-                      const count =
-                          0; // TODO(developer): Implement ratingCounts
+                      const count = 0; // TODO(developer): Implement ratingCounts
                       final percentage = statistics.totalReviews > 0
                           ? (count / statistics.totalReviews * 100)
                           : 0.0;
@@ -199,7 +199,8 @@ class SpecialistReviewsWidget extends ConsumerWidget {
   }
 
   /// Построить карточку отзыва
-  Widget _buildReviewCard(Review review) => Card(
+  Widget _buildReviewCard(Review review) {
+    return Card(
         elevation: 2,
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -294,7 +295,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
               // Комментарий
               ...[
                 Text(
-                  review.comment,
+                  review.text,
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey[700],
@@ -318,7 +319,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.blue.withValues(alpha: 0.1),
+                            color: Colors.blue.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -338,6 +339,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
           ),
         ),
       );
+  }
 
   /// Построить пустые отзывы
   Widget _buildEmptyReviews() => Container(
@@ -419,78 +421,4 @@ class SpecialistReviewsWidget extends ConsumerWidget {
       return '${(difference.inDays / 365).floor()} г. назад';
     }
   }
-}
-
-/// Виджет для отображения детального рейтинга
-class DetailedRatingWidget extends StatelessWidget {
-  const DetailedRatingWidget({
-    super.key,
-    required this.detailedRating,
-  });
-  final ReviewStats detailedRating;
-
-  @override
-  Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.grey[50],
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Детальный рейтинг',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            _buildRatingItem(
-                'Качество', 0), // TODO(developer): Implement detailed ratings
-            _buildRatingItem('Общение', 0),
-            _buildRatingItem('Пунктуальность', 0),
-            _buildRatingItem('Соотношение цена/качество', 0),
-          ],
-        ),
-      );
-
-  /// Построить элемент рейтинга
-  Widget _buildRatingItem(String label, double rating) => Padding(
-        padding: const EdgeInsets.only(bottom: 12),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                label,
-                style: const TextStyle(fontSize: 14),
-              ),
-            ),
-            Row(
-              children: [
-                Text(
-                  rating.toStringAsFixed(1),
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Row(
-                  children: List.generate(
-                    5,
-                    (index) => Icon(
-                      index < rating ? Icons.star : Icons.star_border,
-                      color: Colors.amber,
-                      size: 16,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
 }

@@ -38,7 +38,7 @@ class CustomerProfileRepository {
 
   /// Обновить профиль заказчика
   Future<bool> updateProfile(
-      String customerId, Map<String, dynamic> updates) async {
+      String customerId, Map<String, dynamic> updates,) async {
     try {
       updates['updatedAt'] = Timestamp.fromDate(DateTime.now());
       await _firestore.collection(_collection).doc(customerId).update(updates);

@@ -123,7 +123,7 @@ class ReviewService {
 
       debugPrint('Review created: ${docRef.id}');
       return docRef.id;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error creating review: $e');
       throw Exception('Ошибка создания отзыва: $e');
     }
@@ -144,7 +144,7 @@ class ReviewService {
           .get();
 
       return querySnapshot.docs.map(Review.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error getting specialist reviews: $e');
       throw Exception('Ошибка получения отзывов: $e');
     }
@@ -192,7 +192,7 @@ class ReviewService {
         ratingDistribution: ratingDistribution,
         lastUpdated: DateTime.now(),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error getting review stats: $e');
       throw Exception('Ошибка получения статистики отзывов: $e');
     }
@@ -212,7 +212,7 @@ class ReviewService {
       }
 
       return Review.fromDocument(querySnapshot.docs.first);
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error getting review by booking ID: $e');
       throw Exception('Ошибка получения отзыва: $e');
     }
@@ -258,7 +258,7 @@ class ReviewService {
       await _updateSpecialistRating(review.specialistId);
 
       debugPrint('Review updated: $reviewId');
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error updating review: $e');
       throw Exception('Ошибка обновления отзыва: $e');
     }
@@ -296,7 +296,7 @@ class ReviewService {
       await _updateSpecialistRating(review.specialistId);
 
       debugPrint('Review deleted: $reviewId');
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error deleting review: $e');
       throw Exception('Ошибка удаления отзыва: $e');
     }
@@ -323,7 +323,7 @@ class ReviewService {
       });
 
       debugPrint('Response added to review: $reviewId');
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error adding response to review: $e');
       throw Exception('Ошибка добавления ответа: $e');
     }
@@ -341,7 +341,7 @@ class ReviewService {
       });
 
       debugPrint('Specialist rating updated: $specialistId');
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error updating specialist rating: $e');
       // Не выбрасываем исключение, так как это не критично
     }
@@ -358,7 +358,7 @@ class ReviewService {
           .get();
 
       return querySnapshot.docs.map(Review.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error getting user reviews: $e');
       throw Exception('Ошибка получения отзывов пользователя: $e');
     }
@@ -394,7 +394,7 @@ class ReviewService {
           .get();
 
       return existingReview.docs.isEmpty;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error checking if user can review: $e');
       return false;
     }

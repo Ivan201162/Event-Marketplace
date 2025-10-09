@@ -100,7 +100,7 @@ class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
                 color: theme.primaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                    color: theme.primaryColor.withValues(alpha: 0.3)),
+                    color: theme.primaryColor.withValues(alpha: 0.3),),
               ),
               child: Row(
                 children: [

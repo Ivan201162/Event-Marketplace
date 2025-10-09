@@ -96,7 +96,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
   }
 
   Widget _buildFeedContent(
-          AsyncValue<List<FeedPost>> feedPosts, FeedFilter filter) =>
+          AsyncValue<List<FeedPost>> feedPosts, FeedFilter filter,) =>
       feedPosts.when(
         data: (posts) {
           if (posts.isEmpty) {

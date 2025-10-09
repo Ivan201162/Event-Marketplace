@@ -51,7 +51,7 @@ class _TaxDetailsScreenState extends ConsumerState<TaxDetailsScreen>
         _taxRecords = records;
         _isLoading = false;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _isLoading = false;
       });
@@ -471,7 +471,7 @@ class _TaxDetailsScreenState extends ConsumerState<TaxDetailsScreen>
                     ),
                   );
                 }
-              } catch (e) {
+              } on Exception catch (e) {
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -513,7 +513,7 @@ class _TaxDetailsScreenState extends ConsumerState<TaxDetailsScreen>
                     ),
                   );
                 }
-              } catch (e) {
+              } on Exception catch (e) {
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(

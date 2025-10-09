@@ -70,7 +70,7 @@ class _OrganizersListScreenState extends ConsumerState<OrganizersListScreen> {
         _organizers = organizers;
         _filteredOrganizers = organizers;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       _showErrorSnackBar('Ошибка загрузки организаторов: $e');
     } finally {
       setState(() {

@@ -15,7 +15,7 @@ class CustomerService {
 
       if (!doc.exists) return null;
       return Customer.fromDocument(doc);
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка загрузки заказчика: $e');
     }
   }
@@ -31,7 +31,7 @@ class CustomerService {
 
       if (querySnapshot.docs.isEmpty) return null;
       return Customer.fromDocument(querySnapshot.docs.first);
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка загрузки заказчика: $e');
     }
   }
@@ -45,7 +45,7 @@ class CustomerService {
           .set(customer.toMap(), SetOptions(merge: true));
 
       return customer;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка сохранения заказчика: $e');
     }
   }
@@ -55,7 +55,7 @@ class CustomerService {
     try {
       final customer = Customer.fromAppUser(user);
       return await createOrUpdateCustomer(customer);
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка создания заказчика: $e');
     }
   }
@@ -92,7 +92,7 @@ class CustomerService {
           .collection(_collection)
           .doc(customerId)
           .update(updateData);
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка обновления профиля: $e');
     }
   }
@@ -103,7 +103,7 @@ class CustomerService {
       await _firestore.collection(_collection).doc(customerId).update({
         'favoriteSpecialists': FieldValue.arrayUnion([specialistId]),
       });
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка добавления в избранное: $e');
     }
   }
@@ -117,7 +117,7 @@ class CustomerService {
       await _firestore.collection(_collection).doc(customerId).update({
         'favoriteSpecialists': FieldValue.arrayRemove([specialistId]),
       });
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка удаления из избранного: $e');
     }
   }
@@ -127,7 +127,7 @@ class CustomerService {
     try {
       final customer = await getCustomerById(customerId);
       return customer?.favoriteSpecialists ?? [];
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка загрузки избранного: $e');
     }
   }
@@ -140,7 +140,7 @@ class CustomerService {
     try {
       final favorites = await getFavoriteSpecialists(customerId);
       return favorites.contains(specialistId);
-    } catch (e) {
+    } on Exception {
       return false;
     }
   }
@@ -162,7 +162,7 @@ class CustomerService {
           .get();
 
       return querySnapshot.docs.map(Customer.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка загрузки годовщин: $e');
     }
   }
@@ -186,7 +186,7 @@ class CustomerService {
           .get();
 
       return querySnapshot.docs.map(Customer.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка загрузки предстоящих годовщин: $e');
     }
   }
@@ -197,7 +197,7 @@ class CustomerService {
       await _firestore.collection(_collection).doc(customerId).update({
         'lastLoginAt': Timestamp.fromDate(DateTime.now()),
       });
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка обновления времени входа: $e');
     }
   }
@@ -229,7 +229,7 @@ class CustomerService {
         'isAnniversaryToday': customer.isAnniversaryToday,
         'nextAnniversary': customer.nextAnniversary,
       };
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка получения статистики: $e');
     }
   }
@@ -238,7 +238,7 @@ class CustomerService {
   Future<void> deleteCustomer(String customerId) async {
     try {
       await _firestore.collection(_collection).doc(customerId).delete();
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка удаления заказчика: $e');
     }
   }

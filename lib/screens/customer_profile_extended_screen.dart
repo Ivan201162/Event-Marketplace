@@ -73,7 +73,7 @@ class _CustomerProfileExtendedScreenState
           if (specialist != null) {
             favoriteSpecialists.add(specialist);
           }
-        } catch (e) {
+        } on Exception {
           // Игнорируем ошибки загрузки отдельных специалистов
         }
       }
@@ -84,7 +84,7 @@ class _CustomerProfileExtendedScreenState
         _favoriteSpecialists = favoriteSpecialists;
         _isLoading = false;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -135,7 +135,7 @@ class _CustomerProfileExtendedScreenState
           ),
         ),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка: $e'),

@@ -34,8 +34,8 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
   void initState() {
     super.initState();
     if (widget.initialReview != null) {
-      _rating = widget.initialReview!.rating;
-      _commentController.text = widget.initialReview!.comment;
+        _rating = widget.initialReview!.rating.toDouble();
+      _commentController.text = widget.initialReview!.text;
     }
   }
 
@@ -97,7 +97,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
                 const SizedBox(height: 8),
                 if (_rating > 0)
                   Text(
-                    _getRatingText(_rating),
+                    _getRatingText(_rating.toDouble()),
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.primaryColor,
                       fontWeight: FontWeight.w500,
@@ -217,7 +217,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
         // Редактирование существующего отзыва
         await reviewService.updateReview(
           widget.initialReview!.id,
-          rating: _rating.toInt(),
+          rating: _rating,
           comment: _commentController.text.trim(),
         );
       } else {
@@ -226,7 +226,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
           specialistId: widget.specialistId,
           customerId: 'current_user_id', // TODO(developer): Get from auth
           customerName: 'Current User', // TODO(developer): Get from auth
-          rating: _rating.toInt(),
+          rating: _rating,
           comment: _commentController.text.trim(),
           specialistName: widget.specialistName,
         );
@@ -238,8 +238,8 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
           customerId: 'current_user_id',
           customerName: 'Current User',
           rating: _rating.toInt(),
-          comment: _commentController.text.trim(),
-          createdAt: DateTime.now(),
+          text: _commentController.text.trim(),
+          date: DateTime.now(),
         );
         widget.onReviewSubmitted?.call(review);
       }
@@ -257,7 +257,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
           ),
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

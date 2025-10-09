@@ -126,7 +126,9 @@ class _SpecialistPriceManagementWidgetState
   }
 
   Future<void> _updatePrice() async {
-    if (_editingPrice == null) return;
+    if (_editingPrice == null) {
+      return;
+    }
     if (_serviceNameController.text.isEmpty || _priceController.text.isEmpty) {
       _showErrorSnackBar('Заполните все обязательные поля');
       return;
@@ -187,7 +189,9 @@ class _SpecialistPriceManagementWidgetState
 
   Future<void> _deletePrice(ServicePrice price) async {
     final confirmed = await _showDeleteConfirmation(price.serviceName);
-    if (!confirmed) return;
+    if (!confirmed) {
+      return;
+    }
 
     try {
       await _service.deleteServicePrice(price.id);

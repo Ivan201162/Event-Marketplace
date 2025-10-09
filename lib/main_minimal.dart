@@ -8,8 +8,7 @@ class MinimalApp extends StatelessWidget {
   const MinimalApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context) => MaterialApp(
       title: 'Event Marketplace - Minimal',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -18,15 +17,13 @@ class MinimalApp extends StatelessWidget {
       home: const MinimalHomePage(),
       debugShowCheckedModeBanner: false,
     );
-  }
 }
 
 class MinimalHomePage extends StatelessWidget {
   const MinimalHomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
         title: const Text('Event Marketplace - Test'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -72,5 +69,4 @@ class MinimalHomePage extends StatelessWidget {
         child: const Icon(Icons.add),
       ),
     );
-  }
 }

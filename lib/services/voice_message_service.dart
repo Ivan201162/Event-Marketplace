@@ -57,8 +57,8 @@ class VoiceMessageService {
 
       _isRecording = true;
       return true;
-    } catch (e) {
-      print('Ошибка начала записи: $e');
+    } on Exception {
+      // Логирование:'Ошибка начала записи: $e');
       return false;
     }
   }
@@ -73,8 +73,8 @@ class VoiceMessageService {
       _currentRecordingPath = null;
 
       return path;
-    } catch (e) {
-      print('Ошибка остановки записи: $e');
+    } on Exception {
+      // Логирование:'Ошибка остановки записи: $e');
       return null;
     }
   }
@@ -95,8 +95,8 @@ class VoiceMessageService {
         }
         _currentRecordingPath = null;
       }
-    } catch (e) {
-      print('Ошибка отмены записи: $e');
+    } on Exception {
+      // Логирование:'Ошибка отмены записи: $e');
     }
   }
 
@@ -126,8 +126,8 @@ class VoiceMessageService {
       await file.delete();
 
       return downloadUrl;
-    } catch (e) {
-      print('Ошибка загрузки голосового сообщения: $e');
+    } on Exception {
+      // Логирование:'Ошибка загрузки голосового сообщения: $e');
       return null;
     }
   }
@@ -151,8 +151,8 @@ class VoiceMessageService {
       });
 
       return true;
-    } catch (e) {
-      print('Ошибка воспроизведения: $e');
+    } on Exception {
+      // Логирование:'Ошибка воспроизведения: $e');
       return false;
     }
   }
@@ -163,8 +163,8 @@ class VoiceMessageService {
       await _player.stop();
       _isPlaying = false;
       _currentPlayingMessageId = null;
-    } catch (e) {
-      print('Ошибка остановки воспроизведения: $e');
+    } on Exception {
+      // Логирование:'Ошибка остановки воспроизведения: $e');
     }
   }
 
@@ -172,8 +172,8 @@ class VoiceMessageService {
   Future<void> pausePlaying() async {
     try {
       await _player.pause();
-    } catch (e) {
-      print('Ошибка приостановки воспроизведения: $e');
+    } on Exception {
+      // Логирование:'Ошибка приостановки воспроизведения: $e');
     }
   }
 
@@ -181,8 +181,8 @@ class VoiceMessageService {
   Future<void> resumePlaying() async {
     try {
       await _player.resume();
-    } catch (e) {
-      print('Ошибка возобновления воспроизведения: $e');
+    } on Exception {
+      // Логирование:'Ошибка возобновления воспроизведения: $e');
     }
   }
 
@@ -191,8 +191,8 @@ class VoiceMessageService {
     try {
       await _player.setSource(UrlSource(audioUrl));
       return await _player.getDuration();
-    } catch (e) {
-      print('Ошибка получения длительности: $e');
+    } on Exception {
+      // Логирование:'Ошибка получения длительности: $e');
       return null;
     }
   }
@@ -226,8 +226,8 @@ class VoiceMessageService {
 
       await messageRef.set(message.toMap());
       return messageRef.id;
-    } catch (e) {
-      print('Ошибка создания голосового сообщения: $e');
+    } on Exception {
+      // Логирование:'Ошибка создания голосового сообщения: $e');
       return null;
     }
   }
@@ -238,8 +238,8 @@ class VoiceMessageService {
       // TODO(developer): Реализовать генерацию waveform
       // Пока возвращаем пустую строку
       return '';
-    } catch (e) {
-      print('Ошибка генерации waveform: $e');
+    } on Exception {
+      // Логирование:'Ошибка генерации waveform: $e');
       return null;
     }
   }
@@ -276,8 +276,8 @@ class VoiceMessageService {
 
       // Временная заглушка
       return 'https://example.com/voice_messages/${DateTime.now().millisecondsSinceEpoch}.m4a';
-    } catch (e) {
-      print('Ошибка загрузки голосового сообщения: $e');
+    } on Exception {
+      // Логирование:'Ошибка загрузки голосового сообщения: $e');
       rethrow;
     }
   }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../core/app_theme.dart';
 import '../core/constants/app_routes.dart';
 import '../models/story.dart';
 import '../services/story_service.dart';
@@ -31,15 +30,15 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
       setState(() => _isLoading = true);
 
       // Получаем список специалистов с активными сторисами
-      final allStories = await _storyService.getAllStories();
+      final allStories = await _storyService.getAllActiveStories();
 
       // Группируем сторисы по пользователям
       final userStories = <String, List<Story>>{};
       for (final story in allStories) {
-        if (!userStories.containsKey(story.authorId)) {
-          userStories[story.authorId] = [];
+        if (!userStories.containsKey(story.specialistId)) {
+          userStories[story.specialistId] = [];
         }
-        userStories[story.authorId]!.add(story);
+        userStories[story.specialistId]!.add(story);
       }
 
       setState(() {
@@ -153,17 +152,17 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: hasUnviewedStories
-                      ? BrandColors.primary
+                      ? Theme.of(context).primaryColor
                       : Colors.grey.shade300,
                   width: 3,
                 ),
               ),
               child: CircleAvatar(
                 radius: 27,
-                backgroundColor: BrandColors.primary.withValues(alpha: 0.1),
-                child: const Icon(
+                backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                child: Icon(
                   Icons.person,
-                  color: BrandColors.primary,
+                  color: Theme.of(context).primaryColor,
                   size: 30,
                 ),
               ),
@@ -186,7 +185,7 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
                 margin: const EdgeInsets.only(top: 2),
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
-                  color: BrandColors.primary,
+                  color: Theme.of(context).primaryColor,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
@@ -344,9 +343,7 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
   Widget _buildStoryContent(Story story) => SizedBox(
         width: double.infinity,
         height: double.infinity,
-        child: story.mediaUrl.contains('mp4') ??
-                false || story.mediaUrl.contains('mov') ??
-                false
+        child: (story.mediaUrl.contains('mp4') || story.mediaUrl.contains('mov'))
             ? _buildVideoContent(story)
             : _buildImageContent(story),
       );

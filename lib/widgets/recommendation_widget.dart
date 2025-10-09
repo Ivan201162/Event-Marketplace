@@ -25,6 +25,36 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
   final VoidCallback? onDismiss;
   final VoidCallback? onSave;
 
+  Color _getRecommendationTypeColor(RecommendationType type) {
+    switch (type) {
+      case RecommendationType.similarSpecialists:
+        return Colors.blue;
+      case RecommendationType.popular:
+        return Colors.green;
+      case RecommendationType.trending:
+        return Colors.orange;
+      case RecommendationType.basedOnHistory:
+        return Colors.purple;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  String _getRecommendationTypeIcon(RecommendationType type) {
+    switch (type) {
+      case RecommendationType.similarSpecialists:
+        return '🔍';
+      case RecommendationType.popular:
+        return '⭐';
+      case RecommendationType.trending:
+        return '📈';
+      case RecommendationType.basedOnHistory:
+        return '💡';
+      default:
+        return '📌';
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final specialist = recommendation.specialist!;
@@ -336,7 +366,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
   Color _parseColor(String colorString) {
     try {
       return Color(int.parse(colorString.replaceFirst('#', '0xFF')));
-    } catch (e) {
+    } on Exception {
       return Colors.grey;
     }
   }
@@ -407,7 +437,7 @@ class RecommendationCollectionWidget extends ConsumerWidget {
                     recommendation as SpecialistRecommendation,
                   ),
                   onSave: () => _saveRecommendation(
-                      context, ref, recommendation as SpecialistRecommendation),
+                      context, ref, recommendation as SpecialistRecommendation,),
                 ),
               ),
             ),
@@ -479,7 +509,9 @@ class RecommendationCollectionWidget extends ConsumerWidget {
       );
 
   String _getTitle() {
-    if (type == null) return 'Рекомендации для вас';
+    if (type == null) {
+      return 'Рекомендации для вас';
+    }
 
     switch (type!) {
       case RecommendationType.similarSpecialists:
@@ -605,33 +637,4 @@ class SimilarSpecialistsWidget extends ConsumerWidget {
     );
   }
 
-  Color _getRecommendationTypeColor(RecommendationType type) {
-    switch (type) {
-      case RecommendationType.similarSpecialists:
-        return Colors.blue;
-      case RecommendationType.popular:
-        return Colors.green;
-      case RecommendationType.trending:
-        return Colors.orange;
-      case RecommendationType.basedOnHistory:
-        return Colors.purple;
-      default:
-        return Colors.grey;
-    }
-  }
-
-  String _getRecommendationTypeIcon(RecommendationType type) {
-    switch (type) {
-      case RecommendationType.similarSpecialists:
-        return '🔍';
-      case RecommendationType.popular:
-        return '⭐';
-      case RecommendationType.trending:
-        return '📈';
-      case RecommendationType.basedOnHistory:
-        return '💡';
-      default:
-        return '📌';
-    }
-  }
 }

@@ -31,7 +31,7 @@ class ThemeSwitchWidget extends ConsumerWidget {
     ThemeNotifier themeNotifier,
   ) =>
       IconButton(
-        onPressed: () => themeNotifier.toggleTheme(),
+        onPressed: () => themeNotifier.changeTheme(ThemeMode.dark),
         icon: Icon(_getThemeIcon(themeMode)),
         tooltip: _getThemeTooltip(themeMode),
       );
@@ -94,13 +94,13 @@ class ThemeSwitchWidget extends ConsumerWidget {
                   final selectedTheme = selection.first;
                   switch (selectedTheme) {
                     case ThemeMode.light:
-                      themeNotifier.setLightTheme();
+                      themeNotifier.changeTheme(ThemeMode.light);
                       break;
                     case ThemeMode.dark:
-                      themeNotifier.setDarkTheme();
+                      themeNotifier.changeTheme(ThemeMode.dark);
                       break;
                     case ThemeMode.system:
-                      themeNotifier.setSystemTheme();
+                      themeNotifier.changeTheme(ThemeMode.system);
                       break;
                   }
                 },
@@ -154,7 +154,7 @@ class ThemeToggleButton extends ConsumerWidget {
     final themeNotifier = ref.read(themeProvider.notifier);
 
     return IconButton(
-      onPressed: themeNotifier.toggleTheme,
+      onPressed: () => themeNotifier.changeTheme(ThemeMode.dark),
       icon: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
         child: Icon(

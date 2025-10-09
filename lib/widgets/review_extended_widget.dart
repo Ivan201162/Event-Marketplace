@@ -190,7 +190,9 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
     final videos = widget.review.videos;
     final allMedia = [...photos, ...videos];
 
-    if (allMedia.isEmpty) return const SizedBox.shrink();
+    if (allMedia.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

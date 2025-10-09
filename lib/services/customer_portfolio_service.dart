@@ -21,7 +21,7 @@ class CustomerPortfolioService {
 
       if (!doc.exists) return null;
       return CustomerPortfolio.fromDocument(doc);
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка загрузки портфолио: $e');
     }
   }
@@ -37,7 +37,7 @@ class CustomerPortfolioService {
           .set(portfolio.toMap(), SetOptions(merge: true));
 
       return portfolio;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка сохранения портфолио: $e');
     }
   }
@@ -53,7 +53,7 @@ class CustomerPortfolioService {
           .get();
 
       return snapshot.docs.map(OrderHistory.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка загрузки истории заказов: $e');
     }
   }
@@ -67,7 +67,7 @@ class CustomerPortfolioService {
           .collection(_ordersCollection)
           .doc(order.id)
           .set(order.toMap());
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка добавления заказа в историю: $e');
     }
   }
@@ -92,7 +92,7 @@ class CustomerPortfolioService {
         booking.id,
       );
       await addOrderToHistory(customerId, orderHistory);
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка добавления бронирования в историю: $e');
     }
   }
@@ -109,7 +109,7 @@ class CustomerPortfolioService {
           .collection(_ordersCollection)
           .doc(order.id)
           .update(order.toMap());
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка обновления заказа в истории: $e');
     }
   }
@@ -123,7 +123,7 @@ class CustomerPortfolioService {
           .collection(_ordersCollection)
           .doc(orderId)
           .delete();
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка удаления заказа из истории: $e');
     }
   }
@@ -133,7 +133,7 @@ class CustomerPortfolioService {
     try {
       final portfolio = await getCustomerPortfolio(customerId);
       return portfolio?.favoriteSpecialists ?? [];
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка загрузки избранных специалистов: $e');
     }
   }
@@ -148,7 +148,7 @@ class CustomerPortfolioService {
 
       final updatedPortfolio = portfolio.addFavoriteSpecialist(specialistId);
       await createOrUpdatePortfolio(updatedPortfolio);
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка добавления в избранное: $e');
     }
   }
@@ -166,7 +166,7 @@ class CustomerPortfolioService {
 
       final updatedPortfolio = portfolio.removeFavoriteSpecialist(specialistId);
       await createOrUpdatePortfolio(updatedPortfolio);
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка удаления из избранного: $e');
     }
   }
@@ -179,7 +179,7 @@ class CustomerPortfolioService {
     try {
       final favorites = await getFavoriteSpecialists(customerId);
       return favorites.contains(specialistId);
-    } catch (e) {
+    } on Exception {
       return false;
     }
   }
@@ -189,7 +189,7 @@ class CustomerPortfolioService {
     try {
       final portfolio = await getCustomerPortfolio(customerId);
       return portfolio?.anniversaries ?? [];
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка загрузки годовщин: $e');
     }
   }
@@ -204,7 +204,7 @@ class CustomerPortfolioService {
 
       final updatedPortfolio = portfolio.addAnniversary(anniversary);
       await createOrUpdatePortfolio(updatedPortfolio);
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка добавления годовщины: $e');
     }
   }
@@ -222,7 +222,7 @@ class CustomerPortfolioService {
 
       final updatedPortfolio = portfolio.removeAnniversary(anniversary);
       await createOrUpdatePortfolio(updatedPortfolio);
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка удаления годовщины: $e');
     }
   }
@@ -237,7 +237,7 @@ class CustomerPortfolioService {
 
       final updatedPortfolio = portfolio.copyWith(notes: notes);
       await createOrUpdatePortfolio(updatedPortfolio);
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка обновления заметок: $e');
     }
   }
@@ -247,7 +247,7 @@ class CustomerPortfolioService {
     try {
       final portfolio = await getCustomerPortfolio(customerId);
       return portfolio?.notes;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка загрузки заметок: $e');
     }
   }
@@ -263,7 +263,7 @@ class CustomerPortfolioService {
       final updatedPortfolio =
           portfolio.copyWith(anniversaryRemindersEnabled: enabled);
       await createOrUpdatePortfolio(updatedPortfolio);
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка настройки напоминаний: $e');
     }
   }
@@ -286,7 +286,7 @@ class CustomerPortfolioService {
           .get();
 
       return querySnapshot.docs.map(CustomerPortfolio.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка загрузки годовщин: $e');
     }
   }
@@ -311,7 +311,7 @@ class CustomerPortfolioService {
           .get();
 
       return querySnapshot.docs.map(CustomerPortfolio.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка загрузки предстоящих годовщин: $e');
     }
   }
@@ -340,7 +340,7 @@ class CustomerPortfolioService {
         'lastOrderDate':
             orderHistory.isNotEmpty ? orderHistory.first.date : null,
       };
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка получения статистики: $e');
     }
   }
@@ -366,7 +366,7 @@ class CustomerPortfolioService {
           await addBookingToHistory(customerId, booking);
         }
       }
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка синхронизации истории заказов: $e');
     }
   }
@@ -406,7 +406,7 @@ class CustomerPortfolioService {
       }
 
       return recommendations;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка получения рекомендаций: $e');
     }
   }

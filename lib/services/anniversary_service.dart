@@ -160,7 +160,7 @@ class AnniversaryService {
       await _createAnniversaryReminders(anniversary.copyWith(id: docRef.id));
 
       return docRef.id;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка добавления годовщины: $e');
     }
   }
@@ -175,7 +175,7 @@ class AnniversaryService {
           .get();
 
       return querySnapshot.docs.map(Anniversary.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка получения годовщин: $e');
     }
   }
@@ -194,7 +194,7 @@ class AnniversaryService {
           .toList();
 
       return anniversaries;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка получения годовщин на дату: $e');
     }
   }
@@ -238,7 +238,7 @@ class AnniversaryService {
       });
 
       return upcoming;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка получения предстоящих годовщин: $e');
     }
   }
@@ -255,7 +255,7 @@ class AnniversaryService {
 
       // Обновляем напоминания
       await _updateAnniversaryReminders(updatedAnniversary);
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка обновления годовщины: $e');
     }
   }
@@ -274,7 +274,7 @@ class AnniversaryService {
       }
 
       await _firestore.collection('anniversaries').doc(anniversaryId).delete();
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка удаления годовщины: $e');
     }
   }
@@ -304,7 +304,7 @@ class AnniversaryService {
           );
         }
       }
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка обработки годовщин на сегодня: $e');
     }
   }
@@ -332,7 +332,7 @@ class AnniversaryService {
           );
         }
       }
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка создания напоминаний для годовщины: $e');
     }
   }
@@ -345,7 +345,7 @@ class AnniversaryService {
 
       // Создаем новые напоминания
       await _createAnniversaryReminders(anniversary);
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка обновления напоминаний для годовщины: $e');
     }
   }
@@ -367,7 +367,7 @@ class AnniversaryService {
       for (final doc in querySnapshot.docs) {
         await _reminderService.deleteReminder(doc.id);
       }
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка удаления напоминаний для годовщины: $e');
     }
   }
@@ -409,7 +409,7 @@ class AnniversaryService {
         'upcoming': upcoming,
         ...typeCounts.map((type, count) => MapEntry(type.name, count)),
       };
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка получения статистики годовщин: $e');
     }
   }

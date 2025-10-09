@@ -432,7 +432,7 @@ class _SpecialistRequestsScreenState extends State<SpecialistRequestsScreen>
           ),
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

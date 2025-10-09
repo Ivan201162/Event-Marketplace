@@ -583,7 +583,7 @@ class _NotificationManagementScreenState
     try {
       // TODO(developer): Получить ID текущего пользователя
       final notifications =
-          await _notificationService.getUserNotifications('current_user_id');
+          _notificationService.getUserNotifications('current_user_id');
       setState(() {
         _notifications = notifications;
       });

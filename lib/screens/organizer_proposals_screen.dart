@@ -293,7 +293,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
         if (specialist != null) {
           specialists.add(specialist);
         }
-      } catch (e) {
+      } on Exception catch (e) {
         print('Ошибка загрузки специалиста $id: $e');
       }
     }

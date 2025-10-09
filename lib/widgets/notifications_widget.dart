@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/notification.dart';
 import '../providers/auth_providers.dart';
 import '../providers/notification_providers.dart';
 
@@ -22,11 +21,15 @@ class NotificationsWidget extends ConsumerWidget {
           Consumer(
             builder: (context, ref, child) {
               final currentUser = ref.watch(currentUserProvider).value;
-              if (currentUser == null) return const SizedBox.shrink();
+              if (currentUser == null) {
+                return const SizedBox.shrink();
+              }
 
               return unreadCount.when(
                 data: (count) {
-                  if (count == 0) return const SizedBox.shrink();
+                  if (count == 0) {
+                    return const SizedBox.shrink();
+                  }
 
                   return TextButton(
                     onPressed: () async {
@@ -150,36 +153,38 @@ class NotificationsWidget extends ConsumerWidget {
   void _handleNotificationTap(
     BuildContext context,
     WidgetRef ref,
-    AppNotification notification,
+    Map<String, dynamic> notification,
   ) {
     // Отмечаем как прочитанное, если еще не прочитано
-    if (!notification.isRead) {
-      ref.read(markNotificationAsReadProvider(notification.id).future);
+    if (notification['isRead'] != true) {
+      ref.read(markNotificationAsReadProvider(notification['id'].toString()).future);
     }
 
     // Обрабатываем нажатие в зависимости от типа уведомления
-    switch (notification.type) {
-      case NotificationType.newBooking:
+    switch (notification['type']) {
+      case 'new_booking':
         // Переходим к заявке
-        _navigateToBooking(context, notification.data['bookingId']);
+        _navigateToBooking(context, notification['data']?['bookingId']?.toString() ?? '');
         break;
-      case NotificationType.bookingAccepted:
-      case NotificationType.bookingRejected:
-      case NotificationType.bookingCancelled:
+      case 'booking_confirmed':
+      case 'booking_rejected':
         // Переходим к заявке
-        _navigateToBooking(context, notification.data['bookingId']?.toString());
+        _navigateToBooking(context, notification['data']?['bookingId']?.toString() ?? '');
         break;
-      case NotificationType.newReview:
-        // Переходим к отзыву
-        _navigateToReview(context, notification.data['reviewId']?.toString());
+      case 'chat_message':
+        // Переходим к чату
+        _navigateToChat(context, notification['data']?['chatId']?.toString() ?? '');
         break;
-      case NotificationType.paymentReceived:
-        // Переходим к платежу
-        _navigateToPayment(context, notification.data['paymentId']?.toString());
-        break;
-      case NotificationType.reminder:
-      case NotificationType.system:
+      case 'system':
         // Показываем детали уведомления
+        _showNotificationDetails(context, notification);
+        break;
+      case 'discount':
+        // Показываем детали уведомления
+        _showNotificationDetails(context, notification);
+        break;
+      default:
+        // Обрабатываем неизвестные типы уведомлений
         _showNotificationDetails(context, notification);
         break;
     }
@@ -188,7 +193,7 @@ class NotificationsWidget extends ConsumerWidget {
   void _handleNotificationDelete(
     BuildContext context,
     WidgetRef ref,
-    AppNotification notification,
+    Map<String, dynamic> notification,
   ) {
     showDialog<void>(
       context: context,
@@ -205,7 +210,7 @@ class NotificationsWidget extends ConsumerWidget {
               Navigator.pop(context);
               try {
                 await ref
-                    .read(deleteNotificationProvider(notification.id).future);
+                    .read(deleteNotificationProvider(notification['id'].toString()).future);
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -250,6 +255,15 @@ class NotificationsWidget extends ConsumerWidget {
     }
   }
 
+  void _navigateToChat(BuildContext context, String? chatId) {
+    if (chatId != null) {
+      // TODO(developer): Реализовать навигацию к чату
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Переход к чату: $chatId')),
+      );
+    }
+  }
+
   void _navigateToPayment(BuildContext context, String? paymentId) {
     if (paymentId != null) {
       // TODO(developer): Реализовать навигацию к платежу
@@ -261,21 +275,21 @@ class NotificationsWidget extends ConsumerWidget {
 
   void _showNotificationDetails(
     BuildContext context,
-    AppNotification notification,
+    Map<String, dynamic> notification,
   ) {
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(notification.title),
+        title: Text(notification['title'].toString()),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(notification.message),
-            if (notification.createdAt != null) ...[
+            Text(notification['message'].toString()),
+            if (notification['createdAt'] != null) ...[
               const SizedBox(height: 16),
               Text(
-                'Дата: ${_formatDate(notification.createdAt!)}',
+                'Дата: ${_formatDate(DateTime.parse(notification['createdAt'].toString()))}',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Colors.grey[600],
                     ),
@@ -318,7 +332,7 @@ class NotificationItem extends StatelessWidget {
     required this.onDelete,
   });
 
-  final AppNotification notification;
+  final dynamic notification;
   final VoidCallback onTap;
   final VoidCallback onDelete;
 
@@ -328,19 +342,19 @@ class NotificationItem extends StatelessWidget {
         child: ListTile(
           leading: _buildNotificationIcon(context),
           title: Text(
-            notification.title,
+            notification.title.toString(),
             style: TextStyle(
               fontWeight:
-                  notification.isRead ? FontWeight.normal : FontWeight.bold,
+                  notification.isRead == true ? FontWeight.normal : FontWeight.bold,
             ),
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(notification.message),
+              Text(notification['message'].toString()),
               const SizedBox(height: 4),
               Text(
-                _formatDate(notification.createdAt ?? DateTime.now()),
+                _formatDate(notification['createdAt'] as DateTime? ?? DateTime.now()),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Colors.grey[600],
                     ),
@@ -368,55 +382,36 @@ class NotificationItem extends StatelessWidget {
           ),
           onTap: onTap,
           tileColor:
-              notification.isRead ? null : Colors.blue.withValues(alpha: 0.05),
+              notification.isRead == true ? null : Colors.blue.withValues(alpha: 0.05),
         ),
       );
 
   Widget _buildNotificationIcon(BuildContext context) {
-    IconData iconData;
-    Color iconColor;
+    var iconData = Icons.notifications;
+    Color iconColor = Colors.blue;
 
-    switch (notification.type) {
-      case NotificationType.newBooking:
-        iconData = Icons.event;
-        iconColor = Colors.blue;
-        break;
-      case NotificationType.bookingAccepted:
-        iconData = Icons.check_circle;
-        iconColor = Colors.green;
-        break;
-      case NotificationType.bookingRejected:
-        iconData = Icons.cancel;
-        iconColor = Colors.red;
-        break;
-      case NotificationType.bookingCancelled:
-        iconData = Icons.event_busy;
-        iconColor = Colors.orange;
-        break;
-      case NotificationType.newReview:
-        iconData = Icons.star;
-        iconColor = Colors.amber;
-        break;
-      case NotificationType.paymentReceived:
-        iconData = Icons.payment;
-        iconColor = Colors.green;
-        break;
-      case NotificationType.reminder:
-        iconData = Icons.schedule;
-        iconColor = Colors.purple;
-        break;
-      case NotificationType.system:
-        iconData = Icons.info;
-        iconColor = Colors.grey;
-        break;
-      case NotificationType.discount:
-        iconData = Icons.local_offer;
-        iconColor = Colors.green;
-        break;
-      case NotificationType.recommendation:
-        iconData = Icons.lightbulb;
-        iconColor = Colors.blue;
-        break;
+    // Простая логика для иконок уведомлений
+    if (notification.type.toString().contains('like')) {
+      iconData = Icons.favorite;
+      iconColor = Colors.red;
+    } else if (notification.type.toString().contains('comment')) {
+      iconData = Icons.comment;
+      iconColor = Colors.blue;
+    } else if (notification.type.toString().contains('follow')) {
+      iconData = Icons.person_add;
+      iconColor = Colors.green;
+    } else if (notification.type.toString().contains('request')) {
+      iconData = Icons.event;
+      iconColor = Colors.orange;
+    } else if (notification.type.toString().contains('message')) {
+      iconData = Icons.message;
+      iconColor = Colors.purple;
+    } else if (notification.type.toString().contains('booking')) {
+      iconData = Icons.calendar_today;
+      iconColor = Colors.teal;
+    } else if (notification.type.toString().contains('system')) {
+      iconData = Icons.info;
+      iconColor = Colors.grey;
     }
 
     return Container(

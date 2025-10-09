@@ -102,7 +102,7 @@ class PdfService {
       );
 
       return pdf.save();
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка генерации PDF договора: $e');
     }
   }
@@ -248,7 +248,7 @@ class PdfService {
       );
 
       return pdf.save();
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка генерации PDF акта: $e');
     }
   }
@@ -440,7 +440,7 @@ class PdfService {
       );
 
       return pdf.save();
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка генерации PDF счета: $e');
     }
   }

@@ -1,396 +1,359 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/booking.dart';
-import '../models/recommendation.dart';
 import '../models/specialist.dart';
+import '../models/user_activity.dart';
+import '../services/specialist_service.dart';
 
-/// Сервис для работы с рекомендациями специалистов
+/// Сервис для работы с рекомендациями
 class RecommendationService {
-  factory RecommendationService() => _instance;
-  RecommendationService._internal();
-  static final RecommendationService _instance =
-      RecommendationService._internal();
-
+  static const String _activityCollection = 'userActivity';
+  static const String _recommendationsCollection = 'recommendations';
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final SpecialistService _specialistService = SpecialistService();
 
-  /// Получить рекомендации для пользователя
-  Future<List<Recommendation>> getRecommendationsForUser(String userId) async {
+  /// Записать активность пользователя
+  Future<void> recordActivity({
+    required String userId,
+    required String category,
+    required ActivityType activityType,
+    String? specialistId,
+    String? city,
+    double? price,
+    Map<String, dynamic>? metadata,
+  }) async {
     try {
-      // Проверяем, есть ли у пользователя история заказов
-      final hasOrderHistory = await _hasOrderHistory(userId);
-
-      if (hasOrderHistory) {
-        // Если есть история - используем персонализированные рекомендации
-        return await _getPersonalizedRecommendations(userId);
-      } else {
-        // Если нет истории - показываем популярных специалистов
-        return await _getPopularRecommendations(userId);
-      }
+      await _firestore.collection(_activityCollection).add({
+        'userId': userId,
+        'category': category,
+        'specialistId': specialistId,
+        'city': city,
+        'price': price,
+        'activityType': activityType.value,
+        'timestamp': Timestamp.now(),
+        'metadata': metadata,
+      });
     } catch (e) {
-      print('Ошибка получения рекомендаций: $e');
-      return _getPopularRecommendations(userId);
+      print('Ошибка записи активности: $e');
     }
   }
 
-  /// Получить популярных специалистов
-  Future<List<Recommendation>> getPopularSpecialists({String? userId}) async {
+  /// Получить активность пользователя
+  Future<List<UserActivity>> getUserActivity(String userId, {int limit = 100}) async {
     try {
-      // Получаем специалистов, отсортированных по количеству заказов и рейтингу
-      final specialistsSnapshot = await _firestore
-          .collection('specialists')
-          .where('isAvailable', isEqualTo: true)
-          .orderBy('totalBookings', descending: true)
-          .orderBy('rating', descending: true)
-          .limit(20)
+      final querySnapshot = await _firestore
+          .collection(_activityCollection)
+          .where('userId', isEqualTo: userId)
+          .orderBy('timestamp', descending: true)
+          .limit(limit)
           .get();
 
-      final recommendations = <Recommendation>[];
+      return querySnapshot.docs
+          .map(UserActivity.fromFirestore)
+          .toList();
+    } catch (e) {
+      print('Ошибка получения активности пользователя: $e');
+      return [];
+    }
+  }
 
-      for (var i = 0; i < specialistsSnapshot.docs.length; i++) {
-        final doc = specialistsSnapshot.docs[i];
-        final specialist = Specialist.fromDocument(doc);
-
-        // Рассчитываем оценку популярности
-        final popularityScore = _calculatePopularityScore(specialist, i);
-
-        final recommendation = Recommendation(
-          id: '${userId ?? 'anonymous'}_${specialist.id}_popular',
-          userId: userId ?? 'anonymous',
-          specialistId: specialist.id,
-          specialist: specialist,
-          type: RecommendationType.popular,
-          score: popularityScore,
-          reason: 'Популярный специалист с высоким рейтингом',
-          createdAt: DateTime.now(),
-          category: specialist.category.name,
-          location: specialist.location,
-          priceRange: specialist.priceRangeString,
-          rating: specialist.rating,
-          bookingCount: specialist.totalBookings ?? 0,
-        );
-
-        recommendations.add(recommendation);
+  /// Получить рекомендации для пользователя
+  Future<List<Recommendation>> getRecommendations(String userId) async {
+    try {
+      // Получаем активность пользователя
+      final activities = await getUserActivity(userId);
+      
+      if (activities.isEmpty) {
+        // Если нет активности, возвращаем популярных специалистов
+        return await _getPopularSpecialists(userId);
       }
 
+      // Анализируем активность и генерируем рекомендации
+      final recommendations = await _generateRecommendations(userId, activities);
+      
+      // Сохраняем рекомендации
+      await _saveRecommendations(userId, recommendations);
+      
       return recommendations;
+    } catch (e) {
+      print('Ошибка получения рекомендаций: $e');
+      return _getPopularSpecialists(userId);
+    }
+  }
+
+  /// Генерация рекомендаций на основе активности
+  Future<List<Recommendation>> _generateRecommendations(
+    String userId,
+    List<UserActivity> activities,
+  ) async {
+    // Анализируем категории
+    final categoryStats = _analyzeCategories(activities);
+    final cityStats = _analyzeCities(activities);
+    final priceStats = _analyzePrices(activities);
+
+    // Получаем всех специалистов
+    final allSpecialists = await _specialistService.getAllSpecialists();
+
+    // Фильтруем и ранжируем специалистов
+    final recommendations = <Recommendation>[];
+    final now = DateTime.now();
+
+    for (final specialist in allSpecialists) {
+      var score = 0;
+      var reason = '';
+
+      // Оценка по категории
+      final categoryScore = categoryStats[specialist.category.name] ?? 0.0;
+      if (categoryScore > 0) {
+        score += (categoryScore * 0.4).round();
+        reason += 'Интересуетесь ${specialist.category.displayName}. ';
+      }
+
+      // Оценка по городу
+      if (cityStats.containsKey(specialist.city)) {
+        score += (cityStats[specialist.city]! * 0.3).round();
+        reason += 'В вашем городе. ';
+      }
+
+      // Оценка по цене
+      if (priceStats['min'] != null && priceStats['max'] != null) {
+        final avgPrice = (priceStats['min']! + priceStats['max']!) / 2;
+        final priceDiff = (specialist.price - avgPrice).abs() / avgPrice;
+        if (priceDiff < 0.3) { // В пределах 30% от среднего бюджета
+          score += 1;
+          reason += 'Подходящий ценовой диапазон. ';
+        }
+      }
+
+      // Оценка по рейтингу
+      if (specialist.rating >= 4.5) {
+        score += 1;
+        reason += 'Высокий рейтинг. ';
+      }
+
+      if (score > 0.1) { // Минимальный порог для рекомендации
+        final confidence = (score * 100).clamp(0.0, 100.0);
+        
+        recommendations.add(Recommendation(
+          id: '${userId}_${specialist.id}',
+          userId: userId,
+          specialistId: specialist.id,
+          specialistName: specialist.name,
+          category: specialist.category.name,
+          city: specialist.city ?? '',
+          price: specialist.price,
+          rating: specialist.rating,
+          photoUrl: specialist.photoUrl,
+          reason: reason.trim(),
+          confidence: confidence.toDouble(),
+          createdAt: now,
+        ),);
+      }
+    }
+
+    // Сортируем по уверенности и возвращаем топ-5
+    recommendations.sort((a, b) => b.confidence.compareTo(a.confidence));
+    return recommendations.take(5).toList();
+  }
+
+  /// Анализ категорий в активности
+  Map<String, double> _analyzeCategories(List<UserActivity> activities) {
+    final categoryCount = <String, int>{};
+    final categoryWeights = <String, double>{
+      'booking': 3.0,
+      'favorite': 2.5,
+      'view': 1.0,
+      'search': 0.5,
+      'review': 2.0,
+      'share': 1.5,
+    };
+
+    for (final activity in activities) {
+      final weight = categoryWeights[activity.activityType] ?? 1.0;
+      categoryCount[activity.category] = 
+          (categoryCount[activity.category] ?? 0) + weight.toInt();
+    }
+
+    // Нормализуем значения
+    final total = categoryCount.values.fold(0, (sum, count) => sum + count);
+    if (total == 0) return {};
+
+    return categoryCount.map(
+      (category, count) => MapEntry(category, count / total),
+    );
+  }
+
+  /// Анализ городов в активности
+  Map<String, double> _analyzeCities(List<UserActivity> activities) {
+    final cityCount = <String, int>{};
+    
+    for (final activity in activities) {
+      if (activity.city != null) {
+        cityCount[activity.city!] = (cityCount[activity.city!] ?? 0) + 1;
+      }
+    }
+
+    // Нормализуем значения
+    final total = cityCount.values.fold(0, (sum, count) => sum + count);
+    if (total == 0) return {};
+
+    return cityCount.map(
+      (city, count) => MapEntry(city, count / total),
+    );
+  }
+
+  /// Анализ цен в активности
+  Map<String, double> _analyzePrices(List<UserActivity> activities) {
+    final prices = activities
+        .where((activity) => activity.price != null)
+        .map((activity) => activity.price!)
+        .toList();
+
+    if (prices.isEmpty) return {};
+
+    prices.sort();
+    return {
+      'min': prices.first,
+      'max': prices.last,
+      'avg': prices.reduce((a, b) => a + b) / prices.length,
+    };
+  }
+
+  /// Получить популярных специалистов
+  Future<List<Recommendation>> _getPopularSpecialists(String userId) async {
+    try {
+      final specialists = await _specialistService.getAllSpecialists();
+      final now = DateTime.now();
+
+      // Сортируем по рейтингу и количеству отзывов
+      specialists.sort((a, b) {
+        final scoreA = a.rating * a.reviewCount;
+        final scoreB = b.rating * b.reviewCount;
+        return scoreB.compareTo(scoreA);
+      });
+
+      return specialists.take(5).map((specialist) => Recommendation(
+          id: '${userId}_${specialist.id}',
+          userId: userId,
+          specialistId: specialist.id,
+          specialistName: specialist.name,
+          category: specialist.category.name,
+          city: specialist.city ?? '',
+          price: specialist.price,
+          rating: specialist.rating,
+          photoUrl: specialist.photoUrl,
+          reason: 'Популярный специалист с высоким рейтингом',
+          confidence: 70,
+          createdAt: now,
+        ),).toList();
     } catch (e) {
       print('Ошибка получения популярных специалистов: $e');
       return [];
     }
   }
 
-  /// Получить рекомендации на основе истории заказов
-  Future<List<Recommendation>> getRecommendationsBasedOnHistory(
-    String userId,
-  ) async {
+  /// Сохранить рекомендации
+  Future<void> _saveRecommendations(String userId, List<Recommendation> recommendations) async {
     try {
-      // Получаем историю заказов пользователя
-      final bookingsSnapshot = await _firestore
-          .collection('bookings')
-          .where('customerId', isEqualTo: userId)
-          .where('status', isEqualTo: 'completed')
-          .orderBy('eventDate', descending: true)
-          .limit(10)
-          .get();
-
-      if (bookingsSnapshot.docs.isEmpty) {
-        return await getPopularSpecialists(userId: userId);
-      }
-
-      // Анализируем категории заказов
-      final categoryPreferences = <String, int>{};
-      final specialistIds = <String>{};
-
-      for (final doc in bookingsSnapshot.docs) {
-        final booking = Booking.fromDocument(doc);
-        specialistIds.add(booking.specialistId);
-      }
-
-      // Получаем информацию о специалистах из истории
-      final specialists = <Specialist>[];
-      for (final specialistId in specialistIds) {
-        final specialistDoc =
-            await _firestore.collection('specialists').doc(specialistId).get();
-        if (specialistDoc.exists) {
-          specialists.add(Specialist.fromDocument(specialistDoc));
-        }
-      }
-
-      // Анализируем предпочтения по категориям
-      for (final specialist in specialists) {
-        final category = specialist.category.name;
-        categoryPreferences[category] =
-            (categoryPreferences[category] ?? 0) + 1;
-      }
-
-      // Получаем рекомендации на основе предпочтений
-      // return await _getRecommendationsByCategories(userId, categoryPreferences);
-      // Временная заглушка - возвращаем пустой список
-      return [];
-    } catch (e) {
-      print('Ошибка получения рекомендаций на основе истории: $e');
-      return getPopularSpecialists(userId: userId);
-    }
-  }
-
-  /// Получить рекомендации по категориям
-  Future<List<Recommendation>> getRecommendationsByCategories(
-    String userId,
-    Map<String, int> categoryPreferences,
-  ) async {
-    try {
-      final recommendations = <Recommendation>[];
-
-      // Сортируем категории по популярности
-      final sortedCategories = categoryPreferences.entries.toList()
-        ..sort((a, b) => b.value.compareTo(a.value));
-
-      for (final categoryEntry in sortedCategories.take(3)) {
-        final category = categoryEntry.key;
-
-        // Получаем специалистов в этой категории
-        final specialistsSnapshot = await _firestore
-            .collection('specialists')
-            .where('category', isEqualTo: category)
-            .where('isAvailable', isEqualTo: true)
-            .orderBy('rating', descending: true)
-            .limit(5)
-            .get();
-
-        for (var i = 0; i < specialistsSnapshot.docs.length; i++) {
-          final doc = specialistsSnapshot.docs[i];
-          final specialist = Specialist.fromDocument(doc);
-
-          // Рассчитываем оценку релевантности
-          final relevanceScore = _calculateRelevanceScore(
-            specialist,
-            categoryPreferences,
-            i,
-          );
-
-          final recommendation = Recommendation(
-            id: '${userId}_${specialist.id}_category_$category',
-            userId: userId,
-            specialistId: specialist.id,
-            specialist: specialist,
-            type: RecommendationType.categoryBased,
-            score: relevanceScore,
-            reason:
-                'В категории "${specialist.category.displayName}", которую вы часто заказываете',
-            createdAt: DateTime.now(),
-            category: category,
-            location: specialist.location,
-            priceRange: specialist.priceRangeString,
-            rating: specialist.rating,
-            bookingCount: specialist.totalBookings ?? 0,
-          );
-
-          recommendations.add(recommendation);
-        }
-      }
-
-      // Сортируем по релевантности
-      recommendations.sort((a, b) => b.score.compareTo(a.score));
-
-      return recommendations.take(15).toList();
-    } catch (e) {
-      print('Ошибка получения рекомендаций по категориям: $e');
-      return [];
-    }
-  }
-
-  /// Сохранить рекомендацию
-  Future<void> saveRecommendation(Recommendation recommendation) async {
-    try {
-      await _firestore
-          .collection('recommendations')
-          .doc(recommendation.id)
-          .set(recommendation.toMap());
-    } catch (e) {
-      print('Ошибка сохранения рекомендации: $e');
-    }
-  }
-
-  /// Отметить рекомендацию как просмотренную
-  Future<void> markAsViewed(String recommendationId) async {
-    try {
-      await _firestore
-          .collection('recommendations')
-          .doc(recommendationId)
-          .update({
-        'isViewed': true,
-        'viewedAt': FieldValue.serverTimestamp(),
-      });
-    } catch (e) {
-      print('Ошибка обновления статуса просмотра: $e');
-    }
-  }
-
-  /// Отметить рекомендацию как кликнутую
-  Future<void> markAsClicked(String recommendationId) async {
-    try {
-      await _firestore
-          .collection('recommendations')
-          .doc(recommendationId)
-          .update({
-        'isClicked': true,
-        'clickedAt': FieldValue.serverTimestamp(),
-      });
-    } catch (e) {
-      print('Ошибка обновления статуса клика: $e');
-    }
-  }
-
-  /// Отметить рекомендацию как забронированную
-  Future<void> markAsBooked(String recommendationId) async {
-    try {
-      await _firestore
-          .collection('recommendations')
-          .doc(recommendationId)
-          .update({
-        'isBooked': true,
-        'bookedAt': FieldValue.serverTimestamp(),
-      });
-    } catch (e) {
-      print('Ошибка обновления статуса бронирования: $e');
-    }
-  }
-
-  /// Получить статистику рекомендаций
-  Future<RecommendationStats> getRecommendationStats(String userId) async {
-    try {
-      final recommendationsSnapshot = await _firestore
-          .collection('recommendations')
+      // Удаляем старые рекомендации
+      final oldRecommendations = await _firestore
+          .collection(_recommendationsCollection)
           .where('userId', isEqualTo: userId)
           .get();
 
-      final recommendations = recommendationsSnapshot.docs
-          .map(Recommendation.fromDocument)
-          .toList();
+      final batch = _firestore.batch();
+      for (final doc in oldRecommendations.docs) {
+        batch.delete(doc.reference);
+      }
 
-      return RecommendationStats.fromRecommendations(recommendations);
+      // Добавляем новые рекомендации
+      for (final recommendation in recommendations) {
+        final docRef = _firestore.collection(_recommendationsCollection).doc(recommendation.id);
+        batch.set(docRef, recommendation.toFirestore());
+      }
+
+      await batch.commit();
     } catch (e) {
-      print('Ошибка получения статистики рекомендаций: $e');
-      return RecommendationStats.empty();
+      print('Ошибка сохранения рекомендаций: $e');
     }
   }
 
-  // ========== ПРИВАТНЫЕ МЕТОДЫ ==========
-
-  /// Проверить, есть ли у пользователя история заказов
-  Future<bool> _hasOrderHistory(String userId) async {
+  /// Получить сохраненные рекомендации
+  Future<List<Recommendation>> getSavedRecommendations(String userId) async {
     try {
-      final bookingsSnapshot = await _firestore
-          .collection('bookings')
-          .where('customerId', isEqualTo: userId)
-          .limit(1)
+      final querySnapshot = await _firestore
+          .collection(_recommendationsCollection)
+          .where('userId', isEqualTo: userId)
+          .orderBy('confidence', descending: true)
           .get();
 
-      return bookingsSnapshot.docs.isNotEmpty;
+      return querySnapshot.docs
+          .map(Recommendation.fromFirestore)
+          .toList();
     } catch (e) {
-      print('Ошибка проверки истории заказов: $e');
-      return false;
-    }
-  }
-
-  /// Получить персонализированные рекомендации
-  Future<List<Recommendation>> _getPersonalizedRecommendations(
-    String userId,
-  ) async {
-    try {
-      final recommendations = <Recommendation>[];
-
-      // Рекомендации на основе истории (40%)
-      final historyRecommendations =
-          await getRecommendationsBasedOnHistory(userId);
-      recommendations.addAll(historyRecommendations.take(6));
-
-      // Популярные специалисты (60%)
-      final popularRecommendations =
-          await getPopularSpecialists(userId: userId);
-      recommendations.addAll(popularRecommendations.take(6));
-
-      // Сортируем по релевантности
-      recommendations.sort((a, b) => b.score.compareTo(a.score));
-
-      return recommendations.take(12).toList();
-    } catch (e) {
-      print('Ошибка получения персонализированных рекомендаций: $e');
-      return getPopularSpecialists(userId: userId);
-    }
-  }
-
-  /// Получить популярные рекомендации
-  Future<List<Recommendation>> _getPopularRecommendations(String userId) async {
-    try {
-      final recommendations = <Recommendation>[];
-
-      // Популярные специалисты (100%)
-      final popularRecommendations =
-          await getPopularSpecialists(userId: userId);
-      recommendations.addAll(popularRecommendations.take(12));
-
-      // Сортируем по релевантности
-      recommendations.sort((a, b) => b.score.compareTo(a.score));
-
-      return recommendations;
-    } catch (e) {
-      print('Ошибка получения популярных рекомендаций: $e');
+      print('Ошибка получения сохраненных рекомендаций: $e');
       return [];
     }
   }
 
-  /// Рассчитать оценку популярности
-  double _calculatePopularityScore(Specialist specialist, int index) {
-    const ratingWeight = 0.4;
-    const bookingWeight = 0.4;
-    const positionWeight = 0.2;
+  /// Очистить старые рекомендации
+  Future<void> clearOldRecommendations() async {
+    try {
+      final weekAgo = DateTime.now().subtract(const Duration(days: 7));
+      final querySnapshot = await _firestore
+          .collection(_recommendationsCollection)
+          .where('createdAt', isLessThan: Timestamp.fromDate(weekAgo))
+          .get();
 
-    final ratingScore = (specialist.rating / 5.0) * ratingWeight;
-    final bookingScore =
-        _normalizeBookingCount(specialist.totalBookings ?? 0) * bookingWeight;
-    final positionScore = (1.0 - (index / 20.0)) * positionWeight;
+      final batch = _firestore.batch();
+      for (final doc in querySnapshot.docs) {
+        batch.delete(doc.reference);
+      }
 
-    return ratingScore + bookingScore + positionScore;
+      if (querySnapshot.docs.isNotEmpty) {
+        await batch.commit();
+        print('Удалено ${querySnapshot.docs.length} старых рекомендаций');
+      }
+    } catch (e) {
+      print('Ошибка очистки старых рекомендаций: $e');
+    }
   }
 
-  /// Рассчитать оценку релевантности
-  double _calculateRelevanceScore(
-    Specialist specialist,
-    Map<String, int> categoryPreferences,
-    int index,
-  ) {
-    const categoryWeight = 0.5;
-    const ratingWeight = 0.3;
-    const positionWeight = 0.2;
+  /// Получить статистику активности пользователя
+  Future<Map<String, dynamic>> getUserActivityStats(String userId) async {
+    try {
+      final activities = await getUserActivity(userId);
+      
+      if (activities.isEmpty) {
+        return {
+          'totalActivities': 0,
+          'categories': {},
+          'cities': {},
+          'activityTypes': {},
+        };
+      }
 
-    final categoryScore = _getCategoryPreferenceScore(
-          specialist.category.name,
-          categoryPreferences,
-        ) *
-        categoryWeight;
-    final ratingScore = (specialist.rating / 5.0) * ratingWeight;
-    final positionScore = (1.0 - (index / 5.0)) * positionWeight;
+      final categoryStats = <String, int>{};
+      final cityStats = <String, int>{};
+      final activityTypeStats = <String, int>{};
 
-    return categoryScore + ratingScore + positionScore;
-  }
+      for (final activity in activities) {
+        categoryStats[activity.category] = (categoryStats[activity.category] ?? 0) + 1;
+        if (activity.city != null) {
+          cityStats[activity.city!] = (cityStats[activity.city!] ?? 0) + 1;
+        }
+        activityTypeStats[activity.activityType] = (activityTypeStats[activity.activityType] ?? 0) + 1;
+      }
 
-  /// Получить оценку предпочтения категории
-  double _getCategoryPreferenceScore(
-    String category,
-    Map<String, int> preferences,
-  ) {
-    final totalPreferences =
-        preferences.values.fold(0, (sum, count) => sum + count);
-    if (totalPreferences == 0) return 0;
-
-    final categoryCount = preferences[category] ?? 0;
-    return categoryCount / totalPreferences;
-  }
-
-  /// Нормализовать количество заказов
-  double _normalizeBookingCount(int bookingCount) {
-    // Логистическая функция для нормализации
-    return 1.0 / (1.0 + (100.0 / (bookingCount + 1)));
+      return {
+        'totalActivities': activities.length,
+        'categories': categoryStats,
+        'cities': cityStats,
+        'activityTypes': activityTypeStats,
+        'lastActivity': activities.isNotEmpty ? activities.first.timestamp : null,
+      };
+    } catch (e) {
+      print('Ошибка получения статистики активности: $e');
+      return {};
+    }
   }
 }

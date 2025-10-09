@@ -665,7 +665,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
           SnackBar(content: Text('Ошибка: ${result['error']}')),
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Ошибка обработки платежа: $e')),
       );
@@ -679,7 +679,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
         const SnackBar(content: Text('Платеж отменен')),
       );
       setState(() {});
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Ошибка отмены платежа: $e')),
       );

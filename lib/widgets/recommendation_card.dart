@@ -426,8 +426,12 @@ class RecommendationCard extends StatelessWidget {
   }
 
   Color _getScoreColor(BuildContext context) {
-    if (recommendation.score >= 0.8) return Colors.green;
-    if (recommendation.score >= 0.6) return Colors.orange;
+    if (recommendation.score >= 0.8) {
+      return Colors.green;
+    }
+    if (recommendation.score >= 0.6) {
+      return Colors.orange;
+    }
     return Colors.red;
   }
 }

@@ -72,7 +72,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           _advanceAmount = _totalPrice * 0.3; // 30% аванс
         }
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _isLoading = false;
       });
@@ -188,7 +188,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
         );
         context.pop();
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

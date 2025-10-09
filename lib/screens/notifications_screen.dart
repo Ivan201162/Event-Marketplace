@@ -1,306 +1,376 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
-/// Провайдер для получения уведомлений
-final notificationsProvider = StreamProvider<List<Map<String, dynamic>>>((ref) {
-  final user = FirebaseAuth.instance.currentUser;
-  if (user == null) return Stream.value([]);
-
-  return FirebaseFirestore.instance
-      .collection('notifications')
-      .where('userId', isEqualTo: user.uid)
-      .orderBy('timestamp', descending: true)
-      .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map((doc) {
-          final data = doc.data();
-          return {
-            'id': doc.id,
-            ...data,
-          };
-        }).toList(),
-      );
-});
-
-/// Провайдер для подсчета непрочитанных уведомлений
-final unreadNotificationsCountProvider = StreamProvider<int>((ref) {
-  final user = FirebaseAuth.instance.currentUser;
-  if (user == null) return Stream.value(0);
-
-  return FirebaseFirestore.instance
-      .collection('notifications')
-      .where('userId', isEqualTo: user.uid)
-      .where('isRead', isEqualTo: false)
-      .snapshots()
-      .map((snapshot) => snapshot.docs.length);
-});
+import '../models/app_notification.dart' as app_notification;
+import '../providers/notification_provider.dart';
+import '../services/notification_service.dart';
 
 /// Экран уведомлений
-class NotificationsScreen extends ConsumerWidget {
+class NotificationsScreen extends ConsumerStatefulWidget {
   const NotificationsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final notificationsAsync = ref.watch(notificationsProvider);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Уведомления'),
-        actions: [
-          Consumer(
-            builder: (context, ref, child) {
-              final notificationsAsync = ref.watch(notificationsProvider);
-              return notificationsAsync.when(
-                data: (notifications) {
-                  final hasUnread = notifications.any((n) => !n['isRead']);
-                  if (!hasUnread) return const SizedBox.shrink();
-
-                  return TextButton(
-                    onPressed: () => _markAllAsRead(ref),
-                    child: const Text('Отметить все как прочитанные'),
-                  );
-                },
-                loading: () => const SizedBox.shrink(),
-                error: (_, __) => const SizedBox.shrink(),
-              );
-            },
-          ),
-        ],
-      ),
-      body: notificationsAsync.when(
-        data: (notifications) {
-          if (notifications.isEmpty) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.notifications_none,
-                    size: 64,
-                    color: Colors.grey,
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    'Уведомлений пока нет',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return ListView.builder(
-            itemCount: notifications.length,
-            itemBuilder: (context, index) {
-              final notification = notifications[index];
-              return _NotificationItem(
-                notification: notification,
-                onTap: () => _handleNotificationTap(context, notification),
-                onMarkAsRead: () => _markAsRead(ref, notification['id']),
-              );
-            },
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.error_outline,
-                size: 64,
-                color: Colors.red,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Ошибка загрузки уведомлений',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                error.toString(),
-                style: Theme.of(context).textTheme.bodySmall,
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Обработка нажатия на уведомление
-  void _handleNotificationTap(
-    BuildContext context,
-    Map<String, dynamic> notification,
-  ) {
-    final type = notification['type'] as String?;
-    final data = notification['data'] as Map<String, dynamic>? ?? {};
-
-    switch (type) {
-      case 'chat':
-        final chatId = data['chatId'] as String?;
-        if (chatId != null) {
-          context.push('/chat/$chatId');
-        }
-        break;
-      case 'booking':
-        context.push('/my-bookings');
-        break;
-      case 'review':
-        context.push('/profile');
-        break;
-      default:
-        // Остаемся на экране уведомлений
-        break;
-    }
-  }
-
-  /// Отметить уведомление как прочитанное
-  void _markAsRead(WidgetRef ref, String notificationId) {
-    FirebaseFirestore.instance
-        .collection('notifications')
-        .doc(notificationId)
-        .update({'isRead': true});
-  }
-
-  /// Отметить все уведомления как прочитанные
-  void _markAllAsRead(WidgetRef ref) {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
-
-    FirebaseFirestore.instance
-        .collection('notifications')
-        .where('userId', isEqualTo: user.uid)
-        .where('isRead', isEqualTo: false)
-        .get()
-        .then((snapshot) {
-      final batch = FirebaseFirestore.instance.batch();
-      for (final doc in snapshot.docs) {
-        batch.update(doc.reference, {'isRead': true});
-      }
-      batch.commit();
-    });
-  }
+  ConsumerState<NotificationsScreen> createState() => _NotificationsScreenState();
 }
 
-/// Виджет элемента уведомления
-class _NotificationItem extends StatelessWidget {
-  const _NotificationItem({
-    required this.notification,
-    required this.onTap,
-    required this.onMarkAsRead,
-  });
-  final Map<String, dynamic> notification;
-  final VoidCallback onTap;
-  final VoidCallback onMarkAsRead;
+class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
+    with TickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final isRead = notification['isRead'] as bool? ?? false;
-    final title = notification['title'] as String? ?? '';
-    final message = notification['message'] as String? ?? '';
-    final timestamp = notification['timestamp'] as Timestamp?;
-    final type = notification['type'] as String? ?? 'system';
+    final notificationsAsync = ref.watch(userNotificationsProvider);
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      color: isRead
-          ? null
-          : Theme.of(context)
-              .colorScheme
-              .primaryContainer
-              .withValues(alpha: 0.1),
-      child: ListTile(
-        leading: _getNotificationIcon(type),
-        title: Text(
-          title,
-          style: TextStyle(
-            fontWeight: isRead ? FontWeight.normal : FontWeight.bold,
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Уведомления'),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pop(),
           ),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(message),
-            if (timestamp != null) ...[
-              const SizedBox(height: 4),
-              Text(
-                _formatTimestamp(timestamp),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
-                    ),
-              ),
-            ],
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.clear_all),
+              onPressed: _clearAllNotifications,
+              tooltip: 'Очистить все',
+            ),
           ],
         ),
-        trailing: isRead
-            ? null
-            : IconButton(
-                icon: const Icon(Icons.mark_email_read),
-                onPressed: onMarkAsRead,
-                tooltip: 'Отметить как прочитанное',
-              ),
-        onTap: onTap,
+        body: notificationsAsync.when(
+          data: _buildNotificationsList,
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stack) => Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  size: 64,
+                  color: Theme.of(context).colorScheme.error,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Ошибка загрузки уведомлений',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  error.toString(),
+                  style: Theme.of(context).textTheme.bodySmall,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => ref.refresh(userNotificationsProvider),
+                  child: const Text('Повторить'),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  /// Получение иконки для типа уведомления
-  Widget _getNotificationIcon(String type) {
-    IconData iconData;
-    Color iconColor;
-
-    switch (type) {
-      case 'chat':
-        iconData = Icons.chat;
-        iconColor = Colors.blue;
-        break;
-      case 'booking':
-        iconData = Icons.event;
-        iconColor = Colors.green;
-        break;
-      case 'review':
-        iconData = Icons.star;
-        iconColor = Colors.orange;
-        break;
-      default:
-        iconData = Icons.notifications;
-        iconColor = Colors.grey;
-        break;
+  Widget _buildNotificationsList(List<dynamic> notifications) {
+    if (notifications.isEmpty) {
+      return _buildEmptyState();
     }
 
-    return CircleAvatar(
-      backgroundColor: iconColor.withValues(alpha: 0.1),
+    return RefreshIndicator(
+      onRefresh: () async {
+        ref.refresh(userNotificationsProvider);
+      },
+      child: ListView.separated(
+        padding: const EdgeInsets.all(16),
+        itemCount: notifications.length,
+        separatorBuilder: (context, index) => const SizedBox(height: 8),
+        itemBuilder: (context, index) {
+          final notification = notifications[index];
+          return _buildNotificationCard(notification);
+        },
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() => Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.notifications_none,
+            size: 80,
+            color: Theme.of(context).colorScheme.outline,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Нет уведомлений',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              color: Theme.of(context).colorScheme.outline,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Здесь будут отображаться ваши уведомления',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.outline,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+
+  Widget _buildNotificationCard(app_notification.AppNotification notification) => Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: Theme.of(context).dividerColor.withOpacity(0.1),
+        ),
+      ),
+      child: InkWell(
+        onTap: () => _handleNotificationTap(notification),
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: notification.isRead 
+              ? null 
+              : Theme.of(context).primaryColor.withOpacity(0.05),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildNotificationIcon(notification.type),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            notification.title,
+                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              fontWeight: notification.isRead 
+                                ? FontWeight.normal 
+                                : FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        if (!notification.isRead)
+                          Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColor,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      notification.body,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.7),
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      _formatDateTime(notification.createdAt),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.5),
+                        fontSize: 11,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+  Widget _buildNotificationIcon(String type) {
+    IconData icon;
+    Color color;
+
+    switch (type) {
+      case 'message':
+        icon = Icons.chat_bubble_outline;
+        color = Colors.blue;
+        break;
+      case 'booking':
+        icon = Icons.assignment_outlined;
+        color = Colors.green;
+        break;
+      case 'review':
+        icon = Icons.star_outline;
+        color = Colors.orange;
+        break;
+      case 'system':
+        icon = Icons.settings_outlined;
+        color = Colors.purple;
+        break;
+      default:
+        icon = Icons.notifications_outlined;
+        color = Colors.grey;
+    }
+
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+      ),
       child: Icon(
-        iconData,
-        color: iconColor,
+        icon,
+        color: color,
         size: 20,
       ),
     );
   }
 
-  /// Форматирование времени
-  String _formatTimestamp(Timestamp timestamp) {
-    final date = timestamp.toDate();
+  String _formatDateTime(DateTime dateTime) {
     final now = DateTime.now();
-    final difference = now.difference(date);
+    final difference = now.difference(dateTime);
 
     if (difference.inDays > 0) {
-      return DateFormat('dd.MM.yyyy HH:mm').format(date);
+      return '${difference.inDays} дн. назад';
     } else if (difference.inHours > 0) {
-      return '${difference.inHours}ч назад';
+      return '${difference.inHours} ч. назад';
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}м назад';
+      return '${difference.inMinutes} мин. назад';
     } else {
       return 'Только что';
     }
+  }
+
+  Future<void> _handleNotificationTap(app_notification.AppNotification notification) async {
+    // Отмечаем уведомление как прочитанное
+    if (!notification.isRead) {
+      await NotificationService.markNotificationAsRead(notification.id);
+    }
+
+    // Навигация в зависимости от типа уведомления
+    switch (notification.type) {
+      case 'message':
+        // TODO: Открыть чат с пользователем
+        _showComingSoonDialog('Открытие чата');
+        break;
+      case 'booking':
+        // TODO: Открыть заявку
+        _showComingSoonDialog('Открытие заявки');
+        break;
+      case 'review':
+        // TODO: Открыть профиль специалиста
+        _showComingSoonDialog('Открытие профиля специалиста');
+        break;
+      case 'system':
+        // Остаемся на экране уведомлений
+        break;
+      default:
+        break;
+    }
+  }
+
+  void _showComingSoonDialog(String feature) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Скоро'),
+        content: Text('Функция "$feature" будет реализована в следующих версиях.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _clearAllNotifications() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Очистить уведомления'),
+        content: const Text('Вы уверены, что хотите удалить все уведомления?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              try {
+                final user = FirebaseAuth.instance.currentUser;
+                if (user != null) {
+                  await NotificationService.clearAllNotifications(user.uid);
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Все уведомления удалены'),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  }
+                }
+              } on Exception catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Ошибка при удалении: $e'),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                }
+              }
+            },
+            child: const Text('Очистить'),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -36,7 +36,7 @@ final storyViewsProvider =
 final createStoryProvider =
     FutureProvider.family<String, CreateStory>((ref, createStory) async {
   final storyService = ref.read(storyServiceProvider);
-  return await storyService.createStory(
+  return storyService.createStory(
     specialistId: createStory.specialistId,
     mediaUrl: createStory.mediaUrl,
     text: createStory.text,

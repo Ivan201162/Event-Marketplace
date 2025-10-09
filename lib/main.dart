@@ -1,16 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'core/app_router.dart';
-import 'core/app_theme.dart';
 import 'core/performance_optimizer.dart';
 import 'firebase_options.dart';
 import 'generated/l10n/app_localizations.dart';
 import 'providers/locale_provider.dart';
 import 'providers/theme_provider.dart';
-import 'services/notification_service.dart';
+import 'router/enhanced_router.dart';
+import 'services/analytics_service.dart';
+import 'services/cache_service.dart';
 import 'services/reminder_service.dart';
 import 'services/test_data_service.dart';
 
@@ -21,8 +22,8 @@ void main() async {
     // Инициализация оптимизатора производительности
     try {
       await PerformanceOptimizer.initialize();
-    } catch (e) {
-      print('Ошибка инициализации PerformanceOptimizer: $e');
+    } on Exception catch (e) {
+      debugPrint('Ошибка инициализации PerformanceOptimizer: $e');
     }
 
     // Инициализация Firebase
@@ -30,24 +31,36 @@ void main() async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
-      print('Firebase инициализирован успешно');
-    } catch (e) {
-      print('Ошибка инициализации Firebase: $e');
+      debugPrint('Firebase инициализирован успешно');
+      
+      // Инициализация аналитики
+      final analyticsService = AnalyticsService();
+      await analyticsService.logScreenView('app_start');
+      debugPrint('Firebase Analytics инициализирован успешно');
+    } on Exception catch (e) {
+      debugPrint('Ошибка инициализации Firebase: $e');
       // Продолжаем без Firebase для отладки
     }
 
     // Инициализация сервиса уведомлений
     try {
-      await NotificationService().initialize();
-    } catch (e) {
-      print('Ошибка инициализации NotificationService: $e');
+      // await NotificationService().initialize();
+    } on Exception catch (e) {
+      debugPrint('Ошибка инициализации NotificationService: $e');
     }
 
     // Инициализация сервиса напоминаний
     try {
       await ReminderService().initialize();
-    } catch (e) {
-      print('Ошибка инициализации ReminderService: $e');
+    } on Exception catch (e) {
+      debugPrint('Ошибка инициализации ReminderService: $e');
+    }
+
+    // Инициализация сервиса кэширования
+    try {
+      await CacheService().initialize();
+    } on Exception catch (e) {
+      debugPrint('Ошибка инициализации CacheService: $e');
     }
 
     // Инициализация тестовых данных
@@ -55,8 +68,8 @@ void main() async {
 
     runApp(const ProviderScope(child: EventMarketplaceApp()));
   } catch (e, stackTrace) {
-    print('Критическая ошибка при запуске приложения: $e');
-    print('Stack trace: $stackTrace');
+    debugPrint('Критическая ошибка при запуске приложения: $e');
+    debugPrint('Stack trace: $stackTrace');
     
     // Запускаем минимальную версию приложения
     runApp(const MaterialApp(
@@ -65,40 +78,40 @@ void main() async {
           child: Text('Ошибка инициализации приложения'),
         ),
       ),
-    ));
+    ),);
   }
 }
 
 /// Инициализация тестовых данных
 Future<void> _initializeTestData() async {
   try {
-    print('Начинаем инициализацию тестовых данных...');
+    debugPrint('Начинаем инициализацию тестовых данных...');
     final testDataService = TestDataService();
     
     // Проверяем наличие данных с таймаутом
     final hasData = await testDataService.hasTestData().timeout(
       const Duration(seconds: 10),
       onTimeout: () {
-        print('Таймаут при проверке тестовых данных');
+        debugPrint('Таймаут при проверке тестовых данных');
         return false;
       },
     );
 
     if (!hasData) {
-      print('Загружаем тестовые данные...');
+      debugPrint('Загружаем тестовые данные...');
       await testDataService.populateAll().timeout(
         const Duration(seconds: 30),
         onTimeout: () {
-          print('Таймаут при загрузке тестовых данных');
+          debugPrint('Таймаут при загрузке тестовых данных');
         },
       );
-      print('Тестовые данные загружены успешно');
+      debugPrint('Тестовые данные загружены успешно');
     } else {
-      print('Тестовые данные уже загружены');
+      debugPrint('Тестовые данные уже загружены');
     }
   } catch (e, stackTrace) {
-    print('Ошибка при инициализации тестовых данных: $e');
-    print('Stack trace: $stackTrace');
+    debugPrint('Ошибка при инициализации тестовых данных: $e');
+    debugPrint('Stack trace: $stackTrace');
     // Не прерываем запуск приложения из-за ошибки тестовых данных
   }
 }
@@ -110,12 +123,12 @@ class EventMarketplaceApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeProvider);
     final locale = ref.watch(localeProvider);
-    final router = ref.watch(routerProvider);
+    final router = EnhancedRouter.router;
 
     return MaterialApp.router(
       title: 'Event Marketplace',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
       themeMode: themeMode,
       locale: locale,
       localizationsDelegates: const [

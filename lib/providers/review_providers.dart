@@ -90,12 +90,12 @@ final reviewServiceProvider = Provider<ReviewService>((ref) => ReviewService());
 /// Провайдер для состояния формы отзыва
 final reviewFormProvider =
     StateNotifierProvider<ReviewFormNotifier, ReviewFormState>(
-        (ref) => ReviewFormNotifier(ref.read(reviewServiceProvider)));
+        (ref) => ReviewFormNotifier(ref.read(reviewServiceProvider)),);
 
 /// Провайдер для состояния отзывов
 final reviewStateProvider =
     StateNotifierProvider<ReviewStateNotifier, ReviewState>(
-        (ref) => ReviewStateNotifier(ref.read(reviewServiceProvider)));
+        (ref) => ReviewStateNotifier(ref.read(reviewServiceProvider)),);
 
 /// Состояние формы отзыва
 class ReviewFormState {
@@ -210,7 +210,7 @@ class ReviewFormNotifier extends StateNotifier<ReviewFormState> {
   bool get isValid => state.rating > 0 && state.comment.isNotEmpty;
 
   Future<void> submitReview(
-      String specialistId, String customerId, String customerName) async {
+      String specialistId, String customerId, String customerName,) async {
     state = state.copyWith(isLoading: true);
 
     try {
@@ -223,7 +223,7 @@ class ReviewFormNotifier extends StateNotifier<ReviewFormState> {
         serviceTags: state.serviceTags,
       );
       state = state.copyWith(isLoading: false);
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
@@ -265,7 +265,7 @@ class ReviewStateNotifier extends StateNotifier<ReviewState> {
     try {
       final reviews = await _reviewService.getReviews(specialistId);
       state = state.copyWith(reviews: reviews, isLoading: false);
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
@@ -283,7 +283,7 @@ class ReviewStateNotifier extends StateNotifier<ReviewState> {
         serviceTags: review.serviceTags,
       );
       state = state.copyWith(isLoading: false);
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
   }

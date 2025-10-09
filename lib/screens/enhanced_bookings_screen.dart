@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../core/responsive_utils.dart';
 import '../models/booking.dart';
-import '../models/booking_status.dart';
-import '../widgets/enhanced_page_transition.dart';
-import '../widgets/responsive_layout.dart';
+import '../providers/auth_providers.dart';
+import '../services/firestore_service.dart';
+import '../widgets/booking_card.dart';
+import 'create_booking_screen.dart';
 
-/// Улучшенный экран бронирований с вкладками
+/// Улучшенный экран заявок с полным функционалом
 class EnhancedBookingsScreen extends ConsumerStatefulWidget {
   const EnhancedBookingsScreen({super.key});
 
@@ -17,850 +17,662 @@ class EnhancedBookingsScreen extends ConsumerStatefulWidget {
 }
 
 class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  late PageController _pageController;
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+  BookingStatus? _selectedStatus;
+  DateTime? _selectedDate;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
-    _pageController = PageController();
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
   void dispose() {
     _tabController.dispose();
-    _pageController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => ResponsiveLayout(
-        mobile: _buildMobileLayout(),
-        tablet: _buildTabletLayout(),
-        desktop: _buildDesktopLayout(),
-        largeDesktop: _buildLargeDesktopLayout(),
-      );
-
-  Widget _buildMobileLayout() => Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            // AppBar с вкладками
-            SliverAppBar(
-              expandedHeight: 120,
-              pinned: true,
-              flexibleSpace: FlexibleSpaceBar(
-                title: const Text(
-                  'Мои бронирования',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                background: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xFF6200EE), Color(0xFF3700B3)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                  ),
-                ),
-              ),
-              bottom: TabBar(
-                controller: _tabController,
-                isScrollable: true,
-                indicatorColor: Colors.white,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.white70,
-                onTap: (index) {
-                  _pageController.animateToPage(
-                    index,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                  );
-                },
-                tabs: const [
-                  Tab(text: 'Все'),
-                  Tab(text: 'На рассмотрении'),
-                  Tab(text: 'Подтверждено'),
-                  Tab(text: 'Завершено'),
-                ],
-              ),
-            ),
-            // Контент с вкладками
-            SliverFillRemaining(
-              child: PageView(
-                controller: _pageController,
-                onPageChanged: (index) {
-                  _tabController.animateTo(index);
-                },
-                children: [
-                  _buildAllBookingsTab(),
-                  _buildPendingBookingsTab(),
-                  _buildConfirmedBookingsTab(),
-                  _buildCompletedBookingsTab(),
-                ],
-              ),
-            ),
+  Widget build(BuildContext context) => Scaffold(
+      appBar: AppBar(
+        title: const Text('Заявки'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(text: 'Мои заявки'),
+            Tab(text: 'Заявки мне'),
           ],
         ),
-      );
-
-  Widget _buildTabletLayout() => Scaffold(
-        body: ResponsiveContainer(
-          child: Column(
-            children: [
-              // AppBar
-              Container(
-                height: 100,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFF6200EE), Color(0xFF3700B3)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-                child: const Center(
-                  child: Text(
-                    'Мои бронирования',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-              // Вкладки
-              TabBar(
-                controller: _tabController,
-                isScrollable: true,
-                onTap: (index) {
-                  _pageController.animateToPage(
-                    index,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                  );
-                },
-                tabs: const [
-                  Tab(text: 'Все'),
-                  Tab(text: 'На рассмотрении'),
-                  Tab(text: 'Подтверждено'),
-                  Tab(text: 'Завершено'),
-                ],
-              ),
-              // Контент
-              Expanded(
-                child: PageView(
-                  controller: _pageController,
-                  onPageChanged: (index) {
-                    _tabController.animateTo(index);
-                  },
-                  children: [
-                    _buildAllBookingsTab(),
-                    _buildPendingBookingsTab(),
-                    _buildConfirmedBookingsTab(),
-                    _buildCompletedBookingsTab(),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildDesktopLayout() => Scaffold(
-        body: ResponsiveContainer(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Боковая панель с вкладками
-              SizedBox(
-                width: 250,
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Мои бронирования',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    // Вертикальные вкладки
-                    Expanded(
-                      child: ListView(
-                        children: [
-                          _buildDesktopTabItem(0, 'Все', Icons.list),
-                          _buildDesktopTabItem(
-                            1,
-                            'На рассмотрении',
-                            Icons.schedule,
-                          ),
-                          _buildDesktopTabItem(
-                            2,
-                            'Подтверждено',
-                            Icons.check_circle_outline,
-                          ),
-                          _buildDesktopTabItem(
-                            3,
-                            'Завершено',
-                            Icons.check_circle,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 24),
-              // Основной контент
-              Expanded(
-                child: PageView(
-                  controller: _pageController,
-                  onPageChanged: (index) {
-                    _tabController.animateTo(index);
-                  },
-                  children: [
-                    _buildAllBookingsTab(),
-                    _buildPendingBookingsTab(),
-                    _buildConfirmedBookingsTab(),
-                    _buildCompletedBookingsTab(),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildLargeDesktopLayout() => Scaffold(
-        body: ResponsiveContainer(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Боковая панель с вкладками
-              SizedBox(
-                width: 300,
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Мои бронирования',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    // Вертикальные вкладки
-                    Expanded(
-                      child: ListView(
-                        children: [
-                          _buildDesktopTabItem(0, 'Все', Icons.list),
-                          _buildDesktopTabItem(
-                            1,
-                            'На рассмотрении',
-                            Icons.schedule,
-                          ),
-                          _buildDesktopTabItem(
-                            2,
-                            'Подтверждено',
-                            Icons.check_circle_outline,
-                          ),
-                          _buildDesktopTabItem(
-                            3,
-                            'Завершено',
-                            Icons.check_circle,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 32),
-              // Основной контент
-              Expanded(
-                child: PageView(
-                  controller: _pageController,
-                  onPageChanged: (index) {
-                    _tabController.animateTo(index);
-                  },
-                  children: [
-                    _buildAllBookingsTab(),
-                    _buildPendingBookingsTab(),
-                    _buildConfirmedBookingsTab(),
-                    _buildCompletedBookingsTab(),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 32),
-              // Правая панель с фильтрами и статистикой
-              SizedBox(
-                width: 300,
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    _buildFiltersPanel(),
-                    const SizedBox(height: 24),
-                    _buildStatsPanel(),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildDesktopTabItem(int index, String title, IconData icon) {
-    final isSelected = _tabController.index == index;
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: InkWell(
-        onTap: () {
-          _tabController.animateTo(index);
-          _pageController.animateToPage(
-            index,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
-                : null,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: isSelected
-                  ? Theme.of(context).colorScheme.primary
-                  : Colors.transparent,
-            ),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                icon,
-                color:
-                    isSelected ? Theme.of(context).colorScheme.primary : null,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontWeight:
-                        isSelected ? FontWeight.bold : FontWeight.normal,
-                    color: isSelected
-                        ? Theme.of(context).colorScheme.primary
-                        : null,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
-    );
-  }
+      body: Column(
+        children: [
+          // Поиск и фильтры
+          _buildSearchAndFilters(),
 
-  Widget _buildAllBookingsTab() => _buildBookingsList([
-        _createMockBooking('1', 'Фотограф на свадьбу', BookingStatus.pending),
-        _createMockBooking(
-          '2',
-          'Видеограф на корпоратив',
-          BookingStatus.confirmed,
-        ),
-        _createMockBooking(
-          '3',
-          'Диджей на день рождения',
-          BookingStatus.completed,
-        ),
-        _createMockBooking('4', 'Ведущий на юбилей', BookingStatus.cancelled),
-      ]);
-
-  Widget _buildPendingBookingsTab() => _buildBookingsList([
-        _createMockBooking('1', 'Фотограф на свадьбу', BookingStatus.pending),
-      ]);
-
-  Widget _buildConfirmedBookingsTab() => _buildBookingsList([
-        _createMockBooking(
-          '2',
-          'Видеограф на корпоратив',
-          BookingStatus.confirmed,
-        ),
-      ]);
-
-  Widget _buildCompletedBookingsTab() => _buildBookingsList([
-        _createMockBooking(
-          '3',
-          'Диджей на день рождения',
-          BookingStatus.completed,
-        ),
-      ]);
-
-  Widget _buildBookingsList(List<Booking> bookings) {
-    if (bookings.isEmpty) {
-      return _buildEmptyState();
-    }
-
-    return ResponsiveList(
-      children: bookings.map(_buildBookingCard).toList(),
-    );
-  }
-
-  Widget _buildBookingCard(Booking booking) {
-    final statusInfo = BookingStatusUtils.getStatusInfo(booking.status);
-    final availableActions =
-        BookingStatusUtils.getAvailableActions(booking.status);
-
-    return AnimatedContent(
-      delay: Duration(milliseconds: bookings.indexOf(booking) * 100),
-      type: AnimationType.slideUp,
-      child: ResponsiveCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Заголовок с статусом
-            Row(
+          // Контент
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
               children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ResponsiveText(
-                        booking.specialistName,
-                        isTitle: true,
-                      ),
-                      const SizedBox(height: 4),
-                      ResponsiveText(
-                        booking.eventType,
-                        isSubtitle: true,
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: statusInfo.color.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: statusInfo.color),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        statusInfo.icon,
-                        size: 16,
-                        color: statusInfo.color,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        statusInfo.name,
-                        style: TextStyle(
-                          color: statusInfo.color,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                _buildMyBookingsTab(),
+                _buildIncomingBookingsTab(),
               ],
             ),
-            const SizedBox(height: 16),
-            // Детали бронирования
-            _buildBookingDetails(booking),
-            const SizedBox(height: 16),
-            // Действия
-            if (availableActions.isNotEmpty) ...[
-              const Divider(),
-              const SizedBox(height: 12),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: availableActions
-                    .map((action) => _buildActionButton(action, booking))
-                    .toList(),
-              ),
-            ],
-          ],
-        ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _createBooking,
+        child: const Icon(Icons.add),
       ),
     );
-  }
 
-  Widget _buildBookingDetails(Booking booking) => Column(
-        children: [
-          _buildDetailRow('Дата', _formatDate(booking.startTime)),
-          _buildDetailRow('Время', _formatTime(booking.startTime)),
-          _buildDetailRow(
-            'Длительность',
-            '${booking.duration?.inHours ?? 0} ч',
-          ),
-          _buildDetailRow('Стоимость', '${booking.totalPrice} ₽'),
-          if (booking.location?.isNotEmpty ?? false)
-            _buildDetailRow('Место', booking.location),
-        ],
-      );
-
-  Widget _buildDetailRow(String label, String value) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            ResponsiveText(
-              label,
-              isSubtitle: true,
-            ),
-            ResponsiveText(
-              value,
-              style: const TextStyle(fontWeight: FontWeight.w500),
-            ),
-          ],
+  /// Построить поиск и фильтры
+  Widget _buildSearchAndFilters() => Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        border: Border(
+          bottom: BorderSide(color: Colors.grey[300]!),
         ),
-      );
-
-  Widget _buildActionButton(BookingAction action, Booking booking) =>
-      AnimatedButton(
-        onPressed: () => _handleAction(action, booking),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            color: action.color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: action.color),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                action.icon,
-                size: 16,
-                color: action.color,
+      ),
+      child: Column(
+        children: [
+          // Поисковая строка
+          TextField(
+            controller: _searchController,
+            decoration: InputDecoration(
+              hintText: 'Поиск по заявкам...',
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: _searchController.text.isNotEmpty
+                  ? IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        _searchController.clear();
+                        setState(() {
+                          _searchQuery = '';
+                        });
+                      },
+                    )
+                  : null,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
-              const SizedBox(width: 4),
-              Text(
-                action.name,
-                style: TextStyle(
-                  color: action.color,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12,
+              filled: true,
+              fillColor: Colors.white,
+            ),
+            onChanged: (value) {
+              setState(() {
+                _searchQuery = value;
+              });
+            },
+          ),
+
+          const SizedBox(height: 12),
+
+          // Фильтры
+          Row(
+            children: [
+              // Фильтр по статусу
+              Expanded(
+                child: DropdownButtonFormField<BookingStatus?>(
+                  initialValue: _selectedStatus,
+                  decoration: const InputDecoration(
+                    labelText: 'Статус',
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                  ),
+                  hint: const Text('Все статусы'),
+                  items: [
+                    const DropdownMenuItem<BookingStatus?>(
+                      child: Text('Все статусы'),
+                    ),
+                    ...BookingStatus.values.map(
+                      (status) => DropdownMenuItem<BookingStatus?>(
+                        value: status,
+                        child: Row(
+                          children: [
+                            Icon(
+                              _getStatusIcon(status),
+                              size: 16,
+                              color: _getStatusColor(status),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(_getStatusText(status)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedStatus = value;
+                    });
+                  },
+                ),
+              ),
+
+              const SizedBox(width: 12),
+
+              // Фильтр по дате
+              Expanded(
+                child: InkWell(
+                  onTap: _selectDate,
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.calendar_today, size: 16),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            _selectedDate != null
+                                ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}'
+                                : 'Выберите дату',
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ),
+                        if (_selectedDate != null)
+                          IconButton(
+                            icon: const Icon(Icons.clear, size: 16),
+                            onPressed: () {
+                              setState(() {
+                                _selectedDate = null;
+                              });
+                            },
+                          ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
-        ),
-      );
+        ],
+      ),
+    );
 
-  Widget _buildEmptyState() => Center(
+  /// Построить вкладку моих заявок
+  Widget _buildMyBookingsTab() {
+    final currentUser = ref.watch(currentUserProvider).value;
+    if (currentUser == null) {
+      return const Center(
+        child: Text('Необходимо войти в систему'),
+      );
+    }
+
+    final bookingsStream = ref.watch(
+      bookingsByCustomerStreamProvider(currentUser.uid),
+    );
+
+    return bookingsStream.when(
+      data: (bookings) {
+        final filteredBookings = _filterBookings(bookings);
+
+        if (filteredBookings.isEmpty) {
+          return _buildEmptyBookingsState('Мои заявки');
+        }
+
+        return RefreshIndicator(
+          onRefresh: () async {
+            ref.invalidate(bookingsByCustomerStreamProvider(currentUser.uid));
+          },
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: filteredBookings.length,
+            itemBuilder: (context, index) {
+              final booking = filteredBookings[index];
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: BookingCard(
+                  booking: booking,
+                  showActions: true,
+                  onCancel: () => _cancelBooking(booking),
+                  onEdit: () => _editBooking(booking),
+                ),
+              );
+            },
+          ),
+        );
+      },
+      loading: () => const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.event_busy,
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Загрузка заявок...'),
+          ],
+        ),
+      ),
+      error: (error, stack) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.error_outline,
               size: 64,
-              color: Colors.grey[400],
+              color: Colors.red,
             ),
             const SizedBox(height: 16),
-            const ResponsiveText(
-              'Нет бронирований',
-              isTitle: true,
-            ),
-            const SizedBox(height: 8),
-            const ResponsiveText(
-              'Здесь будут отображаться ваши бронирования',
-              isSubtitle: true,
+            Text('Ошибка загрузки заявок: $error'),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                ref.invalidate(bookingsByCustomerStreamProvider(currentUser.uid));
+              },
+              child: const Text('Повторить'),
             ),
           ],
         ),
-      );
+      ),
+    );
+  }
 
-  Widget _buildFiltersPanel() => ResponsiveCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const ResponsiveText(
-              'Фильтры',
-              isTitle: true,
-            ),
-            const SizedBox(height: 16),
-            // Фильтры по дате
-            _buildFilterChip('Сегодня', false),
-            _buildFilterChip('На этой неделе', false),
-            _buildFilterChip('В этом месяце', false),
-            const SizedBox(height: 16),
-            // Фильтры по типу события
-            _buildFilterChip('Свадьба', false),
-            _buildFilterChip('Корпоратив', false),
-            _buildFilterChip('День рождения', false),
-          ],
-        ),
+  /// Построить вкладку входящих заявок
+  Widget _buildIncomingBookingsTab() {
+    final currentUser = ref.watch(currentUserProvider).value;
+    if (currentUser == null) {
+      return const Center(
+        child: Text('Необходимо войти в систему'),
       );
+    }
 
-  Widget _buildFilterChip(String label, bool isSelected) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: FilterChip(
-          label: Text(label),
-          selected: isSelected,
-          onSelected: (selected) {
-            // TODO(developer): Реализовать фильтрацию
+    final bookingsStream = ref.watch(
+      bookingsBySpecialistStreamProvider(currentUser.uid),
+    );
+
+    return bookingsStream.when(
+      data: (bookings) {
+        final filteredBookings = _filterBookings(bookings);
+
+        if (filteredBookings.isEmpty) {
+          return _buildEmptyBookingsState('Заявки мне');
+        }
+
+        return RefreshIndicator(
+          onRefresh: () async {
+            ref.invalidate(bookingsBySpecialistStreamProvider(currentUser.uid));
           },
-        ),
-      );
-
-  Widget _buildStatsPanel() => ResponsiveCard(
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: filteredBookings.length,
+            itemBuilder: (context, index) {
+              final booking = filteredBookings[index];
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: BookingCard(
+                  booking: booking,
+                  showActions: true,
+                  onApprove: () => _approveBooking(booking),
+                  onReject: () => _rejectBooking(booking),
+                  onComplete: () => _completeBooking(booking),
+                ),
+              );
+            },
+          ),
+        );
+      },
+      loading: () => const Center(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const ResponsiveText(
-              'Статистика',
-              isTitle: true,
-            ),
-            const SizedBox(height: 16),
-            _buildStatItem('Всего бронирований', '12'),
-            _buildStatItem('На рассмотрении', '3'),
-            _buildStatItem('Подтверждено', '5'),
-            _buildStatItem('Завершено', '4'),
-            const SizedBox(height: 16),
-            _buildStatItem('Общая сумма', '45,000 ₽'),
-            _buildStatItem('Средний чек', '3,750 ₽'),
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Загрузка заявок...'),
           ],
         ),
-      );
-
-  Widget _buildStatItem(String label, String value) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      ),
+      error: (error, stack) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ResponsiveText(label, isSubtitle: true),
-            ResponsiveText(
-              value,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            const Icon(
+              Icons.error_outline,
+              size: 64,
+              color: Colors.red,
+            ),
+            const SizedBox(height: 16),
+            Text('Ошибка загрузки заявок: $error'),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                ref.invalidate(bookingsBySpecialistStreamProvider(currentUser.uid));
+              },
+              child: const Text('Повторить'),
             ),
           ],
         ),
-      );
+      ),
+    );
+  }
 
-  void _handleAction(BookingAction action, Booking booking) {
-    switch (action) {
-      case BookingAction.confirm:
-        _showConfirmDialog(booking);
-        break;
-      case BookingAction.reject:
-        _showRejectDialog(booking);
-        break;
-      case BookingAction.cancel:
-        _showCancelDialog(booking);
-        break;
-      case BookingAction.complete:
-        _showCompleteDialog(booking);
-        break;
-      case BookingAction.view:
-        _viewBooking(booking);
-        break;
-      case BookingAction.edit:
-        _editBooking(booking);
-        break;
-      case BookingAction.delete:
-        _showDeleteDialog(booking);
-        break;
+  /// Построить пустое состояние заявок
+  Widget _buildEmptyBookingsState(String title) => Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.event_busy,
+            size: 64,
+            color: Colors.grey[400],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Нет заявок',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: Colors.grey[600],
+                ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            title == 'Мои заявки'
+                ? 'Создайте первую заявку'
+                : 'Заявки появятся здесь',
+            style: TextStyle(color: Colors.grey[500]),
+          ),
+          if (title == 'Мои заявки') ...[
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: _createBooking,
+              icon: const Icon(Icons.add),
+              label: const Text('Создать заявку'),
+            ),
+          ],
+        ],
+      ),
+    );
+
+  /// Фильтровать заявки
+  List<Booking> _filterBookings(List<Booking> bookings) {
+    var filtered = bookings;
+
+    // Фильтр по поисковому запросу
+    if (_searchQuery.isNotEmpty) {
+      final searchLower = _searchQuery.toLowerCase();
+      filtered = filtered.where((booking) => (booking.title?.toLowerCase().contains(searchLower) ?? false) ||
+               (booking.customerName?.toLowerCase().contains(searchLower) ?? false) ||
+               (booking.specialistName?.toLowerCase().contains(searchLower) ?? false) ||
+               (booking.message.toLowerCase().contains(searchLower)),).toList();
+    }
+
+    // Фильтр по статусу
+    if (_selectedStatus != null) {
+      filtered = filtered.where((booking) => booking.status == _selectedStatus).toList();
+    }
+
+    // Фильтр по дате
+    if (_selectedDate != null) {
+      filtered = filtered.where((booking) => booking.eventDate.year == _selectedDate!.year &&
+               booking.eventDate.month == _selectedDate!.month &&
+               booking.eventDate.day == _selectedDate!.day,).toList();
+    }
+
+    return filtered;
+  }
+
+  /// Получить иконку статуса
+  IconData _getStatusIcon(BookingStatus status) {
+    switch (status) {
+      case BookingStatus.pending:
+        return Icons.schedule;
+      case BookingStatus.confirmed:
+        return Icons.check_circle;
+      case BookingStatus.cancelled:
+        return Icons.cancel;
+      case BookingStatus.completed:
+        return Icons.done_all;
+      case BookingStatus.rejected:
+        return Icons.close;
     }
   }
 
-  void _showConfirmDialog(Booking booking) {
+  /// Получить цвет статуса
+  Color _getStatusColor(BookingStatus status) {
+    switch (status) {
+      case BookingStatus.pending:
+        return Colors.orange;
+      case BookingStatus.confirmed:
+        return Colors.green;
+      case BookingStatus.cancelled:
+        return Colors.red;
+      case BookingStatus.completed:
+        return Colors.blue;
+      case BookingStatus.rejected:
+        return Colors.red;
+    }
+  }
+
+  /// Получить текст статуса
+  String _getStatusText(BookingStatus status) {
+    switch (status) {
+      case BookingStatus.pending:
+        return 'Ожидает';
+      case BookingStatus.confirmed:
+        return 'Подтверждено';
+      case BookingStatus.cancelled:
+        return 'Отменено';
+      case BookingStatus.completed:
+        return 'Завершено';
+      case BookingStatus.rejected:
+        return 'Отклонено';
+    }
+  }
+
+  /// Выбрать дату
+  Future<void> _selectDate() async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(),
+      firstDate: DateTime.now().subtract(const Duration(days: 365)),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+    if (date != null) {
+      setState(() {
+        _selectedDate = date;
+      });
+    }
+  }
+
+  /// Создать заявку
+  void _createBooking() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) => const CreateBookingScreen(),
+      ),
+    );
+  }
+
+  /// Редактировать заявку
+  void _editBooking(Booking booking) {
+    // TODO: Реализовать редактирование заявки
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Редактирование заявки будет реализовано')),
+    );
+  }
+
+  /// Отменить заявку
+  void _cancelBooking(Booking booking) {
     showDialog<void>(
       context: context,
-      builder: (context) => ResponsiveDialog(
-        title: 'Подтвердить бронирование',
+      builder: (context) => AlertDialog(
+        title: const Text('Отменить заявку'),
+        content: const Text('Вы уверены, что хотите отменить эту заявку?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.of(context).pop(),
             child: const Text('Отмена'),
           ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Бронирование подтверждено')),
-              );
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              try {
+                await ref.read(firestoreServiceProvider).updateBookingStatus(
+                  booking.id,
+                  BookingStatus.cancelled,
+                );
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Заявка отменена')),
+                  );
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Ошибка: $e')),
+                  );
+                }
+              }
+            },
+            child: const Text('Отменить'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Подтвердить заявку
+  void _approveBooking(Booking booking) {
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Подтвердить заявку'),
+        content: const Text('Вы подтверждаете эту заявку?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Отмена'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              try {
+                await ref.read(firestoreServiceProvider).updateBookingStatus(
+                  booking.id,
+                  BookingStatus.confirmed,
+                );
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Заявка подтверждена')),
+                  );
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Ошибка: $e')),
+                  );
+                }
+              }
             },
             child: const Text('Подтвердить'),
           ),
         ],
-        child: Text(
-          'Вы уверены, что хотите подтвердить бронирование "${booking.specialistName}"?',
-        ),
       ),
     );
   }
 
-  void _showRejectDialog(Booking booking) {
+  /// Отклонить заявку
+  void _rejectBooking(Booking booking) {
     showDialog<void>(
       context: context,
-      builder: (context) => ResponsiveDialog(
-        title: 'Отклонить бронирование',
+      builder: (context) => AlertDialog(
+        title: const Text('Отклонить заявку'),
+        content: const Text('Вы отклоняете эту заявку?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.of(context).pop(),
             child: const Text('Отмена'),
           ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Бронирование отклонено')),
-              );
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              try {
+                await ref.read(firestoreServiceProvider).updateBookingStatus(
+                  booking.id,
+                  BookingStatus.rejected,
+                );
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Заявка отклонена')),
+                  );
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Ошибка: $e')),
+                  );
+                }
+              }
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('Отклонить'),
           ),
         ],
-        child: Text(
-          'Вы уверены, что хотите отклонить бронирование "${booking.specialistName}"?',
-        ),
       ),
     );
   }
 
-  void _showCancelDialog(Booking booking) {
+  /// Завершить заявку
+  void _completeBooking(Booking booking) {
     showDialog<void>(
       context: context,
-      builder: (context) => ResponsiveDialog(
-        title: 'Отменить бронирование',
+      builder: (context) => AlertDialog(
+        title: const Text('Завершить заявку'),
+        content: const Text('Вы завершаете эту заявку?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.of(context).pop(),
             child: const Text('Отмена'),
           ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Бронирование отменено')),
-              );
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-            child: const Text('Отменить'),
-          ),
-        ],
-        child: Text(
-          'Вы уверены, что хотите отменить бронирование "${booking.specialistName}"?',
-        ),
-      ),
-    );
-  }
-
-  void _showCompleteDialog(Booking booking) {
-    showDialog<void>(
-      context: context,
-      builder: (context) => ResponsiveDialog(
-        title: 'Завершить бронирование',
-        actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Бронирование завершено')),
-              );
+            onPressed: () async {
+              Navigator.of(context).pop();
+              try {
+                await ref.read(firestoreServiceProvider).updateBookingStatus(
+                  booking.id,
+                  BookingStatus.completed,
+                );
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Заявка завершена')),
+                  );
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Ошибка: $e')),
+                  );
+                }
+              }
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
             child: const Text('Завершить'),
           ),
         ],
-        child: Text(
-          'Вы уверены, что хотите завершить бронирование "${booking.specialistName}"?',
-        ),
       ),
     );
   }
-
-  void _showDeleteDialog(Booking booking) {
-    showDialog<void>(
-      context: context,
-      builder: (context) => ResponsiveDialog(
-        title: 'Удалить бронирование',
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Бронирование удалено')),
-              );
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Удалить'),
-          ),
-        ],
-        child: Text(
-          'Вы уверены, что хотите удалить бронирование "${booking.specialistName}"? Это действие нельзя отменить.',
-        ),
-      ),
-    );
-  }
-
-  void _viewBooking(Booking booking) {
-    // TODO(developer): Реализовать просмотр деталей бронирования
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Просмотр бронирования: ${booking.specialistName}'),
-      ),
-    );
-  }
-
-  void _editBooking(Booking booking) {
-    // TODO(developer): Реализовать редактирование бронирования
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Редактирование бронирования: ${booking.specialistName}'),
-      ),
-    );
-  }
-
-  String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
-
-  String _formatTime(DateTime date) =>
-      '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
-
-  Booking _createMockBooking(
-    String id,
-    String specialistName,
-    BookingStatus status,
-  ) =>
-      Booking(
-        id: id,
-        customerId: 'customer_1',
-        specialistId: 'specialist_$id',
-        specialistName: specialistName,
-        eventType: 'Свадьба',
-        startTime: DateTime.now().add(Duration(days: int.parse(id))),
-        eventTime: DateTime.now()
-            .add(Duration(days: int.parse(id), hours: 4))
-            .toIso8601String(),
-        duration: const Duration(hours: 4),
-        totalPrice: 15000,
-        status: status,
-        location: 'Москва, ул. Примерная, д. 1',
-        notes: 'Дополнительные пожелания',
-        createdAt: DateTime.now().subtract(Duration(days: int.parse(id))),
-        updatedAt: DateTime.now().subtract(Duration(days: int.parse(id))),
-      );
 }
+
+/// Провайдер для потока заявок по заказчику
+final bookingsByCustomerStreamProvider = StreamProvider.family<List<Booking>, String>((ref, customerId) {
+  final service = ref.watch(firestoreServiceProvider);
+  return service.bookingsByCustomerStream(customerId);
+});
+
+/// Провайдер для потока заявок по специалисту
+final bookingsBySpecialistStreamProvider = StreamProvider.family<List<Booking>, String>((ref, specialistId) {
+  final service = ref.watch(firestoreServiceProvider);
+  return service.bookingsBySpecialistStream(specialistId);
+});
+
+/// Провайдер для сервиса Firestore
+final firestoreServiceProvider = Provider<FirestoreService>((ref) => FirestoreService());

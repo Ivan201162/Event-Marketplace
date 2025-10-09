@@ -61,7 +61,7 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
           await _chatService.markMessagesAsRead(widget.chatId, _currentUserId!);
         }
       }
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _isLoading = false;
       });
@@ -80,7 +80,7 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
         _messages = messages;
       });
       _scrollToBottom();
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ошибка загрузки сообщений: $e')),
@@ -345,7 +345,7 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
       );
 
       _loadMessages();
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ошибка отправки сообщения: $e')),
@@ -370,7 +370,7 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
       );
 
       _loadMessages();
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ошибка принятия специалиста: $e')),
@@ -398,7 +398,7 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
       );
 
       _loadMessages();
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ошибка отклонения специалиста: $e')),
@@ -516,7 +516,7 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
         if (mounted) {
           Navigator.pop(context);
         }
-      } catch (e) {
+      } on Exception catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Ошибка закрытия чата: $e')),

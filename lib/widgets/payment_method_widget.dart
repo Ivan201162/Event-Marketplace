@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../models/payment.dart';
-import '../screens/payment_screen.dart';
 
 class PaymentMethodWidget extends StatelessWidget {
   const PaymentMethodWidget({

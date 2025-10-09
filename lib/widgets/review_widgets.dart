@@ -39,7 +39,7 @@ class ReviewCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    _buildRatingStars(review.rating),
+                    _buildRatingStars(review.rating.toDouble()),
                   ],
                 ),
 
@@ -48,7 +48,7 @@ class ReviewCard extends StatelessWidget {
                 // Комментарий
                 if (review.hasComment) ...[
                   Text(
-                    review.comment,
+                    review.text,
                     style: TextStyle(
                       fontSize: 14,
                       color: Theme.of(context)
@@ -396,6 +396,30 @@ class ReviewStatsWidget extends StatelessWidget {
 
   /// Форматировать дату
   String _formatDate(DateTime date) => '${date.day}.${date.month}';
+
+  /// Получить описание рейтинга
+  String _getRatingDescription(int rating) {
+    switch (rating) {
+      case 1:
+        return 'Очень плохо';
+      case 2:
+        return 'Плохо';
+      case 3:
+        return 'Удовлетворительно';
+      case 4:
+        return 'Хорошо';
+      case 5:
+        return 'Отлично';
+      default:
+        return 'Не оценено';
+    }
+  }
+
+  /// Получить процент проверенных отзывов
+  double _getVerifiedPercentage() => 85; // TODO: Реализовать реальную логику
+
+  /// Получить дату последнего отзыва
+  DateTime _getLastReviewDate() => DateTime.now().subtract(const Duration(days: 2)); // TODO: Реализовать реальную логику
 }
 
 /// Виджет формы отзыва
@@ -619,18 +643,22 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
     ref.read(reviewFormProvider.notifier).startSubmitting();
 
     try {
-      await ref.read(reviewStateProvider.notifier).createReview(
-            specialistId: widget.specialistId,
-            customerId: 'current_user_id',
-            customerName: 'Current User',
-            rating: ref.read(reviewFormProvider).rating,
-            comment: ref.read(reviewFormProvider).comment,
-            specialistName: widget.specialistName ?? 'Specialist',
-          );
+      final review = Review(
+        id: '',
+        specialistId: widget.specialistId,
+        customerId: 'current_user_id',
+        customerName: 'Current User',
+        rating: ref.read(reviewFormProvider).rating.toDouble(),
+        text: ref.read(reviewFormProvider).comment,
+        serviceTags: [],
+        date: DateTime.now(),
+      );
+      
+      await ref.read(reviewStateProvider.notifier).createReview(review);
 
       ref.read(reviewFormProvider.notifier).finishSubmitting();
       widget.onSubmit?.call();
-    } catch (e) {
+    } on Exception catch (e) {
       ref.read(reviewFormProvider.notifier).setError(e.toString());
     }
   }
@@ -716,22 +744,4 @@ class ReviewListWidget extends ConsumerWidget {
     );
   }
 
-  String _getRatingDescription(double rating) {
-    if (rating >= 4.5) return 'Отлично';
-    if (rating >= 4.0) return 'Хорошо';
-    if (rating >= 3.0) return 'Удовлетворительно';
-    if (rating >= 2.0) return 'Плохо';
-    return 'Очень плохо';
-  }
-
-  double _getVerifiedPercentage() {
-    // Возвращаем примерный процент проверенных отзывов
-    return 85; // TODO: Реализовать реальную логику
-  }
-
-  DateTime _getLastReviewDate() {
-    // Возвращаем примерную дату последнего отзыва
-    return DateTime.now()
-        .subtract(const Duration(days: 2)); // TODO: Реализовать реальную логику
-  }
 }

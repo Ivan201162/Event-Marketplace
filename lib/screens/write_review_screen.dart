@@ -101,7 +101,7 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
       }
 
       context.pop(true); // Возвращаем true для обновления списка
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка: $e'),

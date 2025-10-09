@@ -3,8 +3,9 @@ import 'package:uuid/uuid.dart';
 
 import '../core/logger.dart';
 import '../models/event_idea.dart';
+import '../models/event_idea_category.dart';
 import '../models/favorite_idea.dart';
-import '../models/idea_comment.dart';
+// import '../models/idea_comment.dart'; // Конфликт с EventIdea
 
 /// Сервис для работы с идеями мероприятий
 class EventIdeasService {
@@ -141,14 +142,14 @@ class EventIdeasService {
 
       final idea = EventIdea(
         id: ideaId,
+        authorId: createdBy,
         title: title,
         description: description,
-        imageUrl: imageUrl,
-        category: category,
-        type: EventIdeaType.userCreated, // Тип идеи
-        createdBy: createdBy,
+        images: [imageUrl],
         createdAt: now,
-        updatedAt: now,
+        category: category.name,
+        imageUrl: imageUrl,
+        createdBy: createdBy,
         tags: tags ?? [],
         location: location,
         budget: budget,
@@ -431,12 +432,12 @@ class EventIdeasService {
       final comment = IdeaComment(
         id: commentId,
         ideaId: ideaId,
-        userId: userId,
-        userName: userName,
-        userAvatar: userAvatar,
-        content: content,
+        authorId: userId,
+        text: content,
         createdAt: now,
-        parentCommentId: parentCommentId,
+        authorName: userName,
+        authorAvatar: userAvatar,
+        parentId: parentCommentId,
       );
 
       final batch = _firestore.batch();
@@ -489,7 +490,7 @@ class EventIdeasService {
 
       final snapshot = await _firestore
           .collection('event_ideas')
-          .where('category', isEqualTo: idea.category.name)
+          .where('category', isEqualTo: idea.category)
           .where('status', isEqualTo: 'published')
           .where('isPublic', isEqualTo: true)
           .where(FieldPath.documentId, isNotEqualTo: ideaId)
@@ -526,10 +527,10 @@ class EventIdeasService {
       }
 
       // Анализируем категории избранных идей
-      final categoryCounts = <EventIdeaCategory, int>{};
+      final categoryCounts = <String, int>{};
       for (final idea in favoriteIdeas) {
-        categoryCounts[idea.category] =
-            (categoryCounts[idea.category] ?? 0) + 1;
+        categoryCounts[idea.category ?? 'other'] =
+            (categoryCounts[idea.category ?? 'other'] ?? 0) + 1;
       }
 
       // Получаем самую популярную категорию
@@ -540,7 +541,6 @@ class EventIdeasService {
       // Получаем идеи из этой категории
       final recommendedIdeas = await getPublishedIdeas(
         limit: limit,
-        category: topCategory,
       );
 
       AppLogger.logI(

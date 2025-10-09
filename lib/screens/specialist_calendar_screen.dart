@@ -419,7 +419,7 @@ class _SpecialistCalendarScreenState
                       const SnackBar(content: Text('Недоступность добавлена')),
                     );
                   }
-                } catch (e) {
+                } on Exception catch (e) {
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Ошибка: $e')),
@@ -542,7 +542,7 @@ class _SpecialistCalendarScreenState
                       const SnackBar(content: Text('Отпуск добавлен')),
                     );
                   }
-                } catch (e) {
+                } on Exception catch (e) {
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Ошибка: $e')),
@@ -583,7 +583,7 @@ class _SpecialistCalendarScreenState
                     const SnackBar(content: Text('Тестовые данные добавлены')),
                   );
                 }
-              } catch (e) {
+              } on Exception catch (e) {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Ошибка: $e')),

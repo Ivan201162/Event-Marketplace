@@ -5,11 +5,11 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../core/navigation/app_navigator.dart';
-import '../models/chat_message.dart';
+import '../models/chat.dart';
 import '../services/chat_media_service.dart';
 import '../services/chat_service.dart';
-import '../services/firebase_auth_service.dart';
 import '../widgets/attachment_picker.dart';
+import '../widgets/auth_gate.dart';
 import '../widgets/message_bubble.dart';
 
 /// Экран конкретного чата
@@ -32,7 +32,6 @@ class ChatScreen extends ConsumerStatefulWidget {
 
 class _ChatScreenState extends ConsumerState<ChatScreen> {
   final ChatService _chatService = ChatService();
-  final FirebaseAuthService _authService = FirebaseAuthService();
   final ChatMediaService _mediaService = ChatMediaService();
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -65,187 +64,206 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   Future<void> _markMessagesAsRead() async {
-    final currentUser = _authService.currentUser;
+    final currentUserAsync = ref.read(currentUserProvider);
+    final currentUser = currentUserAsync.value;
     if (currentUser != null) {
-      await _chatService.markMessagesAsRead(widget.chatId, currentUser.id);
+      await _chatService.markMessagesAsRead(widget.chatId, currentUser.uid);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = _authService.currentUser;
+    final currentUserAsync = ref.watch(currentUserProvider);
 
-    if (currentUser == null) {
-      return const Scaffold(
-        body: Center(
-          child: Text('Необходимо войти в систему'),
-        ),
-      );
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        leading: AppNavigator.buildBackButton(context),
-        title: Row(
-          children: [
-            CircleAvatar(
-              radius: 18,
-              backgroundImage: widget.otherParticipantAvatar != null
-                  ? NetworkImage(widget.otherParticipantAvatar!)
-                  : null,
-              child: widget.otherParticipantAvatar == null
-                  ? Text(
-                      widget.otherParticipantName.isNotEmpty
-                          ? widget.otherParticipantName[0].toUpperCase()
-                          : '?',
-                    )
-                  : null,
+    return currentUserAsync.when(
+      loading: () => const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      ),
+      error: (e, _) => Scaffold(
+        body: Center(child: Text('Ошибка загрузки пользователя: $e')),
+      ),
+      data: (currentUser) {
+        if (currentUser == null) {
+          return const Scaffold(
+            body: Center(
+              child: Text('Необходимо войти в систему'),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.otherParticipantName,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+          );
+        }
+
+        return Scaffold(
+          appBar: AppBar(
+            leading: AppNavigator.buildBackButton(context),
+            title: Row(
+              children: [
+                Hero(
+                  tag: 'chat_avatar_${widget.otherParticipantId}',
+                  child: CircleAvatar(
+                    radius: 18,
+                    backgroundImage: widget.otherParticipantAvatar != null
+                        ? NetworkImage(widget.otherParticipantAvatar!)
+                        : null,
+                    child: widget.otherParticipantAvatar == null
+                        ? Text(
+                            widget.otherParticipantName.isNotEmpty
+                                ? widget.otherParticipantName[0].toUpperCase()
+                                : '?',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          )
+                        : null,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.otherParticipantName,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const Text(
+                        'в сети',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white70,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            backgroundColor: Theme.of(context).primaryColor,
+            foregroundColor: Colors.white,
+            elevation: 0,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.videocam),
+                onPressed: _startVideoCall,
+              ),
+              IconButton(
+                icon: const Icon(Icons.phone),
+                onPressed: _startVoiceCall,
+              ),
+              PopupMenuButton<String>(
+                onSelected: _handleMenuAction,
+                itemBuilder: (context) => [
+                  const PopupMenuItem(
+                    value: 'info',
+                    child: Row(
+                      children: [
+                        Icon(Icons.info),
+                        SizedBox(width: 8),
+                        Text('Информация о чате'),
+                      ],
                     ),
                   ),
-                  const Text(
-                    'в сети',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.white70,
+                  const PopupMenuItem(
+                    value: 'search',
+                    child: Row(
+                      children: [
+                        Icon(Icons.search),
+                        SizedBox(width: 8),
+                        Text('Поиск в чате'),
+                      ],
+                    ),
+                  ),
+                  const PopupMenuItem(
+                    value: 'media',
+                    child: Row(
+                      children: [
+                        Icon(Icons.photo_library),
+                        SizedBox(width: 8),
+                        Text('Медиафайлы'),
+                      ],
+                    ),
+                  ),
+                  const PopupMenuItem(
+                    value: 'block',
+                    child: Row(
+                      children: [
+                        Icon(Icons.block),
+                        SizedBox(width: 8),
+                        Text('Заблокировать'),
+                      ],
                     ),
                   ),
                 ],
               ),
-            ),
-          ],
-        ),
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.videocam),
-            onPressed: _startVideoCall,
-          ),
-          IconButton(
-            icon: const Icon(Icons.phone),
-            onPressed: _startVoiceCall,
-          ),
-          PopupMenuButton<String>(
-            onSelected: _handleMenuAction,
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'info',
-                child: Row(
-                  children: [
-                    Icon(Icons.info),
-                    SizedBox(width: 8),
-                    Text('Информация о чате'),
-                  ],
-                ),
-              ),
-              const PopupMenuItem(
-                value: 'search',
-                child: Row(
-                  children: [
-                    Icon(Icons.search),
-                    SizedBox(width: 8),
-                    Text('Поиск в чате'),
-                  ],
-                ),
-              ),
-              const PopupMenuItem(
-                value: 'media',
-                child: Row(
-                  children: [
-                    Icon(Icons.photo_library),
-                    SizedBox(width: 8),
-                    Text('Медиафайлы'),
-                  ],
-                ),
-              ),
-              const PopupMenuItem(
-                value: 'block',
-                child: Row(
-                  children: [
-                    Icon(Icons.block),
-                    SizedBox(width: 8),
-                    Text('Заблокировать'),
-                  ],
-                ),
-              ),
             ],
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Список сообщений
-          Expanded(
-            child: StreamBuilder<List<ChatMessage>>(
-              stream: _chatService.getChatMessages(widget.chatId),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  _messages = snapshot.data!;
-                }
+          body: Column(
+            children: [
+              // Список сообщений
+              Expanded(
+                child: StreamBuilder<List<ChatMessage>>(
+                  stream: _chatService.getChatMessages(widget.chatId),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      _messages = snapshot.data!;
+                    }
 
-                if (_messages.isEmpty && !snapshot.hasData) {
-                  return const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.chat_bubble_outline,
-                          size: 64,
-                          color: Colors.grey,
+                    if (_messages.isEmpty && !snapshot.hasData) {
+                      return const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.chat_bubble_outline,
+                              size: 64,
+                              color: Colors.grey,
+                            ),
+                            SizedBox(height: 16),
+                            Text(
+                              'Начните общение',
+                              style: TextStyle(fontSize: 18, color: Colors.grey),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Отправьте первое сообщение',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 16),
-                        Text(
-                          'Начните общение',
-                          style: TextStyle(fontSize: 18, color: Colors.grey),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Отправьте первое сообщение',
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  );
-                }
+                      );
+                    }
 
-                return ListView.builder(
-                  controller: _scrollController,
-                  padding: const EdgeInsets.all(16),
-                  itemCount: _messages.length,
-                  itemBuilder: (context, index) {
-                    final message = _messages[index];
-                    final isFromCurrentUser =
-                        message.senderId == currentUser.id;
+                    return ListView.builder(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.all(16),
+                      itemCount: _messages.length,
+                      itemBuilder: (context, index) {
+                        final message = _messages[index];
+                        final isFromCurrentUser =
+                            message.senderId == currentUser.uid;
 
-                    return MessageBubble(
-                      message: message,
-                      isFromCurrentUser: isFromCurrentUser,
-                      onTap: () => _showMessageOptions(context, message),
-                      onLongPress: () =>
-                          _showMessageContextMenu(context, message),
+                        return MessageBubble(
+                          message: message,
+                          isFromCurrentUser: isFromCurrentUser,
+                          onTap: () => _showMessageOptions(context, message),
+                          onLongPress: () =>
+                              _showMessageContextMenu(context, message),
+                        );
+                      },
                     );
                   },
-                );
-              },
-            ),
+                ),
+              ),
+              // Поле ввода сообщения
+              _buildMessageInput(),
+            ],
           ),
-          // Поле ввода сообщения
-          _buildMessageInput(),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -323,7 +341,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   Future<void> _sendTextMessage(String text) async {
     if (text.trim().isEmpty || _isLoading) return;
 
-    final currentUser = _authService.currentUser;
+    final currentUserAsync = ref.read(currentUserProvider);
+    final currentUser = currentUserAsync.value;
     if (currentUser == null) return;
 
     setState(() {
@@ -335,9 +354,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     try {
       await _chatService.sendTextMessage(
         chatId: widget.chatId,
-        senderId: currentUser.id,
+        senderId: currentUser.uid,
         text: text.trim(),
-        senderName: currentUser.displayName,
+        senderName: currentUser.name,
       );
 
       // Прокручиваем вниз
@@ -382,7 +401,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       final imageFile = await _mediaService.pickImage();
       if (imageFile == null) return;
 
-      final currentUser = _authService.currentUser;
+      final currentUserAsync = ref.read(currentUserProvider);
+      final currentUser = currentUserAsync.value;
       if (currentUser == null) return;
 
       setState(() {
@@ -391,8 +411,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
       final success = await _mediaService.sendImageMessage(
         chatId: widget.chatId,
-        senderId: currentUser.id,
-        senderName: currentUser.displayName ?? 'Пользователь',
+        senderId: currentUser.uid,
+        senderName: currentUser.name,
         imageFile: imageFile,
       );
 
@@ -406,7 +426,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           const SnackBar(content: Text('Ошибка отправки изображения')),
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ошибка отправки изображения: $e')),
@@ -426,7 +446,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       final videoFile = await _mediaService.pickVideo();
       if (videoFile == null) return;
 
-      final currentUser = _authService.currentUser;
+      final currentUserAsync = ref.read(currentUserProvider);
+      final currentUser = currentUserAsync.value;
       if (currentUser == null) return;
 
       setState(() {
@@ -435,8 +456,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
       final success = await _mediaService.sendVideoMessage(
         chatId: widget.chatId,
-        senderId: currentUser.id,
-        senderName: currentUser.displayName ?? 'Пользователь',
+        senderId: currentUser.uid,
+        senderName: currentUser.name,
         videoFile: videoFile,
       );
 
@@ -450,7 +471,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           const SnackBar(content: Text('Ошибка отправки видео')),
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ошибка отправки видео: $e')),
@@ -467,7 +488,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   Future<void> _sendFileMessage() async {
     try {
-      final currentUser = _authService.currentUser;
+      final currentUserAsync = ref.read(currentUserProvider);
+      final currentUser = currentUserAsync.value;
       if (currentUser == null) return;
 
       setState(() {
@@ -476,8 +498,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
       await _chatService.pickAndSendFile(
         chatId: widget.chatId,
-        senderId: currentUser.id,
-        senderName: currentUser.displayName,
+        senderId: currentUser.uid,
+        senderName: currentUser.name,
       );
     } on Exception catch (e) {
       if (mounted) {
@@ -550,7 +572,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   // TODO(developer): Реализовать пересылку
                 },
               ),
-              if (message.senderId == _authService.currentUser?.id) ...[
+              if (message.senderId == ref.read(currentUserProvider).value?.uid) ...[
                 ListTile(
                   leading: const Icon(Icons.edit),
                   title: const Text('Редактировать'),

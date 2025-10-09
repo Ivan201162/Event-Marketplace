@@ -130,7 +130,7 @@ class ErrorLogger {
       if (await file.exists()) {
         final content = await file.readAsString();
         if (content.isNotEmpty) {
-          final List<dynamic> jsonList = json.decode(content);
+          final jsonList = json.decode(content) as List<dynamic>;
           return jsonList.cast<Map<String, dynamic>>();
         }
       }
@@ -149,7 +149,7 @@ class ErrorLogger {
     try {
       final allLogs = await getAllLogs();
       return allLogs.where((log) {
-        final timestamp = DateTime.tryParse(log['timestamp'] ?? '');
+        final timestamp = DateTime.tryParse(log['timestamp'] as String? ?? '');
         return timestamp != null && timestamp.isAfter(since);
       }).toList();
     } catch (e) {
@@ -231,7 +231,7 @@ class ErrorLogger {
           buffer.writeln(log['stackTrace']);
         }
 
-        if (log['additionalData'] != null && log['additionalData'].isNotEmpty) {
+        if (log['additionalData'] != null && (log['additionalData'] as Map).isNotEmpty) {
           buffer.writeln('Additional Data:');
           buffer.writeln(json.encode(log['additionalData']));
         }
@@ -302,7 +302,7 @@ class ErrorLogger {
         contexts[context] = (contexts[context] ?? 0) + 1;
 
         // Определение диапазона дат
-        final timestamp = DateTime.tryParse(log['timestamp'] ?? '');
+        final timestamp = DateTime.tryParse(log['timestamp'] as String? ?? '');
         if (timestamp != null) {
           if (earliestDate == null || timestamp.isBefore(earliestDate)) {
             earliestDate = timestamp;

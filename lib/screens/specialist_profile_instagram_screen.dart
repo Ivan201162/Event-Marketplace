@@ -67,7 +67,7 @@ class _SpecialistProfileInstagramScreenState
         _stories = results[2]! as List<Story>;
         _isLoading = false;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _isLoading = false;
       });

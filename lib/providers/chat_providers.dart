@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../models/chat.dart' as chat_message;
 import '../models/chat.dart';
 import '../models/chat_attachment.dart';
-import '../models/chat_message.dart' as chat_message;
 import '../services/chat_service.dart';
 
 /// Провайдер сервиса чата
@@ -187,7 +187,7 @@ class ChatStateNotifier extends Notifier<ChatState> {
         ),
       );
       setLoading(false);
-    } catch (e) {
+    } on Exception catch (e) {
       setError(e.toString());
       setLoading(false);
     }

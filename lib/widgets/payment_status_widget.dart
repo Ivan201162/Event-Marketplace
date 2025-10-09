@@ -277,9 +277,9 @@ class PaymentStatusWidget extends ConsumerWidget {
               // Заголовок платежа
               Row(
                 children: [
-                  Text(
+                  Icon(
                     payment.type.icon,
-                    style: const TextStyle(fontSize: 20),
+                    size: 20,
                   ),
                   const SizedBox(width: 8),
                   Expanded(
@@ -411,13 +411,13 @@ class PaymentStatusWidget extends ConsumerWidget {
 
   Widget _buildPaymentSummary(BuildContext context, List<Payment> payments) {
     final totalAmount =
-        payments.fold(0, (sum, payment) => sum + payment.amount);
+        payments.fold<double>(0, (sum, payment) => sum + payment.amount);
     final completedAmount = payments
         .where((p) => p.isCompleted)
-        .fold(0, (sum, payment) => sum + payment.amount);
+        .fold<double>(0, (sum, payment) => sum + payment.amount);
     final pendingAmount = payments
         .where((p) => p.isPending)
-        .fold(0, (sum, payment) => sum + payment.amount);
+        .fold<double>(0, (sum, payment) => sum + payment.amount);
 
     return Container(
       padding: const EdgeInsets.all(12),

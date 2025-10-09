@@ -69,10 +69,14 @@ class ProfileImagePlaceholder extends StatelessWidget {
 
   /// Получить инициалы из имени
   String _getInitials(String? name) {
-    if (name == null || name.isEmpty) return '';
+    if (name == null || name.isEmpty) {
+      return '';
+    }
 
     final words = name.trim().split(' ');
-    if (words.isEmpty) return '';
+    if (words.isEmpty) {
+      return '';
+    }
 
     if (words.length == 1) {
       return words[0].substring(0, 1).toUpperCase();

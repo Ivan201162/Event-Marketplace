@@ -1,91 +1,78 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// Модель подписки
+enum SubscriptionPlan {
+  standard,
+  pro,
+  elite,
+}
+
 class Subscription {
-  const Subscription({
-    required this.id,
+  final String userId;
+  final SubscriptionPlan plan;
+  final DateTime startedAt;
+  final DateTime expiresAt;
+  final bool autoRenew;
+  final bool isActive;
+  final double monthlyPrice;
+
+  Subscription({
     required this.userId,
-    required this.specialistId,
-    required this.specialistName,
-    this.specialistPhotoUrl,
-    required this.createdAt,
+    required this.plan,
+    required this.startedAt,
+    required this.expiresAt,
+    required this.autoRenew,
     this.isActive = true,
-    this.notificationsEnabled = true,
-    this.planType = 'basic',
+    required this.monthlyPrice,
   });
 
-  /// Создать из документа Firestore
-  factory Subscription.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data()! as Map<String, dynamic>;
-
+  factory Subscription.fromMap(Map<String, dynamic> map) {
     return Subscription(
-      id: doc.id,
-      userId: data['userId'] as String,
-      specialistId: data['specialistId'] as String,
-      specialistName: data['specialistName'] as String,
-      specialistPhotoUrl: data['specialistPhotoUrl'] as String?,
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      isActive: data['isActive'] as bool? ?? true,
-      notificationsEnabled: data['notificationsEnabled'] as bool? ?? true,
-      planType: data['planType'] ?? 'basic',
+      userId: map['userId'] ?? '',
+      plan: SubscriptionPlan.values.firstWhere(
+        (e) => e.toString() == 'SubscriptionPlan.${map['plan']}',
+        orElse: () => SubscriptionPlan.standard,
+      ),
+      startedAt: (map['startedAt'] as Timestamp).toDate(),
+      expiresAt: (map['expiresAt'] as Timestamp).toDate(),
+      autoRenew: map['autoRenew'] ?? false,
+      isActive: map['isActive'] ?? true,
+      monthlyPrice: (map['monthlyPrice'] ?? 0.0).toDouble(),
     );
   }
-  final String id;
-  final String userId;
-  final String specialistId;
-  final String specialistName;
-  final String? specialistPhotoUrl;
-  final DateTime createdAt;
-  final bool isActive;
-  final bool notificationsEnabled;
-  final String planType;
 
-  /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'specialistId': specialistId,
-        'specialistName': specialistName,
-        'specialistPhotoUrl': specialistPhotoUrl,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'isActive': isActive,
-        'notificationsEnabled': notificationsEnabled,
-        'planType': planType,
-      };
-
-  /// Создать копию с обновлёнными полями
-  Subscription copyWith({
-    String? id,
-    String? userId,
-    String? specialistId,
-    String? specialistName,
-    String? specialistPhotoUrl,
-    DateTime? createdAt,
-    bool? isActive,
-    bool? notificationsEnabled,
-    String? planType,
-  }) =>
-      Subscription(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        specialistId: specialistId ?? this.specialistId,
-        specialistName: specialistName ?? this.specialistName,
-        specialistPhotoUrl: specialistPhotoUrl ?? this.specialistPhotoUrl,
-        createdAt: createdAt ?? this.createdAt,
-        isActive: isActive ?? this.isActive,
-        notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
-        planType: planType ?? this.planType,
-      );
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Subscription && other.id == id;
+  Map<String, dynamic> toMap() {
+    return {
+      'userId': userId,
+      'plan': plan.toString().split('.').last,
+      'startedAt': Timestamp.fromDate(startedAt),
+      'expiresAt': Timestamp.fromDate(expiresAt),
+      'autoRenew': autoRenew,
+      'isActive': isActive,
+      'monthlyPrice': monthlyPrice,
+    };
   }
 
-  @override
-  int get hashCode => id.hashCode;
+  bool get isExpired => DateTime.now().isAfter(expiresAt);
+  
+  int get daysRemaining => expiresAt.difference(DateTime.now()).inDays;
 
-  @override
-  String toString() =>
-      'Subscription(id: $id, userId: $userId, specialistId: $specialistId)';
+  Subscription copyWith({
+    String? userId,
+    SubscriptionPlan? plan,
+    DateTime? startedAt,
+    DateTime? expiresAt,
+    bool? autoRenew,
+    bool? isActive,
+    double? monthlyPrice,
+  }) {
+    return Subscription(
+      userId: userId ?? this.userId,
+      plan: plan ?? this.plan,
+      startedAt: startedAt ?? this.startedAt,
+      expiresAt: expiresAt ?? this.expiresAt,
+      autoRenew: autoRenew ?? this.autoRenew,
+      isActive: isActive ?? this.isActive,
+      monthlyPrice: monthlyPrice ?? this.monthlyPrice,
+    );
+  }
 }

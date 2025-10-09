@@ -159,7 +159,9 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
   Widget _buildSubcategoriesFilter() {
     final subcategories = _getAvailableSubcategories();
 
-    if (subcategories.isEmpty) return const SizedBox.shrink();
+    if (subcategories.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -311,7 +313,9 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
   Widget _buildServiceAreasFilter() {
     final serviceAreas = _getAvailableServiceAreas();
 
-    if (serviceAreas.isEmpty) return const SizedBox.shrink();
+    if (serviceAreas.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

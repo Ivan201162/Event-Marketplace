@@ -151,34 +151,64 @@ class PaymentSummary extends StatelessWidget {
 
   IconData _getTypeIcon() {
     switch (type) {
+      case PaymentType.deposit:
+        return Icons.payment;
       case PaymentType.prepayment:
         return Icons.payment;
       case PaymentType.finalPayment:
         return Icons.account_balance_wallet;
       case PaymentType.fullPayment:
         return Icons.check_circle;
+      case PaymentType.refund:
+        return Icons.undo;
+      case PaymentType.penalty:
+        return Icons.warning;
+      case PaymentType.bonus:
+        return Icons.star;
+      case PaymentType.hold:
+        return Icons.pause_circle;
     }
   }
 
   String _getTypeDisplayName() {
     switch (type) {
+      case PaymentType.deposit:
+        return 'Депозит';
       case PaymentType.prepayment:
         return 'Предоплата';
       case PaymentType.finalPayment:
         return 'Окончательный расчет';
       case PaymentType.fullPayment:
         return 'Полная оплата';
+      case PaymentType.refund:
+        return 'Возврат';
+      case PaymentType.penalty:
+        return 'Штраф';
+      case PaymentType.bonus:
+        return 'Бонус';
+      case PaymentType.hold:
+        return 'Заморозка средств';
     }
   }
 
   String _getPaymentInfo() {
     switch (type) {
+      case PaymentType.deposit:
+        return 'Депозит для бронирования услуги';
       case PaymentType.prepayment:
         return 'Предоплата составляет 30% от общей стоимости услуги';
       case PaymentType.finalPayment:
         return 'Окончательный расчет после завершения мероприятия';
       case PaymentType.fullPayment:
         return 'Полная оплата за услугу';
+      case PaymentType.refund:
+        return 'Возврат средств';
+      case PaymentType.penalty:
+        return 'Штраф за нарушение условий';
+      case PaymentType.bonus:
+        return 'Бонусная выплата';
+      case PaymentType.hold:
+        return 'Временная заморозка средств';
     }
   }
 }

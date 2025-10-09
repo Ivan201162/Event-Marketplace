@@ -51,6 +51,25 @@ app.*.map.json
 **/*.jks
 **/*.p8
 **/*.pem
+
+# Analysis and build artifacts
+analysis_*.txt
+analysis_*.log
+build_logs.txt
+final_build_log.txt
+error_map_*.txt
+errors_only.txt
+fresh_logs.txt
+install_log.txt
+test_summary.txt
+ui_fixes_log.txt
+ui_test_report.txt
+usb_test_report.txt
+device_logs*.txt
+
+# Backup and temporary files
+pubspec_*.yaml
+event_marketplace*.yaml
 **/firebase_options.dart
 **/secrets.json
 **/config.json

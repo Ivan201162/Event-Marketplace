@@ -446,7 +446,9 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
   }
 
   Future<void> _loadMoreNews() async {
-    if (_isLoadingMore) return;
+    if (_isLoadingMore) {
+      return;
+    }
 
     setState(() => _isLoadingMore = true);
 

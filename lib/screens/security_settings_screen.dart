@@ -436,7 +436,7 @@ class _SecuritySettingsScreenState
           'lastSecurityUpdate': DateTime.now(),
           'createdAt': DateTime.now(),
           'updatedAt': DateTime.now(),
-        );
+        ,,,,,,,,,,,,,,,,,,,,,,,,);
 
         await _securityService.updateSecuritySettings(settings);
 

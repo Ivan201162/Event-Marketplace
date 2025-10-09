@@ -57,7 +57,9 @@ class _SpecialistDiscountOfferWidgetState
   }
 
   Future<void> _offerDiscount(double discountPercent) async {
-    if (!_canOfferDiscount) return;
+    if (!_canOfferDiscount) {
+      return;
+    }
 
     setState(() {
       _isLoading = true;

@@ -24,6 +24,22 @@ class EventIdea {
     this.isPublic = true,
     this.isFeatured = false,
     this.metadata = const {},
+    this.imageUrl,
+    this.guestCount,
+    this.season,
+    this.style,
+    this.colorScheme,
+    this.inspiration,
+    this.createdBy,
+    this.commentsCount,
+    this.mediaUrl,
+    this.isVideo,
+    this.price,
+    this.priceCurrency,
+    this.requiredSkills,
+    this.likesCount,
+    this.savesCount,
+    this.sharesCount,
   });
 
   /// Создать из документа Firestore
@@ -56,6 +72,22 @@ class EventIdea {
       isPublic: data['isPublic'] != false,
       isFeatured: data['isFeatured'] == true,
       metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
+      imageUrl: data['imageUrl']?.toString(),
+      guestCount: (data['guestCount'] as num?)?.toInt(),
+      season: data['season']?.toString(),
+      style: data['style']?.toString(),
+      colorScheme: (data['colorScheme'] as List<dynamic>?)?.map((e) => e.toString()).toList(),
+      inspiration: data['inspiration']?.toString(),
+      createdBy: data['createdBy']?.toString(),
+      commentsCount: (data['commentsCount'] as num?)?.toInt(),
+      mediaUrl: data['mediaUrl']?.toString(),
+      isVideo: data['isVideo'] as bool?,
+      price: (data['price'] as num?)?.toDouble(),
+      priceCurrency: data['priceCurrency']?.toString(),
+      requiredSkills: (data['requiredSkills'] as List<dynamic>?)?.map((e) => e.toString()).toList(),
+      likesCount: (data['likesCount'] as num?)?.toInt(),
+      savesCount: (data['savesCount'] as num?)?.toInt(),
+      sharesCount: (data['sharesCount'] as num?)?.toInt(),
     );
   }
 
@@ -90,6 +122,22 @@ class EventIdea {
         isPublic: data['isPublic'] != false,
         isFeatured: data['isFeatured'] == true,
         metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
+        imageUrl: data['imageUrl']?.toString(),
+        guestCount: (data['guestCount'] as num?)?.toInt(),
+        season: data['season']?.toString(),
+        style: data['style']?.toString(),
+        colorScheme: (data['colorScheme'] as List<dynamic>?)?.map((e) => e.toString()).toList(),
+        inspiration: data['inspiration']?.toString(),
+        createdBy: data['createdBy']?.toString(),
+        commentsCount: (data['commentsCount'] as num?)?.toInt(),
+        mediaUrl: data['mediaUrl']?.toString(),
+        isVideo: data['isVideo'] as bool?,
+        price: (data['price'] as num?)?.toDouble(),
+        priceCurrency: data['priceCurrency']?.toString(),
+        requiredSkills: (data['requiredSkills'] as List<dynamic>?)?.map((e) => e.toString()).toList(),
+        likesCount: (data['likesCount'] as num?)?.toInt(),
+        savesCount: (data['savesCount'] as num?)?.toInt(),
+        sharesCount: (data['sharesCount'] as num?)?.toInt(),
       );
 
   final String id;
@@ -113,6 +161,22 @@ class EventIdea {
   final bool isPublic;
   final bool isFeatured;
   final Map<String, dynamic> metadata;
+  final String? imageUrl;
+  final int? guestCount;
+  final String? season;
+  final String? style;
+  final List<String>? colorScheme;
+  final String? inspiration;
+  final String? createdBy;
+  final int? commentsCount;
+  final String? mediaUrl;
+  final bool? isVideo;
+  final double? price;
+  final String? priceCurrency;
+  final List<String>? requiredSkills;
+  final int? likesCount;
+  final int? savesCount;
+  final int? sharesCount;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -136,6 +200,22 @@ class EventIdea {
         'isPublic': isPublic,
         'isFeatured': isFeatured,
         'metadata': metadata,
+        'imageUrl': imageUrl,
+        'guestCount': guestCount,
+        'season': season,
+        'style': style,
+        'colorScheme': colorScheme,
+        'inspiration': inspiration,
+        'createdBy': createdBy,
+        'commentsCount': commentsCount,
+        'mediaUrl': mediaUrl,
+        'isVideo': isVideo,
+        'price': price,
+        'priceCurrency': priceCurrency,
+        'requiredSkills': requiredSkills,
+        'likesCount': likesCount,
+        'savesCount': savesCount,
+        'sharesCount': sharesCount,
       };
 
   /// Создать копию с изменениями
@@ -161,6 +241,22 @@ class EventIdea {
     bool? isPublic,
     bool? isFeatured,
     Map<String, dynamic>? metadata,
+    String? imageUrl,
+    int? guestCount,
+    String? season,
+    String? style,
+    List<String>? colorScheme,
+    String? inspiration,
+    String? createdBy,
+    int? commentsCount,
+    String? mediaUrl,
+    bool? isVideo,
+    double? price,
+    String? priceCurrency,
+    List<String>? requiredSkills,
+    int? likesCount,
+    int? savesCount,
+    int? sharesCount,
   }) =>
       EventIdea(
         id: id ?? this.id,
@@ -184,6 +280,22 @@ class EventIdea {
         isPublic: isPublic ?? this.isPublic,
         isFeatured: isFeatured ?? this.isFeatured,
         metadata: metadata ?? this.metadata,
+        imageUrl: imageUrl ?? this.imageUrl,
+        guestCount: guestCount ?? this.guestCount,
+        season: season ?? this.season,
+        style: style ?? this.style,
+        colorScheme: colorScheme ?? this.colorScheme,
+        inspiration: inspiration ?? this.inspiration,
+        createdBy: createdBy ?? this.createdBy,
+        commentsCount: commentsCount ?? this.commentsCount,
+        mediaUrl: mediaUrl ?? this.mediaUrl,
+        isVideo: isVideo ?? this.isVideo,
+        price: price ?? this.price,
+        priceCurrency: priceCurrency ?? this.priceCurrency,
+        requiredSkills: requiredSkills ?? this.requiredSkills,
+        likesCount: likesCount ?? this.likesCount,
+        savesCount: savesCount ?? this.savesCount,
+        sharesCount: sharesCount ?? this.sharesCount,
       );
 
   /// Проверить, есть ли изображения
@@ -341,6 +453,22 @@ class IdeaComment {
       isPublic: data['isPublic'] != false,
     );
   }
+
+  factory IdeaComment.fromMap(Map<String, dynamic> data) => IdeaComment(
+      id: data['id']?.toString() ?? '',
+      ideaId: data['ideaId']?.toString() ?? '',
+      authorId: data['authorId']?.toString() ?? '',
+      text: data['text']?.toString() ?? '',
+      createdAt: (data['createdAt'] is Timestamp) 
+          ? (data['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
+      authorName: data['authorName']?.toString(),
+      authorAvatar: data['authorAvatar']?.toString(),
+      likes: (data['likes'] as num?)?.toInt() ?? 0,
+      replies: (data['replies'] as num?)?.toInt() ?? 0,
+      parentId: data['parentId']?.toString(),
+      isPublic: data['isPublic'] != false,
+    );
 
   final String id;
   final String ideaId;

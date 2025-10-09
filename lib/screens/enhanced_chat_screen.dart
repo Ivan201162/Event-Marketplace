@@ -1,448 +1,529 @@
-import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/enhanced_chat.dart';
+import '../models/enhanced_message.dart';
+import '../services/enhanced_chats_service.dart';
+import '../widgets/message_bubble_widget.dart';
+import '../widgets/message_input_widget.dart';
 
-import '../models/chat.dart';
-import '../models/chat_message.dart';
-import '../services/chat_service.dart';
-import '../services/media_upload_service.dart';
-import '../services/typing_service.dart';
-import '../widgets/chat_attachment_picker.dart';
-import '../widgets/media_message_widget.dart';
-import '../widgets/typing_indicator_widget.dart';
-
-/// Улучшенный экран чата с полной функциональностью
+/// Расширенный экран чата
 class EnhancedChatScreen extends ConsumerStatefulWidget {
   const EnhancedChatScreen({
     super.key,
     required this.chatId,
-    this.chatTitle,
   });
 
   final String chatId;
-  final String? chatTitle;
 
   @override
   ConsumerState<EnhancedChatScreen> createState() => _EnhancedChatScreenState();
 }
 
 class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
-  final TextEditingController _messageController = TextEditingController();
+  final EnhancedChatsService _chatsService = EnhancedChatsService();
   final ScrollController _scrollController = ScrollController();
-  final ChatService _chatService = ChatService();
-  final TypingService _typingService = TypingService();
-
+  
+  EnhancedChat? _chat;
+  List<EnhancedMessage> _messages = [];
+  bool _isLoading = true;
+  String? _error;
+  MessageReply? _replyTo;
   bool _isTyping = false;
-  bool _isUploading = false;
-  String? _currentUserId;
-  String? _currentUserName;
-  List<TypingUser> _typingUsers = [];
 
   @override
   void initState() {
     super.initState();
-    _messageController.addListener(_onTextChanged);
-    _scrollController.addListener(_onScroll);
-    _loadCurrentUser();
-    _setupTypingListener();
+    _loadChat();
+    _loadMessages();
   }
 
   @override
   void dispose() {
-    _messageController.removeListener(_onTextChanged);
-    _scrollController.removeListener(_onScroll);
-    _messageController.dispose();
     _scrollController.dispose();
-    _stopTyping();
     super.dispose();
   }
 
-  void _loadCurrentUser() {
-    // TODO(developer): Получить текущего пользователя из провайдера
-    _currentUserId = 'current_user_id';
-    _currentUserName = 'Текущий пользователь';
-  }
-
-  void _setupTypingListener() {
-    _typingService.getTypingUsers(widget.chatId).listen((users) {
+  Future<void> _loadChat() async {
+    try {
+      // Получаем чат по ID через сервис
+      final chat = await _chatsService.getChat(widget.chatId);
       setState(() {
-        _typingUsers = users;
+        _chat = chat;
       });
-    });
-  }
-
-  void _onTextChanged() {
-    if (_messageController.text.isNotEmpty && !_isTyping) {
-      _startTyping();
-    } else if (_messageController.text.isEmpty && _isTyping) {
-      _stopTyping();
-    }
-  }
-
-  void _onScroll() {
-    // Автоматически останавливаем печатание при скролле
-    if (_isTyping) {
-      _stopTyping();
-    }
-  }
-
-  void _startTyping() {
-    if (_currentUserId != null && _currentUserName != null) {
+    } catch (e) {
       setState(() {
-        _isTyping = true;
+        _error = e.toString();
       });
-      _typingService.startTyping(
-        chatId: widget.chatId,
-        userId: _currentUserId!,
-        userName: _currentUserName!,
-      );
     }
   }
 
-  void _stopTyping() {
-    if (_currentUserId != null) {
+  Future<void> _loadMessages() async {
+    setState(() => _isLoading = true);
+
+    try {
+      // Получаем сообщения чата через сервис
+      final messages = await _chatsService.getMessages(widget.chatId);
       setState(() {
-        _isTyping = false;
+        _messages = messages;
+        _isLoading = false;
       });
-      _typingService.stopTyping(
-        chatId: widget.chatId,
-        userId: _currentUserId!,
-      );
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
     }
+  }
+
+  EnhancedChat _createMockChat() {
+    return EnhancedChat(
+      id: widget.chatId,
+      type: ChatType.direct,
+      members: [
+        ChatMember(
+          userId: 'user_1',
+          role: ChatMemberRole.member,
+          joinedAt: DateTime.now().subtract(const Duration(days: 1)),
+          isOnline: true,
+        ),
+        ChatMember(
+          userId: 'user_2',
+          role: ChatMemberRole.member,
+          joinedAt: DateTime.now().subtract(const Duration(days: 1)),
+          isOnline: false,
+          lastSeen: DateTime.now().subtract(const Duration(minutes: 30)),
+        ),
+      ],
+      createdAt: DateTime.now().subtract(const Duration(days: 1)),
+      name: 'Тестовый чат',
+      lastMessage: ChatLastMessage(
+        id: '1',
+        senderId: 'user_1',
+        text: 'Привет! Как дела?',
+        type: MessageType.text,
+        createdAt: DateTime.now().subtract(const Duration(minutes: 5)),
+      ),
+    );
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: Text(widget.chatTitle ?? 'Чат'),
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.attach_file),
-              onPressed: _showAttachmentPicker,
-            ),
-            PopupMenuButton<String>(
-              onSelected: _handleMenuAction,
-              itemBuilder: (context) => [
-                const PopupMenuItem(
-                  value: 'clear_chat',
-                  child: Row(
-                    children: [
-                      Icon(Icons.clear_all),
-                      SizedBox(width: 8),
-                      Text('Очистить чат'),
-                    ],
-                  ),
-                ),
-                const PopupMenuItem(
-                  value: 'chat_info',
-                  child: Row(
-                    children: [
-                      Icon(Icons.info),
-                      SizedBox(width: 8),
-                      Text('Информация о чате'),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        body: Column(
-          children: [
-            // Список сообщений
-            Expanded(
-              child: StreamBuilder<List<ChatMessage>>(
-                stream: _chatService.getChatMessages(widget.chatId),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Text('Ошибка: ${snapshot.error}'),
-                    );
-                  }
-
-                  final messages = snapshot.data ?? [];
-
-                  if (messages.isEmpty) {
-                    return const Center(
-                      child: Text('Пока нет сообщений'),
-                    );
-                  }
-
-                  return ListView.builder(
-                    controller: _scrollController,
-                    reverse: true,
-                    padding: const EdgeInsets.all(16),
-                    itemCount:
-                        messages.length + (_typingUsers.isNotEmpty ? 1 : 0),
-                    itemBuilder: (context, index) {
-                      if (index == 0 && _typingUsers.isNotEmpty) {
-                        return AnimatedTypingIndicator(
-                          typingUsers: _typingUsers,
-                          currentUserId: _currentUserId,
-                        );
-                      }
-
-                      final messageIndex =
-                          _typingUsers.isNotEmpty ? index - 1 : index;
-                      final message = messages[messageIndex];
-                      final isOwnMessage = message.senderId == _currentUserId;
-
-                      return _buildMessageBubble(message, isOwnMessage);
-                    },
-                  );
-                },
-              ),
-            ),
-
-            // Индикатор загрузки файлов
-            if (_isUploading) const LinearProgressIndicator(),
-
-            // Поле ввода сообщения
-            _buildMessageInput(),
-          ],
-        ),
-      );
-
-  Widget _buildMessageBubble(ChatMessage message, bool isOwnMessage) {
-    if (message.isAttachment) {
-      return MediaMessageWidget(
-        message: message,
-        isOwnMessage: isOwnMessage,
-        onTap: () => _handleMediaTap(message),
-        onDelete: () => _deleteMessage(message.id),
+  Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
       );
     }
 
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment:
-            isOwnMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
-        children: [
-          if (!isOwnMessage) ...[
-            CircleAvatar(
-              radius: 16,
-              backgroundImage: message.senderAvatar != null
-                  ? NetworkImage(message.senderAvatar!)
-                  : null,
-              child: message.senderAvatar == null
-                  ? Text(message.senderName[0].toUpperCase())
-                  : null,
-            ),
-            const SizedBox(width: 8),
-          ],
-          Flexible(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              decoration: BoxDecoration(
-                color: isOwnMessage
-                    ? Theme.of(context).primaryColor
-                    : Colors.grey[200],
-                borderRadius: BorderRadius.circular(20),
+    if (_error != null) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Ошибка')),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error, size: 64, color: Colors.red),
+              const SizedBox(height: 16),
+              Text('Ошибка: $_error'),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  _loadChat();
+                  _loadMessages();
+                },
+                child: const Text('Повторить'),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (!isOwnMessage)
-                    Text(
-                      message.senderName,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                      ),
-                    ),
-                  Text(
-                    message.content,
-                    style: TextStyle(
-                      color: isOwnMessage ? Colors.white : Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        _formatTime(message.timestamp),
-                        style: TextStyle(
-                          color:
-                              isOwnMessage ? Colors.white70 : Colors.grey[600],
-                          fontSize: 10,
-                        ),
-                      ),
-                      if (isOwnMessage) ...[
-                        const SizedBox(width: 4),
-                        Icon(
-                          _getStatusIcon(message.status),
-                          size: 12,
-                          color: Colors.white70,
-                        ),
-                      ],
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            ],
           ),
-          if (isOwnMessage) ...[
-            const SizedBox(width: 8),
-            CircleAvatar(
-              radius: 16,
-              backgroundImage: message.senderAvatar != null
-                  ? NetworkImage(message.senderAvatar!)
-                  : null,
-              child: message.senderAvatar == null
-                  ? Text(message.senderName[0].toUpperCase())
-                  : null,
-            ),
-          ],
+        ),
+      );
+    }
+
+    if (_chat == null) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Чат не найден')),
+        body: Center(child: Text('Чат не найден')),
+      );
+    }
+
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: Column(
+        children: [
+          // Список сообщений
+          Expanded(
+            child: _buildMessagesList(),
+          ),
+          
+          // Индикатор печати
+          if (_isTyping) _buildTypingIndicator(),
+          
+          // Поле ввода сообщений
+          MessageInputWidget(
+            onSendMessage: _sendTextMessage,
+            onSendMedia: _sendMediaMessage,
+            onSendVoice: _sendVoiceMessage,
+            onSendDocument: _sendDocumentMessage,
+            replyTo: _replyTo,
+            onCancelReply: _cancelReply,
+            isTyping: _isTyping,
+            onTypingChanged: _onTypingChanged,
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildMessageInput() => Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
-          border: Border(
-            top: BorderSide(color: Colors.grey[300]!),
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      title: Row(
+        children: [
+          CircleAvatar(
+            radius: 16,
+            backgroundColor: Colors.grey[300],
+            child: const Icon(Icons.person, size: 16),
           ),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _messageController,
-                decoration: const InputDecoration(
-                  hintText: 'Введите сообщение...',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _chat!.name ?? 'Чат',
+                  style: const TextStyle(fontSize: 16),
                 ),
-                maxLines: null,
-                onSubmitted: _sendMessage,
+                if (_chat!.type == ChatType.direct) ...[
+                  Text(
+                    _getOnlineStatus(),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.videocam),
+          onPressed: _startVideoCall,
+          tooltip: 'Видеозвонок',
+        ),
+        IconButton(
+          icon: const Icon(Icons.phone),
+          onPressed: _startVoiceCall,
+          tooltip: 'Голосовой звонок',
+        ),
+        PopupMenuButton<String>(
+          onSelected: _handleMenuAction,
+          itemBuilder: (context) => [
+            const PopupMenuItem(
+              value: 'search',
+              child: ListTile(
+                leading: Icon(Icons.search),
+                title: Text('Поиск'),
               ),
             ),
-            const SizedBox(width: 8),
-            IconButton(
-              icon: const Icon(Icons.attach_file),
-              onPressed: _showAttachmentPicker,
+            const PopupMenuItem(
+              value: 'media',
+              child: ListTile(
+                leading: Icon(Icons.photo_library),
+                title: Text('Медиафайлы'),
+              ),
             ),
-            IconButton(
-              icon: const Icon(Icons.send),
-              onPressed:
-                  _messageController.text.isNotEmpty ? _sendMessage : null,
+            const PopupMenuItem(
+              value: 'settings',
+              child: ListTile(
+                leading: Icon(Icons.settings),
+                title: Text('Настройки'),
+              ),
+            ),
+            const PopupMenuItem(
+              value: 'pin',
+              child: ListTile(
+                leading: Icon(Icons.push_pin),
+                title: Text('Закрепить'),
+              ),
+            ),
+            const PopupMenuItem(
+              value: 'mute',
+              child: ListTile(
+                leading: Icon(Icons.volume_off),
+                title: Text('Заглушить'),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMessagesList() {
+    if (_messages.isEmpty) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
+            Text(
+              'Начните общение',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.grey,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Отправьте первое сообщение',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey,
+              ),
             ),
           ],
         ),
       );
-
-  void _sendMessage([String? text]) {
-    final messageText = text ?? _messageController.text.trim();
-    if (messageText.isEmpty ||
-        _currentUserId == null ||
-        _currentUserName == null) {
-      return;
     }
 
-    _stopTyping();
-    _messageController.clear();
+    return ListView.builder(
+      controller: _scrollController,
+      reverse: true,
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      itemCount: _messages.length,
+      itemBuilder: (context, index) {
+        final message = _messages[index];
+        final isCurrentUser = message.senderId == 'current_user'; // TODO: Получить из провайдера
+        final showAvatar = index == _messages.length - 1 || 
+                          _messages[index + 1].senderId != message.senderId;
 
-    final message = ChatMessage(
-      id: '', // Будет установлен Firestore
-      chatId: widget.chatId,
-      senderId: _currentUserId!,
-      senderName: _currentUserName!,
-      type: MessageType.text,
-      content: messageText,
-      status: MessageStatus.sending,
-      timestamp: DateTime.now(),
+        return MessageBubbleWidget(
+          message: message,
+          isCurrentUser: isCurrentUser,
+          showAvatar: showAvatar,
+          onTap: () => _onMessageTap(message),
+          onLongPress: () => _onMessageLongPress(message),
+          onReply: () => _replyToMessage(message),
+          onForward: () => _forwardMessage(message),
+          onEdit: () => _editMessage(message),
+          onDelete: () => _deleteMessage(message),
+          onReact: (emoji) => _reactToMessage(message, emoji),
+        );
+      },
     );
-
-    _chatService.sendMessage(widget.chatId, message);
   }
 
-  void _showAttachmentPicker() {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => ChatAttachmentPicker(
-        onFileSelected: _sendFileMessage,
-        onImageSelected: _sendFileMessage,
-        onVideoSelected: _sendFileMessage,
-        onDocumentSelected: _sendFileMessage,
-        onAudioSelected: _sendFileMessage,
+  Widget _buildTypingIndicator() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        children: [
+          const SizedBox(width: 40), // Отступ для выравнивания с сообщениями
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(18),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Печатает',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 12,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[400]!),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  void _sendFileMessage(MediaUploadResult result) {
-    if (_currentUserId == null || _currentUserName == null) return;
+  String _getOnlineStatus() {
+    final otherMember = _chat!.members.firstWhere(
+      (member) => member.userId != 'current_user', // TODO: Получить из провайдера
+      orElse: () => _chat!.members.first,
+    );
 
+    if (otherMember.isOnline) {
+      return 'В сети';
+    } else if (otherMember.lastSeen != null) {
+      final now = DateTime.now();
+      final difference = now.difference(otherMember.lastSeen!);
+      
+      if (difference.inMinutes < 60) {
+        return 'Был(а) в сети ${difference.inMinutes} мин назад';
+      } else if (difference.inHours < 24) {
+        return 'Был(а) в сети ${difference.inHours} ч назад';
+      } else {
+        return 'Был(а) в сети ${difference.inDays} дн назад';
+      }
+    } else {
+      return 'Не в сети';
+    }
+  }
+
+  void _handleMenuAction(String action) {
+    switch (action) {
+      case 'search':
+        _searchMessages();
+        break;
+      case 'media':
+        _showMediaFiles();
+        break;
+      case 'settings':
+        _showChatSettings();
+        break;
+      case 'pin':
+        _pinChat();
+        break;
+      case 'mute':
+        _muteChat();
+        break;
+    }
+  }
+
+  void _onMessageTap(EnhancedMessage message) {
+    // TODO: Реализовать обработку нажатия на сообщение
+  }
+
+  void _onMessageLongPress(EnhancedMessage message) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => _buildMessageActionsSheet(message),
+    );
+  }
+
+  Widget _buildMessageActionsSheet(EnhancedMessage message) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.reply),
+            title: const Text('Ответить'),
+            onTap: () {
+              Navigator.pop(context);
+              _replyToMessage(message);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.forward),
+            title: const Text('Переслать'),
+            onTap: () {
+              Navigator.pop(context);
+              _forwardMessage(message);
+            },
+          ),
+          if (message.senderId == 'current_user') ...[ // TODO: Получить из провайдера
+            ListTile(
+              leading: const Icon(Icons.edit),
+              title: const Text('Редактировать'),
+              onTap: () {
+                Navigator.pop(context);
+                _editMessage(message);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.delete, color: Colors.red),
+              title: const Text('Удалить', style: TextStyle(color: Colors.red)),
+              onTap: () {
+                Navigator.pop(context);
+                _deleteMessage(message);
+              },
+            ),
+          ],
+          ListTile(
+            leading: const Icon(Icons.copy),
+            title: const Text('Копировать'),
+            onTap: () {
+              Navigator.pop(context);
+              _copyMessage(message);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _sendTextMessage(String text) {
+    // TODO: Реализовать отправку текстового сообщения
+    debugPrint('Отправка текстового сообщения: $text');
+  }
+
+  void _sendMediaMessage(List<MessageAttachment> attachments, {String? caption}) {
+    // TODO: Реализовать отправку медиа сообщения
+    debugPrint('Отправка медиа сообщения: ${attachments.length} файлов');
+  }
+
+  void _sendVoiceMessage(MessageAttachment voiceAttachment) {
+    // TODO: Реализовать отправку голосового сообщения
+    debugPrint('Отправка голосового сообщения');
+  }
+
+  void _sendDocumentMessage(List<MessageAttachment> documents) {
+    // TODO: Реализовать отправку документов
+    debugPrint('Отправка документов: ${documents.length} файлов');
+  }
+
+  void _replyToMessage(EnhancedMessage message) {
     setState(() {
-      _isUploading = true;
-    });
-
-    _chatService
-        .sendMessageWithMedia(
-      chatId: widget.chatId,
-      senderId: _currentUserId!,
-      senderName: _currentUserName!,
-      content: result.fileName,
-      mediaResult: result,
-    )
-        .then((_) {
-      setState(() {
-        _isUploading = false;
-      });
-    }).catchError((error) {
-      setState(() {
-        _isUploading = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка отправки файла: $error'),
-          backgroundColor: Colors.red,
-        ),
+      _replyTo = MessageReply(
+        messageId: message.id,
+        senderId: message.senderId,
+        text: message.text,
+        type: message.type,
       );
     });
   }
 
-  void _handleMediaTap(ChatMessage message) {
-    // TODO(developer): Реализовать просмотр медиафайлов
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Просмотр ${message.typeName}'),
-      ),
-    );
+  void _cancelReply() {
+    setState(() {
+      _replyTo = null;
+    });
   }
 
-  void _deleteMessage(String messageId) {
-    showDialog<void>(
+  void _forwardMessage(EnhancedMessage message) {
+    // TODO: Реализовать пересылку сообщения
+    debugPrint('Пересылка сообщения: ${message.id}');
+  }
+
+  void _editMessage(EnhancedMessage message) {
+    // TODO: Реализовать редактирование сообщения
+    debugPrint('Редактирование сообщения: ${message.id}');
+  }
+
+  void _deleteMessage(EnhancedMessage message) {
+    showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Удалить сообщение?'),
-        content: const Text('Это действие нельзя отменить.'),
+        title: const Text('Удалить сообщение'),
+        content: const Text('Вы уверены, что хотите удалить это сообщение?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.pop(context),
             child: const Text('Отмена'),
           ),
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
-              _chatService.deleteMessage(messageId);
+              Navigator.pop(context);
+              // TODO: Реализовать удаление сообщения
             },
             child: const Text('Удалить'),
           ),
@@ -451,76 +532,54 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
     );
   }
 
-  void _handleMenuAction(String action) {
-    switch (action) {
-      case 'clear_chat':
-        _clearChat();
-        break;
-      case 'chat_info':
-        _showChatInfo();
-        break;
-    }
+  void _reactToMessage(EnhancedMessage message, String emoji) {
+    // TODO: Реализовать реакцию на сообщение
+    debugPrint('Реакция на сообщение: $emoji');
   }
 
-  void _clearChat() {
-    showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Очистить чат?'),
-        content: const Text(
-          'Все сообщения будут удалены. Это действие нельзя отменить.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Отмена'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              _chatService.clearChat(widget.chatId);
-            },
-            child: const Text('Очистить'),
-          ),
-        ],
-      ),
-    );
+  void _copyMessage(EnhancedMessage message) {
+    // TODO: Реализовать копирование сообщения
+    debugPrint('Копирование сообщения');
   }
 
-  void _showChatInfo() {
-    // TODO(developer): Показать информацию о чате
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Информация о чате'),
-      ),
-    );
+  void _onTypingChanged(bool isTyping) {
+    setState(() {
+      _isTyping = isTyping;
+    });
   }
 
-  String _formatTime(DateTime dateTime) {
-    final now = DateTime.now();
-    final difference = now.difference(dateTime);
-
-    if (difference.inDays > 0) {
-      return '${dateTime.day}.${dateTime.month}.${dateTime.year}';
-    } else if (difference.inHours > 0) {
-      return '${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
-    } else {
-      return dateTime.minute.toString().padLeft(2, '0');
-    }
+  void _startVideoCall() {
+    // TODO: Реализовать видеозвонок
+    debugPrint('Начало видеозвонка');
   }
 
-  IconData _getStatusIcon(MessageStatus status) {
-    switch (status) {
-      case MessageStatus.sending:
-        return Icons.access_time;
-      case MessageStatus.sent:
-        return Icons.check;
-      case MessageStatus.delivered:
-        return Icons.done_all;
-      case MessageStatus.read:
-        return Icons.done_all;
-      case MessageStatus.failed:
-        return Icons.error;
-    }
+  void _startVoiceCall() {
+    // TODO: Реализовать голосовой звонок
+    debugPrint('Начало голосового звонка');
+  }
+
+  void _searchMessages() {
+    // TODO: Реализовать поиск по сообщениям
+    debugPrint('Поиск по сообщениям');
+  }
+
+  void _showMediaFiles() {
+    // TODO: Реализовать показ медиафайлов
+    debugPrint('Показ медиафайлов');
+  }
+
+  void _showChatSettings() {
+    // TODO: Реализовать настройки чата
+    debugPrint('Настройки чата');
+  }
+
+  void _pinChat() {
+    // TODO: Реализовать закрепление чата
+    debugPrint('Закрепление чата');
+  }
+
+  void _muteChat() {
+    // TODO: Реализовать заглушение чата
+    debugPrint('Заглушение чата');
   }
 }

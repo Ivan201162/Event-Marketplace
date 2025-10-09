@@ -203,7 +203,6 @@ class _EventHistoryScreenState extends State<EventHistoryScreen>
                 return BookingCard(
                   booking: booking,
                   onTap: () => _showEventDetails(booking),
-                  showActions: false, // В истории не показываем действия
                 );
               },
             ),

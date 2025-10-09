@@ -26,7 +26,7 @@ void main() {
       expect(review.specialistId, 'specialist_1');
       expect(review.customerId, 'customer_1');
       expect(review.rating, 4);
-      expect(review.comment, 'Отличная работа!');
+      expect(review.text, 'Отличная работа!');
       expect(review.isEdited, true);
       expect(review.metadata['reported'], false);
       expect(review.metadata['reportReason'], null);
@@ -39,8 +39,8 @@ void main() {
         customerId: 'customer_1',
         customerName: 'Customer Name',
         rating: 4,
-        comment: 'Отличная работа!',
-        createdAt: DateTime(2024, 1, 15),
+        text: 'Отличная работа!',
+        date: DateTime(2024, 1, 15),
         bookingId: 'booking_1',
         editedAt: DateTime(2024, 1, 16),
         isEdited: true,
@@ -65,8 +65,8 @@ void main() {
         customerId: 'test',
         customerName: 'test',
         rating: 1,
-        comment: 'test',
-        createdAt: DateTime.now(),
+        text: 'test',
+        date: DateTime.now(),
       );
       expect(review.isValidRating(1), true);
       expect(review.isValidRating(2), true);
@@ -82,8 +82,8 @@ void main() {
         customerId: 'test',
         customerName: 'test',
         rating: 1,
-        comment: 'test',
-        createdAt: DateTime.now(),
+        text: 'test',
+        date: DateTime.now(),
       );
       expect(review.isValidComment('Это хороший комментарий'), true);
       expect(review.isValidComment('   Это тоже хороший комментарий   '), true);
@@ -99,8 +99,8 @@ void main() {
         customerId: 'customer_1',
         customerName: 'Customer',
         rating: 4,
-        comment: 'Отличная работа!',
-        createdAt: DateTime.now(),
+        text: 'Отличная работа!',
+        date: DateTime.now(),
         bookingId: 'booking_1',
       );
 
@@ -110,8 +110,8 @@ void main() {
         customerId: 'customer_2',
         customerName: 'Customer',
         rating: 4,
-        comment: 'Хорошая работа!',
-        createdAt: DateTime.now(),
+        text: 'Хорошая работа!',
+        date: DateTime.now(),
         bookingId: 'booking_2',
         isEdited: true,
       );
@@ -127,8 +127,8 @@ void main() {
         customerId: 'customer_1',
         customerName: 'Customer',
         rating: 4,
-        comment: 'Отличная работа!',
-        createdAt: DateTime.now(),
+        text: 'Отличная работа!',
+        date: DateTime.now(),
         bookingId: 'booking_1',
       );
 
@@ -138,8 +138,8 @@ void main() {
         customerId: 'customer_2',
         customerName: 'Customer',
         rating: 4,
-        comment: 'Хорошая работа!',
-        createdAt: DateTime.now(),
+        text: 'Хорошая работа!',
+        date: DateTime.now(),
         bookingId: 'booking_2',
         metadata: {'reported': true},
       );
@@ -155,21 +155,21 @@ void main() {
         customerId: 'customer_1',
         customerName: 'Customer',
         rating: 4,
-        comment: 'Отличная работа!',
-        createdAt: DateTime(2024, 1, 15),
+        text: 'Отличная работа!',
+        date: DateTime(2024, 1, 15),
         bookingId: 'booking_1',
       );
 
       final updatedReview = originalReview.copyWith(
         rating: 5,
-        comment: 'Превосходная работа!',
+        text: 'Превосходная работа!',
         isEdited: true,
         editedAt: DateTime(2024, 1, 16),
       );
 
       expect(updatedReview.id, originalReview.id);
       expect(updatedReview.rating, 5);
-      expect(updatedReview.comment, 'Превосходная работа!');
+      expect(updatedReview.text, 'Превосходная работа!');
       expect(updatedReview.isEdited, true);
       expect(updatedReview.editedAt, DateTime(2024, 1, 16));
       expect(updatedReview.createdAt, originalReview.createdAt);
@@ -182,8 +182,8 @@ void main() {
         customerId: 'customer_1',
         customerName: 'Customer',
         rating: 4,
-        comment: 'Отличная работа!',
-        createdAt: DateTime(2024, 1, 15),
+        text: 'Отличная работа!',
+        date: DateTime(2024, 1, 15),
         bookingId: 'booking_1',
       );
 
@@ -193,8 +193,8 @@ void main() {
         customerId: 'customer_1',
         customerName: 'Customer',
         rating: 4,
-        comment: 'Отличная работа!',
-        createdAt: DateTime(2024, 1, 15),
+        text: 'Отличная работа!',
+        date: DateTime(2024, 1, 15),
         bookingId: 'booking_1',
       );
 
@@ -204,8 +204,8 @@ void main() {
         customerId: 'customer_1',
         customerName: 'Customer',
         rating: 4,
-        comment: 'Отличная работа!',
-        createdAt: DateTime(2024, 1, 15),
+        text: 'Отличная работа!',
+        date: DateTime(2024, 1, 15),
         bookingId: 'booking_1',
       );
 
@@ -220,8 +220,8 @@ void main() {
         customerId: 'customer_1',
         customerName: 'Customer',
         rating: 4,
-        comment: 'Отличная работа!',
-        createdAt: DateTime(2024, 1, 15),
+        text: 'Отличная работа!',
+        date: DateTime(2024, 1, 15),
         bookingId: 'booking_1',
       );
 
@@ -231,8 +231,8 @@ void main() {
         customerId: 'customer_1',
         customerName: 'Customer',
         rating: 4,
-        comment: 'Отличная работа!',
-        createdAt: DateTime(2024, 1, 15),
+        text: 'Отличная работа!',
+        date: DateTime(2024, 1, 15),
         bookingId: 'booking_1',
       );
 

@@ -152,7 +152,9 @@ class _SpecialistAvailabilityWidgetState
           },
           todayBuilder: (context, day, focusedDay) {
             final isToday = isSameDay(day, DateTime.now());
-            if (!isToday) return null;
+            if (!isToday) {
+              return null;
+            }
 
             return Container(
               margin: const EdgeInsets.all(2),
@@ -331,7 +333,7 @@ class _SpecialistAvailabilityWidgetState
     );
 
     if (success) {
-      _loadAvailabilityData();
+      await _loadAvailabilityData();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Дата заблокирована')),
@@ -353,7 +355,7 @@ class _SpecialistAvailabilityWidgetState
     );
 
     if (success) {
-      _loadAvailabilityData();
+      await _loadAvailabilityData();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Дата освобождена')),

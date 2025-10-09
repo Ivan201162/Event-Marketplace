@@ -18,7 +18,7 @@ class SessionService {
       await _storage.write(key: _userKey, value: userJson);
       await _storage.write(key: _isLoggedInKey, value: 'true');
       debugPrint('Пользователь сохранен в локальном хранилище');
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка сохранения пользователя: $e');
     }
   }
@@ -31,7 +31,7 @@ class SessionService {
         final userMap = jsonDecode(userJson) as Map<String, dynamic>;
         return AppUser.fromMap(userMap);
       }
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка получения пользователя: $e');
     }
     return null;
@@ -42,7 +42,7 @@ class SessionService {
     try {
       final isLoggedIn = await _storage.read(key: _isLoggedInKey);
       return isLoggedIn == 'true';
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка проверки авторизации: $e');
       return false;
     }
@@ -54,7 +54,7 @@ class SessionService {
       await _storage.delete(key: _userKey);
       await _storage.delete(key: _isLoggedInKey);
       debugPrint('Сессия очищена');
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка очистки сессии: $e');
     }
   }
@@ -64,7 +64,7 @@ class SessionService {
     try {
       await _storage.write(key: 'user_uid', value: uid);
       debugPrint('UID пользователя сохранен: $uid');
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка сохранения UID: $e');
     }
   }
@@ -73,9 +73,15 @@ class SessionService {
   static Future<String?> getUserId() async {
     try {
       return await _storage.read(key: 'user_uid');
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка получения UID: $e');
       return null;
     }
   }
 }
+
+
+
+
+
+

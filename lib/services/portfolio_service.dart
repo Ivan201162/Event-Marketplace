@@ -44,7 +44,7 @@ class PortfolioService {
       await _addPortfolioItemToProfile(userId, portfolioItem);
 
       return portfolioItem;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка загрузки изображения: $e');
       return null;
     }
@@ -82,7 +82,7 @@ class PortfolioService {
       await _addPortfolioItemToProfile(userId, portfolioItem);
 
       return portfolioItem;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка загрузки видео: $e');
       return null;
     }
@@ -123,7 +123,7 @@ class PortfolioService {
       await _addPortfolioItemToProfile(userId, portfolioItem);
 
       return portfolioItem;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка загрузки документа: $e');
       return null;
     }
@@ -155,7 +155,7 @@ class PortfolioService {
           });
         }
       });
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка сохранения элемента портфолио: $e');
       throw Exception('Не удалось сохранить элемент портфолио');
     }
@@ -185,7 +185,7 @@ class PortfolioService {
           });
         }
       });
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка удаления элемента портфолио: $e');
       throw Exception('Не удалось удалить элемент портфолио');
     }
@@ -222,7 +222,7 @@ class PortfolioService {
           });
         }
       });
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка обновления элемента портфолио: $e');
       throw Exception('Не удалось обновить элемент портфолио');
     }
@@ -247,7 +247,7 @@ class PortfolioService {
       }
 
       return [];
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения портфолио: $e');
       return [];
     }
@@ -259,7 +259,7 @@ class PortfolioService {
       final picker = ImagePicker();
       final image = await picker.pickImage(source: ImageSource.gallery);
       return image != null ? File(image.path) : null;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка выбора изображения: $e');
       return null;
     }
@@ -271,7 +271,7 @@ class PortfolioService {
       final picker = ImagePicker();
       final image = await picker.pickImage(source: ImageSource.camera);
       return image != null ? File(image.path) : null;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка съемки фото: $e');
       return null;
     }
@@ -283,7 +283,7 @@ class PortfolioService {
       final picker = ImagePicker();
       final video = await picker.pickVideo(source: ImageSource.gallery);
       return video != null ? File(video.path) : null;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка выбора видео: $e');
       return null;
     }
@@ -302,7 +302,7 @@ class PortfolioService {
       }
 
       return null;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка выбора файла: $e');
       return null;
     }

@@ -60,7 +60,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
           }
         });
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         setState(() {
           _isLoading = false;

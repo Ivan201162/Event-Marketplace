@@ -27,7 +27,7 @@ class ReminderService {
       await _initializeLocalNotifications();
 
       print('ReminderService initialized successfully');
-    } catch (e) {
+    } on Exception catch (e) {
       print('Error initializing ReminderService: $e');
     }
   }
@@ -87,7 +87,7 @@ class ReminderService {
       await _saveReminderInfo(bookingId, eventDateTime, customerId);
 
       print('Event reminders scheduled for booking: $bookingId');
-    } catch (e) {
+    } on Exception catch (e) {
       print('Error scheduling event reminder: $e');
     }
   }
@@ -155,7 +155,7 @@ class ReminderService {
         'reminder1hScheduled': true,
         'createdAt': FieldValue.serverTimestamp(),
       });
-    } catch (e) {
+    } on Exception catch (e) {
       print('Error saving reminder info: $e');
     }
   }
@@ -171,7 +171,7 @@ class ReminderService {
       await _firestore.collection('reminders').doc(bookingId).delete();
 
       print('Event reminders cancelled for booking: $bookingId');
-    } catch (e) {
+    } on Exception catch (e) {
       print('Error cancelling event reminders: $e');
     }
   }
@@ -203,7 +203,7 @@ class ReminderService {
       await batch.commit();
 
       print('All user reminders cancelled');
-    } catch (e) {
+    } on Exception catch (e) {
       print('Error cancelling all user reminders: $e');
     }
   }
@@ -226,7 +226,7 @@ class ReminderService {
           ...data,
         };
       }).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       print('Error getting active reminders: $e');
       return [];
     }

@@ -227,7 +227,7 @@ class SubscriptionsListWidget extends ConsumerWidget {
       final service = ref.read(subscriptionServiceProvider);
       await service.unsubscribeFromSpecialist(
         subscription.userId,
-        subscription.specialistId,
+        subscription.userId, // Используем userId как specialistId
       );
 
       ref.invalidate(userSubscriptionsProvider(subscription.userId));
@@ -249,16 +249,11 @@ class SubscriptionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-        leading: CircleAvatar(
-          backgroundImage: subscription.specialistPhotoUrl != null
-              ? CachedNetworkImageProvider(subscription.specialistPhotoUrl!)
-              : null,
-          child: subscription.specialistPhotoUrl == null
-              ? const Icon(Icons.person)
-              : null,
+        leading: const CircleAvatar(
+          child: Icon(Icons.person),
         ),
-        title: Text(subscription.specialistName),
-        subtitle: Text('Подписан с ${_formatDate(subscription.createdAt)}'),
+        title: Text('Подписка ${subscription.plan.toString().split('.').last}'),
+        subtitle: Text('Подписан с ${_formatDate(subscription.startedAt)}'),
         trailing: PopupMenuButton<String>(
           onSelected: (value) {
             switch (value) {

@@ -80,7 +80,7 @@ class _OrganizerProfileScreenState
           _populateControllers();
         });
       }
-    } catch (e) {
+    } on Exception catch (e) {
       _showErrorSnackBar('Ошибка загрузки профиля: $e');
     } finally {
       setState(() {
@@ -149,7 +149,7 @@ class _OrganizerProfileScreenState
       });
 
       _showSuccessSnackBar('Профиль успешно обновлен');
-    } catch (e) {
+    } on Exception catch (e) {
       _showErrorSnackBar('Ошибка сохранения профиля: $e');
     }
   }

@@ -57,7 +57,7 @@ class _ReviewsSectionState extends ConsumerState<ReviewsSection> {
         _stats = stats;
         _isLoading = false;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _error = e.toString();
         _isLoading = false;
@@ -279,7 +279,7 @@ class _AllReviewsScreenState extends ConsumerState<AllReviewsScreen> {
         _stats = stats;
         _isLoading = false;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _error = e.toString();
         _isLoading = false;

@@ -57,8 +57,8 @@ void main() {
           customerId: 'customer_1',
           customerName: 'Customer',
           rating: 4,
-          comment: 'Отличная работа!',
-          createdAt: DateTime.now(),
+          text: 'Отличная работа!',
+          date: DateTime.now(),
         );
 
         when(mockDocumentSnapshot.exists).thenReturn(true);
@@ -90,9 +90,10 @@ void main() {
           bookingId: 'booking_1',
           specialistId: 'specialist_1',
           customerId: 'customer_1',
+          customerName: 'Customer',
           rating: 6, // Неверный рейтинг
-          comment: 'Отличная работа!',
-          createdAt: DateTime.now(),
+          text: 'Отличная работа!',
+          date: DateTime.now(),
         );
 
         // Act & Assert
@@ -117,8 +118,8 @@ void main() {
           customerId: 'customer_1',
           customerName: 'Customer',
           rating: 4,
-          comment: 'Короткий', // Неверный комментарий
-          createdAt: DateTime.now(),
+          text: 'Короткий', // Неверный комментарий
+          date: DateTime.now(),
         );
 
         // Act & Assert
@@ -143,8 +144,8 @@ void main() {
           customerId: 'customer_1',
           customerName: 'Customer',
           rating: 4,
-          comment: 'Отличная работа!',
-          createdAt: DateTime.now(),
+          text: 'Отличная работа!',
+          date: DateTime.now(),
         );
 
         when(mockDocumentSnapshot.exists).thenReturn(true);
@@ -177,8 +178,8 @@ void main() {
           customerId: 'customer_1',
           customerName: 'Customer',
           rating: 4,
-          comment: 'Отличная работа!',
-          createdAt: DateTime.now(),
+          text: 'Отличная работа!',
+          date: DateTime.now(),
         );
 
         when(mockDocumentSnapshot.exists).thenReturn(true);

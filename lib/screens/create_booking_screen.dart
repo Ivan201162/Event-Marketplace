@@ -1,353 +1,417 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/event.dart';
-import '../providers/auth_providers.dart';
-import '../providers/booking_providers.dart';
+import 'package:go_router/go_router.dart';
 
-/// Экран создания бронирования
+import '../providers/auth_providers.dart';
+
 class CreateBookingScreen extends ConsumerStatefulWidget {
-  const CreateBookingScreen({
-    super.key,
-    required this.event,
-  });
-  final Event event;
+  const CreateBookingScreen({super.key});
 
   @override
-  ConsumerState<CreateBookingScreen> createState() =>
-      _CreateBookingScreenState();
+  ConsumerState<CreateBookingScreen> createState() => _CreateBookingScreenState();
 }
 
 class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _notesController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
+  final _eventTitleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _participantsController = TextEditingController();
+  final _totalPriceController = TextEditingController();
+  final _prepaymentController = TextEditingController();
+  final _customerNameController = TextEditingController();
+  final _customerPhoneController = TextEditingController();
+  final _customerEmailController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    // Заполняем email текущего пользователя
-    final currentUser = ref.read(currentUserProvider);
-    currentUser.whenData((user) {
-      if (user != null) {
-        _emailController.text = user.email;
-        ref.read(createBookingProvider.notifier).updateUserEmail(user.email);
-      }
-    });
-  }
+  DateTime? _selectedDate;
+  TimeOfDay? _selectedTime;
+  String? _selectedSpecialistId;
+  bool _isLoading = false;
+
+  final List<Map<String, String>> _specialists = [
+    {'id': 'specialist1', 'name': 'Александр Иванов', 'category': 'Свадьбы и корпоративы'},
+    {'id': 'specialist2', 'name': 'Мария Смирнова', 'category': 'Детские праздники'},
+    {'id': 'specialist3', 'name': 'Дмитрий Петров', 'category': 'Банкеты и фуршеты'},
+  ];
 
   @override
   void dispose() {
-    _notesController.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
+    _eventTitleController.dispose();
+    _descriptionController.dispose();
+    _addressController.dispose();
+    _participantsController.dispose();
+    _totalPriceController.dispose();
+    _prepaymentController.dispose();
+    _customerNameController.dispose();
+    _customerPhoneController.dispose();
+    _customerEmailController.dispose();
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final createBookingState = ref.watch(createBookingProvider);
-    final currentUser = ref.watch(currentUserProvider);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Бронирование'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      body: currentUser.when(
-        data: (user) {
-          if (user == null) {
-            return const Center(
-              child: Text('Пользователь не авторизован'),
-            );
-          }
-
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Информация о событии
-                  _buildEventInfo(),
-
-                  const SizedBox(height: 24),
-
-                  // Количество участников
-                  _buildParticipantsSection(),
-
-                  const SizedBox(height: 24),
-
-                  // Контактная информация
-                  _buildContactInfoSection(),
-
-                  const SizedBox(height: 24),
-
-                  // Заметки
-                  _buildNotesSection(),
-
-                  const SizedBox(height: 24),
-
-                  // Итоговая стоимость
-                  _buildTotalPriceSection(),
-
-                  const SizedBox(height: 24),
-
-                  // Кнопка бронирования
-                  _buildBookingButton(createBookingState),
-
-                  // Ошибка
-                  if (createBookingState.errorMessage != null) ...[
-                    const SizedBox(height: 16),
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.red.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                            color: Colors.red.withValues(alpha: 0.3)),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.error, color: Colors.red),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              createBookingState.errorMessage!,
-                              style: const TextStyle(color: Colors.red),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Text('Ошибка: $error'),
-        ),
-      ),
+  Future<void> _selectDate() async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now().add(const Duration(days: 1)),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
     );
+    if (date != null) {
+      setState(() {
+        _selectedDate = date;
+      });
+    }
   }
 
-  Widget _buildEventInfo() => Card(
-        child: Padding(
+  Future<void> _selectTime() async {
+    final time = await showTimePicker(
+      context: context,
+      initialTime: const TimeOfDay(hour: 18, minute: 0),
+    );
+    if (time != null) {
+      setState(() {
+        _selectedTime = time;
+      });
+    }
+  }
+
+  Future<void> _createBooking() async {
+    if (!_formKey.currentState!.validate()) return;
+    if (_selectedDate == null || _selectedTime == null || _selectedSpecialistId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Пожалуйста, заполните все обязательные поля'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final currentUser = ref.read(currentUserProvider).value;
+      if (currentUser == null) {
+        throw Exception('Пользователь не авторизован');
+      }
+
+      final eventDateTime = DateTime(
+        _selectedDate!.year,
+        _selectedDate!.month,
+        _selectedDate!.day,
+        _selectedTime!.hour,
+        _selectedTime!.minute,
+      );
+
+      final bookingData = {
+        'customerId': currentUser.uid,
+        'specialistId': _selectedSpecialistId!,
+        'eventTitle': _eventTitleController.text.trim(),
+        'eventDate': Timestamp.fromDate(eventDateTime),
+        'totalPrice': double.parse(_totalPriceController.text),
+        'prepayment': double.parse(_prepaymentController.text),
+        'status': 'pending',
+        'message': _descriptionController.text.trim(),
+        'customerName': _customerNameController.text.trim(),
+        'customerPhone': _customerPhoneController.text.trim(),
+        'customerEmail': _customerEmailController.text.trim(),
+        'description': _descriptionController.text.trim(),
+        'participantsCount': int.parse(_participantsController.text),
+        'address': _addressController.text.trim(),
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+
+      await FirebaseFirestore.instance.collection('bookings').add(bookingData);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Заявка успешно создана!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        context.pop();
+      }
+    } on Exception catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Ошибка создания заявки: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+      appBar: AppBar(
+        title: const Text('Создать заявку'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.pop(),
+        ),
+      ),
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Информация о мероприятии',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+              // Основная информация
+              _buildSectionTitle('Основная информация'),
+              const SizedBox(height: 16),
+              
+              TextFormField(
+                controller: _eventTitleController,
+                decoration: const InputDecoration(
+                  labelText: 'Название мероприятия *',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Введите название мероприятия';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+
+              TextFormField(
+                controller: _descriptionController,
+                decoration: const InputDecoration(
+                  labelText: 'Описание мероприятия',
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: 3,
+              ),
+              const SizedBox(height: 16),
+
+              // Дата и время
+              _buildSectionTitle('Дата и время'),
+              const SizedBox(height: 16),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      onTap: _selectDate,
+                      child: InputDecorator(
+                        decoration: const InputDecoration(
+                          labelText: 'Дата мероприятия *',
+                          border: OutlineInputBorder(),
+                        ),
+                        child: Text(
+                          _selectedDate != null
+                              ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}'
+                              : 'Выберите дату',
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: InkWell(
+                      onTap: _selectTime,
+                      child: InputDecorator(
+                        decoration: const InputDecoration(
+                          labelText: 'Время мероприятия *',
+                          border: OutlineInputBorder(),
+                        ),
+                        child: Text(
+                          _selectedTime != null
+                              ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
+                              : 'Выберите время',
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // Место проведения
+              _buildSectionTitle('Место проведения'),
+              const SizedBox(height: 16),
+
+              TextFormField(
+                controller: _addressController,
+                decoration: const InputDecoration(
+                  labelText: 'Адрес мероприятия',
+                  border: OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 16),
-              Row(
-                children: [
-                  Icon(
-                    widget.event.categoryIcon,
-                    size: 32,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
+
+              // Участники
+              _buildSectionTitle('Участники'),
+              const SizedBox(height: 16),
+
+              TextFormField(
+                controller: _participantsController,
+                decoration: const InputDecoration(
+                  labelText: 'Количество участников *',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Введите количество участников';
+                  }
+                  final count = int.tryParse(value);
+                  if (count == null || count <= 0) {
+                    return 'Введите корректное количество участников';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+
+              // Специалист
+              _buildSectionTitle('Специалист'),
+              const SizedBox(height: 16),
+
+              DropdownButtonFormField<String>(
+                initialValue: _selectedSpecialistId,
+                decoration: const InputDecoration(
+                  labelText: 'Выберите специалиста *',
+                  border: OutlineInputBorder(),
+                ),
+                items: _specialists.map((specialist) => DropdownMenuItem<String>(
+                    value: specialist['id'],
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Text(specialist['name']!),
                         Text(
-                          widget.event.title,
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          widget.event.categoryName,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
+                          specialist['category']!,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.grey[600],
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.calendar_today,
-                    size: 16,
-                    color: Colors.grey,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    widget.event.formattedDate,
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                  const SizedBox(width: 16),
-                  const Icon(Icons.access_time, size: 16, color: Colors.grey),
-                  const SizedBox(width: 8),
-                  Text(
-                    widget.event.formattedTime,
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  const Icon(Icons.location_on, size: 16, color: Colors.grey),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      widget.event.location,
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  const Icon(Icons.attach_money, size: 16, color: Colors.green),
-                  const SizedBox(width: 8),
-                  Text(
-                    widget.event.formattedPrice,
-                    style: const TextStyle(
-                      color: Colors.green,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const Spacer(),
-                  const Icon(Icons.people, size: 16, color: Colors.blue),
-                  const SizedBox(width: 8),
-                  Text(
-                    '${widget.event.currentParticipants}/${widget.event.maxParticipants}',
-                    style: const TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildParticipantsSection() {
-    final createBookingState = ref.watch(createBookingProvider);
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Количество участников',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: createBookingState.participantsCount > 1
-                      ? () {
-                          ref
-                              .read(createBookingProvider.notifier)
-                              .updateParticipantsCount(
-                                createBookingState.participantsCount - 1,
-                              );
-                        }
-                      : null,
-                  icon: const Icon(Icons.remove),
-                ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    '${createBookingState.participantsCount}',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  onPressed: createBookingState.participantsCount <
-                          widget.event.availableSpots
-                      ? () {
-                          ref
-                              .read(createBookingProvider.notifier)
-                              .updateParticipantsCount(
-                                createBookingState.participantsCount + 1,
-                              );
-                        }
-                      : null,
-                  icon: const Icon(Icons.add),
-                ),
-                const Spacer(),
-                Text(
-                  'Максимум: ${widget.event.availableSpots}',
-                  style: const TextStyle(color: Colors.grey),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildContactInfoSection() => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Контактная информация',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                  ),).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedSpecialistId = value;
+                  });
+                },
+                validator: (value) {
+                  if (value == null) {
+                    return 'Выберите специалиста';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
+
+              // Стоимость
+              _buildSectionTitle('Стоимость'),
+              const SizedBox(height: 16),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _totalPriceController,
+                      decoration: const InputDecoration(
+                        labelText: 'Общая стоимость (₽) *',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Введите стоимость';
+                        }
+                        final price = double.tryParse(value);
+                        if (price == null || price <= 0) {
+                          return 'Введите корректную стоимость';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _prepaymentController,
+                      decoration: const InputDecoration(
+                        labelText: 'Предоплата (₽) *',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Введите предоплату';
+                        }
+                        final prepayment = double.tryParse(value);
+                        if (prepayment == null || prepayment <= 0) {
+                          return 'Введите корректную предоплату';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // Контактная информация
+              _buildSectionTitle('Контактная информация'),
+              const SizedBox(height: 16),
+
               TextFormField(
-                controller: _emailController,
+                controller: _customerNameController,
+                decoration: const InputDecoration(
+                  labelText: 'Ваше имя *',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Введите ваше имя';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+
+              TextFormField(
+                controller: _customerPhoneController,
+                decoration: const InputDecoration(
+                  labelText: 'Телефон *',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.phone,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Введите телефон';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+
+              TextFormField(
+                controller: _customerEmailController,
                 decoration: const InputDecoration(
                   labelText: 'Email *',
                   border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.email),
                 ),
                 keyboardType: TextInputType.emailAddress,
-                onChanged: (value) {
-                  ref
-                      .read(createBookingProvider.notifier)
-                      .updateUserEmail(value);
-                },
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
+                  if (value == null || value.trim().isEmpty) {
                     return 'Введите email';
                   }
                   if (!value.contains('@')) {
@@ -356,153 +420,30 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
                   return null;
                 },
               ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _phoneController,
-                decoration: const InputDecoration(
-                  labelText: 'Телефон',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.phone),
-                  hintText: '+7 (999) 123-45-67',
+              const SizedBox(height: 32),
+
+              // Кнопка создания
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: _isLoading ? null : _createBooking,
+                  child: _isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text('Создать заявку'),
                 ),
-                keyboardType: TextInputType.phone,
-                onChanged: (value) {
-                  ref
-                      .read(createBookingProvider.notifier)
-                      .updateUserPhone(value);
-                },
               ),
             ],
           ),
-        ),
-      );
-
-  Widget _buildNotesSection() => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Дополнительные заметки',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _notesController,
-                decoration: const InputDecoration(
-                  labelText: 'Заметки',
-                  border: OutlineInputBorder(),
-                  hintText: 'Дополнительная информация для организатора',
-                ),
-                maxLines: 3,
-                onChanged: (value) {
-                  ref.read(createBookingProvider.notifier).updateNotes(value);
-                },
-              ),
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildTotalPriceSection() {
-    final createBookingState = ref.watch(createBookingProvider);
-    final totalPrice =
-        widget.event.price * createBookingState.participantsCount;
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Итоговая стоимость',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '${createBookingState.participantsCount} × ${widget.event.formattedPrice}',
-                ),
-                Text(
-                  totalPrice == 0
-                      ? 'Бесплатно'
-                      : '${totalPrice.toStringAsFixed(0)} ₽',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green,
-                  ),
-                ),
-              ],
-            ),
-          ],
         ),
       ),
     );
-  }
 
-  Widget _buildBookingButton(CreateBookingState state) => SizedBox(
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: state.isLoading ? null : _createBooking,
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-          ),
-          child: state.isLoading
-              ? const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
-                    SizedBox(width: 12),
-                    Text('Создание бронирования...'),
-                  ],
-                )
-              : const Text('Забронировать'),
-        ),
-      );
-
-  Future<void> _createBooking() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    final currentUser = ref.read(currentUserProvider);
-    currentUser.whenData((user) async {
-      if (user == null) return;
-
-      final createBookingNotifier = ref.read(createBookingProvider.notifier);
-      final bookingId = await createBookingNotifier.createBooking(
-        eventId: widget.event.id,
-        eventTitle: widget.event.title,
-        userId: user.id,
-        userName: user.displayNameOrEmail,
-        eventDate: widget.event.date,
-        eventPrice: widget.event.price,
-        organizerId: widget.event.organizerId,
-        organizerName: widget.event.organizerName,
-      );
-
-      if (bookingId != null && context.mounted) {
-        Navigator.pop(context, true);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Бронирование создано успешно!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-      }
-    });
-  }
+  Widget _buildSectionTitle(String title) => Text(
+      title,
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+        fontWeight: FontWeight.bold,
+        color: Theme.of(context).primaryColor,
+      ),
+    );
 }

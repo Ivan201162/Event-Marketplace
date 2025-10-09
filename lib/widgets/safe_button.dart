@@ -62,7 +62,9 @@ class _SafeButtonState extends State<SafeButton> {
   }
 
   void _startCooldown() {
-    if (!widget.preventDoubleTap) return;
+    if (!widget.preventDoubleTap) {
+      return;
+    }
 
     setState(() {
       _isInCooldown = true;
@@ -140,7 +142,9 @@ class _SafeIconButtonState extends State<SafeIconButton> {
   }
 
   void _startCooldown() {
-    if (!widget.preventDoubleTap) return;
+    if (!widget.preventDoubleTap) {
+      return;
+    }
 
     setState(() {
       _isInCooldown = true;

@@ -15,7 +15,7 @@ class SpecialistReportService {
           querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
 
       return SpecialistReport.fromSpecialists(specialists);
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка генерации отчета по специалистам: $e');
       throw Exception('Не удалось сгенерировать отчет');
     }
@@ -31,7 +31,7 @@ class SpecialistReportService {
           querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
 
       return CategoryReport.fromSpecialists(specialists);
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка генерации отчета по категориям: $e');
       throw Exception('Не удалось сгенерировать отчет по категориям');
     }
@@ -49,7 +49,7 @@ class SpecialistReportService {
           querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
 
       return RatingReport.fromSpecialists(specialists);
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка генерации отчета по рейтингам: $e');
       throw Exception('Не удалось сгенерировать отчет по рейтингам');
     }
@@ -65,7 +65,7 @@ class SpecialistReportService {
           querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
 
       return EarningsReport.fromSpecialists(specialists);
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка генерации отчета по доходам: $e');
       throw Exception('Не удалось сгенерировать отчет по доходам');
     }
@@ -81,7 +81,7 @@ class SpecialistReportService {
           querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
 
       return ActivityReport.fromSpecialists(specialists);
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка генерации отчета по активности: $e');
       throw Exception('Не удалось сгенерировать отчет по активности');
     }
@@ -124,7 +124,7 @@ class SpecialistReportService {
         bookings: bookings,
         generatedAt: DateTime.now(),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка генерации детального отчета: $e');
       throw Exception('Не удалось сгенерировать детальный отчет');
     }

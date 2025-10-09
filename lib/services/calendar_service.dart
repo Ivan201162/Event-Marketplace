@@ -24,7 +24,7 @@ class CalendarService {
 
       await eventRef.set(eventWithId.toMap());
       return eventRef.id;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка создания события: $e');
       return null;
     }
@@ -181,7 +181,7 @@ class CalendarService {
           .doc(event.id)
           .update(event.toMap());
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка обновления события: $e');
       return false;
     }
@@ -192,7 +192,7 @@ class CalendarService {
     try {
       await _firestore.collection('calendar_events').doc(eventId).delete();
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка удаления события: $e');
       return false;
     }
@@ -227,7 +227,7 @@ class CalendarService {
 
       // TODO(developer): Return proper ICS content
       return 'BEGIN:VCALENDAR\nVERSION:2.0\nEND:VCALENDAR';
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка экспорта в ICS: $e');
       return null;
     }
@@ -249,7 +249,7 @@ class CalendarService {
           text: 'Календарные события',
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка шаринга событий: $e');
     }
   }
@@ -257,10 +257,8 @@ class CalendarService {
   /// Открыть в Google Calendar
   Future<void> openInGoogleCalendar(CalendarEvent event) async {
     try {
-      final startTime =
-          '${event.startTime.toUtc().toIso8601String().replaceAll(':', '').split('.')[0]}Z';
-      final endTime =
-          '${event.endTime.toUtc().toIso8601String().replaceAll(':', '').split('.')[0]}Z';
+      final startTime = '${event.startTime.toUtc().toIso8601String().replaceAll(':', '').split('.')[0]}Z';
+      final endTime = '${event.endTime.toUtc().toIso8601String().replaceAll(':', '').split('.')[0]}Z';
 
       final url = Uri.parse(
           'https://calendar.google.com/calendar/render?action=TEMPLATE'
@@ -272,7 +270,7 @@ class CalendarService {
       if (await canLaunchUrl(url)) {
         await launchUrl(url, mode: LaunchMode.externalApplication);
       }
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка открытия в Google Calendar: $e');
     }
   }
@@ -294,7 +292,7 @@ class CalendarService {
       if (await canLaunchUrl(url)) {
         await launchUrl(url, mode: LaunchMode.externalApplication);
       }
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка открытия в Outlook Calendar: $e');
     }
   }
@@ -305,7 +303,7 @@ class CalendarService {
       // TODO(developer): Реализовать синхронизацию с Google Calendar API
       print('Синхронизация с Google Calendar для пользователя: $userId');
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка синхронизации с Google Calendar: $e');
       return false;
     }
@@ -320,7 +318,7 @@ class CalendarService {
       // TODO(developer): Реализовать синхронизацию с Outlook Calendar API
       print('Синхронизация с Outlook Calendar для пользователя: $userId');
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка синхронизации с Outlook Calendar: $e');
       return false;
     }
@@ -337,7 +335,7 @@ class CalendarService {
       final events = snapshot.docs.map(CalendarEvent.fromDocument).toList();
 
       return _calculateStats(events);
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения статистики календаря: $e');
       return CalendarStats.empty();
     }
@@ -376,7 +374,7 @@ class CalendarService {
       );
 
       return await createEvent(event);
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка создания события из бронирования: $e');
       return null;
     }
@@ -390,7 +388,7 @@ class CalendarService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка обновления статуса события: $e');
       return false;
     }
@@ -531,7 +529,7 @@ class CalendarService {
           .get();
 
       return querySnapshot.docs.isEmpty;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка проверки доступности даты: $e');
       return false;
     }
@@ -567,7 +565,7 @@ class CalendarService {
         }
       }
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка проверки доступности даты и времени: $e');
       return false;
     }
@@ -624,7 +622,7 @@ class CalendarService {
       }
 
       return availableSlots;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения доступных слотов: $e');
       return [];
     }
@@ -648,7 +646,7 @@ class CalendarService {
       }
 
       return availableDates;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения доступных дат: $e');
       return [];
     }
@@ -684,7 +682,7 @@ class CalendarService {
           .get();
 
       return events.docs.map(CalendarEvent.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения событий на дату: $e');
       return [];
     }
@@ -739,7 +737,7 @@ class CalendarService {
 
       await eventRef.set(eventData);
       return eventRef.id;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка создания события недоступности: $e');
       return null;
     }
@@ -766,7 +764,7 @@ class CalendarService {
 
       await eventRef.set(eventData);
       return eventRef.id;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка создания события отпуска: $e');
       return null;
     }
@@ -801,7 +799,7 @@ class CalendarService {
       for (final eventData in testEvents) {
         await _firestore.collection('calendar_events').add(eventData);
       }
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка добавления тестовых данных: $e');
     }
   }
@@ -842,7 +840,7 @@ class CalendarService {
       }
 
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка пометки даты как занятой: $e');
       return false;
     }
@@ -881,7 +879,7 @@ class CalendarService {
       });
 
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка пометки даты как свободной: $e');
       return false;
     }
@@ -903,7 +901,7 @@ class CalendarService {
           [];
 
       return busyDates;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения занятых дат: $e');
       return [];
     }
@@ -939,7 +937,7 @@ class CalendarService {
       }
 
       return availableDates;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения свободных дат: $e');
       return [];
     }
@@ -978,7 +976,7 @@ class CalendarService {
         'busyDates': busyDates.map(Timestamp.fromDate).toList(),
         'updatedAt': FieldValue.serverTimestamp(),
       });
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка синхронизации занятых дат: $e');
     }
   }

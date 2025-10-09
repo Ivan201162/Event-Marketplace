@@ -72,7 +72,7 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
         _recommendations = recommendations;
         _isLoading = false;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _error = e.toString();
         _isLoading = false;
@@ -685,7 +685,7 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
             const SnackBar(content: Text('Заметки сохранены')),
           );
         }
-      } catch (e) {
+      } on Exception catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Ошибка: $e')),
@@ -710,7 +710,7 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
           const SnackBar(content: Text('Удалено из избранного')),
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ошибка: $e')),
@@ -739,7 +739,7 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
             const SnackBar(content: Text('Годовщина добавлена')),
           );
         }
-      } catch (e) {
+      } on Exception catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Ошибка: $e')),
@@ -781,7 +781,7 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
             const SnackBar(content: Text('Годовщина удалена')),
           );
         }
-      } catch (e) {
+      } on Exception catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Ошибка: $e')),

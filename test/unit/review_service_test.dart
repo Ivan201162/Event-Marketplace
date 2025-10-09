@@ -19,8 +19,8 @@ void main() {
           customerId: 'customer_1',
           customerName: 'Customer 1',
           rating: 5,
-          comment: 'Great!',
-          createdAt: DateTime.now(),
+          text: 'Great!',
+          date: DateTime.now(),
         ),
         Review(
           id: '2',
@@ -28,8 +28,8 @@ void main() {
           customerId: 'customer_2',
           customerName: 'Customer 2',
           rating: 4,
-          comment: 'Good!',
-          createdAt: DateTime.now(),
+          text: 'Good!',
+          date: DateTime.now(),
         ),
         Review(
           id: '3',
@@ -37,8 +37,8 @@ void main() {
           customerId: 'customer_3',
           customerName: 'Customer 3',
           rating: 3,
-          comment: 'Average',
-          createdAt: DateTime.now(),
+          text: 'Average',
+          date: DateTime.now(),
         ),
       ];
 
@@ -62,8 +62,8 @@ void main() {
           customerId: 'customer_1',
           customerName: 'Customer 1',
           rating: 1,
-          comment: 'Test',
-          createdAt: DateTime.now(),
+          text: 'Test',
+          date: DateTime.now(),
         ),
         returnsNormally,
       );
@@ -75,8 +75,8 @@ void main() {
           customerId: 'customer_1',
           customerName: 'Customer 1',
           rating: 5,
-          comment: 'Test',
-          createdAt: DateTime.now(),
+          text: 'Test',
+          date: DateTime.now(),
         ),
         returnsNormally,
       );
@@ -91,8 +91,8 @@ void main() {
         customerId: 'customer_1',
         customerName: 'Customer 1',
         rating: 5,
-        comment: 'Test',
-        createdAt: now,
+        text: 'Test',
+        date: now,
       );
 
       // Act
@@ -111,8 +111,8 @@ void main() {
         customerId: 'customer_1',
         customerName: 'Customer 1',
         rating: 5,
-        comment: 'Test',
-        createdAt: DateTime.now().subtract(const Duration(hours: 12)),
+        text: 'Test',
+        date: DateTime.now().subtract(const Duration(hours: 12)),
       );
 
       final oldReview = Review(
@@ -121,8 +121,8 @@ void main() {
         customerId: 'customer_1',
         customerName: 'Customer 1',
         rating: 5,
-        comment: 'Test',
-        createdAt: DateTime.now().subtract(const Duration(days: 2)),
+        text: 'Test',
+        date: DateTime.now().subtract(const Duration(days: 2)),
       );
 
       // Act & Assert
@@ -138,8 +138,8 @@ void main() {
         customerId: 'customer_1',
         customerName: 'Customer 1',
         rating: 5,
-        comment: 'Test',
-        createdAt: DateTime.now().subtract(const Duration(hours: 12)),
+        text: 'Test',
+        date: DateTime.now().subtract(const Duration(hours: 12)),
       );
 
       final oldReview = Review(
@@ -148,8 +148,8 @@ void main() {
         customerId: 'customer_1',
         customerName: 'Customer 1',
         rating: 5,
-        comment: 'Test',
-        createdAt: DateTime.now().subtract(const Duration(days: 2)),
+        text: 'Test',
+        date: DateTime.now().subtract(const Duration(days: 2)),
       );
 
       // Act & Assert
@@ -165,8 +165,8 @@ void main() {
         customerId: 'customer_1',
         customerName: 'Customer 1',
         rating: 3,
-        comment: 'Test',
-        createdAt: DateTime.now(),
+        text: 'Test',
+        date: DateTime.now(),
       );
 
       // Act
@@ -184,8 +184,8 @@ void main() {
         customerId: 'customer_1',
         customerName: 'Customer 1',
         rating: 5,
-        comment: 'Test',
-        createdAt: DateTime.now(),
+        text: 'Test',
+        date: DateTime.now(),
       );
 
       final mediumRatingReview = Review(
@@ -194,8 +194,8 @@ void main() {
         customerId: 'customer_1',
         customerName: 'Customer 1',
         rating: 3,
-        comment: 'Test',
-        createdAt: DateTime.now(),
+        text: 'Test',
+        date: DateTime.now(),
       );
 
       final lowRatingReview = Review(
@@ -204,8 +204,8 @@ void main() {
         customerId: 'customer_1',
         customerName: 'Customer 1',
         rating: 1,
-        comment: 'Test',
-        createdAt: DateTime.now(),
+        text: 'Test',
+        date: DateTime.now(),
       );
 
       // Act & Assert

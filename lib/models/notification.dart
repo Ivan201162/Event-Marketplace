@@ -1,174 +1,142 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// Тип уведомления
+/// Типы уведомлений
 enum NotificationType {
-  newBooking, // Новая заявка
-  bookingAccepted, // Заявка принята
-  bookingRejected, // Заявка отклонена
-  bookingCancelled, // Заявка отменена
-  newReview, // Новый отзыв
-  paymentReceived, // Получен платеж
-  reminder, // Напоминание
-  system, // Системное уведомление
-  discount, // Скидка предоставлена
-  recommendation, // Рекомендации по мероприятию
-}
-
-/// Статус уведомления
-enum NotificationStatus {
-  unread, // Не прочитано
-  read, // Прочитано
-  archived, // Архивировано
+  like,
+  comment,
+  follow,
+  request,
+  message,
+  booking,
+  system,
 }
 
 /// Модель уведомления
-class AppNotification {
-  const AppNotification({
+class Notification {
+  const Notification({
     required this.id,
     required this.userId,
-    required this.type,
     required this.title,
-    required this.message,
-    this.data = const {},
-    this.status = NotificationStatus.unread,
-    this.isRead = false,
-    this.createdAt,
+    required this.body,
+    required this.type,
+    this.data,
+    required this.isRead,
+    required this.createdAt,
+    this.isPinned = false,
+    this.senderId,
+    this.targetId,
   });
 
-  /// Создать уведомление из документа Firestore
-  factory AppNotification.fromDocument(DocumentSnapshot doc) {
+  /// Создание из Firestore документа
+  factory Notification.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data()! as Map<String, dynamic>;
-    return AppNotification(
+    return Notification(
       id: doc.id,
-      userId: data['userId'] ?? '',
+      userId: data['userId'] ?? data['receiverId'] ?? '',
+      title: data['title'] ?? '',
+      body: data['body'] ?? '',
       type: NotificationType.values.firstWhere(
         (e) => e.name == data['type'],
         orElse: () => NotificationType.system,
       ),
-      title: data['title'] ?? '',
-      message: data['message'] ?? '',
-      data: Map<String, dynamic>.from(data['data'] ?? {}),
-      status: NotificationStatus.values.firstWhere(
-        (e) => e.name == data['status'],
-        orElse: () => NotificationStatus.unread,
-      ),
-      isRead: data['isRead'] as bool? ?? false,
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
+      data: data['data'],
+      isRead: data['isRead'] ?? false,
+      createdAt: (data['createdAt'] as Timestamp? ?? data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      isPinned: data['isPinned'] ?? false,
+      senderId: data['senderId'],
+      targetId: data['targetId'],
     );
   }
-
   final String id;
   final String userId;
-  final NotificationType type;
   final String title;
-  final String message;
-  final Map<String, dynamic> data;
-  final NotificationStatus status;
+  final String body;
+  final NotificationType type;
+  final String? data;
   final bool isRead;
-  final DateTime? createdAt;
+  final DateTime createdAt;
+  final bool isPinned;
+  final String? senderId;
+  final String? targetId;
 
-  /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'type': type.name,
-        'title': title,
-        'message': message,
-        'data': data,
-        'status': status.name,
-        'isRead': isRead,
-        'createdAt': createdAt != null
-            ? Timestamp.fromDate(createdAt!)
-            : FieldValue.serverTimestamp(),
-      };
+  /// Преобразование в Map для Firestore
+  Map<String, dynamic> toFirestore() => {
+      'userId': userId,
+      'title': title,
+      'body': body,
+      'type': type.name,
+      'data': data,
+      'isRead': isRead,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'isPinned': isPinned,
+      'senderId': senderId,
+      'targetId': targetId,
+    };
 
-  /// Копировать с изменениями
-  AppNotification copyWith({
+  /// Копирование с изменениями
+  Notification copyWith({
     String? id,
     String? userId,
-    NotificationType? type,
     String? title,
-    String? message,
-    Map<String, dynamic>? data,
-    NotificationStatus? status,
+    String? body,
+    NotificationType? type,
+    String? data,
     bool? isRead,
     DateTime? createdAt,
-  }) =>
-      AppNotification(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        type: type ?? this.type,
-        title: title ?? this.title,
-        message: message ?? this.message,
-        data: data ?? this.data,
-        status: status ?? this.status,
-        isRead: isRead ?? this.isRead,
-        createdAt: createdAt ?? this.createdAt,
-      );
+    bool? isPinned,
+    String? senderId,
+    String? targetId,
+  }) => Notification(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      title: title ?? this.title,
+      body: body ?? this.body,
+      type: type ?? this.type,
+      data: data ?? this.data,
+      isRead: isRead ?? this.isRead,
+      createdAt: createdAt ?? this.createdAt,
+      isPinned: isPinned ?? this.isPinned,
+      senderId: senderId ?? this.senderId,
+      targetId: targetId ?? this.targetId,
+    );
 
-  /// Получить иконку для типа уведомления
-  String get iconName {
+  /// Получение иконки для типа уведомления
+  String get icon {
     switch (type) {
-      case NotificationType.newBooking:
-        return 'booking';
-      case NotificationType.bookingAccepted:
-        return 'check_circle';
-      case NotificationType.bookingRejected:
-        return 'cancel';
-      case NotificationType.bookingCancelled:
-        return 'event_busy';
-      case NotificationType.newReview:
-        return 'star';
-      case NotificationType.paymentReceived:
-        return 'payment';
-      case NotificationType.reminder:
-        return 'schedule';
+      case NotificationType.like:
+        return '❤️';
+      case NotificationType.comment:
+        return '💬';
+      case NotificationType.follow:
+        return '👥';
+      case NotificationType.request:
+        return '📋';
+      case NotificationType.message:
+        return '💌';
+      case NotificationType.booking:
+        return '📅';
       case NotificationType.system:
-        return 'info';
-      case NotificationType.discount:
-        return 'local_offer';
-      case NotificationType.recommendation:
-        return 'lightbulb';
+        return '🔔';
     }
   }
 
-  /// Получить цвет для типа уведомления
-  String get colorName {
+  /// Получение цвета для типа уведомления
+  String get color {
     switch (type) {
-      case NotificationType.newBooking:
-        return 'blue';
-      case NotificationType.bookingAccepted:
-        return 'green';
-      case NotificationType.bookingRejected:
-        return 'red';
-      case NotificationType.bookingCancelled:
-        return 'orange';
-      case NotificationType.newReview:
-        return 'amber';
-      case NotificationType.paymentReceived:
-        return 'green';
-      case NotificationType.reminder:
-        return 'purple';
+      case NotificationType.like:
+        return '#FF6B6B';
+      case NotificationType.comment:
+        return '#4ECDC4';
+      case NotificationType.follow:
+        return '#45B7D1';
+      case NotificationType.request:
+        return '#96CEB4';
+      case NotificationType.message:
+        return '#FFEAA7';
+      case NotificationType.booking:
+        return '#DDA0DD';
       case NotificationType.system:
-        return 'grey';
-      case NotificationType.discount:
-        return 'green';
-      case NotificationType.recommendation:
-        return 'blue';
+        return '#98D8C8';
     }
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is AppNotification && other.id == id;
-  }
-
-  @override
-  int get hashCode => id.hashCode;
-
-  @override
-  String toString() =>
-      'AppNotification(id: $id, type: $type, title: $title, isRead: $isRead)';
 }

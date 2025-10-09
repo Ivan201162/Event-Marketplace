@@ -31,7 +31,7 @@ class SpecialistPricingService {
       final averagePrice = totalPrice / bookings.length;
 
       return averagePrice;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения среднего прайса специалиста: $e');
       return 0.0;
     }
@@ -63,7 +63,7 @@ class SpecialistPricingService {
       final averagePrice = totalPrice / specialists.length;
 
       return averagePrice;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения среднего прайса по категории: $e');
       return 0.0;
     }
@@ -106,7 +106,7 @@ class SpecialistPricingService {
         medianPrice: medianPrice,
         lastUpdated: DateTime.now(),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения статистики цен специалиста: $e');
       return SpecialistPricingStats.empty();
     }
@@ -123,7 +123,7 @@ class SpecialistPricingService {
           'lastPriceUpdateAt': FieldValue.serverTimestamp(),
         });
       }
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка обновления среднего прайса специалиста: $e');
     }
   }
@@ -177,7 +177,7 @@ class SpecialistPricingService {
       history.sort((a, b) => b.month.compareTo(a.month));
 
       return history.take(12).toList(); // Последние 12 месяцев
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения истории цен специалиста: $e');
       return [];
     }

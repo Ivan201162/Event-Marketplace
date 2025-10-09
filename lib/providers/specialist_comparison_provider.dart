@@ -17,7 +17,7 @@ class SpecialistComparisonNotifier extends StateNotifier<SpecialistComparison> {
   void addSpecialist(Specialist specialist) {
     try {
       state = state.addSpecialist(specialist);
-    } catch (e) {
+    } on Exception {
       // Ошибка уже обработана в модели
       rethrow;
     }

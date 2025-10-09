@@ -156,7 +156,7 @@ Future<List<Specialist>> _loadHostsWithFilters(HostFilters filters) async {
         if (_matchesFilters(specialist, filters)) {
           specialists.add(specialist);
         }
-      } catch (e) {
+      } on Exception {
         // Пропускаем некорректные документы
         continue;
       }
@@ -265,7 +265,7 @@ class PaginatedHostsNotifier
           if (_matchesFilters(specialist, _currentFilters)) {
             newSpecialists.add(specialist);
           }
-        } catch (e) {
+        } on Exception {
           continue;
         }
       }
@@ -279,7 +279,7 @@ class PaginatedHostsNotifier
           refresh ? newSpecialists : [...currentList, ...newSpecialists];
 
       state = AsyncValue.data(updatedList);
-    } catch (e) {
+    } on Exception catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     }
   }
@@ -417,7 +417,7 @@ class MockPaginatedHostsNotifier
       final updatedList = refresh ? newHosts : [...currentList, ...newHosts];
 
       state = AsyncValue.data(updatedList);
-    } catch (e) {
+    } on Exception catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     }
   }

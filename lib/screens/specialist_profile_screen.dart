@@ -5,10 +5,17 @@ import 'package:go_router/go_router.dart';
 import '../models/post.dart';
 import '../models/specialist.dart';
 import '../models/story.dart';
+import '../models/review.dart';
 import '../services/post_service.dart';
 import '../services/specialist_service.dart';
 import '../services/story_service.dart';
+import '../services/analytics_service.dart';
+import '../services/reviews_service.dart';
+import '../widgets/specialist_tips_widget.dart';
+import '../screens/reviews/widgets/reputation_widget.dart';
 import 'specialist_profile_instagram_screen.dart';
+import 'specialist_stats_screen.dart';
+import 'reviews/simple_reviews_screen.dart';
 
 class SpecialistProfileScreen extends ConsumerStatefulWidget {
   const SpecialistProfileScreen({
@@ -28,10 +35,12 @@ class _SpecialistProfileScreenState
   final SpecialistService _specialistService = SpecialistService();
   final PostService _postService = PostService();
   final StoryService _storyService = StoryService();
+  final ReviewsService _reviewsService = ReviewsService();
 
   Specialist? _specialist;
   List<Post> _posts = [];
   List<Story> _stories = [];
+  SpecialistReputation? _reputation;
   bool _isLoading = true;
   bool _isFavorite = false;
 
@@ -40,8 +49,11 @@ class _SpecialistProfileScreenState
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 6, vsync: this);
     _loadSpecialist();
+    
+    // Логируем просмотр профиля специалиста
+    AnalyticsService().logScreenView('specialist_profile_screen');
   }
 
   Future<void> _addPost() async {
@@ -172,20 +184,30 @@ class _SpecialistProfileScreenState
 
   Future<void> _loadSpecialist() async {
     try {
-      // Загружаем специалиста, посты и сторис параллельно
+      // Загружаем специалиста, посты, сторис и репутацию параллельно
       final results = await Future.wait([
         _specialistService.getSpecialistById(widget.specialistId),
         _postService.getSpecialistPosts(widget.specialistId),
         _storyService.getSpecialistStories(widget.specialistId),
+        _reviewsService.getSpecialistReputation(widget.specialistId),
       ]);
 
       setState(() {
         _specialist = results[0] as Specialist?;
         _posts = results[1]! as List<Post>;
         _stories = results[2]! as List<Story>;
+        _reputation = results[3] as SpecialistReputation?;
         _isLoading = false;
       });
-    } catch (e) {
+      
+      // Логируем просмотр профиля специалиста
+      if (_specialist != null) {
+        AnalyticsService().logViewProfile(
+          _specialist!.id,
+          _specialist!.name,
+        );
+      }
+    } on Exception catch (e) {
       setState(() {
         _isLoading = false;
       });
@@ -289,30 +311,71 @@ class _SpecialistProfileScreenState
                         ),
                       ),
                       const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          const Icon(Icons.star, color: Colors.amber, size: 20),
-                          const SizedBox(width: 4),
-                          Text(
-                            _specialist!.rating.toStringAsFixed(1),
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                      InkWell(
+                        onTap: _navigateToReviews,
+                        child: Row(
+                          children: [
+                            const Icon(Icons.star, color: Colors.amber, size: 20),
+                            const SizedBox(width: 4),
+                            Text(
+                              _specialist!.rating.toStringAsFixed(1),
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '(${_getReviewCount()} отзывов)',
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontSize: 14,
+                            const SizedBox(width: 8),
+                            Text(
+                              '(${_getReviewCount()} отзывов)',
+                              style: TextStyle(
+                                color: Colors.grey.shade600,
+                                fontSize: 14,
+                              ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(width: 4),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              size: 12,
+                              color: Colors.grey.shade400,
+                            ),
+                            const SizedBox(width: 8),
+                            // Статус репутации
+                            if (_reputation != null)
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: _getReputationColor().withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: _getReputationColor().withOpacity(0.3),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      _reputation!.status.emoji,
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      _reputation!.status.displayName,
+                                      style: TextStyle(
+                                        color: _getReputationColor(),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 10,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
-                    ],
+                      ,,,,),
+                    ,,,,],
                   ),
-                ),
+                ,,,,),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -333,14 +396,14 @@ class _SpecialistProfileScreenState
                     ),
                   ],
                 ),
-              ],
+              ,,,,],
             ),
 
-            const SizedBox(height: 16),
+            const void void SizedBox(height = 16),
 
             // Дополнительная информация
-            Row(
-              children: [
+            void void Row(
+              children = [
                 if (_specialist!.location != null &&
                     _specialist!.location!.isNotEmpty) ...[
                   Icon(
@@ -383,6 +446,8 @@ class _SpecialistProfileScreenState
           Tab(text: 'Посты'),
           Tab(text: 'Услуги'),
           Tab(text: 'Календарь'),
+          Tab(text: 'Советы'),
+          Tab(text: 'Статистика'),
         ],
       );
 
@@ -395,6 +460,8 @@ class _SpecialistProfileScreenState
             _buildPostsTab(),
             _buildServicesTab(),
             _buildCalendarTab(),
+            _buildTipsTab(),
+            _buildStatsTab(),
           ],
         ),
       );
@@ -427,7 +494,7 @@ class _SpecialistProfileScreenState
                 child: Column(
                   children: [
                     Icon(Icons.auto_stories, size: 64, color: Colors.grey),
-                    SizedBox(height: 16),
+                    SizedBox(),
                     Text(
                       'Сторис пока нет',
                       style: TextStyle(color: Colors.grey),
@@ -561,7 +628,7 @@ class _SpecialistProfileScreenState
                 child: Column(
                   children: [
                     Icon(Icons.post_add, size: 64, color: Colors.grey),
-                    SizedBox(height: 16),
+                    SizedBox(),
                     Text(
                       'Посты пока нет',
                       style: TextStyle(color: Colors.grey),
@@ -601,14 +668,14 @@ class _SpecialistProfileScreenState
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 16),
+            SizedBox(),
 
             // Заглушка для календаря
             Center(
               child: Column(
                 children: [
                   Icon(Icons.calendar_today, size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
+                  SizedBox(),
                   Text(
                     'Календарь будет доступен после реализации',
                     style: TextStyle(color: Colors.grey),
@@ -690,9 +757,84 @@ class _SpecialistProfileScreenState
         ),
       );
 
+  Widget _buildTipsTab() => const SingleChildScrollView(
+      padding: EdgeInsets.all(16),
+      child: SpecialistTipsWidget(
+        userId: 'current_user', // TODO: Получать из аутентификации
+      ),
+    );
+
+  Widget _buildStatsTab() => const SingleChildScrollView(
+      padding: EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Статистика профиля',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(),
+          Center(
+            child: Column(
+              children: [
+                Icon(Icons.analytics, size: 64, color: Colors.grey),
+                SizedBox(),
+                Text(
+                  'Подробная статистика доступна в отдельном экране',
+                  style: TextStyle(color: Colors.grey),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(),
+                ElevatedButton.icon(
+                  onPressed: null, // TODO: Добавить навигацию к полной статистике
+                  icon: Icon(Icons.analytics),
+                  label: Text('Открыть полную статистику'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+
   String _getReviewCount() {
+    if (_reputation != null) {
+      return _reputation!.reviewsCount.toString();
+    }
     // Генерируем случайное количество отзывов на основе рейтинга
     final baseCount = (_specialist!.rating * 20).round();
     return (baseCount + (DateTime.now().millisecond % 50)).toString();
+  }
+
+  Color _getReputationColor() {
+    if (_reputation == null) return Colors.grey;
+    
+    switch (_reputation!.status) {
+      case ReputationStatus.verifiedExpert:
+        return Colors.green;
+      case ReputationStatus.reliable:
+        return Colors.blue;
+      case ReputationStatus.needsExperience:
+        return Colors.orange;
+      case ReputationStatus.underObservation:
+        return Colors.red;
+    }
+  }
+
+  void _navigateToReviews() {
+    if (_specialist != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SimpleReviewsScreen(
+            specialistId: _specialist!.id,
+            specialistName: _specialist!.name,
+          ),
+        ),
+      );
+    }
   }
 }

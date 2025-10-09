@@ -10,7 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/chat_message.dart';
+import '../models/chat.dart';
 
 /// Сервис для работы с чатами
 class ChatService {
@@ -52,7 +52,7 @@ class ChatService {
         type: MessageType.text,
         content: text,
         status: MessageStatus.sent,
-        timestamp: DateTime.now(),
+        createdAt: DateTime.now(),
         isFromCurrentUser: true,
       );
 
@@ -101,10 +101,9 @@ class ChatService {
         senderId: senderId,
         senderName: senderName ?? 'Пользователь',
         type: MessageType.image,
-        content: 'Изображение',
-        fileUrl: imageUrl,
+        content: imageUrl,
         status: MessageStatus.sent,
-        timestamp: DateTime.now(),
+        createdAt: DateTime.now(),
         isFromCurrentUser: true,
       );
 
@@ -141,12 +140,11 @@ class ChatService {
         senderId: senderId,
         senderName: senderName ?? 'Пользователь',
         type: MessageType.video,
-        content: 'Видео',
-        fileUrl: videoUrl,
+        content: videoUrl,
         fileName: video.path.split('/').last,
         fileSize: await File(video.path).length(),
         status: MessageStatus.sent,
-        timestamp: DateTime.now(),
+        createdAt: DateTime.now(),
         isFromCurrentUser: true,
       );
 
@@ -185,13 +183,12 @@ class ChatService {
         senderId: senderId,
         senderName: senderName ?? 'Пользователь',
         type: MessageType.audio,
-        content: 'Аудио сообщение',
-        fileUrl: audioUrl,
+        content: audioUrl,
         fileName: audioFile.path.split('/').last,
         fileSize: await audioFile.length(),
         metadata: duration != null ? {'duration': duration} : null,
         status: MessageStatus.sent,
-        timestamp: DateTime.now(),
+        createdAt: DateTime.now(),
         isFromCurrentUser: true,
       );
 
@@ -229,11 +226,10 @@ class ChatService {
         senderId: senderId,
         senderName: senderName ?? 'Пользователь',
         type: MessageType.document,
-        content: 'Документ',
-        fileUrl: fileUrl,
+        content: fileUrl,
         fileName: file.path.split('/').last,
         status: MessageStatus.sent,
-        timestamp: DateTime.now(),
+        createdAt: DateTime.now(),
         isFromCurrentUser: true,
       );
 
@@ -403,7 +399,7 @@ class ChatService {
       await _firestore.collection(_chatsCollection).doc(chatId).update({
         'lastMessageContent': message.content,
         'lastMessageType': message.type.name,
-        'lastMessageTime': Timestamp.fromDate(message.timestamp),
+        'lastMessageTime': message.timestamp != null ? Timestamp.fromDate(message.timestamp!) : Timestamp.fromDate(message.createdAt),
         'lastMessageSenderId': message.senderId,
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -548,12 +544,12 @@ class ChatService {
           senderId: senderId,
           senderName: senderName ?? 'Пользователь',
           type: messageType,
-          content: fileName,
+          content: fileUrl,
           fileUrl: fileUrl,
           fileName: fileName,
           fileSize: fileSize,
           status: MessageStatus.sent,
-          timestamp: DateTime.now(),
+          createdAt: DateTime.now(),
           isFromCurrentUser: true,
         );
 
@@ -595,4 +591,144 @@ class ChatService {
         }
         return count;
       });
+
+  /// Получить чаты пользователя как Stream
+  Stream<List<Chat>> getUserChatsStream(String userId) {
+    try {
+      return _firestore
+          .collection(_chatsCollection)
+          .where('participants', arrayContains: userId)
+          .orderBy('updatedAt', descending: true)
+          .snapshots()
+          .map((snapshot) => snapshot.docs.map(Chat.fromDocument).toList());
+    } on Exception {
+      // Возвращаем тестовые данные в случае ошибки
+      return Stream.value([]);
+    }
+  }
+
+
+  /// Создать новый чат
+  Future<String> createChat({
+    required List<String> participants,
+    required Map<String, String> participantNames,
+    Map<String, String>? participantAvatars,
+    String? name,
+  }) async {
+    try {
+      final chat = Chat(
+        id: '',
+        customerId: participants.first,
+        specialistId: participants.length > 1 ? participants[1] : participants.first,
+        name: name ?? '',
+        participants: participants,
+        participantNames: participantNames,
+        participantAvatars: participantAvatars ?? {},
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      final docRef = await _firestore.collection(_chatsCollection).add(chat.toMap());
+      return docRef.id;
+    } on Exception catch (e) {
+      throw Exception('Ошибка создания чата: $e');
+    }
+  }
+
+  /// Обновить чат
+  Future<void> updateChat(String chatId, Map<String, dynamic> updates) async {
+    try {
+      await _firestore.collection(_chatsCollection).doc(chatId).update({
+        ...updates,
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
+      });
+    } on Exception catch (e) {
+      throw Exception('Ошибка обновления чата: $e');
+    }
+  }
+
+  /// Удалить чат
+  Future<void> deleteChat(String chatId) async {
+    try {
+      // Удаляем все сообщения чата
+      final messagesSnapshot = await _firestore
+          .collection(_messagesCollection)
+          .where('chatId', isEqualTo: chatId)
+          .get();
+
+      final batch = _firestore.batch();
+      for (final doc in messagesSnapshot.docs) {
+        batch.delete(doc.reference);
+      }
+
+      // Удаляем сам чат
+      batch.delete(_firestore.collection(_chatsCollection).doc(chatId));
+      await batch.commit();
+    } on Exception catch (e) {
+      throw Exception('Ошибка удаления чата: $e');
+    }
+  }
+
+  /// Тестовые данные для чатов
+  List<Chat> _getTestChats(String userId) {
+    final now = DateTime.now();
+    return [
+      Chat(
+        id: '1',
+        customerId: userId,
+        specialistId: 'user2',
+        name: '',
+        participants: [userId, 'user2'],
+        participantNames: {
+          userId: 'Вы',
+          'user2': 'Анна Петрова',
+        },
+        participantAvatars: {
+          'user2': 'https://placehold.co/100x100/4CAF50/white?text=AP',
+        },
+        lastMessageContent: 'Спасибо за отличную работу!',
+        lastMessageTime: now.subtract(const Duration(minutes: 30)),
+        createdAt: now.subtract(const Duration(days: 2)),
+        updatedAt: now.subtract(const Duration(minutes: 30)),
+      ),
+      Chat(
+        id: '2',
+        customerId: userId,
+        specialistId: 'user3',
+        name: '',
+        participants: [userId, 'user3'],
+        participantNames: {
+          userId: 'Вы',
+          'user3': 'Михаил Соколов',
+        },
+        participantAvatars: {
+          'user3': 'https://placehold.co/100x100/2196F3/white?text=MS',
+        },
+        lastMessageContent: 'Когда можем встретиться?',
+        lastMessageTime: now.subtract(const Duration(hours: 2)),
+        unreadCount: 2,
+        createdAt: now.subtract(const Duration(days: 1)),
+        updatedAt: now.subtract(const Duration(hours: 2)),
+      ),
+      Chat(
+        id: '3',
+        customerId: userId,
+        specialistId: 'user4',
+        name: '',
+        participants: [userId, 'user4'],
+        participantNames: {
+          userId: 'Вы',
+          'user4': 'Елена Козлова',
+        },
+        participantAvatars: {
+          'user4': 'https://placehold.co/100x100/FF9800/white?text=EK',
+        },
+        lastMessageContent: 'Отправлю фото завтра',
+        lastMessageTime: now.subtract(const Duration(days: 1)),
+        unreadCount: 1,
+        createdAt: now.subtract(const Duration(days: 3)),
+        updatedAt: now.subtract(const Duration(days: 1)),
+      ),
+    ];
+  }
 }

@@ -384,9 +384,9 @@ class SpecialistReviewsWidget extends ConsumerWidget {
             const SizedBox(height: 8),
 
             // Текст отзыва
-            if (review.comment.isNotEmpty) ...[
+            if (review.text.isNotEmpty) ...[
               Text(
-                review.comment,
+                review.text,
                 style: const TextStyle(fontSize: 14),
               ),
               const SizedBox(height: 8),

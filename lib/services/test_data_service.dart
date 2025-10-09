@@ -1,9 +1,59 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 
 class TestDataService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
+
+  // Тестовые промоакции
+  final List<Map<String, dynamic>> _testPromotions = [
+    {
+      'id': 'promo_1',
+      'title': 'Скидка 20% на свадебную фотосъемку',
+      'description': 'Специальное предложение для молодоженов! Скидка 20% на полный пакет свадебной фотосъемки.',
+      'discount': 20,
+      'category': 'photographer',
+      'specialistName': 'Анна Лебедева',
+      'city': 'Санкт-Петербург',
+      'endDate': '2024-12-31',
+      'participants': 15,
+      'isParticipating': false,
+      'color': Colors.pink,
+      'conditions': 'Акция действует при заказе на сумму от 50 000 рублей. Не суммируется с другими скидками.',
+      'image': 'https://picsum.photos/400/300?random=101',
+    },
+    {
+      'id': 'promo_2',
+      'title': 'Бесплатный DJ на корпоратив',
+      'description': 'При заказе ведущего на корпоратив - DJ в подарок! Создайте незабываемую атмосферу для вашего мероприятия.',
+      'discount': 100,
+      'category': 'dj',
+      'specialistName': 'Дмитрий Козлов',
+      'city': 'Москва',
+      'endDate': '2024-11-30',
+      'participants': 8,
+      'isParticipating': false,
+      'color': Colors.blue,
+      'conditions': 'Минимальный заказ ведущего - 40 000 рублей. Акция действует только в будние дни.',
+      'image': 'https://picsum.photos/400/300?random=102',
+    },
+    {
+      'id': 'promo_3',
+      'title': 'Сезонная скидка на декорации',
+      'description': 'Осенняя скидка 30% на все виды декораций для мероприятий. Украсьте ваш праздник со скидкой!',
+      'discount': 30,
+      'category': 'decorator',
+      'specialistName': 'Елена Петрова',
+      'city': 'Москва',
+      'endDate': '2024-10-31',
+      'participants': 23,
+      'isParticipating': true,
+      'color': Colors.orange,
+      'conditions': 'Скидка распространяется на все виды декораций. Минимальный заказ - 20 000 рублей.',
+      'image': 'https://picsum.photos/400/300?random=103',
+    },
+  ];
 
   // Тестовые специалисты
   final List<Map<String, dynamic>> _testSpecialists = [
@@ -979,16 +1029,20 @@ class TestDataService {
   /// Заполнить все тестовые данные
   Future<void> populateAll() async {
     try {
-      print('Начинаем заполнение тестовых данных...');
+      // Логирование начала заполнения тестовых данных
 
       await _populateSpecialists();
       await _populateChats();
       await _populateBookings();
       await _populatePosts();
+      await _populateIdeas();
+      await _populateNotifications();
+      await createTestPromotions();
+      await _populateReviews();
 
-      print('Тестовые данные успешно добавлены!');
-    } catch (e) {
-      print('Ошибка при заполнении тестовых данных: $e');
+      // Логирование успешного добавления тестовых данных
+    } on Exception {
+      // Логирование ошибки при заполнении тестовых данных
     }
   }
 
@@ -1006,7 +1060,7 @@ class TestDataService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     }
-    print('Добавлено ${_testSpecialists.length} специалистов');
+    // Логирование добавления специалистов
   }
 
   /// Заполнить чаты
@@ -1082,11 +1136,403 @@ class TestDataService {
     await _populateSpecialists();
   }
 
+  /// Заполнить идеи
+  Future<void> _populateIdeas() async {
+    final testIdeas = [
+      {
+        'title': 'Свадьба в стиле прованс',
+        'description': 'Романтическая свадьба с французским шармом. Лавандовые оттенки, винтажные детали и уютная атмосфера.',
+        'imageUrl': 'https://picsum.photos/400?random=100',
+        'authorId': 'specialist_5',
+        'authorName': 'Михаил Волков',
+        'authorAvatar': 'https://picsum.photos/200?random=5',
+        'likeCount': 42,
+        'commentCount': 8,
+        'isLiked': false,
+        'isSaved': false,
+        'createdAt': DateTime.now().subtract(const Duration(days: 1)),
+      },
+      {
+        'title': 'Корпоратив в стиле 80-х',
+        'description': 'Яркий и энергичный корпоратив с неоновыми цветами, диско-музыкой и ретро-атмосферой.',
+        'imageUrl': 'https://picsum.photos/400?random=101',
+        'authorId': 'specialist_3',
+        'authorName': 'Дмитрий Козлов',
+        'authorAvatar': 'https://picsum.photos/200?random=3',
+        'likeCount': 28,
+        'commentCount': 5,
+        'isLiked': true,
+        'isSaved': false,
+        'createdAt': DateTime.now().subtract(const Duration(days: 2)),
+      },
+      {
+        'title': 'Детская вечеринка "Пираты"',
+        'description': 'Приключенческая вечеринка для детей с поиском сокровищ, костюмами пиратов и морскими играми.',
+        'imageUrl': 'https://picsum.photos/400?random=102',
+        'authorId': 'specialist_6',
+        'authorName': 'Ольга Морозова',
+        'authorAvatar': 'https://picsum.photos/200?random=6',
+        'likeCount': 35,
+        'commentCount': 12,
+        'isLiked': false,
+        'isSaved': true,
+        'createdAt': DateTime.now().subtract(const Duration(days: 3)),
+      },
+      {
+        'title': 'Фотосессия в закатном свете',
+        'description': 'Романтическая фотосессия на природе с мягким закатным освещением и естественными позами.',
+        'imageUrl': 'https://picsum.photos/400?random=103',
+        'authorId': 'specialist_2',
+        'authorName': 'Анна Лебедева',
+        'authorAvatar': 'https://picsum.photos/200?random=2',
+        'likeCount': 56,
+        'commentCount': 15,
+        'isLiked': true,
+        'isSaved': true,
+        'createdAt': DateTime.now().subtract(const Duration(days: 4)),
+      },
+      {
+        'title': 'Свадебный макияж "Натуральная красота"',
+        'description': 'Деликатный макияж, подчеркивающий естественную красоту невесты. Светлые тона и нежные акценты.',
+        'imageUrl': 'https://picsum.photos/400?random=104',
+        'authorId': 'specialist_10',
+        'authorName': 'Мария Кузнецова',
+        'authorAvatar': 'https://picsum.photos/200?random=10',
+        'likeCount': 31,
+        'commentCount': 7,
+        'isLiked': false,
+        'isSaved': false,
+        'createdAt': DateTime.now().subtract(const Duration(days: 5)),
+      },
+      {
+        'title': 'Кейтеринг "Французская кухня"',
+        'description': 'Изысканное меню с французскими деликатесами: фуа-гра, улитки, рататуй и классические десерты.',
+        'imageUrl': 'https://picsum.photos/400?random=105',
+        'authorId': 'specialist_9',
+        'authorName': 'Андрей Федоров',
+        'authorAvatar': 'https://picsum.photos/200?random=9',
+        'likeCount': 48,
+        'commentCount': 9,
+        'isLiked': true,
+        'isSaved': false,
+        'createdAt': DateTime.now().subtract(const Duration(days: 6)),
+      },
+      {
+        'title': 'Цветочное оформление "Весенний сад"',
+        'description': 'Свежие весенние цветы: тюльпаны, нарциссы, гиацинты. Создаем атмосферу пробуждающейся природы.',
+        'imageUrl': 'https://picsum.photos/400?random=106',
+        'authorId': 'specialist_8',
+        'authorName': 'Татьяна Соколова',
+        'authorAvatar': 'https://picsum.photos/200?random=8',
+        'likeCount': 39,
+        'commentCount': 6,
+        'isLiked': false,
+        'isSaved': true,
+        'createdAt': DateTime.now().subtract(const Duration(days: 7)),
+      },
+      {
+        'title': 'Живая музыка "Джаз и блюз"',
+        'description': 'Атмосферное выступление с джазовыми стандартами и блюзовыми импровизациями для особенного вечера.',
+        'imageUrl': 'https://picsum.photos/400?random=107',
+        'authorId': 'specialist_7',
+        'authorName': 'Сергей Новиков',
+        'authorAvatar': 'https://picsum.photos/200?random=7',
+        'likeCount': 44,
+        'commentCount': 11,
+        'isLiked': true,
+        'isSaved': false,
+        'createdAt': DateTime.now().subtract(const Duration(days: 8)),
+      },
+      {
+        'title': 'Видеосъемка "Свадебный фильм"',
+        'description': 'Кинематографичная съемка свадьбы с красивыми планами, эмоциональными моментами и качественным монтажом.',
+        'imageUrl': 'https://picsum.photos/400?random=108',
+        'authorId': 'specialist_4',
+        'authorName': 'Елена Петрова',
+        'authorAvatar': 'https://picsum.photos/200?random=4',
+        'likeCount': 52,
+        'commentCount': 13,
+        'isLiked': false,
+        'isSaved': true,
+        'createdAt': DateTime.now().subtract(const Duration(days: 9)),
+      },
+      {
+        'title': 'Ведущий "Интерактивная свадьба"',
+        'description': 'Современный подход к проведению свадьбы с интерактивными играми, квестами и вовлечением всех гостей.',
+        'imageUrl': 'https://picsum.photos/400?random=109',
+        'authorId': 'specialist_1',
+        'authorName': 'Алексей Смирнов',
+        'authorAvatar': 'https://picsum.photos/200?random=1',
+        'likeCount': 37,
+        'commentCount': 8,
+        'isLiked': true,
+        'isSaved': false,
+        'createdAt': DateTime.now().subtract(const Duration(days: 10)),
+      },
+    ];
+
+    for (var i = 0; i < testIdeas.length; i++) {
+      final idea = testIdeas[i];
+      await _firestore.collection('ideas').add({
+        ...idea,
+        'createdAt': idea['createdAt'],
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    }
+    print('Добавлено ${testIdeas.length} идей');
+  }
+
+  /// Заполнить уведомления
+  Future<void> _populateNotifications() async {
+    final testNotifications = [
+      {
+        'userId': 'current_user',
+        'title': 'Новый лайк!',
+        'body': 'Анна Лебедева поставила лайк вашему посту',
+        'type': 'like',
+        'data': 'post_1',
+        'isRead': false,
+        'createdAt': DateTime.now().subtract(const Duration(minutes: 5)),
+      },
+      {
+        'userId': 'current_user',
+        'title': 'Новый комментарий',
+        'body': 'Дмитрий Козлов прокомментировал вашу идею',
+        'type': 'comment',
+        'data': 'idea_2',
+        'isRead': false,
+        'createdAt': DateTime.now().subtract(const Duration(minutes: 15)),
+      },
+      {
+        'userId': 'current_user',
+        'title': 'Новая подписка',
+        'body': 'Михаил Волков подписался на вас',
+        'type': 'follow',
+        'data': 'specialist_5',
+        'isRead': true,
+        'createdAt': DateTime.now().subtract(const Duration(hours: 1)),
+      },
+      {
+        'userId': 'current_user',
+        'title': 'Новая заявка',
+        'body': 'Поступила заявка на фотосъемку свадьбы',
+        'type': 'request',
+        'data': 'booking_1',
+        'isRead': false,
+        'createdAt': DateTime.now().subtract(const Duration(hours: 2)),
+      },
+      {
+        'userId': 'current_user',
+        'title': 'Новое сообщение',
+        'body': 'Елена Петрова: Спасибо за отличную работу!',
+        'type': 'message',
+        'data': 'chat_1',
+        'isRead': false,
+        'createdAt': DateTime.now().subtract(const Duration(hours: 3)),
+      },
+      {
+        'userId': 'current_user',
+        'title': 'Подтверждение заявки',
+        'body': 'Ваша заявка на видеосъемку подтверждена',
+        'type': 'booking',
+        'data': 'booking_2',
+        'isRead': true,
+        'createdAt': DateTime.now().subtract(const Duration(days: 1)),
+      },
+      {
+        'userId': 'current_user',
+        'title': 'Системное уведомление',
+        'body': 'Добро пожаловать в Event Marketplace!',
+        'type': 'system',
+        'data': null,
+        'isRead': true,
+        'createdAt': DateTime.now().subtract(const Duration(days: 2)),
+      },
+      {
+        'userId': 'current_user',
+        'title': 'Новый лайк!',
+        'body': 'Ольга Морозова поставила лайк вашей идее',
+        'type': 'like',
+        'data': 'idea_3',
+        'isRead': false,
+        'createdAt': DateTime.now().subtract(const Duration(days: 1, hours: 2)),
+      },
+      {
+        'userId': 'current_user',
+        'title': 'Новый комментарий',
+        'body': 'Сергей Новиков прокомментировал ваш пост',
+        'type': 'comment',
+        'data': 'post_2',
+        'isRead': true,
+        'createdAt': DateTime.now().subtract(const Duration(days: 1, hours: 5)),
+      },
+      {
+        'userId': 'current_user',
+        'title': 'Новая подписка',
+        'body': 'Татьяна Соколова подписался на вас',
+        'type': 'follow',
+        'data': 'specialist_8',
+        'isRead': false,
+        'createdAt': DateTime.now().subtract(const Duration(days: 2, hours: 1)),
+      },
+    ];
+
+    for (var i = 0; i < testNotifications.length; i++) {
+      final notification = testNotifications[i];
+      await _firestore.collection('notifications').add({
+        ...notification,
+        'createdAt': notification['createdAt'],
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    }
+    print('Добавлено ${testNotifications.length} уведомлений');
+  }
+
+  /// Создать тестовые акции
+  Future<void> createTestPromotions() async {
+    print('Создание тестовых акций...');
+    
+    final testPromotions = [
+      {
+        'title': 'Свадебный пакет -15%',
+        'description': 'Специальное предложение для свадебных мероприятий. Включает ведущего, фотографа и декорации.',
+        'category': 'host',
+        'discount': 15,
+        'startDate': DateTime.now().subtract(const Duration(days: 5)),
+        'endDate': DateTime.now().add(const Duration(days: 30)),
+        'imageUrl': 'https://picsum.photos/400?random=101',
+        'specialistId': 'specialist_1',
+        'specialistName': 'Алексей Смирнов',
+        'city': 'Москва',
+        'isActive': true,
+        'createdAt': DateTime.now().subtract(const Duration(days: 5)),
+        'updatedAt': DateTime.now(),
+      },
+      {
+        'title': 'Фотосессия -20%',
+        'description': 'Скидка на все виды фотосессий. Студийная, выездная, свадебная фотография.',
+        'category': 'photographer',
+        'discount': 20,
+        'startDate': DateTime.now().subtract(const Duration(days: 3)),
+        'endDate': DateTime.now().add(const Duration(days: 20)),
+        'imageUrl': 'https://picsum.photos/400?random=102',
+        'specialistId': 'specialist_2',
+        'specialistName': 'Анна Лебедева',
+        'city': 'Санкт-Петербург',
+        'isActive': true,
+        'createdAt': DateTime.now().subtract(const Duration(days: 3)),
+        'updatedAt': DateTime.now(),
+      },
+      {
+        'title': 'Новогодние праздники -25%',
+        'description': 'Сезонное предложение на новогодние корпоративы и частные вечеринки.',
+        'category': 'seasonal',
+        'discount': 25,
+        'startDate': DateTime.now().subtract(const Duration(days: 1)),
+        'endDate': DateTime.now().add(const Duration(days: 45)),
+        'imageUrl': 'https://picsum.photos/400?random=103',
+        'specialistId': 'specialist_3',
+        'specialistName': 'Михаил Петров',
+        'city': 'Москва',
+        'isActive': true,
+        'createdAt': DateTime.now().subtract(const Duration(days: 1)),
+        'updatedAt': DateTime.now(),
+      },
+      {
+        'title': 'DJ-услуги -10%',
+        'description': 'Скидка на музыкальное сопровождение мероприятий. Современное оборудование и качественный звук.',
+        'category': 'dj',
+        'discount': 10,
+        'startDate': DateTime.now(),
+        'endDate': DateTime.now().add(const Duration(days: 15)),
+        'imageUrl': 'https://picsum.photos/400?random=104',
+        'specialistId': 'specialist_4',
+        'specialistName': 'Дмитрий Козлов',
+        'city': 'Санкт-Петербург',
+        'isActive': true,
+        'createdAt': DateTime.now(),
+        'updatedAt': DateTime.now(),
+      },
+      {
+        'title': 'Подарок: бесплатная консультация',
+        'description': 'Бесплатная консультация по организации мероприятия. Поможем составить план и подобрать специалистов.',
+        'category': 'gift',
+        'discount': 0,
+        'startDate': DateTime.now().subtract(const Duration(days: 2)),
+        'endDate': DateTime.now().add(const Duration(days: 60)),
+        'imageUrl': 'https://picsum.photos/400?random=105',
+        'specialistId': 'specialist_5',
+        'specialistName': 'Елена Волкова',
+        'city': 'Москва',
+        'isActive': true,
+        'createdAt': DateTime.now().subtract(const Duration(days: 2)),
+        'updatedAt': DateTime.now(),
+      },
+      {
+        'title': 'Промокод WEDDING2024 -30%',
+        'description': 'Используйте промокод WEDDING2024 и получите максимальную скидку на свадебные услуги.',
+        'category': 'promoCode',
+        'discount': 30,
+        'startDate': DateTime.now().subtract(const Duration(days: 7)),
+        'endDate': DateTime.now().add(const Duration(days: 25)),
+        'imageUrl': 'https://picsum.photos/400?random=106',
+        'specialistId': 'specialist_6',
+        'specialistName': 'Ольга Морозова',
+        'city': 'Санкт-Петербург',
+        'isActive': true,
+        'createdAt': DateTime.now().subtract(const Duration(days: 7)),
+        'updatedAt': DateTime.now(),
+      },
+      {
+        'title': 'Декорации -18%',
+        'description': 'Скидка на оформление залов и создание праздничной атмосферы.',
+        'category': 'decorator',
+        'discount': 18,
+        'startDate': DateTime.now().subtract(const Duration(days: 4)),
+        'endDate': DateTime.now().add(const Duration(days: 35)),
+        'imageUrl': 'https://picsum.photos/400?random=107',
+        'specialistId': 'specialist_7',
+        'specialistName': 'Сергей Новиков',
+        'city': 'Москва',
+        'isActive': true,
+        'createdAt': DateTime.now().subtract(const Duration(days: 4)),
+        'updatedAt': DateTime.now(),
+      },
+      {
+        'title': 'Кейтеринг -12%',
+        'description': 'Специальные цены на организацию питания для ваших мероприятий.',
+        'category': 'caterer',
+        'discount': 12,
+        'startDate': DateTime.now().subtract(const Duration(days: 6)),
+        'endDate': DateTime.now().add(const Duration(days: 40)),
+        'imageUrl': 'https://picsum.photos/400?random=108',
+        'specialistId': 'specialist_8',
+        'specialistName': 'Татьяна Соколова',
+        'city': 'Санкт-Петербург',
+        'isActive': true,
+        'createdAt': DateTime.now().subtract(const Duration(days: 6)),
+        'updatedAt': DateTime.now(),
+      },
+    ];
+
+    for (var i = 0; i < testPromotions.length; i++) {
+      final promotion = testPromotions[i];
+      await _firestore.collection('promotions').add({
+        ...promotion,
+        'startDate': Timestamp.fromDate(promotion['startDate']! as DateTime),
+        'endDate': Timestamp.fromDate(promotion['endDate']! as DateTime),
+        'createdAt': Timestamp.fromDate(promotion['createdAt']! as DateTime),
+        'updatedAt': Timestamp.fromDate(promotion['updatedAt']! as DateTime),
+      });
+    }
+    print('Добавлено ${testPromotions.length} акций');
+  }
+
   /// Очистить все тестовые данные
   Future<void> clearAllTestData() async {
     try {
       // Удаляем все коллекции
-      final collections = ['specialists', 'chats', 'bookings', 'posts'];
+      final collections = ['specialists', 'chats', 'bookings', 'posts', 'ideas', 'notifications', 'promotions'];
       for (final collection in collections) {
         final snapshot = await _firestore.collection(collection).get();
         for (final doc in snapshot.docs) {
@@ -1094,7 +1540,7 @@ class TestDataService {
         }
       }
       print('Все тестовые данные удалены');
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка при удалении тестовых данных: $e');
     }
   }
@@ -1105,8 +1551,1050 @@ class TestDataService {
       final specialistsSnapshot =
           await _firestore.collection('specialists').limit(1).get();
       return specialistsSnapshot.docs.isNotEmpty;
-    } catch (e) {
+    } on Exception {
       return false;
+    }
+  }
+
+  /// Заполнить отзывы
+  Future<void> _populateReviews() async {
+    final testReviews = [
+      // Отзывы для специалиста 1 (Алексей Смирнов)
+      {
+        'specialistId': 'specialist_1',
+        'customerId': 'customer_1',
+        'customerName': 'Ольга Иванова',
+        'rating': 5.0,
+        'text': 'Алексей - потрясающий ведущий! Наша свадьба прошла на высшем уровне. Он создал незабываемую атмосферу, все гости были в восторге. Очень рекомендую!',
+        'date': DateTime.now().subtract(const Duration(days: 5)),
+        'photos': ['https://picsum.photos/400?random=201', 'https://picsum.photos/400?random=202'],
+        'likes': 12,
+        'responses': [
+          {
+            'authorId': 'specialist_1',
+            'authorName': 'Алексей Смирнов',
+            'text': 'Спасибо большое за отзыв! Было очень приятно работать с вами!',
+            'date': DateTime.now().subtract(const Duration(days: 4)),
+          }
+        ],
+        'bookingId': 'booking_1',
+        'eventTitle': 'Свадьба Ольги и Игоря',
+        'customerAvatar': 'https://picsum.photos/200?random=301',
+        'specialistName': 'Алексей Смирнов',
+        'isVerified': true,
+        'reportCount': 0,
+        'isReported': false,
+      },
+      {
+        'specialistId': 'specialist_1',
+        'customerId': 'customer_2',
+        'customerName': 'Мария Петрова',
+        'rating': 4.5,
+        'text': 'Хороший ведущий, но немного затянул программу. В целом все прошло хорошо, гости остались довольны.',
+        'date': DateTime.now().subtract(const Duration(days: 10)),
+        'photos': ['https://picsum.photos/400?random=203'],
+        'likes': 5,
+        'responses': [],
+        'bookingId': 'booking_2',
+        'eventTitle': 'Корпоратив IT-компании',
+        'customerAvatar': 'https://picsum.photos/200?random=302',
+        'specialistName': 'Алексей Смирнов',
+        'isVerified': false,
+        'reportCount': 0,
+        'isReported': false,
+      },
+      {
+        'specialistId': 'specialist_1',
+        'customerId': 'customer_3',
+        'customerName': 'Дмитрий Козлов',
+        'rating': 5.0,
+        'text': 'Отличный ведущий! Профессиональный подход, интересная программа, все было на высоте. Рекомендую всем!',
+        'date': DateTime.now().subtract(const Duration(days: 15)),
+        'photos': [],
+        'likes': 8,
+        'responses': [
+          {
+            'authorId': 'specialist_1',
+            'authorName': 'Алексей Смирнов',
+            'text': 'Благодарю за отзыв! Рад, что мероприятие понравилось!',
+            'date': DateTime.now().subtract(const Duration(days: 14)),
+          }
+        ],
+        'bookingId': 'booking_3',
+        'eventTitle': 'День рождения',
+        'customerAvatar': 'https://picsum.photos/200?random=303',
+        'specialistName': 'Алексей Смирнов',
+        'isVerified': true,
+        'reportCount': 0,
+        'isReported': false,
+      },
+      {
+        'specialistId': 'specialist_1',
+        'customerId': 'customer_4',
+        'customerName': 'Анна Сидорова',
+        'rating': 4.0,
+        'text': 'Неплохой ведущий, но ожидала больше интерактива. В целом справился со своей задачей.',
+        'date': DateTime.now().subtract(const Duration(days: 20)),
+        'photos': ['https://picsum.photos/400?random=204', 'https://picsum.photos/400?random=205'],
+        'likes': 3,
+        'responses': [],
+        'bookingId': 'booking_4',
+        'eventTitle': 'Юбилей',
+        'customerAvatar': 'https://picsum.photos/200?random=304',
+        'specialistName': 'Алексей Смирнов',
+        'isVerified': false,
+        'reportCount': 0,
+        'isReported': false,
+      },
+      {
+        'specialistId': 'specialist_1',
+        'customerId': 'customer_5',
+        'customerName': 'Сергей Волков',
+        'rating': 5.0,
+        'text': 'Алексей - мастер своего дела! Создал незабываемую атмосферу на нашей свадьбе. Все гости до сих пор вспоминают этот день с улыбкой!',
+        'date': DateTime.now().subtract(const Duration(days: 25)),
+        'photos': ['https://picsum.photos/400?random=206'],
+        'likes': 15,
+        'responses': [
+          {
+            'authorId': 'specialist_1',
+            'authorName': 'Алексей Смирнов',
+            'text': 'Спасибо за теплые слова! Было очень приятно работать с вами!',
+            'date': DateTime.now().subtract(const Duration(days: 24)),
+          }
+        ],
+        'bookingId': 'booking_5',
+        'eventTitle': 'Свадьба Сергея и Анны',
+        'customerAvatar': 'https://picsum.photos/200?random=305',
+        'specialistName': 'Алексей Смирнов',
+        'isVerified': true,
+        'reportCount': 0,
+        'isReported': false,
+      },
+
+      // Отзывы для специалиста 2 (Анна Лебедева)
+      {
+        'specialistId': 'specialist_2',
+        'customerId': 'customer_6',
+        'customerName': 'Елена Морозова',
+        'rating': 5.0,
+        'text': 'Анна - талантливый фотограф! Снимки получились просто потрясающие. Очень внимательная к деталям, профессиональный подход.',
+        'date': DateTime.now().subtract(const Duration(days: 3)),
+        'photos': ['https://picsum.photos/400?random=207', 'https://picsum.photos/400?random=208'],
+        'likes': 18,
+        'responses': [
+          {
+            'authorId': 'specialist_2',
+            'authorName': 'Анна Лебедева',
+            'text': 'Спасибо за отзыв! Рада, что фото понравились!',
+            'date': DateTime.now().subtract(const Duration(days: 2)),
+          }
+        ],
+        'bookingId': 'booking_6',
+        'eventTitle': 'Свадебная фотосессия',
+        'customerAvatar': 'https://picsum.photos/200?random=306',
+        'specialistName': 'Анна Лебедева',
+        'isVerified': true,
+        'reportCount': 0,
+        'isReported': false,
+      },
+      {
+        'specialistId': 'specialist_2',
+        'customerId': 'customer_7',
+        'customerName': 'Игорь Петров',
+        'rating': 4.5,
+        'text': 'Хорошая работа, качественные фото. Единственное - немного затянула процесс съемки, но результат оправдал ожидания.',
+        'date': DateTime.now().subtract(const Duration(days: 8)),
+        'photos': ['https://picsum.photos/400?random=209'],
+        'likes': 7,
+        'responses': [],
+        'bookingId': 'booking_7',
+        'eventTitle': 'Корпоративная фотосессия',
+        'customerAvatar': 'https://picsum.photos/200?random=307',
+        'specialistName': 'Анна Лебедева',
+        'isVerified': false,
+        'reportCount': 0,
+        'isReported': false,
+      },
+      {
+        'specialistId': 'specialist_2',
+        'customerId': 'customer_8',
+        'customerName': 'Татьяна Козлова',
+        'rating': 5.0,
+        'text': 'Анна - профессионал высшего класса! Создала невероятные снимки нашей свадьбы. Каждый кадр - произведение искусства!',
+        'date': DateTime.now().subtract(const Duration(days: 12)),
+        'photos': ['https://picsum.photos/400?random=210', 'https://picsum.photos/400?random=211'],
+        'likes': 22,
+        'responses': [
+          {
+            'authorId': 'specialist_2',
+            'authorName': 'Анна Лебедева',
+            'text': 'Благодарю за такие теплые слова! Было очень приятно работать с вами!',
+            'date': DateTime.now().subtract(const Duration(days: 11)),
+          }
+        ],
+        'bookingId': 'booking_8',
+        'eventTitle': 'Свадьба в стиле прованс',
+        'customerAvatar': 'https://picsum.photos/200?random=308',
+        'specialistName': 'Анна Лебедева',
+        'isVerified': true,
+        'reportCount': 0,
+        'isReported': false,
+      },
+
+      // Отзывы для специалиста 3 (Дмитрий Козлов)
+      {
+        'specialistId': 'specialist_3',
+        'customerId': 'customer_9',
+        'customerName': 'Александр Новиков',
+        'rating': 4.0,
+        'text': 'Хороший DJ, но музыкальный вкус не совсем совпал с нашими предпочтениями. В целом справился с задачей.',
+        'date': DateTime.now().subtract(const Duration(days: 6)),
+        'photos': [],
+        'likes': 4,
+        'responses': [
+          {
+            'authorId': 'specialist_3',
+            'authorName': 'Дмитрий Козлов',
+            'text': 'Спасибо за отзыв! Учту ваши пожелания на будущее.',
+            'date': DateTime.now().subtract(const Duration(days: 5)),
+          }
+        ],
+        'bookingId': 'booking_9',
+        'eventTitle': 'День рождения',
+        'customerAvatar': 'https://picsum.photos/200?random=309',
+        'specialistName': 'Дмитрий Козлов',
+        'isVerified': false,
+        'reportCount': 0,
+        'isReported': false,
+      },
+      {
+        'specialistId': 'specialist_3',
+        'customerId': 'customer_10',
+        'customerName': 'Наталья Федорова',
+        'rating': 5.0,
+        'text': 'Дмитрий - отличный DJ! Создал потрясающую атмосферу на нашей свадьбе. Все танцевали до утра!',
+        'date': DateTime.now().subtract(const Duration(days: 14)),
+        'photos': ['https://picsum.photos/400?random=212'],
+        'likes': 11,
+        'responses': [
+          {
+            'authorId': 'specialist_3',
+            'authorName': 'Дмитрий Козлов',
+            'text': 'Спасибо! Рад, что музыка понравилась всем!',
+            'date': DateTime.now().subtract(const Duration(days: 13)),
+          }
+        ],
+        'bookingId': 'booking_10',
+        'eventTitle': 'Свадьба Натальи и Михаила',
+        'customerAvatar': 'https://picsum.photos/200?random=310',
+        'specialistName': 'Дмитрий Козлов',
+        'isVerified': true,
+        'reportCount': 0,
+        'isReported': false,
+      },
+    ];
+
+    for (var i = 0; i < testReviews.length; i++) {
+      final review = testReviews[i];
+      await _firestore.collection('reviews').add({
+        ...review,
+        'date': Timestamp.fromDate(review['date']! as DateTime),
+        'responses': (review['responses']! as List<dynamic>).map((response) => {
+          ...response,
+          'date': Timestamp.fromDate(response['date'] as DateTime),
+        },).toList(),
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    }
+    print('Добавлено ${testReviews.length} отзывов');
+  }
+
+  // Создание тестовых данных для монетизации
+  Future<void> createMonetizationTestData() async {
+    print('Создание тестовых данных монетизации...');
+    
+    await _createTestTransactions();
+    await _createTestPremiumProfiles();
+    await _createTestSubscriptions();
+    await _createTestPromotedPosts();
+    
+    print('Тестовые данные монетизации созданы успешно!');
+  }
+
+  // Тестовые транзакции
+  Future<void> _createTestTransactions() async {
+    final testTransactions = [
+      {
+        'id': 'transaction_1',
+        'userId': 'user_1',
+        'type': 'promotion',
+        'amount': 299.0,
+        'currency': 'RUB',
+        'status': 'success',
+        'timestamp': DateTime.now().subtract(const Duration(days: 5)),
+        'description': 'Продвижение профиля - 7_days',
+        'targetUserId': null,
+        'postId': null,
+        'metadata': {'plan': '7_days'},
+      },
+      {
+        'id': 'transaction_2',
+        'userId': 'user_2',
+        'type': 'subscription',
+        'amount': 499.0,
+        'currency': 'RUB',
+        'status': 'success',
+        'timestamp': DateTime.now().subtract(const Duration(days: 10)),
+        'description': 'Подписка pro',
+        'targetUserId': null,
+        'postId': null,
+        'metadata': {'plan': 'pro'},
+      },
+      {
+        'id': 'transaction_3',
+        'userId': 'demo_user_123',
+        'type': 'donation',
+        'amount': 500.0,
+        'currency': 'RUB',
+        'status': 'success',
+        'timestamp': DateTime.now().subtract(const Duration(days: 3)),
+        'description': 'Донат специалисту',
+        'targetUserId': 'user_1',
+        'postId': null,
+        'metadata': {'message': 'Спасибо за отличную работу!'},
+      },
+      {
+        'id': 'transaction_4',
+        'userId': 'user_3',
+        'type': 'boostPost',
+        'amount': 999.0,
+        'currency': 'RUB',
+        'status': 'success',
+        'timestamp': DateTime.now().subtract(const Duration(days: 2)),
+        'description': 'Продвижение поста на 7 дней',
+        'targetUserId': null,
+        'postId': 'post_1',
+        'metadata': {'days': 7},
+      },
+      {
+        'id': 'transaction_5',
+        'userId': 'user_4',
+        'type': 'subscription',
+        'amount': 999.0,
+        'currency': 'RUB',
+        'status': 'success',
+        'timestamp': DateTime.now().subtract(const Duration(days: 15)),
+        'description': 'Подписка elite',
+        'targetUserId': null,
+        'postId': null,
+        'metadata': {'plan': 'elite'},
+      },
+    ];
+
+    for (final transaction in testTransactions) {
+      await _firestore.collection('transactions').doc(transaction['id'] as String).set({
+        ...transaction,
+        'timestamp': Timestamp.fromDate(transaction['timestamp'] as DateTime),
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    }
+    print('Добавлено ${testTransactions.length} транзакций');
+  }
+
+  // Тестовые премиум-профили
+  Future<void> _createTestPremiumProfiles() async {
+    final testPremiumProfiles = [
+      {
+        'userId': 'user_1',
+        'activeUntil': DateTime.now().add(const Duration(days: 2)),
+        'type': 'highlight',
+        'region': 'Москва',
+        'createdAt': DateTime.now().subtract(const Duration(days: 5)),
+        'isActive': true,
+      },
+      {
+        'userId': 'user_2',
+        'activeUntil': DateTime.now().add(const Duration(days: 20)),
+        'type': 'prioritySearch',
+        'region': 'Санкт-Петербург',
+        'createdAt': DateTime.now().subtract(const Duration(days: 10)),
+        'isActive': true,
+      },
+    ];
+
+    for (final profile in testPremiumProfiles) {
+      await _firestore.collection('premiumProfiles').doc(profile['userId'] as String).set({
+        ...profile,
+        'activeUntil': Timestamp.fromDate(profile['activeUntil'] as DateTime),
+        'createdAt': Timestamp.fromDate(profile['createdAt'] as DateTime),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    }
+    print('Добавлено ${testPremiumProfiles.length} премиум-профилей');
+  }
+
+  // Тестовые подписки
+  Future<void> _createTestSubscriptions() async {
+    final testSubscriptions = [
+      {
+        'userId': 'user_2',
+        'plan': 'pro',
+        'startedAt': DateTime.now().subtract(const Duration(days: 10)),
+        'expiresAt': DateTime.now().add(const Duration(days: 20)),
+        'autoRenew': true,
+        'isActive': true,
+        'monthlyPrice': 499.0,
+      },
+      {
+        'userId': 'user_4',
+        'plan': 'elite',
+        'startedAt': DateTime.now().subtract(const Duration(days: 15)),
+        'expiresAt': DateTime.now().add(const Duration(days: 15)),
+        'autoRenew': true,
+        'isActive': true,
+        'monthlyPrice': 999.0,
+      },
+    ];
+
+    for (final subscription in testSubscriptions) {
+      await _firestore.collection('subscriptions').doc(subscription['userId'] as String).set({
+        ...subscription,
+        'startedAt': Timestamp.fromDate(subscription['startedAt'] as DateTime),
+        'expiresAt': Timestamp.fromDate(subscription['expiresAt'] as DateTime),
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    }
+    print('Добавлено ${testSubscriptions.length} подписок');
+  }
+
+  // Тестовые продвигаемые посты
+  Future<void> _createTestPromotedPosts() async {
+    final testPromotedPosts = [
+      {
+        'postId': 'post_1',
+        'userId': 'user_3',
+        'startDate': DateTime.now().subtract(const Duration(days: 2)),
+        'endDate': DateTime.now().add(const Duration(days: 5)),
+        'priority': 1,
+        'budget': 999.0,
+        'isActive': true,
+        'impressions': 1250,
+        'clicks': 45,
+        'createdAt': DateTime.now().subtract(const Duration(days: 2)),
+      },
+      {
+        'postId': 'post_2',
+        'userId': 'user_1',
+        'startDate': DateTime.now().subtract(const Duration(days: 1)),
+        'endDate': DateTime.now().add(const Duration(days: 6)),
+        'priority': 1,
+        'budget': 499.0,
+        'isActive': true,
+        'impressions': 850,
+        'clicks': 32,
+        'createdAt': DateTime.now().subtract(const Duration(days: 1)),
+      },
+    ];
+
+    for (final post in testPromotedPosts) {
+      await _firestore.collection('promotedPosts').doc(post['postId'] as String).set({
+        ...post,
+        'startDate': Timestamp.fromDate(post['startDate'] as DateTime),
+        'endDate': Timestamp.fromDate(post['endDate'] as DateTime),
+        'createdAt': Timestamp.fromDate(post['createdAt'] as DateTime),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    }
+    print('Добавлено ${testPromotedPosts.length} продвигаемых постов');
+  }
+
+  // Создание тестовых пользователей с монетизацией
+  Future<void> createMonetizationUsers() async {
+    final monetizationUsers = [
+      {
+        'id': 'premium_user_1',
+        'name': 'Елена Премиум',
+        'email': 'elena.premium@example.com',
+        'avatarUrl': 'https://picsum.photos/200?random=101',
+        'subscription': 'pro',
+        'premiumUntil': DateTime.now().add(const Duration(days: 25)),
+        'totalEarnings': 15000.0,
+        'donationCount': 12,
+      },
+      {
+        'id': 'elite_user_1',
+        'name': 'Максим Элит',
+        'email': 'maxim.elite@example.com',
+        'avatarUrl': 'https://picsum.photos/200?random=102',
+        'subscription': 'elite',
+        'premiumUntil': DateTime.now().add(const Duration(days: 15)),
+        'totalEarnings': 25000.0,
+        'donationCount': 8,
+      },
+      {
+        'id': 'donor_user_1',
+        'name': 'Анна Донатор',
+        'email': 'anna.donor@example.com',
+        'avatarUrl': 'https://picsum.photos/200?random=103',
+        'subscription': 'standard',
+        'totalDonations': 3500.0,
+        'donationCount': 7,
+      },
+    ];
+
+    for (final user in monetizationUsers) {
+      await _firestore.collection('users').doc(user['id'] as String).set({
+        ...user,
+        'premiumUntil': user['premiumUntil'] != null 
+            ? Timestamp.fromDate(user['premiumUntil'] as DateTime)
+            : null,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    }
+    print('Добавлено ${monetizationUsers.length} пользователей с монетизацией');
+  }
+
+  /// Получить тестовые промоакции
+  List<Map<String, dynamic>> getPromotions() {
+    return List.from(_testPromotions);
+  }
+
+  // ===== МЕТОДЫ ДЛЯ РАБОТЫ С FIRESTORE =====
+
+  /// Добавить тестовых пользователей в Firestore
+  Future<void> addTestUsersToFirestore() async {
+    print('👥 Добавление тестовых пользователей в Firestore...');
+    
+    final users = [
+      {
+        'uid': 'user_1',
+        'name': 'Александр Иванов',
+        'city': 'Москва',
+        'avatarUrl': 'https://i.pravatar.cc/150?img=1',
+        'role': 'specialist',
+        'email': 'alex.ivanov@example.com',
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'uid': 'user_2',
+        'name': 'Мария Смирнова',
+        'city': 'Санкт-Петербург',
+        'avatarUrl': 'https://i.pravatar.cc/150?img=2',
+        'role': 'customer',
+        'email': 'maria.smirnova@example.com',
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'uid': 'user_3',
+        'name': 'Игорь Кузнецов',
+        'city': 'Казань',
+        'avatarUrl': 'https://i.pravatar.cc/150?img=3',
+        'role': 'specialist',
+        'email': 'igor.kuznetsov@example.com',
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'uid': 'user_4',
+        'name': 'Анна Сергеева',
+        'city': 'Новосибирск',
+        'avatarUrl': 'https://i.pravatar.cc/150?img=4',
+        'role': 'customer',
+        'email': 'anna.sergeeva@example.com',
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'uid': 'user_5',
+        'name': 'Дмитрий Орлов',
+        'city': 'Екатеринбург',
+        'avatarUrl': 'https://i.pravatar.cc/150?img=5',
+        'role': 'specialist',
+        'email': 'dmitry.orlov@example.com',
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      },
+    ];
+    
+    for (final user in users) {
+      await _firestore.collection('users').doc(user['uid'] as String).set(user);
+      print('  ✅ Пользователь ${user['name']} добавлен');
+    }
+  }
+
+  /// Добавить посты в ленту Firestore
+  Future<void> addFeedPostsToFirestore() async {
+    print('📢 Добавление постов в ленту Firestore...');
+    
+    final posts = [
+      {
+        'id': 'feed_1',
+        'authorId': 'user_1',
+        'imageUrl': 'https://picsum.photos/400/300?random=1',
+        'text': 'Поделился кадром с последнего мероприятия 🎤',
+        'likesCount': 25,
+        'commentsCount': 6,
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'feed_2',
+        'authorId': 'user_3',
+        'imageUrl': 'https://picsum.photos/400/300?random=2',
+        'text': 'Новая фотозона для свадеб готова! 🌸',
+        'likesCount': 18,
+        'commentsCount': 4,
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'feed_3',
+        'authorId': 'user_5',
+        'imageUrl': 'https://picsum.photos/400/300?random=3',
+        'text': 'Отличный день для фотосессии на природе 📸',
+        'likesCount': 32,
+        'commentsCount': 8,
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'feed_4',
+        'authorId': 'user_1',
+        'imageUrl': 'https://picsum.photos/400/300?random=4',
+        'text': 'Свадебная церемония в стиле винтаж 💍',
+        'likesCount': 41,
+        'commentsCount': 12,
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'feed_5',
+        'authorId': 'user_3',
+        'imageUrl': 'https://picsum.photos/400/300?random=5',
+        'text': 'Детский праздник с аниматорами 🎈',
+        'likesCount': 15,
+        'commentsCount': 3,
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'feed_6',
+        'authorId': 'user_5',
+        'imageUrl': 'https://picsum.photos/400/300?random=6',
+        'text': 'Корпоративное мероприятие прошло на ура! 🎉',
+        'likesCount': 28,
+        'commentsCount': 7,
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'feed_7',
+        'authorId': 'user_1',
+        'imageUrl': 'https://picsum.photos/400/300?random=7',
+        'text': 'Новый реквизит для фотосессий 📷',
+        'likesCount': 22,
+        'commentsCount': 5,
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'feed_8',
+        'authorId': 'user_3',
+        'imageUrl': 'https://picsum.photos/400/300?random=8',
+        'text': 'День рождения в стиле пиратской вечеринки 🏴‍☠️',
+        'likesCount': 19,
+        'commentsCount': 4,
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'feed_9',
+        'authorId': 'user_5',
+        'imageUrl': 'https://picsum.photos/400/300?random=9',
+        'text': 'Семейная фотосессия в парке 👨‍👩‍👧‍👦',
+        'likesCount': 35,
+        'commentsCount': 9,
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'feed_10',
+        'authorId': 'user_1',
+        'imageUrl': 'https://picsum.photos/400/300?random=10',
+        'text': 'Выпускной вечер в школе 🎓',
+        'likesCount': 27,
+        'commentsCount': 6,
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+    ];
+    
+    for (final post in posts) {
+      await _firestore.collection('feed').doc(post['id'] as String).set(post);
+      print('  ✅ Пост ${post['id']} добавлен');
+    }
+  }
+
+  /// Добавить заявки в Firestore
+  Future<void> addOrdersToFirestore() async {
+    print('📝 Добавление заявок в Firestore...');
+    
+    final orders = [
+      {
+        'id': 'order_1',
+        'customerId': 'user_2',
+        'specialistId': 'user_1',
+        'title': 'Свадьба 14 октября',
+        'description': 'Нужен ведущий с юмором и диджей на свадьбу на 40 человек.',
+        'status': 'pending',
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'order_2',
+        'customerId': 'user_4',
+        'specialistId': 'user_3',
+        'title': 'Детский день рождения',
+        'description': 'Организация праздника для 8-летнего ребенка. Нужны аниматоры и фотограф.',
+        'status': 'accepted',
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'order_3',
+        'customerId': 'user_2',
+        'specialistId': 'user_5',
+        'title': 'Корпоративное мероприятие',
+        'description': 'Новогодний корпоратив на 50 сотрудников. Нужен ведущий и музыкальное сопровождение.',
+        'status': 'completed',
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'order_4',
+        'customerId': 'user_4',
+        'specialistId': 'user_1',
+        'title': 'Фотосессия для пары',
+        'description': 'Романтическая фотосессия в парке. Нужен профессиональный фотограф.',
+        'status': 'pending',
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'order_5',
+        'customerId': 'user_2',
+        'specialistId': 'user_3',
+        'title': 'Выпускной вечер',
+        'description': 'Организация выпускного для 11 класса. Нужен ведущий и диджей.',
+        'status': 'accepted',
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'order_6',
+        'customerId': 'user_4',
+        'specialistId': 'user_5',
+        'title': 'Семейная фотосессия',
+        'description': 'Фотосессия семьи из 4 человек. Нужен фотограф с опытом работы с детьми.',
+        'status': 'completed',
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'order_7',
+        'customerId': 'user_2',
+        'specialistId': 'user_1',
+        'title': 'Юбилей бабушки',
+        'description': 'Празднование 70-летия. Нужен ведущий и музыкальное сопровождение.',
+        'status': 'canceled',
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'order_8',
+        'customerId': 'user_4',
+        'specialistId': 'user_3',
+        'title': 'День рождения ребенка',
+        'description': 'Праздник для 5-летней девочки. Нужны аниматоры в костюмах принцесс.',
+        'status': 'pending',
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+    ];
+    
+    for (final order in orders) {
+      await _firestore.collection('orders').doc(order['id'] as String).set(order);
+      print('  ✅ Заявка ${order['id']} добавлена');
+    }
+  }
+
+  /// Добавить чаты и сообщения в Firestore
+  Future<void> addChatsToFirestore() async {
+    print('💬 Добавление чатов и сообщений в Firestore...');
+    
+    final chats = [
+      {
+        'id': 'chat_1',
+        'members': ['user_1', 'user_2'],
+        'lastMessage': 'Добрый день! Уточните дату?',
+        'isTest': true,
+        'updatedAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'chat_2',
+        'members': ['user_3', 'user_4'],
+        'lastMessage': 'Спасибо за отличную работу!',
+        'isTest': true,
+        'updatedAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'chat_3',
+        'members': ['user_5', 'user_2'],
+        'lastMessage': 'Когда можем встретиться?',
+        'isTest': true,
+        'updatedAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'chat_4',
+        'members': ['user_1', 'user_4'],
+        'lastMessage': 'Фото готовы, отправляю ссылку',
+        'isTest': true,
+        'updatedAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'chat_5',
+        'members': ['user_3', 'user_2'],
+        'lastMessage': 'До встречи завтра!',
+        'isTest': true,
+        'updatedAt': FieldValue.serverTimestamp(),
+      },
+    ];
+    
+    // Создаем чаты
+    for (final chat in chats) {
+      await _firestore.collection('chats').doc(chat['id'] as String).set(chat);
+      print('  ✅ Чат ${chat['id']} добавлен');
+      
+      // Создаем сообщения для каждого чата
+      final chatId = chat['id'] as String;
+      final members = chat['members'] as List<String>;
+      
+      final messages = [
+        {
+          'id': 'msg_${chatId}_1',
+          'senderId': members[0],
+          'text': 'Здравствуйте, рад знакомству 👋',
+          'isTest': true,
+          'createdAt': FieldValue.serverTimestamp(),
+        },
+        {
+          'id': 'msg_${chatId}_2',
+          'senderId': members[1],
+          'text': 'Привет! Спасибо за отклик',
+          'isTest': true,
+          'createdAt': FieldValue.serverTimestamp(),
+        },
+        {
+          'id': 'msg_${chatId}_3',
+          'senderId': members[0],
+          'text': 'Расскажите подробнее о мероприятии',
+          'isTest': true,
+          'createdAt': FieldValue.serverTimestamp(),
+        },
+        {
+          'id': 'msg_${chatId}_4',
+          'senderId': members[1],
+          'text': 'Конечно! Это будет свадьба на 40 человек',
+          'isTest': true,
+          'createdAt': FieldValue.serverTimestamp(),
+        },
+        {
+          'id': 'msg_${chatId}_5',
+          'senderId': members[0],
+          'text': 'Отлично! Когда планируете?',
+          'isTest': true,
+          'createdAt': FieldValue.serverTimestamp(),
+        },
+      ];
+      
+      for (final message in messages) {
+        await _firestore
+            .collection('chats')
+            .doc(chatId)
+            .collection('messages')
+            .doc(message['id'] as String)
+            .set(message);
+      }
+      print('    ✅ 5 сообщений добавлено в чат $chatId');
+    }
+  }
+
+  /// Добавить идеи в Firestore
+  Future<void> addIdeasToFirestore() async {
+    print('💡 Добавление идей в Firestore...');
+    
+    final ideas = [
+      {
+        'id': 'idea_1',
+        'authorId': 'user_3',
+        'imageUrl': 'https://picsum.photos/400/400?random=21',
+        'title': 'Необычная фотозона 🌸',
+        'description': 'Отличная идея для летних свадеб. Используйте живые цветы и натуральные материалы.',
+        'likesCount': 12,
+        'commentsCount': 3,
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'idea_2',
+        'authorId': 'user_1',
+        'imageUrl': 'https://picsum.photos/400/400?random=22',
+        'title': 'Винтажная свадебная церемония 💍',
+        'description': 'Создайте атмосферу прошлого века с помощью ретро-реквизита и классической музыки.',
+        'likesCount': 28,
+        'commentsCount': 7,
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'idea_3',
+        'authorId': 'user_5',
+        'imageUrl': 'https://picsum.photos/400/400?random=23',
+        'title': 'Пикник на природе 🧺',
+        'description': 'Организуйте романтический пикник с красивой сервировкой и природным декором.',
+        'likesCount': 19,
+        'commentsCount': 5,
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'idea_4',
+        'authorId': 'user_3',
+        'imageUrl': 'https://picsum.photos/400/400?random=24',
+        'title': 'Детский праздник в стиле пиратов 🏴‍☠️',
+        'description': 'Создайте незабываемое приключение для детей с костюмами и тематическими играми.',
+        'likesCount': 15,
+        'commentsCount': 4,
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'idea_5',
+        'authorId': 'user_1',
+        'imageUrl': 'https://picsum.photos/400/400?random=25',
+        'title': 'Семейная фотосессия в парке 👨‍👩‍👧‍👦',
+        'description': 'Запечатлейте счастливые моменты семьи на фоне красивой природы.',
+        'likesCount': 24,
+        'commentsCount': 6,
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'idea_6',
+        'authorId': 'user_5',
+        'imageUrl': 'https://picsum.photos/400/400?random=26',
+        'title': 'Корпоратив в стиле 80-х 🕺',
+        'description': 'Вернитесь в эпоху диско с яркими костюмами и зажигательной музыкой.',
+        'likesCount': 21,
+        'commentsCount': 8,
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'idea_7',
+        'authorId': 'user_3',
+        'imageUrl': 'https://picsum.photos/400/400?random=27',
+        'title': 'Романтический ужин при свечах 🕯️',
+        'description': 'Создайте интимную атмосферу с красивой сервировкой и мягким освещением.',
+        'likesCount': 17,
+        'commentsCount': 3,
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+      {
+        'id': 'idea_8',
+        'authorId': 'user_1',
+        'imageUrl': 'https://picsum.photos/400/400?random=28',
+        'title': 'Выпускной в стиле Гарри Поттера 🧙‍♂️',
+        'description': 'Окунитесь в мир магии с тематическими декорациями и костюмами.',
+        'likesCount': 31,
+        'commentsCount': 9,
+        'isTest': true,
+        'createdAt': FieldValue.serverTimestamp(),
+      },
+    ];
+    
+    for (final idea in ideas) {
+      await _firestore.collection('ideas').doc(idea['id'] as String).set(idea);
+      print('  ✅ Идея ${idea['id']} добавлена');
+    }
+  }
+
+  /// Добавить все тестовые данные в Firestore
+  Future<void> addAllTestDataToFirestore() async {
+    print('🚀 Начинаем добавление всех тестовых данных в Firestore...');
+    
+    try {
+      await addTestUsersToFirestore();
+      await addFeedPostsToFirestore();
+      await addOrdersToFirestore();
+      await addChatsToFirestore();
+      await addIdeasToFirestore();
+      
+      print('✅ Все тестовые данные успешно добавлены в Firestore!');
+    } catch (e) {
+      print('❌ Ошибка при добавлении данных: $e');
+      rethrow;
+    }
+  }
+
+  /// Очистить все тестовые данные из Firestore
+  Future<void> clearTestDataFromFirestore() async {
+    print('🧹 Очистка тестовых данных из Firestore...');
+    
+    try {
+      // Удаляем тестовые данные из всех коллекций
+      final collections = ['users', 'feed', 'orders', 'chats', 'ideas'];
+      
+      for (final collection in collections) {
+        final querySnapshot = await _firestore
+            .collection(collection)
+            .where('isTest', isEqualTo: true)
+            .get();
+        
+        for (final doc in querySnapshot.docs) {
+          if (collection == 'chats') {
+            // Для чатов удаляем также сообщения
+            final messagesSnapshot = await doc.reference
+                .collection('messages')
+                .get();
+            
+            for (final messageDoc in messagesSnapshot.docs) {
+              await messageDoc.reference.delete();
+            }
+          }
+          await doc.reference.delete();
+        }
+        
+        print('  ✅ Тестовые данные удалены из коллекции $collection');
+      }
+      
+      print('✅ Все тестовые данные очищены из Firestore!');
+    } catch (e) {
+      print('❌ Ошибка при очистке данных: $e');
+      rethrow;
     }
   }
 }

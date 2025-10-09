@@ -73,7 +73,7 @@ class _SpecialistProfileExtendedScreenState
         _recentBookings = results[2] as List<Booking>;
         _isLoading = false;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -100,7 +100,7 @@ class _SpecialistProfileExtendedScreenState
           ),
         ),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка: $e'),

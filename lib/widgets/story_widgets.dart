@@ -210,15 +210,21 @@ class _CreateStoryWidgetState extends ConsumerState<CreateStoryWidget> {
       if (file == null) return;
 
       final service = ref.read(storyServiceProvider);
-      await service.createStory(
+      final story = Story(
+        id: '',
         specialistId: widget.specialistId,
+        title: 'Story',
         mediaUrl: file.path,
+        thumbnailUrl: file.path,
+        createdAt: DateTime.now(),
+        expiresAt: DateTime.now().add(const Duration(hours: 24)),
         metadata: {
           'specialistName': widget.specialistName,
           'specialistPhotoUrl': widget.specialistPhotoUrl,
           'mediaType': type == StoryType.image ? 'image' : 'video',
         },
       );
+      await service.createStory(story);
 
       widget.onStoryCreated?.call();
 

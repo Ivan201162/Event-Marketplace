@@ -61,7 +61,7 @@ class FinancialReportService {
         typeBreakdown: typeBreakdown,
         generatedAt: DateTime.now(),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error generating customer payment report: $e');
       throw Exception('Ошибка генерации отчета по платежам: $e');
     }
@@ -135,7 +135,7 @@ class FinancialReportService {
         paymentMethodStats: paymentMethodStats,
         generatedAt: DateTime.now(),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error generating specialist income report: $e');
       throw Exception('Ошибка генерации отчета по доходам: $e');
     }
@@ -227,7 +227,7 @@ class FinancialReportService {
 
       final querySnapshot = await query.get();
       return querySnapshot.docs.map(Payment.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error getting transaction history: $e');
       throw Exception('Ошибка получения истории транзакций: $e');
     }
@@ -250,7 +250,7 @@ class FinancialReportService {
       );
 
       return _groupPaymentsByMonth(payments);
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error getting monthly stats: $e');
       return {};
     }

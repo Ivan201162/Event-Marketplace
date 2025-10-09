@@ -43,8 +43,8 @@ class WorkActService {
           await _firestore.collection('work_acts').add(workAct.toMap());
 
       return workAct.copyWith(id: docRef.id);
-    } catch (e) {
-      print('Ошибка создания акта выполненных работ: $e');
+    } on Exception {
+      // Логирование:'Ошибка создания акта выполненных работ: $e');
       rethrow;
     }
   }
@@ -57,8 +57,8 @@ class WorkActService {
       if (!doc.exists) return null;
 
       return WorkAct.fromDocument(doc);
-    } catch (e) {
-      print('Ошибка получения акта выполненных работ: $e');
+    } on Exception {
+      // Логирование:'Ошибка получения акта выполненных работ: $e');
       return null;
     }
   }
@@ -73,8 +73,8 @@ class WorkActService {
           .get();
 
       return snapshot.docs.map(WorkAct.fromDocument).toList();
-    } catch (e) {
-      print('Ошибка получения актов по заказу: $e');
+    } on Exception {
+      // Логирование:'Ошибка получения актов по заказу: $e');
       return [];
     }
   }
@@ -89,8 +89,8 @@ class WorkActService {
           .get();
 
       return snapshot.docs.map(WorkAct.fromDocument).toList();
-    } catch (e) {
-      print('Ошибка получения актов специалиста: $e');
+    } on Exception {
+      // Логирование:'Ошибка получения актов специалиста: $e');
       return [];
     }
   }
@@ -105,8 +105,8 @@ class WorkActService {
           .get();
 
       return snapshot.docs.map(WorkAct.fromDocument).toList();
-    } catch (e) {
-      print('Ошибка получения актов заказчика: $e');
+    } on Exception {
+      // Логирование:'Ошибка получения актов заказчика: $e');
       return [];
     }
   }
@@ -125,8 +125,8 @@ class WorkActService {
         'signature': signature,
         'updatedAt': FieldValue.serverTimestamp(),
       });
-    } catch (e) {
-      print('Ошибка подписания акта: $e');
+    } on Exception {
+      // Логирование:'Ошибка подписания акта: $e');
       rethrow;
     }
   }
@@ -142,8 +142,8 @@ class WorkActService {
         'rejectionReason': reason,
         'updatedAt': FieldValue.serverTimestamp(),
       });
-    } catch (e) {
-      print('Ошибка отклонения акта: $e');
+    } on Exception {
+      // Логирование:'Ошибка отклонения акта: $e');
       rethrow;
     }
   }
@@ -176,8 +176,8 @@ class WorkActService {
           .collection('work_acts')
           .doc(workActId)
           .update(updateData);
-    } catch (e) {
-      print('Ошибка обновления акта: $e');
+    } on Exception {
+      // Логирование:'Ошибка обновления акта: $e');
       rethrow;
     }
   }
@@ -195,8 +195,8 @@ class WorkActService {
       );
 
       return await pdf.save();
-    } catch (e) {
-      print('Ошибка создания PDF: $e');
+    } on Exception {
+      // Логирование:'Ошибка создания PDF: $e');
       rethrow;
     }
   }
@@ -455,8 +455,8 @@ class WorkActService {
         totalAmount: totalAmount,
         lastUpdated: DateTime.now(),
       );
-    } catch (e) {
-      print('Ошибка получения статистики актов: $e');
+    } on Exception {
+      // Логирование:'Ошибка получения статистики актов: $e');
       return WorkActStats.empty();
     }
   }
@@ -688,8 +688,8 @@ class WorkActServiceExtended {
       return querySnapshot.docs
           .map((doc) => WorkAct.fromMap(doc.data(), doc.id))
           .toList();
-    } catch (e) {
-      print('Ошибка получения актов выполненных работ по бронированию: $e');
+    } on Exception {
+      // Логирование:'Ошибка получения актов выполненных работ по бронированию: $e');
       return [];
     }
   }
@@ -733,8 +733,8 @@ class WorkActServiceExtended {
           await _firestore.collection('work_acts').add(workAct.toMap());
 
       return workAct.copyWith(id: docRef.id);
-    } catch (e) {
-      print('Ошибка генерации акта выполненных работ: $e');
+    } on Exception {
+      // Логирование:'Ошибка генерации акта выполненных работ: $e');
       rethrow;
     }
   }
@@ -747,8 +747,8 @@ class WorkActServiceExtended {
         'completedAt': Timestamp.fromDate(DateTime.now()),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
-    } catch (e) {
-      print('Ошибка подтверждения акта выполненных работ: $e');
+    } on Exception {
+      // Логирование:'Ошибка подтверждения акта выполненных работ: $e');
       rethrow;
     }
   }

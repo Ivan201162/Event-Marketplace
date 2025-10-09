@@ -1,438 +1,366 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import '../core/app_theme.dart';
+import '../models/smart_specialist.dart';
 import '../models/specialist.dart';
-import 'safe_button.dart';
 
-class SpecialistCard extends ConsumerWidget {
+/// Карточка специалиста с поддержкой умного поиска
+class SpecialistCard extends StatelessWidget {
   const SpecialistCard({
     super.key,
     required this.specialist,
+    this.showCompatibility = false,
     this.onTap,
-    this.showFullInfo = false,
-    this.showFavoriteButton = true,
-    this.showQuickActions = true,
+    this.onFavorite,
+    this.onContact,
   });
-  final Specialist specialist;
+
+  final dynamic specialist; // SmartSpecialist или Specialist
+  final bool showCompatibility;
   final VoidCallback? onTap;
-  final bool showFullInfo;
-  final bool showFavoriteButton;
-  final bool showQuickActions;
+  final VoidCallback? onFavorite;
+  final VoidCallback? onContact;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(16),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Заголовок с аватаром и основной информацией
-                Row(
-                  children: [
-                    Stack(
+  Widget build(BuildContext context) => Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Заголовок с фото и основной информацией
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Фото специалиста
+                  _buildAvatar(),
+                  
+                  const SizedBox(width: 12),
+                  
+                  // Основная информация
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CircleAvatar(
-                          radius: 32,
-                          backgroundColor: BrandColors.primary.withOpacity(0.1),
-                          backgroundImage: specialist.imageUrlValue != null
-                              ? NetworkImage(specialist.imageUrlValue!)
-                              : null,
-                          child: specialist.imageUrlValue == null
-                              ? Text(
-                                  specialist.name.isNotEmpty
-                                      ? specialist.name[0].toUpperCase()
-                                      : '?',
-                                  style: const TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                    color: BrandColors.primary,
-                                  ),
-                                )
-                              : null,
-                        ),
-                        if (specialist.isVerified)
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: Container(
-                              padding: const EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                color: BrandColors.primary,
-                                shape: BoxShape.circle,
-                                border:
-                                    Border.all(color: Colors.white, width: 2),
-                              ),
-                              child: const Icon(
-                                Icons.verified,
-                                size: 12,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  specialist.displayName,
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              if (showFavoriteButton)
-                                IconButton(
-                                  icon: const Icon(Icons.favorite_border),
-                                  onPressed: () {
-                                    // Добавляем в избранное
-                                    _addToFavorites(context, specialist);
-                                  },
-                                  iconSize: 20,
-                                  padding: EdgeInsets.zero,
-                                  constraints: const BoxConstraints(),
-                                ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              Text(
-                                specialist.category.icon,
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                specialist.category.displayName,
-                                style: TextStyle(
-                                  color: Colors.grey.shade600,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                                size: 16,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                specialist.rating.toStringAsFixed(1),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                '(${specialist.reviewsCount} отзывов)',
-                                style: TextStyle(
-                                  color: Colors.grey.shade600,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              if (specialist.isOnline ?? false) ...[
-                                const SizedBox(width: 8),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 6,
-                                    vertical: 2,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: const Text(
-                                    'Онлайн',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
+                        // Имя и категория
                         Text(
-                          '${specialist.price.toInt()}₽',
+                          _getSpecialistName(),
                           style: const TextStyle(
-                            fontSize: 20,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: BrandColors.accent,
                           ),
                         ),
-                        const Text(
-                          'за час',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        if (specialist.priceRange != null) ...[
-                          const SizedBox(height: 2),
-                          Text(
-                            'от ${specialist.priceRange!.minPrice.toInt()}₽',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.grey.shade600,
+                        
+                        const SizedBox(height: 4),
+                        
+                        // Категория и город
+                        Row(
+                          children: [
+                            Text(
+                              _getCategoryDisplayName(),
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 14,
+                              ),
                             ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 12),
-
-                // Описание
-                if (specialist.description != null &&
-                    specialist.description!.isNotEmpty)
-                  Text(
-                    specialist.description!,
-                    style: const TextStyle(fontSize: 14),
-                    maxLines: showFullInfo ? null : 2,
-                    overflow: showFullInfo ? null : TextOverflow.ellipsis,
-                  ),
-
-                const SizedBox(height: 12),
-
-                // Дополнительная информация
-                Row(
-                  children: [
-                    if (specialist.location != null &&
-                        specialist.location!.isNotEmpty) ...[
-                      Icon(
-                        Icons.location_on,
-                        size: 16,
-                        color: Colors.grey.shade600,
-                      ),
-                      const SizedBox(width: 4),
-                      Expanded(
-                        child: Text(
-                          specialist.location!,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey.shade600,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                    const Spacer(),
-                    if (specialist.yearsOfExperience > 0) ...[
-                      Icon(Icons.work, size: 16, color: Colors.grey.shade600),
-                      const SizedBox(width: 4),
-                      Text(
-                        '${specialist.yearsOfExperience} лет',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-
-                if (showFullInfo) ...[
-                  const SizedBox(height: 12),
-
-                  // Услуги
-                  if (specialist.services.isNotEmpty) ...[
-                    const Text(
-                      'Услуги:',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Wrap(
-                      spacing: 4,
-                      runSpacing: 4,
-                      children: specialist.services
-                          .take(3)
-                          .map(
-                            (service) => Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
+                            if (_getCity() != null) ...[
+                              const SizedBox(width: 8),
+                              Icon(
+                                Icons.location_on,
+                                size: 14,
+                                color: Colors.grey[600],
                               ),
-                              decoration: BoxDecoration(
-                                color: Colors.blue.shade50,
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: Colors.blue.shade200),
-                              ),
-                              child: Text(
-                                service,
+                              const SizedBox(width: 2),
+                              Text(
+                                _getCity()!,
                                 style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.blue.shade700,
+                                  color: Colors.grey[600],
+                                  fontSize: 14,
                                 ),
                               ),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                    if (specialist.services.length > 3)
-                      Text(
-                        '+${specialist.services.length - 3} еще',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
-                  ],
-
-                  const SizedBox(height: 12),
-
-                  // Доступные даты
-                  if (specialist.availableDates.isNotEmpty) ...[
-                    const Text(
-                      'Доступные даты:',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      specialist.availableDates.take(3).join(', '),
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                  ],
-                ],
-
-                const SizedBox(height: 12),
-
-                // Быстрые действия
-                if (showQuickActions) ...[
-                  Row(
-                    children: [
-                      Expanded(
-                        child: SafeButton(
-                          onPressed: () {
-                            _openChat(context, specialist);
-                          },
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                          ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.chat, size: 16),
-                              SizedBox(width: 8),
-                              Text('Чат'),
                             ],
-                          ),
+                          ],
                         ),
+                        
+                        const SizedBox(height: 8),
+                        
+                        // Рейтинг и отзывы
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              _getRating().toStringAsFixed(1),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              '(${_getReviewCount()} отзывов)',
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  // Кнопка избранного
+                  IconButton(
+                    icon: Icon(
+                      Icons.favorite_border,
+                      color: Colors.grey[600],
+                    ),
+                    onPressed: onFavorite,
+                  ),
+                ],
+              ),
+              
+              const SizedBox(height: 12),
+              
+              // Описание
+              if (_getDescription() != null) ...[
+                Text(
+                  _getDescription()!,
+                  style: TextStyle(
+                    color: Colors.grey[700],
+                    fontSize: 14,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 12),
+              ],
+              
+              // Стили работы
+              if (_getStyles().isNotEmpty) ...[
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: _getStyles().take(3).map((style) => Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        style,
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),).toList(),
+                ),
+                const SizedBox(height: 12),
+              ],
+              
+              // Совместимость
+              if (showCompatibility && _getCompatibilityScore() > 0) ...[
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.green.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.psychology,
+                        color: Colors.green[700],
+                        size: 16,
                       ),
                       const SizedBox(width: 8),
-                      Expanded(
-                        child: SafeButton(
-                          onPressed: () {
-                            _bookSpecialist(context, specialist);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: BrandColors.primary,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.event_available, size: 16),
-                              SizedBox(width: 8),
-                              Text('Забронировать'),
-                            ],
-                          ),
+                      Text(
+                        'Совместимость: ${(_getCompatibilityScore() * 100).toStringAsFixed(0)}%',
+                        style: TextStyle(
+                          color: Colors.green[700],
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
-                ],
-
-                // Кнопка "Подробнее"
-                SizedBox(
-                  width: double.infinity,
-                  child: SafeButton(
-                    onPressed: onTap,
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                    child: const Text('Подробнее'),
-                  ),
                 ),
+                const SizedBox(height: 12),
               ],
-            ),
+              
+              // Цена и кнопки действий
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Цена
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _getPriceRangeString(),
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        ),
+                      ),
+                      if (_getExperienceYears() > 0)
+                        Text(
+                          'Опыт: ${_getExperienceYears()} лет',
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 12,
+                          ),
+                        ),
+                    ],
+                  ),
+                  
+                  // Кнопки действий
+                  Row(
+                    children: [
+                      // Кнопка "Написать"
+                      ElevatedButton.icon(
+                        onPressed: onContact,
+                        icon: const Icon(Icons.message, size: 16),
+                        label: const Text('Написать'),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          textStyle: const TextStyle(fontSize: 12),
+                        ),
+                      ),
+                      
+                      const SizedBox(width: 8),
+                      
+                      // Кнопка "Подробнее"
+                      OutlinedButton(
+                        onPressed: onTap,
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          textStyle: const TextStyle(fontSize: 12),
+                        ),
+                        child: const Text('Подробнее'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
           ),
-        ),
-      );
-
-  String _getReviewCount() {
-    // Генерируем случайное количество отзывов на основе рейтинга
-    final baseCount = (specialist.rating * 20).round();
-    return (baseCount + (DateTime.now().millisecond % 50)).toString();
-  }
-
-  /// Добавить специалиста в избранное
-  void _addToFavorites(BuildContext context, Specialist specialist) {
-    // TODO: Реализовать добавление в избранное через Firebase
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${specialist.name} добавлен в избранное'),
-        action: SnackBarAction(
-          label: 'Отменить',
-          onPressed: () {
-            // TODO: Удалить из избранного
-          },
         ),
       ),
     );
+
+  /// Построить аватар
+  Widget _buildAvatar() {
+    final imageUrl = _getImageUrl();
+    final name = _getSpecialistName();
+    
+    return CircleAvatar(
+      radius: 30,
+      backgroundImage: imageUrl != null ? NetworkImage(imageUrl) : null,
+      child: imageUrl == null
+          ? Text(
+              name.isNotEmpty ? name[0].toUpperCase() : '?',
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            )
+          : null,
+    );
   }
 
-  /// Открыть чат с специалистом
-  void _openChat(BuildContext context, Specialist specialist) {
-    context.push('/chat/chat_${specialist.id}');
-  }
+  /// Получить имя специалиста
+  String _getSpecialistName() => specialist is SmartSpecialist
+      ? (specialist as SmartSpecialist).name
+      : specialist is Specialist
+          ? (specialist as Specialist).name
+          : 'Специалист';
 
-  /// Забронировать специалиста
-  void _bookSpecialist(BuildContext context, Specialist specialist) {
-    context.push('/booking/${specialist.id}');
-  }
+  /// Получить отображаемое название категории
+  String _getCategoryDisplayName() => specialist is SmartSpecialist
+      ? (specialist as SmartSpecialist).categoryDisplayName
+      : specialist is Specialist
+          ? (specialist as Specialist).categoryDisplayName
+          : 'Специалист';
+
+  /// Получить город
+  String? _getCity() => specialist is SmartSpecialist
+      ? (specialist as SmartSpecialist).city
+      : specialist is Specialist
+          ? (specialist as Specialist).city
+          : null;
+
+  /// Получить рейтинг
+  double _getRating() => specialist is SmartSpecialist
+      ? (specialist as SmartSpecialist).rating
+      : specialist is Specialist
+          ? (specialist as Specialist).rating
+          : 0.0;
+
+  /// Получить количество отзывов
+  int _getReviewCount() => specialist is SmartSpecialist
+      ? (specialist as SmartSpecialist).reviewsCount
+      : specialist is Specialist
+          ? (specialist as Specialist).reviewsCount
+          : 0;
+
+  /// Получить описание
+  String? _getDescription() => specialist is SmartSpecialist
+      ? (specialist as SmartSpecialist).description
+      : specialist is Specialist
+          ? (specialist as Specialist).description
+          : null;
+
+  /// Получить стили
+  List<String> _getStyles() => specialist is SmartSpecialist
+      ? (specialist as SmartSpecialist).styles
+      : <String>[];
+
+  /// Получить балл совместимости
+  double _getCompatibilityScore() => specialist is SmartSpecialist
+      ? (specialist as SmartSpecialist).compatibilityScore
+      : 0.0;
+
+  /// Получить диапазон цен
+  String _getPriceRangeString() => specialist is SmartSpecialist
+      ? (specialist as SmartSpecialist).priceRangeString
+      : specialist is Specialist
+          ? (specialist as Specialist).priceRangeString
+          : 'Цена не указана';
+
+  /// Получить годы опыта
+  int _getExperienceYears() => specialist is SmartSpecialist
+      ? (specialist as SmartSpecialist).yearsOfExperience
+      : specialist is Specialist
+          ? (specialist as Specialist).yearsOfExperience
+          : 0;
+
+  /// Получить URL изображения
+  String? _getImageUrl() => specialist is SmartSpecialist
+      ? (specialist as SmartSpecialist).imageUrlValue
+      : specialist is Specialist
+          ? (specialist as Specialist).imageUrlValue
+          : null;
 }

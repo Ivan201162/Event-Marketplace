@@ -97,8 +97,8 @@ class CityRegionService {
       cities = _applyClientSideFilters(cities, filters);
 
       return cities;
-    } catch (e) {
-      print('Ошибка получения городов: $e');
+    } on Exception {
+      // Логирование:'Ошибка получения городов: $e');
       return [];
     }
   }
@@ -195,8 +195,8 @@ class CityRegionService {
           .get();
 
       return cities.docs.map(CityRegion.fromDocument).toList();
-    } catch (e) {
-      print('Ошибка поиска городов: $e');
+    } on Exception {
+      // Логирование:'Ошибка поиска городов: $e');
       return [];
     }
   }
@@ -210,8 +210,8 @@ class CityRegionService {
         return CityRegion.fromDocument(doc);
       }
       return null;
-    } catch (e) {
-      print('Ошибка получения города по ID: $e');
+    } on Exception {
+      // Логирование:'Ошибка получения города по ID: $e');
       return null;
     }
   }
@@ -231,8 +231,8 @@ class CityRegionService {
           .get();
 
       return cities.docs.map(CityRegion.fromDocument).toList();
-    } catch (e) {
-      print('Ошибка получения городов по региону: $e');
+    } on Exception {
+      // Логирование:'Ошибка получения городов по региону: $e');
       return [];
     }
   }
@@ -252,8 +252,8 @@ class CityRegionService {
 
       regions.sort();
       return regions;
-    } catch (e) {
-      print('Ошибка получения регионов: $e');
+    } on Exception {
+      // Логирование:'Ошибка получения регионов: $e');
       return [];
     }
   }
@@ -288,8 +288,8 @@ class CityRegionService {
       }
 
       return popularCities;
-    } catch (e) {
-      print('Ошибка получения популярных городов: $e');
+    } on Exception {
+      // Логирование:'Ошибка получения популярных городов: $e');
       return [];
     }
   }
@@ -327,8 +327,8 @@ class CityRegionService {
       });
 
       return nearbyCities.take(limit).toList();
-    } catch (e) {
-      print('Ошибка получения ближайших городов: $e');
+    } on Exception {
+      // Логирование:'Ошибка получения ближайших городов: $e');
       return [];
     }
   }
@@ -339,7 +339,7 @@ class CityRegionService {
       // Проверяем разрешения
       final serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        print('Службы геолокации отключены');
+        // Логирование:'Службы геолокации отключены');
         return null;
       }
 
@@ -347,13 +347,13 @@ class CityRegionService {
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
-          print('Разрешение на геолокацию отклонено');
+          // Логирование:'Разрешение на геолокацию отклонено');
           return null;
         }
       }
 
       if (permission == LocationPermission.deniedForever) {
-        print('Разрешение на геолокацию отклонено навсегда');
+        // Логирование:'Разрешение на геолокацию отклонено навсегда');
         return null;
       }
 
@@ -361,8 +361,8 @@ class CityRegionService {
       return await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
-    } catch (e) {
-      print('Ошибка получения местоположения: $e');
+    } on Exception {
+      // Логирование:'Ошибка получения местоположения: $e');
       return null;
     }
   }
@@ -390,8 +390,8 @@ class CityRegionService {
       }
 
       return null;
-    } catch (e) {
-      print('Ошибка геокодирования: $e');
+    } on Exception {
+      // Логирование:'Ошибка геокодирования: $e');
       return null;
     }
   }
@@ -408,8 +408,8 @@ class CityRegionService {
         'avgSpecialistRating': avgRating,
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
-    } catch (e) {
-      print('Ошибка обновления статистики специалистов: $e');
+    } on Exception {
+      // Логирование:'Ошибка обновления статистики специалистов: $e');
     }
   }
 
@@ -444,7 +444,7 @@ class CityRegionService {
     if (filters.minSpecialistRating > 0.0) {
       filteredCities = filteredCities
           .where(
-              (city) => city.avgSpecialistRating >= filters.minSpecialistRating)
+              (city) => city.avgSpecialistRating >= filters.minSpecialistRating,)
           .toList();
     }
 
@@ -453,7 +453,7 @@ class CityRegionService {
         filters.specialistCategory!.isNotEmpty) {
       filteredCities = filteredCities
           .where((city) =>
-              city.specialistCategories.contains(filters.specialistCategory))
+              city.specialistCategories.contains(filters.specialistCategory),)
           .toList();
     }
 
@@ -479,7 +479,7 @@ class CityRegionService {
           await _firestore.collection(_collectionName).limit(1).get();
 
       if (existingCities.docs.isNotEmpty) {
-        print('Данные городов уже инициализированы');
+        // Логирование:'Данные городов уже инициализированы');
         return;
       }
 
@@ -723,9 +723,9 @@ class CityRegionService {
       }
 
       await batch.commit();
-      print('Инициализированы данные ${cities.length} городов России');
-    } catch (e) {
-      print('Ошибка инициализации городов: $e');
+      // Логирование:'Инициализированы данные ${cities.length} городов России');
+    } on Exception {
+      // Логирование:'Ошибка инициализации городов: $e');
     }
   }
 }

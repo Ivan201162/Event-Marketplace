@@ -10,6 +10,8 @@ import '../models/event.dart';
 
 /// Сервис для экспорта событий в формат iCalendar (.ics)
 class IcsExportService {
+  // Приватный конструктор для предотвращения создания экземпляров
+  IcsExportService._();
   /// Экспортировать событие в файл .ics
   static Future<String?> exportEventToIcs(Event event) async {
     if (!FeatureFlags.calendarExportEnabled) {
@@ -32,7 +34,7 @@ class IcsExportService {
       );
 
       return file.path;
-    } catch (e, stackTrace) {
+    } on Exception catch (e, stackTrace) {
       SafeLog.error(
         'IcsExportService: Error exporting event to ICS',
         e,
@@ -67,7 +69,7 @@ class IcsExportService {
       );
 
       return file.path;
-    } catch (e, stackTrace) {
+    } on Exception catch (e, stackTrace) {
       SafeLog.error(
         'IcsExportService: Error exporting booking to ICS',
         e,
@@ -107,7 +109,7 @@ class IcsExportService {
       );
 
       return file.path;
-    } catch (e, stackTrace) {
+    } on Exception catch (e, stackTrace) {
       SafeLog.error(
         'IcsExportService: Error exporting events to ICS',
         e,
@@ -147,7 +149,7 @@ class IcsExportService {
       );
 
       return file.path;
-    } catch (e, stackTrace) {
+    } on Exception catch (e, stackTrace) {
       SafeLog.error(
         'IcsExportService: Error exporting bookings to ICS',
         e,
@@ -168,20 +170,20 @@ class IcsExportService {
       SafeLog.info('IcsExportService: Sharing ICS file: $filePath');
 
       final file = File(filePath);
-      if (!await file.exists()) {
+      if (!file.existsSync()) {
         SafeLog.error('IcsExportService: File does not exist: $filePath');
         return false;
       }
 
-      await Share.shareXFiles(
-        [XFile(filePath)],
+      await SharePlus.instance.share(
+        filePath,
         subject: subject ?? 'Календарное событие',
         text: 'Экспорт календарного события',
       );
 
       SafeLog.info('IcsExportService: ICS file shared successfully');
       return true;
-    } catch (e, stackTrace) {
+    } on Exception catch (e, stackTrace) {
       SafeLog.error('IcsExportService: Error sharing ICS file', e, stackTrace);
       return false;
     }
@@ -250,24 +252,28 @@ class IcsExportService {
   static String _buildBookingDescription(Booking booking) {
     final buffer = StringBuffer();
 
-    buffer.writeln('Бронирование события');
-    buffer.writeln();
-    buffer.writeln('Событие: ${booking.eventTitle}');
-    buffer.writeln('Участников: ${booking.participantsCount}');
-    buffer.writeln('Цена: ${booking.totalPrice} руб.');
+    buffer
+      ..writeln('Бронирование события')
+      ..writeln()
+      ..writeln('Событие: ${booking.eventTitle}')
+      ..writeln('Участников: ${booking.participantsCount}')
+      ..writeln('Цена: ${booking.totalPrice} руб.');
 
     if (booking.notes != null && booking.notes!.isNotEmpty) {
-      buffer.writeln();
-      buffer.writeln('Примечания: ${booking.notes}');
+      buffer
+        ..writeln()
+        ..writeln('Примечания: ${booking.notes}');
     }
 
     if (booking.organizerName != null) {
-      buffer.writeln();
-      buffer.writeln('Организатор: ${booking.organizerName}');
+      buffer
+        ..writeln()
+        ..writeln('Организатор: ${booking.organizerName}');
     }
 
-    buffer.writeln();
-    buffer.writeln('Статус: ${_getBookingStatusText(booking.status)}');
+    buffer
+      ..writeln()
+      ..writeln('Статус: ${_getBookingStatusText(booking.status)}');
 
     return buffer.toString();
   }
@@ -349,7 +355,7 @@ class IcsExportService {
     buffer.writeln('STATUS:${_getBookingStatusText(booking.status)}');
     buffer.writeln('CREATED:${_formatDateTime(booking.createdAt)}');
     buffer.writeln(
-        'LAST-MODIFIED:${_formatDateTime(booking.updatedAt ?? booking.createdAt)}');
+        'LAST-MODIFIED:${_formatDateTime(booking.updatedAt ?? booking.createdAt)}',);
     buffer.writeln('END:VEVENT');
     buffer.writeln('END:VCALENDAR');
 
@@ -410,7 +416,7 @@ class IcsExportService {
       buffer.writeln('STATUS:${_getBookingStatusText(booking.status)}');
       buffer.writeln('CREATED:${_formatDateTime(booking.createdAt)}');
       buffer.writeln(
-          'LAST-MODIFIED:${_formatDateTime(booking.updatedAt ?? booking.createdAt)}');
+          'LAST-MODIFIED:${_formatDateTime(booking.updatedAt ?? booking.createdAt)}',);
       buffer.writeln('END:VEVENT');
     }
 

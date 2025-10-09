@@ -37,8 +37,8 @@ class SupportService {
       }
 
       return docRef.id;
-    } catch (e) {
-      print('Ошибка отправки сообщения в поддержку: $e');
+    } on Exception {
+      // Логирование:'Ошибка отправки сообщения в поддержку: $e');
       rethrow;
     }
   }
@@ -60,8 +60,8 @@ class SupportService {
           await _firestore.collection('faq').orderBy('order').get();
 
       return snapshot.docs.map(FAQItem.fromDocument).toList();
-    } catch (e) {
-      print('Ошибка получения FAQ: $e');
+    } on Exception {
+      // Логирование:'Ошибка получения FAQ: $e');
       return [];
     }
   }
@@ -81,8 +81,8 @@ class SupportService {
             item.content.toLowerCase().contains(query.toLowerCase());
         return titleMatch || contentMatch;
       }).toList();
-    } catch (e) {
-      print('Ошибка поиска в FAQ: $e');
+    } on Exception {
+      // Логирование:'Ошибка поиска в FAQ: $e');
       return [];
     }
   }
@@ -106,8 +106,8 @@ class SupportService {
         'isRead': false,
         'createdAt': FieldValue.serverTimestamp(),
       });
-    } catch (e) {
-      print('Ошибка передачи чата оператору: $e');
+    } on Exception {
+      // Логирование:'Ошибка передачи чата оператору: $e');
       rethrow;
     }
   }
@@ -139,8 +139,8 @@ class SupportService {
         default:
           return TransferStatus.notRequested;
       }
-    } catch (e) {
-      print('Ошибка получения статуса передачи: $e');
+    } on Exception {
+      // Логирование:'Ошибка получения статуса передачи: $e');
       return TransferStatus.notRequested;
     }
   }
@@ -152,8 +152,8 @@ class SupportService {
         'isRead': true,
         'readAt': FieldValue.serverTimestamp(),
       });
-    } catch (e) {
-      print('Ошибка отметки сообщения как прочитанного: $e');
+    } on Exception {
+      // Логирование:'Ошибка отметки сообщения как прочитанного: $e');
     }
   }
 
@@ -180,8 +180,8 @@ class SupportService {
         lastMessageAt: lastMessage,
         lastUpdated: DateTime.now(),
       );
-    } catch (e) {
-      print('Ошибка получения статистики поддержки: $e');
+    } on Exception {
+      // Логирование:'Ошибка получения статистики поддержки: $e');
       return SupportStats.empty();
     }
   }
@@ -213,8 +213,8 @@ class SupportService {
 
         await _firestore.collection('support_messages').add(botMessage.toMap());
       }
-    } catch (e) {
-      print('Ошибка генерации ответа бота: $e');
+    } on Exception {
+      // Логирование:'Ошибка генерации ответа бота: $e');
     }
   }
 

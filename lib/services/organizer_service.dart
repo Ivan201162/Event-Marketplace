@@ -12,7 +12,7 @@ class OrganizerService {
           .collection('organizer_profiles')
           .doc(profile.id)
           .set(profile.toMap());
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка создания профиля организатора: $e');
       throw Exception('Ошибка создания профиля организатора: $e');
     }
@@ -30,7 +30,7 @@ class OrganizerService {
         return OrganizerProfile.fromDocument(doc);
       }
       return null;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения профиля организатора: $e');
       return null;
     }
@@ -49,7 +49,7 @@ class OrganizerService {
         return OrganizerProfile.fromDocument(querySnapshot.docs.first);
       }
       return null;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения профиля организатора по userId: $e');
       return null;
     }
@@ -63,7 +63,7 @@ class OrganizerService {
           .collection('organizer_profiles')
           .doc(profile.id)
           .update(updatedProfile.toMap());
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка обновления профиля организатора: $e');
       throw Exception('Ошибка обновления профиля организатора: $e');
     }
@@ -76,7 +76,7 @@ class OrganizerService {
           .collection('organizer_profiles')
           .doc(organizerId)
           .delete();
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка удаления профиля организатора: $e');
       throw Exception('Ошибка удаления профиля организатора: $e');
     }
@@ -100,7 +100,7 @@ class OrganizerService {
 
       final querySnapshot = await query.get();
       return querySnapshot.docs.map(OrganizerProfile.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения списка организаторов: $e');
       return [];
     }
@@ -126,7 +126,7 @@ class OrganizerService {
 
       final querySnapshot = await query.get();
       return querySnapshot.docs.map(OrganizerProfile.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения организаторов по категории: $e');
       return [];
     }
@@ -162,7 +162,7 @@ class OrganizerService {
                 ),
           )
           .toList();
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка поиска организаторов: $e');
       return [];
     }
@@ -183,7 +183,7 @@ class OrganizerService {
           .get();
 
       return querySnapshot.docs.map(OrganizerProfile.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения топ организаторов: $e');
       return [];
     }
@@ -204,7 +204,7 @@ class OrganizerService {
           .get();
 
       return querySnapshot.docs.map(OrganizerProfile.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения организаторов по локации: $e');
       return [];
     }
@@ -225,7 +225,7 @@ class OrganizerService {
         'reviewCount': reviewCount,
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка обновления рейтинга организатора: $e');
       throw Exception('Ошибка обновления рейтинга: $e');
     }
@@ -244,7 +244,7 @@ class OrganizerService {
         'pastEvents': FieldValue.arrayUnion([eventId]),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка добавления события в портфолио: $e');
       throw Exception('Ошибка добавления события: $e');
     }
@@ -263,7 +263,7 @@ class OrganizerService {
         'portfolioImages': FieldValue.arrayUnion([imageUrl]),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка добавления изображения в портфолио: $e');
       throw Exception('Ошибка добавления изображения: $e');
     }
@@ -282,7 +282,7 @@ class OrganizerService {
         'portfolioVideos': FieldValue.arrayUnion([videoUrl]),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка добавления видео в портфолио: $e');
       throw Exception('Ошибка добавления видео: $e');
     }
@@ -301,7 +301,7 @@ class OrganizerService {
         'teamMembers': FieldValue.arrayUnion([specialistId]),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка добавления члена команды: $e');
       throw Exception('Ошибка добавления члена команды: $e');
     }
@@ -320,7 +320,7 @@ class OrganizerService {
         'teamMembers': FieldValue.arrayRemove([specialistId]),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка удаления члена команды: $e');
       throw Exception('Ошибка удаления члена команды: $e');
     }
@@ -359,7 +359,7 @@ class OrganizerService {
         'teamSize': organizer.teamMembers.length,
         'experienceYears': organizer.experienceYears,
       };
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения статистики организатора: $e');
       return {};
     }
@@ -370,7 +370,7 @@ class OrganizerService {
     try {
       final profile = await getOrganizerProfileByUserId(userId);
       return profile != null;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка проверки профиля организатора: $e');
       return false;
     }

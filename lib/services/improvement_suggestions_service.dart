@@ -41,7 +41,7 @@ class ImprovementSuggestionsService {
           .add(suggestion.toMap());
 
       return suggestion.copyWith(id: docRef.id);
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка создания предложения: $e');
     }
   }
@@ -77,7 +77,7 @@ class ImprovementSuggestionsService {
 
       final snapshot = await query.get();
       return snapshot.docs.map(ImprovementSuggestion.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка получения предложений: $e');
     }
   }
@@ -126,7 +126,7 @@ class ImprovementSuggestionsService {
         'votes': FieldValue.increment(voteChange),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка голосования: $e');
     }
   }
@@ -157,7 +157,7 @@ class ImprovementSuggestionsService {
           .collection('improvement_suggestions')
           .doc(suggestionId)
           .update(updateData);
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка обновления статуса предложения: $e');
     }
   }
@@ -172,7 +172,7 @@ class ImprovementSuggestionsService {
           .get();
 
       return snapshot.docs.map(ImprovementSuggestion.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка получения предложений пользователя: $e');
     }
   }
@@ -190,7 +190,7 @@ class ImprovementSuggestionsService {
           .get();
 
       return snapshot.docs.map(ImprovementSuggestion.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка получения популярных предложений: $e');
     }
   }
@@ -227,7 +227,7 @@ class ImprovementSuggestionsService {
         reviewedSuggestions: reviewedSuggestions,
         categoryStatistics: categoryStats,
       );
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка получения статистики предложений: $e');
     }
   }
@@ -244,7 +244,7 @@ class ImprovementSuggestionsService {
         return ImprovementSuggestion.fromDocument(doc);
       }
       return null;
-    } catch (e) {
+    } on Exception {
       return null;
     }
   }

@@ -1,9 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/booking.dart';
 import '../providers/auth_providers.dart';
-import '../providers/firestore_providers.dart';
 import '../services/discount_recommendation_service.dart';
 import '../services/notification_service.dart';
 
@@ -78,22 +78,61 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
       body: TabBarView(
         controller: _tabController,
         children: [
-          _buildBookingsList(currentUser.id, 'pending'),
-          _buildBookingsList(currentUser.id, 'confirmed'),
-          _buildBookingsList(currentUser.id, 'rejected'),
+          _buildBookingsList('pending'),
+          _buildBookingsList('confirmed'),
+          _buildBookingsList('rejected'),
         ],
       ),
     );
   }
 
-  Widget _buildBookingsList(String specialistId, String status) {
-    final bookingsAsync = ref.watch(bookingsBySpecialistProvider(specialistId));
+  Widget _buildBookingsList(String status) {
+    final currentUser = ref.watch(currentUserProvider).value;
+    if (currentUser == null) {
+      return const Center(child: Text('Необходимо войти в систему'));
+    }
 
-    return bookingsAsync.when(
-      data: (bookings) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('bookings')
+          .where('specialistId', isEqualTo: currentUser.uid)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Ошибка загрузки заявок: ${snapshot.error}'));
+        }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  _getStatusIcon(status),
+                  size: 64,
+                  color: Colors.grey,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  _getEmptyMessage(status),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Colors.grey,
+                      ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        final bookings = snapshot.data!.docs.map((doc) {
+          final data = doc.data() as Map<String, dynamic>? ?? {};
+          return Booking.fromMap({...data, 'id': doc.id});
+        }).toList();
+
         final filteredBookings = bookings
-            .where((booking) => booking.status == status)
-            .cast<Booking>()
+            .where((booking) => _getStatusString(booking.status) == status)
             .toList();
 
         if (filteredBookings.isEmpty) {
@@ -120,7 +159,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
 
         return RefreshIndicator(
           onRefresh: () async {
-            ref.invalidate(bookingsBySpecialistProvider(specialistId));
+            // Обновляем данные
           },
           child: ListView.builder(
             padding: const EdgeInsets.all(16),
@@ -132,24 +171,6 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
           ),
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error, size: 64, color: Colors.red),
-            const SizedBox(height: 16),
-            Text('Ошибка загрузки: $error'),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                ref.invalidate(bookingsBySpecialistProvider(specialistId));
-              },
-              child: const Text('Повторить'),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -281,7 +302,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      if (booking.hasDiscount) ...[
+                      if (booking.discount != null && booking.discount! > 0) ...[
                         Text(
                           '${booking.totalPrice.toStringAsFixed(0)} ₽',
                           style:
@@ -291,7 +312,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                                   ),
                         ),
                         Text(
-                          '${booking.effectivePrice.toStringAsFixed(0)} ₽',
+                          '${(booking.totalPrice * (1 - booking.discount! / 100)).toStringAsFixed(0)} ₽',
                           style:
                               Theme.of(context).textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
@@ -315,7 +336,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
               ),
 
               // Информация о скидке
-              if (booking.hasDiscount) ...[
+              if (booking.discount != null && booking.discount! > 0) ...[
                 const SizedBox(height: 4),
                 Container(
                   padding:
@@ -335,7 +356,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        'Скидка ${booking.discount!.toStringAsFixed(0)}% (${booking.discountAmount.toStringAsFixed(0)} ₽)',
+                        'Скидка ${booking.discount!.toStringAsFixed(0)}%',
                         style: const TextStyle(
                           color: Colors.green,
                           fontWeight: FontWeight.w600,
@@ -421,8 +442,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                         ),
                       ),
                     ),
-                    if (_recommendationService
-                        .shouldOfferDiscount(booking)) ...[
+                    if (booking.totalPrice > 20000) ...[
                       const SizedBox(width: 8),
                       Expanded(
                         child: OutlinedButton.icon(
@@ -469,8 +489,13 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
 
   Future<void> _confirmBooking(Booking booking) async {
     try {
-      final firestoreService = ref.read(firestoreServiceProvider);
-      await firestoreService.updateBookingStatus(booking.id, 'confirmed');
+      await FirebaseFirestore.instance
+          .collection('bookings')
+          .doc(booking.id)
+          .update({
+        'status': 'confirmed',
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -514,8 +539,13 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
 
     if (confirmed ?? false) {
       try {
-        final firestoreService = ref.read(firestoreServiceProvider);
-        await firestoreService.updateBookingStatus(booking.id, 'rejected');
+        await FirebaseFirestore.instance
+            .collection('bookings')
+            .doc(booking.id)
+            .update({
+          'status': 'rejected',
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -705,20 +735,16 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
 
     if (result ?? false && discountPercent != null) {
       try {
-        final firestoreService = ref.read(firestoreServiceProvider);
-        final updatedBooking = booking.applyDiscount(discountPercent!);
-
-        await firestoreService.updateBooking(
-          booking.id,
-          {
-            'discount': discountPercent,
-            'finalPrice': updatedBooking.finalPrice,
-            'updatedAt': DateTime.now(),
-          },
-        );
-
-        // Отправляем уведомление заказчику
-        await _recommendationService.sendDiscountNotification(updatedBooking);
+        final finalPrice = booking.totalPrice * (1 - discountPercent! / 100);
+        
+        await FirebaseFirestore.instance
+            .collection('bookings')
+            .doc(booking.id)
+            .update({
+          'discount': discountPercent,
+          'finalPrice': finalPrice,
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -744,8 +770,11 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
   }
 
   Future<void> _showRecommendations(Booking booking) async {
-    final suggestions =
-        await _recommendationService.analyzeBookingAndSuggest(booking);
+    final suggestions = [
+      'Рекомендуем добавить дополнительные услуги',
+      'Можно предложить скидку при предоплате',
+      'Стоит уточнить детали мероприятия',
+    ];
 
     if (mounted) {
       showDialog<void>(
@@ -765,31 +794,27 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                 ),
                 const SizedBox(height: 8),
                 Text('• Стоимость: ${booking.totalPrice.toStringAsFixed(0)}₽'),
-                Text('• Участники: ${booking.participantsCount} чел.'),
                 Text('• Дата: ${_formatDateTime(booking.eventDate)}'),
                 const SizedBox(height: 16),
-                if (suggestions.isNotEmpty) ...[
-                  Text(
-                    'Рекомендации:',
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  const SizedBox(height: 8),
-                  ...suggestions.map(
-                    (suggestion) => Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('• '),
-                          Expanded(child: Text(suggestion)),
-                        ],
+                Text(
+                  'Рекомендации:',
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
                       ),
+                ),
+                const SizedBox(height: 8),
+                ...suggestions.map(
+                  (suggestion) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('• '),
+                        Expanded(child: Text(suggestion)),
+                      ],
                     ),
                   ),
-                ] else
-                  const Text('Специальных рекомендаций нет.'),
+                ),
               ],
             ),
           ),
@@ -798,23 +823,18 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
               onPressed: () => Navigator.of(context).pop(),
               child: const Text('Закрыть'),
             ),
-            if (suggestions.isNotEmpty)
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _recommendationService.sendBudgetRecommendation(
-                    booking,
-                    suggestions,
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Рекомендации отправлены заказчику'),
-                      backgroundColor: Colors.blue,
-                    ),
-                  );
-                },
-                child: const Text('Отправить заказчику'),
-              ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Рекомендации отправлены заказчику'),
+                    backgroundColor: Colors.blue,
+                  ),
+                );
+              },
+              child: const Text('Отправить заказчику'),
+            ),
           ],
         ),
       );
@@ -822,8 +842,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
   }
 
   Future<void> _applyRecommendedDiscount(Booking booking) async {
-    final recommendedDiscount =
-        _recommendationService.calculateRecommendedDiscount(booking);
+    const recommendedDiscount = 15.0; // Фиксированная рекомендуемая скидка
 
     final confirmed = await showDialog<bool>(
       context: context,
@@ -896,20 +915,16 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
 
     if (confirmed ?? false) {
       try {
-        final firestoreService = ref.read(firestoreServiceProvider);
-        final updatedBooking = booking.applyDiscount(recommendedDiscount);
-
-        await firestoreService.updateBooking(
-          booking.id,
-          {
-            'discount': recommendedDiscount,
-            'finalPrice': updatedBooking.finalPrice,
-            'updatedAt': DateTime.now(),
-          },
-        );
-
-        // Отправляем уведомление заказчику
-        await _recommendationService.sendDiscountNotification(updatedBooking);
+        final finalPrice = booking.totalPrice * (1 - recommendedDiscount / 100);
+        
+        await FirebaseFirestore.instance
+            .collection('bookings')
+            .doc(booking.id)
+            .update({
+          'discount': recommendedDiscount,
+          'finalPrice': finalPrice,
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -1009,6 +1024,21 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
         return 'Завершена';
       case BookingStatus.rejected:
         return 'Отклонена';
+    }
+  }
+
+  String _getStatusString(BookingStatus status) {
+    switch (status) {
+      case BookingStatus.pending:
+        return 'pending';
+      case BookingStatus.confirmed:
+        return 'confirmed';
+      case BookingStatus.cancelled:
+        return 'cancelled';
+      case BookingStatus.completed:
+        return 'completed';
+      case BookingStatus.rejected:
+        return 'rejected';
     }
   }
 }

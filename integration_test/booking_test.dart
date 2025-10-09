@@ -81,7 +81,7 @@ void main() {
       final descriptionField = find.byKey(const Key('description_field'));
       if (descriptionField.evaluate().isNotEmpty) {
         await tester.enterText(
-            descriptionField, 'Свадебная церемония на 50 человек');
+            descriptionField, 'Свадебная церемония на 50 человек',);
         await tester.pumpAndSettle();
       }
 
@@ -299,3 +299,12 @@ void main() {
     });
   });
 }
+
+
+
+
+
+
+
+
+

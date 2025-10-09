@@ -113,7 +113,7 @@ class SessionTimeoutService {
         'Пользователь вышел из-за неактивности',
         'session_timeout_service',
       );
-    } catch (e) {
+    } on Exception catch (e) {
       AppLogger.logE(
         'Ошибка обработки неактивности',
         'session_timeout_service',
@@ -140,7 +140,7 @@ class SessionTimeoutService {
         'Пользователь вышел из-за таймаута сессии',
         'session_timeout_service',
       );
-    } catch (e) {
+    } on Exception catch (e) {
       AppLogger.logE(
         'Ошибка обработки таймаута сессии',
         'session_timeout_service',

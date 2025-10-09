@@ -53,7 +53,7 @@ class ArchiveService {
         uploadedBy: uploadedBy,
         description: description,
       );
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('ArchiveService: Error uploading archive from gallery: $e');
       rethrow;
     }
@@ -90,7 +90,7 @@ class ArchiveService {
         uploadedBy: uploadedBy,
         description: description,
       );
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('ArchiveService: Error uploading archive from camera: $e');
       rethrow;
     }
@@ -165,7 +165,7 @@ class ArchiveService {
         'ArchiveService: Archive uploaded successfully: ${archive.id}',
       );
       return archive;
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('ArchiveService: Error uploading archive file: $e');
       rethrow;
     }
@@ -187,7 +187,7 @@ class ArchiveService {
 
       SafeLog.info('ArchiveService: Found ${archives.length} archives');
       return archives;
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('ArchiveService: Error getting archives: $e');
       rethrow;
     }
@@ -208,7 +208,7 @@ class ArchiveService {
           .map(
             (snapshot) => snapshot.docs.map(EventArchive.fromDocument).toList(),
           );
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('ArchiveService: Error getting archives stream: $e');
       rethrow;
     }
@@ -232,7 +232,7 @@ class ArchiveService {
       if (storagePath != null) {
         try {
           await _storage.ref().child(storagePath).delete();
-        } catch (e) {
+        } on Exception catch (e) {
           SafeLog.warning(
             'ArchiveService: Error deleting file from storage: $e',
           );
@@ -243,7 +243,7 @@ class ArchiveService {
       await _firestore.collection(_collection).doc(archiveId).delete();
 
       SafeLog.info('ArchiveService: Archive deleted successfully: $archiveId');
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('ArchiveService: Error deleting archive: $e');
       rethrow;
     }
@@ -262,7 +262,7 @@ class ArchiveService {
       });
 
       SafeLog.info('ArchiveService: Archive description updated successfully');
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('ArchiveService: Error updating archive description: $e');
       rethrow;
     }
@@ -310,7 +310,7 @@ class ArchiveService {
 
       SafeLog.info('ArchiveService: Archive stats: $stats');
       return stats;
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('ArchiveService: Error getting archive stats: $e');
       rethrow;
     }
@@ -329,7 +329,7 @@ class ArchiveService {
       }
 
       return null;
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('ArchiveService: Error extracting storage path: $e');
       return null;
     }

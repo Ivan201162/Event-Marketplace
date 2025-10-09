@@ -48,7 +48,7 @@ class IncidentManagementService {
       await _loadComments();
       await _loadSLA();
       _isInitialized = true;
-    } catch (e) {
+    } on Exception catch (e) {
       await _crashlytics.recordError(e, null, fatal: true);
       rethrow;
     }
@@ -66,7 +66,7 @@ class IncidentManagementService {
         final incident = Incident.fromMap(doc.data());
         _incidentCache[incident.id] = incident;
       }
-    } catch (e) {
+    } on Exception catch (e) {
       await _crashlytics.recordError(e, null);
     }
   }
@@ -80,7 +80,7 @@ class IncidentManagementService {
         final comment = IncidentComment.fromMap(doc.data());
         _commentCache[comment.id] = comment;
       }
-    } catch (e) {
+    } on Exception catch (e) {
       await _crashlytics.recordError(e, null);
     }
   }
@@ -94,7 +94,7 @@ class IncidentManagementService {
         final sla = IncidentSLA.fromMap(doc.data());
         _slaCache[sla.id] = sla;
       }
-    } catch (e) {
+    } on Exception catch (e) {
       await _crashlytics.recordError(e, null);
     }
   }
@@ -174,7 +174,7 @@ class IncidentManagementService {
       await _createSLA(incident);
 
       return incident;
-    } catch (e) {
+    } on Exception catch (e) {
       await _crashlytics.recordError(e, null);
       rethrow;
     }
@@ -251,7 +251,7 @@ class IncidentManagementService {
       await _updateSLA(updatedIncident);
 
       return updatedIncident;
-    } catch (e) {
+    } on Exception catch (e) {
       await _crashlytics.recordError(e, null);
       rethrow;
     }
@@ -335,7 +335,7 @@ class IncidentManagementService {
       _commentStreamController.add(comment);
 
       return comment;
-    } catch (e) {
+    } on Exception catch (e) {
       await _crashlytics.recordError(e, null);
       rethrow;
     }
@@ -373,7 +373,7 @@ class IncidentManagementService {
       _commentStreamController.add(updatedComment);
 
       return updatedComment;
-    } catch (e) {
+    } on Exception catch (e) {
       await _crashlytics.recordError(e, null);
       rethrow;
     }
@@ -410,7 +410,7 @@ class IncidentManagementService {
       _slaStreamController.add(sla);
 
       return sla;
-    } catch (e) {
+    } on Exception catch (e) {
       await _crashlytics.recordError(e, null);
       rethrow;
     }
@@ -450,7 +450,7 @@ class IncidentManagementService {
 
       _slaCache[sla.id] = updatedSLA;
       _slaStreamController.add(updatedSLA);
-    } catch (e) {
+    } on Exception catch (e) {
       await _crashlytics.recordError(e, null);
     }
   }
@@ -554,7 +554,7 @@ class IncidentManagementService {
           'resolvedOnTime': sla.where((s) => s.resolvedOnTime).length,
         },
       };
-    } catch (e) {
+    } on Exception catch (e) {
       await _crashlytics.recordError(e, null);
       return {};
     }
@@ -628,7 +628,7 @@ class IncidentManagementService {
       } else {
         throw ArgumentError('Unsupported format: $format');
       }
-    } catch (e) {
+    } on Exception catch (e) {
       await _crashlytics.recordError(e, null);
       rethrow;
     }

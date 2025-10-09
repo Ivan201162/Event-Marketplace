@@ -35,11 +35,11 @@ linter:
   # `// ignore_for_file: name_of_lint` syntax on the line or in the file
   # producing the lint.
   rules:
-    # Disable some rules that are too strict for this project
-    avoid_print: false
+    # Enable strict linting for better code quality
+    avoid_print: true
     prefer_single_quotes: true
-    unnecessary_null_comparison: false
-    unnecessary_non_null_assertion: false
+    # unnecessary_null_comparison: false  # Removed in Dart 3.0
+    # unnecessary_non_null_assertion: false  # Removed in Dart 3.0
     use_build_context_synchronously: false
     
     # Enable additional rules for better code quality
@@ -67,8 +67,8 @@ linter:
     avoid_return_types_on_setters: true
     avoid_returning_null_for_future: true
     avoid_returning_null_for_void: true
-    avoid_returning_nullable_booleans: true
-    avoid_returning_nullable_types: true
+    # avoid_returning_nullable_booleans: true  # Removed in Dart 3.0
+    # avoid_returning_nullable_types: true  # Removed in Dart 3.0
     avoid_returning_this: true
     avoid_setters_without_getters: true
     avoid_shadowing_type_parameters: true
@@ -123,7 +123,7 @@ linter:
     one_member_abstracts: true
     only_throw_errors: true
     overridden_fields: true
-    package_api_docs: false
+    # package_api_docs: false  # Removed in Dart 3.7.0
     package_names: true
     package_prefixed_library_names: true
     parameter_assignments: true

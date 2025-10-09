@@ -1,92 +1,161 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/event.dart';
+import 'package:flutter/foundation.dart';
 
-/// Сервис для работы с избранными событиями
+import '../models/specialist.dart';
+
+/// Сервис для работы с избранными специалистами
 class FavoritesService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static const String _collectionName = 'favorites';
 
-  /// Добавить событие в избранное
-  Future<void> addToFavorites(String userId, String eventId) async {
+  /// Добавить специалиста в избранное
+  Future<void> addToFavorites({
+    required String userId,
+    required String specialistId,
+  }) async {
     try {
-      await _firestore.collection('favorites').doc('${userId}_$eventId').set({
+      await _firestore
+          .collection(_collectionName)
+          .doc('${userId}_$specialistId')
+          .set({
         'userId': userId,
-        'eventId': eventId,
+        'specialistId': specialistId,
         'createdAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      throw Exception('Ошибка добавления в избранное: $e');
+      debugPrint('Ошибка добавления в избранное: $e');
+      throw Exception('Не удалось добавить в избранное');
     }
   }
 
-  /// Удалить событие из избранного
-  Future<void> removeFromFavorites(String userId, String eventId) async {
+  /// Удалить специалиста из избранного
+  Future<void> removeFromFavorites({
+    required String userId,
+    required String specialistId,
+  }) async {
     try {
       await _firestore
-          .collection('favorites')
-          .doc('${userId}_$eventId')
+          .collection(_collectionName)
+          .doc('${userId}_$specialistId')
           .delete();
     } catch (e) {
-      throw Exception('Ошибка удаления из избранного: $e');
+      debugPrint('Ошибка удаления из избранного: $e');
+      throw Exception('Не удалось удалить из избранного');
     }
   }
 
-  /// Получить избранные события пользователя
-  Stream<List<Event>> getUserFavorites(String userId) => _firestore
-          .collection('favorites')
-          .where('userId', isEqualTo: userId)
-          .orderBy('createdAt', descending: true)
-          .snapshots()
-          .asyncMap((snapshot) async {
-        final eventIds = snapshot.docs
-            .map((doc) => doc.data()['eventId'] as String)
-            .toList();
-
-        if (eventIds.isEmpty) return <Event>[];
-
-        final eventsSnapshot = await _firestore
-            .collection('events')
-            .where(FieldPath.documentId, whereIn: eventIds)
-            .get();
-
-        return eventsSnapshot.docs.map(Event.fromDocument).toList();
-      });
-
-  /// Проверить, добавлено ли событие в избранное
-  Future<bool> isFavorite(String userId, String eventId) async {
+  /// Проверить, находится ли специалист в избранном
+  Future<bool> isFavorite({
+    required String userId,
+    required String specialistId,
+  }) async {
     try {
       final doc = await _firestore
-          .collection('favorites')
-          .doc('${userId}_$eventId')
+          .collection(_collectionName)
+          .doc('${userId}_$specialistId')
           .get();
       return doc.exists;
     } catch (e) {
+      debugPrint('Ошибка проверки избранного: $e');
       return false;
     }
   }
 
-  /// Получить количество избранных событий пользователя
-  Stream<int> getFavoritesCount(String userId) => _firestore
-      .collection('favorites')
-      .where('userId', isEqualTo: userId)
-      .snapshots()
-      .map((snapshot) => snapshot.docs.length);
-
-  /// Очистить все избранные события пользователя
-  Future<void> clearAllFavorites(String userId) async {
+  /// Получить список избранных специалистов
+  Future<List<Specialist>> getFavoriteSpecialists(String userId) async {
     try {
-      final batch = _firestore.batch();
       final favoritesSnapshot = await _firestore
-          .collection('favorites')
+          .collection(_collectionName)
           .where('userId', isEqualTo: userId)
           .get();
 
-      for (final doc in favoritesSnapshot.docs) {
-        batch.delete(doc.reference);
+      if (favoritesSnapshot.docs.isEmpty) {
+        return [];
       }
 
-      await batch.commit();
+      final specialistIds = favoritesSnapshot.docs
+          .map((doc) => doc.data()['specialistId'] as String)
+          .toList();
+
+      final specialistsSnapshot = await _firestore
+          .collection('specialists')
+          .where(FieldPath.documentId, whereIn: specialistIds)
+          .get();
+
+      return specialistsSnapshot.docs
+          .map(Specialist.fromDocument)
+          .toList();
     } catch (e) {
-      throw Exception('Ошибка очистки избранного: $e');
+      debugPrint('Ошибка получения избранных специалистов: $e');
+      return [];
+    }
+  }
+
+  /// Получить поток избранных специалистов
+  Stream<List<Specialist>> getFavoriteSpecialistsStream(String userId) => _firestore
+        .collection(_collectionName)
+        .where('userId', isEqualTo: userId)
+        .snapshots()
+        .asyncMap((favoritesSnapshot) async {
+      if (favoritesSnapshot.docs.isEmpty) {
+        return <Specialist>[];
+      }
+
+      final specialistIds = favoritesSnapshot.docs
+          .map((doc) => doc.data()['specialistId'] as String)
+          .toList();
+
+      final specialistsSnapshot = await _firestore
+          .collection('specialists')
+          .where(FieldPath.documentId, whereIn: specialistIds)
+          .get();
+
+      return specialistsSnapshot.docs
+          .map(Specialist.fromDocument)
+          .toList();
+    });
+
+  /// Получить количество избранных специалистов
+  Future<int> getFavoritesCount(String userId) async {
+    try {
+      final snapshot = await _firestore
+          .collection(_collectionName)
+          .where('userId', isEqualTo: userId)
+          .get();
+      return snapshot.docs.length;
+    } catch (e) {
+      debugPrint('Ошибка получения количества избранных: $e');
+      return 0;
+    }
+  }
+
+  /// Переключить статус избранного
+  Future<bool> toggleFavorite({
+    required String userId,
+    required String specialistId,
+  }) async {
+    try {
+      final isCurrentlyFavorite = await isFavorite(
+        userId: userId,
+        specialistId: specialistId,
+      );
+
+      if (isCurrentlyFavorite) {
+        await removeFromFavorites(
+          userId: userId,
+          specialistId: specialistId,
+        );
+        return false;
+      } else {
+        await addToFavorites(
+          userId: userId,
+          specialistId: specialistId,
+        );
+        return true;
+      }
+    } catch (e) {
+      debugPrint('Ошибка переключения избранного: $e');
+      throw Exception('Не удалось изменить статус избранного');
     }
   }
 }

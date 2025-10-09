@@ -1,442 +1,395 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-/// Сервис для генерации и обновления аналитики
+/// Сервис для работы с аналитикой Firebase и локальной статистикой
 class AnalyticsService {
   factory AnalyticsService() => _instance;
   AnalyticsService._internal();
   static final AnalyticsService _instance = AnalyticsService._internal();
 
+  final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// Генерация аналитики для специалиста
-  Future<void> generateSpecialistAnalytics(String specialistId) async {
+  /// Логирование события входа пользователя
+  Future<void> logLogin({String? method}) async {
     try {
-      // Получаем все заказы специалиста
-      final bookingsSnapshot = await _firestore
-          .collection('bookings')
-          .where('specialistId', isEqualTo: specialistId)
-          .get();
-
-      final bookings = bookingsSnapshot.docs.map((doc) => doc.data()).toList();
-
-      // Получаем отзывы
-      final reviewsSnapshot = await _firestore
-          .collection('reviews')
-          .where('specialistId', isEqualTo: specialistId)
-          .get();
-
-      final reviews = reviewsSnapshot.docs.map((doc) => doc.data()).toList();
-
-      // Вычисляем статистику
-      final analytics = _calculateSpecialistAnalytics(bookings, reviews);
-
-      // Сохраняем аналитику
-      await _firestore
-          .collection('analytics')
-          .doc('specialist_$specialistId')
-          .set(analytics, SetOptions(merge: true));
-
-      print('Specialist analytics generated for: $specialistId');
-    } catch (e) {
-      print('Error generating specialist analytics: $e');
+      await _analytics.logLogin(loginMethod: method ?? 'email');
+      await _logCustomEvent('login', {
+        'method': method ?? 'email',
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+    } on Exception catch (e) {
+      print('Ошибка логирования входа: $e');
     }
   }
 
-  /// Генерация аналитики для заказчика
-  Future<void> generateCustomerAnalytics(String customerId) async {
+  /// Логирование события выхода пользователя
+  Future<void> logLogout() async {
     try {
-      // Получаем все заказы заказчика
-      final bookingsSnapshot = await _firestore
-          .collection('bookings')
-          .where('customerId', isEqualTo: customerId)
-          .get();
-
-      final bookings = bookingsSnapshot.docs.map((doc) => doc.data()).toList();
-
-      // Вычисляем статистику
-      final analytics = _calculateCustomerAnalytics(bookings);
-
-      // Сохраняем аналитику
-      await _firestore
-          .collection('analytics')
-          .doc('customer_$customerId')
-          .set(analytics, SetOptions(merge: true));
-
-      print('Customer analytics generated for: $customerId');
-    } catch (e) {
-      print('Error generating customer analytics: $e');
+      await _analytics.logEvent(name: 'logout');
+      await _logCustomEvent('logout', {
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+    } on Exception catch (e) {
+      print('Ошибка логирования выхода: $e');
     }
   }
 
-  /// Вычисление аналитики специалиста
-  Map<String, dynamic> _calculateSpecialistAnalytics(
-    List<Map<String, dynamic>> bookings,
-    List<Map<String, dynamic>> reviews,
-  ) {
-    // Общий доход
-    var totalIncome = 0;
-    final totalBookings = bookings.length;
-    var completedBookings = 0;
-
-    // Доход по месяцам
-    final monthlyIncome = <String, double>{};
-
-    // Заказы по статусам
-    final bookingsByStatus = <String, int>{};
-
-    // Топ заказчики
-    final topCustomers = <String, Map<String, dynamic>>{};
-
-    // Распределение оценок
-    final ratingDistribution = <String, int>{};
-
-    for (final booking in bookings) {
-      final status = booking['status'] as String? ?? 'unknown';
-      final price = (booking['totalPrice'] as num?)?.toDouble() ?? 0.0;
-      final eventDate = booking['eventDate'] as Timestamp?;
-      final customerId = booking['customerId'] as String? ?? '';
-      final customerName = booking['customerName'] as String? ?? 'Неизвестно';
-
-      // Общий доход
-      if (status == 'completed') {
-        totalIncome += price;
-        completedBookings++;
-      }
-
-      // Доход по месяцам
-      if (eventDate != null && status == 'completed') {
-        final date = eventDate.toDate();
-        final monthKey =
-            '${date.year}-${date.month.toString().padLeft(2, '0')}';
-        monthlyIncome[monthKey] = (monthlyIncome[monthKey] ?? 0.0) + price;
-      }
-
-      // Заказы по статусам
-      bookingsByStatus[status] = (bookingsByStatus[status] ?? 0) + 1;
-
-      // Топ заказчики
-      if (customerId.isNotEmpty) {
-        if (!topCustomers.containsKey(customerId)) {
-          topCustomers[customerId] = {
-            'name': customerName,
-            'bookings': 0,
-            'totalSpent': 0.0,
-          };
-        }
-        topCustomers[customerId]!['bookings'] =
-            (topCustomers[customerId]!['bookings'] as int) + 1;
-        if (status == 'completed') {
-          topCustomers[customerId]!['totalSpent'] =
-              (topCustomers[customerId]!['totalSpent'] as double) + price;
-        }
-      }
-    }
-
-    // Средний рейтинг
-    var averageRating = 0;
-    if (reviews.isNotEmpty) {
-      var totalRating = 0;
-      for (final review in reviews) {
-        final rating = (review['rating'] as num?)?.toDouble() ?? 0.0;
-        totalRating += rating;
-
-        // Распределение оценок
-        final ratingKey = rating.round().toString();
-        ratingDistribution[ratingKey] =
-            (ratingDistribution[ratingKey] ?? 0) + 1;
-      }
-      averageRating = totalRating / reviews.length;
-    }
-
-    // Сортируем топ заказчиков
-    final sortedTopCustomers = topCustomers.values.toList()
-      ..sort(
-        (a, b) =>
-            (b['totalSpent'] as double).compareTo(a['totalSpent'] as double),
+  /// Логирование просмотра профиля специалиста
+  Future<void> logViewProfile(String specialistId, String specialistName) async {
+    try {
+      await _analytics.logEvent(
+        name: 'view_item',
+        parameters: {
+          'item_id': specialistId,
+          'item_name': specialistName,
+          'item_category': 'specialist_profile',
+        },
       );
-
-    // Форматируем доход по месяцам
-    final monthlyIncomeList = monthlyIncome.entries.map((entry) {
-      final date = DateTime.parse('${entry.key}-01');
-      return {
-        'month': '${date.month}/${date.year}',
-        'amount': entry.value,
-      };
-    }).toList()
-      ..sort((a, b) => a['month'].toString().compareTo(b['month'].toString()));
-
-    return {
-      'totalIncome': totalIncome,
-      'totalBookings': totalBookings,
-      'completedBookings': completedBookings,
-      'averageRating': averageRating,
-      'monthlyIncome': monthlyIncomeList,
-      'bookingsByStatus': bookingsByStatus,
-      'topCustomers': sortedTopCustomers.take(5).toList(),
-      'ratingDistribution': ratingDistribution,
-      'lastUpdated': FieldValue.serverTimestamp(),
-    };
+      await _logCustomEvent('view_profile', {
+        'specialist_id': specialistId,
+        'specialist_name': specialistName,
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+      
+      // Обновляем статистику просмотров профиля
+      await _updateProfileViews(specialistId);
+    } on Exception catch (e) {
+      print('Ошибка логирования просмотра профиля: $e');
+    }
   }
 
-  /// Вычисление аналитики заказчика
-  Map<String, dynamic> _calculateCustomerAnalytics(
-    List<Map<String, dynamic>> bookings,
-  ) {
-    // Общие расходы
-    var totalSpent = 0;
-    final totalBookings = bookings.length;
-
-    // Расходы по месяцам
-    final monthlySpending = <String, double>{};
-
-    // Частота заказов
-    final bookingFrequency = <String, int>{};
-
-    // Топ специалисты
-    final topSpecialists = <String, Map<String, dynamic>>{};
-
-    // Любимая категория
-    final categoryCount = <String, int>{};
-
-    final now = DateTime.now();
-    final thisMonth = DateTime(now.year, now.month);
-    final lastMonth = DateTime(now.year, now.month - 1);
-    final thisYear = DateTime(now.year);
-    final lastYear = DateTime(now.year - 1);
-
-    for (final booking in bookings) {
-      final status = booking['status'] as String? ?? 'unknown';
-      final price = (booking['totalPrice'] as num?)?.toDouble() ?? 0.0;
-      final eventDate = booking['eventDate'] as Timestamp?;
-      final specialistId = booking['specialistId'] as String? ?? '';
-      final specialistName =
-          booking['specialistName'] as String? ?? 'Неизвестно';
-      final category = booking['category'] as String? ?? 'Неизвестно';
-
-      // Общие расходы
-      if (status == 'completed') {
-        totalSpent += price;
-      }
-
-      // Расходы по месяцам
-      if (eventDate != null && status == 'completed') {
-        final date = eventDate.toDate();
-        final monthKey =
-            '${date.year}-${date.month.toString().padLeft(2, '0')}';
-        monthlySpending[monthKey] = (monthlySpending[monthKey] ?? 0.0) + price;
-      }
-
-      // Частота заказов
-      if (eventDate != null) {
-        final date = eventDate.toDate();
-
-        if (date.isAfter(thisMonth)) {
-          bookingFrequency['thisMonth'] =
-              (bookingFrequency['thisMonth'] ?? 0) + 1;
-        }
-        if (date.isAfter(lastMonth) && date.isBefore(thisMonth)) {
-          bookingFrequency['lastMonth'] =
-              (bookingFrequency['lastMonth'] ?? 0) + 1;
-        }
-        if (date.isAfter(thisYear)) {
-          bookingFrequency['thisYear'] =
-              (bookingFrequency['thisYear'] ?? 0) + 1;
-        }
-        if (date.isAfter(lastYear) && date.isBefore(thisYear)) {
-          bookingFrequency['lastYear'] =
-              (bookingFrequency['lastYear'] ?? 0) + 1;
-        }
-      }
-
-      // Топ специалисты
-      if (specialistId.isNotEmpty) {
-        if (!topSpecialists.containsKey(specialistId)) {
-          topSpecialists[specialistId] = {
-            'name': specialistName,
-            'category': category,
-            'bookings': 0,
-            'rating': 0.0,
-          };
-        }
-        topSpecialists[specialistId]!['bookings'] =
-            (topSpecialists[specialistId]!['bookings'] as int) + 1;
-      }
-
-      // Категории
-      categoryCount[category] = (categoryCount[category] ?? 0) + 1;
-    }
-
-    // Средняя оценка специалистов (нужно получить из отзывов)
-    const averageRating = 0;
-
-    // Сортируем топ специалистов
-    final sortedTopSpecialists = topSpecialists.values.toList()
-      ..sort((a, b) => (b['bookings'] as int).compareTo(a['bookings'] as int));
-
-    // Находим любимую категорию
-    var favoriteCategory = 'Не определено';
-    if (categoryCount.isNotEmpty) {
-      favoriteCategory =
-          categoryCount.entries.reduce((a, b) => a.value > b.value ? a : b).key;
-    }
-
-    // Форматируем расходы по месяцам
-    final monthlySpendingList = monthlySpending.entries.map((entry) {
-      final date = DateTime.parse('${entry.key}-01');
-      return {
-        'month': '${date.month}/${date.year}',
-        'amount': entry.value,
-      };
-    }).toList()
-      ..sort((a, b) => a['month'].toString().compareTo(b['month'].toString()));
-
-    return {
-      'totalSpent': totalSpent,
-      'totalBookings': totalBookings,
-      'averageRating': averageRating,
-      'favoriteCategory': favoriteCategory,
-      'monthlySpending': monthlySpendingList,
-      'bookingFrequency': bookingFrequency,
-      'topSpecialists': sortedTopSpecialists.take(5).toList(),
-      'lastUpdated': FieldValue.serverTimestamp(),
-    };
-  }
-
-  /// Обновление аналитики при изменении заказа
-  Future<void> updateAnalyticsOnBookingChange(String bookingId) async {
+  /// Логирование создания заявки
+  Future<void> logCreateRequest(String requestId, String specialistId, String category) async {
     try {
-      final bookingDoc =
-          await _firestore.collection('bookings').doc(bookingId).get();
-
-      if (!bookingDoc.exists) return;
-
-      final booking = bookingDoc.data()!;
-      final specialistId = booking['specialistId'] as String?;
-      final customerId = booking['customerId'] as String?;
-
-      if (specialistId != null) {
-        await generateSpecialistAnalytics(specialistId);
-      }
-
-      if (customerId != null) {
-        await generateCustomerAnalytics(customerId);
-      }
-
-      print('Analytics updated for booking: $bookingId');
-    } catch (e) {
-      print('Error updating analytics: $e');
+      await _analytics.logEvent(
+        name: 'create_request',
+        parameters: {
+          'request_id': requestId,
+          'specialist_id': specialistId,
+          'category': category,
+          'timestamp': DateTime.now().toIso8601String(),
+        },
+      );
+      await _logCustomEvent('create_request', {
+        'request_id': requestId,
+        'specialist_id': specialistId,
+        'category': category,
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+      
+      // Обновляем статистику заявок
+      await _updateRequestStats(specialistId, 'received');
+    } on Exception catch (e) {
+      print('Ошибка логирования создания заявки: $e');
     }
   }
 
-  /// Создание тестовых данных аналитики
-  Future<void> createTestAnalytics() async {
+  /// Логирование отправки сообщения
+  Future<void> logSendMessage(String chatId, String recipientId) async {
     try {
-      final user = _auth.currentUser;
-      if (user == null) return;
-
-      // Тестовая аналитика для специалиста
-      final specialistAnalytics = {
-        'totalIncome': 150000.0,
-        'totalBookings': 25,
-        'completedBookings': 20,
-        'averageRating': 4.7,
-        'monthlyIncome': [
-          {'month': '10/2024', 'amount': 25000.0},
-          {'month': '11/2024', 'amount': 30000.0},
-          {'month': '12/2024', 'amount': 35000.0},
-          {'month': '1/2025', 'amount': 40000.0},
-          {'month': '2/2025', 'amount': 20000.0},
-        ],
-        'bookingsByStatus': {
-          'completed': 20,
-          'pending': 3,
-          'confirmed': 2,
-          'cancelled': 0,
+      await _analytics.logEvent(
+        name: 'send_message',
+        parameters: {
+          'chat_id': chatId,
+          'recipient_id': recipientId,
+          'timestamp': DateTime.now().toIso8601String(),
         },
-        'topCustomers': [
-          {
-            'name': 'Анна Петрова',
-            'bookings': 5,
-            'totalSpent': 25000.0,
-          },
-          {
-            'name': 'Михаил Сидоров',
-            'bookings': 3,
-            'totalSpent': 15000.0,
-          },
-          {
-            'name': 'Елена Козлова',
-            'bookings': 2,
-            'totalSpent': 10000.0,
-          },
-        ],
-        'ratingDistribution': {
-          '5': 15,
-          '4': 3,
-          '3': 1,
-          '2': 0,
-          '1': 1,
+      );
+      await _logCustomEvent('send_message', {
+        'chat_id': chatId,
+        'recipient_id': recipientId,
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+      
+      // Обновляем статистику сообщений
+      await _updateMessageStats(recipientId);
+    } on Exception catch (e) {
+      print('Ошибка логирования отправки сообщения: $e');
+    }
+  }
+
+  /// Логирование лайка поста/идеи
+  Future<void> logLikePost(String postId, String postType) async {
+    try {
+      await _analytics.logEvent(
+        name: 'like_post',
+        parameters: {
+          'post_id': postId,
+          'post_type': postType,
+          'timestamp': DateTime.now().toIso8601String(),
         },
-        'lastUpdated': FieldValue.serverTimestamp(),
-      };
+      );
+      await _logCustomEvent('like_post', {
+        'post_id': postId,
+        'post_type': postType,
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+    } on Exception catch (e) {
+      print('Ошибка логирования лайка: $e');
+    }
+  }
 
-      // Тестовая аналитика для заказчика
-      final customerAnalytics = {
-        'totalSpent': 45000.0,
-        'totalBookings': 8,
-        'averageRating': 4.5,
-        'favoriteCategory': 'Фотограф',
-        'monthlySpending': [
-          {'month': '10/2024', 'amount': 5000.0},
-          {'month': '11/2024', 'amount': 8000.0},
-          {'month': '12/2024', 'amount': 12000.0},
-          {'month': '1/2025', 'amount': 15000.0},
-          {'month': '2/2025', 'amount': 5000.0},
-        ],
-        'bookingFrequency': {
-          'thisMonth': 1,
-          'lastMonth': 2,
-          'thisYear': 5,
-          'lastYear': 3,
+  /// Логирование комментария к посту/идее
+  Future<void> logCommentPost(String postId, String postType) async {
+    try {
+      await _analytics.logEvent(
+        name: 'comment_post',
+        parameters: {
+          'post_id': postId,
+          'post_type': postType,
+          'timestamp': DateTime.now().toIso8601String(),
         },
-        'topSpecialists': [
-          {
-            'name': 'Иван Иванов',
-            'category': 'Фотограф',
-            'bookings': 3,
-            'rating': 4.8,
-          },
-          {
-            'name': 'Мария Смирнова',
-            'category': 'Видеограф',
-            'bookings': 2,
-            'rating': 4.6,
-          },
-          {
-            'name': 'Алексей Петров',
-            'category': 'Ведущий',
-            'bookings': 1,
-            'rating': 4.9,
-          },
-        ],
-        'lastUpdated': FieldValue.serverTimestamp(),
-      };
+      );
+      await _logCustomEvent('comment_post', {
+        'post_id': postId,
+        'post_type': postType,
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+    } on Exception catch (e) {
+      print('Ошибка логирования комментария: $e');
+    }
+  }
 
-      await _firestore
-          .collection('analytics')
-          .doc('specialist_${user.uid}')
-          .set(specialistAnalytics);
+  /// Логирование сохранения поста/идеи
+  Future<void> logSavePost(String postId, String postType) async {
+    try {
+      await _analytics.logEvent(
+        name: 'save_post',
+        parameters: {
+          'post_id': postId,
+          'post_type': postType,
+          'timestamp': DateTime.now().toIso8601String(),
+        },
+      );
+      await _logCustomEvent('save_post', {
+        'post_id': postId,
+        'post_type': postType,
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+    } on Exception catch (e) {
+      print('Ошибка логирования сохранения: $e');
+    }
+  }
 
-      await _firestore
-          .collection('analytics')
-          .doc('customer_${user.uid}')
-          .set(customerAnalytics);
+  /// Логирование открытия настроек
+  Future<void> logOpenSettings() async {
+    try {
+      await _analytics.logEvent(name: 'open_settings');
+      await _logCustomEvent('open_settings', {
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+    } on Exception catch (e) {
+      print('Ошибка логирования открытия настроек: $e');
+    }
+  }
 
-      print('Test analytics created');
-    } catch (e) {
-      print('Error creating test analytics: $e');
+  /// Логирование изменения темы
+  Future<void> logChangeTheme(String theme) async {
+    try {
+      await _analytics.logEvent(
+        name: 'change_theme',
+        parameters: {'theme': theme},
+      );
+      await _logCustomEvent('change_theme', {
+        'theme': theme,
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+    } on Exception catch (e) {
+      print('Ошибка логирования изменения темы: $e');
+    }
+  }
+
+  /// Логирование переключения уведомлений
+  Future<void> logToggleNotifications(bool enabled) async {
+    try {
+      await _analytics.logEvent(
+        name: 'toggle_notifications',
+        parameters: {'enabled': enabled},
+      );
+      await _logCustomEvent('toggle_notifications', {
+        'enabled': enabled,
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+    } on Exception catch (e) {
+      print('Ошибка логирования переключения уведомлений: $e');
+    }
+  }
+
+  /// Логирование просмотра экрана
+  Future<void> logScreenView(String screenName, {String? screenClass}) async {
+    try {
+      await _analytics.logScreenView(
+        screenName: screenName,
+        screenClass: screenClass ?? screenName,
+      );
+    } on Exception catch (e) {
+      print('Ошибка логирования просмотра экрана: $e');
+    }
+  }
+
+  /// Логирование пользовательского события
+  Future<void> _logCustomEvent(String eventName, Map<String, dynamic> parameters) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await _firestore.collection('analytics_events').add({
+          'event_name': eventName,
+          'user_id': user.uid,
+          'parameters': parameters,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      }
+    } on Exception catch (e) {
+      print('Ошибка сохранения пользовательского события: $e');
+    }
+  }
+
+  /// Обновление статистики просмотров профиля
+  Future<void> _updateProfileViews(String specialistId) async {
+    try {
+      await _firestore.collection('userStats').doc(specialistId).set({
+        'userId': specialistId,
+        'views': FieldValue.increment(1),
+        'lastViewDate': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true),);
+    } on Exception catch (e) {
+      print('Ошибка обновления статистики просмотров: $e');
+    }
+  }
+
+  /// Обновление статистики заявок
+  Future<void> _updateRequestStats(String specialistId, String type) async {
+    try {
+      final field = type == 'received' ? 'requests' : 'rejected_requests';
+      await _firestore.collection('userStats').doc(specialistId).set({
+        'userId': specialistId,
+        field: FieldValue.increment(1),
+        'lastRequestDate': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true),);
+    } on Exception catch (e) {
+      print('Ошибка обновления статистики заявок: $e');
+    }
+  }
+
+  /// Обновление статистики сообщений
+  Future<void> _updateMessageStats(String userId) async {
+    try {
+      await _firestore.collection('userStats').doc(userId).set({
+        'userId': userId,
+        'messages': FieldValue.increment(1),
+        'lastMessageDate': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true),);
+    } on Exception catch (e) {
+      print('Ошибка обновления статистики сообщений: $e');
+    }
+  }
+
+  /// Получение статистики пользователя
+  Future<Map<String, dynamic>?> getUserStats(String userId) async {
+    try {
+      final doc = await _firestore.collection('userStats').doc(userId).get();
+      if (doc.exists) {
+        return doc.data();
+      }
+      return null;
+    } on Exception catch (e) {
+      print('Ошибка получения статистики пользователя: $e');
+      return null;
+    }
+  }
+
+  /// Получение аналитических отчётов для админов
+  Future<Map<String, dynamic>> getAnalyticsReports() async {
+    try {
+      final doc = await _firestore.collection('analyticsReports').doc('main').get();
+      if (doc.exists) {
+        return doc.data()!;
+      }
+      return {};
+    } on Exception catch (e) {
+      print('Ошибка получения аналитических отчётов: $e');
+      return {};
+    }
+  }
+
+  /// Обновление аналитических отчётов
+  Future<void> updateAnalyticsReports() async {
+    try {
+      // Получаем топ специалистов
+      final specialistsQuery = await _firestore
+          .collection('userStats')
+          .orderBy('views', descending: true)
+          .limit(10)
+          .get();
+
+      final topSpecialists = specialistsQuery.docs.map((doc) {
+        final data = doc.data();
+        return {
+          'userId': doc.id,
+          'views': data['views'] ?? 0,
+          'requests': data['requests'] ?? 0,
+          'messages': data['messages'] ?? 0,
+        };
+      }).toList();
+
+      // Получаем топ заказчиков
+      final customersQuery = await _firestore
+          .collection('analytics_events')
+          .where('event_name', isEqualTo: 'create_request')
+          .get();
+
+      final customerStats = <String, int>{};
+      for (final doc in customersQuery.docs) {
+        final data = doc.data();
+        final userId = data['user_id'] as String?;
+        if (userId != null) {
+          customerStats[userId] = (customerStats[userId] ?? 0) + 1;
+        }
+      }
+
+      final topCustomers = customerStats.entries
+          .toList()
+          ..sort((a, b) => b.value.compareTo(a.value));
+      final topCustomersList = topCustomers.take(10).map((entry) => {
+        'userId': entry.key,
+        'requests': entry.value,
+      },).toList();
+
+      // Получаем популярные категории
+      final categoriesQuery = await _firestore
+          .collection('analytics_events')
+          .where('event_name', isEqualTo: 'create_request')
+          .get();
+
+      final categoryStats = <String, int>{};
+      for (final doc in categoriesQuery.docs) {
+        final data = doc.data();
+        final parameters = data['parameters'] as Map<String, dynamic>?;
+        final category = parameters?['category'] as String?;
+        if (category != null) {
+          categoryStats[category] = (categoryStats[category] ?? 0) + 1;
+        }
+      }
+
+      final popularCategories = categoryStats.entries
+          .toList()
+          ..sort((a, b) => b.value.compareTo(a.value));
+      final popularCategoriesList = popularCategories.take(5).map((entry) => {
+        'category': entry.key,
+        'count': entry.value,
+      },).toList();
+
+      // Сохраняем отчёт
+      await _firestore.collection('analyticsReports').doc('main').set({
+        'topSpecialists': topSpecialists,
+        'topCustomers': topCustomersList,
+        'popularCategories': popularCategoriesList,
+        'dateGenerated': FieldValue.serverTimestamp(),
+      });
+    } on Exception catch (e) {
+      print('Ошибка обновления аналитических отчётов: $e');
     }
   }
 }

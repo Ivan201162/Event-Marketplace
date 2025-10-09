@@ -566,7 +566,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
           backgroundColor: Colors.green,
         ),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка отправки: $e'),
@@ -588,7 +588,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
       setState(() {
         _searchResults = results;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка поиска: $e'),
@@ -686,7 +686,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
           backgroundColor: Colors.green,
         ),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка голосования: $e'),

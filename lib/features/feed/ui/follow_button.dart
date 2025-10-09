@@ -86,7 +86,7 @@ class FollowButton extends ConsumerWidget {
       );
 
   Future<void> _handleFollow(
-      BuildContext context, WidgetRef ref, bool isFollowing) async {
+      BuildContext context, WidgetRef ref, bool isFollowing,) async {
     try {
       if (isFollowing) {
         await ref.read(unfollowUserProvider(targetUserId).future);

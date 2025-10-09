@@ -7,7 +7,7 @@ enum ReviewType {
   service,
 }
 
-/// Модель отзыва
+/// Модель отзыва с расширенным функционалом
 class Review {
   const Review({
     required this.id,
@@ -15,9 +15,12 @@ class Review {
     required this.customerId,
     required this.customerName,
     required this.rating,
-    required this.comment,
+    required this.text,
     this.serviceTags = const [],
-    required this.createdAt,
+    required this.date,
+    this.photos = const [],
+    this.likes = 0,
+    this.responses = const [],
     this.bookingId, // Связь с заказом
     this.eventTitle, // Название события
     this.editedAt, // Дата редактирования
@@ -25,26 +28,31 @@ class Review {
     this.isDeleted = false, // Флаг удаления
     this.customerAvatar, // Аватар заказчика
     this.specialistName, // Имя специалиста
-    this.response, // Ответ специалиста на отзыв
-    this.responseAt, // Дата ответа
     this.metadata = const {}, // Дополнительные данные
+    this.reportCount = 0, // Количество жалоб
+    this.isReported = false, // Флаг жалобы
+    this.isVerified = false, // Верифицированный отзыв
   });
 
   /// Создать отзыв из Map
-  factory Review.fromMap(Map<String, dynamic> data) {
-    return Review(
+  factory Review.fromMap(Map<String, dynamic> data) => Review(
       id: data['id'] ?? '',
       specialistId: data['specialistId'] ?? '',
       customerId: data['customerId'] ?? '',
       customerName: data['customerName'] ?? '',
-      rating: data['rating'] as int? ?? 0,
-      comment: data['comment'] ?? '',
+      rating: data['rating'] as double? ?? 0.0,
+      text: data['text'] ?? '',
       serviceTags: List<String>.from(data['serviceTags'] ?? []),
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] is Timestamp
-              ? (data['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(data['createdAt'].toString()))
+      date: data['date'] != null
+          ? (data['date'] is Timestamp
+              ? (data['date'] as Timestamp).toDate()
+              : DateTime.parse(data['date'].toString()))
           : DateTime.now(),
+      photos: List<String>.from(data['photos'] ?? []),
+      likes: data['likes'] as int? ?? 0,
+      responses: (data['responses'] as List<dynamic>?)
+          ?.map((response) => ReviewResponse.fromMap(response))
+          .toList() ?? [],
       bookingId: data['bookingId'] as String?,
       eventTitle: data['eventTitle'] as String?,
       editedAt: data['editedAt'] != null
@@ -56,15 +64,11 @@ class Review {
       isDeleted: data['isDeleted'] as bool? ?? false,
       customerAvatar: data['customerAvatar'] as String?,
       specialistName: data['specialistName'] as String?,
-      response: data['response'] as String?,
-      responseAt: data['responseAt'] != null
-          ? (data['responseAt'] is Timestamp
-              ? (data['responseAt'] as Timestamp).toDate()
-              : DateTime.parse(data['responseAt'].toString()))
-          : null,
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      reportCount: data['reportCount'] as int? ?? 0,
+      isReported: data['isReported'] as bool? ?? false,
+      isVerified: data['isVerified'] as bool? ?? false,
     );
-  }
 
   /// Создать отзыв из документа Firestore
   factory Review.fromDocument(DocumentSnapshot doc) {
@@ -88,14 +92,19 @@ class Review {
       specialistId: safeData['specialistId'] ?? '',
       customerId: safeData['customerId'] ?? '',
       customerName: safeData['customerName'] ?? '',
-      rating: safeData['rating'] as int? ?? 0,
-      comment: safeData['comment'] ?? '',
+      rating: safeData['rating'] as double? ?? 0.0,
+      text: safeData['text'] ?? '',
       serviceTags: List<String>.from(safeData['serviceTags'] ?? []),
-      createdAt: safeData['createdAt'] != null
-          ? (safeData['createdAt'] is Timestamp
-              ? (safeData['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(safeData['createdAt'].toString()))
+      date: safeData['date'] != null
+          ? (safeData['date'] is Timestamp
+              ? (safeData['date'] as Timestamp).toDate()
+              : DateTime.parse(safeData['date'].toString()))
           : DateTime.now(),
+      photos: List<String>.from(safeData['photos'] ?? []),
+      likes: safeData['likes'] as int? ?? 0,
+      responses: (safeData['responses'] as List<dynamic>?)
+          ?.map((response) => ReviewResponse.fromMap(response))
+          .toList() ?? [],
       bookingId: safeData['bookingId'] as String?,
       eventTitle: safeData['eventTitle'] as String?,
       editedAt: safeData['editedAt'] != null
@@ -107,13 +116,10 @@ class Review {
       isDeleted: safeData['isDeleted'] as bool? ?? false,
       customerAvatar: safeData['customerAvatar'] as String?,
       specialistName: safeData['specialistName'] as String?,
-      response: safeData['response'] as String?,
-      responseAt: safeData['responseAt'] != null
-          ? (safeData['responseAt'] is Timestamp
-              ? (safeData['responseAt'] as Timestamp).toDate()
-              : DateTime.parse(safeData['responseAt'].toString()))
-          : null,
       metadata: Map<String, dynamic>.from(safeData['metadata'] ?? {}),
+      reportCount: safeData['reportCount'] as int? ?? 0,
+      isReported: safeData['isReported'] as bool? ?? false,
+      isVerified: safeData['isVerified'] as bool? ?? false,
     );
   }
 
@@ -121,10 +127,13 @@ class Review {
   final String specialistId;
   final String customerId;
   final String customerName;
-  final int rating; // 1-5 звезд
-  final String comment;
+  final double rating; // 1-5 звезд
+  final String text;
   final List<String> serviceTags;
-  final DateTime createdAt;
+  final DateTime date;
+  final List<String> photos;
+  final int likes;
+  final List<ReviewResponse> responses;
   final String? bookingId; // Связь с заказом
   final String? eventTitle; // Название события
   final DateTime? editedAt; // Дата редактирования
@@ -132,13 +141,15 @@ class Review {
   final bool isDeleted; // Флаг удаления
   final String? customerAvatar; // Аватар заказчика
   final String? specialistName; // Имя специалиста
-  final String? response; // Ответ специалиста на отзыв
-  final DateTime? responseAt; // Дата ответа
   final Map<String, dynamic> metadata; // Дополнительные данные
+  final int reportCount; // Количество жалоб
+  final bool isReported; // Флаг жалобы
+  final bool isVerified; // Верифицированный отзыв
 
   // Дополнительные методы для совместимости
-  bool get hasComment => comment.isNotEmpty;
+  bool get hasComment => text.isNotEmpty;
   DateTime? get updatedAt => editedAt;
+  DateTime get createdAt => date;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -146,9 +157,12 @@ class Review {
         'customerId': customerId,
         'customerName': customerName,
         'rating': rating,
-        'comment': comment,
+        'text': text,
         'serviceTags': serviceTags,
-        'createdAt': Timestamp.fromDate(createdAt),
+        'date': Timestamp.fromDate(date),
+        'photos': photos,
+        'likes': likes,
+        'responses': responses.map((response) => response.toMap()).toList(),
         'bookingId': bookingId,
         'eventTitle': eventTitle,
         'editedAt': editedAt != null ? Timestamp.fromDate(editedAt!) : null,
@@ -156,10 +170,10 @@ class Review {
         'isDeleted': isDeleted,
         'customerAvatar': customerAvatar,
         'specialistName': specialistName,
-        'response': response,
-        'responseAt':
-            responseAt != null ? Timestamp.fromDate(responseAt!) : null,
         'metadata': metadata,
+        'reportCount': reportCount,
+        'isReported': isReported,
+        'isVerified': isVerified,
       };
 
   /// Копировать с изменениями
@@ -168,10 +182,13 @@ class Review {
     String? specialistId,
     String? customerId,
     String? customerName,
-    int? rating,
-    String? comment,
+    double? rating,
+    String? text,
     List<String>? serviceTags,
-    DateTime? createdAt,
+    DateTime? date,
+    List<String>? photos,
+    int? likes,
+    List<ReviewResponse>? responses,
     String? bookingId,
     String? eventTitle,
     DateTime? editedAt,
@@ -179,9 +196,10 @@ class Review {
     bool? isDeleted,
     String? customerAvatar,
     String? specialistName,
-    String? response,
-    DateTime? responseAt,
     Map<String, dynamic>? metadata,
+    int? reportCount,
+    bool? isReported,
+    bool? isVerified,
   }) =>
       Review(
         id: id ?? this.id,
@@ -189,9 +207,12 @@ class Review {
         customerId: customerId ?? this.customerId,
         customerName: customerName ?? this.customerName,
         rating: rating ?? this.rating,
-        comment: comment ?? this.comment,
+        text: text ?? this.text,
         serviceTags: serviceTags ?? this.serviceTags,
-        createdAt: createdAt ?? this.createdAt,
+        date: date ?? this.date,
+        photos: photos ?? this.photos,
+        likes: likes ?? this.likes,
+        responses: responses ?? this.responses,
         bookingId: bookingId ?? this.bookingId,
         eventTitle: eventTitle ?? this.eventTitle,
         editedAt: editedAt ?? this.editedAt,
@@ -199,9 +220,10 @@ class Review {
         isDeleted: isDeleted ?? this.isDeleted,
         customerAvatar: customerAvatar ?? this.customerAvatar,
         specialistName: specialistName ?? this.specialistName,
-        response: response ?? this.response,
-        responseAt: responseAt ?? this.responseAt,
         metadata: metadata ?? this.metadata,
+        reportCount: reportCount ?? this.reportCount,
+        isReported: isReported ?? this.isReported,
+        isVerified: isVerified ?? this.isVerified,
       );
 
   @override
@@ -286,10 +308,10 @@ class Review {
   }
 
   /// Проверить, есть ли комментарий
-  bool get hasComment => comment.isNotEmpty;
+  bool get hasComment => text.isNotEmpty;
 
-  /// Проверить, верифицирован ли отзыв
-  bool get isVerified => metadata['isVerified'] == true;
+  /// Проверить, верифицирован ли отзыв (из метаданных)
+  bool get isVerifiedFromMetadata => metadata['isVerified'] == true;
 
   /// Проверить, публичный ли отзыв
   bool get isPublic => metadata['isPublic'] != false;
@@ -349,4 +371,212 @@ class ReviewStats {
     final count = ratingDistribution[rating.toString()] ?? 0;
     return (count / totalReviews) * 100;
   }
+}
+
+/// Модель ответа на отзыв
+class ReviewResponse {
+
+  const ReviewResponse({
+    required this.authorId,
+    required this.authorName,
+    required this.text,
+    required this.date,
+  });
+
+  factory ReviewResponse.fromMap(Map<String, dynamic> data) => ReviewResponse(
+    authorId: data['authorId'] ?? '',
+    authorName: data['authorName'] ?? '',
+    text: data['text'] ?? '',
+    date: data['date'] != null
+        ? (data['date'] is Timestamp
+            ? (data['date'] as Timestamp).toDate()
+            : DateTime.parse(data['date'].toString()))
+        : DateTime.now(),
+  );
+  final String authorId;
+  final String authorName;
+  final String text;
+  final DateTime date;
+
+  Map<String, dynamic> toMap() => {
+    'authorId': authorId,
+    'authorName': authorName,
+    'text': text,
+    'date': Timestamp.fromDate(date),
+  };
+}
+
+/// Модель лайка отзыва
+class ReviewLike {
+
+  const ReviewLike({
+    required this.userId,
+    required this.userName,
+    required this.date,
+  });
+
+  factory ReviewLike.fromMap(Map<String, dynamic> data) => ReviewLike(
+    userId: data['userId'] ?? '',
+    userName: data['userName'] ?? '',
+    date: data['date'] != null
+        ? (data['date'] is Timestamp
+            ? (data['date'] as Timestamp).toDate()
+            : DateTime.parse(data['date'].toString()))
+        : DateTime.now(),
+  );
+  final String userId;
+  final String userName;
+  final DateTime date;
+
+  Map<String, dynamic> toMap() => {
+    'userId': userId,
+    'userName': userName,
+    'date': Timestamp.fromDate(date),
+  };
+}
+
+/// Модель жалобы на отзыв
+class ReviewReport {
+
+  const ReviewReport({
+    required this.id,
+    required this.reviewId,
+    required this.reporterId,
+    required this.reporterName,
+    required this.reason,
+    this.description,
+    required this.date,
+    this.isResolved = false,
+    this.moderatorNote,
+  });
+
+  factory ReviewReport.fromMap(Map<String, dynamic> data) => ReviewReport(
+    id: data['id'] ?? '',
+    reviewId: data['reviewId'] ?? '',
+    reporterId: data['reporterId'] ?? '',
+    reporterName: data['reporterName'] ?? '',
+    reason: data['reason'] ?? '',
+    description: data['description'] as String?,
+    date: data['date'] != null
+        ? (data['date'] is Timestamp
+            ? (data['date'] as Timestamp).toDate()
+            : DateTime.parse(data['date'].toString()))
+        : DateTime.now(),
+    isResolved: data['isResolved'] as bool? ?? false,
+    moderatorNote: data['moderatorNote'] as String?,
+  );
+  final String id;
+  final String reviewId;
+  final String reporterId;
+  final String reporterName;
+  final String reason;
+  final String? description;
+  final DateTime date;
+  final bool isResolved;
+  final String? moderatorNote;
+
+  Map<String, dynamic> toMap() => {
+    'id': id,
+    'reviewId': reviewId,
+    'reporterId': reporterId,
+    'reporterName': reporterName,
+    'reason': reason,
+    'description': description,
+    'date': Timestamp.fromDate(date),
+    'isResolved': isResolved,
+    'moderatorNote': moderatorNote,
+  };
+}
+
+/// Причины жалоб на отзывы
+enum ReviewReportReason {
+  spam('spam', 'Спам'),
+  inappropriate('inappropriate', 'Неподходящий контент'),
+  fake('fake', 'Поддельный отзыв'),
+  harassment('harassment', 'Оскорбления'),
+  other('other', 'Другое');
+
+  const ReviewReportReason(this.value, this.displayName);
+  final String value;
+  final String displayName;
+}
+
+/// Модель статистики репутации специалиста
+class SpecialistReputation {
+
+  const SpecialistReputation({
+    required this.specialistId,
+    required this.ratingAverage,
+    required this.reviewsCount,
+    required this.positiveReviews,
+    required this.negativeReviews,
+    required this.reputationScore,
+    required this.status,
+    required this.lastUpdated,
+  });
+
+  factory SpecialistReputation.fromMap(Map<String, dynamic> data) => SpecialistReputation(
+    specialistId: data['specialistId'] ?? '',
+    ratingAverage: data['ratingAverage'] as double? ?? 0.0,
+    reviewsCount: data['reviewsCount'] as int? ?? 0,
+    positiveReviews: data['positiveReviews'] as int? ?? 0,
+    negativeReviews: data['negativeReviews'] as int? ?? 0,
+    reputationScore: data['reputationScore'] as double? ?? 0.0,
+    status: ReputationStatus.values.firstWhere(
+      (status) => status.value == data['status'],
+      orElse: () => ReputationStatus.needsExperience,
+    ),
+    lastUpdated: data['lastUpdated'] != null
+        ? (data['lastUpdated'] is Timestamp
+            ? (data['lastUpdated'] as Timestamp).toDate()
+            : DateTime.parse(data['lastUpdated'].toString()))
+        : DateTime.now(),
+  );
+  final String specialistId;
+  final double ratingAverage;
+  final int reviewsCount;
+  final int positiveReviews;
+  final int negativeReviews;
+  final double reputationScore;
+  final ReputationStatus status;
+  final DateTime lastUpdated;
+
+  Map<String, dynamic> toMap() => {
+    'specialistId': specialistId,
+    'ratingAverage': ratingAverage,
+    'reviewsCount': reviewsCount,
+    'positiveReviews': positiveReviews,
+    'negativeReviews': negativeReviews,
+    'reputationScore': reputationScore,
+    'status': status.value,
+    'lastUpdated': Timestamp.fromDate(lastUpdated),
+  };
+
+  /// Рассчитать репутационный балл
+  static double calculateReputationScore(int positive, int negative) {
+    final total = positive + negative;
+    if (total == 0) return 0;
+    return (positive / total) * 100;
+  }
+
+  /// Определить статус репутации
+  static ReputationStatus getReputationStatus(double score) {
+    if (score >= 90) return ReputationStatus.verifiedExpert;
+    if (score >= 75) return ReputationStatus.reliable;
+    if (score >= 50) return ReputationStatus.needsExperience;
+    return ReputationStatus.underObservation;
+  }
+}
+
+/// Статусы репутации специалиста
+enum ReputationStatus {
+  verifiedExpert('verified_expert', 'Проверенный эксперт', '🏆'),
+  reliable('reliable', 'Надёжный', '⭐'),
+  needsExperience('needs_experience', 'Нуждается в опыте', '⚙️'),
+  underObservation('under_observation', 'Под наблюдением', '⚠️');
+
+  const ReputationStatus(this.value, this.displayName, this.emoji);
+  final String value;
+  final String displayName;
+  final String emoji;
 }

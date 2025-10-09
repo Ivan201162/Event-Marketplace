@@ -6,7 +6,11 @@ import '../core/i18n/app_localizations.dart';
 import '../models/user.dart';
 import '../providers/auth_providers.dart';
 import '../providers/locale_provider.dart';
+import '../services/analytics_service.dart';
+import '../widgets/theme_switch.dart';
+import 'admin_analytics_screen.dart';
 import 'admin_panel_screen.dart';
+import 'user_reports_screen.dart';
 
 /// Экран настроек
 class SettingsPage extends ConsumerWidget {
@@ -16,6 +20,9 @@ class SettingsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUser = ref.watch(currentUserProvider);
     final l10n = AppLocalizations.of(context);
+
+    // Логируем открытие настроек
+    AnalyticsService().logOpenSettings();
 
     return Scaffold(
       appBar: AppBar(
@@ -224,6 +231,16 @@ class SettingsPage extends ConsumerWidget {
                   );
                 },
               ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.notifications_active),
+                title: const Text('История уведомлений'),
+                subtitle: const Text('Просмотреть все уведомления'),
+                trailing: const Icon(Icons.arrow_forward_ios),
+                onTap: () {
+                  context.push('/notifications');
+                },
+              ),
             ],
           ),
         ),
@@ -298,7 +315,7 @@ class SettingsPage extends ConsumerWidget {
                 ),
               ),
               SizedBox(height: 16),
-              ThemeSelectorWidget(showTitle: false),
+              ThemeSwitch(showLabel: false),
             ],
           ),
         ),
@@ -335,6 +352,24 @@ class SettingsPage extends ConsumerWidget {
                   );
                 },
               ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(
+                  Icons.analytics,
+                  color: Colors.blue,
+                ),
+                title: const Text('Аналитика и отчёты'),
+                subtitle: const Text('Статистика и аналитика платформы'),
+                trailing: const Icon(Icons.arrow_forward_ios),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (context) => const AdminAnalyticsScreen(),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -354,6 +389,21 @@ class SettingsPage extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 16),
+              ListTile(
+                leading: const Icon(Icons.analytics),
+                title: const Text('Мои отчёты'),
+                subtitle: const Text('Статистика и аналитика'),
+                trailing: const Icon(Icons.arrow_forward_ios),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (context) => const UserReportsScreen(),
+                    ),
+                  );
+                },
+              ),
+              const Divider(),
               ListTile(
                 leading: const Icon(Icons.help_outline),
                 title: const Text('Помощь'),
@@ -457,6 +507,9 @@ class SettingsPage extends ConsumerWidget {
             onPressed: () async {
               Navigator.pop(context);
               try {
+                // Логируем выход
+                await AnalyticsService().logLogout();
+                
                 await ref.read(authServiceProvider).signOut();
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -466,7 +519,7 @@ class SettingsPage extends ConsumerWidget {
                     ),
                   );
                 }
-              } catch (e) {
+              } on Exception catch (e) {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(

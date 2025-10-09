@@ -1,74 +1,43 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
-import '../providers/auth_providers.dart';
-import '../screens/login_register_screen.dart';
+import '../data/models/up_user.dart';
+import '../data/repositories/user_repository.dart';
+import '../screens/main_navigation_screen.dart';
+import '../screens/modern_auth_screen.dart';
 
-/// Виджет для управления аутентификацией и маршрутизацией
+final firebaseUserProvider = StreamProvider<User?>((ref) => FirebaseAuth.instance.authStateChanges());
+
+final currentUserProvider = StreamProvider<UpUser?>((ref) {
+  final fbUserAsync = ref.watch(firebaseUserProvider);
+  return fbUserAsync.when(
+    data: (fbUser) {
+      if (fbUser == null) {
+        // not signed in
+        return Stream<UpUser?>.value(null);
+      }
+      return UserRepository().watchUser(fbUser.uid);
+    },
+    loading: () => const Stream.empty(),
+    error: (_, __) => const Stream.empty(),
+  );
+});
+
 class AuthGate extends ConsumerWidget {
   const AuthGate({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentUser = ref.watch(currentUserProvider);
+    final userAsync = ref.watch(currentUserProvider);
 
-    return currentUser.when(
+    return userAsync.when(
+      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (e, _) => Scaffold(body: Center(child: Text('Ошибка авторизации: $e'))),
       data: (user) {
-        if (user != null) {
-          // Пользователь авторизован - перенаправляем на главную
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (context.mounted) {
-              context.go('/home');
-            }
-          });
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        } else {
-          // Пользователь не авторизован - показываем экран входа
-          return const LoginRegisterScreen();
-        }
+        if (user == null) return const ModernAuthScreen(); // <- всегда показываем вход
+        return const MainNavigationScreen(); // BottomNavigation с Главная/Лента/Заявки/Чаты/Идеи
       },
-      loading: () => const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      ),
-      error: (error, stack) => Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.error_outline,
-                size: 64,
-                color: Colors.red,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Ошибка аутентификации',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                error.toString(),
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  ref.invalidate(currentUserProvider);
-                },
-                child: const Text('Повторить'),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

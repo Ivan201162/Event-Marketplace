@@ -1,14 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// Типы сообщений в чате
+/// Тип сообщения
 enum MessageType {
   text,
   image,
   video,
   audio,
-  file,
   document,
-  attachment,
+  file,
   location,
   system,
 }
@@ -22,150 +21,93 @@ enum MessageStatus {
   failed,
 }
 
-/// Модель сообщения в чате
+/// Модель сообщения чата
 class ChatMessage {
   const ChatMessage({
     required this.id,
     required this.chatId,
     required this.senderId,
     required this.senderName,
-    this.senderAvatar,
-    required this.type,
     required this.content,
-    this.fileUrl,
-    this.fileType,
+    required this.type,
+    required this.timestamp,
+    required this.status,
+    this.replyTo,
+    this.mediaUrl,
+    this.thumbnailUrl,
     this.fileName,
     this.fileSize,
-    this.thumbnailUrl,
-    this.attachmentId,
-    this.metadata,
-    required this.status,
-    required this.timestamp,
-    this.editedAt,
-    this.replyToMessageId,
-    this.readBy = const [],
-    this.isDeleted = false,
-    this.isFromCurrentUser = false,
+    this.duration,
+    this.location,
+    this.metadata = const {},
   });
 
-  /// Создать сообщение из документа Firestore
+  /// Создать из документа Firestore
   factory ChatMessage.fromDocument(DocumentSnapshot doc) {
     final data = doc.data()! as Map<String, dynamic>;
-
     return ChatMessage(
       id: doc.id,
       chatId: data['chatId'] as String? ?? '',
       senderId: data['senderId'] as String? ?? '',
       senderName: data['senderName'] as String? ?? '',
-      senderAvatar: data['senderAvatar'] as String?,
+      content: data['content'] as String? ?? '',
       type: MessageType.values.firstWhere(
-        (e) => e.name == data['type'],
+        (e) => e.name == (data['type'] as String?),
         orElse: () => MessageType.text,
       ),
-      content: data['content'] as String? ?? '',
-      fileUrl: data['fileUrl'] as String?,
-      fileType: data['fileType'] as String?,
-      fileName: data['fileName'] as String?,
-      fileSize: data['fileSize'] as int?,
-      thumbnailUrl: data['thumbnailUrl'] as String?,
-      attachmentId: data['attachmentId'] as String?,
-      metadata: data['metadata'] as Map<String, dynamic>?,
+      timestamp: (data['timestamp'] as Timestamp).toDate(),
       status: MessageStatus.values.firstWhere(
-        (e) => e.name == data['status'],
+        (e) => e.name == (data['status'] as String?),
         orElse: () => MessageStatus.sent,
       ),
-      timestamp: (data['timestamp'] as Timestamp).toDate(),
-      editedAt: data['editedAt'] != null
-          ? (data['editedAt'] as Timestamp).toDate()
+      replyTo: data['replyTo'] as String?,
+      mediaUrl: data['mediaUrl'] as String?,
+      thumbnailUrl: data['thumbnailUrl'] as String?,
+      fileName: data['fileName'] as String?,
+      fileSize: data['fileSize'] as int?,
+      duration: data['duration'] as int?,
+      location: data['location'] != null
+          ? Map<String, double>.from(data['location'])
           : null,
-      replyToMessageId: data['replyToMessageId'] as String?,
-      readBy: List<String>.from(data['readBy'] as List<dynamic>? ?? []),
-      isDeleted: data['isDeleted'] as bool? ?? false,
-      isFromCurrentUser: data['isFromCurrentUser'] as bool? ?? false,
+      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
   }
-
-  /// Создать сообщение из Map (для кэширования)
-  factory ChatMessage.fromMap(Map<String, dynamic> data) => ChatMessage(
-        id: data['id'] as String? ?? '',
-        chatId: data['chatId'] as String? ?? '',
-        senderId: data['senderId'] as String? ?? '',
-        senderName: data['senderName'] as String? ?? '',
-        senderAvatar: data['senderAvatar'] as String?,
-        type: MessageType.values.firstWhere(
-          (e) => e.name == data['type'],
-          orElse: () => MessageType.text,
-        ),
-        content: data['content'] as String? ?? '',
-        fileUrl: data['fileUrl'] as String?,
-        fileType: data['fileType'] as String?,
-        fileName: data['fileName'] as String?,
-        fileSize: data['fileSize'] as int?,
-        thumbnailUrl: data['thumbnailUrl'] as String?,
-        attachmentId: data['attachmentId'] as String?,
-        metadata: data['metadata'] as Map<String, dynamic>?,
-        status: MessageStatus.values.firstWhere(
-          (e) => e.name == data['status'],
-          orElse: () => MessageStatus.sent,
-        ),
-        timestamp: data['timestamp'] is Timestamp
-            ? (data['timestamp'] as Timestamp).toDate()
-            : DateTime.parse(data['timestamp'] as String),
-        editedAt: data['editedAt'] != null
-            ? (data['editedAt'] is Timestamp
-                ? (data['editedAt'] as Timestamp).toDate()
-                : DateTime.parse(data['editedAt'] as String))
-            : null,
-        replyToMessageId: data['replyToMessageId'] as String?,
-        readBy: List<String>.from(data['readBy'] as List<dynamic>? ?? []),
-        isDeleted: data['isDeleted'] as bool? ?? false,
-        isFromCurrentUser: data['isFromCurrentUser'] as bool? ?? false,
-      );
 
   final String id;
   final String chatId;
   final String senderId;
   final String senderName;
-  final String? senderAvatar;
-  final MessageType type;
   final String content;
-  final String? fileUrl;
-  final String? fileType;
+  final MessageType type;
+  final DateTime timestamp;
+  final MessageStatus status;
+  final String? replyTo;
+  final String? mediaUrl;
+  final String? thumbnailUrl;
   final String? fileName;
   final int? fileSize;
-  final String? thumbnailUrl;
-  final String? attachmentId;
-  final Map<String, dynamic>? metadata;
-  final MessageStatus status;
-  final DateTime timestamp;
-  final DateTime? editedAt;
-  final String? replyToMessageId;
-  final List<String> readBy;
-  final bool isDeleted;
-  final bool isFromCurrentUser;
+  final int? duration; // в секундах для аудио/видео
+  final Map<String, double>? location; // {lat: 0.0, lng: 0.0}
+  final Map<String, dynamic> metadata;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'chatId': chatId,
-        'senderId': senderId,
-        'senderName': senderName,
-        'senderAvatar': senderAvatar,
-        'type': type.name,
-        'content': content,
-        'fileUrl': fileUrl,
-        'fileType': fileType,
-        'fileName': fileName,
-        'fileSize': fileSize,
-        'thumbnailUrl': thumbnailUrl,
-        'attachmentId': attachmentId,
-        'metadata': metadata,
-        'status': status.name,
-        'timestamp': Timestamp.fromDate(timestamp),
-        'editedAt': editedAt != null ? Timestamp.fromDate(editedAt!) : null,
-        'replyToMessageId': replyToMessageId,
-        'readBy': readBy,
-        'isDeleted': isDeleted,
-      };
+      'chatId': chatId,
+      'senderId': senderId,
+      'senderName': senderName,
+      'content': content,
+      'type': type.name,
+      'timestamp': Timestamp.fromDate(timestamp),
+      'status': status.name,
+      'replyTo': replyTo,
+      'mediaUrl': mediaUrl,
+      'thumbnailUrl': thumbnailUrl,
+      'fileName': fileName,
+      'fileSize': fileSize,
+      'duration': duration,
+      'location': location,
+      'metadata': metadata,
+    };
 
   /// Создать копию с изменениями
   ChatMessage copyWith({
@@ -173,128 +115,75 @@ class ChatMessage {
     String? chatId,
     String? senderId,
     String? senderName,
-    String? senderAvatar,
-    MessageType? type,
     String? content,
-    String? fileUrl,
-    String? fileType,
+    MessageType? type,
+    DateTime? timestamp,
+    MessageStatus? status,
+    String? replyTo,
+    String? mediaUrl,
+    String? thumbnailUrl,
     String? fileName,
     int? fileSize,
-    String? thumbnailUrl,
-    String? attachmentId,
+    int? duration,
+    Map<String, double>? location,
     Map<String, dynamic>? metadata,
-    MessageStatus? status,
-    DateTime? timestamp,
-    DateTime? editedAt,
-    String? replyToMessageId,
-    List<String>? readBy,
-    bool? isDeleted,
-  }) =>
-      ChatMessage(
-        id: id ?? this.id,
-        chatId: chatId ?? this.chatId,
-        senderId: senderId ?? this.senderId,
-        senderName: senderName ?? this.senderName,
-        senderAvatar: senderAvatar ?? this.senderAvatar,
-        type: type ?? this.type,
-        content: content ?? this.content,
-        fileUrl: fileUrl ?? this.fileUrl,
-        fileType: fileType ?? this.fileType,
-        fileName: fileName ?? this.fileName,
-        fileSize: fileSize ?? this.fileSize,
-        thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-        attachmentId: attachmentId ?? this.attachmentId,
-        metadata: metadata ?? this.metadata,
-        status: status ?? this.status,
-        timestamp: timestamp ?? this.timestamp,
-        editedAt: editedAt ?? this.editedAt,
-        replyToMessageId: replyToMessageId ?? this.replyToMessageId,
-        readBy: readBy ?? this.readBy,
-        isDeleted: isDeleted ?? this.isDeleted,
-      );
+  }) => ChatMessage(
+      id: id ?? this.id,
+      chatId: chatId ?? this.chatId,
+      senderId: senderId ?? this.senderId,
+      senderName: senderName ?? this.senderName,
+      content: content ?? this.content,
+      type: type ?? this.type,
+      timestamp: timestamp ?? this.timestamp,
+      status: status ?? this.status,
+      replyTo: replyTo ?? this.replyTo,
+      mediaUrl: mediaUrl ?? this.mediaUrl,
+      thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+      fileName: fileName ?? this.fileName,
+      fileSize: fileSize ?? this.fileSize,
+      duration: duration ?? this.duration,
+      location: location ?? this.location,
+      metadata: metadata ?? this.metadata,
+    );
 
-  /// Проверить, является ли сообщение вложением
-  bool get isAttachment =>
-      type != MessageType.text && type != MessageType.system;
+  /// Проверить, является ли сообщение медиа
+  bool get isMedia => type == MessageType.image ||
+           type == MessageType.video ||
+           type == MessageType.audio ||
+           type == MessageType.document ||
+           type == MessageType.file;
 
-  /// Проверить, является ли сообщение медиафайлом
-  bool get isMedia =>
-      type == MessageType.image ||
-      type == MessageType.video ||
-      type == MessageType.audio;
+  /// Проверить, является ли сообщение текстовым
+  bool get isText => type == MessageType.text;
 
-  /// Проверить, является ли сообщение файлом
-  bool get isFile => type == MessageType.file;
+  /// Проверить, является ли сообщение системным
+  bool get isSystem => type == MessageType.system;
 
   /// Получить размер файла в читаемом формате
   String get formattedFileSize {
     if (fileSize == null) return '';
-
-    final bytes = fileSize!;
-    if (bytes < 1024) return '$bytes B';
-    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-    if (bytes < 1024 * 1024 * 1024) {
-      return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+    
+    const units = ['B', 'KB', 'MB', 'GB'];
+    var size = fileSize!;
+    var unitIndex = 0;
+    
+    while (size >= 1024 && unitIndex < units.length - 1) {
+      size ~/= 1024;
+      unitIndex++;
     }
-    return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
+    
+    return '$size ${units[unitIndex]}';
   }
 
-  /// Получить иконку для типа сообщения
-  String get typeIcon {
-    switch (type) {
-      case MessageType.text:
-        return '💬';
-      case MessageType.image:
-        return '🖼️';
-      case MessageType.video:
-        return '🎥';
-      case MessageType.audio:
-        return '🎵';
-      case MessageType.file:
-        return '📎';
-      case MessageType.document:
-        return '📄';
-      case MessageType.attachment:
-        return '📎';
-      case MessageType.location:
-        return '📍';
-      case MessageType.system:
-        return 'ℹ️';
-    }
+  /// Получить длительность в читаемом формате
+  String get formattedDuration {
+    if (duration == null) return '';
+    
+    final minutes = duration! ~/ 60;
+    final seconds = duration! % 60;
+    
+    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
-
-  /// Получить название типа сообщения
-  String get typeName {
-    switch (type) {
-      case MessageType.text:
-        return 'Текст';
-      case MessageType.image:
-        return 'Изображение';
-      case MessageType.video:
-        return 'Видео';
-      case MessageType.audio:
-        return 'Аудио';
-      case MessageType.file:
-        return 'Файл';
-      case MessageType.document:
-        return 'Документ';
-      case MessageType.attachment:
-        return 'Вложение';
-      case MessageType.location:
-        return 'Местоположение';
-      case MessageType.system:
-        return 'Системное';
-    }
-  }
-
-  /// Проверить, прочитано ли сообщение пользователем
-  bool isReadBy(String userId) => readBy.contains(userId);
-
-  /// Проверить, является ли сообщение ответом
-  bool get isReply => replyToMessageId != null;
-
-  /// Проверить, отредактировано ли сообщение
-  bool get isEdited => editedAt != null;
 
   @override
   bool operator ==(Object other) {
@@ -306,195 +195,5 @@ class ChatMessage {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() =>
-      'ChatMessage(id: $id, type: $type, content: $content, sender: $senderName)';
-}
-
-/// Модель чата
-class Chat {
-  const Chat({
-    required this.id,
-    required this.name,
-    this.description,
-    this.avatar,
-    required this.participants,
-    required this.participantNames,
-    required this.participantAvatars,
-    this.lastMessageId,
-    this.lastMessageContent,
-    this.lastMessageType,
-    this.lastMessageTime,
-    this.lastMessageSenderId,
-    this.unreadCount = 0,
-    required this.createdAt,
-    required this.updatedAt,
-    this.isGroup = false,
-    this.createdBy,
-    this.settings,
-  });
-
-  /// Создать чат из документа Firestore
-  factory Chat.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data()! as Map<String, dynamic>;
-
-    return Chat(
-      id: doc.id,
-      name: data['name'] as String? ?? '',
-      description: data['description'] as String?,
-      avatar: data['avatar'] as String?,
-      participants:
-          List<String>.from(data['participants'] as List<dynamic>? ?? []),
-      participantNames: Map<String, String>.from(
-        data['participantNames'] as Map<dynamic, dynamic>? ?? {},
-      ),
-      participantAvatars: Map<String, String>.from(
-        data['participantAvatars'] as Map<dynamic, dynamic>? ?? {},
-      ),
-      lastMessageId: data['lastMessageId'] as String?,
-      lastMessageContent: data['lastMessageContent'] as String?,
-      lastMessageType: data['lastMessageType'] != null
-          ? MessageType.values.firstWhere(
-              (e) => e.name == data['lastMessageType'],
-              orElse: () => MessageType.text,
-            )
-          : null,
-      lastMessageTime: data['lastMessageTime'] != null
-          ? (data['lastMessageTime'] as Timestamp).toDate()
-          : null,
-      lastMessageSenderId: data['lastMessageSenderId'] as String?,
-      unreadCount: data['unreadCount'] as int? ?? 0,
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      isGroup: data['isGroup'] as bool? ?? false,
-      createdBy: data['createdBy'] as String?,
-      settings: data['settings'] as Map<String, dynamic>?,
-    );
-  }
-  final String id;
-  final String name;
-  final String? description;
-  final String? avatar;
-  final List<String> participants;
-  final Map<String, String> participantNames;
-  final Map<String, String> participantAvatars;
-  final String? lastMessageId;
-  final String? lastMessageContent;
-  final MessageType? lastMessageType;
-  final DateTime? lastMessageTime;
-  final String? lastMessageSenderId;
-  final int unreadCount;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final bool isGroup;
-  final String? createdBy;
-  final Map<String, dynamic>? settings;
-
-  /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() => {
-        'name': name,
-        'description': description,
-        'avatar': avatar,
-        'participants': participants,
-        'participantNames': participantNames,
-        'participantAvatars': participantAvatars,
-        'lastMessageId': lastMessageId,
-        'lastMessageContent': lastMessageContent,
-        'lastMessageType': lastMessageType?.name,
-        'lastMessageTime': lastMessageTime != null
-            ? Timestamp.fromDate(lastMessageTime!)
-            : null,
-        'lastMessageSenderId': lastMessageSenderId,
-        'unreadCount': unreadCount,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-        'isGroup': isGroup,
-        'createdBy': createdBy,
-        'settings': settings,
-      };
-
-  /// Создать копию с изменениями
-  Chat copyWith({
-    String? id,
-    String? name,
-    String? description,
-    String? avatar,
-    List<String>? participants,
-    Map<String, String>? participantNames,
-    Map<String, String>? participantAvatars,
-    String? lastMessageId,
-    String? lastMessageContent,
-    MessageType? lastMessageType,
-    DateTime? lastMessageTime,
-    String? lastMessageSenderId,
-    int? unreadCount,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    bool? isGroup,
-    String? createdBy,
-    Map<String, dynamic>? settings,
-  }) =>
-      Chat(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        description: description ?? this.description,
-        avatar: avatar ?? this.avatar,
-        participants: participants ?? this.participants,
-        participantNames: participantNames ?? this.participantNames,
-        participantAvatars: participantAvatars ?? this.participantAvatars,
-        lastMessageId: lastMessageId ?? this.lastMessageId,
-        lastMessageContent: lastMessageContent ?? this.lastMessageContent,
-        lastMessageType: lastMessageType ?? this.lastMessageType,
-        lastMessageTime: lastMessageTime ?? this.lastMessageTime,
-        lastMessageSenderId: lastMessageSenderId ?? this.lastMessageSenderId,
-        unreadCount: unreadCount ?? this.unreadCount,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        isGroup: isGroup ?? this.isGroup,
-        createdBy: createdBy ?? this.createdBy,
-        settings: settings ?? this.settings,
-      );
-
-  /// Получить название чата для пользователя
-  String getDisplayName(String currentUserId) {
-    if (isGroup) {
-      return name;
-    } else {
-      // Для личных чатов показываем имя собеседника
-      final otherParticipant = participants.firstWhere(
-        (id) => id != currentUserId,
-        orElse: () => participants.first,
-      );
-      return participantNames[otherParticipant] ?? 'Неизвестный пользователь';
-    }
-  }
-
-  /// Получить аватар чата для пользователя
-  String? getDisplayAvatar(String currentUserId) {
-    if (isGroup) {
-      return avatar;
-    } else {
-      // Для личных чатов показываем аватар собеседника
-      final otherParticipant = participants.firstWhere(
-        (id) => id != currentUserId,
-        orElse: () => participants.first,
-      );
-      return participantAvatars[otherParticipant];
-    }
-  }
-
-  /// Проверить, является ли пользователь участником чата
-  bool isParticipant(String userId) => participants.contains(userId);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Chat && other.id == id;
-  }
-
-  @override
-  int get hashCode => id.hashCode;
-
-  @override
-  String toString() =>
-      'Chat(id: $id, name: $name, participants: ${participants.length})';
+  String toString() => 'ChatMessage(id: $id, senderId: $senderId, content: $content, type: $type, status: $status)';
 }

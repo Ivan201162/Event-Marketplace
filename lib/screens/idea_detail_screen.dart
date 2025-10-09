@@ -2,559 +2,664 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/event_idea.dart';
-import '../models/idea_comment.dart';
+import '../providers/auth_providers.dart';
 import '../services/event_ideas_service.dart';
-import '../services/idea_booking_service.dart';
-import '../widgets/idea_comment_widget.dart';
+import 'share_idea_screen.dart';
+import 'video_reels_viewer.dart';
 
-/// Экран детального просмотра идеи
 class IdeaDetailScreen extends ConsumerStatefulWidget {
-  const IdeaDetailScreen({
-    super.key,
-    required this.idea,
-    this.userId,
-  });
 
+  const IdeaDetailScreen({super.key, required this.idea});
   final EventIdea idea;
-  final String? userId;
 
   @override
   ConsumerState<IdeaDetailScreen> createState() => _IdeaDetailScreenState();
 }
 
 class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late TabController _tabController;
   final EventIdeasService _ideasService = EventIdeasService();
-  final IdeaBookingService _bookingService = IdeaBookingService();
-
-  List<IdeaComment> _comments = [];
-  List<EventIdea> _similarIdeas = [];
-  bool _isLoadingComments = true;
-  bool _isLoadingSimilar = true;
-  bool _isLiked = false;
-  bool _isFavorite = false;
-  final bool _isAttachedToBooking = false;
+  final TextEditingController _commentController = TextEditingController();
+  bool _isCommenting = false;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    _loadData();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _commentController.dispose();
     super.dispose();
   }
 
-  Future<void> _loadData() async {
-    await Future.wait([
-      _loadComments(),
-      _loadSimilarIdeas(),
-      _loadUserInteractions(),
-    ]);
-  }
-
-  Future<void> _loadComments() async {
-    try {
-      final comments = await _ideasService.getIdeaComments(widget.idea.id);
-      setState(() {
-        _comments = comments;
-        _isLoadingComments = false;
-      });
-    } on Exception {
-      setState(() {
-        _isLoadingComments = false;
-      });
-    }
-  }
-
-  Future<void> _loadSimilarIdeas() async {
-    try {
-      final ideas = await _ideasService.getSimilarIdeas(widget.idea.id);
-      setState(() {
-        _similarIdeas = ideas;
-        _isLoadingSimilar = false;
-      });
-    } on Exception {
-      setState(() {
-        _isLoadingSimilar = false;
-      });
-    }
-  }
-
-  Future<void> _loadUserInteractions() async {
-    if (widget.userId == null) return;
-
-    try {
-      final futures = await Future.wait([
-        _ideasService.isIdeaLiked(widget.idea.id, widget.userId!),
-        _ideasService.isIdeaInFavorites(widget.idea.id, widget.userId!),
-      ]);
-
-      setState(() {
-        _isLiked = futures[0];
-        _isFavorite = futures[1];
-      });
-    } on Exception {
-      // Игнорируем ошибки
-    }
-  }
-
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: Text(widget.idea.title),
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          foregroundColor: Theme.of(context).colorScheme.onSurface,
-          actions: [
-            IconButton(
-              onPressed: _toggleFavorite,
-              icon: Icon(
-                _isFavorite ? Icons.favorite : Icons.favorite_border,
-                color: _isFavorite ? Colors.red : null,
-              ),
-            ),
-            IconButton(
-              onPressed: _shareIdea,
-              icon: const Icon(Icons.share),
-            ),
-            PopupMenuButton<String>(
-              onSelected: _handleMenuAction,
-              itemBuilder: (context) => [
-                const PopupMenuItem(
-                  value: 'attach_to_booking',
-                  child: Row(
-                    children: [
-                      Icon(Icons.attach_file),
-                      SizedBox(width: 8),
-                      Text('Прикрепить к заявке'),
-                    ],
-                  ),
-                ),
-                const PopupMenuItem(
-                  value: 'report',
-                  child: Row(
-                    children: [
-                      Icon(Icons.report),
-                      SizedBox(width: 8),
-                      Text('Пожаловаться'),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        body: Column(
-          children: [
-            // Изображение
-            AspectRatio(
-              aspectRatio: 16 / 9,
-              child: Image.network(
-                widget.idea.imageUrl,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                  child: Icon(
-                    Icons.image_not_supported,
-                    size: 64,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ),
-            ),
+  Widget build(BuildContext context) {
+    final currentUser = ref.watch(currentUserProvider);
 
-            // Контент
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  _buildDetailsTab(),
-                  _buildCommentsTab(),
-                ],
-              ),
-            ),
-          ],
-        ),
-        bottomNavigationBar: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Детали', icon: Icon(Icons.info)),
-            Tab(text: 'Комментарии', icon: Icon(Icons.comment)),
-          ],
-        ),
-      );
-
-  Widget _buildDetailsTab() => SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Заголовок и категория
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    widget.idea.title,
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                ),
-                Chip(
-                  label: Text(widget.idea.category.displayName),
-                  avatar: Text(widget.idea.category.emoji),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 12),
-
-            // Описание
-            Text(
-              widget.idea.description,
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-
-            const SizedBox(height: 16),
-
-            // Детали
-            _buildIdeaDetails(),
-
-            const SizedBox(height: 24),
-
-            // Теги
-            if (widget.idea.tags.isNotEmpty) ...[
-              Text(
-                'Теги',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                children: widget.idea.tags
-                    .map(
-                      (tag) => Chip(
-                        label: Text('#$tag'),
-                        backgroundColor:
-                            Theme.of(context).colorScheme.primaryContainer,
-                      ),
-                    )
-                    .toList(),
-              ),
-              const SizedBox(height: 24),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Идея'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: _shareIdea,
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          // Медиа контент
+          _buildMediaContent(),
+          
+          // Информация об идее
+          _buildIdeaInfo(),
+          
+          // Табы (комментарии и детали)
+          TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(text: 'Комментарии'),
+              Tab(text: 'Детали'),
             ],
+          ),
+          
+          // Содержимое табов
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                _buildCommentsTab(),
+                _buildDetailsTab(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-            // Похожие идеи
-            if (_similarIdeas.isNotEmpty) ...[
-              Text(
-                'Похожие идеи',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                height: 200,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _similarIdeas.length,
-                  itemBuilder: (context, index) {
-                    final idea = _similarIdeas[index];
-                    return Container(
-                      width: 150,
-                      margin: const EdgeInsets.only(right: 12),
-                      child: Card(
-                        clipBehavior: Clip.antiAlias,
-                        child: InkWell(
-                          onTap: () => _navigateToIdea(idea),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Image.network(
-                                  idea.imageUrl,
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Container(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .surfaceContainerHighest,
-                                    child: Icon(
-                                      Icons.image_not_supported,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurfaceVariant,
-                                    ),
-                                  ),
+  Widget _buildMediaContent() => Container(
+      height: 300,
+      width: double.infinity,
+      color: Colors.black,
+      child: Stack(
+        children: [
+          if (widget.idea.mediaUrl?.isNotEmpty ?? false)
+            widget.idea.isVideo ?? false
+                ? Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Image.network(
+                        widget.idea.mediaUrl!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                            color: Colors.grey[800],
+                            child: const Icon(
+                              Icons.video_library,
+                              size: 80,
+                              color: Colors.white,
+                            ),
+                          ),
+                      ),
+                      Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => VideoReelsViewer(
+                                  initialIdea: widget.idea,
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: Text(
-                                  idea.title,
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: const BoxDecoration(
+                              color: Colors.black54,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.play_arrow,
+                              color: Colors.white,
+                              size: 60,
+                            ),
                           ),
                         ),
                       ),
-                    );
+                    ],
+                  )
+                : Image.network(
+                    widget.idea.mediaUrl!,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                        color: Colors.grey[800],
+                        child: const Icon(
+                          Icons.image,
+                          size: 80,
+                          color: Colors.white,
+                        ),
+                      ),
+                  )
+          else
+            Container(
+              color: Colors.grey[800],
+              child: Icon(
+                widget.idea.isVideo ?? false ? Icons.video_library : Icons.image,
+                size: 80,
+                color: Colors.white,
+              ),
+            ),
+
+          // Кнопки действий
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: Column(
+              children: [
+                _buildActionButton(
+                  icon: Icons.favorite_border,
+                  color: Colors.white,
+                  count: widget.idea.likesCount ?? 0,
+                  onTap: _toggleLike,
+                ),
+                const SizedBox(height: 16),
+                _buildActionButton(
+                  icon: Icons.comment,
+                  color: Colors.white,
+                  count: widget.idea.commentsCount ?? 0,
+                  onTap: () {
+                    _tabController.animateTo(0);
                   },
                 ),
-              ),
-            ],
-          ],
-        ),
-      );
-
-  Widget _buildCommentsTab() => Column(
-        children: [
-          // Поле для добавления комментария
-          if (widget.userId != null)
-            Container(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      decoration: const InputDecoration(
-                        hintText: 'Добавить комментарий...',
-                        border: OutlineInputBorder(),
-                      ),
-                      onSubmitted: _addComment,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    onPressed: () => _addComment(''),
-                    icon: const Icon(Icons.send),
-                  ),
-                ],
-              ),
+                const SizedBox(height: 16),
+                _buildActionButton(
+                  icon: Icons.bookmark_border,
+                  color: Colors.white,
+                  count: 0,
+                  onTap: _toggleSave,
+                ),
+                const SizedBox(height: 16),
+                _buildActionButton(
+                  icon: Icons.share,
+                  color: Colors.white,
+                  count: widget.idea.sharesCount ?? 0,
+                  onTap: _shareIdea,
+                ),
+              ],
             ),
-
-          // Список комментариев
-          Expanded(
-            child: _isLoadingComments
-                ? const Center(child: CircularProgressIndicator())
-                : _comments.isEmpty
-                    ? _buildEmptyCommentsState()
-                    : ListView.builder(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: _comments.length,
-                        itemBuilder: (context, index) {
-                          final comment = _comments[index];
-                          return IdeaCommentWidget(
-                            comment: comment,
-                            onLike: () => _toggleCommentLike(comment),
-                            onReply: () => _replyToComment(comment),
-                          );
-                        },
-                      ),
           ),
         ],
-      );
+      ),
+    );
 
-  Widget _buildIdeaDetails() => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Детали',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 12),
-              if (widget.idea.budget != null)
-                _buildDetailRow(
-                  'Бюджет',
-                  '${widget.idea.budget!.toStringAsFixed(0)} ₽',
-                ),
-              if (widget.idea.duration != null)
-                _buildDetailRow(
-                  'Длительность',
-                  '${widget.idea.duration} часов',
-                ),
-              if (widget.idea.guestCount != null)
-                _buildDetailRow(
-                  'Количество гостей',
-                  '${widget.idea.guestCount} человек',
-                ),
-              if (widget.idea.location != null)
-                _buildDetailRow('Локация', widget.idea.location!),
-              if (widget.idea.season != null)
-                _buildDetailRow('Сезон', widget.idea.season!),
-              if (widget.idea.style != null)
-                _buildDetailRow('Стиль', widget.idea.style!),
-              if (widget.idea.colorScheme != null &&
-                  widget.idea.colorScheme!.isNotEmpty)
-                _buildDetailRow(
-                  'Цветовая схема',
-                  widget.idea.colorScheme!.join(', '),
-                ),
-              if (widget.idea.inspiration != null)
-                _buildDetailRow('Вдохновение', widget.idea.inspiration!),
-              _buildDetailRow('Автор', widget.idea.createdBy),
-              _buildDetailRow(
-                'Дата создания',
-                _formatDate(widget.idea.createdAt),
-              ),
-              _buildDetailRow('Просмотры', widget.idea.views.toString()),
-              _buildDetailRow('Лайки', widget.idea.likes.toString()),
-              _buildDetailRow(
-                'Комментарии',
-                widget.idea.commentsCount.toString(),
-              ),
-            ],
-          ),
+  Widget _buildActionButton({
+    required IconData icon,
+    required Color color,
+    required int count,
+    required VoidCallback onTap,
+  }) => GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: const BoxDecoration(
+          color: Colors.black54,
+          shape: BoxShape.circle,
         ),
-      );
-
-  Widget _buildDetailRow(String label, String value) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 120,
-              child: Text(
-                label,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
-              ),
-            ),
-            Expanded(
-              child: Text(
-                value,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildEmptyCommentsState() => Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.comment_outlined,
-              size: 64,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-            const SizedBox(height: 16),
+            Icon(icon, color: color, size: 24),
+            const SizedBox(height: 4),
             Text(
-              'Пока нет комментариев',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Будьте первым, кто оставит комментарий',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+              count.toString(),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
-        ),
-      );
-
-  Future<void> _toggleLike() async {
-    if (widget.userId == null) return;
-
-    try {
-      if (_isLiked) {
-        await _ideasService.unlikeIdea(widget.idea.id, widget.userId!);
-      } else {
-        await _ideasService.likeIdea(widget.idea.id, widget.userId!);
-      }
-
-      setState(() {
-        _isLiked = !_isLiked;
-      });
-    } on Exception catch (e) {
-      _showErrorSnackBar('Ошибка изменения лайка: $e');
-    }
-  }
-
-  Future<void> _toggleFavorite() async {
-    if (widget.userId == null) return;
-
-    try {
-      if (_isFavorite) {
-        await _ideasService.removeFromFavorites(widget.idea.id, widget.userId!);
-      } else {
-        await _ideasService.addToFavorites(widget.idea.id, widget.userId!);
-      }
-
-      setState(() {
-        _isFavorite = !_isFavorite;
-      });
-    } on Exception catch (e) {
-      _showErrorSnackBar('Ошибка изменения избранного: $e');
-    }
-  }
-
-  void _shareIdea() {
-    // TODO(developer): Реализовать шаринг
-    _showErrorSnackBar('Функция шаринга будет добавлена');
-  }
-
-  void _handleMenuAction(String action) {
-    switch (action) {
-      case 'attach_to_booking':
-        _attachToBooking();
-        break;
-      case 'report':
-        _reportIdea();
-        break;
-    }
-  }
-
-  void _attachToBooking() {
-    // TODO(developer): Реализовать прикрепление к заявке
-    _showErrorSnackBar('Функция прикрепления к заявке будет добавлена');
-  }
-
-  void _reportIdea() {
-    // TODO(developer): Реализовать жалобу
-    _showErrorSnackBar('Функция жалоб будет добавлена');
-  }
-
-  void _addComment(String content) {
-    if (widget.userId == null || content.trim().isEmpty) return;
-
-    // TODO(developer): Реализовать добавление комментария
-    _showErrorSnackBar('Функция комментариев будет добавлена');
-  }
-
-  void _toggleCommentLike(IdeaComment comment) {
-    // TODO(developer): Реализовать лайк комментария
-    _showErrorSnackBar('Функция лайков комментариев будет добавлена');
-  }
-
-  void _replyToComment(IdeaComment comment) {
-    // TODO(developer): Реализовать ответ на комментарий
-    _showErrorSnackBar('Функция ответов на комментарии будет добавлена');
-  }
-
-  void _navigateToIdea(EventIdea idea) {
-    Navigator.push(
-      context,
-      MaterialPageRoute<void>(
-        builder: (context) => IdeaDetailScreen(
-          idea: idea,
-          userId: widget.userId,
         ),
       ),
     );
+
+  Widget _buildIdeaInfo() => Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Заголовок
+          Text(
+            widget.idea.title,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+
+          // Автор
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 16,
+                backgroundImage: widget.idea.authorAvatar != null
+                    ? NetworkImage(widget.idea.authorAvatar!)
+                    : null,
+                child: widget.idea.authorAvatar == null
+                    ? const Icon(Icons.person, size: 16)
+                    : null,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                widget.idea.authorName ?? 'Неизвестный автор',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                _formatDate(widget.idea.createdAt),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+
+          // Описание
+          if (widget.idea.description.isNotEmpty) ...[
+            Text(
+              widget.idea.description,
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 12),
+          ],
+
+          // Теги
+          if (widget.idea.tags.isNotEmpty) ...[
+            Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: widget.idea.tags.map((tag) => Chip(
+                  label: Text('#$tag'),
+                  backgroundColor: Colors.grey[200],
+                  labelStyle: const TextStyle(fontSize: 12),
+                ),).toList(),
+            ),
+            const SizedBox(height: 12),
+          ],
+
+          // Категория
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Text(
+              widget.idea.category ?? 'Без категории',
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+  Widget _buildCommentsTab() => FutureBuilder<List<IdeaComment>>(
+      future: _ideasService.getIdeaComments(widget.idea.id),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Center(
+            child: Text('Ошибка загрузки комментариев: ${snapshot.error}'),
+          );
+        }
+
+        final comments = snapshot.data ?? [];
+
+        return Column(
+          children: [
+            // Поле для добавления комментария
+            _buildCommentInput(),
+            
+            // Список комментариев
+            Expanded(
+              child: comments.isEmpty
+                  ? const Center(
+                      child: Text('Пока нет комментариев'),
+                    )
+                  : ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: comments.length,
+                      itemBuilder: (context, index) {
+                        final comment = comments[index];
+                        return _buildCommentItem(comment);
+                      },
+                    ),
+            ),
+          ],
+        );
+      },
+    );
+
+  Widget _buildCommentInput() {
+    final currentUser = ref.watch(currentUserProvider);
+
+    return currentUser.when(
+      data: (user) {
+        if (user == null) {
+          return Container(
+            padding: const EdgeInsets.all(16),
+            child: const Text('Войдите в аккаунт, чтобы комментировать'),
+          );
+        }
+
+        return Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(color: Colors.grey[300]!),
+            ),
+          ),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 16,
+                backgroundImage: user.avatar != null
+                    ? NetworkImage(user.avatar!)
+                    : null,
+                child: user.avatar == null
+                    ? const Icon(Icons.person, size: 16)
+                    : null,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: TextField(
+                  controller: _commentController,
+                  decoration: const InputDecoration(
+                    hintText: 'Добавить комментарий...',
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                  ),
+                  maxLines: null,
+                ),
+              ),
+              const SizedBox(width: 8),
+              IconButton(
+                onPressed: _isCommenting ? null : () => _addComment(user),
+                icon: _isCommenting
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.send),
+              ),
+            ],
+          ),
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
+    );
+  }
+
+  Widget _buildCommentItem(IdeaComment comment) => Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(
+            radius: 16,
+            backgroundImage: comment.authorAvatar != null
+                ? NetworkImage(comment.authorAvatar!)
+                : null,
+            child: comment.authorAvatar == null
+                ? const Icon(Icons.person, size: 16)
+                : null,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      comment.authorName ?? 'Неизвестный',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      _formatDate(comment.createdAt),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  comment.text,
+                  style: const TextStyle(fontSize: 14),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => _toggleCommentLike(comment),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.favorite_border,
+                            size: 16,
+                            color: Colors.grey,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            comment.likes.toString(),
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+
+  Widget _buildDetailsTab() => SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Местоположение
+          if (widget.idea.location != null) ...[
+            _buildDetailItem(
+              icon: Icons.location_on,
+              title: 'Местоположение',
+              value: widget.idea.location!,
+            ),
+            const SizedBox(height: 16),
+          ],
+
+          // Цена
+          if (widget.idea.price != null) ...[
+            _buildDetailItem(
+              icon: Icons.attach_money,
+              title: 'Цена',
+              value: '${widget.idea.price!.toStringAsFixed(0)} ${widget.idea.priceCurrency ?? 'RUB'}',
+            ),
+            const SizedBox(height: 16),
+          ],
+
+          // Длительность
+          if (widget.idea.duration != null) ...[
+            _buildDetailItem(
+              icon: Icons.access_time,
+              title: 'Длительность',
+              value: '${widget.idea.duration} минут',
+            ),
+            const SizedBox(height: 16),
+          ],
+
+          // Навыки
+          if (widget.idea.requiredSkills?.isNotEmpty ?? false) ...[
+            const Text(
+              'Требуемые навыки:',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: widget.idea.requiredSkills!.map((skill) => Chip(
+                  label: Text(skill),
+                  backgroundColor: Colors.blue[100],
+                  labelStyle: const TextStyle(fontSize: 12),
+                ),).toList(),
+            ),
+            const SizedBox(height: 16),
+          ],
+
+          // Статистика
+          _buildDetailItem(
+            icon: Icons.favorite,
+            title: 'Лайки',
+            value: (widget.idea.likesCount ?? 0).toString(),
+          ),
+          const SizedBox(height: 8),
+          _buildDetailItem(
+            icon: Icons.comment,
+            title: 'Комментарии',
+            value: (widget.idea.commentsCount ?? 0).toString(),
+          ),
+          const SizedBox(height: 8),
+          _buildDetailItem(
+            icon: Icons.bookmark,
+            title: 'Сохранения',
+            value: (widget.idea.savesCount ?? 0).toString(),
+          ),
+          const SizedBox(height: 8),
+          _buildDetailItem(
+            icon: Icons.share,
+            title: 'Репосты',
+            value: (widget.idea.sharesCount ?? 0).toString(),
+          ),
+        ],
+      ),
+    );
+
+  Widget _buildDetailItem({
+    required IconData icon,
+    required String title,
+    required String value,
+  }) => Row(
+      children: [
+        Icon(icon, size: 20, color: Colors.grey[600]),
+        const SizedBox(width: 12),
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const Spacer(),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.grey[600],
+          ),
+        ),
+      ],
+    );
+
+  Future<void> _toggleLike() async {
+    final currentUser = ref.read(currentUserProvider).value;
+    if (currentUser == null) return;
+
+    // await _ideasService.toggleLike(widget.idea.id, currentUser.id);
+  }
+
+  Future<void> _toggleSave() async {
+    final currentUser = ref.read(currentUserProvider).value;
+    if (currentUser == null) return;
+
+    // await _ideasService.toggleSave(widget.idea.id, currentUser.id);
+  }
+
+  Future<void> _shareIdea() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ShareIdeaScreen(idea: widget.idea),
+      ),
+    );
+  }
+
+  Future<void> _addComment(user) async {
+    if (_commentController.text.trim().isEmpty) return;
+
+    setState(() {
+      _isCommenting = true;
+    });
+
+    try {
+      await _ideasService.addComment(
+        ideaId: widget.idea.id,
+        userId: user.uid,
+        userName: user.name ?? 'Пользователь',
+        userAvatar: user.avatar,
+        content: _commentController.text.trim(),
+      );
+
+      _commentController.clear();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Ошибка добавления комментария: $e')),
+      );
+    } finally {
+      setState(() {
+        _isCommenting = false;
+      });
+    }
+  }
+
+  Future<void> _toggleCommentLike(IdeaComment comment) async {
+    final currentUser = ref.read(currentUserProvider).value;
+    if (currentUser == null) return;
+
+    // await _ideasService.toggleCommentLike(comment.id, currentUser.id);
   }
 
   String _formatDate(DateTime date) {
@@ -562,23 +667,13 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
     final difference = now.difference(date);
 
     if (difference.inDays > 0) {
-      return '${difference.inDays} дн. назад';
+      return '${difference.inDays}д назад';
     } else if (difference.inHours > 0) {
-      return '${difference.inHours} ч. назад';
+      return '${difference.inHours}ч назад';
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes} мин. назад';
+      return '${difference.inMinutes}м назад';
     } else {
-      return 'Только что';
+      return 'только что';
     }
-  }
-
-  void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Theme.of(context).colorScheme.error,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
   }
 }

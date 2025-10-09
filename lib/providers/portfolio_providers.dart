@@ -85,7 +85,7 @@ class PortfolioUploadNotifier extends StateNotifier<PortfolioUploadState> {
       } else {
         throw Exception('Не удалось загрузить изображение');
       }
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(
         isUploading: false,
         errorMessage: e.toString(),
@@ -130,7 +130,7 @@ class PortfolioUploadNotifier extends StateNotifier<PortfolioUploadState> {
       } else {
         throw Exception('Не удалось загрузить видео');
       }
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(
         isUploading: false,
         errorMessage: e.toString(),
@@ -175,7 +175,7 @@ class PortfolioUploadNotifier extends StateNotifier<PortfolioUploadState> {
       } else {
         throw Exception('Не удалось загрузить документ');
       }
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(
         isUploading: false,
         errorMessage: e.toString(),
@@ -192,7 +192,7 @@ class PortfolioUploadNotifier extends StateNotifier<PortfolioUploadState> {
       final newItems =
           state.uploadedItems.where((item) => item.id != itemId).toList();
       state = state.copyWith(uploadedItems: newItems);
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(errorMessage: e.toString());
     }
   }
@@ -210,7 +210,7 @@ class PortfolioUploadNotifier extends StateNotifier<PortfolioUploadState> {
           .map((item) => item.id == updatedItem.id ? updatedItem : item)
           .toList();
       state = state.copyWith(uploadedItems: newItems);
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(errorMessage: e.toString());
     }
   }

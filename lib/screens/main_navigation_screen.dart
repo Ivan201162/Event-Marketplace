@@ -7,7 +7,8 @@ import '../widgets/modern_navigation_bar.dart';
 import 'bookings_screen_full.dart';
 import 'chat_list_screen.dart';
 import 'customer_profile_screen.dart';
-import 'feed_screen.dart';
+import 'enhanced_feed_screen.dart';
+import 'enhanced_ideas_screen.dart';
 import 'home_screen.dart';
 
 /// Главный экран с навигацией
@@ -37,7 +38,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
       icon: Icons.newspaper_outlined,
       activeIcon: Icons.newspaper,
       label: 'Лента',
-      screen: FeedScreen(),
+      screen: EnhancedFeedScreen(),
     ),
     const NavigationItem(
       icon: Icons.assignment_outlined,
@@ -52,10 +53,10 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
       screen: ChatListScreen(),
     ),
     const NavigationItem(
-      icon: Icons.person_outline,
-      activeIcon: Icons.person,
-      label: 'Профиль',
-      screen: ProfileScreen(),
+      icon: Icons.lightbulb_outline,
+      activeIcon: Icons.lightbulb,
+      label: 'Идеи',
+      screen: EnhancedIdeasScreen(),
     ),
   ];
 
@@ -169,12 +170,11 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
             // TODO: Реализовать новый чат
           },
         );
-      case 4: // Профиль
+      case 4: // Идеи
         return ModernFAB(
-          icon: Icons.edit,
-          tooltip: 'Редактировать профиль',
+          tooltip: 'Добавить идею',
           onPressed: () {
-            // TODO: Реализовать редактирование профиля
+            Navigator.pushNamed(context, '/add-idea');
           },
         );
       default:
@@ -223,7 +223,7 @@ class SearchScreen extends StatelessWidget {
               Text(
                 'Поиск специалистов и услуг',
                 style: TextStyle(fontSize: 18),
-              ),
+                ),
             ],
           ),
         ),

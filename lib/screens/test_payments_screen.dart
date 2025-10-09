@@ -46,7 +46,7 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
         _bookings = bookings;
         _isLoading = false;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _error = e.toString();
         _isLoading = false;
@@ -289,7 +289,7 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
 
       _showSuccessMessage('Предоплата создана: ${payment.formattedAmount}');
       _loadData();
-    } catch (e) {
+    } on Exception catch (e) {
       _showErrorMessage('Ошибка создания предоплаты: $e');
     }
   }
@@ -310,7 +310,7 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
         'Окончательный платеж создан: ${payment.formattedAmount}',
       );
       _loadData();
-    } catch (e) {
+    } on Exception catch (e) {
       _showErrorMessage('Ошибка создания окончательного платежа: $e');
     }
   }
@@ -335,7 +335,7 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
 
       _showSuccessMessage('Возврат создан: ${refund.formattedAmount}');
       _loadData();
-    } catch (e) {
+    } on Exception catch (e) {
       _showErrorMessage('Ошибка создания возврата: $e');
     }
   }
@@ -360,7 +360,7 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
 
       _showSuccessMessage('Статус обновлен: ${newStatus.statusName}');
       _loadData();
-    } catch (e) {
+    } on Exception catch (e) {
       _showErrorMessage('Ошибка обновления статуса: $e');
     }
   }
@@ -378,7 +378,7 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
         'Расходы: ${report.formattedExpenses}\n'
         'Чистый доход: ${report.formattedNetIncome}',
       );
-    } catch (e) {
+    } on Exception catch (e) {
       _showErrorMessage('Ошибка создания отчета: $e');
     }
   }
@@ -420,7 +420,7 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
 
       _showSuccessMessage('Бронирование создано: ${booking.id}');
       _loadData();
-    } catch (e) {
+    } on Exception catch (e) {
       _showErrorMessage('Ошибка создания бронирования: $e');
     }
   }

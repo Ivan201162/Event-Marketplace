@@ -43,7 +43,7 @@ class BookingService {
 
       final docRef = await _firestore.collection('bookings').add(bookingData);
       return docRef.id;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка создания заявки: $e');
     }
   }
@@ -51,14 +51,14 @@ class BookingService {
   /// Обновить статус заявки
   Future<void> updateBookingStatus(
     String bookingId,
-    BookingStatus newStatus,
+    String newStatus,
   ) async {
     try {
       await _firestore.collection('bookings').doc(bookingId).update({
-        'status': newStatus.name,
+        'status': newStatus,
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка обновления статуса заявки: $e');
     }
   }
@@ -71,7 +71,7 @@ class BookingService {
     try {
       updates['updatedAt'] = Timestamp.fromDate(DateTime.now());
       await _firestore.collection('bookings').doc(bookingId).update(updates);
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка обновления заявки: $e');
     }
   }
@@ -84,7 +84,7 @@ class BookingService {
         return Booking.fromDocument(doc);
       }
       return null;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка получения заявки: $e');
     }
   }
@@ -153,29 +153,29 @@ class BookingService {
   Future<void> deleteBooking(String bookingId) async {
     try {
       await _firestore.collection('bookings').doc(bookingId).delete();
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка удаления заявки: $e');
     }
   }
 
   /// Подтвердить заявку
   Future<void> confirmBooking(String bookingId) async {
-    await updateBookingStatus(bookingId, BookingStatus.confirmed);
+    await updateBookingStatus(bookingId, 'Подтверждено');
   }
 
   /// Отклонить заявку
   Future<void> rejectBooking(String bookingId) async {
-    await updateBookingStatus(bookingId, BookingStatus.rejected);
+    await updateBookingStatus(bookingId, 'Отклонено');
   }
 
   /// Отменить заявку
   Future<void> cancelBooking(String bookingId) async {
-    await updateBookingStatus(bookingId, BookingStatus.cancelled);
+    await updateBookingStatus(bookingId, 'Отменено');
   }
 
   /// Завершить заявку
   Future<void> completeBooking(String bookingId) async {
-    await updateBookingStatus(bookingId, BookingStatus.completed);
+    await updateBookingStatus(bookingId, 'Завершено');
   }
 
   /// Получить статистику заявок для пользователя
@@ -210,7 +210,7 @@ class BookingService {
       }
 
       return stats;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка получения статистики заявок: $e');
     }
   }
@@ -234,7 +234,7 @@ class BookingService {
       ).get();
 
       return snapshot.docs.isNotEmpty;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка проверки конфликтов заявок: $e');
     }
   }

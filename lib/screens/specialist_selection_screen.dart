@@ -273,7 +273,7 @@ class _SpecialistSelectionScreenState extends State<SpecialistSelectionScreen> {
 
         Navigator.pop(context, proposalId);
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

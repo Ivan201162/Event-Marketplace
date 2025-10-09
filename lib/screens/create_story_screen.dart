@@ -382,7 +382,7 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
           _selectedFile = File(file.path);
         });
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ошибка выбора файла: $e')),
@@ -421,7 +421,7 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
           const SnackBar(content: Text('Сторис успешно создана')),
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ошибка создания сторис: $e')),

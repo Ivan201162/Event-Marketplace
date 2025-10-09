@@ -46,7 +46,7 @@ class EventIdeaService {
 
       debugPrint('Event idea created: ${docRef.id}');
       return docRef.id;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error creating event idea: $e');
       throw Exception('Ошибка создания идеи: $e');
     }
@@ -75,7 +75,7 @@ class EventIdeaService {
 
       debugPrint('Event idea images uploaded: ${urls.length} images');
       return urls;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error uploading event idea images: $e');
       throw Exception('Ошибка загрузки изображений: $e');
     }
@@ -114,7 +114,7 @@ class EventIdeaService {
 
       final querySnapshot = await query.limit(limit).get();
       return querySnapshot.docs.map(EventIdea.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error getting all ideas: $e');
       throw Exception('Ошибка получения идей: $e');
     }
@@ -132,7 +132,7 @@ class EventIdeaService {
           .get();
 
       return snapshot.docs.map(EventIdea.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error getting user ideas: $e');
       throw Exception('Ошибка получения идей пользователя: $e');
     }
@@ -146,7 +146,7 @@ class EventIdeaService {
         return EventIdea.fromDocument(doc);
       }
       return null;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error getting idea by ID: $e');
       throw Exception('Ошибка получения идеи: $e');
     }
@@ -157,7 +157,7 @@ class EventIdeaService {
     try {
       await _firestore.collection('event_ideas').doc(ideaId).update(updates);
       debugPrint('Event idea updated: $ideaId');
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error updating event idea: $e');
       throw Exception('Ошибка обновления идеи: $e');
     }
@@ -178,7 +178,7 @@ class EventIdeaService {
       for (final imageUrl in idea.images) {
         try {
           await _storage.refFromURL(imageUrl).delete();
-        } catch (e) {
+        } on Exception catch (e) {
           debugPrint('Error deleting idea image: $e');
         }
       }
@@ -187,7 +187,7 @@ class EventIdeaService {
       await _firestore.collection('event_ideas').doc(ideaId).delete();
 
       debugPrint('Event idea deleted: $ideaId');
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error deleting event idea: $e');
       throw Exception('Ошибка удаления идеи: $e');
     }
@@ -200,7 +200,7 @@ class EventIdeaService {
         'likes': FieldValue.increment(1),
       });
       debugPrint('Event idea liked: $ideaId');
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error liking event idea: $e');
       throw Exception('Ошибка лайка идеи: $e');
     }
@@ -213,7 +213,7 @@ class EventIdeaService {
         'likes': FieldValue.increment(-1),
       });
       debugPrint('Event idea unliked: $ideaId');
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error unliking event idea: $e');
       throw Exception('Ошибка удаления лайка: $e');
     }
@@ -225,7 +225,7 @@ class EventIdeaService {
       await _firestore.collection('event_ideas').doc(ideaId).update({
         'views': FieldValue.increment(1),
       });
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error incrementing views: $e');
       // Не выбрасываем исключение, так как это не критично
     }
@@ -269,7 +269,7 @@ class EventIdeaService {
 
       debugPrint('Comment added to idea: $ideaId');
       return docRef.id;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error adding comment: $e');
       throw Exception('Ошибка добавления комментария: $e');
     }
@@ -290,7 +290,7 @@ class EventIdeaService {
           .get();
 
       return snapshot.docs.map(IdeaComment.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error getting idea comments: $e');
       throw Exception('Ошибка получения комментариев: $e');
     }
@@ -303,7 +303,7 @@ class EventIdeaService {
         'likes': FieldValue.increment(1),
       });
       debugPrint('Comment liked: $commentId');
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error liking comment: $e');
       throw Exception('Ошибка лайка комментария: $e');
     }
@@ -316,7 +316,7 @@ class EventIdeaService {
         'likes': FieldValue.increment(-1),
       });
       debugPrint('Comment unliked: $commentId');
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error unliking comment: $e');
       throw Exception('Ошибка удаления лайка: $e');
     }
@@ -343,7 +343,7 @@ class EventIdeaService {
         ..sort((a, b) => b.value.compareTo(a.value));
 
       return sortedTags.take(limit).map((entry) => entry.key).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error getting popular tags: $e');
       return [];
     }
@@ -359,7 +359,7 @@ class EventIdeaService {
       );
 
       return images.take(maxImages).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error picking images: $e');
       return [];
     }
@@ -374,7 +374,7 @@ class EventIdeaService {
         maxHeight: 1080,
         imageQuality: 85,
       );
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error taking photo: $e');
       return null;
     }

@@ -34,7 +34,7 @@ class AvailabilityService {
 
       final querySnapshot = await query.orderBy('date').get();
       return querySnapshot.docs.map(AvailabilityCalendar.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения календаря доступности: $e');
       return [];
     }
@@ -90,7 +90,7 @@ class AvailabilityService {
       });
 
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка добавления занятой даты: $e');
       return false;
     }
@@ -132,7 +132,7 @@ class AvailabilityService {
       }
 
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка добавления временного слота: $e');
       return false;
     }
@@ -170,7 +170,7 @@ class AvailabilityService {
       });
 
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка блокировки временного слота: $e');
       return false;
     }
@@ -206,7 +206,7 @@ class AvailabilityService {
       });
 
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка разблокировки временного слота: $e');
       return false;
     }
@@ -219,7 +219,7 @@ class AvailabilityService {
           '${specialistId}_${date.toIso8601String().split('T')[0]}';
       await _firestore.collection(_collectionName).doc(calendarId).delete();
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка удаления занятой даты: $e');
       return false;
     }
@@ -241,7 +241,7 @@ class AvailabilityService {
 
       final calendar = AvailabilityCalendar.fromDocument(doc);
       return calendar.isAvailableAt(dateTime);
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка проверки доступности: $e');
       return false;
     }
@@ -265,7 +265,7 @@ class AvailabilityService {
 
       final calendar = AvailabilityCalendar.fromDocument(doc);
       return calendar.getAvailableSlots(date);
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения доступных слотов: $e');
       return [];
     }
@@ -319,7 +319,7 @@ class AvailabilityService {
 
       await batch.commit();
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка массового добавления занятых дат: $e');
       return false;
     }

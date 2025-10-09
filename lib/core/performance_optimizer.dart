@@ -35,8 +35,12 @@ class PerformanceOptimizer {
 
       // Отправляем в Crashlytics в продакшене
       if (!kDebugMode) {
-        // FirebaseCrashlytics.instance.recordFlutterFatalError(details);
-        developer.log('Fatal Error: ${details.exception}', name: 'CRASH');
+        try {
+          // FirebaseCrashlytics.instance.recordFlutterFatalError(details);
+          developer.log('Fatal Error: ${details.exception}', name: 'CRASH');
+        } catch (e) {
+          developer.log('Failed to record crash: $e', name: 'CRASH');
+        }
       }
     };
 
@@ -50,8 +54,12 @@ class PerformanceOptimizer {
       );
 
       if (!kDebugMode) {
-        // FirebaseCrashlytics.instance.recordError(error, stack);
-        developer.log('Platform Error: $error', name: 'CRASH');
+        try {
+          // FirebaseCrashlytics.instance.recordError(error, stack);
+          developer.log('Platform Error: $error', name: 'CRASH');
+        } catch (e) {
+          developer.log('Failed to record platform error: $e', name: 'CRASH');
+        }
       }
 
       return true;
@@ -81,7 +89,7 @@ class PerformanceOptimizer {
     // Проверка лимита
     if (requestCount >= _maxRequestsPerMinute) {
       developer.log('Request limit exceeded for $requestType',
-          name: 'PERFORMANCE');
+          name: 'PERFORMANCE',);
       return false;
     }
 
@@ -99,7 +107,7 @@ class PerformanceOptimizer {
 
   /// Дебаунс для предотвращения частых вызовов
   void debounce(String key, VoidCallback callback,
-      {Duration delay = const Duration(milliseconds: 300)}) {
+      {Duration delay = const Duration(milliseconds: 300),}) {
     _debounceTimers[key]?.cancel();
     _debounceTimers[key] = Timer(delay, callback);
   }
@@ -200,7 +208,7 @@ extension PerformanceFutureExtension<T> on Future<T> {
 
   /// Выполнить с дебаунсом
   Future<T> withDebounce(String key,
-      {Duration delay = const Duration(milliseconds: 300)}) {
+      {Duration delay = const Duration(milliseconds: 300),}) {
     final completer = Completer<T>();
 
     PerformanceOptimizer().debounce(

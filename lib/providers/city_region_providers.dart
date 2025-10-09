@@ -69,7 +69,7 @@ final citiesInitializationProvider = FutureProvider<bool>((ref) async {
   try {
     await service.initializeRussianCities();
     return true;
-  } catch (e) {
+    } on Exception {
     return false;
   }
 });

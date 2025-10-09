@@ -50,7 +50,7 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
           _isLoading = false;
         });
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         setState(() {
           _isLoading = false;

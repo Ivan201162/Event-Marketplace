@@ -48,7 +48,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
         _isLoading = false;
         _hasMore = reviews.length == 20;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() => _isLoading = false);
       _showErrorSnackBar('Ошибка загрузки отзывов: $e');
     }
@@ -59,7 +59,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
       final stats =
           await _reviewService.getSpecialistReviewStats(widget.specialist.id);
       setState(() => _stats = stats);
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка загрузки статистики: $e');
     }
   }
@@ -80,7 +80,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
         _isLoading = false;
         _hasMore = moreReviews.length == 20;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() => _isLoading = false);
       _showErrorSnackBar('Ошибка загрузки отзывов: $e');
     }
@@ -217,7 +217,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Отзыв удален')),
                 );
-              } catch (e) {
+              } on Exception catch (e) {
                 _showErrorSnackBar('Ошибка удаления отзыва: $e');
               }
             },

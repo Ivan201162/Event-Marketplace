@@ -1,31 +1,62 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/event.dart';
+
+import '../models/specialist.dart';
 import '../services/favorites_service.dart';
+import 'auth_providers.dart';
 
 /// Провайдер сервиса избранного
-final favoritesServiceProvider =
-    Provider<FavoritesService>((ref) => FavoritesService());
+final favoritesServiceProvider = Provider<FavoritesService>((ref) => FavoritesService());
 
-/// Провайдер избранных событий пользователя
-final userFavoritesProvider =
-    StreamProvider.family<List<Event>, String>((ref, userId) {
+/// Провайдер избранных специалистов
+final favoriteSpecialistsProvider = StreamProvider<List<Specialist>>((ref) {
   final favoritesService = ref.watch(favoritesServiceProvider);
-  return favoritesService.getUserFavorites(userId);
+  final currentUser = ref.watch(currentUserProvider);
+
+  if (currentUser.value == null) {
+    return Stream.value([]);
+  }
+
+  return favoritesService.getFavoriteSpecialistsStream(currentUser.value!.uid);
 });
 
-/// Провайдер количества избранных событий пользователя
-final favoritesCountProvider =
-    StreamProvider.family<int, String>((ref, userId) {
+/// Провайдер количества избранных специалистов
+final favoritesCountProvider = FutureProvider<int>((ref) {
   final favoritesService = ref.watch(favoritesServiceProvider);
-  return favoritesService
-      .getUserFavorites(userId)
-      .map((favorites) => favorites.length);
+  final currentUser = ref.watch(currentUserProvider);
+
+  if (currentUser.value == null) {
+    return Future.value(0);
+  }
+
+  return favoritesService.getFavoritesCount(currentUser.value!.uid);
 });
 
-/// Провайдер проверки, добавлено ли событие в избранное
-final isFavoriteProvider =
-    FutureProvider.family<bool, ({String userId, String eventId})>(
-        (ref, params) {
+/// Провайдер для проверки, является ли специалист избранным
+final isFavoriteProvider = FutureProvider.family<bool, String>((ref, specialistId) {
   final favoritesService = ref.watch(favoritesServiceProvider);
-  return favoritesService.isFavorite(params.userId, params.eventId);
+  final currentUser = ref.watch(currentUserProvider);
+
+  if (currentUser.value == null) {
+    return Future.value(false);
+  }
+
+  return favoritesService.isFavorite(
+    userId: currentUser.value!.uid,
+    specialistId: specialistId,
+  );
+});
+
+/// Провайдер для переключения статуса избранного
+final toggleFavoriteProvider = FutureProvider.family<bool, String>((ref, specialistId) {
+  final favoritesService = ref.watch(favoritesServiceProvider);
+  final currentUser = ref.watch(currentUserProvider);
+
+  if (currentUser.value == null) {
+    throw Exception('Пользователь не авторизован');
+  }
+
+  return favoritesService.toggleFavorite(
+    userId: currentUser.value!.uid,
+    specialistId: specialistId,
+  );
 });

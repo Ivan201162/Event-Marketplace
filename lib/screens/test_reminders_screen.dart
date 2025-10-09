@@ -51,7 +51,7 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
         _statusMessage =
             'Загружено напоминаний: ${reminders.length}, годовщин: ${anniversaries.length}';
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _isLoading = false;
         _statusMessage = 'Ошибка загрузки: $e';
@@ -475,7 +475,7 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
 
       await _loadData();
       _showSuccessSnackBar('Напоминание о событии создано');
-    } catch (e) {
+    } on Exception catch (e) {
       _showErrorSnackBar('Ошибка создания напоминания: $e');
     } finally {
       setState(() => _isLoading = false);
@@ -496,7 +496,7 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
 
       await _loadData();
       _showSuccessSnackBar('Годовщина создана');
-    } catch (e) {
+    } on Exception catch (e) {
       _showErrorSnackBar('Ошибка создания годовщины: $e');
     } finally {
       setState(() => _isLoading = false);
@@ -516,7 +516,7 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
 
       await _loadData();
       _showSuccessSnackBar('Пользовательское напоминание создано');
-    } catch (e) {
+    } on Exception catch (e) {
       _showErrorSnackBar('Ошибка создания напоминания: $e');
     } finally {
       setState(() => _isLoading = false);
@@ -531,7 +531,7 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
 
       await _loadData();
       _showSuccessSnackBar('Ожидающие напоминания обработаны');
-    } catch (e) {
+    } on Exception catch (e) {
       _showErrorSnackBar('Ошибка обработки напоминаний: $e');
     } finally {
       setState(() => _isLoading = false);
@@ -543,7 +543,7 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
       await _reminderService.sendReminder(reminder);
       await _loadData();
       _showSuccessSnackBar('Напоминание отправлено');
-    } catch (e) {
+    } on Exception catch (e) {
       _showErrorSnackBar('Ошибка отправки напоминания: $e');
     }
   }
@@ -553,7 +553,7 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
       await _reminderService.cancelReminder(reminderId);
       await _loadData();
       _showSuccessSnackBar('Напоминание отменено');
-    } catch (e) {
+    } on Exception catch (e) {
       _showErrorSnackBar('Ошибка отмены напоминания: $e');
     }
   }
@@ -563,7 +563,7 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
       await _anniversaryService.deleteAnniversary(anniversaryId);
       await _loadData();
       _showSuccessSnackBar('Годовщина удалена');
-    } catch (e) {
+    } on Exception catch (e) {
       _showErrorSnackBar('Ошибка удаления годовщины: $e');
     }
   }
@@ -584,7 +584,7 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
 
       await _loadData();
       _showSuccessSnackBar('Все данные очищены');
-    } catch (e) {
+    } on Exception catch (e) {
       _showErrorSnackBar('Ошибка очистки данных: $e');
     } finally {
       setState(() => _isLoading = false);

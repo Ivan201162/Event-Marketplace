@@ -167,7 +167,7 @@ class RecommendationStateNotifier extends StateNotifier<RecommendationState> {
         isLoading: false,
         lastUpdated: DateTime.now(),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(
         isLoading: false,
         error: e.toString(),
@@ -179,7 +179,7 @@ class RecommendationStateNotifier extends StateNotifier<RecommendationState> {
   Future<void> markAsViewed(String recommendationId) async {
     try {
       await _service.markAsViewed(recommendationId);
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(error: e.toString());
     }
   }
@@ -188,7 +188,7 @@ class RecommendationStateNotifier extends StateNotifier<RecommendationState> {
   Future<void> markAsClicked(String recommendationId) async {
     try {
       await _service.markAsClicked(recommendationId);
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(error: e.toString());
     }
   }
@@ -197,7 +197,7 @@ class RecommendationStateNotifier extends StateNotifier<RecommendationState> {
   Future<void> markAsBooked(String recommendationId) async {
     try {
       await _service.markAsBooked(recommendationId);
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(error: e.toString());
     }
   }

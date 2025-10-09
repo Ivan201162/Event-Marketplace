@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/booking.dart';
 import 'chat_screen.dart';
 
 /// Экран деталей заявки
@@ -10,7 +9,7 @@ class BookingDetailsScreen extends ConsumerWidget {
     super.key,
     required this.booking,
   });
-  final Booking booking;
+  final Map<String, dynamic> booking;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Scaffold(
@@ -54,9 +53,9 @@ class BookingDetailsScreen extends ConsumerWidget {
       context,
       MaterialPageRoute<void>(
         builder: (context) => ChatScreen(
-          chatId: '${booking.customerId}_${booking.specialistId}',
-          otherParticipantId: booking.specialistId,
-          otherParticipantName: booking.specialistName ?? 'Специалист',
+          chatId: '${booking['customerId'] ?? ''}_${booking['specialistId'] ?? ''}',
+          otherParticipantId: booking['specialistId'] ?? '',
+          otherParticipantName: booking['specialistName'] ?? 'Специалист',
         ),
       ),
     );
@@ -104,7 +103,7 @@ class BookingDetailsScreen extends ConsumerWidget {
 /// Карточка с информацией о заявке
 class _BookingInfoCard extends StatelessWidget {
   const _BookingInfoCard({required this.booking});
-  final Booking booking;
+  final Map<String, dynamic> booking;
 
   @override
   Widget build(BuildContext context) => Card(
@@ -130,17 +129,17 @@ class _BookingInfoCard extends StatelessWidget {
               _InfoRow(
                 icon: Icons.calendar_today,
                 label: 'Дата события',
-                value: booking.eventDate.toString() ?? 'Не указана',
+                value: booking['eventDate'] ?? 'Не указана',
               ),
               _InfoRow(
                 icon: Icons.access_time,
                 label: 'Время',
-                value: booking.eventTime?.toString() ?? 'Не указано',
+                value: booking['eventTime'] ?? 'Не указано',
               ),
               _InfoRow(
                 icon: Icons.location_on,
                 label: 'Место',
-                value: booking.eventLocation ?? 'Не указано',
+                value: booking['location'] ?? 'Не указано',
               ),
             ],
           ),
@@ -151,7 +150,7 @@ class _BookingInfoCard extends StatelessWidget {
 /// Карточка с информацией о заказчике
 class _CustomerInfoCard extends StatelessWidget {
   const _CustomerInfoCard({required this.booking});
-  final Booking booking;
+  final Map<String, dynamic> booking;
 
   @override
   Widget build(BuildContext context) => Card(
@@ -177,17 +176,17 @@ class _CustomerInfoCard extends StatelessWidget {
               _InfoRow(
                 icon: Icons.person,
                 label: 'Имя',
-                value: booking.customerName ?? 'Не указано',
+                value: booking['customerName'] ?? 'Не указано',
               ),
               _InfoRow(
                 icon: Icons.phone,
                 label: 'Телефон',
-                value: booking.customerPhone ?? 'Не указан',
+                value: booking['customerPhone'] ?? 'Не указан',
               ),
               _InfoRow(
                 icon: Icons.email,
                 label: 'Email',
-                value: booking.customerEmail ?? 'Не указан',
+                value: booking['customerEmail'] ?? 'Не указан',
               ),
             ],
           ),
@@ -198,7 +197,7 @@ class _CustomerInfoCard extends StatelessWidget {
 /// Карточка с информацией о специалисте
 class _SpecialistInfoCard extends StatelessWidget {
   const _SpecialistInfoCard({required this.booking});
-  final Booking booking;
+  final Map<String, dynamic> booking;
 
   @override
   Widget build(BuildContext context) => Card(
@@ -224,7 +223,7 @@ class _SpecialistInfoCard extends StatelessWidget {
               _InfoRow(
                 icon: Icons.person,
                 label: 'Имя',
-                value: booking.specialistName ?? 'Не указано',
+                value: booking['specialistName'] ?? 'Не указано',
               ),
               const _InfoRow(
                 icon: Icons.category,
@@ -240,7 +239,7 @@ class _SpecialistInfoCard extends StatelessWidget {
 /// Карточка с информацией о платеже
 class _PaymentInfoCard extends StatelessWidget {
   const _PaymentInfoCard({required this.booking});
-  final Booking booking;
+  final Map<String, dynamic> booking;
 
   @override
   Widget build(BuildContext context) => Card(
@@ -266,12 +265,12 @@ class _PaymentInfoCard extends StatelessWidget {
               _InfoRow(
                 icon: Icons.monetization_on,
                 label: 'Сумма',
-                value: '${booking.totalAmount ?? 0} ₽',
+                value: '${booking['totalPrice'] ?? 0} ₽',
               ),
               _InfoRow(
                 icon: Icons.payment,
                 label: 'Статус',
-                value: booking.paymentStatus ?? 'Не указан',
+                value: booking['paymentStatus'] ?? 'Не указан',
               ),
             ],
           ),
@@ -282,7 +281,7 @@ class _PaymentInfoCard extends StatelessWidget {
 /// Карточка со статусом заявки
 class _StatusCard extends StatelessWidget {
   const _StatusCard({required this.booking});
-  final Booking booking;
+  final Map<String, dynamic> booking;
 
   @override
   Widget build(BuildContext context) {
@@ -290,31 +289,31 @@ class _StatusCard extends StatelessWidget {
     Color textColor;
     String text;
 
-    switch (booking.status) {
-      case BookingStatus.pending:
+    switch (booking['status']) {
+      case 'В обработке':
         backgroundColor = Colors.orange[100]!;
         textColor = Colors.orange[800]!;
-        text = 'Ожидает';
+        text = 'В обработке';
         break;
-      case BookingStatus.confirmed:
+      case 'Подтверждено':
         backgroundColor = Colors.green[100]!;
         textColor = Colors.green[800]!;
-        text = 'Подтверждена';
+        text = 'Подтверждено';
         break;
-      case BookingStatus.cancelled:
+      case 'Отклонено':
         backgroundColor = Colors.red[100]!;
         textColor = Colors.red[800]!;
-        text = 'Отменена';
+        text = 'Отклонено';
         break;
-      case BookingStatus.completed:
+      case 'Завершено':
         backgroundColor = Colors.blue[100]!;
         textColor = Colors.blue[800]!;
-        text = 'Завершена';
+        text = 'Завершено';
         break;
       default:
         backgroundColor = Colors.grey[100]!;
         textColor = Colors.grey[800]!;
-        text = 'Неизвестно';
+        text = booking['status'] ?? 'Неизвестно';
     }
 
     return Card(

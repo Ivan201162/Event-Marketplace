@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../core/app_theme.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
@@ -32,13 +31,13 @@ class CustomTextField extends StatelessWidget {
         maxLines: maxLines,
         enabled: enabled,
         style: const TextStyle(
-          color: BrandColors.textPrimary,
+          color: Colors.black87,
           fontSize: 16,
         ),
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: const TextStyle(
-            color: BrandColors.textSecondary,
+          labelStyle: TextStyle(
+            color: Colors.grey.shade600,
             fontSize: 16,
           ),
           border: OutlineInputBorder(
@@ -51,21 +50,21 @@ class CustomTextField extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: BrandColors.primary, width: 2),
+            borderSide: const BorderSide(color: Colors.blue, width: 2),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: BrandColors.error),
+            borderSide: const BorderSide(color: Colors.red),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: BrandColors.error, width: 2),
+            borderSide: const BorderSide(color: Colors.red, width: 2),
           ),
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           filled: true,
           fillColor: Colors.white,
         ),
-        cursorColor: BrandColors.primary,
+        cursorColor: Colors.blue,
       );
 }

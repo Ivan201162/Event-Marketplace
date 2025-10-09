@@ -381,7 +381,7 @@ class _TaxCalculatorScreenState extends ConsumerState<TaxCalculatorScreen> {
           _isCalculated = false;
         });
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

@@ -1,244 +1,379 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/event_idea.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
-/// Сервис для работы с идеями мероприятий
+import '../models/idea.dart';
+import '../repositories/ideas_repository.dart';
+
+/// Сервис для работы с идеями
 class IdeasService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  factory IdeasService() => _instance;
+  IdeasService._internal();
+  static final IdeasService _instance = IdeasService._internal();
 
-  /// Получить все публичные идеи
-  Future<List<EventIdea>> getPublicIdeas({
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  final ImagePicker _imagePicker = ImagePicker();
+  final IdeasRepository _repository = IdeasRepository();
+
+  /// Получение всех идей с фильтрацией
+  Stream<List<Idea>> getIdeas({
     String? category,
-    String? eventType,
-    String? budget,
-    String? season,
-    String? venue,
-    List<String>? tags,
+    String? searchQuery,
     int limit = 20,
     DocumentSnapshot? startAfter,
+  }) => _repository.streamList(
+      category: category,
+      searchQuery: searchQuery,
+      limit: limit,
+      startAfter: startAfter,
+    );
+
+  /// Получение идей пользователя
+  Stream<List<Idea>> getUserIdeas(String userId) => _repository.getUserIdeas(userId);
+
+  /// Получение сохраненных идей пользователя
+  Stream<List<Idea>> getSavedIdeas(String userId) => _repository.getSavedIdeas(userId);
+
+  /// Получение конкретной идеи
+  Future<Idea?> getIdea(String ideaId) async => _repository.getById(ideaId);
+
+  /// Создание новой идеи
+  Future<String?> createIdea({
+    required String title,
+    required String description,
+    required String category,
+    required String authorId,
+    required String authorName,
+    String? authorAvatar,
+    required File mediaFile,
+    required bool isVideo,
+    List<String> tags = const [],
+    String? location,
+    double? price,
+    String? priceCurrency,
+    int? duration,
+    List<String> requiredSkills = const [],
   }) async {
-    var query = _db
-        .collection('event_ideas')
-        .where('isPublic', isEqualTo: true)
-        .orderBy('createdAt', descending: true)
-        .limit(limit);
+    try {
+      // Загрузка медиа файла
+      final mediaUrl = await _uploadMediaFile(mediaFile, isVideo);
+      if (mediaUrl == null) {
+        throw Exception('Ошибка загрузки медиа файла');
+      }
 
-    // Фильтры
-    if (category != null && category.isNotEmpty) {
-      query = query.where('category', isEqualTo: category);
+      // Создание документа идеи
+      final ideaData = {
+        'title': title,
+        'description': description,
+        'category': category,
+        'mediaUrl': mediaUrl,
+        'isVideo': isVideo,
+        'authorId': authorId,
+        'authorName': authorName,
+        'authorAvatar': authorAvatar,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+        'likesCount': 0,
+        'commentsCount': 0,
+        'savesCount': 0,
+        'sharesCount': 0,
+        'tags': tags,
+        'likedBy': [],
+        'savedBy': [],
+        'sharedBy': [],
+        'isPublic': true,
+        'location': location,
+        'price': price,
+        'priceCurrency': priceCurrency,
+        'duration': duration,
+        'requiredSkills': requiredSkills,
+      };
+
+      final docRef = await _firestore.collection('ideas').add(ideaData);
+      return docRef.id;
+    } on Exception catch (e) {
+      print('Ошибка создания идеи: $e');
+      return null;
     }
-    if (eventType != null && eventType.isNotEmpty) {
-      query = query.where('eventType', isEqualTo: eventType);
+  }
+
+  /// Обновление идеи
+  Future<bool> updateIdea(String ideaId, Map<String, dynamic> updates) async {
+    try {
+      updates['updatedAt'] = FieldValue.serverTimestamp();
+      await _firestore.collection('ideas').doc(ideaId).update(updates);
+      return true;
+    } on Exception catch (e) {
+      print('Ошибка обновления идеи: $e');
+      return false;
     }
-    if (budget != null && budget.isNotEmpty) {
-      query = query.where('budget', isEqualTo: budget);
+  }
+
+  /// Удаление идеи
+  Future<bool> deleteIdea(String ideaId) async {
+    try {
+      await _firestore.collection('ideas').doc(ideaId).delete();
+      return true;
+    } on Exception catch (e) {
+      print('Ошибка удаления идеи: $e');
+      return false;
     }
-    if (season != null && season.isNotEmpty) {
-      query = query.where('season', isEqualTo: season);
+  }
+
+  /// Лайк/анлайк идеи
+  Future<bool> toggleLike(String ideaId, String userId) async {
+    try {
+      final docRef = _firestore.collection('ideas').doc(ideaId);
+      
+      return await _firestore.runTransaction((transaction) async {
+        final doc = await transaction.get(docRef);
+        if (!doc.exists) return false;
+
+        final idea = Idea.fromFirestore(doc);
+        final isLiked = idea.isLiked;
+        
+        final newLikedBy = <String>[];
+        if (isLiked) {
+          newLikedBy.remove(userId);
+        } else {
+          newLikedBy.add(userId);
+        }
+
+        transaction.update(docRef, {
+          'likedBy': newLikedBy,
+          'likesCount': newLikedBy.length,
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
+
+        return true;
+      });
+    } on Exception catch (e) {
+      print('Ошибка лайка идеи: $e');
+      return false;
     }
-    if (venue != null && venue.isNotEmpty) {
-      query = query.where('venue', isEqualTo: venue);
+  }
+
+  /// Сохранение/удаление из сохраненных
+  Future<bool> toggleSave(String ideaId, String userId) async {
+    try {
+      final docRef = _firestore.collection('ideas').doc(ideaId);
+      
+      return await _firestore.runTransaction((transaction) async {
+        final doc = await transaction.get(docRef);
+        if (!doc.exists) return false;
+
+        final idea = Idea.fromFirestore(doc);
+        final isSaved = idea.isSaved;
+        
+        final newSavedBy = <String>[];
+        if (isSaved) {
+          newSavedBy.remove(userId);
+        } else {
+          newSavedBy.add(userId);
+        }
+
+        transaction.update(docRef, {
+          'savedBy': newSavedBy,
+          'savesCount': newSavedBy.length,
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
+
+        return true;
+      });
+    } on Exception catch (e) {
+      print('Ошибка сохранения идеи: $e');
+      return false;
     }
+  }
 
-    if (startAfter != null) {
-      query = query.startAfterDocument(startAfter);
+  /// Поделиться идеей
+  Future<bool> shareIdea(String ideaId, String userId) async {
+    try {
+      final docRef = _firestore.collection('ideas').doc(ideaId);
+      
+      return await _firestore.runTransaction((transaction) async {
+        final doc = await transaction.get(docRef);
+        if (!doc.exists) return false;
+
+        final idea = Idea.fromFirestore(doc);
+        final newSharedBy = <String>[];
+        
+        if (!newSharedBy.contains(userId)) {
+          newSharedBy.add(userId);
+        }
+
+        transaction.update(docRef, {
+          'sharedBy': newSharedBy,
+          'sharesCount': newSharedBy.length,
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
+
+        return true;
+      });
+    } on Exception catch (e) {
+      print('Ошибка репоста идеи: $e');
+      return false;
     }
-
-    final querySnapshot = await query.get();
-    return querySnapshot.docs.map(EventIdea.fromDocument).toList();
   }
 
-  /// Получить идеи по автору
-  Future<List<EventIdea>> getIdeasByAuthor(String authorId) async {
-    final querySnapshot = await _db
-        .collection('event_ideas')
-        .where('authorId', isEqualTo: authorId)
-        .orderBy('createdAt', descending: true)
-        .get();
+  /// Получение комментариев к идее
+  Stream<List<Map<String, dynamic>>> getIdeaComments(String ideaId) => _firestore
+        .collection('idea_comments')
+        .where('ideaId', isEqualTo: ideaId)
+        .where('parentCommentId', isNull: true) // только основные комментарии
+        .orderBy('createdAt', descending: false)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
 
-    return querySnapshot.docs.map(EventIdea.fromDocument).toList();
+  /// Добавление комментария
+  Future<String?> addComment({
+    required String ideaId,
+    required String authorId,
+    required String authorName,
+    String? authorAvatar,
+    required String content,
+    String? parentCommentId,
+  }) async {
+    try {
+      final commentData = {
+        'ideaId': ideaId,
+        'authorId': authorId,
+        'authorName': authorName,
+        'authorAvatar': authorAvatar,
+        'content': content,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+        'likesCount': 0,
+        'likedBy': [],
+        'parentCommentId': parentCommentId,
+        'replies': [],
+      };
+
+      final docRef = await _firestore.collection('idea_comments').add(commentData);
+      
+      // Обновляем счетчик комментариев в идее
+      await _firestore.collection('ideas').doc(ideaId).update({
+        'commentsCount': FieldValue.increment(1),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      return docRef.id;
+    } on Exception catch (e) {
+      print('Ошибка добавления комментария: $e');
+      return null;
+    }
   }
 
-  /// Получить сохраненные идеи пользователя
-  Future<List<EventIdea>> getSavedIdeas(String userId) async {
-    final userDoc = await _db.collection('users').doc(userId).get();
-    if (!userDoc.exists) return [];
+  /// Лайк комментария
+  Future<bool> toggleCommentLike(String commentId, String userId) async {
+    try {
+      final docRef = _firestore.collection('idea_comments').doc(commentId);
+      
+      return await _firestore.runTransaction((transaction) async {
+        final doc = await transaction.get(docRef);
+        if (!doc.exists) return false;
 
-    final savedIdeaIds = List<String>.from(userDoc.data()?['savedIdeas'] ?? []);
-    if (savedIdeaIds.isEmpty) return [];
+        final comment = doc.data();
+        const isLiked = false;
+        
+        final newLikedBy = <String>[];
+        if (isLiked) {
+          newLikedBy.remove(userId);
+        } else {
+          newLikedBy.add(userId);
+        }
 
-    final querySnapshot = await _db
-        .collection('event_ideas')
-        .where(FieldPath.documentId, whereIn: savedIdeaIds)
-        .get();
+        transaction.update(docRef, {
+          'likedBy': newLikedBy,
+          'likesCount': newLikedBy.length,
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
 
-    return querySnapshot.docs.map(EventIdea.fromDocument).toList();
+        return true;
+      });
+    } on Exception catch (e) {
+      print('Ошибка лайка комментария: $e');
+      return false;
+    }
   }
 
-  /// Создать новую идею
-  Future<String> createIdea(EventIdea idea) async {
-    final docRef = await _db.collection('event_ideas').add(idea.toMap());
-    return docRef.id;
+  /// Выбор медиа файла
+  Future<File?> pickMediaFile({required bool isVideo}) async {
+    try {
+      final file = await _imagePicker.pickMedia();
+      
+      if (file != null) {
+        return File(file.path);
+      }
+      return null;
+    } on Exception catch (e) {
+      print('Ошибка выбора медиа файла: $e');
+      return null;
+    }
   }
 
-  /// Обновить идею
-  Future<void> updateIdea(String ideaId, EventIdea idea) async {
-    await _db.collection('event_ideas').doc(ideaId).update(idea.toMap());
+  /// Загрузка медиа файла в Firebase Storage
+  Future<String?> _uploadMediaFile(File file, bool isVideo) async {
+    try {
+      final fileName = '${DateTime.now().millisecondsSinceEpoch}_${file.path.split('/').last}';
+      final path = isVideo ? 'ideas/videos/$fileName' : 'ideas/images/$fileName';
+      
+      final ref = _storage.ref().child(path);
+      final uploadTask = ref.putFile(file);
+      
+      final snapshot = await uploadTask;
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+      
+      return downloadUrl;
+    } on Exception catch (e) {
+      print('Ошибка загрузки медиа файла: $e');
+      return null;
+    }
   }
 
-  /// Удалить идею
-  Future<void> deleteIdea(String ideaId) async {
-    await _db.collection('event_ideas').doc(ideaId).delete();
+  /// Генерация превью для видео
+  Future<String?> generateVideoThumbnail(String videoPath) async {
+    try {
+      final thumbnailPath = await VideoThumbnail.thumbnailFile(
+        video: videoPath,
+        thumbnailPath: (await Directory.systemTemp.createTemp()).path,
+        imageFormat: ImageFormat.JPEG,
+        maxHeight: 200,
+        quality: 75,
+      );
+      
+      if (thumbnailPath != null) {
+        final thumbnailFile = File(thumbnailPath);
+        return await _uploadMediaFile(thumbnailFile, false);
+      }
+      
+      return null;
+    } on Exception catch (e) {
+      print('Ошибка генерации превью видео: $e');
+      return null;
+    }
   }
 
-  /// Лайкнуть идею
-  Future<void> likeIdea(String ideaId, String userId) async {
-    final batch = _db.batch();
-
-    // Добавить лайк в коллекцию лайков
-    final likeRef = _db
-        .collection('event_ideas')
-        .doc(ideaId)
-        .collection('likes')
-        .doc(userId);
-    batch.set(likeRef, {
-      'userId': userId,
-      'createdAt': FieldValue.serverTimestamp(),
-    });
-
-    // Увеличить счетчик лайков
-    final ideaRef = _db.collection('event_ideas').doc(ideaId);
-    batch.update(ideaRef, {
-      'likesCount': FieldValue.increment(1),
-    });
-
-    await batch.commit();
-  }
-
-  /// Убрать лайк с идеи
-  Future<void> unlikeIdea(String ideaId, String userId) async {
-    final batch = _db.batch();
-
-    // Удалить лайк из коллекции лайков
-    final likeRef = _db
-        .collection('event_ideas')
-        .doc(ideaId)
-        .collection('likes')
-        .doc(userId);
-    batch.delete(likeRef);
-
-    // Уменьшить счетчик лайков
-    final ideaRef = _db.collection('event_ideas').doc(ideaId);
-    batch.update(ideaRef, {
-      'likesCount': FieldValue.increment(-1),
-    });
-
-    await batch.commit();
-  }
-
-  /// Сохранить идею
-  Future<void> saveIdea(String ideaId, String userId) async {
-    final batch = _db.batch();
-
-    // Добавить в сохраненные идеи пользователя
-    final userRef = _db.collection('users').doc(userId);
-    batch.update(userRef, {
-      'savedIdeas': FieldValue.arrayUnion([ideaId]),
-    });
-
-    // Увеличить счетчик сохранений
-    final ideaRef = _db.collection('event_ideas').doc(ideaId);
-    batch.update(ideaRef, {
-      'savesCount': FieldValue.increment(1),
-    });
-
-    await batch.commit();
-  }
-
-  /// Убрать из сохраненных
-  Future<void> unsaveIdea(String ideaId, String userId) async {
-    final batch = _db.batch();
-
-    // Удалить из сохраненных идей пользователя
-    final userRef = _db.collection('users').doc(userId);
-    batch.update(userRef, {
-      'savedIdeas': FieldValue.arrayRemove([ideaId]),
-    });
-
-    // Уменьшить счетчик сохранений
-    final ideaRef = _db.collection('event_ideas').doc(ideaId);
-    batch.update(ideaRef, {
-      'savesCount': FieldValue.increment(-1),
-    });
-
-    await batch.commit();
-  }
-
-  /// Проверить, лайкнул ли пользователь идею
-  Future<bool> isIdeaLiked(String ideaId, String userId) async {
-    final likeDoc = await _db
-        .collection('event_ideas')
-        .doc(ideaId)
-        .collection('likes')
-        .doc(userId)
-        .get();
-
-    return likeDoc.exists;
-  }
-
-  /// Проверить, сохранена ли идея пользователем
-  Future<bool> isIdeaSaved(String ideaId, String userId) async {
-    final userDoc = await _db.collection('users').doc(userId).get();
-    if (!userDoc.exists) return false;
-
-    final savedIdeas = List<String>.from(userDoc.data()?['savedIdeas'] ?? []);
-    return savedIdeas.contains(ideaId);
-  }
-
-  /// Поиск идей по тексту
-  Future<List<EventIdea>> searchIdeas(String searchText) async {
-    // Firestore не поддерживает полнотекстовый поиск,
-    // поэтому используем простой поиск по заголовку и описанию
-    final querySnapshot = await _db
-        .collection('event_ideas')
-        .where('isPublic', isEqualTo: true)
-        .get();
-
-    final ideas = querySnapshot.docs.map(EventIdea.fromDocument).toList();
-
-    // Фильтруем на клиенте
-    final searchLower = searchText.toLowerCase();
-    return ideas
-        .where(
-          (idea) =>
-              idea.title.toLowerCase().contains(searchLower) ||
-              idea.description.toLowerCase().contains(searchLower) ||
-              idea.tags.any((tag) => tag.toLowerCase().contains(searchLower)),
-        )
-        .toList();
-  }
-
-  /// Получить популярные идеи
-  Future<List<EventIdea>> getPopularIdeas({int limit = 10}) async {
-    final querySnapshot = await _db
-        .collection('event_ideas')
+  /// Получение трендовых идей
+  Stream<List<Idea>> getTrendingIdeas({int limit = 10}) => _firestore
+        .collection('ideas')
         .where('isPublic', isEqualTo: true)
         .orderBy('likesCount', descending: true)
-        .orderBy('savesCount', descending: true)
-        .limit(limit)
-        .get();
-
-    return querySnapshot.docs.map(EventIdea.fromDocument).toList();
-  }
-
-  /// Получить последние идеи
-  Future<List<EventIdea>> getRecentIdeas({int limit = 10}) async {
-    final querySnapshot = await _db
-        .collection('event_ideas')
-        .where('isPublic', isEqualTo: true)
         .orderBy('createdAt', descending: true)
         .limit(limit)
-        .get();
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map(Idea.fromFirestore).toList());
 
-    return querySnapshot.docs.map(EventIdea.fromDocument).toList();
-  }
+  /// Поиск идей по тегам
+  Stream<List<Idea>> searchIdeasByTags(List<String> tags, {int limit = 20}) => _firestore
+        .collection('ideas')
+        .where('isPublic', isEqualTo: true)
+        .where('tags', arrayContainsAny: tags)
+        .orderBy('createdAt', descending: true)
+        .limit(limit)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map(Idea.fromFirestore).toList());
 }

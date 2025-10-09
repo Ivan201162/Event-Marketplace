@@ -1,564 +1,239 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-import 'package:flutter/foundation.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../models/cache_item.dart';
-
-/// Сервис кэширования и оптимизации
+/// Сервис для кэширования данных и изображений
 class CacheService {
   factory CacheService() => _instance;
   CacheService._internal();
   static final CacheService _instance = CacheService._internal();
 
-  final Map<String, CacheItem> _memoryCache = {};
-  final Map<String, int> _accessCount = {};
-  final Map<String, DateTime> _lastAccess = {};
+  static const String _specialistsBox = 'specialists';
+  static const String _postsBox = 'posts';
+  static const String _ideasBox = 'ideas';
+  static const String _storiesBox = 'stories';
+  static const String _userDataBox = 'user_data';
 
-  SharedPreferences? _prefs;
-  Directory? _cacheDirectory;
-  CacheConfig _config = const CacheConfig();
+  late Box _specialistsCache;
+  late Box _postsCache;
+  late Box _ideasCache;
+  late Box _storiesCache;
+  late Box _userDataCache;
 
-  int _hitCount = 0;
-  int _missCount = 0;
-  bool _isInitialized = false;
+  // Cache manager для изображений
+  static final CacheManager _imageCacheManager = DefaultCacheManager();
 
-  /// Инициализация сервиса кэширования
-  Future<void> initialize({CacheConfig? config}) async {
-    if (_isInitialized) return;
+  /// Инициализация кэша
+  Future<void> initialize() async {
+    await Hive.initFlutter();
+    
+    _specialistsCache = await Hive.openBox(_specialistsBox);
+    _postsCache = await Hive.openBox(_postsBox);
+    _ideasCache = await Hive.openBox(_ideasBox);
+    _storiesCache = await Hive.openBox(_storiesBox);
+    _userDataCache = await Hive.openBox(_userDataBox);
+  }
 
+  /// Кэширование списка специалистов
+  Future<void> cacheSpecialists(List<Map<String, dynamic>> specialists) async {
     try {
-      _config = config ?? _config;
-      _prefs = await SharedPreferences.getInstance();
-      _cacheDirectory = await getApplicationCacheDirectory();
-
-      // Создаем директорию кэша
-      final cacheDir = Directory('${_cacheDirectory!.path}/app_cache');
-      if (!await cacheDir.exists()) {
-        await cacheDir.create(recursive: true);
-      }
-
-      // Загружаем статистику
-      await _loadStatistics();
-
-      _isInitialized = true;
-
-      if (kDebugMode) {
-        print('Cache service initialized');
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка инициализации сервиса кэширования: $e');
-      }
+      await _specialistsCache.put('specialists_list', specialists);
+      await _specialistsCache.put('last_updated', DateTime.now().millisecondsSinceEpoch);
+    } on Exception catch (e) {
+      print('Ошибка кэширования специалистов: $e');
     }
   }
 
-  /// Получить элемент из кэша
-  Future<T?> get<T>(String key, {T Function()? fromJson}) async {
-    if (!_isInitialized) await initialize();
-    if (!_config.enabled) return null;
-
+  /// Получение кэшированных специалистов
+  List<Map<String, dynamic>>? getCachedSpecialists() {
     try {
-      // Проверяем исключенные ключи
-      if (_config.isKeyExcluded(key)) return null;
-
-      // Проверяем память
-      final memoryItem = _memoryCache[key];
-      if (memoryItem != null && memoryItem.isValid) {
-        _updateAccess(key);
-        _hitCount++;
-        return memoryItem.data as T;
+      final data = _specialistsCache.get('specialists_list');
+      if (data != null) {
+        return List<Map<String, dynamic>>.from(data);
       }
+    } on Exception catch (e) {
+      print('Ошибка получения кэшированных специалистов: $e');
+    }
+    return null;
+  }
 
-      // Проверяем диск
-      final diskItem = await _getFromDisk<T>(key, fromJson);
-      if (diskItem != null && diskItem.isValid) {
-        // Загружаем в память
-        _memoryCache[key] = diskItem;
-        _updateAccess(key);
-        _hitCount++;
-        return diskItem.data;
+  /// Проверка актуальности кэша специалистов
+  bool isSpecialistsCacheValid({Duration maxAge = const Duration(hours: 1)}) {
+    try {
+      final lastUpdated = _specialistsCache.get('last_updated');
+      if (lastUpdated != null) {
+        final lastUpdateTime = DateTime.fromMillisecondsSinceEpoch(lastUpdated);
+        return DateTime.now().difference(lastUpdateTime) < maxAge;
       }
+    } on Exception catch (e) {
+      print('Ошибка проверки актуальности кэша: $e');
+    }
+    return false;
+  }
 
-      _missCount++;
-      return null;
-    } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка получения из кэша: $e');
-      }
-      _missCount++;
-      return null;
+  /// Кэширование постов
+  Future<void> cachePosts(List<Map<String, dynamic>> posts) async {
+    try {
+      await _postsCache.put('posts_list', posts);
+      await _postsCache.put('last_updated', DateTime.now().millisecondsSinceEpoch);
+    } on Exception catch (e) {
+      print('Ошибка кэширования постов: $e');
     }
   }
 
-  /// Сохранить элемент в кэш
-  Future<void> set<T>(
-    String key,
-    T data, {
-    Duration? ttl,
-    CacheType type = CacheType.memory,
-    Map<String, dynamic>? metadata,
-    T Function(T)? toJson,
-  }) async {
-    if (!_isInitialized) await initialize();
-    if (!_config.enabled) return;
-
+  /// Получение кэшированных постов
+  List<Map<String, dynamic>>? getCachedPosts() {
     try {
-      // Проверяем исключенные ключи
-      if (_config.isKeyExcluded(key)) return;
+      final data = _postsCache.get('posts_list');
+      if (data != null) {
+        return List<Map<String, dynamic>>.from(data);
+      }
+    } on Exception catch (e) {
+      print('Ошибка получения кэшированных постов: $e');
+    }
+    return null;
+  }
 
-      final now = DateTime.now();
-      final expiry = ttl ?? _config.getTTL(key);
-      final expiresAt = now.add(expiry);
+  /// Кэширование идей
+  Future<void> cacheIdeas(List<Map<String, dynamic>> ideas) async {
+    try {
+      await _ideasCache.put('ideas_list', ideas);
+      await _ideasCache.put('last_updated', DateTime.now().millisecondsSinceEpoch);
+    } on Exception catch (e) {
+      print('Ошибка кэширования идей: $e');
+    }
+  }
 
-      // Вычисляем размер
-      final size = _calculateSize(data, toJson);
+  /// Получение кэшированных идей
+  List<Map<String, dynamic>>? getCachedIdeas() {
+    try {
+      final data = _ideasCache.get('ideas_list');
+      if (data != null) {
+        return List<Map<String, dynamic>>.from(data);
+      }
+    } on Exception catch (e) {
+      print('Ошибка получения кэшированных идей: $e');
+    }
+    return null;
+  }
 
-      final cacheItem = CacheItem<T>(
-        key: key,
-        data: data,
-        createdAt: now,
-        expiresAt: expiresAt,
-        type: type,
-        metadata: metadata ?? {},
-        size: size,
-        lastAccessed: now,
+  /// Кэширование историй
+  Future<void> cacheStories(List<Map<String, dynamic>> stories) async {
+    try {
+      await _storiesCache.put('stories_list', stories);
+      await _storiesCache.put('last_updated', DateTime.now().millisecondsSinceEpoch);
+    } on Exception catch (e) {
+      print('Ошибка кэширования историй: $e');
+    }
+  }
+
+  /// Получение кэшированных историй
+  List<Map<String, dynamic>>? getCachedStories() {
+    try {
+      final data = _storiesCache.get('stories_list');
+      if (data != null) {
+        return List<Map<String, dynamic>>.from(data);
+      }
+    } on Exception catch (e) {
+      print('Ошибка получения кэшированных историй: $e');
+    }
+    return null;
+  }
+
+  /// Кэширование пользовательских данных
+  Future<void> cacheUserData(String userId, Map<String, dynamic> userData) async {
+    try {
+      await _userDataCache.put(userId, userData);
+    } on Exception catch (e) {
+      print('Ошибка кэширования пользовательских данных: $e');
+    }
+  }
+
+  /// Получение кэшированных пользовательских данных
+  Map<String, dynamic>? getCachedUserData(String userId) {
+    try {
+      final data = _userDataCache.get(userId);
+      if (data != null) {
+        return Map<String, dynamic>.from(data);
+      }
+    } on Exception catch (e) {
+      print('Ошибка получения кэшированных пользовательских данных: $e');
+    }
+    return null;
+  }
+
+  /// Предзагрузка изображения
+  Future<void> preloadImage(String imageUrl) async {
+    try {
+      await _imageCacheManager.getSingleFile(imageUrl);
+    } on Exception catch (e) {
+      print('Ошибка предзагрузки изображения: $e');
+    }
+  }
+
+  /// Предзагрузка списка изображений
+  Future<void> preloadImages(List<String> imageUrls) async {
+    try {
+      await Future.wait(
+        imageUrls.map(_imageCacheManager.getSingleFile),
       );
-
-      // Сохраняем в память
-      if (type == CacheType.memory ||
-          type == CacheType.api ||
-          type == CacheType.user) {
-        _memoryCache[key] = cacheItem;
-        _updateAccess(key);
-
-        // Проверяем лимиты памяти
-        await _checkMemoryLimits();
-      }
-
-      // Сохраняем на диск
-      if (type == CacheType.disk ||
-          type == CacheType.image ||
-          type == CacheType.database) {
-        await _saveToDisk(cacheItem, toJson);
-      }
-
-      if (_config.enableLogging) {
-        if (kDebugMode) {
-          print('Cached: $key (${cacheItem.formattedSize})');
-        }
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка сохранения в кэш: $e');
-      }
+    } on Exception catch (e) {
+      print('Ошибка предзагрузки изображений: $e');
     }
   }
 
-  /// Удалить элемент из кэша
-  Future<void> remove(String key) async {
-    if (!_isInitialized) await initialize();
-
+  /// Очистка кэша изображений
+  Future<void> clearImageCache() async {
     try {
-      // Удаляем из памяти
-      _memoryCache.remove(key);
-      _accessCount.remove(key);
-      _lastAccess.remove(key);
-
-      // Удаляем с диска
-      await _removeFromDisk(key);
-
-      if (_config.enableLogging) {
-        if (kDebugMode) {
-          print('Removed from cache: $key');
-        }
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка удаления из кэша: $e');
-      }
+      await _imageCacheManager.emptyCache();
+    } on Exception catch (e) {
+      print('Ошибка очистки кэша изображений: $e');
     }
   }
 
-  /// Очистить весь кэш
-  Future<void> clear({CacheType? type}) async {
-    if (!_isInitialized) await initialize();
-
+  /// Очистка всех кэшей
+  Future<void> clearAllCaches() async {
     try {
-      if (type == null) {
-        // Очищаем все
-        _memoryCache.clear();
-        _accessCount.clear();
-        _lastAccess.clear();
-        await _clearDisk();
-      } else {
-        // Очищаем по типу
-        final keysToRemove = _memoryCache.entries
-            .where((entry) => entry.value.type == type)
-            .map((entry) => entry.key)
-            .toList();
-
-        for (final key in keysToRemove) {
-          await remove(key);
-        }
-      }
-
-      if (_config.enableLogging) {
-        if (kDebugMode) {
-          print(
-            'Cache cleared${type != null ? ' (type: ${type.displayName})' : ''}',
-          );
-        }
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка очистки кэша: $e');
-      }
+      await _specialistsCache.clear();
+      await _postsCache.clear();
+      await _ideasCache.clear();
+      await _storiesCache.clear();
+      await _userDataCache.clear();
+      await _imageCacheManager.emptyCache();
+    } on Exception catch (e) {
+      print('Ошибка очистки кэшей: $e');
     }
   }
 
-  /// Очистить истекшие элементы
-  Future<void> clearExpired() async {
-    if (!_isInitialized) await initialize();
-
+  /// Получение размера кэша
+  Future<int> getCacheSize() async {
     try {
-      final expiredKeys = _memoryCache.entries
-          .where((entry) => entry.value.isExpired)
-          .map((entry) => entry.key)
-          .toList();
-
-      for (final key in expiredKeys) {
-        await remove(key);
-      }
-
-      await _clearExpiredFromDisk();
-
-      if (_config.enableLogging) {
-        if (kDebugMode) {
-          print('Expired items cleared: ${expiredKeys.length}');
-        }
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка очистки истекших элементов: $e');
-      }
-    }
-  }
-
-  /// Получить статистику кэша
-  Future<CacheStatistics> getStatistics() async {
-    if (!_isInitialized) await initialize();
-
-    try {
-      final allItems = <CacheItem>[];
-
-      // Добавляем элементы из памяти
-      allItems.addAll(_memoryCache.values);
-
-      // Добавляем элементы с диска
-      final diskItems = await _getAllFromDisk();
-      allItems.addAll(diskItems);
-
-      return CacheStatistics.fromCacheItems(
-        'Общий кэш',
-        allItems,
-        _hitCount,
-        _missCount,
-      );
-    } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка получения статистики кэша: $e');
-      }
-      return CacheStatistics.fromCacheItems('Общий кэш', [], 0, 0);
-    }
-  }
-
-  /// Получить элемент с диска
-  Future<CacheItem<T>?> _getFromDisk<T>(
-    String key,
-    T Function()? fromJson,
-  ) async {
-    try {
-      final file = File('${_cacheDirectory!.path}/app_cache/$key.json');
-      if (!await file.exists()) return null;
-
-      final content = await file.readAsString();
-      final data = json.decode(content);
-
-      return CacheItem.fromMap(data, fromJson ?? () => data as T);
-    } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка чтения с диска: $e');
-      }
-      return null;
-    }
-  }
-
-  /// Сохранить элемент на диск
-  Future<void> _saveToDisk<T>(CacheItem<T> item, T Function(T)? toJson) async {
-    try {
-      final file = File('${_cacheDirectory!.path}/app_cache/${item.key}.json');
-      final data = item.toMap(toJson ?? (data) => data);
-      final content = json.encode(data);
-
-      await file.writeAsString(content);
-    } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка сохранения на диск: $e');
-      }
-    }
-  }
-
-  /// Удалить элемент с диска
-  Future<void> _removeFromDisk(String key) async {
-    try {
-      final file = File('${_cacheDirectory!.path}/app_cache/$key.json');
-      if (await file.exists()) {
-        await file.delete();
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка удаления с диска: $e');
-      }
-    }
-  }
-
-  /// Очистить диск
-  Future<void> _clearDisk() async {
-    try {
-      final cacheDir = Directory('${_cacheDirectory!.path}/app_cache');
-      if (await cacheDir.exists()) {
-        await cacheDir.delete(recursive: true);
-        await cacheDir.create(recursive: true);
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка очистки диска: $e');
-      }
-    }
-  }
-
-  /// Очистить истекшие элементы с диска
-  Future<void> _clearExpiredFromDisk() async {
-    try {
-      final cacheDir = Directory('${_cacheDirectory!.path}/app_cache');
-      if (!await cacheDir.exists()) return;
-
-      final files = await cacheDir.list().toList();
-      for (final file in files) {
-        if (file is File && file.path.endsWith('.json')) {
-          try {
-            final content = await file.readAsString();
-            final data = json.decode(content);
-            final expiresAt = DateTime.parse(data['expiresAt']);
-
-            if (DateTime.now().isAfter(expiresAt)) {
-              await file.delete();
-            }
-          } catch (e) {
-            // Удаляем поврежденные файлы
-            await file.delete();
-          }
-        }
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка очистки истекших элементов с диска: $e');
-      }
-    }
-  }
-
-  /// Получить все элементы с диска
-  Future<List<CacheItem>> _getAllFromDisk() async {
-    final items = <CacheItem>[];
-
-    try {
-      final cacheDir = Directory('${_cacheDirectory!.path}/app_cache');
-      if (!await cacheDir.exists()) return items;
-
-      final files = await cacheDir.list().toList();
-      for (final file in files) {
-        if (file is File && file.path.endsWith('.json')) {
-          try {
-            final content = await file.readAsString();
-            final data = json.decode(content);
-            final item = CacheItem.fromMap(data, () => data);
-            items.add(item);
-          } catch (e) {
-            // Пропускаем поврежденные файлы
-            continue;
-          }
-        }
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка получения всех элементов с диска: $e');
-      }
-    }
-
-    return items;
-  }
-
-  /// Вычислить размер данных
-  int _calculateSize<T>(T data, T Function(T)? toJson) {
-    try {
-      if (data is String) return data.length;
-      if (data is List) return data.length;
-      if (data is Map) return data.length;
-
-      final json = toJson?.call(data) ?? data;
-      return json.toString().length;
-    } catch (e) {
+      var totalSize = 0;
+      totalSize += _specialistsCache.length;
+      totalSize += _postsCache.length;
+      totalSize += _ideasCache.length;
+      totalSize += _storiesCache.length;
+      totalSize += _userDataCache.length;
+      return totalSize;
+    } on Exception catch (e) {
+      print('Ошибка получения размера кэша: $e');
       return 0;
     }
   }
 
-  /// Обновить информацию о доступе
-  void _updateAccess(String key) {
-    _accessCount[key] = (_accessCount[key] ?? 0) + 1;
-    _lastAccess[key] = DateTime.now();
-  }
-
-  /// Проверить лимиты памяти
-  Future<void> _checkMemoryLimits() async {
-    // Проверяем количество элементов
-    if (_memoryCache.length > _config.maxItems) {
-      await _evictItems();
-    }
-
-    // Проверяем размер
-    final totalSize =
-        _memoryCache.values.fold(0, (sum, item) => sum + (item.size ?? 0));
-    if (totalSize > _config.maxSize) {
-      await _evictItems();
-    }
-  }
-
-  /// Вытеснить элементы по политике
-  Future<void> _evictItems() async {
-    final items = _memoryCache.entries.toList();
-
-    switch (_config.evictionPolicy) {
-      case CacheEvictionPolicy.lru:
-        items.sort(
-          (a, b) => (a.value.lastAccessed ?? a.value.createdAt)
-              .compareTo(b.value.lastAccessed ?? b.value.createdAt),
-        );
-        break;
-      case CacheEvictionPolicy.lfu:
-        items.sort(
-          (a, b) =>
-              (_accessCount[a.key] ?? 0).compareTo(_accessCount[b.key] ?? 0),
-        );
-        break;
-      case CacheEvictionPolicy.fifo:
-        items.sort((a, b) => a.value.createdAt.compareTo(b.value.createdAt));
-        break;
-      case CacheEvictionPolicy.ttl:
-        items.sort((a, b) => a.value.expiresAt.compareTo(b.value.expiresAt));
-        break;
-      case CacheEvictionPolicy.random:
-        items.shuffle();
-        break;
-    }
-
-    // Удаляем 20% элементов
-    final itemsToRemove = (items.length * 0.2).ceil();
-    for (var i = 0; i < itemsToRemove && i < items.length; i++) {
-      await remove(items[i].key);
-    }
-  }
-
-  /// Загрузить статистику
-  Future<void> _loadStatistics() async {
-    try {
-      _hitCount = _prefs?.getInt('cache_hit_count') ?? 0;
-      _missCount = _prefs?.getInt('cache_miss_count') ?? 0;
-    } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка загрузки статистики: $e');
-      }
-    }
-  }
-
-  /// Сохранить статистику
-  Future<void> _saveStatistics() async {
-    try {
-      await _prefs?.setInt('cache_hit_count', _hitCount);
-      await _prefs?.setInt('cache_miss_count', _missCount);
-    } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка сохранения статистики: $e');
-      }
-    }
-  }
-
-  /// Получить конфигурацию
-  CacheConfig get config => _config;
-
-  /// Обновить конфигурацию
-  Future<void> updateConfig(CacheConfig newConfig) async {
-    _config = newConfig;
-
-    // Применяем новые лимиты
-    await _checkMemoryLimits();
-
-    if (_config.enableLogging) {
-      if (kDebugMode) {
-        print('Cache config updated: ${_config.toString()}');
-      }
-    }
-  }
-
-  /// Получить размер кэша
-  Future<int> getCacheSize() async {
-    if (!_isInitialized) await initialize();
-
-    var totalSize = 0;
-
-    // Размер в памяти
-    totalSize +=
-        _memoryCache.values.fold(0, (sum, item) => sum + (item.size ?? 0));
-
-    // Размер на диске
-    try {
-      final cacheDir = Directory('${_cacheDirectory!.path}/app_cache');
-      if (await cacheDir.exists()) {
-        final files = await cacheDir.list().toList();
-        for (final file in files) {
-          if (file is File) {
-            totalSize += await file.length();
-          }
-        }
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка вычисления размера кэша: $e');
-      }
-    }
-
-    return totalSize;
-  }
-
-  /// Получить количество элементов в кэше
-  int getItemCount() => _memoryCache.length;
-
-  /// Проверить, существует ли ключ
-  bool containsKey(String key) =>
-      _memoryCache.containsKey(key) && _memoryCache[key]!.isValid;
-
-  /// Получить все ключи
-  List<String> getAllKeys() => _memoryCache.keys.toList();
-
-  /// Закрыть сервис
+  /// Закрытие всех кэшей
   Future<void> dispose() async {
-    await _saveStatistics();
-    _memoryCache.clear();
-    _accessCount.clear();
-    _lastAccess.clear();
-    _isInitialized = false;
+    try {
+      await _specialistsCache.close();
+      await _postsCache.close();
+      await _ideasCache.close();
+      await _storiesCache.close();
+      await _userDataCache.close();
+    } on Exception catch (e) {
+      print('Ошибка закрытия кэшей: $e');
+    }
   }
 }
+
+/// Провайдер для CacheService
+final cacheServiceProvider = Provider<CacheService>((ref) => CacheService());

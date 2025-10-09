@@ -45,7 +45,7 @@ class _TestAvailabilityScreenState
         _availabilityData = data;
         _isLoading = false;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _isLoading = false;
       });

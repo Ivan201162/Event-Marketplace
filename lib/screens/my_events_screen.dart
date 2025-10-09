@@ -509,7 +509,7 @@ class MyEventsScreen extends ConsumerWidget {
                     const SnackBar(content: Text('Мероприятие завершено')),
                   );
                 }
-              } catch (e) {
+              } on Exception catch (e) {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Ошибка: $e')),
@@ -550,7 +550,7 @@ class MyEventsScreen extends ConsumerWidget {
                     const SnackBar(content: Text('Мероприятие отменено')),
                   );
                 }
-              } catch (e) {
+              } on Exception catch (e) {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Ошибка: $e')),
@@ -591,7 +591,7 @@ class MyEventsScreen extends ConsumerWidget {
                     const SnackBar(content: Text('Мероприятие удалено')),
                   );
                 }
-              } catch (e) {
+              } on Exception catch (e) {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Ошибка: $e')),

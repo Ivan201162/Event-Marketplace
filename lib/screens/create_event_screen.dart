@@ -601,7 +601,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
               ),
             );
           }
-        } catch (e) {
+        } on Exception catch (e) {
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

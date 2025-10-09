@@ -46,7 +46,7 @@ class AnniversaryNotificationService {
   /// Обработка нажатия на уведомление
   void _onNotificationTapped(NotificationResponse response) {
     // TODO(developer): Переход к экрану портфолио или специалистов
-    print('Уведомление нажато: ${response.payload}');
+    // Логирование:'Уведомление нажато: ${response.payload}');
   }
 
   /// Запуск ежедневной проверки годовщин
@@ -94,8 +94,8 @@ class AnniversaryNotificationService {
       for (final customer in customersWithUpcomingAnniversaries) {
         await _sendUpcomingAnniversaryNotification(customer);
       }
-    } catch (e) {
-      print('Ошибка проверки годовщин: $e');
+    } on Exception {
+      // Логирование:'Ошибка проверки годовщин: $e');
     }
   }
 

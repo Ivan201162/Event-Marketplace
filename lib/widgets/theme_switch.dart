@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/theme_provider.dart';
+import '../services/analytics_service.dart';
 
 /// Виджет для переключения темы
 class ThemeSwitch extends ConsumerWidget {
@@ -157,17 +158,24 @@ class ThemeSwitch extends ConsumerWidget {
   }
 
   void _setThemeMode(WidgetRef ref, ThemeMode themeMode) {
+    String themeName;
     switch (themeMode) {
       case ThemeMode.light:
-        ref.read(themeProvider.notifier).setLightTheme();
+        ref.read(themeProvider.notifier).changeTheme(ThemeMode.light);
+        themeName = 'light';
         break;
       case ThemeMode.dark:
-        ref.read(themeProvider.notifier).setDarkTheme();
+        ref.read(themeProvider.notifier).changeTheme(ThemeMode.dark);
+        themeName = 'dark';
         break;
       case ThemeMode.system:
-        ref.read(themeProvider.notifier).setSystemTheme();
+        ref.read(themeProvider.notifier).changeTheme(ThemeMode.system);
+        themeName = 'system';
         break;
     }
+    
+    // Логируем изменение темы
+    AnalyticsService().logChangeTheme(themeName);
   }
 
   void _showThemeDialog(BuildContext context, WidgetRef ref) {
@@ -374,13 +382,13 @@ class CompactThemeSwitch extends ConsumerWidget {
       onTap: () {
         switch (themeMode) {
           case ThemeMode.light:
-            ref.read(themeProvider.notifier).setLightTheme();
+            ref.read(themeProvider.notifier).changeTheme(ThemeMode.light);
             break;
           case ThemeMode.dark:
-            ref.read(themeProvider.notifier).setDarkTheme();
+            ref.read(themeProvider.notifier).changeTheme(ThemeMode.dark);
             break;
           case ThemeMode.system:
-            ref.read(themeProvider.notifier).setSystemTheme();
+            ref.read(themeProvider.notifier).changeTheme(ThemeMode.system);
             break;
         }
         Navigator.of(context).pop();
@@ -490,7 +498,7 @@ class QuickThemeToggle extends ConsumerWidget {
 
     return IconButton(
       onPressed: () {
-        ref.read(themeProvider.notifier).toggleTheme();
+        ref.read(themeProvider.notifier).changeTheme(ThemeMode.dark);
         onChanged?.call();
       },
       icon: Icon(

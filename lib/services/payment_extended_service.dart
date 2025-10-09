@@ -125,7 +125,7 @@ class PaymentExtendedService {
 
       await paymentRef.set(payment.toMap());
       return paymentRef.id;
-    } catch (e) {
+    } on Exception {
       // TODO(developer): Log error properly
       return null;
     }
@@ -139,7 +139,7 @@ class PaymentExtendedService {
           .doc(payment.id)
           .update(payment.toMap());
       return true;
-    } catch (e) {
+    } on Exception {
       // TODO(developer): Log error properly
       return false;
     }
@@ -153,7 +153,7 @@ class PaymentExtendedService {
         return PaymentExtended.fromDocument(doc);
       }
       return null;
-    } catch (e) {
+    } on Exception {
       // TODO(developer): Log error properly
       return null;
     }
@@ -218,7 +218,7 @@ class PaymentExtendedService {
       );
 
       return await updatePayment(updatedPayment);
-    } catch (e) {
+    } on Exception {
       // TODO(developer): Log error properly
       return false;
     }
@@ -307,7 +307,7 @@ class PaymentExtendedService {
       await updatePayment(updatedPayment);
 
       return downloadUrl;
-    } catch (e) {
+    } on Exception {
       // TODO(developer): Log error properly
       return null;
     }
@@ -400,7 +400,7 @@ class PaymentExtendedService {
       await updatePayment(updatedPayment);
 
       return downloadUrl;
-    } catch (e) {
+    } on Exception {
       // TODO(developer): Log error properly
       return null;
     }
@@ -455,7 +455,7 @@ class PaymentExtendedService {
         paymentsByStatus: paymentsByStatus,
         lastUpdated: DateTime.now(),
       );
-    } catch (e) {
+    } on Exception {
       // TODO(developer): Log error properly
       return PaymentStats.empty();
     }
@@ -470,7 +470,7 @@ class PaymentExtendedService {
         return AdvancePaymentSettings.fromMap(doc.data()!);
       }
       return const AdvancePaymentSettings();
-    } catch (e) {
+    } on Exception {
       // TODO(developer): Log error properly
       return const AdvancePaymentSettings();
     }
@@ -486,7 +486,7 @@ class PaymentExtendedService {
           .doc('advance_payment')
           .set(settings.toMap());
       return true;
-    } catch (e) {
+    } on Exception {
       // TODO(developer): Log error properly
       return false;
     }
@@ -524,7 +524,7 @@ class PaymentExtendedService {
 
       // Временная заглушка
       return 'https://example.com/receipts/${DateTime.now().millisecondsSinceEpoch}.pdf';
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка загрузки квитанции: $e');
       rethrow;
     }
@@ -542,7 +542,7 @@ class PaymentExtendedService {
 
       // Временная заглушка
       return 'https://example.com/invoices/${DateTime.now().millisecondsSinceEpoch}.pdf';
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка загрузки счёта: $e');
       rethrow;
     }

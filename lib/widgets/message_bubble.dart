@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/chat_message.dart';
+import '../models/chat.dart';
 
 /// Виджет для отображения сообщения в чате
 class MessageBubble extends StatelessWidget {
@@ -32,8 +32,8 @@ class MessageBubble extends StatelessWidget {
                   radius: 16,
                   backgroundColor: Colors.grey[300],
                   child: Text(
-                    message.senderName.isNotEmpty
-                        ? message.senderName[0].toUpperCase()
+                    message.senderName?.isNotEmpty ?? false
+                        ? message.senderName![0].toUpperCase()
                         : '?',
                     style: const TextStyle(fontSize: 12),
                   ),
@@ -65,7 +65,7 @@ class MessageBubble extends StatelessWidget {
                     children: [
                       if (!isFromCurrentUser)
                         Text(
-                          message.senderName,
+                          message.senderName ?? 'Пользователь',
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -86,8 +86,8 @@ class MessageBubble extends StatelessWidget {
                   radius: 16,
                   backgroundColor: Colors.grey[300],
                   child: Text(
-                    message.senderName.isNotEmpty
-                        ? message.senderName[0].toUpperCase()
+                    message.senderName?.isNotEmpty ?? false
+                        ? message.senderName![0].toUpperCase()
                         : '?',
                     style: const TextStyle(fontSize: 12),
                   ),
@@ -361,7 +361,7 @@ class MessageBubble extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            _formatTime(message.timestamp),
+            _formatTime(message.timestamp ?? message.createdAt),
             style: TextStyle(
               color: isFromCurrentUser ? Colors.white70 : Colors.grey[600],
               fontSize: 12,

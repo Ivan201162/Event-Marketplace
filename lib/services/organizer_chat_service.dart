@@ -55,7 +55,7 @@ class OrganizerChatService {
       );
 
       return chatId;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка создания чата с организатором: $e');
       rethrow;
     }
@@ -71,7 +71,7 @@ class OrganizerChatService {
           .get();
 
       return querySnapshot.docs.map(OrganizerChat.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения чатов заказчика: $e');
       return [];
     }
@@ -87,7 +87,7 @@ class OrganizerChatService {
           .get();
 
       return querySnapshot.docs.map(OrganizerChat.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения чатов организатора: $e');
       return [];
     }
@@ -126,7 +126,7 @@ class OrganizerChatService {
         return OrganizerChat.fromDocument(doc);
       }
       return null;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения чата: $e');
       return null;
     }
@@ -179,7 +179,7 @@ class OrganizerChatService {
             senderType == 'customer', // Организатор не прочитал
         'unreadCount': senderType == 'customer' ? FieldValue.increment(1) : 0,
       });
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка отправки сообщения: $e');
       rethrow;
     }
@@ -217,7 +217,7 @@ class OrganizerChatService {
             message ?? 'Предлагаю вам этого специалиста для вашего мероприятия',
         metadata: proposal.toMap(),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка предложения специалиста: $e');
       rethrow;
     }
@@ -242,7 +242,7 @@ class OrganizerChatService {
             'Спасибо за предложение, но этот специалист мне не подходит',
         metadata: {'specialistId': specialistId},
       );
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка отклонения специалиста: $e');
       rethrow;
     }
@@ -266,7 +266,7 @@ class OrganizerChatService {
         text: message ?? 'Отлично! Хочу забронировать этого специалиста',
         metadata: {'specialistId': specialistId, 'action': 'accept'},
       );
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка принятия специалиста: $e');
       rethrow;
     }
@@ -301,7 +301,7 @@ class OrganizerChatService {
         'hasUnreadMessages': false,
         'unreadCount': 0,
       });
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка отметки сообщений как прочитанных: $e');
     }
   }
@@ -316,7 +316,7 @@ class OrganizerChatService {
         'status': status.name,
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка обновления статуса чата: $e');
       rethrow;
     }
@@ -334,7 +334,7 @@ class OrganizerChatService {
       return querySnapshot.docs
           .map((doc) => OrganizerMessage.fromMap(doc.data()))
           .toList();
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения сообщений чата: $e');
       return [];
     }
@@ -371,7 +371,7 @@ class OrganizerChatService {
       batch.delete(_firestore.collection(_chatsCollection).doc(chatId));
 
       await batch.commit();
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка удаления чата: $e');
       rethrow;
     }
@@ -388,7 +388,7 @@ class OrganizerChatService {
           .get();
 
       return querySnapshot.docs.length;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения количества непрочитанных чатов: $e');
       return 0;
     }

@@ -504,7 +504,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                     ),
                   );
                 }
-              } catch (e) {
+              } on Exception catch (e) {
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Ошибка: $e')),
@@ -616,7 +616,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                     const SnackBar(content: Text('Команда обновлена')),
                   );
                 }
-              } catch (e) {
+              } on Exception catch (e) {
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Ошибка: $e')),
@@ -654,7 +654,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                     const SnackBar(content: Text('Команда подтверждена')),
                   );
                 }
-              } catch (e) {
+              } on Exception catch (e) {
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Ошибка: $e')),
@@ -716,7 +716,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                     const SnackBar(content: Text('Команда отклонена')),
                   );
                 }
-              } catch (e) {
+              } on Exception catch (e) {
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Ошибка: $e')),

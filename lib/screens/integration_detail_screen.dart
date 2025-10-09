@@ -454,7 +454,7 @@ class _IntegrationDetailScreenState
           ),
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка: $e'),
@@ -493,7 +493,7 @@ class _IntegrationDetailScreenState
           ),
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка: $e'),

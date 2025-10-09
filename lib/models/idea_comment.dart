@@ -16,6 +16,9 @@ class IdeaComment {
     this.parentCommentId,
     this.isEdited = false,
     this.isDeleted = false,
+    this.authorName,
+    this.authorAvatar,
+    this.likesCount,
   });
 
   /// Создать из Map (Firestore)
@@ -35,6 +38,9 @@ class IdeaComment {
         parentCommentId: map['parentCommentId'] as String?,
         isEdited: (map['isEdited'] ?? false) as bool,
         isDeleted: (map['isDeleted'] ?? false) as bool,
+        authorName: map['authorName'] as String?,
+        authorAvatar: map['authorAvatar'] as String?,
+        likesCount: (map['likesCount'] ?? 0) as int?,
       );
 
   final String id;
@@ -50,6 +56,9 @@ class IdeaComment {
   final String? parentCommentId; // ID родительского комментария
   final bool isEdited;
   final bool isDeleted;
+  final String? authorName;
+  final String? authorAvatar;
+  final int? likesCount;
 
   /// Преобразовать в Map (Firestore)
   Map<String, dynamic> toMap() => {
@@ -66,6 +75,9 @@ class IdeaComment {
         'parentCommentId': parentCommentId,
         'isEdited': isEdited,
         'isDeleted': isDeleted,
+        'authorName': authorName,
+        'authorAvatar': authorAvatar,
+        'likesCount': likesCount,
       };
 
   /// Создать копию с изменениями
@@ -83,6 +95,9 @@ class IdeaComment {
     String? parentCommentId,
     bool? isEdited,
     bool? isDeleted,
+    String? authorName,
+    String? authorAvatar,
+    int? likesCount,
   }) =>
       IdeaComment(
         id: id ?? this.id,
@@ -98,6 +113,9 @@ class IdeaComment {
         parentCommentId: parentCommentId ?? this.parentCommentId,
         isEdited: isEdited ?? this.isEdited,
         isDeleted: isDeleted ?? this.isDeleted,
+        authorName: authorName ?? this.authorName,
+        authorAvatar: authorAvatar ?? this.authorAvatar,
+        likesCount: likesCount ?? this.likesCount,
       );
 
   @override

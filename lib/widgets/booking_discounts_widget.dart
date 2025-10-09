@@ -261,7 +261,7 @@ class _DiscountCard extends StatelessWidget {
                         color: Colors.orange.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                            color: Colors.orange.withValues(alpha: 0.3)),
+                            color: Colors.orange.withValues(alpha: 0.3),),
                       ),
                       child: Text(
                         'Скидка: -${discount.discountPercent.toStringAsFixed(0)}%',

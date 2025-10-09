@@ -31,9 +31,9 @@ class VideoOptimizationService {
             const Duration(), // TODO(developer): Получить реальную длительность
         format: fileExtension,
         resolution: const Size(
-            1920, 1080), // TODO(developer): Получить реальное разрешение
+            1920, 1080,), // TODO(developer): Получить реальное разрешение
       );
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка получения информации о видео: $e');
       return null;
     }
@@ -57,7 +57,7 @@ class VideoOptimizationService {
       await inputFile.copy(outputPath);
 
       return outputPath;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка сжатия видео: $e');
       return null;
     }
@@ -74,7 +74,7 @@ class VideoOptimizationService {
       // TODO(developer): Реализовать создание миниатюры с помощью FFmpeg
       // Пока возвращаем заглушку
       return _createPlaceholderThumbnail(width, height);
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка создания миниатюры видео: $e');
       return null;
     }
@@ -107,7 +107,7 @@ class VideoOptimizationService {
       await file.writeAsBytes(videoBytes);
 
       return file.path;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка сохранения видео: $e');
       rethrow;
     }
@@ -121,7 +121,7 @@ class VideoOptimizationService {
         return await file.readAsBytes();
       }
       return null;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка загрузки видео: $e');
       return null;
     }
@@ -134,7 +134,7 @@ class VideoOptimizationService {
       if (await file.exists()) {
         await file.delete();
       }
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка удаления видео: $e');
     }
   }
@@ -148,7 +148,7 @@ class VideoOptimizationService {
       if (await videosDir.exists()) {
         await videosDir.delete(recursive: true);
       }
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка очистки кэша видео: $e');
     }
   }
@@ -171,7 +171,7 @@ class VideoOptimizationService {
       }
 
       return totalSize;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка получения размера кэша видео: $e');
       return 0;
     }
@@ -376,7 +376,7 @@ class _OptimizedVideoPlayerState extends State<OptimizedVideoPlayer> {
           _isLoading = false;
         });
       }
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка загрузки видео: $e');
       if (mounted) {
         setState(() {
@@ -398,7 +398,7 @@ class _OptimizedVideoPlayerState extends State<OptimizedVideoPlayer> {
         return videoPath;
       }
       return null;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка получения кэшированного видео: $e');
       return null;
     }
@@ -422,7 +422,7 @@ class _OptimizedVideoPlayerState extends State<OptimizedVideoPlayer> {
         return bytes;
       }
       return null;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка загрузки видео по URL: $e');
       return null;
     }

@@ -43,8 +43,9 @@ final mockStories = <Story>[
   Story(
     id: 'story_1',
     specialistId: 'specialist_1',
+    title: 'Тестовая история',
     mediaUrl: 'https://example.com/story1.jpg',
-    text: 'Тестовая история',
+    thumbnailUrl: 'https://example.com/story1_thumb.jpg',
     createdAt: DateTime.now(),
     expiresAt: DateTime.now().add(const Duration(hours: 24)),
     viewsCount: 15,

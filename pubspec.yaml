@@ -16,6 +16,7 @@ dependencies:
   
   # State Management
   flutter_riverpod: ^2.4.9
+  qr_flutter: ^4.1.0
   
   # Firebase
   firebase_core: ^4.1.1
@@ -29,12 +30,16 @@ dependencies:
   
   # Local Storage
   shared_preferences: ^2.1.1
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  flutter_cache_manager: ^3.3.1
   
   # File & Media
   cached_network_image: ^3.3.1
   image_picker: ^1.0.4
   file_picker: ^10.3.3
   permission_handler: ^12.0.1
+  path_provider: ^2.1.1
   
   # Network & HTTP
   http: ^1.1.0
@@ -88,14 +93,17 @@ dependencies:
   
   # Animations
   flutter_animate: ^4.5.0
+  curved_navigation_bar: ^1.0.3
+  animated_bottom_navigation_bar: ^1.2.0
   
   # Analytics
   firebase_analytics: ^12.0.2
+  fl_chart: ^0.69.0
   
-  # Integration Testing
-  integration_test:
-    sdk: flutter
-  patrol: ^3.7.0
+  # Payment System
+  flutter_stripe: ^11.1.0
+  # yookassa_payment_flutter: ^1.0.0  # Package not available
+  
   google_fonts: ^6.3.2
 
 dev_dependencies:
@@ -105,6 +113,9 @@ dev_dependencies:
   mockito: ^5.4.4
   golden_toolkit: ^0.15.0
   build_runner: ^2.4.7
+  integration_test:
+    sdk: flutter
+  patrol: ^3.7.0
 
 flutter:
   uses-material-design: true

@@ -1,312 +1,246 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/ai_message.dart';
+import 'dart:async';
+import 'package:flutter/material.dart';
+import '../models/smart_specialist.dart';
 import '../models/specialist.dart';
-import 'specialist_service.dart';
+import 'smart_search_service.dart';
 
-/// Сервис для AI-помощника
+/// Сервис AI-помощника для подбора специалистов
 class AIAssistantService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final SpecialistService _specialistService = SpecialistService();
+  factory AIAssistantService() => _instance;
+  AIAssistantService._internal();
+  static final AIAssistantService _instance = AIAssistantService._internal();
 
-  /// Получить историю сообщений пользователя
-  Stream<List<AIMessage>> getMessageHistory(String userId) => _db
-      .collection('ai_chats')
-      .doc(userId)
-      .collection('messages')
-      .orderBy('timestamp', descending: false)
-      .snapshots()
-      .map((snapshot) => snapshot.docs.map(AIMessage.fromDocument).toList());
+  final SmartSearchService _smartSearchService = SmartSearchService();
+  final List<AIConversation> _conversations = [];
+  final Map<String, List<AIMessage>> _conversationHistory = {};
 
-  /// Отправить сообщение пользователя и получить ответ AI
-  Future<AIMessage> sendMessage(String userId, String message) async {
-    try {
-      // Сохраняем сообщение пользователя
-      final userMessage = AIMessage(
-        id: _generateMessageId(),
-        type: AIMessageType.user,
-        content: message,
-        timestamp: DateTime.now(),
-      );
+  /// Начать новую беседу с AI-помощником
+  Future<AIConversation> startConversation({String? userId}) async {
+    final conversation = AIConversation(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      userId: userId,
+      messages: [],
+      context: {},
+      createdAt: DateTime.now(),
+    );
 
-      await _saveMessage(userId, userMessage);
+    _conversations.add(conversation);
+    
+    // Добавляем приветственное сообщение
+    final welcomeMessage = AIMessage(
+      id: 'welcome_${conversation.id}',
+      text: 'Привет! Я помогу вам найти идеального специалиста для вашего мероприятия. Расскажите, что вы планируете?',
+      isFromUser: false,
+      timestamp: DateTime.now(),
+      messageType: AIMessageType.text,
+    );
 
-      // Обрабатываем сообщение и генерируем ответ
-      final aiResponse = await _processUserMessage(message);
+    conversation.messages.add(welcomeMessage);
+    _conversationHistory[conversation.id] = [welcomeMessage];
 
-      // Сохраняем ответ AI
-      await _saveMessage(userId, aiResponse);
-
-      return aiResponse;
-    } catch (e) {
-      print('Ошибка отправки сообщения: $e');
-      // Возвращаем сообщение об ошибке
-      return AIMessage(
-        id: _generateMessageId(),
-        type: AIMessageType.assistant,
-        content: 'Извините, произошла ошибка. Попробуйте еще раз.',
-        timestamp: DateTime.now(),
-      );
-    }
+    return conversation;
   }
 
-  /// Обработать сообщение пользователя и сгенерировать ответ
-  Future<AIMessage> _processUserMessage(String message) async {
-    final lowerMessage = message.toLowerCase();
+  /// Отправить сообщение AI-помощнику
+  Future<AIMessage> sendMessage({
+    required String conversationId,
+    required String message,
+    String? userId,
+  }) async {
+    final conversation = _conversations.firstWhere(
+      (c) => c.id == conversationId,
+      orElse: () => throw Exception('Conversation not found'),
+    );
 
-    // Анализируем запрос пользователя
-    final intent = _analyzeIntent(lowerMessage);
+    // Создаем сообщение пользователя
+    final userMessage = AIMessage(
+      id: 'user_${DateTime.now().millisecondsSinceEpoch}',
+      text: message,
+      isFromUser: true,
+      timestamp: DateTime.now(),
+      messageType: AIMessageType.text,
+    );
 
-    switch (intent.type) {
-      case AIIntentType.findSpecialist:
-        return _handleFindSpecialistIntent(intent, message);
-      case AIIntentType.budgetQuestion:
-        return _handleBudgetQuestionIntent(intent, message);
-      case AIIntentType.generalQuestion:
-        return _handleGeneralQuestionIntent(message);
-      case AIIntentType.greeting:
-        return _handleGreetingIntent();
-      default:
-        return _handleUnknownIntent(message);
-    }
+    conversation.messages.add(userMessage);
+    _conversationHistory[conversationId]?.add(userMessage);
+
+    // Обрабатываем сообщение и генерируем ответ
+    final aiResponse = await _processUserMessage(conversation, message, userId);
+    
+    conversation.messages.add(aiResponse);
+    _conversationHistory[conversationId]?.add(aiResponse);
+
+    return aiResponse;
   }
 
-  /// Анализировать намерение пользователя
-  AIIntent _analyzeIntent(String message) {
-    // Ключевые слова для поиска специалистов
-    final specialistKeywords = [
-      'найди',
-      'подбери',
-      'нужен',
-      'ищу',
-      'хочу',
-      'ведущий',
-      'фотограф',
-      'dj',
-      'декоратор',
-      'музыкант',
-      'видеограф',
-      'аниматор',
-      'флорист',
-      'свадьба',
-      'день рождения',
-      'корпоратив',
-      'мероприятие',
-    ];
-
-    // Ключевые слова для вопросов о бюджете
-    final budgetKeywords = [
-      'бюджет',
-      'стоимость',
-      'цена',
-      'сколько стоит',
-      'дорого',
-      'дешево',
-      'расходы',
-      'затраты',
-      'потратить',
-    ];
-
-    // Ключевые слова для приветствий
-    final greetingKeywords = [
-      'привет',
-      'здравствуй',
-      'добро пожаловать',
-      'помощь',
-      'помоги',
-    ];
-
-    // Проверяем намерения
-    if (specialistKeywords.any((keyword) => message.contains(keyword))) {
-      return AIIntent(
-        type: AIIntentType.findSpecialist,
-        category: _extractCategory(message),
-        location: _extractLocation(message),
-        eventType: _extractEventType(message),
-        budget: _extractBudget(message),
-      );
-    }
-
-    if (budgetKeywords.any((keyword) => message.contains(keyword))) {
-      return AIIntent(
-        type: AIIntentType.budgetQuestion,
-        category: _extractCategory(message),
-        location: _extractLocation(message),
-        eventType: _extractEventType(message),
-        budget: _extractBudget(message),
-      );
-    }
-
-    if (greetingKeywords.any((keyword) => message.contains(keyword))) {
-      return const AIIntent(type: AIIntentType.greeting);
-    }
-
-    return const AIIntent(type: AIIntentType.generalQuestion);
-  }
-
-  /// Обработать запрос на поиск специалиста
-  Future<AIMessage> _handleFindSpecialistIntent(
-    AIIntent intent,
-    String originalMessage,
+  /// Обработать сообщение пользователя
+  Future<AIMessage> _processUserMessage(
+    AIConversation conversation,
+    String message,
+    String? userId,
   ) async {
-    try {
-      // Ищем специалистов по категории
-      var specialists = <Specialist>[];
+    final messageLower = message.toLowerCase();
+    
+    // Анализируем сообщение и обновляем контекст
+    _updateConversationContext(conversation, message);
 
-      if (intent.category != null) {
-        specialists = await _specialistService.getSpecialistsByCategory(
-          intent.category!,
-          limit: 3,
-        );
-      } else {
-        // Если категория не определена, ищем по тексту
-        specialists = await _specialistService.searchSpecialists(
-          query: originalMessage,
-        );
-      }
-
-      if (specialists.isEmpty) {
-        return AIMessage(
-          id: _generateMessageId(),
-          type: AIMessageType.assistant,
-          content:
-              'К сожалению, я не нашел подходящих специалистов. Попробуйте изменить критерии поиска или обратитесь к нашему каталогу специалистов.',
-          timestamp: DateTime.now(),
-        );
-      }
-
-      // Формируем ответ с предложениями специалистов
-      final response =
-          _buildSpecialistRecommendationResponse(specialists, intent);
-
-      return AIMessage(
-        id: _generateMessageId(),
-        type: AIMessageType.assistant,
-        content: response,
-        timestamp: DateTime.now(),
-      );
-    } catch (e) {
-      print('Ошибка поиска специалистов: $e');
-      return AIMessage(
-        id: _generateMessageId(),
-        type: AIMessageType.assistant,
-        content:
-            'Произошла ошибка при поиске специалистов. Попробуйте еще раз.',
-        timestamp: DateTime.now(),
-      );
+    // Определяем тип ответа
+    if (_isGreeting(messageLower)) {
+      return _generateGreetingResponse(conversation);
+    } else if (_isAskingForHelp(messageLower)) {
+      return _generateHelpResponse(conversation);
+    } else if (_isProvidingEventInfo(messageLower)) {
+      return _generateEventInfoResponse(conversation);
+    } else if (_isProvidingBudget(messageLower)) {
+      return _generateBudgetResponse(conversation);
+    } else if (_isProvidingDate(messageLower)) {
+      return _generateDateResponse(conversation);
+    } else if (_isProvidingLocation(messageLower)) {
+      return _generateLocationResponse(conversation);
+    } else if (_isAskingForRecommendations(messageLower)) {
+      return _generateRecommendationsResponse(conversation, userId);
+    } else if (_isAskingForMoreInfo(messageLower)) {
+      return _generateMoreInfoResponse(conversation);
+    } else {
+      return _generateDefaultResponse(conversation);
     }
   }
 
-  /// Обработать вопрос о бюджете
-  Future<AIMessage> _handleBudgetQuestionIntent(
-    AIIntent intent,
-    String originalMessage,
-  ) async {
-    try {
-      // Получаем средние цены по категории
-      var specialists = <Specialist>[];
-
-      if (intent.category != null) {
-        specialists = await _specialistService.getSpecialistsByCategory(
-          intent.category!,
-          limit: 10,
-        );
-      } else {
-        specialists = await _specialistService.getAllSpecialists(limit: 20);
+  /// Обновить контекст беседы
+  void _updateConversationContext(AIConversation conversation, String message) {
+    final messageLower = message.toLowerCase();
+    
+    // Извлекаем информацию о мероприятии
+    if (_containsEventType(messageLower)) {
+      final eventType = _extractEventType(messageLower);
+      if (eventType != null) {
+        conversation.context['eventType'] = eventType;
       }
+    }
 
-      if (specialists.isEmpty) {
-        return AIMessage(
-          id: _generateMessageId(),
-          type: AIMessageType.assistant,
-          content: 'К сожалению, у нас нет данных о ценах в этой категории.',
-          timestamp: DateTime.now(),
-        );
+    // Извлекаем информацию о бюджете
+    if (_containsBudget(messageLower)) {
+      final budget = _extractBudget(messageLower);
+      if (budget != null) {
+        conversation.context['budget'] = budget;
       }
+    }
 
-      // Рассчитываем средние цены
-      final avgPrice =
-          specialists.map((s) => s.hourlyRate).reduce((a, b) => a + b) /
-              specialists.length;
-      final minPrice =
-          specialists.map((s) => s.hourlyRate).reduce((a, b) => a < b ? a : b);
-      final maxPrice =
-          specialists.map((s) => s.hourlyRate).reduce((a, b) => a > b ? a : b);
+    // Извлекаем информацию о дате
+    if (_containsDate(messageLower)) {
+      final date = _extractDate(messageLower);
+      if (date != null) {
+        conversation.context['eventDate'] = date;
+      }
+    }
 
-      final response =
-          _buildBudgetResponse(avgPrice, minPrice, maxPrice, intent);
+    // Извлекаем информацию о локации
+    if (_containsLocation(messageLower)) {
+      final location = _extractLocation(messageLower);
+      if (location != null) {
+        conversation.context['location'] = location;
+      }
+    }
 
-      return AIMessage(
-        id: _generateMessageId(),
-        type: AIMessageType.assistant,
-        content: response,
-        timestamp: DateTime.now(),
-      );
-    } catch (e) {
-      print('Ошибка расчета бюджета: $e');
-      return AIMessage(
-        id: _generateMessageId(),
-        type: AIMessageType.assistant,
-        content: 'Произошла ошибка при расчете бюджета. Попробуйте еще раз.',
-        timestamp: DateTime.now(),
-      );
+    // Извлекаем информацию о стиле
+    if (_containsStyle(messageLower)) {
+      final style = _extractStyle(messageLower);
+      if (style != null) {
+        conversation.context['style'] = style;
+      }
     }
   }
 
-  /// Обработать общий вопрос
-  Future<AIMessage> _handleGeneralQuestionIntent(String message) async =>
-      AIMessage(
-        id: _generateMessageId(),
-        type: AIMessageType.assistant,
-        content:
-            'Я помогу вам найти специалистов для вашего мероприятия. Вы можете спросить:\n\n'
-            '• "Подбери ведущего для свадьбы в Москве"\n'
-            '• "Какой бюджет нужен на корпоратив для 50 человек?"\n'
-            '• "Найди фотографа для дня рождения"\n\n'
-            'Или просто опишите, что вам нужно!',
-        timestamp: DateTime.now(),
-      );
+  /// Проверить, является ли сообщение приветствием
+  bool _isGreeting(String message) {
+    final greetings = ['привет', 'здравствуйте', 'добрый день', 'добрый вечер', 'доброе утро'];
+    return greetings.any((greeting) => message.contains(greeting));
+  }
 
-  /// Обработать приветствие
-  AIMessage _handleGreetingIntent() => AIMessage(
-        id: _generateMessageId(),
-        type: AIMessageType.assistant,
-        content: 'Привет! Я ваш AI-помощник по планированию мероприятий. 🎉\n\n'
-            'Я помогу вам:\n'
-            '• Найти подходящих специалистов\n'
-            '• Рассчитать примерный бюджет\n'
-            '• Дать советы по организации\n\n'
-            'Просто опишите, какое мероприятие вы планируете!',
-        timestamp: DateTime.now(),
-      );
+  /// Проверить, просит ли пользователь помощи
+  bool _isAskingForHelp(String message) {
+    final helpWords = ['помощь', 'помоги', 'как', 'что', 'расскажи'];
+    return helpWords.any((word) => message.contains(word));
+  }
 
-  /// Обработать неизвестный запрос
-  AIMessage _handleUnknownIntent(String message) => AIMessage(
-        id: _generateMessageId(),
-        type: AIMessageType.assistant,
-        content:
-            'Я не совсем понял ваш запрос. Попробуйте переформулировать или задайте один из этих вопросов:\n\n'
-            '• "Найди фотографа для свадьбы"\n'
-            '• "Сколько стоит ведущий?"\n'
-            '• "Подбери DJ для корпоратива"',
-        timestamp: DateTime.now(),
-      );
+  /// Проверить, предоставляет ли пользователь информацию о мероприятии
+  bool _isProvidingEventInfo(String message) {
+    final eventWords = ['свадьба', 'день рождения', 'корпоратив', 'юбилей', 'вечеринка', 'мероприятие'];
+    return eventWords.any((word) => message.contains(word));
+  }
 
-  /// Извлечь категорию из сообщения
-  SpecialistCategory? _extractCategory(String message) {
-    final categoryMap = {
-      'фотограф': SpecialistCategory.photographer,
-      'видеограф': SpecialistCategory.videographer,
-      'dj': SpecialistCategory.dj,
-      'ведущий': SpecialistCategory.host,
-      'декоратор': SpecialistCategory.decorator,
-      'музыкант': SpecialistCategory.musician,
-      'аниматор': SpecialistCategory.animator,
-      'флорист': SpecialistCategory.florist,
-      'визажист': SpecialistCategory.makeup,
-      'парикмахер': SpecialistCategory.hairstylist,
+  /// Проверить, предоставляет ли пользователь информацию о бюджете
+  bool _isProvidingBudget(String message) {
+    final budgetWords = ['бюджет', 'стоимость', 'цена', 'рублей', 'руб', '₽'];
+    return budgetWords.any((word) => message.contains(word));
+  }
+
+  /// Проверить, предоставляет ли пользователь информацию о дате
+  bool _isProvidingDate(String message) {
+    final dateWords = ['дата', 'число', 'месяц', 'год', 'день'];
+    return dateWords.any((word) => message.contains(word));
+  }
+
+  /// Проверить, предоставляет ли пользователь информацию о локации
+  bool _isProvidingLocation(String message) {
+    final locationWords = ['город', 'место', 'адрес', 'локация'];
+    return locationWords.any((word) => message.contains(word));
+  }
+
+  /// Проверить, просит ли пользователь рекомендации
+  bool _isAskingForRecommendations(String message) {
+    final recommendationWords = ['найди', 'подбери', 'рекомендуй', 'покажи', 'дай'];
+    return recommendationWords.any((word) => message.contains(word));
+  }
+
+  /// Проверить, просит ли пользователь дополнительную информацию
+  bool _isAskingForMoreInfo(String message) {
+    final infoWords = ['расскажи', 'подробнее', 'больше', 'еще'];
+    return infoWords.any((word) => message.contains(word));
+  }
+
+  /// Содержит ли сообщение тип мероприятия
+  bool _containsEventType(String message) {
+    final eventTypes = ['свадьба', 'день рождения', 'корпоратив', 'юбилей', 'вечеринка', 'фотосессия'];
+    return eventTypes.any((type) => message.contains(type));
+  }
+
+  /// Содержит ли сообщение информацию о бюджете
+  bool _containsBudget(String message) {
+    final budgetPattern = RegExp(r'\d+.*(?:руб|₽|тысяч|тыс)');
+    return budgetPattern.hasMatch(message);
+  }
+
+  /// Содержит ли сообщение информацию о дате
+  bool _containsDate(String message) {
+    final datePattern = RegExp(r'\d{1,2}[./]\d{1,2}[./]\d{2,4}');
+    return datePattern.hasMatch(message);
+  }
+
+  /// Содержит ли сообщение информацию о локации
+  bool _containsLocation(String message) {
+    final cities = ['москва', 'санкт-петербург', 'екатеринбург', 'новосибирск', 'казань', 'нижний новгород'];
+    return cities.any((city) => message.contains(city));
+  }
+
+  /// Содержит ли сообщение информацию о стиле
+  bool _containsStyle(String message) {
+    final styles = ['классика', 'современный', 'юмор', 'интерактив', 'романтичный', 'официальный'];
+    return styles.any((style) => message.contains(style));
+  }
+
+  /// Извлечь тип мероприятия
+  String? _extractEventType(String message) {
+    final eventTypes = {
+      'свадьба': 'свадьба',
+      'день рождения': 'день рождения',
+      'корпоратив': 'корпоратив',
+      'юбилей': 'юбилей',
+      'вечеринка': 'вечеринка',
+      'фотосессия': 'фотосессия',
     };
 
-    for (final entry in categoryMap.entries) {
+    for (final entry in eventTypes.entries) {
       if (message.contains(entry.key)) {
         return entry.value;
       }
@@ -314,198 +248,364 @@ class AIAssistantService {
     return null;
   }
 
-  /// Извлечь местоположение из сообщения
-  String? _extractLocation(String message) {
-    final locations = [
-      'москва',
-      'санкт-петербург',
-      'екатеринбург',
-      'новосибирск',
-    ];
-    for (final location in locations) {
-      if (message.contains(location)) {
-        return location;
-      }
-    }
-    return null;
-  }
-
-  /// Извлечь тип мероприятия из сообщения
-  String? _extractEventType(String message) {
-    final eventTypes = [
-      'свадьба',
-      'день рождения',
-      'корпоратив',
-      'конференция',
-    ];
-    for (final eventType in eventTypes) {
-      if (message.contains(eventType)) {
-        return eventType;
-      }
-    }
-    return null;
-  }
-
-  /// Извлечь бюджет из сообщения
+  /// Извлечь бюджет
   double? _extractBudget(String message) {
-    final regex = RegExp(r'(\d+)\s*(тысяч|тыс|к|рублей|руб)');
-    final match = regex.firstMatch(message);
+    final budgetPattern = RegExp(r'(\d+).*(?:руб|₽|тысяч|тыс)');
+    final match = budgetPattern.firstMatch(message);
     if (match != null) {
-      final amount = double.tryParse(match.group(1) ?? '');
+      var amount = double.tryParse(match.group(1) ?? '');
       if (amount != null) {
-        return amount * 1000; // Конвертируем в рубли
+        // Если упоминаются тысячи, умножаем на 1000
+        if (message.contains('тысяч') || message.contains('тыс')) {
+          amount *= 1000;
+        }
+        return amount;
       }
     }
     return null;
   }
 
-  /// Построить ответ с рекомендациями специалистов
-  String _buildSpecialistRecommendationResponse(
-    List<Specialist> specialists,
-    AIIntent intent,
-  ) {
-    final buffer = StringBuffer();
-
-    if (intent.category != null) {
-      buffer.writeln(
-        'Вот подходящие ${intent.category!.displayName.toLowerCase()}ы для вашего мероприятия:\n',
-      );
-    } else {
-      buffer.writeln('Вот подходящие специалисты:\n');
-    }
-
-    for (var i = 0; i < specialists.length; i++) {
-      final specialist = specialists[i];
-      buffer.writeln('${i + 1}. **${specialist.name}**');
-      buffer.writeln('   ${specialist.categoryDisplayName}');
-      buffer.writeln(
-        '   ⭐ Рейтинг: ${specialist.rating.toStringAsFixed(1)} (${specialist.reviewCount} отзывов)',
-      );
-      buffer.writeln(
-        '   💰 Цена: ${specialist.hourlyRate.toStringAsFixed(0)} ₽/час',
-      );
-      if (specialist.description != null &&
-          specialist.description!.isNotEmpty) {
-        buffer.writeln('   📝 ${specialist.description}');
+  /// Извлечь дату
+  DateTime? _extractDate(String message) {
+    final datePattern = RegExp(r'(\d{1,2})[./](\d{1,2})[./](\d{2,4})');
+    final match = datePattern.firstMatch(message);
+    if (match != null) {
+      final day = int.tryParse(match.group(1) ?? '');
+      final month = int.tryParse(match.group(2) ?? '');
+      final year = int.tryParse(match.group(3) ?? '');
+      
+      if (day != null && month != null && year != null) {
+        final fullYear = year < 100 ? 2000 + year : year;
+        return DateTime(fullYear, month, day);
       }
-      buffer.writeln();
     }
-
-    buffer.writeln(
-      'Хотите узнать больше о каком-то специалисте или найти других?',
-    );
-
-    return buffer.toString();
+    return null;
   }
 
-  /// Построить ответ о бюджете
-  String _buildBudgetResponse(
-    double avgPrice,
-    double minPrice,
-    double maxPrice,
-    AIIntent intent,
-  ) {
-    final buffer = StringBuffer();
+  /// Извлечь локацию
+  String? _extractLocation(String message) {
+    final cities = ['москва', 'санкт-петербург', 'екатеринбург', 'новосибирск', 'казань', 'нижний новгород'];
+    for (final city in cities) {
+      if (message.contains(city)) {
+        return city;
+      }
+    }
+    return null;
+  }
 
-    if (intent.category != null) {
-      buffer.writeln(
-        'Примерные цены на ${intent.category!.displayName.toLowerCase()}ов:\n',
+  /// Извлечь стиль
+  String? _extractStyle(String message) {
+    final styles = ['классика', 'современный', 'юмор', 'интерактив', 'романтичный', 'официальный'];
+    for (final style in styles) {
+      if (message.contains(style)) {
+        return style;
+      }
+    }
+    return null;
+  }
+
+  /// Сгенерировать ответ на приветствие
+  AIMessage _generateGreetingResponse(AIConversation conversation) {
+    final responses = [
+      'Отлично! Давайте найдем идеального специалиста для вашего мероприятия. Какой тип события вы планируете?',
+      'Приятно познакомиться! Расскажите, что у вас за мероприятие?',
+      'Здравствуйте! Я помогу подобрать специалиста. Что вы организуете?',
+    ];
+    
+    final response = responses[DateTime.now().millisecond % responses.length];
+    
+    return AIMessage(
+      id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
+      text: response,
+      isFromUser: false,
+      timestamp: DateTime.now(),
+      messageType: AIMessageType.text,
+    );
+  }
+
+  /// Сгенерировать ответ с помощью
+  AIMessage _generateHelpResponse(AIConversation conversation) => AIMessage(
+      id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
+      text: 'Я помогу вам найти специалиста! Расскажите мне:\n\n'
+          '• Какой тип мероприятия вы планируете?\n'
+          '• В каком городе?\n'
+          '• На какую дату?\n'
+          '• Какой у вас бюджет?\n'
+          '• Какой стиль предпочитаете?\n\n'
+          'Чем больше деталей, тем точнее подбор!',
+      isFromUser: false,
+      timestamp: DateTime.now(),
+      messageType: AIMessageType.text,
+    );
+
+  /// Сгенерировать ответ на информацию о мероприятии
+  AIMessage _generateEventInfoResponse(AIConversation conversation) {
+    final eventType = conversation.context['eventType'] as String?;
+    
+    if (eventType != null) {
+      return AIMessage(
+        id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
+        text: 'Понятно, у вас $eventType! Отличный выбор. Теперь расскажите, в каком городе будет проходить мероприятие?',
+        isFromUser: false,
+        timestamp: DateTime.now(),
+        messageType: AIMessageType.text,
       );
-    } else {
-      buffer.writeln('Примерные цены на специалистов:\n');
     }
+    
+    return AIMessage(
+      id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
+      text: 'Интересно! А какой это будет тип мероприятия? Свадьба, день рождения, корпоратив?',
+      isFromUser: false,
+      timestamp: DateTime.now(),
+      messageType: AIMessageType.text,
+    );
+  }
 
-    buffer.writeln('💰 Средняя цена: ${avgPrice.toStringAsFixed(0)} ₽/час');
-    buffer.writeln('📉 От: ${minPrice.toStringAsFixed(0)} ₽/час');
-    buffer.writeln('📈 До: ${maxPrice.toStringAsFixed(0)} ₽/час\n');
-
-    if (intent.eventType != null) {
-      final hours = _getEstimatedHours(intent.eventType!);
-      final totalMin = minPrice * hours;
-      final totalMax = maxPrice * hours;
-      final totalAvg = avgPrice * hours;
-
-      buffer.writeln('Для ${intent.eventType} (примерно $hours часов):');
-      buffer.writeln('💰 Общий бюджет: ${totalAvg.toStringAsFixed(0)} ₽');
-      buffer.writeln('📉 От: ${totalMin.toStringAsFixed(0)} ₽');
-      buffer.writeln('📈 До: ${totalMax.toStringAsFixed(0)} ₽\n');
+  /// Сгенерировать ответ на информацию о бюджете
+  AIMessage _generateBudgetResponse(AIConversation conversation) {
+    final budget = conversation.context['budget'] as double?;
+    
+    if (budget != null) {
+      return AIMessage(
+        id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
+        text: 'Отлично, бюджет ${budget.toStringAsFixed(0)} ₽. Теперь скажите, на какую дату планируете мероприятие?',
+        isFromUser: false,
+        timestamp: DateTime.now(),
+        messageType: AIMessageType.text,
+      );
     }
+    
+    return AIMessage(
+      id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
+      text: 'Хорошо! А какой у вас примерный бюджет на специалиста?',
+      isFromUser: false,
+      timestamp: DateTime.now(),
+      messageType: AIMessageType.text,
+    );
+  }
 
-    buffer.writeln(
-      '*Цены могут варьироваться в зависимости от опыта, локации и дополнительных услуг.*',
+  /// Сгенерировать ответ на информацию о дате
+  AIMessage _generateDateResponse(AIConversation conversation) {
+    final date = conversation.context['eventDate'] as DateTime?;
+    
+    if (date != null) {
+      return AIMessage(
+        id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
+        text: 'Понятно, ${date.day}.${date.month}.${date.year}. Теперь расскажите, какой стиль мероприятия вы предпочитаете? Классический, современный, с юмором?',
+        isFromUser: false,
+        timestamp: DateTime.now(),
+        messageType: AIMessageType.text,
+      );
+    }
+    
+    return AIMessage(
+      id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
+      text: 'Хорошо! А на какую дату планируете мероприятие?',
+      isFromUser: false,
+      timestamp: DateTime.now(),
+      messageType: AIMessageType.text,
+    );
+  }
+
+  /// Сгенерировать ответ на информацию о локации
+  AIMessage _generateLocationResponse(AIConversation conversation) {
+    final location = conversation.context['location'] as String?;
+    
+    if (location != null) {
+      return AIMessage(
+        id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
+        text: 'Отлично, $location! Теперь скажите, какой у вас бюджет на специалиста?',
+        isFromUser: false,
+        timestamp: DateTime.now(),
+        messageType: AIMessageType.text,
+      );
+    }
+    
+    return AIMessage(
+      id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
+      text: 'Хорошо! А в каком городе будет проходить мероприятие?',
+      isFromUser: false,
+      timestamp: DateTime.now(),
+      messageType: AIMessageType.text,
+    );
+  }
+
+  /// Сгенерировать ответ с рекомендациями
+  Future<AIMessage> _generateRecommendationsResponse(
+    AIConversation conversation,
+    String? userId,
+  ) async {
+    try {
+      // Получаем контекст беседы
+      final eventType = conversation.context['eventType'] as String?;
+      final budget = conversation.context['budget'] as double?;
+      final date = conversation.context['eventDate'] as DateTime?;
+      final location = conversation.context['location'] as String?;
+      final style = conversation.context['style'] as String?;
+
+      // Определяем категорию специалиста на основе типа мероприятия
+      SpecialistCategory? category;
+      if (eventType != null) {
+        switch (eventType) {
+          case 'свадьба':
+            category = SpecialistCategory.host;
+            break;
+          case 'день рождения':
+            category = SpecialistCategory.host;
+            break;
+          case 'корпоратив':
+            category = SpecialistCategory.host;
+            break;
+          case 'фотосессия':
+            category = SpecialistCategory.photographer;
+            break;
+          default:
+            category = SpecialistCategory.host;
+        }
+      }
+
+      // Ищем специалистов
+      final specialists = await _smartSearchService.smartSearch(
+        category: category,
+        city: location,
+        minPrice: budget != null ? budget * 0.8 : null,
+        maxPrice: budget != null ? budget * 1.2 : null,
+        eventDate: date,
+        styles: style != null ? [style] : null,
+        userId: userId,
+      );
+
+      if (specialists.isNotEmpty) {
+        final topSpecialists = specialists.take(3).toList();
+        
+        final responseText = 'Отлично! Я нашел для вас ${specialists.length} подходящих специалистов. Вот топ-3:\n\n${topSpecialists.asMap().entries.map((entry) {
+              final index = entry.key + 1;
+              final specialist = entry.value;
+              return '$index. ${specialist.name} - ${specialist.category.displayName}\n'
+                  '   ⭐ Рейтинг: ${specialist.rating.toStringAsFixed(1)}\n'
+                  '   💰 Цена: ${specialist.priceRangeString}\n'
+                  '   📍 Город: ${specialist.city ?? 'Не указан'}\n'
+                  '   🎯 Совместимость: ${(specialist.compatibilityScore * 100).toStringAsFixed(0)}%';
+            }).join('\n\n')}\n\nХотите посмотреть подробнее или найти других специалистов?';
+
+        return AIMessage(
+          id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
+          text: responseText,
+          isFromUser: false,
+          timestamp: DateTime.now(),
+          messageType: AIMessageType.recommendations,
+          recommendations: topSpecialists,
+        );
+      } else {
+        return AIMessage(
+          id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
+          text: 'К сожалению, по вашим критериям не найдено подходящих специалистов. Попробуйте изменить параметры поиска или расскажите больше о ваших предпочтениях.',
+          isFromUser: false,
+          timestamp: DateTime.now(),
+          messageType: AIMessageType.text,
+        );
+      }
+    } on Exception catch (e) {
+      debugPrint('Ошибка генерации рекомендаций: $e');
+      return AIMessage(
+        id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
+        text: 'Произошла ошибка при поиске специалистов. Попробуйте еще раз.',
+        isFromUser: false,
+        timestamp: DateTime.now(),
+        messageType: AIMessageType.text,
+      );
+    }
+  }
+
+  /// Сгенерировать ответ с дополнительной информацией
+  AIMessage _generateMoreInfoResponse(AIConversation conversation) => AIMessage(
+      id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
+      text: 'Конечно! Расскажите подробнее о вашем мероприятии. Чем больше деталей, тем точнее я смогу подобрать специалиста.',
+      isFromUser: false,
+      timestamp: DateTime.now(),
+      messageType: AIMessageType.text,
     );
 
-    return buffer.toString();
+  /// Сгенерировать ответ по умолчанию
+  AIMessage _generateDefaultResponse(AIConversation conversation) {
+    final responses = [
+      'Понятно! Расскажите еще что-нибудь о вашем мероприятии.',
+      'Интересно! А что еще вы можете рассказать?',
+      'Хорошо! Давайте продолжим. Что еще важно учесть?',
+    ];
+    
+    final response = responses[DateTime.now().millisecond % responses.length];
+    
+    return AIMessage(
+      id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
+      text: response,
+      isFromUser: false,
+      timestamp: DateTime.now(),
+      messageType: AIMessageType.text,
+    );
   }
 
-  /// Получить примерное количество часов для типа мероприятия
-  int _getEstimatedHours(String eventType) {
-    switch (eventType) {
-      case 'свадьба':
-        return 8;
-      case 'день рождения':
-        return 4;
-      case 'корпоратив':
-        return 6;
-      case 'конференция':
-        return 8;
-      default:
-        return 4;
+  /// Получить беседу по ID
+  AIConversation? getConversation(String conversationId) {
+    try {
+      return _conversations.firstWhere((c) => c.id == conversationId);
+    } on Exception {
+      return null;
     }
   }
 
-  /// Сохранить сообщение в Firestore
-  Future<void> _saveMessage(String userId, AIMessage message) async {
-    await _db
-        .collection('ai_chats')
-        .doc(userId)
-        .collection('messages')
-        .doc(message.id)
-        .set(message.toMap());
-  }
+  /// Получить историю сообщений
+  List<AIMessage> getConversationHistory(String conversationId) => _conversationHistory[conversationId] ?? [];
 
-  /// Генерация ID сообщения
-  String _generateMessageId() =>
-      'msg_${DateTime.now().millisecondsSinceEpoch}_${(DateTime.now().microsecond % 1000).toString().padLeft(3, '0')}';
-
-  /// Очистить историю сообщений пользователя
-  Future<void> clearMessageHistory(String userId) async {
-    final messages = await _db
-        .collection('ai_chats')
-        .doc(userId)
-        .collection('messages')
-        .get();
-
-    final batch = _db.batch();
-    for (final doc in messages.docs) {
-      batch.delete(doc.reference);
-    }
-    await batch.commit();
+  /// Очистить историю беседы
+  void clearConversationHistory(String conversationId) {
+    _conversationHistory.remove(conversationId);
+    _conversations.removeWhere((c) => c.id == conversationId);
   }
 }
 
-/// Намерение пользователя
-class AIIntent {
-  const AIIntent({
-    required this.type,
-    this.category,
-    this.location,
-    this.eventType,
-    this.budget,
+/// Модель беседы с AI-помощником
+class AIConversation {
+  const AIConversation({
+    required this.id,
+    this.userId,
+    required this.messages,
+    required this.context,
+    required this.createdAt,
   });
 
-  final AIIntentType type;
-  final SpecialistCategory? category;
-  final String? location;
-  final String? eventType;
-  final double? budget;
+  final String id;
+  final String? userId;
+  final List<AIMessage> messages;
+  final Map<String, dynamic> context;
+  final DateTime createdAt;
 }
 
-/// Типы намерений
-enum AIIntentType {
-  findSpecialist, // Поиск специалиста
-  budgetQuestion, // Вопрос о бюджете
-  generalQuestion, // Общий вопрос
-  greeting, // Приветствие
-  unknown, // Неизвестное намерение
+/// Модель сообщения AI-помощника
+class AIMessage {
+  const AIMessage({
+    required this.id,
+    required this.text,
+    required this.isFromUser,
+    required this.timestamp,
+    required this.messageType,
+    this.recommendations,
+    this.metadata,
+  });
+
+  final String id;
+  final String text;
+  final bool isFromUser;
+  final DateTime timestamp;
+  final AIMessageType messageType;
+  final List<SmartSpecialist>? recommendations;
+  final Map<String, dynamic>? metadata;
+}
+
+/// Типы сообщений AI-помощника
+enum AIMessageType {
+  text,
+  recommendations,
+  options,
+  error,
 }

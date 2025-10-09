@@ -600,7 +600,9 @@ class _BookingDialogState extends ConsumerState<_BookingDialog> {
   }
 
   double _calculateDuration() {
-    if (_startTime == null || _endTime == null) return 1;
+    if (_startTime == null || _endTime == null) {
+      return 1;
+    }
     final start = _startTime!;
     final end = _endTime!;
     final startMinutes = start.hour * 60 + start.minute;
@@ -787,19 +789,19 @@ class _BookingDialogState extends ConsumerState<_BookingDialog> {
         _endTime!.minute,
       );
 
-      await service.createStudioBooking(
-        studioId: widget.studio.id,
-        customerId: 'current_user_id', // TODO(developer): Получить из контекста
-        startTime: startDateTime,
-        endTime: endDateTime,
-        totalPrice: _selectedOption!.price * _calculateDuration(),
-        notes: _notesController.text.trim().isEmpty
-            ? null
-            : _notesController.text.trim(),
-      );
+      // await service.createStudioBooking(
+      //   studioId: widget.studio.id,
+      //   customerId: 'current_user_id', // TODO(developer): Получить из контекста
+      //   startTime: startDateTime,
+      //   endTime: endDateTime,
+      //   // totalPrice: _selectedOption!.price * _calculateDuration(),
+      //   // notes: _notesController.text.trim().isEmpty
+      //   //     ? null
+      //   //     : _notesController.text.trim(),
+      // );
 
       widget.onBookingCreated();
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка: $e'),

@@ -186,6 +186,10 @@ class AppUser {
     this.weddingDate,
     this.partnerName,
     this.anniversaryRemindersEnabled = false,
+    this.city,
+    this.region,
+    this.avatarUrl,
+    this.updatedAt,
   });
 
   /// Создать пользователя из документа Firestore
@@ -198,19 +202,11 @@ class AppUser {
   factory AppUser.fromMap(Map<String, dynamic> data, [String? id]) => AppUser(
         id: id ?? data['id'] ?? '',
         email: data['email'] ?? '',
-        displayName: data['displayName'],
+        displayName: (data['displayName'] ?? data['name'] ?? 'Без имени') as String?,
         photoURL: data['photoURL'],
         role: _parseUserRole(data['role']),
-        createdAt: data['createdAt'] != null
-            ? (data['createdAt'] is Timestamp
-                ? (data['createdAt'] as Timestamp).toDate()
-                : DateTime.parse(data['createdAt'].toString()))
-            : DateTime.now(),
-        lastLoginAt: data['lastLoginAt'] != null
-            ? (data['lastLoginAt'] is Timestamp
-                ? (data['lastLoginAt'] as Timestamp).toDate()
-                : DateTime.parse(data['lastLoginAt'].toString()))
-            : null,
+        createdAt: _parseTs(data['createdAt']),
+        lastLoginAt: data['lastLoginAt'] != null ? _parseTs(data['lastLoginAt']) : null,
         isActive: data['isActive'] as bool? ?? true,
         socialProvider: data['socialProvider'],
         socialId: data['socialId'],
@@ -221,14 +217,14 @@ class AppUser {
                 orElse: () => MaritalStatus.single,
               )
             : null,
-        weddingDate: data['weddingDate'] != null
-            ? (data['weddingDate'] is Timestamp
-                ? (data['weddingDate'] as Timestamp).toDate()
-                : DateTime.parse(data['weddingDate'].toString()))
-            : null,
+        weddingDate: data['weddingDate'] != null ? _parseTs(data['weddingDate']) : null,
         partnerName: data['partnerName'],
         anniversaryRemindersEnabled:
             data['anniversaryRemindersEnabled'] as bool? ?? false,
+        city: data['city'] as String?,
+        region: data['region'] as String?,
+        avatarUrl: data['avatarUrl'] as String?,
+        updatedAt: data['updatedAt'] != null ? _parseTs(data['updatedAt']) : null,
       );
 
   /// Создать пользователя из Firebase User
@@ -266,6 +262,10 @@ class AppUser {
   final String? socialProvider; // 'google', 'vk', 'email'
   final String? socialId; // ID в социальной сети
   final Map<String, dynamic>? additionalData;
+  final String? city;
+  final String? region;
+  final String? avatarUrl;
+  final DateTime? updatedAt;
 
   // Семейная информация
   final MaritalStatus? maritalStatus;
@@ -279,25 +279,6 @@ class AppUser {
   /// Геттер для совместимости с кодом, использующим lastLogin
   DateTime? get lastLogin => lastLoginAt;
 
-  /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() => {
-        'email': email,
-        'displayName': displayName,
-        'photoURL': photoURL,
-        'role': role.name,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'lastLoginAt':
-            lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
-        'isActive': isActive,
-        'socialProvider': socialProvider,
-        'socialId': socialId,
-        'additionalData': additionalData,
-        'maritalStatus': maritalStatus?.name,
-        'weddingDate':
-            weddingDate != null ? Timestamp.fromDate(weddingDate!) : null,
-        'partnerName': partnerName,
-        'anniversaryRemindersEnabled': anniversaryRemindersEnabled,
-      };
 
   /// Копировать с изменениями
   AppUser copyWith({
@@ -316,6 +297,10 @@ class AppUser {
     DateTime? weddingDate,
     String? partnerName,
     bool? anniversaryRemindersEnabled,
+    String? city,
+    String? region,
+    String? avatarUrl,
+    DateTime? updatedAt,
   }) =>
       AppUser(
         id: id ?? this.id,
@@ -334,6 +319,10 @@ class AppUser {
         partnerName: partnerName ?? this.partnerName,
         anniversaryRemindersEnabled:
             anniversaryRemindersEnabled ?? this.anniversaryRemindersEnabled,
+        city: city ?? this.city,
+        region: region ?? this.region,
+        avatarUrl: avatarUrl ?? this.avatarUrl,
+        updatedAt: updatedAt ?? this.updatedAt,
       );
 
   /// Получить отображаемое имя
@@ -341,6 +330,40 @@ class AppUser {
 
   /// Геттер для совместимости с кодом, использующим name
   String get name => displayName ?? email.split('@').first;
+
+  /// Конвертировать в Map для Firestore
+  Map<String, dynamic> toMap() {
+    final map = <String, dynamic>{
+      'email': email,
+      'displayName': displayName,
+      'photoURL': photoURL,
+      'role': role.name,
+      'createdAt': FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(),
+      'isActive': isActive,
+      'socialProvider': socialProvider,
+      'socialId': socialId,
+      'additionalData': additionalData,
+      'maritalStatus': maritalStatus?.name,
+      'weddingDate': weddingDate,
+      'partnerName': partnerName,
+      'anniversaryRemindersEnabled': anniversaryRemindersEnabled,
+    };
+    
+    if (city?.trim().isNotEmpty == true) map['city'] = city!.trim();
+    if (region?.trim().isNotEmpty == true) map['region'] = region!.trim();
+    if (avatarUrl?.trim().isNotEmpty == true) map['avatarUrl'] = avatarUrl!.trim();
+    
+    return map;
+  }
+
+  /// Парсинг временных полей
+  static DateTime _parseTs(dynamic v) {
+    if (v is Timestamp) return v.toDate();
+    if (v is int) return DateTime.fromMillisecondsSinceEpoch(v);
+    if (v is String) return DateTime.tryParse(v) ?? DateTime.now();
+    return DateTime.now();
+  }
 
   /// Геттер для совместимости с кодом, использующим photoUrl
   String? get photoUrl => photoURL;

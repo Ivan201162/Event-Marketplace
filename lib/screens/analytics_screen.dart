@@ -205,7 +205,7 @@ class _SpecialistAnalyticsTab extends ConsumerWidget {
             gradient: LinearGradient(
               colors: [
                 color.withValues(alpha: 0.1),
-                color.withValues(alpha: 0.05)
+                color.withValues(alpha: 0.05),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -639,7 +639,7 @@ class _CustomerAnalyticsTab extends ConsumerWidget {
             gradient: LinearGradient(
               colors: [
                 color.withValues(alpha: 0.1),
-                color.withValues(alpha: 0.05)
+                color.withValues(alpha: 0.05),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,

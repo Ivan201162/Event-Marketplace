@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../models/payment_models.dart';
+import '../models/payment.dart';
 
 class PaymentHistoryItem extends StatelessWidget {
   const PaymentHistoryItem({

@@ -98,6 +98,85 @@ enum PaymentMethod {
   cryptocurrency, // Криптовалюта
 }
 
+extension PaymentMethodExtension on PaymentMethod {
+  String get displayName {
+    switch (this) {
+      case PaymentMethod.card:
+        return 'Банковская карта';
+      case PaymentMethod.bankTransfer:
+        return 'Банковский перевод';
+      case PaymentMethod.cash:
+        return 'Наличные';
+      case PaymentMethod.digitalWallet:
+        return 'Электронный кошелек';
+      case PaymentMethod.cryptocurrency:
+        return 'Криптовалюта';
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case PaymentMethod.card:
+        return Icons.credit_card;
+      case PaymentMethod.bankTransfer:
+        return Icons.account_balance;
+      case PaymentMethod.cash:
+        return Icons.money;
+      case PaymentMethod.digitalWallet:
+        return Icons.qr_code;
+      case PaymentMethod.cryptocurrency:
+        return Icons.currency_bitcoin;
+    }
+  }
+
+  bool get isAvailable {
+    switch (this) {
+      case PaymentMethod.card:
+        return true;
+      case PaymentMethod.bankTransfer:
+        return true;
+      case PaymentMethod.cash:
+        return true;
+      case PaymentMethod.digitalWallet:
+        return true;
+      case PaymentMethod.cryptocurrency:
+        return false; // Пока не поддерживается
+    }
+  }
+
+  String get method => displayName;
+
+  String get description {
+    switch (this) {
+      case PaymentMethod.card:
+        return 'Оплата банковской картой';
+      case PaymentMethod.bankTransfer:
+        return 'Банковский перевод';
+      case PaymentMethod.cash:
+        return 'Оплата наличными';
+      case PaymentMethod.digitalWallet:
+        return 'Электронный кошелек';
+      case PaymentMethod.cryptocurrency:
+        return 'Криптовалюта';
+    }
+  }
+
+  double get fee {
+    switch (this) {
+      case PaymentMethod.card:
+        return 0.03; // 3%
+      case PaymentMethod.bankTransfer:
+        return 0.01; // 1%
+      case PaymentMethod.cash:
+        return 0; // 0%
+      case PaymentMethod.digitalWallet:
+        return 0.02; // 2%
+      case PaymentMethod.cryptocurrency:
+        return 0.05; // 5%
+    }
+  }
+}
+
 /// Статус налогообложения
 enum TaxStatus {
   none, // Без налога

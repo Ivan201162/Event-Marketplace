@@ -60,7 +60,7 @@ class _SpecialistIncomeReportScreenState
           _isLoading = false;
         });
       }
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _error = e.toString();
         _isLoading = false;

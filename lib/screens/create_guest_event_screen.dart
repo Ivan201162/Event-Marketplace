@@ -378,7 +378,7 @@ class _CreateGuestEventScreenState
           backgroundColor: Colors.green,
         ),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка: $e'),

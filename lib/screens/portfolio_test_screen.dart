@@ -36,7 +36,7 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
     try {
       await _notificationService.initialize();
       await _notificationService.requestPermissions();
-    } catch (e) {
+    } on Exception catch (e) {
       _addTestResult('Ошибка инициализации сервисов: $e');
     }
   }
@@ -65,7 +65,7 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
       await _testIntegration();
 
       _addTestResult('✅ Все тесты завершены успешно!');
-    } catch (e) {
+    } on Exception catch (e) {
       _addTestResult('❌ Ошибка тестирования: $e');
     } finally {
       setState(() {
@@ -117,7 +117,7 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
         '✅ Избранных специалистов: ${loadedPortfolio.favoriteSpecialists.length}',
       );
       _addTestResult('✅ Годовщин: ${loadedPortfolio.anniversaries.length}');
-    } catch (e) {
+    } on Exception catch (e) {
       _addTestResult('❌ Ошибка создания портфолио: $e');
     }
   }
@@ -172,7 +172,7 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
           '✅ Скидка: ${lastOrder.discountAmount.toStringAsFixed(0)} ₽',
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       _addTestResult('❌ Ошибка тестирования истории заказов: $e');
     }
   }
@@ -212,7 +212,7 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
         testSpecialistId,
       );
       _addTestResult('✅ Специалист удален из избранного');
-    } catch (e) {
+    } on Exception catch (e) {
       _addTestResult('❌ Ошибка тестирования избранного: $e');
     }
   }
@@ -251,7 +251,7 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
           _addTestResult('✅ До следующей годовщины: $daysUntil дней');
         }
       }
-    } catch (e) {
+    } on Exception catch (e) {
       _addTestResult('❌ Ошибка тестирования годовщин: $e');
     }
   }
@@ -269,7 +269,7 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
       _addTestResult(
         '✅ Разрешения на уведомления: ${hasPermissions ? "предоставлены" : "отклонены"}',
       );
-    } catch (e) {
+    } on Exception catch (e) {
       _addTestResult('❌ Ошибка тестирования уведомлений: $e');
     }
   }
@@ -326,7 +326,7 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
       for (final recommendation in recommendations) {
         _addTestResult('   - $recommendation');
       }
-    } catch (e) {
+    } on Exception catch (e) {
       _addTestResult('❌ Ошибка тестирования интеграции: $e');
     }
   }
@@ -350,7 +350,7 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
         throw Exception('Заметки не совпадают');
       }
       _addTestResult('✅ Заметки загружены корректно');
-    } catch (e) {
+    } on Exception catch (e) {
       _addTestResult('❌ Ошибка тестирования заметок: $e');
     }
   }

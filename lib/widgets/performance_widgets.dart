@@ -184,7 +184,7 @@ class PaginatedList extends StatefulWidget {
     this.emptyWidget,
   });
   final Future<List<dynamic>> Function(int page, int limit) loadData;
-  final Widget Function(BuildContext context, item) itemBuilder;
+  final Widget Function(BuildContext context, dynamic item) itemBuilder;
   final int itemsPerPage;
   final Widget? loadingWidget;
   final Widget? errorWidget;
@@ -208,7 +208,9 @@ class _PaginatedListState extends State<PaginatedList> {
   }
 
   Future<void> _loadMore() async {
-    if (_isLoading || !_hasMore) return;
+    if (_isLoading || !_hasMore) {
+      return;
+    }
 
     setState(() {
       _isLoading = true;
@@ -224,7 +226,7 @@ class _PaginatedListState extends State<PaginatedList> {
         _hasMore = newItems.length == widget.itemsPerPage;
         _isLoading = false;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _error = e.toString();
         _isLoading = false;
@@ -406,7 +408,7 @@ class _PreloadWidgetState extends State<PreloadWidget> {
           _isPreloading = false;
         });
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         setState(() {
           _error = e.toString();

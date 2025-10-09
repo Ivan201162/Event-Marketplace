@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../services/notification_service.dart';
 
 /// Виджет для отображения списка уведомлений
@@ -10,7 +11,7 @@ class NotificationsListWidget extends StatefulWidget {
   });
 
   final String userId;
-  final void Function(AppNotification)? onNotificationTap;
+  final void Function(Map<String, dynamic>)? onNotificationTap;
 
   @override
   State<NotificationsListWidget> createState() =>
@@ -18,11 +19,9 @@ class NotificationsListWidget extends StatefulWidget {
 }
 
 class _NotificationsListWidgetState extends State<NotificationsListWidget> {
-  final NotificationService _notificationService = NotificationService();
-
   @override
-  Widget build(BuildContext context) => StreamBuilder<List<AppNotification>>(
-        stream: _notificationService.getUserNotifications(widget.userId),
+  Widget build(BuildContext context) => StreamBuilder<List<Map<String, dynamic>>>(
+        stream: NotificationService.getUserNotifications(widget.userId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const _LoadingWidget();
@@ -52,17 +51,17 @@ class _NotificationsListWidgetState extends State<NotificationsListWidget> {
 
   Future<void> _markAsRead(String notificationId) async {
     try {
-      await _notificationService.markAsRead(notificationId);
-    } catch (e) {
+      await NotificationService.markAsRead(widget.userId, notificationId);
+    } on Exception catch (e) {
       _showErrorSnackBar('Ошибка отметки уведомления: $e');
     }
   }
 
   Future<void> _markAllAsRead() async {
     try {
-      await _notificationService.markAllAsRead(widget.userId);
+      await NotificationService.markAllAsRead(widget.userId);
       _showSuccessSnackBar('Все уведомления отмечены как прочитанные');
-    } catch (e) {
+    } on Exception catch (e) {
       _showErrorSnackBar('Ошибка отметки всех уведомлений: $e');
     }
   }
@@ -188,8 +187,8 @@ class _NotificationsList extends StatelessWidget {
     required this.onMarkAllAsRead,
   });
 
-  final List<AppNotification> notifications;
-  final void Function(AppNotification)? onNotificationTap;
+  final List<Map<String, dynamic>> notifications;
+  final void Function(Map<String, dynamic>)? onNotificationTap;
   final void Function(String) onMarkAsRead;
   final VoidCallback onMarkAllAsRead;
 
@@ -205,8 +204,8 @@ class _NotificationsList extends StatelessWidget {
                 return _NotificationCard(
                   notification: notification,
                   onTap: () {
-                    if (!notification.isRead) {
-                      onMarkAsRead(notification.id);
+                    if (!(notification['isRead'] as bool? ?? false)) {
+                      onMarkAsRead(notification['id'] as String? ?? '');
                     }
                     onNotificationTap?.call(notification);
                   },
@@ -245,14 +244,14 @@ class _NotificationCard extends StatelessWidget {
     required this.onTap,
   });
 
-  final AppNotification notification;
+  final Map<String, dynamic> notification;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) => Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         child: Card(
-          elevation: notification.isRead ? 1 : 2,
+          elevation: (notification['isRead'] as bool? ?? false) ? 1 : 2,
           child: InkWell(
             onTap: onTap,
             borderRadius: BorderRadius.circular(8),
@@ -267,17 +266,17 @@ class _NotificationCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          notification.title,
+                          notification['title'] as String? ?? 'Уведомление',
                           style: TextStyle(
                             fontSize: 16,
-                            fontWeight: notification.isRead
+                            fontWeight: (notification['isRead'] as bool? ?? false)
                                 ? FontWeight.normal
                                 : FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          notification.body,
+                          notification['body'] as String? ?? '',
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.grey,
@@ -287,7 +286,7 @@ class _NotificationCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          _formatDate(notification.createdAt),
+                          _formatDate(notification['createdAt']),
                           style: const TextStyle(
                             fontSize: 12,
                             color: Colors.grey,
@@ -296,7 +295,7 @@ class _NotificationCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if (!notification.isRead)
+                  if (!(notification['isRead'] as bool? ?? false))
                     Container(
                       width: 8,
                       height: 8,
@@ -316,7 +315,7 @@ class _NotificationCard extends StatelessWidget {
     IconData iconData;
     Color iconColor;
 
-    switch (notification.type) {
+    switch (notification['type']) {
       case 'new_booking':
         iconData = Icons.event;
         iconColor = Colors.green;
@@ -350,9 +349,9 @@ class _NotificationCard extends StatelessWidget {
 }
 
 /// Форматирование даты
-String _formatDate(DateTime date) {
+String _formatDate(date) {
   final now = DateTime.now();
-  final difference = now.difference(date);
+  final difference = now.difference(date as DateTime);
 
   if (difference.inDays > 0) {
     return '${difference.inDays} дн. назад';

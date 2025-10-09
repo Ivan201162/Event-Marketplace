@@ -171,9 +171,9 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
         child: SizedBox(
           width: double.infinity,
           height: double.infinity,
-          child: story.isImage
+          child: story.mediaUrl.isNotEmpty
               ? Image.network(
-                  story.content,
+                  story.mediaUrl,
                   fit: BoxFit.cover,
                   loadingBuilder: (context, child, loadingProgress) {
                     if (loadingProgress == null) {
@@ -202,15 +202,15 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
                   : Container(
                       width: double.infinity,
                       height: double.infinity,
-                      color: story.backgroundColor,
+                      color: Colors.black,
                       child: Center(
                         child: Padding(
                           padding: const EdgeInsets.all(32),
                           child: Text(
-                            story.text ?? '',
-                            style: TextStyle(
-                              color: story.textColor,
-                              fontSize: story.fontSize,
+                            story.title,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
                               fontWeight: FontWeight.bold,
                               height: 1.2,
                             ),

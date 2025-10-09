@@ -196,7 +196,7 @@ class _InstagramStoryViewerState extends State<InstagramStoryViewer>
             ),
 
             // Текст сторис
-            if (story.text != null && story.text!.isNotEmpty)
+            if (story.text.isNotEmpty)
               Positioned(
                 bottom: 100,
                 left: 16,
@@ -208,7 +208,7 @@ class _InstagramStoryViewerState extends State<InstagramStoryViewer>
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    story.text!,
+                    story.text,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,

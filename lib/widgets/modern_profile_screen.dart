@@ -3,10 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../core/app_theme.dart';
+import '../models/post.dart';
 import '../models/specialist.dart';
+import '../models/story.dart';
 import '../providers/auth_providers.dart';
+import '../services/post_service.dart';
+import '../services/story_service.dart';
 import '../services/test_data_service.dart';
+import '../widgets/editable_image.dart';
+import '../widgets/post_grid_widget.dart';
+import '../widgets/story_circle_widget.dart';
 
 /// Современный экран профиля в стиле Instagram
 class ModernProfileScreen extends ConsumerStatefulWidget {
@@ -32,14 +38,19 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
 
   final ScrollController _scrollController = ScrollController();
   final TestDataService _testDataService = TestDataService();
+  final PostService _postService = PostService();
+  final StoryService _storyService = StoryService();
 
   bool _isFollowing = false;
-  final bool _isLoading = false;
+  bool _isLoading = false;
+  List<Post> _posts = [];
+  List<Story> _stories = [];
+  Specialist? _specialist;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this); // Посты, Отзывы, Портфолио, Расписание
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
@@ -56,6 +67,30 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     );
 
     _animationController.forward();
+    _loadProfileData();
+  }
+
+  Future<void> _loadProfileData() async {
+    setState(() => _isLoading = true);
+    try {
+      // Загружаем данные специалиста
+      _specialist = await _testDataService.getSpecialistById(widget.userId);
+      
+      // Загружаем посты
+      _posts = await _postService.getPostsBySpecialist(widget.userId);
+      
+      // Загружаем сторисы
+      _stories = await _storyService.getStoriesBySpecialist(widget.userId);
+      
+      setState(() => _isLoading = false);
+    } catch (e) {
+      setState(() => _isLoading = false);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Ошибка загрузки данных: $e')),
+        );
+      }
+    }
   }
 
   @override
@@ -67,83 +102,128 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: _buildProfileContent(),
+  Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
       );
+    }
 
-  Widget _buildProfileContent() {
-    // Получаем данные специалиста (в реальном приложении из API)
-    final specialists = _testDataService.getSpecialists();
-    final specialistData = specialists.first; // Используем первого для демо
-    final specialist = Specialist.fromMap(specialistData);
-
-    return CustomScrollView(
-      controller: _scrollController,
-      slivers: [
-        _buildSliverAppBar(specialist),
-        _buildProfileInfo(specialist),
-        _buildStatsSection(specialist),
-        _buildActionButtons(specialist),
-        _buildBioSection(specialist),
-        _buildTabBar(),
-        _buildTabContent(specialist),
-      ],
-    );
-  }
-
-  Widget _buildSliverAppBar(Specialist specialist) => SliverAppBar(
-        expandedHeight: 200,
-        pinned: true,
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        flexibleSpace: FlexibleSpaceBar(
-          background: Container(
-            decoration: const BoxDecoration(
-              gradient: BrandColors.primaryGradient,
-            ),
-            child: Stack(
-              children: [
-                // Фоновое изображение (если есть)
-                if (specialist.imageUrlValue != null)
-                  Positioned.fill(
-                    child: CachedNetworkImage(
-                      imageUrl: specialist.imageUrlValue!,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => Container(
-                        color: context.primaryColor.withOpacity(0.3),
-                      ),
-                      errorWidget: (context, url, error) => Container(
-                        color: context.primaryColor.withOpacity(0.3),
-                      ),
-                    ),
-                  ),
-                // Градиентный оверлей
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        Colors.black.withOpacity(0.7),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+    if (_specialist == null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Профиль'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context),
           ),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
+        body: const Center(
+          child: Text('Профиль не найден'),
         ),
+      );
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(_specialist!.name),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
+            icon: const Icon(Icons.more_vert),
             onPressed: _showOptionsMenu,
           ),
         ],
+      ),
+      body: _buildProfileContent(_specialist!),
+    );
+  }
+
+  Widget _buildProfileContent(Specialist specialist) => FadeTransition(
+      opacity: _fadeAnimation,
+      child: CustomScrollView(
+        controller: _scrollController,
+        slivers: [
+          _buildProfileHeader(specialist),
+          _buildProfileInfo(specialist),
+          _buildStatsSection(specialist),
+          _buildActionButtons(specialist),
+          _buildBioSection(specialist),
+          _buildStoriesSection(),
+          _buildTabBar(),
+          _buildTabContent(specialist),
+        ],
+      ),
+    );
+
+  Widget _buildProfileHeader(Specialist specialist) => SliverToBoxAdapter(
+        child: Container(
+          height: 200,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Theme.of(context).primaryColor,
+                Theme.of(context).primaryColor.withValues(alpha: 0.8),
+              ],
+            ),
+          ),
+          child: Stack(
+            children: [
+              // Фоновое изображение (если есть)
+              if (specialist.coverImageUrl != null)
+                Positioned.fill(
+                  child: CachedNetworkImage(
+                    imageUrl: specialist.coverImageUrl!,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                    ),
+                  ),
+                ),
+              // Градиентный оверлей
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withValues(alpha: 0.7),
+                    ],
+                  ),
+                ),
+              ),
+              // Кнопка редактирования (для владельца профиля)
+              if (widget.isOwnProfile)
+                Positioned(
+                  top: 16,
+                  right: 16,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.white),
+                      onPressed: _editProfile,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
       );
 
   Widget _buildProfileInfo(Specialist specialist) => SliverToBoxAdapter(
@@ -154,90 +234,85 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
             child: Row(
               children: [
                 // Аватар
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: context.surfaceColor,
-                      width: 4,
+                Hero(
+                  tag: 'profile_avatar_${specialist.id}',
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Theme.of(context).primaryColor,
+                        width: 3,
+                      ),
                     ),
-                    boxShadow: BrandColors.cardShadow,
-                  ),
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundColor: context.primaryColor,
-                    backgroundImage: specialist.imageUrlValue != null
-                        ? CachedNetworkImageProvider(specialist.imageUrlValue!)
-                        : null,
-                    child: specialist.imageUrlValue == null
-                        ? Text(
-                            specialist.name.isNotEmpty
-                                ? specialist.name[0].toUpperCase()
-                                : 'С',
-                            style: const TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                    child: ClipOval(
+                      child: widget.isOwnProfile
+                          ? EditableImage(
+                              imageUrl: specialist.imageUrlValue,
+                              onImageChanged: _updateProfileImage,
+                              placeholder: Icons.person,
+                            )
+                          : CachedNetworkImage(
+                              imageUrl: specialist.imageUrlValue ?? '',
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Container(
+                                color: Colors.grey[300],
+                                child: const Icon(Icons.person, size: 50),
+                              ),
+                              errorWidget: (context, url, error) => Container(
+                                color: Colors.grey[300],
+                                child: const Icon(Icons.person, size: 50),
+                              ),
                             ),
-                          )
-                        : null,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 20),
-                // Информация
+                // Информация о пользователе
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        specialist.displayName,
-                        style: context.textTheme.headlineSmall,
+                        specialist.name,
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Text(
-                            specialist.category.displayName,
-                            style: context.textTheme.bodyMedium?.copyWith(
-                              color: context.textSecondary,
-                            ),
+                      if (specialist.city != null)
+                        Text(
+                          specialist.city!,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[600],
                           ),
-                          if (specialist.isVerified) ...[
-                            const SizedBox(width: 8),
-                            Container(
-                              padding: const EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                color: context.primaryColor,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.verified,
-                                size: 16,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
+                        ),
                       const SizedBox(height: 8),
                       Row(
                         children: [
                           const Icon(
                             Icons.star,
                             color: Colors.amber,
-                            size: 16,
+                            size: 20,
                           ),
                           const SizedBox(width: 4),
                           Text(
                             specialist.rating.toStringAsFixed(1),
-                            style: context.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            '(${specialist.reviewsCount} отзывов)',
-                            style: context.textTheme.bodySmall,
+                            '(${specialist.reviewCount} отзывов)',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
                           ),
                         ],
                       ),
@@ -257,19 +332,25 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
             margin: const EdgeInsets.symmetric(horizontal: 16),
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: context.surfaceColor,
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                  color: Theme.of(context).colorScheme.surfaceContainerHighest),
-              boxShadow: BrandColors.cardShadow,
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildStatItem('Заказы', '${specialist.reviewsCount * 2}'),
-                _buildStatItem('Рейтинг', specialist.rating.toStringAsFixed(1)),
-                _buildStatItem('Опыт', '${specialist.yearsOfExperience} лет'),
-                _buildStatItem('Цена', '${specialist.price.toInt()}₽/ч'),
+                _buildStatItem('Посты', _posts.length.toString()),
+                _buildStatItem('Подписчики', '1.2K'),
+                _buildStatItem('Подписки', '156'),
+                _buildStatItem('Проекты', specialist.totalBookings?.toString() ?? '0'),
               ],
             ),
           ),
@@ -280,15 +361,15 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         children: [
           Text(
             value,
-            style: context.textTheme.headlineSmall?.copyWith(
-              color: context.primaryColor,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              color: Theme.of(context).primaryColor,
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 4),
           Text(
             label,
-            style: context.textTheme.bodySmall,
+            style: Theme.of(context).textTheme.bodySmall,
           ),
         ],
       );
@@ -298,55 +379,62 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
           opacity: _fadeAnimation,
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () {
-                      // TODO(developer): Открыть чат
-                    },
-                    icon: const Icon(Icons.chat),
-                    label: const Text('Написать'),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: FilledButton.icon(
-                    onPressed: () {
-                      // TODO(developer): Забронировать
-                    },
-                    icon: const Icon(Icons.event_available),
-                    label: const Text('Забронировать'),
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                if (!widget.isOwnProfile)
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .surfaceContainerHighest),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: IconButton(
-                      onPressed: _toggleFollow,
-                      icon: Icon(
-                        _isFollowing ? Icons.person_remove : Icons.person_add,
-                        color: _isFollowing
-                            ? BrandColors.error
-                            : context.primaryColor,
+            child: widget.isOwnProfile
+                ? Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: _editProfile,
+                          icon: const Icon(Icons.edit),
+                          label: const Text('Редактировать'),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                        ),
                       ),
-                    ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: FilledButton.icon(
+                          onPressed: _addPost,
+                          icon: const Icon(Icons.add),
+                          label: const Text('Добавить пост'),
+                          style: FilledButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: _openChat,
+                          icon: const Icon(Icons.chat),
+                          label: const Text('Написать'),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: FilledButton.icon(
+                          onPressed: _toggleFollow,
+                          icon: Icon(
+                            _isFollowing ? Icons.person_remove : Icons.person_add,
+                          ),
+                          label: Text(_isFollowing ? 'Отписаться' : 'Подписаться'),
+                          style: FilledButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            backgroundColor: _isFollowing 
+                                ? Colors.red 
+                                : Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-              ],
-            ),
           ),
         ),
       );
@@ -363,29 +451,35 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
           margin: const EdgeInsets.symmetric(horizontal: 16),
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: context.surfaceColor,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest),
-            boxShadow: BrandColors.cardShadow,
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'О специалисте',
-                style: context.textTheme.titleMedium,
+                style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 12),
               Text(
                 specialist.description!,
-                style: context.textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
               if (specialist.services.isNotEmpty) ...[
                 const SizedBox(height: 16),
                 Text(
                   'Услуги:',
-                  style: context.textTheme.titleSmall,
+                  style: Theme.of(context).textTheme.titleSmall,
                 ),
                 const SizedBox(height: 8),
                 Wrap(
@@ -400,16 +494,16 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: context.primaryColor.withOpacity(0.1),
+                            color: Theme.of(context).primaryColor.withValues(alpha:0.1),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: context.primaryColor.withOpacity(0.3),
+                              color: Theme.of(context).primaryColor.withValues(alpha:0.3),
                             ),
                           ),
                           child: Text(
                             service,
-                            style: context.textTheme.bodySmall?.copyWith(
-                              color: context.primaryColor,
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(context).primaryColor,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -425,18 +519,98 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     );
   }
 
+  Widget _buildStoriesSection() {
+    if (_stories.isEmpty) {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
+
+    return SliverToBoxAdapter(
+      child: FadeTransition(
+        opacity: _fadeAnimation,
+        child: Container(
+          height: 100,
+          margin: const EdgeInsets.symmetric(vertical: 16),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: _stories.length + (widget.isOwnProfile ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (widget.isOwnProfile && index == _stories.length) {
+                return _buildAddStoryButton();
+              }
+              return _buildStoryItem(_stories[index]);
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStoryItem(Story story) => Container(
+        width: 80,
+        margin: const EdgeInsets.only(right: 12),
+        child: Column(
+          children: [
+            StoryCircleWidget(
+              story: story,
+              onTap: () => _viewStory(story),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              story.title,
+              style: const TextStyle(fontSize: 12),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildAddStoryButton() => Container(
+        width: 80,
+        margin: const EdgeInsets.only(right: 12),
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: _addStory,
+              child: Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Theme.of(context).primaryColor,
+                    width: 2,
+                  ),
+                ),
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+            const SizedBox(height: 4),
+            const Text(
+              'Добавить',
+              style: TextStyle(fontSize: 12),
+            ),
+          ],
+        ),
+      );
+
   Widget _buildTabBar() => SliverPersistentHeader(
         pinned: true,
         delegate: _TabBarDelegate(
           TabBar(
             controller: _tabController,
-            indicatorColor: context.primaryColor,
-            labelColor: context.primaryColor,
-            unselectedLabelColor: context.textSecondary,
+            indicatorColor: Theme.of(context).primaryColor,
+            labelColor: Theme.of(context).primaryColor,
+            unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withValues(alpha:0.6),
             tabs: const [
-              Tab(icon: Icon(Icons.grid_on), text: 'Работы'),
-              Tab(icon: Icon(Icons.favorite), text: 'Избранное'),
+              Tab(icon: Icon(Icons.grid_on), text: 'Посты'),
               Tab(icon: Icon(Icons.star), text: 'Отзывы'),
+              Tab(icon: Icon(Icons.work), text: 'Портфолио'),
+              Tab(icon: Icon(Icons.calendar_today), text: 'Расписание'),
             ],
           ),
         ),
@@ -446,35 +620,29 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         child: TabBarView(
           controller: _tabController,
           children: [
-            _buildWorksTab(),
-            _buildFavoritesTab(),
+            _buildPostsTab(),
             _buildReviewsTab(specialist),
+            _buildPortfolioTab(specialist),
+            _buildScheduleTab(specialist),
           ],
         ),
       );
 
-  Widget _buildWorksTab() => GridView.builder(
-        padding: const EdgeInsets.all(16),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: 2,
-          mainAxisSpacing: 2,
-        ),
-        itemCount: 12,
-        itemBuilder: (context, index) => Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(8),
+  Widget _buildPostsTab() => _posts.isEmpty
+      ? const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.grid_on, size: 64, color: Colors.grey),
+              SizedBox(height: 16),
+              Text('Пока нет постов'),
+            ],
           ),
-          child: Center(
-            child: Icon(
-              Icons.image,
-              color: context.textSecondary,
-              size: 32,
-            ),
-          ),
-        ),
-      );
+        )
+      : PostGridWidget(
+          posts: _posts,
+          onPostTap: _viewPost,
+        );
 
   Widget _buildFavoritesTab() => GridView.builder(
         padding: const EdgeInsets.all(16),
@@ -501,7 +669,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
 
   Widget _buildReviewsTab(Specialist specialist) => ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: specialist.reviewsCount,
+        itemCount: specialist.reviewsCount ?? 0,
         itemBuilder: (context, index) => _buildReviewCard(index),
       );
 
@@ -509,11 +677,17 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: context.surfaceColor,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-              color: Theme.of(context).colorScheme.surfaceContainerHighest),
-          boxShadow: BrandColors.cardShadow,
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -522,7 +696,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
               children: [
                 CircleAvatar(
                   radius: 20,
-                  backgroundColor: context.primaryColor,
+                  backgroundColor: Theme.of(context).primaryColor,
                   child: Text(
                     'U$index',
                     style: const TextStyle(
@@ -538,7 +712,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                     children: [
                       Text(
                         'Пользователь $index',
-                        style: context.textTheme.titleSmall,
+                        style: Theme.of(context).textTheme.titleSmall,
                       ),
                       Row(
                         children: List.generate(
@@ -555,7 +729,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                 ),
                 Text(
                   '${index + 1} дн. назад',
-                  style: context.textTheme.bodySmall,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
             ),
@@ -563,8 +737,57 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
             Text(
               'Отличный специалист! Очень довольна результатом. '
               'Рекомендую всем, кто ищет качественные услуги.',
-              style: context.textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
+          ],
+        ),
+      );
+
+  Widget _buildPortfolioTab(Specialist specialist) => specialist.portfolioImages.isEmpty
+      ? const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.work, size: 64, color: Colors.grey),
+              SizedBox(height: 16),
+              Text('Портфолио пусто'),
+            ],
+          ),
+        )
+      : GridView.builder(
+          padding: const EdgeInsets.all(16),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
+          ),
+          itemCount: specialist.portfolioImages.length,
+          itemBuilder: (context, index) => Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: CachedNetworkImage(
+              imageUrl: specialist.portfolioImages[index],
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                color: Colors.grey[300],
+                child: const Center(child: CircularProgressIndicator()),
+              ),
+              errorWidget: (context, url, error) => Container(
+                color: Colors.grey[300],
+                child: const Icon(Icons.error),
+              ),
+            ),
+          ),
+        );
+
+  Widget _buildScheduleTab(Specialist specialist) => const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.calendar_today, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
+            Text('Расписание будет доступно в следующей версии'),
           ],
         ),
       );
@@ -581,6 +804,55 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ),
         duration: const Duration(seconds: 1),
       ),
+    );
+  }
+
+  void _editProfile() {
+    // TODO: Открыть экран редактирования профиля
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Редактирование профиля будет доступно в следующей версии')),
+    );
+  }
+
+  void _addPost() {
+    // TODO: Открыть экран создания поста
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Создание поста будет доступно в следующей версии')),
+    );
+  }
+
+  void _addStory() {
+    // TODO: Открыть экран создания сторис
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Создание сторис будет доступно в следующей версии')),
+    );
+  }
+
+  void _openChat() {
+    // TODO: Открыть чат с пользователем
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Открытие чата будет доступно в следующей версии')),
+    );
+  }
+
+  void _viewPost(Post post) {
+    // TODO: Открыть детали поста
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Просмотр поста будет доступен в следующей версии')),
+    );
+  }
+
+  void _viewStory(Story story) {
+    // TODO: Открыть просмотр сторис
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Просмотр сторис будет доступен в следующей версии')),
+    );
+  }
+
+  void _updateProfileImage(String imageUrl) {
+    // TODO: Обновить изображение профиля
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Обновление изображения будет доступно в следующей версии')),
     );
   }
 
@@ -622,7 +894,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text(
-                            'Для редактирования профиля войдите в систему.'),
+                            'Для редактирования профиля войдите в систему.',),
                         backgroundColor: Colors.orange,
                       ),
                     );
@@ -650,7 +922,7 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-          BuildContext context, double shrinkOffset, bool overlapsContent) =>
+          BuildContext context, double shrinkOffset, bool overlapsContent,) =>
       Container(
         color: Theme.of(context).scaffoldBackgroundColor,
         child: tabBar,
@@ -660,3 +932,4 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
       false;
 }
+

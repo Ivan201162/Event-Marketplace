@@ -54,7 +54,7 @@ class FeatureRequestService {
           .add(featureRequest.toMap());
 
       return docRef.id;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error creating feature request: $e');
       throw Exception('Ошибка создания предложения: $e');
     }
@@ -161,7 +161,7 @@ class FeatureRequestService {
         'id': doc.id,
         ...doc.data()!,
       });
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error getting feature request: $e');
       return null;
     }
@@ -181,7 +181,7 @@ class FeatureRequestService {
         ...updates,
         'updatedAt': FieldValue.serverTimestamp(),
       });
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error updating feature request: $e');
       throw Exception('Ошибка обновления предложения: $e');
     }
@@ -195,7 +195,7 @@ class FeatureRequestService {
 
     try {
       await _firestore.collection('feature_requests').doc(requestId).delete();
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error deleting feature request: $e');
       throw Exception('Ошибка удаления предложения: $e');
     }
@@ -233,7 +233,7 @@ class FeatureRequestService {
           'updatedAt': FieldValue.serverTimestamp(),
         });
       });
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error voting for feature request: $e');
       throw Exception('Ошибка голосования: $e');
     }
@@ -271,7 +271,7 @@ class FeatureRequestService {
           'updatedAt': FieldValue.serverTimestamp(),
         });
       });
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error unvoting for feature request: $e');
       throw Exception('Ошибка отзыва голоса: $e');
     }
@@ -310,7 +310,7 @@ class FeatureRequestService {
           .collection('feature_requests')
           .doc(requestId)
           .update(updates);
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error updating feature request status: $e');
       throw Exception('Ошибка обновления статуса: $e');
     }
@@ -335,7 +335,7 @@ class FeatureRequestService {
           .toList();
 
       return _calculateStats(requests);
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error getting feature request stats: $e');
       return _createMockStats();
     }
@@ -379,7 +379,7 @@ class FeatureRequestService {
             }),
           )
           .toList();
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error searching feature requests: $e');
       return [];
     }

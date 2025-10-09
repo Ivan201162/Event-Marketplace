@@ -20,6 +20,11 @@ class AuthService {
   Future<AppUser?> signInWithEmail(String email, String password) async =>
       _firebaseAuth.signInWithEmail(email, password);
 
+  /// Вход по email и паролю (Firebase Auth)
+  Future<void> signInWithEmailAndPassword(String email, String password) async {
+    await _firebaseAuth.signInWithEmail(email, password);
+  }
+
   /// Регистрация по email и паролю
   Future<AppUser?> signUpWithEmail(
     String email,
@@ -28,9 +33,23 @@ class AuthService {
   }) async =>
       _firebaseAuth.signUpWithEmail(email, password, displayName: displayName);
 
+  /// Создание пользователя с email и паролем (Firebase Auth)
+  Future<void> createUserWithEmailAndPassword(
+    String email,
+    String password,
+    String displayName,
+  ) async {
+    await _firebaseAuth.signUpWithEmail(email, password, displayName: displayName);
+  }
+
   /// Отправка SMS для входа по телефону
   Future<void> signInWithPhone(String phoneNumber) async =>
       _firebaseAuth.signInWithPhone(phoneNumber);
+
+  /// Вход по номеру телефона (Firebase Auth)
+  Future<void> signInWithPhoneNumber(String phoneNumber) async {
+    await _firebaseAuth.signInWithPhone(phoneNumber);
+  }
 
   /// Подтверждение SMS кода для входа по телефону
   Future<AppUser?> confirmPhoneCode(String smsCode) async =>
@@ -38,6 +57,11 @@ class AuthService {
 
   /// Вход как гость
   Future<AppUser?> signInAsGuest() async => _firebaseAuth.signInAsGuest();
+
+  /// Анонимный вход (Firebase Auth)
+  Future<void> signInAnonymously() async {
+    await _firebaseAuth.signInAsGuest();
+  }
 
   /// Выход
   Future<void> signOut() async => _firebaseAuth.signOut();
@@ -58,7 +82,7 @@ class AuthService {
         'Test1234',
         displayName: 'Тестовый пользователь',
       );
-    } catch (e) {
+    } on Exception catch (e) {
       // Если пользователь уже существует, пробуем войти
       if (e.toString().contains('email-already-in-use')) {
         return signInWithTestEmail();
@@ -74,7 +98,7 @@ class AuthService {
       await signInWithPhone('+79998887766');
       // Затем подтверждаем с тестовым кодом
       return await confirmPhoneCode('123456');
-    } catch (e) {
+    } on Exception catch (e) {
       // Если это ошибка верификации, пробуем войти напрямую
       if (e.toString().contains('verification')) {
         return confirmPhoneCode('123456');

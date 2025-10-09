@@ -49,7 +49,7 @@ class ProposalService {
       );
 
       return proposalId;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка создания предложения: $e');
     }
   }
@@ -76,7 +76,7 @@ class ProposalService {
           proposalId: proposalId,
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка принятия предложения: $e');
     }
   }
@@ -103,7 +103,7 @@ class ProposalService {
           proposalId: proposalId,
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка отклонения предложения: $e');
     }
   }
@@ -117,7 +117,7 @@ class ProposalService {
         return SpecialistProposal.fromFirestore(doc);
       }
       return null;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка получения предложения: $e');
     }
   }
@@ -177,7 +177,7 @@ class ProposalService {
   static Future<void> deleteProposal(String proposalId) async {
     try {
       await _firestore.collection(_collection).doc(proposalId).delete();
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка удаления предложения: $e');
     }
   }
@@ -190,7 +190,7 @@ class ProposalService {
     try {
       updates['updatedAt'] = Timestamp.fromDate(DateTime.now());
       await _firestore.collection(_collection).doc(proposalId).update(updates);
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка обновления предложения: $e');
     }
   }
@@ -229,7 +229,7 @@ class ProposalService {
       }
 
       return stats;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка получения статистики: $e');
     }
   }

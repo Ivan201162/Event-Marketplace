@@ -79,3 +79,12 @@ adb shell am start -n com.eventmarketplace.app/com.eventmarketplace.app.MainActi
 
 
 
+
+
+
+
+
+
+
+
+

@@ -19,8 +19,8 @@ class ChatMediaService {
         imageQuality: 85,
       );
       return image != null ? File(image.path) : null;
-    } catch (e) {
-      print('Ошибка при выборе изображения: $e');
+    } on Exception {
+      // Логирование:'Ошибка при выборе изображения: $e');
       return null;
     }
   }
@@ -35,8 +35,8 @@ class ChatMediaService {
         imageQuality: 85,
       );
       return image != null ? File(image.path) : null;
-    } catch (e) {
-      print('Ошибка при съемке фото: $e');
+    } on Exception {
+      // Логирование:'Ошибка при съемке фото: $e');
       return null;
     }
   }
@@ -49,8 +49,8 @@ class ChatMediaService {
         maxDuration: const Duration(minutes: 5),
       );
       return video != null ? File(video.path) : null;
-    } catch (e) {
-      print('Ошибка при выборе видео: $e');
+    } on Exception {
+      // Логирование:'Ошибка при выборе видео: $e');
       return null;
     }
   }
@@ -67,8 +67,8 @@ class ChatMediaService {
       final downloadUrl = await snapshot.ref.getDownloadURL();
 
       return downloadUrl;
-    } catch (e) {
-      print('Ошибка при загрузке изображения: $e');
+    } on Exception {
+      // Логирование:'Ошибка при загрузке изображения: $e');
       return null;
     }
   }
@@ -85,8 +85,8 @@ class ChatMediaService {
       final downloadUrl = await snapshot.ref.getDownloadURL();
 
       return downloadUrl;
-    } catch (e) {
-      print('Ошибка при загрузке видео: $e');
+    } on Exception {
+      // Логирование:'Ошибка при загрузке видео: $e');
       return null;
     }
   }
@@ -126,8 +126,8 @@ class ChatMediaService {
       });
 
       return true;
-    } catch (e) {
-      print('Ошибка при отправке изображения: $e');
+    } on Exception {
+      // Логирование:'Ошибка при отправке изображения: $e');
       return false;
     }
   }
@@ -171,8 +171,8 @@ class ChatMediaService {
       });
 
       return true;
-    } catch (e) {
-      print('Ошибка при отправке видео: $e');
+    } on Exception {
+      // Логирование:'Ошибка при отправке видео: $e');
       return false;
     }
   }
@@ -190,8 +190,8 @@ class ChatMediaService {
       // В реальном приложении здесь бы создавался thumbnail
       // Пока возвращаем placeholder
       return 'https://picsum.photos/300?random=${DateTime.now().millisecondsSinceEpoch}';
-    } catch (e) {
-      print('Ошибка при создании превью видео: $e');
+    } on Exception {
+      // Логирование:'Ошибка при создании превью видео: $e');
       return null;
     }
   }
@@ -202,8 +202,8 @@ class ChatMediaService {
       final ref = _storage.refFromURL(url);
       await ref.delete();
       return true;
-    } catch (e) {
-      print('Ошибка при удалении медиа: $e');
+    } on Exception {
+      // Логирование:'Ошибка при удалении медиа: $e');
       return false;
     }
   }

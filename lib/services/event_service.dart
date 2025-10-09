@@ -55,7 +55,7 @@ class EventService {
         return Event.fromDocument(doc);
       }
       return null;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка получения события: $e');
     }
   }
@@ -65,7 +65,7 @@ class EventService {
     try {
       final docRef = await _firestore.collection('events').add(event.toMap());
       return docRef.id;
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка создания события: $e');
     }
   }
@@ -74,7 +74,7 @@ class EventService {
   Future<void> updateEvent(String eventId, Event event) async {
     try {
       await _firestore.collection('events').doc(eventId).update(event.toMap());
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка обновления события: $e');
     }
   }
@@ -83,7 +83,7 @@ class EventService {
   Future<void> deleteEvent(String eventId) async {
     try {
       await _firestore.collection('events').doc(eventId).delete();
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка удаления события: $e');
     }
   }
@@ -184,7 +184,7 @@ class EventService {
         'currentParticipants': newCount,
         'updatedAt': FieldValue.serverTimestamp(),
       });
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка обновления количества участников: $e');
     }
   }
@@ -196,7 +196,7 @@ class EventService {
         'status': status.name,
         'updatedAt': FieldValue.serverTimestamp(),
       });
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка обновления статуса события: $e');
     }
   }
@@ -239,7 +239,7 @@ class EventService {
         'completed': completed,
         'cancelled': cancelled,
       };
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Ошибка получения статистики: $e');
     }
   }

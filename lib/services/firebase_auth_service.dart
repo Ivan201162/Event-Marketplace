@@ -147,6 +147,9 @@ class FirebaseAuthService {
     }
   }
 
+  /// Получить сохраненный verification ID
+  String? get verificationId => _verificationId;
+
   /// Вход как гость (анонимная авторизация)
   Future<AppUser?> signInAsGuest() async {
     try {

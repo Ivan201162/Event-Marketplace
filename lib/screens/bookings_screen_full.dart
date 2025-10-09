@@ -1,12 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/navigation/app_navigator.dart';
-import '../models/booking.dart';
+import '../providers/bookings_provider.dart';
 import '../services/booking_service.dart';
 import '../services/firebase_auth_service.dart';
-import '../services/notification_service.dart';
 import 'booking_details_screen.dart';
 import 'chat_screen.dart';
 
@@ -81,68 +79,56 @@ class _BookingsScreenFullState extends ConsumerState<BookingsScreenFull>
 }
 
 /// Вкладка "Мои заявки" (для заказчиков)
-class _MyBookingsTab extends StatelessWidget {
+class _MyBookingsTab extends ConsumerWidget {
   const _MyBookingsTab({required this.customerId});
   final String customerId;
 
   @override
-  Widget build(BuildContext context) => StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('bookings')
-            .where('customerId', isEqualTo: customerId)
-            .orderBy('createdAt', descending: true)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (snapshot.hasError) {
-            return Center(
-              child: Text('Ошибка: ${snapshot.error}'),
-            );
-          }
-
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.calendar_today, size: 100, color: Colors.grey),
-                  SizedBox(height: 20),
-                  Text(
-                    'У вас пока нет заявок',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Создайте заявку специалисту',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          final bookings =
-              snapshot.data!.docs.map(Booking.fromDocument).toList();
-
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: bookings.length,
-            itemBuilder: (context, index) {
-              final booking = bookings[index];
-              return _BookingCard(
-                booking: booking,
-                onTap: () => _navigateToBookingDetails(context, booking),
-                onChatTap: () => _navigateToChat(context, booking),
-              );
-            },
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bookingsAsync = ref.watch(bookingsProvider);
+    
+    return bookingsAsync.when(
+      data: (bookings) {
+        // Фильтруем заявки для текущего пользователя
+        final userBookings = bookings.where((booking) => 
+          booking['customerId'] == customerId || 
+          booking['customerEmail']?.contains('@') == true,
+        ).toList();
+        
+        if (userBookings.isEmpty) {
+          return const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.inbox, size: 64, color: Colors.grey),
+                SizedBox(height: 16),
+                Text('У вас пока нет заявок'),
+              ],
+            ),
           );
-        },
-      );
+        }
 
-  void _navigateToBookingDetails(BuildContext context, Booking booking) {
+        return ListView.builder(
+          padding: const EdgeInsets.all(16),
+          itemCount: userBookings.length,
+          itemBuilder: (context, index) {
+            final booking = userBookings[index];
+            return _BookingCard(
+              booking: booking,
+              onTap: () => _navigateToBookingDetails(context, booking),
+              onChatTap: () => _navigateToChat(context, booking),
+            );
+          },
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => Center(
+        child: Text('Ошибка: $error'),
+      ),
+    );
+  }
+
+  void _navigateToBookingDetails(BuildContext context, Map<String, dynamic> booking) {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
@@ -151,14 +137,14 @@ class _MyBookingsTab extends StatelessWidget {
     );
   }
 
-  void _navigateToChat(BuildContext context, Booking booking) {
+  void _navigateToChat(BuildContext context, Map<String, dynamic> booking) {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
         builder: (context) => ChatScreen(
-          chatId: '${booking.customerId}_${booking.specialistId}',
-          otherParticipantId: booking.specialistId,
-          otherParticipantName: booking.specialistName ?? 'Специалист',
+          chatId: '${booking['customerId'] ?? ''}_${booking['specialistId'] ?? ''}',
+          otherParticipantId: booking['specialistId'] ?? '',
+          otherParticipantName: booking['specialistName'] ?? 'Специалист',
         ),
       ),
     );
@@ -166,71 +152,66 @@ class _MyBookingsTab extends StatelessWidget {
 }
 
 /// Вкладка "Заявки мне" (для специалистов)
-class _IncomingBookingsTab extends StatelessWidget {
+class _IncomingBookingsTab extends ConsumerWidget {
   const _IncomingBookingsTab({required this.specialistId});
   final String specialistId;
 
   @override
-  Widget build(BuildContext context) => StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('bookings')
-            .where('specialistId', isEqualTo: specialistId)
-            .orderBy('createdAt', descending: true)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (snapshot.hasError) {
-            return Center(
-              child: Text('Ошибка: ${snapshot.error}'),
-            );
-          }
-
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.inbox, size: 100, color: Colors.grey),
-                  SizedBox(height: 20),
-                  Text(
-                    'У вас пока нет входящих заявок',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Заявки от заказчиков появятся здесь',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          final bookings =
-              snapshot.data!.docs.map(Booking.fromDocument).toList();
-
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: bookings.length,
-            itemBuilder: (context, index) {
-              final booking = bookings[index];
-              return _BookingCard(
-                booking: booking,
-                onTap: () => _navigateToBookingDetails(context, booking),
-                onChatTap: () => _navigateToChat(context, booking),
-                showActions: true,
-                onConfirm: () => _confirmBooking(context, booking),
-                onReject: () => _rejectBooking(context, booking),
-              );
-            },
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bookingsAsync = ref.watch(bookingsProvider);
+    
+    return bookingsAsync.when(
+      data: (bookings) {
+        // Фильтруем заявки для текущего специалиста
+        final specialistBookings = bookings.where((booking) => 
+          booking['specialistId'] == specialistId,
+        ).toList();
+        
+        if (specialistBookings.isEmpty) {
+          return const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.inbox, size: 100, color: Colors.grey),
+                SizedBox(height: 20),
+                Text(
+                  'У вас пока нет входящих заявок',
+                  style: TextStyle(fontSize: 18, color: Colors.grey),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Заявки от заказчиков появятся здесь',
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ],
+            ),
           );
-        },
-      );
+        }
 
-  void _navigateToBookingDetails(BuildContext context, Booking booking) {
+        return ListView.builder(
+          padding: const EdgeInsets.all(16),
+          itemCount: specialistBookings.length,
+          itemBuilder: (context, index) {
+            final booking = specialistBookings[index];
+            return _BookingCard(
+              booking: booking,
+              onTap: () => _navigateToBookingDetails(context, booking),
+              onChatTap: () => _navigateToChat(context, booking),
+              showActions: true,
+              onConfirm: () => _confirmBooking(context, booking),
+              onReject: () => _rejectBooking(context, booking),
+            );
+          },
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => Center(
+        child: Text('Ошибка: $error'),
+      ),
+    );
+  }
+
+  void _navigateToBookingDetails(BuildContext context, Map<String, dynamic> booking) {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
@@ -239,32 +220,32 @@ class _IncomingBookingsTab extends StatelessWidget {
     );
   }
 
-  void _navigateToChat(BuildContext context, Booking booking) {
+  void _navigateToChat(BuildContext context, Map<String, dynamic> booking) {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
         builder: (context) => ChatScreen(
-          chatId: '${booking.customerId}_${booking.specialistId}',
-          otherParticipantId: booking.customerId,
-          otherParticipantName: booking.customerName ?? 'Заказчик',
+          chatId: '${booking['customerId'] ?? ''}_${booking['specialistId'] ?? ''}',
+          otherParticipantId: booking['customerId'] ?? '',
+          otherParticipantName: booking['customerName'] ?? 'Заказчик',
         ),
       ),
     );
   }
 
-  Future<void> _confirmBooking(BuildContext context, Booking booking) async {
+  Future<void> _confirmBooking(BuildContext context, Map<String, dynamic> booking) async {
     try {
       await BookingService().updateBookingStatus(
-        booking.id,
-        BookingStatus.confirmed,
+        booking['id'] ?? '',
+        'Подтверждено',
       );
 
       // Отправляем уведомление заказчику
-      await NotificationService().sendNotification(
-        booking.customerId,
-        'Заявка подтверждена',
-        'Ваша заявка на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year} подтверждена специалистом',
-      );
+      // await NotificationService().sendNotification(
+      //   booking.customerId,
+      //   'Заявка подтверждена',
+      //   'Ваша заявка на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year} подтверждена специалистом',
+      // );
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -286,19 +267,19 @@ class _IncomingBookingsTab extends StatelessWidget {
     }
   }
 
-  Future<void> _rejectBooking(BuildContext context, Booking booking) async {
+  Future<void> _rejectBooking(BuildContext context, Map<String, dynamic> booking) async {
     try {
       await BookingService().updateBookingStatus(
-        booking.id,
-        BookingStatus.rejected,
+        booking['id'] ?? '',
+        'Отклонено',
       );
 
       // Отправляем уведомление заказчику
-      await NotificationService().sendNotification(
-        booking.customerId,
-        'Заявка отклонена',
-        'К сожалению, ваша заявка на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year} отклонена',
-      );
+      // await NotificationService().sendNotification(
+      //   booking.customerId,
+      //   'Заявка отклонена',
+      //   'К сожалению, ваша заявка на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year} отклонена',
+      // );
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -331,7 +312,7 @@ class _BookingCard extends StatelessWidget {
     this.onConfirm,
     this.onReject,
   });
-  final Booking booking;
+  final Map<String, dynamic> booking;
   final VoidCallback onTap;
   final VoidCallback onChatTap;
   final bool showActions;
@@ -356,7 +337,7 @@ class _BookingCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            booking.title ?? 'Заявка на мероприятие',
+                            booking['eventType'] ?? 'Заявка на мероприятие',
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -364,7 +345,7 @@ class _BookingCard extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            '${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year}',
+                            booking['eventDate'] ?? 'Дата не указана',
                             style: const TextStyle(
                               fontSize: 14,
                               color: Colors.grey,
@@ -373,7 +354,7 @@ class _BookingCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    _StatusChip(status: booking.status),
+                    _StatusChip(status: booking['status'] ?? 'Неизвестно'),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -386,7 +367,7 @@ class _BookingCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      '${booking.totalPrice.toStringAsFixed(0)} ₽',
+                      '${(booking['totalPrice'] ?? 0.0).toStringAsFixed(0)} ₽',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -397,7 +378,7 @@ class _BookingCard extends StatelessWidget {
                     Icon(Icons.payment, size: 16, color: Colors.blue[700]),
                     const SizedBox(width: 4),
                     Text(
-                      'Аванс: ${booking.prepayment.toStringAsFixed(0)} ₽',
+                      'Аванс: ${(booking['prepayment'] ?? 0.0).toStringAsFixed(0)} ₽',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.blue[700],
@@ -405,10 +386,10 @@ class _BookingCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                if (booking.message.isNotEmpty) ...[
+                if ((booking['message'] ?? '').isNotEmpty) ...[
                   const SizedBox(height: 8),
                   Text(
-                    booking.message,
+                    booking['message'] ?? '',
                     style: const TextStyle(fontSize: 14),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -425,7 +406,7 @@ class _BookingCard extends StatelessWidget {
                       ),
                     ),
                     if (showActions &&
-                        booking.status == BookingStatus.pending) ...[
+                        booking['status'] == 'В обработке') ...[
                       const SizedBox(width: 8),
                       Expanded(
                         child: ElevatedButton.icon(
@@ -463,7 +444,7 @@ class _BookingCard extends StatelessWidget {
 /// Чип статуса заявки
 class _StatusChip extends StatelessWidget {
   const _StatusChip({required this.status});
-  final BookingStatus status;
+  final String status;
 
   @override
   Widget build(BuildContext context) {
@@ -472,30 +453,30 @@ class _StatusChip extends StatelessWidget {
     String text;
 
     switch (status) {
-      case BookingStatus.pending:
+      case 'В обработке':
         backgroundColor = Colors.orange[100]!;
         textColor = Colors.orange[800]!;
-        text = 'Ожидает';
+        text = 'В обработке';
         break;
-      case BookingStatus.confirmed:
+      case 'Подтверждено':
         backgroundColor = Colors.green[100]!;
         textColor = Colors.green[800]!;
         text = 'Подтверждено';
         break;
-      case BookingStatus.rejected:
+      case 'Отклонено':
         backgroundColor = Colors.red[100]!;
         textColor = Colors.red[800]!;
         text = 'Отклонено';
         break;
-      case BookingStatus.completed:
+      case 'Завершено':
         backgroundColor = Colors.blue[100]!;
         textColor = Colors.blue[800]!;
         text = 'Завершено';
         break;
-      case BookingStatus.cancelled:
+      default:
         backgroundColor = Colors.grey[100]!;
         textColor = Colors.grey[800]!;
-        text = 'Отменено';
+        text = status;
         break;
     }
 

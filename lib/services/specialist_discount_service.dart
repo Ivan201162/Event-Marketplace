@@ -38,7 +38,7 @@ class SpecialistDiscountService {
       await _sendDiscountNotification(bookingId, docRef.id);
 
       return docRef.id;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка предложения скидки: $e');
       rethrow;
     }
@@ -57,7 +57,7 @@ class SpecialistDiscountService {
           .get();
 
       return snapshot.docs.map(SpecialistDiscount.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения скидок для заказа: $e');
       return [];
     }
@@ -78,7 +78,7 @@ class SpecialistDiscountService {
           .get();
 
       return snapshot.docs.map(SpecialistDiscount.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения активных скидок специалиста: $e');
       return [];
     }
@@ -106,7 +106,7 @@ class SpecialistDiscountService {
         final discount = SpecialistDiscount.fromDocument(discountDoc);
         await _updateBookingWithDiscount(discount);
       }
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка принятия скидки: $e');
       rethrow;
     }
@@ -123,7 +123,7 @@ class SpecialistDiscountService {
         'rejectedAt': FieldValue.serverTimestamp(),
         'isActive': false,
       });
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка отклонения скидки: $e');
       rethrow;
     }
@@ -140,7 +140,7 @@ class SpecialistDiscountService {
         'cancelledAt': FieldValue.serverTimestamp(),
         'isActive': false,
       });
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка отмены скидки: $e');
       rethrow;
     }
@@ -185,7 +185,7 @@ class SpecialistDiscountService {
         averageDiscount: averageDiscount,
         lastUpdated: DateTime.now(),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка получения статистики скидок: $e');
       return SpecialistDiscountStats.empty();
     }
@@ -204,7 +204,7 @@ class SpecialistDiscountService {
           .get();
 
       return existingDiscount.docs.isEmpty;
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка проверки возможности предложения скидки: $e');
       return false;
     }
@@ -239,7 +239,7 @@ class SpecialistDiscountService {
         'createdAt': FieldValue.serverTimestamp(),
         'isRead': false,
       });
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка отправки уведомления о скидке: $e');
     }
   }
@@ -266,7 +266,7 @@ class SpecialistDiscountService {
         'originalPrice': booking.totalPrice,
         'updatedAt': FieldValue.serverTimestamp(),
       });
-    } catch (e) {
+    } on Exception catch (e) {
       print('Ошибка обновления заказа со скидкой: $e');
     }
   }

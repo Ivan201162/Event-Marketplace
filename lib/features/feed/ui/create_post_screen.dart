@@ -219,7 +219,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                 icon: const Icon(Icons.add_photo_alternate),
                 label: Text(_selectedType == PostType.photo
                     ? 'Выбрать фото'
-                    : 'Выбрать видео'),
+                    : 'Выбрать видео',),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                 ),

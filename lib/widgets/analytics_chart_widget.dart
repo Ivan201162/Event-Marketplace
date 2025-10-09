@@ -79,7 +79,6 @@ class AnalyticsChartWidget extends StatelessWidget {
 
     return LineChart(
       LineChartData(
-        gridData: FlGridData(show: true),
         titlesData: FlTitlesData(
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
@@ -106,9 +105,9 @@ class AnalyticsChartWidget extends StatelessWidget {
             ),
           ),
           topTitles:
-              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              const AxisTitles(),
           rightTitles:
-              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              const AxisTitles(),
         ),
         borderData: FlBorderData(show: true),
         lineBarsData: [
@@ -121,7 +120,6 @@ class AnalyticsChartWidget extends StatelessWidget {
             isCurved: true,
             color: Theme.of(context).primaryColor,
             barWidth: 3,
-            dotData: FlDotData(show: true),
             belowBarData: BarAreaData(
               show: true,
               color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
@@ -169,9 +167,9 @@ class AnalyticsChartWidget extends StatelessWidget {
             ),
           ),
           topTitles:
-              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              const AxisTitles(),
           rightTitles:
-              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              const AxisTitles(),
         ),
         borderData: FlBorderData(show: true),
         barGroups: data
@@ -254,15 +252,10 @@ class AnalyticsChartWidget extends StatelessWidget {
             .toList(),
       );
 
-  double _getChartHeight() {
-    switch (type) {
-      case ChartType.line:
-      case ChartType.bar:
-        return 200;
-      case ChartType.pie:
-        return 250;
-    }
-  }
+  double _getChartHeight() => switch (type) {
+        ChartType.line || ChartType.bar => 200,
+        ChartType.pie => 250,
+      };
 }
 
 /// Тип графика

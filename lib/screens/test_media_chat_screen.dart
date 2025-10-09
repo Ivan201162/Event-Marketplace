@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/chat_message.dart';
+import '../models/chat.dart';
 import '../services/chat_service.dart';
 import '../services/media_upload_service.dart';
 import '../widgets/media_attachment_widget.dart';

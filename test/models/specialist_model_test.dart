@@ -251,8 +251,8 @@ void main() {
 
       final map = specialist.toMap();
 
-      expect(map['contacts'], isA<Map>());
-      expect(map['servicesWithPrices'], isA<Map>());
+      expect(map['contacts'], isA<Map<String, dynamic>>());
+      expect(map['servicesWithPrices'], isA<Map<String, dynamic>>());
       expect((map['contacts'] as Map).isEmpty, isTrue);
       expect((map['servicesWithPrices'] as Map).isEmpty, isTrue);
     });

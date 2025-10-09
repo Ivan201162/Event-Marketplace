@@ -187,7 +187,7 @@ class SpecialistAnalyticsService {
         'specialistId': doc.id,
         ...doc.data()!,
       });
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error getting specialist analytics: $e');
       return null;
     }
@@ -250,7 +250,7 @@ class SpecialistAnalyticsService {
           .set(analytics.toMap());
 
       return analytics;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error generating analytics: $e');
       throw Exception('Ошибка генерации аналитики: $e');
     }
@@ -427,7 +427,7 @@ class SpecialistAnalyticsService {
           .set(analytics.toMap());
 
       debugPrint('Updated analytics for specialist $specialistId');
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error updating specialist analytics: $e');
       throw Exception('Ошибка обновления аналитики: $e');
     }
@@ -461,7 +461,7 @@ class SpecialistAnalyticsService {
             },
           )
           .toList();
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error getting top specialists: $e');
       return [];
     }
@@ -489,7 +489,7 @@ class SpecialistAnalyticsService {
             },
           )
           .toList();
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error getting top specialists by rating: $e');
       return [];
     }
@@ -536,7 +536,7 @@ class SpecialistAnalyticsService {
             ? ratings.reduce((a, b) => a + b) / ratings.length
             : 0.0,
       };
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error getting comparative analytics: $e');
       return {};
     }
@@ -585,7 +585,7 @@ class SpecialistAnalyticsService {
       }
 
       return monthlyIncome;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error getting monthly income stats: $e');
       return {};
     }
@@ -619,7 +619,7 @@ class SpecialistAnalyticsService {
       }
 
       return monthlyBookings;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error getting monthly bookings stats: $e');
       return {};
     }
@@ -663,7 +663,7 @@ class SpecialistAnalyticsService {
       });
 
       return monthlyAverageRating;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error getting monthly rating stats: $e');
       return {};
     }

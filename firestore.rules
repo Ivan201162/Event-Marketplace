@@ -1,615 +1,75 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Правила для пользователей
-    match /users/{userId} {
-      // Пользователи могут читать и писать только свои данные
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-      
-      // Администраторы могут читать все данные пользователей
-      allow read: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
-      
-      // Администраторы могут обновлять статус пользователей
-      allow update: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'] &&
-        request.resource.data.keys().hasAll(['status', 'updatedAt']);
-    }
-    
-    // Правила для специалистов
-    match /specialists/{specialistId} {
-      // Специалисты могут читать и писать только свои данные
-      allow read, write: if request.auth != null && request.auth.uid == specialistId;
-      
-      // Все аутентифицированные пользователи могут читать данные специалистов
-      allow read: if request.auth != null;
-      
-      // Администраторы могут читать и обновлять данные специалистов
-      allow read, update: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
-    }
-    
-    // Правила для бронирований
-    match /bookings/{bookingId} {
-      // Участники бронирования могут читать данные
-      allow read: if request.auth != null && 
-        (request.auth.uid == resource.data.userId || 
-         request.auth.uid == resource.data.specialistId);
-      
-      // Пользователи могут создавать бронирования
+    // Публичное чтение идей (лента). Запись только аутентифицированным.
+    match /ideas/{ideaId} {
+      allow read: if true;
       allow create: if request.auth != null && 
-        request.auth.uid == request.resource.data.userId &&
-        request.resource.data.keys().hasAll(['userId', 'specialistId', 'eventDate', 'status', 'createdAt', 'updatedAt']);
-      
-      // Специалисты могут обновлять статус своих бронирований
+        request.auth.uid == resource.data.authorId;
       allow update: if request.auth != null && 
-        request.auth.uid == resource.data.specialistId &&
-        request.resource.data.keys().hasAll(['status', 'updatedAt']) &&
-        request.resource.data.status in ['confirmed', 'rejected', 'completed', 'cancelled'];
-      
-      // Пользователи могут отменять свои бронирования
-      allow update: if request.auth != null && 
-        request.auth.uid == resource.data.userId &&
-        request.resource.data.status == 'cancelled' &&
-        request.resource.data.keys().hasAll(['status', 'updatedAt']);
-      
-      // Администраторы могут читать и обновлять все бронирования
-      allow read, update: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
+        (request.auth.uid == resource.data.authorId || 
+         request.auth.uid in resource.data.moderators);
+      allow delete: if request.auth != null && 
+        request.auth.uid == resource.data.authorId;
+      match /comments/{commentId} {
+        allow read: if true;
+        allow create: if request.auth != null;
+        allow update, delete: if request.auth != null && 
+          request.auth.uid == resource.data.authorId;
+      }
     }
-    
-    // Правила для чатов
+
+    // Чаты — только для авторизованных
     match /chats/{chatId} {
-      // Участники чата могут читать данные
-      allow read: if request.auth != null && 
-        request.auth.uid in resource.data.participants;
-      
-      // Участники чата могут создавать чаты
-      allow create: if request.auth != null && 
-        request.auth.uid in request.resource.data.participants &&
-        request.resource.data.keys().hasAll(['participants', 'createdAt', 'updatedAt']);
-      
-      // Участники чата могут обновлять чат
-      allow update: if request.auth != null && 
-        request.auth.uid in resource.data.participants &&
-        request.resource.data.keys().hasAll(['updatedAt']);
-      
-      // Администраторы могут читать все чаты
-      allow read: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
-    }
-    
-    // Правила для сообщений (новая структура)
+      allow read, write: if request.auth != null;
     match /messages/{messageId} {
-      // Участники чата могут читать сообщения
-      allow read: if request.auth != null && 
-        request.auth.uid in get(/databases/$(database)/documents/chats/$(resource.data.chatId)).data.participants;
-      
-      // Участники чата могут отправлять сообщения
-      allow create: if request.auth != null && 
-        request.auth.uid in get(/databases/$(database)/documents/chats/$(request.resource.data.chatId)).data.participants &&
-        request.auth.uid == request.resource.data.senderId &&
-        request.resource.data.keys().hasAll(['chatId', 'senderId', 'senderName', 'type', 'content', 'timestamp']);
-      
-      // Отправитель может обновлять свои сообщения
-      allow update: if request.auth != null && 
-        request.auth.uid == resource.data.senderId &&
-        request.resource.data.keys().hasAll(['updatedAt']);
-      
-      // Отправитель может удалять свои сообщения
-      allow delete: if request.auth != null && 
-        request.auth.uid == resource.data.senderId;
-      
-      // Администраторы могут читать все сообщения
-      allow read: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
+        allow read, write: if request.auth != null;
+      }
     }
-    
-    // Правила для отзывов
-    match /reviews/{reviewId} {
-      // Все аутентифицированные пользователи могут читать отзывы
-      allow read: if request.auth != null;
-      
-      // Пользователи могут создавать отзывы только для завершенных заказов
-      allow create: if request.auth != null && 
-        request.auth.uid == request.resource.data.customerId &&
-        request.resource.data.keys().hasAll(['bookingId', 'specialistId', 'customerId', 'rating', 'comment', 'createdAt']) &&
-        request.resource.data.rating >= 1.0 &&
-        request.resource.data.rating <= 5.0 &&
-        // Проверяем, что заказ завершен
-        get(/databases/$(database)/documents/bookings/$(request.resource.data.bookingId)).data.status == 'completed';
-      
-      // Автор отзыва может редактировать свой отзыв один раз
-      allow update: if request.auth != null && 
-        request.auth.uid == resource.data.customerId &&
-        request.resource.data.keys().hasAll(['updatedAt']) &&
-        request.resource.data.edited == true &&
-        resource.data.edited == false;
-      
-      // Пользователи могут жаловаться на отзывы
-      allow update: if request.auth != null && 
-        request.resource.data.keys().hasAll(['reported', 'reportReason']) &&
-        request.resource.data.reported == true;
-      
-      // Администраторы могут читать и обновлять все отзывы
-      allow read, update, delete: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
+
+    // Бронирования — только авторизованным
+    match /bookings/{bookingId} {
+      allow read, write: if request.auth != null;
     }
-    
-    // Правила для платежей
-    match /payments/{paymentId} {
-      // Участники платежа могут читать данные
-      allow read: if request.auth != null && 
-        (request.auth.uid == resource.data.userId || 
-         request.auth.uid == resource.data.specialistId);
-      
-      // Пользователи могут создавать платежи
-      allow create: if request.auth != null && 
-        request.auth.uid == request.resource.data.userId &&
-        request.resource.data.keys().hasAll(['userId', 'specialistId', 'amount', 'currency', 'status', 'createdAt', 'updatedAt']);
-      
-      // Система может обновлять статус платежей
-      allow update: if request.auth != null && 
-        request.resource.data.keys().hasAll(['status', 'updatedAt']) &&
-        request.resource.data.status in ['pending', 'completed', 'failed', 'refunded'];
-      
-      // Администраторы могут читать все платежи
-      allow read: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
-    }
-    
-    // Правила для договоров
-    match /contracts/{contractId} {
-      // Участники договора могут читать данные
-      allow read: if request.auth != null && 
-        (request.auth.uid == resource.data.customerId || 
-         request.auth.uid == resource.data.specialistId);
-      
-      // Система может создавать договоры
-      allow create: if request.auth != null && 
-        request.resource.data.keys().hasAll(['customerId', 'specialistId', 'bookingId', 'type', 'status', 'title', 'content', 'createdAt', 'updatedAt', 'expiresAt', 'signedByCustomer', 'signedBySpecialist']);
-      
-      // Участники договора могут подписывать договор
-      allow update: if request.auth != null && 
-        (request.auth.uid == resource.data.customerId || 
-         request.auth.uid == resource.data.specialistId) &&
-        request.resource.data.keys().hasAll(['updatedAt']) &&
-        (request.resource.data.keys().hasAny(['signedByCustomer', 'signedBySpecialist', 'status', 'signedAt']));
-      
-      // Система может обновлять статус договора
-      allow update: if request.auth != null && 
-        request.resource.data.keys().hasAll(['status', 'updatedAt']) &&
-        request.resource.data.status in ['draft', 'pending', 'signed', 'active', 'completed', 'cancelled', 'expired'];
-      
-      // Администраторы могут читать все договоры
-      allow read: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
-    }
-    
-    // Правила для уведомлений
-    match /notifications/{notificationId} {
-      // Пользователи могут читать свои уведомления
-      allow read: if request.auth != null && 
-        request.auth.uid == resource.data.userId;
-      
-      // Система может создавать уведомления
-      allow create: if request.auth != null && 
-        request.resource.data.keys().hasAll(['userId', 'title', 'body', 'type', 'createdAt']);
-      
-      // Пользователи могут обновлять статус своих уведомлений
-      allow update: if request.auth != null && 
-        request.auth.uid == resource.data.userId &&
-        request.resource.data.keys().hasAll(['isRead', 'updatedAt']);
-      
-      // Администраторы могут читать все уведомления
-      allow read: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
-    }
-    
-    // Правила для жалоб
-    match /reports/{reportId} {
-      // Автор жалобы может читать свою жалобу
-      allow read: if request.auth != null && 
-        request.auth.uid == resource.data.reporterId;
-      
-      // Пользователи могут создавать жалобы
-      allow create: if request.auth != null && 
-        request.auth.uid == request.resource.data.reporterId &&
-        request.resource.data.keys().hasAll(['reporterId', 'reportedUserId', 'reason', 'description', 'createdAt']);
-      
-      // Администраторы могут читать и обновлять все жалобы
-      allow read, update: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
-    }
-    
-    // Правила для администраторов
-    match /admins/{adminId} {
-      // Администраторы могут читать данные других администраторов
-      allow read: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
-      
-      // Супер-администраторы могут создавать и обновлять администраторов
-      allow create, update: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'superAdmin';
-      
-      // Администраторы могут читать свои данные
-      allow read: if request.auth != null && request.auth.uid == adminId;
-    }
-    
-    // Правила для логов действий
-    match /action_logs/{logId} {
-      // Только администраторы могут читать логи
-      allow read: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
-      
-      // Система может создавать логи
-      allow create: if request.auth != null;
-    }
-    
-    // Правила для логов ошибок
-    match /errors_log/{errorId} {
-      // Только администраторы могут читать логи ошибок
-      allow read: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
-      
-      // Система может создавать логи ошибок
-      allow create: if request.auth != null;
-    }
-    
-    // Правила для настроек приложения
-    match /app_settings/{settingId} {
-      // Все аутентифицированные пользователи могут читать настройки
-      allow read: if request.auth != null;
-      
-      // Только супер-администраторы могут обновлять настройки
-      allow update: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'superAdmin';
-    }
-    
-    // Правила для категорий
-    match /categories/{categoryId} {
-      // Все аутентифицированные пользователи могут читать категории
-      allow read: if request.auth != null;
-      
-      // Только администраторы могут создавать и обновлять категории
-      allow create, update: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
-    }
-    
-    // Правила для событий
-    match /events/{eventId} {
-      // Все аутентифицированные пользователи могут читать события
-      allow read: if request.auth != null;
-      
-      // Пользователи могут создавать события
-      allow create: if request.auth != null && 
-        request.resource.data.keys().hasAll(['title', 'description', 'date', 'location', 'createdAt', 'updatedAt']);
-      
-      // Автор события может обновлять свое событие
-      allow update: if request.auth != null && 
-        request.auth.uid == resource.data.userId &&
-        request.resource.data.keys().hasAll(['updatedAt']);
-      
-      // Администраторы могут читать и обновлять все события
-      allow read, update: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
-    }
-    
-    // Правила для подписок
-    match /subscriptions/{subscriptionId} {
-      // Пользователи могут читать свои подписки
-      allow read: if request.auth != null && 
-        request.auth.uid == resource.data.userId;
-      
-      // Пользователи могут создавать подписки
-      allow create: if request.auth != null && 
-        request.auth.uid == request.resource.data.userId &&
-        request.resource.data.keys().hasAll(['userId', 'specialistId', 'createdAt']);
-      
-      // Пользователи могут удалять свои подписки
-      allow delete: if request.auth != null && 
-        request.auth.uid == resource.data.userId;
-      
-      // Администраторы могут читать все подписки
-      allow read: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
-    }
-    
-    // Правила для постов в ленте
-    match /feed_posts/{postId} {
-      // Все аутентифицированные пользователи могут читать посты
-      allow read: if request.auth != null;
-      
-      // Специалисты могут создавать посты
-      allow create: if request.auth != null && 
-        request.auth.uid == request.resource.data.specialistId &&
-        request.resource.data.keys().hasAll(['specialistId', 'content', 'createdAt', 'updatedAt']);
-      
-      // Автор поста может обновлять свой пост
-      allow update: if request.auth != null && 
-        request.auth.uid == resource.data.specialistId &&
-        request.resource.data.keys().hasAll(['updatedAt']);
-      
-      // Администраторы могут читать и обновлять все посты
-      allow read, update: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
-    }
-    
-    // Правила для комментариев к постам
-    match /feed_posts/{postId}/comments/{commentId} {
-      // Все аутентифицированные пользователи могут читать комментарии
-      allow read: if request.auth != null;
-      
-      // Пользователи могут создавать комментарии
-      allow create: if request.auth != null && 
-        request.auth.uid == request.resource.data.userId &&
-        request.resource.data.keys().hasAll(['userId', 'text', 'createdAt', 'updatedAt']);
-      
-      // Автор комментария может обновлять свой комментарий
-      allow update: if request.auth != null && 
-        request.auth.uid == resource.data.userId &&
-        request.resource.data.keys().hasAll(['updatedAt']);
-      
-      // Администраторы могут читать и обновлять все комментарии
-      allow read, update: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
-    }
-    
-    // Правила для сторис
-    match /stories/{storyId} {
-      // Все аутентифицированные пользователи могут читать сторис
-      allow read: if request.auth != null;
-      
-      // Специалисты могут создавать сторис
-      allow create: if request.auth != null && 
-        request.auth.uid == request.resource.data.specialistId &&
-        request.resource.data.keys().hasAll(['specialistId', 'mediaUrl', 'createdAt', 'expiresAt']);
-      
-      // Автор сториса может обновлять свою сторису
-      allow update: if request.auth != null && 
-        request.auth.uid == resource.data.specialistId &&
-        request.resource.data.keys().hasAll(['updatedAt']);
-      
-      // Администраторы могут читать и обновлять все сторис
-      allow read, update: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
-    }
-    
-    // Правила для избранного
-    match /favorites/{favoriteId} {
-      // Пользователи могут читать свои избранные
-      allow read: if request.auth != null && 
-        request.auth.uid == resource.data.userId;
-      
-      // Пользователи могут создавать избранное
-      allow create: if request.auth != null && 
-        request.auth.uid == request.resource.data.userId &&
-        request.resource.data.keys().hasAll(['userId', 'specialistId', 'createdAt']);
-      
-      // Пользователи могут удалять свои избранные
-      allow delete: if request.auth != null && 
-        request.auth.uid == resource.data.userId;
-      
-      // Администраторы могут читать все избранные
-      allow read: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
-    }
-    
-    // Правила для поиска
-    match /search_history/{searchId} {
-      // Пользователи могут читать свою историю поиска
-      allow read: if request.auth != null && 
-        request.auth.uid == resource.data.userId;
-      
-      // Пользователи могут создавать записи в истории поиска
-      allow create: if request.auth != null && 
-        request.auth.uid == request.resource.data.userId &&
-        request.resource.data.keys().hasAll(['userId', 'query', 'createdAt']);
-      
-      // Пользователи могут удалять свою историю поиска
-      allow delete: if request.auth != null && 
-        request.auth.uid == resource.data.userId;
-    }
-    
-    // Правила для аналитики
-    match /analytics/{analyticsId} {
-      // Пользователи могут читать свою аналитику
-      allow read: if request.auth != null && 
-        (analyticsId.matches('specialist_' + request.auth.uid) || 
-         analyticsId.matches('customer_' + request.auth.uid));
-      
-      // Администраторы могут читать всю аналитику
-      allow read: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
-      
-      // Система может создавать и обновлять записи аналитики
-      allow create, update: if request.auth != null;
-    }
-    
-    // Правила для токенов устройств
-    match /user_tokens/{tokenId} {
-      // Пользователи могут читать и обновлять свои токены
-      allow read, write: if request.auth != null && 
-        request.auth.uid == resource.data.userId;
-      
-      // Система может создавать токены
-      allow create: if request.auth != null;
-    }
-    
-    // Правила для напоминаний
-    match /reminders/{reminderId} {
-      // Пользователи могут читать свои напоминания
-      allow read: if request.auth != null && 
-        request.auth.uid == resource.data.customerId;
-      
-      // Система может создавать и обновлять напоминания
-      allow create, update: if request.auth != null;
-      
-      // Пользователи могут удалять свои напоминания
-      allow delete: if request.auth != null && 
-        request.auth.uid == resource.data.customerId;
-    }
-    
-    // Правила для доступности специалистов
-    match /specialist_availability/{specialistId} {
-      // Специалисты могут читать и обновлять свою доступность
-      allow read, write: if request.auth != null && 
-        request.auth.uid == specialistId;
-      
-      // Все аутентифицированные пользователи могут читать доступность
-      allow read: if request.auth != null;
-    }
-    
-    // Правила для кэша
-    match /cache/{cacheId} {
-      // Все аутентифицированные пользователи могут читать кэш
-      allow read: if request.auth != null;
-      
-      // Система может создавать и обновлять кэш
-      allow create, update: if request.auth != null;
-    }
-    
-    // Правила для метаданных
-    match /metadata/{metadataId} {
-      // Все аутентифицированные пользователи могут читать метаданные
-      allow read: if request.auth != null;
-      
-      // Только супер-администраторы могут обновлять метаданные
-      allow update: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'superAdmin';
-    }
-    
-    // Правила для аудита безопасности
-    match /securityAudits/{auditId} {
-      // Только администраторы могут читать аудит безопасности
-      allow read: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
-      
-      // Система может создавать записи аудита
-      allow create: if request.auth != null;
-    }
-    
-    // Правила для политик безопасности
-    match /securityPolicies/{policyId} {
-      // Только администраторы могут читать политики безопасности
-      allow read: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
-      
-      // Только супер-администраторы могут создавать и обновлять политики
-      allow create, update: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'superAdmin';
-    }
-    
-    // Правила для ключей шифрования
-    match /encryptionKeys/{keyId} {
-      // Только администраторы могут читать ключи шифрования
-      allow read: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
-      
-      // Только супер-администраторы могут создавать и обновлять ключи
-      allow create, update: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'superAdmin';
-    }
-    
-    // Правила для пользовательских сессий
-    match /user_sessions/{sessionId} {
-      // Пользователи могут читать свои сессии
-      allow read: if request.auth != null && 
-        request.auth.uid == resource.data.userId;
-      
-      // Система может создавать записи сессий
-      allow create: if request.auth != null;
-      
-      // Система может обновлять статус сессий
-      allow update: if request.auth != null && 
-        request.resource.data.keys().hasAll(['action', 'terminatedAt']);
-      
-      // Администраторы могут читать все сессии
-      allow read: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
-    }
-    
-    // Правила для двухфакторной аутентификации
-    match /user_2fa/{userId} {
-      // Пользователи могут читать свои настройки 2FA
-      allow read: if request.auth != null && request.auth.uid == userId;
-      
-      // Пользователи могут создавать и обновлять свои настройки 2FA
-      allow create, update: if request.auth != null && 
-        request.auth.uid == userId &&
-        request.resource.data.keys().hasAll(['userId', 'method', 'contact', 'isEnabled', 'createdAt', 'updatedAt']);
-      
-      // Пользователи могут удалять свои настройки 2FA
+
+    // Пользователи
+    match /users/{userId} {
+      allow read: if request.auth != null; // только авторизованные могут читать
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null && request.auth.uid == userId; // редактировать только своё
       allow delete: if request.auth != null && request.auth.uid == userId;
-      
-      // Администраторы могут читать настройки 2FA всех пользователей
-      allow read: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
+      match /saved_ideas/{docId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
     }
-    
-    // Правила для заблокированных пользователей
-    match /blockedUsers/{userId} {
-      // Только администраторы могут читать и управлять заблокированными пользователями
-      allow read, write: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
+
+    // Специалисты — публичное чтение, запись только владельцу
+    match /specialists/{specialistId} {
+      allow read: if true;
+      allow create: if request.auth != null && request.auth.uid == specialistId;
+      allow update: if request.auth != null && request.auth.uid == specialistId;
+      allow delete: if request.auth != null && request.auth.uid == specialistId;
     }
-    
-    // Правила для устройств пользователей
-    match /user_devices/{deviceId} {
-      // Пользователи могут читать свои устройства
-      allow read: if request.auth != null && 
-        request.auth.uid == resource.data.userId;
-      
-      // Система может создавать записи устройств
-      allow create: if request.auth != null;
-      
-      // Пользователи могут обновлять свои устройства
-      allow update: if request.auth != null && 
-        request.auth.uid == resource.data.userId &&
-        request.resource.data.keys().hasAll(['lastSeen', 'updatedAt']);
-      
-      // Администраторы могут читать все устройства
-      allow read: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
+
+    // События — публичное чтение, запись только авторизованным
+    match /events/{eventId} {
+      allow read: if true;
+      allow write: if request.auth != null;
     }
-    
-    // Запрет доступа ко всем остальным документам
+
+    // Отзывы — публичное чтение, запись только авторизованным
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // Уведомления — только для владельца
+    match /notifications/{notificationId} {
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+
+    // Остальное — запрещено
     match /{document=**} {
       allow read, write: if false;
     }

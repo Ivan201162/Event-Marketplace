@@ -31,9 +31,15 @@ class PhotoAlbumsWidget extends ConsumerWidget {
   }
 
   int _getCrossAxisCount(BuildContext context) {
-    if (context.isMobile) return 2;
-    if (context.isTablet) return 3;
-    if (context.isDesktop) return 4;
+    if (context.isMobile) {
+      return 2;
+    }
+    if (context.isTablet) {
+      return 3;
+    }
+    if (context.isDesktop) {
+      return 4;
+    }
     return 5;
   }
 

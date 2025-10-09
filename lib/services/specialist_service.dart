@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../models/specialist.dart';
+import 'cache_service.dart';
+import 'debounce_service.dart';
 
 /// Сервис для работы с специалистами
 class SpecialistService {
@@ -11,14 +13,42 @@ class SpecialistService {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String _collection = 'specialists';
+  final CacheService _cacheService = CacheService();
+  final DebounceService _debounceService = DebounceService();
 
-  /// Получить всех специалистов
-  Future<List<Specialist>> getAllSpecialists() async {
+  /// Получить всех специалистов с кэшированием
+  Future<List<Specialist>> getAllSpecialists({bool useCache = true}) async {
     try {
+      // Проверяем кэш, если он актуален
+      if (useCache && _cacheService.isSpecialistsCacheValid()) {
+        final cachedData = _cacheService.getCachedSpecialists();
+        if (cachedData != null) {
+          return cachedData.map(Specialist.fromMap).toList();
+        }
+      }
+
+      // Загружаем из Firestore
       final snapshot = await _firestore.collection(_collection).get();
-      return snapshot.docs.map(Specialist.fromDocument).toList();
-    } catch (e) {
+      final specialists = snapshot.docs.map(Specialist.fromDocument).toList();
+      
+      // Кэшируем результат
+      if (useCache) {
+        final dataToCache = specialists.map((s) => s.toMap()).toList();
+        await _cacheService.cacheSpecialists(dataToCache);
+      }
+      
+      return specialists;
+    } on Exception catch (e) {
       debugPrint('Ошибка получения специалистов: $e');
+      
+      // Пытаемся получить из кэша в случае ошибки
+      if (useCache) {
+        final cachedData = _cacheService.getCachedSpecialists();
+        if (cachedData != null) {
+          return cachedData.map(Specialist.fromMap).toList();
+        }
+      }
+      
       return [];
     }
   }
@@ -44,7 +74,7 @@ class SpecialistService {
       }
 
       return cities.toList()..sort();
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка получения городов: $e');
       return [];
     }
@@ -58,14 +88,51 @@ class SpecialistService {
         return Specialist.fromDocument(doc);
       }
       return null;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка получения специалиста: $e');
       return null;
     }
   }
 
-  /// Поиск специалистов с фильтрами
+  /// Поиск специалистов с фильтрами и debounce
   Future<List<Specialist>> searchSpecialists({
+    String? query,
+    SpecialistCategory? category,
+    double? minPrice,
+    double? maxPrice,
+    double? minRating,
+    String? location,
+    List<String>? availableDates,
+    bool useDebounce = true,
+  }) async {
+    if (useDebounce && query != null && query.isNotEmpty) {
+      return _debounceService.debounceFuture(
+        'search_specialists',
+        () => _performSearch(
+          query: query,
+          category: category,
+          minPrice: minPrice,
+          maxPrice: maxPrice,
+          minRating: minRating,
+          location: location,
+          availableDates: availableDates,
+        ),
+      );
+    }
+    
+    return _performSearch(
+      query: query,
+      category: category,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
+      minRating: minRating,
+      location: location,
+      availableDates: availableDates,
+    );
+  }
+
+  /// Выполнение поиска специалистов
+  Future<List<Specialist>> _performSearch({
     String? query,
     SpecialistCategory? category,
     double? minPrice,
@@ -127,7 +194,7 @@ class SpecialistService {
       }
 
       return specialists;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка поиска специалистов: $e');
       return [];
     }
@@ -143,7 +210,7 @@ class SpecialistService {
           .where('category', isEqualTo: category.name)
           .get();
       return snapshot.docs.map(Specialist.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка получения специалистов по категории: $e');
       return [];
     }
@@ -160,7 +227,7 @@ class SpecialistService {
           .limit(10)
           .get();
       return snapshot.docs.map(Specialist.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка получения рекомендуемых специалистов: $e');
       return [];
     }
@@ -172,7 +239,7 @@ class SpecialistService {
       final docRef =
           await _firestore.collection(_collection).add(specialist.toMap());
       return docRef.id;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка создания специалиста: $e');
       return null;
     }
@@ -183,7 +250,7 @@ class SpecialistService {
     try {
       await _firestore.collection(_collection).doc(id).update(updates);
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка обновления специалиста: $e');
       return false;
     }
@@ -194,7 +261,7 @@ class SpecialistService {
     try {
       await _firestore.collection(_collection).doc(id).delete();
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка удаления специалиста: $e');
       return false;
     }
@@ -221,7 +288,7 @@ class SpecialistService {
 
       final snapshot = await queryRef.get();
       return snapshot.docs.map(Specialist.fromDocument).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка получения специалистов с пагинацией: $e');
       return [];
     }
@@ -260,7 +327,7 @@ class SpecialistService {
       }).toList();
 
       return filteredSpecialists;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка фильтрации специалистов: $e');
       return [];
     }
@@ -294,7 +361,7 @@ class SpecialistService {
         'averagePrice': averagePrice,
         'categoryStats': categoryStats,
       };
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка получения статистики специалистов: $e');
       return {};
     }

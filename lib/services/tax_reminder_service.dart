@@ -33,7 +33,7 @@ class TaxReminderService {
       await _sendEmailReminder(taxInfo);
 
       SafeLog.info('Напоминание отправлено успешно', 'tax_reminder_service');
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('Ошибка отправки напоминания: $e');
       throw Exception('Не удалось отправить напоминание: $e');
     }
@@ -63,9 +63,9 @@ class TaxReminderService {
 
       // TODO(developer): Реализовать отправку push-уведомления через FCM
       // Временная заглушка - просто логируем
-      print('Отправка напоминания о налогах для пользователя $userId');
+      // Логирование:'Отправка напоминания о налогах для пользователя $userId');
       // await _sendFCMNotification(fcmToken, taxInfo);
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('Ошибка отправки push-уведомления: $e');
     }
   }
@@ -93,7 +93,7 @@ class TaxReminderService {
 
       // TODO(developer): Реализовать отправку email
       // await _sendEmail(email, taxInfo);
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('Ошибка отправки email: $e');
     }
   }
@@ -131,7 +131,7 @@ class TaxReminderService {
         'Напоминания о просроченных налогах отправлены',
         'tax_reminder_service',
       );
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('Ошибка проверки просроченных налогов: $e');
     }
   }
@@ -152,7 +152,7 @@ class TaxReminderService {
         'Периодические напоминания настроены',
         'tax_reminder_service',
       );
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('Ошибка настройки периодических напоминаний: $e');
     }
   }
@@ -190,7 +190,7 @@ class TaxReminderService {
 
       SafeLog.info('Статистика напоминаний получена', 'tax_reminder_service');
       return statistics;
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('Ошибка получения статистики напоминаний: $e');
       throw Exception('Не удалось получить статистику напоминаний: $e');
     }
@@ -216,7 +216,7 @@ class TaxReminderService {
           'tax_reminder_service',
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('Ошибка отправки напоминания о приближающемся сроке: $e');
     }
   }
@@ -247,7 +247,7 @@ class TaxReminderService {
         'tax_reminder_service',
       );
       return taxesNeedingReminder;
-    } catch (e) {
+    } on Exception catch (e) {
       SafeLog.error('Ошибка получения налогов, требующих напоминания: $e');
       throw Exception('Не удалось получить налоги, требующие напоминания: $e');
     }

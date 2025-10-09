@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../core/app_theme.dart';
 
 /// Современная навигационная панель с Material Design 3
 class ModernNavigationBar extends ConsumerStatefulWidget {
@@ -61,10 +60,10 @@ class _ModernNavigationBarState extends ConsumerState<ModernNavigationBar>
   @override
   Widget build(BuildContext context) => Container(
         decoration: BoxDecoration(
-          color: context.surfaceColor,
+          color: Theme.of(context).colorScheme.surface,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, -2),
             ),
@@ -86,11 +85,11 @@ class _ModernNavigationBarState extends ConsumerState<ModernNavigationBar>
         _buildNavItem(1, Icons.newspaper_outlined, Icons.newspaper, 'Лента'),
         _buildNavItem(2, Icons.assignment_outlined, Icons.assignment, 'Заявки'),
         _buildNavItem(3, Icons.chat_bubble_outline, Icons.chat_bubble, 'Чаты'),
-        _buildNavItem(4, Icons.person_outline, Icons.person, 'Профиль'),
+        _buildNavItem(4, Icons.lightbulb_outline, Icons.lightbulb, 'Идеи'),
       ];
 
   Widget _buildNavItem(
-      int index, IconData icon, IconData activeIcon, String label) {
+      int index, IconData icon, IconData activeIcon, String label,) {
     final isSelected = widget.currentIndex == index;
 
     return Expanded(
@@ -104,7 +103,7 @@ class _ModernNavigationBarState extends ConsumerState<ModernNavigationBar>
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
               decoration: BoxDecoration(
                 color: isSelected
-                    ? context.primaryColor.withOpacity(0.1)
+                    ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -117,18 +116,18 @@ class _ModernNavigationBarState extends ConsumerState<ModernNavigationBar>
                     child: Icon(
                       isSelected ? activeIcon : icon,
                       color: isSelected
-                          ? context.primaryColor
-                          : context.textSecondary,
+                          ? Theme.of(context).primaryColor
+                          : Theme.of(context).textTheme.bodyMedium?.color,
                       size: 24,
                     ),
                   ),
                   const SizedBox(height: 4),
                   AnimatedDefaultTextStyle(
                     duration: const Duration(milliseconds: 200),
-                    style: context.textTheme.labelSmall!.copyWith(
+                    style: Theme.of(context).textTheme.labelSmall!.copyWith(
                       color: isSelected
-                          ? context.primaryColor
-                          : context.textSecondary,
+                          ? Theme.of(context).primaryColor
+                          : Theme.of(context).textTheme.bodyMedium?.color,
                       fontWeight:
                           isSelected ? FontWeight.w600 : FontWeight.w500,
                     ),
@@ -218,8 +217,8 @@ class _ModernFABState extends State<ModernFAB>
             child: FloatingActionButton(
               onPressed: _onPressed,
               tooltip: widget.tooltip,
-              backgroundColor: context.primaryColor,
-              foregroundColor: BrandColors.textOnPrimary,
+              backgroundColor: Theme.of(context).primaryColor,
+              foregroundColor: Colors.white,
               elevation: 0,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
