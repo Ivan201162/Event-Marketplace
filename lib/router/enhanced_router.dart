@@ -19,6 +19,7 @@ import '../screens/requests_screen.dart';
 import '../screens/settings_screen.dart';
 import '../screens/splash_screen.dart';
 import '../screens/testing_monitoring_screen.dart';
+import '../screens/test_data_management_screen.dart';
 
 /// Улучшенный роутер с поддержкой свайпов и анимаций
 class EnhancedRouter {
@@ -204,6 +205,17 @@ class EnhancedRouter {
         name: 'testing',
         pageBuilder: (context, state) => _buildPageWithTransition(
           const TestingMonitoringScreen(),
+          state,
+          transitionType: TransitionType.slideUp,
+        ),
+      ),
+
+      // Test Data Management
+      GoRoute(
+        path: '/test-data',
+        name: 'test-data',
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          const TestDataManagementScreen(),
           state,
           transitionType: TransitionType.slideUp,
         ),
