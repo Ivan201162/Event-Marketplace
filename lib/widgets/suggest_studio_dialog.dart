@@ -50,11 +50,11 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
 
   Future<void> _loadAvailableStudios() async {
     final currentUserAsync = ref.read(currentUserProvider);
-    
+
     if (currentUserAsync is! AsyncData) {
       return;
     }
-    
+
     final currentUser = currentUserAsync.value;
     if (currentUser == null) {
       return;
@@ -151,13 +151,17 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
                             color: theme.colorScheme.surface,
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(
-                              color: theme.colorScheme.outline.withValues(alpha: 0.2),
+                              color: theme.colorScheme.outline
+                                  .withValues(alpha: 0.2),
                             ),
                           ),
                           child: Column(
                             children: [
-                              const Icon(Icons.photo_camera,
-                                  size: 48, color: Colors.grey,),
+                              const Icon(
+                                Icons.photo_camera,
+                                size: 48,
+                                color: Colors.grey,
+                              ),
                               const SizedBox(height: 8),
                               Text(
                                 'Нет доступных фотостудий',
@@ -180,7 +184,8 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
                           height: 200,
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: theme.colorScheme.outline.withValues(alpha: 0.2),
+                              color: theme.colorScheme.outline
+                                  .withValues(alpha: 0.2),
                             ),
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -334,11 +339,11 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
     }
 
     final currentUserAsync = ref.read(currentUserProvider);
-    
+
     if (currentUserAsync is! AsyncData) {
       return;
     }
-    
+
     final currentUser = currentUserAsync.value;
     if (currentUser == null) {
       return;

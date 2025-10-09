@@ -12,6 +12,7 @@ import '../models/event.dart';
 class IcsExportService {
   // Приватный конструктор для предотвращения создания экземпляров
   IcsExportService._();
+
   /// Экспортировать событие в файл .ics
   static Future<String?> exportEventToIcs(Event event) async {
     if (!FeatureFlags.calendarExportEnabled) {
@@ -355,7 +356,8 @@ class IcsExportService {
     buffer.writeln('STATUS:${_getBookingStatusText(booking.status)}');
     buffer.writeln('CREATED:${_formatDateTime(booking.createdAt)}');
     buffer.writeln(
-        'LAST-MODIFIED:${_formatDateTime(booking.updatedAt ?? booking.createdAt)}',);
+      'LAST-MODIFIED:${_formatDateTime(booking.updatedAt ?? booking.createdAt)}',
+    );
     buffer.writeln('END:VEVENT');
     buffer.writeln('END:VCALENDAR');
 
@@ -416,7 +418,8 @@ class IcsExportService {
       buffer.writeln('STATUS:${_getBookingStatusText(booking.status)}');
       buffer.writeln('CREATED:${_formatDateTime(booking.createdAt)}');
       buffer.writeln(
-          'LAST-MODIFIED:${_formatDateTime(booking.updatedAt ?? booking.createdAt)}',);
+        'LAST-MODIFIED:${_formatDateTime(booking.updatedAt ?? booking.createdAt)}',
+      );
       buffer.writeln('END:VEVENT');
     }
 

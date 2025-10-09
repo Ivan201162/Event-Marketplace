@@ -112,7 +112,8 @@ class PerformanceTest {
     buffer.writeln('Overall Statistics:');
     buffer.writeln('Total Operations: ${stats.totalOperations}');
     buffer.writeln(
-        'Average Duration: ${stats.averageDuration.toStringAsFixed(2)}ms',);
+      'Average Duration: ${stats.averageDuration.toStringAsFixed(2)}ms',
+    );
     buffer.writeln('Min Duration: ${stats.minDuration}ms');
     buffer.writeln('Max Duration: ${stats.maxDuration}ms');
     buffer.writeln('Median Duration: ${stats.medianDuration}ms');
@@ -126,18 +127,23 @@ class PerformanceTest {
 
     for (final metric in _metrics) {
       buffer.writeln(
-          '${metric.operationName} | ${metric.duration} | ${metric.timestamp}',);
+        '${metric.operationName} | ${metric.duration} | ${metric.timestamp}',
+      );
     }
 
     await file.writeAsString(buffer.toString());
-    developer.log('Performance metrics exported to: $filePath',
-        name: 'PERFORMANCE_TEST',);
+    developer.log(
+      'Performance metrics exported to: $filePath',
+      name: 'PERFORMANCE_TEST',
+    );
   }
 
   /// Тест производительности виджетов
   Future<void> testWidgetPerformance() async {
-    developer.log('Starting widget performance test...',
-        name: 'PERFORMANCE_TEST',);
+    developer.log(
+      'Starting widget performance test...',
+      name: 'PERFORMANCE_TEST',
+    );
 
     // Тест создания виджетов
     await measureFunction('Widget Creation', () async {
@@ -171,8 +177,10 @@ class PerformanceTest {
 
   /// Тест производительности памяти
   void testMemoryPerformance() {
-    developer.log('Starting memory performance test...',
-        name: 'PERFORMANCE_TEST',);
+    developer.log(
+      'Starting memory performance test...',
+      name: 'PERFORMANCE_TEST',
+    );
 
     final stopwatch = Stopwatch()..start();
 
@@ -194,8 +202,10 @@ class PerformanceTest {
 
   /// Тест производительности сети
   Future<void> testNetworkPerformance() async {
-    developer.log('Starting network performance test...',
-        name: 'PERFORMANCE_TEST',);
+    developer.log(
+      'Starting network performance test...',
+      name: 'PERFORMANCE_TEST',
+    );
 
     // Тест HTTP запросов
     await measureFunction('HTTP Request', () async {
@@ -263,7 +273,8 @@ class PerformanceStats {
       'maxDuration: ${maxDuration}ms, '
       'medianDuration: ${medianDuration}ms, '
       'p95Duration: ${p95Duration}ms, '
-      'p99Duration: ${p99Duration}ms' ')';
+      'p99Duration: ${p99Duration}ms'
+      ')';
 }
 
 /// Заглушка для TickerProvider для тестов

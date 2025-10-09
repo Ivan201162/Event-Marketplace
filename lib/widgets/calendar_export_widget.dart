@@ -368,7 +368,9 @@ class CalendarExportUtils {
 
   /// Показать диалог экспорта для бронирований
   static void showBookingsExportDialog(
-      BuildContext context, List<Booking> bookings,) {
+    BuildContext context,
+    List<Booking> bookings,
+  ) {
     showDialog<void>(
       context: context,
       builder: (context) => CalendarExportDialog(bookings: bookings),

@@ -88,8 +88,10 @@ class PerformanceOptimizer {
 
     // Проверка лимита
     if (requestCount >= _maxRequestsPerMinute) {
-      developer.log('Request limit exceeded for $requestType',
-          name: 'PERFORMANCE',);
+      developer.log(
+        'Request limit exceeded for $requestType',
+        name: 'PERFORMANCE',
+      );
       return false;
     }
 
@@ -106,8 +108,11 @@ class PerformanceOptimizer {
   }
 
   /// Дебаунс для предотвращения частых вызовов
-  void debounce(String key, VoidCallback callback,
-      {Duration delay = const Duration(milliseconds: 300),}) {
+  void debounce(
+    String key,
+    VoidCallback callback, {
+    Duration delay = const Duration(milliseconds: 300),
+  }) {
     _debounceTimers[key]?.cancel();
     _debounceTimers[key] = Timer(delay, callback);
   }
@@ -207,8 +212,10 @@ extension PerformanceFutureExtension<T> on Future<T> {
       PerformanceOptimizer().measurePerformance(operationName, () => this);
 
   /// Выполнить с дебаунсом
-  Future<T> withDebounce(String key,
-      {Duration delay = const Duration(milliseconds: 300),}) {
+  Future<T> withDebounce(
+    String key, {
+    Duration delay = const Duration(milliseconds: 300),
+  }) {
     final completer = Completer<T>();
 
     PerformanceOptimizer().debounce(

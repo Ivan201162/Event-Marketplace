@@ -25,6 +25,47 @@ class EnhancedFeedPost {
     this.metadata = const {},
   });
 
+  /// Создать из Map
+  factory EnhancedFeedPost.fromMap(Map<String, dynamic> map) =>
+      EnhancedFeedPost(
+        id: map['id'] as String,
+        authorId: map['authorId'] as String,
+        content: map['content'] as String,
+        type: FeedPostType.fromString(map['type'] as String),
+        createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
+        media: (map['media'] as List?)
+                ?.map((media) =>
+                    FeedPostMedia.fromMap(media as Map<String, dynamic>))
+                .toList() ??
+            [],
+        likesCount: (map['likesCount'] as int?) ?? 0,
+        commentsCount: (map['commentsCount'] as int?) ?? 0,
+        sharesCount: (map['sharesCount'] as int?) ?? 0,
+        savesCount: (map['savesCount'] as int?) ?? 0,
+        viewsCount: (map['viewsCount'] as int?) ?? 0,
+        likes: List<String>.from((map['likes'] as List?) ?? []),
+        comments: (map['comments'] as List?)
+                ?.map((comment) =>
+                    FeedPostComment.fromMap(comment as Map<String, dynamic>))
+                .toList() ??
+            [],
+        shares: (map['shares'] as List?)
+                ?.map((share) =>
+                    FeedPostShare.fromMap(share as Map<String, dynamic>))
+                .toList() ??
+            [],
+        saves: List<String>.from((map['saves'] as List?) ?? []),
+        tags: List<String>.from((map['tags'] as List?) ?? []),
+        location: map['location'] as String?,
+        isSponsored: (map['isSponsored'] as bool?) ?? false,
+        isPinned: (map['isPinned'] as bool?) ?? false,
+        isArchived: (map['isArchived'] as bool?) ?? false,
+        updatedAt: map['updatedAt'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int)
+            : null,
+        metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
+      );
+
   /// Уникальный идентификатор
   final String id;
 
@@ -91,69 +132,31 @@ class EnhancedFeedPost {
   /// Дополнительные данные
   final Map<String, dynamic> metadata;
 
-  /// Создать из Map
-  factory EnhancedFeedPost.fromMap(Map<String, dynamic> map) {
-    return EnhancedFeedPost(
-      id: map['id'] as String,
-      authorId: map['authorId'] as String,
-      content: map['content'] as String,
-      type: FeedPostType.fromString(map['type'] as String),
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-      media: (map['media'] as List?)
-          ?.map((media) => FeedPostMedia.fromMap(media as Map<String, dynamic>))
-          .toList() ?? [],
-      likesCount: (map['likesCount'] as int?) ?? 0,
-      commentsCount: (map['commentsCount'] as int?) ?? 0,
-      sharesCount: (map['sharesCount'] as int?) ?? 0,
-      savesCount: (map['savesCount'] as int?) ?? 0,
-      viewsCount: (map['viewsCount'] as int?) ?? 0,
-      likes: List<String>.from((map['likes'] as List?) ?? []),
-      comments: (map['comments'] as List?)
-          ?.map((comment) => FeedPostComment.fromMap(comment as Map<String, dynamic>))
-          .toList() ?? [],
-      shares: (map['shares'] as List?)
-          ?.map((share) => FeedPostShare.fromMap(share as Map<String, dynamic>))
-          .toList() ?? [],
-      saves: List<String>.from((map['saves'] as List?) ?? []),
-      tags: List<String>.from((map['tags'] as List?) ?? []),
-      location: map['location'] as String?,
-      isSponsored: (map['isSponsored'] as bool?) ?? false,
-      isPinned: (map['isPinned'] as bool?) ?? false,
-      isArchived: (map['isArchived'] as bool?) ?? false,
-      updatedAt: map['updatedAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int)
-          : null,
-      metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
-    );
-  }
-
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'authorId': authorId,
-      'content': content,
-      'type': type.value,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'media': media.map((media) => media.toMap()).toList(),
-      'likesCount': likesCount,
-      'commentsCount': commentsCount,
-      'sharesCount': sharesCount,
-      'savesCount': savesCount,
-      'viewsCount': viewsCount,
-      'likes': likes,
-      'comments': comments.map((comment) => comment.toMap()).toList(),
-      'shares': shares.map((share) => share.toMap()).toList(),
-      'saves': saves,
-      'tags': tags,
-      'location': location,
-      'isSponsored': isSponsored,
-      'isPinned': isPinned,
-      'isArchived': isArchived,
-      'updatedAt': updatedAt?.millisecondsSinceEpoch,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'authorId': authorId,
+        'content': content,
+        'type': type.value,
+        'createdAt': createdAt.millisecondsSinceEpoch,
+        'media': media.map((media) => media.toMap()).toList(),
+        'likesCount': likesCount,
+        'commentsCount': commentsCount,
+        'sharesCount': sharesCount,
+        'savesCount': savesCount,
+        'viewsCount': viewsCount,
+        'likes': likes,
+        'comments': comments.map((comment) => comment.toMap()).toList(),
+        'shares': shares.map((share) => share.toMap()).toList(),
+        'saves': saves,
+        'tags': tags,
+        'location': location,
+        'isSponsored': isSponsored,
+        'isPinned': isPinned,
+        'isArchived': isArchived,
+        'updatedAt': updatedAt?.millisecondsSinceEpoch,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   EnhancedFeedPost copyWith({
@@ -179,32 +182,31 @@ class EnhancedFeedPost {
     bool? isArchived,
     DateTime? updatedAt,
     Map<String, dynamic>? metadata,
-  }) {
-    return EnhancedFeedPost(
-      id: id ?? this.id,
-      authorId: authorId ?? this.authorId,
-      content: content ?? this.content,
-      type: type ?? this.type,
-      createdAt: createdAt ?? this.createdAt,
-      media: media ?? this.media,
-      likesCount: likesCount ?? this.likesCount,
-      commentsCount: commentsCount ?? this.commentsCount,
-      sharesCount: sharesCount ?? this.sharesCount,
-      savesCount: savesCount ?? this.savesCount,
-      viewsCount: viewsCount ?? this.viewsCount,
-      likes: likes ?? this.likes,
-      comments: comments ?? this.comments,
-      shares: shares ?? this.shares,
-      saves: saves ?? this.saves,
-      tags: tags ?? this.tags,
-      location: location ?? this.location,
-      isSponsored: isSponsored ?? this.isSponsored,
-      isPinned: isPinned ?? this.isPinned,
-      isArchived: isArchived ?? this.isArchived,
-      updatedAt: updatedAt ?? this.updatedAt,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      EnhancedFeedPost(
+        id: id ?? this.id,
+        authorId: authorId ?? this.authorId,
+        content: content ?? this.content,
+        type: type ?? this.type,
+        createdAt: createdAt ?? this.createdAt,
+        media: media ?? this.media,
+        likesCount: likesCount ?? this.likesCount,
+        commentsCount: commentsCount ?? this.commentsCount,
+        sharesCount: sharesCount ?? this.sharesCount,
+        savesCount: savesCount ?? this.savesCount,
+        viewsCount: viewsCount ?? this.viewsCount,
+        likes: likes ?? this.likes,
+        comments: comments ?? this.comments,
+        shares: shares ?? this.shares,
+        saves: saves ?? this.saves,
+        tags: tags ?? this.tags,
+        location: location ?? this.location,
+        isSponsored: isSponsored ?? this.isSponsored,
+        isPinned: isPinned ?? this.isPinned,
+        isArchived: isArchived ?? this.isArchived,
+        updatedAt: updatedAt ?? this.updatedAt,
+        metadata: metadata ?? this.metadata,
+      );
 }
 
 /// Тип поста в ленте
@@ -295,6 +297,21 @@ class FeedPostMedia {
     this.metadata = const {},
   });
 
+  factory FeedPostMedia.fromMap(Map<String, dynamic> map) => FeedPostMedia(
+        id: map['id'] as String,
+        url: map['url'] as String,
+        type: FeedPostMediaType.fromString(map['type'] as String),
+        width: map['width'] as int,
+        height: map['height'] as int,
+        thumbnailUrl: map['thumbnailUrl'] as String?,
+        duration: map['duration'] != null
+            ? Duration(milliseconds: map['duration'] as int)
+            : null,
+        caption: map['caption'] as String?,
+        altText: map['altText'] as String?,
+        metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
+      );
+
   final String id;
   final String url;
   final FeedPostMediaType type;
@@ -306,37 +323,18 @@ class FeedPostMedia {
   final String? altText;
   final Map<String, dynamic> metadata;
 
-  factory FeedPostMedia.fromMap(Map<String, dynamic> map) {
-    return FeedPostMedia(
-      id: map['id'] as String,
-      url: map['url'] as String,
-      type: FeedPostMediaType.fromString(map['type'] as String),
-      width: map['width'] as int,
-      height: map['height'] as int,
-      thumbnailUrl: map['thumbnailUrl'] as String?,
-      duration: map['duration'] != null
-          ? Duration(milliseconds: map['duration'] as int)
-          : null,
-      caption: map['caption'] as String?,
-      altText: map['altText'] as String?,
-      metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'url': url,
-      'type': type.value,
-      'width': width,
-      'height': height,
-      'thumbnailUrl': thumbnailUrl,
-      'duration': duration?.inMilliseconds,
-      'caption': caption,
-      'altText': altText,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'url': url,
+        'type': type.value,
+        'width': width,
+        'height': height,
+        'thumbnailUrl': thumbnailUrl,
+        'duration': duration?.inMilliseconds,
+        'caption': caption,
+        'altText': altText,
+        'metadata': metadata,
+      };
 }
 
 /// Тип медиафайла поста
@@ -395,6 +393,27 @@ class FeedPostComment {
     this.editedAt,
   });
 
+  factory FeedPostComment.fromMap(Map<String, dynamic> map) => FeedPostComment(
+        id: map['id'] as String,
+        postId: map['postId'] as String,
+        authorId: map['authorId'] as String,
+        text: map['text'] as String,
+        createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
+        parentId: map['parentId'] as String?,
+        replies: (map['replies'] as List?)
+                ?.map((reply) =>
+                    FeedPostComment.fromMap(reply as Map<String, dynamic>))
+                .toList() ??
+            [],
+        likesCount: (map['likesCount'] as int?) ?? 0,
+        likes: List<String>.from((map['likes'] as List?) ?? []),
+        mentions: List<String>.from((map['mentions'] as List?) ?? []),
+        isEdited: (map['isEdited'] as bool?) ?? false,
+        editedAt: map['editedAt'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(map['editedAt'] as int)
+            : null,
+      );
+
   final String id;
   final String postId;
   final String authorId;
@@ -408,43 +427,20 @@ class FeedPostComment {
   final bool isEdited;
   final DateTime? editedAt;
 
-  factory FeedPostComment.fromMap(Map<String, dynamic> map) {
-    return FeedPostComment(
-      id: map['id'] as String,
-      postId: map['postId'] as String,
-      authorId: map['authorId'] as String,
-      text: map['text'] as String,
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-      parentId: map['parentId'] as String?,
-      replies: (map['replies'] as List?)
-          ?.map((reply) => FeedPostComment.fromMap(reply as Map<String, dynamic>))
-          .toList() ?? [],
-      likesCount: (map['likesCount'] as int?) ?? 0,
-      likes: List<String>.from((map['likes'] as List?) ?? []),
-      mentions: List<String>.from((map['mentions'] as List?) ?? []),
-      isEdited: (map['isEdited'] as bool?) ?? false,
-      editedAt: map['editedAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['editedAt'] as int)
-          : null,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'postId': postId,
-      'authorId': authorId,
-      'text': text,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'parentId': parentId,
-      'replies': replies.map((reply) => reply.toMap()).toList(),
-      'likesCount': likesCount,
-      'likes': likes,
-      'mentions': mentions,
-      'isEdited': isEdited,
-      'editedAt': editedAt?.millisecondsSinceEpoch,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'postId': postId,
+        'authorId': authorId,
+        'text': text,
+        'createdAt': createdAt.millisecondsSinceEpoch,
+        'parentId': parentId,
+        'replies': replies.map((reply) => reply.toMap()).toList(),
+        'likesCount': likesCount,
+        'likes': likes,
+        'mentions': mentions,
+        'isEdited': isEdited,
+        'editedAt': editedAt?.millisecondsSinceEpoch,
+      };
 }
 
 /// Репост поста
@@ -459,6 +455,16 @@ class FeedPostShare {
     this.targetUserId,
   });
 
+  factory FeedPostShare.fromMap(Map<String, dynamic> map) => FeedPostShare(
+        id: map['id'] as String,
+        postId: map['postId'] as String,
+        userId: map['userId'] as String,
+        sharedAt: DateTime.fromMillisecondsSinceEpoch(map['sharedAt'] as int),
+        comment: map['comment'] as String?,
+        targetChatId: map['targetChatId'] as String?,
+        targetUserId: map['targetUserId'] as String?,
+      );
+
   final String id;
   final String postId;
   final String userId;
@@ -467,28 +473,13 @@ class FeedPostShare {
   final String? targetChatId;
   final String? targetUserId;
 
-  factory FeedPostShare.fromMap(Map<String, dynamic> map) {
-    return FeedPostShare(
-      id: map['id'] as String,
-      postId: map['postId'] as String,
-      userId: map['userId'] as String,
-      sharedAt: DateTime.fromMillisecondsSinceEpoch(map['sharedAt'] as int),
-      comment: map['comment'] as String?,
-      targetChatId: map['targetChatId'] as String?,
-      targetUserId: map['targetUserId'] as String?,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'postId': postId,
-      'userId': userId,
-      'sharedAt': sharedAt.millisecondsSinceEpoch,
-      'comment': comment,
-      'targetChatId': targetChatId,
-      'targetUserId': targetUserId,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'postId': postId,
+        'userId': userId,
+        'sharedAt': sharedAt.millisecondsSinceEpoch,
+        'comment': comment,
+        'targetChatId': targetChatId,
+        'targetUserId': targetUserId,
+      };
 }
-

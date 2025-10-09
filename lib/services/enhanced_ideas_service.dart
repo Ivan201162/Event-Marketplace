@@ -1,8 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
-import 'dart:io';
 
 import '../models/enhanced_idea.dart';
 
@@ -44,11 +45,11 @@ class EnhancedIdeasService {
         query = query.startAfterDocument(lastDocument);
       }
 
-      final QuerySnapshot snapshot = await query.get();
-      final List<EnhancedIdea> ideas = [];
+      final snapshot = await query.get();
+      final ideas = <EnhancedIdea>[];
 
       for (final doc in snapshot.docs) {
-        final idea = EnhancedIdea.fromMap(doc.data() as Map<String, dynamic>);
+        final idea = EnhancedIdea.fromMap(doc.data()! as Map<String, dynamic>);
         ideas.add(idea);
       }
 
@@ -75,11 +76,11 @@ class EnhancedIdeasService {
         query = query.startAfterDocument(lastDocument);
       }
 
-      final QuerySnapshot snapshot = await query.get();
-      final List<EnhancedIdea> ideas = [];
+      final snapshot = await query.get();
+      final ideas = <EnhancedIdea>[];
 
       for (final doc in snapshot.docs) {
-        final idea = EnhancedIdea.fromMap(doc.data() as Map<String, dynamic>);
+        final idea = EnhancedIdea.fromMap(doc.data()! as Map<String, dynamic>);
         ideas.add(idea);
       }
 
@@ -98,7 +99,7 @@ class EnhancedIdeasService {
           .get();
 
       if (doc.exists) {
-        return EnhancedIdea.fromMap(doc.data() as Map<String, dynamic>);
+        return EnhancedIdea.fromMap(doc.data()! as Map<String, dynamic>);
       }
       return null;
     } catch (e) {
@@ -123,11 +124,11 @@ class EnhancedIdeasService {
     bool isPublic = true,
   }) async {
     try {
-      final String ideaId = _firestore.collection('ideas').doc().id;
-      final DateTime now = DateTime.now();
+      final ideaId = _firestore.collection('ideas').doc().id;
+      final now = DateTime.now();
 
       // Загружаем медиафайлы
-      final List<IdeaMedia> media = [];
+      final media = <IdeaMedia>[];
       if (mediaFiles != null && mediaFiles.isNotEmpty) {
         for (final file in mediaFiles) {
           final mediaItem = await _uploadMediaFile(file, ideaId);
@@ -137,7 +138,7 @@ class EnhancedIdeasService {
         }
       }
 
-      final EnhancedIdea idea = EnhancedIdea(
+      final idea = EnhancedIdea(
         id: ideaId,
         authorId: authorId,
         title: title,
@@ -182,7 +183,7 @@ class EnhancedIdeasService {
     bool? isArchived,
   }) async {
     try {
-      final Map<String, dynamic> updates = {
+      final updates = <String, dynamic>{
         'updatedAt': FieldValue.serverTimestamp(),
       };
 
@@ -266,10 +267,10 @@ class EnhancedIdeasService {
     String? parentId,
   }) async {
     try {
-      final String commentId = _firestore.collection('idea_comments').doc().id;
-      final DateTime now = DateTime.now();
+      final commentId = _firestore.collection('idea_comments').doc().id;
+      final now = DateTime.now();
 
-      final IdeaComment comment = IdeaComment(
+      final comment = IdeaComment(
         id: commentId,
         ideaId: ideaId,
         authorId: authorId,
@@ -316,11 +317,11 @@ class EnhancedIdeasService {
         query = query.startAfterDocument(lastDocument);
       }
 
-      final QuerySnapshot snapshot = await query.get();
-      final List<IdeaComment> comments = [];
+      final snapshot = await query.get();
+      final comments = <IdeaComment>[];
 
       for (final doc in snapshot.docs) {
-        final comment = IdeaComment.fromMap(doc.data() as Map<String, dynamic>);
+        final comment = IdeaComment.fromMap(doc.data()! as Map<String, dynamic>);
         comments.add(comment);
       }
 
@@ -339,10 +340,10 @@ class EnhancedIdeasService {
     String? targetUserId,
   }) async {
     try {
-      final String shareId = _firestore.collection('idea_shares').doc().id;
-      final DateTime now = DateTime.now();
+      final shareId = _firestore.collection('idea_shares').doc().id;
+      final now = DateTime.now();
 
-      final IdeaShare share = IdeaShare(
+      final share = IdeaShare(
         id: shareId,
         ideaId: ideaId,
         userId: userId,
@@ -419,11 +420,11 @@ class EnhancedIdeasService {
         query = query.startAfterDocument(lastDocument);
       }
 
-      final QuerySnapshot snapshot = await query.get();
-      final List<EnhancedIdea> ideas = [];
+      final snapshot = await query.get();
+      final ideas = <EnhancedIdea>[];
 
       for (final doc in snapshot.docs) {
-        final idea = EnhancedIdea.fromMap(doc.data() as Map<String, dynamic>);
+        final idea = EnhancedIdea.fromMap(doc.data()! as Map<String, dynamic>);
         ideas.add(idea);
       }
 
@@ -472,19 +473,19 @@ class EnhancedIdeasService {
           .orderBy('createdAt', descending: true)
           .limit(limit);
 
-      final QuerySnapshot snapshot = await queryBuilder.get();
-      final List<EnhancedIdea> ideas = [];
+      final snapshot = await queryBuilder.get();
+      final ideas = <EnhancedIdea>[];
 
       for (final doc in snapshot.docs) {
-        final idea = EnhancedIdea.fromMap(doc.data() as Map<String, dynamic>);
+        final idea = EnhancedIdea.fromMap(doc.data()! as Map<String, dynamic>);
         
         // Фильтр по тексту и бюджету (на клиенте)
-        bool matchesQuery = query.isEmpty || 
+        final matchesQuery = query.isEmpty || 
             idea.title.toLowerCase().contains(query.toLowerCase()) ||
             idea.description.toLowerCase().contains(query.toLowerCase()) ||
             idea.tags.any((tag) => tag.toLowerCase().contains(query.toLowerCase()));
 
-        bool matchesBudget = true;
+        var matchesBudget = true;
         if (minBudget != null && idea.budget != null && idea.budget! < minBudget) {
           matchesBudget = false;
         }
@@ -520,11 +521,11 @@ class EnhancedIdeasService {
         query = query.where('type', isEqualTo: type.value);
       }
 
-      final QuerySnapshot snapshot = await query.get();
-      final List<EnhancedIdea> ideas = [];
+      final snapshot = await query.get();
+      final ideas = <EnhancedIdea>[];
 
       for (final doc in snapshot.docs) {
-        final idea = EnhancedIdea.fromMap(doc.data() as Map<String, dynamic>);
+        final idea = EnhancedIdea.fromMap(doc.data()! as Map<String, dynamic>);
         ideas.add(idea);
       }
 
@@ -544,10 +545,10 @@ class EnhancedIdeasService {
     bool isPublic = true,
   }) async {
     try {
-      final String collectionId = _firestore.collection('idea_collections').doc().id;
-      final DateTime now = DateTime.now();
+      final collectionId = _firestore.collection('idea_collections').doc().id;
+      final now = DateTime.now();
 
-      final IdeaCollection collection = IdeaCollection(
+      final collection = IdeaCollection(
         id: collectionId,
         name: name,
         description: description,
@@ -582,10 +583,10 @@ class EnhancedIdeasService {
           .limit(limit)
           .get();
 
-      final List<IdeaCollection> collections = [];
+      final collections = <IdeaCollection>[];
 
       for (final doc in snapshot.docs) {
-        final collection = IdeaCollection.fromMap(doc.data() as Map<String, dynamic>);
+        final collection = IdeaCollection.fromMap(doc.data()! as Map<String, dynamic>);
         collections.add(collection);
       }
 
@@ -626,16 +627,16 @@ class EnhancedIdeasService {
   /// Загрузить медиафайл
   Future<IdeaMedia?> _uploadMediaFile(XFile file, String ideaId) async {
     try {
-      final File fileToUpload = File(file.path);
-      final String fileName = '${ideaId}_${DateTime.now().millisecondsSinceEpoch}';
-      final String extension = file.path.split('.').last;
-      final String filePath = 'ideas/$ideaId/$fileName.$extension';
+      final fileToUpload = File(file.path);
+      final fileName = '${ideaId}_${DateTime.now().millisecondsSinceEpoch}';
+      final extension = file.path.split('.').last;
+      final filePath = 'ideas/$ideaId/$fileName.$extension';
 
       // Загружаем файл в Storage
-      final Reference ref = _storage.ref().child(filePath);
-      final UploadTask uploadTask = ref.putFile(fileToUpload);
-      final TaskSnapshot snapshot = await uploadTask;
-      final String downloadUrl = await snapshot.ref.getDownloadURL();
+      final ref = _storage.ref().child(filePath);
+      final uploadTask = ref.putFile(fileToUpload);
+      final snapshot = await uploadTask;
+      final downloadUrl = await snapshot.ref.getDownloadURL();
 
       // Определяем тип медиа
       IdeaMediaType mediaType;
@@ -650,8 +651,8 @@ class EnhancedIdeasService {
       }
 
       // Получаем размеры файла
-      int width = 0;
-      int height = 0;
+      var width = 0;
+      var height = 0;
       String? thumbnailUrl;
 
       if (mediaType == IdeaMediaType.image) {
@@ -692,7 +693,7 @@ class EnhancedIdeasService {
   /// Удалить медиафайл
   Future<void> _deleteMediaFile(String url) async {
     try {
-      final Reference ref = _storage.refFromURL(url);
+      final ref = _storage.refFromURL(url);
       await ref.delete();
     } catch (e) {
       print('Ошибка удаления медиафайла: $e');

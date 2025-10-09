@@ -10,7 +10,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
     super.key,
     required this.specialistId,
   });
-  
+
   final String specialistId;
 
   @override
@@ -37,7 +37,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
 
           // Статистика отзывов
           statisticsAsync.when(
-            data: (stats) => _buildReviewStatistics(stats),
+            data: _buildReviewStatistics,
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stack) => _buildErrorWidget(error),
           ),
@@ -46,7 +46,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
 
           // Список отзывов
           reviewsAsync.when(
-            data: (reviews) => _buildReviewsList(reviews),
+            data: _buildReviewsList,
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stack) => _buildErrorWidget(error),
           ),
@@ -107,7 +107,8 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: List.generate(5, (index) {
                       final rating = 5 - index;
-                      const count = 0; // TODO(developer): Implement ratingCounts
+                      const count =
+                          0; // TODO(developer): Implement ratingCounts
                       final percentage = statistics.totalReviews > 0
                           ? (count / statistics.totalReviews * 100)
                           : 0.0;
@@ -199,8 +200,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
   }
 
   /// Построить карточку отзыва
-  Widget _buildReviewCard(Review review) {
-    return Card(
+  Widget _buildReviewCard(Review review) => Card(
         elevation: 2,
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -339,7 +339,6 @@ class SpecialistReviewsWidget extends ConsumerWidget {
           ),
         ),
       );
-  }
 
   /// Построить пустые отзывы
   Widget _buildEmptyReviews() => Container(

@@ -56,7 +56,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
       // Получаем текущего пользователя
       final currentUserAsync = ref.read(currentUserProvider);
       final currentUser = currentUserAsync.value;
-      
+
       if (currentUser == null) {
         setState(() {
           _isLoading = false;
@@ -122,7 +122,8 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
       await FirebaseFirestore.instance.collection('bookings').add({
         'customerId': uid,
         'specialistId': 'spec_test_1',
-        'eventDate': Timestamp.fromDate(DateTime.now().add(const Duration(days: 7))),
+        'eventDate':
+            Timestamp.fromDate(DateTime.now().add(const Duration(days: 7))),
         'status': 'pending',
         'details': 'Тестовая заявка на фотосессию',
         'totalPrice': 15000.0,
@@ -135,7 +136,8 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
       await FirebaseFirestore.instance.collection('bookings').add({
         'customerId': uid,
         'specialistId': 'spec_test_2',
-        'eventDate': Timestamp.fromDate(DateTime.now().add(const Duration(days: 14))),
+        'eventDate':
+            Timestamp.fromDate(DateTime.now().add(const Duration(days: 14))),
         'status': 'confirmed',
         'details': 'Тестовая заявка на видеосъемку',
         'totalPrice': 25000.0,
@@ -148,11 +150,13 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
       await FirebaseFirestore.instance.collection('bookings').add({
         'customerId': uid,
         'specialistId': 'spec_test_3',
-        'eventDate': Timestamp.fromDate(DateTime.now().subtract(const Duration(days: 7))),
+        'eventDate': Timestamp.fromDate(
+            DateTime.now().subtract(const Duration(days: 7))),
         'status': 'completed',
         'details': 'Завершенная тестовая заявка',
         'totalPrice': 10000.0,
-        'createdAt': Timestamp.fromDate(DateTime.now().subtract(const Duration(days: 10))),
+        'createdAt': Timestamp.fromDate(
+            DateTime.now().subtract(const Duration(days: 10))),
         'eventTitle': 'Фотосессия в студии',
         'customerName': 'Тестовый клиент',
         'customerPhone': '+7 (999) 123-45-67',

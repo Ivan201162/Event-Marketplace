@@ -1,12 +1,13 @@
 import 'dart:developer' as developer;
-import 'package:flutter/foundation.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 /// Сервис для логирования ошибок
 class ErrorLoggingService {
-  static final ErrorLoggingService _instance = ErrorLoggingService._internal();
   factory ErrorLoggingService() => _instance;
   ErrorLoggingService._internal();
+  static final ErrorLoggingService _instance = ErrorLoggingService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -148,7 +149,7 @@ class ErrorLoggingService {
   }) async {
     try {
       Query query = _firestore.collection('error_logs');
-      
+
       if (startDate != null) {
         query = query.where('timestamp', isGreaterThanOrEqualTo: startDate);
       }
@@ -156,15 +157,15 @@ class ErrorLoggingService {
         query = query.where('timestamp', isLessThanOrEqualTo: endDate);
       }
 
-      final QuerySnapshot snapshot = await query.get();
-      
-      int totalErrors = 0;
-      Map<String, int> errorsByScreen = {};
-      Map<String, int> errorsByAction = {};
-      Map<String, int> errorsByType = {};
+      final snapshot = await query.get();
+
+      var totalErrors = 0;
+      final errorsByScreen = <String, int>{};
+      final errorsByAction = <String, int>{};
+      final errorsByType = <String, int>{};
 
       for (final doc in snapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data()! as Map<String, dynamic>;
         totalErrors++;
 
         final screen = data['screen'] as String?;
@@ -212,9 +213,14 @@ class ErrorLoggingService {
   Future<void> cleanupOldLogs({int daysToKeep = 30}) async {
     try {
       final cutoffDate = DateTime.now().subtract(Duration(days: daysToKeep));
-      
-      final collections = ['error_logs', 'warning_logs', 'info_logs', 'performance_logs'];
-      
+
+      final collections = [
+        'error_logs',
+        'warning_logs',
+        'info_logs',
+        'performance_logs'
+      ];
+
       for (final collection in collections) {
         final QuerySnapshot snapshot = await _firestore
             .collection(collection)
@@ -225,7 +231,7 @@ class ErrorLoggingService {
         for (final doc in snapshot.docs) {
           batch.delete(doc.reference);
         }
-        
+
         if (snapshot.docs.isNotEmpty) {
           await batch.commit();
         }

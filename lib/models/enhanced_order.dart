@@ -22,6 +22,50 @@ class EnhancedOrder {
     this.cancellationReason,
   });
 
+  /// Создать из Map
+  factory EnhancedOrder.fromMap(Map<String, dynamic> map) => EnhancedOrder(
+        id: map['id'] as String,
+        customerId: map['customerId'] as String,
+        specialistId: map['specialistId'] as String,
+        title: map['title'] as String,
+        description: map['description'] as String,
+        status: OrderStatus.fromString(map['status'] as String),
+        createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
+        budget: (map['budget'] as num?)?.toDouble(),
+        deadline: map['deadline'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(map['deadline'] as int)
+            : null,
+        location: map['location'] as String?,
+        category: map['category'] as String?,
+        priority:
+            OrderPriority.fromString(map['priority'] as String? ?? 'medium'),
+        comments: (map['comments'] as List?)
+                ?.map((comment) =>
+                    OrderComment.fromMap(comment as Map<String, dynamic>))
+                .toList() ??
+            [],
+        timeline: (map['timeline'] as List?)
+                ?.map((event) =>
+                    OrderTimelineEvent.fromMap(event as Map<String, dynamic>))
+                .toList() ??
+            [],
+        attachments: (map['attachments'] as List?)
+                ?.map((attachment) =>
+                    OrderAttachment.fromMap(attachment as Map<String, dynamic>))
+                .toList() ??
+            [],
+        updatedAt: map['updatedAt'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int)
+            : null,
+        completedAt: map['completedAt'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(map['completedAt'] as int)
+            : null,
+        cancelledAt: map['cancelledAt'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(map['cancelledAt'] as int)
+            : null,
+        cancellationReason: map['cancellationReason'] as String?,
+      );
+
   /// Уникальный идентификатор
   final String id;
 
@@ -79,69 +123,29 @@ class EnhancedOrder {
   /// Причина отмены
   final String? cancellationReason;
 
-  /// Создать из Map
-  factory EnhancedOrder.fromMap(Map<String, dynamic> map) {
-    return EnhancedOrder(
-      id: map['id'] as String,
-      customerId: map['customerId'] as String,
-      specialistId: map['specialistId'] as String,
-      title: map['title'] as String,
-      description: map['description'] as String,
-      status: OrderStatus.fromString(map['status'] as String),
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-      budget: (map['budget'] as num?)?.toDouble(),
-      deadline: map['deadline'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['deadline'] as int)
-          : null,
-      location: map['location'] as String?,
-      category: map['category'] as String?,
-      priority: OrderPriority.fromString(map['priority'] as String? ?? 'medium'),
-      comments: (map['comments'] as List?)
-          ?.map((comment) => OrderComment.fromMap(comment as Map<String, dynamic>))
-          .toList() ?? [],
-      timeline: (map['timeline'] as List?)
-          ?.map((event) => OrderTimelineEvent.fromMap(event as Map<String, dynamic>))
-          .toList() ?? [],
-      attachments: (map['attachments'] as List?)
-          ?.map((attachment) => OrderAttachment.fromMap(attachment as Map<String, dynamic>))
-          .toList() ?? [],
-      updatedAt: map['updatedAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int)
-          : null,
-      completedAt: map['completedAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['completedAt'] as int)
-          : null,
-      cancelledAt: map['cancelledAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['cancelledAt'] as int)
-          : null,
-      cancellationReason: map['cancellationReason'] as String?,
-    );
-  }
-
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'customerId': customerId,
-      'specialistId': specialistId,
-      'title': title,
-      'description': description,
-      'status': status.value,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'budget': budget,
-      'deadline': deadline?.millisecondsSinceEpoch,
-      'location': location,
-      'category': category,
-      'priority': priority.value,
-      'comments': comments.map((comment) => comment.toMap()).toList(),
-      'timeline': timeline.map((event) => event.toMap()).toList(),
-      'attachments': attachments.map((attachment) => attachment.toMap()).toList(),
-      'updatedAt': updatedAt?.millisecondsSinceEpoch,
-      'completedAt': completedAt?.millisecondsSinceEpoch,
-      'cancelledAt': cancelledAt?.millisecondsSinceEpoch,
-      'cancellationReason': cancellationReason,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'customerId': customerId,
+        'specialistId': specialistId,
+        'title': title,
+        'description': description,
+        'status': status.value,
+        'createdAt': createdAt.millisecondsSinceEpoch,
+        'budget': budget,
+        'deadline': deadline?.millisecondsSinceEpoch,
+        'location': location,
+        'category': category,
+        'priority': priority.value,
+        'comments': comments.map((comment) => comment.toMap()).toList(),
+        'timeline': timeline.map((event) => event.toMap()).toList(),
+        'attachments':
+            attachments.map((attachment) => attachment.toMap()).toList(),
+        'updatedAt': updatedAt?.millisecondsSinceEpoch,
+        'completedAt': completedAt?.millisecondsSinceEpoch,
+        'cancelledAt': cancelledAt?.millisecondsSinceEpoch,
+        'cancellationReason': cancellationReason,
+      };
 
   /// Создать копию с изменениями
   EnhancedOrder copyWith({
@@ -164,29 +168,28 @@ class EnhancedOrder {
     DateTime? completedAt,
     DateTime? cancelledAt,
     String? cancellationReason,
-  }) {
-    return EnhancedOrder(
-      id: id ?? this.id,
-      customerId: customerId ?? this.customerId,
-      specialistId: specialistId ?? this.specialistId,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      status: status ?? this.status,
-      createdAt: createdAt ?? this.createdAt,
-      budget: budget ?? this.budget,
-      deadline: deadline ?? this.deadline,
-      location: location ?? this.location,
-      category: category ?? this.category,
-      priority: priority ?? this.priority,
-      comments: comments ?? this.comments,
-      timeline: timeline ?? this.timeline,
-      attachments: attachments ?? this.attachments,
-      updatedAt: updatedAt ?? this.updatedAt,
-      completedAt: completedAt ?? this.completedAt,
-      cancelledAt: cancelledAt ?? this.cancelledAt,
-      cancellationReason: cancellationReason ?? this.cancellationReason,
-    );
-  }
+  }) =>
+      EnhancedOrder(
+        id: id ?? this.id,
+        customerId: customerId ?? this.customerId,
+        specialistId: specialistId ?? this.specialistId,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        status: status ?? this.status,
+        createdAt: createdAt ?? this.createdAt,
+        budget: budget ?? this.budget,
+        deadline: deadline ?? this.deadline,
+        location: location ?? this.location,
+        category: category ?? this.category,
+        priority: priority ?? this.priority,
+        comments: comments ?? this.comments,
+        timeline: timeline ?? this.timeline,
+        attachments: attachments ?? this.attachments,
+        updatedAt: updatedAt ?? this.updatedAt,
+        completedAt: completedAt ?? this.completedAt,
+        cancelledAt: cancelledAt ?? this.cancelledAt,
+        cancellationReason: cancellationReason ?? this.cancellationReason,
+      );
 }
 
 /// Статус заявки
@@ -311,6 +314,19 @@ class OrderComment {
     this.attachments = const [],
   });
 
+  factory OrderComment.fromMap(Map<String, dynamic> map) => OrderComment(
+        id: map['id'] as String,
+        authorId: map['authorId'] as String,
+        text: map['text'] as String,
+        createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
+        isInternal: (map['isInternal'] as bool?) ?? false,
+        attachments: (map['attachments'] as List?)
+                ?.map((attachment) =>
+                    OrderAttachment.fromMap(attachment as Map<String, dynamic>))
+                .toList() ??
+            [],
+      );
+
   final String id;
   final String authorId;
   final String text;
@@ -318,29 +334,15 @@ class OrderComment {
   final bool isInternal;
   final List<OrderAttachment> attachments;
 
-  factory OrderComment.fromMap(Map<String, dynamic> map) {
-    return OrderComment(
-      id: map['id'] as String,
-      authorId: map['authorId'] as String,
-      text: map['text'] as String,
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-      isInternal: (map['isInternal'] as bool?) ?? false,
-      attachments: (map['attachments'] as List?)
-          ?.map((attachment) => OrderAttachment.fromMap(attachment as Map<String, dynamic>))
-          .toList() ?? [],
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'authorId': authorId,
-      'text': text,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'isInternal': isInternal,
-      'attachments': attachments.map((attachment) => attachment.toMap()).toList(),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'authorId': authorId,
+        'text': text,
+        'createdAt': createdAt.millisecondsSinceEpoch,
+        'isInternal': isInternal,
+        'attachments':
+            attachments.map((attachment) => attachment.toMap()).toList(),
+      };
 }
 
 /// Событие в таймлайне заявки
@@ -355,6 +357,17 @@ class OrderTimelineEvent {
     this.metadata = const {},
   });
 
+  factory OrderTimelineEvent.fromMap(Map<String, dynamic> map) =>
+      OrderTimelineEvent(
+        id: map['id'] as String,
+        type: OrderTimelineEventType.fromString(map['type'] as String),
+        title: map['title'] as String,
+        description: map['description'] as String,
+        createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
+        authorId: map['authorId'] as String,
+        metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
+      );
+
   final String id;
   final OrderTimelineEventType type;
   final String title;
@@ -363,29 +376,15 @@ class OrderTimelineEvent {
   final String authorId;
   final Map<String, dynamic> metadata;
 
-  factory OrderTimelineEvent.fromMap(Map<String, dynamic> map) {
-    return OrderTimelineEvent(
-      id: map['id'] as String,
-      type: OrderTimelineEventType.fromString(map['type'] as String),
-      title: map['title'] as String,
-      description: map['description'] as String,
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-      authorId: map['authorId'] as String,
-      metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'type': type.value,
-      'title': title,
-      'description': description,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'authorId': authorId,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'type': type.value,
+        'title': title,
+        'description': description,
+        'createdAt': createdAt.millisecondsSinceEpoch,
+        'authorId': authorId,
+        'metadata': metadata,
+      };
 }
 
 /// Тип события в таймлайне
@@ -454,6 +453,17 @@ class OrderAttachment {
     required this.uploadedBy,
   });
 
+  factory OrderAttachment.fromMap(Map<String, dynamic> map) => OrderAttachment(
+        id: map['id'] as String,
+        name: map['name'] as String,
+        url: map['url'] as String,
+        type: OrderAttachmentType.fromString(map['type'] as String),
+        size: map['size'] as int,
+        uploadedAt:
+            DateTime.fromMillisecondsSinceEpoch(map['uploadedAt'] as int),
+        uploadedBy: map['uploadedBy'] as String,
+      );
+
   final String id;
   final String name;
   final String url;
@@ -462,29 +472,15 @@ class OrderAttachment {
   final DateTime uploadedAt;
   final String uploadedBy;
 
-  factory OrderAttachment.fromMap(Map<String, dynamic> map) {
-    return OrderAttachment(
-      id: map['id'] as String,
-      name: map['name'] as String,
-      url: map['url'] as String,
-      type: OrderAttachmentType.fromString(map['type'] as String),
-      size: map['size'] as int,
-      uploadedAt: DateTime.fromMillisecondsSinceEpoch(map['uploadedAt'] as int),
-      uploadedBy: map['uploadedBy'] as String,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'url': url,
-      'type': type.value,
-      'size': size,
-      'uploadedAt': uploadedAt.millisecondsSinceEpoch,
-      'uploadedBy': uploadedBy,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'name': name,
+        'url': url,
+        'type': type.value,
+        'size': size,
+        'uploadedAt': uploadedAt.millisecondsSinceEpoch,
+        'uploadedBy': uploadedBy,
+      };
 }
 
 /// Тип вложения

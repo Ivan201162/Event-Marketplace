@@ -1,16 +1,15 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../services/auth_service.dart';
 import '../models/user.dart';
+import '../services/auth_service.dart';
 
 /// Провайдер сервиса аутентификации
 final authServiceProvider = Provider<AuthService>((ref) => AuthService());
 
 /// Провайдер текущего пользователя Firebase
-final firebaseUserProvider = StreamProvider<User?>((ref) {
-  return FirebaseAuth.instance.authStateChanges();
-});
+final firebaseUserProvider =
+    StreamProvider<User?>((ref) => FirebaseAuth.instance.authStateChanges());
 
 /// Провайдер текущего пользователя приложения
 final currentUserProvider = StreamProvider<AppUser?>((ref) {

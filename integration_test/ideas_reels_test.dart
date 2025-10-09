@@ -7,7 +7,8 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Ideas and Reels Tests', () {
-    testWidgets('Ideas screen navigation and basic functionality', (tester) async {
+    testWidgets('Ideas screen navigation and basic functionality',
+        (tester) async {
       // Запуск приложения
       app.main();
       await tester.pumpAndSettle();
@@ -263,4 +264,3 @@ void main() {
     });
   });
 }
-

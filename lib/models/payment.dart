@@ -392,13 +392,13 @@ class Payment {
   String? get failureReason => failedAt != null ? 'Платеж не прошел' : null;
   bool get isPending => status == PaymentStatus.pending;
   DateTime? get paidAt => completedAt;
-  
+
   // Tax-related getters
   String get taxStatusDisplayName {
     // TODO: Implement tax status logic
     return 'Без налога';
   }
-  
+
   double get taxAmount => tax ?? 0.0;
   double get netAmount => amount - taxAmount;
 

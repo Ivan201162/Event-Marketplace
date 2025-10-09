@@ -17,8 +17,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Проверяем, что заголовок поиска отображается
-      expect(find.text('Найди специалиста для своего праздника 🎉'),
-          findsOneWidget,);
+      expect(
+        find.text('Найди специалиста для своего праздника 🎉'),
+        findsOneWidget,
+      );
 
       // Проверяем наличие поисковой строки
       expect(find.byType(TextField), findsOneWidget);
@@ -64,8 +66,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Проверяем, что текст введён
-      expect(tester.widget<TextField>(searchField).controller?.text,
-          equals('тест'),);
+      expect(
+        tester.widget<TextField>(searchField).controller?.text,
+        equals('тест'),
+      );
     });
 
     testWidgets('Проверка кнопки очистки поиска', (tester) async {

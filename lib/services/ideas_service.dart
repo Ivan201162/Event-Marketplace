@@ -24,18 +24,21 @@ class IdeasService {
     String? searchQuery,
     int limit = 20,
     DocumentSnapshot? startAfter,
-  }) => _repository.streamList(
-      category: category,
-      searchQuery: searchQuery,
-      limit: limit,
-      startAfter: startAfter,
-    );
+  }) =>
+      _repository.streamList(
+        category: category,
+        searchQuery: searchQuery,
+        limit: limit,
+        startAfter: startAfter,
+      );
 
   /// Получение идей пользователя
-  Stream<List<Idea>> getUserIdeas(String userId) => _repository.getUserIdeas(userId);
+  Stream<List<Idea>> getUserIdeas(String userId) =>
+      _repository.getUserIdeas(userId);
 
   /// Получение сохраненных идей пользователя
-  Stream<List<Idea>> getSavedIdeas(String userId) => _repository.getSavedIdeas(userId);
+  Stream<List<Idea>> getSavedIdeas(String userId) =>
+      _repository.getSavedIdeas(userId);
 
   /// Получение конкретной идеи
   Future<Idea?> getIdea(String ideaId) async => _repository.getById(ideaId);
@@ -127,14 +130,14 @@ class IdeasService {
   Future<bool> toggleLike(String ideaId, String userId) async {
     try {
       final docRef = _firestore.collection('ideas').doc(ideaId);
-      
+
       return await _firestore.runTransaction((transaction) async {
         final doc = await transaction.get(docRef);
         if (!doc.exists) return false;
 
         final idea = Idea.fromFirestore(doc);
         final isLiked = idea.isLiked;
-        
+
         final newLikedBy = <String>[];
         if (isLiked) {
           newLikedBy.remove(userId);
@@ -160,14 +163,14 @@ class IdeasService {
   Future<bool> toggleSave(String ideaId, String userId) async {
     try {
       final docRef = _firestore.collection('ideas').doc(ideaId);
-      
+
       return await _firestore.runTransaction((transaction) async {
         final doc = await transaction.get(docRef);
         if (!doc.exists) return false;
 
         final idea = Idea.fromFirestore(doc);
         final isSaved = idea.isSaved;
-        
+
         final newSavedBy = <String>[];
         if (isSaved) {
           newSavedBy.remove(userId);
@@ -193,14 +196,14 @@ class IdeasService {
   Future<bool> shareIdea(String ideaId, String userId) async {
     try {
       final docRef = _firestore.collection('ideas').doc(ideaId);
-      
+
       return await _firestore.runTransaction((transaction) async {
         final doc = await transaction.get(docRef);
         if (!doc.exists) return false;
 
         final idea = Idea.fromFirestore(doc);
         final newSharedBy = <String>[];
-        
+
         if (!newSharedBy.contains(userId)) {
           newSharedBy.add(userId);
         }
@@ -220,13 +223,14 @@ class IdeasService {
   }
 
   /// Получение комментариев к идее
-  Stream<List<Map<String, dynamic>>> getIdeaComments(String ideaId) => _firestore
-        .collection('idea_comments')
-        .where('ideaId', isEqualTo: ideaId)
-        .where('parentCommentId', isNull: true) // только основные комментарии
-        .orderBy('createdAt', descending: false)
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+  Stream<List<Map<String, dynamic>>> getIdeaComments(String ideaId) =>
+      _firestore
+          .collection('idea_comments')
+          .where('ideaId', isEqualTo: ideaId)
+          .where('parentCommentId', isNull: true) // только основные комментарии
+          .orderBy('createdAt', descending: false)
+          .snapshots()
+          .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
 
   /// Добавление комментария
   Future<String?> addComment({
@@ -252,8 +256,9 @@ class IdeasService {
         'replies': [],
       };
 
-      final docRef = await _firestore.collection('idea_comments').add(commentData);
-      
+      final docRef =
+          await _firestore.collection('idea_comments').add(commentData);
+
       // Обновляем счетчик комментариев в идее
       await _firestore.collection('ideas').doc(ideaId).update({
         'commentsCount': FieldValue.increment(1),
@@ -271,14 +276,14 @@ class IdeasService {
   Future<bool> toggleCommentLike(String commentId, String userId) async {
     try {
       final docRef = _firestore.collection('idea_comments').doc(commentId);
-      
+
       return await _firestore.runTransaction((transaction) async {
         final doc = await transaction.get(docRef);
         if (!doc.exists) return false;
 
         final comment = doc.data();
         const isLiked = false;
-        
+
         final newLikedBy = <String>[];
         if (isLiked) {
           newLikedBy.remove(userId);
@@ -304,7 +309,7 @@ class IdeasService {
   Future<File?> pickMediaFile({required bool isVideo}) async {
     try {
       final file = await _imagePicker.pickMedia();
-      
+
       if (file != null) {
         return File(file.path);
       }
@@ -318,15 +323,17 @@ class IdeasService {
   /// Загрузка медиа файла в Firebase Storage
   Future<String?> _uploadMediaFile(File file, bool isVideo) async {
     try {
-      final fileName = '${DateTime.now().millisecondsSinceEpoch}_${file.path.split('/').last}';
-      final path = isVideo ? 'ideas/videos/$fileName' : 'ideas/images/$fileName';
-      
+      final fileName =
+          '${DateTime.now().millisecondsSinceEpoch}_${file.path.split('/').last}';
+      final path =
+          isVideo ? 'ideas/videos/$fileName' : 'ideas/images/$fileName';
+
       final ref = _storage.ref().child(path);
       final uploadTask = ref.putFile(file);
-      
+
       final snapshot = await uploadTask;
       final downloadUrl = await snapshot.ref.getDownloadURL();
-      
+
       return downloadUrl;
     } on Exception catch (e) {
       print('Ошибка загрузки медиа файла: $e');
@@ -344,12 +351,12 @@ class IdeasService {
         maxHeight: 200,
         quality: 75,
       );
-      
+
       if (thumbnailPath != null) {
         final thumbnailFile = File(thumbnailPath);
         return await _uploadMediaFile(thumbnailFile, false);
       }
-      
+
       return null;
     } on Exception catch (e) {
       print('Ошибка генерации превью видео: $e');
@@ -359,21 +366,22 @@ class IdeasService {
 
   /// Получение трендовых идей
   Stream<List<Idea>> getTrendingIdeas({int limit = 10}) => _firestore
-        .collection('ideas')
-        .where('isPublic', isEqualTo: true)
-        .orderBy('likesCount', descending: true)
-        .orderBy('createdAt', descending: true)
-        .limit(limit)
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map(Idea.fromFirestore).toList());
+      .collection('ideas')
+      .where('isPublic', isEqualTo: true)
+      .orderBy('likesCount', descending: true)
+      .orderBy('createdAt', descending: true)
+      .limit(limit)
+      .snapshots()
+      .map((snapshot) => snapshot.docs.map(Idea.fromFirestore).toList());
 
   /// Поиск идей по тегам
-  Stream<List<Idea>> searchIdeasByTags(List<String> tags, {int limit = 20}) => _firestore
-        .collection('ideas')
-        .where('isPublic', isEqualTo: true)
-        .where('tags', arrayContainsAny: tags)
-        .orderBy('createdAt', descending: true)
-        .limit(limit)
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map(Idea.fromFirestore).toList());
+  Stream<List<Idea>> searchIdeasByTags(List<String> tags, {int limit = 20}) =>
+      _firestore
+          .collection('ideas')
+          .where('isPublic', isEqualTo: true)
+          .where('tags', arrayContainsAny: tags)
+          .orderBy('createdAt', descending: true)
+          .limit(limit)
+          .snapshots()
+          .map((snapshot) => snapshot.docs.map(Idea.fromFirestore).toList());
 }

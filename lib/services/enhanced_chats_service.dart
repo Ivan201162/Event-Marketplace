@@ -17,10 +17,12 @@ class EnhancedChatsService {
           .get();
 
       return snapshot.docs
-          .map((doc) => EnhancedChat.fromMap({
-                'id': doc.id,
-                ...(doc.data() as Map<String, dynamic>),
-              }),)
+          .map(
+            (doc) => EnhancedChat.fromMap({
+              'id': doc.id,
+              ...doc.data(),
+            }),
+          )
           .toList();
     } on Exception catch (e) {
       debugPrint('Ошибка получения чатов пользователя: $e');
@@ -49,10 +51,12 @@ class EnhancedChatsService {
       final snapshot = await query.get();
 
       return snapshot.docs
-          .map((doc) => EnhancedMessage.fromMap({
-                'id': doc.id,
-                ...(doc.data() as Map<String, dynamic>),
-              }),)
+          .map(
+            (doc) => EnhancedMessage.fromMap({
+              'id': doc.id,
+              ...(doc.data()! as Map<String, dynamic>),
+            }),
+          )
           .toList();
     } on Exception catch (e) {
       debugPrint('Ошибка получения сообщений чата: $e');
@@ -106,7 +110,7 @@ class EnhancedChatsService {
       replyTo: replyTo,
     );
 
-    return await sendMessage(message);
+    return sendMessage(message);
   }
 
   /// Отправить медиа сообщение
@@ -118,7 +122,7 @@ class EnhancedChatsService {
     MessageReply? replyTo,
   }) async {
     final messageType = _getMessageTypeFromAttachments(attachments);
-    
+
     final message = EnhancedMessage(
       id: '', // Будет установлен при создании
       chatId: chatId,
@@ -130,7 +134,7 @@ class EnhancedChatsService {
       replyTo: replyTo,
     );
 
-    return await sendMessage(message);
+    return sendMessage(message);
   }
 
   /// Отправить голосовое сообщение
@@ -151,7 +155,7 @@ class EnhancedChatsService {
       replyTo: replyTo,
     );
 
-    return await sendMessage(message);
+    return sendMessage(message);
   }
 
   /// Переслать сообщение
@@ -176,7 +180,7 @@ class EnhancedChatsService {
 
       final originalMessage = EnhancedMessage.fromMap({
         'id': originalDoc.id,
-        ...(originalDoc.data() as Map<String, dynamic>),
+        ...originalDoc.data()!,
       });
 
       // Создать пересланное сообщение
@@ -338,9 +342,9 @@ class EnhancedChatsService {
       for (final doc in existingChats.docs) {
         final chat = EnhancedChat.fromMap({
           'id': doc.id,
-          ...(doc.data() as Map<String, dynamic>),
+          ...doc.data(),
         });
-        
+
         if (chat.members.any((member) => member.userId == userId2)) {
           return doc.id; // Чат уже существует
         }
@@ -376,9 +380,10 @@ class EnhancedChatsService {
   Future<String> createGroupChat(
     String creatorId,
     String name,
-    List<String> memberIds,
-    {String? description, String? avatarUrl}
-  ) async {
+    List<String> memberIds, {
+    String? description,
+    String? avatarUrl,
+  }) async {
     try {
       final members = <ChatMember>[
         ChatMember(
@@ -386,11 +391,13 @@ class EnhancedChatsService {
           role: ChatMemberRole.owner,
           joinedAt: DateTime.now(),
         ),
-        ...memberIds.map((userId) => ChatMember(
-              userId: userId,
-              role: ChatMemberRole.member,
-              joinedAt: DateTime.now(),
-            )),
+        ...memberIds.map(
+          (userId) => ChatMember(
+            userId: userId,
+            role: ChatMemberRole.member,
+            joinedAt: DateTime.now(),
+          ),
+        ),
       ];
 
       final chat = EnhancedChat(
@@ -497,16 +504,22 @@ class EnhancedChatsService {
           .get();
 
       final chats = snapshot.docs
-          .map((doc) => EnhancedChat.fromMap({
-                'id': doc.id,
-                ...(doc.data() as Map<String, dynamic>),
-              }),)
+          .map(
+            (doc) => EnhancedChat.fromMap({
+              'id': doc.id,
+              ...doc.data(),
+            }),
+          )
           .toList();
 
       // Фильтрация по названию и последнему сообщению
       return chats.where((chat) {
-        final nameMatch = chat.name?.toLowerCase().contains(query.toLowerCase()) ?? false;
-        final lastMessageMatch = chat.lastMessage?.text.toLowerCase().contains(query.toLowerCase()) ?? false;
+        final nameMatch =
+            chat.name?.toLowerCase().contains(query.toLowerCase()) ?? false;
+        final lastMessageMatch = chat.lastMessage?.text
+                .toLowerCase()
+                .contains(query.toLowerCase()) ??
+            false;
         return nameMatch || lastMessageMatch;
       }).toList();
     } on Exception catch (e) {
@@ -526,14 +539,16 @@ class EnhancedChatsService {
           .doc(chatId)
           .collection('messages')
           .where('text', isGreaterThanOrEqualTo: query)
-          .where('text', isLessThan: query + 'z')
+          .where('text', isLessThan: '${query}z')
           .get();
 
       return snapshot.docs
-          .map((doc) => EnhancedMessage.fromMap({
-                'id': doc.id,
-                ...(doc.data() as Map<String, dynamic>),
-              }),)
+          .map(
+            (doc) => EnhancedMessage.fromMap({
+              'id': doc.id,
+              ...doc.data(),
+            }),
+          )
           .toList();
     } on Exception catch (e) {
       debugPrint('Ошибка поиска по сообщениям: $e');
@@ -542,9 +557,10 @@ class EnhancedChatsService {
   }
 
   /// Получить тип сообщения на основе вложений
-  MessageType _getMessageTypeFromAttachments(List<MessageAttachment> attachments) {
+  MessageType _getMessageTypeFromAttachments(
+      List<MessageAttachment> attachments) {
     if (attachments.isEmpty) return MessageType.text;
-    
+
     final firstAttachment = attachments.first;
     switch (firstAttachment.type) {
       case MessageAttachmentType.image:
@@ -561,4 +577,3 @@ class EnhancedChatsService {
     }
   }
 }
-

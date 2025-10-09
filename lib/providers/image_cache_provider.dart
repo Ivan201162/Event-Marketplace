@@ -62,10 +62,10 @@ final imagePreloadProvider =
       CachedNetworkImageProvider(imageUrl),
       ref
               .read(imageCacheProvider)
-              .initializeCache()!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+              .initializeCache()!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
           as BuildContext,
     );
-    } on Exception catch (e) {
+  } on Exception catch (e) {
     // Игнорируем ошибки предварительной загрузки
     debugPrint('Failed to preload image: $imageUrl, error: $e');
   }

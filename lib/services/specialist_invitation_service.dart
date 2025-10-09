@@ -6,9 +6,10 @@ import 'error_logging_service.dart';
 
 /// Сервис для работы с приглашениями специалистов
 class SpecialistInvitationService {
-  static final SpecialistInvitationService _instance = SpecialistInvitationService._internal();
   factory SpecialistInvitationService() => _instance;
   SpecialistInvitationService._internal();
+  static final SpecialistInvitationService _instance =
+      SpecialistInvitationService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -54,9 +55,10 @@ class SpecialistInvitationService {
         return null;
       }
 
-      final invitationId = _firestore.collection('specialist_invitations').doc().id;
+      final invitationId =
+          _firestore.collection('specialist_invitations').doc().id;
       final now = DateTime.now();
-      final expiresAt = expirationDuration != null 
+      final expiresAt = expirationDuration != null
           ? now.add(expirationDuration)
           : now.add(const Duration(days: 7)); // По умолчанию 7 дней
 
@@ -179,10 +181,8 @@ class SpecialistInvitationService {
         query = query.startAfterDocument(startAfter);
       }
 
-      final QuerySnapshot snapshot = await query.get();
-      return snapshot.docs
-          .map((doc) => SpecialistInvitation.fromDoc(doc))
-          .toList();
+      final snapshot = await query.get();
+      return snapshot.docs.map(SpecialistInvitation.fromDoc).toList();
     } catch (e, stackTrace) {
       await _errorLogger.logError(
         error: 'Failed to get specialist invitations: $e',
@@ -216,10 +216,8 @@ class SpecialistInvitationService {
         query = query.startAfterDocument(startAfter);
       }
 
-      final QuerySnapshot snapshot = await query.get();
-      return snapshot.docs
-          .map((doc) => SpecialistInvitation.fromDoc(doc))
-          .toList();
+      final snapshot = await query.get();
+      return snapshot.docs.map(SpecialistInvitation.fromDoc).toList();
     } catch (e, stackTrace) {
       await _errorLogger.logError(
         error: 'Failed to get customer invitations: $e',
@@ -294,7 +292,8 @@ class SpecialistInvitationService {
   }
 
   /// Получить статистику приглашений специалиста
-  Future<InvitationStats?> getSpecialistInvitationStats(String specialistId) async {
+  Future<InvitationStats?> getSpecialistInvitationStats(
+      String specialistId) async {
     try {
       final DocumentSnapshot doc = await _firestore
           .collection('invitation_stats')
@@ -302,7 +301,7 @@ class SpecialistInvitationService {
           .get();
 
       if (doc.exists) {
-        return InvitationStats.fromMap(doc.data() as Map<String, dynamic>);
+        return InvitationStats.fromMap(doc.data()! as Map<String, dynamic>);
       }
 
       // Если статистики нет, создаем ее
@@ -352,9 +351,10 @@ class SpecialistInvitationService {
 
         if (existingInvitation.docs.isNotEmpty) continue;
 
-        final invitationId = _firestore.collection('specialist_invitations').doc().id;
+        final invitationId =
+            _firestore.collection('specialist_invitations').doc().id;
         final now = DateTime.now();
-        final expiresAt = expirationDuration != null 
+        final expiresAt = expirationDuration != null
             ? now.add(expirationDuration)
             : now.add(const Duration(days: 7));
 
@@ -424,10 +424,12 @@ class SpecialistInvitationService {
 
       // Базовые фильтры
       if (specialistId != null) {
-        firestoreQuery = firestoreQuery.where('specialistId', isEqualTo: specialistId);
+        firestoreQuery =
+            firestoreQuery.where('specialistId', isEqualTo: specialistId);
       }
       if (customerId != null) {
-        firestoreQuery = firestoreQuery.where('customerId', isEqualTo: customerId);
+        firestoreQuery =
+            firestoreQuery.where('customerId', isEqualTo: customerId);
       }
       if (orderId != null) {
         firestoreQuery = firestoreQuery.where('orderId', isEqualTo: orderId);
@@ -437,28 +439,39 @@ class SpecialistInvitationService {
       }
 
       // Сортировка
-      firestoreQuery = firestoreQuery.orderBy('createdAt', descending: true).limit(limit * 2);
+      firestoreQuery = firestoreQuery
+          .orderBy('createdAt', descending: true)
+          .limit(limit * 2);
 
-      final QuerySnapshot snapshot = await firestoreQuery.get();
-      List<SpecialistInvitation> invitations = snapshot.docs
-          .map((doc) => SpecialistInvitation.fromDoc(doc))
-          .toList();
+      final snapshot = await firestoreQuery.get();
+      var invitations =
+          snapshot.docs.map(SpecialistInvitation.fromDoc).toList();
 
       // Дополнительная фильтрация на клиенте
       if (query != null && query.isNotEmpty) {
         final lowerQuery = query.toLowerCase();
-        invitations = invitations.where((invitation) =>
-            invitation.message.toLowerCase().contains(lowerQuery) ||
-            (invitation.responseMessage?.toLowerCase().contains(lowerQuery) ?? false)
-        ).toList();
+        invitations = invitations
+            .where(
+              (invitation) =>
+                  invitation.message.toLowerCase().contains(lowerQuery) ||
+                  (invitation.responseMessage
+                          ?.toLowerCase()
+                          .contains(lowerQuery) ??
+                      false),
+            )
+            .toList();
       }
 
       if (startDate != null) {
-        invitations = invitations.where((invitation) => invitation.createdAt.isAfter(startDate)).toList();
+        invitations = invitations
+            .where((invitation) => invitation.createdAt.isAfter(startDate))
+            .toList();
       }
 
       if (endDate != null) {
-        invitations = invitations.where((invitation) => invitation.createdAt.isBefore(endDate)).toList();
+        invitations = invitations
+            .where((invitation) => invitation.createdAt.isBefore(endDate))
+            .toList();
       }
 
       return invitations.take(limit).toList();
@@ -494,29 +507,37 @@ class SpecialistInvitationService {
   }
 
   /// Вычислить и сохранить статистику приглашений
-  Future<InvitationStats?> _calculateAndSaveInvitationStats(String specialistId) async {
+  Future<InvitationStats?> _calculateAndSaveInvitationStats(
+      String specialistId) async {
     try {
       final QuerySnapshot snapshot = await _firestore
           .collection('specialist_invitations')
           .where('specialistId', isEqualTo: specialistId)
           .get();
 
-      final invitations = snapshot.docs
-          .map((doc) => SpecialistInvitation.fromDoc(doc))
-          .toList();
+      final invitations =
+          snapshot.docs.map(SpecialistInvitation.fromDoc).toList();
 
       if (invitations.isEmpty) return null;
 
       // Вычисляем статистику
       final totalInvitations = invitations.length;
-      final acceptedInvitations = invitations.where((i) => i.status == InvitationStatus.accepted).length;
-      final declinedInvitations = invitations.where((i) => i.status == InvitationStatus.declined).length;
-      final pendingInvitations = invitations.where((i) => i.status == InvitationStatus.pending).length;
-      final expiredInvitations = invitations.where((i) => i.status == InvitationStatus.expired).length;
+      final acceptedInvitations = invitations
+          .where((i) => i.status == InvitationStatus.accepted)
+          .length;
+      final declinedInvitations = invitations
+          .where((i) => i.status == InvitationStatus.declined)
+          .length;
+      final pendingInvitations =
+          invitations.where((i) => i.status == InvitationStatus.pending).length;
+      final expiredInvitations =
+          invitations.where((i) => i.status == InvitationStatus.expired).length;
 
       final respondedInvitations = acceptedInvitations + declinedInvitations;
-      final acceptanceRate = totalInvitations > 0 ? acceptedInvitations / totalInvitations : 0.0;
-      final responseRate = totalInvitations > 0 ? respondedInvitations / totalInvitations : 0.0;
+      final acceptanceRate =
+          totalInvitations > 0 ? acceptedInvitations / totalInvitations : 0.0;
+      final responseRate =
+          totalInvitations > 0 ? respondedInvitations / totalInvitations : 0.0;
 
       final stats = InvitationStats(
         specialistId: specialistId,
@@ -583,4 +604,3 @@ class SpecialistInvitationService {
     }
   }
 }
-

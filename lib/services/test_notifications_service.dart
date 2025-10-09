@@ -59,7 +59,8 @@ class TestNotificationsService {
         {
           'userId': userId,
           'title': 'Новый отзыв',
-          'body': 'Кто-то оставил отзыв о вашей работе - "Отличная организация!"',
+          'body':
+              'Кто-то оставил отзыв о вашей работе - "Отличная организация!"',
           'type': 'review',
           'data': {
             'reviewId': 'review_1',
@@ -72,7 +73,8 @@ class TestNotificationsService {
         {
           'userId': userId,
           'title': 'Системное уведомление',
-          'body': 'Приложение обновлено до версии 1.0.0. Добавлены новые функции!',
+          'body':
+              'Приложение обновлено до версии 1.0.0. Добавлены новые функции!',
           'type': 'system',
           'data': {
             'version': '1.0.0',
@@ -117,7 +119,8 @@ class TestNotificationsService {
       }
       await batch.commit();
 
-      print('Создано ${testNotifications.length} тестовых уведомлений для пользователя $userId');
+      print(
+          'Создано ${testNotifications.length} тестовых уведомлений для пользователя $userId');
     } catch (e) {
       print('Ошибка создания тестовых уведомлений: $e');
     }
@@ -128,13 +131,14 @@ class TestNotificationsService {
     try {
       // Получаем всех пользователей
       final usersSnapshot = await _firestore.collection('users').get();
-      
+
       for (final userDoc in usersSnapshot.docs) {
         final userId = userDoc.id;
         await createTestNotifications(userId);
       }
-      
-      print('Созданы тестовые уведомления для ${usersSnapshot.docs.length} пользователей');
+
+      print(
+          'Созданы тестовые уведомления для ${usersSnapshot.docs.length} пользователей');
     } catch (e) {
       print('Ошибка создания тестовых уведомлений для всех пользователей: $e');
     }

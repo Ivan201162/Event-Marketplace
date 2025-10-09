@@ -89,7 +89,11 @@ class _ModernNavigationBarState extends ConsumerState<ModernNavigationBar>
       ];
 
   Widget _buildNavItem(
-      int index, IconData icon, IconData activeIcon, String label,) {
+    int index,
+    IconData icon,
+    IconData activeIcon,
+    String label,
+  ) {
     final isSelected = widget.currentIndex == index;
 
     return Expanded(
@@ -125,12 +129,12 @@ class _ModernNavigationBarState extends ConsumerState<ModernNavigationBar>
                   AnimatedDefaultTextStyle(
                     duration: const Duration(milliseconds: 200),
                     style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                      color: isSelected
-                          ? Theme.of(context).primaryColor
-                          : Theme.of(context).textTheme.bodyMedium?.color,
-                      fontWeight:
-                          isSelected ? FontWeight.w600 : FontWeight.w500,
-                    ),
+                          color: isSelected
+                              ? Theme.of(context).primaryColor
+                              : Theme.of(context).textTheme.bodyMedium?.color,
+                          fontWeight:
+                              isSelected ? FontWeight.w600 : FontWeight.w500,
+                        ),
                     child: Text(label),
                   ),
                 ],

@@ -15,10 +15,10 @@ void main() {
       expect(find.byType(MaterialApp), findsOneWidget);
 
       print('✓ Приложение успешно загружено');
-      
+
       // Даем время на инициализацию
       await tester.pumpAndSettle(const Duration(seconds: 2));
-      
+
       print('✓ Инициализация завершена');
     });
   });

@@ -140,7 +140,6 @@ class Idea {
         metadata: metadata ?? this.metadata,
       );
 
-
   /// Проверить, является ли идея видео
   bool get isVideo => videoUrl != null;
 
@@ -155,7 +154,6 @@ class Idea {
 
   @override
   int get hashCode => id.hashCode;
-
 
   /// Получить количество лайков
   int get likeCount => likesCount;

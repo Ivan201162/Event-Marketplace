@@ -217,8 +217,9 @@ class RecommendationService {
           : 0.0;
 
       final preferredSpecialists = specialistIds.entries
-          .where((entry) =>
-              entry.value > 1,) // Специалисты, которых выбирали больше 1 раза
+          .where(
+            (entry) => entry.value > 1,
+          ) // Специалисты, которых выбирали больше 1 раза
           .map((entry) => entry.key)
           .toList();
 
@@ -262,8 +263,10 @@ class RecommendationService {
     }
 
     if (budget != null) {
-      query = query.where('price',
-          isLessThanOrEqualTo: budget * 1.2,); // +20% к бюджету
+      query = query.where(
+        'price',
+        isLessThanOrEqualTo: budget * 1.2,
+      ); // +20% к бюджету
     }
 
     // Сортируем по рейтингу и количеству отзывов
@@ -440,7 +443,9 @@ class RecommendationService {
 
   /// Вычислить релевантность специалиста
   double _calculateRelevanceScore(
-      Specialist specialist, Map<String, dynamic> preferences,) {
+    Specialist specialist,
+    Map<String, dynamic> preferences,
+  ) {
     var score = 0;
 
     // Базовый рейтинг
@@ -479,7 +484,9 @@ class RecommendationService {
 
   /// Получить объяснение рекомендации
   String getRecommendationExplanation(
-      Specialist specialist, Map<String, dynamic> preferences,) {
+    Specialist specialist,
+    Map<String, dynamic> preferences,
+  ) {
     final reasons = <String>[];
 
     if (specialist.avgRating >= 4.5) {

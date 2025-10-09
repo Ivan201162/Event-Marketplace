@@ -19,9 +19,7 @@ class PromotionService {
           .orderBy('discount', descending: true)
           .get();
 
-      return querySnapshot.docs
-          .map(Promotion.fromFirestore)
-          .toList();
+      return querySnapshot.docs.map(Promotion.fromFirestore).toList();
     } catch (e) {
       print('Ошибка получения активных акций: $e');
       return [];
@@ -47,9 +45,7 @@ class PromotionService {
           .orderBy('discount', descending: true)
           .get();
 
-      return querySnapshot.docs
-          .map(Promotion.fromFirestore)
-          .toList();
+      return querySnapshot.docs.map(Promotion.fromFirestore).toList();
     } catch (e) {
       print('Ошибка получения акций по категории: $e');
       return [];
@@ -70,9 +66,7 @@ class PromotionService {
           .orderBy('discount', descending: true)
           .get();
 
-      return querySnapshot.docs
-          .map(Promotion.fromFirestore)
-          .toList();
+      return querySnapshot.docs.map(Promotion.fromFirestore).toList();
     } catch (e) {
       print('Ошибка получения акций по городу: $e');
       return [];
@@ -92,9 +86,7 @@ class PromotionService {
           .orderBy('endDate')
           .get();
 
-      return querySnapshot.docs
-          .map(Promotion.fromFirestore)
-          .toList();
+      return querySnapshot.docs.map(Promotion.fromFirestore).toList();
     } catch (e) {
       print('Ошибка получения акций специалиста: $e');
       return [];
@@ -114,9 +106,7 @@ class PromotionService {
           .orderBy('endDate')
           .get();
 
-      return querySnapshot.docs
-          .map(Promotion.fromFirestore)
-          .toList();
+      return querySnapshot.docs.map(Promotion.fromFirestore).toList();
     } catch (e) {
       print('Ошибка получения сезонных предложений: $e');
       return [];
@@ -136,9 +126,7 @@ class PromotionService {
           .orderBy('endDate')
           .get();
 
-      return querySnapshot.docs
-          .map(Promotion.fromFirestore)
-          .toList();
+      return querySnapshot.docs.map(Promotion.fromFirestore).toList();
     } catch (e) {
       print('Ошибка получения промокодов и подарков: $e');
       return [];
@@ -148,7 +136,8 @@ class PromotionService {
   /// Создать новую акцию
   Future<String?> createPromotion(Promotion promotion) async {
     try {
-      final docRef = await _firestore.collection(_collection).add(promotion.toFirestore());
+      final docRef =
+          await _firestore.collection(_collection).add(promotion.toFirestore());
       return docRef.id;
     } catch (e) {
       print('Ошибка создания акции: $e');
@@ -205,9 +194,8 @@ class PromotionService {
     DateTime? endDate,
   }) async {
     try {
-      Query query = _firestore
-          .collection(_collection)
-          .where('isActive', isEqualTo: true);
+      Query query =
+          _firestore.collection(_collection).where('isActive', isEqualTo: true);
 
       if (category != null && category != 'all') {
         query = query.where('category', isEqualTo: category);
@@ -226,11 +214,13 @@ class PromotionService {
       }
 
       if (startDate != null) {
-        query = query.where('startDate', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where('startDate',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
 
       if (endDate != null) {
-        query = query.where('endDate', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where('endDate',
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
       final querySnapshot = await query
@@ -238,9 +228,7 @@ class PromotionService {
           .orderBy('discount', descending: true)
           .get();
 
-      return querySnapshot.docs
-          .map(Promotion.fromFirestore)
-          .toList();
+      return querySnapshot.docs.map(Promotion.fromFirestore).toList();
     } catch (e) {
       print('Ошибка получения отфильтрованных акций: $e');
       return [];
@@ -251,7 +239,7 @@ class PromotionService {
   Future<Map<String, dynamic>> getPromotionStats() async {
     try {
       final now = Timestamp.now();
-      
+
       // Активные акции
       final activeQuery = await _firestore
           .collection(_collection)
@@ -284,13 +272,13 @@ class PromotionService {
   /// Получить статистику по категориям
   Map<String, int> _getCategoryStats(List<QueryDocumentSnapshot> docs) {
     final categoryStats = <String, int>{};
-    
+
     for (final doc in docs) {
       final data = doc.data()! as Map<String, dynamic>;
       final category = data['category'] ?? 'other';
       categoryStats[category] = (categoryStats[category] ?? 0) + 1;
     }
-    
+
     return categoryStats;
   }
 

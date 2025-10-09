@@ -6,42 +6,41 @@ import 'package:firebase_core/firebase_core.dart';
 /// Запуск: dart tool/add_test_data.dart
 Future<void> main() async {
   print('🚀 Инициализация Firebase...');
-  
+
   // Инициализация Firebase
   await Firebase.initializeApp();
-  
+
   final firestore = FirebaseFirestore.instance;
-  
+
   print('📝 Добавление тестовых данных...');
-  
+
   try {
     // 1. Добавляем тестовых пользователей
     print('👥 Добавление тестовых пользователей...');
     await _addTestUsers(firestore);
-    
+
     // 2. Добавляем посты в ленту
     print('📢 Добавление постов в ленту...');
     await _addFeedPosts(firestore);
-    
+
     // 3. Добавляем заявки
     print('📝 Добавление заявок...');
     await _addOrders(firestore);
-    
+
     // 4. Добавляем чаты с сообщениями
     print('💬 Добавление чатов...');
     await _addChats(firestore);
-    
+
     // 5. Добавляем идеи
     print('💡 Добавление идей...');
     await _addIdeas(firestore);
-    
+
     print('✅ Все тестовые данные успешно добавлены!');
-    
   } catch (e) {
     print('❌ Ошибка при добавлении тестовых данных: $e');
     exit(1);
   }
-  
+
   exit(0);
 }
 
@@ -99,11 +98,11 @@ Future<void> _addTestUsers(FirebaseFirestore firestore) async {
       'isTest': true,
     },
   ];
-  
+
   for (final user in users) {
-    await firestore.collection('users').doc(user['uid'] as String).set(user);
+    await firestore.collection('users').doc(user['uid']! as String).set(user);
   }
-  
+
   print('✅ Добавлено ${users.length} тестовых пользователей');
 }
 
@@ -211,11 +210,11 @@ Future<void> _addFeedPosts(FirebaseFirestore firestore) async {
       'isTest': true,
     },
   ];
-  
+
   for (final post in posts) {
-    await firestore.collection('feed').doc(post['id'] as String).set(post);
+    await firestore.collection('feed').doc(post['id']! as String).set(post);
   }
-  
+
   print('✅ Добавлено ${posts.length} постов в ленту');
 }
 
@@ -227,7 +226,8 @@ Future<void> _addOrders(FirebaseFirestore firestore) async {
       'customerId': 'user_2',
       'specialistId': 'user_1',
       'title': 'Свадьба 14 октября',
-      'description': 'Нужен ведущий и диджей на 40 человек. Свадьба в загородном клубе.',
+      'description':
+          'Нужен ведущий и диджей на 40 человек. Свадьба в загородном клубе.',
       'status': 'pending',
       'createdAt': FieldValue.serverTimestamp(),
       'isTest': true,
@@ -237,7 +237,8 @@ Future<void> _addOrders(FirebaseFirestore firestore) async {
       'customerId': 'user_4',
       'specialistId': 'user_3',
       'title': 'Корпоратив 20 ноября',
-      'description': 'Организация корпоративного мероприятия на 60 сотрудников.',
+      'description':
+          'Организация корпоративного мероприятия на 60 сотрудников.',
       'status': 'accepted',
       'createdAt': FieldValue.serverTimestamp(),
       'isTest': true,
@@ -267,7 +268,8 @@ Future<void> _addOrders(FirebaseFirestore firestore) async {
       'customerId': 'user_2',
       'specialistId': 'user_3',
       'title': 'Выпускной вечер',
-      'description': 'Организация выпускного для 11 класса. Нужен ведущий и музыка.',
+      'description':
+          'Организация выпускного для 11 класса. Нужен ведущий и музыка.',
       'status': 'accepted',
       'createdAt': FieldValue.serverTimestamp(),
       'isTest': true,
@@ -277,7 +279,8 @@ Future<void> _addOrders(FirebaseFirestore firestore) async {
       'customerId': 'user_4',
       'specialistId': 'user_5',
       'title': 'Новогодний корпоратив',
-      'description': 'Празднование Нового года в офисе. Нужны украшения и ведущий.',
+      'description':
+          'Празднование Нового года в офисе. Нужны украшения и ведущий.',
       'status': 'canceled',
       'createdAt': FieldValue.serverTimestamp(),
       'isTest': true,
@@ -297,17 +300,18 @@ Future<void> _addOrders(FirebaseFirestore firestore) async {
       'customerId': 'user_4',
       'specialistId': 'user_3',
       'title': 'День рождения в ресторане',
-      'description': 'Празднование 30-летия. Нужен ведущий и музыкальное сопровождение.',
+      'description':
+          'Празднование 30-летия. Нужен ведущий и музыкальное сопровождение.',
       'status': 'pending',
       'createdAt': FieldValue.serverTimestamp(),
       'isTest': true,
     },
   ];
-  
+
   for (final order in orders) {
-    await firestore.collection('orders').doc(order['id'] as String).set(order);
+    await firestore.collection('orders').doc(order['id']! as String).set(order);
   }
-  
+
   print('✅ Добавлено ${orders.length} заявок');
 }
 
@@ -350,10 +354,10 @@ Future<void> _addChats(FirebaseFirestore firestore) async {
       'isTest': true,
     },
   ];
-  
+
   for (final chat in chats) {
-    await firestore.collection('chats').doc(chat['id'] as String).set(chat);
-    
+    await firestore.collection('chats').doc(chat['id']! as String).set(chat);
+
     // Добавляем сообщения в каждый чат
     final messages = [
       {
@@ -392,17 +396,17 @@ Future<void> _addChats(FirebaseFirestore firestore) async {
         'isTest': true,
       },
     ];
-    
+
     for (final message in messages) {
       await firestore
           .collection('chats')
-          .doc(chat['id'] as String)
+          .doc(chat['id']! as String)
           .collection('messages')
           .doc(message['id'] as String)
           .set(message);
     }
   }
-  
+
   print('✅ Добавлено ${chats.length} чатов с сообщениями');
 }
 
@@ -414,7 +418,8 @@ Future<void> _addIdeas(FirebaseFirestore firestore) async {
       'authorId': 'user_3',
       'imageUrl': 'https://picsum.photos/400/400?random=21',
       'title': 'Фотозона в цветах',
-      'description': 'Отличный вариант для летнего мероприятия 🌸 Создайте атмосферу романтики с помощью живых цветов.',
+      'description':
+          'Отличный вариант для летнего мероприятия 🌸 Создайте атмосферу романтики с помощью живых цветов.',
       'likesCount': 12,
       'commentsCount': 4,
       'createdAt': FieldValue.serverTimestamp(),
@@ -425,7 +430,8 @@ Future<void> _addIdeas(FirebaseFirestore firestore) async {
       'authorId': 'user_1',
       'imageUrl': 'https://picsum.photos/400/400?random=22',
       'title': 'Свадебная арка из веток',
-      'description': 'Эко-стиль в тренде! Арка из натуральных веток создаст неповторимую атмосферу 🌿',
+      'description':
+          'Эко-стиль в тренде! Арка из натуральных веток создаст неповторимую атмосферу 🌿',
       'likesCount': 28,
       'commentsCount': 8,
       'createdAt': FieldValue.serverTimestamp(),
@@ -436,7 +442,8 @@ Future<void> _addIdeas(FirebaseFirestore firestore) async {
       'authorId': 'user_5',
       'imageUrl': 'https://picsum.photos/400/400?random=23',
       'title': 'Детский квест-праздник',
-      'description': 'Интерактивный день рождения с поиском сокровищ! Дети будут в восторге 🏴‍☠️',
+      'description':
+          'Интерактивный день рождения с поиском сокровищ! Дети будут в восторге 🏴‍☠️',
       'likesCount': 35,
       'commentsCount': 12,
       'createdAt': FieldValue.serverTimestamp(),
@@ -459,7 +466,8 @@ Future<void> _addIdeas(FirebaseFirestore firestore) async {
       'authorId': 'user_1',
       'imageUrl': 'https://picsum.photos/400/400?random=25',
       'title': 'Фотосессия в тумане',
-      'description': 'Мистическая атмосфера для необычных кадров. Туман создает магический эффект 🌫️',
+      'description':
+          'Мистическая атмосфера для необычных кадров. Туман создает магический эффект 🌫️',
       'likesCount': 42,
       'commentsCount': 15,
       'createdAt': FieldValue.serverTimestamp(),
@@ -470,7 +478,8 @@ Future<void> _addIdeas(FirebaseFirestore firestore) async {
       'authorId': 'user_5',
       'imageUrl': 'https://picsum.photos/400/400?random=26',
       'title': 'Пикник на природе',
-      'description': 'Семейный отдых с играми и барбекю. Идеально для теплых дней 🍖',
+      'description':
+          'Семейный отдых с играми и барбекю. Идеально для теплых дней 🍖',
       'likesCount': 24,
       'commentsCount': 7,
       'createdAt': FieldValue.serverTimestamp(),
@@ -481,7 +490,8 @@ Future<void> _addIdeas(FirebaseFirestore firestore) async {
       'authorId': 'user_3',
       'imageUrl': 'https://picsum.photos/400/400?random=27',
       'title': 'Новогодняя магия',
-      'description': 'Волшебная атмосфера с огнями и снегом. Создайте настоящую зимнюю сказку ❄️',
+      'description':
+          'Волшебная атмосфера с огнями и снегом. Создайте настоящую зимнюю сказку ❄️',
       'likesCount': 31,
       'commentsCount': 9,
       'createdAt': FieldValue.serverTimestamp(),
@@ -492,18 +502,18 @@ Future<void> _addIdeas(FirebaseFirestore firestore) async {
       'authorId': 'user_1',
       'imageUrl': 'https://picsum.photos/400/400?random=28',
       'title': 'Студийная портретная съемка',
-      'description': 'Профессиональные портреты в студии. Идеально для деловых фото 📸',
+      'description':
+          'Профессиональные портреты в студии. Идеально для деловых фото 📸',
       'likesCount': 16,
       'commentsCount': 3,
       'createdAt': FieldValue.serverTimestamp(),
       'isTest': true,
     },
   ];
-  
+
   for (final idea in ideas) {
-    await firestore.collection('ideas').doc(idea['id'] as String).set(idea);
+    await firestore.collection('ideas').doc(idea['id']! as String).set(idea);
   }
-  
+
   print('✅ Добавлено ${ideas.length} идей');
 }
-

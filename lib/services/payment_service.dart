@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+
 import '../config/payment_config.dart';
-import '../models/transaction.dart';
 import '../models/premium_profile.dart';
-import '../models/subscription.dart';
 import '../models/promoted_post.dart';
+import '../models/subscription.dart';
+import '../models/transaction.dart';
 
 class PaymentService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -26,7 +27,7 @@ class PaymentService {
     try {
       // Create payment intent
       final paymentIntent = await _createPaymentIntent(amount);
-      
+
       // Confirm payment
       final result = await Stripe.instance.confirmPayment(
         paymentIntentClientSecret: paymentIntent['client_secret'],
@@ -74,7 +75,7 @@ class PaymentService {
   }) async {
     try {
       final paymentIntent = await _createPaymentIntent(amount);
-      
+
       final result = await Stripe.instance.confirmPayment(
         paymentIntentClientSecret: paymentIntent['client_secret'],
         data: const PaymentMethodData(
@@ -121,7 +122,7 @@ class PaymentService {
   }) async {
     try {
       final paymentIntent = await _createPaymentIntent(amount);
-      
+
       final result = await Stripe.instance.confirmPayment(
         paymentIntentClientSecret: paymentIntent['client_secret'],
         data: const PaymentMethodData(
@@ -167,7 +168,7 @@ class PaymentService {
   }) async {
     try {
       final paymentIntent = await _createPaymentIntent(amount);
-      
+
       final result = await Stripe.instance.confirmPayment(
         paymentIntentClientSecret: paymentIntent['client_secret'],
         data: const PaymentMethodData(
@@ -221,9 +222,7 @@ class PaymentService {
         .orderBy('timestamp', descending: true)
         .get();
 
-    return snapshot.docs
-        .map((doc) => Transaction.fromMap(doc.data()))
-        .toList();
+    return snapshot.docs.map((doc) => Transaction.fromMap(doc.data())).toList();
   }
 
   // Get user subscription

@@ -112,7 +112,8 @@ class _SupportTicketsScreenState extends ConsumerState<SupportTicketsScreen> {
 
   Widget _buildTicketsList() => StreamBuilder<List<SupportTicket>>(
         stream: _supportService.getUserTickets(
-            'demo_user_id',), // TODO(developer): Получить из контекста
+          'demo_user_id',
+        ), // TODO(developer): Получить из контекста
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

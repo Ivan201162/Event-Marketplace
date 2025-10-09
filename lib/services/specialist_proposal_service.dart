@@ -15,7 +15,8 @@ class SpecialistProposalService {
   final FCMService _fcmService = FCMService();
 
   /// Создать предложение специалистов
-  Future<SpecialistProposal> createProposal(CreateSpecialistProposal data) async {
+  Future<SpecialistProposal> createProposal(
+      CreateSpecialistProposal data) async {
     if (!data.isValid) {
       throw Exception('Неверные данные: ${data.validationErrors.join(', ')}');
     }
@@ -68,7 +69,8 @@ class SpecialistProposalService {
     );
 
     // Сохранить в Firestore
-    final docRef = await _firestore.collection(_collection).add(proposal.toMap());
+    final docRef =
+        await _firestore.collection(_collection).add(proposal.toMap());
 
     // Обновить ID
     final createdProposal = proposal.copyWith(id: docRef.id);
@@ -85,29 +87,27 @@ class SpecialistProposalService {
   }
 
   /// Получить предложения для клиента
-  Future<List<SpecialistProposal>> getCustomerProposals(String customerId) async {
+  Future<List<SpecialistProposal>> getCustomerProposals(
+      String customerId) async {
     final snapshot = await _firestore
         .collection(_collection)
         .where('customerId', isEqualTo: customerId)
         .orderBy('createdAt', descending: true)
         .get();
 
-    return snapshot.docs
-        .map(SpecialistProposal.fromDocument)
-        .toList();
+    return snapshot.docs.map(SpecialistProposal.fromDocument).toList();
   }
 
   /// Получить предложения от организатора
-  Future<List<SpecialistProposal>> getOrganizerProposals(String organizerId) async {
+  Future<List<SpecialistProposal>> getOrganizerProposals(
+      String organizerId) async {
     final snapshot = await _firestore
         .collection(_collection)
         .where('organizerId', isEqualTo: organizerId)
         .orderBy('createdAt', descending: true)
         .get();
 
-    return snapshot.docs
-        .map(SpecialistProposal.fromDocument)
-        .toList();
+    return snapshot.docs.map(SpecialistProposal.fromDocument).toList();
   }
 
   /// Получить предложение по ID
@@ -209,7 +209,8 @@ class SpecialistProposalService {
   }
 
   /// Получить активные предложения для клиента
-  Future<List<SpecialistProposal>> getActiveCustomerProposals(String customerId) async {
+  Future<List<SpecialistProposal>> getActiveCustomerProposals(
+      String customerId) async {
     final snapshot = await _firestore
         .collection(_collection)
         .where('customerId', isEqualTo: customerId)
@@ -218,9 +219,7 @@ class SpecialistProposalService {
         .orderBy('createdAt', descending: true)
         .get();
 
-    return snapshot.docs
-        .map(SpecialistProposal.fromDocument)
-        .toList();
+    return snapshot.docs.map(SpecialistProposal.fromDocument).toList();
   }
 
   /// Получить статистику предложений организатора
@@ -238,7 +237,7 @@ class SpecialistProposalService {
     for (final doc in snapshot.docs) {
       final data = doc.data();
       total++;
-      
+
       if (data['isAccepted'] == true) {
         accepted++;
       } else if (data['isRejected'] == true) {
@@ -257,22 +256,27 @@ class SpecialistProposalService {
   }
 
   /// Подписаться на изменения предложений для клиента
-  Stream<List<SpecialistProposal>> watchCustomerProposals(String customerId) => _firestore
-        .collection(_collection)
-        .where('customerId', isEqualTo: customerId)
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map(SpecialistProposal.fromDocument)
-            .toList(),);
+  Stream<List<SpecialistProposal>> watchCustomerProposals(String customerId) =>
+      _firestore
+          .collection(_collection)
+          .where('customerId', isEqualTo: customerId)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map(
+            (snapshot) =>
+                snapshot.docs.map(SpecialistProposal.fromDocument).toList(),
+          );
 
   /// Подписаться на изменения предложений организатора
-  Stream<List<SpecialistProposal>> watchOrganizerProposals(String organizerId) => _firestore
-        .collection(_collection)
-        .where('organizerId', isEqualTo: organizerId)
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map(SpecialistProposal.fromDocument)
-            .toList(),);
+  Stream<List<SpecialistProposal>> watchOrganizerProposals(
+          String organizerId) =>
+      _firestore
+          .collection(_collection)
+          .where('organizerId', isEqualTo: organizerId)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map(
+            (snapshot) =>
+                snapshot.docs.map(SpecialistProposal.fromDocument).toList(),
+          );
 }

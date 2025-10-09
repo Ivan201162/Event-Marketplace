@@ -7,7 +7,8 @@ class EnhancedOrdersService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Получить заявки пользователя
-  Future<List<EnhancedOrder>> getUserOrders(String userId, {OrderStatus? status}) async {
+  Future<List<EnhancedOrder>> getUserOrders(String userId,
+      {OrderStatus? status}) async {
     try {
       Query query = _firestore
           .collection('orders')
@@ -17,15 +18,15 @@ class EnhancedOrdersService {
         query = query.where('status', isEqualTo: status.value);
       }
 
-      final snapshot = await query
-          .orderBy('createdAt', descending: true)
-          .get();
+      final snapshot = await query.orderBy('createdAt', descending: true).get();
 
       return snapshot.docs
-          .map((doc) => EnhancedOrder.fromMap({
-                'id': doc.id,
-                ...(doc.data() as Map<String, dynamic>),
-              }),)
+          .map(
+            (doc) => EnhancedOrder.fromMap({
+              'id': doc.id,
+              ...(doc.data()! as Map<String, dynamic>),
+            }),
+          )
           .toList();
     } on Exception catch (e) {
       debugPrint('Ошибка получения заявок пользователя: $e');
@@ -34,7 +35,8 @@ class EnhancedOrdersService {
   }
 
   /// Получить заявки специалиста
-  Future<List<EnhancedOrder>> getSpecialistOrders(String specialistId, {OrderStatus? status}) async {
+  Future<List<EnhancedOrder>> getSpecialistOrders(String specialistId,
+      {OrderStatus? status}) async {
     try {
       Query query = _firestore
           .collection('orders')
@@ -44,15 +46,15 @@ class EnhancedOrdersService {
         query = query.where('status', isEqualTo: status.value);
       }
 
-      final snapshot = await query
-          .orderBy('createdAt', descending: true)
-          .get();
+      final snapshot = await query.orderBy('createdAt', descending: true).get();
 
       return snapshot.docs
-          .map((doc) => EnhancedOrder.fromMap({
-                'id': doc.id,
-                ...(doc.data() as Map<String, dynamic>),
-              }),)
+          .map(
+            (doc) => EnhancedOrder.fromMap({
+              'id': doc.id,
+              ...(doc.data()! as Map<String, dynamic>),
+            }),
+          )
           .toList();
     } on Exception catch (e) {
       debugPrint('Ошибка получения заявок специалиста: $e');
@@ -64,7 +66,7 @@ class EnhancedOrdersService {
   Future<String> createOrder(EnhancedOrder order) async {
     try {
       final docRef = await _firestore.collection('orders').add(order.toMap());
-      
+
       // Добавить событие в таймлайн
       await _addTimelineEvent(
         docRef.id,
@@ -88,10 +90,7 @@ class EnhancedOrdersService {
   /// Обновить заявку
   Future<void> updateOrder(String orderId, Map<String, dynamic> updates) async {
     try {
-      await _firestore
-          .collection('orders')
-          .doc(orderId)
-          .update({
+      await _firestore.collection('orders').doc(orderId).update({
         ...updates,
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -104,10 +103,7 @@ class EnhancedOrdersService {
   /// Принять заявку
   Future<void> acceptOrder(String orderId, String specialistId) async {
     try {
-      await _firestore
-          .collection('orders')
-          .doc(orderId)
-          .update({
+      await _firestore.collection('orders').doc(orderId).update({
         'status': OrderStatus.accepted.value,
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -133,10 +129,7 @@ class EnhancedOrdersService {
   /// Начать работу над заявкой
   Future<void> startOrder(String orderId, String specialistId) async {
     try {
-      await _firestore
-          .collection('orders')
-          .doc(orderId)
-          .update({
+      await _firestore.collection('orders').doc(orderId).update({
         'status': OrderStatus.inProgress.value,
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -162,10 +155,7 @@ class EnhancedOrdersService {
   /// Завершить заявку
   Future<void> completeOrder(String orderId, String specialistId) async {
     try {
-      await _firestore
-          .collection('orders')
-          .doc(orderId)
-          .update({
+      await _firestore.collection('orders').doc(orderId).update({
         'status': OrderStatus.completed.value,
         'completedAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
@@ -192,10 +182,7 @@ class EnhancedOrdersService {
   /// Отменить заявку
   Future<void> cancelOrder(String orderId, String userId, String reason) async {
     try {
-      await _firestore
-          .collection('orders')
-          .doc(orderId)
-          .update({
+      await _firestore.collection('orders').doc(orderId).update({
         'status': OrderStatus.cancelled.value,
         'cancelledAt': FieldValue.serverTimestamp(),
         'cancellationReason': reason,
@@ -223,10 +210,7 @@ class EnhancedOrdersService {
   /// Добавить комментарий к заявке
   Future<void> addComment(String orderId, OrderComment comment) async {
     try {
-      await _firestore
-          .collection('orders')
-          .doc(orderId)
-          .update({
+      await _firestore.collection('orders').doc(orderId).update({
         'comments': FieldValue.arrayUnion([comment.toMap()]),
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -238,7 +222,7 @@ class EnhancedOrdersService {
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           type: OrderTimelineEventType.comment,
           title: 'Добавлен комментарий',
-          description: comment.text.length > 50 
+          description: comment.text.length > 50
               ? '${comment.text.substring(0, 50)}...'
               : comment.text,
           createdAt: DateTime.now(),
@@ -254,10 +238,7 @@ class EnhancedOrdersService {
   /// Добавить вложение к заявке
   Future<void> addAttachment(String orderId, OrderAttachment attachment) async {
     try {
-      await _firestore
-          .collection('orders')
-          .doc(orderId)
-          .update({
+      await _firestore.collection('orders').doc(orderId).update({
         'attachments': FieldValue.arrayUnion([attachment.toMap()]),
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -268,12 +249,10 @@ class EnhancedOrdersService {
   }
 
   /// Добавить событие в таймлайн
-  Future<void> _addTimelineEvent(String orderId, OrderTimelineEvent event) async {
+  Future<void> _addTimelineEvent(
+      String orderId, OrderTimelineEvent event) async {
     try {
-      await _firestore
-          .collection('orders')
-          .doc(orderId)
-          .update({
+      await _firestore.collection('orders').doc(orderId).update({
         'timeline': FieldValue.arrayUnion([event.toMap()]),
       });
     } on Exception catch (e) {
@@ -284,15 +263,15 @@ class EnhancedOrdersService {
   /// Получить шаблоны заявок
   Future<List<Map<String, dynamic>>> getOrderTemplates() async {
     try {
-      final snapshot = await _firestore
-          .collection('orderTemplates')
-          .get();
+      final snapshot = await _firestore.collection('orderTemplates').get();
 
       return snapshot.docs
-          .map((doc) => {
-                'id': doc.id,
-                ...doc.data(),
-              })
+          .map(
+            (doc) => {
+              'id': doc.id,
+              ...doc.data(),
+            },
+          )
           .toList();
     } on Exception catch (e) {
       debugPrint('Ошибка получения шаблонов заявок: $e');
@@ -308,33 +287,39 @@ class EnhancedOrdersService {
     Map<String, dynamic> customizations,
   ) async {
     try {
-      final templateDoc = await _firestore
-          .collection('orderTemplates')
-          .doc(templateId)
-          .get();
+      final templateDoc =
+          await _firestore.collection('orderTemplates').doc(templateId).get();
 
       if (!templateDoc.exists) {
         throw Exception('Шаблон не найден');
       }
 
       final template = templateDoc.data()!;
-      
+
       final order = EnhancedOrder(
         id: '', // Будет установлен при создании
         customerId: customerId,
         specialistId: specialistId,
-        title: (customizations['title'] as String?) ?? (template['title'] as String),
-        description: (customizations['description'] as String?) ?? (template['description'] as String),
+        title: (customizations['title'] as String?) ??
+            (template['title'] as String),
+        description: (customizations['description'] as String?) ??
+            (template['description'] as String),
         status: OrderStatus.pending,
         createdAt: DateTime.now(),
-        budget: (customizations['budget'] as double?) ?? (template['budget'] as double?),
+        budget: (customizations['budget'] as double?) ??
+            (template['budget'] as double?),
         deadline: customizations['deadline'] != null
-            ? DateTime.fromMillisecondsSinceEpoch(customizations['deadline'] as int)
+            ? DateTime.fromMillisecondsSinceEpoch(
+                customizations['deadline'] as int)
             : null,
-        location: (customizations['location'] as String?) ?? (template['location'] as String?),
-        category: (customizations['category'] as String?) ?? (template['category'] as String?),
+        location: (customizations['location'] as String?) ??
+            (template['location'] as String?),
+        category: (customizations['category'] as String?) ??
+            (template['category'] as String?),
         priority: OrderPriority.fromString(
-          (customizations['priority'] as String?) ?? (template['priority'] as String?) ?? 'medium',
+          (customizations['priority'] as String?) ??
+              (template['priority'] as String?) ??
+              'medium',
         ),
       );
 

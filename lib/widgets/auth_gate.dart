@@ -7,7 +7,8 @@ import '../data/repositories/user_repository.dart';
 import '../screens/main_navigation_screen.dart';
 import '../screens/modern_auth_screen.dart';
 
-final firebaseUserProvider = StreamProvider<User?>((ref) => FirebaseAuth.instance.authStateChanges());
+final firebaseUserProvider =
+    StreamProvider<User?>((ref) => FirebaseAuth.instance.authStateChanges());
 
 final currentUserProvider = StreamProvider<UpUser?>((ref) {
   final fbUserAsync = ref.watch(firebaseUserProvider);
@@ -32,10 +33,13 @@ class AuthGate extends ConsumerWidget {
     final userAsync = ref.watch(currentUserProvider);
 
     return userAsync.when(
-      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error: (e, _) => Scaffold(body: Center(child: Text('Ошибка авторизации: $e'))),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (e, _) =>
+          Scaffold(body: Center(child: Text('Ошибка авторизации: $e'))),
       data: (user) {
-        if (user == null) return const ModernAuthScreen(); // <- всегда показываем вход
+        if (user == null)
+          return const ModernAuthScreen(); // <- всегда показываем вход
         return const MainNavigationScreen(); // BottomNavigation с Главная/Лента/Заявки/Чаты/Идеи
       },
     );

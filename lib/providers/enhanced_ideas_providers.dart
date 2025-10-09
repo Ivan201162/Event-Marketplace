@@ -1,53 +1,59 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../services/enhanced_ideas_service.dart';
 import '../models/enhanced_idea.dart';
+import '../services/enhanced_ideas_service.dart';
 
 /// Провайдер сервиса идей
-final enhancedIdeasServiceProvider = Provider<EnhancedIdeasService>((ref) {
-  return EnhancedIdeasService();
-});
+final enhancedIdeasServiceProvider =
+    Provider<EnhancedIdeasService>((ref) => EnhancedIdeasService());
 
 /// Провайдер всех идей
 final ideasProvider = FutureProvider<List<EnhancedIdea>>((ref) async {
   final service = ref.read(enhancedIdeasServiceProvider);
-  return await service.getIdeas();
+  return service.getIdeas();
 });
 
 /// Провайдер идей по типу
-final ideasByTypeProvider = FutureProvider.family<List<EnhancedIdea>, IdeaType>((ref, type) async {
+final ideasByTypeProvider =
+    FutureProvider.family<List<EnhancedIdea>, IdeaType>((ref, type) async {
   final service = ref.read(enhancedIdeasServiceProvider);
-  return await service.getIdeas(type: type);
+  return service.getIdeas(type: type);
 });
 
 /// Провайдер идей пользователя
-final userIdeasProvider = FutureProvider.family<List<EnhancedIdea>, String>((ref, userId) async {
+final userIdeasProvider =
+    FutureProvider.family<List<EnhancedIdea>, String>((ref, userId) async {
   final service = ref.read(enhancedIdeasServiceProvider);
-  return await service.getUserIdeas(userId: userId);
+  return service.getUserIdeas(userId: userId);
 });
 
 /// Провайдер идеи по ID
-final ideaProvider = FutureProvider.family<EnhancedIdea?, String>((ref, ideaId) async {
+final ideaProvider =
+    FutureProvider.family<EnhancedIdea?, String>((ref, ideaId) async {
   final service = ref.read(enhancedIdeasServiceProvider);
-  return await service.getIdeaById(ideaId);
+  return service.getIdeaById(ideaId);
 });
 
 /// Провайдер комментариев идеи
-final ideaCommentsProvider = FutureProvider.family<List<IdeaComment>, String>((ref, ideaId) async {
+final ideaCommentsProvider =
+    FutureProvider.family<List<IdeaComment>, String>((ref, ideaId) async {
   final service = ref.read(enhancedIdeasServiceProvider);
-  return await service.getIdeaComments(ideaId: ideaId);
+  return service.getIdeaComments(ideaId: ideaId);
 });
 
 /// Провайдер сохранённых идей
-final savedIdeasProvider = FutureProvider.family<List<EnhancedIdea>, String>((ref, userId) async {
+final savedIdeasProvider =
+    FutureProvider.family<List<EnhancedIdea>, String>((ref, userId) async {
   final service = ref.read(enhancedIdeasServiceProvider);
-  return await service.getSavedIdeas(userId: userId);
+  return service.getSavedIdeas(userId: userId);
 });
 
 /// Провайдер поиска идей
-final searchIdeasProvider = FutureProvider.family<List<EnhancedIdea>, Map<String, dynamic>>((ref, params) async {
+final searchIdeasProvider =
+    FutureProvider.family<List<EnhancedIdea>, Map<String, dynamic>>(
+        (ref, params) async {
   final service = ref.read(enhancedIdeasServiceProvider);
-  return await service.searchIdeas(
+  return service.searchIdeas(
     query: params['query'] as String,
     tags: params['tags'] as List<String>?,
     category: params['category'] as String?,
@@ -59,21 +65,23 @@ final searchIdeasProvider = FutureProvider.family<List<EnhancedIdea>, Map<String
 });
 
 /// Провайдер популярных идей
-final popularIdeasProvider = FutureProvider.family<List<EnhancedIdea>, IdeaType?>((ref, type) async {
+final popularIdeasProvider =
+    FutureProvider.family<List<EnhancedIdea>, IdeaType?>((ref, type) async {
   final service = ref.read(enhancedIdeasServiceProvider);
-  return await service.getPopularIdeas(type: type);
+  return service.getPopularIdeas(type: type);
 });
 
 /// Провайдер коллекций пользователя
-final userCollectionsProvider = FutureProvider.family<List<IdeaCollection>, String>((ref, userId) async {
+final userCollectionsProvider =
+    FutureProvider.family<List<IdeaCollection>, String>((ref, userId) async {
   final service = ref.read(enhancedIdeasServiceProvider);
-  return await service.getUserCollections(userId: userId);
+  return service.getUserCollections(userId: userId);
 });
 
 /// Провайдер состояния создания идеи
-final createIdeaStateProvider = StateNotifierProvider<CreateIdeaStateNotifier, CreateIdeaState>((ref) {
-  return CreateIdeaStateNotifier(ref.read(enhancedIdeasServiceProvider));
-});
+final createIdeaStateProvider =
+    StateNotifierProvider<CreateIdeaStateNotifier, CreateIdeaState>((ref) =>
+        CreateIdeaStateNotifier(ref.read(enhancedIdeasServiceProvider)));
 
 /// Состояние создания идеи
 class CreateIdeaState {
@@ -91,13 +99,12 @@ class CreateIdeaState {
     bool? isLoading,
     String? error,
     bool? success,
-  }) {
-    return CreateIdeaState(
-      isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
-      success: success ?? this.success,
-    );
-  }
+  }) =>
+      CreateIdeaState(
+        isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error,
+        success: success ?? this.success,
+      );
 }
 
 /// Нотификатор состояния создания идеи
@@ -118,7 +125,7 @@ class CreateIdeaStateNotifier extends StateNotifier<CreateIdeaState> {
     String? location,
     bool isPublic = true,
   }) async {
-    state = state.copyWith(isLoading: true, error: null, success: false);
+    state = state.copyWith(isLoading: true, success: false);
 
     try {
       await _service.createIdea(
@@ -149,12 +156,13 @@ class CreateIdeaStateNotifier extends StateNotifier<CreateIdeaState> {
 }
 
 /// Провайдер состояния лайков идеи
-final ideaLikeStateProvider = StateNotifierProvider.family<IdeaLikeStateNotifier, IdeaLikeState, String>((ref, ideaId) {
-  return IdeaLikeStateNotifier(
+final ideaLikeStateProvider =
+    StateNotifierProvider.family<IdeaLikeStateNotifier, IdeaLikeState, String>(
+  (ref, ideaId) => IdeaLikeStateNotifier(
     ref.read(enhancedIdeasServiceProvider),
     ideaId,
-  );
-});
+  ),
+);
 
 /// Состояние лайка идеи
 class IdeaLikeState {
@@ -172,18 +180,18 @@ class IdeaLikeState {
     bool? isLiked,
     int? likesCount,
     bool? isLoading,
-  }) {
-    return IdeaLikeState(
-      isLiked: isLiked ?? this.isLiked,
-      likesCount: likesCount ?? this.likesCount,
-      isLoading: isLoading ?? this.isLoading,
-    );
-  }
+  }) =>
+      IdeaLikeState(
+        isLiked: isLiked ?? this.isLiked,
+        likesCount: likesCount ?? this.likesCount,
+        isLoading: isLoading ?? this.isLoading,
+      );
 }
 
 /// Нотификатор состояния лайка идеи
 class IdeaLikeStateNotifier extends StateNotifier<IdeaLikeState> {
-  IdeaLikeStateNotifier(this._service, this._ideaId) : super(const IdeaLikeState());
+  IdeaLikeStateNotifier(this._service, this._ideaId)
+      : super(const IdeaLikeState());
 
   final EnhancedIdeasService _service;
   final String _ideaId;
@@ -222,12 +230,13 @@ class IdeaLikeStateNotifier extends StateNotifier<IdeaLikeState> {
 }
 
 /// Провайдер состояния сохранения идеи
-final ideaSaveStateProvider = StateNotifierProvider.family<IdeaSaveStateNotifier, IdeaSaveState, String>((ref, ideaId) {
-  return IdeaSaveStateNotifier(
+final ideaSaveStateProvider =
+    StateNotifierProvider.family<IdeaSaveStateNotifier, IdeaSaveState, String>(
+  (ref, ideaId) => IdeaSaveStateNotifier(
     ref.read(enhancedIdeasServiceProvider),
     ideaId,
-  );
-});
+  ),
+);
 
 /// Состояние сохранения идеи
 class IdeaSaveState {
@@ -245,18 +254,18 @@ class IdeaSaveState {
     bool? isSaved,
     int? savesCount,
     bool? isLoading,
-  }) {
-    return IdeaSaveState(
-      isSaved: isSaved ?? this.isSaved,
-      savesCount: savesCount ?? this.savesCount,
-      isLoading: isLoading ?? this.isLoading,
-    );
-  }
+  }) =>
+      IdeaSaveState(
+        isSaved: isSaved ?? this.isSaved,
+        savesCount: savesCount ?? this.savesCount,
+        isLoading: isLoading ?? this.isLoading,
+      );
 }
 
 /// Нотификатор состояния сохранения идеи
 class IdeaSaveStateNotifier extends StateNotifier<IdeaSaveState> {
-  IdeaSaveStateNotifier(this._service, this._ideaId) : super(const IdeaSaveState());
+  IdeaSaveStateNotifier(this._service, this._ideaId)
+      : super(const IdeaSaveState());
 
   final EnhancedIdeasService _service;
   final String _ideaId;
@@ -293,4 +302,3 @@ class IdeaSaveStateNotifier extends StateNotifier<IdeaSaveState> {
     );
   }
 }
-

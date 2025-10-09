@@ -39,7 +39,8 @@ class AuthService {
     String password,
     String displayName,
   ) async {
-    await _firebaseAuth.signUpWithEmail(email, password, displayName: displayName);
+    await _firebaseAuth.signUpWithEmail(email, password,
+        displayName: displayName);
   }
 
   /// Отправка SMS для входа по телефону

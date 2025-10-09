@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель поста в ленте
 class FeedPost {
-
   const FeedPost({
     required this.id,
     required this.authorId,
@@ -54,19 +53,19 @@ class FeedPost {
 
   /// Преобразование в Map для Firestore
   Map<String, dynamic> toFirestore() => {
-      'authorId': authorId,
-      'authorName': authorName,
-      'authorAvatar': authorAvatar,
-      'description': description,
-      'imageUrl': imageUrl,
-      'location': location,
-      'likeCount': likeCount,
-      'commentCount': commentCount,
-      'isLiked': isLiked,
-      'isSaved': isSaved,
-      'isFollowing': isFollowing,
-      'createdAt': Timestamp.fromDate(createdAt),
-    };
+        'authorId': authorId,
+        'authorName': authorName,
+        'authorAvatar': authorAvatar,
+        'description': description,
+        'imageUrl': imageUrl,
+        'location': location,
+        'likeCount': likeCount,
+        'commentCount': commentCount,
+        'isLiked': isLiked,
+        'isSaved': isSaved,
+        'isFollowing': isFollowing,
+        'createdAt': Timestamp.fromDate(createdAt),
+      };
 
   /// Копирование с изменениями
   FeedPost copyWith({
@@ -83,19 +82,20 @@ class FeedPost {
     bool? isSaved,
     bool? isFollowing,
     DateTime? createdAt,
-  }) => FeedPost(
-      id: id ?? this.id,
-      authorId: authorId ?? this.authorId,
-      authorName: authorName ?? this.authorName,
-      authorAvatar: authorAvatar ?? this.authorAvatar,
-      description: description ?? this.description,
-      imageUrl: imageUrl ?? this.imageUrl,
-      location: location ?? this.location,
-      likeCount: likeCount ?? this.likeCount,
-      commentCount: commentCount ?? this.commentCount,
-      isLiked: isLiked ?? this.isLiked,
-      isSaved: isSaved ?? this.isSaved,
-      isFollowing: isFollowing ?? this.isFollowing,
-      createdAt: createdAt ?? this.createdAt,
-    );
+  }) =>
+      FeedPost(
+        id: id ?? this.id,
+        authorId: authorId ?? this.authorId,
+        authorName: authorName ?? this.authorName,
+        authorAvatar: authorAvatar ?? this.authorAvatar,
+        description: description ?? this.description,
+        imageUrl: imageUrl ?? this.imageUrl,
+        location: location ?? this.location,
+        likeCount: likeCount ?? this.likeCount,
+        commentCount: commentCount ?? this.commentCount,
+        isLiked: isLiked ?? this.isLiked,
+        isSaved: isSaved ?? this.isSaved,
+        isFollowing: isFollowing ?? this.isFollowing,
+        createdAt: createdAt ?? this.createdAt,
+      );
 }

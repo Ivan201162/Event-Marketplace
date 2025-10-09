@@ -104,10 +104,8 @@ class AnalyticsChartWidget extends StatelessWidget {
               },
             ),
           ),
-          topTitles:
-              const AxisTitles(),
-          rightTitles:
-              const AxisTitles(),
+          topTitles: const AxisTitles(),
+          rightTitles: const AxisTitles(),
         ),
         borderData: FlBorderData(show: true),
         lineBarsData: [
@@ -166,10 +164,8 @@ class AnalyticsChartWidget extends StatelessWidget {
               },
             ),
           ),
-          topTitles:
-              const AxisTitles(),
-          rightTitles:
-              const AxisTitles(),
+          topTitles: const AxisTitles(),
+          rightTitles: const AxisTitles(),
         ),
         borderData: FlBorderData(show: true),
         barGroups: data

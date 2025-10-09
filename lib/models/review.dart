@@ -36,39 +36,40 @@ class Review {
 
   /// Создать отзыв из Map
   factory Review.fromMap(Map<String, dynamic> data) => Review(
-      id: data['id'] ?? '',
-      specialistId: data['specialistId'] ?? '',
-      customerId: data['customerId'] ?? '',
-      customerName: data['customerName'] ?? '',
-      rating: data['rating'] as double? ?? 0.0,
-      text: data['text'] ?? '',
-      serviceTags: List<String>.from(data['serviceTags'] ?? []),
-      date: data['date'] != null
-          ? (data['date'] is Timestamp
-              ? (data['date'] as Timestamp).toDate()
-              : DateTime.parse(data['date'].toString()))
-          : DateTime.now(),
-      photos: List<String>.from(data['photos'] ?? []),
-      likes: data['likes'] as int? ?? 0,
-      responses: (data['responses'] as List<dynamic>?)
-          ?.map((response) => ReviewResponse.fromMap(response))
-          .toList() ?? [],
-      bookingId: data['bookingId'] as String?,
-      eventTitle: data['eventTitle'] as String?,
-      editedAt: data['editedAt'] != null
-          ? (data['editedAt'] is Timestamp
-              ? (data['editedAt'] as Timestamp).toDate()
-              : DateTime.parse(data['editedAt'].toString()))
-          : null,
-      isEdited: data['isEdited'] as bool? ?? false,
-      isDeleted: data['isDeleted'] as bool? ?? false,
-      customerAvatar: data['customerAvatar'] as String?,
-      specialistName: data['specialistName'] as String?,
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-      reportCount: data['reportCount'] as int? ?? 0,
-      isReported: data['isReported'] as bool? ?? false,
-      isVerified: data['isVerified'] as bool? ?? false,
-    );
+        id: data['id'] ?? '',
+        specialistId: data['specialistId'] ?? '',
+        customerId: data['customerId'] ?? '',
+        customerName: data['customerName'] ?? '',
+        rating: data['rating'] as double? ?? 0.0,
+        text: data['text'] ?? '',
+        serviceTags: List<String>.from(data['serviceTags'] ?? []),
+        date: data['date'] != null
+            ? (data['date'] is Timestamp
+                ? (data['date'] as Timestamp).toDate()
+                : DateTime.parse(data['date'].toString()))
+            : DateTime.now(),
+        photos: List<String>.from(data['photos'] ?? []),
+        likes: data['likes'] as int? ?? 0,
+        responses: (data['responses'] as List<dynamic>?)
+                ?.map((response) => ReviewResponse.fromMap(response))
+                .toList() ??
+            [],
+        bookingId: data['bookingId'] as String?,
+        eventTitle: data['eventTitle'] as String?,
+        editedAt: data['editedAt'] != null
+            ? (data['editedAt'] is Timestamp
+                ? (data['editedAt'] as Timestamp).toDate()
+                : DateTime.parse(data['editedAt'].toString()))
+            : null,
+        isEdited: data['isEdited'] as bool? ?? false,
+        isDeleted: data['isDeleted'] as bool? ?? false,
+        customerAvatar: data['customerAvatar'] as String?,
+        specialistName: data['specialistName'] as String?,
+        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+        reportCount: data['reportCount'] as int? ?? 0,
+        isReported: data['isReported'] as bool? ?? false,
+        isVerified: data['isVerified'] as bool? ?? false,
+      );
 
   /// Создать отзыв из документа Firestore
   factory Review.fromDocument(DocumentSnapshot doc) {
@@ -103,8 +104,9 @@ class Review {
       photos: List<String>.from(safeData['photos'] ?? []),
       likes: safeData['likes'] as int? ?? 0,
       responses: (safeData['responses'] as List<dynamic>?)
-          ?.map((response) => ReviewResponse.fromMap(response))
-          .toList() ?? [],
+              ?.map((response) => ReviewResponse.fromMap(response))
+              .toList() ??
+          [],
       bookingId: safeData['bookingId'] as String?,
       eventTitle: safeData['eventTitle'] as String?,
       editedAt: safeData['editedAt'] != null
@@ -320,7 +322,8 @@ class Review {
   bool isValidRating(int rating) => rating >= 1 && rating <= 5;
 
   /// Проверить валидность комментария
-  bool isValidComment(String comment) => comment.isNotEmpty && comment.length >= 10;
+  bool isValidComment(String comment) =>
+      comment.isNotEmpty && comment.length >= 10;
 
   /// Проверить, можно ли пожаловаться на отзыв
   bool canReport() => !isDeleted && !metadata['reported'] == true;
@@ -375,7 +378,6 @@ class ReviewStats {
 
 /// Модель ответа на отзыв
 class ReviewResponse {
-
   const ReviewResponse({
     required this.authorId,
     required this.authorName,
@@ -384,31 +386,30 @@ class ReviewResponse {
   });
 
   factory ReviewResponse.fromMap(Map<String, dynamic> data) => ReviewResponse(
-    authorId: data['authorId'] ?? '',
-    authorName: data['authorName'] ?? '',
-    text: data['text'] ?? '',
-    date: data['date'] != null
-        ? (data['date'] is Timestamp
-            ? (data['date'] as Timestamp).toDate()
-            : DateTime.parse(data['date'].toString()))
-        : DateTime.now(),
-  );
+        authorId: data['authorId'] ?? '',
+        authorName: data['authorName'] ?? '',
+        text: data['text'] ?? '',
+        date: data['date'] != null
+            ? (data['date'] is Timestamp
+                ? (data['date'] as Timestamp).toDate()
+                : DateTime.parse(data['date'].toString()))
+            : DateTime.now(),
+      );
   final String authorId;
   final String authorName;
   final String text;
   final DateTime date;
 
   Map<String, dynamic> toMap() => {
-    'authorId': authorId,
-    'authorName': authorName,
-    'text': text,
-    'date': Timestamp.fromDate(date),
-  };
+        'authorId': authorId,
+        'authorName': authorName,
+        'text': text,
+        'date': Timestamp.fromDate(date),
+      };
 }
 
 /// Модель лайка отзыва
 class ReviewLike {
-
   const ReviewLike({
     required this.userId,
     required this.userName,
@@ -416,28 +417,27 @@ class ReviewLike {
   });
 
   factory ReviewLike.fromMap(Map<String, dynamic> data) => ReviewLike(
-    userId: data['userId'] ?? '',
-    userName: data['userName'] ?? '',
-    date: data['date'] != null
-        ? (data['date'] is Timestamp
-            ? (data['date'] as Timestamp).toDate()
-            : DateTime.parse(data['date'].toString()))
-        : DateTime.now(),
-  );
+        userId: data['userId'] ?? '',
+        userName: data['userName'] ?? '',
+        date: data['date'] != null
+            ? (data['date'] is Timestamp
+                ? (data['date'] as Timestamp).toDate()
+                : DateTime.parse(data['date'].toString()))
+            : DateTime.now(),
+      );
   final String userId;
   final String userName;
   final DateTime date;
 
   Map<String, dynamic> toMap() => {
-    'userId': userId,
-    'userName': userName,
-    'date': Timestamp.fromDate(date),
-  };
+        'userId': userId,
+        'userName': userName,
+        'date': Timestamp.fromDate(date),
+      };
 }
 
 /// Модель жалобы на отзыв
 class ReviewReport {
-
   const ReviewReport({
     required this.id,
     required this.reviewId,
@@ -451,20 +451,20 @@ class ReviewReport {
   });
 
   factory ReviewReport.fromMap(Map<String, dynamic> data) => ReviewReport(
-    id: data['id'] ?? '',
-    reviewId: data['reviewId'] ?? '',
-    reporterId: data['reporterId'] ?? '',
-    reporterName: data['reporterName'] ?? '',
-    reason: data['reason'] ?? '',
-    description: data['description'] as String?,
-    date: data['date'] != null
-        ? (data['date'] is Timestamp
-            ? (data['date'] as Timestamp).toDate()
-            : DateTime.parse(data['date'].toString()))
-        : DateTime.now(),
-    isResolved: data['isResolved'] as bool? ?? false,
-    moderatorNote: data['moderatorNote'] as String?,
-  );
+        id: data['id'] ?? '',
+        reviewId: data['reviewId'] ?? '',
+        reporterId: data['reporterId'] ?? '',
+        reporterName: data['reporterName'] ?? '',
+        reason: data['reason'] ?? '',
+        description: data['description'] as String?,
+        date: data['date'] != null
+            ? (data['date'] is Timestamp
+                ? (data['date'] as Timestamp).toDate()
+                : DateTime.parse(data['date'].toString()))
+            : DateTime.now(),
+        isResolved: data['isResolved'] as bool? ?? false,
+        moderatorNote: data['moderatorNote'] as String?,
+      );
   final String id;
   final String reviewId;
   final String reporterId;
@@ -476,16 +476,16 @@ class ReviewReport {
   final String? moderatorNote;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'reviewId': reviewId,
-    'reporterId': reporterId,
-    'reporterName': reporterName,
-    'reason': reason,
-    'description': description,
-    'date': Timestamp.fromDate(date),
-    'isResolved': isResolved,
-    'moderatorNote': moderatorNote,
-  };
+        'id': id,
+        'reviewId': reviewId,
+        'reporterId': reporterId,
+        'reporterName': reporterName,
+        'reason': reason,
+        'description': description,
+        'date': Timestamp.fromDate(date),
+        'isResolved': isResolved,
+        'moderatorNote': moderatorNote,
+      };
 }
 
 /// Причины жалоб на отзывы
@@ -503,7 +503,6 @@ enum ReviewReportReason {
 
 /// Модель статистики репутации специалиста
 class SpecialistReputation {
-
   const SpecialistReputation({
     required this.specialistId,
     required this.ratingAverage,
@@ -515,23 +514,24 @@ class SpecialistReputation {
     required this.lastUpdated,
   });
 
-  factory SpecialistReputation.fromMap(Map<String, dynamic> data) => SpecialistReputation(
-    specialistId: data['specialistId'] ?? '',
-    ratingAverage: data['ratingAverage'] as double? ?? 0.0,
-    reviewsCount: data['reviewsCount'] as int? ?? 0,
-    positiveReviews: data['positiveReviews'] as int? ?? 0,
-    negativeReviews: data['negativeReviews'] as int? ?? 0,
-    reputationScore: data['reputationScore'] as double? ?? 0.0,
-    status: ReputationStatus.values.firstWhere(
-      (status) => status.value == data['status'],
-      orElse: () => ReputationStatus.needsExperience,
-    ),
-    lastUpdated: data['lastUpdated'] != null
-        ? (data['lastUpdated'] is Timestamp
-            ? (data['lastUpdated'] as Timestamp).toDate()
-            : DateTime.parse(data['lastUpdated'].toString()))
-        : DateTime.now(),
-  );
+  factory SpecialistReputation.fromMap(Map<String, dynamic> data) =>
+      SpecialistReputation(
+        specialistId: data['specialistId'] ?? '',
+        ratingAverage: data['ratingAverage'] as double? ?? 0.0,
+        reviewsCount: data['reviewsCount'] as int? ?? 0,
+        positiveReviews: data['positiveReviews'] as int? ?? 0,
+        negativeReviews: data['negativeReviews'] as int? ?? 0,
+        reputationScore: data['reputationScore'] as double? ?? 0.0,
+        status: ReputationStatus.values.firstWhere(
+          (status) => status.value == data['status'],
+          orElse: () => ReputationStatus.needsExperience,
+        ),
+        lastUpdated: data['lastUpdated'] != null
+            ? (data['lastUpdated'] is Timestamp
+                ? (data['lastUpdated'] as Timestamp).toDate()
+                : DateTime.parse(data['lastUpdated'].toString()))
+            : DateTime.now(),
+      );
   final String specialistId;
   final double ratingAverage;
   final int reviewsCount;
@@ -542,15 +542,15 @@ class SpecialistReputation {
   final DateTime lastUpdated;
 
   Map<String, dynamic> toMap() => {
-    'specialistId': specialistId,
-    'ratingAverage': ratingAverage,
-    'reviewsCount': reviewsCount,
-    'positiveReviews': positiveReviews,
-    'negativeReviews': negativeReviews,
-    'reputationScore': reputationScore,
-    'status': status.value,
-    'lastUpdated': Timestamp.fromDate(lastUpdated),
-  };
+        'specialistId': specialistId,
+        'ratingAverage': ratingAverage,
+        'reviewsCount': reviewsCount,
+        'positiveReviews': positiveReviews,
+        'negativeReviews': negativeReviews,
+        'reputationScore': reputationScore,
+        'status': status.value,
+        'lastUpdated': Timestamp.fromDate(lastUpdated),
+      };
 
   /// Рассчитать репутационный балл
   static double calculateReputationScore(int positive, int negative) {

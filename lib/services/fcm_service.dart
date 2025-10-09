@@ -8,17 +8,19 @@ import 'package:go_router/go_router.dart';
 
 /// Сервис для работы с Firebase Cloud Messaging
 class FCMService {
-  static final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  static final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
-  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  static final FirebaseMessaging _firebaseMessaging =
+      FirebaseMessaging.instance;
+  static final FlutterLocalNotificationsPlugin _localNotifications =
+      FlutterLocalNotificationsPlugin();
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
 
   /// Инициализация FCM
   static Future<void> initialize() async {
     // Настройка локальных уведомлений
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const iosSettings = DarwinInitializationSettings(
-      
-    );
+    const androidSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const iosSettings = DarwinInitializationSettings();
     const initSettings = InitializationSettings(
       android: androidSettings,
       iOS: iosSettings,
@@ -41,9 +43,7 @@ class FCMService {
 
   /// Запрос разрешений на уведомления
   static Future<void> _requestPermissions() async {
-    final settings = await _firebaseMessaging.requestPermission(
-      
-    );
+    final settings = await _firebaseMessaging.requestPermission();
 
     print('Разрешения на уведомления: ${settings.authorizationStatus}');
   }
@@ -70,7 +70,8 @@ class FCMService {
 
   /// Обработка сообщений в foreground
   static Future<void> _handleForegroundMessage(RemoteMessage message) async {
-    print('📬 Получено уведомление в foreground: ${message.notification?.title}');
+    print(
+        '📬 Получено уведомление в foreground: ${message.notification?.title}');
 
     // Сохраняем уведомление в историю
     await _saveNotificationToHistory(message);
@@ -105,7 +106,7 @@ class FCMService {
   /// Обработка нажатий на уведомления
   static void _handleNotificationTap(RemoteMessage message) {
     print('🔔 Нажато на уведомление: ${message.notification?.title}');
-    
+
     final data = message.data;
     if (data.containsKey('type')) {
       _navigateToScreen(data['type'], data);
@@ -115,7 +116,7 @@ class FCMService {
   /// Обработка нажатий на локальные уведомления
   static void _onNotificationTapped(NotificationResponse response) {
     print('🔔 Нажато на локальное уведомление: ${response.payload}');
-    
+
     if (response.payload != null) {
       _navigateToScreenFromPayload(response.payload!);
     }
@@ -124,7 +125,7 @@ class FCMService {
   /// Навигация к экрану на основе типа уведомления
   static void _navigateToScreen(String type, Map<String, dynamic> data) {
     print('Навигация к экрану типа: $type с данными: $data');
-    
+
     final context = navigatorKey.currentContext;
     if (context == null) return;
 
@@ -184,7 +185,7 @@ class FCMService {
           data[keyValue[0]] = keyValue[1];
         }
       }
-      
+
       if (data.containsKey('type')) {
         _navigateToScreen(data['type'], data);
       }
@@ -245,7 +246,7 @@ class FCMService {
       if (fcmToken != null) {
         // TODO: Отправка через Firebase Admin SDK или Cloud Functions
         print('Отправка уведомления пользователю $userId: $title');
-        
+
         // Создаем уведомление в Firestore
         await FirebaseFirestore.instance.collection('notifications').add({
           'userId': userId,
@@ -349,10 +350,10 @@ class FCMService {
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('📬 Получено уведомление в фоне: ${message.notification?.title}');
-  
+
   // Инициализируем Firebase
   await Firebase.initializeApp();
-  
+
   // Сохраняем уведомление в историю
   try {
     final userId = FirebaseAuth.instance.currentUser?.uid;

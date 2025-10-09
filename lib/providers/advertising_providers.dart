@@ -4,12 +4,13 @@ import '../models/advertisement.dart';
 import '../services/advertising_service.dart';
 
 /// Провайдер сервиса рекламы
-final advertisingServiceProvider = Provider<AdvertisingService>((ref) {
-  return AdvertisingService();
-});
+final advertisingServiceProvider =
+    Provider<AdvertisingService>((ref) => AdvertisingService());
 
 /// Провайдер рекламных объявлений
-final advertisementsProvider = FutureProvider.family<List<Advertisement>, AdvertisementFilters>((ref, filters) async {
+final advertisementsProvider =
+    FutureProvider.family<List<Advertisement>, AdvertisementFilters>(
+        (ref, filters) async {
   final service = ref.read(advertisingServiceProvider);
   return service.getAdvertisements(
     status: filters.status,
@@ -20,7 +21,9 @@ final advertisementsProvider = FutureProvider.family<List<Advertisement>, Advert
 });
 
 /// Провайдер рекламы для показа
-final displayAdvertisementsProvider = FutureProvider.family<List<Advertisement>, DisplayAdParams>((ref, params) async {
+final displayAdvertisementsProvider =
+    FutureProvider.family<List<Advertisement>, DisplayAdParams>(
+        (ref, params) async {
   final service = ref.read(advertisingServiceProvider);
   return service.getAdvertisementsForDisplay(
     userId: params.userId,
@@ -30,30 +33,31 @@ final displayAdvertisementsProvider = FutureProvider.family<List<Advertisement>,
 });
 
 /// Провайдер статистики рекламы
-final advertisementStatsProvider = FutureProvider.family<Map<String, dynamic>, String>((ref, adId) async {
+final advertisementStatsProvider =
+    FutureProvider.family<Map<String, dynamic>, String>((ref, adId) async {
   final service = ref.read(advertisingServiceProvider);
   return service.getAdvertisementStats(adId);
 });
 
 /// Провайдер общей статистики рекламы
-final overallAdStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+final overallAdStatsProvider =
+    FutureProvider<Map<String, dynamic>>((ref) async {
   final service = ref.read(advertisingServiceProvider);
   return service.getOverallStats();
 });
 
 /// Параметры для фильтрации рекламы
 class AdvertisementFilters {
-  final AdvertisementStatus? status;
-  final AdvertisementType? type;
-  final String? advertiserId;
-  final int limit;
-
   const AdvertisementFilters({
     this.status,
     this.type,
     this.advertiserId,
     this.limit = 20,
   });
+  final AdvertisementStatus? status;
+  final AdvertisementType? type;
+  final String? advertiserId;
+  final int limit;
 
   @override
   bool operator ==(Object other) =>
@@ -66,20 +70,20 @@ class AdvertisementFilters {
           limit == other.limit;
 
   @override
-  int get hashCode => status.hashCode ^ type.hashCode ^ advertiserId.hashCode ^ limit.hashCode;
+  int get hashCode =>
+      status.hashCode ^ type.hashCode ^ advertiserId.hashCode ^ limit.hashCode;
 }
 
 /// Параметры для получения рекламы для показа
 class DisplayAdParams {
-  final String userId;
-  final String context;
-  final int limit;
-
   const DisplayAdParams({
     required this.userId,
     required this.context,
     this.limit = 3,
   });
+  final String userId;
+  final String context;
+  final int limit;
 
   @override
   bool operator ==(Object other) =>
@@ -95,44 +99,41 @@ class DisplayAdParams {
 }
 
 /// Провайдер для управления состоянием рекламы
-final advertisingStateProvider = StateNotifierProvider<AdvertisingStateNotifier, AdvertisingState>((ref) {
-  return AdvertisingStateNotifier(ref.read(advertisingServiceProvider));
-});
+final advertisingStateProvider =
+    StateNotifierProvider<AdvertisingStateNotifier, AdvertisingState>((ref) =>
+        AdvertisingStateNotifier(ref.read(advertisingServiceProvider)));
 
 /// Состояние рекламы
 class AdvertisingState {
-  final List<Advertisement> advertisements;
-  final bool isLoading;
-  final String? error;
-  final Map<String, dynamic>? stats;
-
   const AdvertisingState({
     this.advertisements = const [],
     this.isLoading = false,
     this.error,
     this.stats,
   });
+  final List<Advertisement> advertisements;
+  final bool isLoading;
+  final String? error;
+  final Map<String, dynamic>? stats;
 
   AdvertisingState copyWith({
     List<Advertisement>? advertisements,
     bool? isLoading,
     String? error,
     Map<String, dynamic>? stats,
-  }) {
-    return AdvertisingState(
-      advertisements: advertisements ?? this.advertisements,
-      isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
-      stats: stats ?? this.stats,
-    );
-  }
+  }) =>
+      AdvertisingState(
+        advertisements: advertisements ?? this.advertisements,
+        isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error,
+        stats: stats ?? this.stats,
+      );
 }
 
 /// Нотификатор состояния рекламы
 class AdvertisingStateNotifier extends StateNotifier<AdvertisingState> {
-  final AdvertisingService _service;
-
   AdvertisingStateNotifier(this._service) : super(const AdvertisingState());
+  final AdvertisingService _service;
 
   /// Создать рекламу
   Future<void> createAdvertisement({
@@ -149,8 +150,8 @@ class AdvertisingStateNotifier extends StateNotifier<AdvertisingState> {
     String? videoUrl,
     Map<String, dynamic>? metadata,
   }) async {
-    state = state.copyWith(isLoading: true, error: null);
-    
+    state = state.copyWith(isLoading: true);
+
     try {
       final advertisement = await _service.createAdvertisement(
         advertiserId: advertiserId,
@@ -166,7 +167,7 @@ class AdvertisingStateNotifier extends StateNotifier<AdvertisingState> {
         videoUrl: videoUrl,
         metadata: metadata,
       );
-      
+
       state = state.copyWith(
         advertisements: [advertisement, ...state.advertisements],
         isLoading: false,
@@ -194,8 +195,8 @@ class AdvertisingStateNotifier extends StateNotifier<AdvertisingState> {
     AdvertisementStatus? status,
     Map<String, dynamic>? metadata,
   }) async {
-    state = state.copyWith(isLoading: true, error: null);
-    
+    state = state.copyWith(isLoading: true);
+
     try {
       await _service.updateAdvertisement(
         adId: adId,
@@ -211,7 +212,7 @@ class AdvertisingStateNotifier extends StateNotifier<AdvertisingState> {
         status: status,
         metadata: metadata,
       );
-      
+
       // Обновить локальное состояние
       final updatedAdvertisements = state.advertisements.map((ad) {
         if (ad.id == adId) {
@@ -231,7 +232,7 @@ class AdvertisingStateNotifier extends StateNotifier<AdvertisingState> {
         }
         return ad;
       }).toList();
-      
+
       state = state.copyWith(
         advertisements: updatedAdvertisements,
         isLoading: false,
@@ -246,13 +247,14 @@ class AdvertisingStateNotifier extends StateNotifier<AdvertisingState> {
 
   /// Удалить рекламу
   Future<void> deleteAdvertisement(String adId) async {
-    state = state.copyWith(isLoading: true, error: null);
-    
+    state = state.copyWith(isLoading: true);
+
     try {
       await _service.deleteAdvertisement(adId);
-      
+
       state = state.copyWith(
-        advertisements: state.advertisements.where((ad) => ad.id != adId).toList(),
+        advertisements:
+            state.advertisements.where((ad) => ad.id != adId).toList(),
         isLoading: false,
       );
     } catch (e) {
@@ -330,7 +332,6 @@ class AdvertisingStateNotifier extends StateNotifier<AdvertisingState> {
 
   /// Очистить ошибку
   void clearError() {
-    state = state.copyWith(error: null);
+    state = state.copyWith();
   }
 }
-

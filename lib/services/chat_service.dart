@@ -399,7 +399,9 @@ class ChatService {
       await _firestore.collection(_chatsCollection).doc(chatId).update({
         'lastMessageContent': message.content,
         'lastMessageType': message.type.name,
-        'lastMessageTime': message.timestamp != null ? Timestamp.fromDate(message.timestamp!) : Timestamp.fromDate(message.createdAt),
+        'lastMessageTime': message.timestamp != null
+            ? Timestamp.fromDate(message.timestamp!)
+            : Timestamp.fromDate(message.createdAt),
         'lastMessageSenderId': message.senderId,
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -607,7 +609,6 @@ class ChatService {
     }
   }
 
-
   /// Создать новый чат
   Future<String> createChat({
     required List<String> participants,
@@ -619,7 +620,8 @@ class ChatService {
       final chat = Chat(
         id: '',
         customerId: participants.first,
-        specialistId: participants.length > 1 ? participants[1] : participants.first,
+        specialistId:
+            participants.length > 1 ? participants[1] : participants.first,
         name: name ?? '',
         participants: participants,
         participantNames: participantNames,
@@ -628,7 +630,8 @@ class ChatService {
         updatedAt: DateTime.now(),
       );
 
-      final docRef = await _firestore.collection(_chatsCollection).add(chat.toMap());
+      final docRef =
+          await _firestore.collection(_chatsCollection).add(chat.toMap());
       return docRef.id;
     } on Exception catch (e) {
       throw Exception('Ошибка создания чата: $e');

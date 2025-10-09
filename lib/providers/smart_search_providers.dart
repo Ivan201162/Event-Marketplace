@@ -2,20 +2,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/smart_search_service.dart';
 
 /// Провайдер сервиса умного поиска
-final smartSearchServiceProvider = Provider<SmartSearchService>((ref) {
-  return SmartSearchService();
-});
+final smartSearchServiceProvider =
+    Provider<SmartSearchService>((ref) => SmartSearchService());
 
 /// Провайдер подсказок поиска
-final searchSuggestionsProvider = FutureProvider.family<List<SearchSuggestion>, String>((ref, query) async {
+final searchSuggestionsProvider =
+    FutureProvider.family<List<SearchSuggestion>, String>((ref, query) async {
   final service = ref.read(smartSearchServiceProvider);
-  return await service.getSearchSuggestions(query);
+  return service.getSearchSuggestions(query);
 });
 
 /// Провайдер результатов поиска специалистов
-final searchResultsProvider = FutureProvider.family<List<Map<String, dynamic>>, SearchParams>((ref, params) async {
+final searchResultsProvider =
+    FutureProvider.family<List<Map<String, dynamic>>, SearchParams>(
+        (ref, params) async {
   final service = ref.read(smartSearchServiceProvider);
-  return await service.searchSpecialists(
+  return service.searchSpecialists(
     query: params.query,
     category: params.category,
     city: params.city,
@@ -28,28 +30,21 @@ final searchResultsProvider = FutureProvider.family<List<Map<String, dynamic>>, 
 });
 
 /// Провайдер популярных специалистов
-final popularSpecialistsProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
+final popularSpecialistsProvider =
+    FutureProvider<List<Map<String, dynamic>>>((ref) async {
   final service = ref.read(smartSearchServiceProvider);
-  return await service.getPopularSpecialists();
+  return service.getPopularSpecialists();
 });
 
 /// Провайдер сохранённых фильтров поиска
-final savedSearchFiltersProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+final savedSearchFiltersProvider =
+    FutureProvider<Map<String, dynamic>>((ref) async {
   final service = ref.read(smartSearchServiceProvider);
-  return await service.loadSearchFilters();
+  return service.loadSearchFilters();
 });
 
 /// Параметры поиска
 class SearchParams {
-  final String? query;
-  final String? category;
-  final String? city;
-  final double? minPrice;
-  final double? maxPrice;
-  final double? minRating;
-  final DateTime? availableDate;
-  final SpecialistSortOption? sortBy;
-
   const SearchParams({
     this.query,
     this.category,
@@ -60,6 +55,14 @@ class SearchParams {
     this.availableDate,
     this.sortBy,
   });
+  final String? query;
+  final String? category;
+  final String? city;
+  final double? minPrice;
+  final double? maxPrice;
+  final double? minRating;
+  final DateTime? availableDate;
+  final SpecialistSortOption? sortBy;
 
   SearchParams copyWith({
     String? query,
@@ -70,18 +73,17 @@ class SearchParams {
     double? minRating,
     DateTime? availableDate,
     SpecialistSortOption? sortBy,
-  }) {
-    return SearchParams(
-      query: query ?? this.query,
-      category: category ?? this.category,
-      city: city ?? this.city,
-      minPrice: minPrice ?? this.minPrice,
-      maxPrice: maxPrice ?? this.maxPrice,
-      minRating: minRating ?? this.minRating,
-      availableDate: availableDate ?? this.availableDate,
-      sortBy: sortBy ?? this.sortBy,
-    );
-  }
+  }) =>
+      SearchParams(
+        query: query ?? this.query,
+        category: category ?? this.category,
+        city: city ?? this.city,
+        minPrice: minPrice ?? this.minPrice,
+        maxPrice: maxPrice ?? this.maxPrice,
+        minRating: minRating ?? this.minRating,
+        availableDate: availableDate ?? this.availableDate,
+        sortBy: sortBy ?? this.sortBy,
+      );
 
   @override
   bool operator ==(Object other) {
@@ -98,16 +100,14 @@ class SearchParams {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      query,
-      category,
-      city,
-      minPrice,
-      maxPrice,
-      minRating,
-      availableDate,
-      sortBy,
-    );
-  }
+  int get hashCode => Object.hash(
+        query,
+        category,
+        city,
+        minPrice,
+        maxPrice,
+        minRating,
+        availableDate,
+        sortBy,
+      );
 }

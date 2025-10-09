@@ -8,23 +8,18 @@ import '../models/enhanced_notification.dart';
 class EnhancedNotificationsService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _localNotifications =
+      FlutterLocalNotificationsPlugin();
 
   /// Инициализация сервиса уведомлений
   Future<void> initialize() async {
     // Инициализация локальных уведомлений
-    const AndroidInitializationSettings initializationSettingsAndroid =
+    const initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
-    
-    const DarwinInitializationSettings initializationSettingsIOS =
-        DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
 
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
+    const initializationSettingsIOS = DarwinInitializationSettings();
+
+    const initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
     );
@@ -45,12 +40,14 @@ class EnhancedNotificationsService {
   Future<void> _requestPermissions() async {
     // Android
     await _localNotifications
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.requestNotificationsPermission();
 
     // iOS
     await _localNotifications
-        .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
           alert: true,
           badge: true,
@@ -58,12 +55,7 @@ class EnhancedNotificationsService {
         );
 
     // Firebase Messaging
-    final settings = await _messaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-      provisional: false,
-    );
+    final settings = await _messaging.requestPermission();
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       print('Уведомления разрешены');
@@ -93,7 +85,7 @@ class EnhancedNotificationsService {
   /// Обработка сообщения в foreground
   void _handleForegroundMessage(RemoteMessage message) {
     print('Получено сообщение в foreground: ${message.messageId}');
-    
+
     // Показать локальное уведомление
     _showLocalNotification(
       title: message.notification?.title ?? 'Новое уведомление',
@@ -114,7 +106,7 @@ class EnhancedNotificationsService {
     required String body,
     String? payload,
   }) async {
-    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+    const androidDetails = AndroidNotificationDetails(
       'event_marketplace',
       'Event Marketplace',
       channelDescription: 'Уведомления Event Marketplace',
@@ -122,13 +114,13 @@ class EnhancedNotificationsService {
       priority: Priority.high,
     );
 
-    const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
+    const iosDetails = DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: true,
       presentSound: true,
     );
 
-    const NotificationDetails details = NotificationDetails(
+    const details = NotificationDetails(
       android: androidDetails,
       iOS: iosDetails,
     );
@@ -164,11 +156,12 @@ class EnhancedNotificationsService {
         query = query.startAfterDocument(lastDocument);
       }
 
-      final QuerySnapshot snapshot = await query.get();
-      final List<EnhancedNotification> notifications = [];
+      final snapshot = await query.get();
+      final notifications = <EnhancedNotification>[];
 
       for (final doc in snapshot.docs) {
-        final notification = EnhancedNotification.fromMap(doc.data() as Map<String, dynamic>);
+        final notification =
+            EnhancedNotification.fromMap(doc.data()! as Map<String, dynamic>);
         notifications.add(notification);
       }
 
@@ -193,10 +186,11 @@ class EnhancedNotificationsService {
           .limit(limit)
           .get();
 
-      final List<EnhancedNotification> notifications = [];
+      final notifications = <EnhancedNotification>[];
 
       for (final doc in snapshot.docs) {
-        final notification = EnhancedNotification.fromMap(doc.data() as Map<String, dynamic>);
+        final notification =
+            EnhancedNotification.fromMap(doc.data()! as Map<String, dynamic>);
         notifications.add(notification);
       }
 
@@ -207,7 +201,8 @@ class EnhancedNotificationsService {
   }
 
   /// Получить уведомление по ID
-  Future<EnhancedNotification?> getNotificationById(String notificationId) async {
+  Future<EnhancedNotification?> getNotificationById(
+      String notificationId) async {
     try {
       final DocumentSnapshot doc = await _firestore
           .collection('notifications')
@@ -215,7 +210,8 @@ class EnhancedNotificationsService {
           .get();
 
       if (doc.exists) {
-        return EnhancedNotification.fromMap(doc.data() as Map<String, dynamic>);
+        return EnhancedNotification.fromMap(
+            doc.data()! as Map<String, dynamic>);
       }
       return null;
     } catch (e) {
@@ -240,10 +236,10 @@ class EnhancedNotificationsService {
     DateTime? expiresAt,
   }) async {
     try {
-      final String notificationId = _firestore.collection('notifications').doc().id;
-      final DateTime now = DateTime.now();
+      final notificationId = _firestore.collection('notifications').doc().id;
+      final now = DateTime.now();
 
-      final EnhancedNotification notification = EnhancedNotification(
+      final notification = EnhancedNotification(
         id: notificationId,
         userId: userId,
         title: title,
@@ -279,13 +275,11 @@ class EnhancedNotificationsService {
   Future<void> _sendPushNotification(EnhancedNotification notification) async {
     try {
       // Получить FCM токен пользователя
-      final userDoc = await _firestore
-          .collection('users')
-          .doc(notification.userId)
-          .get();
+      final userDoc =
+          await _firestore.collection('users').doc(notification.userId).get();
 
       if (userDoc.exists) {
-        final userData = userDoc.data() as Map<String, dynamic>;
+        final userData = userDoc.data()!;
         final fcmToken = userData['fcmToken'] as String?;
 
         if (fcmToken != null) {
@@ -313,10 +307,7 @@ class EnhancedNotificationsService {
   /// Отметить уведомление как прочитанное
   Future<void> markAsRead(String notificationId) async {
     try {
-      await _firestore
-          .collection('notifications')
-          .doc(notificationId)
-          .update({
+      await _firestore.collection('notifications').doc(notificationId).update({
         'isRead': true,
         'readAt': FieldValue.serverTimestamp(),
       });
@@ -334,7 +325,7 @@ class EnhancedNotificationsService {
           .where('isRead', isEqualTo: false)
           .get();
 
-      final WriteBatch batch = _firestore.batch();
+      final batch = _firestore.batch();
 
       for (final doc in snapshot.docs) {
         batch.update(doc.reference, {
@@ -352,10 +343,7 @@ class EnhancedNotificationsService {
   /// Архивировать уведомление
   Future<void> archiveNotification(String notificationId) async {
     try {
-      await _firestore
-          .collection('notifications')
-          .doc(notificationId)
-          .update({
+      await _firestore.collection('notifications').doc(notificationId).update({
         'isArchived': true,
         'archivedAt': FieldValue.serverTimestamp(),
       });
@@ -367,10 +355,7 @@ class EnhancedNotificationsService {
   /// Удалить уведомление
   Future<void> deleteNotification(String notificationId) async {
     try {
-      await _firestore
-          .collection('notifications')
-          .doc(notificationId)
-          .delete();
+      await _firestore.collection('notifications').doc(notificationId).delete();
     } catch (e) {
       throw Exception('Ошибка удаления уведомления: $e');
     }
@@ -384,7 +369,7 @@ class EnhancedNotificationsService {
           .where('userId', isEqualTo: userId)
           .get();
 
-      final WriteBatch batch = _firestore.batch();
+      final batch = _firestore.batch();
 
       for (final doc in snapshot.docs) {
         batch.delete(doc.reference);
@@ -404,14 +389,14 @@ class EnhancedNotificationsService {
           .where('userId', isEqualTo: userId)
           .get();
 
-      int total = 0;
-      int unread = 0;
-      int archived = 0;
-      final Map<NotificationType, int> byType = {};
-      final Map<NotificationPriority, int> byPriority = {};
+      var total = 0;
+      var unread = 0;
+      var archived = 0;
+      final byType = <NotificationType, int>{};
+      final byPriority = <NotificationPriority, int>{};
 
       for (final doc in snapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data()! as Map<String, dynamic>;
         total++;
 
         if (data['isRead'] == false) unread++;
@@ -420,7 +405,8 @@ class EnhancedNotificationsService {
         final type = NotificationType.fromString(data['type'] as String);
         byType[type] = (byType[type] ?? 0) + 1;
 
-        final priority = NotificationPriority.fromString(data['priority'] as String? ?? 'normal');
+        final priority = NotificationPriority.fromString(
+            data['priority'] as String? ?? 'normal');
         byPriority[priority] = (byPriority[priority] ?? 0) + 1;
       }
 
@@ -466,10 +452,7 @@ class EnhancedNotificationsService {
   /// Сохранить FCM токен пользователя
   Future<void> saveFCMToken(String userId, String token) async {
     try {
-      await _firestore
-          .collection('users')
-          .doc(userId)
-          .update({
+      await _firestore.collection('users').doc(userId).update({
         'fcmToken': token,
         'lastTokenUpdate': FieldValue.serverTimestamp(),
       });
@@ -484,4 +467,3 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('Обработка сообщения в фоне: ${message.messageId}');
   // TODO: Обработка сообщения в фоне
 }
-

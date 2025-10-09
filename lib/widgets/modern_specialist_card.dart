@@ -62,7 +62,8 @@ class ModernSpecialistCard extends ConsumerWidget {
         children: [
           CircleAvatar(
             radius: isCompact ? 25 : 32,
-            backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+            backgroundColor:
+                Theme.of(context).primaryColor.withValues(alpha: 0.1),
             backgroundImage: specialist.imageUrlValue != null
                 ? NetworkImage(specialist.imageUrlValue!)
                 : null,
@@ -111,7 +112,8 @@ class ModernSpecialistCard extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: isCompact ? 16 : 18,
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
+                    color: Theme.of(context).textTheme.bodyLarge?.color ??
+                        Colors.black,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -124,21 +126,27 @@ class ModernSpecialistCard extends ConsumerWidget {
             specialist.category.displayName ?? 'Категория',
             style: TextStyle(
               fontSize: isCompact ? 12 : 14,
-              color: Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey,
+              color:
+                  Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey,
             ),
           ),
           const SizedBox(height: 4),
           Row(
             children: [
-              Icon(Icons.location_on,
-                  size: 14, color: Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey,),
+              Icon(
+                Icons.location_on,
+                size: 14,
+                color: Theme.of(context).textTheme.bodyMedium?.color ??
+                    Colors.grey,
+              ),
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
                   specialist.city ?? 'Город не указан',
                   style: TextStyle(
                     fontSize: isCompact ? 12 : 14,
-                    color: Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey,
+                    color: Theme.of(context).textTheme.bodyMedium?.color ??
+                        Colors.grey,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

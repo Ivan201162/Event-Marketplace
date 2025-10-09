@@ -273,7 +273,8 @@ final subscriptionStatsProvider =
 /// Провайдер для управления состоянием создания поста
 final createPostStateProvider =
     StateNotifierProvider<CreatePostNotifier, CreatePostState>(
-        (ref) => CreatePostNotifier(),);
+  (ref) => CreatePostNotifier(),
+);
 
 /// Состояние создания поста
 class CreatePostState {

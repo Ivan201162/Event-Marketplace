@@ -9,7 +9,8 @@ class CreateBookingScreen extends ConsumerStatefulWidget {
   const CreateBookingScreen({super.key});
 
   @override
-  ConsumerState<CreateBookingScreen> createState() => _CreateBookingScreenState();
+  ConsumerState<CreateBookingScreen> createState() =>
+      _CreateBookingScreenState();
 }
 
 class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
@@ -30,9 +31,21 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
   bool _isLoading = false;
 
   final List<Map<String, String>> _specialists = [
-    {'id': 'specialist1', 'name': 'Александр Иванов', 'category': 'Свадьбы и корпоративы'},
-    {'id': 'specialist2', 'name': 'Мария Смирнова', 'category': 'Детские праздники'},
-    {'id': 'specialist3', 'name': 'Дмитрий Петров', 'category': 'Банкеты и фуршеты'},
+    {
+      'id': 'specialist1',
+      'name': 'Александр Иванов',
+      'category': 'Свадьбы и корпоративы'
+    },
+    {
+      'id': 'specialist2',
+      'name': 'Мария Смирнова',
+      'category': 'Детские праздники'
+    },
+    {
+      'id': 'specialist3',
+      'name': 'Дмитрий Петров',
+      'category': 'Банкеты и фуршеты'
+    },
   ];
 
   @override
@@ -77,7 +90,9 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
 
   Future<void> _createBooking() async {
     if (!_formKey.currentState!.validate()) return;
-    if (_selectedDate == null || _selectedTime == null || _selectedSpecialistId == null) {
+    if (_selectedDate == null ||
+        _selectedTime == null ||
+        _selectedSpecialistId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Пожалуйста, заполните все обязательные поля'),
@@ -155,295 +170,302 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(
-        title: const Text('Создать заявку'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
-        ),
-      ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Основная информация
-              _buildSectionTitle('Основная информация'),
-              const SizedBox(height: 16),
-              
-              TextFormField(
-                controller: _eventTitleController,
-                decoration: const InputDecoration(
-                  labelText: 'Название мероприятия *',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Введите название мероприятия';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              TextFormField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(
-                  labelText: 'Описание мероприятия',
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: 3,
-              ),
-              const SizedBox(height: 16),
-
-              // Дата и время
-              _buildSectionTitle('Дата и время'),
-              const SizedBox(height: 16),
-
-              Row(
-                children: [
-                  Expanded(
-                    child: InkWell(
-                      onTap: _selectDate,
-                      child: InputDecorator(
-                        decoration: const InputDecoration(
-                          labelText: 'Дата мероприятия *',
-                          border: OutlineInputBorder(),
-                        ),
-                        child: Text(
-                          _selectedDate != null
-                              ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}'
-                              : 'Выберите дату',
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: InkWell(
-                      onTap: _selectTime,
-                      child: InputDecorator(
-                        decoration: const InputDecoration(
-                          labelText: 'Время мероприятия *',
-                          border: OutlineInputBorder(),
-                        ),
-                        child: Text(
-                          _selectedTime != null
-                              ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
-                              : 'Выберите время',
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-
-              // Место проведения
-              _buildSectionTitle('Место проведения'),
-              const SizedBox(height: 16),
-
-              TextFormField(
-                controller: _addressController,
-                decoration: const InputDecoration(
-                  labelText: 'Адрес мероприятия',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Участники
-              _buildSectionTitle('Участники'),
-              const SizedBox(height: 16),
-
-              TextFormField(
-                controller: _participantsController,
-                decoration: const InputDecoration(
-                  labelText: 'Количество участников *',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Введите количество участников';
-                  }
-                  final count = int.tryParse(value);
-                  if (count == null || count <= 0) {
-                    return 'Введите корректное количество участников';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // Специалист
-              _buildSectionTitle('Специалист'),
-              const SizedBox(height: 16),
-
-              DropdownButtonFormField<String>(
-                initialValue: _selectedSpecialistId,
-                decoration: const InputDecoration(
-                  labelText: 'Выберите специалиста *',
-                  border: OutlineInputBorder(),
-                ),
-                items: _specialists.map((specialist) => DropdownMenuItem<String>(
-                    value: specialist['id'],
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(specialist['name']!),
-                        Text(
-                          specialist['category']!,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedSpecialistId = value;
-                  });
-                },
-                validator: (value) {
-                  if (value == null) {
-                    return 'Выберите специалиста';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // Стоимость
-              _buildSectionTitle('Стоимость'),
-              const SizedBox(height: 16),
-
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _totalPriceController,
-                      decoration: const InputDecoration(
-                        labelText: 'Общая стоимость (₽) *',
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Введите стоимость';
-                        }
-                        final price = double.tryParse(value);
-                        if (price == null || price <= 0) {
-                          return 'Введите корректную стоимость';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: TextFormField(
-                      controller: _prepaymentController,
-                      decoration: const InputDecoration(
-                        labelText: 'Предоплата (₽) *',
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Введите предоплату';
-                        }
-                        final prepayment = double.tryParse(value);
-                        if (prepayment == null || prepayment <= 0) {
-                          return 'Введите корректную предоплату';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-
-              // Контактная информация
-              _buildSectionTitle('Контактная информация'),
-              const SizedBox(height: 16),
-
-              TextFormField(
-                controller: _customerNameController,
-                decoration: const InputDecoration(
-                  labelText: 'Ваше имя *',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Введите ваше имя';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              TextFormField(
-                controller: _customerPhoneController,
-                decoration: const InputDecoration(
-                  labelText: 'Телефон *',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.phone,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Введите телефон';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              TextFormField(
-                controller: _customerEmailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email *',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Введите email';
-                  }
-                  if (!value.contains('@')) {
-                    return 'Введите корректный email';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 32),
-
-              // Кнопка создания
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _createBooking,
-                  child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text('Создать заявку'),
-                ),
-              ),
-            ],
+        appBar: AppBar(
+          title: const Text('Создать заявку'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => context.pop(),
           ),
         ),
-      ),
-    );
+        body: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Основная информация
+                _buildSectionTitle('Основная информация'),
+                const SizedBox(height: 16),
+
+                TextFormField(
+                  controller: _eventTitleController,
+                  decoration: const InputDecoration(
+                    labelText: 'Название мероприятия *',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Введите название мероприятия';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+
+                TextFormField(
+                  controller: _descriptionController,
+                  decoration: const InputDecoration(
+                    labelText: 'Описание мероприятия',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 3,
+                ),
+                const SizedBox(height: 16),
+
+                // Дата и время
+                _buildSectionTitle('Дата и время'),
+                const SizedBox(height: 16),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        onTap: _selectDate,
+                        child: InputDecorator(
+                          decoration: const InputDecoration(
+                            labelText: 'Дата мероприятия *',
+                            border: OutlineInputBorder(),
+                          ),
+                          child: Text(
+                            _selectedDate != null
+                                ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}'
+                                : 'Выберите дату',
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: InkWell(
+                        onTap: _selectTime,
+                        child: InputDecorator(
+                          decoration: const InputDecoration(
+                            labelText: 'Время мероприятия *',
+                            border: OutlineInputBorder(),
+                          ),
+                          child: Text(
+                            _selectedTime != null
+                                ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
+                                : 'Выберите время',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // Место проведения
+                _buildSectionTitle('Место проведения'),
+                const SizedBox(height: 16),
+
+                TextFormField(
+                  controller: _addressController,
+                  decoration: const InputDecoration(
+                    labelText: 'Адрес мероприятия',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Участники
+                _buildSectionTitle('Участники'),
+                const SizedBox(height: 16),
+
+                TextFormField(
+                  controller: _participantsController,
+                  decoration: const InputDecoration(
+                    labelText: 'Количество участников *',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Введите количество участников';
+                    }
+                    final count = int.tryParse(value);
+                    if (count == null || count <= 0) {
+                      return 'Введите корректное количество участников';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+
+                // Специалист
+                _buildSectionTitle('Специалист'),
+                const SizedBox(height: 16),
+
+                DropdownButtonFormField<String>(
+                  initialValue: _selectedSpecialistId,
+                  decoration: const InputDecoration(
+                    labelText: 'Выберите специалиста *',
+                    border: OutlineInputBorder(),
+                  ),
+                  items: _specialists
+                      .map(
+                        (specialist) => DropdownMenuItem<String>(
+                          value: specialist['id'],
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(specialist['name']!),
+                              Text(
+                                specialist['category']!,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
+                                      color: Colors.grey[600],
+                                    ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedSpecialistId = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Выберите специалиста';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+
+                // Стоимость
+                _buildSectionTitle('Стоимость'),
+                const SizedBox(height: 16),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _totalPriceController,
+                        decoration: const InputDecoration(
+                          labelText: 'Общая стоимость (₽) *',
+                          border: OutlineInputBorder(),
+                        ),
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Введите стоимость';
+                          }
+                          final price = double.tryParse(value);
+                          if (price == null || price <= 0) {
+                            return 'Введите корректную стоимость';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _prepaymentController,
+                        decoration: const InputDecoration(
+                          labelText: 'Предоплата (₽) *',
+                          border: OutlineInputBorder(),
+                        ),
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Введите предоплату';
+                          }
+                          final prepayment = double.tryParse(value);
+                          if (prepayment == null || prepayment <= 0) {
+                            return 'Введите корректную предоплату';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // Контактная информация
+                _buildSectionTitle('Контактная информация'),
+                const SizedBox(height: 16),
+
+                TextFormField(
+                  controller: _customerNameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Ваше имя *',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Введите ваше имя';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+
+                TextFormField(
+                  controller: _customerPhoneController,
+                  decoration: const InputDecoration(
+                    labelText: 'Телефон *',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.phone,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Введите телефон';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+
+                TextFormField(
+                  controller: _customerEmailController,
+                  decoration: const InputDecoration(
+                    labelText: 'Email *',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Введите email';
+                    }
+                    if (!value.contains('@')) {
+                      return 'Введите корректный email';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 32),
+
+                // Кнопка создания
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _createBooking,
+                    child: _isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text('Создать заявку'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
 
   Widget _buildSectionTitle(String title) => Text(
-      title,
-      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-        fontWeight: FontWeight.bold,
-        color: Theme.of(context).primaryColor,
-      ),
-    );
+        title,
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).primaryColor,
+            ),
+      );
 }

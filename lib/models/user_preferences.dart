@@ -29,49 +29,63 @@ class UserPreferences {
 
   /// Создать из Map
   factory UserPreferences.fromMap(Map<String, dynamic> data) => UserPreferences(
-      userId: data['userId'] as String,
-      likedStyles: (data['likedStyles'] as List<dynamic>?)?.cast<String>() ?? [],
-      preferredBudget: (data['preferredBudget'] as num?)?.toDouble() ?? 0.0,
-      preferredCities: (data['preferredCities'] as List<dynamic>?)?.cast<String>() ?? [],
-      pastRequests: (data['pastRequests'] as List<dynamic>?)?.cast<String>() ?? [],
-      favoriteCategories: (data['favoriteCategories'] as List<dynamic>?)?.cast<String>() ?? [],
-      dislikedStyles: (data['dislikedStyles'] as List<dynamic>?)?.cast<String>() ?? [],
-      preferredEventTypes: (data['preferredEventTypes'] as List<dynamic>?)?.cast<String>() ?? [],
-      budgetRange: Map<String, dynamic>.from(data['budgetRange'] ?? {}),
-      locationPreferences: Map<String, dynamic>.from(data['locationPreferences'] ?? {}),
-      stylePreferences: Map<String, dynamic>.from(data['stylePreferences'] ?? {}),
-      experiencePreferences: Map<String, dynamic>.from(data['experiencePreferences'] ?? {}),
-      ratingPreferences: Map<String, dynamic>.from(data['ratingPreferences'] ?? {}),
-      availabilityPreferences: Map<String, dynamic>.from(data['availabilityPreferences'] ?? {}),
-      personalityPreferences: Map<String, dynamic>.from(data['personalityPreferences'] ?? {}),
-      searchHistory: (data['searchHistory'] as List<dynamic>?)
-              ?.map((e) => Map<String, dynamic>.from(e))
-              .toList() ??
-          [],
-      interactionHistory: (data['interactionHistory'] as List<dynamic>?)
-              ?.map((e) => Map<String, dynamic>.from(e))
-              .toList() ??
-          [],
-      recommendationHistory: (data['recommendationHistory'] as List<dynamic>?)
-              ?.map((e) => Map<String, dynamic>.from(e))
-              .toList() ??
-          [],
-      feedbackHistory: (data['feedbackHistory'] as List<dynamic>?)
-              ?.map((e) => Map<String, dynamic>.from(e))
-              .toList() ??
-          [],
-      learningData: Map<String, dynamic>.from(data['learningData'] ?? {}),
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] is Timestamp
-              ? (data['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(data['createdAt'].toString()))
-          : DateTime.now(),
-      updatedAt: data['updatedAt'] != null
-          ? (data['updatedAt'] is Timestamp
-              ? (data['updatedAt'] as Timestamp).toDate()
-              : DateTime.parse(data['updatedAt'].toString()))
-          : DateTime.now(),
-    );
+        userId: data['userId'] as String,
+        likedStyles:
+            (data['likedStyles'] as List<dynamic>?)?.cast<String>() ?? [],
+        preferredBudget: (data['preferredBudget'] as num?)?.toDouble() ?? 0.0,
+        preferredCities:
+            (data['preferredCities'] as List<dynamic>?)?.cast<String>() ?? [],
+        pastRequests:
+            (data['pastRequests'] as List<dynamic>?)?.cast<String>() ?? [],
+        favoriteCategories:
+            (data['favoriteCategories'] as List<dynamic>?)?.cast<String>() ??
+                [],
+        dislikedStyles:
+            (data['dislikedStyles'] as List<dynamic>?)?.cast<String>() ?? [],
+        preferredEventTypes:
+            (data['preferredEventTypes'] as List<dynamic>?)?.cast<String>() ??
+                [],
+        budgetRange: Map<String, dynamic>.from(data['budgetRange'] ?? {}),
+        locationPreferences:
+            Map<String, dynamic>.from(data['locationPreferences'] ?? {}),
+        stylePreferences:
+            Map<String, dynamic>.from(data['stylePreferences'] ?? {}),
+        experiencePreferences:
+            Map<String, dynamic>.from(data['experiencePreferences'] ?? {}),
+        ratingPreferences:
+            Map<String, dynamic>.from(data['ratingPreferences'] ?? {}),
+        availabilityPreferences:
+            Map<String, dynamic>.from(data['availabilityPreferences'] ?? {}),
+        personalityPreferences:
+            Map<String, dynamic>.from(data['personalityPreferences'] ?? {}),
+        searchHistory: (data['searchHistory'] as List<dynamic>?)
+                ?.map((e) => Map<String, dynamic>.from(e))
+                .toList() ??
+            [],
+        interactionHistory: (data['interactionHistory'] as List<dynamic>?)
+                ?.map((e) => Map<String, dynamic>.from(e))
+                .toList() ??
+            [],
+        recommendationHistory: (data['recommendationHistory'] as List<dynamic>?)
+                ?.map((e) => Map<String, dynamic>.from(e))
+                .toList() ??
+            [],
+        feedbackHistory: (data['feedbackHistory'] as List<dynamic>?)
+                ?.map((e) => Map<String, dynamic>.from(e))
+                .toList() ??
+            [],
+        learningData: Map<String, dynamic>.from(data['learningData'] ?? {}),
+        createdAt: data['createdAt'] != null
+            ? (data['createdAt'] is Timestamp
+                ? (data['createdAt'] as Timestamp).toDate()
+                : DateTime.parse(data['createdAt'].toString()))
+            : DateTime.now(),
+        updatedAt: data['updatedAt'] != null
+            ? (data['updatedAt'] is Timestamp
+                ? (data['updatedAt'] as Timestamp).toDate()
+                : DateTime.parse(data['updatedAt'].toString()))
+            : DateTime.now(),
+      );
 
   /// Создать из документа Firestore
   factory UserPreferences.fromDocument(DocumentSnapshot doc) {
@@ -95,11 +109,14 @@ class UserPreferences {
   final Map<String, dynamic> stylePreferences; // Предпочтения по стилю
   final Map<String, dynamic> experiencePreferences; // Предпочтения по опыту
   final Map<String, dynamic> ratingPreferences; // Предпочтения по рейтингу
-  final Map<String, dynamic> availabilityPreferences; // Предпочтения по доступности
-  final Map<String, dynamic> personalityPreferences; // Предпочтения по характеру
+  final Map<String, dynamic>
+      availabilityPreferences; // Предпочтения по доступности
+  final Map<String, dynamic>
+      personalityPreferences; // Предпочтения по характеру
   final List<Map<String, dynamic>> searchHistory; // История поиска
   final List<Map<String, dynamic>> interactionHistory; // История взаимодействий
-  final List<Map<String, dynamic>> recommendationHistory; // История рекомендаций
+  final List<Map<String, dynamic>>
+      recommendationHistory; // История рекомендаций
   final List<Map<String, dynamic>> feedbackHistory; // История отзывов
   final Map<String, dynamic> learningData; // Данные для обучения модели
   final DateTime createdAt;
@@ -167,13 +184,17 @@ class UserPreferences {
         budgetRange: budgetRange ?? this.budgetRange,
         locationPreferences: locationPreferences ?? this.locationPreferences,
         stylePreferences: stylePreferences ?? this.stylePreferences,
-        experiencePreferences: experiencePreferences ?? this.experiencePreferences,
+        experiencePreferences:
+            experiencePreferences ?? this.experiencePreferences,
         ratingPreferences: ratingPreferences ?? this.ratingPreferences,
-        availabilityPreferences: availabilityPreferences ?? this.availabilityPreferences,
-        personalityPreferences: personalityPreferences ?? this.personalityPreferences,
+        availabilityPreferences:
+            availabilityPreferences ?? this.availabilityPreferences,
+        personalityPreferences:
+            personalityPreferences ?? this.personalityPreferences,
         searchHistory: searchHistory ?? this.searchHistory,
         interactionHistory: interactionHistory ?? this.interactionHistory,
-        recommendationHistory: recommendationHistory ?? this.recommendationHistory,
+        recommendationHistory:
+            recommendationHistory ?? this.recommendationHistory,
         feedbackHistory: feedbackHistory ?? this.feedbackHistory,
         learningData: learningData ?? this.learningData,
         createdAt: createdAt ?? this.createdAt,
@@ -191,9 +212,9 @@ class UserPreferences {
 
   /// Удалить понравившийся стиль
   UserPreferences removeLikedStyle(String style) => copyWith(
-      likedStyles: likedStyles.where((s) => s != style).toList(),
-      updatedAt: DateTime.now(),
-    );
+        likedStyles: likedStyles.where((s) => s != style).toList(),
+        updatedAt: DateTime.now(),
+      );
 
   /// Добавить не понравившийся стиль
   UserPreferences addDislikedStyle(String style) {
@@ -222,12 +243,12 @@ class UserPreferences {
       },
       ...searchHistory,
     ];
-    
+
     // Ограничиваем историю 50 записями
     if (newHistory.length > 50) {
       newHistory.removeRange(50, newHistory.length);
     }
-    
+
     return copyWith(
       searchHistory: newHistory,
       updatedAt: DateTime.now(),
@@ -246,14 +267,14 @@ class UserPreferences {
       'timestamp': DateTime.now().toIso8601String(),
       'metadata': metadata ?? {},
     };
-    
+
     final newHistory = [newInteraction, ...interactionHistory];
-    
+
     // Ограничиваем историю 100 записями
     if (newHistory.length > 100) {
       newHistory.removeRange(100, newHistory.length);
     }
-    
+
     return copyWith(
       interactionHistory: newHistory,
       updatedAt: DateTime.now(),
@@ -262,43 +283,41 @@ class UserPreferences {
 
   /// Обновить предпочитаемый бюджет
   UserPreferences updatePreferredBudget(double budget) => copyWith(
-      preferredBudget: budget,
-      updatedAt: DateTime.now(),
-    );
+        preferredBudget: budget,
+        updatedAt: DateTime.now(),
+      );
 
   /// Получить предпочтения для алгоритма совместимости
   Map<String, dynamic> getCompatibilityPreferences() => {
-      'preferredStyles': likedStyles,
-      'preferredBudget': preferredBudget,
-      'preferredCities': preferredCities,
-      'dislikedStyles': dislikedStyles,
-      'preferredEventTypes': preferredEventTypes,
-      'budgetRange': budgetRange,
-      'stylePreferences': stylePreferences,
-      'experiencePreferences': experiencePreferences,
-      'ratingPreferences': ratingPreferences,
-    };
+        'preferredStyles': likedStyles,
+        'preferredBudget': preferredBudget,
+        'preferredCities': preferredCities,
+        'dislikedStyles': dislikedStyles,
+        'preferredEventTypes': preferredEventTypes,
+        'budgetRange': budgetRange,
+        'stylePreferences': stylePreferences,
+        'experiencePreferences': experiencePreferences,
+        'ratingPreferences': ratingPreferences,
+      };
 
   /// Получить последние поисковые запросы
-  List<String> getRecentSearchQueries({int limit = 5}) => searchHistory
-        .take(limit)
-        .map((item) => item['query'] as String)
-        .toList();
+  List<String> getRecentSearchQueries({int limit = 5}) =>
+      searchHistory.take(limit).map((item) => item['query'] as String).toList();
 
   /// Получить популярные категории из истории
   List<String> getPopularCategories({int limit = 5}) {
     final categoryCounts = <String, int>{};
-    
+
     for (final interaction in interactionHistory) {
       final category = interaction['category'] as String?;
       if (category != null) {
         categoryCounts[category] = (categoryCounts[category] ?? 0) + 1;
       }
     }
-    
+
     final sortedCategories = categoryCounts.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
-    
+
     return sortedCategories.take(limit).map((entry) => entry.key).toList();
   }
 
@@ -310,7 +329,7 @@ class UserPreferences {
         'max': (budgetRange['max'] as num?)?.toDouble() ?? 100000.0,
       };
     }
-    
+
     // Вычисляем на основе предпочитаемого бюджета
     final budget = preferredBudget;
     if (budget > 0) {
@@ -319,7 +338,7 @@ class UserPreferences {
         'max': budget * 1.3,
       };
     }
-    
+
     return {'min': 0.0, 'max': 100000.0};
   }
 

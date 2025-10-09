@@ -86,15 +86,18 @@ class _MyBookingsTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingsAsync = ref.watch(bookingsProvider);
-    
+
     return bookingsAsync.when(
       data: (bookings) {
         // Фильтруем заявки для текущего пользователя
-        final userBookings = bookings.where((booking) => 
-          booking['customerId'] == customerId || 
-          booking['customerEmail']?.contains('@') == true,
-        ).toList();
-        
+        final userBookings = bookings
+            .where(
+              (booking) =>
+                  booking['customerId'] == customerId ||
+                  booking['customerEmail']?.contains('@') == true,
+            )
+            .toList();
+
         if (userBookings.isEmpty) {
           return const Center(
             child: Column(
@@ -128,7 +131,8 @@ class _MyBookingsTab extends ConsumerWidget {
     );
   }
 
-  void _navigateToBookingDetails(BuildContext context, Map<String, dynamic> booking) {
+  void _navigateToBookingDetails(
+      BuildContext context, Map<String, dynamic> booking) {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
@@ -142,7 +146,8 @@ class _MyBookingsTab extends ConsumerWidget {
       context,
       MaterialPageRoute<void>(
         builder: (context) => ChatScreen(
-          chatId: '${booking['customerId'] ?? ''}_${booking['specialistId'] ?? ''}',
+          chatId:
+              '${booking['customerId'] ?? ''}_${booking['specialistId'] ?? ''}',
           otherParticipantId: booking['specialistId'] ?? '',
           otherParticipantName: booking['specialistName'] ?? 'Специалист',
         ),
@@ -159,14 +164,16 @@ class _IncomingBookingsTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingsAsync = ref.watch(bookingsProvider);
-    
+
     return bookingsAsync.when(
       data: (bookings) {
         // Фильтруем заявки для текущего специалиста
-        final specialistBookings = bookings.where((booking) => 
-          booking['specialistId'] == specialistId,
-        ).toList();
-        
+        final specialistBookings = bookings
+            .where(
+              (booking) => booking['specialistId'] == specialistId,
+            )
+            .toList();
+
         if (specialistBookings.isEmpty) {
           return const Center(
             child: Column(
@@ -211,7 +218,8 @@ class _IncomingBookingsTab extends ConsumerWidget {
     );
   }
 
-  void _navigateToBookingDetails(BuildContext context, Map<String, dynamic> booking) {
+  void _navigateToBookingDetails(
+      BuildContext context, Map<String, dynamic> booking) {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
@@ -225,7 +233,8 @@ class _IncomingBookingsTab extends ConsumerWidget {
       context,
       MaterialPageRoute<void>(
         builder: (context) => ChatScreen(
-          chatId: '${booking['customerId'] ?? ''}_${booking['specialistId'] ?? ''}',
+          chatId:
+              '${booking['customerId'] ?? ''}_${booking['specialistId'] ?? ''}',
           otherParticipantId: booking['customerId'] ?? '',
           otherParticipantName: booking['customerName'] ?? 'Заказчик',
         ),
@@ -233,7 +242,8 @@ class _IncomingBookingsTab extends ConsumerWidget {
     );
   }
 
-  Future<void> _confirmBooking(BuildContext context, Map<String, dynamic> booking) async {
+  Future<void> _confirmBooking(
+      BuildContext context, Map<String, dynamic> booking) async {
     try {
       await BookingService().updateBookingStatus(
         booking['id'] ?? '',
@@ -267,7 +277,8 @@ class _IncomingBookingsTab extends ConsumerWidget {
     }
   }
 
-  Future<void> _rejectBooking(BuildContext context, Map<String, dynamic> booking) async {
+  Future<void> _rejectBooking(
+      BuildContext context, Map<String, dynamic> booking) async {
     try {
       await BookingService().updateBookingStatus(
         booking['id'] ?? '',
@@ -405,8 +416,7 @@ class _BookingCard extends StatelessWidget {
                         label: const Text('Чат'),
                       ),
                     ),
-                    if (showActions &&
-                        booking['status'] == 'В обработке') ...[
+                    if (showActions && booking['status'] == 'В обработке') ...[
                       const SizedBox(width: 8),
                       Expanded(
                         child: ElevatedButton.icon(

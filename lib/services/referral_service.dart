@@ -13,7 +13,7 @@ class ReferralService {
   Future<String?> createPartnerProgram(String userId) async {
     try {
       final referralCode = _generateReferralCode(userId);
-      
+
       final partnerProgram = PartnerProgram(
         userId: userId,
         referralCode: referralCode,
@@ -64,9 +64,7 @@ class ReferralService {
           .orderBy('timestamp', descending: true)
           .get();
 
-      return querySnapshot.docs
-          .map(Referral.fromFirestore)
-          .toList();
+      return querySnapshot.docs.map(Referral.fromFirestore).toList();
     } on Exception catch (e) {
       print('Ошибка получения рефералов: $e');
       return [];
@@ -74,7 +72,8 @@ class ReferralService {
   }
 
   /// Обработать приглашение по реферальному коду
-  Future<bool> processReferral(String referralCode, String invitedUserId) async {
+  Future<bool> processReferral(
+      String referralCode, String invitedUserId) async {
     try {
       // Найти пользователя по реферальному коду
       final partnerQuery = await _firestore
@@ -121,10 +120,12 @@ class ReferralService {
       await _updatePartnerProgramStats(inviterId);
 
       // Создать бонус для пригласившего
-      await _createBonus(inviterId, 100, BonusType.referral, 'За приглашение пользователя');
+      await _createBonus(
+          inviterId, 100, BonusType.referral, 'За приглашение пользователя');
 
       // Создать бонус для приглашенного
-      await _createBonus(invitedUserId, 50, BonusType.registration, 'За регистрацию по приглашению');
+      await _createBonus(invitedUserId, 50, BonusType.registration,
+          'За регистрацию по приглашению');
 
       return true;
     } on Exception catch (e) {
@@ -146,16 +147,13 @@ class ReferralService {
       }
 
       final referral = Referral.fromFirestore(referralDoc);
-      
+
       if (referral.isCompleted) {
         return true; // Уже завершен
       }
 
       // Обновить статус реферала
-      await _firestore
-          .collection(_referralsCollection)
-          .doc(referralId)
-          .update({
+      await _firestore.collection(_referralsCollection).doc(referralId).update({
         'isCompleted': true,
         'completedAt': Timestamp.now(),
       });
@@ -165,9 +163,9 @@ class ReferralService {
 
       // Создать дополнительный бонус за завершение
       await _createBonus(
-        referral.inviterId, 
-        200, 
-        BonusType.milestone, 
+        referral.inviterId,
+        200,
+        BonusType.milestone,
         'За завершение реферала',
       );
 
@@ -211,7 +209,8 @@ class ReferralService {
   }
 
   /// Создать бонус
-  Future<void> _createBonus(String userId, int amount, BonusType type, String description) async {
+  Future<void> _createBonus(
+      String userId, int amount, BonusType type, String description) async {
     try {
       final bonus = Bonus(
         id: '${userId}_${DateTime.now().millisecondsSinceEpoch}',
@@ -240,9 +239,7 @@ class ReferralService {
           .orderBy('earnedAt', descending: true)
           .get();
 
-      return querySnapshot.docs
-          .map(Bonus.fromFirestore)
-          .toList();
+      return querySnapshot.docs.map(Bonus.fromFirestore).toList();
     } on Exception catch (e) {
       print('Ошибка получения бонусов: $e');
       return [];
@@ -257,7 +254,7 @@ class ReferralService {
       final used = bonuses
           .where((bonus) => bonus.isUsed)
           .fold(0, (sum, bonus) => sum + bonus.amount);
-      
+
       return earned - used;
     } on Exception catch (e) {
       print('Ошибка получения баланса бонусов: $e');
@@ -268,25 +265,20 @@ class ReferralService {
   /// Использовать бонус
   Future<bool> useBonus(String bonusId, String usedFor) async {
     try {
-      final bonusDoc = await _firestore
-          .collection(_bonusesCollection)
-          .doc(bonusId)
-          .get();
+      final bonusDoc =
+          await _firestore.collection(_bonusesCollection).doc(bonusId).get();
 
       if (!bonusDoc.exists) {
         return false;
       }
 
       final bonus = Bonus.fromFirestore(bonusDoc);
-      
+
       if (bonus.isUsed) {
         return false; // Уже использован
       }
 
-      await _firestore
-          .collection(_bonusesCollection)
-          .doc(bonusId)
-          .update({
+      await _firestore.collection(_bonusesCollection).doc(bonusId).update({
         'isUsed': true,
         'usedAt': Timestamp.now(),
         'usedFor': usedFor,

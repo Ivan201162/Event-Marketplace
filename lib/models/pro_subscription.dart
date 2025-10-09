@@ -18,6 +18,29 @@ class ProSubscription {
     this.metadata = const {},
   });
 
+  /// Создать из Map
+  factory ProSubscription.fromMap(Map<String, dynamic> map) => ProSubscription(
+        id: map['id'] as String,
+        userId: map['userId'] as String,
+        plan: SubscriptionPlan.fromString(map['plan'] as String),
+        status: SubscriptionStatus.fromString(map['status'] as String),
+        startDate: DateTime.fromMillisecondsSinceEpoch(map['startDate'] as int),
+        endDate: DateTime.fromMillisecondsSinceEpoch(map['endDate'] as int),
+        price: (map['price'] as num?)?.toDouble() ?? 0.0,
+        currency: map['currency'] as String? ?? 'RUB',
+        paymentMethod: map['paymentMethod'] as String?,
+        autoRenew: (map['autoRenew'] as bool?) ?? true,
+        trialEndDate: map['trialEndDate'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(map['trialEndDate'] as int)
+            : null,
+        cancelledAt: map['cancelledAt'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(map['cancelledAt'] as int)
+            : null,
+        cancellationReason: map['cancellationReason'] as String?,
+        features: Map<String, bool>.from((map['features'] as Map?) ?? {}),
+        metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
+      );
+
   /// Уникальный идентификатор
   final String id;
 
@@ -63,51 +86,24 @@ class ProSubscription {
   /// Дополнительные данные
   final Map<String, dynamic> metadata;
 
-  /// Создать из Map
-  factory ProSubscription.fromMap(Map<String, dynamic> map) {
-    return ProSubscription(
-      id: map['id'] as String,
-      userId: map['userId'] as String,
-      plan: SubscriptionPlan.fromString(map['plan'] as String),
-      status: SubscriptionStatus.fromString(map['status'] as String),
-      startDate: DateTime.fromMillisecondsSinceEpoch(map['startDate'] as int),
-      endDate: DateTime.fromMillisecondsSinceEpoch(map['endDate'] as int),
-      price: (map['price'] as num?)?.toDouble() ?? 0.0,
-      currency: map['currency'] as String? ?? 'RUB',
-      paymentMethod: map['paymentMethod'] as String?,
-      autoRenew: (map['autoRenew'] as bool?) ?? true,
-      trialEndDate: map['trialEndDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['trialEndDate'] as int)
-          : null,
-      cancelledAt: map['cancelledAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['cancelledAt'] as int)
-          : null,
-      cancellationReason: map['cancellationReason'] as String?,
-      features: Map<String, bool>.from((map['features'] as Map?) ?? {}),
-      metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
-    );
-  }
-
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'userId': userId,
-      'plan': plan.value,
-      'status': status.value,
-      'startDate': startDate.millisecondsSinceEpoch,
-      'endDate': endDate.millisecondsSinceEpoch,
-      'price': price,
-      'currency': currency,
-      'paymentMethod': paymentMethod,
-      'autoRenew': autoRenew,
-      'trialEndDate': trialEndDate?.millisecondsSinceEpoch,
-      'cancelledAt': cancelledAt?.millisecondsSinceEpoch,
-      'cancellationReason': cancellationReason,
-      'features': features,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'userId': userId,
+        'plan': plan.value,
+        'status': status.value,
+        'startDate': startDate.millisecondsSinceEpoch,
+        'endDate': endDate.millisecondsSinceEpoch,
+        'price': price,
+        'currency': currency,
+        'paymentMethod': paymentMethod,
+        'autoRenew': autoRenew,
+        'trialEndDate': trialEndDate?.millisecondsSinceEpoch,
+        'cancelledAt': cancelledAt?.millisecondsSinceEpoch,
+        'cancellationReason': cancellationReason,
+        'features': features,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   ProSubscription copyWith({
@@ -126,42 +122,35 @@ class ProSubscription {
     String? cancellationReason,
     Map<String, bool>? features,
     Map<String, dynamic>? metadata,
-  }) {
-    return ProSubscription(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      plan: plan ?? this.plan,
-      status: status ?? this.status,
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
-      price: price ?? this.price,
-      currency: currency ?? this.currency,
-      paymentMethod: paymentMethod ?? this.paymentMethod,
-      autoRenew: autoRenew ?? this.autoRenew,
-      trialEndDate: trialEndDate ?? this.trialEndDate,
-      cancelledAt: cancelledAt ?? this.cancelledAt,
-      cancellationReason: cancellationReason ?? this.cancellationReason,
-      features: features ?? this.features,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      ProSubscription(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        plan: plan ?? this.plan,
+        status: status ?? this.status,
+        startDate: startDate ?? this.startDate,
+        endDate: endDate ?? this.endDate,
+        price: price ?? this.price,
+        currency: currency ?? this.currency,
+        paymentMethod: paymentMethod ?? this.paymentMethod,
+        autoRenew: autoRenew ?? this.autoRenew,
+        trialEndDate: trialEndDate ?? this.trialEndDate,
+        cancelledAt: cancelledAt ?? this.cancelledAt,
+        cancellationReason: cancellationReason ?? this.cancellationReason,
+        features: features ?? this.features,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Проверить, активна ли подписка
-  bool get isActive {
-    return status == SubscriptionStatus.active && 
-           DateTime.now().isBefore(endDate);
-  }
+  bool get isActive =>
+      status == SubscriptionStatus.active && DateTime.now().isBefore(endDate);
 
   /// Проверить, истекла ли подписка
-  bool get isExpired {
-    return DateTime.now().isAfter(endDate);
-  }
+  bool get isExpired => DateTime.now().isAfter(endDate);
 
   /// Проверить, в пробном периоде ли подписка
-  bool get isTrial {
-    return trialEndDate != null && 
-           DateTime.now().isBefore(trialEndDate!);
-  }
+  bool get isTrial =>
+      trialEndDate != null && DateTime.now().isBefore(trialEndDate!);
 
   /// Получить оставшиеся дни
   int get remainingDays {
@@ -171,9 +160,7 @@ class ProSubscription {
   }
 
   /// Проверить доступность функции
-  bool hasFeature(String feature) {
-    return features[feature] ?? false;
-  }
+  bool hasFeature(String feature) => features[feature] ?? false;
 }
 
 /// План подписки
@@ -223,22 +210,22 @@ enum SubscriptionPlan {
   double get monthlyPrice {
     switch (this) {
       case SubscriptionPlan.basic:
-        return 0.0;
+        return 0;
       case SubscriptionPlan.pro:
-        return 999.0;
+        return 999;
       case SubscriptionPlan.premium:
-        return 1999.0;
+        return 1999;
     }
   }
 
   double get yearlyPrice {
     switch (this) {
       case SubscriptionPlan.basic:
-        return 0.0;
+        return 0;
       case SubscriptionPlan.pro:
-        return 9999.0; // 2 месяца бесплатно
+        return 9999; // 2 месяца бесплатно
       case SubscriptionPlan.premium:
-        return 19999.0; // 2 месяца бесплатно
+        return 19999; // 2 месяца бесплатно
     }
   }
 
@@ -357,6 +344,19 @@ class Payment {
     this.metadata = const {},
   });
 
+  factory Payment.fromMap(Map<String, dynamic> map) => Payment(
+        id: map['id'] as String,
+        subscriptionId: map['subscriptionId'] as String,
+        amount: (map['amount'] as num).toDouble(),
+        currency: map['currency'] as String,
+        status: PaymentStatus.fromString(map['status'] as String),
+        createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
+        paymentMethod: map['paymentMethod'] as String?,
+        transactionId: map['transactionId'] as String?,
+        receiptUrl: map['receiptUrl'] as String?,
+        metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
+      );
+
   final String id;
   final String subscriptionId;
   final double amount;
@@ -368,35 +368,18 @@ class Payment {
   final String? receiptUrl;
   final Map<String, dynamic> metadata;
 
-  factory Payment.fromMap(Map<String, dynamic> map) {
-    return Payment(
-      id: map['id'] as String,
-      subscriptionId: map['subscriptionId'] as String,
-      amount: (map['amount'] as num).toDouble(),
-      currency: map['currency'] as String,
-      status: PaymentStatus.fromString(map['status'] as String),
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-      paymentMethod: map['paymentMethod'] as String?,
-      transactionId: map['transactionId'] as String?,
-      receiptUrl: map['receiptUrl'] as String?,
-      metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'subscriptionId': subscriptionId,
-      'amount': amount,
-      'currency': currency,
-      'status': status.value,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'paymentMethod': paymentMethod,
-      'transactionId': transactionId,
-      'receiptUrl': receiptUrl,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'subscriptionId': subscriptionId,
+        'amount': amount,
+        'currency': currency,
+        'status': status.value,
+        'createdAt': createdAt.millisecondsSinceEpoch,
+        'paymentMethod': paymentMethod,
+        'transactionId': transactionId,
+        'receiptUrl': receiptUrl,
+        'metadata': metadata,
+      };
 }
 
 /// Статус платежа
@@ -437,4 +420,3 @@ enum PaymentStatus {
     }
   }
 }
-

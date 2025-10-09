@@ -221,19 +221,23 @@ class NotificationService {
   }
 
   /// Получение истории уведомлений пользователя
-  static Stream<List<Map<String, dynamic>>> getUserNotifications(String userId) => _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('notifications_history')
-        .orderBy('timestamp', descending: true)
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) {
-          final data = doc.data();
-          return {
-            'id': doc.id,
-            ...data,
-          };
-        }).toList(),);
+  static Stream<List<Map<String, dynamic>>> getUserNotifications(
+          String userId) =>
+      _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('notifications_history')
+          .orderBy('timestamp', descending: true)
+          .snapshots()
+          .map(
+            (snapshot) => snapshot.docs.map((doc) {
+              final data = doc.data();
+              return {
+                'id': doc.id,
+                ...data,
+              };
+            }).toList(),
+          );
 
   /// Отметить уведомление как прочитанное
   static Future<void> markAsRead(String userId, String notificationId) async {
@@ -271,7 +275,8 @@ class NotificationService {
   }
 
   /// Закрепить уведомление
-  static Future<void> pinNotification(String userId, String notificationId) async {
+  static Future<void> pinNotification(
+      String userId, String notificationId) async {
     try {
       await _firestore
           .collection('users')
@@ -285,7 +290,8 @@ class NotificationService {
   }
 
   /// Открепить уведомление
-  static Future<void> unpinNotification(String userId, String notificationId) async {
+  static Future<void> unpinNotification(
+      String userId, String notificationId) async {
     try {
       await _firestore
           .collection('users')
@@ -299,7 +305,8 @@ class NotificationService {
   }
 
   /// Удалить уведомление
-  static Future<void> deleteNotification(String userId, String notificationId) async {
+  static Future<void> deleteNotification(
+      String userId, String notificationId) async {
     try {
       await _firestore
           .collection('users')
@@ -314,12 +321,12 @@ class NotificationService {
 
   /// Получить количество непрочитанных уведомлений
   static Stream<int> getUnreadCount(String userId) => _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('notifications_history')
-        .where('isRead', isEqualTo: false)
-        .snapshots()
-        .map((snapshot) => snapshot.docs.length);
+      .collection('users')
+      .doc(userId)
+      .collection('notifications_history')
+      .where('isRead', isEqualTo: false)
+      .snapshots()
+      .map((snapshot) => snapshot.docs.length);
 
   /// Очистить все уведомления пользователя
   static Future<void> clearAllNotifications(String userId) async {
@@ -347,10 +354,7 @@ class NotificationService {
       final user = _auth.currentUser;
       if (user == null) return;
 
-      await _firestore
-          .collection('notifications')
-          .doc(notificationId)
-          .update({
+      await _firestore.collection('notifications').doc(notificationId).update({
         'isRead': true,
         'readAt': FieldValue.serverTimestamp(),
       });

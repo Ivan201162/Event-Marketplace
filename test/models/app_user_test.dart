@@ -1,6 +1,6 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_marketplace_app/models/user.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('AppUser Model Tests', () {
@@ -46,7 +46,6 @@ void main() {
         email: 'test@example.com',
         role: UserRole.customer,
         createdAt: DateTime.now(),
-        city: null,
         region: '',
         avatarUrl: '   ',
       );
@@ -97,4 +96,3 @@ void main() {
     });
   });
 }
-

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 /// Модель сообщения в AI-чате
 class ChatMessage {
-
   const ChatMessage({
     required this.id,
     required this.userId,
@@ -37,13 +36,13 @@ class ChatMessage {
 
   /// Преобразование в Map для Firestore
   Map<String, dynamic> toFirestore() => {
-      'userId': userId,
-      'content': content,
-      'isUser': isUser,
-      'timestamp': Timestamp.fromDate(timestamp),
-      'messageType': messageType,
-      'metadata': metadata,
-    };
+        'userId': userId,
+        'content': content,
+        'isUser': isUser,
+        'timestamp': Timestamp.fromDate(timestamp),
+        'messageType': messageType,
+        'metadata': metadata,
+      };
 
   /// Копирование с изменениями
   ChatMessage copyWith({
@@ -54,15 +53,16 @@ class ChatMessage {
     DateTime? timestamp,
     String? messageType,
     Map<String, dynamic>? metadata,
-  }) => ChatMessage(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      content: content ?? this.content,
-      isUser: isUser ?? this.isUser,
-      timestamp: timestamp ?? this.timestamp,
-      messageType: messageType ?? this.messageType,
-      metadata: metadata ?? this.metadata,
-    );
+  }) =>
+      ChatMessage(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        content: content ?? this.content,
+        isUser: isUser ?? this.isUser,
+        timestamp: timestamp ?? this.timestamp,
+        messageType: messageType ?? this.messageType,
+        metadata: metadata ?? this.metadata,
+      );
 
   @override
   bool operator ==(Object other) {
@@ -74,12 +74,12 @@ class ChatMessage {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() => 'ChatMessage(id: $id, isUser: $isUser, content: ${content.substring(0, content.length > 50 ? 50 : content.length)}...)';
+  String toString() =>
+      'ChatMessage(id: $id, isUser: $isUser, content: ${content.substring(0, content.length > 50 ? 50 : content.length)}...)';
 }
 
 /// Модель сессии AI-чата
 class ChatSession {
-
   const ChatSession({
     required this.id,
     required this.userId,
@@ -113,13 +113,13 @@ class ChatSession {
 
   /// Преобразование в Map для Firestore
   Map<String, dynamic> toFirestore() => {
-      'userId': userId,
-      'title': title,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'lastMessageAt': Timestamp.fromDate(lastMessageAt),
-      'messageIds': messageIds,
-      'context': context,
-    };
+        'userId': userId,
+        'title': title,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'lastMessageAt': Timestamp.fromDate(lastMessageAt),
+        'messageIds': messageIds,
+        'context': context,
+      };
 
   @override
   bool operator ==(Object other) {
@@ -131,7 +131,8 @@ class ChatSession {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() => 'ChatSession(id: $id, title: $title, messages: ${messageIds.length})';
+  String toString() =>
+      'ChatSession(id: $id, title: $title, messages: ${messageIds.length})';
 }
 
 /// Типы сообщений
@@ -150,7 +151,6 @@ enum MessageType {
 
 /// Модель быстрого ответа
 class QuickReply {
-
   const QuickReply({
     required this.text,
     required this.value,
@@ -158,24 +158,25 @@ class QuickReply {
   });
 
   factory QuickReply.fromJson(Map<String, dynamic> json) => QuickReply(
-      text: json['text'] ?? '',
-      value: json['value'] ?? '',
-      icon: json['icon'] != null ? IconData(json['icon'], fontFamily: 'MaterialIcons') : null,
-    );
+        text: json['text'] ?? '',
+        value: json['value'] ?? '',
+        icon: json['icon'] != null
+            ? IconData(json['icon'], fontFamily: 'MaterialIcons')
+            : null,
+      );
   final String text;
   final String value;
   final IconData? icon;
 
   Map<String, dynamic> toJson() => {
-      'text': text,
-      'value': value,
-      'icon': icon?.codePoint,
-    };
+        'text': text,
+        'value': value,
+        'icon': icon?.codePoint,
+      };
 }
 
 /// Модель контекста пользователя для AI
 class UserContext {
-
   const UserContext({
     this.city,
     this.eventType,
@@ -187,14 +188,16 @@ class UserContext {
   });
 
   factory UserContext.fromJson(Map<String, dynamic> json) => UserContext(
-      city: json['city'],
-      eventType: json['eventType'],
-      eventDate: json['eventDate'] != null ? DateTime.parse(json['eventDate']) : null,
-      budget: json['budget'],
-      preferences: List<String>.from(json['preferences'] ?? []),
-      viewedSpecialists: List<String>.from(json['viewedSpecialists'] ?? []),
-      categories: List<String>.from(json['categories'] ?? []),
-    );
+        city: json['city'],
+        eventType: json['eventType'],
+        eventDate: json['eventDate'] != null
+            ? DateTime.parse(json['eventDate'])
+            : null,
+        budget: json['budget'],
+        preferences: List<String>.from(json['preferences'] ?? []),
+        viewedSpecialists: List<String>.from(json['viewedSpecialists'] ?? []),
+        categories: List<String>.from(json['categories'] ?? []),
+      );
   final String? city;
   final String? eventType;
   final DateTime? eventDate;
@@ -204,14 +207,14 @@ class UserContext {
   final List<String> categories;
 
   Map<String, dynamic> toJson() => {
-      'city': city,
-      'eventType': eventType,
-      'eventDate': eventDate?.toIso8601String(),
-      'budget': budget,
-      'preferences': preferences,
-      'viewedSpecialists': viewedSpecialists,
-      'categories': categories,
-    };
+        'city': city,
+        'eventType': eventType,
+        'eventDate': eventDate?.toIso8601String(),
+        'budget': budget,
+        'preferences': preferences,
+        'viewedSpecialists': viewedSpecialists,
+        'categories': categories,
+      };
 
   UserContext copyWith({
     String? city,
@@ -221,13 +224,14 @@ class UserContext {
     List<String>? preferences,
     List<String>? viewedSpecialists,
     List<String>? categories,
-  }) => UserContext(
-      city: city ?? this.city,
-      eventType: eventType ?? this.eventType,
-      eventDate: eventDate ?? this.eventDate,
-      budget: budget ?? this.budget,
-      preferences: preferences ?? this.preferences,
-      viewedSpecialists: viewedSpecialists ?? this.viewedSpecialists,
-      categories: categories ?? this.categories,
-    );
+  }) =>
+      UserContext(
+        city: city ?? this.city,
+        eventType: eventType ?? this.eventType,
+        eventDate: eventDate ?? this.eventDate,
+        budget: budget ?? this.budget,
+        preferences: preferences ?? this.preferences,
+        viewedSpecialists: viewedSpecialists ?? this.viewedSpecialists,
+        categories: categories ?? this.categories,
+      );
 }

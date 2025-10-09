@@ -92,22 +92,22 @@ class ChatMessage {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-      'chatId': chatId,
-      'senderId': senderId,
-      'senderName': senderName,
-      'content': content,
-      'type': type.name,
-      'timestamp': Timestamp.fromDate(timestamp),
-      'status': status.name,
-      'replyTo': replyTo,
-      'mediaUrl': mediaUrl,
-      'thumbnailUrl': thumbnailUrl,
-      'fileName': fileName,
-      'fileSize': fileSize,
-      'duration': duration,
-      'location': location,
-      'metadata': metadata,
-    };
+        'chatId': chatId,
+        'senderId': senderId,
+        'senderName': senderName,
+        'content': content,
+        'type': type.name,
+        'timestamp': Timestamp.fromDate(timestamp),
+        'status': status.name,
+        'replyTo': replyTo,
+        'mediaUrl': mediaUrl,
+        'thumbnailUrl': thumbnailUrl,
+        'fileName': fileName,
+        'fileSize': fileSize,
+        'duration': duration,
+        'location': location,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   ChatMessage copyWith({
@@ -127,31 +127,33 @@ class ChatMessage {
     int? duration,
     Map<String, double>? location,
     Map<String, dynamic>? metadata,
-  }) => ChatMessage(
-      id: id ?? this.id,
-      chatId: chatId ?? this.chatId,
-      senderId: senderId ?? this.senderId,
-      senderName: senderName ?? this.senderName,
-      content: content ?? this.content,
-      type: type ?? this.type,
-      timestamp: timestamp ?? this.timestamp,
-      status: status ?? this.status,
-      replyTo: replyTo ?? this.replyTo,
-      mediaUrl: mediaUrl ?? this.mediaUrl,
-      thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-      fileName: fileName ?? this.fileName,
-      fileSize: fileSize ?? this.fileSize,
-      duration: duration ?? this.duration,
-      location: location ?? this.location,
-      metadata: metadata ?? this.metadata,
-    );
+  }) =>
+      ChatMessage(
+        id: id ?? this.id,
+        chatId: chatId ?? this.chatId,
+        senderId: senderId ?? this.senderId,
+        senderName: senderName ?? this.senderName,
+        content: content ?? this.content,
+        type: type ?? this.type,
+        timestamp: timestamp ?? this.timestamp,
+        status: status ?? this.status,
+        replyTo: replyTo ?? this.replyTo,
+        mediaUrl: mediaUrl ?? this.mediaUrl,
+        thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+        fileName: fileName ?? this.fileName,
+        fileSize: fileSize ?? this.fileSize,
+        duration: duration ?? this.duration,
+        location: location ?? this.location,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Проверить, является ли сообщение медиа
-  bool get isMedia => type == MessageType.image ||
-           type == MessageType.video ||
-           type == MessageType.audio ||
-           type == MessageType.document ||
-           type == MessageType.file;
+  bool get isMedia =>
+      type == MessageType.image ||
+      type == MessageType.video ||
+      type == MessageType.audio ||
+      type == MessageType.document ||
+      type == MessageType.file;
 
   /// Проверить, является ли сообщение текстовым
   bool get isText => type == MessageType.text;
@@ -162,26 +164,26 @@ class ChatMessage {
   /// Получить размер файла в читаемом формате
   String get formattedFileSize {
     if (fileSize == null) return '';
-    
+
     const units = ['B', 'KB', 'MB', 'GB'];
     var size = fileSize!;
     var unitIndex = 0;
-    
+
     while (size >= 1024 && unitIndex < units.length - 1) {
       size ~/= 1024;
       unitIndex++;
     }
-    
+
     return '$size ${units[unitIndex]}';
   }
 
   /// Получить длительность в читаемом формате
   String get formattedDuration {
     if (duration == null) return '';
-    
+
     final minutes = duration! ~/ 60;
     final seconds = duration! % 60;
-    
+
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
@@ -195,5 +197,6 @@ class ChatMessage {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() => 'ChatMessage(id: $id, senderId: $senderId, content: $content, type: $type, status: $status)';
+  String toString() =>
+      'ChatMessage(id: $id, senderId: $senderId, content: $content, type: $type, status: $status)';
 }

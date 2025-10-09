@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель уведомления приложения
 class AppNotification {
-
   const AppNotification({
     required this.id,
     required this.userId,
@@ -17,24 +16,24 @@ class AppNotification {
 
   /// Создать уведомление из Map
   factory AppNotification.fromMap(Map<String, dynamic> map) => AppNotification(
-      id: map['id'] ?? '',
-      userId: map['userId'] ?? '',
-      title: map['title'] ?? '',
-      body: map['body'] ?? '',
-      type: map['type'] ?? '',
-      data: Map<String, dynamic>.from(map['data'] ?? {}),
-      isRead: map['isRead'] ?? false,
-      createdAt: map['createdAt'] != null
-          ? (map['createdAt'] is Timestamp
-              ? (map['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(map['createdAt'].toString()))
-          : DateTime.now(),
-      readAt: map['readAt'] != null
-          ? (map['readAt'] is Timestamp
-              ? (map['readAt'] as Timestamp).toDate()
-              : DateTime.parse(map['readAt'].toString()))
-          : null,
-    );
+        id: map['id'] ?? '',
+        userId: map['userId'] ?? '',
+        title: map['title'] ?? '',
+        body: map['body'] ?? '',
+        type: map['type'] ?? '',
+        data: Map<String, dynamic>.from(map['data'] ?? {}),
+        isRead: map['isRead'] ?? false,
+        createdAt: map['createdAt'] != null
+            ? (map['createdAt'] is Timestamp
+                ? (map['createdAt'] as Timestamp).toDate()
+                : DateTime.parse(map['createdAt'].toString()))
+            : DateTime.now(),
+        readAt: map['readAt'] != null
+            ? (map['readAt'] is Timestamp
+                ? (map['readAt'] as Timestamp).toDate()
+                : DateTime.parse(map['readAt'].toString()))
+            : null,
+      );
 
   /// Создать уведомление из Firestore документа
   factory AppNotification.fromFirestore(DocumentSnapshot doc) {
@@ -56,16 +55,16 @@ class AppNotification {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-      'id': id,
-      'userId': userId,
-      'title': title,
-      'body': body,
-      'type': type,
-      'data': data,
-      'isRead': isRead,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
-    };
+        'id': id,
+        'userId': userId,
+        'title': title,
+        'body': body,
+        'type': type,
+        'data': data,
+        'isRead': isRead,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
+      };
 
   /// Создать копию с изменениями
   AppNotification copyWith({
@@ -78,20 +77,22 @@ class AppNotification {
     bool? isRead,
     DateTime? createdAt,
     DateTime? readAt,
-  }) => AppNotification(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      title: title ?? this.title,
-      body: body ?? this.body,
-      type: type ?? this.type,
-      data: data ?? this.data,
-      isRead: isRead ?? this.isRead,
-      createdAt: createdAt ?? this.createdAt,
-      readAt: readAt ?? this.readAt,
-    );
+  }) =>
+      AppNotification(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        title: title ?? this.title,
+        body: body ?? this.body,
+        type: type ?? this.type,
+        data: data ?? this.data,
+        isRead: isRead ?? this.isRead,
+        createdAt: createdAt ?? this.createdAt,
+        readAt: readAt ?? this.readAt,
+      );
 
   @override
-  String toString() => 'AppNotification(id: $id, userId: $userId, title: $title, body: $body, type: $type, isRead: $isRead, createdAt: $createdAt)';
+  String toString() =>
+      'AppNotification(id: $id, userId: $userId, title: $title, body: $body, type: $type, isRead: $isRead, createdAt: $createdAt)';
 
   @override
   bool operator ==(Object other) {
@@ -108,14 +109,15 @@ class AppNotification {
   }
 
   @override
-  int get hashCode => id.hashCode ^
-        userId.hashCode ^
-        title.hashCode ^
-        body.hashCode ^
-        type.hashCode ^
-        isRead.hashCode ^
-        createdAt.hashCode ^
-        readAt.hashCode;
+  int get hashCode =>
+      id.hashCode ^
+      userId.hashCode ^
+      title.hashCode ^
+      body.hashCode ^
+      type.hashCode ^
+      isRead.hashCode ^
+      createdAt.hashCode ^
+      readAt.hashCode;
 }
 
 /// Типы уведомлений
@@ -164,12 +166,3 @@ extension NotificationTypeExtension on NotificationType {
     }
   }
 }
-
-
-
-
-
-
-
-
-

@@ -1,11 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 
 import '../services/cache_service.dart';
-import '../services/auth_service.dart';
 
 /// Экран загрузки с анимацией и инициализацией
 class SplashScreen extends ConsumerStatefulWidget {
@@ -38,7 +37,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     // Устанавливаем таймаут в 10 секунд
     final timeout = Future.delayed(const Duration(seconds: 10));
     final initialization = _initializeApp();
-    
+
     try {
       await Future.any([initialization, timeout]);
     } catch (e) {
@@ -66,26 +65,32 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     _logoScaleAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(CurvedAnimation(
-      parent: _logoController,
-      curve: Curves.elasticOut,
-    ),);
+    ).animate(
+      CurvedAnimation(
+        parent: _logoController,
+        curve: Curves.elasticOut,
+      ),
+    );
 
     _logoFadeAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(CurvedAnimation(
-      parent: _logoController,
-      curve: Curves.easeInOut,
-    ),);
+    ).animate(
+      CurvedAnimation(
+        parent: _logoController,
+        curve: Curves.easeInOut,
+      ),
+    );
 
     _progressAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(CurvedAnimation(
-      parent: _progressController,
-      curve: Curves.easeInOut,
-    ),);
+    ).animate(
+      CurvedAnimation(
+        parent: _progressController,
+        curve: Curves.easeInOut,
+      ),
+    );
 
     _logoController.forward();
   }
@@ -97,7 +102,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         _statusText = 'Инициализация Firebase...';
       });
       await _updateProgress(0.1);
-      
+
       await Firebase.initializeApp();
       await _updateProgress(0.2);
 
@@ -106,7 +111,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         _statusText = 'Инициализация кэша...';
       });
       await _updateProgress(0.3);
-      
+
       final cacheService = CacheService();
       await cacheService.initialize();
       await _updateProgress(0.5);
@@ -142,7 +147,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       setState(() {
         _statusText = 'Ошибка инициализации: $e';
       });
-      
+
       // В случае ошибки переходим к экрану авторизации
       await Future.delayed(const Duration(seconds: 2));
       if (mounted) {
@@ -195,7 +200,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
       backgroundColor: theme.primaryColor,
       body: Container(
@@ -214,74 +219,74 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Spacer(flex: 2),
-              
+
               // Логотип с анимацией
               AnimatedBuilder(
                 animation: _logoController,
                 builder: (context, child) => Transform.scale(
-                    scale: _logoScaleAnimation.value,
-                    child: Opacity(
-                      opacity: _logoFadeAnimation.value,
-                      child: Container(
-                        width: 120,
-                        height: 120,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(24),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.2),
-                              blurRadius: 20,
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
-                        ),
-                        child: Icon(
-                          Icons.event,
-                          size: 60,
-                          color: theme.primaryColor,
-                        ),
+                  scale: _logoScaleAnimation.value,
+                  child: Opacity(
+                    opacity: _logoFadeAnimation.value,
+                    child: Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(24),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.2),
+                            blurRadius: 20,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
+                      ),
+                      child: Icon(
+                        Icons.event,
+                        size: 60,
+                        color: theme.primaryColor,
                       ),
                     ),
                   ),
+                ),
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               // Название приложения
               AnimatedBuilder(
                 animation: _logoFadeAnimation,
                 builder: (context, child) => Opacity(
-                    opacity: _logoFadeAnimation.value,
-                    child: Text(
-                      'Event Marketplace',
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  opacity: _logoFadeAnimation.value,
+                  child: Text(
+                    'Event Marketplace',
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
+                ),
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Подзаголовок
               AnimatedBuilder(
                 animation: _logoFadeAnimation,
                 builder: (context, child) => Opacity(
-                    opacity: _logoFadeAnimation.value * 0.8,
-                    child: Text(
-                      'Найдите идеального специалиста для вашего события',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: Colors.white.withValues(alpha: 0.9),
-                      ),
-                      textAlign: TextAlign.center,
+                  opacity: _logoFadeAnimation.value * 0.8,
+                  child: Text(
+                    'Найдите идеального специалиста для вашего события',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: Colors.white.withValues(alpha: 0.9),
                     ),
+                    textAlign: TextAlign.center,
                   ),
+                ),
               ),
-              
+
               const Spacer(flex: 2),
-              
+
               // Прогресс-бар
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 32),
@@ -291,51 +296,51 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     AnimatedBuilder(
                       animation: _progressAnimation,
                       builder: (context, child) => Opacity(
-                          opacity: _progressAnimation.value,
-                          child: Text(
-                            _statusText,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: Colors.white.withValues(alpha: 0.8),
-                            ),
+                        opacity: _progressAnimation.value,
+                        child: Text(
+                          _statusText,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: Colors.white.withValues(alpha: 0.8),
                           ),
                         ),
+                      ),
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     // Прогресс-бар
                     AnimatedBuilder(
                       animation: _progressAnimation,
                       builder: (context, child) => Opacity(
-                          opacity: _progressAnimation.value,
-                          child: LinearProgressIndicator(
-                            value: _progress,
-                            backgroundColor: Colors.white.withValues(alpha: 0.3),
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.white.withValues(alpha: 0.9),
-                            ),
-                            minHeight: 4,
+                        opacity: _progressAnimation.value,
+                        child: LinearProgressIndicator(
+                          value: _progress,
+                          backgroundColor: Colors.white.withValues(alpha: 0.3),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white.withValues(alpha: 0.9),
                           ),
+                          minHeight: 4,
                         ),
+                      ),
                     ),
-                    
+
                     const SizedBox(height: 8),
-                    
+
                     // Процент
                     AnimatedBuilder(
                       animation: _progressAnimation,
                       builder: (context, child) => Opacity(
-                          opacity: _progressAnimation.value,
-                          child: Text(
-                            '${(_progress * 100).toInt()}%',
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: Colors.white.withValues(alpha: 0.8),
-                              fontWeight: FontWeight.w600,
-                            ),
+                        opacity: _progressAnimation.value,
+                        child: Text(
+                          '${(_progress * 100).toInt()}%',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: Colors.white.withValues(alpha: 0.8),
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
+                      ),
                     ),
-                    
+
                     // Кнопка "Повторить" (показывается при таймауте)
                     if (_showRetryButton) ...[
                       const SizedBox(height: 16),
@@ -362,7 +367,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   ],
                 ),
               ),
-              
+
               const SizedBox(height: 32),
             ],
           ),
@@ -373,7 +378,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 }
 
 /// Провайдер для состояния сплэш-экрана
-final splashStateProvider = StateNotifierProvider<SplashStateNotifier, SplashState>((ref) => SplashStateNotifier());
+final splashStateProvider =
+    StateNotifierProvider<SplashStateNotifier, SplashState>(
+        (ref) => SplashStateNotifier());
 
 class SplashState {
   const SplashState({
@@ -393,12 +400,13 @@ class SplashState {
     double? progress,
     String? statusText,
     String? error,
-  }) => SplashState(
-      isInitialized: isInitialized ?? this.isInitialized,
-      progress: progress ?? this.progress,
-      statusText: statusText ?? this.statusText,
-      error: error ?? this.error,
-    );
+  }) =>
+      SplashState(
+        isInitialized: isInitialized ?? this.isInitialized,
+        progress: progress ?? this.progress,
+        statusText: statusText ?? this.statusText,
+        error: error ?? this.error,
+      );
 }
 
 class SplashStateNotifier extends StateNotifier<SplashState> {

@@ -8,31 +8,32 @@ import 'analytics_service.dart';
 class WeeklyReportsService {
   factory WeeklyReportsService() => _instance;
   WeeklyReportsService._internal();
-  static final WeeklyReportsService _instance = WeeklyReportsService._internal();
+  static final WeeklyReportsService _instance =
+      WeeklyReportsService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _notifications = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _notifications =
+      FlutterLocalNotificationsPlugin();
   final AnalyticsService _analyticsService = AnalyticsService();
 
   /// Инициализация сервиса
   Future<void> initialize() async {
     try {
       // Инициализация локальных уведомлений
-      const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+      const androidSettings =
+          AndroidInitializationSettings('@mipmap/ic_launcher');
       const iosSettings = DarwinInitializationSettings();
       const initSettings = InitializationSettings(
         android: androidSettings,
         iOS: iosSettings,
       );
-      
+
       await _notifications.initialize(initSettings);
-      
+
       // Запрос разрешений на уведомления
-      await _messaging.requestPermission(
-        
-      );
-      
+      await _messaging.requestPermission();
+
       // Логирование:'WeeklyReportsService инициализирован успешно');
     } on Exception {
       // Логирование:'Ошибка инициализации WeeklyReportsService: $e');
@@ -83,11 +84,12 @@ class WeeklyReportsService {
           .collection('analytics_events')
           .where('user_id', isEqualTo: customerId)
           .where('event_name', isEqualTo: 'create_request')
-          .where('timestamp', isGreaterThan: DateTime.now().subtract(const Duration(days: 7)))
+          .where('timestamp',
+              isGreaterThan: DateTime.now().subtract(const Duration(days: 7)))
           .get();
 
       final totalRequests = requestsQuery.docs.length;
-      
+
       // Получаем информацию о просмотрах заявок
       final viewedRequests = await _getViewedRequestsCount(customerId);
 
@@ -106,7 +108,8 @@ class WeeklyReportsService {
       await _firestore.collection('weekly_reports').add(report);
 
       // Отправляем уведомление
-      await _sendCustomerNotification(customerId, totalRequests, viewedRequests);
+      await _sendCustomerNotification(
+          customerId, totalRequests, viewedRequests);
 
       // Логирование:'Еженедельный отчёт отправлен заказчику $customerId');
     } on Exception {
@@ -115,10 +118,12 @@ class WeeklyReportsService {
   }
 
   /// Отправка уведомления специалисту
-  Future<void> _sendSpecialistNotification(String specialistId, int views, int requests) async {
+  Future<void> _sendSpecialistNotification(
+      String specialistId, int views, int requests) async {
     try {
       const title = '📊 Ваша недельная статистика';
-      final body = 'Ваш профиль просмотрели $views раз, получено $requests заявок';
+      final body =
+          'Ваш профиль просмотрели $views раз, получено $requests заявок';
 
       // Локальное уведомление
       await _notifications.show(
@@ -145,10 +150,12 @@ class WeeklyReportsService {
   }
 
   /// Отправка уведомления заказчику
-  Future<void> _sendCustomerNotification(String customerId, int totalRequests, int viewedRequests) async {
+  Future<void> _sendCustomerNotification(
+      String customerId, int totalRequests, int viewedRequests) async {
     try {
       const title = '📈 Ваша активность за неделю';
-      final body = 'Создано $totalRequests заявок, просмотрено $viewedRequests специалистами';
+      final body =
+          'Создано $totalRequests заявок, просмотрено $viewedRequests специалистами';
 
       // Локальное уведомление
       await _notifications.show(
@@ -175,12 +182,13 @@ class WeeklyReportsService {
   }
 
   /// Отправка push-уведомления через FCM
-  Future<void> _sendPushNotification(String userId, String title, String body) async {
+  Future<void> _sendPushNotification(
+      String userId, String title, String body) async {
     try {
       // Получаем FCM токен пользователя
       final userDoc = await _firestore.collection('users').doc(userId).get();
       final fcmToken = userDoc.data()?['fcmToken'] as String?;
-      
+
       if (fcmToken == null) return;
 
       // Отправляем уведомление через Cloud Functions
@@ -203,7 +211,8 @@ class WeeklyReportsService {
       final requestsQuery = await _firestore
           .collection('requests')
           .where('customerId', isEqualTo: customerId)
-          .where('createdAt', isGreaterThan: DateTime.now().subtract(const Duration(days: 7)))
+          .where('createdAt',
+              isGreaterThan: DateTime.now().subtract(const Duration(days: 7)))
           .get();
 
       var viewedCount = 0;
@@ -228,7 +237,8 @@ class WeeklyReportsService {
       // Получаем всех активных пользователей
       final usersQuery = await _firestore
           .collection('users')
-          .where('lastActiveAt', isGreaterThan: DateTime.now().subtract(const Duration(days: 30)))
+          .where('lastActiveAt',
+              isGreaterThan: DateTime.now().subtract(const Duration(days: 30)))
           .get();
 
       var specialistCount = 0;
@@ -262,7 +272,8 @@ class WeeklyReportsService {
   }
 
   /// Получение истории отчётов пользователя
-  Future<List<Map<String, dynamic>>> getUserReportsHistory(String userId) async {
+  Future<List<Map<String, dynamic>>> getUserReportsHistory(
+      String userId) async {
     try {
       final reportsQuery = await _firestore
           .collection('weekly_reports')
@@ -271,10 +282,14 @@ class WeeklyReportsService {
           .limit(10)
           .get();
 
-      return reportsQuery.docs.map((doc) => {
-        'id': doc.id,
-        ...doc.data(),
-      },).toList();
+      return reportsQuery.docs
+          .map(
+            (doc) => {
+              'id': doc.id,
+              ...doc.data(),
+            },
+          )
+          .toList();
     } on Exception {
       // Логирование:'Ошибка получения истории отчётов: $e');
       return [];
@@ -317,9 +332,10 @@ class WeeklyReportsService {
 
       final lastReportDate = lastReportQuery.data()?['lastSent'] as Timestamp?;
       final now = DateTime.now();
-      
+
       if (lastReportDate != null) {
-        final daysSinceLastReport = now.difference(lastReportDate.toDate()).inDays;
+        final daysSinceLastReport =
+            now.difference(lastReportDate.toDate()).inDays;
         if (daysSinceLastReport < 7) {
           // Логирование:'Отчёты уже отправлялись на этой неделе');
           return;

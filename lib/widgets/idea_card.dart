@@ -41,10 +41,12 @@ class _IdeaCardState extends State<IdeaCard>
     _scaleAnimation = Tween<double>(
       begin: 1,
       end: 1.05,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ),);
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
   }
 
   @override
@@ -55,8 +57,8 @@ class _IdeaCardState extends State<IdeaCard>
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
-      animation: _scaleAnimation,
-      builder: (context, child) => Transform.scale(
+        animation: _scaleAnimation,
+        builder: (context, child) => Transform.scale(
           scale: _scaleAnimation.value,
           child: GestureDetector(
             onTap: widget.onTap,
@@ -80,7 +82,7 @@ class _IdeaCardState extends State<IdeaCard>
                 children: [
                   // Изображение идеи
                   _buildIdeaImage(),
-                  
+
                   // Контент карточки
                   Expanded(
                     child: Padding(
@@ -99,7 +101,7 @@ class _IdeaCardState extends State<IdeaCard>
                             overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 4),
-                          
+
                           // Описание
                           Expanded(
                             child: Text(
@@ -112,9 +114,9 @@ class _IdeaCardState extends State<IdeaCard>
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          
+
                           const SizedBox(height: 8),
-                          
+
                           // Действия
                           _buildActions(),
                         ],
@@ -126,7 +128,7 @@ class _IdeaCardState extends State<IdeaCard>
             ),
           ),
         ),
-    );
+      );
 
   Widget _buildIdeaImage() => Container(
         height: 120,
@@ -181,7 +183,8 @@ class _IdeaCardState extends State<IdeaCard>
     required IconData icon,
     Color? color,
     required VoidCallback onTap,
-  }) => GestureDetector(
+  }) =>
+      GestureDetector(
         onTap: onTap,
         child: Icon(
           icon,

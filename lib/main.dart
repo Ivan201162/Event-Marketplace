@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,7 +31,7 @@ void main() async {
         options: DefaultFirebaseOptions.currentPlatform,
       );
       debugPrint('Firebase инициализирован успешно');
-      
+
       // Инициализация аналитики
       final analyticsService = AnalyticsService();
       await analyticsService.logScreenView('app_start');
@@ -70,15 +69,17 @@ void main() async {
   } catch (e, stackTrace) {
     debugPrint('Критическая ошибка при запуске приложения: $e');
     debugPrint('Stack trace: $stackTrace');
-    
+
     // Запускаем минимальную версию приложения
-    runApp(const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Ошибка инициализации приложения'),
+    runApp(
+      const MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: Text('Ошибка инициализации приложения'),
+          ),
         ),
       ),
-    ),);
+    );
   }
 }
 
@@ -87,7 +88,7 @@ Future<void> _initializeTestData() async {
   try {
     debugPrint('Начинаем инициализацию тестовых данных...');
     final testDataService = TestDataService();
-    
+
     // Проверяем наличие данных с таймаутом
     final hasData = await testDataService.hasTestData().timeout(
       const Duration(seconds: 10),

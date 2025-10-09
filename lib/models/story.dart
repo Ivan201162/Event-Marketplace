@@ -97,7 +97,7 @@ class Story {
   String get timeAgo {
     final now = DateTime.now();
     final difference = now.difference(createdAt);
-    
+
     if (difference.inDays > 0) {
       return '${difference.inDays}д назад';
     } else if (difference.inHours > 0) {
@@ -158,5 +158,6 @@ class Story {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() => 'Story(id: $id, title: $title, specialistId: $specialistId)';
+  String toString() =>
+      'Story(id: $id, title: $title, specialistId: $specialistId)';
 }

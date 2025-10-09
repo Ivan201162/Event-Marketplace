@@ -509,7 +509,7 @@ class SettingsPage extends ConsumerWidget {
               try {
                 // Логируем выход
                 await AnalyticsService().logLogout();
-                
+
                 await ref.read(authServiceProvider).signOut();
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(

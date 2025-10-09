@@ -62,7 +62,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -80,7 +80,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Поисковая строка
                   TextField(
                     controller: _searchController,
@@ -97,9 +97,9 @@ class _SearchScreenState extends State<SearchScreen> {
                       setState(() {});
                     },
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Фильтры
                   Row(
                     children: [
@@ -114,10 +114,14 @@ class _SearchScreenState extends State<SearchScreen> {
                             filled: true,
                             fillColor: theme.colorScheme.surface,
                           ),
-                          items: _categories.map((category) => DropdownMenuItem(
-                              value: category,
-                              child: Text(category),
-                            ),).toList(),
+                          items: _categories
+                              .map(
+                                (category) => DropdownMenuItem(
+                                  value: category,
+                                  child: Text(category),
+                                ),
+                              )
+                              .toList(),
                           onChanged: (value) {
                             setState(() {
                               _selectedCategory = value!;
@@ -154,7 +158,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
           ),
-          
+
           // Список специалистов
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -173,104 +177,107 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _buildSpecialistCard(Map<String, dynamic> specialist, ThemeData theme) => Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      elevation: 2,
-      child: InkWell(
-        onTap: () {
-          _showSpecialistDetails(specialist);
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              // Аватар
-              Stack(
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage: NetworkImage(specialist['avatar']),
-                  ),
-                  if (specialist['isVerified'])
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Icon(
-                          Icons.verified,
-                          color: Colors.white,
-                          size: 16,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-              
-              const SizedBox(width: 16),
-              
-              // Информация
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildSpecialistCard(
+          Map<String, dynamic> specialist, ThemeData theme) =>
+      Card(
+        margin: const EdgeInsets.only(bottom: 16),
+        elevation: 2,
+        child: InkWell(
+          onTap: () {
+            _showSpecialistDetails(specialist);
+          },
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                // Аватар
+                Stack(
                   children: [
-                    Text(
-                      specialist['name'],
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundImage: NetworkImage(specialist['avatar']),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      specialist['category'],
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                          size: 16,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          specialist['rating'].toString(),
-                          style: theme.textTheme.bodyMedium,
-                        ),
-                        const SizedBox(width: 16),
-                        Text(
-                          '${specialist['price']}₽/час',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.primary,
+                    if (specialist['isVerified'])
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(
+                            Icons.verified,
+                            color: Colors.white,
+                            size: 16,
                           ),
                         ),
-                      ],
-                    ),
+                      ),
                   ],
                 ),
-              ),
-              
-              // Кнопка действия
-              IconButton(
-                onPressed: () {
-                  context.push('/specialist/${specialist['name'].toLowerCase().replaceAll(' ', '_')}');
-                },
-                icon: const Icon(Icons.arrow_forward_ios),
-              ),
-            ],
+
+                const SizedBox(width: 16),
+
+                // Информация
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        specialist['name'],
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        specialist['category'],
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                            size: 16,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            specialist['rating'].toString(),
+                            style: theme.textTheme.bodyMedium,
+                          ),
+                          const SizedBox(width: 16),
+                          Text(
+                            '${specialist['price']}₽/час',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Кнопка действия
+                IconButton(
+                  onPressed: () {
+                    context.push(
+                        '/specialist/${specialist['name'].toLowerCase().replaceAll(' ', '_')}');
+                  },
+                  icon: const Icon(Icons.arrow_forward_ios),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
 
   void _showSpecialistDetails(Map<String, dynamic> specialist) {
     showModalBottomSheet(
@@ -299,15 +306,21 @@ class _SearchScreenState extends State<SearchScreen> {
                       children: [
                         Text(
                           specialist['name'],
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
                         Text(
                           specialist['category'],
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
                         ),
                       ],
                     ),
@@ -318,9 +331,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Действия
               Row(
                 children: [

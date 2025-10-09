@@ -379,7 +379,8 @@ class _EditCustomerProfileScreenState
                                         width: 20,
                                         height: 20,
                                         child: CircularProgressIndicator(
-                                            strokeWidth: 2,),
+                                          strokeWidth: 2,
+                                        ),
                                       ),
                                       SizedBox(width: 12),
                                       Text('Сохранение...'),

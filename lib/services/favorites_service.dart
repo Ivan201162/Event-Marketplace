@@ -82,9 +82,7 @@ class FavoritesService {
           .where(FieldPath.documentId, whereIn: specialistIds)
           .get();
 
-      return specialistsSnapshot.docs
-          .map(Specialist.fromDocument)
-          .toList();
+      return specialistsSnapshot.docs.map(Specialist.fromDocument).toList();
     } catch (e) {
       debugPrint('Ошибка получения избранных специалистов: $e');
       return [];
@@ -92,28 +90,27 @@ class FavoritesService {
   }
 
   /// Получить поток избранных специалистов
-  Stream<List<Specialist>> getFavoriteSpecialistsStream(String userId) => _firestore
-        .collection(_collectionName)
-        .where('userId', isEqualTo: userId)
-        .snapshots()
-        .asyncMap((favoritesSnapshot) async {
-      if (favoritesSnapshot.docs.isEmpty) {
-        return <Specialist>[];
-      }
+  Stream<List<Specialist>> getFavoriteSpecialistsStream(String userId) =>
+      _firestore
+          .collection(_collectionName)
+          .where('userId', isEqualTo: userId)
+          .snapshots()
+          .asyncMap((favoritesSnapshot) async {
+        if (favoritesSnapshot.docs.isEmpty) {
+          return <Specialist>[];
+        }
 
-      final specialistIds = favoritesSnapshot.docs
-          .map((doc) => doc.data()['specialistId'] as String)
-          .toList();
+        final specialistIds = favoritesSnapshot.docs
+            .map((doc) => doc.data()['specialistId'] as String)
+            .toList();
 
-      final specialistsSnapshot = await _firestore
-          .collection('specialists')
-          .where(FieldPath.documentId, whereIn: specialistIds)
-          .get();
+        final specialistsSnapshot = await _firestore
+            .collection('specialists')
+            .where(FieldPath.documentId, whereIn: specialistIds)
+            .get();
 
-      return specialistsSnapshot.docs
-          .map(Specialist.fromDocument)
-          .toList();
-    });
+        return specialistsSnapshot.docs.map(Specialist.fromDocument).toList();
+      });
 
   /// Получить количество избранных специалистов
   Future<int> getFavoritesCount(String userId) async {

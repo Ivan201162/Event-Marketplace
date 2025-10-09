@@ -47,7 +47,9 @@ class ErrorHandler {
 
   /// Обработка ошибок Firebase Auth
   static String _handleFirebaseAuthError(
-      FirebaseAuthException error, String? context,) {
+    FirebaseAuthException error,
+    String? context,
+  ) {
     String message;
     final code = error.code;
     const type = 'FIREBASE_AUTH';
@@ -177,7 +179,11 @@ class ErrorHandler {
     }
 
     _logError(
-        error, context, type, error.osError?.errorCode.toString() ?? 'UNKNOWN',);
+      error,
+      context,
+      type,
+      error.osError?.errorCode.toString() ?? 'UNKNOWN',
+    );
     return message;
   }
 
@@ -237,7 +243,9 @@ class ErrorHandler {
 
   /// Обработка ошибок нереализованных функций
   static String _handleUnimplementedError(
-      UnimplementedError error, String? context,) {
+    UnimplementedError error,
+    String? context,
+  ) {
     final message = 'Функция не реализована: ${error.message}';
     const type = 'UNIMPLEMENTED';
 
@@ -247,7 +255,9 @@ class ErrorHandler {
 
   /// Обработка ошибок неподдерживаемых операций
   static String _handleUnsupportedError(
-      UnsupportedError error, String? context,) {
+    UnsupportedError error,
+    String? context,
+  ) {
     final message = 'Неподдерживаемая операция: ${error.message}';
     const type = 'UNSUPPORTED';
 

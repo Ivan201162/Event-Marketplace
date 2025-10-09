@@ -102,7 +102,8 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasError) {
-          return Center(child: Text('Ошибка загрузки заявок: ${snapshot.error}'));
+          return Center(
+              child: Text('Ошибка загрузки заявок: ${snapshot.error}'));
         }
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return Center(
@@ -302,7 +303,8 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      if (booking.discount != null && booking.discount! > 0) ...[
+                      if (booking.discount != null &&
+                          booking.discount! > 0) ...[
                         Text(
                           '${booking.totalPrice.toStringAsFixed(0)} ₽',
                           style:
@@ -736,7 +738,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
     if (result ?? false && discountPercent != null) {
       try {
         final finalPrice = booking.totalPrice * (1 - discountPercent! / 100);
-        
+
         await FirebaseFirestore.instance
             .collection('bookings')
             .doc(booking.id)
@@ -916,7 +918,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
     if (confirmed ?? false) {
       try {
         final finalPrice = booking.totalPrice * (1 - recommendedDiscount / 100);
-        
+
         await FirebaseFirestore.instance
             .collection('bookings')
             .doc(booking.id)

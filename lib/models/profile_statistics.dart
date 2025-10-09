@@ -15,6 +15,25 @@ class ProfileStatistics {
     required this.pinnedPosts,
   });
 
+  /// Создать из Map
+  factory ProfileStatistics.fromMap(Map<String, dynamic> map) =>
+      ProfileStatistics(
+        views: (map['views'] as int?) ?? 0,
+        likes: (map['likes'] as int?) ?? 0,
+        rating: (map['rating'] as num?)?.toDouble() ?? 0.0,
+        reviewsCount: (map['reviewsCount'] as int?) ?? 0,
+        averagePrice: (map['averagePrice'] as num?)?.toDouble() ?? 0.0,
+        completedOrders: (map['completedOrders'] as int?) ?? 0,
+        responseTime: (map['responseTime'] as num?)?.toDouble() ?? 0.0,
+        onlineStatus: (map['onlineStatus'] as bool?) ?? false,
+        lastActive: map['lastActive'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(map['lastActive'] as int)
+            : DateTime.now(),
+        portfolioItems: (map['portfolioItems'] as int?) ?? 0,
+        socialLinks: (map['socialLinks'] as int?) ?? 0,
+        pinnedPosts: (map['pinnedPosts'] as int?) ?? 0,
+      );
+
   /// Количество просмотров профиля
   final int views;
 
@@ -51,43 +70,22 @@ class ProfileStatistics {
   /// Количество закреплённых постов
   final int pinnedPosts;
 
-  /// Создать из Map
-  factory ProfileStatistics.fromMap(Map<String, dynamic> map) {
-    return ProfileStatistics(
-      views: (map['views'] as int?) ?? 0,
-      likes: (map['likes'] as int?) ?? 0,
-      rating: (map['rating'] as num?)?.toDouble() ?? 0.0,
-      reviewsCount: (map['reviewsCount'] as int?) ?? 0,
-      averagePrice: (map['averagePrice'] as num?)?.toDouble() ?? 0.0,
-      completedOrders: (map['completedOrders'] as int?) ?? 0,
-      responseTime: (map['responseTime'] as num?)?.toDouble() ?? 0.0,
-      onlineStatus: (map['onlineStatus'] as bool?) ?? false,
-      lastActive: map['lastActive'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['lastActive'] as int)
-          : DateTime.now(),
-      portfolioItems: (map['portfolioItems'] as int?) ?? 0,
-      socialLinks: (map['socialLinks'] as int?) ?? 0,
-      pinnedPosts: (map['pinnedPosts'] as int?) ?? 0,
-    );
-  }
-
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'views': views,
-      'likes': likes,
-      'rating': rating,
-      'reviewsCount': reviewsCount,
-      'averagePrice': averagePrice,
-      'completedOrders': completedOrders,
-      'responseTime': responseTime,
-      'onlineStatus': onlineStatus,
-      if (lastActive != null) 'lastActive': lastActive!.millisecondsSinceEpoch,
-      'portfolioItems': portfolioItems,
-      'socialLinks': socialLinks,
-      'pinnedPosts': pinnedPosts,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'views': views,
+        'likes': likes,
+        'rating': rating,
+        'reviewsCount': reviewsCount,
+        'averagePrice': averagePrice,
+        'completedOrders': completedOrders,
+        'responseTime': responseTime,
+        'onlineStatus': onlineStatus,
+        if (lastActive != null)
+          'lastActive': lastActive!.millisecondsSinceEpoch,
+        'portfolioItems': portfolioItems,
+        'socialLinks': socialLinks,
+        'pinnedPosts': pinnedPosts,
+      };
 
   /// Создать копию с изменениями
   ProfileStatistics copyWith({
@@ -103,20 +101,19 @@ class ProfileStatistics {
     int? portfolioItems,
     int? socialLinks,
     int? pinnedPosts,
-  }) {
-    return ProfileStatistics(
-      views: views ?? this.views,
-      likes: likes ?? this.likes,
-      rating: rating ?? this.rating,
-      reviewsCount: reviewsCount ?? this.reviewsCount,
-      averagePrice: averagePrice ?? this.averagePrice,
-      completedOrders: completedOrders ?? this.completedOrders,
-      responseTime: responseTime ?? this.responseTime,
-      onlineStatus: onlineStatus ?? this.onlineStatus,
-      lastActive: lastActive ?? this.lastActive,
-      portfolioItems: portfolioItems ?? this.portfolioItems,
-      socialLinks: socialLinks ?? this.socialLinks,
-      pinnedPosts: pinnedPosts ?? this.pinnedPosts,
-    );
-  }
+  }) =>
+      ProfileStatistics(
+        views: views ?? this.views,
+        likes: likes ?? this.likes,
+        rating: rating ?? this.rating,
+        reviewsCount: reviewsCount ?? this.reviewsCount,
+        averagePrice: averagePrice ?? this.averagePrice,
+        completedOrders: completedOrders ?? this.completedOrders,
+        responseTime: responseTime ?? this.responseTime,
+        onlineStatus: onlineStatus ?? this.onlineStatus,
+        lastActive: lastActive ?? this.lastActive,
+        portfolioItems: portfolioItems ?? this.portfolioItems,
+        socialLinks: socialLinks ?? this.socialLinks,
+        pinnedPosts: pinnedPosts ?? this.pinnedPosts,
+      );
 }

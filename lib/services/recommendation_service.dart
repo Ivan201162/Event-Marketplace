@@ -38,7 +38,8 @@ class RecommendationService {
   }
 
   /// Получить активность пользователя
-  Future<List<UserActivity>> getUserActivity(String userId, {int limit = 100}) async {
+  Future<List<UserActivity>> getUserActivity(String userId,
+      {int limit = 100}) async {
     try {
       final querySnapshot = await _firestore
           .collection(_activityCollection)
@@ -47,9 +48,7 @@ class RecommendationService {
           .limit(limit)
           .get();
 
-      return querySnapshot.docs
-          .map(UserActivity.fromFirestore)
-          .toList();
+      return querySnapshot.docs.map(UserActivity.fromFirestore).toList();
     } catch (e) {
       print('Ошибка получения активности пользователя: $e');
       return [];
@@ -61,18 +60,19 @@ class RecommendationService {
     try {
       // Получаем активность пользователя
       final activities = await getUserActivity(userId);
-      
+
       if (activities.isEmpty) {
         // Если нет активности, возвращаем популярных специалистов
         return await _getPopularSpecialists(userId);
       }
 
       // Анализируем активность и генерируем рекомендации
-      final recommendations = await _generateRecommendations(userId, activities);
-      
+      final recommendations =
+          await _generateRecommendations(userId, activities);
+
       // Сохраняем рекомендации
       await _saveRecommendations(userId, recommendations);
-      
+
       return recommendations;
     } catch (e) {
       print('Ошибка получения рекомендаций: $e');
@@ -118,7 +118,8 @@ class RecommendationService {
       if (priceStats['min'] != null && priceStats['max'] != null) {
         final avgPrice = (priceStats['min']! + priceStats['max']!) / 2;
         final priceDiff = (specialist.price - avgPrice).abs() / avgPrice;
-        if (priceDiff < 0.3) { // В пределах 30% от среднего бюджета
+        if (priceDiff < 0.3) {
+          // В пределах 30% от среднего бюджета
           score += 1;
           reason += 'Подходящий ценовой диапазон. ';
         }
@@ -130,23 +131,26 @@ class RecommendationService {
         reason += 'Высокий рейтинг. ';
       }
 
-      if (score > 0.1) { // Минимальный порог для рекомендации
+      if (score > 0.1) {
+        // Минимальный порог для рекомендации
         final confidence = (score * 100).clamp(0.0, 100.0);
-        
-        recommendations.add(Recommendation(
-          id: '${userId}_${specialist.id}',
-          userId: userId,
-          specialistId: specialist.id,
-          specialistName: specialist.name,
-          category: specialist.category.name,
-          city: specialist.city ?? '',
-          price: specialist.price,
-          rating: specialist.rating,
-          photoUrl: specialist.photoUrl,
-          reason: reason.trim(),
-          confidence: confidence.toDouble(),
-          createdAt: now,
-        ),);
+
+        recommendations.add(
+          Recommendation(
+            id: '${userId}_${specialist.id}',
+            userId: userId,
+            specialistId: specialist.id,
+            specialistName: specialist.name,
+            category: specialist.category.name,
+            city: specialist.city ?? '',
+            price: specialist.price,
+            rating: specialist.rating,
+            photoUrl: specialist.photoUrl,
+            reason: reason.trim(),
+            confidence: confidence.toDouble(),
+            createdAt: now,
+          ),
+        );
       }
     }
 
@@ -169,7 +173,7 @@ class RecommendationService {
 
     for (final activity in activities) {
       final weight = categoryWeights[activity.activityType] ?? 1.0;
-      categoryCount[activity.category] = 
+      categoryCount[activity.category] =
           (categoryCount[activity.category] ?? 0) + weight.toInt();
     }
 
@@ -185,7 +189,7 @@ class RecommendationService {
   /// Анализ городов в активности
   Map<String, double> _analyzeCities(List<UserActivity> activities) {
     final cityCount = <String, int>{};
-    
+
     for (final activity in activities) {
       if (activity.city != null) {
         cityCount[activity.city!] = (cityCount[activity.city!] ?? 0) + 1;
@@ -231,20 +235,25 @@ class RecommendationService {
         return scoreB.compareTo(scoreA);
       });
 
-      return specialists.take(5).map((specialist) => Recommendation(
-          id: '${userId}_${specialist.id}',
-          userId: userId,
-          specialistId: specialist.id,
-          specialistName: specialist.name,
-          category: specialist.category.name,
-          city: specialist.city ?? '',
-          price: specialist.price,
-          rating: specialist.rating,
-          photoUrl: specialist.photoUrl,
-          reason: 'Популярный специалист с высоким рейтингом',
-          confidence: 70,
-          createdAt: now,
-        ),).toList();
+      return specialists
+          .take(5)
+          .map(
+            (specialist) => Recommendation(
+              id: '${userId}_${specialist.id}',
+              userId: userId,
+              specialistId: specialist.id,
+              specialistName: specialist.name,
+              category: specialist.category.name,
+              city: specialist.city ?? '',
+              price: specialist.price,
+              rating: specialist.rating,
+              photoUrl: specialist.photoUrl,
+              reason: 'Популярный специалист с высоким рейтингом',
+              confidence: 70,
+              createdAt: now,
+            ),
+          )
+          .toList();
     } catch (e) {
       print('Ошибка получения популярных специалистов: $e');
       return [];
@@ -252,7 +261,8 @@ class RecommendationService {
   }
 
   /// Сохранить рекомендации
-  Future<void> _saveRecommendations(String userId, List<Recommendation> recommendations) async {
+  Future<void> _saveRecommendations(
+      String userId, List<Recommendation> recommendations) async {
     try {
       // Удаляем старые рекомендации
       final oldRecommendations = await _firestore
@@ -267,7 +277,9 @@ class RecommendationService {
 
       // Добавляем новые рекомендации
       for (final recommendation in recommendations) {
-        final docRef = _firestore.collection(_recommendationsCollection).doc(recommendation.id);
+        final docRef = _firestore
+            .collection(_recommendationsCollection)
+            .doc(recommendation.id);
         batch.set(docRef, recommendation.toFirestore());
       }
 
@@ -286,9 +298,7 @@ class RecommendationService {
           .orderBy('confidence', descending: true)
           .get();
 
-      return querySnapshot.docs
-          .map(Recommendation.fromFirestore)
-          .toList();
+      return querySnapshot.docs.map(Recommendation.fromFirestore).toList();
     } catch (e) {
       print('Ошибка получения сохраненных рекомендаций: $e');
       return [];
@@ -322,7 +332,7 @@ class RecommendationService {
   Future<Map<String, dynamic>> getUserActivityStats(String userId) async {
     try {
       final activities = await getUserActivity(userId);
-      
+
       if (activities.isEmpty) {
         return {
           'totalActivities': 0,
@@ -337,11 +347,13 @@ class RecommendationService {
       final activityTypeStats = <String, int>{};
 
       for (final activity in activities) {
-        categoryStats[activity.category] = (categoryStats[activity.category] ?? 0) + 1;
+        categoryStats[activity.category] =
+            (categoryStats[activity.category] ?? 0) + 1;
         if (activity.city != null) {
           cityStats[activity.city!] = (cityStats[activity.city!] ?? 0) + 1;
         }
-        activityTypeStats[activity.activityType] = (activityTypeStats[activity.activityType] ?? 0) + 1;
+        activityTypeStats[activity.activityType] =
+            (activityTypeStats[activity.activityType] ?? 0) + 1;
       }
 
       return {
@@ -349,7 +361,8 @@ class RecommendationService {
         'categories': categoryStats,
         'cities': cityStats,
         'activityTypes': activityTypeStats,
-        'lastActivity': activities.isNotEmpty ? activities.first.timestamp : null,
+        'lastActivity':
+            activities.isNotEmpty ? activities.first.timestamp : null,
       };
     } catch (e) {
       print('Ошибка получения статистики активности: $e');

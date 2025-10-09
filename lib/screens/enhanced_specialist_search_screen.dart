@@ -22,7 +22,7 @@ class _EnhancedSpecialistSearchScreenState
   late TabController _tabController;
   bool _showFilters = false;
   String _searchQuery = '';
-  
+
   // Фильтры
   SpecialistCategory? _selectedCategory;
   ExperienceLevel? _selectedExperience;
@@ -51,53 +51,53 @@ class _EnhancedSpecialistSearchScreenState
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(
-        title: const Text('Поиск специалистов'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        actions: [
-          IconButton(
-            icon: Icon(
-              _showFilters ? Icons.filter_list_off : Icons.filter_list,
+        appBar: AppBar(
+          title: const Text('Поиск специалистов'),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          actions: [
+            IconButton(
+              icon: Icon(
+                _showFilters ? Icons.filter_list_off : Icons.filter_list,
+              ),
+              onPressed: () {
+                setState(() {
+                  _showFilters = !_showFilters;
+                });
+              },
             ),
-            onPressed: () {
-              setState(() {
-                _showFilters = !_showFilters;
-              });
-            },
+          ],
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(text: 'Все специалисты'),
+              Tab(text: 'Быстрые фильтры'),
+            ],
           ),
-        ],
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Все специалисты'),
-            Tab(text: 'Быстрые фильтры'),
+        ),
+        body: Column(
+          children: [
+            // Поисковая строка
+            _buildSearchBar(),
+
+            // Фильтры
+            if (_showFilters) _buildFiltersSection(),
+
+            // Быстрые фильтры
+            if (_tabController.index == 1) _buildQuickFilters(),
+
+            // Результаты
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildAllSpecialistsTab(),
+                  _buildQuickFiltersTab(),
+                ],
+              ),
+            ),
           ],
         ),
-      ),
-      body: Column(
-        children: [
-          // Поисковая строка
-          _buildSearchBar(),
-
-          // Фильтры
-          if (_showFilters) _buildFiltersSection(),
-
-          // Быстрые фильтры
-          if (_tabController.index == 1) _buildQuickFilters(),
-
-          // Результаты
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildAllSpecialistsTab(),
-                _buildQuickFiltersTab(),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+      );
 
   /// Построить поисковую строку
   Widget _buildSearchBar() => Container(
@@ -248,7 +248,8 @@ class _EnhancedSpecialistSearchScreenState
             children: [
               Expanded(
                 child: TextFormField(
-                  initialValue: _minPrice > 0 ? _minPrice.toInt().toString() : '',
+                  initialValue:
+                      _minPrice > 0 ? _minPrice.toInt().toString() : '',
                   decoration: const InputDecoration(
                     labelText: 'От',
                     border: OutlineInputBorder(),
@@ -263,7 +264,8 @@ class _EnhancedSpecialistSearchScreenState
               const SizedBox(width: 16),
               Expanded(
                 child: TextFormField(
-                  initialValue: _maxPrice < 10000 ? _maxPrice.toInt().toString() : '',
+                  initialValue:
+                      _maxPrice < 10000 ? _maxPrice.toInt().toString() : '',
                   decoration: const InputDecoration(
                     labelText: 'До',
                     border: OutlineInputBorder(),
@@ -395,12 +397,14 @@ class _EnhancedSpecialistSearchScreenState
               border: OutlineInputBorder(),
               isDense: true,
             ),
-            items: SpecialistSorting.values.map(
-              (sorting) => DropdownMenuItem<SpecialistSorting>(
-                value: sorting,
-                child: Text(sorting.displayName),
-              ),
-            ).toList(),
+            items: SpecialistSorting.values
+                .map(
+                  (sorting) => DropdownMenuItem<SpecialistSorting>(
+                    value: sorting,
+                    child: Text(sorting.displayName),
+                  ),
+                )
+                .toList(),
             onChanged: (value) {
               if (value != null) {
                 setState(() {
@@ -701,17 +705,25 @@ class _EnhancedSpecialistSearchScreenState
       if (_searchQuery.isNotEmpty) {
         final searchLower = _searchQuery.toLowerCase();
         final matchesName = specialist.name.toLowerCase().contains(searchLower);
-        final matchesDescription = specialist.description?.toLowerCase().contains(searchLower) ?? false;
-        final matchesCategory = specialist.category.displayName.toLowerCase().contains(searchLower);
-        final matchesLocation = specialist.location?.toLowerCase().contains(searchLower) ?? false;
-        
-        if (!matchesName && !matchesDescription && !matchesCategory && !matchesLocation) {
+        final matchesDescription =
+            specialist.description?.toLowerCase().contains(searchLower) ??
+                false;
+        final matchesCategory =
+            specialist.category.displayName.toLowerCase().contains(searchLower);
+        final matchesLocation =
+            specialist.location?.toLowerCase().contains(searchLower) ?? false;
+
+        if (!matchesName &&
+            !matchesDescription &&
+            !matchesCategory &&
+            !matchesLocation) {
           return false;
         }
       }
 
       // Фильтр по категории
-      if (_selectedCategory != null && specialist.category != _selectedCategory) {
+      if (_selectedCategory != null &&
+          specialist.category != _selectedCategory) {
         return false;
       }
 
@@ -726,7 +738,8 @@ class _EnhancedSpecialistSearchScreenState
       }
 
       // Фильтр по опыту
-      if (_selectedExperience != null && specialist.experienceLevel != _selectedExperience) {
+      if (_selectedExperience != null &&
+          specialist.experienceLevel != _selectedExperience) {
         return false;
       }
 
@@ -751,7 +764,8 @@ class _EnhancedSpecialistSearchScreenState
         filtered.sort((a, b) => b.price.compareTo(a.price));
         break;
       case SpecialistSorting.experience:
-        filtered.sort((a, b) => b.yearsOfExperience.compareTo(a.yearsOfExperience));
+        filtered
+            .sort((a, b) => b.yearsOfExperience.compareTo(a.yearsOfExperience));
         break;
       case SpecialistSorting.reviews:
         filtered.sort((a, b) => b.reviewCount.compareTo(a.reviewCount));
@@ -762,12 +776,13 @@ class _EnhancedSpecialistSearchScreenState
   }
 
   /// Проверить наличие активных фильтров
-  bool _hasActiveFilters() => _selectedCategory != null ||
-        _selectedExperience != null ||
-        _minPrice > 0 ||
-        _maxPrice < 10000 ||
-        _minRating > 0 ||
-        _selectedDate != null;
+  bool _hasActiveFilters() =>
+      _selectedCategory != null ||
+      _selectedExperience != null ||
+      _minPrice > 0 ||
+      _maxPrice < 10000 ||
+      _minRating > 0 ||
+      _selectedDate != null;
 
   /// Очистить все фильтры
   void _clearFilters() {
@@ -804,7 +819,8 @@ class _EnhancedSpecialistSearchScreenState
   void _navigateToSpecialistProfile(Specialist specialist) {
     Navigator.of(context).push(
       MaterialPageRoute<SpecialistProfileScreen>(
-        builder: (context) => SpecialistProfileScreen(specialistId: specialist.id),
+        builder: (context) =>
+            SpecialistProfileScreen(specialistId: specialist.id),
       ),
     );
   }

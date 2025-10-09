@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../models/profile_statistics.dart';
+
 import '../models/portfolio_item.dart';
+import '../models/profile_statistics.dart';
 import '../models/social_link.dart';
 
 /// Сервис для работы с профилем специалиста
@@ -22,28 +23,27 @@ class SpecialistProfileService {
         return ProfileStatistics.fromMap(doc.data()!);
       } else {
         // Создать базовую статистику
-        final defaultStats = const ProfileStatistics(
+        const defaultStats = ProfileStatistics(
           views: 0,
           likes: 0,
-          rating: 0.0,
+          rating: 0,
           reviewsCount: 0,
-          averagePrice: 0.0,
+          averagePrice: 0,
           completedOrders: 0,
-          responseTime: 0.0,
+          responseTime: 0,
           onlineStatus: false,
-          lastActive: null,
           portfolioItems: 0,
           socialLinks: 0,
           pinnedPosts: 0,
         );
-        
+
         await _firestore
             .collection('specialists')
             .doc(specialistId)
             .collection('statistics')
             .doc('profile')
             .set(defaultStats.toMap());
-            
+
         return defaultStats;
       }
     } on Exception catch (e) {
@@ -51,13 +51,12 @@ class SpecialistProfileService {
       return const ProfileStatistics(
         views: 0,
         likes: 0,
-        rating: 0.0,
+        rating: 0,
         reviewsCount: 0,
-        averagePrice: 0.0,
+        averagePrice: 0,
         completedOrders: 0,
-        responseTime: 0.0,
+        responseTime: 0,
         onlineStatus: false,
-        lastActive: null,
         portfolioItems: 0,
         socialLinks: 0,
         pinnedPosts: 0,
@@ -110,10 +109,12 @@ class SpecialistProfileService {
           .get();
 
       return snapshot.docs
-          .map((doc) => PortfolioItem.fromMap({
-                'id': doc.id,
-                ...doc.data(),
-              }))
+          .map(
+            (doc) => PortfolioItem.fromMap({
+              'id': doc.id,
+              ...doc.data(),
+            }),
+          )
           .toList();
     } on Exception catch (e) {
       debugPrint('Ошибка получения портфолио: $e');
@@ -129,7 +130,7 @@ class SpecialistProfileService {
           .doc(specialistId)
           .collection('portfolio')
           .add(item.toMap());
-          
+
       // Обновить количество элементов портфолио в статистике
       await _firestore
           .collection('specialists')
@@ -153,7 +154,7 @@ class SpecialistProfileService {
           .collection('portfolio')
           .doc(itemId)
           .delete();
-          
+
       // Обновить количество элементов портфолио в статистике
       await _firestore
           .collection('specialists')
@@ -179,10 +180,12 @@ class SpecialistProfileService {
           .get();
 
       return snapshot.docs
-          .map((doc) => SocialLink.fromMap({
-                'id': doc.id,
-                ...doc.data(),
-              }))
+          .map(
+            (doc) => SocialLink.fromMap({
+              'id': doc.id,
+              ...doc.data(),
+            }),
+          )
           .toList();
     } on Exception catch (e) {
       debugPrint('Ошибка получения социальных ссылок: $e');
@@ -198,7 +201,7 @@ class SpecialistProfileService {
           .doc(specialistId)
           .collection('socialLinks')
           .add(link.toMap());
-          
+
       // Обновить количество социальных ссылок в статистике
       await _firestore
           .collection('specialists')
@@ -222,7 +225,7 @@ class SpecialistProfileService {
           .collection('socialLinks')
           .doc(linkId)
           .delete();
-          
+
       // Обновить количество социальных ссылок в статистике
       await _firestore
           .collection('specialists')
@@ -248,10 +251,12 @@ class SpecialistProfileService {
           .get();
 
       return snapshot.docs
-          .map((doc) => {
-                'id': doc.id,
-                ...doc.data(),
-              })
+          .map(
+            (doc) => {
+              'id': doc.id,
+              ...doc.data(),
+            },
+          )
           .toList();
     } on Exception catch (e) {
       debugPrint('Ошибка получения закреплённых постов: $e');
@@ -270,7 +275,7 @@ class SpecialistProfileService {
         'postId': postId,
         'pinnedAt': FieldValue.serverTimestamp(),
       });
-      
+
       // Обновить количество закреплённых постов в статистике
       await _firestore
           .collection('specialists')
@@ -294,7 +299,7 @@ class SpecialistProfileService {
           .collection('pinnedPosts')
           .doc(pinnedPostId)
           .delete();
-          
+
       // Обновить количество закреплённых постов в статистике
       await _firestore
           .collection('specialists')

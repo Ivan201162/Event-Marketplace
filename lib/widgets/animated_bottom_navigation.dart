@@ -33,7 +33,8 @@ class AnimatedBottomNavigation extends StatefulWidget {
   final TextStyle? labelStyle;
 
   @override
-  State<AnimatedBottomNavigation> createState() => _AnimatedBottomNavigationState();
+  State<AnimatedBottomNavigation> createState() =>
+      _AnimatedBottomNavigationState();
 }
 
 class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation>
@@ -53,18 +54,22 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation>
     _scaleAnimation = Tween<double>(
       begin: 1,
       end: 1.1,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    ),);
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: widget.curve,
+      ),
+    );
 
     _fadeAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    ),);
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: widget.curve,
+      ),
+    );
   }
 
   @override
@@ -87,7 +92,8 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation>
     final theme = Theme.of(context);
     final backgroundColor = widget.backgroundColor ?? theme.primaryColor;
     final activeColor = widget.activeColor ?? theme.colorScheme.onPrimary;
-    final inactiveColor = widget.inactiveColor ?? theme.colorScheme.onPrimary.withValues(alpha: 0.6);
+    final inactiveColor = widget.inactiveColor ??
+        theme.colorScheme.onPrimary.withValues(alpha: 0.6);
 
     return Container(
       height: widget.height + MediaQuery.of(context).padding.bottom,
@@ -115,43 +121,47 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation>
                 child: AnimatedBuilder(
                   animation: _controller,
                   builder: (context, child) => SizedBox(
-                      height: widget.height,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          AnimatedContainer(
-                            duration: widget.animationDuration,
-                            curve: widget.curve,
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? activeColor.withValues(alpha: 0.1)
-                                  : Colors.transparent,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Transform.scale(
-                              scale: isSelected ? _scaleAnimation.value : 1.0,
-                              child: Icon(
-                                isSelected ? item.activeIcon : item.icon,
-                                size: widget.iconSize,
-                                color: isSelected ? activeColor : inactiveColor,
-                              ),
+                    height: widget.height,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AnimatedContainer(
+                          duration: widget.animationDuration,
+                          curve: widget.curve,
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? activeColor.withValues(alpha: 0.1)
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Transform.scale(
+                            scale: isSelected ? _scaleAnimation.value : 1.0,
+                            child: Icon(
+                              isSelected ? item.activeIcon : item.icon,
+                              size: widget.iconSize,
+                              color: isSelected ? activeColor : inactiveColor,
                             ),
                           ),
-                          if (widget.showLabels) ...[
-                            const SizedBox(height: 4),
-                            AnimatedDefaultTextStyle(
-                              duration: widget.animationDuration,
-                              style: (widget.labelStyle ?? theme.textTheme.labelSmall)!.copyWith(
-                                color: isSelected ? activeColor : inactiveColor,
-                                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                              ),
-                              child: Text(item.label),
+                        ),
+                        if (widget.showLabels) ...[
+                          const SizedBox(height: 4),
+                          AnimatedDefaultTextStyle(
+                            duration: widget.animationDuration,
+                            style: (widget.labelStyle ??
+                                    theme.textTheme.labelSmall)!
+                                .copyWith(
+                              color: isSelected ? activeColor : inactiveColor,
+                              fontWeight: isSelected
+                                  ? FontWeight.w600
+                                  : FontWeight.normal,
                             ),
-                          ],
+                            child: Text(item.label),
+                          ),
                         ],
-                      ),
+                      ],
                     ),
+                  ),
                 ),
               ),
             );
@@ -210,10 +220,13 @@ class _CurvedBottomNavigationState extends State<CurvedBottomNavigation> {
     final theme = Theme.of(context);
     final backgroundColor = widget.backgroundColor ?? theme.primaryColor;
     final activeColor = widget.activeColor ?? theme.colorScheme.onPrimary;
-    final inactiveColor = widget.inactiveColor ?? theme.colorScheme.onPrimary.withValues(alpha: 0.6);
+    final inactiveColor = widget.inactiveColor ??
+        theme.colorScheme.onPrimary.withValues(alpha: 0.6);
 
     return CurvedNavigationBar(
-      items: widget.items.map((icon) => Icon(icon, size: widget.iconSize)).toList(),
+      items: widget.items
+          .map((icon) => Icon(icon, size: widget.iconSize))
+          .toList(),
       onTap: widget.onTap,
       index: widget.currentIndex,
       height: widget.height,
@@ -256,7 +269,8 @@ class FloatingBottomNavigation extends StatefulWidget {
   final TextStyle? labelStyle;
 
   @override
-  State<FloatingBottomNavigation> createState() => _FloatingBottomNavigationState();
+  State<FloatingBottomNavigation> createState() =>
+      _FloatingBottomNavigationState();
 }
 
 class _FloatingBottomNavigationState extends State<FloatingBottomNavigation>
@@ -275,10 +289,12 @@ class _FloatingBottomNavigationState extends State<FloatingBottomNavigation>
     _scaleAnimation = Tween<double>(
       begin: 1,
       end: 1.2,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.elasticOut,
-    ),);
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.elasticOut,
+      ),
+    );
   }
 
   @override
@@ -301,7 +317,8 @@ class _FloatingBottomNavigationState extends State<FloatingBottomNavigation>
     final theme = Theme.of(context);
     final backgroundColor = widget.backgroundColor ?? theme.cardColor;
     final activeColor = widget.activeColor ?? theme.primaryColor;
-    final inactiveColor = widget.inactiveColor ?? theme.colorScheme.onSurface.withValues(alpha: 0.6);
+    final inactiveColor = widget.inactiveColor ??
+        theme.colorScheme.onSurface.withValues(alpha: 0.6);
 
     return Container(
       margin: const EdgeInsets.all(16),
@@ -331,44 +348,48 @@ class _FloatingBottomNavigationState extends State<FloatingBottomNavigation>
                 child: AnimatedBuilder(
                   animation: _controller,
                   builder: (context, child) => SizedBox(
-                      height: widget.height,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          AnimatedContainer(
-                            duration: widget.animationDuration,
-                            curve: Curves.easeInOut,
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? activeColor.withValues(alpha: 0.1)
-                                  : Colors.transparent,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Transform.scale(
-                              scale: isSelected ? _scaleAnimation.value : 1.0,
-                              child: Icon(
-                                isSelected ? item.activeIcon : item.icon,
-                                size: widget.iconSize,
-                                color: isSelected ? activeColor : inactiveColor,
-                              ),
+                    height: widget.height,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AnimatedContainer(
+                          duration: widget.animationDuration,
+                          curve: Curves.easeInOut,
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? activeColor.withValues(alpha: 0.1)
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Transform.scale(
+                            scale: isSelected ? _scaleAnimation.value : 1.0,
+                            child: Icon(
+                              isSelected ? item.activeIcon : item.icon,
+                              size: widget.iconSize,
+                              color: isSelected ? activeColor : inactiveColor,
                             ),
                           ),
-                          if (widget.showLabels) ...[
-                            const SizedBox(height: 2),
-                            AnimatedDefaultTextStyle(
-                              duration: widget.animationDuration,
-                              style: (widget.labelStyle ?? theme.textTheme.labelSmall)!.copyWith(
-                                color: isSelected ? activeColor : inactiveColor,
-                                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                                fontSize: 10,
-                              ),
-                              child: Text(item.label),
+                        ),
+                        if (widget.showLabels) ...[
+                          const SizedBox(height: 2),
+                          AnimatedDefaultTextStyle(
+                            duration: widget.animationDuration,
+                            style: (widget.labelStyle ??
+                                    theme.textTheme.labelSmall)!
+                                .copyWith(
+                              color: isSelected ? activeColor : inactiveColor,
+                              fontWeight: isSelected
+                                  ? FontWeight.w600
+                                  : FontWeight.normal,
+                              fontSize: 10,
                             ),
-                          ],
+                            child: Text(item.label),
+                          ),
                         ],
-                      ),
+                      ],
                     ),
+                  ),
                 ),
               ),
             );

@@ -71,7 +71,8 @@ class ThemeNotifier extends StateNotifier<ThemeMode> {
 }
 
 /// Провайдер для управления темами
-final themeProvider = StateNotifierProvider<ThemeNotifier, ThemeMode>((ref) => ThemeNotifier());
+final themeProvider =
+    StateNotifierProvider<ThemeNotifier, ThemeMode>((ref) => ThemeNotifier());
 
 /// Провайдер для получения текущей темы с учётом времени
 final currentThemeProvider = Provider<ThemeMode>((ref) {
@@ -82,8 +83,9 @@ final currentThemeProvider = Provider<ThemeMode>((ref) {
 /// Провайдер для получения цветовой схемы
 final colorSchemeProvider = Provider<ColorScheme>((ref) {
   final themeMode = ref.watch(currentThemeProvider);
-  final brightness = themeMode == ThemeMode.dark ? Brightness.dark : Brightness.light;
-  
+  final brightness =
+      themeMode == ThemeMode.dark ? Brightness.dark : Brightness.light;
+
   if (brightness == Brightness.dark) {
     return const ColorScheme.dark(
       primary: Colors.amber,

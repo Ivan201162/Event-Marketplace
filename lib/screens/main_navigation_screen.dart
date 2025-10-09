@@ -223,7 +223,7 @@ class SearchScreen extends StatelessWidget {
               Text(
                 'Поиск специалистов и услуг',
                 style: TextStyle(fontSize: 18),
-                ),
+              ),
             ],
           ),
         ),

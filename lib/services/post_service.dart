@@ -81,7 +81,7 @@ class PostService {
 
         final post = Post.fromDocument(snapshot);
         final likedBy = List<String>.from(post.likedBy);
-        
+
         if (likedBy.contains(userId)) {
           likedBy.remove(userId);
         } else {
@@ -100,55 +100,63 @@ class PostService {
 
   /// Тестовые данные
   List<Post> _getTestPosts(String specialistId) => [
-      Post(
-        id: '1',
-        specialistId: specialistId,
-        text: 'Отличная свадебная фотосессия в парке! 🌸',
-        mediaUrls: ['https://placehold.co/400x400/FF6B6B/white?text=Wedding+1'],
-        createdAt: DateTime.now().subtract(const Duration(days: 1)),
-        likesCount: 42,
-        commentsCount: 8,
-        likedBy: ['user1', 'user2', 'user3'],
-      ),
-      Post(
-        id: '2',
-        specialistId: specialistId,
-        text: 'Портретная съёмка в студии с профессиональным освещением',
-        mediaUrls: ['https://placehold.co/400x400/4ECDC4/white?text=Portrait+1'],
-        createdAt: DateTime.now().subtract(const Duration(days: 3)),
-        likesCount: 28,
-        commentsCount: 5,
-        likedBy: ['user1', 'user4'],
-      ),
-      Post(
-        id: '3',
-        specialistId: specialistId,
-        text: 'Семейная фотосессия на природе. Счастье в каждом кадре! ❤️',
-        mediaUrls: ['https://placehold.co/400x400/45B7D1/white?text=Family+1'],
-        createdAt: DateTime.now().subtract(const Duration(days: 5)),
-        likesCount: 67,
-        commentsCount: 12,
-        likedBy: ['user2', 'user3', 'user5'],
-      ),
-      Post(
-        id: '4',
-        specialistId: specialistId,
-        text: 'Корпоративная съёмка для IT-компании',
-        mediaUrls: ['https://placehold.co/400x400/96CEB4/white?text=Corporate+1'],
-        createdAt: DateTime.now().subtract(const Duration(days: 7)),
-        likesCount: 15,
-        commentsCount: 3,
-        likedBy: ['user1'],
-      ),
-      Post(
-        id: '5',
-        specialistId: specialistId,
-        text: 'Детская фотосессия в студии. Такие милые малыши! 👶',
-        mediaUrls: ['https://placehold.co/400x400/FFEAA7/white?text=Kids+1'],
-        createdAt: DateTime.now().subtract(const Duration(days: 10)),
-        likesCount: 89,
-        commentsCount: 18,
-        likedBy: ['user1', 'user2', 'user3', 'user4', 'user5'],
-      ),
-    ];
+        Post(
+          id: '1',
+          specialistId: specialistId,
+          text: 'Отличная свадебная фотосессия в парке! 🌸',
+          mediaUrls: [
+            'https://placehold.co/400x400/FF6B6B/white?text=Wedding+1'
+          ],
+          createdAt: DateTime.now().subtract(const Duration(days: 1)),
+          likesCount: 42,
+          commentsCount: 8,
+          likedBy: ['user1', 'user2', 'user3'],
+        ),
+        Post(
+          id: '2',
+          specialistId: specialistId,
+          text: 'Портретная съёмка в студии с профессиональным освещением',
+          mediaUrls: [
+            'https://placehold.co/400x400/4ECDC4/white?text=Portrait+1'
+          ],
+          createdAt: DateTime.now().subtract(const Duration(days: 3)),
+          likesCount: 28,
+          commentsCount: 5,
+          likedBy: ['user1', 'user4'],
+        ),
+        Post(
+          id: '3',
+          specialistId: specialistId,
+          text: 'Семейная фотосессия на природе. Счастье в каждом кадре! ❤️',
+          mediaUrls: [
+            'https://placehold.co/400x400/45B7D1/white?text=Family+1'
+          ],
+          createdAt: DateTime.now().subtract(const Duration(days: 5)),
+          likesCount: 67,
+          commentsCount: 12,
+          likedBy: ['user2', 'user3', 'user5'],
+        ),
+        Post(
+          id: '4',
+          specialistId: specialistId,
+          text: 'Корпоративная съёмка для IT-компании',
+          mediaUrls: [
+            'https://placehold.co/400x400/96CEB4/white?text=Corporate+1'
+          ],
+          createdAt: DateTime.now().subtract(const Duration(days: 7)),
+          likesCount: 15,
+          commentsCount: 3,
+          likedBy: ['user1'],
+        ),
+        Post(
+          id: '5',
+          specialistId: specialistId,
+          text: 'Детская фотосессия в студии. Такие милые малыши! 👶',
+          mediaUrls: ['https://placehold.co/400x400/FFEAA7/white?text=Kids+1'],
+          createdAt: DateTime.now().subtract(const Duration(days: 10)),
+          likesCount: 89,
+          commentsCount: 18,
+          likedBy: ['user1', 'user2', 'user3', 'user4', 'user5'],
+        ),
+      ];
 }

@@ -115,7 +115,9 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
 
   Widget _buildMySubscriptionTab(currentUser) => StreamBuilder<Subscription?>(
         stream: _subscriptionService.getUserSubscription(
-            currentUser.id, 'default_specialist',),
+          currentUser.id,
+          'default_specialist',
+        ),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

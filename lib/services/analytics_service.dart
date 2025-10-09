@@ -37,7 +37,8 @@ class AnalyticsService {
   }
 
   /// Логирование просмотра профиля специалиста
-  Future<void> logViewProfile(String specialistId, String specialistName) async {
+  Future<void> logViewProfile(
+      String specialistId, String specialistName) async {
     try {
       await _analytics.logEvent(
         name: 'view_item',
@@ -52,7 +53,7 @@ class AnalyticsService {
         'specialist_name': specialistName,
         'timestamp': DateTime.now().toIso8601String(),
       });
-      
+
       // Обновляем статистику просмотров профиля
       await _updateProfileViews(specialistId);
     } on Exception catch (e) {
@@ -61,7 +62,8 @@ class AnalyticsService {
   }
 
   /// Логирование создания заявки
-  Future<void> logCreateRequest(String requestId, String specialistId, String category) async {
+  Future<void> logCreateRequest(
+      String requestId, String specialistId, String category) async {
     try {
       await _analytics.logEvent(
         name: 'create_request',
@@ -78,7 +80,7 @@ class AnalyticsService {
         'category': category,
         'timestamp': DateTime.now().toIso8601String(),
       });
-      
+
       // Обновляем статистику заявок
       await _updateRequestStats(specialistId, 'received');
     } on Exception catch (e) {
@@ -102,7 +104,7 @@ class AnalyticsService {
         'recipient_id': recipientId,
         'timestamp': DateTime.now().toIso8601String(),
       });
-      
+
       // Обновляем статистику сообщений
       await _updateMessageStats(recipientId);
     } on Exception catch (e) {
@@ -230,7 +232,8 @@ class AnalyticsService {
   }
 
   /// Логирование пользовательского события
-  Future<void> _logCustomEvent(String eventName, Map<String, dynamic> parameters) async {
+  Future<void> _logCustomEvent(
+      String eventName, Map<String, dynamic> parameters) async {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
@@ -249,11 +252,14 @@ class AnalyticsService {
   /// Обновление статистики просмотров профиля
   Future<void> _updateProfileViews(String specialistId) async {
     try {
-      await _firestore.collection('userStats').doc(specialistId).set({
-        'userId': specialistId,
-        'views': FieldValue.increment(1),
-        'lastViewDate': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true),);
+      await _firestore.collection('userStats').doc(specialistId).set(
+        {
+          'userId': specialistId,
+          'views': FieldValue.increment(1),
+          'lastViewDate': FieldValue.serverTimestamp(),
+        },
+        SetOptions(merge: true),
+      );
     } on Exception catch (e) {
       print('Ошибка обновления статистики просмотров: $e');
     }
@@ -263,11 +269,14 @@ class AnalyticsService {
   Future<void> _updateRequestStats(String specialistId, String type) async {
     try {
       final field = type == 'received' ? 'requests' : 'rejected_requests';
-      await _firestore.collection('userStats').doc(specialistId).set({
-        'userId': specialistId,
-        field: FieldValue.increment(1),
-        'lastRequestDate': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true),);
+      await _firestore.collection('userStats').doc(specialistId).set(
+        {
+          'userId': specialistId,
+          field: FieldValue.increment(1),
+          'lastRequestDate': FieldValue.serverTimestamp(),
+        },
+        SetOptions(merge: true),
+      );
     } on Exception catch (e) {
       print('Ошибка обновления статистики заявок: $e');
     }
@@ -276,11 +285,14 @@ class AnalyticsService {
   /// Обновление статистики сообщений
   Future<void> _updateMessageStats(String userId) async {
     try {
-      await _firestore.collection('userStats').doc(userId).set({
-        'userId': userId,
-        'messages': FieldValue.increment(1),
-        'lastMessageDate': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true),);
+      await _firestore.collection('userStats').doc(userId).set(
+        {
+          'userId': userId,
+          'messages': FieldValue.increment(1),
+          'lastMessageDate': FieldValue.serverTimestamp(),
+        },
+        SetOptions(merge: true),
+      );
     } on Exception catch (e) {
       print('Ошибка обновления статистики сообщений: $e');
     }
@@ -303,7 +315,8 @@ class AnalyticsService {
   /// Получение аналитических отчётов для админов
   Future<Map<String, dynamic>> getAnalyticsReports() async {
     try {
-      final doc = await _firestore.collection('analyticsReports').doc('main').get();
+      final doc =
+          await _firestore.collection('analyticsReports').doc('main').get();
       if (doc.exists) {
         return doc.data()!;
       }
@@ -349,13 +362,17 @@ class AnalyticsService {
         }
       }
 
-      final topCustomers = customerStats.entries
-          .toList()
-          ..sort((a, b) => b.value.compareTo(a.value));
-      final topCustomersList = topCustomers.take(10).map((entry) => {
-        'userId': entry.key,
-        'requests': entry.value,
-      },).toList();
+      final topCustomers = customerStats.entries.toList()
+        ..sort((a, b) => b.value.compareTo(a.value));
+      final topCustomersList = topCustomers
+          .take(10)
+          .map(
+            (entry) => {
+              'userId': entry.key,
+              'requests': entry.value,
+            },
+          )
+          .toList();
 
       // Получаем популярные категории
       final categoriesQuery = await _firestore
@@ -373,13 +390,17 @@ class AnalyticsService {
         }
       }
 
-      final popularCategories = categoryStats.entries
-          .toList()
-          ..sort((a, b) => b.value.compareTo(a.value));
-      final popularCategoriesList = popularCategories.take(5).map((entry) => {
-        'category': entry.key,
-        'count': entry.value,
-      },).toList();
+      final popularCategories = categoryStats.entries.toList()
+        ..sort((a, b) => b.value.compareTo(a.value));
+      final popularCategoriesList = popularCategories
+          .take(5)
+          .map(
+            (entry) => {
+              'category': entry.key,
+              'count': entry.value,
+            },
+          )
+          .toList();
 
       // Сохраняем отчёт
       await _firestore.collection('analyticsReports').doc('main').set({

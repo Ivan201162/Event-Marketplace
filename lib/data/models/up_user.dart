@@ -1,6 +1,6 @@
-
 /// Типизированная модель пользователя для Firestore
-class UpUser { // customer|specialist|guest
+class UpUser {
+  // customer|specialist|guest
 
   UpUser({
     required this.uid,
@@ -12,13 +12,13 @@ class UpUser { // customer|specialist|guest
   });
 
   factory UpUser.fromMap(Map<String, dynamic> map) => UpUser(
-      uid: (map['uid'] ?? map['id'] ?? '') as String,
-      name: (map['name'] ?? map['displayName'] ?? '') as String,
-      email: (map['email'] ?? '') as String,
-      phone: map['phone'] as String?,
-      avatarUrl: map['avatarUrl'] ?? map['photoURL'] as String?,
-      role: (map['role'] ?? 'customer') as String,
-    );
+        uid: (map['uid'] ?? map['id'] ?? '') as String,
+        name: (map['name'] ?? map['displayName'] ?? '') as String,
+        email: (map['email'] ?? '') as String,
+        phone: map['phone'] as String?,
+        avatarUrl: map['avatarUrl'] ?? map['photoURL'] as String?,
+        role: (map['role'] ?? 'customer') as String,
+      );
 
   /// Создать из Firebase User
   factory UpUser.fromFirebaseUser(
@@ -43,13 +43,13 @@ class UpUser { // customer|specialist|guest
   final String role;
 
   Map<String, dynamic> toMap() => {
-    'uid': uid,
-    'name': name,
-    'email': email,
-    'phone': phone,
-    'avatarUrl': avatarUrl,
-    'role': role,
-  };
+        'uid': uid,
+        'name': name,
+        'email': email,
+        'phone': phone,
+        'avatarUrl': avatarUrl,
+        'role': role,
+      };
 
   /// Копировать с изменениями
   UpUser copyWith({
@@ -79,5 +79,6 @@ class UpUser { // customer|specialist|guest
   int get hashCode => uid.hashCode;
 
   @override
-  String toString() => 'UpUser(uid: $uid, name: $name, email: $email, role: $role)';
+  String toString() =>
+      'UpUser(uid: $uid, name: $name, email: $email, role: $role)';
 }

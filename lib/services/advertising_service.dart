@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 
 import '../models/advertisement.dart';
 import '../models/pro_subscription.dart';
@@ -24,10 +23,10 @@ class AdvertisingService {
     Map<String, dynamic>? metadata,
   }) async {
     try {
-      final String adId = _firestore.collection('advertisements').doc().id;
-      final DateTime now = DateTime.now();
+      final adId = _firestore.collection('advertisements').doc().id;
+      final now = DateTime.now();
 
-      final Advertisement advertisement = Advertisement(
+      final advertisement = Advertisement(
         id: adId,
         advertiserId: advertiserId,
         type: type,
@@ -37,17 +36,9 @@ class AdvertisingService {
         videoUrl: videoUrl,
         targetUrl: targetUrl,
         budget: budget,
-        spentAmount: 0.0,
-        status: AdvertisementStatus.pending,
         startDate: startDate,
         endDate: endDate,
         targetAudience: targetAudience,
-        impressions: 0,
-        clicks: 0,
-        conversions: 0,
-        ctr: 0.0,
-        cpm: 0.0,
-        cpc: 0.0,
         metadata: metadata ?? {},
         createdAt: now,
         updatedAt: now,
@@ -84,16 +75,14 @@ class AdvertisingService {
         query = query.where('advertiserId', isEqualTo: advertiserId);
       }
 
-      final QuerySnapshot snapshot = await query
-          .orderBy('createdAt', descending: true)
-          .limit(limit)
-          .get();
+      final snapshot =
+          await query.orderBy('createdAt', descending: true).limit(limit).get();
 
-      final List<Advertisement> advertisements = [];
+      final advertisements = <Advertisement>[];
 
       for (final doc in snapshot.docs) {
         final advertisement = Advertisement.fromMap(
-          doc.data() as Map<String, dynamic>
+          doc.data()! as Map<String, dynamic>,
         );
         advertisements.add(advertisement);
       }
@@ -111,8 +100,8 @@ class AdvertisingService {
     int limit = 3,
   }) async {
     try {
-      final DateTime now = DateTime.now();
-      
+      final now = DateTime.now();
+
       final QuerySnapshot snapshot = await _firestore
           .collection('advertisements')
           .where('status', isEqualTo: AdvertisementStatus.active.value)
@@ -123,13 +112,13 @@ class AdvertisingService {
           .limit(limit * 2) // Получаем больше для фильтрации
           .get();
 
-      final List<Advertisement> availableAds = [];
+      final availableAds = <Advertisement>[];
 
       for (final doc in snapshot.docs) {
         final advertisement = Advertisement.fromMap(
-          doc.data() as Map<String, dynamic>
+          doc.data()! as Map<String, dynamic>,
         );
-        
+
         // Проверяем, подходит ли реклама для контекста
         if (_isAdSuitableForContext(advertisement, context)) {
           availableAds.add(advertisement);
@@ -137,8 +126,9 @@ class AdvertisingService {
       }
 
       // Сортируем по релевантности и возвращаем лимит
-      availableAds.sort((a, b) => _calculateRelevance(b, userId).compareTo(_calculateRelevance(a, userId)));
-      
+      availableAds.sort((a, b) => _calculateRelevance(b, userId)
+          .compareTo(_calculateRelevance(a, userId)));
+
       return availableAds.take(limit).toList();
     } catch (e) {
       throw Exception('Ошибка получения рекламы для показа: $e');
@@ -161,7 +151,7 @@ class AdvertisingService {
     Map<String, dynamic>? metadata,
   }) async {
     try {
-      final Map<String, dynamic> updates = {
+      final updates = <String, dynamic>{
         'updatedAt': FieldValue.serverTimestamp(),
       };
 
@@ -171,16 +161,14 @@ class AdvertisingService {
       if (videoUrl != null) updates['videoUrl'] = videoUrl;
       if (targetUrl != null) updates['targetUrl'] = targetUrl;
       if (budget != null) updates['budget'] = budget;
-      if (startDate != null) updates['startDate'] = startDate.millisecondsSinceEpoch;
+      if (startDate != null)
+        updates['startDate'] = startDate.millisecondsSinceEpoch;
       if (endDate != null) updates['endDate'] = endDate.millisecondsSinceEpoch;
       if (targetAudience != null) updates['targetAudience'] = targetAudience;
       if (status != null) updates['status'] = status.value;
       if (metadata != null) updates['metadata'] = metadata;
 
-      await _firestore
-          .collection('advertisements')
-          .doc(adId)
-          .update(updates);
+      await _firestore.collection('advertisements').doc(adId).update(updates);
     } catch (e) {
       throw Exception('Ошибка обновления рекламы: $e');
     }
@@ -189,10 +177,7 @@ class AdvertisingService {
   /// Удалить рекламу
   Future<void> deleteAdvertisement(String adId) async {
     try {
-      await _firestore
-          .collection('advertisements')
-          .doc(adId)
-          .delete();
+      await _firestore.collection('advertisements').doc(adId).delete();
     } catch (e) {
       throw Exception('Ошибка удаления рекламы: $e');
     }
@@ -205,21 +190,16 @@ class AdvertisingService {
     required String context,
   }) async {
     try {
-      final DateTime now = DateTime.now();
-      
+      final now = DateTime.now();
+
       // Обновить статистику рекламы
-      await _firestore
-          .collection('advertisements')
-          .doc(adId)
-          .update({
+      await _firestore.collection('advertisements').doc(adId).update({
         'impressions': FieldValue.increment(1),
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
       // Записать показ
-      await _firestore
-          .collection('ad_impressions')
-          .add({
+      await _firestore.collection('ad_impressions').add({
         'adId': adId,
         'userId': userId,
         'context': context,
@@ -238,21 +218,16 @@ class AdvertisingService {
     required String context,
   }) async {
     try {
-      final DateTime now = DateTime.now();
-      
+      final now = DateTime.now();
+
       // Обновить статистику рекламы
-      await _firestore
-          .collection('advertisements')
-          .doc(adId)
-          .update({
+      await _firestore.collection('advertisements').doc(adId).update({
         'clicks': FieldValue.increment(1),
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
       // Записать клик
-      await _firestore
-          .collection('ad_clicks')
-          .add({
+      await _firestore.collection('ad_clicks').add({
         'adId': adId,
         'userId': userId,
         'context': context,
@@ -273,21 +248,16 @@ class AdvertisingService {
     Map<String, dynamic>? metadata,
   }) async {
     try {
-      final DateTime now = DateTime.now();
-      
+      final now = DateTime.now();
+
       // Обновить статистику рекламы
-      await _firestore
-          .collection('advertisements')
-          .doc(adId)
-          .update({
+      await _firestore.collection('advertisements').doc(adId).update({
         'conversions': FieldValue.increment(1),
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
       // Записать конверсию
-      await _firestore
-          .collection('ad_conversions')
-          .add({
+      await _firestore.collection('ad_conversions').add({
         'adId': adId,
         'userId': userId,
         'context': context,
@@ -304,25 +274,23 @@ class AdvertisingService {
   /// Получить статистику рекламы
   Future<Map<String, dynamic>> getAdvertisementStats(String adId) async {
     try {
-      final DocumentSnapshot doc = await _firestore
-          .collection('advertisements')
-          .doc(adId)
-          .get();
+      final DocumentSnapshot doc =
+          await _firestore.collection('advertisements').doc(adId).get();
 
       if (!doc.exists) {
         throw Exception('Реклама не найдена');
       }
 
-      final data = doc.data() as Map<String, dynamic>;
-      final int impressions = data['impressions'] as int? ?? 0;
-      final int clicks = data['clicks'] as int? ?? 0;
-      final int conversions = data['conversions'] as int? ?? 0;
-      final double budget = (data['budget'] as num?)?.toDouble() ?? 0.0;
-      final double spentAmount = (data['spentAmount'] as num?)?.toDouble() ?? 0.0;
+      final data = doc.data()! as Map<String, dynamic>;
+      final impressions = data['impressions'] as int? ?? 0;
+      final clicks = data['clicks'] as int? ?? 0;
+      final conversions = data['conversions'] as int? ?? 0;
+      final budget = (data['budget'] as num?)?.toDouble() ?? 0.0;
+      final spentAmount = (data['spentAmount'] as num?)?.toDouble() ?? 0.0;
 
-      final double ctr = impressions > 0 ? (clicks / impressions) * 100 : 0.0;
-      final double cpm = impressions > 0 ? (spentAmount / impressions) * 1000 : 0.0;
-      final double cpc = clicks > 0 ? spentAmount / clicks : 0.0;
+      final ctr = impressions > 0 ? (clicks / impressions) * 100 : 0.0;
+      final cpm = impressions > 0 ? (spentAmount / impressions) * 1000 : 0.0;
+      final cpc = clicks > 0 ? spentAmount / clicks : 0.0;
 
       return {
         'impressions': impressions,
@@ -344,20 +312,19 @@ class AdvertisingService {
   /// Получить общую статистику рекламы
   Future<Map<String, dynamic>> getOverallStats() async {
     try {
-      final QuerySnapshot snapshot = await _firestore
-          .collection('advertisements')
-          .get();
+      final QuerySnapshot snapshot =
+          await _firestore.collection('advertisements').get();
 
-      int totalAds = 0;
-      int activeAds = 0;
-      double totalBudget = 0.0;
-      double totalSpent = 0.0;
-      int totalImpressions = 0;
-      int totalClicks = 0;
-      int totalConversions = 0;
+      var totalAds = 0;
+      var activeAds = 0;
+      var totalBudget = 0;
+      var totalSpent = 0;
+      var totalImpressions = 0;
+      var totalClicks = 0;
+      var totalConversions = 0;
 
       for (final doc in snapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data()! as Map<String, dynamic>;
         totalAds++;
 
         final status = AdvertisementStatus.fromString(data['status'] as String);
@@ -372,9 +339,11 @@ class AdvertisingService {
         totalConversions += data['conversions'] as int? ?? 0;
       }
 
-      final double overallCtr = totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0.0;
-      final double overallCpm = totalImpressions > 0 ? (totalSpent / totalImpressions) * 1000 : 0.0;
-      final double overallCpc = totalClicks > 0 ? totalSpent / totalClicks : 0.0;
+      final overallCtr =
+          totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0.0;
+      final overallCpm =
+          totalImpressions > 0 ? (totalSpent / totalImpressions) * 1000 : 0.0;
+      final overallCpc = totalClicks > 0 ? totalSpent / totalClicks : 0.0;
 
       return {
         'totalAds': totalAds,
@@ -387,7 +356,8 @@ class AdvertisingService {
         'overallCtr': overallCtr,
         'overallCpm': overallCpm,
         'overallCpc': overallCpc,
-        'conversionRate': totalClicks > 0 ? (totalConversions / totalClicks) * 100 : 0.0,
+        'conversionRate':
+            totalClicks > 0 ? (totalConversions / totalClicks) * 100 : 0.0,
       };
     } catch (e) {
       throw Exception('Ошибка получения общей статистики: $e');
@@ -399,11 +369,14 @@ class AdvertisingService {
     // Простая логика фильтрации по контексту
     switch (context) {
       case 'feed':
-        return ad.type == AdvertisementType.feed || ad.type == AdvertisementType.banner;
+        return ad.type == AdvertisementType.feed ||
+            ad.type == AdvertisementType.banner;
       case 'ideas':
-        return ad.type == AdvertisementType.ideas || ad.type == AdvertisementType.banner;
+        return ad.type == AdvertisementType.ideas ||
+            ad.type == AdvertisementType.banner;
       case 'search':
-        return ad.type == AdvertisementType.search || ad.type == AdvertisementType.banner;
+        return ad.type == AdvertisementType.search ||
+            ad.type == AdvertisementType.banner;
       default:
         return true;
     }
@@ -412,19 +385,19 @@ class AdvertisingService {
   /// Рассчитать релевантность рекламы для пользователя
   double _calculateRelevance(Advertisement ad, String userId) {
     // Простой алгоритм релевантности
-    double relevance = 0.0;
-    
+    var relevance = 0;
+
     // Базовый рейтинг по бюджету
     relevance += ad.budget / 1000.0;
-    
+
     // Бонус за высокий CTR
     relevance += ad.ctr * 0.1;
-    
+
     // Штраф за низкий CTR
     if (ad.ctr < 1.0) {
       relevance -= 0.5;
     }
-    
+
     return relevance;
   }
 
@@ -445,8 +418,8 @@ class AdvertisingService {
         status: PaymentStatus.completed,
         createdAt: DateTime.now(),
         paymentMethod: paymentMethodId,
-        transactionId: 'mock_transaction_${DateTime.now().millisecondsSinceEpoch}',
-        receiptUrl: null,
+        transactionId:
+            'mock_transaction_${DateTime.now().millisecondsSinceEpoch}',
       );
 
       return paymentIntent;
@@ -463,7 +436,7 @@ class AdvertisingService {
   }) async {
     try {
       // Создать платеж
-      final Payment paymentIntent = await createAdPayment(
+      final paymentIntent = await createAdPayment(
         amount: amount,
         currency: 'RUB',
         paymentMethodId: paymentMethodId,
@@ -474,10 +447,7 @@ class AdvertisingService {
       }
 
       // Обновить бюджет рекламы
-      await _firestore
-          .collection('advertisements')
-          .doc(adId)
-          .update({
+      await _firestore.collection('advertisements').doc(adId).update({
         'budget': FieldValue.increment(amount),
         'updatedAt': FieldValue.serverTimestamp(),
       });

@@ -444,7 +444,8 @@ class CityRegionService {
     if (filters.minSpecialistRating > 0.0) {
       filteredCities = filteredCities
           .where(
-              (city) => city.avgSpecialistRating >= filters.minSpecialistRating,)
+            (city) => city.avgSpecialistRating >= filters.minSpecialistRating,
+          )
           .toList();
     }
 
@@ -452,8 +453,10 @@ class CityRegionService {
     if (filters.specialistCategory != null &&
         filters.specialistCategory!.isNotEmpty) {
       filteredCities = filteredCities
-          .where((city) =>
-              city.specialistCategories.contains(filters.specialistCategory),)
+          .where(
+            (city) =>
+                city.specialistCategories.contains(filters.specialistCategory),
+          )
           .toList();
     }
 

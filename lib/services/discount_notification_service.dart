@@ -15,7 +15,8 @@ class DiscountNotificationService {
   final FCMService _fcmService = FCMService();
 
   /// Создать уведомление о скидке
-  Future<DiscountNotification> createDiscountNotification(CreateDiscountNotification data) async {
+  Future<DiscountNotification> createDiscountNotification(
+      CreateDiscountNotification data) async {
     if (!data.isValid) {
       throw Exception('Неверные данные: ${data.validationErrors.join(', ')}');
     }
@@ -70,7 +71,8 @@ class DiscountNotificationService {
     );
 
     // Сохранить в Firestore
-    final docRef = await _firestore.collection(_collection).add(notification.toMap());
+    final docRef =
+        await _firestore.collection(_collection).add(notification.toMap());
 
     // Обновить ID
     final createdNotification = notification.copyWith(id: docRef.id);
@@ -87,20 +89,20 @@ class DiscountNotificationService {
   }
 
   /// Получить уведомления клиента
-  Future<List<DiscountNotification>> getCustomerNotifications(String customerId) async {
+  Future<List<DiscountNotification>> getCustomerNotifications(
+      String customerId) async {
     final snapshot = await _firestore
         .collection(_collection)
         .where('customerId', isEqualTo: customerId)
         .orderBy('createdAt', descending: true)
         .get();
 
-    return snapshot.docs
-        .map(DiscountNotification.fromDocument)
-        .toList();
+    return snapshot.docs.map(DiscountNotification.fromDocument).toList();
   }
 
   /// Получить непрочитанные уведомления клиента
-  Future<List<DiscountNotification>> getUnreadCustomerNotifications(String customerId) async {
+  Future<List<DiscountNotification>> getUnreadCustomerNotifications(
+      String customerId) async {
     final snapshot = await _firestore
         .collection(_collection)
         .where('customerId', isEqualTo: customerId)
@@ -108,14 +110,13 @@ class DiscountNotificationService {
         .orderBy('createdAt', descending: true)
         .get();
 
-    return snapshot.docs
-        .map(DiscountNotification.fromDocument)
-        .toList();
+    return snapshot.docs.map(DiscountNotification.fromDocument).toList();
   }
 
   /// Получить уведомление по ID
   Future<DiscountNotification?> getNotification(String notificationId) async {
-    final doc = await _firestore.collection(_collection).doc(notificationId).get();
+    final doc =
+        await _firestore.collection(_collection).doc(notificationId).get();
     if (!doc.exists) return null;
     return DiscountNotification.fromDocument(doc);
   }
@@ -133,7 +134,8 @@ class DiscountNotificationService {
     }
 
     if (notification.customerId != currentUser.uid) {
-      throw Exception('Только получатель может отмечать уведомления как прочитанные');
+      throw Exception(
+          'Только получатель может отмечать уведомления как прочитанные');
     }
 
     await _firestore.collection(_collection).doc(notificationId).update({
@@ -150,11 +152,13 @@ class DiscountNotificationService {
     }
 
     if (customerId != currentUser.uid) {
-      throw Exception('Только владелец может отмечать уведомления как прочитанные');
+      throw Exception(
+          'Только владелец может отмечать уведомления как прочитанные');
     }
 
-    final unreadNotifications = await getUnreadCustomerNotifications(customerId);
-    
+    final unreadNotifications =
+        await getUnreadCustomerNotifications(customerId);
+
     final batch = _firestore.batch();
     for (final notification in unreadNotifications) {
       final docRef = _firestore.collection(_collection).doc(notification.id);
@@ -211,11 +215,11 @@ class DiscountNotificationService {
     for (final doc in snapshot.docs) {
       final data = doc.data();
       total++;
-      
+
       if (data['isRead'] != true) {
         unread++;
       }
-      
+
       final originalPrice = (data['originalPrice'] as num).toDouble();
       final newPrice = (data['newPrice'] as num).toDouble();
       totalSavings += originalPrice - newPrice;
@@ -230,31 +234,37 @@ class DiscountNotificationService {
   }
 
   /// Подписаться на изменения уведомлений клиента
-  Stream<List<DiscountNotification>> watchCustomerNotifications(String customerId) => _firestore
-        .collection(_collection)
-        .where('customerId', isEqualTo: customerId)
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map(DiscountNotification.fromDocument)
-            .toList(),);
+  Stream<List<DiscountNotification>> watchCustomerNotifications(
+          String customerId) =>
+      _firestore
+          .collection(_collection)
+          .where('customerId', isEqualTo: customerId)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map(
+            (snapshot) =>
+                snapshot.docs.map(DiscountNotification.fromDocument).toList(),
+          );
 
   /// Подписаться на непрочитанные уведомления клиента
-  Stream<List<DiscountNotification>> watchUnreadCustomerNotifications(String customerId) => _firestore
-        .collection(_collection)
-        .where('customerId', isEqualTo: customerId)
-        .where('isRead', isEqualTo: false)
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map(DiscountNotification.fromDocument)
-            .toList(),);
+  Stream<List<DiscountNotification>> watchUnreadCustomerNotifications(
+          String customerId) =>
+      _firestore
+          .collection(_collection)
+          .where('customerId', isEqualTo: customerId)
+          .where('isRead', isEqualTo: false)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map(
+            (snapshot) =>
+                snapshot.docs.map(DiscountNotification.fromDocument).toList(),
+          );
 
   /// Подписаться на количество непрочитанных уведомлений
   Stream<int> watchUnreadCount(String customerId) => _firestore
-        .collection(_collection)
-        .where('customerId', isEqualTo: customerId)
-        .where('isRead', isEqualTo: false)
-        .snapshots()
-        .map((snapshot) => snapshot.docs.length);
+      .collection(_collection)
+      .where('customerId', isEqualTo: customerId)
+      .where('isRead', isEqualTo: false)
+      .snapshots()
+      .map((snapshot) => snapshot.docs.length);
 }

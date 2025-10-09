@@ -73,8 +73,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
     );
   }
 
-  Widget _buildChatList(String currentUserId) =>
-      StreamBuilder<List<Chat>>(
+  Widget _buildChatList(String currentUserId) => StreamBuilder<List<Chat>>(
         stream: _chatService.getUserChatsStream(currentUserId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -280,7 +279,9 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
   void _createNewChat() {
     // TODO: Открыть экран создания нового чата
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Создание нового чата будет доступно в следующей версии')),
+      const SnackBar(
+          content:
+              Text('Создание нового чата будет доступно в следующей версии')),
     );
   }
 

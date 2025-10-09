@@ -10,7 +10,8 @@ import 'services/smart_specialist_data_generator.dart';
 class SmartSearchTester {
   final SmartSearchService _smartSearchService = SmartSearchService();
   final AIAssistantService _aiAssistantService = AIAssistantService();
-  final SmartSpecialistDataGenerator _dataGenerator = SmartSpecialistDataGenerator();
+  final SmartSpecialistDataGenerator _dataGenerator =
+      SmartSpecialistDataGenerator();
 
   /// Запустить все тесты
   Future<void> runAllTests() async {
@@ -19,19 +20,19 @@ class SmartSearchTester {
     try {
       // Тест 1: Генерация тестовых данных
       await _testDataGeneration();
-      
+
       // Тест 2: Умный поиск
       await _testSmartSearch();
-      
+
       // Тест 3: Персональные рекомендации
       await _testPersonalRecommendations();
-      
+
       // Тест 4: AI-помощник
       await _testAIAssistant();
-      
+
       // Тест 5: Предпочтения пользователя
       await _testUserPreferences();
-      
+
       print('\n✅ Все тесты пройдены успешно!');
     } catch (e) {
       print('\n❌ Ошибка в тестах: $e');
@@ -41,65 +42,68 @@ class SmartSearchTester {
   /// Тест генерации тестовых данных
   Future<void> _testDataGeneration() async {
     print('📊 Тест 1: Генерация тестовых данных');
-    
+
     try {
       await _dataGenerator.generateTestSpecialists(count: 10);
       print('✅ Тестовые данные сгенерированы успешно');
     } catch (e) {
       print('❌ Ошибка генерации данных: $e');
     }
-    
+
     print('');
   }
 
   /// Тест умного поиска
   Future<void> _testSmartSearch() async {
     print('🔍 Тест 2: Умный поиск специалистов');
-    
+
     try {
       // Поиск по категории
       final specialistsByCategory = await _smartSearchService.smartSearch(
         category: SpecialistCategory.host,
         limit: 5,
       );
-      print('✅ Поиск по категории: найдено ${specialistsByCategory.length} специалистов');
-      
+      print(
+          '✅ Поиск по категории: найдено ${specialistsByCategory.length} специалистов');
+
       // Поиск по городу
       final specialistsByCity = await _smartSearchService.smartSearch(
         city: 'Москва',
         limit: 5,
       );
-      print('✅ Поиск по городу: найдено ${specialistsByCity.length} специалистов');
-      
+      print(
+          '✅ Поиск по городу: найдено ${specialistsByCity.length} специалистов');
+
       // Поиск по цене
       final specialistsByPrice = await _smartSearchService.smartSearch(
         minPrice: 10000,
         maxPrice: 30000,
         limit: 5,
       );
-      print('✅ Поиск по цене: найдено ${specialistsByPrice.length} специалистов');
-      
+      print(
+          '✅ Поиск по цене: найдено ${specialistsByPrice.length} специалистов');
+
       // Поиск по стилю
       final specialistsByStyle = await _smartSearchService.smartSearch(
         styles: ['классика', 'юмор'],
         limit: 5,
       );
-      print('✅ Поиск по стилю: найдено ${specialistsByStyle.length} специалистов');
-      
+      print(
+          '✅ Поиск по стилю: найдено ${specialistsByStyle.length} специалистов');
     } catch (e) {
       print('❌ Ошибка умного поиска: $e');
     }
-    
+
     print('');
   }
 
   /// Тест персональных рекомендаций
   Future<void> _testPersonalRecommendations() async {
     print('🎯 Тест 3: Персональные рекомендации');
-    
+
     try {
       const testUserId = 'test_user_123';
-      
+
       // Создаем тестовые предпочтения
       final preferences = UserPreferences(
         userId: testUserId,
@@ -111,45 +115,47 @@ class SmartSearchTester {
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
-      
+
       // Сохраняем предпочтения
       final saved = await _smartSearchService.saveUserPreferences(preferences);
       print('✅ Предпочтения сохранены: $saved');
-      
+
       // Получаем рекомендации
-      final recommendations = await _smartSearchService.getPersonalRecommendations(
+      final recommendations =
+          await _smartSearchService.getPersonalRecommendations(
         testUserId,
         limit: 5,
       );
-      print('✅ Персональные рекомендации: найдено ${recommendations.length} специалистов');
-      
+      print(
+          '✅ Персональные рекомендации: найдено ${recommendations.length} специалистов');
+
       // Проверяем совместимость
       if (recommendations.isNotEmpty) {
         final specialist = recommendations.first;
         final compatibility = specialist.calculateCompatibility(
           preferences.getCompatibilityPreferences(),
         );
-        print('✅ Совместимость с первым специалистом: ${(compatibility * 100).toStringAsFixed(1)}%');
+        print(
+            '✅ Совместимость с первым специалистом: ${(compatibility * 100).toStringAsFixed(1)}%');
       }
-      
     } catch (e) {
       print('❌ Ошибка персональных рекомендаций: $e');
     }
-    
+
     print('');
   }
 
   /// Тест AI-помощника
   Future<void> _testAIAssistant() async {
     print('🤖 Тест 4: AI-помощник');
-    
+
     try {
       // Начинаем беседу
       final conversation = await _aiAssistantService.startConversation(
         userId: 'test_user_123',
       );
       print('✅ Беседа начата: ${conversation.id}');
-      
+
       // Отправляем сообщения
       final messages = [
         'Привет!',
@@ -159,7 +165,7 @@ class SmartSearchTester {
         'На 15 июня 2024',
         'Найди мне специалистов',
       ];
-      
+
       for (final message in messages) {
         final response = await _aiAssistantService.sendMessage(
           conversationId: conversation.id,
@@ -167,25 +173,24 @@ class SmartSearchTester {
           userId: 'test_user_123',
         );
         print('✅ Ответ AI: ${response.text.substring(0, 50)}...');
-        
+
         // Небольшая пауза между сообщениями
         await Future.delayed(const Duration(milliseconds: 100));
       }
-      
     } catch (e) {
       print('❌ Ошибка AI-помощника: $e');
     }
-    
+
     print('');
   }
 
   /// Тест предпочтений пользователя
   Future<void> _testUserPreferences() async {
     print('👤 Тест 5: Предпочтения пользователя');
-    
+
     try {
       const testUserId = 'test_user_456';
-      
+
       // Создаем предпочтения
       final preferences = UserPreferences(
         userId: testUserId,
@@ -197,22 +202,24 @@ class SmartSearchTester {
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
-      
+
       // Сохраняем
       await _smartSearchService.saveUserPreferences(preferences);
       print('✅ Предпочтения созданы и сохранены');
-      
+
       // Загружаем
-      final loadedPreferences = await _smartSearchService.getUserPreferences(testUserId);
-      print('✅ Предпочтения загружены: ${loadedPreferences?.likedStyles.length} стилей');
-      
+      final loadedPreferences =
+          await _smartSearchService.getUserPreferences(testUserId);
+      print(
+          '✅ Предпочтения загружены: ${loadedPreferences?.likedStyles.length} стилей');
+
       // Обновляем
       await _smartSearchService.updateUserPreferences(
         testUserId,
         {'preferredBudget': 50000},
       );
       print('✅ Предпочтения обновлены');
-      
+
       // Записываем взаимодействие
       await _smartSearchService.recordUserInteraction(
         userId: testUserId,
@@ -221,40 +228,40 @@ class SmartSearchTester {
         metadata: {'category': 'photographer'},
       );
       print('✅ Взаимодействие записано');
-      
     } catch (e) {
       print('❌ Ошибка предпочтений пользователя: $e');
     }
-    
+
     print('');
   }
 
   /// Тест статистики
   Future<void> _testStatistics() async {
     print('📈 Тест 6: Статистика поиска');
-    
+
     try {
       final stats = await _smartSearchService.getSearchStats();
       print('✅ Статистика получена:');
       print('   - Всего специалистов: ${stats['totalSpecialists']}');
       print('   - Доступных: ${stats['availableSpecialists']}');
-      print('   - Средний рейтинг: ${stats['averageRating']?.toStringAsFixed(1)}');
-      print('   - Средняя цена: ${stats['averagePrice']?.toStringAsFixed(0)} ₽');
-      
+      print(
+          '   - Средний рейтинг: ${stats['averageRating']?.toStringAsFixed(1)}');
+      print(
+          '   - Средняя цена: ${stats['averagePrice']?.toStringAsFixed(0)} ₽');
     } catch (e) {
       print('❌ Ошибка статистики: $e');
     }
-    
+
     print('');
   }
 
   /// Тест совместимости
   Future<void> _testCompatibility() async {
     print('🎯 Тест 7: Совместимость специалистов');
-    
+
     try {
       const testUserId = 'test_user_789';
-      
+
       // Создаем предпочтения
       final preferences = UserPreferences(
         userId: testUserId,
@@ -264,25 +271,27 @@ class SmartSearchTester {
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
-      
+
       await _smartSearchService.saveUserPreferences(preferences);
-      
+
       // Получаем специалистов по совместимости
-      final compatibleSpecialists = await _smartSearchService.getSpecialistsByCompatibility(
+      final compatibleSpecialists =
+          await _smartSearchService.getSpecialistsByCompatibility(
         testUserId,
         limit: 5,
       );
-      
-      print('✅ Специалисты по совместимости: найдено ${compatibleSpecialists.length}');
-      
+
+      print(
+          '✅ Специалисты по совместимости: найдено ${compatibleSpecialists.length}');
+
       for (final specialist in compatibleSpecialists) {
-        print('   - ${specialist.name}: ${(specialist.compatibilityScore * 100).toStringAsFixed(1)}%');
+        print(
+            '   - ${specialist.name}: ${(specialist.compatibilityScore * 100).toStringAsFixed(1)}%');
       }
-      
     } catch (e) {
       print('❌ Ошибка совместимости: $e');
     }
-    
+
     print('');
   }
 }
@@ -302,54 +311,54 @@ class _SmartSearchTestWidgetState extends State<SmartSearchTestWidget> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(
-        title: const Text('Тесты умного поиска'),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: ElevatedButton(
-              onPressed: _isRunning ? null : _runTests,
-              child: _isRunning
-                  ? const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        ),
-                        SizedBox(width: 8),
-                        Text('Запуск тестов...'),
-                      ],
-                    )
-                  : const Text('Запустить все тесты'),
-            ),
-          ),
-          Expanded(
-            child: Container(
-              margin: const EdgeInsets.all(16),
+        appBar: AppBar(
+          title: const Text('Тесты умного поиска'),
+        ),
+        body: Column(
+          children: [
+            Padding(
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(8),
+              child: ElevatedButton(
+                onPressed: _isRunning ? null : _runTests,
+                child: _isRunning
+                    ? const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                          SizedBox(width: 8),
+                          Text('Запуск тестов...'),
+                        ],
+                      )
+                    : const Text('Запустить все тесты'),
               ),
-              child: SingleChildScrollView(
-                child: Text(
-                  _output,
-                  style: const TextStyle(
-                    color: Colors.green,
-                    fontFamily: 'monospace',
-                    fontSize: 12,
+            ),
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: SingleChildScrollView(
+                  child: Text(
+                    _output,
+                    style: const TextStyle(
+                      color: Colors.green,
+                      fontFamily: 'monospace',
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
 
   Future<void> _runTests() async {
     setState(() {

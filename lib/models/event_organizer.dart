@@ -2,31 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель организатора мероприятий
 class EventOrganizer {
-  final String id;
-  final String userId;
-  final String companyName;
-  final String? description;
-  final String? website;
-  final String? phone;
-  final String? email;
-  final String? address;
-  final String? city;
-  final String? region;
-  final List<String> eventTypes;
-  final List<String> specializations;
-  final double? rating;
-  final int totalEvents;
-  final int completedEvents;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final bool isVerified;
-  final bool isActive;
-  final Map<String, dynamic>? socialLinks;
-  final List<String>? portfolioImages;
-  final Map<String, dynamic>? businessHours;
-  final String? licenseNumber;
-  final String? taxId;
-
   const EventOrganizer({
     required this.id,
     required this.userId,
@@ -54,68 +29,88 @@ class EventOrganizer {
     this.taxId,
   });
 
-  factory EventOrganizer.fromMap(Map<String, dynamic> map) {
-    return EventOrganizer(
-      id: map['id'] as String,
-      userId: map['userId'] as String,
-      companyName: map['companyName'] as String,
-      description: map['description'] as String?,
-      website: map['website'] as String?,
-      phone: map['phone'] as String?,
-      email: map['email'] as String?,
-      address: map['address'] as String?,
-      city: map['city'] as String?,
-      region: map['region'] as String?,
-      eventTypes: List<String>.from(map['eventTypes'] ?? []),
-      specializations: List<String>.from(map['specializations'] ?? []),
-      rating: (map['rating'] as num?)?.toDouble(),
-      totalEvents: map['totalEvents'] as int? ?? 0,
-      completedEvents: map['completedEvents'] as int? ?? 0,
-      createdAt: _parseTimestamp(map['createdAt']),
-      updatedAt: _parseTimestamp(map['updatedAt']),
-      isVerified: map['isVerified'] as bool? ?? false,
-      isActive: map['isActive'] as bool? ?? true,
-      socialLinks: map['socialLinks'] as Map<String, dynamic>?,
-      portfolioImages: List<String>.from(map['portfolioImages'] ?? []),
-      businessHours: map['businessHours'] as Map<String, dynamic>?,
-      licenseNumber: map['licenseNumber'] as String?,
-      taxId: map['taxId'] as String?,
-    );
-  }
+  factory EventOrganizer.fromMap(Map<String, dynamic> map) => EventOrganizer(
+        id: map['id'] as String,
+        userId: map['userId'] as String,
+        companyName: map['companyName'] as String,
+        description: map['description'] as String?,
+        website: map['website'] as String?,
+        phone: map['phone'] as String?,
+        email: map['email'] as String?,
+        address: map['address'] as String?,
+        city: map['city'] as String?,
+        region: map['region'] as String?,
+        eventTypes: List<String>.from(map['eventTypes'] ?? []),
+        specializations: List<String>.from(map['specializations'] ?? []),
+        rating: (map['rating'] as num?)?.toDouble(),
+        totalEvents: map['totalEvents'] as int? ?? 0,
+        completedEvents: map['completedEvents'] as int? ?? 0,
+        createdAt: _parseTimestamp(map['createdAt']),
+        updatedAt: _parseTimestamp(map['updatedAt']),
+        isVerified: map['isVerified'] as bool? ?? false,
+        isActive: map['isActive'] as bool? ?? true,
+        socialLinks: map['socialLinks'] as Map<String, dynamic>?,
+        portfolioImages: List<String>.from(map['portfolioImages'] ?? []),
+        businessHours: map['businessHours'] as Map<String, dynamic>?,
+        licenseNumber: map['licenseNumber'] as String?,
+        taxId: map['taxId'] as String?,
+      );
 
   factory EventOrganizer.fromDoc(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return EventOrganizer.fromMap({...data, 'id': doc.id});
   }
+  final String id;
+  final String userId;
+  final String companyName;
+  final String? description;
+  final String? website;
+  final String? phone;
+  final String? email;
+  final String? address;
+  final String? city;
+  final String? region;
+  final List<String> eventTypes;
+  final List<String> specializations;
+  final double? rating;
+  final int totalEvents;
+  final int completedEvents;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final bool isVerified;
+  final bool isActive;
+  final Map<String, dynamic>? socialLinks;
+  final List<String>? portfolioImages;
+  final Map<String, dynamic>? businessHours;
+  final String? licenseNumber;
+  final String? taxId;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'userId': userId,
-      'companyName': companyName,
-      if (description != null) 'description': description,
-      if (website != null) 'website': website,
-      if (phone != null) 'phone': phone,
-      if (email != null) 'email': email,
-      if (address != null) 'address': address,
-      if (city != null) 'city': city,
-      if (region != null) 'region': region,
-      'eventTypes': eventTypes,
-      'specializations': specializations,
-      if (rating != null) 'rating': rating,
-      'totalEvents': totalEvents,
-      'completedEvents': completedEvents,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'isVerified': isVerified,
-      'isActive': isActive,
-      if (socialLinks != null) 'socialLinks': socialLinks,
-      if (portfolioImages != null) 'portfolioImages': portfolioImages,
-      if (businessHours != null) 'businessHours': businessHours,
-      if (licenseNumber != null) 'licenseNumber': licenseNumber,
-      if (taxId != null) 'taxId': taxId,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'userId': userId,
+        'companyName': companyName,
+        if (description != null) 'description': description,
+        if (website != null) 'website': website,
+        if (phone != null) 'phone': phone,
+        if (email != null) 'email': email,
+        if (address != null) 'address': address,
+        if (city != null) 'city': city,
+        if (region != null) 'region': region,
+        'eventTypes': eventTypes,
+        'specializations': specializations,
+        if (rating != null) 'rating': rating,
+        'totalEvents': totalEvents,
+        'completedEvents': completedEvents,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'isVerified': isVerified,
+        'isActive': isActive,
+        if (socialLinks != null) 'socialLinks': socialLinks,
+        if (portfolioImages != null) 'portfolioImages': portfolioImages,
+        if (businessHours != null) 'businessHours': businessHours,
+        if (licenseNumber != null) 'licenseNumber': licenseNumber,
+        if (taxId != null) 'taxId': taxId,
+      };
 
   EventOrganizer copyWith({
     String? id,
@@ -142,36 +137,35 @@ class EventOrganizer {
     Map<String, dynamic>? businessHours,
     String? licenseNumber,
     String? taxId,
-  }) {
-    return EventOrganizer(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      companyName: companyName ?? this.companyName,
-      description: description ?? this.description,
-      website: website ?? this.website,
-      phone: phone ?? this.phone,
-      email: email ?? this.email,
-      address: address ?? this.address,
-      city: city ?? this.city,
-      region: region ?? this.region,
-      eventTypes: eventTypes ?? this.eventTypes,
-      specializations: specializations ?? this.specializations,
-      rating: rating ?? this.rating,
-      totalEvents: totalEvents ?? this.totalEvents,
-      completedEvents: completedEvents ?? this.completedEvents,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      isVerified: isVerified ?? this.isVerified,
-      isActive: isActive ?? this.isActive,
-      socialLinks: socialLinks ?? this.socialLinks,
-      portfolioImages: portfolioImages ?? this.portfolioImages,
-      businessHours: businessHours ?? this.businessHours,
-      licenseNumber: licenseNumber ?? this.licenseNumber,
-      taxId: taxId ?? this.taxId,
-    );
-  }
+  }) =>
+      EventOrganizer(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        companyName: companyName ?? this.companyName,
+        description: description ?? this.description,
+        website: website ?? this.website,
+        phone: phone ?? this.phone,
+        email: email ?? this.email,
+        address: address ?? this.address,
+        city: city ?? this.city,
+        region: region ?? this.region,
+        eventTypes: eventTypes ?? this.eventTypes,
+        specializations: specializations ?? this.specializations,
+        rating: rating ?? this.rating,
+        totalEvents: totalEvents ?? this.totalEvents,
+        completedEvents: completedEvents ?? this.completedEvents,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        isVerified: isVerified ?? this.isVerified,
+        isActive: isActive ?? this.isActive,
+        socialLinks: socialLinks ?? this.socialLinks,
+        portfolioImages: portfolioImages ?? this.portfolioImages,
+        businessHours: businessHours ?? this.businessHours,
+        licenseNumber: licenseNumber ?? this.licenseNumber,
+        taxId: taxId ?? this.taxId,
+      );
 
-  static DateTime _parseTimestamp(dynamic timestamp) {
+  static DateTime _parseTimestamp(timestamp) {
     if (timestamp == null) return DateTime.now();
     if (timestamp is Timestamp) return timestamp.toDate();
     if (timestamp is int) return DateTime.fromMillisecondsSinceEpoch(timestamp);
@@ -180,9 +174,8 @@ class EventOrganizer {
   }
 
   @override
-  String toString() {
-    return 'EventOrganizer(id: $id, companyName: $companyName, eventTypes: $eventTypes)';
-  }
+  String toString() =>
+      'EventOrganizer(id: $id, companyName: $companyName, eventTypes: $eventTypes)';
 
   @override
   bool operator ==(Object other) {
@@ -231,4 +224,3 @@ enum OrganizerSpecialization {
   const OrganizerSpecialization(this.displayName);
   final String displayName;
 }
-

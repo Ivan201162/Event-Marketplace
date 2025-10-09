@@ -118,8 +118,13 @@ class _CreateChatScreenState extends ConsumerState<CreateChatScreen> {
       if (query.isEmpty) {
         _searchResults = _allUsers;
       } else {
-        _searchResults = _allUsers.where((user) => user['name'].toLowerCase().contains(query.toLowerCase()) ||
-                 user['email'].toLowerCase().contains(query.toLowerCase()),).toList();
+        _searchResults = _allUsers
+            .where(
+              (user) =>
+                  user['name'].toLowerCase().contains(query.toLowerCase()) ||
+                  user['email'].toLowerCase().contains(query.toLowerCase()),
+            )
+            .toList();
       }
     });
   }
@@ -154,11 +159,14 @@ class _CreateChatScreenState extends ConsumerState<CreateChatScreen> {
           // Чат уже существует, переходим к нему
           if (mounted) {
             context.pop();
-            context.push('/chat', extra: {
-              'chatId': chatDoc.id,
-              'otherParticipantId': user['id'],
-              'otherParticipantName': user['name'],
-            },);
+            context.push(
+              '/chat',
+              extra: {
+                'chatId': chatDoc.id,
+                'otherParticipantId': user['id'],
+                'otherParticipantName': user['name'],
+              },
+            );
           }
           return;
         }
@@ -177,9 +185,8 @@ class _CreateChatScreenState extends ConsumerState<CreateChatScreen> {
         'updatedAt': FieldValue.serverTimestamp(),
       };
 
-      final chatDoc = await FirebaseFirestore.instance
-          .collection('chats')
-          .add(chatData);
+      final chatDoc =
+          await FirebaseFirestore.instance.collection('chats').add(chatData);
 
       // Добавляем первое сообщение
       await chatDoc.collection('messages').add({
@@ -199,11 +206,14 @@ class _CreateChatScreenState extends ConsumerState<CreateChatScreen> {
           ),
         );
         context.pop();
-        context.push('/chat', extra: {
-          'chatId': chatDoc.id,
-          'otherParticipantId': user['id'],
-          'otherParticipantName': user['name'],
-        },);
+        context.push(
+          '/chat',
+          extra: {
+            'chatId': chatDoc.id,
+            'otherParticipantId': user['id'],
+            'otherParticipantName': user['name'],
+          },
+        );
       }
     } on Exception catch (e) {
       if (mounted) {
@@ -219,91 +229,97 @@ class _CreateChatScreenState extends ConsumerState<CreateChatScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(
-        title: const Text('Создать чат'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
-        ),
-      ),
-      body: Column(
-        children: [
-          // Поиск
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Поиск пользователей...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                suffixIcon: _searchQuery.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          _searchController.clear();
-                          _searchUsers('');
-                        },
-                      )
-                    : null,
-              ),
-              onChanged: _searchUsers,
-            ),
+        appBar: AppBar(
+          title: const Text('Создать чат'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => context.pop(),
           ),
+        ),
+        body: Column(
+          children: [
+            // Поиск
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Поиск пользователей...',
+                  prefixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  suffixIcon: _searchQuery.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            _searchController.clear();
+                            _searchUsers('');
+                          },
+                        )
+                      : null,
+                ),
+                onChanged: _searchUsers,
+              ),
+            ),
 
-          // Список пользователей
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _searchResults.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.search_off,
-                              size: 64,
-                              color: Colors.grey,
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              _searchQuery.isEmpty
-                                  ? 'Нет пользователей'
-                                  : 'Пользователи не найдены',
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            // Список пользователей
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _searchResults.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.search_off,
+                                size: 64,
                                 color: Colors.grey,
                               ),
-                            ),
-                            if (_searchQuery.isNotEmpty) ...[
-                              const SizedBox(height: 8),
+                              const SizedBox(height: 16),
                               Text(
-                                'Попробуйте изменить поисковый запрос',
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: Colors.grey,
-                                ),
+                                _searchQuery.isEmpty
+                                    ? 'Нет пользователей'
+                                    : 'Пользователи не найдены',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(
+                                      color: Colors.grey,
+                                    ),
                               ),
+                              if (_searchQuery.isNotEmpty) ...[
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Попробуйте изменить поисковый запрос',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        color: Colors.grey,
+                                      ),
+                                ),
+                              ],
                             ],
-                          ],
+                          ),
+                        )
+                      : ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          itemCount: _searchResults.length,
+                          itemBuilder: (context, index) {
+                            final user = _searchResults[index];
+                            return _buildUserTile(user);
+                          },
                         ),
-                      )
-                    : ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        itemCount: _searchResults.length,
-                        itemBuilder: (context, index) {
-                          final user = _searchResults[index];
-                          return _buildUserTile(user);
-                        },
-                      ),
-          ),
-        ],
-      ),
-    );
+            ),
+          ],
+        ),
+      );
 
   Widget _buildUserTile(Map<String, dynamic> user) {
     final isSpecialist = user['isSpecialist'] == true;
-    
+
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
@@ -352,4 +368,3 @@ class _CreateChatScreenState extends ConsumerState<CreateChatScreen> {
     );
   }
 }
-

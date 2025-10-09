@@ -75,10 +75,10 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
   void _applyFilters() {
     setState(() {
       _filteredPromotions = _allPromotions.where((promotion) {
-        final categoryMatch = _selectedCategory == 'all' || 
+        final categoryMatch = _selectedCategory == 'all' ||
             promotion.category == _selectedCategory;
-        final cityMatch = _selectedCity.isEmpty || 
-            promotion.city == _selectedCity;
+        final cityMatch =
+            _selectedCity.isEmpty || promotion.city == _selectedCity;
         return categoryMatch && cityMatch;
       }).toList();
     });
@@ -86,43 +86,43 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(
-        title: const Text('🔥 Акции'),
-        elevation: 0,
-        backgroundColor: Colors.orange.shade50,
-        foregroundColor: Colors.orange.shade800,
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: Colors.orange.shade600,
-          labelColor: Colors.orange.shade800,
-          unselectedLabelColor: Colors.grey.shade600,
-          tabs: const [
-            Tab(text: 'Скидки', icon: Icon(Icons.local_offer)),
-            Tab(text: 'Сезонные', icon: Icon(Icons.wb_sunny)),
-            Tab(text: 'Подарки', icon: Icon(Icons.card_giftcard)),
+        appBar: AppBar(
+          title: const Text('🔥 Акции'),
+          elevation: 0,
+          backgroundColor: Colors.orange.shade50,
+          foregroundColor: Colors.orange.shade800,
+          bottom: TabBar(
+            controller: _tabController,
+            indicatorColor: Colors.orange.shade600,
+            labelColor: Colors.orange.shade800,
+            unselectedLabelColor: Colors.grey.shade600,
+            tabs: const [
+              Tab(text: 'Скидки', icon: Icon(Icons.local_offer)),
+              Tab(text: 'Сезонные', icon: Icon(Icons.wb_sunny)),
+              Tab(text: 'Подарки', icon: Icon(Icons.card_giftcard)),
+            ],
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showFilterDialog,
+            ),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: _showFilterDialog,
-          ),
-        ],
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : FadeTransition(
-              opacity: _fadeAnimation,
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  _buildDiscountsTab(),
-                  _buildSeasonalTab(),
-                  _buildGiftsTab(),
-                ],
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : FadeTransition(
+                opacity: _fadeAnimation,
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    _buildDiscountsTab(),
+                    _buildSeasonalTab(),
+                    _buildGiftsTab(),
+                  ],
+                ),
               ),
-            ),
-    );
+      );
 
   Widget _buildDiscountsTab() {
     final discounts = _filteredPromotions
@@ -133,9 +133,8 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
   }
 
   Widget _buildSeasonalTab() {
-    final seasonal = _filteredPromotions
-        .where((p) => p.category == 'seasonal')
-        .toList();
+    final seasonal =
+        _filteredPromotions.where((p) => p.category == 'seasonal').toList();
 
     return _buildPromotionsList(seasonal, 'Сезонные предложения');
   }
@@ -163,15 +162,15 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
             Text(
               'Нет доступных акций',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                color: Colors.grey.shade600,
-              ),
+                    color: Colors.grey.shade600,
+                  ),
             ),
             const SizedBox(height: 8),
             Text(
               'Скоро появятся новые предложения!',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey.shade500,
-              ),
+                    color: Colors.grey.shade500,
+                  ),
             ),
           ],
         ),
@@ -188,18 +187,19 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
           child: Text(
             '$title (${promotions.length})',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: Colors.orange.shade800,
-            ),
+                  fontWeight: FontWeight.w600,
+                  color: Colors.orange.shade800,
+                ),
           ),
         ),
-        
+
         // Список акций
         Expanded(
           child: ListView.builder(
             padding: const EdgeInsets.all(16),
             itemCount: promotions.length,
-            itemBuilder: (context, index) => _buildPromotionCard(promotions[index]),
+            itemBuilder: (context, index) =>
+                _buildPromotionCard(promotions[index]),
           ),
         ),
       ],
@@ -207,132 +207,134 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
   }
 
   Widget _buildPromotionCard(Promotion promotion) => ResponsiveCard(
-      mobileMargin: const EdgeInsets.only(bottom: 16),
-      tabletMargin: const EdgeInsets.only(bottom: 20),
-      desktopMargin: const EdgeInsets.only(bottom: 24),
-      child: InkWell(
-        onTap: () => _showPromotionDetails(promotion),
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            gradient: LinearGradient(
-              colors: [
-                Colors.orange.shade50,
-                Colors.orange.shade100.withValues(alpha: 0.3),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            border: Border.all(
-              color: Colors.orange.shade200,
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Заголовок и скидка
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      promotion.title,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.orange.shade800,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.red.shade500,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      '-${promotion.discount}%',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
+        mobileMargin: const EdgeInsets.only(bottom: 16),
+        tabletMargin: const EdgeInsets.only(bottom: 20),
+        desktopMargin: const EdgeInsets.only(bottom: 24),
+        child: InkWell(
+          onTap: () => _showPromotionDetails(promotion),
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              gradient: LinearGradient(
+                colors: [
+                  Colors.orange.shade50,
+                  Colors.orange.shade100.withValues(alpha: 0.3),
                 ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              
-              const SizedBox(height: 8),
-              
-              // Описание
-              Text(
-                promotion.description,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey.shade700,
+              border: Border.all(
+                color: Colors.orange.shade200,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Заголовок и скидка
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        promotion.title,
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.orange.shade800,
+                                ),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade500,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        '-${promotion.discount}%',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              
-              const SizedBox(height: 12),
-              
-              // Информация о специалисте и времени
-              Row(
-                children: [
-                  Icon(
-                    Icons.person,
-                    size: 16,
-                    color: Colors.grey.shade600,
-                  ),
-                  const SizedBox(width: 4),
-                  Expanded(
-                    child: Text(
-                      promotion.specialistName ?? 'Специалист',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                  ),
-                  Icon(
-                    Icons.access_time,
-                    size: 16,
-                    color: Colors.grey.shade600,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    promotion.formattedTimeRemaining,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey.shade600,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-              
-              if (promotion.city != null) ...[
+
                 const SizedBox(height: 8),
+
+                // Описание
+                Text(
+                  promotion.description,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.grey.shade700,
+                      ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+
+                const SizedBox(height: 12),
+
+                // Информация о специалисте и времени
                 Row(
                   children: [
                     Icon(
-                      Icons.location_on,
+                      Icons.person,
+                      size: 16,
+                      color: Colors.grey.shade600,
+                    ),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        promotion.specialistName ?? 'Специалист',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Colors.grey.shade600,
+                            ),
+                      ),
+                    ),
+                    Icon(
+                      Icons.access_time,
                       size: 16,
                       color: Colors.grey.shade600,
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      promotion.city!,
+                      promotion.formattedTimeRemaining,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey.shade600,
-                      ),
+                            color: Colors.grey.shade600,
+                            fontWeight: FontWeight.w500,
+                          ),
                     ),
                   ],
                 ),
+
+                if (promotion.city != null) ...[
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.location_on,
+                        size: 16,
+                        color: Colors.grey.shade600,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        promotion.city!,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Colors.grey.shade600,
+                            ),
+                      ),
+                    ],
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
-      ),
-    );
+      );
 
   void _showPromotionDetails(Promotion promotion) {
     showDialog(
@@ -352,10 +354,10 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
                   height: 200,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Container(
-                      height: 200,
-                      color: Colors.grey.shade200,
-                      child: const Icon(Icons.image, size: 64),
-                    ),
+                    height: 200,
+                    color: Colors.grey.shade200,
+                    child: const Icon(Icons.image, size: 64),
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -389,7 +391,8 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
               const SizedBox(height: 8),
               Row(
                 children: [
-                  Icon(Icons.location_on, size: 16, color: Colors.grey.shade600),
+                  Icon(Icons.location_on,
+                      size: 16, color: Colors.grey.shade600),
                   const SizedBox(width: 8),
                   Text('Город: ${promotion.city}'),
                 ],
@@ -431,8 +434,10 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
               ),
               items: const [
                 DropdownMenuItem(value: 'all', child: Text('Все категории')),
-                DropdownMenuItem(value: 'photographer', child: Text('Фотографы')),
-                DropdownMenuItem(value: 'videographer', child: Text('Видеографы')),
+                DropdownMenuItem(
+                    value: 'photographer', child: Text('Фотографы')),
+                DropdownMenuItem(
+                    value: 'videographer', child: Text('Видеографы')),
                 DropdownMenuItem(value: 'dj', child: Text('DJ')),
                 DropdownMenuItem(value: 'host', child: Text('Ведущие')),
                 DropdownMenuItem(value: 'decorator', child: Text('Декораторы')),
@@ -446,7 +451,7 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
               },
             ),
             const SizedBox(height: 16),
-            
+
             // Город
             TextField(
               decoration: const InputDecoration(

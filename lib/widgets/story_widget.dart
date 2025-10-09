@@ -305,7 +305,9 @@ class StoryCircle extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: story.expiresAt.isBefore(DateTime.now()) ? Colors.grey : Colors.blue,
+              color: story.expiresAt.isBefore(DateTime.now())
+                  ? Colors.grey
+                  : Colors.blue,
               width: 3,
             ),
           ),

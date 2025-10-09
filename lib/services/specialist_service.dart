@@ -30,17 +30,17 @@ class SpecialistService {
       // Загружаем из Firestore
       final snapshot = await _firestore.collection(_collection).get();
       final specialists = snapshot.docs.map(Specialist.fromDocument).toList();
-      
+
       // Кэшируем результат
       if (useCache) {
         final dataToCache = specialists.map((s) => s.toMap()).toList();
         await _cacheService.cacheSpecialists(dataToCache);
       }
-      
+
       return specialists;
     } on Exception catch (e) {
       debugPrint('Ошибка получения специалистов: $e');
-      
+
       // Пытаемся получить из кэша в случае ошибки
       if (useCache) {
         final cachedData = _cacheService.getCachedSpecialists();
@@ -48,7 +48,7 @@ class SpecialistService {
           return cachedData.map(Specialist.fromMap).toList();
         }
       }
-      
+
       return [];
     }
   }
@@ -119,7 +119,7 @@ class SpecialistService {
         ),
       );
     }
-    
+
     return _performSearch(
       query: query,
       category: category,

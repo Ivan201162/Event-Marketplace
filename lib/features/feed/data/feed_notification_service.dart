@@ -66,7 +66,8 @@ class FeedNotificationService {
       print('Пользователь предоставил временное разрешение на уведомления');
     } else {
       print(
-          'Пользователь отклонил или не предоставил разрешение на уведомления',);
+        'Пользователь отклонил или не предоставил разрешение на уведомления',
+      );
     }
   }
 
@@ -249,7 +250,8 @@ class FeedNotificationService {
       if (userDoc.exists) {
         final userData = userDoc.data()!;
         return List<String>.from(
-            (userData['followers'] as List<dynamic>?) ?? [],);
+          (userData['followers'] as List<dynamic>?) ?? [],
+        );
       }
 
       return [];

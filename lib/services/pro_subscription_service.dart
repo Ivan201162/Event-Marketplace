@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 
 import '../models/pro_subscription.dart';
 
@@ -20,7 +19,7 @@ class ProSubscriptionService {
 
       if (snapshot.docs.isNotEmpty) {
         final doc = snapshot.docs.first;
-        return ProSubscription.fromMap(doc.data() as Map<String, dynamic>);
+        return ProSubscription.fromMap(doc.data()! as Map<String, dynamic>);
       }
       return null;
     } catch (e) {
@@ -36,14 +35,14 @@ class ProSubscriptionService {
     bool isTrial = false,
   }) async {
     try {
-      final String subscriptionId = _firestore.collection('subscriptions').doc().id;
-      final DateTime now = DateTime.now();
-      final DateTime endDate = isTrial 
+      final subscriptionId = _firestore.collection('subscriptions').doc().id;
+      final now = DateTime.now();
+      final endDate = isTrial
           ? now.add(const Duration(days: 7)) // 7 дней пробного периода
           : now.add(const Duration(days: 30)); // 30 дней подписки
 
       // Создать платеж
-      final Payment payment = await _createPayment(
+      final payment = await _createPayment(
         subscriptionId: subscriptionId,
         amount: isTrial ? 0.0 : plan.monthlyPrice,
         currency: 'RUB',
@@ -55,7 +54,7 @@ class ProSubscriptionService {
       }
 
       // Создать подписку
-      final ProSubscription subscription = ProSubscription(
+      final subscription = ProSubscription(
         id: subscriptionId,
         userId: userId,
         plan: plan,
@@ -63,7 +62,6 @@ class ProSubscriptionService {
         startDate: now,
         endDate: endDate,
         price: plan.monthlyPrice,
-        currency: 'RUB',
         paymentMethod: paymentMethodId,
         trialEndDate: isTrial ? endDate : null,
         features: _getPlanFeatures(plan),
@@ -90,7 +88,7 @@ class ProSubscriptionService {
     Map<String, bool>? features,
   }) async {
     try {
-      final Map<String, dynamic> updates = {
+      final updates = <String, dynamic>{
         'updatedAt': FieldValue.serverTimestamp(),
       };
 
@@ -115,10 +113,7 @@ class ProSubscriptionService {
     String? reason,
   }) async {
     try {
-      await _firestore
-          .collection('subscriptions')
-          .doc(subscriptionId)
-          .update({
+      await _firestore.collection('subscriptions').doc(subscriptionId).update({
         'status': SubscriptionStatus.cancelled.value,
         'cancelledAt': FieldValue.serverTimestamp(),
         'cancellationReason': reason,
@@ -146,11 +141,11 @@ class ProSubscriptionService {
       }
 
       final subscription = ProSubscription.fromMap(
-        subscriptionDoc.data() as Map<String, dynamic>
+        subscriptionDoc.data()!,
       );
 
       // Создать новый платеж
-      final Payment payment = await _createPayment(
+      final payment = await _createPayment(
         subscriptionId: subscriptionId,
         amount: subscription.plan.monthlyPrice,
         currency: subscription.currency,
@@ -186,10 +181,10 @@ class ProSubscriptionService {
           .limit(limit)
           .get();
 
-      final List<Payment> payments = [];
+      final payments = <Payment>[];
 
       for (final doc in snapshot.docs) {
-        final payment = Payment.fromMap(doc.data() as Map<String, dynamic>);
+        final payment = Payment.fromMap(doc.data()! as Map<String, dynamic>);
         payments.add(payment);
       }
 
@@ -207,7 +202,7 @@ class ProSubscriptionService {
     try {
       final subscription = await getUserSubscription(userId);
       if (subscription == null) return false;
-      
+
       return subscription.hasFeature(feature);
     } catch (e) {
       throw Exception('Ошибка проверки доступности функции: $e');
@@ -215,9 +210,7 @@ class ProSubscriptionService {
   }
 
   /// Получить доступные планы
-  List<SubscriptionPlan> getAvailablePlans() {
-    return SubscriptionPlan.values;
-  }
+  List<SubscriptionPlan> getAvailablePlans() => SubscriptionPlan.values;
 
   /// Создать платеж
   Future<Payment> _createPayment({
@@ -227,8 +220,8 @@ class ProSubscriptionService {
     required String paymentMethodId,
   }) async {
     try {
-      final String paymentId = _firestore.collection('payments').doc().id;
-      final DateTime now = DateTime.now();
+      final paymentId = _firestore.collection('payments').doc().id;
+      final now = DateTime.now();
 
       // Создать платеж в Stripe (заглушка)
       // TODO: Интегрировать с реальным Stripe API
@@ -241,10 +234,9 @@ class ProSubscriptionService {
         createdAt: now,
         paymentMethod: paymentMethodId,
         transactionId: 'mock_transaction_$paymentId',
-        receiptUrl: null,
       );
 
-      final Payment payment = paymentIntent;
+      final payment = paymentIntent;
 
       await _firestore
           .collection('payments')
@@ -299,17 +291,16 @@ class ProSubscriptionService {
   /// Получить статистику подписок
   Future<Map<String, dynamic>> getSubscriptionStats() async {
     try {
-      final QuerySnapshot snapshot = await _firestore
-          .collection('subscriptions')
-          .get();
+      final QuerySnapshot snapshot =
+          await _firestore.collection('subscriptions').get();
 
-      int totalSubscriptions = 0;
-      int activeSubscriptions = 0;
-      int trialSubscriptions = 0;
-      double totalRevenue = 0.0;
+      var totalSubscriptions = 0;
+      var activeSubscriptions = 0;
+      var trialSubscriptions = 0;
+      var totalRevenue = 0;
 
       for (final doc in snapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data()! as Map<String, dynamic>;
         totalSubscriptions++;
 
         final status = SubscriptionStatus.fromString(data['status'] as String);

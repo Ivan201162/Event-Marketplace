@@ -38,7 +38,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     initialLocation: '/',
     redirect: (context, state) {
       final currentPath = state.uri.path;
-      
+
       // Если это начальный маршрут, всегда показываем splash screen
       if (currentPath == '/') {
         return null; // Показываем splash screen

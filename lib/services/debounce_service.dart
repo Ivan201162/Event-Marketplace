@@ -18,7 +18,7 @@ class DebounceService {
   }) {
     // Отменяем предыдущий таймер, если он существует
     _timers[key]?.cancel();
-    
+
     // Создаем новый таймер
     _timers[key] = Timer(delay, () {
       callback();
@@ -34,9 +34,9 @@ class DebounceService {
   }) async {
     // Отменяем предыдущий таймер, если он существует
     _timers[key]?.cancel();
-    
+
     final completer = Completer<T>();
-    
+
     _timers[key] = Timer(delay, () async {
       try {
         final result = await callback();
@@ -47,7 +47,7 @@ class DebounceService {
         _timers.remove(key);
       }
     });
-    
+
     return completer.future;
   }
 
@@ -73,4 +73,5 @@ class DebounceService {
 }
 
 /// Провайдер для DebounceService
-final debounceServiceProvider = Provider<DebounceService>((ref) => DebounceService());
+final debounceServiceProvider =
+    Provider<DebounceService>((ref) => DebounceService());

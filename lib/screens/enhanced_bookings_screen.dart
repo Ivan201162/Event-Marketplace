@@ -39,168 +39,168 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(
-        title: const Text('Заявки'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Мои заявки'),
-            Tab(text: 'Заявки мне'),
+        appBar: AppBar(
+          title: const Text('Заявки'),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(text: 'Мои заявки'),
+              Tab(text: 'Заявки мне'),
+            ],
+          ),
+        ),
+        body: Column(
+          children: [
+            // Поиск и фильтры
+            _buildSearchAndFilters(),
+
+            // Контент
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildMyBookingsTab(),
+                  _buildIncomingBookingsTab(),
+                ],
+              ),
+            ),
           ],
         ),
-      ),
-      body: Column(
-        children: [
-          // Поиск и фильтры
-          _buildSearchAndFilters(),
-
-          // Контент
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildMyBookingsTab(),
-                _buildIncomingBookingsTab(),
-              ],
-            ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _createBooking,
-        child: const Icon(Icons.add),
-      ),
-    );
+        floatingActionButton: FloatingActionButton(
+          onPressed: _createBooking,
+          child: const Icon(Icons.add),
+        ),
+      );
 
   /// Построить поиск и фильтры
   Widget _buildSearchAndFilters() => Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        border: Border(
-          bottom: BorderSide(color: Colors.grey[300]!),
-        ),
-      ),
-      child: Column(
-        children: [
-          // Поисковая строка
-          TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              hintText: 'Поиск по заявкам...',
-              prefixIcon: const Icon(Icons.search),
-              suffixIcon: _searchController.text.isNotEmpty
-                  ? IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: () {
-                        _searchController.clear();
-                        setState(() {
-                          _searchQuery = '';
-                        });
-                      },
-                    )
-                  : null,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              filled: true,
-              fillColor: Colors.white,
-            ),
-            onChanged: (value) {
-              setState(() {
-                _searchQuery = value;
-              });
-            },
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          border: Border(
+            bottom: BorderSide(color: Colors.grey[300]!),
           ),
+        ),
+        child: Column(
+          children: [
+            // Поисковая строка
+            TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Поиск по заявкам...',
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: _searchController.text.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          _searchController.clear();
+                          setState(() {
+                            _searchQuery = '';
+                          });
+                        },
+                      )
+                    : null,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                filled: true,
+                fillColor: Colors.white,
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                });
+              },
+            ),
 
-          const SizedBox(height: 12),
+            const SizedBox(height: 12),
 
-          // Фильтры
-          Row(
-            children: [
-              // Фильтр по статусу
-              Expanded(
-                child: DropdownButtonFormField<BookingStatus?>(
-                  initialValue: _selectedStatus,
-                  decoration: const InputDecoration(
-                    labelText: 'Статус',
-                    border: OutlineInputBorder(),
-                    isDense: true,
-                  ),
-                  hint: const Text('Все статусы'),
-                  items: [
-                    const DropdownMenuItem<BookingStatus?>(
-                      child: Text('Все статусы'),
+            // Фильтры
+            Row(
+              children: [
+                // Фильтр по статусу
+                Expanded(
+                  child: DropdownButtonFormField<BookingStatus?>(
+                    initialValue: _selectedStatus,
+                    decoration: const InputDecoration(
+                      labelText: 'Статус',
+                      border: OutlineInputBorder(),
+                      isDense: true,
                     ),
-                    ...BookingStatus.values.map(
-                      (status) => DropdownMenuItem<BookingStatus?>(
-                        value: status,
-                        child: Row(
-                          children: [
-                            Icon(
-                              _getStatusIcon(status),
-                              size: 16,
-                              color: _getStatusColor(status),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(_getStatusText(status)),
-                          ],
+                    hint: const Text('Все статусы'),
+                    items: [
+                      const DropdownMenuItem<BookingStatus?>(
+                        child: Text('Все статусы'),
+                      ),
+                      ...BookingStatus.values.map(
+                        (status) => DropdownMenuItem<BookingStatus?>(
+                          value: status,
+                          child: Row(
+                            children: [
+                              Icon(
+                                _getStatusIcon(status),
+                                size: 16,
+                                color: _getStatusColor(status),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(_getStatusText(status)),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedStatus = value;
-                    });
-                  },
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedStatus = value;
+                      });
+                    },
+                  ),
                 ),
-              ),
 
-              const SizedBox(width: 12),
+                const SizedBox(width: 12),
 
-              // Фильтр по дате
-              Expanded(
-                child: InkWell(
-                  onTap: _selectDate,
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.calendar_today, size: 16),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            _selectedDate != null
-                                ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}'
-                                : 'Выберите дату',
-                            style: const TextStyle(fontSize: 14),
+                // Фильтр по дате
+                Expanded(
+                  child: InkWell(
+                    onTap: _selectDate,
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.calendar_today, size: 16),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              _selectedDate != null
+                                  ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}'
+                                  : 'Выберите дату',
+                              style: const TextStyle(fontSize: 14),
+                            ),
                           ),
-                        ),
-                        if (_selectedDate != null)
-                          IconButton(
-                            icon: const Icon(Icons.clear, size: 16),
-                            onPressed: () {
-                              setState(() {
-                                _selectedDate = null;
-                              });
-                            },
-                          ),
-                      ],
+                          if (_selectedDate != null)
+                            IconButton(
+                              icon: const Icon(Icons.clear, size: 16),
+                              onPressed: () {
+                                setState(() {
+                                  _selectedDate = null;
+                                });
+                              },
+                            ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+              ],
+            ),
+          ],
+        ),
+      );
 
   /// Построить вкладку моих заявок
   Widget _buildMyBookingsTab() {
@@ -269,7 +269,8 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                ref.invalidate(bookingsByCustomerStreamProvider(currentUser.uid));
+                ref.invalidate(
+                    bookingsByCustomerStreamProvider(currentUser.uid));
               },
               child: const Text('Повторить'),
             ),
@@ -347,7 +348,8 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                ref.invalidate(bookingsBySpecialistStreamProvider(currentUser.uid));
+                ref.invalidate(
+                    bookingsBySpecialistStreamProvider(currentUser.uid));
               },
               child: const Text('Повторить'),
             ),
@@ -359,39 +361,39 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
 
   /// Построить пустое состояние заявок
   Widget _buildEmptyBookingsState(String title) => Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.event_busy,
-            size: 64,
-            color: Colors.grey[400],
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Нет заявок',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: Colors.grey[600],
-                ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            title == 'Мои заявки'
-                ? 'Создайте первую заявку'
-                : 'Заявки появятся здесь',
-            style: TextStyle(color: Colors.grey[500]),
-          ),
-          if (title == 'Мои заявки') ...[
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: _createBooking,
-              icon: const Icon(Icons.add),
-              label: const Text('Создать заявку'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.event_busy,
+              size: 64,
+              color: Colors.grey[400],
             ),
+            const SizedBox(height: 16),
+            Text(
+              'Нет заявок',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    color: Colors.grey[600],
+                  ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              title == 'Мои заявки'
+                  ? 'Создайте первую заявку'
+                  : 'Заявки появятся здесь',
+              style: TextStyle(color: Colors.grey[500]),
+            ),
+            if (title == 'Мои заявки') ...[
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
+                onPressed: _createBooking,
+                icon: const Icon(Icons.add),
+                label: const Text('Создать заявку'),
+              ),
+            ],
           ],
-        ],
-      ),
-    );
+        ),
+      );
 
   /// Фильтровать заявки
   List<Booking> _filterBookings(List<Booking> bookings) {
@@ -400,22 +402,36 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
     // Фильтр по поисковому запросу
     if (_searchQuery.isNotEmpty) {
       final searchLower = _searchQuery.toLowerCase();
-      filtered = filtered.where((booking) => (booking.title?.toLowerCase().contains(searchLower) ?? false) ||
-               (booking.customerName?.toLowerCase().contains(searchLower) ?? false) ||
-               (booking.specialistName?.toLowerCase().contains(searchLower) ?? false) ||
-               (booking.message.toLowerCase().contains(searchLower)),).toList();
+      filtered = filtered
+          .where(
+            (booking) =>
+                (booking.title?.toLowerCase().contains(searchLower) ?? false) ||
+                (booking.customerName?.toLowerCase().contains(searchLower) ??
+                    false) ||
+                (booking.specialistName?.toLowerCase().contains(searchLower) ??
+                    false) ||
+                (booking.message.toLowerCase().contains(searchLower)),
+          )
+          .toList();
     }
 
     // Фильтр по статусу
     if (_selectedStatus != null) {
-      filtered = filtered.where((booking) => booking.status == _selectedStatus).toList();
+      filtered = filtered
+          .where((booking) => booking.status == _selectedStatus)
+          .toList();
     }
 
     // Фильтр по дате
     if (_selectedDate != null) {
-      filtered = filtered.where((booking) => booking.eventDate.year == _selectedDate!.year &&
-               booking.eventDate.month == _selectedDate!.month &&
-               booking.eventDate.day == _selectedDate!.day,).toList();
+      filtered = filtered
+          .where(
+            (booking) =>
+                booking.eventDate.year == _selectedDate!.year &&
+                booking.eventDate.month == _selectedDate!.month &&
+                booking.eventDate.day == _selectedDate!.day,
+          )
+          .toList();
     }
 
     return filtered;
@@ -518,9 +534,9 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
               Navigator.of(context).pop();
               try {
                 await ref.read(firestoreServiceProvider).updateBookingStatus(
-                  booking.id,
-                  BookingStatus.cancelled,
-                );
+                      booking.id,
+                      BookingStatus.cancelled,
+                    );
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Заявка отменена')),
@@ -558,9 +574,9 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
               Navigator.of(context).pop();
               try {
                 await ref.read(firestoreServiceProvider).updateBookingStatus(
-                  booking.id,
-                  BookingStatus.confirmed,
-                );
+                      booking.id,
+                      BookingStatus.confirmed,
+                    );
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Заявка подтверждена')),
@@ -598,9 +614,9 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
               Navigator.of(context).pop();
               try {
                 await ref.read(firestoreServiceProvider).updateBookingStatus(
-                  booking.id,
-                  BookingStatus.rejected,
-                );
+                      booking.id,
+                      BookingStatus.rejected,
+                    );
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Заявка отклонена')),
@@ -638,9 +654,9 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
               Navigator.of(context).pop();
               try {
                 await ref.read(firestoreServiceProvider).updateBookingStatus(
-                  booking.id,
-                  BookingStatus.completed,
-                );
+                      booking.id,
+                      BookingStatus.completed,
+                    );
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Заявка завершена')),
@@ -663,16 +679,19 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
 }
 
 /// Провайдер для потока заявок по заказчику
-final bookingsByCustomerStreamProvider = StreamProvider.family<List<Booking>, String>((ref, customerId) {
+final bookingsByCustomerStreamProvider =
+    StreamProvider.family<List<Booking>, String>((ref, customerId) {
   final service = ref.watch(firestoreServiceProvider);
   return service.bookingsByCustomerStream(customerId);
 });
 
 /// Провайдер для потока заявок по специалисту
-final bookingsBySpecialistStreamProvider = StreamProvider.family<List<Booking>, String>((ref, specialistId) {
+final bookingsBySpecialistStreamProvider =
+    StreamProvider.family<List<Booking>, String>((ref, specialistId) {
   final service = ref.watch(firestoreServiceProvider);
   return service.bookingsBySpecialistStream(specialistId);
 });
 
 /// Провайдер для сервиса Firestore
-final firestoreServiceProvider = Provider<FirestoreService>((ref) => FirestoreService());
+final firestoreServiceProvider =
+    Provider<FirestoreService>((ref) => FirestoreService());

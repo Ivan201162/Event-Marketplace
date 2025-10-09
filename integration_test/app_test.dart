@@ -12,8 +12,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Проверяем, что приложение запустилось
-      expect(find.text('Найди специалиста для своего праздника 🎉'),
-          findsOneWidget,);
+      expect(
+        find.text('Найди специалиста для своего праздника 🎉'),
+        findsOneWidget,
+      );
 
       // Тестируем поиск
       final searchField = find.byType(TextField);
@@ -27,7 +29,10 @@ void main() {
       final searchResults = find.textContaining('Найдено специалистов:');
       final noResults = find.text('Никого не найдено 😅');
 
-      expect(searchResults.evaluate().isNotEmpty || noResults.evaluate().isNotEmpty, isTrue);
+      expect(
+          searchResults.evaluate().isNotEmpty ||
+              noResults.evaluate().isNotEmpty,
+          isTrue);
 
       // Тестируем быстрые фильтры
       expect(find.text('Фотографы'), findsOneWidget);
@@ -54,8 +59,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Проверяем, что мы на главной странице
-      expect(find.text('Найди специалиста для своего праздника 🎉'),
-          findsOneWidget,);
+      expect(
+        find.text('Найди специалиста для своего праздника 🎉'),
+        findsOneWidget,
+      );
 
       // Симулируем нажатие кнопки "Назад"
       await tester.pageBack();

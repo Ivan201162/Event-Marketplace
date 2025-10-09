@@ -159,7 +159,8 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
               ),
               child: CircleAvatar(
                 radius: 27,
-                backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                backgroundColor:
+                    Theme.of(context).primaryColor.withValues(alpha: 0.1),
                 child: Icon(
                   Icons.person,
                   color: Theme.of(context).primaryColor,
@@ -343,9 +344,10 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
   Widget _buildStoryContent(Story story) => SizedBox(
         width: double.infinity,
         height: double.infinity,
-        child: (story.mediaUrl.contains('mp4') || story.mediaUrl.contains('mov'))
-            ? _buildVideoContent(story)
-            : _buildImageContent(story),
+        child:
+            (story.mediaUrl.contains('mp4') || story.mediaUrl.contains('mov'))
+                ? _buildVideoContent(story)
+                : _buildImageContent(story),
       );
 
   Widget _buildImageContent(Story story) => Image.network(

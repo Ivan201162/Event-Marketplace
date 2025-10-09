@@ -17,8 +17,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Проверяем, что заголовок поиска отображается
-      expect(find.text('Найди специалиста для своего праздника 🎉'),
-          findsOneWidget,);
+      expect(
+        find.text('Найди специалиста для своего праздника 🎉'),
+        findsOneWidget,
+      );
 
       // Ищем поле поиска
       final searchField = find.byType(TextField);
@@ -33,9 +35,9 @@ void main() {
       final noResults = find.text('Никого не найдено 😅');
 
       expect(
-          searchResults.evaluate().isNotEmpty ||
-              noResults.evaluate().isNotEmpty,
-          isTrue,);
+        searchResults.evaluate().isNotEmpty || noResults.evaluate().isNotEmpty,
+        isTrue,
+      );
     });
 
     testWidgets('Проверка быстрых фильтров', (tester) async {

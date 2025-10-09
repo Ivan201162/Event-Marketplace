@@ -13,7 +13,8 @@ class EventMarketplaceApp extends ConsumerStatefulWidget {
   const EventMarketplaceApp({super.key});
 
   @override
-  ConsumerState<EventMarketplaceApp> createState() => _EventMarketplaceAppState();
+  ConsumerState<EventMarketplaceApp> createState() =>
+      _EventMarketplaceAppState();
 }
 
 class _EventMarketplaceAppState extends ConsumerState<EventMarketplaceApp> {
@@ -68,30 +69,24 @@ class _EventMarketplaceAppState extends ConsumerState<EventMarketplaceApp> {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-      title: 'Event Marketplace',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
+        title: 'Event Marketplace',
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.deepPurple,
+          ),
         ),
-      ),
-      darkTheme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-          brightness: Brightness.dark,
+        darkTheme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.deepPurple,
+            brightness: Brightness.dark,
+          ),
         ),
-      ),
-      themeMode: _themeMode,
-      home: RestoredHomeScreen(
-        onThemeChange: _changeTheme,
-      ),
-      debugShowCheckedModeBanner: false,
-    );
+        themeMode: _themeMode,
+        home: RestoredHomeScreen(
+          onThemeChange: _changeTheme,
+        ),
+        debugShowCheckedModeBanner: false,
+      );
 }
-
-
-
-
-
-

@@ -12,12 +12,11 @@ enum AdvertisementType {
   final String value;
   final String displayName;
 
-  static AdvertisementType fromString(String value) {
-    return AdvertisementType.values.firstWhere(
-      (type) => type.value == value,
-      orElse: () => AdvertisementType.banner,
-    );
-  }
+  static AdvertisementType fromString(String value) =>
+      AdvertisementType.values.firstWhere(
+        (type) => type.value == value,
+        orElse: () => AdvertisementType.banner,
+      );
 }
 
 /// Статус рекламного объявления
@@ -33,12 +32,11 @@ enum AdvertisementStatus {
   final String value;
   final String displayName;
 
-  static AdvertisementStatus fromString(String value) {
-    return AdvertisementStatus.values.firstWhere(
-      (status) => status.value == value,
-      orElse: () => AdvertisementStatus.pending,
-    );
-  }
+  static AdvertisementStatus fromString(String value) =>
+      AdvertisementStatus.values.firstWhere(
+        (status) => status.value == value,
+        orElse: () => AdvertisementStatus.pending,
+      );
 }
 
 /// Модель рекламного объявления
@@ -69,6 +67,55 @@ class Advertisement {
     required this.updatedAt,
   });
 
+  /// Создать рекламу из Map
+  factory Advertisement.fromMap(Map<String, dynamic> data) => Advertisement(
+        id: data['id'] ?? '',
+        advertiserId: data['advertiserId'] ?? '',
+        type: AdvertisementType.fromString(data['type'] ?? 'banner'),
+        title: data['title'] ?? '',
+        description: data['description'] ?? '',
+        imageUrl: data['imageUrl'] ?? '',
+        videoUrl: data['videoUrl'],
+        targetUrl: data['targetUrl'] ?? '',
+        budget: (data['budget'] as num?)?.toDouble() ?? 0.0,
+        spentAmount: (data['spentAmount'] as num?)?.toDouble() ?? 0.0,
+        status: AdvertisementStatus.fromString(data['status'] ?? 'pending'),
+        startDate: data['startDate'] != null
+            ? (data['startDate'] is Timestamp
+                ? (data['startDate'] as Timestamp).toDate()
+                : DateTime.parse(data['startDate'].toString()))
+            : DateTime.now(),
+        endDate: data['endDate'] != null
+            ? (data['endDate'] is Timestamp
+                ? (data['endDate'] as Timestamp).toDate()
+                : DateTime.parse(data['endDate'].toString()))
+            : DateTime.now(),
+        targetAudience: List<String>.from(data['targetAudience'] ?? []),
+        impressions: data['impressions'] ?? 0,
+        clicks: data['clicks'] ?? 0,
+        conversions: data['conversions'] ?? 0,
+        ctr: (data['ctr'] as num?)?.toDouble() ?? 0.0,
+        cpm: (data['cpm'] as num?)?.toDouble() ?? 0.0,
+        cpc: (data['cpc'] as num?)?.toDouble() ?? 0.0,
+        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+        createdAt: data['createdAt'] != null
+            ? (data['createdAt'] is Timestamp
+                ? (data['createdAt'] as Timestamp).toDate()
+                : DateTime.parse(data['createdAt'].toString()))
+            : DateTime.now(),
+        updatedAt: data['updatedAt'] != null
+            ? (data['updatedAt'] is Timestamp
+                ? (data['updatedAt'] as Timestamp).toDate()
+                : DateTime.parse(data['updatedAt'].toString()))
+            : DateTime.now(),
+      );
+
+  /// Создать рекламу из DocumentSnapshot
+  factory Advertisement.fromDoc(DocumentSnapshot doc) {
+    final data = doc.data()! as Map<String, dynamic>;
+    return Advertisement.fromMap({...data, 'id': doc.id});
+  }
+
   final String id;
   final String advertiserId;
   final AdvertisementType type;
@@ -93,85 +140,32 @@ class Advertisement {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  /// Создать рекламу из Map
-  factory Advertisement.fromMap(Map<String, dynamic> data) {
-    return Advertisement(
-      id: data['id'] ?? '',
-      advertiserId: data['advertiserId'] ?? '',
-      type: AdvertisementType.fromString(data['type'] ?? 'banner'),
-      title: data['title'] ?? '',
-      description: data['description'] ?? '',
-      imageUrl: data['imageUrl'] ?? '',
-      videoUrl: data['videoUrl'],
-      targetUrl: data['targetUrl'] ?? '',
-      budget: (data['budget'] as num?)?.toDouble() ?? 0.0,
-      spentAmount: (data['spentAmount'] as num?)?.toDouble() ?? 0.0,
-      status: AdvertisementStatus.fromString(data['status'] ?? 'pending'),
-      startDate: data['startDate'] != null
-          ? (data['startDate'] is Timestamp
-              ? (data['startDate'] as Timestamp).toDate()
-              : DateTime.parse(data['startDate'].toString()))
-          : DateTime.now(),
-      endDate: data['endDate'] != null
-          ? (data['endDate'] is Timestamp
-              ? (data['endDate'] as Timestamp).toDate()
-              : DateTime.parse(data['endDate'].toString()))
-          : DateTime.now(),
-      targetAudience: List<String>.from(data['targetAudience'] ?? []),
-      impressions: data['impressions'] ?? 0,
-      clicks: data['clicks'] ?? 0,
-      conversions: data['conversions'] ?? 0,
-      ctr: (data['ctr'] as num?)?.toDouble() ?? 0.0,
-      cpm: (data['cpm'] as num?)?.toDouble() ?? 0.0,
-      cpc: (data['cpc'] as num?)?.toDouble() ?? 0.0,
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] is Timestamp
-              ? (data['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(data['createdAt'].toString()))
-          : DateTime.now(),
-      updatedAt: data['updatedAt'] != null
-          ? (data['updatedAt'] is Timestamp
-              ? (data['updatedAt'] as Timestamp).toDate()
-              : DateTime.parse(data['updatedAt'].toString()))
-          : DateTime.now(),
-    );
-  }
-
-  /// Создать рекламу из DocumentSnapshot
-  factory Advertisement.fromDoc(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    return Advertisement.fromMap({...data, 'id': doc.id});
-  }
-
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'advertiserId': advertiserId,
-      'type': type.value,
-      'title': title,
-      'description': description,
-      'imageUrl': imageUrl,
-      if (videoUrl != null) 'videoUrl': videoUrl,
-      'targetUrl': targetUrl,
-      'budget': budget,
-      'spentAmount': spentAmount,
-      'status': status.value,
-      'startDate': startDate.millisecondsSinceEpoch,
-      'endDate': endDate.millisecondsSinceEpoch,
-      'targetAudience': targetAudience,
-      'impressions': impressions,
-      'clicks': clicks,
-      'conversions': conversions,
-      'ctr': ctr,
-      'cpm': cpm,
-      'cpc': cpc,
-      'metadata': metadata,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'updatedAt': updatedAt.millisecondsSinceEpoch,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'advertiserId': advertiserId,
+        'type': type.value,
+        'title': title,
+        'description': description,
+        'imageUrl': imageUrl,
+        if (videoUrl != null) 'videoUrl': videoUrl,
+        'targetUrl': targetUrl,
+        'budget': budget,
+        'spentAmount': spentAmount,
+        'status': status.value,
+        'startDate': startDate.millisecondsSinceEpoch,
+        'endDate': endDate.millisecondsSinceEpoch,
+        'targetAudience': targetAudience,
+        'impressions': impressions,
+        'clicks': clicks,
+        'conversions': conversions,
+        'ctr': ctr,
+        'cpm': cpm,
+        'cpc': cpc,
+        'metadata': metadata,
+        'createdAt': createdAt.millisecondsSinceEpoch,
+        'updatedAt': updatedAt.millisecondsSinceEpoch,
+      };
 
   /// Создать копию с изменениями
   Advertisement copyWith({
@@ -198,33 +192,32 @@ class Advertisement {
     Map<String, dynamic>? metadata,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) {
-    return Advertisement(
-      id: id ?? this.id,
-      advertiserId: advertiserId ?? this.advertiserId,
-      type: type ?? this.type,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      imageUrl: imageUrl ?? this.imageUrl,
-      videoUrl: videoUrl ?? this.videoUrl,
-      targetUrl: targetUrl ?? this.targetUrl,
-      budget: budget ?? this.budget,
-      spentAmount: spentAmount ?? this.spentAmount,
-      status: status ?? this.status,
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
-      targetAudience: targetAudience ?? this.targetAudience,
-      impressions: impressions ?? this.impressions,
-      clicks: clicks ?? this.clicks,
-      conversions: conversions ?? this.conversions,
-      ctr: ctr ?? this.ctr,
-      cpm: cpm ?? this.cpm,
-      cpc: cpc ?? this.cpc,
-      metadata: metadata ?? this.metadata,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
+  }) =>
+      Advertisement(
+        id: id ?? this.id,
+        advertiserId: advertiserId ?? this.advertiserId,
+        type: type ?? this.type,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        imageUrl: imageUrl ?? this.imageUrl,
+        videoUrl: videoUrl ?? this.videoUrl,
+        targetUrl: targetUrl ?? this.targetUrl,
+        budget: budget ?? this.budget,
+        spentAmount: spentAmount ?? this.spentAmount,
+        status: status ?? this.status,
+        startDate: startDate ?? this.startDate,
+        endDate: endDate ?? this.endDate,
+        targetAudience: targetAudience ?? this.targetAudience,
+        impressions: impressions ?? this.impressions,
+        clicks: clicks ?? this.clicks,
+        conversions: conversions ?? this.conversions,
+        ctr: ctr ?? this.ctr,
+        cpm: cpm ?? this.cpm,
+        cpc: cpc ?? this.cpc,
+        metadata: metadata ?? this.metadata,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   @override
   bool operator ==(Object other) =>
@@ -237,8 +230,6 @@ class Advertisement {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'Advertisement{id: $id, title: $title, type: $type, status: $status}';
-  }
+  String toString() =>
+      'Advertisement{id: $id, title: $title, type: $type, status: $status}';
 }
-

@@ -202,11 +202,13 @@ class AppUser {
   factory AppUser.fromMap(Map<String, dynamic> data, [String? id]) => AppUser(
         id: id ?? data['id'] ?? '',
         email: data['email'] ?? '',
-        displayName: (data['displayName'] ?? data['name'] ?? 'Без имени') as String?,
+        displayName:
+            (data['displayName'] ?? data['name'] ?? 'Без имени') as String?,
         photoURL: data['photoURL'],
         role: _parseUserRole(data['role']),
         createdAt: _parseTs(data['createdAt']),
-        lastLoginAt: data['lastLoginAt'] != null ? _parseTs(data['lastLoginAt']) : null,
+        lastLoginAt:
+            data['lastLoginAt'] != null ? _parseTs(data['lastLoginAt']) : null,
         isActive: data['isActive'] as bool? ?? true,
         socialProvider: data['socialProvider'],
         socialId: data['socialId'],
@@ -217,14 +219,16 @@ class AppUser {
                 orElse: () => MaritalStatus.single,
               )
             : null,
-        weddingDate: data['weddingDate'] != null ? _parseTs(data['weddingDate']) : null,
+        weddingDate:
+            data['weddingDate'] != null ? _parseTs(data['weddingDate']) : null,
         partnerName: data['partnerName'],
         anniversaryRemindersEnabled:
             data['anniversaryRemindersEnabled'] as bool? ?? false,
         city: data['city'] as String?,
         region: data['region'] as String?,
         avatarUrl: data['avatarUrl'] as String?,
-        updatedAt: data['updatedAt'] != null ? _parseTs(data['updatedAt']) : null,
+        updatedAt:
+            data['updatedAt'] != null ? _parseTs(data['updatedAt']) : null,
       );
 
   /// Создать пользователя из Firebase User
@@ -278,7 +282,6 @@ class AppUser {
 
   /// Геттер для совместимости с кодом, использующим lastLogin
   DateTime? get lastLogin => lastLoginAt;
-
 
   /// Копировать с изменениями
   AppUser copyWith({
@@ -349,16 +352,17 @@ class AppUser {
       'partnerName': partnerName,
       'anniversaryRemindersEnabled': anniversaryRemindersEnabled,
     };
-    
-    if (city?.trim().isNotEmpty == true) map['city'] = city!.trim();
-    if (region?.trim().isNotEmpty == true) map['region'] = region!.trim();
-    if (avatarUrl?.trim().isNotEmpty == true) map['avatarUrl'] = avatarUrl!.trim();
-    
+
+    if (city?.trim().isNotEmpty ?? false) map['city'] = city!.trim();
+    if (region?.trim().isNotEmpty ?? false) map['region'] = region!.trim();
+    if (avatarUrl?.trim().isNotEmpty ?? false)
+      map['avatarUrl'] = avatarUrl!.trim();
+
     return map;
   }
 
   /// Парсинг временных полей
-  static DateTime _parseTs(dynamic v) {
+  static DateTime _parseTs(v) {
     if (v is Timestamp) return v.toDate();
     if (v is int) return DateTime.fromMillisecondsSinceEpoch(v);
     if (v is String) return DateTime.tryParse(v) ?? DateTime.now();

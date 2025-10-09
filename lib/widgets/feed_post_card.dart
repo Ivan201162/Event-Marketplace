@@ -41,10 +41,12 @@ class _FeedPostCardState extends State<FeedPostCard>
     _scaleAnimation = Tween<double>(
       begin: 1,
       end: 1.2,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ),);
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
   }
 
   @override
@@ -55,35 +57,35 @@ class _FeedPostCardState extends State<FeedPostCard>
 
   @override
   Widget build(BuildContext context) => Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Заголовок поста
-          _buildPostHeader(),
-          
-          // Контент поста
-          _buildPostContent(),
-          
-          // Действия с постом
-          _buildPostActions(),
-          
-          // Информация о лайках и комментариях
-          _buildPostInfo(),
-        ],
-      ),
-    );
+        margin: const EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Заголовок поста
+            _buildPostHeader(),
+
+            // Контент поста
+            _buildPostContent(),
+
+            // Действия с постом
+            _buildPostActions(),
+
+            // Информация о лайках и комментариях
+            _buildPostInfo(),
+          ],
+        ),
+      );
 
   Widget _buildPostHeader() => Padding(
         padding: const EdgeInsets.all(16),
@@ -236,7 +238,8 @@ class _FeedPostCardState extends State<FeedPostCard>
     required IconData icon,
     Color? color,
     required VoidCallback onTap,
-  }) => GestureDetector(
+  }) =>
+      GestureDetector(
         onTap: onTap,
         child: Icon(
           icon,

@@ -173,7 +173,7 @@ class ThemeSwitch extends ConsumerWidget {
         themeName = 'system';
         break;
     }
-    
+
     // Логируем изменение темы
     AnalyticsService().logChangeTheme(themeName);
   }

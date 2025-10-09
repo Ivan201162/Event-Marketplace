@@ -258,16 +258,16 @@ class ChatMessage {
   /// Получить отформатированный размер файла
   String get formattedFileSize {
     if (fileSize == null) return '';
-    
+
     const units = ['B', 'KB', 'MB', 'GB'];
     var size = fileSize!;
     var unitIndex = 0;
-    
+
     while (size >= 1024 && unitIndex < units.length - 1) {
       size ~/= 1024;
       unitIndex++;
     }
-    
+
     return '$size ${units[unitIndex]}';
   }
 
@@ -421,7 +421,8 @@ class Chat {
           : DateTime.now(),
       lastMessage: safeData['lastMessage'] != null
           ? ChatMessage.fromDocument(
-              safeData['lastMessage'] as DocumentSnapshot,)
+              safeData['lastMessage'] as DocumentSnapshot,
+            )
           : null,
       unreadCount: safeData['unreadCount'] as int? ?? 0,
       isActive: safeData['isActive'] as bool? ?? true,
@@ -429,8 +430,10 @@ class Chat {
       title: safeData['title'] as String?,
       name: safeData['name'] as String?,
       participants: List<String>.from(safeData['participants'] ?? []),
-      participantNames: Map<String, String>.from(safeData['participantNames'] ?? {}),
-      participantAvatars: Map<String, String>.from(safeData['participantAvatars'] ?? {}),
+      participantNames:
+          Map<String, String>.from(safeData['participantNames'] ?? {}),
+      participantAvatars:
+          Map<String, String>.from(safeData['participantAvatars'] ?? {}),
       lastMessageContent: safeData['lastMessageContent'] as String?,
       lastMessageTime: safeData['lastMessageTime'] != null
           ? (safeData['lastMessageTime'] is Timestamp
@@ -474,7 +477,9 @@ class Chat {
         'participantNames': participantNames,
         'participantAvatars': participantAvatars,
         'lastMessageContent': lastMessageContent,
-        'lastMessageTime': lastMessageTime != null ? Timestamp.fromDate(lastMessageTime!) : null,
+        'lastMessageTime': lastMessageTime != null
+            ? Timestamp.fromDate(lastMessageTime!)
+            : null,
       };
 
   /// Копировать с изменениями
@@ -538,7 +543,7 @@ class Chat {
       );
       return participantNames[otherParticipantId] ?? 'Пользователь';
     }
-    
+
     if (currentUserId == customerId) {
       return 'Специалист';
     } else {
@@ -559,13 +564,16 @@ class Chat {
   }
 
   /// Получить время последнего сообщения
-  DateTime? get lastMessageTimeValue => lastMessageTime ?? lastMessage?.createdAt;
+  DateTime? get lastMessageTimeValue =>
+      lastMessageTime ?? lastMessage?.createdAt;
 
   /// Получить содержимое последнего сообщения
-  String? get lastMessageContentValue => lastMessageContent ?? lastMessage?.content;
+  String? get lastMessageContentValue =>
+      lastMessageContent ?? lastMessage?.content;
 
   /// Получить список участников
-  List<String> get participantsList => participants.isNotEmpty ? participants : [customerId, specialistId];
+  List<String> get participantsList =>
+      participants.isNotEmpty ? participants : [customerId, specialistId];
 
   @override
   String toString() =>

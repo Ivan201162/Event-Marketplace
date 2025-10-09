@@ -364,8 +364,11 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
             const SizedBox(height: 12),
             Row(
               children: [
-                const Icon(Icons.location_on,
-                    size: 16, color: BrandColors.textSecondary,),
+                const Icon(
+                  Icons.location_on,
+                  size: 16,
+                  color: BrandColors.textSecondary,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   _specialist!.city,

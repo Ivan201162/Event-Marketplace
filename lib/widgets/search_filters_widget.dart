@@ -491,10 +491,12 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
                   onChanged: (value) {
                     setState(() {
                       _filters = _filters.copyWith(
-                        sortBy: value != null ? SpecialistSortOption.values.firstWhere(
-                          (option) => option.name == value,
-                          orElse: () => SpecialistSortOption.rating,
-                        ) : null,
+                        sortBy: value != null
+                            ? SpecialistSortOption.values.firstWhere(
+                                (option) => option.name == value,
+                                orElse: () => SpecialistSortOption.rating,
+                              )
+                            : null,
                       );
                     });
                     widget.onFiltersChanged(_filters);

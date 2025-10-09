@@ -26,131 +26,111 @@ class BookingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Заголовок с статусом
-            _buildHeader(context),
-
-            const SizedBox(height: 12),
-
-            // Информация о заявке
-            _buildBookingInfo(),
-
-            const SizedBox(height: 12),
-
-            // Детали события
-            _buildEventDetails(),
-
-            if (showActions) ...[
-              const SizedBox(height: 16),
-              _buildActions(context),
-            ],
-          ],
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
         ),
-      ),
-    );
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Заголовок с статусом
+              _buildHeader(context),
+
+              const SizedBox(height: 12),
+
+              // Информация о заявке
+              _buildBookingInfo(),
+
+              const SizedBox(height: 12),
+
+              // Детали события
+              _buildEventDetails(),
+
+              if (showActions) ...[
+                const SizedBox(height: 16),
+                _buildActions(context),
+              ],
+            ],
+          ),
+        ),
+      );
 
   /// Построить заголовок
   Widget _buildHeader(BuildContext context) => Row(
-      children: [
-        // Статус
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(
-            color: _getStatusColor(booking.status).withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: _getStatusColor(booking.status),
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                _getStatusIcon(booking.status),
-                size: 16,
+        children: [
+          // Статус
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: _getStatusColor(booking.status).withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
                 color: _getStatusColor(booking.status),
               ),
-              const SizedBox(width: 4),
-              Text(
-                _getStatusText(booking.status),
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  _getStatusIcon(booking.status),
+                  size: 16,
                   color: _getStatusColor(booking.status),
                 ),
-              ),
-            ],
+                const SizedBox(width: 4),
+                Text(
+                  _getStatusText(booking.status),
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: _getStatusColor(booking.status),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
 
-        const Spacer(),
+          const Spacer(),
 
-        // Дата создания
-        Text(
-          _formatDate(booking.createdAt),
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey[600],
+          // Дата создания
+          Text(
+            _formatDate(booking.createdAt),
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey[600],
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
 
   /// Построить информацию о заявке
   Widget _buildBookingInfo() => Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Название события
-        if (booking.title != null && booking.title!.isNotEmpty) ...[
-          Text(
-            booking.title!,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 4),
-        ],
-
-        // Участники
-        Row(
-          children: [
-            Icon(
-              Icons.person,
-              size: 16,
-              color: Colors.grey[600],
-            ),
-            const SizedBox(width: 4),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Название события
+          if (booking.title != null && booking.title!.isNotEmpty) ...[
             Text(
-              'Заказчик: ${booking.customerName ?? 'Неизвестно'}',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[700],
+              booking.title!,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
               ),
             ),
+            const SizedBox(height: 4),
           ],
-        ),
 
-        if (booking.specialistName != null) ...[
-          const SizedBox(height: 2),
+          // Участники
           Row(
             children: [
               Icon(
-                Icons.work,
+                Icons.person,
                 size: 16,
                 color: Colors.grey[600],
               ),
               const SizedBox(width: 4),
               Text(
-                'Специалист: ${booking.specialistName}',
+                'Заказчик: ${booking.customerName ?? 'Неизвестно'}',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[700],
@@ -158,107 +138,127 @@ class BookingCard extends StatelessWidget {
               ),
             ],
           ),
-        ],
-      ],
-    );
 
-  /// Построить детали события
-  Widget _buildEventDetails() => Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        children: [
-          // Дата и время события
-          Row(
-            children: [
-              Icon(
-                Icons.event,
-                size: 16,
-                color: Colors.grey[600],
-              ),
-              const SizedBox(width: 8),
-              Text(
-                DateFormat('dd.MM.yyyy HH:mm').format(booking.eventDate),
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 8),
-
-          // Цена
-          Row(
-            children: [
-              Icon(
-                Icons.attach_money,
-                size: 16,
-                color: Colors.grey[600],
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'Стоимость: ${booking.totalPrice.toInt()}₽',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-
-          if (booking.prepayment > 0) ...[
-            const SizedBox(height: 4),
+          if (booking.specialistName != null) ...[
+            const SizedBox(height: 2),
             Row(
               children: [
                 Icon(
-                  Icons.payment,
+                  Icons.work,
+                  size: 16,
+                  color: Colors.grey[600],
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  'Специалист: ${booking.specialistName}',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[700],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ],
+      );
+
+  /// Построить детали события
+  Widget _buildEventDetails() => Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          children: [
+            // Дата и время события
+            Row(
+              children: [
+                Icon(
+                  Icons.event,
                   size: 16,
                   color: Colors.grey[600],
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'Предоплата: ${booking.prepayment.toInt()}₽',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey[600],
+                  DateFormat('dd.MM.yyyy HH:mm').format(booking.eventDate),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
             ),
-          ],
 
-          // Сообщение
-          if (booking.message.isNotEmpty) ...[
             const SizedBox(height: 8),
+
+            // Цена
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Icon(
-                  Icons.message,
+                  Icons.attach_money,
                   size: 16,
                   color: Colors.grey[600],
                 ),
                 const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    booking.message,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey[700],
-                    ),
+                Text(
+                  'Стоимость: ${booking.totalPrice.toInt()}₽',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
             ),
+
+            if (booking.prepayment > 0) ...[
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  Icon(
+                    Icons.payment,
+                    size: 16,
+                    color: Colors.grey[600],
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Предоплата: ${booking.prepayment.toInt()}₽',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+
+            // Сообщение
+            if (booking.message.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.message,
+                    size: 16,
+                    color: Colors.grey[600],
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      booking.message,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
-        ],
-      ),
-    );
+        ),
+      );
 
   /// Построить действия
   Widget _buildActions(BuildContext context) {
@@ -448,8 +448,9 @@ class BookingCard extends StatelessWidget {
   }
 
   /// Проверить, можно ли редактировать заявку
-  bool _canEdit() => booking.status == BookingStatus.pending ||
-           booking.status == BookingStatus.confirmed;
+  bool _canEdit() =>
+      booking.status == BookingStatus.pending ||
+      booking.status == BookingStatus.confirmed;
 
   /// Получить иконку статуса
   IconData _getStatusIcon(BookingStatus status) {

@@ -44,83 +44,81 @@ class SocialLinksWidget extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16),
-        
+
         // Список социальных ссылок
         Wrap(
           spacing: 12,
           runSpacing: 12,
-          children: socialLinks.map((link) => _buildSocialLink(link)).toList(),
+          children: socialLinks.map(_buildSocialLink).toList(),
         ),
       ],
     );
   }
 
-  Widget _buildSocialLink(SocialLink link) {
-    return GestureDetector(
-      onTap: () => _handleLinkTap(link),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: _getPlatformColor(link.platform).withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: _getPlatformColor(link.platform).withOpacity(0.3),
+  Widget _buildSocialLink(SocialLink link) => GestureDetector(
+        onTap: () => _handleLinkTap(link),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: _getPlatformColor(link.platform).withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: _getPlatformColor(link.platform).withOpacity(0.3),
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                link.platform.icon,
+                style: const TextStyle(fontSize: 20),
+              ),
+              const SizedBox(width: 8),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _getPlatformName(link.platform),
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: _getPlatformColor(link.platform),
+                    ),
+                  ),
+                  if (link.username.isNotEmpty) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      '@${link.username}',
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                  if (link.followersCount != null) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      '${_formatFollowers(link.followersCount!)} подписчиков',
+                      style: TextStyle(
+                        fontSize: 9,
+                        color: Colors.grey[500],
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+              if (link.isVerified) ...[
+                const SizedBox(width: 8),
+                const Icon(
+                  Icons.verified,
+                  color: Colors.blue,
+                  size: 16,
+                ),
+              ],
+            ],
           ),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              link.platform.icon,
-              style: const TextStyle(fontSize: 20),
-            ),
-            const SizedBox(width: 8),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _getPlatformName(link.platform),
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: _getPlatformColor(link.platform),
-                  ),
-                ),
-                if (link.username.isNotEmpty) ...[
-                  const SizedBox(height: 2),
-                  Text(
-                    '@${link.username}',
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
-                if (link.followersCount != null) ...[
-                  const SizedBox(height: 2),
-                  Text(
-                    '${_formatFollowers(link.followersCount!)} подписчиков',
-                    style: TextStyle(
-                      fontSize: 9,
-                      color: Colors.grey[500],
-                    ),
-                  ),
-                ],
-              ],
-            ),
-            if (link.isVerified) ...[
-              const SizedBox(width: 8),
-              const Icon(
-                Icons.verified,
-                color: Colors.blue,
-                size: 16,
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
+      );
 
   String _getPlatformName(SocialPlatform platform) {
     switch (platform) {
@@ -180,7 +178,7 @@ class SocialLinksWidget extends StatelessWidget {
 
   Future<void> _handleLinkTap(SocialLink link) async {
     onLinkTap?.call(link);
-    
+
     try {
       final uri = Uri.parse(link.url);
       if (await canLaunchUrl(uri)) {
@@ -191,4 +189,3 @@ class SocialLinksWidget extends StatelessWidget {
     }
   }
 }
-

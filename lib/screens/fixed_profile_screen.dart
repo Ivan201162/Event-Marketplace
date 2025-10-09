@@ -35,10 +35,12 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
     _fadeAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ),);
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
     _animationController.forward();
   }
 
@@ -113,9 +115,10 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
     );
   }
 
-  Widget _buildProfileContent(Map<String, dynamic> userData, bool isOwnProfile) {
+  Widget _buildProfileContent(
+      Map<String, dynamic> userData, bool isOwnProfile) {
     final theme = Theme.of(context);
-    
+
     return CustomScrollView(
       slivers: [
         _buildSliverAppBar(userData),
@@ -131,7 +134,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
 
   Widget _buildSliverAppBar(Map<String, dynamic> userData) {
     final theme = Theme.of(context);
-    
+
     return SliverAppBar(
       expandedHeight: 200,
       pinned: true,
@@ -196,7 +199,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
                   : null,
             ),
             const SizedBox(height: 16),
-            
+
             // Имя
             Text(
               name,
@@ -205,7 +208,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
               ),
             ),
             const SizedBox(height: 8),
-            
+
             // Город
             if (city.isNotEmpty)
               Text(
@@ -222,7 +225,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
 
   Widget _buildStatsSection(Map<String, dynamic> userData) {
     final theme = Theme.of(context);
-    
+
     return SliverToBoxAdapter(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -239,27 +242,27 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
   }
 
   Widget _buildStatItem(String label, String value, ThemeData theme) => Column(
-      children: [
-        Text(
-          value,
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: theme.primaryColor,
+        children: [
+          Text(
+            value,
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.primaryColor,
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.7),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withOpacity(0.7),
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
 
   Widget _buildActionButtons(Map<String, dynamic> userData, bool isOwnProfile) {
     final theme = Theme.of(context);
-    
+
     return SliverToBoxAdapter(
       child: Container(
         padding: const EdgeInsets.all(20),
@@ -267,9 +270,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
           children: [
             Expanded(
               child: ElevatedButton(
-                onPressed: isOwnProfile
-                    ? _editProfile
-                    : _sendMessage,
+                onPressed: isOwnProfile ? _editProfile : _sendMessage,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: theme.primaryColor,
                   foregroundColor: theme.colorScheme.onPrimary,
@@ -301,9 +302,10 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
   Widget _buildBioSection(Map<String, dynamic> userData) {
     final theme = Theme.of(context);
     final about = userData['about'] as String? ?? '';
-    
-    if (about.isEmpty) return const SliverToBoxAdapter(child: SizedBox.shrink());
-    
+
+    if (about.isEmpty)
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+
     return SliverToBoxAdapter(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -330,7 +332,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
 
   Widget _buildTabBar() {
     final theme = Theme.of(context);
-    
+
     return SliverToBoxAdapter(
       child: Container(
         decoration: BoxDecoration(
@@ -357,19 +359,19 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
   }
 
   Widget _buildTabContent(Map<String, dynamic> userData) => SliverFillRemaining(
-      child: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildBookingsTab(),
-          _buildReviewsTab(),
-          _buildPortfolioTab(),
-        ],
-      ),
-    );
+        child: TabBarView(
+          controller: _tabController,
+          children: [
+            _buildBookingsTab(),
+            _buildReviewsTab(),
+            _buildPortfolioTab(),
+          ],
+        ),
+      );
 
   Widget _buildBookingsTab() {
     final theme = Theme.of(context);
-    
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -398,7 +400,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
 
   Widget _buildReviewsTab() {
     final theme = Theme.of(context);
-    
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -427,7 +429,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
 
   Widget _buildPortfolioTab() {
     final theme = Theme.of(context);
-    
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -475,9 +477,3 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
     );
   }
 }
-
-
-
-
-
-

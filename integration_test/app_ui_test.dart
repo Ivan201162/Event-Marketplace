@@ -16,12 +16,12 @@ void main() {
       // Проверка главного экрана
       if (find.byType(Scaffold).evaluate().isNotEmpty) {
         print('✅ Главный экран загружен');
-        
+
         // Поиск навигационных элементов
         if (find.byType(BottomNavigationBar).evaluate().isNotEmpty ||
             find.byType(NavigationBar).evaluate().isNotEmpty) {
           print('✅ Нижняя навигация присутствует');
-          
+
           // Проверяем основные вкладки
           final tabs = ['Главная', 'Идеи', 'Чаты', 'Заявки'];
           for (final tab in tabs) {
@@ -30,23 +30,23 @@ void main() {
             }
           }
         }
-        
+
         // Проверяем кнопки и иконки
         if (find.byType(IconButton).evaluate().isNotEmpty) {
           print('✅ Кнопки действий найдены');
         }
-        
+
         // Проверяем текстовые поля
         if (find.byType(TextField).evaluate().isNotEmpty ||
             find.byType(TextFormField).evaluate().isNotEmpty) {
           print('✅ Поля ввода присутствуют');
         }
-        
+
         // Проверяем списки
         if (find.byType(ListView).evaluate().isNotEmpty ||
             find.byType(GridView).evaluate().isNotEmpty) {
           print('✅ Списки/сетки контента найдены');
-          
+
           // Возвращаемся на главную
           final homeTab = find.textContaining('Главная');
           if (homeTab.evaluate().isNotEmpty) {
@@ -55,22 +55,22 @@ void main() {
             print('✅ Возврат на главный экран');
           }
         }
-        
+
         // Проверяем изображения
         if (find.byType(Image).evaluate().isNotEmpty) {
           print('✅ Изображения загружены');
         }
-        
+
         // Проверяем карточки
         if (find.byType(Card).evaluate().isNotEmpty) {
           print('✅ Карточки контента найдены');
         }
-        
+
         // Проверяем текст
         if (find.byType(Text).evaluate().isNotEmpty) {
           print('✅ Текстовые элементы отображаются');
         }
-        
+
         // Проверка кнопок
         if (find.byType(ElevatedButton).evaluate().isNotEmpty ||
             find.byType(TextButton).evaluate().isNotEmpty ||
@@ -78,29 +78,29 @@ void main() {
             find.byType(FloatingActionButton).evaluate().isNotEmpty) {
           print('✅ Кнопки действий обнаружены');
         }
-        
+
         // Проверка диалогов
         final dialogButtons = find.byType(ElevatedButton);
         if (dialogButtons.evaluate().isNotEmpty) {
           print('✅ Интерактивные элементы найдены');
         }
-        
+
         // Проверяем AppBar
         if (find.byType(AppBar).evaluate().isNotEmpty) {
           print('✅ AppBar присутствует');
         }
-        
+
         // Проверяем поиск
         final searchFields = find.byType(TextField);
         if (searchFields.evaluate().isNotEmpty) {
           print('✅ Поле поиска найдено');
-          
+
           // Попробуем ввести текст
           try {
             await tester.enterText(searchFields.first, 'Тест');
             await tester.pumpAndSettle(const Duration(seconds: 1));
             print('✅ Ввод текста в поиск работает');
-            
+
             // Очищаем поле
             await tester.enterText(searchFields.first, '');
             await tester.pumpAndSettle(const Duration(seconds: 1));
@@ -108,30 +108,30 @@ void main() {
             print('⚠️ Ошибка при тестировании поиска: $e');
           }
         }
-        
+
         // Проверяем скролл
         final scrollables = find.byType(Scrollable);
         if (scrollables.evaluate().isNotEmpty) {
           print('✅ Прокручиваемые элементы найдены');
-          
+
           try {
             await tester.drag(scrollables.first, const Offset(0, -100));
             await tester.pumpAndSettle(const Duration(seconds: 1));
             print('✅ Скроллинг работает');
-            
+
             await tester.drag(scrollables.first, const Offset(0, 100));
             await tester.pumpAndSettle(const Duration(seconds: 1));
           } catch (e) {
             print('⚠️ Ошибка при тестировании скролла: $e');
           }
         }
-        
+
         // Проверяем навигацию между вкладками
         final bottomNav = find.byType(BottomNavigationBar);
         if (bottomNav.evaluate().isNotEmpty ||
             find.byType(NavigationBar).evaluate().isNotEmpty) {
           final tabs = ['Идеи', 'Чаты', 'Заявки'];
-          
+
           for (final tab in tabs) {
             final tabFinder = find.textContaining(tab);
             if (tabFinder.evaluate().isNotEmpty) {
@@ -160,7 +160,7 @@ void main() {
       if (find.textContaining('Войти').evaluate().isNotEmpty ||
           find.textContaining('Вход').evaluate().isNotEmpty) {
         print('✅ Экран авторизации найден');
-        
+
         // Тест входа как гость
         if (find.textContaining('Гость').evaluate().isNotEmpty ||
             find.textContaining('гость').evaluate().isNotEmpty) {
@@ -179,10 +179,10 @@ void main() {
       if (find.byType(BottomNavigationBar).evaluate().isNotEmpty ||
           find.byType(NavigationBar).evaluate().isNotEmpty) {
         print('✅ Нижняя навигация найдена');
-        
+
         // Тестируем переключение между вкладками
         final navigationItems = ['Главная', 'Чаты', 'Идеи', 'Заявки'];
-        
+
         for (final item in navigationItems) {
           if (find.text(item).evaluate().isNotEmpty) {
             await tester.tap(find.text(item));

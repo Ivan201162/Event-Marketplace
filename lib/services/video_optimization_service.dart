@@ -31,7 +31,9 @@ class VideoOptimizationService {
             const Duration(), // TODO(developer): Получить реальную длительность
         format: fileExtension,
         resolution: const Size(
-            1920, 1080,), // TODO(developer): Получить реальное разрешение
+          1920,
+          1080,
+        ), // TODO(developer): Получить реальное разрешение
       );
     } on Exception catch (e) {
       debugPrint('Ошибка получения информации о видео: $e');

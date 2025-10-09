@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
 class PremiumBadge extends StatelessWidget {
-  final PremiumType type;
-  final bool isActive;
-
   const PremiumBadge({
-    Key? key,
+    super.key,
     required this.type,
     this.isActive = true,
-  }) : super(key: key);
+  });
+  final PremiumType type;
+  final bool isActive;
 
   @override
   Widget build(BuildContext context) {
@@ -70,5 +69,3 @@ enum PremiumType {
   highlight,
   prioritySearch,
 }
-
-

@@ -51,10 +51,12 @@ class _AnimatedButtonState extends State<AnimatedButton>
     _scaleAnimation = Tween<double>(
       begin: 1,
       end: widget.scaleValue,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ),);
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
+    );
   }
 
   @override
@@ -96,13 +98,13 @@ class _AnimatedButtonState extends State<AnimatedButton>
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-      onTapDown: _handleTapDown,
-      onTapUp: _handleTapUp,
-      onTapCancel: _handleTapCancel,
-      onTap: _handleTap,
-      child: AnimatedBuilder(
-        animation: _scaleAnimation,
-        builder: (context, child) => Transform.scale(
+        onTapDown: _handleTapDown,
+        onTapUp: _handleTapUp,
+        onTapCancel: _handleTapCancel,
+        onTap: _handleTap,
+        child: AnimatedBuilder(
+          animation: _scaleAnimation,
+          builder: (context, child) => Transform.scale(
             scale: _scaleAnimation.value,
             child: Material(
               elevation: _isPressed ? widget.elevation * 0.5 : widget.elevation,
@@ -120,8 +122,8 @@ class _AnimatedButtonState extends State<AnimatedButton>
               ),
             ),
           ),
-      ),
-    );
+        ),
+      );
 }
 
 /// Анимированная иконка с эффектами
@@ -168,10 +170,12 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
     _scaleAnimation = Tween<double>(
       begin: 1,
       end: widget.scaleValue,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.elasticOut,
-    ),);
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.elasticOut,
+      ),
+    );
   }
 
   @override
@@ -213,13 +217,13 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-      onTapDown: _handleTapDown,
-      onTapUp: _handleTapUp,
-      onTapCancel: _handleTapCancel,
-      onTap: _handleTap,
-      child: AnimatedBuilder(
-        animation: _scaleAnimation,
-        builder: (context, child) => Transform.scale(
+        onTapDown: _handleTapDown,
+        onTapUp: _handleTapUp,
+        onTapCancel: _handleTapCancel,
+        onTap: _handleTap,
+        child: AnimatedBuilder(
+          animation: _scaleAnimation,
+          builder: (context, child) => Transform.scale(
             scale: _scaleAnimation.value,
             child: Icon(
               widget.icon,
@@ -227,8 +231,8 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
               color: widget.color ?? Theme.of(context).iconTheme.color,
             ),
           ),
-      ),
-    );
+        ),
+      );
 }
 
 /// Анимированная кнопка лайка
@@ -273,18 +277,22 @@ class _AnimatedLikeButtonState extends State<AnimatedLikeButton>
     _scaleAnimation = Tween<double>(
       begin: 1,
       end: 1.3,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.elasticOut,
-    ),);
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.elasticOut,
+      ),
+    );
 
     _colorAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ),);
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
+    );
   }
 
   @override
@@ -297,20 +305,20 @@ class _AnimatedLikeButtonState extends State<AnimatedLikeButton>
     if (widget.hapticFeedback) {
       HapticFeedback.mediumImpact();
     }
-    
+
     _controller.forward().then((_) {
       _controller.reverse();
     });
-    
+
     widget.onPressed(!widget.isLiked);
   }
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-      onTap: _handleTap,
-      child: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, child) => Transform.scale(
+        onTap: _handleTap,
+        child: AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) => Transform.scale(
             scale: _scaleAnimation.value,
             child: Icon(
               widget.isLiked ? Icons.favorite : Icons.favorite_border,
@@ -320,8 +328,8 @@ class _AnimatedLikeButtonState extends State<AnimatedLikeButton>
                   : (widget.unlikedColor ?? Theme.of(context).iconTheme.color),
             ),
           ),
-      ),
-    );
+        ),
+      );
 }
 
 /// Анимированная кнопка репоста
@@ -361,10 +369,12 @@ class _AnimatedShareButtonState extends State<AnimatedShareButton>
     _rotationAnimation = Tween<double>(
       begin: 0,
       end: 0.2,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.elasticOut,
-    ),);
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.elasticOut,
+      ),
+    );
   }
 
   @override
@@ -377,20 +387,20 @@ class _AnimatedShareButtonState extends State<AnimatedShareButton>
     if (widget.hapticFeedback) {
       HapticFeedback.lightImpact();
     }
-    
+
     _controller.forward().then((_) {
       _controller.reverse();
     });
-    
+
     widget.onPressed();
   }
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-      onTap: _handleTap,
-      child: AnimatedBuilder(
-        animation: _rotationAnimation,
-        builder: (context, child) => Transform.rotate(
+        onTap: _handleTap,
+        child: AnimatedBuilder(
+          animation: _rotationAnimation,
+          builder: (context, child) => Transform.rotate(
             angle: _rotationAnimation.value,
             child: Icon(
               Icons.share,
@@ -398,8 +408,8 @@ class _AnimatedShareButtonState extends State<AnimatedShareButton>
               color: widget.color ?? Theme.of(context).iconTheme.color,
             ),
           ),
-      ),
-    );
+        ),
+      );
 }
 
 /// Анимированная кнопка сохранения
@@ -443,10 +453,12 @@ class _AnimatedSaveButtonState extends State<AnimatedSaveButton>
     _scaleAnimation = Tween<double>(
       begin: 1,
       end: 1.2,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.elasticOut,
-    ),);
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.elasticOut,
+      ),
+    );
   }
 
   @override
@@ -459,20 +471,20 @@ class _AnimatedSaveButtonState extends State<AnimatedSaveButton>
     if (widget.hapticFeedback) {
       HapticFeedback.lightImpact();
     }
-    
+
     _controller.forward().then((_) {
       _controller.reverse();
     });
-    
+
     widget.onPressed(!widget.isSaved);
   }
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-      onTap: _handleTap,
-      child: AnimatedBuilder(
-        animation: _scaleAnimation,
-        builder: (context, child) => Transform.scale(
+        onTap: _handleTap,
+        child: AnimatedBuilder(
+          animation: _scaleAnimation,
+          builder: (context, child) => Transform.scale(
             scale: _scaleAnimation.value,
             child: Icon(
               widget.isSaved ? Icons.bookmark : Icons.bookmark_border,
@@ -482,8 +494,8 @@ class _AnimatedSaveButtonState extends State<AnimatedSaveButton>
                   : (widget.unsavedColor ?? Theme.of(context).iconTheme.color),
             ),
           ),
-      ),
-    );
+        ),
+      );
 }
 
 /// Анимированная кнопка с пульсацией
@@ -523,10 +535,12 @@ class _PulsingButtonState extends State<PulsingButton>
     _pulseAnimation = Tween<double>(
       begin: 1.0 - widget.scaleRange,
       end: 1.0 + widget.scaleRange,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ),);
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
+    );
 
     if (widget.enabled) {
       _controller.repeat(reverse: true);
@@ -554,13 +568,13 @@ class _PulsingButtonState extends State<PulsingButton>
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-      onTap: widget.onPressed,
-      child: AnimatedBuilder(
-        animation: _pulseAnimation,
-        builder: (context, child) => Transform.scale(
+        onTap: widget.onPressed,
+        child: AnimatedBuilder(
+          animation: _pulseAnimation,
+          builder: (context, child) => Transform.scale(
             scale: _pulseAnimation.value,
             child: widget.child,
           ),
-      ),
-    );
+        ),
+      );
 }

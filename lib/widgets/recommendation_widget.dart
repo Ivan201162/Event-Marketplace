@@ -437,7 +437,10 @@ class RecommendationCollectionWidget extends ConsumerWidget {
                     recommendation as SpecialistRecommendation,
                   ),
                   onSave: () => _saveRecommendation(
-                      context, ref, recommendation as SpecialistRecommendation,),
+                    context,
+                    ref,
+                    recommendation as SpecialistRecommendation,
+                  ),
                 ),
               ),
             ),
@@ -636,5 +639,4 @@ class SimilarSpecialistsWidget extends ConsumerWidget {
       SnackBar(content: Text('Открыть профиль ${specialist.name}')),
     );
   }
-
 }

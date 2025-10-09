@@ -53,7 +53,8 @@ class BookingDetailsScreen extends ConsumerWidget {
       context,
       MaterialPageRoute<void>(
         builder: (context) => ChatScreen(
-          chatId: '${booking['customerId'] ?? ''}_${booking['specialistId'] ?? ''}',
+          chatId:
+              '${booking['customerId'] ?? ''}_${booking['specialistId'] ?? ''}',
           otherParticipantId: booking['specialistId'] ?? '',
           otherParticipantName: booking['specialistName'] ?? 'Специалист',
         ),

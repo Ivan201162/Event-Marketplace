@@ -1,11 +1,11 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
-import 'dart:io';
 
 import '../models/enhanced_feed_post.dart';
-import '../models/app_user.dart';
 
 /// Сервис для работы с расширенной лентой
 class EnhancedFeedService {
@@ -29,11 +29,12 @@ class EnhancedFeedService {
         query = query.startAfterDocument(lastDocument);
       }
 
-      final QuerySnapshot snapshot = await query.get();
-      final List<EnhancedFeedPost> posts = [];
+      final snapshot = await query.get();
+      final posts = <EnhancedFeedPost>[];
 
       for (final doc in snapshot.docs) {
-        final post = EnhancedFeedPost.fromMap(doc.data() as Map<String, dynamic>);
+        final post =
+            EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
         posts.add(post);
       }
 
@@ -60,11 +61,12 @@ class EnhancedFeedService {
         query = query.startAfterDocument(lastDocument);
       }
 
-      final QuerySnapshot snapshot = await query.get();
-      final List<EnhancedFeedPost> posts = [];
+      final snapshot = await query.get();
+      final posts = <EnhancedFeedPost>[];
 
       for (final doc in snapshot.docs) {
-        final post = EnhancedFeedPost.fromMap(doc.data() as Map<String, dynamic>);
+        final post =
+            EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
         posts.add(post);
       }
 
@@ -77,13 +79,11 @@ class EnhancedFeedService {
   /// Получить пост по ID
   Future<EnhancedFeedPost?> getPostById(String postId) async {
     try {
-      final DocumentSnapshot doc = await _firestore
-          .collection('feed')
-          .doc(postId)
-          .get();
+      final DocumentSnapshot doc =
+          await _firestore.collection('feed').doc(postId).get();
 
       if (doc.exists) {
-        return EnhancedFeedPost.fromMap(doc.data() as Map<String, dynamic>);
+        return EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
       }
       return null;
     } catch (e) {
@@ -102,11 +102,11 @@ class EnhancedFeedService {
     bool isSponsored = false,
   }) async {
     try {
-      final String postId = _firestore.collection('feed').doc().id;
-      final DateTime now = DateTime.now();
+      final postId = _firestore.collection('feed').doc().id;
+      final now = DateTime.now();
 
       // Загружаем медиафайлы
-      final List<FeedPostMedia> media = [];
+      final media = <FeedPostMedia>[];
       if (mediaFiles != null && mediaFiles.isNotEmpty) {
         for (final file in mediaFiles) {
           final mediaItem = await _uploadMediaFile(file, postId);
@@ -116,7 +116,7 @@ class EnhancedFeedService {
         }
       }
 
-      final EnhancedFeedPost post = EnhancedFeedPost(
+      final post = EnhancedFeedPost(
         id: postId,
         authorId: authorId,
         content: content,
@@ -128,10 +128,7 @@ class EnhancedFeedService {
         isSponsored: isSponsored,
       );
 
-      await _firestore
-          .collection('feed')
-          .doc(postId)
-          .set(post.toMap());
+      await _firestore.collection('feed').doc(postId).set(post.toMap());
 
       return post;
     } catch (e) {
@@ -149,7 +146,7 @@ class EnhancedFeedService {
     bool? isArchived,
   }) async {
     try {
-      final Map<String, dynamic> updates = {
+      final updates = <String, dynamic>{
         'updatedAt': FieldValue.serverTimestamp(),
       };
 
@@ -159,10 +156,7 @@ class EnhancedFeedService {
       if (isPinned != null) updates['isPinned'] = isPinned;
       if (isArchived != null) updates['isArchived'] = isArchived;
 
-      await _firestore
-          .collection('feed')
-          .doc(postId)
-          .update(updates);
+      await _firestore.collection('feed').doc(postId).update(updates);
     } catch (e) {
       throw Exception('Ошибка обновления поста: $e');
     }
@@ -180,10 +174,7 @@ class EnhancedFeedService {
       }
 
       // Удаляем пост
-      await _firestore
-          .collection('feed')
-          .doc(postId)
-          .delete();
+      await _firestore.collection('feed').doc(postId).delete();
     } catch (e) {
       throw Exception('Ошибка удаления поста: $e');
     }
@@ -192,10 +183,7 @@ class EnhancedFeedService {
   /// Поставить лайк посту
   Future<void> likePost(String postId, String userId) async {
     try {
-      await _firestore
-          .collection('feed')
-          .doc(postId)
-          .update({
+      await _firestore.collection('feed').doc(postId).update({
         'likes': FieldValue.arrayUnion([userId]),
         'likesCount': FieldValue.increment(1),
       });
@@ -207,10 +195,7 @@ class EnhancedFeedService {
   /// Убрать лайк с поста
   Future<void> unlikePost(String postId, String userId) async {
     try {
-      await _firestore
-          .collection('feed')
-          .doc(postId)
-          .update({
+      await _firestore.collection('feed').doc(postId).update({
         'likes': FieldValue.arrayRemove([userId]),
         'likesCount': FieldValue.increment(-1),
       });
@@ -227,10 +212,10 @@ class EnhancedFeedService {
     String? parentId,
   }) async {
     try {
-      final String commentId = _firestore.collection('comments').doc().id;
-      final DateTime now = DateTime.now();
+      final commentId = _firestore.collection('comments').doc().id;
+      final now = DateTime.now();
 
-      final FeedPostComment comment = FeedPostComment(
+      final comment = FeedPostComment(
         id: commentId,
         postId: postId,
         authorId: authorId,
@@ -246,10 +231,7 @@ class EnhancedFeedService {
           .set(comment.toMap());
 
       // Обновляем счётчик комментариев в посте
-      await _firestore
-          .collection('feed')
-          .doc(postId)
-          .update({
+      await _firestore.collection('feed').doc(postId).update({
         'commentsCount': FieldValue.increment(1),
       });
 
@@ -277,11 +259,12 @@ class EnhancedFeedService {
         query = query.startAfterDocument(lastDocument);
       }
 
-      final QuerySnapshot snapshot = await query.get();
-      final List<FeedPostComment> comments = [];
+      final snapshot = await query.get();
+      final comments = <FeedPostComment>[];
 
       for (final doc in snapshot.docs) {
-        final comment = FeedPostComment.fromMap(doc.data() as Map<String, dynamic>);
+        final comment =
+            FeedPostComment.fromMap(doc.data()! as Map<String, dynamic>);
         comments.add(comment);
       }
 
@@ -300,10 +283,10 @@ class EnhancedFeedService {
     String? targetUserId,
   }) async {
     try {
-      final String shareId = _firestore.collection('shares').doc().id;
-      final DateTime now = DateTime.now();
+      final shareId = _firestore.collection('shares').doc().id;
+      final now = DateTime.now();
 
-      final FeedPostShare share = FeedPostShare(
+      final share = FeedPostShare(
         id: shareId,
         postId: postId,
         userId: userId,
@@ -314,16 +297,10 @@ class EnhancedFeedService {
       );
 
       // Добавляем репост в коллекцию репостов
-      await _firestore
-          .collection('shares')
-          .doc(shareId)
-          .set(share.toMap());
+      await _firestore.collection('shares').doc(shareId).set(share.toMap());
 
       // Обновляем счётчик репостов в посте
-      await _firestore
-          .collection('feed')
-          .doc(postId)
-          .update({
+      await _firestore.collection('feed').doc(postId).update({
         'sharesCount': FieldValue.increment(1),
       });
 
@@ -336,10 +313,7 @@ class EnhancedFeedService {
   /// Сохранить пост
   Future<void> savePost(String postId, String userId) async {
     try {
-      await _firestore
-          .collection('feed')
-          .doc(postId)
-          .update({
+      await _firestore.collection('feed').doc(postId).update({
         'saves': FieldValue.arrayUnion([userId]),
         'savesCount': FieldValue.increment(1),
       });
@@ -351,10 +325,7 @@ class EnhancedFeedService {
   /// Убрать пост из сохранённых
   Future<void> unsavePost(String postId, String userId) async {
     try {
-      await _firestore
-          .collection('feed')
-          .doc(postId)
-          .update({
+      await _firestore.collection('feed').doc(postId).update({
         'saves': FieldValue.arrayRemove([userId]),
         'savesCount': FieldValue.increment(-1),
       });
@@ -380,11 +351,12 @@ class EnhancedFeedService {
         query = query.startAfterDocument(lastDocument);
       }
 
-      final QuerySnapshot snapshot = await query.get();
-      final List<EnhancedFeedPost> posts = [];
+      final snapshot = await query.get();
+      final posts = <EnhancedFeedPost>[];
 
       for (final doc in snapshot.docs) {
-        final post = EnhancedFeedPost.fromMap(doc.data() as Map<String, dynamic>);
+        final post =
+            EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
         posts.add(post);
       }
 
@@ -420,20 +392,21 @@ class EnhancedFeedService {
         queryBuilder = queryBuilder.where('location', isEqualTo: location);
       }
 
-      queryBuilder = queryBuilder
-          .orderBy('createdAt', descending: true)
-          .limit(limit);
+      queryBuilder =
+          queryBuilder.orderBy('createdAt', descending: true).limit(limit);
 
-      final QuerySnapshot snapshot = await queryBuilder.get();
-      final List<EnhancedFeedPost> posts = [];
+      final snapshot = await queryBuilder.get();
+      final posts = <EnhancedFeedPost>[];
 
       for (final doc in snapshot.docs) {
-        final post = EnhancedFeedPost.fromMap(doc.data() as Map<String, dynamic>);
-        
+        final post =
+            EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
+
         // Фильтр по тексту (на клиенте, так как Firestore не поддерживает полнотекстовый поиск)
-        if (query.isEmpty || 
+        if (query.isEmpty ||
             post.content.toLowerCase().contains(query.toLowerCase()) ||
-            post.tags.any((tag) => tag.toLowerCase().contains(query.toLowerCase()))) {
+            post.tags.any(
+                (tag) => tag.toLowerCase().contains(query.toLowerCase()))) {
           posts.add(post);
         }
       }
@@ -447,20 +420,20 @@ class EnhancedFeedService {
   /// Загрузить медиафайл
   Future<FeedPostMedia?> _uploadMediaFile(XFile file, String postId) async {
     try {
-      final File fileToUpload = File(file.path);
-      final String fileName = '${postId}_${DateTime.now().millisecondsSinceEpoch}';
-      final String extension = file.path.split('.').last;
-      final String filePath = 'feed/$postId/$fileName.$extension';
+      final fileToUpload = File(file.path);
+      final fileName = '${postId}_${DateTime.now().millisecondsSinceEpoch}';
+      final extension = file.path.split('.').last;
+      final filePath = 'feed/$postId/$fileName.$extension';
 
       // Загружаем файл в Storage
-      final Reference ref = _storage.ref().child(filePath);
-      final UploadTask uploadTask = ref.putFile(fileToUpload);
-      final TaskSnapshot snapshot = await uploadTask;
-      final String downloadUrl = await snapshot.ref.getDownloadURL();
+      final ref = _storage.ref().child(filePath);
+      final uploadTask = ref.putFile(fileToUpload);
+      final snapshot = await uploadTask;
+      final downloadUrl = await snapshot.ref.getDownloadURL();
 
       // Определяем тип медиа
       FeedPostMediaType mediaType;
-      if (file.path.toLowerCase().endsWith('.mp4') || 
+      if (file.path.toLowerCase().endsWith('.mp4') ||
           file.path.toLowerCase().endsWith('.mov') ||
           file.path.toLowerCase().endsWith('.avi')) {
         mediaType = FeedPostMediaType.video;
@@ -471,8 +444,8 @@ class EnhancedFeedService {
       }
 
       // Получаем размеры файла
-      int width = 0;
-      int height = 0;
+      var width = 0;
+      var height = 0;
       String? thumbnailUrl;
 
       if (mediaType == FeedPostMediaType.image) {
@@ -490,7 +463,7 @@ class EnhancedFeedService {
           maxHeight: 200,
           quality: 75,
         );
-        
+
         // Получаем размеры видео (упрощённо)
         width = 1920;
         height = 1080;
@@ -513,7 +486,7 @@ class EnhancedFeedService {
   /// Удалить медиафайл
   Future<void> _deleteMediaFile(String url) async {
     try {
-      final Reference ref = _storage.refFromURL(url);
+      final ref = _storage.refFromURL(url);
       await ref.delete();
     } catch (e) {
       print('Ошибка удаления медиафайла: $e');

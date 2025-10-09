@@ -15,7 +15,8 @@ class ResponsiveUtils {
   }
 
   /// Получить количество колонок для сетки в зависимости от размера экрана
-  static int getGridColumns(BuildContext context, {
+  static int getGridColumns(
+    BuildContext context, {
     int mobileColumns = 2,
     int tabletColumns = 3,
     int desktopColumns = 4,
@@ -32,7 +33,8 @@ class ResponsiveUtils {
   }
 
   /// Получить отступы в зависимости от размера экрана
-  static EdgeInsets getResponsivePadding(BuildContext context, {
+  static EdgeInsets getResponsivePadding(
+    BuildContext context, {
     EdgeInsets? mobilePadding,
     EdgeInsets? tabletPadding,
     EdgeInsets? desktopPadding,
@@ -49,7 +51,8 @@ class ResponsiveUtils {
   }
 
   /// Получить размер шрифта в зависимости от размера экрана
-  static double getResponsiveFontSize(BuildContext context, {
+  static double getResponsiveFontSize(
+    BuildContext context, {
     double? mobileSize,
     double? tabletSize,
     double? desktopSize,
@@ -66,13 +69,16 @@ class ResponsiveUtils {
   }
 
   /// Проверить, является ли экран мобильным
-  static bool isMobile(BuildContext context) => getScreenType(context) == ScreenType.mobile;
+  static bool isMobile(BuildContext context) =>
+      getScreenType(context) == ScreenType.mobile;
 
   /// Проверить, является ли экран планшетом
-  static bool isTablet(BuildContext context) => getScreenType(context) == ScreenType.tablet;
+  static bool isTablet(BuildContext context) =>
+      getScreenType(context) == ScreenType.tablet;
 
   /// Проверить, является ли экран десктопом
-  static bool isDesktop(BuildContext context) => getScreenType(context) == ScreenType.desktop;
+  static bool isDesktop(BuildContext context) =>
+      getScreenType(context) == ScreenType.desktop;
 }
 
 /// Типы экранов
@@ -98,7 +104,7 @@ class ResponsiveWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenType = ResponsiveUtils.getScreenType(context);
-    
+
     switch (screenType) {
       case ScreenType.mobile:
         return mobile;
@@ -193,12 +199,12 @@ class ResponsiveContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenType = ResponsiveUtils.getScreenType(context);
-    
+
     EdgeInsets? padding;
     EdgeInsets? margin;
     double? width;
     double? maxWidth;
-    
+
     switch (screenType) {
       case ScreenType.mobile:
         padding = mobilePadding;
@@ -255,7 +261,7 @@ class ResponsiveText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenType = ResponsiveUtils.getScreenType(context);
-    
+
     TextStyle? style;
     switch (screenType) {
       case ScreenType.mobile:
@@ -305,10 +311,10 @@ class ResponsiveButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenType = ResponsiveUtils.getScreenType(context);
-    
+
     ButtonStyle? style;
     EdgeInsetsGeometry? padding;
-    
+
     switch (screenType) {
       case ScreenType.mobile:
         style = mobileStyle;
@@ -359,10 +365,10 @@ class ResponsiveList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenType = ResponsiveUtils.getScreenType(context);
-    
+
     double spacing;
     EdgeInsets? padding;
-    
+
     switch (screenType) {
       case ScreenType.mobile:
         spacing = mobileSpacing;
@@ -425,12 +431,12 @@ class ResponsiveCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenType = ResponsiveUtils.getScreenType(context);
-    
+
     double elevation;
     EdgeInsets? margin;
     EdgeInsets? padding;
     BorderRadius? borderRadius;
-    
+
     switch (screenType) {
       case ScreenType.mobile:
         elevation = mobileElevation;
@@ -455,7 +461,9 @@ class ResponsiveCard extends StatelessWidget {
     return Card(
       elevation: elevation,
       margin: margin,
-      shape: borderRadius != null ? RoundedRectangleBorder(borderRadius: borderRadius) : null,
+      shape: borderRadius != null
+          ? RoundedRectangleBorder(borderRadius: borderRadius)
+          : null,
       child: Padding(
         padding: padding ?? EdgeInsets.zero,
         child: child,
@@ -471,13 +479,14 @@ class ResponsiveLayoutBuilder extends StatelessWidget {
     required this.builder,
   });
 
-  final Widget Function(BuildContext context, ScreenType screenType, BoxConstraints constraints) builder;
+  final Widget Function(BuildContext context, ScreenType screenType,
+      BoxConstraints constraints) builder;
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
-      builder: (context, constraints) {
-        final screenType = ResponsiveUtils.getScreenType(context);
-        return builder(context, screenType, constraints);
-      },
-    );
+        builder: (context, constraints) {
+          final screenType = ResponsiveUtils.getScreenType(context);
+          return builder(context, screenType, constraints);
+        },
+      );
 }

@@ -32,12 +32,14 @@ class _FadeInWidgetState extends State<FadeInWidget>
       vsync: this,
     );
     _animation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    ));
+      begin: 0,
+      end: 1,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: widget.curve,
+      ),
+    );
 
     // Запускаем анимацию с задержкой
     Future.delayed(widget.delay, () {
@@ -54,12 +56,10 @@ class _FadeInWidgetState extends State<FadeInWidget>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _animation,
-      child: widget.child,
-    );
-  }
+  Widget build(BuildContext context) => FadeTransition(
+        opacity: _animation,
+        child: widget.child,
+      );
 }
 
 /// Виджет для анимированного появления снизу
@@ -98,10 +98,12 @@ class _SlideInUpWidgetState extends State<SlideInUpWidget>
     _animation = Tween<Offset>(
       begin: Offset(0, widget.distance / 100),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    ));
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: widget.curve,
+      ),
+    );
 
     Future.delayed(widget.delay, () {
       if (mounted) {
@@ -117,12 +119,10 @@ class _SlideInUpWidgetState extends State<SlideInUpWidget>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return SlideTransition(
-      position: _animation,
-      child: widget.child,
-    );
-  }
+  Widget build(BuildContext context) => SlideTransition(
+        position: _animation,
+        child: widget.child,
+      );
 }
 
 /// Виджет для анимированного масштабирования
@@ -160,11 +160,13 @@ class _ScaleInWidgetState extends State<ScaleInWidget>
     );
     _animation = Tween<double>(
       begin: widget.scale,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    ));
+      end: 1,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: widget.curve,
+      ),
+    );
 
     Future.delayed(widget.delay, () {
       if (mounted) {
@@ -180,12 +182,10 @@ class _ScaleInWidgetState extends State<ScaleInWidget>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ScaleTransition(
-      scale: _animation,
-      child: widget.child,
-    );
-  }
+  Widget build(BuildContext context) => ScaleTransition(
+        scale: _animation,
+        child: widget.child,
+      );
 }
 
 /// Виджет для анимированного поворота
@@ -223,11 +223,13 @@ class _RotateInWidgetState extends State<RotateInWidget>
     );
     _animation = Tween<double>(
       begin: widget.angle,
-      end: 0.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    ));
+      end: 0,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: widget.curve,
+      ),
+    );
 
     Future.delayed(widget.delay, () {
       if (mounted) {
@@ -243,12 +245,10 @@ class _RotateInWidgetState extends State<RotateInWidget>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return RotationTransition(
-      turns: _animation,
-      child: widget.child,
-    );
-  }
+  Widget build(BuildContext context) => RotationTransition(
+        turns: _animation,
+        child: widget.child,
+      );
 }
 
 /// Виджет для анимированного списка
@@ -272,26 +272,25 @@ class AnimatedListView extends StatefulWidget {
 
 class _AnimatedListViewState extends State<AnimatedListView> {
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: widget.children.asMap().entries.map((entry) {
-        final index = entry.key;
-        final child = entry.value;
-        
-        return FadeInWidget(
-          duration: widget.duration,
-          delay: Duration(milliseconds: widget.delay.inMilliseconds * index),
-          curve: widget.curve,
-          child: SlideInUpWidget(
+  Widget build(BuildContext context) => Column(
+        children: widget.children.asMap().entries.map((entry) {
+          final index = entry.key;
+          final child = entry.value;
+
+          return FadeInWidget(
             duration: widget.duration,
             delay: Duration(milliseconds: widget.delay.inMilliseconds * index),
             curve: widget.curve,
-            child: child,
-          ),
-        );
-      }).toList(),
-    );
-  }
+            child: SlideInUpWidget(
+              duration: widget.duration,
+              delay:
+                  Duration(milliseconds: widget.delay.inMilliseconds * index),
+              curve: widget.curve,
+              child: child,
+            ),
+          );
+        }).toList(),
+      );
 }
 
 /// Виджет для анимированной кнопки
@@ -328,12 +327,14 @@ class _AnimatedButtonState extends State<AnimatedButton>
       vsync: this,
     );
     _animation = Tween<double>(
-      begin: 1.0,
+      begin: 1,
       end: widget.scale,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    ));
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: widget.curve,
+      ),
+    );
   }
 
   @override
@@ -343,30 +344,28 @@ class _AnimatedButtonState extends State<AnimatedButton>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) {
-        if (widget.onPressed != null) {
-          _controller.forward();
-        }
-      },
-      onTapUp: (_) {
-        if (widget.onPressed != null) {
-          _controller.reverse();
-        }
-      },
-      onTapCancel: () {
-        if (widget.onPressed != null) {
-          _controller.reverse();
-        }
-      },
-      onTap: widget.onPressed,
-      child: ScaleTransition(
-        scale: _animation,
-        child: widget.child,
-      ),
-    );
-  }
+  Widget build(BuildContext context) => GestureDetector(
+        onTapDown: (_) {
+          if (widget.onPressed != null) {
+            _controller.forward();
+          }
+        },
+        onTapUp: (_) {
+          if (widget.onPressed != null) {
+            _controller.reverse();
+          }
+        },
+        onTapCancel: () {
+          if (widget.onPressed != null) {
+            _controller.reverse();
+          }
+        },
+        onTap: widget.onPressed,
+        child: ScaleTransition(
+          scale: _animation,
+          child: widget.child,
+        ),
+      );
 }
 
 /// Виджет для анимированного перехода между страницами
@@ -399,22 +398,26 @@ class _AnimatedPageTransitionState extends State<AnimatedPageTransition>
       duration: widget.duration,
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    ));
-    
+      begin: 0,
+      end: 1,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: widget.curve,
+      ),
+    );
+
     _slideAnimation = Tween<Offset>(
-      begin: const Offset(0.0, 0.1),
+      begin: const Offset(0, 0.1),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    ));
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: widget.curve,
+      ),
+    );
 
     _controller.forward();
   }
@@ -426,15 +429,13 @@ class _AnimatedPageTransitionState extends State<AnimatedPageTransition>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: SlideTransition(
-        position: _slideAnimation,
-        child: widget.child,
-      ),
-    );
-  }
+  Widget build(BuildContext context) => FadeTransition(
+        opacity: _fadeAnimation,
+        child: SlideTransition(
+          position: _slideAnimation,
+          child: widget.child,
+        ),
+      );
 }
 
 /// Виджет для анимированного индикатора загрузки
@@ -451,7 +452,8 @@ class AnimatedLoadingIndicator extends StatefulWidget {
   final Duration duration;
 
   @override
-  State<AnimatedLoadingIndicator> createState() => _AnimatedLoadingIndicatorState();
+  State<AnimatedLoadingIndicator> createState() =>
+      _AnimatedLoadingIndicatorState();
 }
 
 class _AnimatedLoadingIndicatorState extends State<AnimatedLoadingIndicator>
@@ -467,8 +469,8 @@ class _AnimatedLoadingIndicatorState extends State<AnimatedLoadingIndicator>
       vsync: this,
     );
     _animation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(_controller);
 
     _controller.repeat();
@@ -481,18 +483,15 @@ class _AnimatedLoadingIndicatorState extends State<AnimatedLoadingIndicator>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return RotationTransition(
-      turns: _animation,
-      child: SizedBox(
-        width: widget.size,
-        height: widget.size,
-        child: CircularProgressIndicator(
-          color: widget.color ?? Theme.of(context).colorScheme.primary,
-          strokeWidth: 2.0,
+  Widget build(BuildContext context) => RotationTransition(
+        turns: _animation,
+        child: SizedBox(
+          width: widget.size,
+          height: widget.size,
+          child: CircularProgressIndicator(
+            color: widget.color ?? Theme.of(context).colorScheme.primary,
+            strokeWidth: 2,
+          ),
         ),
-      ),
-    );
-  }
+      );
 }
-

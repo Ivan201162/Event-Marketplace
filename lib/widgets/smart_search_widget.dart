@@ -23,7 +23,7 @@ class _SmartSearchWidgetState extends ConsumerState<SmartSearchWidget> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   final SmartSearchService _searchService = SmartSearchService();
-  
+
   List<SearchSuggestion> _suggestions = [];
   bool _showSuggestions = false;
   bool _isLoading = false;
@@ -101,92 +101,88 @@ class _SmartSearchWidgetState extends ConsumerState<SmartSearchWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Поле поиска
-        TextField(
-          controller: _controller,
-          focusNode: _focusNode,
-          decoration: InputDecoration(
-            hintText: widget.hintText,
-            prefixIcon: const Icon(Icons.search),
-            suffixIcon: _isLoading
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : _controller.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          _controller.clear();
-                          _loadPopularSuggestions();
-                        },
-                      )
-                    : null,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+  Widget build(BuildContext context) => Column(
+        children: [
+          // Поле поиска
+          TextField(
+            controller: _controller,
+            focusNode: _focusNode,
+            decoration: InputDecoration(
+              hintText: widget.hintText,
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: _isLoading
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : _controller.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            _controller.clear();
+                            _loadPopularSuggestions();
+                          },
+                        )
+                      : null,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              filled: true,
+              fillColor: Theme.of(context).cardColor,
             ),
-            filled: true,
-            fillColor: Theme.of(context).cardColor,
+            onChanged: _onTextChanged,
+            onSubmitted: _onSearchSubmitted,
           ),
-          onChanged: _onTextChanged,
-          onSubmitted: _onSearchSubmitted,
-        ),
 
-        // Подсказки
-        if (_showSuggestions && _suggestions.isNotEmpty)
-          Container(
-            margin: const EdgeInsets.only(top: 8),
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 10,
-                  offset: const Offset(0, 2),
-                ),
-              ],
+          // Подсказки
+          if (_showSuggestions && _suggestions.isNotEmpty)
+            Container(
+              margin: const EdgeInsets.only(top: 8),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: _suggestions.length,
+                itemBuilder: (context, index) {
+                  final suggestion = _suggestions[index];
+                  return _buildSuggestionItem(suggestion);
+                },
+              ),
             ),
-            child: ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: _suggestions.length,
-              itemBuilder: (context, index) {
-                final suggestion = _suggestions[index];
-                return _buildSuggestionItem(suggestion);
-              },
-            ),
+        ],
+      );
+
+  Widget _buildSuggestionItem(SearchSuggestion suggestion) => ListTile(
+        leading: Icon(
+          suggestion.icon,
+          color: _getSuggestionColor(suggestion.type),
+          size: 20,
+        ),
+        title: Text(
+          suggestion.text,
+          style: const TextStyle(fontWeight: FontWeight.w500),
+        ),
+        subtitle: Text(
+          suggestion.subtitle,
+          style: TextStyle(
+            color: Colors.grey[600],
+            fontSize: 12,
           ),
-      ],
-    );
-  }
-
-  Widget _buildSuggestionItem(SearchSuggestion suggestion) {
-    return ListTile(
-      leading: Icon(
-        suggestion.icon,
-        color: _getSuggestionColor(suggestion.type),
-        size: 20,
-      ),
-      title: Text(
-        suggestion.text,
-        style: const TextStyle(fontWeight: FontWeight.w500),
-      ),
-      subtitle: Text(
-        suggestion.subtitle,
-        style: TextStyle(
-          color: Colors.grey[600],
-          fontSize: 12,
         ),
-      ),
-      trailing: _getSuggestionTrailing(suggestion.type),
-      onTap: () => _onSuggestionSelected(suggestion),
-    );
-  }
+        trailing: _getSuggestionTrailing(suggestion.type),
+        onTap: () => _onSuggestionSelected(suggestion),
+      );
 
   Color _getSuggestionColor(SuggestionType type) {
     switch (type) {
@@ -214,4 +210,3 @@ class _SmartSearchWidgetState extends ConsumerState<SmartSearchWidget> {
     }
   }
 }
-

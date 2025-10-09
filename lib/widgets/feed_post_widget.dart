@@ -1,13 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:video_player/video_player.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:video_player/video_player.dart';
 
 import '../models/enhanced_feed_post.dart';
-import '../models/app_user.dart';
-import '../services/enhanced_feed_service.dart';
-import '../providers/enhanced_feed_providers.dart';
 
 /// Виджет поста в ленте
 class FeedPostWidget extends ConsumerStatefulWidget {
@@ -58,7 +55,7 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
       final firstVideo = widget.post.media
           .where((media) => media.type == FeedPostMediaType.video)
           .firstOrNull;
-      
+
       if (firstVideo != null) {
         _videoController = VideoPlayerController.networkUrl(
           Uri.parse(firstVideo.url),
@@ -71,75 +68,72 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildPostHeader(),
-          _buildPostContent(),
-          _buildPostMedia(),
-          _buildPostActions(),
-          _buildPostStats(),
-          if (widget.post.comments.isNotEmpty) _buildCommentsPreview(),
-        ],
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Card(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildPostHeader(),
+            _buildPostContent(),
+            _buildPostMedia(),
+            _buildPostActions(),
+            _buildPostStats(),
+            if (widget.post.comments.isNotEmpty) _buildCommentsPreview(),
+          ],
+        ),
+      );
 
-  Widget _buildPostHeader() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: widget.onUserTap,
-            child: CircleAvatar(
-              radius: 20,
-              backgroundImage: widget.post.authorId.isNotEmpty
-                  ? CachedNetworkImageProvider(
-                      'https://ui-avatars.com/api/?name=${widget.post.authorId}&size=40')
-                  : null,
-              child: widget.post.authorId.isEmpty
-                  ? const Icon(Icons.person)
-                  : null,
+  Widget _buildPostHeader() => Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            GestureDetector(
+              onTap: widget.onUserTap,
+              child: CircleAvatar(
+                radius: 20,
+                backgroundImage: widget.post.authorId.isNotEmpty
+                    ? CachedNetworkImageProvider(
+                        'https://ui-avatars.com/api/?name=${widget.post.authorId}&size=40',
+                      )
+                    : null,
+                child: widget.post.authorId.isEmpty
+                    ? const Icon(Icons.person)
+                    : null,
+              ),
             ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Пользователь ${widget.post.authorId}',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Пользователь ${widget.post.authorId}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
-                ),
-                Text(
-                  _formatDate(widget.post.createdAt),
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 12,
+                  Text(
+                    _formatDate(widget.post.createdAt),
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          if (widget.post.isPinned)
-            const Icon(Icons.push_pin, color: Colors.orange, size: 16),
-          if (widget.post.isSponsored)
-            const Icon(Icons.ads_click, color: Colors.blue, size: 16),
-          IconButton(
-            onPressed: widget.onMore,
-            icon: const Icon(Icons.more_vert),
-          ),
-        ],
-      ),
-    );
-  }
+            if (widget.post.isPinned)
+              const Icon(Icons.push_pin, color: Colors.orange, size: 16),
+            if (widget.post.isSponsored)
+              const Icon(Icons.ads_click, color: Colors.blue, size: 16),
+            IconButton(
+              onPressed: widget.onMore,
+              icon: const Icon(Icons.more_vert),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildPostContent() {
     if (widget.post.content.isEmpty) return const SizedBox.shrink();
@@ -171,54 +165,53 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
     );
   }
 
-  Widget _buildTags() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: Wrap(
-        spacing: 8,
-        children: widget.post.tags.map((tag) {
-          return GestureDetector(
-            onTap: () {
-              // TODO: Переход к поиску по тегу
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.blue[100],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                '#$tag',
-                style: TextStyle(
-                  color: Colors.blue[800],
-                  fontSize: 12,
+  Widget _buildTags() => Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: Wrap(
+          spacing: 8,
+          children: widget.post.tags
+              .map(
+                (tag) => GestureDetector(
+                  onTap: () {
+                    // TODO: Переход к поиску по тегу
+                  },
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.blue[100],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      '#$tag',
+                      style: TextStyle(
+                        color: Colors.blue[800],
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
                 ),
+              )
+              .toList(),
+        ),
+      );
+
+  Widget _buildLocation() => Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: Row(
+          children: [
+            Icon(Icons.location_on, size: 16, color: Colors.grey[600]),
+            const SizedBox(width: 4),
+            Text(
+              widget.post.location!,
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 12,
               ),
             ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  Widget _buildLocation() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: Row(
-        children: [
-          Icon(Icons.location_on, size: 16, color: Colors.grey[600]),
-          const SizedBox(width: 4),
-          Text(
-            widget.post.location!,
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 12,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
   Widget _buildPostMedia() {
     if (widget.post.media.isEmpty) return const SizedBox.shrink();
@@ -324,157 +317,150 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
     );
   }
 
-  Widget _buildMediaCarousel() {
-    return Column(
-      children: [
-        SizedBox(
-          height: 200,
-          child: PageView.builder(
-            onPageChanged: (index) {
-              setState(() {
-                _currentMediaIndex = index;
-              });
-            },
-            itemCount: widget.post.media.length,
-            itemBuilder: (context, index) {
-              return _buildSingleMedia(widget.post.media[index]);
-            },
+  Widget _buildMediaCarousel() => Column(
+        children: [
+          SizedBox(
+            height: 200,
+            child: PageView.builder(
+              onPageChanged: (index) {
+                setState(() {
+                  _currentMediaIndex = index;
+                });
+              },
+              itemCount: widget.post.media.length,
+              itemBuilder: (context, index) =>
+                  _buildSingleMedia(widget.post.media[index]),
+            ),
           ),
-        ),
-        if (widget.post.media.length > 1)
-          Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                widget.post.media.length,
-                (index) => Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 2),
-                  width: 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _currentMediaIndex == index
-                        ? Colors.blue
-                        : Colors.grey[300],
+          if (widget.post.media.length > 1)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  widget.post.media.length,
+                  (index) => Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 2),
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _currentMediaIndex == index
+                          ? Colors.blue
+                          : Colors.grey[300],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildPostActions() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        children: [
-          _buildActionButton(
-            icon: _isLiked ? Icons.favorite : Icons.favorite_border,
-            color: _isLiked ? Colors.red : Colors.grey,
-            onTap: () {
-              setState(() {
-                _isLiked = !_isLiked;
-              });
-              widget.onLike?.call();
-            },
-          ),
-          const SizedBox(width: 16),
-          _buildActionButton(
-            icon: Icons.chat_bubble_outline,
-            onTap: widget.onComment,
-          ),
-          const SizedBox(width: 16),
-          _buildActionButton(
-            icon: Icons.share_outlined,
-            onTap: widget.onShare,
-          ),
-          const Spacer(),
-          _buildActionButton(
-            icon: _isSaved ? Icons.bookmark : Icons.bookmark_border,
-            color: _isSaved ? Colors.blue : Colors.grey,
-            onTap: () {
-              setState(() {
-                _isSaved = !_isSaved;
-              });
-              widget.onSave?.call();
-            },
-          ),
         ],
-      ),
-    );
-  }
+      );
+
+  Widget _buildPostActions() => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
+          children: [
+            _buildActionButton(
+              icon: _isLiked ? Icons.favorite : Icons.favorite_border,
+              color: _isLiked ? Colors.red : Colors.grey,
+              onTap: () {
+                setState(() {
+                  _isLiked = !_isLiked;
+                });
+                widget.onLike?.call();
+              },
+            ),
+            const SizedBox(width: 16),
+            _buildActionButton(
+              icon: Icons.chat_bubble_outline,
+              onTap: widget.onComment,
+            ),
+            const SizedBox(width: 16),
+            _buildActionButton(
+              icon: Icons.share_outlined,
+              onTap: widget.onShare,
+            ),
+            const Spacer(),
+            _buildActionButton(
+              icon: _isSaved ? Icons.bookmark : Icons.bookmark_border,
+              color: _isSaved ? Colors.blue : Colors.grey,
+              onTap: () {
+                setState(() {
+                  _isSaved = !_isSaved;
+                });
+                widget.onSave?.call();
+              },
+            ),
+          ],
+        ),
+      );
 
   Widget _buildActionButton({
     required IconData icon,
     Color? color,
     VoidCallback? onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Icon(
-        icon,
-        color: color ?? Colors.grey[600],
-        size: 24,
-      ),
-    );
-  }
+  }) =>
+      GestureDetector(
+        onTap: onTap,
+        child: Icon(
+          icon,
+          color: color ?? Colors.grey[600],
+          size: 24,
+        ),
+      );
 
-  Widget _buildPostStats() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (widget.post.likesCount > 0)
-            Text(
-              '${widget.post.likesCount} ${_getLikesText(widget.post.likesCount)}',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          if (widget.post.commentsCount > 0)
-            TextButton(
-              onPressed: widget.onComment,
-              child: Text(
-                'Показать все ${widget.post.commentsCount} ${_getCommentsText(widget.post.commentsCount)}',
-                style: const TextStyle(fontSize: 14),
+  Widget _buildPostStats() => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (widget.post.likesCount > 0)
+              Text(
+                '${widget.post.likesCount} ${_getLikesText(widget.post.likesCount)}',
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-            ),
-        ],
-      ),
-    );
-  }
+            if (widget.post.commentsCount > 0)
+              TextButton(
+                onPressed: widget.onComment,
+                child: Text(
+                  'Показать все ${widget.post.commentsCount} ${_getCommentsText(widget.post.commentsCount)}',
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ),
+          ],
+        ),
+      );
 
-  Widget _buildCommentsPreview() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: widget.post.comments.take(2).map((comment) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 4),
-            child: RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Пользователь ${comment.authorId} ',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+  Widget _buildCommentsPreview() => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          children: widget.post.comments
+              .take(2)
+              .map(
+                (comment) => Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Пользователь ${comment.authorId} ',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        TextSpan(
+                          text: comment.text,
+                          style: const TextStyle(color: Colors.black),
+                        ),
+                      ],
                     ),
                   ),
-                  TextSpan(
-                    text: comment.text,
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
+                ),
+              )
+              .toList(),
+        ),
+      );
 
   void _showImageFullscreen(String imageUrl) {
     Navigator.of(context).push(
@@ -522,4 +508,3 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
     return 'комментариев';
   }
 }
-

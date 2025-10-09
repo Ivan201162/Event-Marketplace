@@ -41,7 +41,7 @@ class OrderTimelineWidget extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16),
-        
+
         // Таймлайн
         ListView.builder(
           shrinkWrap: true,
@@ -57,171 +57,167 @@ class OrderTimelineWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
-    return Container(
-      padding: const EdgeInsets.all(32),
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: const Column(
-        children: [
-          Icon(Icons.timeline, size: 48, color: Colors.grey),
-          SizedBox(height: 16),
-          Text(
-            'История заявки пуста',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: Colors.grey,
-            ),
-          ),
-          SizedBox(height: 8),
-          Text(
-            'События появятся здесь по мере работы над заявкой',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTimelineItem(OrderTimelineEvent event, bool isLast) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Линия таймлайна
-        Column(
+  Widget _buildEmptyState() => Container(
+        padding: const EdgeInsets.all(32),
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Column(
           children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: _getEventColor(event.type),
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 2),
-              ),
-              child: Center(
-                child: Text(
-                  event.type.icon,
-                  style: const TextStyle(fontSize: 16),
-                ),
+            Icon(Icons.timeline, size: 48, color: Colors.grey),
+            SizedBox(height: 16),
+            Text(
+              'История заявки пуста',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey,
               ),
             ),
-            if (!isLast)
-              Container(
-                width: 2,
-                height: 60,
-                color: Colors.grey[300],
-                margin: const EdgeInsets.only(top: 8),
+            SizedBox(height: 8),
+            Text(
+              'События появятся здесь по мере работы над заявкой',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey,
               ),
+              textAlign: TextAlign.center,
+            ),
           ],
         ),
-        
-        const SizedBox(width: 16),
-        
-        // Содержимое события
-        Expanded(
-          child: Container(
-            margin: const EdgeInsets.only(bottom: 16),
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
+      );
+
+  Widget _buildTimelineItem(OrderTimelineEvent event, bool isLast) => Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Линия таймлайна
+          Column(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: _getEventColor(event.type),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 2),
                 ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        event.title,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                child: Center(
+                  child: Text(
+                    event.type.icon,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),
+              if (!isLast)
+                Container(
+                  width: 2,
+                  height: 60,
+                  color: Colors.grey[300],
+                  margin: const EdgeInsets.only(top: 8),
+                ),
+            ],
+          ),
+
+          const SizedBox(width: 16),
+
+          // Содержимое события
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          event.title,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                    Text(
-                      _formatDate(event.createdAt),
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
+                      Text(
+                        _formatDate(event.createdAt),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[600],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  event.description,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.black87,
+                    ],
                   ),
-                ),
-                if (event.metadata.isNotEmpty) ...[
-                  const SizedBox(height: 12),
-                  _buildMetadata(event.metadata),
+                  const SizedBox(height: 8),
+                  Text(
+                    event.description,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  if (event.metadata.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    _buildMetadata(event.metadata),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
-        ),
-      ],
-    );
-  }
+        ],
+      );
 
-  Widget _buildMetadata(Map<String, dynamic> metadata) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey[200]!),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: metadata.entries.map((entry) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 4),
-            child: Row(
-              children: [
-                Text(
-                  '${entry.key}: ',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey[700],
+  Widget _buildMetadata(Map<String, dynamic> metadata) => Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey[200]!),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: metadata.entries
+              .map(
+                (entry) => Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Row(
+                    children: [
+                      Text(
+                        '${entry.key}: ',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          entry.value.toString(),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Expanded(
-                  child: Text(
-                    entry.value.toString(),
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
+              )
+              .toList(),
+        ),
+      );
 
   Color _getEventColor(OrderTimelineEventType type) {
     switch (type) {
@@ -257,4 +253,3 @@ class OrderTimelineWidget extends StatelessWidget {
     }
   }
 }
-

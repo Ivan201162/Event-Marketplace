@@ -1,27 +1,30 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../services/calendar_integration_service.dart';
-import '../services/reminder_system_service.dart';
 import '../services/error_logging_service.dart';
+import '../services/reminder_system_service.dart';
 
 /// Экран календаря и напоминаний
 class CalendarRemindersScreen extends ConsumerStatefulWidget {
   const CalendarRemindersScreen({super.key});
 
   @override
-  ConsumerState<CalendarRemindersScreen> createState() => _CalendarRemindersScreenState();
+  ConsumerState<CalendarRemindersScreen> createState() =>
+      _CalendarRemindersScreenState();
 }
 
-class _CalendarRemindersScreenState extends ConsumerState<CalendarRemindersScreen>
+class _CalendarRemindersScreenState
+    extends ConsumerState<CalendarRemindersScreen>
     with TickerProviderStateMixin {
-  final CalendarIntegrationService _calendarService = CalendarIntegrationService();
+  final CalendarIntegrationService _calendarService =
+      CalendarIntegrationService();
   final ReminderSystemService _reminderService = ReminderSystemService();
   final ErrorLoggingService _errorLogger = ErrorLoggingService();
 
   late TabController _tabController;
-  
+
   bool _isLoading = false;
   List<Map<String, dynamic>> _calendarEvents = [];
   List<Map<String, dynamic>> _reminders = [];
@@ -68,7 +71,7 @@ class _CalendarRemindersScreenState extends ConsumerState<CalendarRemindersScree
 
   Future<void> _loadCalendarEvents(String userId) async {
     final now = DateTime.now();
-    final startOfMonth = DateTime(now.year, now.month, 1);
+    final startOfMonth = DateTime(now.year, now.month);
     final endOfMonth = DateTime(now.year, now.month + 1, 0, 23, 59, 59);
 
     final events = await _calendarService.getUserCalendarEvents(
@@ -143,166 +146,166 @@ class _CalendarRemindersScreenState extends ConsumerState<CalendarRemindersScree
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Календарь и Напоминания'),
-        backgroundColor: Colors.indigo,
-        foregroundColor: Colors.white,
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: Colors.white,
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.white70,
-          tabs: const [
-            Tab(icon: Icon(Icons.calendar_today), text: 'События'),
-            Tab(icon: Icon(Icons.alarm), text: 'Напоминания'),
-            Tab(icon: Icon(Icons.analytics), text: 'Статистика'),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Календарь и Напоминания'),
+          backgroundColor: Colors.indigo,
+          foregroundColor: Colors.white,
+          bottom: TabBar(
+            controller: _tabController,
+            indicatorColor: Colors.white,
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.white70,
+            tabs: const [
+              Tab(icon: Icon(Icons.calendar_today), text: 'События'),
+              Tab(icon: Icon(Icons.alarm), text: 'Напоминания'),
+              Tab(icon: Icon(Icons.analytics), text: 'Статистика'),
+            ],
+          ),
+          actions: [
+            IconButton(
+              onPressed: _loadData,
+              icon: const Icon(Icons.refresh),
+            ),
           ],
         ),
-        actions: [
-          IconButton(
-            onPressed: _loadData,
-            icon: const Icon(Icons.refresh),
-          ),
-        ],
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : TabBarView(
-              controller: _tabController,
-              children: [
-                _buildEventsTab(),
-                _buildRemindersTab(),
-                _buildStatsTab(),
-              ],
-            ),
-      floatingActionButton: _buildFloatingActionButton(),
-    );
-  }
-
-  Widget _buildFloatingActionButton() {
-    return FloatingActionButton(
-      onPressed: () {
-        if (_tabController.index == 0) {
-          _createEvent();
-        } else {
-          _createReminder();
-        }
-      },
-      backgroundColor: Colors.indigo,
-      child: Icon(
-        _tabController.index == 0 ? Icons.add : Icons.alarm_add,
-        color: Colors.white,
-      ),
-    );
-  }
-
-  Widget _buildEventsTab() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (_calendarEvents.isEmpty)
-            const Center(
-              child: Padding(
-                padding: EdgeInsets.all(32),
-                child: Text(
-                  'Нет событий в календаре',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
-                ),
-              ),
-            )
-          else
-            ..._calendarEvents.map((event) => _buildEventCard(event)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRemindersTab() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (_reminders.isEmpty)
-            const Center(
-              child: Padding(
-                padding: EdgeInsets.all(32),
-                child: Text(
-                  'Нет активных напоминаний',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
-                ),
-              ),
-            )
-          else
-            ..._reminders.map((reminder) => _buildReminderCard(reminder)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatsTab() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Статистика календаря
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : TabBarView(
+                controller: _tabController,
                 children: [
-                  const Text(
-                    'Статистика Календаря',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 16),
-                  if (_calendarStats.isNotEmpty) ...[
-                    _buildStatRow('Всего событий', '${_calendarStats['totalEvents']}'),
-                    _buildStatRow('Событий за месяц', '${_calendarStats['monthlyEvents']}'),
-                    _buildStatRow('Синхронизировано', '${_calendarStats['syncedEvents']}'),
-                    _buildStatRow('Процент синхронизации', '${(_calendarStats['syncRate'] * 100).toStringAsFixed(1)}%'),
-                  ] else
-                    const Text('Нет данных'),
+                  _buildEventsTab(),
+                  _buildRemindersTab(),
+                  _buildStatsTab(),
                 ],
               ),
-            ),
-          ),
+        floatingActionButton: _buildFloatingActionButton(),
+      );
 
-          const SizedBox(height: 16),
+  Widget _buildFloatingActionButton() => FloatingActionButton(
+        onPressed: () {
+          if (_tabController.index == 0) {
+            _createEvent();
+          } else {
+            _createReminder();
+          }
+        },
+        backgroundColor: Colors.indigo,
+        child: Icon(
+          _tabController.index == 0 ? Icons.add : Icons.alarm_add,
+          color: Colors.white,
+        ),
+      );
 
-          // Статистика напоминаний
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Статистика Напоминаний',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+  Widget _buildEventsTab() => SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (_calendarEvents.isEmpty)
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(32),
+                  child: Text(
+                    'Нет событий в календаре',
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
-                  const SizedBox(height: 16),
-                  if (_reminderStats.isNotEmpty) ...[
-                    _buildStatRow('Всего напоминаний', '${_reminderStats['totalReminders']}'),
-                    _buildStatRow('Активных', '${_reminderStats['activeReminders']}'),
-                    _buildStatRow('Сработавших', '${_reminderStats['triggeredReminders']}'),
-                    _buildStatRow('Повторяющихся', '${_reminderStats['repeatingReminders']}'),
-                  ] else
-                    const Text('Нет данных'),
-                ],
+                ),
+              )
+            else
+              ..._calendarEvents.map(_buildEventCard),
+          ],
+        ),
+      );
+
+  Widget _buildRemindersTab() => SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (_reminders.isEmpty)
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(32),
+                  child: Text(
+                    'Нет активных напоминаний',
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                ),
+              )
+            else
+              ..._reminders.map(_buildReminderCard),
+          ],
+        ),
+      );
+
+  Widget _buildStatsTab() => SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Статистика календаря
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Статистика Календаря',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 16),
+                    if (_calendarStats.isNotEmpty) ...[
+                      _buildStatRow(
+                          'Всего событий', '${_calendarStats['totalEvents']}'),
+                      _buildStatRow('Событий за месяц',
+                          '${_calendarStats['monthlyEvents']}'),
+                      _buildStatRow('Синхронизировано',
+                          '${_calendarStats['syncedEvents']}'),
+                      _buildStatRow('Процент синхронизации',
+                          '${(_calendarStats['syncRate'] * 100).toStringAsFixed(1)}%'),
+                    ] else
+                      const Text('Нет данных'),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+
+            const SizedBox(height: 16),
+
+            // Статистика напоминаний
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Статистика Напоминаний',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 16),
+                    if (_reminderStats.isNotEmpty) ...[
+                      _buildStatRow('Всего напоминаний',
+                          '${_reminderStats['totalReminders']}'),
+                      _buildStatRow(
+                          'Активных', '${_reminderStats['activeReminders']}'),
+                      _buildStatRow('Сработавших',
+                          '${_reminderStats['triggeredReminders']}'),
+                      _buildStatRow('Повторяющихся',
+                          '${_reminderStats['repeatingReminders']}'),
+                    ] else
+                      const Text('Нет данных'),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildEventCard(Map<String, dynamic> event) {
     final startTime = (event['startTime'] as Timestamp).toDate();
@@ -442,21 +445,19 @@ class _CalendarRemindersScreenState extends ConsumerState<CalendarRemindersScree
     );
   }
 
-  Widget _buildStatRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label),
-          Text(
-            value,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildStatRow(String label, String value) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(label),
+            Text(
+              value,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      );
 
   IconData _getReminderIcon(String type) {
     switch (type) {
@@ -488,9 +489,8 @@ class _CalendarRemindersScreenState extends ConsumerState<CalendarRemindersScree
     }
   }
 
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day.toString().padLeft(2, '0')}.${dateTime.month.toString().padLeft(2, '0')}.${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
+  String _formatDateTime(DateTime dateTime) =>
+      '${dateTime.day.toString().padLeft(2, '0')}.${dateTime.month.toString().padLeft(2, '0')}.${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
 }
 
 /// Экран создания события
@@ -503,7 +503,8 @@ class CreateEventScreen extends ConsumerStatefulWidget {
 
 class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
   final _formKey = GlobalKey<FormState>();
-  final CalendarIntegrationService _calendarService = CalendarIntegrationService();
+  final CalendarIntegrationService _calendarService =
+      CalendarIntegrationService();
 
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -595,8 +596,8 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
         description: _descriptionController.text.trim(),
         startTime: _startTime,
         endTime: _endTime,
-        location: _locationController.text.trim().isNotEmpty 
-            ? _locationController.text.trim() 
+        location: _locationController.text.trim().isNotEmpty
+            ? _locationController.text.trim()
             : null,
         userId: userId,
       );
@@ -637,99 +638,96 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Создать событие'),
-        backgroundColor: Colors.indigo,
-        foregroundColor: Colors.white,
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextFormField(
-                      controller: _titleController,
-                      decoration: const InputDecoration(
-                        labelText: 'Название события *',
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Введите название события';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-
-                    TextFormField(
-                      controller: _descriptionController,
-                      decoration: const InputDecoration(
-                        labelText: 'Описание',
-                        border: OutlineInputBorder(),
-                      ),
-                      maxLines: 3,
-                    ),
-                    const SizedBox(height: 16),
-
-                    TextFormField(
-                      controller: _locationController,
-                      decoration: const InputDecoration(
-                        labelText: 'Место проведения',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Время начала
-                    ListTile(
-                      title: const Text('Время начала'),
-                      subtitle: Text(_formatDateTime(_startTime)),
-                      trailing: const Icon(Icons.access_time),
-                      onTap: _selectStartTime,
-                    ),
-
-                    // Время окончания
-                    ListTile(
-                      title: const Text('Время окончания'),
-                      subtitle: Text(_formatDateTime(_endTime)),
-                      trailing: const Icon(Icons.access_time),
-                      onTap: _selectEndTime,
-                    ),
-
-                    const SizedBox(height: 32),
-
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _createEvent,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.indigo,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Создать событие'),
+          backgroundColor: Colors.indigo,
+          foregroundColor: Colors.white,
+        ),
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextFormField(
+                        controller: _titleController,
+                        decoration: const InputDecoration(
+                          labelText: 'Название события *',
+                          border: OutlineInputBorder(),
                         ),
-                        child: const Text(
-                          'Создать событие',
-                          style: TextStyle(fontSize: 16),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Введите название события';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+
+                      TextFormField(
+                        controller: _descriptionController,
+                        decoration: const InputDecoration(
+                          labelText: 'Описание',
+                          border: OutlineInputBorder(),
+                        ),
+                        maxLines: 3,
+                      ),
+                      const SizedBox(height: 16),
+
+                      TextFormField(
+                        controller: _locationController,
+                        decoration: const InputDecoration(
+                          labelText: 'Место проведения',
+                          border: OutlineInputBorder(),
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 16),
+
+                      // Время начала
+                      ListTile(
+                        title: const Text('Время начала'),
+                        subtitle: Text(_formatDateTime(_startTime)),
+                        trailing: const Icon(Icons.access_time),
+                        onTap: _selectStartTime,
+                      ),
+
+                      // Время окончания
+                      ListTile(
+                        title: const Text('Время окончания'),
+                        subtitle: Text(_formatDateTime(_endTime)),
+                        trailing: const Icon(Icons.access_time),
+                        onTap: _selectEndTime,
+                      ),
+
+                      const SizedBox(height: 32),
+
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _createEvent,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.indigo,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                          ),
+                          child: const Text(
+                            'Создать событие',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-    );
-  }
+      );
 
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day.toString().padLeft(2, '0')}.${dateTime.month.toString().padLeft(2, '0')}.${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
+  String _formatDateTime(DateTime dateTime) =>
+      '${dateTime.day.toString().padLeft(2, '0')}.${dateTime.month.toString().padLeft(2, '0')}.${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
 }
 
 /// Экран создания напоминания
@@ -737,7 +735,8 @@ class CreateReminderScreen extends ConsumerStatefulWidget {
   const CreateReminderScreen({super.key});
 
   @override
-  ConsumerState<CreateReminderScreen> createState() => _CreateReminderScreenState();
+  ConsumerState<CreateReminderScreen> createState() =>
+      _CreateReminderScreenState();
 }
 
 class _CreateReminderScreenState extends ConsumerState<CreateReminderScreen> {
@@ -749,7 +748,7 @@ class _CreateReminderScreenState extends ConsumerState<CreateReminderScreen> {
 
   DateTime _reminderTime = DateTime.now().add(const Duration(hours: 1));
   ReminderType _selectedType = ReminderType.notification;
-  List<int> _selectedRepeatDays = [];
+  final List<int> _selectedRepeatDays = [];
   bool _isLoading = false;
 
   @override
@@ -842,147 +841,155 @@ class _CreateReminderScreenState extends ConsumerState<CreateReminderScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Создать напоминание'),
-        backgroundColor: Colors.indigo,
-        foregroundColor: Colors.white,
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextFormField(
-                      controller: _titleController,
-                      decoration: const InputDecoration(
-                        labelText: 'Название напоминания *',
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Введите название напоминания';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-
-                    TextFormField(
-                      controller: _messageController,
-                      decoration: const InputDecoration(
-                        labelText: 'Сообщение *',
-                        border: OutlineInputBorder(),
-                      ),
-                      maxLines: 3,
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Введите сообщение';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Время напоминания
-                    ListTile(
-                      title: const Text('Время напоминания'),
-                      subtitle: Text(_formatDateTime(_reminderTime)),
-                      trailing: const Icon(Icons.alarm),
-                      onTap: _selectReminderTime,
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    // Тип напоминания
-                    const Text(
-                      'Тип напоминания',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
-                    DropdownButtonFormField<ReminderType>(
-                      value: _selectedType,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                      ),
-                      items: ReminderType.values.map((type) =>
-                        DropdownMenuItem(
-                          value: type,
-                          child: Text(type.displayName),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Создать напоминание'),
+          backgroundColor: Colors.indigo,
+          foregroundColor: Colors.white,
+        ),
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextFormField(
+                        controller: _titleController,
+                        decoration: const InputDecoration(
+                          labelText: 'Название напоминания *',
+                          border: OutlineInputBorder(),
                         ),
-                      ).toList(),
-                      onChanged: (value) {
-                        if (value != null) {
-                          setState(() {
-                            _selectedType = value;
-                          });
-                        }
-                      },
-                    ),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Введите название напоминания';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
 
-                    const SizedBox(height: 16),
+                      TextFormField(
+                        controller: _messageController,
+                        decoration: const InputDecoration(
+                          labelText: 'Сообщение *',
+                          border: OutlineInputBorder(),
+                        ),
+                        maxLines: 3,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Введите сообщение';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
 
-                    // Повторение
-                    const Text(
-                      'Повторение (дни недели)',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 8,
-                      children: [
-                        'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'
-                      ].asMap().entries.map((entry) {
-                        final index = entry.key + 1; // 1-7 для дней недели
-                        final dayName = entry.value;
-                        final isSelected = _selectedRepeatDays.contains(index);
-                        
-                        return FilterChip(
-                          label: Text(dayName),
-                          selected: isSelected,
-                          onSelected: (selected) {
+                      // Время напоминания
+                      ListTile(
+                        title: const Text('Время напоминания'),
+                        subtitle: Text(_formatDateTime(_reminderTime)),
+                        trailing: const Icon(Icons.alarm),
+                        onTap: _selectReminderTime,
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      // Тип напоминания
+                      const Text(
+                        'Тип напоминания',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      DropdownButtonFormField<ReminderType>(
+                        initialValue: _selectedType,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        items: ReminderType.values
+                            .map(
+                              (type) => DropdownMenuItem(
+                                value: type,
+                                child: Text(type.displayName),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) {
+                          if (value != null) {
                             setState(() {
-                              if (selected) {
-                                _selectedRepeatDays.add(index);
-                              } else {
-                                _selectedRepeatDays.remove(index);
-                              }
+                              _selectedType = value;
                             });
-                          },
-                        );
-                      }).toList(),
-                    ),
+                          }
+                        },
+                      ),
 
-                    const SizedBox(height: 32),
+                      const SizedBox(height: 16),
 
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _createReminder,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.indigo,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                        ),
-                        child: const Text(
-                          'Создать напоминание',
-                          style: TextStyle(fontSize: 16),
+                      // Повторение
+                      const Text(
+                        'Повторение (дни недели)',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        children: [
+                          'Пн',
+                          'Вт',
+                          'Ср',
+                          'Чт',
+                          'Пт',
+                          'Сб',
+                          'Вс',
+                        ].asMap().entries.map((entry) {
+                          final index = entry.key + 1; // 1-7 для дней недели
+                          final dayName = entry.value;
+                          final isSelected =
+                              _selectedRepeatDays.contains(index);
+
+                          return FilterChip(
+                            label: Text(dayName),
+                            selected: isSelected,
+                            onSelected: (selected) {
+                              setState(() {
+                                if (selected) {
+                                  _selectedRepeatDays.add(index);
+                                } else {
+                                  _selectedRepeatDays.remove(index);
+                                }
+                              });
+                            },
+                          );
+                        }).toList(),
+                      ),
+
+                      const SizedBox(height: 32),
+
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _createReminder,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.indigo,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                          ),
+                          child: const Text(
+                            'Создать напоминание',
+                            style: TextStyle(fontSize: 16),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-    );
-  }
+      );
 
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day.toString().padLeft(2, '0')}.${dateTime.month.toString().padLeft(2, '0')}.${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
+  String _formatDateTime(DateTime dateTime) =>
+      '${dateTime.day.toString().padLeft(2, '0')}.${dateTime.month.toString().padLeft(2, '0')}.${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
 }

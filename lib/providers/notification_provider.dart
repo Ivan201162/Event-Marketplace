@@ -6,10 +6,12 @@ import '../models/app_notification.dart' as app_notification;
 import '../services/notification_service.dart';
 
 /// Провайдер для получения текущего пользователя
-final currentUserProvider = StreamProvider<User?>((ref) => FirebaseAuth.instance.authStateChanges());
+final currentUserProvider =
+    StreamProvider<User?>((ref) => FirebaseAuth.instance.authStateChanges());
 
 /// Провайдер для управления уведомлениями пользователя
-final userNotificationsProvider = StreamProvider<List<app_notification.AppNotification>>((ref) {
+final userNotificationsProvider =
+    StreamProvider<List<app_notification.AppNotification>>((ref) {
   final userAsync = ref.watch(currentUserProvider);
   return userAsync.when(
     data: (user) {
@@ -19,9 +21,11 @@ final userNotificationsProvider = StreamProvider<List<app_notification.AppNotifi
           .where('userId', isEqualTo: user.uid)
           .orderBy('createdAt', descending: true)
           .snapshots()
-          .map((snapshot) => snapshot.docs
-              .map(app_notification.AppNotification.fromFirestore)
-              .toList(),);
+          .map(
+            (snapshot) => snapshot.docs
+                .map(app_notification.AppNotification.fromFirestore)
+                .toList(),
+          );
     },
     loading: () => Stream.value([]),
     error: (_, __) => Stream.value([]),
@@ -47,7 +51,8 @@ final unreadNotificationsCountProvider = StreamProvider<int>((ref) {
 });
 
 /// Провайдер для управления уведомлениями
-class NotificationNotifier extends StateNotifier<AsyncValue<List<app_notification.AppNotification>>> {
+class NotificationNotifier
+    extends StateNotifier<AsyncValue<List<app_notification.AppNotification>>> {
   NotificationNotifier() : super(const AsyncValue.loading()) {
     _loadNotifications();
   }
@@ -64,9 +69,11 @@ class NotificationNotifier extends StateNotifier<AsyncValue<List<app_notificatio
         .where('userId', isEqualTo: user.uid)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map(app_notification.AppNotification.fromFirestore)
-            .toList(),)
+        .map(
+          (snapshot) => snapshot.docs
+              .map(app_notification.AppNotification.fromFirestore)
+              .toList(),
+        )
         .listen((notifications) {
       state = AsyncValue.data(notifications);
     });
@@ -130,34 +137,35 @@ class NotificationNotifier extends StateNotifier<AsyncValue<List<app_notificatio
   }
 }
 
-final notificationNotifierProvider = StateNotifierProvider<NotificationNotifier, AsyncValue<List<app_notification.AppNotification>>>((ref) => NotificationNotifier());
+final notificationNotifierProvider = StateNotifierProvider<NotificationNotifier,
+        AsyncValue<List<app_notification.AppNotification>>>(
+    (ref) => NotificationNotifier());
 
 /// Временный класс для совместимости с DocumentSnapshot
 class MockDocumentSnapshot implements DocumentSnapshot {
   MockDocumentSnapshot(this._data, this._id);
-  
+
   final Map<String, dynamic> _data;
   final String _id;
-  
+
   @override
   Map<String, dynamic>? data() => _data;
-  
+
   @override
   String get id => _id;
-  
+
   @override
   bool get exists => true;
-  
+
   @override
   DocumentReference get reference => throw UnimplementedError();
-  
+
   @override
   SnapshotMetadata get metadata => throw UnimplementedError();
-  
+
   @override
   dynamic operator [](Object field) => _data[field];
-  
+
   @override
   dynamic get(Object field) => _data[field];
 }
-

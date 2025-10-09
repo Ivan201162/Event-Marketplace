@@ -18,76 +18,113 @@ class SmartSearchService {
       final specialistsQuery = await _firestore
           .collection('specialists')
           .where('name', isGreaterThanOrEqualTo: query)
-          .where('name', isLessThan: query + 'z')
+          .where('name', isLessThan: '${query}z')
           .limit(5)
           .get();
 
       for (final doc in specialistsQuery.docs) {
         final data = doc.data();
-        suggestions.add(SearchSuggestion(
-          text: (data['name'] as String?) ?? '',
-          type: SuggestionType.specialist,
-          icon: Icons.person,
-          subtitle: (data['category'] as String?) ?? '',
-          data: {'specialistId': doc.id},
-        ),);
+        suggestions.add(
+          SearchSuggestion(
+            text: (data['name'] as String?) ?? '',
+            type: SuggestionType.specialist,
+            icon: Icons.person,
+            subtitle: (data['category'] as String?) ?? '',
+            data: {'specialistId': doc.id},
+          ),
+        );
       }
 
       // Поиск по категориям
       final categories = [
-        'Ведущие', 'DJ', 'Фотографы', 'Видеографы', 'Декораторы', 'Аниматоры',
-        'Музыканты', 'Танцоры', 'Клоуны', 'Фокусники', 'Певцы', 'Гитаристы'
+        'Ведущие',
+        'DJ',
+        'Фотографы',
+        'Видеографы',
+        'Декораторы',
+        'Аниматоры',
+        'Музыканты',
+        'Танцоры',
+        'Клоуны',
+        'Фокусники',
+        'Певцы',
+        'Гитаристы',
       ];
 
       for (final category in categories) {
         if (category.toLowerCase().contains(query.toLowerCase())) {
-          suggestions.add(SearchSuggestion(
-            text: category,
-            type: SuggestionType.category,
-            icon: Icons.category,
-            subtitle: 'Категория специалистов',
-            data: {'category': category},
-          ),);
+          suggestions.add(
+            SearchSuggestion(
+              text: category,
+              type: SuggestionType.category,
+              icon: Icons.category,
+              subtitle: 'Категория специалистов',
+              data: {'category': category},
+            ),
+          );
         }
       }
 
       // Поиск по городам
       final cities = [
-        'Москва', 'Санкт-Петербург', 'Казань', 'Екатеринбург', 'Новосибирск',
-        'Нижний Новгород', 'Челябинск', 'Самара', 'Омск', 'Ростов-на-Дону',
-        'Уфа', 'Красноярск', 'Воронеж', 'Пермь', 'Волгоград'
+        'Москва',
+        'Санкт-Петербург',
+        'Казань',
+        'Екатеринбург',
+        'Новосибирск',
+        'Нижний Новгород',
+        'Челябинск',
+        'Самара',
+        'Омск',
+        'Ростов-на-Дону',
+        'Уфа',
+        'Красноярск',
+        'Воронеж',
+        'Пермь',
+        'Волгоград',
       ];
 
       for (final city in cities) {
         if (city.toLowerCase().contains(query.toLowerCase())) {
-          suggestions.add(SearchSuggestion(
-            text: city,
-            type: SuggestionType.location,
-            icon: Icons.location_on,
-            subtitle: 'Город',
-            data: {'city': city},
-          ),);
+          suggestions.add(
+            SearchSuggestion(
+              text: city,
+              type: SuggestionType.location,
+              icon: Icons.location_on,
+              subtitle: 'Город',
+              data: {'city': city},
+            ),
+          );
         }
       }
 
       // Поиск по услугам
       final services = [
-        'Свадьба', 'Корпоратив', 'День рождения', 'Выпускной', 'Юбилей',
-        'Фотосессия', 'Видеосъемка', 'Ведущий', 'DJ', 'Аниматор'
+        'Свадьба',
+        'Корпоратив',
+        'День рождения',
+        'Выпускной',
+        'Юбилей',
+        'Фотосессия',
+        'Видеосъемка',
+        'Ведущий',
+        'DJ',
+        'Аниматор',
       ];
 
       for (final service in services) {
         if (service.toLowerCase().contains(query.toLowerCase())) {
-          suggestions.add(SearchSuggestion(
-            text: service,
-            type: SuggestionType.service,
-            icon: Icons.event,
-            subtitle: 'Услуга',
-            data: {'service': service},
-          ),);
+          suggestions.add(
+            SearchSuggestion(
+              text: service,
+              type: SuggestionType.service,
+              icon: Icons.event,
+              subtitle: 'Услуга',
+              data: {'service': service},
+            ),
+          );
         }
       }
-
     } on Exception catch (e) {
       debugPrint('Ошибка получения подсказок: $e');
     }
@@ -96,38 +133,36 @@ class SmartSearchService {
   }
 
   /// Получить популярные подсказки
-  List<SearchSuggestion> _getPopularSuggestions() {
-    return [
-      SearchSuggestion(
-        text: 'Ведущие',
-        type: SuggestionType.category,
-        icon: Icons.category,
-        subtitle: 'Популярная категория',
-        data: {'category': 'Ведущие'},
-      ),
-      SearchSuggestion(
-        text: 'Фотографы',
-        type: SuggestionType.category,
-        icon: Icons.category,
-        subtitle: 'Популярная категория',
-        data: {'category': 'Фотографы'},
-      ),
-      SearchSuggestion(
-        text: 'Москва',
-        type: SuggestionType.location,
-        icon: Icons.location_on,
-        subtitle: 'Популярный город',
-        data: {'city': 'Москва'},
-      ),
-      SearchSuggestion(
-        text: 'Свадьба',
-        type: SuggestionType.service,
-        icon: Icons.event,
-        subtitle: 'Популярная услуга',
-        data: {'service': 'Свадьба'},
-      ),
-    ];
-  }
+  List<SearchSuggestion> _getPopularSuggestions() => [
+        SearchSuggestion(
+          text: 'Ведущие',
+          type: SuggestionType.category,
+          icon: Icons.category,
+          subtitle: 'Популярная категория',
+          data: {'category': 'Ведущие'},
+        ),
+        SearchSuggestion(
+          text: 'Фотографы',
+          type: SuggestionType.category,
+          icon: Icons.category,
+          subtitle: 'Популярная категория',
+          data: {'category': 'Фотографы'},
+        ),
+        SearchSuggestion(
+          text: 'Москва',
+          type: SuggestionType.location,
+          icon: Icons.location_on,
+          subtitle: 'Популярный город',
+          data: {'city': 'Москва'},
+        ),
+        SearchSuggestion(
+          text: 'Свадьба',
+          type: SuggestionType.service,
+          icon: Icons.event,
+          subtitle: 'Популярная услуга',
+          data: {'service': 'Свадьба'},
+        ),
+      ];
 
   /// Получить специалистов с фильтрами
   Future<List<Map<String, dynamic>>> searchSpecialists({
@@ -155,15 +190,18 @@ class SmartSearchService {
 
       // Фильтр по цене
       if (minPrice != null) {
-        queryBuilder = queryBuilder.where('price', isGreaterThanOrEqualTo: minPrice);
+        queryBuilder =
+            queryBuilder.where('price', isGreaterThanOrEqualTo: minPrice);
       }
       if (maxPrice != null) {
-        queryBuilder = queryBuilder.where('price', isLessThanOrEqualTo: maxPrice);
+        queryBuilder =
+            queryBuilder.where('price', isLessThanOrEqualTo: maxPrice);
       }
 
       // Фильтр по рейтингу
       if (minRating != null) {
-        queryBuilder = queryBuilder.where('rating', isGreaterThanOrEqualTo: minRating);
+        queryBuilder =
+            queryBuilder.where('rating', isGreaterThanOrEqualTo: minRating);
       }
 
       // Сортировка
@@ -189,18 +227,20 @@ class SmartSearchService {
       final specialists = <Map<String, dynamic>>[];
 
       for (final doc in snapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data()! as Map<String, dynamic>;
         data['id'] = doc.id;
 
         // Фильтр по поисковому запросу
         if (query != null && query.isNotEmpty) {
           final searchLower = query.toLowerCase();
           final name = ((data['name'] as String?) ?? '').toLowerCase();
-          final description = ((data['description'] as String?) ?? '').toLowerCase();
-          final categoryName = ((data['category'] as String?) ?? '').toLowerCase();
+          final description =
+              ((data['description'] as String?) ?? '').toLowerCase();
+          final categoryName =
+              ((data['category'] as String?) ?? '').toLowerCase();
 
-          if (!name.contains(searchLower) && 
-              !description.contains(searchLower) && 
+          if (!name.contains(searchLower) &&
+              !description.contains(searchLower) &&
               !categoryName.contains(searchLower)) {
             continue;
           }
@@ -210,7 +250,6 @@ class SmartSearchService {
       }
 
       return specialists;
-
     } on Exception catch (e) {
       debugPrint('Ошибка поиска специалистов: $e');
       return [];
@@ -231,7 +270,6 @@ class SmartSearchService {
         data['id'] = doc.id;
         return data;
       }).toList();
-
     } on Exception catch (e) {
       debugPrint('Ошибка получения популярных специалистов: $e');
       return [];
@@ -262,12 +300,6 @@ class SmartSearchService {
 
 /// Подсказка для поиска
 class SearchSuggestion {
-  final String text;
-  final SuggestionType type;
-  final IconData icon;
-  final String subtitle;
-  final Map<String, dynamic> data;
-
   SearchSuggestion({
     required this.text,
     required this.type,
@@ -275,6 +307,11 @@ class SearchSuggestion {
     required this.subtitle,
     required this.data,
   });
+  final String text;
+  final SuggestionType type;
+  final IconData icon;
+  final String subtitle;
+  final Map<String, dynamic> data;
 }
 
 /// Тип подсказки

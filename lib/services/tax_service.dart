@@ -24,8 +24,10 @@ class TaxService {
     double? customTaxRate,
   }) async {
     try {
-      AppLogger.logI('Начинаем расчёт налога для специалиста $specialistId',
-          'tax_service',);
+      AppLogger.logI(
+        'Начинаем расчёт налога для специалиста $specialistId',
+        'tax_service',
+      );
 
       // Определяем налоговую ставку
       final taxRate = customTaxRate ?? _getTaxRate(taxType, income);
@@ -48,7 +50,9 @@ class TaxService {
       );
 
       AppLogger.logI(
-          'Налог рассчитан: ${taxInfo.formattedTaxAmount}', 'tax_service',);
+        'Налог рассчитан: ${taxInfo.formattedTaxAmount}',
+        'tax_service',
+      );
       return taxInfo;
     } on Exception catch (e) {
       AppLogger.logE('Ошибка расчёта налога', 'tax_service', e);
@@ -84,7 +88,9 @@ class TaxService {
   Future<void> saveTaxInfo(TaxInfo taxInfo) async {
     try {
       AppLogger.logI(
-          'Сохраняем информацию о налоге ${taxInfo.id}', 'tax_service',);
+        'Сохраняем информацию о налоге ${taxInfo.id}',
+        'tax_service',
+      );
 
       await _db.collection('tax_info').doc(taxInfo.id).set(taxInfo.toMap());
 
@@ -99,8 +105,9 @@ class TaxService {
   Future<List<TaxInfo>> getTaxInfoForSpecialist(String specialistId) async {
     try {
       AppLogger.logI(
-          'Получаем налоговую информацию для специалиста $specialistId',
-          'tax_service',);
+        'Получаем налоговую информацию для специалиста $specialistId',
+        'tax_service',
+      );
 
       final querySnapshot = await _db
           .collection('tax_info')
@@ -111,7 +118,9 @@ class TaxService {
       final taxInfoList = querySnapshot.docs.map(TaxInfo.fromDocument).toList();
 
       AppLogger.logI(
-          'Получено ${taxInfoList.length} записей о налогах', 'tax_service',);
+        'Получено ${taxInfoList.length} записей о налогах',
+        'tax_service',
+      );
       return taxInfoList;
     } on Exception catch (e) {
       AppLogger.logE('Ошибка получения налоговой информации', 'tax_service', e);
@@ -126,7 +135,9 @@ class TaxService {
   }) async {
     try {
       AppLogger.logI(
-          'Получаем налоговую сводку за период $period', 'tax_service',);
+        'Получаем налоговую сводку за период $period',
+        'tax_service',
+      );
 
       final taxRecords = await _db
           .collection('tax_info')
@@ -168,8 +179,9 @@ class TaxService {
       );
 
       AppLogger.logI(
-          'Налоговая сводка создана: ${summary.formattedTotalTaxAmount}',
-          'tax_service',);
+        'Налоговая сводка создана: ${summary.formattedTotalTaxAmount}',
+        'tax_service',
+      );
       return summary;
     } on Exception catch (e) {
       AppLogger.logE('Ошибка получения налоговой сводки', 'tax_service', e);
@@ -210,8 +222,10 @@ class TaxService {
       final querySnapshot = await _db
           .collection('tax_info')
           .where('isPaid', isEqualTo: false)
-          .where('nextReminderDate',
-              isLessThanOrEqualTo: Timestamp.fromDate(now),)
+          .where(
+            'nextReminderDate',
+            isLessThanOrEqualTo: Timestamp.fromDate(now),
+          )
           .get();
 
       final reminders = querySnapshot.docs.map(TaxInfo.fromDocument).toList();
@@ -228,7 +242,9 @@ class TaxService {
   Future<void> sendTaxReminder(String taxInfoId) async {
     try {
       AppLogger.logI(
-          'Отправляем напоминание о налоге $taxInfoId', 'tax_service',);
+        'Отправляем напоминание о налоге $taxInfoId',
+        'tax_service',
+      );
 
       // Обновляем статус напоминания
       await _db.collection('tax_info').doc(taxInfoId).update({
@@ -256,8 +272,10 @@ class TaxService {
     required double earnings,
   }) async {
     try {
-      AppLogger.logI('Рассчитываем налог с дохода $earnings за период $period',
-          'tax_service',);
+      AppLogger.logI(
+        'Рассчитываем налог с дохода $earnings за период $period',
+        'tax_service',
+      );
 
       final taxInfo = await calculateTax(
         userId: userId,
@@ -281,8 +299,9 @@ class TaxService {
   Future<Map<String, dynamic>> getTaxStatistics(String specialistId) async {
     try {
       AppLogger.logI(
-          'Получаем статистику по налогам для специалиста $specialistId',
-          'tax_service',);
+        'Получаем статистику по налогам для специалиста $specialistId',
+        'tax_service',
+      );
 
       final taxRecords = await getTaxInfoForSpecialist(specialistId);
 
@@ -332,8 +351,9 @@ class TaxService {
       };
 
       AppLogger.logI(
-          'Статистика получена: ${statistics['recordsCount']} записей',
-          'tax_service',);
+        'Статистика получена: ${statistics['recordsCount']} записей',
+        'tax_service',
+      );
       return statistics;
     } on Exception catch (e) {
       AppLogger.logE('Ошибка получения статистики', 'tax_service', e);
@@ -345,7 +365,9 @@ class TaxService {
   Future<void> updateTaxInfo(TaxInfo taxInfo) async {
     try {
       AppLogger.logI(
-          'Обновляем налоговую информацию ${taxInfo.id}', 'tax_service',);
+        'Обновляем налоговую информацию ${taxInfo.id}',
+        'tax_service',
+      );
 
       final updatedTaxInfo = taxInfo.copyWith(
         updatedAt: DateTime.now(),
@@ -359,7 +381,10 @@ class TaxService {
       AppLogger.logI('Налоговая информация обновлена', 'tax_service');
     } on Exception catch (e) {
       AppLogger.logE(
-          'Ошибка обновления налоговой информации', 'tax_service', e,);
+        'Ошибка обновления налоговой информации',
+        'tax_service',
+        e,
+      );
       throw Exception('Не удалось обновить налоговую информацию: $e');
     }
   }

@@ -1,47 +1,57 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../services/enhanced_notifications_service.dart';
 import '../models/enhanced_notification.dart';
+import '../services/enhanced_notifications_service.dart';
 
 /// Провайдер сервиса уведомлений
-final enhancedNotificationsServiceProvider = Provider<EnhancedNotificationsService>((ref) {
-  return EnhancedNotificationsService();
-});
+final enhancedNotificationsServiceProvider =
+    Provider<EnhancedNotificationsService>(
+        (ref) => EnhancedNotificationsService());
 
 /// Провайдер уведомлений пользователя
-final notificationsProvider = FutureProvider.family<List<EnhancedNotification>, String>((ref, userId) async {
+final notificationsProvider =
+    FutureProvider.family<List<EnhancedNotification>, String>(
+        (ref, userId) async {
   final service = ref.read(enhancedNotificationsServiceProvider);
-  return await service.getNotifications(userId: userId);
+  return service.getNotifications(userId: userId);
 });
 
 /// Провайдер непрочитанных уведомлений
-final unreadNotificationsProvider = FutureProvider.family<List<EnhancedNotification>, String>((ref, userId) async {
+final unreadNotificationsProvider =
+    FutureProvider.family<List<EnhancedNotification>, String>(
+        (ref, userId) async {
   final service = ref.read(enhancedNotificationsServiceProvider);
-  return await service.getUnreadNotifications(userId: userId);
+  return service.getUnreadNotifications(userId: userId);
 });
 
 /// Провайдер архивированных уведомлений
-final archivedNotificationsProvider = FutureProvider.family<List<EnhancedNotification>, String>((ref, userId) async {
+final archivedNotificationsProvider =
+    FutureProvider.family<List<EnhancedNotification>, String>(
+        (ref, userId) async {
   final service = ref.read(enhancedNotificationsServiceProvider);
-  return await service.getNotifications(userId: userId, includeArchived: true);
+  return service.getNotifications(userId: userId, includeArchived: true);
 });
 
 /// Провайдер уведомления по ID
-final notificationProvider = FutureProvider.family<EnhancedNotification?, String>((ref, notificationId) async {
+final notificationProvider =
+    FutureProvider.family<EnhancedNotification?, String>(
+        (ref, notificationId) async {
   final service = ref.read(enhancedNotificationsServiceProvider);
-  return await service.getNotificationById(notificationId);
+  return service.getNotificationById(notificationId);
 });
 
 /// Провайдер статистики уведомлений
-final notificationStatsProvider = FutureProvider.family<NotificationStats, String>((ref, userId) async {
+final notificationStatsProvider =
+    FutureProvider.family<NotificationStats, String>((ref, userId) async {
   final service = ref.read(enhancedNotificationsServiceProvider);
-  return await service.getNotificationStats(userId);
+  return service.getNotificationStats(userId);
 });
 
 /// Провайдер состояния создания уведомления
-final createNotificationStateProvider = StateNotifierProvider<CreateNotificationStateNotifier, CreateNotificationState>((ref) {
-  return CreateNotificationStateNotifier(ref.read(enhancedNotificationsServiceProvider));
-});
+final createNotificationStateProvider = StateNotifierProvider<
+        CreateNotificationStateNotifier, CreateNotificationState>(
+    (ref) => CreateNotificationStateNotifier(
+        ref.read(enhancedNotificationsServiceProvider)));
 
 /// Состояние создания уведомления
 class CreateNotificationState {
@@ -59,18 +69,19 @@ class CreateNotificationState {
     bool? isLoading,
     String? error,
     bool? success,
-  }) {
-    return CreateNotificationState(
-      isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
-      success: success ?? this.success,
-    );
-  }
+  }) =>
+      CreateNotificationState(
+        isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error,
+        success: success ?? this.success,
+      );
 }
 
 /// Нотификатор состояния создания уведомления
-class CreateNotificationStateNotifier extends StateNotifier<CreateNotificationState> {
-  CreateNotificationStateNotifier(this._service) : super(const CreateNotificationState());
+class CreateNotificationStateNotifier
+    extends StateNotifier<CreateNotificationState> {
+  CreateNotificationStateNotifier(this._service)
+      : super(const CreateNotificationState());
 
   final EnhancedNotificationsService _service;
 
@@ -89,7 +100,7 @@ class CreateNotificationStateNotifier extends StateNotifier<CreateNotificationSt
     String? senderAvatar,
     DateTime? expiresAt,
   }) async {
-    state = state.copyWith(isLoading: true, error: null, success: false);
+    state = state.copyWith(isLoading: true, success: false);
 
     try {
       await _service.createNotification(
@@ -123,12 +134,13 @@ class CreateNotificationStateNotifier extends StateNotifier<CreateNotificationSt
 }
 
 /// Провайдер состояния уведомлений
-final notificationStateProvider = StateNotifierProvider.family<NotificationStateNotifier, NotificationState, String>((ref, notificationId) {
-  return NotificationStateNotifier(
+final notificationStateProvider = StateNotifierProvider.family<
+    NotificationStateNotifier, NotificationState, String>(
+  (ref, notificationId) => NotificationStateNotifier(
     ref.read(enhancedNotificationsServiceProvider),
     notificationId,
-  );
-});
+  ),
+);
 
 /// Состояние уведомления
 class NotificationState {
@@ -146,18 +158,18 @@ class NotificationState {
     bool? isRead,
     bool? isArchived,
     bool? isLoading,
-  }) {
-    return NotificationState(
-      isRead: isRead ?? this.isRead,
-      isArchived: isArchived ?? this.isArchived,
-      isLoading: isLoading ?? this.isLoading,
-    );
-  }
+  }) =>
+      NotificationState(
+        isRead: isRead ?? this.isRead,
+        isArchived: isArchived ?? this.isArchived,
+        isLoading: isLoading ?? this.isLoading,
+      );
 }
 
 /// Нотификатор состояния уведомления
 class NotificationStateNotifier extends StateNotifier<NotificationState> {
-  NotificationStateNotifier(this._service, this._notificationId) : super(const NotificationState());
+  NotificationStateNotifier(this._service, this._notificationId)
+      : super(const NotificationState());
 
   final EnhancedNotificationsService _service;
   final String _notificationId;
@@ -213,9 +225,9 @@ class NotificationStateNotifier extends StateNotifier<NotificationState> {
 }
 
 /// Провайдер настроек уведомлений
-final notificationSettingsProvider = StateNotifierProvider<NotificationSettingsNotifier, NotificationSettings>((ref) {
-  return NotificationSettingsNotifier();
-});
+final notificationSettingsProvider =
+    StateNotifierProvider<NotificationSettingsNotifier, NotificationSettings>(
+        (ref) => NotificationSettingsNotifier());
 
 /// Настройки уведомлений
 class NotificationSettings {
@@ -245,17 +257,16 @@ class NotificationSettings {
     Map<NotificationType, bool>? types,
     NotificationFrequency? frequency,
     QuietHours? quietHours,
-  }) {
-    return NotificationSettings(
-      enabled: enabled ?? this.enabled,
-      sound: sound ?? this.sound,
-      vibration: vibration ?? this.vibration,
-      badge: badge ?? this.badge,
-      types: types ?? this.types,
-      frequency: frequency ?? this.frequency,
-      quietHours: quietHours ?? this.quietHours,
-    );
-  }
+  }) =>
+      NotificationSettings(
+        enabled: enabled ?? this.enabled,
+        sound: sound ?? this.sound,
+        vibration: vibration ?? this.vibration,
+        badge: badge ?? this.badge,
+        types: types ?? this.types,
+        frequency: frequency ?? this.frequency,
+        quietHours: quietHours ?? this.quietHours,
+      );
 }
 
 /// Частота уведомлений
@@ -314,15 +325,14 @@ class QuietHours {
     int? startMinute,
     int? endHour,
     int? endMinute,
-  }) {
-    return QuietHours(
-      enabled: enabled ?? this.enabled,
-      startHour: startHour ?? this.startHour,
-      startMinute: startMinute ?? this.startMinute,
-      endHour: endHour ?? this.endHour,
-      endMinute: endMinute ?? this.endMinute,
-    );
-  }
+  }) =>
+      QuietHours(
+        enabled: enabled ?? this.enabled,
+        startHour: startHour ?? this.startHour,
+        startMinute: startMinute ?? this.startMinute,
+        endHour: endHour ?? this.endHour,
+        endMinute: endMinute ?? this.endMinute,
+      );
 }
 
 /// Нотификатор настроек уведомлений
@@ -359,4 +369,3 @@ class NotificationSettingsNotifier extends StateNotifier<NotificationSettings> {
     state = state.copyWith(quietHours: quietHours);
   }
 }
-

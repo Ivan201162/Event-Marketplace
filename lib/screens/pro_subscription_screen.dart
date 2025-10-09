@@ -7,15 +7,15 @@ import '../widgets/pro_subscription_widgets.dart';
 
 /// Экран управления PRO подписками
 class ProSubscriptionScreen extends ConsumerStatefulWidget {
-  final String userId;
-
   const ProSubscriptionScreen({
     super.key,
     required this.userId,
   });
+  final String userId;
 
   @override
-  ConsumerState<ProSubscriptionScreen> createState() => _ProSubscriptionScreenState();
+  ConsumerState<ProSubscriptionScreen> createState() =>
+      _ProSubscriptionScreenState();
 }
 
 class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
@@ -26,10 +26,12 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    
+
     // Загрузить подписку пользователя
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(subscriptionStateProvider.notifier).loadUserSubscription(widget.userId);
+      ref
+          .read(subscriptionStateProvider.notifier)
+          .loadUserSubscription(widget.userId);
     });
   }
 
@@ -40,55 +42,54 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('PRO Подписка'),
-        bottom: TabBar(
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('PRO Подписка'),
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(text: 'Текущая', icon: Icon(Icons.star)),
+              Tab(text: 'Планы', icon: Icon(Icons.credit_card)),
+              Tab(text: 'История', icon: Icon(Icons.history)),
+            ],
+          ),
+        ),
+        body: TabBarView(
           controller: _tabController,
-          tabs: const [
-            Tab(text: 'Текущая', icon: Icon(Icons.star)),
-            Tab(text: 'Планы', icon: Icon(Icons.credit_card)),
-            Tab(text: 'История', icon: Icon(Icons.history)),
+          children: [
+            // Текущая подписка
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  CurrentSubscriptionWidget(userId: widget.userId),
+                  const SizedBox(height: 24),
+                  const SubscriptionStatsWidget(),
+                ],
+              ),
+            ),
+
+            // Планы подписки
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: SubscriptionPlansWidget(
+                userId: widget.userId,
+                onPlanSelected: _handlePlanSelected,
+              ),
+            ),
+
+            // История платежей
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: _buildPaymentHistoryTab(),
+            ),
           ],
         ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          // Текущая подписка
-          SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                CurrentSubscriptionWidget(userId: widget.userId),
-                const SizedBox(height: 24),
-                const SubscriptionStatsWidget(),
-              ],
-            ),
-          ),
-          
-          // Планы подписки
-          SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: SubscriptionPlansWidget(
-              userId: widget.userId,
-              onPlanSelected: _handlePlanSelected,
-            ),
-          ),
-          
-          // История платежей
-          SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: _buildPaymentHistoryTab(),
-          ),
-        ],
-      ),
-    );
-  }
+      );
 
   Widget _buildPaymentHistoryTab() {
-    final subscriptionAsync = ref.watch(userSubscriptionProvider(widget.userId));
+    final subscriptionAsync =
+        ref.watch(userSubscriptionProvider(widget.userId));
 
     return subscriptionAsync.when(
       data: (subscription) {
@@ -134,20 +135,22 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            ...plan.features.map((feature) => Padding(
-              padding: const EdgeInsets.only(bottom: 4),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.check_circle,
-                    color: Colors.green,
-                    size: 16,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(child: Text(feature)),
-                ],
+            ...plan.features.map(
+              (feature) => Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.check_circle,
+                      color: Colors.green,
+                      size: 16,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(child: Text(feature)),
+                  ],
+                ),
               ),
-            )),
+            ),
           ],
         ),
         actions: [
@@ -239,14 +242,15 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
     // Имитация обработки платежа
     Future.delayed(const Duration(seconds: 2), () {
       Navigator.of(context).pop(); // Закрыть диалог загрузки
-      
+
       // Создать подписку
       ref.read(subscriptionStateProvider.notifier).createSubscription(
-        userId: widget.userId,
-        plan: plan,
-        paymentMethodId: 'mock_payment_method_$paymentMethod',
-        isTrial: plan == SubscriptionPlan.basic, // Базовый план с пробным периодом
-      );
+            userId: widget.userId,
+            plan: plan,
+            paymentMethodId: 'mock_payment_method_$paymentMethod',
+            isTrial: plan ==
+                SubscriptionPlan.basic, // Базовый план с пробным периодом
+          );
 
       // Показать результат
       _showPaymentResult(true);
@@ -259,7 +263,7 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
       builder: (context) => AlertDialog(
         title: Text(success ? 'Успешно!' : 'Ошибка'),
         content: Text(
-          success 
+          success
               ? 'Подписка успешно оформлена!'
               : 'Произошла ошибка при оформлении подписки.',
         ),
@@ -279,4 +283,3 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
     );
   }
 }
-

@@ -34,7 +34,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
   void initState() {
     super.initState();
     if (widget.initialReview != null) {
-        _rating = widget.initialReview!.rating.toDouble();
+      _rating = widget.initialReview!.rating.toDouble();
       _commentController.text = widget.initialReview!.text;
     }
   }

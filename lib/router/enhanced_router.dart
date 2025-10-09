@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../screens/splash_screen.dart';
 import '../screens/auth/auth_screen.dart';
-import '../screens/optimized_main_screen.dart';
-import '../screens/home_screen.dart';
-import '../screens/enhanced_feed_screen.dart';
-import '../screens/requests_screen.dart';
+import '../screens/auth/phone_verification_screen.dart';
+import '../screens/calendar_reminders_screen.dart';
 import '../screens/chats_screen.dart';
+import '../screens/enhanced_chat_screen.dart';
+import '../screens/enhanced_feed_screen.dart';
 import '../screens/enhanced_ideas_screen.dart';
+import '../screens/enhanced_order_screen.dart';
+import '../screens/enhanced_specialist_profile_screen.dart';
+import '../screens/event_organizer_screen.dart';
+import '../screens/home_screen.dart';
+import '../screens/optimized_main_screen.dart';
 import '../screens/profile_screen.dart';
 import '../screens/promotions_screen.dart';
+import '../screens/requests_screen.dart';
 import '../screens/settings_screen.dart';
-import '../screens/auth/phone_verification_screen.dart';
-import '../screens/enhanced_specialist_profile_screen.dart';
-import '../screens/enhanced_order_screen.dart';
-import '../screens/enhanced_chat_screen.dart';
+import '../screens/splash_screen.dart';
 import '../screens/testing_monitoring_screen.dart';
-import '../screens/event_organizer_screen.dart';
-import '../screens/calendar_reminders_screen.dart';
 
 /// Улучшенный роутер с поддержкой свайпов и анимаций
 class EnhancedRouter {
@@ -245,20 +245,18 @@ class EnhancedRouter {
     Widget child,
     GoRouterState state, {
     required TransitionType transitionType,
-  }) {
-    return CustomTransitionPage<void>(
-      key: state.pageKey,
-      child: child,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return _buildTransition(
+  }) =>
+      CustomTransitionPage<void>(
+        key: state.pageKey,
+        child: child,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+            _buildTransition(
           animation,
           secondaryAnimation,
           child,
           transitionType,
-        );
-      },
-    );
-  }
+        ),
+      );
 
   /// Создать переход
   static Widget _buildTransition(
@@ -277,7 +275,7 @@ class EnhancedRouter {
         return SlideTransition(
           position: animation.drive(
             Tween<Offset>(
-              begin: const Offset(1.0, 0.0),
+              begin: const Offset(1, 0),
               end: Offset.zero,
             ).chain(CurveTween(curve: Curves.easeInOut)),
           ),
@@ -287,7 +285,7 @@ class EnhancedRouter {
         return SlideTransition(
           position: animation.drive(
             Tween<Offset>(
-              begin: const Offset(-1.0, 0.0),
+              begin: const Offset(-1, 0),
               end: Offset.zero,
             ).chain(CurveTween(curve: Curves.easeInOut)),
           ),
@@ -300,7 +298,7 @@ class EnhancedRouter {
         return SlideTransition(
           position: animation.drive(
             Tween<Offset>(
-              begin: const Offset(0.0, 1.0),
+              begin: const Offset(0, 1),
               end: Offset.zero,
             ).chain(CurveTween(curve: Curves.easeInOut)),
           ),
@@ -313,8 +311,8 @@ class EnhancedRouter {
         return ScaleTransition(
           scale: animation.drive(
             Tween<double>(
-              begin: 0.0,
-              end: 1.0,
+              begin: 0,
+              end: 1,
             ).chain(CurveTween(curve: Curves.easeInOut)),
           ),
           child: child,
@@ -323,8 +321,8 @@ class EnhancedRouter {
         return RotationTransition(
           turns: animation.drive(
             Tween<double>(
-              begin: 0.0,
-              end: 1.0,
+              begin: 0,
+              end: 1,
             ).chain(CurveTween(curve: Curves.easeInOut)),
           ),
           child: child,
@@ -353,47 +351,45 @@ class ErrorScreen extends StatelessWidget {
   final String error;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Ошибка'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red,
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Произошла ошибка',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () {
-                context.go('/main');
-              },
-              child: const Text('На главную'),
-            ),
-          ],
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Ошибка'),
         ),
-      ),
-    );
-  }
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.error_outline,
+                size: 64,
+                color: Colors.red,
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Произошла ошибка',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                error,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () {
+                  context.go('/main');
+                },
+                child: const Text('На главную'),
+              ),
+            ],
+          ),
+        ),
+      );
 }

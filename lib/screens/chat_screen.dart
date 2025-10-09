@@ -225,7 +225,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                             SizedBox(height: 16),
                             Text(
                               'Начните общение',
-                              style: TextStyle(fontSize: 18, color: Colors.grey),
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.grey),
                             ),
                             SizedBox(height: 8),
                             Text(
@@ -572,7 +573,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   // TODO(developer): Реализовать пересылку
                 },
               ),
-              if (message.senderId == ref.read(currentUserProvider).value?.uid) ...[
+              if (message.senderId ==
+                  ref.read(currentUserProvider).value?.uid) ...[
                 ListTile(
                   leading: const Icon(Icons.edit),
                   title: const Text('Редактировать'),

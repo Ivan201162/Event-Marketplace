@@ -8,7 +8,6 @@ class SimpleIdeasScreen extends ConsumerWidget {
   const SimpleIdeasScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return const EnhancedIdeasScreen();
-  }
+  Widget build(BuildContext context, WidgetRef ref) =>
+      const EnhancedIdeasScreen();
 }

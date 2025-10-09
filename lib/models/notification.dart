@@ -41,7 +41,10 @@ class Notification {
       ),
       data: data['data'],
       isRead: data['isRead'] ?? false,
-      createdAt: (data['createdAt'] as Timestamp? ?? data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      createdAt:
+          (data['createdAt'] as Timestamp? ?? data['timestamp'] as Timestamp?)
+                  ?.toDate() ??
+              DateTime.now(),
       isPinned: data['isPinned'] ?? false,
       senderId: data['senderId'],
       targetId: data['targetId'],
@@ -61,17 +64,17 @@ class Notification {
 
   /// Преобразование в Map для Firestore
   Map<String, dynamic> toFirestore() => {
-      'userId': userId,
-      'title': title,
-      'body': body,
-      'type': type.name,
-      'data': data,
-      'isRead': isRead,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'isPinned': isPinned,
-      'senderId': senderId,
-      'targetId': targetId,
-    };
+        'userId': userId,
+        'title': title,
+        'body': body,
+        'type': type.name,
+        'data': data,
+        'isRead': isRead,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'isPinned': isPinned,
+        'senderId': senderId,
+        'targetId': targetId,
+      };
 
   /// Копирование с изменениями
   Notification copyWith({
@@ -86,19 +89,20 @@ class Notification {
     bool? isPinned,
     String? senderId,
     String? targetId,
-  }) => Notification(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      title: title ?? this.title,
-      body: body ?? this.body,
-      type: type ?? this.type,
-      data: data ?? this.data,
-      isRead: isRead ?? this.isRead,
-      createdAt: createdAt ?? this.createdAt,
-      isPinned: isPinned ?? this.isPinned,
-      senderId: senderId ?? this.senderId,
-      targetId: targetId ?? this.targetId,
-    );
+  }) =>
+      Notification(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        title: title ?? this.title,
+        body: body ?? this.body,
+        type: type ?? this.type,
+        data: data ?? this.data,
+        isRead: isRead ?? this.isRead,
+        createdAt: createdAt ?? this.createdAt,
+        isPinned: isPinned ?? this.isPinned,
+        senderId: senderId ?? this.senderId,
+        targetId: targetId ?? this.targetId,
+      );
 
   /// Получение иконки для типа уведомления
   String get icon {

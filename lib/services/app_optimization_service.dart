@@ -1,6 +1,6 @@
-import 'dart:io';
 import 'dart:developer' as developer;
-import 'package:flutter/foundation.dart';
+import 'dart:io';
+
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -8,28 +8,30 @@ import 'error_logging_service.dart';
 
 /// Сервис для оптимизации веса приложения
 class AppOptimizationService {
-  static final AppOptimizationService _instance = AppOptimizationService._internal();
   factory AppOptimizationService() => _instance;
   AppOptimizationService._internal();
+  static final AppOptimizationService _instance =
+      AppOptimizationService._internal();
 
   final ErrorLoggingService _errorLogger = ErrorLoggingService();
 
   /// Получить размер кэша приложения
   Future<Map<String, dynamic>> getCacheSize() async {
     try {
-      final Directory tempDir = await getTemporaryDirectory();
-      final Directory appDocDir = await getApplicationDocumentsDirectory();
-      
+      final tempDir = await getTemporaryDirectory();
+      final appDocDir = await getApplicationDocumentsDirectory();
+
       final tempSize = await _getDirectorySize(tempDir);
       final docSize = await _getDirectorySize(appDocDir);
-      
+
       return {
         'tempCacheSize': tempSize,
         'documentsSize': docSize,
         'totalSize': tempSize + docSize,
         'tempCacheSizeMB': (tempSize / (1024 * 1024)).toStringAsFixed(2),
         'documentsSizeMB': (docSize / (1024 * 1024)).toStringAsFixed(2),
-        'totalSizeMB': ((tempSize + docSize) / (1024 * 1024)).toStringAsFixed(2),
+        'totalSizeMB':
+            ((tempSize + docSize) / (1024 * 1024)).toStringAsFixed(2),
       };
     } catch (e, stackTrace) {
       await _errorLogger.logError(
@@ -44,23 +46,24 @@ class AppOptimizationService {
   /// Очистить кэш приложения
   Future<Map<String, dynamic>> clearCache() async {
     try {
-      final Directory tempDir = await getTemporaryDirectory();
-      final Directory appDocDir = await getApplicationDocumentsDirectory();
-      
+      final tempDir = await getTemporaryDirectory();
+      final appDocDir = await getApplicationDocumentsDirectory();
+
       final tempSizeBefore = await _getDirectorySize(tempDir);
       final docSizeBefore = await _getDirectorySize(appDocDir);
-      
+
       // Очищаем временные файлы
       await _clearDirectory(tempDir);
-      
+
       // Очищаем кэш изображений (но сохраняем важные данные)
       await _clearImageCache(appDocDir);
-      
+
       final tempSizeAfter = await _getDirectorySize(tempDir);
       final docSizeAfter = await _getDirectorySize(appDocDir);
-      
-      final freedSpace = (tempSizeBefore + docSizeBefore) - (tempSizeAfter + docSizeAfter);
-      
+
+      final freedSpace =
+          (tempSizeBefore + docSizeBefore) - (tempSizeAfter + docSizeAfter);
+
       return {
         'success': true,
         'freedSpace': freedSpace,
@@ -91,13 +94,14 @@ class AppOptimizationService {
 
       // Оптимизация настроек изображений
       optimizations['imageQuality'] = await _optimizeImageSettings(prefs);
-      
+
       // Оптимизация настроек кэширования
       optimizations['cacheSettings'] = await _optimizeCacheSettings(prefs);
-      
+
       // Оптимизация настроек уведомлений
-      optimizations['notificationSettings'] = await _optimizeNotificationSettings(prefs);
-      
+      optimizations['notificationSettings'] =
+          await _optimizeNotificationSettings(prefs);
+
       // Оптимизация настроек синхронизации
       optimizations['syncSettings'] = await _optimizeSyncSettings(prefs);
 
@@ -128,60 +132,65 @@ class AppOptimizationService {
   Future<List<Map<String, dynamic>>> getOptimizationRecommendations() async {
     try {
       final recommendations = <Map<String, dynamic>>[];
-      
+
       // Проверяем размер кэша
       final cacheSize = await getCacheSize();
       final totalSizeMB = double.tryParse(cacheSize['totalSizeMB'] ?? '0') ?? 0;
-      
+
       if (totalSizeMB > 100) {
         recommendations.add({
           'type': 'cache_cleanup',
           'priority': 'high',
           'title': 'Очистить кэш',
-          'description': 'Размер кэша составляет ${cacheSize['totalSizeMB']} МБ. Рекомендуется очистка.',
+          'description':
+              'Размер кэша составляет ${cacheSize['totalSizeMB']} МБ. Рекомендуется очистка.',
           'action': 'clear_cache',
           'estimatedSavings': '${(totalSizeMB * 0.7).toStringAsFixed(1)} МБ',
         });
       }
-      
+
       // Проверяем настройки изображений
       final prefs = await SharedPreferences.getInstance();
       final imageQuality = prefs.getInt('image_quality') ?? 80;
-      
+
       if (imageQuality > 90) {
         recommendations.add({
           'type': 'image_quality',
           'priority': 'medium',
           'title': 'Снизить качество изображений',
-          'description': 'Высокое качество изображений (${imageQuality}%) увеличивает размер приложения.',
+          'description':
+              'Высокое качество изображений ($imageQuality%) увеличивает размер приложения.',
           'action': 'reduce_image_quality',
           'estimatedSavings': '20-30% размера изображений',
         });
       }
-      
+
       // Проверяем настройки автосинхронизации
       final autoSync = prefs.getBool('auto_sync') ?? true;
-      
+
       if (autoSync) {
         recommendations.add({
           'type': 'sync_settings',
           'priority': 'low',
           'title': 'Оптимизировать синхронизацию',
-          'description': 'Автоматическая синхронизация может расходовать трафик и батарею.',
+          'description':
+              'Автоматическая синхронизация может расходовать трафик и батарею.',
           'action': 'optimize_sync',
           'estimatedSavings': 'Экономия трафика и батареи',
         });
       }
-      
+
       // Проверяем настройки уведомлений
-      final notificationFrequency = prefs.getString('notification_frequency') ?? 'all';
-      
+      final notificationFrequency =
+          prefs.getString('notification_frequency') ?? 'all';
+
       if (notificationFrequency == 'all') {
         recommendations.add({
           'type': 'notifications',
           'priority': 'low',
           'title': 'Настроить уведомления',
-          'description': 'Слишком частые уведомления могут влиять на производительность.',
+          'description':
+              'Слишком частые уведомления могут влиять на производительность.',
           'action': 'optimize_notifications',
           'estimatedSavings': 'Улучшение производительности',
         });
@@ -235,7 +244,7 @@ class AppOptimizationService {
 
   /// Получить размер директории
   Future<int> _getDirectorySize(Directory directory) async {
-    int size = 0;
+    var size = 0;
     try {
       if (await directory.exists()) {
         await for (final entity in directory.list(recursive: true)) {
@@ -281,13 +290,15 @@ class AppOptimizationService {
   }
 
   /// Оптимизировать настройки изображений
-  Future<Map<String, dynamic>> _optimizeImageSettings(SharedPreferences prefs) async {
+  Future<Map<String, dynamic>> _optimizeImageSettings(
+      SharedPreferences prefs) async {
     try {
       // Устанавливаем оптимальное качество изображений
       await prefs.setInt('image_quality', 80);
       await prefs.setBool('compress_images', true);
-      await prefs.setInt('max_image_size', 1024); // Максимальный размер в пикселях
-      
+      await prefs.setInt(
+          'max_image_size', 1024); // Максимальный размер в пикселях
+
       return {
         'imageQuality': 80,
         'compressImages': true,
@@ -299,13 +310,14 @@ class AppOptimizationService {
   }
 
   /// Оптимизировать настройки кэширования
-  Future<Map<String, dynamic>> _optimizeCacheSettings(SharedPreferences prefs) async {
+  Future<Map<String, dynamic>> _optimizeCacheSettings(
+      SharedPreferences prefs) async {
     try {
       // Устанавливаем оптимальные настройки кэширования
       await prefs.setInt('cache_duration_hours', 24);
       await prefs.setInt('max_cache_size_mb', 50);
       await prefs.setBool('auto_clear_cache', true);
-      
+
       return {
         'cacheDurationHours': 24,
         'maxCacheSizeMB': 50,
@@ -317,13 +329,14 @@ class AppOptimizationService {
   }
 
   /// Оптимизировать настройки уведомлений
-  Future<Map<String, dynamic>> _optimizeNotificationSettings(SharedPreferences prefs) async {
+  Future<Map<String, dynamic>> _optimizeNotificationSettings(
+      SharedPreferences prefs) async {
     try {
       // Устанавливаем оптимальные настройки уведомлений
       await prefs.setString('notification_frequency', 'important');
       await prefs.setBool('vibration_enabled', false);
       await prefs.setBool('sound_enabled', true);
-      
+
       return {
         'notificationFrequency': 'important',
         'vibrationEnabled': false,
@@ -335,15 +348,16 @@ class AppOptimizationService {
   }
 
   /// Оптимизировать настройки синхронизации
-  Future<Map<String, dynamic>> _optimizeSyncSettings([SharedPreferences? prefs]) async {
+  Future<Map<String, dynamic>> _optimizeSyncSettings(
+      [SharedPreferences? prefs]) async {
     try {
       final prefsInstance = prefs ?? await SharedPreferences.getInstance();
-      
+
       // Устанавливаем оптимальные настройки синхронизации
       await prefsInstance.setBool('auto_sync', false);
       await prefsInstance.setInt('sync_interval_hours', 6);
       await prefsInstance.setBool('sync_on_wifi_only', true);
-      
+
       return {
         'autoSync': false,
         'syncIntervalHours': 6,
@@ -360,7 +374,7 @@ class AppOptimizationService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setInt('image_quality', 70);
       await prefs.setBool('compress_images', true);
-      
+
       return {
         'success': true,
         'newImageQuality': 70,
@@ -379,12 +393,13 @@ class AppOptimizationService {
     try {
       final cacheSize = await getCacheSize();
       final prefs = await SharedPreferences.getInstance();
-      
+
       return {
         'cacheSize': cacheSize,
         'imageQuality': prefs.getInt('image_quality') ?? 80,
         'autoSync': prefs.getBool('auto_sync') ?? true,
-        'notificationFrequency': prefs.getString('notification_frequency') ?? 'all',
+        'notificationFrequency':
+            prefs.getString('notification_frequency') ?? 'all',
         'lastOptimization': prefs.getString('last_optimization'),
         'optimizationCount': prefs.getInt('optimization_count') ?? 0,
       };

@@ -157,23 +157,27 @@ class NotificationsWidget extends ConsumerWidget {
   ) {
     // Отмечаем как прочитанное, если еще не прочитано
     if (notification['isRead'] != true) {
-      ref.read(markNotificationAsReadProvider(notification['id'].toString()).future);
+      ref.read(
+          markNotificationAsReadProvider(notification['id'].toString()).future);
     }
 
     // Обрабатываем нажатие в зависимости от типа уведомления
     switch (notification['type']) {
       case 'new_booking':
         // Переходим к заявке
-        _navigateToBooking(context, notification['data']?['bookingId']?.toString() ?? '');
+        _navigateToBooking(
+            context, notification['data']?['bookingId']?.toString() ?? '');
         break;
       case 'booking_confirmed':
       case 'booking_rejected':
         // Переходим к заявке
-        _navigateToBooking(context, notification['data']?['bookingId']?.toString() ?? '');
+        _navigateToBooking(
+            context, notification['data']?['bookingId']?.toString() ?? '');
         break;
       case 'chat_message':
         // Переходим к чату
-        _navigateToChat(context, notification['data']?['chatId']?.toString() ?? '');
+        _navigateToChat(
+            context, notification['data']?['chatId']?.toString() ?? '');
         break;
       case 'system':
         // Показываем детали уведомления
@@ -209,8 +213,9 @@ class NotificationsWidget extends ConsumerWidget {
             onPressed: () async {
               Navigator.pop(context);
               try {
-                await ref
-                    .read(deleteNotificationProvider(notification['id'].toString()).future);
+                await ref.read(
+                    deleteNotificationProvider(notification['id'].toString())
+                        .future);
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -344,8 +349,9 @@ class NotificationItem extends StatelessWidget {
           title: Text(
             notification.title.toString(),
             style: TextStyle(
-              fontWeight:
-                  notification.isRead == true ? FontWeight.normal : FontWeight.bold,
+              fontWeight: notification.isRead == true
+                  ? FontWeight.normal
+                  : FontWeight.bold,
             ),
           ),
           subtitle: Column(
@@ -354,7 +360,8 @@ class NotificationItem extends StatelessWidget {
               Text(notification['message'].toString()),
               const SizedBox(height: 4),
               Text(
-                _formatDate(notification['createdAt'] as DateTime? ?? DateTime.now()),
+                _formatDate(
+                    notification['createdAt'] as DateTime? ?? DateTime.now()),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Colors.grey[600],
                     ),
@@ -381,8 +388,9 @@ class NotificationItem extends StatelessWidget {
             },
           ),
           onTap: onTap,
-          tileColor:
-              notification.isRead == true ? null : Colors.blue.withValues(alpha: 0.05),
+          tileColor: notification.isRead == true
+              ? null
+              : Colors.blue.withValues(alpha: 0.05),
         ),
       );
 

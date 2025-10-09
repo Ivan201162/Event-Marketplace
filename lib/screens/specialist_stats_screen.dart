@@ -11,14 +11,15 @@ class SpecialistStatsScreen extends ConsumerStatefulWidget {
   const SpecialistStatsScreen({super.key});
 
   @override
-  ConsumerState<SpecialistStatsScreen> createState() => _SpecialistStatsScreenState();
+  ConsumerState<SpecialistStatsScreen> createState() =>
+      _SpecialistStatsScreenState();
 }
 
 class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   final AnalyticsService _analyticsService = AnalyticsService();
-  
+
   Map<String, dynamic>? _userStats;
   bool _isLoading = true;
   String? _error;
@@ -28,7 +29,7 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _loadUserStats();
-    
+
     // Логируем просмотр экрана статистики
     _analyticsService.logScreenView('specialist_stats_screen');
   }
@@ -64,49 +65,50 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(
-        title: const Text('Статистика'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(icon: Icon(Icons.analytics), text: 'Общая'),
-            Tab(icon: Icon(Icons.trending_up), text: 'Графики'),
-            Tab(icon: Icon(Icons.insights), text: 'Аналитика'),
-          ],
+        appBar: AppBar(
+          title: const Text('Статистика'),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(icon: Icon(Icons.analytics), text: 'Общая'),
+              Tab(icon: Icon(Icons.trending_up), text: 'Графики'),
+              Tab(icon: Icon(Icons.insights), text: 'Аналитика'),
+            ],
+          ),
         ),
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _error != null
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _error != null
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.error_outline,
+                            size: 64, color: Colors.red[300]),
+                        const SizedBox(height: 16),
+                        Text(_error!, style: const TextStyle(fontSize: 16)),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: _loadUserStats,
+                          child: const Text('Повторить'),
+                        ),
+                      ],
+                    ),
+                  )
+                : TabBarView(
+                    controller: _tabController,
                     children: [
-                      Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
-                      const SizedBox(height: 16),
-                      Text(_error!, style: const TextStyle(fontSize: 16)),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: _loadUserStats,
-                        child: const Text('Повторить'),
-                      ),
+                      _buildGeneralStatsTab(),
+                      _buildChartsTab(),
+                      _buildAnalyticsTab(),
                     ],
                   ),
-                )
-              : TabBarView(
-                  controller: _tabController,
-                  children: [
-                    _buildGeneralStatsTab(),
-                    _buildChartsTab(),
-                    _buildAnalyticsTab(),
-                  ],
-                ),
-    );
+      );
 
   Widget _buildGeneralStatsTab() {
     final stats = _userStats ?? {};
-    
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -142,9 +144,9 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Социальные метрики
           _buildStatsCard(
             title: 'Социальная активность',
@@ -175,9 +177,9 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Временные метрики
           _buildStatsCard(
             title: 'Временные показатели',
@@ -209,7 +211,7 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
 
   Widget _buildChartsTab() {
     final stats = _userStats ?? {};
-    
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -245,9 +247,9 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
               ),
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Круговая диаграмма заявок
           _buildChartCard(
             title: 'Распределение заявок',
@@ -275,9 +277,9 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
               ),
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Столбчатая диаграмма активности
           _buildChartCard(
             title: 'Активность по типам',
@@ -293,7 +295,12 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
                       sideTitles: SideTitles(
                         showTitles: true,
                         getTitlesWidget: (value, meta) {
-                          const titles = ['Просмотры', 'Заявки', 'Сообщения', 'Лайки'];
+                          const titles = [
+                            'Просмотры',
+                            'Заявки',
+                            'Сообщения',
+                            'Лайки'
+                          ];
                           return Text(titles[value.toInt() % titles.length]);
                         },
                       ),
@@ -317,7 +324,7 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
 
   Widget _buildAnalyticsTab() {
     final stats = _userStats ?? {};
-    
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -346,9 +353,9 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           _buildAnalyticsCard(
             title: 'Рекомендации',
             icon: Icons.lightbulb,
@@ -371,9 +378,9 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           _buildAnalyticsCard(
             title: 'Сравнение с другими',
             icon: Icons.compare,
@@ -404,170 +411,177 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
   Widget _buildStatsCard({
     required String title,
     required List<Widget> children,
-  }) => Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
+  }) =>
+      Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
-            ),
-            const SizedBox(height: 16),
-            ...children,
-          ],
+              const SizedBox(height: 16),
+              ...children,
+            ],
+          ),
         ),
-      ),
-    );
+      );
 
   Widget _buildStatItem({
     required IconData icon,
     required String title,
     required String value,
     required Color color,
-  }) => Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
+  }) =>
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(icon, color: color, size: 20),
             ),
-            child: Icon(icon, color: color, size: 20),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              title,
-              style: Theme.of(context).textTheme.bodyMedium,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                title,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
             ),
-          ),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: color,
+            Text(
+              value,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                  ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
 
   Widget _buildChartCard({
     required String title,
     required Widget child,
-  }) => Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
+  }) =>
+      Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
-            ),
-            const SizedBox(height: 16),
-            child,
-          ],
+              const SizedBox(height: 16),
+              child,
+            ],
+          ),
         ),
-      ),
-    );
+      );
 
   Widget _buildAnalyticsCard({
     required String title,
     required IconData icon,
     required Color color,
     required List<Widget> children,
-  }) => Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
+  }) =>
+      Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: color.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(icon, color: color, size: 20),
                   ),
-                  child: Icon(icon, color: color, size: 20),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  const SizedBox(width: 12),
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              ...children,
+            ],
+          ),
+        ),
+      );
+
+  Widget _buildAnalyticsItem(String title, String value, IconData icon) =>
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          children: [
+            Icon(icon, size: 16, color: Colors.grey[600]),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                title,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+            Text(
+              value,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
-                ),
-              ],
             ),
-            const SizedBox(height: 16),
-            ...children,
           ],
         ),
-      ),
-    );
+      );
 
-  Widget _buildAnalyticsItem(String title, String value, IconData icon) => Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        children: [
-          Icon(icon, size: 16, color: Colors.grey[600]),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              title,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-
-  Widget _buildRecommendationItem(String title, String description, IconData icon) => Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, size: 16, color: Colors.amber[600]),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
+  Widget _buildRecommendationItem(
+          String title, String description, IconData icon) =>
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, size: 16, color: Colors.amber[600]),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
                   ),
-                ),
-                Text(
-                  description,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.grey[600],
+                  Text(
+                    description,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Colors.grey[600],
+                        ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
 
   List<FlSpot> _generateViewsData() {
     // Генерируем тестовые данные для графика просмотров
@@ -627,7 +641,8 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
   String _formatDate(date) {
     if (date == null) return 'Никогда';
     try {
-      final dateTime = date is Timestamp ? date.toDate() : DateTime.parse(date.toString());
+      final dateTime =
+          date is Timestamp ? date.toDate() : DateTime.parse(date.toString());
       return '${dateTime.day}.${dateTime.month}.${dateTime.year}';
     } on Exception {
       return 'Неизвестно';
@@ -642,10 +657,10 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
   }
 
   double _calculateDailyActivity(Map<String, dynamic> stats) {
-    final totalActivity = ((stats['views'] as int?) ?? 0) + 
-                         ((stats['requests'] as int?) ?? 0) + 
-                         ((stats['messages'] as int?) ?? 0) + 
-                         ((stats['likes'] as int?) ?? 0);
+    final totalActivity = ((stats['views'] as int?) ?? 0) +
+        ((stats['requests'] as int?) ?? 0) +
+        ((stats['messages'] as int?) ?? 0) +
+        ((stats['likes'] as int?) ?? 0);
     return (totalActivity / 30).roundToDouble(); // Предполагаем 30 дней
   }
 
@@ -659,10 +674,10 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
   }
 
   double _calculateActivityScore(Map<String, dynamic> stats) {
-    final totalActivity = ((stats['views'] as int?) ?? 0) + 
-                         ((stats['requests'] as int?) ?? 0) + 
-                         ((stats['messages'] as int?) ?? 0) + 
-                         ((stats['likes'] as int?) ?? 0);
+    final totalActivity = ((stats['views'] as int?) ?? 0) +
+        ((stats['requests'] as int?) ?? 0) +
+        ((stats['messages'] as int?) ?? 0) +
+        ((stats['likes'] as int?) ?? 0);
     return (totalActivity / 10).roundToDouble();
   }
 }

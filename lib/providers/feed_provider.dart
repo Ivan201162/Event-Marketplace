@@ -12,7 +12,7 @@ final feedProvider = StreamProvider<List<FeedPost>>((ref) async* {
         .orderBy('createdAt', descending: true)
         .snapshots()) {
       final posts = snapshot.docs.map(FeedPost.fromFirestore).toList();
-      
+
       // Если нет данных, добавляем тестовые
       if (posts.isEmpty) {
         yield _getTestFeedPosts();
@@ -28,82 +28,82 @@ final feedProvider = StreamProvider<List<FeedPost>>((ref) async* {
 
 /// Тестовые данные для ленты
 List<FeedPost> _getTestFeedPosts() => [
-    FeedPost(
-      id: 'test_1',
-      authorId: 'author_1',
-      authorName: 'Анна Фотограф',
-      authorAvatar: 'https://picsum.photos/200/200?random=1',
-      description: 'Красивая свадьба в стиле бохо 🌸✨',
-      imageUrl: 'https://picsum.photos/400/600?random=1',
-      location: 'Москва',
-      likeCount: 24,
-      commentCount: 8,
-      isLiked: false,
-      isSaved: false,
-      isFollowing: false,
-      createdAt: DateTime.now().subtract(const Duration(hours: 2)),
-    ),
-    FeedPost(
-      id: 'test_2',
-      authorId: 'author_2',
-      authorName: 'Максим Ведущий',
-      authorAvatar: 'https://picsum.photos/200/200?random=2',
-      description: 'Отличная вечеринка в честь дня рождения! 🎉',
-      imageUrl: 'https://picsum.photos/400/600?random=2',
-      location: 'Санкт-Петербург',
-      likeCount: 18,
-      commentCount: 5,
-      isLiked: true,
-      isSaved: false,
-      isFollowing: true,
-      createdAt: DateTime.now().subtract(const Duration(hours: 5)),
-    ),
-    FeedPost(
-      id: 'test_3',
-      authorId: 'author_3',
-      authorName: 'Елена Декор',
-      authorAvatar: 'https://picsum.photos/200/200?random=3',
-      description: 'Создаем волшебную атмосферу для вашего праздника ✨',
-      imageUrl: 'https://picsum.photos/400/600?random=3',
-      location: 'Казань',
-      likeCount: 31,
-      commentCount: 12,
-      isLiked: false,
-      isSaved: true,
-      isFollowing: false,
-      createdAt: DateTime.now().subtract(const Duration(days: 1)),
-    ),
-    FeedPost(
-      id: 'test_4',
-      authorId: 'author_4',
-      authorName: 'Дмитрий Диджей',
-      authorAvatar: 'https://picsum.photos/200/200?random=4',
-      description: 'Музыка - это душа любого праздника! 🎵',
-      imageUrl: 'https://picsum.photos/400/600?random=4',
-      location: 'Екатеринбург',
-      likeCount: 15,
-      commentCount: 3,
-      isLiked: false,
-      isSaved: false,
-      isFollowing: false,
-      createdAt: DateTime.now().subtract(const Duration(days: 2)),
-    ),
-    FeedPost(
-      id: 'test_5',
-      authorId: 'author_5',
-      authorName: 'Ольга Кейтеринг',
-      authorAvatar: 'https://picsum.photos/200/200?random=5',
-      description: 'Вкусные угощения для вашего торжества 🍰',
-      imageUrl: 'https://picsum.photos/400/600?random=5',
-      location: 'Новосибирск',
-      likeCount: 42,
-      commentCount: 18,
-      isLiked: true,
-      isSaved: true,
-      isFollowing: true,
-      createdAt: DateTime.now().subtract(const Duration(days: 3)),
-    ),
-  ];
+      FeedPost(
+        id: 'test_1',
+        authorId: 'author_1',
+        authorName: 'Анна Фотограф',
+        authorAvatar: 'https://picsum.photos/200/200?random=1',
+        description: 'Красивая свадьба в стиле бохо 🌸✨',
+        imageUrl: 'https://picsum.photos/400/600?random=1',
+        location: 'Москва',
+        likeCount: 24,
+        commentCount: 8,
+        isLiked: false,
+        isSaved: false,
+        isFollowing: false,
+        createdAt: DateTime.now().subtract(const Duration(hours: 2)),
+      ),
+      FeedPost(
+        id: 'test_2',
+        authorId: 'author_2',
+        authorName: 'Максим Ведущий',
+        authorAvatar: 'https://picsum.photos/200/200?random=2',
+        description: 'Отличная вечеринка в честь дня рождения! 🎉',
+        imageUrl: 'https://picsum.photos/400/600?random=2',
+        location: 'Санкт-Петербург',
+        likeCount: 18,
+        commentCount: 5,
+        isLiked: true,
+        isSaved: false,
+        isFollowing: true,
+        createdAt: DateTime.now().subtract(const Duration(hours: 5)),
+      ),
+      FeedPost(
+        id: 'test_3',
+        authorId: 'author_3',
+        authorName: 'Елена Декор',
+        authorAvatar: 'https://picsum.photos/200/200?random=3',
+        description: 'Создаем волшебную атмосферу для вашего праздника ✨',
+        imageUrl: 'https://picsum.photos/400/600?random=3',
+        location: 'Казань',
+        likeCount: 31,
+        commentCount: 12,
+        isLiked: false,
+        isSaved: true,
+        isFollowing: false,
+        createdAt: DateTime.now().subtract(const Duration(days: 1)),
+      ),
+      FeedPost(
+        id: 'test_4',
+        authorId: 'author_4',
+        authorName: 'Дмитрий Диджей',
+        authorAvatar: 'https://picsum.photos/200/200?random=4',
+        description: 'Музыка - это душа любого праздника! 🎵',
+        imageUrl: 'https://picsum.photos/400/600?random=4',
+        location: 'Екатеринбург',
+        likeCount: 15,
+        commentCount: 3,
+        isLiked: false,
+        isSaved: false,
+        isFollowing: false,
+        createdAt: DateTime.now().subtract(const Duration(days: 2)),
+      ),
+      FeedPost(
+        id: 'test_5',
+        authorId: 'author_5',
+        authorName: 'Ольга Кейтеринг',
+        authorAvatar: 'https://picsum.photos/200/200?random=5',
+        description: 'Вкусные угощения для вашего торжества 🍰',
+        imageUrl: 'https://picsum.photos/400/600?random=5',
+        location: 'Новосибирск',
+        likeCount: 42,
+        commentCount: 18,
+        isLiked: true,
+        isSaved: true,
+        isFollowing: true,
+        createdAt: DateTime.now().subtract(const Duration(days: 3)),
+      ),
+    ];
 
 /// Провайдер для управления лентой
 class FeedNotifier extends StateNotifier<AsyncValue<List<FeedPost>>> {
@@ -117,9 +117,7 @@ class FeedNotifier extends StateNotifier<AsyncValue<List<FeedPost>>> {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .listen((snapshot) {
-      final posts = snapshot.docs
-          .map(FeedPost.fromFirestore)
-          .toList();
+      final posts = snapshot.docs.map(FeedPost.fromFirestore).toList();
       state = AsyncValue.data(posts);
     });
   }
@@ -226,7 +224,6 @@ class FeedNotifier extends StateNotifier<AsyncValue<List<FeedPost>>> {
   }
 }
 
-final feedNotifierProvider = StateNotifierProvider<FeedNotifier, AsyncValue<List<FeedPost>>>((ref) => FeedNotifier());
-
-
-
+final feedNotifierProvider =
+    StateNotifierProvider<FeedNotifier, AsyncValue<List<FeedPost>>>(
+        (ref) => FeedNotifier());

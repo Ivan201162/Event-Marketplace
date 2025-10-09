@@ -4,12 +4,12 @@ import '../models/pro_subscription.dart';
 import '../services/pro_subscription_service.dart';
 
 /// Провайдер сервиса PRO подписок
-final proSubscriptionServiceProvider = Provider<ProSubscriptionService>((ref) {
-  return ProSubscriptionService();
-});
+final proSubscriptionServiceProvider =
+    Provider<ProSubscriptionService>((ref) => ProSubscriptionService());
 
 /// Провайдер подписки пользователя
-final userSubscriptionProvider = FutureProvider.family<ProSubscription?, String>((ref, userId) async {
+final userSubscriptionProvider =
+    FutureProvider.family<ProSubscription?, String>((ref, userId) async {
   final service = ref.read(proSubscriptionServiceProvider);
   return service.getUserSubscription(userId);
 });
@@ -21,19 +21,22 @@ final availablePlansProvider = Provider<List<SubscriptionPlan>>((ref) {
 });
 
 /// Провайдер истории платежей
-final paymentHistoryProvider = FutureProvider.family<List<Payment>, String>((ref, subscriptionId) async {
+final paymentHistoryProvider =
+    FutureProvider.family<List<Payment>, String>((ref, subscriptionId) async {
   final service = ref.read(proSubscriptionServiceProvider);
   return service.getPaymentHistory(subscriptionId: subscriptionId);
 });
 
 /// Провайдер статистики подписок
-final subscriptionStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+final subscriptionStatsProvider =
+    FutureProvider<Map<String, dynamic>>((ref) async {
   final service = ref.read(proSubscriptionServiceProvider);
   return service.getSubscriptionStats();
 });
 
 /// Провайдер проверки доступности функции
-final featureAccessProvider = FutureProvider.family<bool, FeatureAccessParams>((ref, params) async {
+final featureAccessProvider =
+    FutureProvider.family<bool, FeatureAccessParams>((ref, params) async {
   final service = ref.read(proSubscriptionServiceProvider);
   return service.hasFeature(
     userId: params.userId,
@@ -43,13 +46,12 @@ final featureAccessProvider = FutureProvider.family<bool, FeatureAccessParams>((
 
 /// Параметры для проверки доступа к функции
 class FeatureAccessParams {
-  final String userId;
-  final String feature;
-
   const FeatureAccessParams({
     required this.userId,
     required this.feature,
   });
+  final String userId;
+  final String feature;
 
   @override
   bool operator ==(Object other) =>
@@ -64,18 +66,12 @@ class FeatureAccessParams {
 }
 
 /// Провайдер для управления состоянием подписки
-final subscriptionStateProvider = StateNotifierProvider<SubscriptionStateNotifier, SubscriptionState>((ref) {
-  return SubscriptionStateNotifier(ref.read(proSubscriptionServiceProvider));
-});
+final subscriptionStateProvider =
+    StateNotifierProvider<SubscriptionStateNotifier, SubscriptionState>((ref) =>
+        SubscriptionStateNotifier(ref.read(proSubscriptionServiceProvider)));
 
 /// Состояние подписки
 class SubscriptionState {
-  final ProSubscription? subscription;
-  final bool isLoading;
-  final String? error;
-  final List<Payment> paymentHistory;
-  final bool isPaymentInProgress;
-
   const SubscriptionState({
     this.subscription,
     this.isLoading = false,
@@ -83,6 +79,11 @@ class SubscriptionState {
     this.paymentHistory = const [],
     this.isPaymentInProgress = false,
   });
+  final ProSubscription? subscription;
+  final bool isLoading;
+  final String? error;
+  final List<Payment> paymentHistory;
+  final bool isPaymentInProgress;
 
   SubscriptionState copyWith({
     ProSubscription? subscription,
@@ -90,27 +91,25 @@ class SubscriptionState {
     String? error,
     List<Payment>? paymentHistory,
     bool? isPaymentInProgress,
-  }) {
-    return SubscriptionState(
-      subscription: subscription ?? this.subscription,
-      isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
-      paymentHistory: paymentHistory ?? this.paymentHistory,
-      isPaymentInProgress: isPaymentInProgress ?? this.isPaymentInProgress,
-    );
-  }
+  }) =>
+      SubscriptionState(
+        subscription: subscription ?? this.subscription,
+        isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error,
+        paymentHistory: paymentHistory ?? this.paymentHistory,
+        isPaymentInProgress: isPaymentInProgress ?? this.isPaymentInProgress,
+      );
 }
 
 /// Нотификатор состояния подписки
 class SubscriptionStateNotifier extends StateNotifier<SubscriptionState> {
-  final ProSubscriptionService _service;
-
   SubscriptionStateNotifier(this._service) : super(const SubscriptionState());
+  final ProSubscriptionService _service;
 
   /// Загрузить подписку пользователя
   Future<void> loadUserSubscription(String userId) async {
-    state = state.copyWith(isLoading: true, error: null);
-    
+    state = state.copyWith(isLoading: true);
+
     try {
       final subscription = await _service.getUserSubscription(userId);
       state = state.copyWith(
@@ -132,8 +131,8 @@ class SubscriptionStateNotifier extends StateNotifier<SubscriptionState> {
     required String paymentMethodId,
     bool isTrial = false,
   }) async {
-    state = state.copyWith(isPaymentInProgress: true, error: null);
-    
+    state = state.copyWith(isPaymentInProgress: true);
+
     try {
       final subscription = await _service.createSubscription(
         userId: userId,
@@ -141,7 +140,7 @@ class SubscriptionStateNotifier extends StateNotifier<SubscriptionState> {
         paymentMethodId: paymentMethodId,
         isTrial: isTrial,
       );
-      
+
       state = state.copyWith(
         subscription: subscription,
         isPaymentInProgress: false,
@@ -163,8 +162,8 @@ class SubscriptionStateNotifier extends StateNotifier<SubscriptionState> {
     bool? autoRenew,
     Map<String, bool>? features,
   }) async {
-    state = state.copyWith(isLoading: true, error: null);
-    
+    state = state.copyWith(isLoading: true);
+
     try {
       await _service.updateSubscription(
         subscriptionId: subscriptionId,
@@ -174,7 +173,7 @@ class SubscriptionStateNotifier extends StateNotifier<SubscriptionState> {
         autoRenew: autoRenew,
         features: features,
       );
-      
+
       // Перезагрузить подписку
       if (state.subscription != null) {
         await loadUserSubscription(state.subscription!.userId);
@@ -192,14 +191,14 @@ class SubscriptionStateNotifier extends StateNotifier<SubscriptionState> {
     required String subscriptionId,
     String? reason,
   }) async {
-    state = state.copyWith(isLoading: true, error: null);
-    
+    state = state.copyWith(isLoading: true);
+
     try {
       await _service.cancelSubscription(
         subscriptionId: subscriptionId,
         reason: reason,
       );
-      
+
       // Перезагрузить подписку
       if (state.subscription != null) {
         await loadUserSubscription(state.subscription!.userId);
@@ -217,14 +216,14 @@ class SubscriptionStateNotifier extends StateNotifier<SubscriptionState> {
     required String subscriptionId,
     required String paymentMethodId,
   }) async {
-    state = state.copyWith(isPaymentInProgress: true, error: null);
-    
+    state = state.copyWith(isPaymentInProgress: true);
+
     try {
       await _service.renewSubscription(
         subscriptionId: subscriptionId,
         paymentMethodId: paymentMethodId,
       );
-      
+
       // Перезагрузить подписку
       if (state.subscription != null) {
         await loadUserSubscription(state.subscription!.userId);
@@ -243,7 +242,7 @@ class SubscriptionStateNotifier extends StateNotifier<SubscriptionState> {
       final paymentHistory = await _service.getPaymentHistory(
         subscriptionId: subscriptionId,
       );
-      
+
       state = state.copyWith(paymentHistory: paymentHistory);
     } catch (e) {
       state = state.copyWith(error: e.toString());
@@ -268,7 +267,6 @@ class SubscriptionStateNotifier extends StateNotifier<SubscriptionState> {
 
   /// Очистить ошибку
   void clearError() {
-    state = state.copyWith(error: null);
+    state = state.copyWith();
   }
 }
-

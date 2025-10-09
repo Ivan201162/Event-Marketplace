@@ -45,12 +45,3 @@ class AppConstants {
   static const String profileUpdatedMessage = 'Профиль обновлен.';
   static const String passwordChangedMessage = 'Пароль изменен.';
 }
-
-
-
-
-
-
-
-
-

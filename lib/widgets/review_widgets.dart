@@ -419,7 +419,8 @@ class ReviewStatsWidget extends StatelessWidget {
   double _getVerifiedPercentage() => 85; // TODO: Реализовать реальную логику
 
   /// Получить дату последнего отзыва
-  DateTime _getLastReviewDate() => DateTime.now().subtract(const Duration(days: 2)); // TODO: Реализовать реальную логику
+  DateTime _getLastReviewDate() => DateTime.now()
+      .subtract(const Duration(days: 2)); // TODO: Реализовать реальную логику
 }
 
 /// Виджет формы отзыва
@@ -653,7 +654,7 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
         serviceTags: [],
         date: DateTime.now(),
       );
-      
+
       await ref.read(reviewStateProvider.notifier).createReview(review);
 
       ref.read(reviewFormProvider.notifier).finishSubmitting();
@@ -743,5 +744,4 @@ class ReviewListWidget extends ConsumerWidget {
       ),
     );
   }
-
 }

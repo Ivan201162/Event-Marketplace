@@ -1,9 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../services/auth_service.dart';
 import '../../providers/auth_providers.dart';
 
 /// Главный экран авторизации с поддержкой разных способов входа
@@ -19,7 +18,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   final _passwordController = TextEditingController();
   final _phoneController = TextEditingController();
   final _nameController = TextEditingController();
-  
+
   bool _isLoading = false;
   bool _isLoginMode = true;
   String? _errorMessage;
@@ -52,7 +51,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         _emailController.text.trim(),
         _passwordController.text,
       );
-      
+
       if (mounted) {
         context.go('/main');
       }
@@ -74,8 +73,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   }
 
   Future<void> _signUpWithEmail() async {
-    if (_nameController.text.isEmpty || 
-        _emailController.text.isEmpty || 
+    if (_nameController.text.isEmpty ||
+        _emailController.text.isEmpty ||
         _passwordController.text.isEmpty) {
       setState(() {
         _errorMessage = 'Заполните все поля';
@@ -95,7 +94,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         _passwordController.text,
         _nameController.text.trim(),
       );
-      
+
       if (mounted) {
         context.go('/main');
       }
@@ -132,11 +131,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     try {
       final authService = ref.read(authServiceProvider);
       await authService.signInWithPhoneNumber(_phoneController.text.trim());
-      
+
       if (mounted) {
         // Переходим на экран подтверждения SMS
-        context.push('/phone-verification', 
-          extra: _phoneController.text.trim());
+        context.push(
+          '/phone-verification',
+          extra: _phoneController.text.trim(),
+        );
       }
     } on FirebaseAuthException catch (e) {
       setState(() {
@@ -164,7 +165,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     try {
       final authService = ref.read(authServiceProvider);
       await authService.signInAnonymously();
-      
+
       if (mounted) {
         context.go('/main');
       }
@@ -190,7 +191,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     try {
       final authService = ref.read(authServiceProvider);
       await authService.signInWithEmailAndPassword('test@event.ru', '123456');
-      
+
       if (mounted) {
         context.go('/main');
       }
@@ -231,7 +232,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -240,7 +241,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 40),
-              
+
               // Логотип
               Container(
                 width: 80,
@@ -249,15 +250,15 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   color: theme.primaryColor,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.event,
                   size: 40,
                   color: Colors.white,
                 ),
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Заголовок
               Text(
                 'Event Marketplace',
@@ -266,9 +267,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               Text(
                 'Найдите идеального специалиста для вашего события',
                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -276,9 +277,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              
+
               const SizedBox(height: 40),
-              
+
               // Переключатель режима
               Container(
                 decoration: BoxDecoration(
@@ -293,13 +294,17 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           decoration: BoxDecoration(
-                            color: _isLoginMode ? theme.primaryColor : Colors.transparent,
+                            color: _isLoginMode
+                                ? theme.primaryColor
+                                : Colors.transparent,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
                             'Вход',
                             style: TextStyle(
-                              color: _isLoginMode ? Colors.white : Colors.grey[600],
+                              color: _isLoginMode
+                                  ? Colors.white
+                                  : Colors.grey[600],
                               fontWeight: FontWeight.w600,
                             ),
                             textAlign: TextAlign.center,
@@ -313,13 +318,17 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           decoration: BoxDecoration(
-                            color: !_isLoginMode ? theme.primaryColor : Colors.transparent,
+                            color: !_isLoginMode
+                                ? theme.primaryColor
+                                : Colors.transparent,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
                             'Регистрация',
                             style: TextStyle(
-                              color: !_isLoginMode ? Colors.white : Colors.grey[600],
+                              color: !_isLoginMode
+                                  ? Colors.white
+                                  : Colors.grey[600],
                               fontWeight: FontWeight.w600,
                             ),
                             textAlign: TextAlign.center,
@@ -330,9 +339,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   ],
                 ),
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Форма авторизации
               if (_isLoginMode) ...[
                 // Поля для входа
@@ -345,9 +354,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 TextField(
                   controller: _passwordController,
                   obscureText: true,
@@ -357,9 +366,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Кнопка входа
                 ElevatedButton(
                   onPressed: _isLoading ? null : _signInWithEmail,
@@ -384,9 +393,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 TextField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
@@ -396,9 +405,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 TextField(
                   controller: _passwordController,
                   obscureText: true,
@@ -408,9 +417,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Кнопка регистрации
                 ElevatedButton(
                   onPressed: _isLoading ? null : _signUpWithEmail,
@@ -426,9 +435,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       : const Text('Зарегистрироваться'),
                 ),
               ],
-              
+
               const SizedBox(height: 16),
-              
+
               // Ошибка
               if (_errorMessage != null)
                 Container(
@@ -444,9 +453,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Разделитель
               Row(
                 children: [
@@ -461,9 +470,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   const Expanded(child: Divider()),
                 ],
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Вход по телефону
               OutlinedButton.icon(
                 onPressed: _isLoading ? null : _signInWithPhone,
@@ -473,9 +482,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Гостевой вход
               OutlinedButton.icon(
                 onPressed: _isLoading ? null : _signInAnonymously,
@@ -485,15 +494,15 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Тестовый аккаунт
               TextButton(
                 onPressed: _isLoading ? null : _signInWithTestAccount,
                 child: const Text('Войти с тестовым аккаунтом'),
               ),
-              
+
               const SizedBox(height: 40),
             ],
           ),

@@ -257,8 +257,10 @@ class CalendarService {
   /// Открыть в Google Calendar
   Future<void> openInGoogleCalendar(CalendarEvent event) async {
     try {
-      final startTime = '${event.startTime.toUtc().toIso8601String().replaceAll(':', '').split('.')[0]}Z';
-      final endTime = '${event.endTime.toUtc().toIso8601String().replaceAll(':', '').split('.')[0]}Z';
+      final startTime =
+          '${event.startTime.toUtc().toIso8601String().replaceAll(':', '').split('.')[0]}Z';
+      final endTime =
+          '${event.endTime.toUtc().toIso8601String().replaceAll(':', '').split('.')[0]}Z';
 
       final url = Uri.parse(
           'https://calendar.google.com/calendar/render?action=TEMPLATE'

@@ -76,7 +76,9 @@ class EventIdea {
       guestCount: (data['guestCount'] as num?)?.toInt(),
       season: data['season']?.toString(),
       style: data['style']?.toString(),
-      colorScheme: (data['colorScheme'] as List<dynamic>?)?.map((e) => e.toString()).toList(),
+      colorScheme: (data['colorScheme'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList(),
       inspiration: data['inspiration']?.toString(),
       createdBy: data['createdBy']?.toString(),
       commentsCount: (data['commentsCount'] as num?)?.toInt(),
@@ -84,7 +86,9 @@ class EventIdea {
       isVideo: data['isVideo'] as bool?,
       price: (data['price'] as num?)?.toDouble(),
       priceCurrency: data['priceCurrency']?.toString(),
-      requiredSkills: (data['requiredSkills'] as List<dynamic>?)?.map((e) => e.toString()).toList(),
+      requiredSkills: (data['requiredSkills'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList(),
       likesCount: (data['likesCount'] as num?)?.toInt(),
       savesCount: (data['savesCount'] as num?)?.toInt(),
       sharesCount: (data['sharesCount'] as num?)?.toInt(),
@@ -126,7 +130,9 @@ class EventIdea {
         guestCount: (data['guestCount'] as num?)?.toInt(),
         season: data['season']?.toString(),
         style: data['style']?.toString(),
-        colorScheme: (data['colorScheme'] as List<dynamic>?)?.map((e) => e.toString()).toList(),
+        colorScheme: (data['colorScheme'] as List<dynamic>?)
+            ?.map((e) => e.toString())
+            .toList(),
         inspiration: data['inspiration']?.toString(),
         createdBy: data['createdBy']?.toString(),
         commentsCount: (data['commentsCount'] as num?)?.toInt(),
@@ -134,7 +140,9 @@ class EventIdea {
         isVideo: data['isVideo'] as bool?,
         price: (data['price'] as num?)?.toDouble(),
         priceCurrency: data['priceCurrency']?.toString(),
-        requiredSkills: (data['requiredSkills'] as List<dynamic>?)?.map((e) => e.toString()).toList(),
+        requiredSkills: (data['requiredSkills'] as List<dynamic>?)
+            ?.map((e) => e.toString())
+            .toList(),
         likesCount: (data['likesCount'] as num?)?.toInt(),
         savesCount: (data['savesCount'] as num?)?.toInt(),
         sharesCount: (data['sharesCount'] as num?)?.toInt(),
@@ -455,20 +463,20 @@ class IdeaComment {
   }
 
   factory IdeaComment.fromMap(Map<String, dynamic> data) => IdeaComment(
-      id: data['id']?.toString() ?? '',
-      ideaId: data['ideaId']?.toString() ?? '',
-      authorId: data['authorId']?.toString() ?? '',
-      text: data['text']?.toString() ?? '',
-      createdAt: (data['createdAt'] is Timestamp) 
-          ? (data['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
-      authorName: data['authorName']?.toString(),
-      authorAvatar: data['authorAvatar']?.toString(),
-      likes: (data['likes'] as num?)?.toInt() ?? 0,
-      replies: (data['replies'] as num?)?.toInt() ?? 0,
-      parentId: data['parentId']?.toString(),
-      isPublic: data['isPublic'] != false,
-    );
+        id: data['id']?.toString() ?? '',
+        ideaId: data['ideaId']?.toString() ?? '',
+        authorId: data['authorId']?.toString() ?? '',
+        text: data['text']?.toString() ?? '',
+        createdAt: (data['createdAt'] is Timestamp)
+            ? (data['createdAt'] as Timestamp).toDate()
+            : DateTime.now(),
+        authorName: data['authorName']?.toString(),
+        authorAvatar: data['authorAvatar']?.toString(),
+        likes: (data['likes'] as num?)?.toInt() ?? 0,
+        replies: (data['replies'] as num?)?.toInt() ?? 0,
+        parentId: data['parentId']?.toString(),
+        isPublic: data['isPublic'] != false,
+      );
 
   final String id;
   final String ideaId;

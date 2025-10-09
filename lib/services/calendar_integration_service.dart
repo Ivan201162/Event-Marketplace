@@ -1,15 +1,17 @@
 import 'dart:async';
 import 'dart:developer' as developer;
-import 'package:flutter/foundation.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 import 'error_logging_service.dart';
 
 /// Сервис для интеграции с календарями Google/Apple
 class CalendarIntegrationService {
-  static final CalendarIntegrationService _instance = CalendarIntegrationService._internal();
   factory CalendarIntegrationService() => _instance;
   CalendarIntegrationService._internal();
+  static final CalendarIntegrationService _instance =
+      CalendarIntegrationService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final ErrorLoggingService _errorLogger = ErrorLoggingService();
@@ -49,10 +51,7 @@ class CalendarIntegrationService {
         'platform': defaultTargetPlatform.name,
       };
 
-      await _firestore
-          .collection('calendar_events')
-          .doc(eventId)
-          .set(event);
+      await _firestore.collection('calendar_events').doc(eventId).set(event);
 
       // Попытка синхронизации с внешним календарем
       await _syncWithExternalCalendar(eventId, event);
@@ -104,7 +103,8 @@ class CalendarIntegrationService {
 
       if (title != null) updates['title'] = title;
       if (description != null) updates['description'] = description;
-      if (startTime != null) updates['startTime'] = Timestamp.fromDate(startTime);
+      if (startTime != null)
+        updates['startTime'] = Timestamp.fromDate(startTime);
       if (endTime != null) updates['endTime'] = Timestamp.fromDate(endTime);
       if (location != null) updates['location'] = location;
       if (attendees != null) updates['attendees'] = attendees;
@@ -116,11 +116,9 @@ class CalendarIntegrationService {
           .update(updates);
 
       // Попытка синхронизации с внешним календарем
-      final eventDoc = await _firestore
-          .collection('calendar_events')
-          .doc(eventId)
-          .get();
-      
+      final eventDoc =
+          await _firestore.collection('calendar_events').doc(eventId).get();
+
       if (eventDoc.exists) {
         await _syncWithExternalCalendar(eventId, eventDoc.data()!);
       }
@@ -147,10 +145,8 @@ class CalendarIntegrationService {
   Future<bool> deleteCalendarEvent(String eventId) async {
     try {
       // Получаем событие для получения externalEventId
-      final eventDoc = await _firestore
-          .collection('calendar_events')
-          .doc(eventId)
-          .get();
+      final eventDoc =
+          await _firestore.collection('calendar_events').doc(eventId).get();
 
       if (eventDoc.exists) {
         final eventData = eventDoc.data()!;
@@ -162,10 +158,7 @@ class CalendarIntegrationService {
         }
 
         // Удаляем из нашей базы
-        await _firestore
-            .collection('calendar_events')
-            .doc(eventId)
-            .delete();
+        await _firestore.collection('calendar_events').doc(eventId).delete();
 
         await _errorLogger.logInfo(
           message: 'Calendar event deleted',
@@ -201,16 +194,20 @@ class CalendarIntegrationService {
           .where('userId', isEqualTo: userId);
 
       if (startDate != null) {
-        query = query.where('startTime', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where('startTime',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
       if (endDate != null) {
-        query = query.where('endTime', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where('endTime',
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
       query = query.orderBy('startTime').limit(limit);
 
-      final QuerySnapshot snapshot = await query.get();
-      return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+      final snapshot = await query.get();
+      return snapshot.docs
+          .map((doc) => doc.data()! as Map<String, dynamic>)
+          .toList();
     } catch (e, stackTrace) {
       await _errorLogger.logError(
         error: 'Failed to get user calendar events: $e',
@@ -223,7 +220,8 @@ class CalendarIntegrationService {
   }
 
   /// Получить события по заказу
-  Future<List<Map<String, dynamic>>> getOrderCalendarEvents(String orderId) async {
+  Future<List<Map<String, dynamic>>> getOrderCalendarEvents(
+      String orderId) async {
     try {
       final QuerySnapshot snapshot = await _firestore
           .collection('calendar_events')
@@ -231,7 +229,9 @@ class CalendarIntegrationService {
           .orderBy('startTime')
           .get();
 
-      return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+      return snapshot.docs
+          .map((doc) => doc.data()! as Map<String, dynamic>)
+          .toList();
     } catch (e, stackTrace) {
       await _errorLogger.logError(
         error: 'Failed to get order calendar events: $e',
@@ -244,11 +244,12 @@ class CalendarIntegrationService {
   }
 
   /// Синхронизировать с внешним календарем
-  Future<void> _syncWithExternalCalendar(String eventId, Map<String, dynamic> event) async {
+  Future<void> _syncWithExternalCalendar(
+      String eventId, Map<String, dynamic> event) async {
     try {
       // Здесь должна быть интеграция с Google Calendar API или Apple EventKit
       // Пока что имитируем успешную синхронизацию
-      
+
       if (kDebugMode) {
         developer.log('Syncing event with external calendar: $eventId');
       }
@@ -257,13 +258,11 @@ class CalendarIntegrationService {
       await Future.delayed(const Duration(seconds: 1));
 
       // Обновляем статус синхронизации
-      await _firestore
-          .collection('calendar_events')
-          .doc(eventId)
-          .update({
+      await _firestore.collection('calendar_events').doc(eventId).update({
         'isSynced': true,
         'syncStatus': 'success',
-        'externalEventId': 'ext_${eventId}_${DateTime.now().millisecondsSinceEpoch}',
+        'externalEventId':
+            'ext_${eventId}_${DateTime.now().millisecondsSinceEpoch}',
         'lastSyncAt': FieldValue.serverTimestamp(),
       });
 
@@ -274,10 +273,7 @@ class CalendarIntegrationService {
       );
     } catch (e, stackTrace) {
       // Обновляем статус на ошибку
-      await _firestore
-          .collection('calendar_events')
-          .doc(eventId)
-          .update({
+      await _firestore.collection('calendar_events').doc(eventId).update({
         'isSynced': false,
         'syncStatus': 'error',
         'syncError': e.toString(),
@@ -298,9 +294,10 @@ class CalendarIntegrationService {
     try {
       // Здесь должна быть интеграция с Google Calendar API или Apple EventKit
       // Пока что имитируем успешное удаление
-      
+
       if (kDebugMode) {
-        developer.log('Deleting event from external calendar: $externalEventId');
+        developer
+            .log('Deleting event from external calendar: $externalEventId');
       }
 
       // Имитируем задержку API
@@ -324,13 +321,11 @@ class CalendarIntegrationService {
   /// Получить настройки календаря пользователя
   Future<Map<String, dynamic>> getCalendarSettings(String userId) async {
     try {
-      final DocumentSnapshot doc = await _firestore
-          .collection('calendar_settings')
-          .doc(userId)
-          .get();
+      final DocumentSnapshot doc =
+          await _firestore.collection('calendar_settings').doc(userId).get();
 
       if (doc.exists) {
-        return doc.data() as Map<String, dynamic>;
+        return doc.data()! as Map<String, dynamic>;
       }
 
       // Возвращаем настройки по умолчанию
@@ -367,14 +362,14 @@ class CalendarIntegrationService {
     Map<String, dynamic> settings,
   ) async {
     try {
-      await _firestore
-          .collection('calendar_settings')
-          .doc(userId)
-          .set({
-        ...settings,
-        'userId': userId,
-        'updatedAt': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
+      await _firestore.collection('calendar_settings').doc(userId).set(
+        {
+          ...settings,
+          'userId': userId,
+          'updatedAt': FieldValue.serverTimestamp(),
+        },
+        SetOptions(merge: true),
+      );
 
       await _errorLogger.logInfo(
         message: 'Calendar settings updated',
@@ -461,10 +456,12 @@ class CalendarIntegrationService {
           .where('userId', isEqualTo: userId);
 
       if (startDate != null) {
-        query = query.where('reminderTime', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where('reminderTime',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
       if (endDate != null) {
-        query = query.where('reminderTime', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where('reminderTime',
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
       if (isTriggered != null) {
         query = query.where('isTriggered', isEqualTo: isTriggered);
@@ -472,8 +469,10 @@ class CalendarIntegrationService {
 
       query = query.orderBy('reminderTime');
 
-      final QuerySnapshot snapshot = await query.get();
-      return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+      final snapshot = await query.get();
+      return snapshot.docs
+          .map((doc) => doc.data()! as Map<String, dynamic>)
+          .toList();
     } catch (e, stackTrace) {
       await _errorLogger.logError(
         error: 'Failed to get user reminders: $e',
@@ -503,8 +502,10 @@ class CalendarIntegrationService {
         query = query.where(FieldPath.documentId, isNotEqualTo: excludeEventId);
       }
 
-      final QuerySnapshot snapshot = await query.get();
-      return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+      final snapshot = await query.get();
+      return snapshot.docs
+          .map((doc) => doc.data()! as Map<String, dynamic>)
+          .toList();
     } catch (e, stackTrace) {
       await _errorLogger.logError(
         error: 'Failed to check time conflicts: $e',
@@ -520,7 +521,7 @@ class CalendarIntegrationService {
   Future<Map<String, dynamic>> getCalendarStats(String userId) async {
     try {
       final now = DateTime.now();
-      final startOfMonth = DateTime(now.year, now.month, 1);
+      final startOfMonth = DateTime(now.year, now.month);
       final endOfMonth = DateTime(now.year, now.month + 1, 0, 23, 59, 59);
 
       // События за месяц
@@ -542,8 +543,9 @@ class CalendarIntegrationService {
         'totalReminders': reminders.length,
         'pendingReminders': reminders.where((r) => !r['isTriggered']).length,
         'syncedEvents': allEvents.where((e) => e['isSynced'] == true).length,
-        'syncRate': allEvents.isNotEmpty 
-            ? allEvents.where((e) => e['isSynced'] == true).length / allEvents.length 
+        'syncRate': allEvents.isNotEmpty
+            ? allEvents.where((e) => e['isSynced'] == true).length /
+                allEvents.length
             : 0.0,
         'lastUpdated': now.toIso8601String(),
       };
@@ -558,4 +560,3 @@ class CalendarIntegrationService {
     }
   }
 }
-

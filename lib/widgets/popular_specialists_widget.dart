@@ -7,10 +7,12 @@ class PopularSpecialistsWidget extends ConsumerStatefulWidget {
   const PopularSpecialistsWidget({super.key});
 
   @override
-  ConsumerState<PopularSpecialistsWidget> createState() => _PopularSpecialistsWidgetState();
+  ConsumerState<PopularSpecialistsWidget> createState() =>
+      _PopularSpecialistsWidgetState();
 }
 
-class _PopularSpecialistsWidgetState extends ConsumerState<PopularSpecialistsWidget> {
+class _PopularSpecialistsWidgetState
+    extends ConsumerState<PopularSpecialistsWidget> {
   final SmartSearchService _searchService = SmartSearchService();
   List<Map<String, dynamic>> _specialists = [];
   bool _isLoading = true;
@@ -36,77 +38,72 @@ class _PopularSpecialistsWidgetState extends ConsumerState<PopularSpecialistsWid
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.trending_up, color: Colors.orange),
-              const SizedBox(width: 8),
-              const Text(
-                'Популярные специалисты недели',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.trending_up, color: Colors.orange),
+                const SizedBox(width: 8),
+                const Text(
+                  'Популярные специалисты недели',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Spacer(),
+                TextButton(
+                  onPressed: () {
+                    // TODO: Переход к полному списку популярных специалистов
+                  },
+                  child: const Text('Все'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            if (_isLoading)
+              const Center(child: CircularProgressIndicator())
+            else if (_specialists.isEmpty)
+              _buildEmptyState()
+            else
+              SizedBox(
+                height: 200,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _specialists.length,
+                  itemBuilder: (context, index) {
+                    final specialist = _specialists[index];
+                    return _buildSpecialistCard(specialist);
+                  },
                 ),
               ),
-              const Spacer(),
-              TextButton(
-                onPressed: () {
-                  // TODO: Переход к полному списку популярных специалистов
-                },
-                child: const Text('Все'),
+          ],
+        ),
+      );
+
+  Widget _buildEmptyState() => Container(
+        height: 200,
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.people_outline, size: 48, color: Colors.grey),
+              SizedBox(height: 8),
+              Text(
+                'Популярные специалисты появятся здесь',
+                style: TextStyle(color: Colors.grey),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          
-          if (_isLoading)
-            const Center(child: CircularProgressIndicator())
-          else if (_specialists.isEmpty)
-            _buildEmptyState()
-          else
-            SizedBox(
-              height: 200,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: _specialists.length,
-                itemBuilder: (context, index) {
-                  final specialist = _specialists[index];
-                  return _buildSpecialistCard(specialist);
-                },
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEmptyState() {
-    return Container(
-      height: 200,
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.people_outline, size: 48, color: Colors.grey),
-            SizedBox(height: 8),
-            Text(
-              'Популярные специалисты появятся здесь',
-              style: TextStyle(color: Colors.grey),
-            ),
-          ],
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildSpecialistCard(Map<String, dynamic> specialist) {
     final name = specialist['name'] ?? 'Без имени';
@@ -140,7 +137,8 @@ class _PopularSpecialistsWidgetState extends ConsumerState<PopularSpecialistsWid
               Container(
                 height: 100,
                 decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(12)),
                   image: avatarUrl != null
                       ? DecorationImage(
                           image: NetworkImage(avatarUrl),
@@ -155,20 +153,21 @@ class _PopularSpecialistsWidgetState extends ConsumerState<PopularSpecialistsWid
                       )
                     : null,
               ),
-              
+
               // Бейджи
               Positioned(
                 top: 8,
                 left: 8,
                 child: _buildBadges(isVerified, isOnline),
               ),
-              
+
               // Рейтинг
               Positioned(
                 bottom: 8,
                 right: 8,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: Colors.black.withOpacity(0.7),
                     borderRadius: BorderRadius.circular(12),
@@ -192,7 +191,7 @@ class _PopularSpecialistsWidgetState extends ConsumerState<PopularSpecialistsWid
               ),
             ],
           ),
-          
+
           // Информация
           Padding(
             padding: const EdgeInsets.all(12),
@@ -289,4 +288,3 @@ class _PopularSpecialistsWidgetState extends ConsumerState<PopularSpecialistsWid
     return const SizedBox.shrink();
   }
 }
-

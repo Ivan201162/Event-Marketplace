@@ -50,10 +50,10 @@ class ReviewsService {
 
       // Добавляем в Firestore
       final docRef = await _firestore.collection('reviews').add(review.toMap());
-      
+
       // Обновляем рейтинг специалиста
       await _updateSpecialistRating(specialistId);
-      
+
       // Логируем событие
       await _analytics.logEvent(
         name: 'add_review',
@@ -88,7 +88,8 @@ class ReviewsService {
       // Применяем фильтры
       if (filter != null) {
         if (filter.minRating != null) {
-          query = query.where('rating', isGreaterThanOrEqualTo: filter.minRating);
+          query =
+              query.where('rating', isGreaterThanOrEqualTo: filter.minRating);
         }
         if (filter.hasPhotos) {
           query = query.where('photos', isNotEqualTo: []);
@@ -138,13 +139,13 @@ class ReviewsService {
     try {
       final reviewRef = _firestore.collection('reviews').doc(reviewId);
       final reviewDoc = await reviewRef.get();
-      
+
       if (!reviewDoc.exists) {
         throw Exception('Отзыв не найден');
       }
 
       final review = Review.fromDocument(reviewDoc);
-      
+
       // Проверяем, что прошло не более 24 часов
       final hoursSinceCreation = DateTime.now().difference(review.date).inHours;
       if (hoursSinceCreation > 24) {
@@ -190,13 +191,13 @@ class ReviewsService {
     try {
       final reviewRef = _firestore.collection('reviews').doc(reviewId);
       final reviewDoc = await reviewRef.get();
-      
+
       if (!reviewDoc.exists) {
         throw Exception('Отзыв не найден');
       }
 
       final review = Review.fromDocument(reviewDoc);
-      
+
       // Проверяем, что прошло не более 24 часов
       final hoursSinceCreation = DateTime.now().difference(review.date).inHours;
       if (hoursSinceCreation > 24) {
@@ -227,7 +228,8 @@ class ReviewsService {
   }
 
   /// Поставить лайк отзыву
-  Future<void> likeReview(String reviewId, String userId, String userName) async {
+  Future<void> likeReview(
+      String reviewId, String userId, String userName) async {
     try {
       final likeRef = _firestore
           .collection('reviews')
@@ -236,7 +238,7 @@ class ReviewsService {
           .doc(userId);
 
       final likeDoc = await likeRef.get();
-      
+
       if (likeDoc.exists) {
         // Убираем лайк
         await likeRef.delete();
@@ -245,11 +247,13 @@ class ReviewsService {
         });
       } else {
         // Ставим лайк
-        await likeRef.set(ReviewLike(
-          userId: userId,
-          userName: userName,
-          date: DateTime.now(),
-        ).toMap(),);
+        await likeRef.set(
+          ReviewLike(
+            userId: userId,
+            userName: userName,
+            date: DateTime.now(),
+          ).toMap(),
+        );
         await _firestore.collection('reviews').doc(reviewId).update({
           'likes': FieldValue.increment(1),
         });
@@ -278,7 +282,7 @@ class ReviewsService {
     try {
       final reviewRef = _firestore.collection('reviews').doc(reviewId);
       final reviewDoc = await reviewRef.get();
-      
+
       if (!reviewDoc.exists) {
         throw Exception('Отзыв не найден');
       }
@@ -351,12 +355,11 @@ class ReviewsService {
   }
 
   /// Получить репутацию специалиста
-  Future<SpecialistReputation> getSpecialistReputation(String specialistId) async {
+  Future<SpecialistReputation> getSpecialistReputation(
+      String specialistId) async {
     try {
-      final doc = await _firestore
-          .collection('userStats')
-          .doc(specialistId)
-          .get();
+      final doc =
+          await _firestore.collection('userStats').doc(specialistId).get();
 
       if (doc.exists) {
         return SpecialistReputation.fromMap(doc.data()!);
@@ -392,23 +395,21 @@ class ReviewsService {
         return;
       }
 
-      final reviews = reviewsSnapshot.docs
-          .map(Review.fromDocument)
-          .toList();
+      final reviews = reviewsSnapshot.docs.map(Review.fromDocument).toList();
 
       // Рассчитываем статистику
       final totalReviews = reviews.length;
       final totalRating = reviews.fold(0, (sum, review) => sum + review.rating);
       final averageRating = totalRating / totalReviews;
-      
+
       final positiveReviews = reviews.where((r) => r.rating >= 4).length;
       final negativeReviews = reviews.where((r) => r.rating <= 2).length;
-      
+
       final reputationScore = SpecialistReputation.calculateReputationScore(
         positiveReviews,
         negativeReviews,
       );
-      
+
       final status = SpecialistReputation.getReputationStatus(reputationScore);
 
       // Обновляем статистику
@@ -429,10 +430,7 @@ class ReviewsService {
           .set(reputation.toMap(), SetOptions(merge: true));
 
       // Обновляем рейтинг в профиле специалиста
-      await _firestore
-          .collection('specialists')
-          .doc(specialistId)
-          .update({
+      await _firestore.collection('specialists').doc(specialistId).update({
         'rating': averageRating,
         'reviewCount': totalReviews,
         'reputationScore': reputationScore,
@@ -494,7 +492,6 @@ enum ReviewSortType {
 
 /// Фильтр отзывов
 class ReviewFilter {
-
   const ReviewFilter({
     this.minRating,
     this.hasPhotos = false,
@@ -505,9 +502,10 @@ class ReviewFilter {
   factory ReviewFilter.fromJson(String json) {
     // Простая реализация парсинга JSON
     final hasPhotos = json.contains('"hasPhotos": true');
-    final minRatingMatch = RegExp(r'"minRating": (\d+(?:\.\d+)?)').firstMatch(json);
-    final minRating = minRatingMatch != null 
-        ? double.tryParse(minRatingMatch.group(1)!) 
+    final minRatingMatch =
+        RegExp(r'"minRating": (\d+(?:\.\d+)?)').firstMatch(json);
+    final minRating = minRatingMatch != null
+        ? double.tryParse(minRatingMatch.group(1)!)
         : null;
 
     return ReviewFilter(

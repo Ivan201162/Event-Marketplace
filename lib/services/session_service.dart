@@ -79,9 +79,3 @@ class SessionService {
     }
   }
 }
-
-
-
-
-
-

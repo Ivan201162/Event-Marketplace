@@ -6,9 +6,10 @@ import 'error_logging_service.dart';
 
 /// Сервис для работы с отзывами заказчиков
 class CustomerReviewService {
-  static final CustomerReviewService _instance = CustomerReviewService._internal();
   factory CustomerReviewService() => _instance;
   CustomerReviewService._internal();
+  static final CustomerReviewService _instance =
+      CustomerReviewService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -120,10 +121,8 @@ class CustomerReviewService {
         query = query.startAfterDocument(startAfter);
       }
 
-      final QuerySnapshot snapshot = await query.get();
-      return snapshot.docs
-          .map((doc) => CustomerReview.fromDoc(doc))
-          .toList();
+      final snapshot = await query.get();
+      return snapshot.docs.map(CustomerReview.fromDoc).toList();
     } catch (e, stackTrace) {
       await _errorLogger.logError(
         error: 'Failed to get specialist reviews: $e',
@@ -138,10 +137,8 @@ class CustomerReviewService {
   /// Получить отзыв по ID
   Future<CustomerReview?> getReviewById(String reviewId) async {
     try {
-      final DocumentSnapshot doc = await _firestore
-          .collection('customer_reviews')
-          .doc(reviewId)
-          .get();
+      final DocumentSnapshot doc =
+          await _firestore.collection('customer_reviews').doc(reviewId).get();
 
       if (doc.exists) {
         return CustomerReview.fromDoc(doc);
@@ -233,16 +230,10 @@ class CustomerReviewService {
       if (review == null) return false;
 
       // Удаляем отзыв
-      await _firestore
-          .collection('customer_reviews')
-          .doc(reviewId)
-          .delete();
+      await _firestore.collection('customer_reviews').doc(reviewId).delete();
 
       // Удаляем детальные оценки
-      await _firestore
-          .collection('detailed_ratings')
-          .doc(reviewId)
-          .delete();
+      await _firestore.collection('detailed_ratings').doc(reviewId).delete();
 
       // Обновляем статистику специалиста
       await _updateSpecialistReviewStats(review.specialistId);
@@ -272,10 +263,7 @@ class CustomerReviewService {
       final user = _auth.currentUser;
       if (user == null) return false;
 
-      await _firestore
-          .collection('customer_reviews')
-          .doc(reviewId)
-          .update({
+      await _firestore.collection('customer_reviews').doc(reviewId).update({
         'response': response,
         'responseDate': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
@@ -301,15 +289,14 @@ class CustomerReviewService {
   }
 
   /// Получить статистику отзывов специалиста
-  Future<CustomerReviewStats?> getSpecialistReviewStats(String specialistId) async {
+  Future<CustomerReviewStats?> getSpecialistReviewStats(
+      String specialistId) async {
     try {
-      final DocumentSnapshot doc = await _firestore
-          .collection('review_stats')
-          .doc(specialistId)
-          .get();
+      final DocumentSnapshot doc =
+          await _firestore.collection('review_stats').doc(specialistId).get();
 
       if (doc.exists) {
-        return CustomerReviewStats.fromMap(doc.data() as Map<String, dynamic>);
+        return CustomerReviewStats.fromMap(doc.data()! as Map<String, dynamic>);
       }
 
       // Если статистики нет, создаем ее
@@ -328,13 +315,11 @@ class CustomerReviewService {
   /// Получить детальные оценки отзыва
   Future<DetailedRating?> getDetailedRating(String reviewId) async {
     try {
-      final DocumentSnapshot doc = await _firestore
-          .collection('detailed_ratings')
-          .doc(reviewId)
-          .get();
+      final DocumentSnapshot doc =
+          await _firestore.collection('detailed_ratings').doc(reviewId).get();
 
       if (doc.exists) {
-        return DetailedRating.fromMap(doc.data() as Map<String, dynamic>);
+        return DetailedRating.fromMap(doc.data()! as Map<String, dynamic>);
       }
       return null;
     } catch (e, stackTrace) {
@@ -366,54 +351,74 @@ class CustomerReviewService {
 
       // Базовые фильтры
       if (specialistId != null) {
-        firestoreQuery = firestoreQuery.where('specialistId', isEqualTo: specialistId);
+        firestoreQuery =
+            firestoreQuery.where('specialistId', isEqualTo: specialistId);
       }
       if (minRating != null) {
-        firestoreQuery = firestoreQuery.where('rating', isGreaterThanOrEqualTo: minRating);
+        firestoreQuery =
+            firestoreQuery.where('rating', isGreaterThanOrEqualTo: minRating);
       }
       if (isVerified != null) {
-        firestoreQuery = firestoreQuery.where('isVerified', isEqualTo: isVerified);
+        firestoreQuery =
+            firestoreQuery.where('isVerified', isEqualTo: isVerified);
       }
 
       // Сортировка
-      firestoreQuery = firestoreQuery.orderBy('createdAt', descending: true).limit(limit * 2);
+      firestoreQuery = firestoreQuery
+          .orderBy('createdAt', descending: true)
+          .limit(limit * 2);
 
-      final QuerySnapshot snapshot = await firestoreQuery.get();
-      List<CustomerReview> reviews = snapshot.docs
-          .map((doc) => CustomerReview.fromDoc(doc))
-          .toList();
+      final snapshot = await firestoreQuery.get();
+      var reviews = snapshot.docs.map(CustomerReview.fromDoc).toList();
 
       // Дополнительная фильтрация на клиенте
       if (query != null && query.isNotEmpty) {
         final lowerQuery = query.toLowerCase();
-        reviews = reviews.where((review) =>
-            review.text.toLowerCase().contains(lowerQuery) ||
-            (review.response?.toLowerCase().contains(lowerQuery) ?? false)
-        ).toList();
+        reviews = reviews
+            .where(
+              (review) =>
+                  review.text.toLowerCase().contains(lowerQuery) ||
+                  (review.response?.toLowerCase().contains(lowerQuery) ??
+                      false),
+            )
+            .toList();
       }
 
       if (maxRating != null) {
-        reviews = reviews.where((review) => review.rating <= maxRating).toList();
+        reviews =
+            reviews.where((review) => review.rating <= maxRating).toList();
       }
 
       if (hasImages != null) {
-        reviews = reviews.where((review) => 
-            hasImages ? (review.images?.isNotEmpty ?? false) : (review.images?.isEmpty ?? true)
-        ).toList();
+        reviews = reviews
+            .where(
+              (review) => hasImages
+                  ? (review.images?.isNotEmpty ?? false)
+                  : (review.images?.isEmpty ?? true),
+            )
+            .toList();
       }
 
       if (hasResponse != null) {
-        reviews = reviews.where((review) => 
-            hasResponse ? (review.response?.isNotEmpty ?? false) : (review.response?.isEmpty ?? true)
-        ).toList();
+        reviews = reviews
+            .where(
+              (review) => hasResponse
+                  ? (review.response?.isNotEmpty ?? false)
+                  : (review.response?.isEmpty ?? true),
+            )
+            .toList();
       }
 
       if (startDate != null) {
-        reviews = reviews.where((review) => review.createdAt.isAfter(startDate)).toList();
+        reviews = reviews
+            .where((review) => review.createdAt.isAfter(startDate))
+            .toList();
       }
 
       if (endDate != null) {
-        reviews = reviews.where((review) => review.createdAt.isBefore(endDate)).toList();
+        reviews = reviews
+            .where((review) => review.createdAt.isBefore(endDate))
+            .toList();
       }
 
       return reviews.take(limit).toList();
@@ -449,31 +454,34 @@ class CustomerReviewService {
   }
 
   /// Вычислить и сохранить статистику отзывов
-  Future<CustomerReviewStats?> _calculateAndSaveReviewStats(String specialistId) async {
+  Future<CustomerReviewStats?> _calculateAndSaveReviewStats(
+      String specialistId) async {
     try {
       final QuerySnapshot snapshot = await _firestore
           .collection('customer_reviews')
           .where('specialistId', isEqualTo: specialistId)
           .get();
 
-      final reviews = snapshot.docs
-          .map((doc) => CustomerReview.fromDoc(doc))
-          .toList();
+      final reviews = snapshot.docs.map(CustomerReview.fromDoc).toList();
 
       if (reviews.isEmpty) return null;
 
       // Вычисляем статистику
       final totalReviews = reviews.length;
-      final averageRating = reviews.map((r) => r.rating).reduce((a, b) => a + b) / totalReviews;
-      
+      final averageRating =
+          reviews.map((r) => r.rating).reduce((a, b) => a + b) / totalReviews;
+
       final ratingDistribution = <int, int>{};
-      for (int i = 1; i <= 5; i++) {
-        ratingDistribution[i] = reviews.where((r) => r.rating.round() == i).length;
+      for (var i = 1; i <= 5; i++) {
+        ratingDistribution[i] =
+            reviews.where((r) => r.rating.round() == i).length;
       }
 
       final verifiedReviews = reviews.where((r) => r.isVerified).length;
-      final reviewsWithImages = reviews.where((r) => r.images?.isNotEmpty ?? false).length;
-      final reviewsWithResponse = reviews.where((r) => r.response?.isNotEmpty ?? false).length;
+      final reviewsWithImages =
+          reviews.where((r) => r.images?.isNotEmpty ?? false).length;
+      final reviewsWithResponse =
+          reviews.where((r) => r.response?.isNotEmpty ?? false).length;
 
       final stats = CustomerReviewStats(
         specialistId: specialistId,
@@ -513,9 +521,7 @@ class CustomerReviewService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return snapshot.docs
-          .map((doc) => CustomerReview.fromDoc(doc))
-          .toList();
+      return snapshot.docs.map(CustomerReview.fromDoc).toList();
     } catch (e, stackTrace) {
       await _errorLogger.logError(
         error: 'Failed to get user reviews: $e',
@@ -550,4 +556,3 @@ class CustomerReviewService {
     }
   }
 }
-

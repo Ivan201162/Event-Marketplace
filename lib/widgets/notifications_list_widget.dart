@@ -20,7 +20,8 @@ class NotificationsListWidget extends StatefulWidget {
 
 class _NotificationsListWidgetState extends State<NotificationsListWidget> {
   @override
-  Widget build(BuildContext context) => StreamBuilder<List<Map<String, dynamic>>>(
+  Widget build(BuildContext context) =>
+      StreamBuilder<List<Map<String, dynamic>>>(
         stream: NotificationService.getUserNotifications(widget.userId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -269,9 +270,10 @@ class _NotificationCard extends StatelessWidget {
                           notification['title'] as String? ?? 'Уведомление',
                           style: TextStyle(
                             fontSize: 16,
-                            fontWeight: (notification['isRead'] as bool? ?? false)
-                                ? FontWeight.normal
-                                : FontWeight.bold,
+                            fontWeight:
+                                (notification['isRead'] as bool? ?? false)
+                                    ? FontWeight.normal
+                                    : FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 4),

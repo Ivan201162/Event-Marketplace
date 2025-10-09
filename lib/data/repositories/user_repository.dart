@@ -47,7 +47,7 @@ class UserRepository {
     try {
       final doc = await _firestore.collection('users').doc(uid).get();
       if (!doc.exists) return;
-      
+
       final data = doc.data()!;
       final updates = <String, dynamic>{};
 
@@ -63,7 +63,7 @@ class UserRepository {
       if (!data.containsKey('avatarUrl')) {
         updates['avatarUrl'] = null;
       }
-      
+
       if (updates.isNotEmpty) {
         updates['updatedAt'] = FieldValue.serverTimestamp();
         await doc.reference.update(updates);
@@ -74,16 +74,16 @@ class UserRepository {
   }
 
   /// Поток изменений пользователя
-  Stream<AppUser?> watchUser(String uid) {
-    return _firestore.collection('users').doc(uid).snapshots().map((doc) {
-      if (!doc.exists) return null;
-      return AppUser.fromDocument(doc);
-    });
-  }
+  Stream<AppUser?> watchUser(String uid) =>
+      _firestore.collection('users').doc(uid).snapshots().map((doc) {
+        if (!doc.exists) return null;
+        return AppUser.fromDocument(doc);
+      });
 }
 
 /// Провайдер репозитория пользователя
-final userRepositoryProvider = Provider<UserRepository>((ref) => UserRepository());
+final userRepositoryProvider =
+    Provider<UserRepository>((ref) => UserRepository());
 
 /// Провайдер пользователя по ID
 final userProvider = StreamProvider.family<AppUser?, String>((ref, uid) {
@@ -92,7 +92,8 @@ final userProvider = StreamProvider.family<AppUser?, String>((ref, uid) {
 });
 
 /// Провайдер для обновления пользователя
-final updateUserProvider = FutureProvider.family<bool, Map<String, dynamic>>((ref, params) async {
+final updateUserProvider =
+    FutureProvider.family<bool, Map<String, dynamic>>((ref, params) async {
   final repository = ref.watch(userRepositoryProvider);
   final uid = params['uid'] as String;
   final updates = Map<String, dynamic>.from(params);

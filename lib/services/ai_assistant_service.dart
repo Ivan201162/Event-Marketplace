@@ -25,11 +25,12 @@ class AIAssistantService {
     );
 
     _conversations.add(conversation);
-    
+
     // Добавляем приветственное сообщение
     final welcomeMessage = AIMessage(
       id: 'welcome_${conversation.id}',
-      text: 'Привет! Я помогу вам найти идеального специалиста для вашего мероприятия. Расскажите, что вы планируете?',
+      text:
+          'Привет! Я помогу вам найти идеального специалиста для вашего мероприятия. Расскажите, что вы планируете?',
       isFromUser: false,
       timestamp: DateTime.now(),
       messageType: AIMessageType.text,
@@ -66,7 +67,7 @@ class AIAssistantService {
 
     // Обрабатываем сообщение и генерируем ответ
     final aiResponse = await _processUserMessage(conversation, message, userId);
-    
+
     conversation.messages.add(aiResponse);
     _conversationHistory[conversationId]?.add(aiResponse);
 
@@ -80,7 +81,7 @@ class AIAssistantService {
     String? userId,
   ) async {
     final messageLower = message.toLowerCase();
-    
+
     // Анализируем сообщение и обновляем контекст
     _updateConversationContext(conversation, message);
 
@@ -109,7 +110,7 @@ class AIAssistantService {
   /// Обновить контекст беседы
   void _updateConversationContext(AIConversation conversation, String message) {
     final messageLower = message.toLowerCase();
-    
+
     // Извлекаем информацию о мероприятии
     if (_containsEventType(messageLower)) {
       final eventType = _extractEventType(messageLower);
@@ -153,7 +154,13 @@ class AIAssistantService {
 
   /// Проверить, является ли сообщение приветствием
   bool _isGreeting(String message) {
-    final greetings = ['привет', 'здравствуйте', 'добрый день', 'добрый вечер', 'доброе утро'];
+    final greetings = [
+      'привет',
+      'здравствуйте',
+      'добрый день',
+      'добрый вечер',
+      'доброе утро'
+    ];
     return greetings.any((greeting) => message.contains(greeting));
   }
 
@@ -165,7 +172,14 @@ class AIAssistantService {
 
   /// Проверить, предоставляет ли пользователь информацию о мероприятии
   bool _isProvidingEventInfo(String message) {
-    final eventWords = ['свадьба', 'день рождения', 'корпоратив', 'юбилей', 'вечеринка', 'мероприятие'];
+    final eventWords = [
+      'свадьба',
+      'день рождения',
+      'корпоратив',
+      'юбилей',
+      'вечеринка',
+      'мероприятие'
+    ];
     return eventWords.any((word) => message.contains(word));
   }
 
@@ -189,7 +203,13 @@ class AIAssistantService {
 
   /// Проверить, просит ли пользователь рекомендации
   bool _isAskingForRecommendations(String message) {
-    final recommendationWords = ['найди', 'подбери', 'рекомендуй', 'покажи', 'дай'];
+    final recommendationWords = [
+      'найди',
+      'подбери',
+      'рекомендуй',
+      'покажи',
+      'дай'
+    ];
     return recommendationWords.any((word) => message.contains(word));
   }
 
@@ -201,7 +221,14 @@ class AIAssistantService {
 
   /// Содержит ли сообщение тип мероприятия
   bool _containsEventType(String message) {
-    final eventTypes = ['свадьба', 'день рождения', 'корпоратив', 'юбилей', 'вечеринка', 'фотосессия'];
+    final eventTypes = [
+      'свадьба',
+      'день рождения',
+      'корпоратив',
+      'юбилей',
+      'вечеринка',
+      'фотосессия'
+    ];
     return eventTypes.any((type) => message.contains(type));
   }
 
@@ -219,13 +246,27 @@ class AIAssistantService {
 
   /// Содержит ли сообщение информацию о локации
   bool _containsLocation(String message) {
-    final cities = ['москва', 'санкт-петербург', 'екатеринбург', 'новосибирск', 'казань', 'нижний новгород'];
+    final cities = [
+      'москва',
+      'санкт-петербург',
+      'екатеринбург',
+      'новосибирск',
+      'казань',
+      'нижний новгород'
+    ];
     return cities.any((city) => message.contains(city));
   }
 
   /// Содержит ли сообщение информацию о стиле
   bool _containsStyle(String message) {
-    final styles = ['классика', 'современный', 'юмор', 'интерактив', 'романтичный', 'официальный'];
+    final styles = [
+      'классика',
+      'современный',
+      'юмор',
+      'интерактив',
+      'романтичный',
+      'официальный'
+    ];
     return styles.any((style) => message.contains(style));
   }
 
@@ -273,7 +314,7 @@ class AIAssistantService {
       final day = int.tryParse(match.group(1) ?? '');
       final month = int.tryParse(match.group(2) ?? '');
       final year = int.tryParse(match.group(3) ?? '');
-      
+
       if (day != null && month != null && year != null) {
         final fullYear = year < 100 ? 2000 + year : year;
         return DateTime(fullYear, month, day);
@@ -284,7 +325,14 @@ class AIAssistantService {
 
   /// Извлечь локацию
   String? _extractLocation(String message) {
-    final cities = ['москва', 'санкт-петербург', 'екатеринбург', 'новосибирск', 'казань', 'нижний новгород'];
+    final cities = [
+      'москва',
+      'санкт-петербург',
+      'екатеринбург',
+      'новосибирск',
+      'казань',
+      'нижний новгород'
+    ];
     for (final city in cities) {
       if (message.contains(city)) {
         return city;
@@ -295,7 +343,14 @@ class AIAssistantService {
 
   /// Извлечь стиль
   String? _extractStyle(String message) {
-    final styles = ['классика', 'современный', 'юмор', 'интерактив', 'романтичный', 'официальный'];
+    final styles = [
+      'классика',
+      'современный',
+      'юмор',
+      'интерактив',
+      'романтичный',
+      'официальный'
+    ];
     for (final style in styles) {
       if (message.contains(style)) {
         return style;
@@ -311,9 +366,9 @@ class AIAssistantService {
       'Приятно познакомиться! Расскажите, что у вас за мероприятие?',
       'Здравствуйте! Я помогу подобрать специалиста. Что вы организуете?',
     ];
-    
+
     final response = responses[DateTime.now().millisecond % responses.length];
-    
+
     return AIMessage(
       id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
       text: response,
@@ -325,36 +380,38 @@ class AIAssistantService {
 
   /// Сгенерировать ответ с помощью
   AIMessage _generateHelpResponse(AIConversation conversation) => AIMessage(
-      id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
-      text: 'Я помогу вам найти специалиста! Расскажите мне:\n\n'
-          '• Какой тип мероприятия вы планируете?\n'
-          '• В каком городе?\n'
-          '• На какую дату?\n'
-          '• Какой у вас бюджет?\n'
-          '• Какой стиль предпочитаете?\n\n'
-          'Чем больше деталей, тем точнее подбор!',
-      isFromUser: false,
-      timestamp: DateTime.now(),
-      messageType: AIMessageType.text,
-    );
+        id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
+        text: 'Я помогу вам найти специалиста! Расскажите мне:\n\n'
+            '• Какой тип мероприятия вы планируете?\n'
+            '• В каком городе?\n'
+            '• На какую дату?\n'
+            '• Какой у вас бюджет?\n'
+            '• Какой стиль предпочитаете?\n\n'
+            'Чем больше деталей, тем точнее подбор!',
+        isFromUser: false,
+        timestamp: DateTime.now(),
+        messageType: AIMessageType.text,
+      );
 
   /// Сгенерировать ответ на информацию о мероприятии
   AIMessage _generateEventInfoResponse(AIConversation conversation) {
     final eventType = conversation.context['eventType'] as String?;
-    
+
     if (eventType != null) {
       return AIMessage(
         id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
-        text: 'Понятно, у вас $eventType! Отличный выбор. Теперь расскажите, в каком городе будет проходить мероприятие?',
+        text:
+            'Понятно, у вас $eventType! Отличный выбор. Теперь расскажите, в каком городе будет проходить мероприятие?',
         isFromUser: false,
         timestamp: DateTime.now(),
         messageType: AIMessageType.text,
       );
     }
-    
+
     return AIMessage(
       id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
-      text: 'Интересно! А какой это будет тип мероприятия? Свадьба, день рождения, корпоратив?',
+      text:
+          'Интересно! А какой это будет тип мероприятия? Свадьба, день рождения, корпоратив?',
       isFromUser: false,
       timestamp: DateTime.now(),
       messageType: AIMessageType.text,
@@ -364,17 +421,18 @@ class AIAssistantService {
   /// Сгенерировать ответ на информацию о бюджете
   AIMessage _generateBudgetResponse(AIConversation conversation) {
     final budget = conversation.context['budget'] as double?;
-    
+
     if (budget != null) {
       return AIMessage(
         id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
-        text: 'Отлично, бюджет ${budget.toStringAsFixed(0)} ₽. Теперь скажите, на какую дату планируете мероприятие?',
+        text:
+            'Отлично, бюджет ${budget.toStringAsFixed(0)} ₽. Теперь скажите, на какую дату планируете мероприятие?',
         isFromUser: false,
         timestamp: DateTime.now(),
         messageType: AIMessageType.text,
       );
     }
-    
+
     return AIMessage(
       id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
       text: 'Хорошо! А какой у вас примерный бюджет на специалиста?',
@@ -387,17 +445,18 @@ class AIAssistantService {
   /// Сгенерировать ответ на информацию о дате
   AIMessage _generateDateResponse(AIConversation conversation) {
     final date = conversation.context['eventDate'] as DateTime?;
-    
+
     if (date != null) {
       return AIMessage(
         id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
-        text: 'Понятно, ${date.day}.${date.month}.${date.year}. Теперь расскажите, какой стиль мероприятия вы предпочитаете? Классический, современный, с юмором?',
+        text:
+            'Понятно, ${date.day}.${date.month}.${date.year}. Теперь расскажите, какой стиль мероприятия вы предпочитаете? Классический, современный, с юмором?',
         isFromUser: false,
         timestamp: DateTime.now(),
         messageType: AIMessageType.text,
       );
     }
-    
+
     return AIMessage(
       id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
       text: 'Хорошо! А на какую дату планируете мероприятие?',
@@ -410,17 +469,18 @@ class AIAssistantService {
   /// Сгенерировать ответ на информацию о локации
   AIMessage _generateLocationResponse(AIConversation conversation) {
     final location = conversation.context['location'] as String?;
-    
+
     if (location != null) {
       return AIMessage(
         id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
-        text: 'Отлично, $location! Теперь скажите, какой у вас бюджет на специалиста?',
+        text:
+            'Отлично, $location! Теперь скажите, какой у вас бюджет на специалиста?',
         isFromUser: false,
         timestamp: DateTime.now(),
         messageType: AIMessageType.text,
       );
     }
-    
+
     return AIMessage(
       id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
       text: 'Хорошо! А в каком городе будет проходить мероприятие?',
@@ -477,16 +537,17 @@ class AIAssistantService {
 
       if (specialists.isNotEmpty) {
         final topSpecialists = specialists.take(3).toList();
-        
-        final responseText = 'Отлично! Я нашел для вас ${specialists.length} подходящих специалистов. Вот топ-3:\n\n${topSpecialists.asMap().entries.map((entry) {
-              final index = entry.key + 1;
-              final specialist = entry.value;
-              return '$index. ${specialist.name} - ${specialist.category.displayName}\n'
-                  '   ⭐ Рейтинг: ${specialist.rating.toStringAsFixed(1)}\n'
-                  '   💰 Цена: ${specialist.priceRangeString}\n'
-                  '   📍 Город: ${specialist.city ?? 'Не указан'}\n'
-                  '   🎯 Совместимость: ${(specialist.compatibilityScore * 100).toStringAsFixed(0)}%';
-            }).join('\n\n')}\n\nХотите посмотреть подробнее или найти других специалистов?';
+
+        final responseText =
+            'Отлично! Я нашел для вас ${specialists.length} подходящих специалистов. Вот топ-3:\n\n${topSpecialists.asMap().entries.map((entry) {
+          final index = entry.key + 1;
+          final specialist = entry.value;
+          return '$index. ${specialist.name} - ${specialist.category.displayName}\n'
+              '   ⭐ Рейтинг: ${specialist.rating.toStringAsFixed(1)}\n'
+              '   💰 Цена: ${specialist.priceRangeString}\n'
+              '   📍 Город: ${specialist.city ?? 'Не указан'}\n'
+              '   🎯 Совместимость: ${(specialist.compatibilityScore * 100).toStringAsFixed(0)}%';
+        }).join('\n\n')}\n\nХотите посмотреть подробнее или найти других специалистов?';
 
         return AIMessage(
           id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
@@ -499,7 +560,8 @@ class AIAssistantService {
       } else {
         return AIMessage(
           id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
-          text: 'К сожалению, по вашим критериям не найдено подходящих специалистов. Попробуйте изменить параметры поиска или расскажите больше о ваших предпочтениях.',
+          text:
+              'К сожалению, по вашим критериям не найдено подходящих специалистов. Попробуйте изменить параметры поиска или расскажите больше о ваших предпочтениях.',
           isFromUser: false,
           timestamp: DateTime.now(),
           messageType: AIMessageType.text,
@@ -519,12 +581,13 @@ class AIAssistantService {
 
   /// Сгенерировать ответ с дополнительной информацией
   AIMessage _generateMoreInfoResponse(AIConversation conversation) => AIMessage(
-      id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
-      text: 'Конечно! Расскажите подробнее о вашем мероприятии. Чем больше деталей, тем точнее я смогу подобрать специалиста.',
-      isFromUser: false,
-      timestamp: DateTime.now(),
-      messageType: AIMessageType.text,
-    );
+        id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
+        text:
+            'Конечно! Расскажите подробнее о вашем мероприятии. Чем больше деталей, тем точнее я смогу подобрать специалиста.',
+        isFromUser: false,
+        timestamp: DateTime.now(),
+        messageType: AIMessageType.text,
+      );
 
   /// Сгенерировать ответ по умолчанию
   AIMessage _generateDefaultResponse(AIConversation conversation) {
@@ -533,9 +596,9 @@ class AIAssistantService {
       'Интересно! А что еще вы можете рассказать?',
       'Хорошо! Давайте продолжим. Что еще важно учесть?',
     ];
-    
+
     final response = responses[DateTime.now().millisecond % responses.length];
-    
+
     return AIMessage(
       id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
       text: response,
@@ -555,7 +618,8 @@ class AIAssistantService {
   }
 
   /// Получить историю сообщений
-  List<AIMessage> getConversationHistory(String conversationId) => _conversationHistory[conversationId] ?? [];
+  List<AIMessage> getConversationHistory(String conversationId) =>
+      _conversationHistory[conversationId] ?? [];
 
   /// Очистить историю беседы
   void clearConversationHistory(String conversationId) {

@@ -5,12 +5,11 @@ import '../../services/payment_service.dart';
 import '../../widgets/premium/premium_plan_card.dart';
 
 class PromotionScreen extends ConsumerStatefulWidget {
-  final String userId;
-
   const PromotionScreen({
-    Key? key,
+    super.key,
     required this.userId,
-  }) : super(key: key);
+  });
+  final String userId;
 
   @override
   ConsumerState<PromotionScreen> createState() => _PromotionScreenState();
@@ -22,206 +21,203 @@ class _PromotionScreenState extends ConsumerState<PromotionScreen> {
   String? _selectedPlan;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Продвижение профиля'),
-        backgroundColor: Colors.purple,
-        foregroundColor: Colors.white,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Colors.purple, Colors.deepPurple],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Продвижение профиля'),
+          backgroundColor: Colors.purple,
+          foregroundColor: Colors.white,
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Colors.purple, Colors.deepPurple],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                borderRadius: BorderRadius.circular(16),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.star,
+                      color: Colors.white,
+                      size: 32,
+                    ),
+                    SizedBox(height: 12),
+                    Text(
+                      'Премиум-размещение',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Ваш профиль будет отображаться выше других в поиске и ленте',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
               ),
+
+              const SizedBox(height: 24),
+
+              // Benefits
+              const Text(
+                'Что вы получите:',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              _buildBenefitItem(
+                Icons.visibility,
+                'Приоритет в поиске',
+                'Ваш профиль отображается в топе результатов',
+              ),
+              _buildBenefitItem(
+                Icons.star,
+                'Золотая рамка',
+                'Визуальное выделение среди других специалистов',
+              ),
+              _buildBenefitItem(
+                Icons.trending_up,
+                'Больше заказов',
+                'Увеличение количества просмотров и заявок',
+              ),
+
+              const SizedBox(height: 32),
+
+              // Plans
+              const Text(
+                'Выберите тариф:',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Premium Plans
+              ...PaymentConfig.premiumPlans.entries.map((entry) {
+                final plan = entry.key;
+                final price = entry.value;
+                final isSelected = _selectedPlan == plan;
+
+                return PremiumPlanCard(
+                  plan: plan,
+                  price: price,
+                  isSelected: isSelected,
+                  onTap: () {
+                    setState(() {
+                      _selectedPlan = plan;
+                    });
+                  },
+                );
+              }),
+
+              const SizedBox(height: 32),
+
+              // Purchase Button
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: _selectedPlan != null && !_isLoading
+                      ? _processPayment
+                      : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purple,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: _isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : Text(
+                          'Оплатить ${PaymentConfig.premiumPlans[_selectedPlan] ?? 0} ₽',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              // Terms
+              Text(
+                'Оплата производится через защищенный сервис Stripe. '
+                'Вы можете отменить продвижение в любое время.',
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 12,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+
+  Widget _buildBenefitItem(IconData icon, String title, String description) =>
+      Padding(
+        padding: const EdgeInsets.only(bottom: 16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.purple.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                icon,
+                color: Colors.purple,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(
-                    Icons.star,
-                    color: Colors.white,
-                    size: 32,
-                  ),
-                  const SizedBox(height: 12),
-                  const Text(
-                    'Премиум-размещение',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Ваш профиль будет отображаться выше других в поиске и ленте',
+                  Text(
+                    description,
                     style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 16,
+                      color: Colors.grey[600],
+                      fontSize: 14,
                     ),
                   ),
                 ],
               ),
             ),
-
-            const SizedBox(height: 24),
-
-            // Benefits
-            const Text(
-              'Что вы получите:',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            _buildBenefitItem(
-              Icons.visibility,
-              'Приоритет в поиске',
-              'Ваш профиль отображается в топе результатов',
-            ),
-            _buildBenefitItem(
-              Icons.star,
-              'Золотая рамка',
-              'Визуальное выделение среди других специалистов',
-            ),
-            _buildBenefitItem(
-              Icons.trending_up,
-              'Больше заказов',
-              'Увеличение количества просмотров и заявок',
-            ),
-
-            const SizedBox(height: 32),
-
-            // Plans
-            const Text(
-              'Выберите тариф:',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Premium Plans
-            ...PaymentConfig.premiumPlans.entries.map((entry) {
-              final plan = entry.key;
-              final price = entry.value;
-              final isSelected = _selectedPlan == plan;
-
-              return PremiumPlanCard(
-                plan: plan,
-                price: price,
-                isSelected: isSelected,
-                onTap: () {
-                  setState(() {
-                    _selectedPlan = plan;
-                  });
-                },
-              );
-            }).toList(),
-
-            const SizedBox(height: 32),
-
-            // Purchase Button
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: ElevatedButton(
-                onPressed: _selectedPlan != null && !_isLoading
-                    ? _processPayment
-                    : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: _isLoading
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : Text(
-                        'Оплатить ${PaymentConfig.premiumPlans[_selectedPlan] ?? 0} ₽',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // Terms
-            Text(
-              'Оплата производится через защищенный сервис Stripe. '
-              'Вы можете отменить продвижение в любое время.',
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 12,
-              ),
-              textAlign: TextAlign.center,
-            ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildBenefitItem(IconData icon, String title, String description) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.purple.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(
-              icon,
-              color: Colors.purple,
-              size: 24,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  description,
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+      );
 
   Future<void> _processPayment() async {
     if (_selectedPlan == null) return;
@@ -305,5 +301,3 @@ class _PromotionScreenState extends ConsumerState<PromotionScreen> {
     );
   }
 }
-
-

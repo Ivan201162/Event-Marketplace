@@ -15,18 +15,6 @@ enum TransactionStatus {
 }
 
 class Transaction {
-  final String id;
-  final String userId;
-  final TransactionType type;
-  final double amount;
-  final String currency;
-  final TransactionStatus status;
-  final DateTime timestamp;
-  final String description;
-  final String? targetUserId; // For donations
-  final String? postId; // For post boosting
-  final Map<String, dynamic>? metadata;
-
   Transaction({
     required this.id,
     required this.userId,
@@ -41,43 +29,50 @@ class Transaction {
     this.metadata,
   });
 
-  factory Transaction.fromMap(Map<String, dynamic> map) {
-    return Transaction(
-      id: map['id'] ?? '',
-      userId: map['userId'] ?? '',
-      type: TransactionType.values.firstWhere(
-        (e) => e.toString() == 'TransactionType.${map['type']}',
-        orElse: () => TransactionType.donation,
-      ),
-      amount: (map['amount'] ?? 0.0).toDouble(),
-      currency: map['currency'] ?? 'RUB',
-      status: TransactionStatus.values.firstWhere(
-        (e) => e.toString() == 'TransactionStatus.${map['status']}',
-        orElse: () => TransactionStatus.pending,
-      ),
-      timestamp: (map['timestamp'] as Timestamp).toDate(),
-      description: map['description'] ?? '',
-      targetUserId: map['targetUserId'],
-      postId: map['postId'],
-      metadata: map['metadata'],
-    );
-  }
+  factory Transaction.fromMap(Map<String, dynamic> map) => Transaction(
+        id: map['id'] ?? '',
+        userId: map['userId'] ?? '',
+        type: TransactionType.values.firstWhere(
+          (e) => e.toString() == 'TransactionType.${map['type']}',
+          orElse: () => TransactionType.donation,
+        ),
+        amount: (map['amount'] ?? 0.0).toDouble(),
+        currency: map['currency'] ?? 'RUB',
+        status: TransactionStatus.values.firstWhere(
+          (e) => e.toString() == 'TransactionStatus.${map['status']}',
+          orElse: () => TransactionStatus.pending,
+        ),
+        timestamp: (map['timestamp'] as Timestamp).toDate(),
+        description: map['description'] ?? '',
+        targetUserId: map['targetUserId'],
+        postId: map['postId'],
+        metadata: map['metadata'],
+      );
+  final String id;
+  final String userId;
+  final TransactionType type;
+  final double amount;
+  final String currency;
+  final TransactionStatus status;
+  final DateTime timestamp;
+  final String description;
+  final String? targetUserId; // For donations
+  final String? postId; // For post boosting
+  final Map<String, dynamic>? metadata;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'userId': userId,
-      'type': type.toString().split('.').last,
-      'amount': amount,
-      'currency': currency,
-      'status': status.toString().split('.').last,
-      'timestamp': Timestamp.fromDate(timestamp),
-      'description': description,
-      'targetUserId': targetUserId,
-      'postId': postId,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'userId': userId,
+        'type': type.toString().split('.').last,
+        'amount': amount,
+        'currency': currency,
+        'status': status.toString().split('.').last,
+        'timestamp': Timestamp.fromDate(timestamp),
+        'description': description,
+        'targetUserId': targetUserId,
+        'postId': postId,
+        'metadata': metadata,
+      };
 
   Transaction copyWith({
     String? id,
@@ -91,21 +86,18 @@ class Transaction {
     String? targetUserId,
     String? postId,
     Map<String, dynamic>? metadata,
-  }) {
-    return Transaction(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      type: type ?? this.type,
-      amount: amount ?? this.amount,
-      currency: currency ?? this.currency,
-      status: status ?? this.status,
-      timestamp: timestamp ?? this.timestamp,
-      description: description ?? this.description,
-      targetUserId: targetUserId ?? this.targetUserId,
-      postId: postId ?? this.postId,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      Transaction(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        type: type ?? this.type,
+        amount: amount ?? this.amount,
+        currency: currency ?? this.currency,
+        status: status ?? this.status,
+        timestamp: timestamp ?? this.timestamp,
+        description: description ?? this.description,
+        targetUserId: targetUserId ?? this.targetUserId,
+        postId: postId ?? this.postId,
+        metadata: metadata ?? this.metadata,
+      );
 }
-
-

@@ -1,47 +1,52 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../services/enhanced_feed_service.dart';
 import '../models/enhanced_feed_post.dart';
+import '../services/enhanced_feed_service.dart';
 
 /// Провайдер сервиса ленты
-final enhancedFeedServiceProvider = Provider<EnhancedFeedService>((ref) {
-  return EnhancedFeedService();
-});
+final enhancedFeedServiceProvider =
+    Provider<EnhancedFeedService>((ref) => EnhancedFeedService());
 
 /// Провайдер ленты
 final feedProvider = FutureProvider<List<EnhancedFeedPost>>((ref) async {
   final service = ref.read(enhancedFeedServiceProvider);
-  return await service.getFeed();
+  return service.getFeed();
 });
 
 /// Провайдер постов пользователя
-final userPostsProvider = FutureProvider.family<List<EnhancedFeedPost>, String>((ref, userId) async {
+final userPostsProvider =
+    FutureProvider.family<List<EnhancedFeedPost>, String>((ref, userId) async {
   final service = ref.read(enhancedFeedServiceProvider);
-  return await service.getUserPosts(userId: userId);
+  return service.getUserPosts(userId: userId);
 });
 
 /// Провайдер поста по ID
-final postProvider = FutureProvider.family<EnhancedFeedPost?, String>((ref, postId) async {
+final postProvider =
+    FutureProvider.family<EnhancedFeedPost?, String>((ref, postId) async {
   final service = ref.read(enhancedFeedServiceProvider);
-  return await service.getPostById(postId);
+  return service.getPostById(postId);
 });
 
 /// Провайдер комментариев поста
-final postCommentsProvider = FutureProvider.family<List<FeedPostComment>, String>((ref, postId) async {
+final postCommentsProvider =
+    FutureProvider.family<List<FeedPostComment>, String>((ref, postId) async {
   final service = ref.read(enhancedFeedServiceProvider);
-  return await service.getPostComments(postId: postId);
+  return service.getPostComments(postId: postId);
 });
 
 /// Провайдер сохранённых постов
-final savedPostsProvider = FutureProvider.family<List<EnhancedFeedPost>, String>((ref, userId) async {
+final savedPostsProvider =
+    FutureProvider.family<List<EnhancedFeedPost>, String>((ref, userId) async {
   final service = ref.read(enhancedFeedServiceProvider);
-  return await service.getSavedPosts(userId: userId);
+  return service.getSavedPosts(userId: userId);
 });
 
 /// Провайдер поиска постов
-final searchPostsProvider = FutureProvider.family<List<EnhancedFeedPost>, Map<String, dynamic>>((ref, params) async {
+final searchPostsProvider =
+    FutureProvider.family<List<EnhancedFeedPost>, Map<String, dynamic>>(
+        (ref, params) async {
   final service = ref.read(enhancedFeedServiceProvider);
-  return await service.searchPosts(
+  return service.searchPosts(
     query: params['query'] as String,
     tags: params['tags'] as List<String>?,
     location: params['location'] as String?,
@@ -50,9 +55,9 @@ final searchPostsProvider = FutureProvider.family<List<EnhancedFeedPost>, Map<St
 });
 
 /// Провайдер состояния создания поста
-final createPostStateProvider = StateNotifierProvider<CreatePostStateNotifier, CreatePostState>((ref) {
-  return CreatePostStateNotifier(ref.read(enhancedFeedServiceProvider));
-});
+final createPostStateProvider =
+    StateNotifierProvider<CreatePostStateNotifier, CreatePostState>((ref) =>
+        CreatePostStateNotifier(ref.read(enhancedFeedServiceProvider)));
 
 /// Состояние создания поста
 class CreatePostState {
@@ -70,13 +75,12 @@ class CreatePostState {
     bool? isLoading,
     String? error,
     bool? success,
-  }) {
-    return CreatePostState(
-      isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
-      success: success ?? this.success,
-    );
-  }
+  }) =>
+      CreatePostState(
+        isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error,
+        success: success ?? this.success,
+      );
 }
 
 /// Нотификатор состояния создания поста
@@ -93,7 +97,7 @@ class CreatePostStateNotifier extends StateNotifier<CreatePostState> {
     String? location,
     bool isSponsored = false,
   }) async {
-    state = state.copyWith(isLoading: true, error: null, success: false);
+    state = state.copyWith(isLoading: true, success: false);
 
     try {
       await _service.createPost(
@@ -120,12 +124,13 @@ class CreatePostStateNotifier extends StateNotifier<CreatePostState> {
 }
 
 /// Провайдер состояния лайков
-final likeStateProvider = StateNotifierProvider.family<LikeStateNotifier, LikeState, String>((ref, postId) {
-  return LikeStateNotifier(
+final likeStateProvider =
+    StateNotifierProvider.family<LikeStateNotifier, LikeState, String>(
+  (ref, postId) => LikeStateNotifier(
     ref.read(enhancedFeedServiceProvider),
     postId,
-  );
-});
+  ),
+);
 
 /// Состояние лайка
 class LikeState {
@@ -143,13 +148,12 @@ class LikeState {
     bool? isLiked,
     int? likesCount,
     bool? isLoading,
-  }) {
-    return LikeState(
-      isLiked: isLiked ?? this.isLiked,
-      likesCount: likesCount ?? this.likesCount,
-      isLoading: isLoading ?? this.isLoading,
-    );
-  }
+  }) =>
+      LikeState(
+        isLiked: isLiked ?? this.isLiked,
+        likesCount: likesCount ?? this.likesCount,
+        isLoading: isLoading ?? this.isLoading,
+      );
 }
 
 /// Нотификатор состояния лайка
@@ -193,12 +197,13 @@ class LikeStateNotifier extends StateNotifier<LikeState> {
 }
 
 /// Провайдер состояния сохранения поста
-final saveStateProvider = StateNotifierProvider.family<SaveStateNotifier, SaveState, String>((ref, postId) {
-  return SaveStateNotifier(
+final saveStateProvider =
+    StateNotifierProvider.family<SaveStateNotifier, SaveState, String>(
+  (ref, postId) => SaveStateNotifier(
     ref.read(enhancedFeedServiceProvider),
     postId,
-  );
-});
+  ),
+);
 
 /// Состояние сохранения
 class SaveState {
@@ -216,13 +221,12 @@ class SaveState {
     bool? isSaved,
     int? savesCount,
     bool? isLoading,
-  }) {
-    return SaveState(
-      isSaved: isSaved ?? this.isSaved,
-      savesCount: savesCount ?? this.savesCount,
-      isLoading: isLoading ?? this.isLoading,
-    );
-  }
+  }) =>
+      SaveState(
+        isSaved: isSaved ?? this.isSaved,
+        savesCount: savesCount ?? this.savesCount,
+        isLoading: isLoading ?? this.isLoading,
+      );
 }
 
 /// Нотификатор состояния сохранения
@@ -264,4 +268,3 @@ class SaveStateNotifier extends StateNotifier<SaveState> {
     );
   }
 }
-
