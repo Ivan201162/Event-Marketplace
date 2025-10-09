@@ -317,8 +317,8 @@ class AdvertisingService {
 
       var totalAds = 0;
       var activeAds = 0;
-      var totalBudget = 0;
-      var totalSpent = 0;
+      var totalBudget = 0.0;
+      var totalSpent = 0.0;
       var totalImpressions = 0;
       var totalClicks = 0;
       var totalConversions = 0;
@@ -385,7 +385,7 @@ class AdvertisingService {
   /// Рассчитать релевантность рекламы для пользователя
   double _calculateRelevance(Advertisement ad, String userId) {
     // Простой алгоритм релевантности
-    var relevance = 0;
+    var relevance = 0.0;
 
     // Базовый рейтинг по бюджету
     relevance += ad.budget / 1000.0;
