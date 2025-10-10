@@ -39,7 +39,7 @@ class ReviewCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    _buildRatingStars(review.rating.toDouble()),
+                    _buildRatingStars(review.rating),
                   ],
                 ),
 

@@ -1,6 +1,6 @@
 import 'package:event_marketplace_app/services/test_data_service.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_options.dart';
+// import 'package:firebase_options.dart';
 
 /// Скрипт для тестирования TestDataService
 Future<void> main() async {
@@ -8,9 +8,9 @@ Future<void> main() async {
   
   try {
     // Инициализация Firebase
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    // await Firebase.initializeApp(
+    //   options: DefaultFirebaseOptions.currentPlatform,
+    // );
     print('✅ Firebase инициализирован');
     
     final testDataService = TestDataService();
