@@ -15,8 +15,8 @@ class ThemeSwitchWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeProvider);
-    final themeNotifier = ref.read(themeProvider.notifier);
+    final themeNotifier = ref.watch(themeProvider) as ThemeNotifier;
+    final themeMode = themeNotifier.themeMode;
 
     if (compact) {
       return _buildCompactSwitch(context, themeMode, themeNotifier);
@@ -31,7 +31,7 @@ class ThemeSwitchWidget extends ConsumerWidget {
     ThemeNotifier themeNotifier,
   ) =>
       IconButton(
-        onPressed: () => themeNotifier.changeTheme(ThemeMode.dark),
+        onPressed: () => themeNotifier.toggleTheme(),
         icon: Icon(_getThemeIcon(themeMode)),
         tooltip: _getThemeTooltip(themeMode),
       );
@@ -94,13 +94,13 @@ class ThemeSwitchWidget extends ConsumerWidget {
                   final selectedTheme = selection.first;
                   switch (selectedTheme) {
                     case ThemeMode.light:
-                      themeNotifier.changeTheme(ThemeMode.light);
+                      themeNotifier.setLightTheme();
                       break;
                     case ThemeMode.dark:
-                      themeNotifier.changeTheme(ThemeMode.dark);
+                      themeNotifier.setDarkTheme();
                       break;
                     case ThemeMode.system:
-                      themeNotifier.changeTheme(ThemeMode.system);
+                      themeNotifier.setSystemTheme();
                       break;
                   }
                 },
@@ -150,11 +150,11 @@ class ThemeToggleButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeProvider);
-    final themeNotifier = ref.read(themeProvider.notifier);
+    final themeNotifier = ref.watch(themeProvider) as ThemeNotifier;
+    final themeMode = themeNotifier.themeMode;
 
     return IconButton(
-      onPressed: () => themeNotifier.changeTheme(ThemeMode.dark),
+      onPressed: themeNotifier.toggleTheme,
       icon: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
         child: Icon(
@@ -195,7 +195,8 @@ class ThemeIndicator extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeProvider);
+    final themeNotifier = ref.watch(themeProvider) as ThemeNotifier;
+    final themeMode = themeNotifier.themeMode;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),

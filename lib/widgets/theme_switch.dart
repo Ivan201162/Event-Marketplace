@@ -158,24 +158,21 @@ class ThemeSwitch extends ConsumerWidget {
   }
 
   void _setThemeMode(WidgetRef ref, ThemeMode themeMode) {
-    String themeName;
+    final notifier = ref.read(themeProvider.notifier);
     switch (themeMode) {
       case ThemeMode.light:
-        ref.read(themeProvider.notifier).changeTheme(ThemeMode.light);
-        themeName = 'light';
+        notifier.setLightTheme();
         break;
       case ThemeMode.dark:
-        ref.read(themeProvider.notifier).changeTheme(ThemeMode.dark);
-        themeName = 'dark';
+        notifier.setDarkTheme();
         break;
       case ThemeMode.system:
-        ref.read(themeProvider.notifier).changeTheme(ThemeMode.system);
-        themeName = 'system';
+        notifier.setSystemTheme();
         break;
     }
 
     // Логируем изменение темы
-    AnalyticsService().logChangeTheme(themeName);
+    AnalyticsService().logChangeTheme(themeMode.name);
   }
 
   void _showThemeDialog(BuildContext context, WidgetRef ref) {
@@ -227,13 +224,13 @@ class ThemeSwitch extends ConsumerWidget {
   Widget _buildThemeOption(
     BuildContext context,
     WidgetRef ref,
-    ThemeMode ThemeMode,
+    ThemeMode themeMode,
     IconData icon,
     String title,
     String subtitle,
   ) {
     final currentThemeMode = ref.watch(themeProvider);
-    final isSelected = currentThemeMode == ThemeMode;
+    final isSelected = currentThemeMode == themeMode;
 
     return ListTile(
       leading: Icon(icon, size: 24),
@@ -242,7 +239,7 @@ class ThemeSwitch extends ConsumerWidget {
       trailing: isSelected ? const Icon(Icons.check, color: Colors.blue) : null,
       selected: isSelected,
       onTap: () {
-        _setThemeMode(ref, ThemeMode);
+        _setThemeMode(ref, themeMode);
         Navigator.of(context).pop();
         onChanged?.call();
       },
@@ -380,15 +377,16 @@ class CompactThemeSwitch extends ConsumerWidget {
       trailing: isSelected ? const Icon(Icons.check, color: Colors.blue) : null,
       selected: isSelected,
       onTap: () {
+        final notifier = ref.read(themeProvider.notifier);
         switch (themeMode) {
           case ThemeMode.light:
-            ref.read(themeProvider.notifier).changeTheme(ThemeMode.light);
+            notifier.setLightTheme();
             break;
           case ThemeMode.dark:
-            ref.read(themeProvider.notifier).changeTheme(ThemeMode.dark);
+            notifier.setDarkTheme();
             break;
           case ThemeMode.system:
-            ref.read(themeProvider.notifier).changeTheme(ThemeMode.system);
+            notifier.setSystemTheme();
             break;
         }
         Navigator.of(context).pop();
@@ -498,7 +496,7 @@ class QuickThemeToggle extends ConsumerWidget {
 
     return IconButton(
       onPressed: () {
-        ref.read(themeProvider.notifier).changeTheme(ThemeMode.dark);
+        ref.read(themeProvider.notifier).toggleTheme();
         onChanged?.call();
       },
       icon: Icon(

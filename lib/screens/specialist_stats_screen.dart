@@ -84,8 +84,11 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.error_outline,
-                            size: 64, color: Colors.red[300]),
+                        Icon(
+                          Icons.error_outline,
+                          size: 64,
+                          color: Colors.red[300],
+                        ),
                         const SizedBox(height: 16),
                         Text(_error!, style: const TextStyle(fontSize: 16)),
                         const SizedBox(height: 16),
@@ -289,7 +292,7 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
                 BarChartData(
                   alignment: BarChartAlignment.spaceAround,
                   maxY: 100,
-                  barTouchData: BarTouchData(enabled: false),
+                  barTouchData: const BarTouchData(enabled: false),
                   titlesData: FlTitlesData(
                     bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
@@ -299,7 +302,7 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
                             'Просмотры',
                             'Заявки',
                             'Сообщения',
-                            'Лайки'
+                            'Лайки',
                           ];
                           return Text(titles[value.toInt() % titles.length]);
                         },
@@ -552,7 +555,10 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
       );
 
   Widget _buildRecommendationItem(
-          String title, String description, IconData icon) =>
+    String title,
+    String description,
+    IconData icon,
+  ) =>
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../firebase_options.dart';
 import '../services/cache_service.dart';
 
 /// Экран загрузки с анимацией и инициализацией
@@ -103,7 +104,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       });
       await _updateProgress(0.1);
 
-      await Firebase.initializeApp();
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
       await _updateProgress(0.2);
 
       // Инициализация кэша
@@ -377,10 +380,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   }
 }
 
-/// Провайдер для состояния сплэш-экрана
+/// Провайдер для состояния сплэш-экрана (мигрирован с StateNotifierProvider)
 final splashStateProvider =
-    StateNotifierProvider<SplashStateNotifier, SplashState>(
-        (ref) => SplashStateNotifier());
+    NotifierProvider<SplashStateNotifier, SplashState>(SplashStateNotifier.new);
 
 class SplashState {
   const SplashState({
@@ -409,8 +411,9 @@ class SplashState {
       );
 }
 
-class SplashStateNotifier extends StateNotifier<SplashState> {
-  SplashStateNotifier() : super(const SplashState());
+class SplashStateNotifier extends Notifier<SplashState> {
+  @override
+  SplashState build() => const SplashState();
 
   void updateProgress(double progress) {
     state = state.copyWith(progress: progress);

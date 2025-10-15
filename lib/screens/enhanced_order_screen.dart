@@ -511,7 +511,11 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
       );
 
   Widget _buildInfoCard(
-          String title, String value, IconData icon, Color color) =>
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) =>
       Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(

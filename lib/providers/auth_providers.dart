@@ -47,8 +47,31 @@ final currentUserIdProvider = Provider<String?>((ref) {
   );
 });
 
-/// Провайдер для состояния загрузки аутентификации
-final authLoadingProvider = StateProvider<bool>((ref) => false);
+/// Провайдер для состояния загрузки аутентификации (мигрирован с StateProvider)
+class AuthLoadingNotifier extends Notifier<bool> {
+  @override
+  bool build() => false;
 
-/// Провайдер для ошибок аутентификации
-final authErrorProvider = StateProvider<String?>((ref) => null);
+  void setLoading(bool loading) {
+    state = loading;
+  }
+}
+
+/// Провайдер для ошибок аутентификации (мигрирован с StateProvider)
+class AuthErrorNotifier extends Notifier<String?> {
+  @override
+  String? build() => null;
+
+  void setError(String? error) {
+    state = error;
+  }
+
+  void clearError() {
+    state = null;
+  }
+}
+
+final authLoadingProvider =
+    NotifierProvider<AuthLoadingNotifier, bool>(AuthLoadingNotifier.new);
+final authErrorProvider =
+    NotifierProvider<AuthErrorNotifier, String?>(AuthErrorNotifier.new);

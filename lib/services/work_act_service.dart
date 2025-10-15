@@ -1,10 +1,8 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:printing/printing.dart';
 
 /// Сервис для управления актами выполненных работ
 class WorkActService {
@@ -190,7 +188,7 @@ class WorkActService {
       pdf.addPage(
         pw.Page(
           pageFormat: PdfPageFormat.a4,
-          build: (pw.Context context) => _buildWorkActContent(workAct),
+          build: (context) => _buildWorkActContent(workAct),
         ),
       );
 
@@ -233,7 +231,7 @@ class WorkActService {
           ),
           pw.Text(
             '№ ${DateTime.now().millisecondsSinceEpoch}',
-            style: pw.TextStyle(fontSize: 12),
+            style: const pw.TextStyle(fontSize: 12),
           ),
         ],
       );
@@ -274,13 +272,13 @@ class WorkActService {
               width: 120,
               child: pw.Text(
                 label,
-                style: pw.TextStyle(fontSize: 12),
+                style: const pw.TextStyle(fontSize: 12),
               ),
             ),
             pw.Expanded(
               child: pw.Text(
                 value,
-                style: pw.TextStyle(fontSize: 12),
+                style: const pw.TextStyle(fontSize: 12),
               ),
             ),
           ],
@@ -301,10 +299,10 @@ class WorkActService {
           pw.Table(
             border: pw.TableBorder.all(),
             columnWidths: {
-              0: const pw.FlexColumnWidth(1),
+              0: const pw.FlexColumnWidth(),
               1: const pw.FlexColumnWidth(3),
-              2: const pw.FlexColumnWidth(1),
-              3: const pw.FlexColumnWidth(1),
+              2: const pw.FlexColumnWidth(),
+              3: const pw.FlexColumnWidth(),
             },
             children: [
               pw.TableRow(
@@ -375,7 +373,7 @@ class WorkActService {
         pw.SizedBox(height: 8),
         pw.Text(
           workAct.notes!,
-          style: pw.TextStyle(fontSize: 12),
+          style: const pw.TextStyle(fontSize: 12),
         ),
       ],
     );
@@ -389,16 +387,16 @@ class WorkActService {
             children: [
               pw.Text(
                 'Исполнитель:',
-                style: pw.TextStyle(fontSize: 12),
+                style: const pw.TextStyle(fontSize: 12),
               ),
               pw.SizedBox(height: 40),
               pw.Text(
                 '_________________',
-                style: pw.TextStyle(fontSize: 12),
+                style: const pw.TextStyle(fontSize: 12),
               ),
               pw.Text(
                 'Подпись',
-                style: pw.TextStyle(fontSize: 10),
+                style: const pw.TextStyle(fontSize: 10),
               ),
             ],
           ),
@@ -407,16 +405,16 @@ class WorkActService {
             children: [
               pw.Text(
                 'Заказчик:',
-                style: pw.TextStyle(fontSize: 12),
+                style: const pw.TextStyle(fontSize: 12),
               ),
               pw.SizedBox(height: 40),
               pw.Text(
                 '_________________',
-                style: pw.TextStyle(fontSize: 12),
+                style: const pw.TextStyle(fontSize: 12),
               ),
               pw.Text(
                 'Подпись',
-                style: pw.TextStyle(fontSize: 10),
+                style: const pw.TextStyle(fontSize: 10),
               ),
             ],
           ),

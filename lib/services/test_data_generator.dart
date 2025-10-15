@@ -7,7 +7,7 @@ class TestDataGenerator {
   /// Генерация всех тестовых данных
   static Future<void> generateAllTestData() async {
     try {
-      print('🚀 Начинаем генерацию тестовых данных...');
+      debugPrint('🚀 Начинаем генерацию тестовых данных...');
 
       // Очистка существующих данных
       await _clearTestData();
@@ -30,9 +30,9 @@ class TestDataGenerator {
       // Генерация заявок
       await _generateRequests();
 
-      print('✅ Все тестовые данные успешно сгенерированы!');
-    } catch (e) {
-      print('❌ Ошибка генерации тестовых данных: $e');
+      debugPrint('✅ Все тестовые данные успешно сгенерированы!');
+    } on Exception catch (e) {
+      debugPrint('❌ Ошибка генерации тестовых данных: $e');
     }
   }
 
@@ -45,7 +45,7 @@ class TestDataGenerator {
       'ideas',
       'notifications',
       'chats',
-      'requests'
+      'requests',
     ];
 
     for (final collection in collections) {
@@ -58,9 +58,9 @@ class TestDataGenerator {
         }
 
         await batch.commit();
-        print('🧹 Очищена коллекция: $collection');
-      } catch (e) {
-        print('⚠️ Ошибка очистки коллекции $collection: $e');
+        debugPrint('🧹 Очищена коллекция: $collection');
+      } on Exception catch (e) {
+        debugPrint('⚠️ Ошибка очистки коллекции $collection: $e');
       }
     }
   }
@@ -165,7 +165,7 @@ class TestDataGenerator {
       }
     }
 
-    print('👥 Создано ${users.length} пользователей и специалистов');
+    debugPrint('👥 Создано ${users.length} пользователей и специалистов');
   }
 
   /// Генерация постов ленты
@@ -245,7 +245,7 @@ class TestDataGenerator {
       });
     }
 
-    print('📱 Создано ${posts.length} постов в ленте');
+    debugPrint('📱 Создано ${posts.length} постов в ленте');
   }
 
   /// Генерация идей
@@ -324,7 +324,7 @@ class TestDataGenerator {
       });
     }
 
-    print('💡 Создано ${ideas.length} идей');
+    debugPrint('💡 Создано ${ideas.length} идей');
   }
 
   /// Генерация уведомлений
@@ -379,7 +379,7 @@ class TestDataGenerator {
       });
     }
 
-    print('🔔 Создано ${notifications.length} уведомлений');
+    debugPrint('🔔 Создано ${notifications.length} уведомлений');
   }
 
   /// Генерация чатов
@@ -411,7 +411,7 @@ class TestDataGenerator {
       });
     }
 
-    print('💬 Создано ${chats.length} чатов');
+    debugPrint('💬 Создано ${chats.length} чатов');
   }
 
   /// Генерация заявок
@@ -450,6 +450,6 @@ class TestDataGenerator {
       });
     }
 
-    print('📋 Создано ${requests.length} заявок');
+    debugPrint('📋 Создано ${requests.length} заявок');
   }
 }

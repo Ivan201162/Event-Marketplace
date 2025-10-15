@@ -13,7 +13,8 @@ class BookingsRepository {
   Stream<List<Map<String, dynamic>>> getCustomerBookings(String customerId) {
     try {
       debugPrint(
-          'BookingsRepository.getCustomerBookings: customerId=$customerId');
+        'BookingsRepository.getCustomerBookings: customerId=$customerId',
+      );
 
       return _firestore
           .collection('bookings')
@@ -22,7 +23,8 @@ class BookingsRepository {
           .snapshots()
           .map((snapshot) {
         debugPrint(
-            'BookingsRepository.getCustomerBookings: получено ${snapshot.docs.length} заявок');
+          'BookingsRepository.getCustomerBookings: получено ${snapshot.docs.length} заявок',
+        );
 
         return snapshot.docs.map((doc) {
           final data = doc.data() as Map<String, dynamic>? ?? {};
@@ -40,10 +42,12 @@ class BookingsRepository {
 
   /// Получение заявок специалиста
   Stream<List<Map<String, dynamic>>> getSpecialistBookings(
-      String specialistId) {
+    String specialistId,
+  ) {
     try {
       debugPrint(
-          'BookingsRepository.getSpecialistBookings: specialistId=$specialistId');
+        'BookingsRepository.getSpecialistBookings: specialistId=$specialistId',
+      );
 
       return _firestore
           .collection('bookings')
@@ -52,7 +56,8 @@ class BookingsRepository {
           .snapshots()
           .map((snapshot) {
         debugPrint(
-            'BookingsRepository.getSpecialistBookings: получено ${snapshot.docs.length} заявок');
+          'BookingsRepository.getSpecialistBookings: получено ${snapshot.docs.length} заявок',
+        );
 
         return snapshot.docs.map((doc) {
           final data = doc.data() as Map<String, dynamic>? ?? {};
@@ -64,7 +69,8 @@ class BookingsRepository {
       });
     } catch (e) {
       debugPrint(
-          'BookingsRepository.getSpecialistBookings: ошибка запроса: $e');
+        'BookingsRepository.getSpecialistBookings: ошибка запроса: $e',
+      );
       return Stream.value([]);
     }
   }
@@ -80,7 +86,8 @@ class BookingsRepository {
           .snapshots()
           .map((snapshot) {
         debugPrint(
-            'BookingsRepository.getAllBookings: получено ${snapshot.docs.length} заявок');
+          'BookingsRepository.getAllBookings: получено ${snapshot.docs.length} заявок',
+        );
 
         return snapshot.docs.map((doc) {
           final data = doc.data() as Map<String, dynamic>? ?? {};
@@ -105,7 +112,8 @@ class BookingsRepository {
       if (doc.exists) {
         final data = doc.data() ?? {};
         debugPrint(
-            'BookingsRepository.getById: заявка найдена, поля: ${data.keys.toList()}');
+          'BookingsRepository.getById: заявка найдена, поля: ${data.keys.toList()}',
+        );
         return {
           'id': doc.id,
           ...data,
@@ -123,11 +131,13 @@ class BookingsRepository {
   Future<String?> create(Map<String, dynamic> bookingData) async {
     try {
       debugPrint(
-          'BookingsRepository.create: создание заявки с данными: ${bookingData.keys.toList()}');
+        'BookingsRepository.create: создание заявки с данными: ${bookingData.keys.toList()}',
+      );
 
       final docRef = await _firestore.collection('bookings').add(bookingData);
       debugPrint(
-          'BookingsRepository.create: заявка создана с ID: ${docRef.id}');
+        'BookingsRepository.create: заявка создана с ID: ${docRef.id}',
+      );
       return docRef.id;
     } catch (e) {
       debugPrint('BookingsRepository.create: ошибка создания заявки: $e');
@@ -139,7 +149,8 @@ class BookingsRepository {
   Future<bool> update(String bookingId, Map<String, dynamic> updates) async {
     try {
       debugPrint(
-          'BookingsRepository.update: обновление заявки $bookingId с полями: ${updates.keys.toList()}');
+        'BookingsRepository.update: обновление заявки $bookingId с полями: ${updates.keys.toList()}',
+      );
 
       await _firestore.collection('bookings').doc(bookingId).update(updates);
       debugPrint('BookingsRepository.update: заявка обновлена успешно');
@@ -165,11 +176,15 @@ class BookingsRepository {
   }
 
   /// Обновление статуса заявки
-  Future<bool> updateStatus(String bookingId, String status,
-      {String? notes}) async {
+  Future<bool> updateStatus(
+    String bookingId,
+    String status, {
+    String? notes,
+  }) async {
     try {
       debugPrint(
-          'BookingsRepository.updateStatus: обновление статуса заявки $bookingId на $status');
+        'BookingsRepository.updateStatus: обновление статуса заявки $bookingId на $status',
+      );
 
       final updates = <String, dynamic>{
         'status': status,
@@ -182,11 +197,13 @@ class BookingsRepository {
 
       await _firestore.collection('bookings').doc(bookingId).update(updates);
       debugPrint(
-          'BookingsRepository.updateStatus: статус заявки обновлен успешно');
+        'BookingsRepository.updateStatus: статус заявки обновлен успешно',
+      );
       return true;
     } catch (e) {
       debugPrint(
-          'BookingsRepository.updateStatus: ошибка обновления статуса: $e');
+        'BookingsRepository.updateStatus: ошибка обновления статуса: $e',
+      );
       return false;
     }
   }
@@ -203,7 +220,8 @@ class BookingsRepository {
           .snapshots()
           .map((snapshot) {
         debugPrint(
-            'BookingsRepository.getBookingsByStatus: получено ${snapshot.docs.length} заявок');
+          'BookingsRepository.getBookingsByStatus: получено ${snapshot.docs.length} заявок',
+        );
 
         return snapshot.docs.map((doc) {
           final data = doc.data() as Map<String, dynamic>? ?? {};
@@ -221,10 +239,12 @@ class BookingsRepository {
 
   /// Получение заявок по дате события
   Stream<List<Map<String, dynamic>>> getBookingsByEventDate(
-      DateTime eventDate) {
+    DateTime eventDate,
+  ) {
     try {
       debugPrint(
-          'BookingsRepository.getBookingsByEventDate: eventDate=$eventDate');
+        'BookingsRepository.getBookingsByEventDate: eventDate=$eventDate',
+      );
 
       final startOfDay =
           DateTime(eventDate.year, eventDate.month, eventDate.day);
@@ -233,14 +253,17 @@ class BookingsRepository {
 
       return _firestore
           .collection('bookings')
-          .where('eventDate',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+          .where(
+            'eventDate',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay),
+          )
           .where('eventDate', isLessThanOrEqualTo: Timestamp.fromDate(endOfDay))
           .orderBy('eventDate', descending: false)
           .snapshots()
           .map((snapshot) {
         debugPrint(
-            'BookingsRepository.getBookingsByEventDate: получено ${snapshot.docs.length} заявок');
+          'BookingsRepository.getBookingsByEventDate: получено ${snapshot.docs.length} заявок',
+        );
 
         return snapshot.docs.map((doc) {
           final data = doc.data() as Map<String, dynamic>? ?? {};
@@ -252,7 +275,8 @@ class BookingsRepository {
       });
     } catch (e) {
       debugPrint(
-          'BookingsRepository.getBookingsByEventDate: ошибка запроса: $e');
+        'BookingsRepository.getBookingsByEventDate: ошибка запроса: $e',
+      );
       return Stream.value([]);
     }
   }

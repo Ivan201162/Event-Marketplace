@@ -365,7 +365,10 @@ class CurrentSubscriptionWidget extends ConsumerWidget {
   }
 
   void _showCancelDialog(
-      BuildContext context, WidgetRef ref, String subscriptionId) {
+    BuildContext context,
+    WidgetRef ref,
+    String subscriptionId,
+  ) {
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
@@ -381,10 +384,9 @@ class CurrentSubscriptionWidget extends ConsumerWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              ref.read(subscriptionStateProvider.notifier).cancelSubscription(
-                    subscriptionId: subscriptionId,
-                    reason: 'Пользователь отменил подписку',
-                  );
+              ref
+                  .read(subscriptionStateProvider.notifier)
+                  .cancelSubscription(subscriptionId);
               Navigator.of(context).pop();
             },
             style: ElevatedButton.styleFrom(
@@ -555,8 +557,10 @@ class SubscriptionStatsWidget extends ConsumerWidget {
                   _buildStatRow(
                     'Общий доход',
                     NumberFormat.currency(
-                            locale: 'ru', symbol: '₽', decimalDigits: 0)
-                        .format(stats['totalRevenue']),
+                      locale: 'ru',
+                      symbol: '₽',
+                      decimalDigits: 0,
+                    ).format(stats['totalRevenue']),
                     Icons.attach_money,
                     Colors.orange,
                   ),
@@ -571,8 +575,12 @@ class SubscriptionStatsWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatRow(String label, String value, IconData icon,
-          [Color? color]) =>
+  Widget _buildStatRow(
+    String label,
+    String value,
+    IconData icon, [
+    Color? color,
+  ]) =>
       Padding(
         padding: const EdgeInsets.only(bottom: 12),
         child: Row(

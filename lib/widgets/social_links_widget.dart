@@ -11,7 +11,7 @@ class SocialLinksWidget extends StatelessWidget {
   });
 
   final List<SocialLink> socialLinks;
-  final Function(SocialLink)? onLinkTap;
+  final void Function(SocialLink)? onLinkTap;
 
   @override
   Widget build(BuildContext context) {
@@ -60,10 +60,10 @@ class SocialLinksWidget extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
-            color: _getPlatformColor(link.platform).withOpacity(0.1),
+            color: _getPlatformColor(link.platform).withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: _getPlatformColor(link.platform).withOpacity(0.3),
+              color: _getPlatformColor(link.platform).withValues(alpha: 0.3),
             ),
           ),
           child: Row(

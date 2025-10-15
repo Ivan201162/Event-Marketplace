@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../models/post.dart';
-import '../models/specialist.dart';
 import '../models/story.dart';
 import '../providers/auth_providers.dart';
 import '../services/post_service.dart';
@@ -45,13 +44,15 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
   bool _isLoading = false;
   List<Post> _posts = [];
   List<Story> _stories = [];
-  Specialist? _specialist;
+  Map<String, dynamic>? _specialist;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(
-        length: 4, vsync: this); // Посты, Отзывы, Портфолио, Расписание
+      length: 4,
+      vsync: this,
+    ); // Посты, Отзывы, Портфолио, Расписание
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
@@ -75,7 +76,12 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     setState(() => _isLoading = true);
     try {
       // Загружаем данные специалиста
-      _specialist = await _testDataService.getSpecialistById(widget.userId);
+      final specialists = _testDataService.getSpecialists();
+      final specialistData = specialists.firstWhere(
+        (s) => s['id'] == widget.userId,
+        orElse: () => specialists.first,
+      );
+      _specialist = specialistData;
 
       // Загружаем посты
       _posts = await _postService.getPostsBySpecialist(widget.userId);
@@ -129,7 +135,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_specialist!.name),
+        title: Text((_specialist!['name'] as String?) ?? 'Без имени'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -147,7 +153,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     );
   }
 
-  Widget _buildProfileContent(Specialist specialist) => FadeTransition(
+  Widget _buildProfileContent(Map<String, dynamic> specialist) => FadeTransition(
         opacity: _fadeAnimation,
         child: CustomScrollView(
           controller: _scrollController,
@@ -164,7 +170,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ),
       );
 
-  Widget _buildProfileHeader(Specialist specialist) => SliverToBoxAdapter(
+  Widget _buildProfileHeader(Map<String, dynamic> specialist) => SliverToBoxAdapter(
         child: Container(
           height: 200,
           decoration: BoxDecoration(
@@ -180,10 +186,10 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
           child: Stack(
             children: [
               // Фоновое изображение (если есть)
-              if (specialist.coverImageUrl != null)
+              if (specialist['coverImageUrl'] != null)
                 Positioned.fill(
                   child: CachedNetworkImage(
-                    imageUrl: specialist.coverImageUrl!,
+                    imageUrl: specialist['coverImageUrl'] as String,
                     fit: BoxFit.cover,
                     placeholder: (context, url) => Container(
                       color:
@@ -229,7 +235,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ),
       );
 
-  Widget _buildProfileInfo(Specialist specialist) => SliverToBoxAdapter(
+  Widget _buildProfileInfo(Map<String, dynamic> specialist) => SliverToBoxAdapter(
         child: FadeTransition(
           opacity: _fadeAnimation,
           child: Padding(
@@ -238,7 +244,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
               children: [
                 // Аватар
                 Hero(
-                  tag: 'profile_avatar_${specialist.id}',
+                  tag: 'profile_avatar_${specialist['id']}',
                   child: Container(
                     width: 100,
                     height: 100,
@@ -252,12 +258,12 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                     child: ClipOval(
                       child: widget.isOwnProfile
                           ? EditableImage(
-                              imageUrl: specialist.imageUrlValue,
+                              imageUrl: specialist['imageUrl'] as String?,
                               onImageChanged: _updateProfileImage,
                               placeholder: Icons.person,
                             )
                           : CachedNetworkImage(
-                              imageUrl: specialist.imageUrlValue ?? '',
+                              imageUrl: (specialist['imageUrl'] as String?) ?? '',
                               fit: BoxFit.cover,
                               placeholder: (context, url) => Container(
                                 color: Colors.grey[300],
@@ -278,16 +284,16 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        specialist.name,
+                        specialist['name'] as String,
                         style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 4),
-                      if (specialist.city != null)
+                      if (specialist['city'] != null)
                         Text(
-                          specialist.city!,
+                          specialist['city'] as String,
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.grey[600],
@@ -303,7 +309,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            specialist.rating.toStringAsFixed(1),
+                            (specialist['rating'] as num).toStringAsFixed(1),
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -311,7 +317,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            '(${specialist.reviewCount} отзывов)',
+                            '(${specialist['reviewCount']} отзывов)',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[600],
@@ -328,7 +334,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ),
       );
 
-  Widget _buildStatsSection(Specialist specialist) => SliverToBoxAdapter(
+  Widget _buildStatsSection(Map<String, dynamic> specialist) => SliverToBoxAdapter(
         child: FadeTransition(
           opacity: _fadeAnimation,
           child: Container(
@@ -355,7 +361,9 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                 _buildStatItem('Подписчики', '1.2K'),
                 _buildStatItem('Подписки', '156'),
                 _buildStatItem(
-                    'Проекты', specialist.totalBookings?.toString() ?? '0'),
+                  'Проекты',
+                  specialist['totalBookings']?.toString() ?? '0',
+                ),
               ],
             ),
           ),
@@ -379,7 +387,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ],
       );
 
-  Widget _buildActionButtons(Specialist specialist) => SliverToBoxAdapter(
+  Widget _buildActionButtons(Map<String, dynamic> specialist) => SliverToBoxAdapter(
         child: FadeTransition(
           opacity: _fadeAnimation,
           child: Padding(
@@ -447,8 +455,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ),
       );
 
-  Widget _buildBioSection(Specialist specialist) {
-    if (specialist.description == null || specialist.description!.isEmpty) {
+  Widget _buildBioSection(Map<String, dynamic> specialist) {
+    if (specialist['description'] == null || (specialist['description'] as String).isEmpty) {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
     }
 
@@ -481,10 +489,10 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
               ),
               const SizedBox(height: 12),
               Text(
-                specialist.description!,
+                specialist['description'] as String,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
-              if (specialist.services.isNotEmpty) ...[
+              if ((specialist['services'] as List).isNotEmpty) ...[
                 const SizedBox(height: 16),
                 Text(
                   'Услуги:',
@@ -494,7 +502,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: specialist.services
+                  children: (specialist['services'] as List)
                       .take(5)
                       .map(
                         (service) => Container(
@@ -514,7 +522,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                             ),
                           ),
                           child: Text(
-                            service,
+                            service.toString(),
                             style:
                                 Theme.of(context).textTheme.bodySmall?.copyWith(
                                       color: Theme.of(context).primaryColor,
@@ -631,7 +639,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ),
       );
 
-  Widget _buildTabContent(Specialist specialist) => SliverFillRemaining(
+  Widget _buildTabContent(Map<String, dynamic> specialist) => SliverFillRemaining(
         child: TabBarView(
           controller: _tabController,
           children: [
@@ -682,9 +690,9 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ),
       );
 
-  Widget _buildReviewsTab(Specialist specialist) => ListView.builder(
+  Widget _buildReviewsTab(Map<String, dynamic> specialist) => ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: specialist.reviewsCount ?? 0,
+        itemCount: (specialist['reviewsCount'] as int?) ?? 0,
         itemBuilder: (context, index) => _buildReviewCard(index),
       );
 
@@ -759,8 +767,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ),
       );
 
-  Widget _buildPortfolioTab(Specialist specialist) =>
-      specialist.portfolioImages.isEmpty
+  Widget _buildPortfolioTab(Map<String, dynamic> specialist) =>
+      (specialist['portfolioImages'] as List).isEmpty
           ? const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -778,13 +786,13 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
               ),
-              itemCount: specialist.portfolioImages.length,
+              itemCount: (specialist['portfolioImages'] as List).length,
               itemBuilder: (context, index) => Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: CachedNetworkImage(
-                  imageUrl: specialist.portfolioImages[index],
+                  imageUrl: (specialist['portfolioImages'] as List)[index].toString(),
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Container(
                     color: Colors.grey[300],
@@ -798,7 +806,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
               ),
             );
 
-  Widget _buildScheduleTab(Specialist specialist) => const Center(
+  Widget _buildScheduleTab(Map<String, dynamic> specialist) => const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -828,8 +836,9 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     // TODO: Открыть экран редактирования профиля
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content:
-              Text('Редактирование профиля будет доступно в следующей версии')),
+        content:
+            Text('Редактирование профиля будет доступно в следующей версии'),
+      ),
     );
   }
 
@@ -837,7 +846,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     // TODO: Открыть экран создания поста
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Создание поста будет доступно в следующей версии')),
+        content: Text('Создание поста будет доступно в следующей версии'),
+      ),
     );
   }
 
@@ -845,7 +855,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     // TODO: Открыть экран создания сторис
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Создание сторис будет доступно в следующей версии')),
+        content: Text('Создание сторис будет доступно в следующей версии'),
+      ),
     );
   }
 
@@ -853,7 +864,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     // TODO: Открыть чат с пользователем
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Открытие чата будет доступно в следующей версии')),
+        content: Text('Открытие чата будет доступно в следующей версии'),
+      ),
     );
   }
 
@@ -861,7 +873,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     // TODO: Открыть детали поста
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Просмотр поста будет доступен в следующей версии')),
+        content: Text('Просмотр поста будет доступен в следующей версии'),
+      ),
     );
   }
 
@@ -869,7 +882,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     // TODO: Открыть просмотр сторис
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Просмотр сторис будет доступен в следующей версии')),
+        content: Text('Просмотр сторис будет доступен в следующей версии'),
+      ),
     );
   }
 
@@ -877,8 +891,9 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     // TODO: Обновить изображение профиля
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content:
-              Text('Обновление изображения будет доступно в следующей версии')),
+        content:
+            Text('Обновление изображения будет доступно в следующей версии'),
+      ),
     );
   }
 

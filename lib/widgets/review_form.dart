@@ -17,7 +17,7 @@ class ReviewForm extends ConsumerStatefulWidget {
 
   final String specialistId;
   final String specialistName;
-  final Function(Review)? onReviewSubmitted;
+  final void Function(Review)? onReviewSubmitted;
   final Review? initialReview;
 
   @override
@@ -27,7 +27,7 @@ class ReviewForm extends ConsumerStatefulWidget {
 class _ReviewFormState extends ConsumerState<ReviewForm> {
   final _formKey = GlobalKey<FormState>();
   final _commentController = TextEditingController();
-  int _rating = 0;
+  double _rating = 0;
   bool _isLoading = false;
 
   @override
@@ -89,7 +89,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
                   rating: _rating.toDouble(),
                   onRatingChanged: (rating) {
                     setState(() {
-                      _rating = rating.toInt();
+                      _rating = rating.toDouble();
                     });
                   },
                   starSize: 40,
@@ -217,7 +217,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
         // Редактирование существующего отзыва
         await reviewService.updateReview(
           widget.initialReview!.id,
-          rating: _rating,
+          rating: _rating.round(),
           comment: _commentController.text.trim(),
         );
       } else {
@@ -226,7 +226,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
           specialistId: widget.specialistId,
           customerId: 'current_user_id', // TODO(developer): Get from auth
           customerName: 'Current User', // TODO(developer): Get from auth
-          rating: _rating,
+          rating: _rating.round(),
           comment: _commentController.text.trim(),
           specialistName: widget.specialistName,
         );
@@ -237,7 +237,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
           specialistId: widget.specialistId,
           customerId: 'current_user_id',
           customerName: 'Current User',
-          rating: _rating.toInt(),
+          rating: _rating,
           text: _commentController.text.trim(),
           date: DateTime.now(),
         );
@@ -288,7 +288,7 @@ class ReviewFormDialog extends StatelessWidget {
 
   final String specialistId;
   final String specialistName;
-  final Function(Review)? onReviewSubmitted;
+  final void Function(Review)? onReviewSubmitted;
   final Review? initialReview;
 
   @override

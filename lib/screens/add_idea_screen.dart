@@ -38,7 +38,7 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen> {
     'День рождения',
     'Корпоратив',
     'Детский праздник',
-    'Другое'
+    'Другое',
   ];
   final List<String> _currencies = ['RUB', 'USD', 'EUR'];
 
@@ -276,8 +276,11 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen> {
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.add_photo_alternate,
-                      size: 48, color: Colors.grey),
+                  const Icon(
+                    Icons.add_photo_alternate,
+                    size: 48,
+                    color: Colors.grey,
+                  ),
                   const SizedBox(height: 16),
                   const Text('Выберите фото или видео'),
                   const SizedBox(height: 16),

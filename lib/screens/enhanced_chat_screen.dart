@@ -463,8 +463,10 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
     debugPrint('Отправка текстового сообщения: $text');
   }
 
-  void _sendMediaMessage(List<MessageAttachment> attachments,
-      {String? caption}) {
+  void _sendMediaMessage(
+    List<MessageAttachment> attachments, {
+    String? caption,
+  }) {
     // TODO: Реализовать отправку медиа сообщения
     debugPrint('Отправка медиа сообщения: ${attachments.length} файлов');
   }

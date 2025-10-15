@@ -30,7 +30,7 @@ class _StudioSuggestionCardState extends State<StudioSuggestionCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    // final isDark = theme.brightness == Brightness.dark; // Unused variable
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

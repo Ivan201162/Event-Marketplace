@@ -12,7 +12,7 @@ class PostGridWidget extends StatelessWidget {
   });
 
   final List<Post> posts;
-  final Function(Post) onPostTap;
+  final void Function(Post) onPostTap;
 
   @override
   Widget build(BuildContext context) => GridView.builder(

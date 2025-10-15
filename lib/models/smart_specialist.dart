@@ -798,7 +798,8 @@ class SmartSpecialist {
 
   /// Генерация паттерна доступности
   static Map<String, dynamic> _generateAvailabilityPattern(
-          Specialist specialist) =>
+    Specialist specialist,
+  ) =>
       {
         'weekdays': specialist.workingHours.containsKey('weekdays'),
         'weekends': specialist.workingHours.containsKey('weekends'),
@@ -808,7 +809,8 @@ class SmartSpecialist {
 
   /// Генерация предпочтений клиентов
   static Map<String, dynamic> _generateClientPreferences(
-          Specialist specialist) =>
+    Specialist specialist,
+  ) =>
       {
         'budgetRange': specialist.price < 20000
             ? 'бюджетный'
@@ -822,7 +824,8 @@ class SmartSpecialist {
 
   /// Генерация метрик производительности
   static Map<String, dynamic> _generatePerformanceMetrics(
-          Specialist specialist) =>
+    Specialist specialist,
+  ) =>
       {
         'responseTime': specialist.responseTime ?? 'быстрый',
         'completionRate': specialist.completionRate ?? 0.95,
@@ -832,7 +835,8 @@ class SmartSpecialist {
 
   /// Генерация факторов рекомендаций
   static Map<String, dynamic> _generateRecommendationFactors(
-          Specialist specialist) =>
+    Specialist specialist,
+  ) =>
       {
         'popularity': specialist.reviewCount,
         'quality': specialist.rating,

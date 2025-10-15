@@ -203,7 +203,9 @@ class EventOrganizerService {
 
   /// Обновить организатора
   Future<bool> updateOrganizer(
-      String organizerId, Map<String, dynamic> updates) async {
+    String organizerId,
+    Map<String, dynamic> updates,
+  ) async {
     try {
       updates['updatedAt'] = FieldValue.serverTimestamp();
 
@@ -384,7 +386,9 @@ class EventOrganizerService {
 
   /// Обновить рейтинг организатора
   Future<bool> updateOrganizerRating(
-      String organizerId, double newRating) async {
+    String organizerId,
+    double newRating,
+  ) async {
     try {
       await _firestore.collection('event_organizers').doc(organizerId).update({
         'rating': newRating,
@@ -404,8 +408,10 @@ class EventOrganizerService {
   }
 
   /// Увеличить счетчик мероприятий
-  Future<bool> incrementEventCount(String organizerId,
-      {bool completed = false}) async {
+  Future<bool> incrementEventCount(
+    String organizerId, {
+    bool completed = false,
+  }) async {
     try {
       final updates = <String, dynamic>{
         'totalEvents': FieldValue.increment(1),

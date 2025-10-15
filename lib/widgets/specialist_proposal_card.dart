@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../models/specialist_profile.dart';
 import '../models/specialist_proposal.dart';
 import '../services/specialist_proposal_service.dart';
-import '../services/specialist_service.dart';
 
 /// Карточка предложения специалистов
 class SpecialistProposalCard extends StatefulWidget {
@@ -27,7 +26,7 @@ class SpecialistProposalCard extends StatefulWidget {
 class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
   final SpecialistProposalService _proposalService =
       SpecialistProposalService();
-  final SpecialistService _specialistService = SpecialistService();
+  // final SpecialistService _specialistService = SpecialistService(); // Unused field removed
   List<SpecialistProfile>? _specialists;
   bool _isLoading = false;
 
@@ -62,7 +61,7 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    // final isDark = theme.brightness == Brightness.dark; // Unused variable removed
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

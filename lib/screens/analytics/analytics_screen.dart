@@ -77,8 +77,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.calendar_today,
-                              color: Colors.indigo),
+                          const Icon(
+                            Icons.calendar_today,
+                            color: Colors.indigo,
+                          ),
                           const SizedBox(width: 12),
                           Text(
                             'Период: ${_getPeriodText(_selectedPeriod)}',
@@ -343,15 +345,19 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
       .fold(0, (sum, transaction) => sum + transaction.amount);
 
   int _getDonationsCount() => _transactions
-      .where((t) =>
-          t.type == TransactionType.donation &&
-          t.status == TransactionStatus.success)
+      .where(
+        (t) =>
+            t.type == TransactionType.donation &&
+            t.status == TransactionStatus.success,
+      )
       .length;
 
   int _getSubscriptionsCount() => _transactions
-      .where((t) =>
-          t.type == TransactionType.subscription &&
-          t.status == TransactionStatus.success)
+      .where(
+        (t) =>
+            t.type == TransactionType.subscription &&
+            t.status == TransactionStatus.success,
+      )
       .length;
 
   Map<TransactionType, double> _getTransactionTypeStats() {

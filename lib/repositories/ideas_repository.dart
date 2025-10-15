@@ -20,7 +20,8 @@ class IdeasRepository {
   }) {
     try {
       debugPrint(
-          'IdeasRepository.streamList: category=$category, searchQuery=$searchQuery, limit=$limit');
+        'IdeasRepository.streamList: category=$category, searchQuery=$searchQuery, limit=$limit',
+      );
 
       Query query = _firestore
           .collection('ideas')
@@ -39,7 +40,8 @@ class IdeasRepository {
 
       return query.snapshots().map((snapshot) {
         debugPrint(
-            'IdeasRepository.streamList: получено ${snapshot.docs.length} документов');
+          'IdeasRepository.streamList: получено ${snapshot.docs.length} документов',
+        );
 
         var ideas = snapshot.docs
             .map((doc) {
@@ -47,7 +49,8 @@ class IdeasRepository {
                 return Idea.fromFirestore(doc);
               } catch (e) {
                 debugPrint(
-                    'IdeasRepository.streamList: ошибка парсинга документа ${doc.id}: $e');
+                  'IdeasRepository.streamList: ошибка парсинга документа ${doc.id}: $e',
+                );
                 return null;
               }
             })
@@ -88,7 +91,8 @@ class IdeasRepository {
           .snapshots()
           .map((snapshot) {
         debugPrint(
-            'IdeasRepository.getUserIdeas: получено ${snapshot.docs.length} документов');
+          'IdeasRepository.getUserIdeas: получено ${snapshot.docs.length} документов',
+        );
 
         return snapshot.docs
             .map((doc) {
@@ -96,7 +100,8 @@ class IdeasRepository {
                 return Idea.fromFirestore(doc);
               } catch (e) {
                 debugPrint(
-                    'IdeasRepository.getUserIdeas: ошибка парсинга документа ${doc.id}: $e');
+                  'IdeasRepository.getUserIdeas: ошибка парсинга документа ${doc.id}: $e',
+                );
                 return null;
               }
             })
@@ -122,7 +127,8 @@ class IdeasRepository {
           .snapshots()
           .map((snapshot) {
         debugPrint(
-            'IdeasRepository.getSavedIdeas: получено ${snapshot.docs.length} документов');
+          'IdeasRepository.getSavedIdeas: получено ${snapshot.docs.length} документов',
+        );
 
         return snapshot.docs
             .map((doc) {
@@ -130,7 +136,8 @@ class IdeasRepository {
                 return Idea.fromFirestore(doc);
               } catch (e) {
                 debugPrint(
-                    'IdeasRepository.getSavedIdeas: ошибка парсинга документа ${doc.id}: $e');
+                  'IdeasRepository.getSavedIdeas: ошибка парсинга документа ${doc.id}: $e',
+                );
                 return null;
               }
             })
@@ -153,7 +160,8 @@ class IdeasRepository {
       if (doc.exists) {
         final data = doc.data() ?? {};
         debugPrint(
-            'IdeasRepository.getById: документ найден, поля: ${data.keys.toList()}');
+          'IdeasRepository.getById: документ найден, поля: ${data.keys.toList()}',
+        );
         return Idea.fromFirestore(doc);
       }
       debugPrint('IdeasRepository.getById: документ не найден');
@@ -168,7 +176,8 @@ class IdeasRepository {
   Future<String?> create(Map<String, dynamic> ideaData) async {
     try {
       debugPrint(
-          'IdeasRepository.create: создание идеи с данными: ${ideaData.keys.toList()}');
+        'IdeasRepository.create: создание идеи с данными: ${ideaData.keys.toList()}',
+      );
 
       final docRef = await _firestore.collection('ideas').add(ideaData);
       debugPrint('IdeasRepository.create: идея создана с ID: ${docRef.id}');
@@ -183,7 +192,8 @@ class IdeasRepository {
   Future<bool> update(String ideaId, Map<String, dynamic> updates) async {
     try {
       debugPrint(
-          'IdeasRepository.update: обновление идеи $ideaId с полями: ${updates.keys.toList()}');
+        'IdeasRepository.update: обновление идеи $ideaId с полями: ${updates.keys.toList()}',
+      );
 
       await _firestore.collection('ideas').doc(ideaId).update(updates);
       debugPrint('IdeasRepository.update: идея обновлена успешно');
@@ -221,7 +231,8 @@ class IdeasRepository {
           .snapshots()
           .map((snapshot) {
         debugPrint(
-            'IdeasRepository.getComments: получено ${snapshot.docs.length} комментариев');
+          'IdeasRepository.getComments: получено ${snapshot.docs.length} комментариев',
+        );
 
         return snapshot.docs.map((doc) {
           final data = doc.data() as Map<String, dynamic>? ?? {};
@@ -233,17 +244,21 @@ class IdeasRepository {
       });
     } catch (e) {
       debugPrint(
-          'IdeasRepository.getComments: ошибка получения комментариев: $e');
+        'IdeasRepository.getComments: ошибка получения комментариев: $e',
+      );
       return Stream.value([]);
     }
   }
 
   /// Добавление комментария к идее
   Future<bool> addComment(
-      String ideaId, Map<String, dynamic> commentData) async {
+    String ideaId,
+    Map<String, dynamic> commentData,
+  ) async {
     try {
       debugPrint(
-          'IdeasRepository.addComment: добавление комментария к идее $ideaId');
+        'IdeasRepository.addComment: добавление комментария к идее $ideaId',
+      );
 
       await _firestore
           .collection('ideas')
@@ -254,7 +269,8 @@ class IdeasRepository {
       return true;
     } catch (e) {
       debugPrint(
-          'IdeasRepository.addComment: ошибка добавления комментария: $e');
+        'IdeasRepository.addComment: ошибка добавления комментария: $e',
+      );
       return false;
     }
   }

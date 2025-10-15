@@ -52,8 +52,9 @@ enum ExperienceLevel {
   expert, // Эксперт
 }
 
-/// Расширение для получения названий категорий
+/// Расширение для SpecialistCategory
 extension SpecialistCategoryExtension on SpecialistCategory {
+  /// Получить название категории
   String get displayName {
     switch (this) {
       case SpecialistCategory.photographer:
@@ -126,6 +127,9 @@ extension SpecialistCategoryExtension on SpecialistCategory {
         return 'Другое';
     }
   }
+
+  /// Проверить, не пустая ли категория
+  bool get isNotEmpty => this != SpecialistCategory.other;
 
   String get icon {
     switch (this) {

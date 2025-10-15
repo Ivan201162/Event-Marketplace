@@ -34,17 +34,17 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
     {
       'id': 'specialist1',
       'name': 'Александр Иванов',
-      'category': 'Свадьбы и корпоративы'
+      'category': 'Свадьбы и корпоративы',
     },
     {
       'id': 'specialist2',
       'name': 'Мария Смирнова',
-      'category': 'Детские праздники'
+      'category': 'Детские праздники',
     },
     {
       'id': 'specialist3',
       'name': 'Дмитрий Петров',
-      'category': 'Банкеты и фуршеты'
+      'category': 'Банкеты и фуршеты',
     },
   ];
 

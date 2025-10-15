@@ -16,7 +16,8 @@ class DiscountNotificationService {
 
   /// Создать уведомление о скидке
   Future<DiscountNotification> createDiscountNotification(
-      CreateDiscountNotification data) async {
+    CreateDiscountNotification data,
+  ) async {
     if (!data.isValid) {
       throw Exception('Неверные данные: ${data.validationErrors.join(', ')}');
     }
@@ -90,7 +91,8 @@ class DiscountNotificationService {
 
   /// Получить уведомления клиента
   Future<List<DiscountNotification>> getCustomerNotifications(
-      String customerId) async {
+    String customerId,
+  ) async {
     final snapshot = await _firestore
         .collection(_collection)
         .where('customerId', isEqualTo: customerId)
@@ -102,7 +104,8 @@ class DiscountNotificationService {
 
   /// Получить непрочитанные уведомления клиента
   Future<List<DiscountNotification>> getUnreadCustomerNotifications(
-      String customerId) async {
+    String customerId,
+  ) async {
     final snapshot = await _firestore
         .collection(_collection)
         .where('customerId', isEqualTo: customerId)
@@ -135,7 +138,8 @@ class DiscountNotificationService {
 
     if (notification.customerId != currentUser.uid) {
       throw Exception(
-          'Только получатель может отмечать уведомления как прочитанные');
+        'Только получатель может отмечать уведомления как прочитанные',
+      );
     }
 
     await _firestore.collection(_collection).doc(notificationId).update({
@@ -153,7 +157,8 @@ class DiscountNotificationService {
 
     if (customerId != currentUser.uid) {
       throw Exception(
-          'Только владелец может отмечать уведомления как прочитанные');
+        'Только владелец может отмечать уведомления как прочитанные',
+      );
     }
 
     final unreadNotifications =
@@ -235,7 +240,8 @@ class DiscountNotificationService {
 
   /// Подписаться на изменения уведомлений клиента
   Stream<List<DiscountNotification>> watchCustomerNotifications(
-          String customerId) =>
+    String customerId,
+  ) =>
       _firestore
           .collection(_collection)
           .where('customerId', isEqualTo: customerId)
@@ -248,7 +254,8 @@ class DiscountNotificationService {
 
   /// Подписаться на непрочитанные уведомления клиента
   Stream<List<DiscountNotification>> watchUnreadCustomerNotifications(
-          String customerId) =>
+    String customerId,
+  ) =>
       _firestore
           .collection(_collection)
           .where('customerId', isEqualTo: customerId)

@@ -297,8 +297,8 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
       setState(() {
         _currentSubscription = subscription;
       });
-    } catch (e) {
-      print('Error loading subscription: $e');
+    } on Exception catch (e) {
+      debugPrint('Error loading subscription: $e');
     }
   }
 
@@ -324,7 +324,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
       } else {
         _showErrorDialog();
       }
-    } catch (e) {
+    } on Exception {
       _showErrorDialog();
     } finally {
       setState(() {

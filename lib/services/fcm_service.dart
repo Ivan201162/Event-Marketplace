@@ -45,7 +45,7 @@ class FCMService {
   static Future<void> _requestPermissions() async {
     final settings = await _firebaseMessaging.requestPermission();
 
-    print('Разрешения на уведомления: ${settings.authorizationStatus}');
+    debugPrint('Разрешения на уведомления: ${settings.authorizationStatus}');
   }
 
   /// Настройка обработчиков сообщений
@@ -70,8 +70,9 @@ class FCMService {
 
   /// Обработка сообщений в foreground
   static Future<void> _handleForegroundMessage(RemoteMessage message) async {
-    print(
-        '📬 Получено уведомление в foreground: ${message.notification?.title}');
+    debugPrint(
+      '📬 Получено уведомление в foreground: ${message.notification?.title}',
+    );
 
     // Сохраняем уведомление в историю
     await _saveNotificationToHistory(message);
@@ -105,7 +106,7 @@ class FCMService {
 
   /// Обработка нажатий на уведомления
   static void _handleNotificationTap(RemoteMessage message) {
-    print('🔔 Нажато на уведомление: ${message.notification?.title}');
+    debugPrint('🔔 Нажато на уведомление: ${message.notification?.title}');
 
     final data = message.data;
     if (data.containsKey('type')) {
@@ -115,7 +116,7 @@ class FCMService {
 
   /// Обработка нажатий на локальные уведомления
   static void _onNotificationTapped(NotificationResponse response) {
-    print('🔔 Нажато на локальное уведомление: ${response.payload}');
+    debugPrint('🔔 Нажато на локальное уведомление: ${response.payload}');
 
     if (response.payload != null) {
       _navigateToScreenFromPayload(response.payload!);
@@ -124,7 +125,7 @@ class FCMService {
 
   /// Навигация к экрану на основе типа уведомления
   static void _navigateToScreen(String type, Map<String, dynamic> data) {
-    print('Навигация к экрану типа: $type с данными: $data');
+    debugPrint('Навигация к экрану типа: $type с данными: $data');
 
     final context = navigatorKey.currentContext;
     if (context == null) return;
@@ -190,7 +191,7 @@ class FCMService {
         _navigateToScreen(data['type'], data);
       }
     } on Exception catch (e) {
-      print('Ошибка парсинга payload: $e');
+      debugPrint('Ошибка парсинга payload: $e');
     }
   }
 
@@ -198,10 +199,10 @@ class FCMService {
   static Future<String?> _getToken() async {
     try {
       final token = await _firebaseMessaging.getToken();
-      print('FCM Token: $token');
+      debugPrint('FCM Token: $token');
       return token;
     } on Exception catch (e) {
-      print('Ошибка получения FCM токена: $e');
+      debugPrint('Ошибка получения FCM токена: $e');
       return null;
     }
   }
@@ -218,10 +219,10 @@ class FCMService {
           'fcmToken': token,
           'lastTokenUpdate': FieldValue.serverTimestamp(),
         });
-        print('FCM токен сохранён для пользователя: $userId');
+        debugPrint('FCM токен сохранён для пользователя: $userId');
       }
     } on Exception catch (e) {
-      print('Ошибка сохранения FCM токена: $e');
+      debugPrint('Ошибка сохранения FCM токена: $e');
     }
   }
 
@@ -245,7 +246,7 @@ class FCMService {
 
       if (fcmToken != null) {
         // TODO: Отправка через Firebase Admin SDK или Cloud Functions
-        print('Отправка уведомления пользователю $userId: $title');
+        debugPrint('Отправка уведомления пользователю $userId: $title');
 
         // Создаем уведомление в Firestore
         await FirebaseFirestore.instance.collection('notifications').add({
@@ -259,7 +260,7 @@ class FCMService {
         });
       }
     } on Exception catch (e) {
-      print('Ошибка отправки уведомления: $e');
+      debugPrint('Ошибка отправки уведомления: $e');
     }
   }
 
@@ -267,9 +268,9 @@ class FCMService {
   static Future<void> subscribeToTopic(String topic) async {
     try {
       await _firebaseMessaging.subscribeToTopic(topic);
-      print('Подписались на топик: $topic');
+      debugPrint('Подписались на топик: $topic');
     } on Exception catch (e) {
-      print('Ошибка подписки на топик: $e');
+      debugPrint('Ошибка подписки на топик: $e');
     }
   }
 
@@ -277,9 +278,9 @@ class FCMService {
   static Future<void> unsubscribeFromTopic(String topic) async {
     try {
       await _firebaseMessaging.unsubscribeFromTopic(topic);
-      print('Отписались от топика: $topic');
+      debugPrint('Отписались от топика: $topic');
     } on Exception catch (e) {
-      print('Ошибка отписки от топика: $e');
+      debugPrint('Ошибка отписки от топика: $e');
     }
   }
 
@@ -308,9 +309,9 @@ class FCMService {
         'data': data,
       });
 
-      print('Уведомление сохранено в историю для пользователя: $userId');
+      debugPrint('Уведомление сохранено в историю для пользователя: $userId');
     } on Exception catch (e) {
-      print('Ошибка сохранения уведомления в историю: $e');
+      debugPrint('Ошибка сохранения уведомления в историю: $e');
     }
   }
 
@@ -349,7 +350,7 @@ class FCMService {
 /// Обработчик фоновых сообщений
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print('📬 Получено уведомление в фоне: ${message.notification?.title}');
+  debugPrint('📬 Получено уведомление в фоне: ${message.notification?.title}');
 
   // Инициализируем Firebase
   await Firebase.initializeApp();
@@ -378,6 +379,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       });
     }
   } catch (e) {
-    print('Ошибка сохранения фонового уведомления: $e');
+    debugPrint('Ошибка сохранения фонового уведомления: $e');
   }
 }

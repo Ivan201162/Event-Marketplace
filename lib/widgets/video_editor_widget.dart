@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/specialist_profile_extended.dart';
 // import '../services/specialist_profile_extended_service.dart';
-import '../providers/specialist_providers.dart';
 
 /// Виджет редактора видео
 class VideoEditorWidget extends ConsumerStatefulWidget {
@@ -345,8 +344,8 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
     final title = _titleController.text.trim();
     final description = _descriptionController.text.trim();
     final url = _urlController.text.trim();
-    final thumbnailUrl = _thumbnailUrlController.text.trim();
-    final duration = _durationController.text.trim();
+    // final thumbnailUrl = _thumbnailUrlController.text.trim(); // Unused variable
+    // final duration = _durationController.text.trim(); // Unused variable
 
     if (title.isEmpty || description.isEmpty || url.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -360,20 +359,20 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
     });
 
     try {
-      final service = ref.read(specialistServiceProvider);
+      // final service = ref.read(specialistServiceProvider); // Unused variable removed
 
       if (widget.existingVideo != null) {
         // Обновляем существующее видео
-        final updatedVideo = widget.existingVideo!.copyWith(
-          title: title,
-          description: description,
-          url: url,
-          thumbnailUrl: thumbnailUrl,
-          platform: _selectedPlatform,
-          duration: duration,
-          tags: _tags,
-          isPublic: _isPublic,
-        );
+        // final updatedVideo = widget.existingVideo!.copyWith( // Unused variable removed
+        //   title: title,
+        //   description: description,
+        //   url: url,
+        //   thumbnailUrl: thumbnailUrl,
+        //   platform: _selectedPlatform,
+        //   duration: duration,
+        //   tags: _tags,
+        //   isPublic: _isPublic,
+        // );
 
         // TODO(developer): Implement updatePortfolioVideo method
         // await service.updatePortfolioVideo(widget.specialistId, updatedVideo);

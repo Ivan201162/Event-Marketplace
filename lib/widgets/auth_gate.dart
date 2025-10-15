@@ -38,8 +38,9 @@ class AuthGate extends ConsumerWidget {
       error: (e, _) =>
           Scaffold(body: Center(child: Text('Ошибка авторизации: $e'))),
       data: (user) {
-        if (user == null)
+        if (user == null) {
           return const ModernAuthScreen(); // <- всегда показываем вход
+        }
         return const MainNavigationScreen(); // BottomNavigation с Главная/Лента/Заявки/Чаты/Идеи
       },
     );

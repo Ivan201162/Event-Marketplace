@@ -135,9 +135,11 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text(widget.existingReview != null
-              ? 'Редактировать отзыв'
-              : 'Добавить отзыв'),
+          title: Text(
+            widget.existingReview != null
+                ? 'Редактировать отзыв'
+                : 'Добавить отзыв',
+          ),
           actions: [
             if (widget.existingReview != null)
               IconButton(
@@ -351,9 +353,11 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
                     ),
                     child: _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
-                        : Text(widget.existingReview != null
-                            ? 'Обновить отзыв'
-                            : 'Отправить отзыв'),
+                        : Text(
+                            widget.existingReview != null
+                                ? 'Обновить отзыв'
+                                : 'Отправить отзыв',
+                          ),
                   ),
                 ),
               ],

@@ -16,7 +16,7 @@ class SpecialistReportService {
 
       return SpecialistReport.fromSpecialists(specialists);
     } on Exception catch (e) {
-      print('Ошибка генерации отчета по специалистам: $e');
+      debugPrint('Ошибка генерации отчета по специалистам: $e');
       throw Exception('Не удалось сгенерировать отчет');
     }
   }
@@ -32,7 +32,7 @@ class SpecialistReportService {
 
       return CategoryReport.fromSpecialists(specialists);
     } on Exception catch (e) {
-      print('Ошибка генерации отчета по категориям: $e');
+      debugPrint('Ошибка генерации отчета по категориям: $e');
       throw Exception('Не удалось сгенерировать отчет по категориям');
     }
   }
@@ -50,7 +50,7 @@ class SpecialistReportService {
 
       return RatingReport.fromSpecialists(specialists);
     } on Exception catch (e) {
-      print('Ошибка генерации отчета по рейтингам: $e');
+      debugPrint('Ошибка генерации отчета по рейтингам: $e');
       throw Exception('Не удалось сгенерировать отчет по рейтингам');
     }
   }
@@ -66,7 +66,7 @@ class SpecialistReportService {
 
       return EarningsReport.fromSpecialists(specialists);
     } on Exception catch (e) {
-      print('Ошибка генерации отчета по доходам: $e');
+      debugPrint('Ошибка генерации отчета по доходам: $e');
       throw Exception('Не удалось сгенерировать отчет по доходам');
     }
   }
@@ -82,7 +82,7 @@ class SpecialistReportService {
 
       return ActivityReport.fromSpecialists(specialists);
     } on Exception catch (e) {
-      print('Ошибка генерации отчета по активности: $e');
+      debugPrint('Ошибка генерации отчета по активности: $e');
       throw Exception('Не удалось сгенерировать отчет по активности');
     }
   }
@@ -125,7 +125,7 @@ class SpecialistReportService {
         generatedAt: DateTime.now(),
       );
     } on Exception catch (e) {
-      print('Ошибка генерации детального отчета: $e');
+      debugPrint('Ошибка генерации детального отчета: $e');
       throw Exception('Не удалось сгенерировать детальный отчет');
     }
   }

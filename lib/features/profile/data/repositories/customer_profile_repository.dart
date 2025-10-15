@@ -16,8 +16,8 @@ class CustomerProfileRepository {
         return CustomerProfile.fromFirestore(doc);
       }
       return null;
-    } catch (e) {
-      print('Ошибка получения профиля: $e');
+    } on Exception catch (e) {
+      debugPrint('Ошибка получения профиля: $e');
       return null;
     }
   }
@@ -30,8 +30,8 @@ class CustomerProfileRepository {
             SetOptions(merge: true),
           );
       return true;
-    } catch (e) {
-      print('Ошибка сохранения профиля: $e');
+    } on Exception catch (e) {
+      debugPrint('Ошибка сохранения профиля: $e');
       return false;
     }
   }
@@ -45,8 +45,8 @@ class CustomerProfileRepository {
       updates['updatedAt'] = Timestamp.fromDate(DateTime.now());
       await _firestore.collection(_collection).doc(customerId).update(updates);
       return true;
-    } catch (e) {
-      print('Ошибка обновления профиля: $e');
+    } on Exception catch (e) {
+      debugPrint('Ошибка обновления профиля: $e');
       return false;
     }
   }
@@ -56,8 +56,8 @@ class CustomerProfileRepository {
     try {
       await _firestore.collection(_collection).doc(customerId).delete();
       return true;
-    } catch (e) {
-      print('Ошибка удаления профиля: $e');
+    } on Exception catch (e) {
+      debugPrint('Ошибка удаления профиля: $e');
       return false;
     }
   }

@@ -154,7 +154,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
       );
 
   Widget _buildNotificationCard(
-          app_notification.AppNotification notification) =>
+    app_notification.AppNotification notification,
+  ) =>
       Card(
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -300,7 +301,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
   }
 
   Future<void> _handleNotificationTap(
-      app_notification.AppNotification notification) async {
+    app_notification.AppNotification notification,
+  ) async {
     // Отмечаем уведомление как прочитанное
     if (!notification.isRead) {
       await NotificationService.markNotificationAsRead(notification.id);

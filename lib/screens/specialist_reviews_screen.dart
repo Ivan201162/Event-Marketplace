@@ -60,7 +60,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
           await _reviewService.getSpecialistReviewStats(widget.specialist.id);
       setState(() => _stats = stats);
     } on Exception catch (e) {
-      print('Ошибка загрузки статистики: $e');
+      debugPrint('Ошибка загрузки статистики: $e');
     }
   }
 

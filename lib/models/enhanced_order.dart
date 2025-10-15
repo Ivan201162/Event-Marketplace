@@ -40,18 +40,25 @@ class EnhancedOrder {
         priority:
             OrderPriority.fromString(map['priority'] as String? ?? 'medium'),
         comments: (map['comments'] as List?)
-                ?.map((comment) =>
-                    OrderComment.fromMap(comment as Map<String, dynamic>))
+                ?.map(
+                  (comment) =>
+                      OrderComment.fromMap(comment as Map<String, dynamic>),
+                )
                 .toList() ??
             [],
         timeline: (map['timeline'] as List?)
-                ?.map((event) =>
-                    OrderTimelineEvent.fromMap(event as Map<String, dynamic>))
+                ?.map(
+                  (event) =>
+                      OrderTimelineEvent.fromMap(event as Map<String, dynamic>),
+                )
                 .toList() ??
             [],
         attachments: (map['attachments'] as List?)
-                ?.map((attachment) =>
-                    OrderAttachment.fromMap(attachment as Map<String, dynamic>))
+                ?.map(
+                  (attachment) => OrderAttachment.fromMap(
+                    attachment as Map<String, dynamic>,
+                  ),
+                )
                 .toList() ??
             [],
         updatedAt: map['updatedAt'] != null
@@ -321,8 +328,11 @@ class OrderComment {
         createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
         isInternal: (map['isInternal'] as bool?) ?? false,
         attachments: (map['attachments'] as List?)
-                ?.map((attachment) =>
-                    OrderAttachment.fromMap(attachment as Map<String, dynamic>))
+                ?.map(
+                  (attachment) => OrderAttachment.fromMap(
+                    attachment as Map<String, dynamic>,
+                  ),
+                )
                 .toList() ??
             [],
       );

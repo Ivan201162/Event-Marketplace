@@ -178,7 +178,9 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _buildSpecialistCard(
-          Map<String, dynamic> specialist, ThemeData theme) =>
+    Map<String, dynamic> specialist,
+    ThemeData theme,
+  ) =>
       Card(
         margin: const EdgeInsets.only(bottom: 16),
         elevation: 2,
@@ -269,7 +271,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 IconButton(
                   onPressed: () {
                     context.push(
-                        '/specialist/${specialist['name'].toLowerCase().replaceAll(' ', '_')}');
+                      '/specialist/${specialist['name'].toLowerCase().replaceAll(' ', '_')}',
+                    );
                   },
                   icon: const Icon(Icons.arrow_forward_ios),
                 ),

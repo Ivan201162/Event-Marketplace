@@ -18,6 +18,7 @@ class EnhancedFeedPost {
     this.saves = const [],
     this.tags = const [],
     this.location,
+    this.category,
     this.isSponsored = false,
     this.isPinned = false,
     this.isArchived = false,
@@ -34,8 +35,10 @@ class EnhancedFeedPost {
         type: FeedPostType.fromString(map['type'] as String),
         createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
         media: (map['media'] as List?)
-                ?.map((media) =>
-                    FeedPostMedia.fromMap(media as Map<String, dynamic>))
+                ?.map(
+                  (media) =>
+                      FeedPostMedia.fromMap(media as Map<String, dynamic>),
+                )
                 .toList() ??
             [],
         likesCount: (map['likesCount'] as int?) ?? 0,
@@ -45,18 +48,23 @@ class EnhancedFeedPost {
         viewsCount: (map['viewsCount'] as int?) ?? 0,
         likes: List<String>.from((map['likes'] as List?) ?? []),
         comments: (map['comments'] as List?)
-                ?.map((comment) =>
-                    FeedPostComment.fromMap(comment as Map<String, dynamic>))
+                ?.map(
+                  (comment) =>
+                      FeedPostComment.fromMap(comment as Map<String, dynamic>),
+                )
                 .toList() ??
             [],
         shares: (map['shares'] as List?)
-                ?.map((share) =>
-                    FeedPostShare.fromMap(share as Map<String, dynamic>))
+                ?.map(
+                  (share) =>
+                      FeedPostShare.fromMap(share as Map<String, dynamic>),
+                )
                 .toList() ??
             [],
         saves: List<String>.from((map['saves'] as List?) ?? []),
         tags: List<String>.from((map['tags'] as List?) ?? []),
         location: map['location'] as String?,
+        category: map['category'] as String?,
         isSponsored: (map['isSponsored'] as bool?) ?? false,
         isPinned: (map['isPinned'] as bool?) ?? false,
         isArchived: (map['isArchived'] as bool?) ?? false,
@@ -117,6 +125,9 @@ class EnhancedFeedPost {
   /// Местоположение
   final String? location;
 
+  /// Категория поста
+  final String? category;
+
   /// Рекламный пост
   final bool isSponsored;
 
@@ -151,6 +162,7 @@ class EnhancedFeedPost {
         'saves': saves,
         'tags': tags,
         'location': location,
+        'category': category,
         'isSponsored': isSponsored,
         'isPinned': isPinned,
         'isArchived': isArchived,
@@ -177,6 +189,7 @@ class EnhancedFeedPost {
     List<String>? saves,
     List<String>? tags,
     String? location,
+    String? category,
     bool? isSponsored,
     bool? isPinned,
     bool? isArchived,
@@ -201,6 +214,7 @@ class EnhancedFeedPost {
         saves: saves ?? this.saves,
         tags: tags ?? this.tags,
         location: location ?? this.location,
+        category: category ?? this.category,
         isSponsored: isSponsored ?? this.isSponsored,
         isPinned: isPinned ?? this.isPinned,
         isArchived: isArchived ?? this.isArchived,
@@ -401,8 +415,10 @@ class FeedPostComment {
         createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
         parentId: map['parentId'] as String?,
         replies: (map['replies'] as List?)
-                ?.map((reply) =>
-                    FeedPostComment.fromMap(reply as Map<String, dynamic>))
+                ?.map(
+                  (reply) =>
+                      FeedPostComment.fromMap(reply as Map<String, dynamic>),
+                )
                 .toList() ??
             [],
         likesCount: (map['likesCount'] as int?) ?? 0,

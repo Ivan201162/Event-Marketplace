@@ -21,7 +21,8 @@ class ChatsRepository {
           .snapshots()
           .map((snapshot) {
         debugPrint(
-            'ChatsRepository.streamList: получено ${snapshot.docs.length} чатов');
+          'ChatsRepository.streamList: получено ${snapshot.docs.length} чатов',
+        );
 
         return snapshot.docs.map((doc) {
           final data = doc.data() as Map<String, dynamic>? ?? {};
@@ -46,7 +47,8 @@ class ChatsRepository {
       if (doc.exists) {
         final data = doc.data() ?? {};
         debugPrint(
-            'ChatsRepository.getById: чат найден, поля: ${data.keys.toList()}');
+          'ChatsRepository.getById: чат найден, поля: ${data.keys.toList()}',
+        );
         return {
           'id': doc.id,
           ...data,
@@ -64,7 +66,8 @@ class ChatsRepository {
   Future<String?> create(Map<String, dynamic> chatData) async {
     try {
       debugPrint(
-          'ChatsRepository.create: создание чата с данными: ${chatData.keys.toList()}');
+        'ChatsRepository.create: создание чата с данными: ${chatData.keys.toList()}',
+      );
 
       final docRef = await _firestore.collection('chats').add(chatData);
       debugPrint('ChatsRepository.create: чат создан с ID: ${docRef.id}');
@@ -79,7 +82,8 @@ class ChatsRepository {
   Future<bool> update(String chatId, Map<String, dynamic> updates) async {
     try {
       debugPrint(
-          'ChatsRepository.update: обновление чата $chatId с полями: ${updates.keys.toList()}');
+        'ChatsRepository.update: обновление чата $chatId с полями: ${updates.keys.toList()}',
+      );
 
       await _firestore.collection('chats').doc(chatId).update(updates);
       debugPrint('ChatsRepository.update: чат обновлен успешно');
@@ -105,8 +109,10 @@ class ChatsRepository {
   }
 
   /// Получение сообщений чата
-  Stream<List<Map<String, dynamic>>> getMessages(String chatId,
-      {int limit = 50}) {
+  Stream<List<Map<String, dynamic>>> getMessages(
+    String chatId, {
+    int limit = 50,
+  }) {
     try {
       debugPrint('ChatsRepository.getMessages: chatId=$chatId, limit=$limit');
 
@@ -119,7 +125,8 @@ class ChatsRepository {
           .snapshots()
           .map((snapshot) {
         debugPrint(
-            'ChatsRepository.getMessages: получено ${snapshot.docs.length} сообщений');
+          'ChatsRepository.getMessages: получено ${snapshot.docs.length} сообщений',
+        );
 
         return snapshot.docs.map((doc) {
           final data = doc.data() as Map<String, dynamic>? ?? {};
@@ -137,10 +144,13 @@ class ChatsRepository {
 
   /// Отправка сообщения
   Future<bool> sendMessage(
-      String chatId, Map<String, dynamic> messageData) async {
+    String chatId,
+    Map<String, dynamic> messageData,
+  ) async {
     try {
       debugPrint(
-          'ChatsRepository.sendMessage: отправка сообщения в чат $chatId');
+        'ChatsRepository.sendMessage: отправка сообщения в чат $chatId',
+      );
 
       // Добавляем сообщение
       await _firestore
@@ -167,7 +177,8 @@ class ChatsRepository {
   Future<String?> findOrCreateChat(String userId1, String userId2) async {
     try {
       debugPrint(
-          'ChatsRepository.findOrCreateChat: userId1=$userId1, userId2=$userId2');
+        'ChatsRepository.findOrCreateChat: userId1=$userId1, userId2=$userId2',
+      );
 
       // Ищем существующий чат
       final existingChats = await _firestore
@@ -183,7 +194,8 @@ class ChatsRepository {
 
         if (members.contains(userId2)) {
           debugPrint(
-              'ChatsRepository.findOrCreateChat: найден существующий чат ${doc.id}');
+            'ChatsRepository.findOrCreateChat: найден существующий чат ${doc.id}',
+          );
           return doc.id;
         }
       }
@@ -201,7 +213,8 @@ class ChatsRepository {
       return chatId;
     } catch (e) {
       debugPrint(
-          'ChatsRepository.findOrCreateChat: ошибка поиска/создания чата: $e');
+        'ChatsRepository.findOrCreateChat: ошибка поиска/создания чата: $e',
+      );
       return null;
     }
   }

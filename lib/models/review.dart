@@ -32,6 +32,7 @@ class Review {
     this.reportCount = 0, // Количество жалоб
     this.isReported = false, // Флаг жалобы
     this.isVerified = false, // Верифицированный отзыв
+    this.response, // Ответ специалиста
   });
 
   /// Создать отзыв из Map
@@ -69,6 +70,7 @@ class Review {
         reportCount: data['reportCount'] as int? ?? 0,
         isReported: data['isReported'] as bool? ?? false,
         isVerified: data['isVerified'] as bool? ?? false,
+        response: data['response'] as String?,
       );
 
   /// Создать отзыв из документа Firestore
@@ -122,6 +124,7 @@ class Review {
       reportCount: safeData['reportCount'] as int? ?? 0,
       isReported: safeData['isReported'] as bool? ?? false,
       isVerified: safeData['isVerified'] as bool? ?? false,
+      response: safeData['response'] as String?,
     );
   }
 
@@ -147,6 +150,7 @@ class Review {
   final int reportCount; // Количество жалоб
   final bool isReported; // Флаг жалобы
   final bool isVerified; // Верифицированный отзыв
+  final String? response; // Ответ специалиста
 
   // Дополнительные методы для совместимости
   bool get hasComment => text.isNotEmpty;
@@ -300,7 +304,7 @@ class Review {
   }
 
   /// Получить звезды рейтинга как строку
-  String get ratingStars => '★' * rating + '☆' * (5 - rating);
+  String get ratingStars => '★' * rating.round() + '☆' * (5 - rating.round());
 
   /// Получить цвет рейтинга
   String get ratingColor {
@@ -309,8 +313,8 @@ class Review {
     return 'red';
   }
 
-  /// Проверить, есть ли комментарий
-  bool get hasComment => text.isNotEmpty;
+  // /// Проверить, есть ли комментарий
+  // bool get hasComment => text.isNotEmpty;
 
   /// Проверить, верифицирован ли отзыв (из метаданных)
   bool get isVerifiedFromMetadata => metadata['isVerified'] == true;

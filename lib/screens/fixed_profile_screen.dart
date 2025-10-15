@@ -116,7 +116,9 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
   }
 
   Widget _buildProfileContent(
-      Map<String, dynamic> userData, bool isOwnProfile) {
+    Map<String, dynamic> userData,
+    bool isOwnProfile,
+  ) {
     final theme = Theme.of(context);
 
     return CustomScrollView(
@@ -303,8 +305,9 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
     final theme = Theme.of(context);
     final about = userData['about'] as String? ?? '';
 
-    if (about.isEmpty)
+    if (about.isEmpty) {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
 
     return SliverToBoxAdapter(
       child: Container(

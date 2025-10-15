@@ -58,9 +58,9 @@ class EnhancedNotificationsService {
     final settings = await _messaging.requestPermission();
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('Уведомления разрешены');
+      debugPrint('Уведомления разрешены');
     } else {
-      print('Уведомления не разрешены');
+      debugPrint('Уведомления не разрешены');
     }
   }
 
@@ -79,12 +79,12 @@ class EnhancedNotificationsService {
   /// Обработка нажатия на уведомление
   void _onNotificationTapped(NotificationResponse response) {
     // TODO: Обработка нажатия на локальное уведомление
-    print('Нажато на уведомление: ${response.payload}');
+    debugPrint('Нажато на уведомление: ${response.payload}');
   }
 
   /// Обработка сообщения в foreground
   void _handleForegroundMessage(RemoteMessage message) {
-    print('Получено сообщение в foreground: ${message.messageId}');
+    debugPrint('Получено сообщение в foreground: ${message.messageId}');
 
     // Показать локальное уведомление
     _showLocalNotification(
@@ -96,7 +96,7 @@ class EnhancedNotificationsService {
 
   /// Обработка нажатия на уведомление
   void _handleNotificationTap(RemoteMessage message) {
-    print('Нажато на уведомление: ${message.messageId}');
+    debugPrint('Нажато на уведомление: ${message.messageId}');
     // TODO: Навигация к соответствующему экрану
   }
 
@@ -202,7 +202,8 @@ class EnhancedNotificationsService {
 
   /// Получить уведомление по ID
   Future<EnhancedNotification?> getNotificationById(
-      String notificationId) async {
+    String notificationId,
+  ) async {
     try {
       final DocumentSnapshot doc = await _firestore
           .collection('notifications')
@@ -211,7 +212,8 @@ class EnhancedNotificationsService {
 
       if (doc.exists) {
         return EnhancedNotification.fromMap(
-            doc.data()! as Map<String, dynamic>);
+          doc.data()! as Map<String, dynamic>,
+        );
       }
       return null;
     } catch (e) {
@@ -300,7 +302,7 @@ class EnhancedNotificationsService {
         }
       }
     } catch (e) {
-      print('Ошибка отправки push-уведомления: $e');
+      debugPrint('Ошибка отправки push-уведомления: $e');
     }
   }
 
@@ -406,7 +408,8 @@ class EnhancedNotificationsService {
         byType[type] = (byType[type] ?? 0) + 1;
 
         final priority = NotificationPriority.fromString(
-            data['priority'] as String? ?? 'normal');
+          data['priority'] as String? ?? 'normal',
+        );
         byPriority[priority] = (byPriority[priority] ?? 0) + 1;
       }
 
@@ -464,6 +467,6 @@ class EnhancedNotificationsService {
 
 /// Обработчик сообщений в фоне
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print('Обработка сообщения в фоне: ${message.messageId}');
+  debugPrint('Обработка сообщения в фоне: ${message.messageId}');
   // TODO: Обработка сообщения в фоне
 }

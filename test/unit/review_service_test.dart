@@ -1,13 +1,12 @@
 import 'package:event_marketplace_app/models/review.dart';
-import 'package:event_marketplace_app/services/review_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('ReviewService Tests', () {
-    late ReviewService reviewService;
+    // late ReviewService reviewService;
 
     setUp(() {
-      reviewService = ReviewService();
+      // reviewService = ReviewService();
     });
 
     test('should calculate average rating correctly', () {

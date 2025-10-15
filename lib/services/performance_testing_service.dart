@@ -369,7 +369,8 @@ class PerformanceTestingService {
       );
 
       developer.log(
-          'Full performance test completed in ${stopwatch.elapsedMilliseconds}ms');
+        'Full performance test completed in ${stopwatch.elapsedMilliseconds}ms',
+      );
       return results;
     } catch (e, stackTrace) {
       stopwatch.stop();

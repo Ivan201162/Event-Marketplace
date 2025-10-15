@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import '../models/app_user.dart';
 import '../models/photo_studio.dart';
 import '../providers/auth_providers.dart';
-import '../services/photo_studio_service.dart';
 import '../services/photographer_studio_link_service.dart';
 
 /// Диалог предложения фотостудии
@@ -28,7 +27,7 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
 
   final PhotographerStudioLinkService _linkService =
       PhotographerStudioLinkService();
-  final PhotoStudioService _photoStudioService = PhotoStudioService();
+  // final PhotoStudioService _photoStudioService = PhotoStudioService(); // Unused field removed
 
   List<PhotoStudio> _availableStudios = [];
   PhotoStudio? _selectedStudio;
@@ -93,7 +92,7 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final currentUser = ref.watch(currentUserProvider);
+    // final currentUser = ref.watch(currentUserProvider); // Unused variable removed
 
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -193,8 +192,7 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
                             itemCount: _availableStudios.length,
                             itemBuilder: (context, index) {
                               final studio = _availableStudios[index];
-                              final isSelected =
-                                  _selectedStudio?.id == studio.id;
+                              // final isSelected = _selectedStudio?.id == studio.id; // Unused variable removed
 
                               return ListTile(
                                 leading: CircleAvatar(

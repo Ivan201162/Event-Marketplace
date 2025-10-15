@@ -110,7 +110,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer>
 
       setState(() {});
     } on Exception catch (e) {
-      print('Ошибка инициализации видео: $e');
+      debugPrint('Ошибка инициализации видео: $e');
     }
   }
 
@@ -242,8 +242,11 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer>
                             ? NetworkImage(video.authorAvatar!)
                             : null,
                         child: video.authorAvatar == null
-                            ? const Icon(Icons.person,
-                                size: 16, color: Colors.white)
+                            ? const Icon(
+                                Icons.person,
+                                size: 16,
+                                color: Colors.white,
+                              )
                             : null,
                       ),
                       const SizedBox(width: 8),

@@ -15,8 +15,8 @@ class SpecialistSearchResultsWidget extends ConsumerStatefulWidget {
   });
 
   final AdvancedSearchFilters filters;
-  final Function(Specialist)? onSpecialistSelected;
-  final Function(AdvancedSearchFilters)? onFiltersChanged;
+  final void Function(Specialist)? onSpecialistSelected;
+  final void Function(AdvancedSearchFilters)? onFiltersChanged;
 
   @override
   ConsumerState<SpecialistSearchResultsWidget> createState() =>
@@ -69,7 +69,9 @@ class _SpecialistSearchResultsWidgetState
   void _loadMore() {
     if (!_isLoadingMore) {
       setState(() => _isLoadingMore = true);
-      ref.read(advancedSearchProvider.notifier).loadMore();
+      ref
+          .read<AdvancedSearchNotifier>(advancedSearchProvider.notifier)
+          .loadMore();
     }
   }
 
@@ -141,7 +143,7 @@ class _SpecialistSearchResultsWidgetState
     return RefreshIndicator(
       onRefresh: () async {
         ref
-            .read(advancedSearchProvider.notifier)
+            .read<AdvancedSearchNotifier>(advancedSearchProvider.notifier)
             .searchSpecialists(widget.filters);
       },
       child: ListView.builder(
@@ -461,7 +463,9 @@ class _SpecialistSearchResultsWidgetState
             ElevatedButton(
               onPressed: () {
                 ref
-                    .read(advancedSearchProvider.notifier)
+                    .read<AdvancedSearchNotifier>(
+                      advancedSearchProvider.notifier,
+                    )
                     .searchSpecialists(widget.filters);
               },
               child: const Text('Повторить'),

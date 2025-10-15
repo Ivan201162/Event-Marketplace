@@ -24,8 +24,8 @@ class RecommendationSection extends StatelessWidget {
   final String? subtitle;
   final String? icon;
   final VoidCallback? onViewAll;
-  final Function(Recommendation)? onRecommendationTap;
-  final Function(Recommendation)? onRecommendationBook;
+  final void Function(Recommendation)? onRecommendationTap;
+  final void Function(Recommendation)? onRecommendationBook;
   final int maxItems;
   final bool showViewAllButton;
   final bool compact;
@@ -159,8 +159,8 @@ class HorizontalRecommendationList extends StatelessWidget {
   });
 
   final List<Recommendation> recommendations;
-  final Function(Recommendation)? onRecommendationTap;
-  final Function(Recommendation)? onRecommendationBook;
+  final void Function(Recommendation)? onRecommendationTap;
+  final void Function(Recommendation)? onRecommendationBook;
   final double height;
 
   @override

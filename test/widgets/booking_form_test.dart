@@ -1,4 +1,3 @@
-import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:event_marketplace_app/screens/booking_form_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,33 +5,33 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('BookingFormScreen', () {
-    Specialist? testSpecialist;
+    // Specialist? testSpecialist;
 
     setUp(() {
-      testSpecialist = Specialist(
-        id: 'specialist_1',
-        userId: 'user_1',
-        name: 'Test Specialist',
-        description: 'Test description',
-        bio: 'Test bio',
-        category: SpecialistCategory.photographer,
-        subcategories: ['свадебная фотография'],
-        experienceLevel: ExperienceLevel.advanced,
-        yearsOfExperience: 5,
-        hourlyRate: 3000,
-        price: 3000,
-        minBookingHours: 2,
-        maxBookingHours: 12,
-        serviceAreas: ['Москва'],
-        languages: ['Русский'],
-        equipment: ['Canon EOS R5'],
-        portfolio: ['https://example.com/portfolio'],
-        isVerified: true,
-        rating: 4.8,
-        reviewCount: 47,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
+      // testSpecialist = Specialist(
+      //   id: 'specialist_1',
+      //   userId: 'user_1',
+      //   name: 'Test Specialist',
+      //   description: 'Test description',
+      //   bio: 'Test bio',
+      //   category: SpecialistCategory.photographer,
+      //   subcategories: ['свадебная фотография'],
+      //   experienceLevel: ExperienceLevel.advanced,
+      //   yearsOfExperience: 5,
+      //   hourlyRate: 3000,
+      //   price: 3000,
+      //   minBookingHours: 2,
+      //   maxBookingHours: 12,
+      //   serviceAreas: ['Москва'],
+      //   languages: ['Русский'],
+      //   equipment: ['Canon EOS R5'],
+      //   portfolio: ['https://example.com/portfolio'],
+      //   isVerified: true,
+      //   rating: 4.8,
+      //   reviewCount: 47,
+      //   createdAt: DateTime.now(),
+      //   updatedAt: DateTime.now(),
+      // );
     });
 
     testWidgets('should display specialist information', (tester) async {

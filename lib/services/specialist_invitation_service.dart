@@ -293,7 +293,8 @@ class SpecialistInvitationService {
 
   /// Получить статистику приглашений специалиста
   Future<InvitationStats?> getSpecialistInvitationStats(
-      String specialistId) async {
+    String specialistId,
+  ) async {
     try {
       final DocumentSnapshot doc = await _firestore
           .collection('invitation_stats')
@@ -508,7 +509,8 @@ class SpecialistInvitationService {
 
   /// Вычислить и сохранить статистику приглашений
   Future<InvitationStats?> _calculateAndSaveInvitationStats(
-      String specialistId) async {
+    String specialistId,
+  ) async {
     try {
       final QuerySnapshot snapshot = await _firestore
           .collection('specialist_invitations')

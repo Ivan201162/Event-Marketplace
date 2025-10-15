@@ -535,7 +535,7 @@ class PhotoStudioListWidget extends ConsumerWidget {
   final String? location;
   final double? minPrice;
   final double? maxPrice;
-  final Function(PhotoStudio)? onStudioSelected;
+  final void Function(PhotoStudio)? onStudioSelected;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Consumer(

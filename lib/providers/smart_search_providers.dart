@@ -36,6 +36,13 @@ final popularSpecialistsProvider =
   return service.getPopularSpecialists();
 });
 
+/// Провайдер популярных специалистов недели
+final weeklyPopularSpecialistsProvider =
+    FutureProvider<List<Map<String, dynamic>>>((ref) async {
+  final service = ref.read(smartSearchServiceProvider);
+  return service.getWeeklyPopularSpecialists();
+});
+
 /// Провайдер сохранённых фильтров поиска
 final savedSearchFiltersProvider =
     FutureProvider<Map<String, dynamic>>((ref) async {

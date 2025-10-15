@@ -25,7 +25,9 @@ class PremiumPlanCard extends StatelessWidget {
               width: isSelected ? 2 : 1,
             ),
             borderRadius: BorderRadius.circular(12),
-            color: isSelected ? Colors.purple.withOpacity(0.05) : Colors.white,
+            color: isSelected
+                ? Colors.purple.withValues(alpha: 0.05)
+                : Colors.white,
           ),
           child: Row(
             children: [

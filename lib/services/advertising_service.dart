@@ -126,8 +126,10 @@ class AdvertisingService {
       }
 
       // Сортируем по релевантности и возвращаем лимит
-      availableAds.sort((a, b) => _calculateRelevance(b, userId)
-          .compareTo(_calculateRelevance(a, userId)));
+      availableAds.sort(
+        (a, b) => _calculateRelevance(b, userId)
+            .compareTo(_calculateRelevance(a, userId)),
+      );
 
       return availableAds.take(limit).toList();
     } catch (e) {
@@ -161,8 +163,9 @@ class AdvertisingService {
       if (videoUrl != null) updates['videoUrl'] = videoUrl;
       if (targetUrl != null) updates['targetUrl'] = targetUrl;
       if (budget != null) updates['budget'] = budget;
-      if (startDate != null)
+      if (startDate != null) {
         updates['startDate'] = startDate.millisecondsSinceEpoch;
+      }
       if (endDate != null) updates['endDate'] = endDate.millisecondsSinceEpoch;
       if (targetAudience != null) updates['targetAudience'] = targetAudience;
       if (status != null) updates['status'] = status.value;
@@ -212,11 +215,7 @@ class AdvertisingService {
   }
 
   /// Зафиксировать клик по рекламе
-  Future<void> recordClick({
-    required String adId,
-    required String userId,
-    required String context,
-  }) async {
+  Future<void> recordClick(String adId) async {
     try {
       final now = DateTime.now();
 
@@ -229,8 +228,6 @@ class AdvertisingService {
       // Записать клик
       await _firestore.collection('ad_clicks').add({
         'adId': adId,
-        'userId': userId,
-        'context': context,
         'timestamp': now.millisecondsSinceEpoch,
         'createdAt': FieldValue.serverTimestamp(),
       });

@@ -16,7 +16,7 @@ class StoryViewerScreen extends ConsumerStatefulWidget {
 
   final List<Story> stories;
   final int initialIndex;
-  final Function(Story)? onStoryViewed;
+  final void Function(Story)? onStoryViewed;
 
   @override
   ConsumerState<StoryViewerScreen> createState() => _StoryViewerScreenState();

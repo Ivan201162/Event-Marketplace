@@ -31,7 +31,7 @@ class AiChatService {
 
       return session.id;
     } on Exception catch (e) {
-      print('Ошибка создания сессии чата: $e');
+      debugPrint('Ошибка создания сессии чата: $e');
       return null;
     }
   }
@@ -47,7 +47,7 @@ class AiChatService {
 
       return querySnapshot.docs.map(ChatSession.fromFirestore).toList();
     } on Exception catch (e) {
-      print('Ошибка получения сессий: $e');
+      debugPrint('Ошибка получения сессий: $e');
       return [];
     }
   }
@@ -63,14 +63,17 @@ class AiChatService {
 
       return querySnapshot.docs.map(ChatMessage.fromFirestore).toList();
     } on Exception catch (e) {
-      print('Ошибка получения сообщений: $e');
+      debugPrint('Ошибка получения сообщений: $e');
       return [];
     }
   }
 
   /// Отправить сообщение пользователя
   Future<ChatMessage?> sendUserMessage(
-      String sessionId, String userId, String content) async {
+    String sessionId,
+    String userId,
+    String content,
+  ) async {
     try {
       final message = ChatMessage(
         id: '${sessionId}_${DateTime.now().millisecondsSinceEpoch}',
@@ -93,14 +96,17 @@ class AiChatService {
 
       return message;
     } on Exception catch (e) {
-      print('Ошибка отправки сообщения: $e');
+      debugPrint('Ошибка отправки сообщения: $e');
       return null;
     }
   }
 
   /// Получить ответ от AI
   Future<ChatMessage?> getAiResponse(
-      String sessionId, String userId, String userMessage) async {
+    String sessionId,
+    String userId,
+    String userMessage,
+  ) async {
     try {
       // Получаем контекст сессии
       final sessionDoc =
@@ -137,14 +143,16 @@ class AiChatService {
 
       return aiMessage;
     } on Exception catch (e) {
-      print('Ошибка получения ответа AI: $e');
+      debugPrint('Ошибка получения ответа AI: $e');
       return null;
     }
   }
 
   /// Обработка сообщения пользователя
   Future<Map<String, dynamic>> _processUserMessage(
-      String message, UserContext context) async {
+    String message,
+    UserContext context,
+  ) async {
     final lowerMessage = message.toLowerCase();
 
     // Приветствие
@@ -156,16 +164,20 @@ class AiChatService {
         'metadata': {
           'quickReplies': [
             const QuickReply(
-                    text: 'Свадьба', value: 'wedding', icon: Icons.favorite)
-                .toJson(),
+              text: 'Свадьба',
+              value: 'wedding',
+              icon: Icons.favorite,
+            ).toJson(),
             const QuickReply(
-                    text: 'Корпоратив',
-                    value: 'corporate',
-                    icon: Icons.business)
-                .toJson(),
+              text: 'Корпоратив',
+              value: 'corporate',
+              icon: Icons.business,
+            ).toJson(),
             const QuickReply(
-                    text: 'День рождения', value: 'birthday', icon: Icons.cake)
-                .toJson(),
+              text: 'День рождения',
+              value: 'birthday',
+              icon: Icons.cake,
+            ).toJson(),
             const QuickReply(text: 'Другое', value: 'other', icon: Icons.event)
                 .toJson(),
           ],
@@ -313,8 +325,9 @@ class AiChatService {
           'metadata': {
             'quickReplies': [
               const QuickReply(
-                      text: 'Изменить критерии', value: 'change_criteria')
-                  .toJson(),
+                text: 'Изменить критерии',
+                value: 'change_criteria',
+              ).toJson(),
               const QuickReply(text: 'Показать всех', value: 'show_all')
                   .toJson(),
             ],
@@ -349,7 +362,7 @@ class AiChatService {
         'newContext': context,
       };
     } on Exception catch (e) {
-      print('Ошибка поиска специалистов: $e');
+      debugPrint('Ошибка поиска специалистов: $e');
       return {
         'content':
             'Произошла ошибка при поиске специалистов. Попробуйте позже.',
@@ -362,7 +375,9 @@ class AiChatService {
 
   /// Обновить контекст сессии
   Future<void> _updateSessionContext(
-      String sessionId, UserContext? newContext) async {
+    String sessionId,
+    UserContext? newContext,
+  ) async {
     if (newContext == null) return;
 
     try {
@@ -370,7 +385,7 @@ class AiChatService {
         'context': newContext.toJson(),
       });
     } on Exception catch (e) {
-      print('Ошибка обновления контекста: $e');
+      debugPrint('Ошибка обновления контекста: $e');
     }
   }
 
@@ -384,7 +399,7 @@ class AiChatService {
       'добрый вечер',
       'доброе утро',
       'hi',
-      'hello'
+      'hello',
     ];
     return greetings.any((greeting) => message.contains(greeting));
   }
@@ -396,7 +411,7 @@ class AiChatService {
       'день рождения',
       'юбилей',
       'праздник',
-      'мероприятие'
+      'мероприятие',
     ];
     return eventTypes.any((type) => message.contains(type));
   }
@@ -404,8 +419,9 @@ class AiChatService {
   String _extractEventType(String message) {
     if (message.contains('свадьб')) return 'wedding';
     if (message.contains('корпоратив')) return 'corporate';
-    if (message.contains('день рождения') || message.contains('др'))
+    if (message.contains('день рождения') || message.contains('др')) {
       return 'birthday';
+    }
     if (message.contains('юбилей')) return 'anniversary';
     return 'other';
   }
@@ -431,15 +447,16 @@ class AiChatService {
       'санкт-петербург',
       'спб',
       'екатеринбург',
-      'новосибирск'
+      'новосибирск',
     ];
     return cities.any((city) => message.contains(city));
   }
 
   String _extractCity(String message) {
     if (message.contains('москв')) return 'Москва';
-    if (message.contains('санкт-петербург') || message.contains('спб'))
+    if (message.contains('санкт-петербург') || message.contains('спб')) {
       return 'Санкт-Петербург';
+    }
     if (message.contains('екатеринбург')) return 'Екатеринбург';
     if (message.contains('новосибирск')) return 'Новосибирск';
     return 'Другой город';

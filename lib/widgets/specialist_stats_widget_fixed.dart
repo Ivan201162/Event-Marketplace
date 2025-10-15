@@ -162,7 +162,9 @@ class SpecialistStatsWidget extends ConsumerWidget {
 
   /// Построить статистику по статусам заявок
   Widget _buildBookingStatusStats(
-          BuildContext context, SpecialistStats stats) =>
+    BuildContext context,
+    SpecialistStats stats,
+  ) =>
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

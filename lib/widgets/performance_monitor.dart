@@ -16,8 +16,9 @@ class PerformanceMonitor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(performanceProvider);
-    final needsOptimization = ref.watch(needsOptimizationProvider);
+    final performanceNotifier = ref.watch<PerformanceNotifier>(performanceProvider);
+    final state = performanceNotifier.state;
+    final needsOptimization = ref.watch<bool>(needsOptimizationProvider);
 
     if (!showDetails && !needsOptimization) {
       return const SizedBox.shrink();
@@ -160,8 +161,9 @@ class OptimizationControls extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(performanceProvider);
-    final notifier = ref.read(performanceProvider.notifier);
+    final performanceNotifier = ref.watch<PerformanceNotifier>(performanceProvider);
+    final state = performanceNotifier.state;
+    final notifier = performanceNotifier;
 
     return Card(
       child: Padding(
@@ -250,7 +252,8 @@ class PerformanceStats extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(performanceProvider);
+    final performanceNotifier = ref.watch<PerformanceNotifier>(performanceProvider);
+    final state = performanceNotifier.state;
 
     return Card(
       child: Padding(

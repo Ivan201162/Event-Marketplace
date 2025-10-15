@@ -23,25 +23,25 @@ class FirestoreSeederService {
           'id': 'u_customer_1',
           'name': 'Иван Петров',
           'city': 'Москва',
-          'role': 'customer'
+          'role': 'customer',
         },
         {
           'id': 'u_customer_2',
           'name': 'Елена Смирнова',
           'city': 'СПб',
-          'role': 'customer'
+          'role': 'customer',
         },
         {
           'id': 'u_spec_1',
           'name': 'Ведущий Артём',
           'city': 'Москва',
-          'role': 'specialist'
+          'role': 'specialist',
         },
         {
           'id': 'u_spec_2',
           'name': 'Фотограф Анна',
           'city': 'СПб',
-          'role': 'specialist'
+          'role': 'specialist',
         },
       ];
 
@@ -218,7 +218,7 @@ class FirestoreSeederService {
           'skills': [
             'Свадебная фотосъемка',
             'Семейная фотосъемка',
-            'Детская фотосъемка'
+            'Детская фотосъемка',
           ],
           'portfolio': [
             'https://picsum.photos/seed/photo1/300/200',

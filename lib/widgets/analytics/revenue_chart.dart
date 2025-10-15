@@ -14,7 +14,7 @@ class RevenueChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final chartData = _prepareChartData();
+    final chartData = prepareChartData();
 
     return Container(
       height: 200,
@@ -24,7 +24,7 @@ class RevenueChart extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -36,11 +36,11 @@ class RevenueChart extends StatelessWidget {
             horizontalInterval: 1,
             verticalInterval: 1,
             getDrawingHorizontalLine: (value) => FlLine(
-              color: Colors.grey.withOpacity(0.2),
+              color: Colors.grey.withValues(alpha:0.2,
               strokeWidth: 1,
             ),
             getDrawingVerticalLine: (value) => FlLine(
-              color: Colors.grey.withOpacity(0.2),
+              color: Colors.grey.withValues(alpha:0.2,
               strokeWidth: 1,
             ),
           ),
@@ -53,7 +53,7 @@ class RevenueChart extends StatelessWidget {
                 reservedSize: 30,
                 interval: 1,
                 getTitlesWidget: (value, meta) => Text(
-                  _getBottomTitle(value),
+                  getBottomTitle(value),
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 10,
@@ -78,12 +78,12 @@ class RevenueChart extends StatelessWidget {
           ),
           borderData: FlBorderData(
             show: true,
-            border: Border.all(color: Colors.grey.withOpacity(0.2)),
+            border: Border.all(color: Colors.grey.withValues(alpha:0.2),
           ),
           minX: 0,
           maxX: chartData.length - 1.toDouble(),
           minY: 0,
-          maxY: _getMaxY(chartData),
+          maxY: getMaxY(chartData),
           lineBarsData: [
             LineChartBarData(
               spots: chartData
@@ -110,8 +110,8 @@ class RevenueChart extends StatelessWidget {
                 show: true,
                 gradient: LinearGradient(
                   colors: [
-                    Colors.blue.withOpacity(0.3),
-                    Colors.blue.withOpacity(0.1),
+                    Colors.blue.withValues(alpha: 0.3),
+                    Colors.blue.withValues(alpha: 0.1),
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -122,9 +122,8 @@ class RevenueChart extends StatelessWidget {
         ),
       ),
     );
-  }
 
-  List<double> _prepareChartData() {
+  List<double> prepareChartData() {
     // For demo purposes, generate sample data
     // In a real app, this would process actual transaction data
     switch (period) {
@@ -161,7 +160,7 @@ class RevenueChart extends StatelessWidget {
           32.1,
           31.5,
           34.2,
-          33.8
+          33.8,
         ];
       case 'year':
         return [120, 150, 180, 200, 220, 250, 280, 300, 320, 350, 380, 400];
@@ -170,7 +169,7 @@ class RevenueChart extends StatelessWidget {
     }
   }
 
-  String _getBottomTitle(double value) {
+  String getBottomTitle(double value) {
     switch (period) {
       case 'week':
         final days = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
@@ -190,7 +189,7 @@ class RevenueChart extends StatelessWidget {
           'Сен',
           'Окт',
           'Ноя',
-          'Дек'
+          'Дек',
         ];
         return months[value.toInt() % months.length];
       default:
@@ -198,8 +197,7 @@ class RevenueChart extends StatelessWidget {
     }
   }
 
-  double _getMaxY(List<double> data) {
+  double getMaxY(List<double> data) {
     final max = data.reduce((a, b) => a > b ? a : b);
     return (max * 1.2).ceilToDouble();
   }
-}

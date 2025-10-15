@@ -270,7 +270,8 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
             ElevatedButton(
               onPressed: () {
                 ref.invalidate(
-                    bookingsByCustomerStreamProvider(currentUser.uid));
+                  bookingsByCustomerStreamProvider(currentUser.uid),
+                );
               },
               child: const Text('Повторить'),
             ),
@@ -349,7 +350,8 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
             ElevatedButton(
               onPressed: () {
                 ref.invalidate(
-                    bookingsBySpecialistStreamProvider(currentUser.uid));
+                  bookingsBySpecialistStreamProvider(currentUser.uid),
+                );
               },
               child: const Text('Повторить'),
             ),

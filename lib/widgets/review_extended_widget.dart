@@ -18,10 +18,10 @@ class ReviewExtendedWidget extends StatefulWidget {
   });
   final ReviewExtended review;
   final String? currentUserId;
-  final Function(String)? onLike;
-  final Function(String)? onShare;
-  final Function(String)? onReport;
-  final Function(String)? onViewMedia;
+  final void Function(String)? onLike;
+  final void Function(String)? onShare;
+  final void Function(String)? onReport;
+  final void Function(String)? onViewMedia;
 
   @override
   State<ReviewExtendedWidget> createState() => _ReviewExtendedWidgetState();
@@ -622,7 +622,7 @@ class _MediaViewerScreenState extends State<MediaViewerScreen> {
       );
 
   Future<VideoPlayerController> _initializeVideoController(String url) async {
-    final controller = VideoPlayerController.network(url);
+    final controller = VideoPlayerController.networkUrl(Uri.parse(url));
     await controller.initialize();
     return controller;
   }

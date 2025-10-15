@@ -25,11 +25,9 @@ class AdvertisementWidget extends ConsumerWidget {
         child: InkWell(
           onTap: () {
             // Зафиксировать клик
-            ref.read(advertisingStateProvider.notifier).recordClick(
-                  adId: advertisement.id,
-                  userId: userId,
-                  context: this.context,
-                );
+            ref
+                .read(advertisingStateProvider.notifier)
+                .recordClick(advertisement.id);
 
             // Выполнить действие
             onTap?.call();
@@ -155,11 +153,9 @@ class AdvertisementBannerWidget extends ConsumerWidget {
         child: InkWell(
           onTap: () {
             // Зафиксировать клик
-            ref.read(advertisingStateProvider.notifier).recordClick(
-                  adId: advertisement.id,
-                  userId: userId,
-                  context: this.context,
-                );
+            ref
+                .read(advertisingStateProvider.notifier)
+                .recordClick(advertisement.id);
           },
           child: Container(
             height: 100,
@@ -612,22 +608,28 @@ class AdvertisementStatsWidget extends ConsumerWidget {
                   _buildStatRow(
                     'Бюджет',
                     NumberFormat.currency(
-                            locale: 'ru', symbol: '₽', decimalDigits: 0)
-                        .format(stats['budget']),
+                      locale: 'ru',
+                      symbol: '₽',
+                      decimalDigits: 0,
+                    ).format(stats['budget']),
                     Icons.account_balance_wallet,
                   ),
                   _buildStatRow(
                     'Потрачено',
                     NumberFormat.currency(
-                            locale: 'ru', symbol: '₽', decimalDigits: 0)
-                        .format(stats['spentAmount']),
+                      locale: 'ru',
+                      symbol: '₽',
+                      decimalDigits: 0,
+                    ).format(stats['spentAmount']),
                     Icons.money_off,
                   ),
                   _buildStatRow(
                     'Остаток',
                     NumberFormat.currency(
-                            locale: 'ru', symbol: '₽', decimalDigits: 0)
-                        .format(stats['remainingBudget']),
+                      locale: 'ru',
+                      symbol: '₽',
+                      decimalDigits: 0,
+                    ).format(stats['remainingBudget']),
                     Icons.savings,
                   ),
                 ],

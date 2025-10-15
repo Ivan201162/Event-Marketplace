@@ -407,7 +407,11 @@ class _PartnerProgramScreenState extends ConsumerState<PartnerProgramScreen>
       );
 
   Widget _buildStatItem(
-          String title, String value, IconData icon, Color color) =>
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) =>
       Container(
         padding: const EdgeInsets.all(12),
         margin: const EdgeInsets.symmetric(horizontal: 4),

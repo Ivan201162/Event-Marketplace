@@ -15,7 +15,8 @@ dependencies:
     sdk: flutter
   
   # State Management
-  flutter_riverpod: ^2.4.9
+  flutter_riverpod: ^3.0.3
+  riverpod_annotation: ^3.0.1
   qr_flutter: ^4.1.0
   
   # Firebase
@@ -40,6 +41,7 @@ dependencies:
   file_picker: ^10.3.3
   permission_handler: ^12.0.1
   path_provider: ^2.1.1
+  
   
   # Network & HTTP
   http: ^1.1.0
@@ -98,24 +100,50 @@ dependencies:
   
   # Analytics
   firebase_analytics: ^12.0.2
-  fl_chart: ^0.69.0
+  fl_chart: ^1.1.1
   
   # Payment System
-  flutter_stripe: ^11.1.0
+  flutter_stripe: ^12.0.2
   # yookassa_payment_flutter: ^1.0.0  # Package not available
   
   google_fonts: ^6.3.2
 
+  provider: any
+  firebase_crashlytics: any
+  firebase_performance: any
+  connectivity_plus: any
+  package_info_plus: ^8.3.1
+  timeago: any
+  uuid: any
+  in_app_review: any
+  path: any
+  image: any
+  geocoding: any
+  crypto: any
+  pointycastle: ^3.9.1
+  device_info_plus: any
+  pdf: any
+  audioplayers: any
+  printing: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
-  mockito: ^5.4.4
-  golden_toolkit: ^0.15.0
-  build_runner: ^2.4.7
+  mockito: ^5.5.0
+  # golden_toolkit: ^0.15.0  # Discontinued package removed
+  build_runner: ^2.7.1
+  riverpod_generator: ^3.0.1
   integration_test:
     sdk: flutter
   patrol: ^3.7.0
 
 flutter:
   uses-material-design: true
+  
+  # Premium Fonts
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700

@@ -105,7 +105,7 @@ class PostService {
           specialistId: specialistId,
           text: 'Отличная свадебная фотосессия в парке! 🌸',
           mediaUrls: [
-            'https://placehold.co/400x400/FF6B6B/white?text=Wedding+1'
+            'https://placehold.co/400x400/FF6B6B/white?text=Wedding+1',
           ],
           createdAt: DateTime.now().subtract(const Duration(days: 1)),
           likesCount: 42,
@@ -117,7 +117,7 @@ class PostService {
           specialistId: specialistId,
           text: 'Портретная съёмка в студии с профессиональным освещением',
           mediaUrls: [
-            'https://placehold.co/400x400/4ECDC4/white?text=Portrait+1'
+            'https://placehold.co/400x400/4ECDC4/white?text=Portrait+1',
           ],
           createdAt: DateTime.now().subtract(const Duration(days: 3)),
           likesCount: 28,
@@ -129,7 +129,7 @@ class PostService {
           specialistId: specialistId,
           text: 'Семейная фотосессия на природе. Счастье в каждом кадре! ❤️',
           mediaUrls: [
-            'https://placehold.co/400x400/45B7D1/white?text=Family+1'
+            'https://placehold.co/400x400/45B7D1/white?text=Family+1',
           ],
           createdAt: DateTime.now().subtract(const Duration(days: 5)),
           likesCount: 67,
@@ -141,7 +141,7 @@ class PostService {
           specialistId: specialistId,
           text: 'Корпоративная съёмка для IT-компании',
           mediaUrls: [
-            'https://placehold.co/400x400/96CEB4/white?text=Corporate+1'
+            'https://placehold.co/400x400/96CEB4/white?text=Corporate+1',
           ],
           createdAt: DateTime.now().subtract(const Duration(days: 7)),
           likesCount: 15,

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/referral.dart';
 
@@ -32,7 +33,7 @@ class ReferralService {
 
       return referralCode;
     } on Exception catch (e) {
-      print('Ошибка создания партнёрской программы: $e');
+      debugPrint('Ошибка создания партнёрской программы: $e');
       return null;
     }
   }
@@ -50,7 +51,7 @@ class ReferralService {
       }
       return null;
     } on Exception catch (e) {
-      print('Ошибка получения партнёрской программы: $e');
+      debugPrint('Ошибка получения партнёрской программы: $e');
       return null;
     }
   }
@@ -66,14 +67,16 @@ class ReferralService {
 
       return querySnapshot.docs.map(Referral.fromFirestore).toList();
     } on Exception catch (e) {
-      print('Ошибка получения рефералов: $e');
+      debugPrint('Ошибка получения рефералов: $e');
       return [];
     }
   }
 
   /// Обработать приглашение по реферальному коду
   Future<bool> processReferral(
-      String referralCode, String invitedUserId) async {
+    String referralCode,
+    String invitedUserId,
+  ) async {
     try {
       // Найти пользователя по реферальному коду
       final partnerQuery = await _firestore
@@ -83,7 +86,7 @@ class ReferralService {
           .get();
 
       if (partnerQuery.docs.isEmpty) {
-        print('Реферальный код не найден: $referralCode');
+        debugPrint('Реферальный код не найден: $referralCode');
         return false;
       }
 
@@ -98,7 +101,7 @@ class ReferralService {
           .get();
 
       if (existingReferral.docs.isNotEmpty) {
-        print('Пользователь уже приглашен этим рефералом');
+        debugPrint('Пользователь уже приглашен этим рефералом');
         return false;
       }
 
@@ -121,15 +124,23 @@ class ReferralService {
 
       // Создать бонус для пригласившего
       await _createBonus(
-          inviterId, 100, BonusType.referral, 'За приглашение пользователя');
+        inviterId,
+        100,
+        BonusType.referral,
+        'За приглашение пользователя',
+      );
 
       // Создать бонус для приглашенного
-      await _createBonus(invitedUserId, 50, BonusType.registration,
-          'За регистрацию по приглашению');
+      await _createBonus(
+        invitedUserId,
+        50,
+        BonusType.registration,
+        'За регистрацию по приглашению',
+      );
 
       return true;
     } on Exception catch (e) {
-      print('Ошибка обработки реферала: $e');
+      debugPrint('Ошибка обработки реферала: $e');
       return false;
     }
   }
@@ -171,7 +182,7 @@ class ReferralService {
 
       return true;
     } on Exception catch (e) {
-      print('Ошибка завершения реферала: $e');
+      debugPrint('Ошибка завершения реферала: $e');
       return false;
     }
   }
@@ -204,13 +215,17 @@ class ReferralService {
         'lastActivityAt': Timestamp.now(),
       });
     } on Exception catch (e) {
-      print('Ошибка обновления статистики партнёрской программы: $e');
+      debugPrint('Ошибка обновления статистики партнёрской программы: $e');
     }
   }
 
   /// Создать бонус
   Future<void> _createBonus(
-      String userId, int amount, BonusType type, String description) async {
+    String userId,
+    int amount,
+    BonusType type,
+    String description,
+  ) async {
     try {
       final bonus = Bonus(
         id: '${userId}_${DateTime.now().millisecondsSinceEpoch}',
@@ -226,7 +241,7 @@ class ReferralService {
           .doc(bonus.id)
           .set(bonus.toFirestore());
     } on Exception catch (e) {
-      print('Ошибка создания бонуса: $e');
+      debugPrint('Ошибка создания бонуса: $e');
     }
   }
 
@@ -241,7 +256,7 @@ class ReferralService {
 
       return querySnapshot.docs.map(Bonus.fromFirestore).toList();
     } on Exception catch (e) {
-      print('Ошибка получения бонусов: $e');
+      debugPrint('Ошибка получения бонусов: $e');
       return [];
     }
   }
@@ -257,7 +272,7 @@ class ReferralService {
 
       return earned - used;
     } on Exception catch (e) {
-      print('Ошибка получения баланса бонусов: $e');
+      debugPrint('Ошибка получения баланса бонусов: $e');
       return 0;
     }
   }
@@ -286,7 +301,7 @@ class ReferralService {
 
       return true;
     } on Exception catch (e) {
-      print('Ошибка использования бонуса: $e');
+      debugPrint('Ошибка использования бонуса: $e');
       return false;
     }
   }
@@ -304,7 +319,7 @@ class ReferralService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('referral_code', referralCode);
     } on Exception catch (e) {
-      print('Ошибка сохранения реферального кода: $e');
+      debugPrint('Ошибка сохранения реферального кода: $e');
     }
   }
 
@@ -314,7 +329,7 @@ class ReferralService {
       final prefs = await SharedPreferences.getInstance();
       return prefs.getString('referral_code');
     } on Exception catch (e) {
-      print('Ошибка получения реферального кода: $e');
+      debugPrint('Ошибка получения реферального кода: $e');
       return null;
     }
   }
@@ -339,7 +354,7 @@ class ReferralService {
             .fold(0, (sum, bonus) => sum + bonus.amount),
       };
     } on Exception catch (e) {
-      print('Ошибка получения статистики: $e');
+      debugPrint('Ошибка получения статистики: $e');
       return {};
     }
   }
@@ -361,12 +376,12 @@ class ReferralService {
 
       if (querySnapshot.docs.isNotEmpty) {
         await batch.commit();
-        print('Удалено ${querySnapshot.docs.length} старых рефералов');
+        debugPrint('Удалено ${querySnapshot.docs.length} старых рефералов');
       }
 
       return querySnapshot.docs.length;
     } on Exception catch (e) {
-      print('Ошибка очистки старых рефералов: $e');
+      debugPrint('Ошибка очистки старых рефералов: $e');
       return 0;
     }
   }

@@ -281,7 +281,7 @@ class ResponsiveList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenType = context.screenType;
+    // final screenType = context.screenType;
     final effectiveSpacing =
         spacing ?? ResponsiveUtils.getItemSpacing(context.screenWidth);
     final effectivePadding =

@@ -259,13 +259,21 @@ class _CalendarRemindersScreenState
                     const SizedBox(height: 16),
                     if (_calendarStats.isNotEmpty) ...[
                       _buildStatRow(
-                          'Всего событий', '${_calendarStats['totalEvents']}'),
-                      _buildStatRow('Событий за месяц',
-                          '${_calendarStats['monthlyEvents']}'),
-                      _buildStatRow('Синхронизировано',
-                          '${_calendarStats['syncedEvents']}'),
-                      _buildStatRow('Процент синхронизации',
-                          '${(_calendarStats['syncRate'] * 100).toStringAsFixed(1)}%'),
+                        'Всего событий',
+                        '${_calendarStats['totalEvents']}',
+                      ),
+                      _buildStatRow(
+                        'Событий за месяц',
+                        '${_calendarStats['monthlyEvents']}',
+                      ),
+                      _buildStatRow(
+                        'Синхронизировано',
+                        '${_calendarStats['syncedEvents']}',
+                      ),
+                      _buildStatRow(
+                        'Процент синхронизации',
+                        '${(_calendarStats['syncRate'] * 100).toStringAsFixed(1)}%',
+                      ),
                     ] else
                       const Text('Нет данных'),
                   ],
@@ -289,14 +297,22 @@ class _CalendarRemindersScreenState
                     ),
                     const SizedBox(height: 16),
                     if (_reminderStats.isNotEmpty) ...[
-                      _buildStatRow('Всего напоминаний',
-                          '${_reminderStats['totalReminders']}'),
                       _buildStatRow(
-                          'Активных', '${_reminderStats['activeReminders']}'),
-                      _buildStatRow('Сработавших',
-                          '${_reminderStats['triggeredReminders']}'),
-                      _buildStatRow('Повторяющихся',
-                          '${_reminderStats['repeatingReminders']}'),
+                        'Всего напоминаний',
+                        '${_reminderStats['totalReminders']}',
+                      ),
+                      _buildStatRow(
+                        'Активных',
+                        '${_reminderStats['activeReminders']}',
+                      ),
+                      _buildStatRow(
+                        'Сработавших',
+                        '${_reminderStats['triggeredReminders']}',
+                      ),
+                      _buildStatRow(
+                        'Повторяющихся',
+                        '${_reminderStats['repeatingReminders']}',
+                      ),
                     ] else
                       const Text('Нет данных'),
                   ],
@@ -901,7 +917,9 @@ class _CreateReminderScreenState extends ConsumerState<CreateReminderScreen> {
                       const Text(
                         'Тип напоминания',
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       DropdownButtonFormField<ReminderType>(
@@ -932,7 +950,9 @@ class _CreateReminderScreenState extends ConsumerState<CreateReminderScreen> {
                       const Text(
                         'Повторение (дни недели)',
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       Wrap(

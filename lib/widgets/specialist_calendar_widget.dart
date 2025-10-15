@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../models/specialist.dart';
-import '../services/calendar_service.dart';
 
 /// Виджет календаря для отображения занятых и свободных дат специалиста
 class SpecialistCalendarWidget extends StatefulWidget {
@@ -26,7 +25,7 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
   late final ValueNotifier<List<DateTime>> _selectedDates;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  final CalendarService _calendarService = CalendarService();
+  // final CalendarService _calendarService = CalendarService(); // Unused field removed
 
   @override
   void initState() {

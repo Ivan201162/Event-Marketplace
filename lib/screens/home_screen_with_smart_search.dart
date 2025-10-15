@@ -196,8 +196,10 @@ class _HomeScreenWithSmartSearchState
                           'На основе ваших предпочтений',
                         ),
                         const SizedBox(height: 16),
-                        _buildSpecialistsList(_recommendations,
-                            showCompatibility: true),
+                        _buildSpecialistsList(
+                          _recommendations,
+                          showCompatibility: true,
+                        ),
                         const SizedBox(height: 32),
                       ],
 
@@ -332,8 +334,10 @@ class _HomeScreenWithSmartSearchState
       );
 
   /// Построить список специалистов
-  Widget _buildSpecialistsList(List<SmartSpecialist> specialists,
-      {bool showCompatibility = false}) {
+  Widget _buildSpecialistsList(
+    List<SmartSpecialist> specialists, {
+    bool showCompatibility = false,
+  }) {
     if (specialists.isEmpty) {
       return const Center(
         child: Text(

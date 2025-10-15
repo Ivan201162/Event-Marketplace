@@ -61,8 +61,8 @@ class PaymentService {
         return true;
       }
       return false;
-    } catch (e) {
-      print('Payment error: $e');
+    } on Exception catch (e) {
+      debugPrint('Payment error: $e');
       return false;
     }
   }
@@ -108,8 +108,8 @@ class PaymentService {
         return true;
       }
       return false;
-    } catch (e) {
-      print('Subscription payment error: $e');
+    } on Exception catch (e) {
+      debugPrint('Subscription payment error: $e');
       return false;
     }
   }
@@ -153,8 +153,8 @@ class PaymentService {
         return true;
       }
       return false;
-    } catch (e) {
-      print('Donation payment error: $e');
+    } on Exception catch (e) {
+      debugPrint('Donation payment error: $e');
       return false;
     }
   }
@@ -208,8 +208,8 @@ class PaymentService {
         return true;
       }
       return false;
-    } catch (e) {
-      print('Post boost payment error: $e');
+    } on Exception catch (e) {
+      debugPrint('Post boost payment error: $e');
       return false;
     }
   }

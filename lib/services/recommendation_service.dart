@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/specialist.dart';
 import '../models/user_activity.dart';
@@ -33,13 +34,15 @@ class RecommendationService {
         'metadata': metadata,
       });
     } catch (e) {
-      print('Ошибка записи активности: $e');
+      debugPrint('Ошибка записи активности: $e');
     }
   }
 
   /// Получить активность пользователя
-  Future<List<UserActivity>> getUserActivity(String userId,
-      {int limit = 100}) async {
+  Future<List<UserActivity>> getUserActivity(
+    String userId, {
+    int limit = 100,
+  }) async {
     try {
       final querySnapshot = await _firestore
           .collection(_activityCollection)
@@ -50,7 +53,7 @@ class RecommendationService {
 
       return querySnapshot.docs.map(UserActivity.fromFirestore).toList();
     } catch (e) {
-      print('Ошибка получения активности пользователя: $e');
+      debugPrint('Ошибка получения активности пользователя: $e');
       return [];
     }
   }
@@ -75,7 +78,7 @@ class RecommendationService {
 
       return recommendations;
     } catch (e) {
-      print('Ошибка получения рекомендаций: $e');
+      debugPrint('Ошибка получения рекомендаций: $e');
       return _getPopularSpecialists(userId);
     }
   }
@@ -255,14 +258,16 @@ class RecommendationService {
           )
           .toList();
     } catch (e) {
-      print('Ошибка получения популярных специалистов: $e');
+      debugPrint('Ошибка получения популярных специалистов: $e');
       return [];
     }
   }
 
   /// Сохранить рекомендации
   Future<void> _saveRecommendations(
-      String userId, List<Recommendation> recommendations) async {
+    String userId,
+    List<Recommendation> recommendations,
+  ) async {
     try {
       // Удаляем старые рекомендации
       final oldRecommendations = await _firestore
@@ -285,7 +290,7 @@ class RecommendationService {
 
       await batch.commit();
     } catch (e) {
-      print('Ошибка сохранения рекомендаций: $e');
+      debugPrint('Ошибка сохранения рекомендаций: $e');
     }
   }
 
@@ -300,7 +305,7 @@ class RecommendationService {
 
       return querySnapshot.docs.map(Recommendation.fromFirestore).toList();
     } catch (e) {
-      print('Ошибка получения сохраненных рекомендаций: $e');
+      debugPrint('Ошибка получения сохраненных рекомендаций: $e');
       return [];
     }
   }
@@ -321,10 +326,10 @@ class RecommendationService {
 
       if (querySnapshot.docs.isNotEmpty) {
         await batch.commit();
-        print('Удалено ${querySnapshot.docs.length} старых рекомендаций');
+        debugPrint('Удалено ${querySnapshot.docs.length} старых рекомендаций');
       }
     } catch (e) {
-      print('Ошибка очистки старых рекомендаций: $e');
+      debugPrint('Ошибка очистки старых рекомендаций: $e');
     }
   }
 
@@ -365,7 +370,7 @@ class RecommendationService {
             activities.isNotEmpty ? activities.first.timestamp : null,
       };
     } catch (e) {
-      print('Ошибка получения статистики активности: $e');
+      debugPrint('Ошибка получения статистики активности: $e');
       return {};
     }
   }

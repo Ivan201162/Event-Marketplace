@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import '../models/user.dart';
+import 'oauth_profile_service.dart';
 
 /// Полноценный сервис аутентификации с Firebase
 class FirebaseAuthService {
@@ -9,23 +11,24 @@ class FirebaseAuthService {
   static final FirebaseAuthService _instance = FirebaseAuthService._internal();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final OAuthProfileService _oauthService = OAuthProfileService();
   StreamSubscription<User?>? _authStateSubscription;
 
   /// Поток изменений состояния аутентификации
   Stream<AppUser?> get authStateChanges => _auth
       .authStateChanges()
-      .map((user) => user != null ? _convertFirebaseUser(user) : null);
+      .asyncMap((user) async => user != null ? await _convertFirebaseUser(user) : null);
 
   /// Получить текущего пользователя
-  AppUser? get currentUser {
+  Future<AppUser?> get currentUser async {
     final user = _auth.currentUser;
-    return user != null ? _convertFirebaseUser(user) : null;
+    return user != null ? await _convertFirebaseUser(user) : null;
   }
 
   /// Вход по email и паролю
   Future<AppUser?> signInWithEmail(String email, String password) async {
     try {
-      print('Попытка входа с email: $email');
+      debugPrint('Попытка входа с email: $email');
 
       final credential = await _auth.signInWithEmailAndPassword(
         email: email,
@@ -33,16 +36,16 @@ class FirebaseAuthService {
       );
 
       if (credential.user != null) {
-        final appUser = _convertFirebaseUser(credential.user!);
-        print('Успешный вход с email: ${appUser.displayName}');
+        final appUser = await _convertFirebaseUser(credential.user!);
+        debugPrint('Успешный вход с email: ${appUser.displayName}');
         return appUser;
       }
       return null;
     } on FirebaseAuthException catch (e) {
-      print('Ошибка входа: ${e.message}');
+      debugPrint('Ошибка входа: ${e.message}');
       throw _handleAuthException(e);
     } on Exception catch (e) {
-      print('Неожиданная ошибка: $e');
+      debugPrint('Неожиданная ошибка: $e');
       throw Exception('Произошла ошибка при входе');
     }
   }
@@ -54,7 +57,7 @@ class FirebaseAuthService {
     String? displayName,
   }) async {
     try {
-      print('Попытка регистрации с email: $email');
+      debugPrint('Попытка регистрации с email: $email');
 
       final credential = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -67,16 +70,16 @@ class FirebaseAuthService {
           await credential.user!.updateDisplayName(displayName);
         }
 
-        final appUser = _convertFirebaseUser(credential.user!);
-        print('Успешная регистрация с email: ${appUser.displayName}');
+        final appUser = await _convertFirebaseUser(credential.user!);
+        debugPrint('Успешная регистрация с email: ${appUser.displayName}');
         return appUser;
       }
       return null;
     } on FirebaseAuthException catch (e) {
-      print('Ошибка регистрации: ${e.message}');
+      debugPrint('Ошибка регистрации: ${e.message}');
       throw _handleAuthException(e);
     } on Exception catch (e) {
-      print('Неожиданная ошибка: $e');
+      debugPrint('Неожиданная ошибка: $e');
       throw Exception('Произошла ошибка при регистрации');
     }
   }
@@ -84,30 +87,30 @@ class FirebaseAuthService {
   /// Отправка SMS для входа по телефону
   Future<void> signInWithPhone(String phoneNumber) async {
     try {
-      print('Отправка SMS на номер: $phoneNumber');
+      debugPrint('Отправка SMS на номер: $phoneNumber');
 
       await _auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         verificationCompleted: (credential) async {
-          print('Автоматическая верификация завершена');
+          debugPrint('Автоматическая верификация завершена');
         },
         verificationFailed: (e) {
-          print('Ошибка верификации: ${e.message}');
+          debugPrint('Ошибка верификации: ${e.message}');
           throw _handleAuthException(e);
         },
         codeSent: (verificationId, resendToken) {
-          print('SMS код отправлен');
+          debugPrint('SMS код отправлен');
           // Сохраняем verificationId для последующего использования
           _verificationId = verificationId;
         },
         codeAutoRetrievalTimeout: (verificationId) {
-          print('Таймаут автополучения кода');
+          debugPrint('Таймаут автополучения кода');
           _verificationId = verificationId;
         },
         timeout: const Duration(seconds: 60),
       );
     } on Exception catch (e) {
-      print('Ошибка отправки SMS: $e');
+      debugPrint('Ошибка отправки SMS: $e');
       throw Exception('Не удалось отправить SMS код');
     }
   }
@@ -117,7 +120,7 @@ class FirebaseAuthService {
   /// Подтверждение SMS кода для входа по телефону
   Future<AppUser?> confirmPhoneCode(String smsCode) async {
     try {
-      print('Подтверждение SMS кода: $smsCode');
+      debugPrint('Подтверждение SMS кода: $smsCode');
 
       if (_verificationId == null) {
         throw Exception(
@@ -133,16 +136,16 @@ class FirebaseAuthService {
       final userCredential = await _auth.signInWithCredential(credential);
 
       if (userCredential.user != null) {
-        final appUser = _convertFirebaseUser(userCredential.user!);
-        print('Успешный вход по телефону');
+        final appUser = await _convertFirebaseUser(userCredential.user!);
+        debugPrint('Успешный вход по телефону');
         return appUser;
       }
       return null;
     } on FirebaseAuthException catch (e) {
-      print('Ошибка подтверждения кода: ${e.message}');
+      debugPrint('Ошибка подтверждения кода: ${e.message}');
       throw _handleAuthException(e);
     } on Exception catch (e) {
-      print('Неожиданная ошибка: $e');
+      debugPrint('Неожиданная ошибка: $e');
       throw Exception('Неверный код подтверждения');
     }
   }
@@ -153,21 +156,21 @@ class FirebaseAuthService {
   /// Вход как гость (анонимная авторизация)
   Future<AppUser?> signInAsGuest() async {
     try {
-      print('Попытка входа как гость');
+      debugPrint('Попытка входа как гость');
 
       final credential = await _auth.signInAnonymously();
 
       if (credential.user != null) {
-        final appUser = _convertFirebaseUser(credential.user!);
-        print('Успешный вход как гость');
+        final appUser = await _convertFirebaseUser(credential.user!);
+        debugPrint('Успешный вход как гость');
         return appUser;
       }
       return null;
     } on FirebaseAuthException catch (e) {
-      print('Ошибка входа как гость: ${e.message}');
+      debugPrint('Ошибка входа как гость: ${e.message}');
       throw _handleAuthException(e);
     } on Exception catch (e) {
-      print('Неожиданная ошибка: $e');
+      debugPrint('Неожиданная ошибка: $e');
       throw Exception('Произошла ошибка при входе как гость');
     }
   }
@@ -175,10 +178,10 @@ class FirebaseAuthService {
   /// Выход
   Future<void> signOut() async {
     try {
-      print('Выход выполнен');
+      debugPrint('Выход выполнен');
       await _auth.signOut();
     } on Exception catch (e) {
-      print('Ошибка выхода: $e');
+      debugPrint('Ошибка выхода: $e');
       throw Exception('Произошла ошибка при выходе');
     }
   }
@@ -186,19 +189,28 @@ class FirebaseAuthService {
   /// Сброс пароля
   Future<void> resetPassword(String email) async {
     try {
-      print('Сброс пароля для email: $email');
+      debugPrint('Сброс пароля для email: $email');
       await _auth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
-      print('Ошибка сброса пароля: ${e.message}');
+      debugPrint('Ошибка сброса пароля: ${e.message}');
       throw _handleAuthException(e);
     } on Exception catch (e) {
-      print('Неожиданная ошибка: $e');
+      debugPrint('Неожиданная ошибка: $e');
       throw Exception('Произошла ошибка при сбросе пароля');
     }
   }
 
   /// Конвертация Firebase User в AppUser
-  AppUser _convertFirebaseUser(User user) => AppUser(
+  Future<AppUser> _convertFirebaseUser(User user) async {
+    try {
+      // Сначала пытаемся получить профиль из OAuth сервиса
+      final oauthUser = await _oauthService.handleOAuthUser(user);
+      if (oauthUser != null) {
+        return oauthUser;
+      }
+
+      // Если OAuth не сработал, создаем базовый профиль
+      return AppUser(
         id: user.uid,
         email: user.email ?? '',
         displayName:
@@ -211,6 +223,24 @@ class FirebaseAuthService {
           'emailVerified': user.emailVerified,
         },
       );
+    } catch (e) {
+      debugPrint('Ошибка конвертации Firebase пользователя: $e');
+      // Возвращаем базовый профиль в случае ошибки
+      return AppUser(
+        id: user.uid,
+        email: user.email ?? '',
+        displayName:
+            user.displayName ?? user.email?.split('@')[0] ?? 'Пользователь',
+        role: UserRole.customer,
+        createdAt: user.metadata.creationTime ?? DateTime.now(),
+        additionalData: {
+          'isAnonymous': user.isAnonymous,
+          'phoneNumber': user.phoneNumber,
+          'emailVerified': user.emailVerified,
+        },
+      );
+    }
+  }
 
   /// Обработка ошибок Firebase Auth
   Exception _handleAuthException(FirebaseAuthException e) {

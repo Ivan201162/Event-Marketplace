@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 
 import 'fcm_service.dart';
 
@@ -64,9 +65,9 @@ class NotificationService {
         },
       );
 
-      print('Уведомление отправлено пользователю $receiverId: $title');
+      debugPrint('Уведомление отправлено пользователю $receiverId: $title');
     } on Exception catch (e) {
-      print('Ошибка отправки уведомления: $e');
+      debugPrint('Ошибка отправки уведомления: $e');
     }
   }
 
@@ -222,7 +223,8 @@ class NotificationService {
 
   /// Получение истории уведомлений пользователя
   static Stream<List<Map<String, dynamic>>> getUserNotifications(
-          String userId) =>
+    String userId,
+  ) =>
       _firestore
           .collection('users')
           .doc(userId)
@@ -249,7 +251,7 @@ class NotificationService {
           .doc(notificationId)
           .update({'isRead': true});
     } on Exception catch (e) {
-      print('Ошибка отметки уведомления как прочитанного: $e');
+      debugPrint('Ошибка отметки уведомления как прочитанного: $e');
     }
   }
 
@@ -270,13 +272,15 @@ class NotificationService {
 
       await batch.commit();
     } on Exception catch (e) {
-      print('Ошибка отметки всех уведомлений как прочитанных: $e');
+      debugPrint('Ошибка отметки всех уведомлений как прочитанных: $e');
     }
   }
 
   /// Закрепить уведомление
   static Future<void> pinNotification(
-      String userId, String notificationId) async {
+    String userId,
+    String notificationId,
+  ) async {
     try {
       await _firestore
           .collection('users')
@@ -285,13 +289,15 @@ class NotificationService {
           .doc(notificationId)
           .update({'isPinned': true});
     } on Exception catch (e) {
-      print('Ошибка закрепления уведомления: $e');
+      debugPrint('Ошибка закрепления уведомления: $e');
     }
   }
 
   /// Открепить уведомление
   static Future<void> unpinNotification(
-      String userId, String notificationId) async {
+    String userId,
+    String notificationId,
+  ) async {
     try {
       await _firestore
           .collection('users')
@@ -300,13 +306,15 @@ class NotificationService {
           .doc(notificationId)
           .update({'isPinned': false});
     } on Exception catch (e) {
-      print('Ошибка открепления уведомления: $e');
+      debugPrint('Ошибка открепления уведомления: $e');
     }
   }
 
   /// Удалить уведомление
   static Future<void> deleteNotification(
-      String userId, String notificationId) async {
+    String userId,
+    String notificationId,
+  ) async {
     try {
       await _firestore
           .collection('users')
@@ -315,7 +323,7 @@ class NotificationService {
           .doc(notificationId)
           .delete();
     } on Exception catch (e) {
-      print('Ошибка удаления уведомления: $e');
+      debugPrint('Ошибка удаления уведомления: $e');
     }
   }
 
@@ -344,7 +352,7 @@ class NotificationService {
 
       await batch.commit();
     } on Exception catch (e) {
-      print('Ошибка очистки всех уведомлений: $e');
+      debugPrint('Ошибка очистки всех уведомлений: $e');
     }
   }
 
@@ -359,7 +367,7 @@ class NotificationService {
         'readAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      print('Ошибка отметки уведомления как прочитанного: $e');
+      debugPrint('Ошибка отметки уведомления как прочитанного: $e');
     }
   }
 
@@ -412,7 +420,7 @@ class NotificationService {
       }
       await batch.commit();
     } on Exception catch (e) {
-      print('Ошибка создания тестовых уведомлений: $e');
+      debugPrint('Ошибка создания тестовых уведомлений: $e');
     }
   }
 }

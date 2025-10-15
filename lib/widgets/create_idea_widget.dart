@@ -423,8 +423,10 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    Text(_selectedType.icon,
-                        style: const TextStyle(fontSize: 14)),
+                    Text(
+                      _selectedType.icon,
+                      style: const TextStyle(fontSize: 14),
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       _selectedType.displayName,
@@ -469,7 +471,9 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                         .map(
                           (tag) => Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
                               color: Colors.blue[100],
                               borderRadius: BorderRadius.circular(12),
@@ -606,14 +610,16 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
           ? double.tryParse(_budgetController.text.trim())
           : null;
 
-      final ideasService = ref.read(enhancedIdeasServiceProvider);
+      // final ideasService = ref.read(enhancedIdeasServiceProvider);
 
-      await ideasService.createIdea(
+      // Создаем объект идеи
+      final idea = EnhancedIdea(
+        id: '', // Будет установлен в сервисе
         authorId: widget.authorId,
         title: _titleController.text.trim(),
         description: _descriptionController.text.trim(),
         type: _selectedType,
-        mediaFiles: _selectedMedia,
+        media: [], // Будет заполнено в сервисе
         tags: tags,
         category: _categoryController.text.trim().isNotEmpty
             ? _categoryController.text.trim()
@@ -626,7 +632,11 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
             ? _locationController.text.trim()
             : null,
         isPublic: _isPublic,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
+
+      await ideasService.createIdea(idea);
 
       if (mounted) {
         Navigator.of(context).pop();

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/advertisement.dart';
@@ -54,54 +55,51 @@ class AdvertisementFilters {
     this.advertiserId,
     this.limit = 20,
   });
+
   final AdvertisementStatus? status;
   final AdvertisementType? type;
   final String? advertiserId;
   final int limit;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is AdvertisementFilters &&
-          runtimeType == other.runtimeType &&
-          status == other.status &&
-          type == other.type &&
-          advertiserId == other.advertiserId &&
-          limit == other.limit;
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is AdvertisementFilters &&
+        other.status == status &&
+        other.type == type &&
+        other.advertiserId == advertiserId &&
+        other.limit == limit;
+  }
 
   @override
   int get hashCode =>
       status.hashCode ^ type.hashCode ^ advertiserId.hashCode ^ limit.hashCode;
 }
 
-/// Параметры для получения рекламы для показа
+/// Параметры для показа рекламы
 class DisplayAdParams {
   const DisplayAdParams({
     required this.userId,
     required this.context,
-    this.limit = 3,
+    this.limit = 5,
   });
+
   final String userId;
   final String context;
   final int limit;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DisplayAdParams &&
-          runtimeType == other.runtimeType &&
-          userId == other.userId &&
-          context == other.context &&
-          limit == other.limit;
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is DisplayAdParams &&
+        other.userId == userId &&
+        other.context == context &&
+        other.limit == limit;
+  }
 
   @override
   int get hashCode => userId.hashCode ^ context.hashCode ^ limit.hashCode;
 }
-
-/// Провайдер для управления состоянием рекламы
-final advertisingStateProvider =
-    StateNotifierProvider<AdvertisingStateNotifier, AdvertisingState>((ref) =>
-        AdvertisingStateNotifier(ref.read(advertisingServiceProvider)));
 
 /// Состояние рекламы
 class AdvertisingState {
@@ -111,6 +109,7 @@ class AdvertisingState {
     this.error,
     this.stats,
   });
+
   final List<Advertisement> advertisements;
   final bool isLoading;
   final String? error;
@@ -130,10 +129,15 @@ class AdvertisingState {
       );
 }
 
-/// Нотификатор состояния рекламы
-class AdvertisingStateNotifier extends StateNotifier<AdvertisingState> {
-  AdvertisingStateNotifier(this._service) : super(const AdvertisingState());
-  final AdvertisingService _service;
+/// Notifier для состояния рекламы (мигрирован с StateNotifier)
+class AdvertisingNotifier extends Notifier<AdvertisingState> {
+  late final AdvertisingService _service;
+
+  @override
+  AdvertisingState build() {
+    _service = ref.read(advertisingServiceProvider);
+    return const AdvertisingState();
+  }
 
   /// Создать рекламу
   Future<void> createAdvertisement({
@@ -186,13 +190,12 @@ class AdvertisingStateNotifier extends StateNotifier<AdvertisingState> {
     String? title,
     String? description,
     String? imageUrl,
-    String? videoUrl,
     String? targetUrl,
     double? budget,
     DateTime? startDate,
     DateTime? endDate,
     List<String>? targetAudience,
-    AdvertisementStatus? status,
+    String? videoUrl,
     Map<String, dynamic>? metadata,
   }) async {
     state = state.copyWith(isLoading: true);
@@ -203,31 +206,29 @@ class AdvertisingStateNotifier extends StateNotifier<AdvertisingState> {
         title: title,
         description: description,
         imageUrl: imageUrl,
-        videoUrl: videoUrl,
         targetUrl: targetUrl,
         budget: budget,
         startDate: startDate,
         endDate: endDate,
         targetAudience: targetAudience,
-        status: status,
+        videoUrl: videoUrl,
         metadata: metadata,
       );
 
-      // Обновить локальное состояние
+      // Обновляем локальное состояние
       final updatedAdvertisements = state.advertisements.map((ad) {
         if (ad.id == adId) {
           return ad.copyWith(
-            title: title ?? ad.title,
-            description: description ?? ad.description,
-            imageUrl: imageUrl ?? ad.imageUrl,
-            videoUrl: videoUrl ?? ad.videoUrl,
-            targetUrl: targetUrl ?? ad.targetUrl,
-            budget: budget ?? ad.budget,
-            startDate: startDate ?? ad.startDate,
-            endDate: endDate ?? ad.endDate,
-            targetAudience: targetAudience ?? ad.targetAudience,
-            status: status ?? ad.status,
-            metadata: metadata ?? ad.metadata,
+            title: title,
+            description: description,
+            imageUrl: imageUrl,
+            targetUrl: targetUrl,
+            budget: budget,
+            startDate: startDate,
+            endDate: endDate,
+            targetAudience: targetAudience,
+            videoUrl: videoUrl,
+            metadata: metadata,
           );
         }
         return ad;
@@ -265,65 +266,30 @@ class AdvertisingStateNotifier extends StateNotifier<AdvertisingState> {
     }
   }
 
-  /// Зафиксировать показ
-  Future<void> recordImpression({
-    required String adId,
-    required String userId,
-    required String context,
-  }) async {
+  /// Записать клик по рекламе
+  Future<void> recordClick(String adId) async {
     try {
-      await _service.recordImpression(
-        adId: adId,
-        userId: userId,
-        context: context,
-      );
-    } catch (e) {
-      state = state.copyWith(error: e.toString());
-    }
-  }
+      await _service.recordClick(adId);
 
-  /// Зафиксировать клик
-  Future<void> recordClick({
-    required String adId,
-    required String userId,
-    required String context,
-  }) async {
-    try {
-      await _service.recordClick(
-        adId: adId,
-        userId: userId,
-        context: context,
-      );
-    } catch (e) {
-      state = state.copyWith(error: e.toString());
-    }
-  }
+      // Обновляем статистику кликов
+      final updatedAdvertisements = state.advertisements.map((ad) {
+        if (ad.id == adId) {
+          return ad.copyWith(clicks: (ad.clicks ?? 0) + 1);
+        }
+        return ad;
+      }).toList();
 
-  /// Зафиксировать конверсию
-  Future<void> recordConversion({
-    required String adId,
-    required String userId,
-    required String context,
-    required double value,
-    Map<String, dynamic>? metadata,
-  }) async {
-    try {
-      await _service.recordConversion(
-        adId: adId,
-        userId: userId,
-        context: context,
-        value: value,
-        metadata: metadata,
-      );
+      state = state.copyWith(advertisements: updatedAdvertisements);
     } catch (e) {
-      state = state.copyWith(error: e.toString());
+      // Логируем ошибку, но не прерываем работу
+      debugPrint('Error recording click for ad $adId: $e');
     }
   }
 
   /// Загрузить статистику
-  Future<void> loadStats(String adId) async {
+  Future<void> loadStats() async {
     try {
-      final stats = await _service.getAdvertisementStats(adId);
+      final stats = await _service.getOverallStats();
       state = state.copyWith(stats: stats);
     } catch (e) {
       state = state.copyWith(error: e.toString());
@@ -335,3 +301,9 @@ class AdvertisingStateNotifier extends StateNotifier<AdvertisingState> {
     state = state.copyWith();
   }
 }
+
+/// Провайдер состояния рекламы (мигрирован с StateNotifierProvider)
+final advertisingStateProvider =
+    NotifierProvider<AdvertisingNotifier, AdvertisingState>(
+  AdvertisingNotifier.new,
+);

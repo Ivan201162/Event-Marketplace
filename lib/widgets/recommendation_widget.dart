@@ -63,7 +63,11 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
     return AnimatedCard(
       onTap: () {
         // Записываем взаимодействие
-        ref.read(recommendationInteractionProvider.notifier).recordInteraction(
+        ref
+            .read<RecommendationInteractionNotifier>(
+              recommendationInteractionProvider.notifier,
+            )
+            .recordInteraction(
               RecommendationInteraction(
                 id: '${recommendation.id}_${DateTime.now().millisecondsSinceEpoch}',
                 userId:
@@ -288,7 +292,9 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
             child: AnimatedButton(
               onPressed: () {
                 ref
-                    .read(recommendationInteractionProvider.notifier)
+                    .read<RecommendationInteractionNotifier>(
+                      recommendationInteractionProvider.notifier,
+                    )
                     .recordInteraction(
                       RecommendationInteraction(
                         id: '${recommendation.id}_clicked_${DateTime.now().millisecondsSinceEpoch}',
@@ -323,7 +329,9 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
           IconButton(
             onPressed: () {
               ref
-                  .read(recommendationInteractionProvider.notifier)
+                  .read<RecommendationInteractionNotifier>(
+                    recommendationInteractionProvider.notifier,
+                  )
                   .recordInteraction(
                     RecommendationInteraction(
                       id: '${recommendation.id}_saved_${DateTime.now().millisecondsSinceEpoch}',
@@ -343,7 +351,9 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
           IconButton(
             onPressed: () {
               ref
-                  .read(recommendationInteractionProvider.notifier)
+                  .read<RecommendationInteractionNotifier>(
+                    recommendationInteractionProvider.notifier,
+                  )
                   .recordInteraction(
                     RecommendationInteraction(
                       id: '${recommendation.id}_dismissed_${DateTime.now().millisecondsSinceEpoch}',
@@ -363,13 +373,13 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
         ],
       );
 
-  Color _parseColor(String colorString) {
-    try {
-      return Color(int.parse(colorString.replaceFirst('#', '0xFF')));
-    } on Exception {
-      return Colors.grey;
-    }
-  }
+  // Color _parseColor(String colorString) {
+  //   try {
+  //     return Color(int.parse(colorString.replaceFirst('#', '0xFF')));
+  //   } on Exception {
+  //     return Colors.grey;
+  //   }
+  // }
 }
 
 /// Виджет для отображения коллекции рекомендаций

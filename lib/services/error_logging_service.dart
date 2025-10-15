@@ -11,17 +11,17 @@ class ErrorLoggingService {
   static final ErrorLoggingService _instance = ErrorLoggingService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  
+
   // Кэш для батчевых операций
   final List<Map<String, dynamic>> _errorLogCache = [];
   final List<Map<String, dynamic>> _warningLogCache = [];
   final List<Map<String, dynamic>> _performanceLogCache = [];
-  
+
   // Таймеры для периодической отправки
   Timer? _errorLogTimer;
   Timer? _warningLogTimer;
   Timer? _performanceLogTimer;
-  
+
   // Константы
   static const int _batchSize = 50;
   static const Duration _flushInterval = Duration(seconds: 30);
@@ -66,7 +66,7 @@ class ErrorLoggingService {
       } else {
         // Запускаем таймер для периодической отправки
         _errorLogTimer?.cancel();
-        _errorLogTimer = Timer(_flushInterval, () => _flushErrorLogs());
+        _errorLogTimer = Timer(_flushInterval, _flushErrorLogs);
       }
     } catch (e) {
       // Если не удалось записать в Firestore, хотя бы выводим в консоль
@@ -132,7 +132,7 @@ class ErrorLoggingService {
       } else {
         // Запускаем таймер для периодической отправки
         _warningLogTimer?.cancel();
-        _warningLogTimer = Timer(_flushInterval, () => _flushWarningLogs());
+        _warningLogTimer = Timer(_flushInterval, _flushWarningLogs);
       }
     } catch (e) {
       developer.log('Failed to log warning to Firestore: $e');
@@ -228,7 +228,7 @@ class ErrorLoggingService {
       } else {
         // Запускаем таймер для периодической отправки
         _performanceLogTimer?.cancel();
-        _performanceLogTimer = Timer(_flushInterval, () => _flushPerformanceLogs());
+        _performanceLogTimer = Timer(_flushInterval, _flushPerformanceLogs);
       }
     } catch (e) {
       developer.log('Failed to log performance to Firestore: $e');
@@ -251,7 +251,8 @@ class ErrorLoggingService {
       }
 
       await batch.commit();
-      developer.log('Flushed ${logsToSend.length} performance logs to Firestore');
+      developer
+          .log('Flushed ${logsToSend.length} performance logs to Firestore');
     } catch (e) {
       // Возвращаем логи в кэш при ошибке
       _performanceLogCache.insertAll(0, logsToSend);
@@ -344,7 +345,7 @@ class ErrorLoggingService {
         'error_logs',
         'warning_logs',
         'info_logs',
-        'performance_logs'
+        'performance_logs',
       ];
 
       for (final collection in collections) {
@@ -358,7 +359,7 @@ class ErrorLoggingService {
           // Используем батчевые операции для удаления
           final batches = <WriteBatch>[];
           WriteBatch? currentBatch = _firestore.batch();
-          int batchCount = 0;
+          var batchCount = 0;
 
           for (final doc in snapshot.docs) {
             currentBatch!.delete(doc.reference);
@@ -379,7 +380,9 @@ class ErrorLoggingService {
             await batch.commit();
           }
 
-          developer.log('Cleaned up ${snapshot.docs.length} old logs from $collection');
+          developer.log(
+            'Cleaned up ${snapshot.docs.length} old logs from $collection',
+          );
         }
       }
     } catch (e) {
@@ -394,11 +397,11 @@ class ErrorLoggingService {
         'error_logs',
         'warning_logs',
         'info_logs',
-        'performance_logs'
+        'performance_logs',
       ];
 
       final stats = <String, int>{};
-      
+
       for (final collection in collections) {
         final snapshot = await _firestore.collection(collection).get();
         stats[collection] = snapshot.docs.length;

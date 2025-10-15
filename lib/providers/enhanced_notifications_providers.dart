@@ -6,7 +6,8 @@ import '../services/enhanced_notifications_service.dart';
 /// Провайдер сервиса уведомлений
 final enhancedNotificationsServiceProvider =
     Provider<EnhancedNotificationsService>(
-        (ref) => EnhancedNotificationsService());
+  (ref) => EnhancedNotificationsService(),
+);
 
 /// Провайдер уведомлений пользователя
 final notificationsProvider =
@@ -49,9 +50,11 @@ final notificationStatsProvider =
 
 /// Провайдер состояния создания уведомления
 final createNotificationStateProvider = StateNotifierProvider<
-        CreateNotificationStateNotifier, CreateNotificationState>(
-    (ref) => CreateNotificationStateNotifier(
-        ref.read(enhancedNotificationsServiceProvider)));
+    CreateNotificationStateNotifier, CreateNotificationState>(
+  (ref) => CreateNotificationStateNotifier(
+    ref.read(enhancedNotificationsServiceProvider),
+  ),
+);
 
 /// Состояние создания уведомления
 class CreateNotificationState {
@@ -227,7 +230,8 @@ class NotificationStateNotifier extends StateNotifier<NotificationState> {
 /// Провайдер настроек уведомлений
 final notificationSettingsProvider =
     StateNotifierProvider<NotificationSettingsNotifier, NotificationSettings>(
-        (ref) => NotificationSettingsNotifier());
+  (ref) => NotificationSettingsNotifier(),
+);
 
 /// Настройки уведомлений
 class NotificationSettings {

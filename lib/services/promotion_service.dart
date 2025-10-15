@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import '../models/promotion.dart';
 
 /// Сервис для работы с акциями и предложениями
@@ -21,7 +22,7 @@ class PromotionService {
 
       return querySnapshot.docs.map(Promotion.fromFirestore).toList();
     } catch (e) {
-      print('Ошибка получения активных акций: $e');
+      debugPrint('Ошибка получения активных акций: $e');
       return [];
     }
   }
@@ -47,7 +48,7 @@ class PromotionService {
 
       return querySnapshot.docs.map(Promotion.fromFirestore).toList();
     } catch (e) {
-      print('Ошибка получения акций по категории: $e');
+      debugPrint('Ошибка получения акций по категории: $e');
       return [];
     }
   }
@@ -68,7 +69,7 @@ class PromotionService {
 
       return querySnapshot.docs.map(Promotion.fromFirestore).toList();
     } catch (e) {
-      print('Ошибка получения акций по городу: $e');
+      debugPrint('Ошибка получения акций по городу: $e');
       return [];
     }
   }
@@ -88,7 +89,7 @@ class PromotionService {
 
       return querySnapshot.docs.map(Promotion.fromFirestore).toList();
     } catch (e) {
-      print('Ошибка получения акций специалиста: $e');
+      debugPrint('Ошибка получения акций специалиста: $e');
       return [];
     }
   }
@@ -108,7 +109,7 @@ class PromotionService {
 
       return querySnapshot.docs.map(Promotion.fromFirestore).toList();
     } catch (e) {
-      print('Ошибка получения сезонных предложений: $e');
+      debugPrint('Ошибка получения сезонных предложений: $e');
       return [];
     }
   }
@@ -128,7 +129,7 @@ class PromotionService {
 
       return querySnapshot.docs.map(Promotion.fromFirestore).toList();
     } catch (e) {
-      print('Ошибка получения промокодов и подарков: $e');
+      debugPrint('Ошибка получения промокодов и подарков: $e');
       return [];
     }
   }
@@ -140,7 +141,7 @@ class PromotionService {
           await _firestore.collection(_collection).add(promotion.toFirestore());
       return docRef.id;
     } catch (e) {
-      print('Ошибка создания акции: $e');
+      debugPrint('Ошибка создания акции: $e');
       return null;
     }
   }
@@ -154,7 +155,7 @@ class PromotionService {
       });
       return true;
     } catch (e) {
-      print('Ошибка обновления акции: $e');
+      debugPrint('Ошибка обновления акции: $e');
       return false;
     }
   }
@@ -165,7 +166,7 @@ class PromotionService {
       await _firestore.collection(_collection).doc(id).delete();
       return true;
     } catch (e) {
-      print('Ошибка удаления акции: $e');
+      debugPrint('Ошибка удаления акции: $e');
       return false;
     }
   }
@@ -179,7 +180,7 @@ class PromotionService {
       });
       return true;
     } catch (e) {
-      print('Ошибка деактивации акции: $e');
+      debugPrint('Ошибка деактивации акции: $e');
       return false;
     }
   }
@@ -214,13 +215,17 @@ class PromotionService {
       }
 
       if (startDate != null) {
-        query = query.where('startDate',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where(
+          'startDate',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
+        );
       }
 
       if (endDate != null) {
-        query = query.where('endDate',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where(
+          'endDate',
+          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
+        );
       }
 
       final querySnapshot = await query
@@ -230,7 +235,7 @@ class PromotionService {
 
       return querySnapshot.docs.map(Promotion.fromFirestore).toList();
     } catch (e) {
-      print('Ошибка получения отфильтрованных акций: $e');
+      debugPrint('Ошибка получения отфильтрованных акций: $e');
       return [];
     }
   }
@@ -264,7 +269,7 @@ class PromotionService {
         'categories': _getCategoryStats(allQuery.docs),
       };
     } catch (e) {
-      print('Ошибка получения статистики акций: $e');
+      debugPrint('Ошибка получения статистики акций: $e');
       return {};
     }
   }
@@ -309,7 +314,7 @@ class PromotionService {
 
       return deactivatedCount;
     } catch (e) {
-      print('Ошибка деактивации просроченных акций: $e');
+      debugPrint('Ошибка деактивации просроченных акций: $e');
       return 0;
     }
   }

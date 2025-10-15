@@ -18,7 +18,7 @@ class VoiceRecorderWidget extends ConsumerStatefulWidget {
   final String senderId;
   final String senderName;
   final String? senderAvatar;
-  final Function(ChatMessageExtended) onVoiceMessageSent;
+  final void Function(ChatMessageExtended) onVoiceMessageSent;
 
   @override
   ConsumerState<VoiceRecorderWidget> createState() =>

@@ -73,7 +73,7 @@ void main() {
     testWidgets(
         'CreateTestSpecialistButton should call onSpecialistCreated callback',
         (tester) async {
-      var callbackCalled = false;
+      // var callbackCalled = false;
 
       await tester.pumpWidget(
         ProviderScope(
@@ -82,7 +82,7 @@ void main() {
               body: CreateTestSpecialistButton(
                 specialistType: 'photographer',
                 onSpecialistCreated: () {
-                  callbackCalled = true;
+                  // callbackCalled = true;
                 },
               ),
             ),

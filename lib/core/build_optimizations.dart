@@ -35,14 +35,12 @@ class BuildOptimizations {
   /// Оптимизация рендеринга
   static void _optimizeRendering() {
     // Устанавливаем оптимальные настройки рендеринга
-    final view = WidgetsBinding.instance.platformDispatcher.views.first;
     // ViewConfiguration не имеет copyWith, поэтому просто используем текущую конфигурацию
   }
 
   /// Оптимизация рендеринга для debug
   static void _optimizeDebugRendering() {
     // Настройки для debug режима
-    final view = WidgetsBinding.instance.platformDispatcher.views.first;
     // ViewConfiguration не имеет copyWith, поэтому просто используем текущую конфигурацию
   }
 

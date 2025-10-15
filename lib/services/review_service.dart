@@ -20,7 +20,6 @@ class ReviewService {
     String? type,
     String? title,
     String? content,
-    int? rating,
     List<String>? tags,
     required String specialistId,
     required String customerId,
@@ -67,12 +66,14 @@ class ReviewService {
 
         // Защита от накруток: проверяем, что прошло достаточно времени с завершения заказа
         final now = DateTime.now();
-        final timeSinceCompletion =
-            now.difference(booking.endDate ?? booking.startDate);
-        if (timeSinceCompletion.inHours < 1) {
-          throw Exception(
-            'Отзыв можно оставить не ранее чем через час после завершения заказа',
-          );
+        final endDate = booking.endDate ?? booking.startDate;
+        if (endDate != null) {
+          final timeSinceCompletion = now.difference(endDate);
+          if (timeSinceCompletion.inHours < 1) {
+            throw Exception(
+              'Отзыв можно оставить не ранее чем через час после завершения заказа',
+            );
+          }
         }
       }
 
@@ -114,12 +115,12 @@ class ReviewService {
       await _updateSpecialistRating(specialistId);
 
       // Отправляем уведомление специалисту о новом отзыве
-      await _notificationService.sendNewReviewNotification(
-        specialistId: specialistId,
-        customerName: customerName,
-        rating: rating,
-        reviewId: docRef.id,
-      );
+      // await _notificationService.sendNewReviewNotification(
+      //   specialistId: specialistId,
+      //   customerName: customerName,
+      //   rating: rating,
+      //   reviewId: docRef.id,
+      // );
 
       debugPrint('Review created: ${docRef.id}');
       return docRef.id;

@@ -9,15 +9,25 @@ final advancedSearchServiceProvider = Provider<AdvancedSpecialistSearchService>(
 );
 
 /// Провайдер состояния расширенного поиска
-final advancedSearchProvider = StateNotifierProvider<AdvancedSearchNotifier,
-    AsyncValue<AdvancedSearchState>>((ref) {
-  final service = ref.read(advancedSearchServiceProvider);
-  return AdvancedSearchNotifier(service);
-});
+final advancedSearchProvider =
+    NotifierProvider<AdvancedSearchNotifier, AsyncValue<AdvancedSearchState>>(
+  AdvancedSearchNotifier.new,
+);
+
+/// Notifier для фильтров поиска
+class SearchFiltersNotifier extends Notifier<AdvancedSearchFilters> {
+  @override
+  AdvancedSearchFilters build() => const AdvancedSearchFilters();
+
+  void updateFilters(AdvancedSearchFilters filters) {
+    state = filters;
+  }
+}
 
 /// Провайдер для фильтров поиска
-final searchFiltersProvider = StateProvider<AdvancedSearchFilters>(
-  (ref) => const AdvancedSearchFilters(),
+final searchFiltersProvider =
+    NotifierProvider<SearchFiltersNotifier, AdvancedSearchFilters>(
+  SearchFiltersNotifier.new,
 );
 
 /// Провайдер для статистики поиска
@@ -41,13 +51,16 @@ final popularCategoriesProvider =
 });
 
 /// Нотификатор для расширенного поиска
-class AdvancedSearchNotifier
-    extends StateNotifier<AsyncValue<AdvancedSearchState>> {
-  AdvancedSearchNotifier(this._service) : super(const AsyncValue.loading()) {
+class AdvancedSearchNotifier extends Notifier<AsyncValue<AdvancedSearchState>> {
+  late final AdvancedSpecialistSearchService _service;
+
+  @override
+  AsyncValue<AdvancedSearchState> build() {
+    _service = ref.read(advancedSearchServiceProvider);
     _initialize();
+    return const AsyncValue.loading();
   }
 
-  final AdvancedSpecialistSearchService _service;
   AdvancedSearchFilters _currentFilters = const AdvancedSearchFilters();
   List<AdvancedSearchResult> _allResults = [];
   bool _hasMore = true;

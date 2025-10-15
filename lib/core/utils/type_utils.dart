@@ -15,7 +15,7 @@ List<T> safeListFromDynamic<T>(
   T Function() converter,
 ) {
   if (data == null) return <T>[];
-  return data.map(converter).toList().cast<T>();
+  return data.map<T>(converter).toList();
 }
 
 /// Безопасное преобразование String из dynamic

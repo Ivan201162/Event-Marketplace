@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 
 /// Сервис для работы с аналитикой Firebase и локальной статистикой
 class AnalyticsService {
@@ -20,7 +21,7 @@ class AnalyticsService {
         'timestamp': DateTime.now().toIso8601String(),
       });
     } on Exception catch (e) {
-      print('Ошибка логирования входа: $e');
+      debugPrint('Ошибка логирования входа: $e');
     }
   }
 
@@ -32,13 +33,15 @@ class AnalyticsService {
         'timestamp': DateTime.now().toIso8601String(),
       });
     } on Exception catch (e) {
-      print('Ошибка логирования выхода: $e');
+      debugPrint('Ошибка логирования выхода: $e');
     }
   }
 
   /// Логирование просмотра профиля специалиста
   Future<void> logViewProfile(
-      String specialistId, String specialistName) async {
+    String specialistId,
+    String specialistName,
+  ) async {
     try {
       await _analytics.logEvent(
         name: 'view_item',
@@ -57,13 +60,16 @@ class AnalyticsService {
       // Обновляем статистику просмотров профиля
       await _updateProfileViews(specialistId);
     } on Exception catch (e) {
-      print('Ошибка логирования просмотра профиля: $e');
+      debugPrint('Ошибка логирования просмотра профиля: $e');
     }
   }
 
   /// Логирование создания заявки
   Future<void> logCreateRequest(
-      String requestId, String specialistId, String category) async {
+    String requestId,
+    String specialistId,
+    String category,
+  ) async {
     try {
       await _analytics.logEvent(
         name: 'create_request',
@@ -84,7 +90,7 @@ class AnalyticsService {
       // Обновляем статистику заявок
       await _updateRequestStats(specialistId, 'received');
     } on Exception catch (e) {
-      print('Ошибка логирования создания заявки: $e');
+      debugPrint('Ошибка логирования создания заявки: $e');
     }
   }
 
@@ -108,7 +114,7 @@ class AnalyticsService {
       // Обновляем статистику сообщений
       await _updateMessageStats(recipientId);
     } on Exception catch (e) {
-      print('Ошибка логирования отправки сообщения: $e');
+      debugPrint('Ошибка логирования отправки сообщения: $e');
     }
   }
 
@@ -129,7 +135,7 @@ class AnalyticsService {
         'timestamp': DateTime.now().toIso8601String(),
       });
     } on Exception catch (e) {
-      print('Ошибка логирования лайка: $e');
+      debugPrint('Ошибка логирования лайка: $e');
     }
   }
 
@@ -150,7 +156,7 @@ class AnalyticsService {
         'timestamp': DateTime.now().toIso8601String(),
       });
     } on Exception catch (e) {
-      print('Ошибка логирования комментария: $e');
+      debugPrint('Ошибка логирования комментария: $e');
     }
   }
 
@@ -171,7 +177,7 @@ class AnalyticsService {
         'timestamp': DateTime.now().toIso8601String(),
       });
     } on Exception catch (e) {
-      print('Ошибка логирования сохранения: $e');
+      debugPrint('Ошибка логирования сохранения: $e');
     }
   }
 
@@ -183,7 +189,7 @@ class AnalyticsService {
         'timestamp': DateTime.now().toIso8601String(),
       });
     } on Exception catch (e) {
-      print('Ошибка логирования открытия настроек: $e');
+      debugPrint('Ошибка логирования открытия настроек: $e');
     }
   }
 
@@ -199,7 +205,7 @@ class AnalyticsService {
         'timestamp': DateTime.now().toIso8601String(),
       });
     } on Exception catch (e) {
-      print('Ошибка логирования изменения темы: $e');
+      debugPrint('Ошибка логирования изменения темы: $e');
     }
   }
 
@@ -215,7 +221,7 @@ class AnalyticsService {
         'timestamp': DateTime.now().toIso8601String(),
       });
     } on Exception catch (e) {
-      print('Ошибка логирования переключения уведомлений: $e');
+      debugPrint('Ошибка логирования переключения уведомлений: $e');
     }
   }
 
@@ -227,13 +233,15 @@ class AnalyticsService {
         screenClass: screenClass ?? screenName,
       );
     } on Exception catch (e) {
-      print('Ошибка логирования просмотра экрана: $e');
+      debugPrint('Ошибка логирования просмотра экрана: $e');
     }
   }
 
   /// Логирование пользовательского события
   Future<void> _logCustomEvent(
-      String eventName, Map<String, dynamic> parameters) async {
+    String eventName,
+    Map<String, dynamic> parameters,
+  ) async {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
@@ -245,7 +253,7 @@ class AnalyticsService {
         });
       }
     } on Exception catch (e) {
-      print('Ошибка сохранения пользовательского события: $e');
+      debugPrint('Ошибка сохранения пользовательского события: $e');
     }
   }
 
@@ -261,7 +269,7 @@ class AnalyticsService {
         SetOptions(merge: true),
       );
     } on Exception catch (e) {
-      print('Ошибка обновления статистики просмотров: $e');
+      debugPrint('Ошибка обновления статистики просмотров: $e');
     }
   }
 
@@ -278,7 +286,7 @@ class AnalyticsService {
         SetOptions(merge: true),
       );
     } on Exception catch (e) {
-      print('Ошибка обновления статистики заявок: $e');
+      debugPrint('Ошибка обновления статистики заявок: $e');
     }
   }
 
@@ -294,7 +302,7 @@ class AnalyticsService {
         SetOptions(merge: true),
       );
     } on Exception catch (e) {
-      print('Ошибка обновления статистики сообщений: $e');
+      debugPrint('Ошибка обновления статистики сообщений: $e');
     }
   }
 
@@ -307,7 +315,7 @@ class AnalyticsService {
       }
       return null;
     } on Exception catch (e) {
-      print('Ошибка получения статистики пользователя: $e');
+      debugPrint('Ошибка получения статистики пользователя: $e');
       return null;
     }
   }
@@ -322,7 +330,7 @@ class AnalyticsService {
       }
       return {};
     } on Exception catch (e) {
-      print('Ошибка получения аналитических отчётов: $e');
+      debugPrint('Ошибка получения аналитических отчётов: $e');
       return {};
     }
   }
@@ -410,7 +418,7 @@ class AnalyticsService {
         'dateGenerated': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      print('Ошибка обновления аналитических отчётов: $e');
+      debugPrint('Ошибка обновления аналитических отчётов: $e');
     }
   }
 }

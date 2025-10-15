@@ -103,7 +103,8 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
         }
         if (snapshot.hasError) {
           return Center(
-              child: Text('Ошибка загрузки заявок: ${snapshot.error}'));
+            child: Text('Ошибка загрузки заявок: ${snapshot.error}'),
+          );
         }
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return Center(

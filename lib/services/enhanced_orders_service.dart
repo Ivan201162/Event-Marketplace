@@ -7,8 +7,10 @@ class EnhancedOrdersService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Получить заявки пользователя
-  Future<List<EnhancedOrder>> getUserOrders(String userId,
-      {OrderStatus? status}) async {
+  Future<List<EnhancedOrder>> getUserOrders(
+    String userId, {
+    OrderStatus? status,
+  }) async {
     try {
       Query query = _firestore
           .collection('orders')
@@ -35,8 +37,10 @@ class EnhancedOrdersService {
   }
 
   /// Получить заявки специалиста
-  Future<List<EnhancedOrder>> getSpecialistOrders(String specialistId,
-      {OrderStatus? status}) async {
+  Future<List<EnhancedOrder>> getSpecialistOrders(
+    String specialistId, {
+    OrderStatus? status,
+  }) async {
     try {
       Query query = _firestore
           .collection('orders')
@@ -250,7 +254,9 @@ class EnhancedOrdersService {
 
   /// Добавить событие в таймлайн
   Future<void> _addTimelineEvent(
-      String orderId, OrderTimelineEvent event) async {
+    String orderId,
+    OrderTimelineEvent event,
+  ) async {
     try {
       await _firestore.collection('orders').doc(orderId).update({
         'timeline': FieldValue.arrayUnion([event.toMap()]),
@@ -310,7 +316,8 @@ class EnhancedOrdersService {
             (template['budget'] as double?),
         deadline: customizations['deadline'] != null
             ? DateTime.fromMillisecondsSinceEpoch(
-                customizations['deadline'] as int)
+                customizations['deadline'] as int,
+              )
             : null,
         location: (customizations['location'] as String?) ??
             (template['location'] as String?),

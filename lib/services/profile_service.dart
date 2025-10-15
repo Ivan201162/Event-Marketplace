@@ -22,7 +22,7 @@ class ProfileService {
       }
       return null;
     } on Exception catch (e) {
-      print('Ошибка получения профиля заказчика: $e');
+      debugPrint('Ошибка получения профиля заказчика: $e');
       return null;
     }
   }
@@ -35,7 +35,7 @@ class ProfileService {
           .doc(profile.userId)
           .set(profile.toMap());
     } on Exception catch (e) {
-      print('Ошибка сохранения профиля заказчика: $e');
+      debugPrint('Ошибка сохранения профиля заказчика: $e');
       throw Exception('Ошибка сохранения профиля: $e');
     }
   }
@@ -51,7 +51,7 @@ class ProfileService {
       }
       return null;
     } on Exception catch (e) {
-      print('Ошибка получения профиля специалиста: $e');
+      debugPrint('Ошибка получения профиля специалиста: $e');
       return null;
     }
   }
@@ -71,7 +71,7 @@ class ProfileService {
           .doc(profile.userId)
           .set(updatedProfile.toMap(), SetOptions(merge: true));
     } on Exception catch (e) {
-      print('Ошибка сохранения профиля специалиста: $e');
+      debugPrint('Ошибка сохранения профиля специалиста: $e');
       throw Exception('Ошибка сохранения профиля: $e');
     }
   }
@@ -129,7 +129,7 @@ class ProfileService {
       // Для демонстрации возвращаем фиктивный URL
       return 'https://example.com/profile_photos/$userId.jpg';
     } on Exception catch (e) {
-      print('Ошибка загрузки фото: $e');
+      debugPrint('Ошибка загрузки фото: $e');
       return null;
     }
   }
@@ -145,7 +145,7 @@ class ProfileService {
       // Для демонстрации возвращаем фиктивный URL
       return 'https://example.com/portfolio/$userId/${DateTime.now().millisecondsSinceEpoch}.$type';
     } on Exception catch (e) {
-      print('Ошибка загрузки портфолио: $e');
+      debugPrint('Ошибка загрузки портфолио: $e');
       return null;
     }
   }
@@ -175,7 +175,7 @@ class ProfileService {
 
       return querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
     } on Exception catch (e) {
-      print('Ошибка получения специалистов по категории: $e');
+      debugPrint('Ошибка получения специалистов по категории: $e');
       return [];
     }
   }
@@ -206,7 +206,7 @@ class ProfileService {
 
       return querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
     } on Exception catch (e) {
-      print('Ошибка получения специалистов по категориям: $e');
+      debugPrint('Ошибка получения специалистов по категориям: $e');
       return [];
     }
   }
@@ -245,7 +245,7 @@ class ProfileService {
           )
           .toList();
     } on Exception catch (e) {
-      print('Ошибка получения популярных категорий: $e');
+      debugPrint('Ошибка получения популярных категорий: $e');
       return [];
     }
   }
@@ -377,7 +377,7 @@ class ProfileService {
 
       return specialists;
     } on Exception catch (e) {
-      print('Ошибка поиска специалистов: $e');
+      debugPrint('Ошибка поиска специалистов: $e');
       return [];
     }
   }
@@ -395,7 +395,7 @@ class ProfileService {
 
       return querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
     } on Exception catch (e) {
-      print('Ошибка получения топ специалистов: $e');
+      debugPrint('Ошибка получения топ специалистов: $e');
       return [];
     }
   }
@@ -424,7 +424,7 @@ class ProfileService {
           throw Exception('Админы не могут иметь профили');
       }
     } on Exception catch (e) {
-      print('Ошибка удаления профиля: $e');
+      debugPrint('Ошибка удаления профиля: $e');
       throw Exception('Ошибка удаления профиля: $e');
     }
   }
@@ -479,7 +479,7 @@ class ProfileService {
 
       return stats;
     } on Exception catch (e) {
-      print('Ошибка получения статистики профиля: $e');
+      debugPrint('Ошибка получения статистики профиля: $e');
       return {};
     }
   }
@@ -495,7 +495,7 @@ class ProfileService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } on Exception catch (e) {
-      print('Ошибка обновления доступности: $e');
+      debugPrint('Ошибка обновления доступности: $e');
       throw Exception('Не удалось обновить доступность');
     }
   }
@@ -509,7 +509,7 @@ class ProfileService {
         await createOrUpdateSpecialistProfile(updatedProfile);
       }
     } on Exception catch (e) {
-      print('Ошибка добавления занятой даты: $e');
+      debugPrint('Ошибка добавления занятой даты: $e');
       throw Exception('Не удалось добавить занятую дату');
     }
   }
@@ -523,7 +523,7 @@ class ProfileService {
         await createOrUpdateSpecialistProfile(updatedProfile);
       }
     } on Exception catch (e) {
-      print('Ошибка удаления занятой даты: $e');
+      debugPrint('Ошибка удаления занятой даты: $e');
       throw Exception('Не удалось удалить занятую дату');
     }
   }
@@ -534,7 +534,7 @@ class ProfileService {
       final profile = await getSpecialistProfile(userId);
       return profile?.busyDates ?? [];
     } on Exception catch (e) {
-      print('Ошибка получения занятых дат: $e');
+      debugPrint('Ошибка получения занятых дат: $e');
       return [];
     }
   }
@@ -553,7 +553,7 @@ class ProfileService {
                 busyDate.day == date.day,
           );
     } on Exception catch (e) {
-      print('Ошибка проверки доступности: $e');
+      debugPrint('Ошибка проверки доступности: $e');
       return false;
     }
   }

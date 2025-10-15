@@ -35,7 +35,8 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final uploadState = ref.watch(portfolioUploadStateProvider);
+    final uploadState =
+        ref.watch<PortfolioUploadState>(portfolioUploadStateProvider);
 
     return Card(
       child: Padding(
@@ -92,7 +93,7 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
             // Прогресс загрузки
             if (uploadState.isUploading) ...[
               LinearProgressIndicator(
-                value: uploadState.uploadProgress,
+                value: uploadState.uploadProgress as double?,
                 backgroundColor: Colors.grey[300],
                 valueColor: AlwaysStoppedAnimation<Color>(
                   Theme.of(context).colorScheme.primary,
@@ -317,35 +318,40 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
   }
 
   Future<void> _pickImageFromGallery() async {
-    final file = await ref.read(pickImageFromGalleryProvider.future);
+    final file =
+        await ref.read<Future<File?>>(pickImageFromGalleryProvider.future);
     if (file != null) {
       await _uploadImage(file);
     }
   }
 
   Future<void> _takePhotoWithCamera() async {
-    final file = await ref.read(takePhotoWithCameraProvider.future);
+    final file =
+        await ref.read<Future<File?>>(takePhotoWithCameraProvider.future);
     if (file != null) {
       await _uploadImage(file);
     }
   }
 
   Future<void> _pickVideoFromGallery() async {
-    final file = await ref.read(pickVideoFromGalleryProvider.future);
+    final file =
+        await ref.read<Future<File?>>(pickVideoFromGalleryProvider.future);
     if (file != null) {
       await _uploadVideo(file);
     }
   }
 
   Future<void> _pickFile() async {
-    final file = await ref.read(pickFileProvider.future);
+    final file = await ref.read<Future<File?>>(pickFileProvider.future);
     if (file != null) {
       await _uploadDocument(file);
     }
   }
 
   Future<void> _uploadImage(File file) async {
-    await ref.read(portfolioUploadStateProvider.notifier).uploadImage(
+    await ref
+        .read<PortfolioUploadNotifier>(portfolioUploadStateProvider.notifier)
+        .uploadImage(
           userId: widget.userId,
           imageFile: file,
           title:
@@ -360,7 +366,9 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
   }
 
   Future<void> _uploadVideo(File file) async {
-    await ref.read(portfolioUploadStateProvider.notifier).uploadVideo(
+    await ref
+        .read<PortfolioUploadNotifier>(portfolioUploadStateProvider.notifier)
+        .uploadVideo(
           userId: widget.userId,
           videoFile: file,
           title:
@@ -375,7 +383,9 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
   }
 
   Future<void> _uploadDocument(File file) async {
-    await ref.read(portfolioUploadStateProvider.notifier).uploadDocument(
+    await ref
+        .read<PortfolioUploadNotifier>(portfolioUploadStateProvider.notifier)
+        .uploadDocument(
           userId: widget.userId,
           documentFile: file,
           title:

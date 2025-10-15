@@ -41,8 +41,12 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-        parent: _animationController, curve: Curves.easeOutCubic));
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeOutCubic,
+      ),
+    );
 
     _loadRecommendations();
   }
@@ -66,7 +70,7 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
       setState(() {
         _isLoading = false;
       });
-      print('Ошибка загрузки рекомендаций: $e');
+      debugPrint('Ошибка загрузки рекомендаций: $e');
     }
   }
 

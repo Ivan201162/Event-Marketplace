@@ -39,7 +39,7 @@ class ReviewCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    _buildRatingStars(review.rating),
+                    _buildRatingStars(review.rating.round()),
                   ],
                 ),
 
@@ -242,7 +242,7 @@ class ReviewStatsWidget extends StatelessWidget {
           _buildRatingStars(statistics.averageRating.round()),
           const SizedBox(height: 4),
           Text(
-            _getRatingDescription(statistics.averageRating.toInt()),
+            _getRatingDescription(statistics.averageRating.round()),
             style: TextStyle(
               fontSize: 12,
               color: Theme.of(context)
@@ -444,7 +444,7 @@ class ReviewFormWidget extends ConsumerStatefulWidget {
 class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
   @override
   Widget build(BuildContext context) {
-    final formState = ref.watch(reviewFormProvider);
+    final formState = ref.watch(reviewFormProvider) as ReviewFormState;
 
     return Card(
       elevation: 4,
@@ -473,7 +473,9 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
                 border: OutlineInputBorder(),
               ),
               onChanged: (value) {
-                ref.read(reviewFormProvider.notifier).updateTitle(value);
+                ref
+                    .read<ReviewFormNotifier>(reviewFormProvider.notifier)
+                    .updateTitle(value);
               },
             ),
             const SizedBox(height: 16),
@@ -487,7 +489,9 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
               ),
               maxLines: 4,
               onChanged: (value) {
-                ref.read(reviewFormProvider.notifier).updateComment(value);
+                ref
+                    .read<ReviewFormNotifier>(reviewFormProvider.notifier)
+                    .updateComment(value);
               },
             ),
             const SizedBox(height: 16),
@@ -529,8 +533,11 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: formState.isSubmitting ||
-                        !ref.read(reviewFormProvider.notifier).isValid
+                onPressed: (formState.isSubmitting ||
+                        !((ref.read<ReviewFormNotifier>(
+                          reviewFormProvider.notifier,
+                        ) as dynamic)
+                            .isValid as bool))
                     ? null
                     : _submitReview,
                 child: formState.isSubmitting
@@ -563,7 +570,9 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
               final rating = index + 1;
               return GestureDetector(
                 onTap: () {
-                  ref.read(reviewFormProvider.notifier).setRating(rating);
+                  ref
+                      .read<ReviewFormNotifier>(reviewFormProvider.notifier)
+                      .setRating(rating);
                 },
                 child: Icon(
                   rating <= formState.rating ? Icons.star : Icons.star_border,
@@ -609,9 +618,13 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
               selected: isSelected,
               onSelected: (selected) {
                 if (selected) {
-                  ref.read(reviewFormProvider.notifier).addTag(tag);
+                  ref
+                      .read<ReviewFormNotifier>(reviewFormProvider.notifier)
+                      .addTag(tag);
                 } else {
-                  ref.read(reviewFormProvider.notifier).removeTag(tag);
+                  ref
+                      .read<ReviewFormNotifier>(reviewFormProvider.notifier)
+                      .removeTag(tag);
                 }
               },
             );
@@ -633,7 +646,9 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
             subtitle: const Text('Отзыв будет виден другим пользователям'),
             value: formState.isPublic,
             onChanged: (value) {
-              ref.read(reviewFormProvider.notifier).togglePublic();
+              ref
+                  .read<ReviewFormNotifier>(reviewFormProvider.notifier)
+                  .togglePublic();
             },
           ),
         ],
@@ -641,7 +656,7 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
 
   /// Отправить отзыв
   Future<void> _submitReview() async {
-    ref.read(reviewFormProvider.notifier).startSubmitting();
+    ref.read<ReviewFormNotifier>(reviewFormProvider.notifier).startSubmitting();
 
     try {
       final review = Review(
@@ -649,18 +664,23 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
         specialistId: widget.specialistId,
         customerId: 'current_user_id',
         customerName: 'Current User',
-        rating: ref.read(reviewFormProvider).rating.toDouble(),
-        text: ref.read(reviewFormProvider).comment,
+        rating:
+            (ref.read(reviewFormProvider) as ReviewFormState).rating.toDouble(),
+        text: (ref.read(reviewFormProvider) as ReviewFormState).comment,
         serviceTags: [],
         date: DateTime.now(),
       );
 
       await ref.read(reviewStateProvider.notifier).createReview(review);
 
-      ref.read(reviewFormProvider.notifier).finishSubmitting();
+      ref
+          .read<ReviewFormNotifier>(reviewFormProvider.notifier)
+          .finishSubmitting();
       widget.onSubmit?.call();
     } on Exception catch (e) {
-      ref.read(reviewFormProvider.notifier).setError(e.toString());
+      ref
+          .read<ReviewFormNotifier>(reviewFormProvider.notifier)
+          .setError(e.toString());
     }
   }
 

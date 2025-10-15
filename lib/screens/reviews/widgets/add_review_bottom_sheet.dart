@@ -345,7 +345,8 @@ class _AddReviewBottomSheetState extends State<AddReviewBottomSheet> {
         // Здесь должна быть загрузка в Firebase Storage
         // Для демонстрации используем заглушку
         photoUrls.add(
-            'https://picsum.photos/400?random=${DateTime.now().millisecondsSinceEpoch}');
+          'https://picsum.photos/400?random=${DateTime.now().millisecondsSinceEpoch}',
+        );
       }
 
       await _reviewsService.addReview(

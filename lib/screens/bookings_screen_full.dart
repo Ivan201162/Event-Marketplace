@@ -37,18 +37,6 @@ class _BookingsScreenFullState extends ConsumerState<BookingsScreenFull>
   Widget build(BuildContext context) {
     final currentUser = _authService.currentUser;
 
-    if (currentUser == null) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Заявки'),
-          leading: AppNavigator.buildBackButton(context),
-        ),
-        body: const Center(
-          child: Text('Необходимо войти в систему'),
-        ),
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Заявки'),
@@ -132,7 +120,9 @@ class _MyBookingsTab extends ConsumerWidget {
   }
 
   void _navigateToBookingDetails(
-      BuildContext context, Map<String, dynamic> booking) {
+    BuildContext context,
+    Map<String, dynamic> booking,
+  ) {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
@@ -219,7 +209,9 @@ class _IncomingBookingsTab extends ConsumerWidget {
   }
 
   void _navigateToBookingDetails(
-      BuildContext context, Map<String, dynamic> booking) {
+    BuildContext context,
+    Map<String, dynamic> booking,
+  ) {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
@@ -243,7 +235,9 @@ class _IncomingBookingsTab extends ConsumerWidget {
   }
 
   Future<void> _confirmBooking(
-      BuildContext context, Map<String, dynamic> booking) async {
+    BuildContext context,
+    Map<String, dynamic> booking,
+  ) async {
     try {
       await BookingService().updateBookingStatus(
         booking['id'] ?? '',
@@ -278,7 +272,9 @@ class _IncomingBookingsTab extends ConsumerWidget {
   }
 
   Future<void> _rejectBooking(
-      BuildContext context, Map<String, dynamic> booking) async {
+    BuildContext context,
+    Map<String, dynamic> booking,
+  ) async {
     try {
       await BookingService().updateBookingStatus(
         booking['id'] ?? '',

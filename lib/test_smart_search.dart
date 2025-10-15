@@ -15,7 +15,7 @@ class SmartSearchTester {
 
   /// Запустить все тесты
   Future<void> runAllTests() async {
-    print('🚀 Запуск тестов умного поиска...\n');
+    debugPrint('🚀 Запуск тестов умного поиска...\n');
 
     try {
       // Тест 1: Генерация тестовых данных
@@ -33,29 +33,29 @@ class SmartSearchTester {
       // Тест 5: Предпочтения пользователя
       await _testUserPreferences();
 
-      print('\n✅ Все тесты пройдены успешно!');
+      debugPrint('\n✅ Все тесты пройдены успешно!');
     } catch (e) {
-      print('\n❌ Ошибка в тестах: $e');
+      debugPrint('\n❌ Ошибка в тестах: $e');
     }
   }
 
   /// Тест генерации тестовых данных
   Future<void> _testDataGeneration() async {
-    print('📊 Тест 1: Генерация тестовых данных');
+    debugPrint('📊 Тест 1: Генерация тестовых данных');
 
     try {
       await _dataGenerator.generateTestSpecialists(count: 10);
-      print('✅ Тестовые данные сгенерированы успешно');
+      debugPrint('✅ Тестовые данные сгенерированы успешно');
     } catch (e) {
-      print('❌ Ошибка генерации данных: $e');
+      debugPrint('❌ Ошибка генерации данных: $e');
     }
 
-    print('');
+    debugPrint('');
   }
 
   /// Тест умного поиска
   Future<void> _testSmartSearch() async {
-    print('🔍 Тест 2: Умный поиск специалистов');
+    debugPrint('🔍 Тест 2: Умный поиск специалистов');
 
     try {
       // Поиск по категории
@@ -63,16 +63,18 @@ class SmartSearchTester {
         category: SpecialistCategory.host,
         limit: 5,
       );
-      print(
-          '✅ Поиск по категории: найдено ${specialistsByCategory.length} специалистов');
+      debugPrint(
+        '✅ Поиск по категории: найдено ${specialistsByCategory.length} специалистов',
+      );
 
       // Поиск по городу
       final specialistsByCity = await _smartSearchService.smartSearch(
         city: 'Москва',
         limit: 5,
       );
-      print(
-          '✅ Поиск по городу: найдено ${specialistsByCity.length} специалистов');
+      debugPrint(
+        '✅ Поиск по городу: найдено ${specialistsByCity.length} специалистов',
+      );
 
       // Поиск по цене
       final specialistsByPrice = await _smartSearchService.smartSearch(
@@ -80,26 +82,28 @@ class SmartSearchTester {
         maxPrice: 30000,
         limit: 5,
       );
-      print(
-          '✅ Поиск по цене: найдено ${specialistsByPrice.length} специалистов');
+      debugPrint(
+        '✅ Поиск по цене: найдено ${specialistsByPrice.length} специалистов',
+      );
 
       // Поиск по стилю
       final specialistsByStyle = await _smartSearchService.smartSearch(
         styles: ['классика', 'юмор'],
         limit: 5,
       );
-      print(
-          '✅ Поиск по стилю: найдено ${specialistsByStyle.length} специалистов');
+      debugPrint(
+        '✅ Поиск по стилю: найдено ${specialistsByStyle.length} специалистов',
+      );
     } catch (e) {
-      print('❌ Ошибка умного поиска: $e');
+      debugPrint('❌ Ошибка умного поиска: $e');
     }
 
-    print('');
+    debugPrint('');
   }
 
   /// Тест персональных рекомендаций
   Future<void> _testPersonalRecommendations() async {
-    print('🎯 Тест 3: Персональные рекомендации');
+    debugPrint('🎯 Тест 3: Персональные рекомендации');
 
     try {
       const testUserId = 'test_user_123';
@@ -118,7 +122,7 @@ class SmartSearchTester {
 
       // Сохраняем предпочтения
       final saved = await _smartSearchService.saveUserPreferences(preferences);
-      print('✅ Предпочтения сохранены: $saved');
+      debugPrint('✅ Предпочтения сохранены: $saved');
 
       // Получаем рекомендации
       final recommendations =
@@ -126,8 +130,9 @@ class SmartSearchTester {
         testUserId,
         limit: 5,
       );
-      print(
-          '✅ Персональные рекомендации: найдено ${recommendations.length} специалистов');
+      debugPrint(
+        '✅ Персональные рекомендации: найдено ${recommendations.length} специалистов',
+      );
 
       // Проверяем совместимость
       if (recommendations.isNotEmpty) {
@@ -135,26 +140,27 @@ class SmartSearchTester {
         final compatibility = specialist.calculateCompatibility(
           preferences.getCompatibilityPreferences(),
         );
-        print(
-            '✅ Совместимость с первым специалистом: ${(compatibility * 100).toStringAsFixed(1)}%');
+        debugPrint(
+          '✅ Совместимость с первым специалистом: ${(compatibility * 100).toStringAsFixed(1)}%',
+        );
       }
     } catch (e) {
-      print('❌ Ошибка персональных рекомендаций: $e');
+      debugPrint('❌ Ошибка персональных рекомендаций: $e');
     }
 
-    print('');
+    debugPrint('');
   }
 
   /// Тест AI-помощника
   Future<void> _testAIAssistant() async {
-    print('🤖 Тест 4: AI-помощник');
+    debugPrint('🤖 Тест 4: AI-помощник');
 
     try {
       // Начинаем беседу
       final conversation = await _aiAssistantService.startConversation(
         userId: 'test_user_123',
       );
-      print('✅ Беседа начата: ${conversation.id}');
+      debugPrint('✅ Беседа начата: ${conversation.id}');
 
       // Отправляем сообщения
       final messages = [
@@ -172,21 +178,21 @@ class SmartSearchTester {
           message: message,
           userId: 'test_user_123',
         );
-        print('✅ Ответ AI: ${response.text.substring(0, 50)}...');
+        debugPrint('✅ Ответ AI: ${response.text.substring(0, 50)}...');
 
         // Небольшая пауза между сообщениями
         await Future.delayed(const Duration(milliseconds: 100));
       }
     } catch (e) {
-      print('❌ Ошибка AI-помощника: $e');
+      debugPrint('❌ Ошибка AI-помощника: $e');
     }
 
-    print('');
+    debugPrint('');
   }
 
   /// Тест предпочтений пользователя
   Future<void> _testUserPreferences() async {
-    print('👤 Тест 5: Предпочтения пользователя');
+    debugPrint('👤 Тест 5: Предпочтения пользователя');
 
     try {
       const testUserId = 'test_user_456';
@@ -205,20 +211,21 @@ class SmartSearchTester {
 
       // Сохраняем
       await _smartSearchService.saveUserPreferences(preferences);
-      print('✅ Предпочтения созданы и сохранены');
+      debugPrint('✅ Предпочтения созданы и сохранены');
 
       // Загружаем
       final loadedPreferences =
           await _smartSearchService.getUserPreferences(testUserId);
-      print(
-          '✅ Предпочтения загружены: ${loadedPreferences?.likedStyles.length} стилей');
+      debugPrint(
+        '✅ Предпочтения загружены: ${loadedPreferences?.likedStyles.length} стилей',
+      );
 
       // Обновляем
       await _smartSearchService.updateUserPreferences(
         testUserId,
         {'preferredBudget': 50000},
       );
-      print('✅ Предпочтения обновлены');
+      debugPrint('✅ Предпочтения обновлены');
 
       // Записываем взаимодействие
       await _smartSearchService.recordUserInteraction(
@@ -227,37 +234,39 @@ class SmartSearchTester {
         action: 'view',
         metadata: {'category': 'photographer'},
       );
-      print('✅ Взаимодействие записано');
+      debugPrint('✅ Взаимодействие записано');
     } catch (e) {
-      print('❌ Ошибка предпочтений пользователя: $e');
+      debugPrint('❌ Ошибка предпочтений пользователя: $e');
     }
 
-    print('');
+    debugPrint('');
   }
 
   /// Тест статистики
   Future<void> _testStatistics() async {
-    print('📈 Тест 6: Статистика поиска');
+    debugPrint('📈 Тест 6: Статистика поиска');
 
     try {
       final stats = await _smartSearchService.getSearchStats();
-      print('✅ Статистика получена:');
-      print('   - Всего специалистов: ${stats['totalSpecialists']}');
-      print('   - Доступных: ${stats['availableSpecialists']}');
-      print(
-          '   - Средний рейтинг: ${stats['averageRating']?.toStringAsFixed(1)}');
-      print(
-          '   - Средняя цена: ${stats['averagePrice']?.toStringAsFixed(0)} ₽');
+      debugPrint('✅ Статистика получена:');
+      debugPrint('   - Всего специалистов: ${stats['totalSpecialists']}');
+      debugPrint('   - Доступных: ${stats['availableSpecialists']}');
+      debugPrint(
+        '   - Средний рейтинг: ${stats['averageRating']?.toStringAsFixed(1)}',
+      );
+      debugPrint(
+        '   - Средняя цена: ${stats['averagePrice']?.toStringAsFixed(0)} ₽',
+      );
     } catch (e) {
-      print('❌ Ошибка статистики: $e');
+      debugPrint('❌ Ошибка статистики: $e');
     }
 
-    print('');
+    debugPrint('');
   }
 
   /// Тест совместимости
   Future<void> _testCompatibility() async {
-    print('🎯 Тест 7: Совместимость специалистов');
+    debugPrint('🎯 Тест 7: Совместимость специалистов');
 
     try {
       const testUserId = 'test_user_789';
@@ -281,18 +290,20 @@ class SmartSearchTester {
         limit: 5,
       );
 
-      print(
-          '✅ Специалисты по совместимости: найдено ${compatibleSpecialists.length}');
+      debugPrint(
+        '✅ Специалисты по совместимости: найдено ${compatibleSpecialists.length}',
+      );
 
       for (final specialist in compatibleSpecialists) {
-        print(
-            '   - ${specialist.name}: ${(specialist.compatibilityScore * 100).toStringAsFixed(1)}%');
+        debugPrint(
+          '   - ${specialist.name}: ${(specialist.compatibilityScore * 100).toStringAsFixed(1)}%',
+        );
       }
     } catch (e) {
-      print('❌ Ошибка совместимости: $e');
+      debugPrint('❌ Ошибка совместимости: $e');
     }
 
-    print('');
+    debugPrint('');
   }
 }
 
@@ -367,8 +378,8 @@ class _SmartSearchTestWidgetState extends State<SmartSearchTestWidget> {
     });
 
     // Перенаправляем вывод в UI
-    const originalPrint = print;
-    print = (object) {
+    const originalPrint = debugPrint;
+    debugPrint = (object) {
       setState(() {
         _output += '$object\n';
       });
@@ -377,7 +388,7 @@ class _SmartSearchTestWidgetState extends State<SmartSearchTestWidget> {
     try {
       await _tester.runAllTests();
     } finally {
-      print = originalPrint;
+      debugPrint = originalPrint;
       setState(() {
         _isRunning = false;
       });

@@ -9,6 +9,7 @@ class SpecialistFilters {
     this.maxRating,
     this.availableDate,
     this.city,
+    this.location,
     this.searchQuery,
     this.subcategories = const [],
     this.isVerified,
@@ -39,6 +40,9 @@ class SpecialistFilters {
 
   /// Город
   final String? city;
+
+  /// Местоположение
+  final String? location;
 
   /// Поисковый запрос
   final String? searchQuery;
@@ -81,6 +85,7 @@ class SpecialistFilters {
     double? maxRating,
     DateTime? availableDate,
     String? city,
+    String? location,
     String? searchQuery,
     List<String>? subcategories,
     bool? isVerified,
@@ -100,6 +105,7 @@ class SpecialistFilters {
         maxRating: maxRating ?? this.maxRating,
         availableDate: availableDate ?? this.availableDate,
         city: city ?? this.city,
+        location: location ?? this.location,
         searchQuery: searchQuery ?? this.searchQuery,
         subcategories: subcategories ?? this.subcategories,
         isVerified: isVerified ?? this.isVerified,

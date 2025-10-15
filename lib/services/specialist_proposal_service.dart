@@ -16,7 +16,8 @@ class SpecialistProposalService {
 
   /// Создать предложение специалистов
   Future<SpecialistProposal> createProposal(
-      CreateSpecialistProposal data) async {
+    CreateSpecialistProposal data,
+  ) async {
     if (!data.isValid) {
       throw Exception('Неверные данные: ${data.validationErrors.join(', ')}');
     }
@@ -88,7 +89,8 @@ class SpecialistProposalService {
 
   /// Получить предложения для клиента
   Future<List<SpecialistProposal>> getCustomerProposals(
-      String customerId) async {
+    String customerId,
+  ) async {
     final snapshot = await _firestore
         .collection(_collection)
         .where('customerId', isEqualTo: customerId)
@@ -100,7 +102,8 @@ class SpecialistProposalService {
 
   /// Получить предложения от организатора
   Future<List<SpecialistProposal>> getOrganizerProposals(
-      String organizerId) async {
+    String organizerId,
+  ) async {
     final snapshot = await _firestore
         .collection(_collection)
         .where('organizerId', isEqualTo: organizerId)
@@ -210,7 +213,8 @@ class SpecialistProposalService {
 
   /// Получить активные предложения для клиента
   Future<List<SpecialistProposal>> getActiveCustomerProposals(
-      String customerId) async {
+    String customerId,
+  ) async {
     final snapshot = await _firestore
         .collection(_collection)
         .where('customerId', isEqualTo: customerId)
@@ -269,7 +273,8 @@ class SpecialistProposalService {
 
   /// Подписаться на изменения предложений организатора
   Stream<List<SpecialistProposal>> watchOrganizerProposals(
-          String organizerId) =>
+    String organizerId,
+  ) =>
       _firestore
           .collection(_collection)
           .where('organizerId', isEqualTo: organizerId)

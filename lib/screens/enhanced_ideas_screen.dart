@@ -1,13 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/enhanced_idea.dart';
-import '../providers/auth_providers.dart';
 import '../providers/enhanced_ideas_providers.dart';
-import '../widgets/create_idea_widget.dart';
-import '../widgets/idea_card_widget.dart';
 
-/// Расширенный экран идей
 class EnhancedIdeasScreen extends ConsumerStatefulWidget {
   const EnhancedIdeasScreen({super.key});
 
@@ -19,771 +16,447 @@ class EnhancedIdeasScreen extends ConsumerStatefulWidget {
 class _EnhancedIdeasScreenState extends ConsumerState<EnhancedIdeasScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
-  final ScrollController _scrollController = ScrollController();
-  String _searchQuery = '';
-  IdeaType? _selectedType;
-  String? _selectedCategory;
-  List<String> _selectedTags = [];
-  double? _minBudget;
-  double? _maxBudget;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
   void dispose() {
     _tabController.dispose();
-    _scrollController.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => Column(
-        children: [
-          // Внутренний TabBar для категорий идей
-          TabBar(
+  Widget build(BuildContext context) {
+    final ideasNotifier = ref.watch(enhancedIdeasProvider);
+    final ideasState = ideasNotifier.state;
+
+    return Column(
+      children: [
+        // TabBar для переключения между фото и видео
+        Container(
+          color: Theme.of(context).primaryColor,
+          child: TabBar(
             controller: _tabController,
-            isScrollable: true,
+            indicatorColor: Colors.white,
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.white70,
             tabs: const [
-              Tab(text: 'Все', icon: Icon(Icons.lightbulb)),
-              Tab(text: 'Популярные', icon: Icon(Icons.trending_up)),
-              Tab(text: 'Мои идеи', icon: Icon(Icons.person)),
-              Tab(text: 'Сохранённые', icon: Icon(Icons.bookmark)),
+              Tab(
+                icon: Icon(Icons.photo_library),
+                text: 'Фото',
+              ),
+              Tab(
+                icon: Icon(Icons.video_library),
+                text: 'Видео',
+              ),
             ],
           ),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildAllIdeasTab(),
-                _buildPopularIdeasTab(),
-                _buildMyIdeasTab(),
-                _buildSavedIdeasTab(),
-              ],
-            ),
+        ),
+        // Контент с TabBarView
+        Expanded(
+          child: TabBarView(
+            controller: _tabController,
+            children: [
+              _PhotoIdeasTab(ideasState: ideasState),
+              _VideoIdeasTab(ideasState: ideasState),
+            ],
           ),
-        ],
-      );
-
-  Widget _buildAllIdeasTab() => Consumer(
-        builder: (context, ref, child) {
-          final ideasAsync = ref.watch(ideasProvider);
-
-          return ideasAsync.when(
-            data: (ideas) {
-              if (ideas.isEmpty) {
-                return _buildEmptyState();
-              }
-
-              return RefreshIndicator(
-                onRefresh: () async {
-                  ref.invalidate(ideasProvider);
-                },
-                child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: ideas.length,
-                  itemBuilder: (context, index) {
-                    final idea = ideas[index];
-                    return IdeaCardWidget(
-                      idea: idea,
-                      onUserTap: () => _showUserProfile(idea.authorId),
-                      onLike: () => _handleLike(idea),
-                      onComment: () => _showComments(idea),
-                      onShare: () => _shareIdea(idea),
-                      onSave: () => _handleSave(idea),
-                      onMore: () => _showIdeaOptions(idea),
-                      onTap: () => _showIdeaDetails(idea),
-                    );
-                  },
-                ),
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, stack) => _buildErrorState(error.toString()),
-          );
-        },
-      );
-
-  Widget _buildPopularIdeasTab() => Consumer(
-        builder: (context, ref, child) {
-          final popularIdeasAsync = ref.watch(popularIdeasProvider(null));
-
-          return popularIdeasAsync.when(
-            data: (ideas) {
-              if (ideas.isEmpty) {
-                return _buildEmptyPopularState();
-              }
-
-              return RefreshIndicator(
-                onRefresh: () async {
-                  ref.invalidate(popularIdeasProvider(null));
-                },
-                child: ListView.builder(
-                  itemCount: ideas.length,
-                  itemBuilder: (context, index) {
-                    final idea = ideas[index];
-                    return IdeaCardWidget(
-                      idea: idea,
-                      onUserTap: () => _showUserProfile(idea.authorId),
-                      onLike: () => _handleLike(idea),
-                      onComment: () => _showComments(idea),
-                      onShare: () => _shareIdea(idea),
-                      onSave: () => _handleSave(idea),
-                      onMore: () => _showIdeaOptions(idea),
-                      onTap: () => _showIdeaDetails(idea),
-                    );
-                  },
-                ),
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, stack) => _buildErrorState(error.toString()),
-          );
-        },
-      );
-
-  Widget _buildMyIdeasTab() => Consumer(
-        builder: (context, ref, child) {
-          final currentUser = ref.watch(currentUserProvider);
-
-          return currentUser.when(
-            data: (user) {
-              if (user == null) {
-                return _buildLoginPrompt();
-              }
-
-              final myIdeasAsync = ref.watch(userIdeasProvider(user.uid));
-
-              return myIdeasAsync.when(
-                data: (ideas) {
-                  if (ideas.isEmpty) {
-                    return _buildEmptyMyIdeasState();
-                  }
-
-                  return RefreshIndicator(
-                    onRefresh: () async {
-                      ref.invalidate(userIdeasProvider(user.uid));
-                    },
-                    child: ListView.builder(
-                      itemCount: ideas.length,
-                      itemBuilder: (context, index) {
-                        final idea = ideas[index];
-                        return IdeaCardWidget(
-                          idea: idea,
-                          onUserTap: () => _showUserProfile(idea.authorId),
-                          onLike: () => _handleLike(idea),
-                          onComment: () => _showComments(idea),
-                          onShare: () => _shareIdea(idea),
-                          onSave: () => _handleSave(idea),
-                          onMore: () => _showIdeaOptions(idea),
-                          onTap: () => _showIdeaDetails(idea),
-                        );
-                      },
-                    ),
-                  );
-                },
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, stack) => _buildErrorState(error.toString()),
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, stack) => _buildErrorState(error.toString()),
-          );
-        },
-      );
-
-  Widget _buildSavedIdeasTab() => Consumer(
-        builder: (context, ref, child) {
-          final currentUser = ref.watch(currentUserProvider);
-
-          return currentUser.when(
-            data: (user) {
-              if (user == null) {
-                return _buildLoginPrompt();
-              }
-
-              final savedIdeasAsync = ref.watch(savedIdeasProvider(user.uid));
-
-              return savedIdeasAsync.when(
-                data: (ideas) {
-                  if (ideas.isEmpty) {
-                    return _buildEmptySavedState();
-                  }
-
-                  return RefreshIndicator(
-                    onRefresh: () async {
-                      ref.invalidate(savedIdeasProvider(user.uid));
-                    },
-                    child: ListView.builder(
-                      itemCount: ideas.length,
-                      itemBuilder: (context, index) {
-                        final idea = ideas[index];
-                        return IdeaCardWidget(
-                          idea: idea,
-                          onUserTap: () => _showUserProfile(idea.authorId),
-                          onLike: () => _handleLike(idea),
-                          onComment: () => _showComments(idea),
-                          onShare: () => _shareIdea(idea),
-                          onSave: () => _handleSave(idea),
-                          onMore: () => _showIdeaOptions(idea),
-                          onTap: () => _showIdeaDetails(idea),
-                        );
-                      },
-                    ),
-                  );
-                },
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, stack) => _buildErrorState(error.toString()),
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, stack) => _buildErrorState(error.toString()),
-          );
-        },
-      );
-
-  Widget _buildEmptyState() => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.lightbulb_outline,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Нет идей',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Создайте первую идею или подождите, пока другие пользователи поделятся своими',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey[500],
-              ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: _createIdea,
-              icon: const Icon(Icons.add),
-              label: const Text('Создать идею'),
-            ),
-          ],
         ),
-      );
+      ],
+    );
+  }
+}
 
-  Widget _buildEmptyPopularState() => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.trending_up,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Нет популярных идей',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Популярные идеи появятся здесь, когда пользователи начнут ставить лайки',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey[500],
-              ),
-            ),
-          ],
-        ),
-      );
+class _PhotoIdeasTab extends ConsumerWidget {
 
-  Widget _buildEmptyMyIdeasState() => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.person_outline,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'У вас нет идей',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Создайте свою первую идею и поделитесь ею с сообществом',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey[500],
-              ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: _createIdea,
-              icon: const Icon(Icons.add),
-              label: const Text('Создать идею'),
-            ),
-          ],
-        ),
-      );
+  const _PhotoIdeasTab({required this.ideasState});
+  final EnhancedIdeasState ideasState;
 
-  Widget _buildEmptySavedState() => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.bookmark_border,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Нет сохранённых идей',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Сохраняйте интересные идеи, нажав на иконку закладки',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey[500],
-              ),
-            ),
-          ],
-        ),
-      );
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final photoIdeas =
+        ideasState.ideas.where((idea) => idea.type == 'image').toList();
 
-  Widget _buildLoginPrompt() => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.login,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Войдите в аккаунт',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Чтобы создавать и сохранять идеи, необходимо войти в аккаунт',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey[500],
-              ),
-            ),
-          ],
-        ),
+    if (ideasState.isLoading && photoIdeas.isEmpty) {
+      return const Center(
+        child: CircularProgressIndicator(),
       );
-
-  Widget _buildErrorState(String error) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Ошибка загрузки',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.red[600],
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.red[500],
-              ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () {
-                ref.invalidate(ideasProvider);
-              },
-              child: const Text('Повторить'),
-            ),
-          ],
-        ),
-      );
-
-  void _createIdea() {
-    final currentUser = ref.read(currentUserProvider).value;
-    if (currentUser == null) {
-      _showLoginDialog();
-      return;
     }
 
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => CreateIdeaWidget(
-          authorId: currentUser.uid,
-          onIdeaCreated: () {
-            ref.invalidate(ideasProvider);
-            ref.invalidate(userIdeasProvider(currentUser.uid));
-            Navigator.of(context).pop();
-          },
+    if (photoIdeas.isEmpty) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.photo_library_outlined,
+              size: 64,
+              color: Colors.grey,
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Нет фото идей',
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Добавьте свои идеи для вдохновения',
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+              ),
+            ),
+          ],
         ),
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: () => ref.read(enhancedIdeasProvider).refreshIdeas(),
+      child: GridView.builder(
+        padding: const EdgeInsets.all(16),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          childAspectRatio: 0.8,
+        ),
+        itemCount: photoIdeas.length,
+        itemBuilder: (context, index) {
+          final idea = photoIdeas[index];
+          return _PhotoIdeaCard(idea: idea);
+        },
       ),
     );
   }
+}
 
-  void _showSearchDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Поиск идей'),
-        content: TextField(
-          decoration: const InputDecoration(
-            hintText: 'Введите запрос для поиска',
-            border: OutlineInputBorder(),
-          ),
-          onChanged: (value) {
-            setState(() {
-              _searchQuery = value;
-            });
-          },
+class _VideoIdeasTab extends ConsumerWidget {
+
+  const _VideoIdeasTab({required this.ideasState});
+  final EnhancedIdeasState ideasState;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final videoIdeas =
+        ideasState.ideas.where((idea) => idea.type == 'video').toList();
+
+    if (ideasState.isLoading && videoIdeas.isEmpty) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    if (videoIdeas.isEmpty) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.video_library_outlined,
+              size: 64,
+              color: Colors.grey,
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Нет видео идей',
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Добавьте свои видео идеи',
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+              ),
+            ),
+          ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              _performSearch();
-            },
-            child: const Text('Поиск'),
-          ),
-        ],
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: () => ref.read(enhancedIdeasProvider).refreshIdeas(),
+      child: PageView.builder(
+        scrollDirection: Axis.vertical,
+        itemCount: videoIdeas.length,
+        itemBuilder: (context, index) {
+          final idea = videoIdeas[index];
+          return _VideoIdeaCard(idea: idea);
+        },
       ),
     );
   }
+}
 
-  void _showFiltersDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: const Text('Фильтры'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                DropdownButtonFormField<IdeaType?>(
-                  initialValue: _selectedType,
-                  decoration: const InputDecoration(
-                    labelText: 'Тип идеи',
-                    border: OutlineInputBorder(),
-                  ),
-                  items: [
-                    const DropdownMenuItem(
-                      child: Text('Все типы'),
-                    ),
-                    ...IdeaType.values.map(
-                      (type) => DropdownMenuItem(
-                        value: type,
-                        child: Text('${type.icon} ${type.displayName}'),
+class _PhotoIdeaCard extends ConsumerWidget {
+
+  const _PhotoIdeaCard({required this.idea});
+  final EnhancedIdea idea;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ideasNotifier = ref.read(enhancedIdeasProvider);
+
+    return InkWell(
+      onTap: () => context.push('/idea/${idea.id}'),
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Изображение идеи
+            Expanded(
+              flex: 3,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(12),
+                ),
+                child: idea.media.isNotEmpty
+                    ? CachedNetworkImage(
+                        imageUrl: idea.media.first.url,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        placeholder: (context, url) => Container(
+                          color: Colors.grey[300],
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          color: Colors.grey[300],
+                          child: const Center(
+                            child: Icon(Icons.error),
+                          ),
+                        ),
+                      )
+                    : Container(
+                        color: Colors.grey[300],
+                        child: const Center(
+                          child: Icon(Icons.image, size: 40),
+                        ),
                       ),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedType = value;
-                    });
-                  },
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'Категория',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedCategory =
-                          value.trim().isNotEmpty ? value.trim() : null;
-                    });
-                  },
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'Теги (через запятую)',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedTags = value
-                          .split(',')
-                          .map((tag) => tag.trim())
-                          .where((tag) => tag.isNotEmpty)
-                          .toList();
-                    });
-                  },
-                ),
-                const SizedBox(height: 16),
-                Row(
+              ),
+            ),
+            // Информация об идее
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: TextField(
-                        decoration: const InputDecoration(
-                          labelText: 'Мин. бюджет',
-                          border: OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) {
-                          setState(() {
-                            _minBudget = double.tryParse(value);
-                          });
-                        },
+                    Text(
+                      idea.title,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      idea.authorName,
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 12,
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: TextField(
-                        decoration: const InputDecoration(
-                          labelText: 'Макс. бюджет',
-                          border: OutlineInputBorder(),
+                    const Spacer(),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.favorite,
+                          color: idea.isLiked ? Colors.red : Colors.grey,
+                          size: 16,
                         ),
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) {
-                          setState(() {
-                            _maxBudget = double.tryParse(value);
-                          });
-                        },
-                      ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${idea.likes}',
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        const SizedBox(width: 12),
+                        const Icon(
+                          Icons.comment,
+                          color: Colors.grey,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${idea.comments}',
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        const Spacer(),
+                        if (idea.budget != null)
+                          Text(
+                            '${idea.budget}₸',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  _selectedType = null;
-                  _selectedCategory = null;
-                  _selectedTags = [];
-                  _minBudget = null;
-                  _maxBudget = null;
-                });
-              },
-              child: const Text('Сбросить'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Отмена'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _applyFilters();
-              },
-              child: const Text('Применить'),
+              ),
             ),
           ],
         ),
       ),
     );
   }
+}
 
-  void _performSearch() {
-    if (_searchQuery.isEmpty) return;
+class _VideoIdeaCard extends ConsumerWidget {
 
-    // TODO: Реализовать поиск
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Поиск: $_searchQuery'),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
+  const _VideoIdeaCard({required this.idea});
+  final EnhancedIdea idea;
 
-  void _applyFilters() {
-    // TODO: Реализовать применение фильтров
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Фильтры применены'),
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ideasNotifier = ref.read(enhancedIdeasProvider);
 
-  void _showUserProfile(String userId) {
-    // TODO: Переход к профилю пользователя
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Профиль пользователя: $userId'),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-
-  void _handleLike(EnhancedIdea idea) {
-    final currentUser = ref.read(currentUserProvider).value;
-    if (currentUser == null) {
-      _showLoginDialog();
-      return;
-    }
-
-    // TODO: Реализовать лайк
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Лайк поставлен'),
-        duration: Duration(seconds: 1),
-      ),
-    );
-  }
-
-  void _showComments(EnhancedIdea idea) {
-    // TODO: Показать комментарии
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Открытие комментариев'),
-        duration: Duration(seconds: 1),
-      ),
-    );
-  }
-
-  void _shareIdea(EnhancedIdea idea) {
-    // TODO: Реализовать репост
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Идея репостнута'),
-        duration: Duration(seconds: 1),
-      ),
-    );
-  }
-
-  void _handleSave(EnhancedIdea idea) {
-    final currentUser = ref.read(currentUserProvider).value;
-    if (currentUser == null) {
-      _showLoginDialog();
-      return;
-    }
-
-    // TODO: Реализовать сохранение
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Идея сохранена'),
-        duration: Duration(seconds: 1),
-      ),
-    );
-  }
-
-  void _showIdeaDetails(EnhancedIdea idea) {
-    // TODO: Показать детали идеи
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Детали идеи: ${idea.title}'),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-
-  void _showIdeaOptions(EnhancedIdea idea) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => Column(
-        mainAxisSize: MainAxisSize.min,
+    return Container(
+      color: Colors.black,
+      child: Stack(
         children: [
-          ListTile(
-            leading: const Icon(Icons.share),
-            title: const Text('Поделиться'),
-            onTap: () {
-              Navigator.of(context).pop();
-              _shareIdea(idea);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.bookmark),
-            title: const Text('Сохранить'),
-            onTap: () {
-              Navigator.of(context).pop();
-              _handleSave(idea);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.report),
-            title: const Text('Пожаловаться'),
-            onTap: () {
-              Navigator.of(context).pop();
-              _reportIdea(idea);
-            },
-          ),
-        ],
-      ),
-    );
-  }
+          // Видео контент
+          if (idea.media.isNotEmpty)
+            Center(
+              child: CachedNetworkImage(
+                imageUrl: idea.media.first.thumbnail ?? idea.media.first.url,
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+                placeholder: (context, url) => Container(
+                  color: Colors.grey[900],
+                  child: const Center(
+                    child: CircularProgressIndicator(color: Colors.white),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  color: Colors.grey[900],
+                  child: const Center(
+                    child: Icon(Icons.error, color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
 
-  void _reportIdea(EnhancedIdea idea) {
-    // TODO: Реализовать жалобу
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Жалоба отправлена'),
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
-
-  void _showLoginDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Вход required'),
-        content: const Text(
-            'Для выполнения этого действия необходимо войти в аккаунт'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Отмена'),
+          // Кнопка воспроизведения
+          const Center(
+            child: Icon(
+              Icons.play_circle_filled,
+              size: 80,
+              color: Colors.white,
+            ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              // TODO: Переход к экрану входа
-            },
-            child: const Text('Войти'),
+
+          // Информация об идее
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withValues(alpha: 0.8),
+                  ],
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    idea.title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    idea.authorName,
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () => ideasNotifier.toggleLike(idea.id),
+                        icon: Icon(
+                          idea.isLiked ? Icons.favorite : Icons.favorite_border,
+                          color: idea.isLiked ? Colors.red : Colors.white,
+                        ),
+                      ),
+                      Text(
+                        '${idea.likes}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      const SizedBox(width: 16),
+                      IconButton(
+                        onPressed: () {
+                          // Открыть комментарии
+                        },
+                        icon: const Icon(
+                          Icons.comment,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        '${idea.comments}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        onPressed: () => ideasNotifier.toggleSave(idea.id),
+                        icon: Icon(
+                          idea.isSaved ? Icons.bookmark : Icons.bookmark_border,
+                          color: idea.isSaved ? Colors.amber : Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),

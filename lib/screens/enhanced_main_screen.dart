@@ -4,11 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../widgets/swipe_back_wrapper.dart';
-import 'chats_screen.dart';
+import 'enhanced_chats_screen.dart';
 import 'enhanced_feed_screen.dart';
+import 'enhanced_home_screen_v2.dart';
 import 'enhanced_ideas_screen.dart';
-import 'home_screen.dart';
-import 'requests_screen.dart';
+import 'enhanced_requests_screen.dart';
 
 /// Улучшенный главный экран с поддержкой свайпов
 class EnhancedMainScreen extends ConsumerStatefulWidget {
@@ -23,14 +23,13 @@ class _EnhancedMainScreenState extends ConsumerState<EnhancedMainScreen>
   late PageController _pageController;
   late TabController _tabController;
   int _currentIndex = 0;
-  bool _isQuickNavVisible = true;
 
   final List<NavigationItem> _navigationItems = [
     const NavigationItem(
       title: 'Главное',
       icon: Icons.home,
       selectedIcon: Icons.home,
-      page: HomeScreen(),
+      page: EnhancedHomeScreenV2(),
     ),
     const NavigationItem(
       title: 'Лента',
@@ -42,13 +41,13 @@ class _EnhancedMainScreenState extends ConsumerState<EnhancedMainScreen>
       title: 'Заявки',
       icon: Icons.assignment,
       selectedIcon: Icons.assignment,
-      page: RequestsScreen(),
+      page: EnhancedRequestsScreen(),
     ),
     const NavigationItem(
       title: 'Чаты',
       icon: Icons.chat,
       selectedIcon: Icons.chat,
-      page: ChatsScreen(),
+      page: EnhancedChatsScreen(),
     ),
     const NavigationItem(
       title: 'Идеи',
@@ -96,26 +95,6 @@ class _EnhancedMainScreenState extends ConsumerState<EnhancedMainScreen>
           }
         },
         child: Scaffold(
-          appBar: AppBar(
-            title: Text(_navigationItems[_currentIndex].title),
-            centerTitle: true,
-            backgroundColor: Theme.of(context).colorScheme.surface,
-            elevation: 0,
-            actions: [
-              if (_currentIndex == 0) // Главная
-                IconButton(
-                  onPressed: () => context.go('/promos'),
-                  icon: const Icon(Icons.local_offer_outlined),
-                  tooltip: 'Акции',
-                ),
-              if (_currentIndex == 0) // Главная
-                IconButton(
-                  onPressed: () => context.go('/settings'),
-                  icon: const Icon(Icons.settings_outlined),
-                  tooltip: 'Настройки',
-                ),
-            ],
-          ),
           body: wrapWithSwipeBack(
             Column(
               children: [
@@ -153,7 +132,6 @@ class _EnhancedMainScreenState extends ConsumerState<EnhancedMainScreen>
                     ),
                   ),
                 ),
-                if (_isQuickNavVisible) _buildQuickNavigation(),
                 _buildBottomNavigation(),
               ],
             ),
@@ -176,20 +154,12 @@ class _EnhancedMainScreenState extends ConsumerState<EnhancedMainScreen>
         child: page,
       );
 
-  Widget _buildQuickNavigation() => AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        height: _isQuickNavVisible ? 60 : 0,
-        child: _isQuickNavVisible
-            ? const QuickNavigationBar()
-            : const SizedBox.shrink(),
-      );
-
   Widget _buildBottomNavigation() => Container(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 4,
               offset: const Offset(0, -2),
             ),
@@ -201,7 +171,7 @@ class _EnhancedMainScreenState extends ConsumerState<EnhancedMainScreen>
             indicatorColor: Theme.of(context).colorScheme.primary,
             labelColor: Theme.of(context).colorScheme.primary,
             unselectedLabelColor:
-                Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
             labelStyle:
                 const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
             unselectedLabelStyle: const TextStyle(fontSize: 12),
@@ -220,13 +190,6 @@ class _EnhancedMainScreenState extends ConsumerState<EnhancedMainScreen>
           ),
         ),
       );
-
-  /// Переключить видимость быстрой навигации
-  void toggleQuickNavigation() {
-    setState(() {
-      _isQuickNavVisible = !_isQuickNavVisible;
-    });
-  }
 
   /// Создать новый пост
   void _createPost() {
@@ -269,6 +232,23 @@ class _EnhancedMainScreenState extends ConsumerState<EnhancedMainScreen>
     } else {
       // Иначе переходим на главную вкладку
       _animateToTab(0);
+    }
+  }
+
+  String _getAppBarTitle(int index) {
+    switch (index) {
+      case 0:
+        return 'Event';
+      case 1:
+        return 'Event';
+      case 2:
+        return 'Event';
+      case 3:
+        return 'Event';
+      case 4:
+        return 'Event';
+      default:
+        return 'Event';
     }
   }
 
@@ -331,8 +311,32 @@ class NavigationItem {
 final enhancedMainScreenProvider =
     Provider<EnhancedMainScreen>((ref) => const EnhancedMainScreen());
 
-/// Провайдер для текущего индекса вкладки
-final currentTabIndexProvider = StateProvider<int>((ref) => 0);
+/// Провайдер для текущего индекса вкладки (мигрирован с StateProvider)
+class CurrentTabIndexNotifier extends Notifier<int> {
+  @override
+  int build() => 0;
 
-/// Провайдер для видимости быстрой навигации
-final quickNavVisibleProvider = StateProvider<bool>((ref) => true);
+  void setTabIndex(int index) {
+    state = index;
+  }
+}
+
+/// Провайдер для видимости быстрой навигации (мигрирован с StateProvider)
+class QuickNavVisibleNotifier extends Notifier<bool> {
+  @override
+  bool build() => true;
+
+  void setVisible(bool visible) {
+    state = visible;
+  }
+
+  void toggle() {
+    state = !state;
+  }
+}
+
+final currentTabIndexProvider =
+    NotifierProvider<CurrentTabIndexNotifier, int>(CurrentTabIndexNotifier.new);
+final quickNavVisibleProvider = NotifierProvider<QuickNavVisibleNotifier, bool>(
+  QuickNavVisibleNotifier.new,
+);

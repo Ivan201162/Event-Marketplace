@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/specialist_tip.dart';
 import '../services/specialist_tips_service.dart';
 
@@ -65,11 +66,11 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
         _isLoading = false;
       });
       _animationController.forward();
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _isLoading = false;
       });
-      print('Ошибка загрузки рекомендаций: $e');
+      debugPrint('Ошибка загрузки рекомендаций: $e');
     }
   }
 
@@ -289,7 +290,9 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: tip.priority.color.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
@@ -390,7 +393,7 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
           );
         }
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

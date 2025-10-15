@@ -14,7 +14,7 @@ class UserRepository {
       if (!doc.exists) return null;
       return AppUser.fromDocument(doc);
     } catch (e) {
-      print('Error getting user by ID: $e');
+      debugPrint('Error getting user by ID: $e');
       return null;
     }
   }
@@ -26,7 +26,7 @@ class UserRepository {
       await _firestore.collection('users').doc(uid).update(updates);
       return true;
     } catch (e) {
-      print('Error updating user: $e');
+      debugPrint('Error updating user: $e');
       return false;
     }
   }
@@ -37,7 +37,7 @@ class UserRepository {
       await _firestore.collection('users').doc(user.id).set(user.toMap());
       return true;
     } catch (e) {
-      print('Error creating user: $e');
+      debugPrint('Error creating user: $e');
       return false;
     }
   }
@@ -69,7 +69,7 @@ class UserRepository {
         await doc.reference.update(updates);
       }
     } catch (e) {
-      print('Error ensuring user defaults: $e');
+      debugPrint('Error ensuring user defaults: $e');
     }
   }
 

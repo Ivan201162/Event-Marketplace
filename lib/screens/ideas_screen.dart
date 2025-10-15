@@ -98,7 +98,10 @@ class IdeasScreen extends ConsumerWidget {
   }
 
   Widget _buildIdeasGrid(
-          BuildContext context, List<Idea> ideas, WidgetRef ref) =>
+    BuildContext context,
+    List<Idea> ideas,
+    WidgetRef ref,
+  ) =>
       Padding(
         padding: const EdgeInsets.all(8),
         child: GridView.builder(
@@ -295,7 +298,8 @@ class IdeasScreen extends ConsumerWidget {
     // TODO: Реализовать сохранение через Firestore
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-          content: Text(idea.isSaved ? 'Убрано из сохранённых' : 'Сохранено')),
+        content: Text(idea.isSaved ? 'Убрано из сохранённых' : 'Сохранено'),
+      ),
     );
   }
 

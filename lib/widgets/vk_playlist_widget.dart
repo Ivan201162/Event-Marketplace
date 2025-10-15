@@ -13,7 +13,7 @@ class VkPlaylistWidget extends ConsumerStatefulWidget {
     this.readOnly = false,
   });
   final String? playlistUrl;
-  final Function(String?)? onUrlChanged;
+  final void Function(String?)? onUrlChanged;
   final bool readOnly;
 
   @override

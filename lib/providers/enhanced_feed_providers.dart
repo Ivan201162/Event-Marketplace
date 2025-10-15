@@ -1,270 +1,109 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../models/enhanced_feed_post.dart';
-import '../services/enhanced_feed_service.dart';
+import '../test_data/mock_data.dart';
 
-/// Провайдер сервиса ленты
-final enhancedFeedServiceProvider =
-    Provider<EnhancedFeedService>((ref) => EnhancedFeedService());
+/// Состояние ленты
+class EnhancedFeedState {
 
-/// Провайдер ленты
-final feedProvider = FutureProvider<List<EnhancedFeedPost>>((ref) async {
-  final service = ref.read(enhancedFeedServiceProvider);
-  return service.getFeed();
-});
-
-/// Провайдер постов пользователя
-final userPostsProvider =
-    FutureProvider.family<List<EnhancedFeedPost>, String>((ref, userId) async {
-  final service = ref.read(enhancedFeedServiceProvider);
-  return service.getUserPosts(userId: userId);
-});
-
-/// Провайдер поста по ID
-final postProvider =
-    FutureProvider.family<EnhancedFeedPost?, String>((ref, postId) async {
-  final service = ref.read(enhancedFeedServiceProvider);
-  return service.getPostById(postId);
-});
-
-/// Провайдер комментариев поста
-final postCommentsProvider =
-    FutureProvider.family<List<FeedPostComment>, String>((ref, postId) async {
-  final service = ref.read(enhancedFeedServiceProvider);
-  return service.getPostComments(postId: postId);
-});
-
-/// Провайдер сохранённых постов
-final savedPostsProvider =
-    FutureProvider.family<List<EnhancedFeedPost>, String>((ref, userId) async {
-  final service = ref.read(enhancedFeedServiceProvider);
-  return service.getSavedPosts(userId: userId);
-});
-
-/// Провайдер поиска постов
-final searchPostsProvider =
-    FutureProvider.family<List<EnhancedFeedPost>, Map<String, dynamic>>(
-        (ref, params) async {
-  final service = ref.read(enhancedFeedServiceProvider);
-  return service.searchPosts(
-    query: params['query'] as String,
-    tags: params['tags'] as List<String>?,
-    location: params['location'] as String?,
-    type: params['type'] as FeedPostType?,
-  );
-});
-
-/// Провайдер состояния создания поста
-final createPostStateProvider =
-    StateNotifierProvider<CreatePostStateNotifier, CreatePostState>((ref) =>
-        CreatePostStateNotifier(ref.read(enhancedFeedServiceProvider)));
-
-/// Состояние создания поста
-class CreatePostState {
-  const CreatePostState({
+  const EnhancedFeedState({
+    this.posts = const [],
     this.isLoading = false,
     this.error,
-    this.success = false,
   });
-
+  final List<EnhancedFeedPost> posts;
   final bool isLoading;
   final String? error;
-  final bool success;
 
-  CreatePostState copyWith({
+  EnhancedFeedState copyWith({
+    List<EnhancedFeedPost>? posts,
     bool? isLoading,
     String? error,
-    bool? success,
   }) =>
-      CreatePostState(
+      EnhancedFeedState(
+        posts: posts ?? this.posts,
         isLoading: isLoading ?? this.isLoading,
         error: error ?? this.error,
-        success: success ?? this.success,
       );
 }
 
-/// Нотификатор состояния создания поста
-class CreatePostStateNotifier extends StateNotifier<CreatePostState> {
-  CreatePostStateNotifier(this._service) : super(const CreatePostState());
+/// Провайдер ленты с тестовыми данными
+class EnhancedFeedNotifier extends ChangeNotifier {
 
-  final EnhancedFeedService _service;
+  EnhancedFeedNotifier() {
+    loadFeed();
+  }
+  EnhancedFeedState _state = const EnhancedFeedState();
 
-  Future<void> createPost({
-    required String authorId,
-    required String content,
-    required FeedPostType type,
-    List<String>? tags,
-    String? location,
-    bool isSponsored = false,
-  }) async {
-    state = state.copyWith(isLoading: true, success: false);
+  EnhancedFeedState get state => _state;
+
+  /// Загружает ленту
+  Future<void> loadFeed() async {
+    _state = _state.copyWith(isLoading: true);
+    notifyListeners();
 
     try {
-      await _service.createPost(
-        authorId: authorId,
-        content: content,
-        type: type,
-        tags: tags,
-        location: location,
-        isSponsored: isSponsored,
-      );
+      // Имитируем задержку сети
+      await Future.delayed(const Duration(seconds: 1));
 
-      state = state.copyWith(isLoading: false, success: true);
-    } catch (e) {
-      state = state.copyWith(
+      // Загружаем тестовые данные
+      final posts = MockData.feedPosts;
+      _state = _state.copyWith(
+        posts: posts,
         isLoading: false,
-        error: e.toString(),
       );
+      notifyListeners();
+    } catch (e) {
+      _state = _state.copyWith(
+        isLoading: false,
+        error: 'Ошибка загрузки ленты: $e',
+      );
+      notifyListeners();
     }
   }
 
-  void reset() {
-    state = const CreatePostState();
+  /// Обновляет ленту
+  Future<void> refreshFeed() async {
+    await loadFeed();
   }
-}
 
-/// Провайдер состояния лайков
-final likeStateProvider =
-    StateNotifierProvider.family<LikeStateNotifier, LikeState, String>(
-  (ref, postId) => LikeStateNotifier(
-    ref.read(enhancedFeedServiceProvider),
-    postId,
-  ),
-);
-
-/// Состояние лайка
-class LikeState {
-  const LikeState({
-    this.isLiked = false,
-    this.likesCount = 0,
-    this.isLoading = false,
-  });
-
-  final bool isLiked;
-  final int likesCount;
-  final bool isLoading;
-
-  LikeState copyWith({
-    bool? isLiked,
-    int? likesCount,
-    bool? isLoading,
-  }) =>
-      LikeState(
-        isLiked: isLiked ?? this.isLiked,
-        likesCount: likesCount ?? this.likesCount,
-        isLoading: isLoading ?? this.isLoading,
-      );
-}
-
-/// Нотификатор состояния лайка
-class LikeStateNotifier extends StateNotifier<LikeState> {
-  LikeStateNotifier(this._service, this._postId) : super(const LikeState());
-
-  final EnhancedFeedService _service;
-  final String _postId;
-
-  Future<void> toggleLike(String userId) async {
-    state = state.copyWith(isLoading: true);
-
-    try {
-      if (state.isLiked) {
-        await _service.unlikePost(_postId, userId);
-        state = state.copyWith(
-          isLiked: false,
-          likesCount: state.likesCount - 1,
-          isLoading: false,
-        );
-      } else {
-        await _service.likePost(_postId, userId);
-        state = state.copyWith(
-          isLiked: true,
-          likesCount: state.likesCount + 1,
-          isLoading: false,
+  /// Переключает лайк поста
+  void toggleLike(String postId) {
+    final posts = _state.posts.map((post) {
+      if (post.id == postId) {
+        return post.copyWith(
+          isLiked: !post.isLiked,
+          likes: post.isLiked ? post.likes - 1 : post.likes + 1,
         );
       }
-    } catch (e) {
-      state = state.copyWith(isLoading: false);
-      // TODO: Показать ошибку
-    }
+      return post;
+    }).toList();
+
+    _state = _state.copyWith(posts: posts);
+    notifyListeners();
   }
 
-  void setInitialState(bool isLiked, int likesCount) {
-    state = state.copyWith(
-      isLiked: isLiked,
-      likesCount: likesCount,
-    );
-  }
-}
-
-/// Провайдер состояния сохранения поста
-final saveStateProvider =
-    StateNotifierProvider.family<SaveStateNotifier, SaveState, String>(
-  (ref, postId) => SaveStateNotifier(
-    ref.read(enhancedFeedServiceProvider),
-    postId,
-  ),
-);
-
-/// Состояние сохранения
-class SaveState {
-  const SaveState({
-    this.isSaved = false,
-    this.savesCount = 0,
-    this.isLoading = false,
-  });
-
-  final bool isSaved;
-  final int savesCount;
-  final bool isLoading;
-
-  SaveState copyWith({
-    bool? isSaved,
-    int? savesCount,
-    bool? isLoading,
-  }) =>
-      SaveState(
-        isSaved: isSaved ?? this.isSaved,
-        savesCount: savesCount ?? this.savesCount,
-        isLoading: isLoading ?? this.isLoading,
-      );
-}
-
-/// Нотификатор состояния сохранения
-class SaveStateNotifier extends StateNotifier<SaveState> {
-  SaveStateNotifier(this._service, this._postId) : super(const SaveState());
-
-  final EnhancedFeedService _service;
-  final String _postId;
-
-  Future<void> toggleSave(String userId) async {
-    state = state.copyWith(isLoading: true);
-
-    try {
-      if (state.isSaved) {
-        await _service.unsavePost(_postId, userId);
-        state = state.copyWith(
-          isSaved: false,
-          savesCount: state.savesCount - 1,
-          isLoading: false,
-        );
-      } else {
-        await _service.savePost(_postId, userId);
-        state = state.copyWith(
-          isSaved: true,
-          savesCount: state.savesCount + 1,
-          isLoading: false,
-        );
+  /// Переключает сохранение поста
+  void toggleSave(String postId) {
+    final posts = _state.posts.map((post) {
+      if (post.id == postId) {
+        return post.copyWith(isSaved: !post.isSaved);
       }
-    } catch (e) {
-      state = state.copyWith(isLoading: false);
-      // TODO: Показать ошибку
-    }
+      return post;
+    }).toList();
+
+    _state = _state.copyWith(posts: posts);
+    notifyListeners();
   }
 
-  void setInitialState(bool isSaved, int savesCount) {
-    state = state.copyWith(
-      isSaved: isSaved,
-      savesCount: savesCount,
-    );
+  /// Добавляет новый пост
+  void addPost(EnhancedFeedPost post) {
+    final posts = [post, ..._state.posts];
+    _state = _state.copyWith(posts: posts);
+    notifyListeners();
   }
 }
+
+/// Провайдер ленты
+final enhancedFeedProvider =
+    ChangeNotifierProvider<EnhancedFeedNotifier>((ref) => EnhancedFeedNotifier());

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../services/support_service.dart';
 
 /// Виджет чата поддержки
@@ -44,13 +45,15 @@ class _SupportChatWidgetState extends State<SupportChatWidget> {
       setState(() {
         _transferStatus = status;
       });
-    } catch (e) {
-      print('Ошибка загрузки статуса передачи: $e');
+    } on Exception catch (e) {
+      debugPrint('Ошибка загрузки статуса передачи: $e');
     }
   }
 
   Future<void> _sendMessage() async {
-    if (_messageController.text.trim().isEmpty) return;
+    if (_messageController.text.trim().isEmpty) {
+      return;
+    }
 
     setState(() {
       _isLoading = true;
@@ -66,10 +69,15 @@ class _SupportChatWidgetState extends State<SupportChatWidget> {
 
       _messageController.clear();
       _scrollToBottom();
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _error = e.toString();
       });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Ошибка: $_error')),
+        );
+      }
     } finally {
       setState(() {
         _isLoading = false;
@@ -87,7 +95,7 @@ class _SupportChatWidgetState extends State<SupportChatWidget> {
         });
         widget.onTransferToOperator?.call(reason);
         _showSuccessSnackBar('Запрос на передачу оператору отправлен');
-      } catch (e) {
+      } on Exception catch (e) {
         _showErrorSnackBar('Ошибка передачи оператору: $e');
       }
     }

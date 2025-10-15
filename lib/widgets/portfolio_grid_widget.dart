@@ -12,7 +12,7 @@ class PortfolioGridWidget extends StatelessWidget {
   final List<Map<String, dynamic>> portfolioItems;
   final List<String> portfolioImages;
   final VoidCallback? onAddItem;
-  final Function(Map<String, dynamic>)? onItemTap;
+  final void Function(Map<String, dynamic>)? onItemTap;
 
   @override
   Widget build(BuildContext context) {

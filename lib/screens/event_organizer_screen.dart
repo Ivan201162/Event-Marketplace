@@ -200,7 +200,9 @@ class _EventOrganizerScreenState extends ConsumerState<EventOrganizerScreen> {
                   if (organizer.rating != null)
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.amber[100],
                         borderRadius: BorderRadius.circular(12),
@@ -255,7 +257,9 @@ class _EventOrganizerScreenState extends ConsumerState<EventOrganizerScreen> {
                       .map(
                         (type) => Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.purple[50],
                             borderRadius: BorderRadius.circular(8),
@@ -487,7 +491,9 @@ class _CreateOrganizerProfileScreenState
                       const Text(
                         'Основная информация',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 16),
 
@@ -520,7 +526,9 @@ class _CreateOrganizerProfileScreenState
                       const Text(
                         'Контактная информация',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 16),
 
@@ -576,7 +584,9 @@ class _CreateOrganizerProfileScreenState
                       const Text(
                         'Типы мероприятий *',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 16),
 
@@ -607,7 +617,9 @@ class _CreateOrganizerProfileScreenState
                       const Text(
                         'Специализации *',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 16),
 
@@ -638,7 +650,9 @@ class _CreateOrganizerProfileScreenState
                       const Text(
                         'Юридическая информация',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 16),
 
@@ -713,7 +727,9 @@ class OrganizerDetailsScreen extends StatelessWidget {
                       const Text(
                         'Основная информация',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 16),
                       if (organizer.description != null) ...[
@@ -776,7 +792,9 @@ class OrganizerDetailsScreen extends StatelessWidget {
                       const Text(
                         'Типы мероприятий',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 16),
                       Wrap(
@@ -808,7 +826,9 @@ class OrganizerDetailsScreen extends StatelessWidget {
                       const Text(
                         'Специализации',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 16),
                       Wrap(
@@ -840,7 +860,9 @@ class OrganizerDetailsScreen extends StatelessWidget {
                       const Text(
                         'Статистика',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 16),
                       Row(
@@ -883,7 +905,11 @@ class OrganizerDetailsScreen extends StatelessWidget {
       );
 
   Widget _buildStatCard(
-          String title, String value, IconData icon, Color color) =>
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) =>
       Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(

@@ -247,7 +247,9 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.red.shade500,
                         borderRadius: BorderRadius.circular(20),
@@ -391,8 +393,11 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
               const SizedBox(height: 8),
               Row(
                 children: [
-                  Icon(Icons.location_on,
-                      size: 16, color: Colors.grey.shade600),
+                  Icon(
+                    Icons.location_on,
+                    size: 16,
+                    color: Colors.grey.shade600,
+                  ),
                   const SizedBox(width: 8),
                   Text('Город: ${promotion.city}'),
                 ],
@@ -435,9 +440,13 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
               items: const [
                 DropdownMenuItem(value: 'all', child: Text('Все категории')),
                 DropdownMenuItem(
-                    value: 'photographer', child: Text('Фотографы')),
+                  value: 'photographer',
+                  child: Text('Фотографы'),
+                ),
                 DropdownMenuItem(
-                    value: 'videographer', child: Text('Видеографы')),
+                  value: 'videographer',
+                  child: Text('Видеографы'),
+                ),
                 DropdownMenuItem(value: 'dj', child: Text('DJ')),
                 DropdownMenuItem(value: 'host', child: Text('Ведущие')),
                 DropdownMenuItem(value: 'decorator', child: Text('Декораторы')),

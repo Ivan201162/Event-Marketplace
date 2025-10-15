@@ -41,7 +41,8 @@ class EnhancedIdea {
         createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
         media: (map['media'] as List?)
                 ?.map(
-                    (media) => IdeaMedia.fromMap(media as Map<String, dynamic>))
+                  (media) => IdeaMedia.fromMap(media as Map<String, dynamic>),
+                )
                 .toList() ??
             [],
         likesCount: (map['likesCount'] as int?) ?? 0,
@@ -51,13 +52,16 @@ class EnhancedIdea {
         viewsCount: (map['viewsCount'] as int?) ?? 0,
         likes: List<String>.from((map['likes'] as List?) ?? []),
         comments: (map['comments'] as List?)
-                ?.map((comment) =>
-                    IdeaComment.fromMap(comment as Map<String, dynamic>))
+                ?.map(
+                  (comment) =>
+                      IdeaComment.fromMap(comment as Map<String, dynamic>),
+                )
                 .toList() ??
             [],
         shares: (map['shares'] as List?)
                 ?.map(
-                    (share) => IdeaShare.fromMap(share as Map<String, dynamic>))
+                  (share) => IdeaShare.fromMap(share as Map<String, dynamic>),
+                )
                 .toList() ??
             [],
         saves: List<String>.from((map['saves'] as List?) ?? []),
@@ -483,8 +487,9 @@ class IdeaComment {
         createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
         parentId: map['parentId'] as String?,
         replies: (map['replies'] as List?)
-                ?.map((reply) =>
-                    IdeaComment.fromMap(reply as Map<String, dynamic>))
+                ?.map(
+                  (reply) => IdeaComment.fromMap(reply as Map<String, dynamic>),
+                )
                 .toList() ??
             [],
         likesCount: (map['likesCount'] as int?) ?? 0,

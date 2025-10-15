@@ -41,7 +41,7 @@ class ErrorLogger {
     } catch (e) {
       // Если не удалось записать в файл, логируем в консоль
       if (kDebugMode) {
-        print('Failed to log error to file: $e');
+        debugPrint('Failed to log error to file: $e');
       }
     }
   }
@@ -80,11 +80,11 @@ class ErrorLogger {
       await file.writeAsString(json.encode(logs));
 
       if (kDebugMode) {
-        print('Error logged to file: ${errorLog['errorType']}');
+        debugPrint('Error logged to file: ${errorLog['errorType']}');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Error writing to log file: $e');
+        debugPrint('Error writing to log file: $e');
       }
     }
   }
@@ -116,7 +116,7 @@ class ErrorLogger {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Error cleaning up old logs: $e');
+        debugPrint('Error cleaning up old logs: $e');
       }
     }
   }
@@ -138,7 +138,7 @@ class ErrorLogger {
       return [];
     } catch (e) {
       if (kDebugMode) {
-        print('Error reading logs: $e');
+        debugPrint('Error reading logs: $e');
       }
       return [];
     }
@@ -154,7 +154,7 @@ class ErrorLogger {
       }).toList();
     } catch (e) {
       if (kDebugMode) {
-        print('Error filtering logs: $e');
+        debugPrint('Error filtering logs: $e');
       }
       return [];
     }
@@ -169,7 +169,7 @@ class ErrorLogger {
       return allLogs.where((log) => log['errorType'] == errorType).toList();
     } catch (e) {
       if (kDebugMode) {
-        print('Error filtering logs by type: $e');
+        debugPrint('Error filtering logs by type: $e');
       }
       return [];
     }
@@ -186,11 +186,11 @@ class ErrorLogger {
       }
 
       if (kDebugMode) {
-        print('All error logs cleared');
+        debugPrint('All error logs cleared');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Error clearing logs: $e');
+        debugPrint('Error clearing logs: $e');
       }
     }
   }
@@ -202,7 +202,7 @@ class ErrorLogger {
       return json.encode(logs);
     } catch (e) {
       if (kDebugMode) {
-        print('Error exporting logs: $e');
+        debugPrint('Error exporting logs: $e');
       }
       return '[]';
     }
@@ -243,7 +243,7 @@ class ErrorLogger {
       return buffer.toString();
     } catch (e) {
       if (kDebugMode) {
-        print('Error exporting logs as text: $e');
+        debugPrint('Error exporting logs as text: $e');
       }
       return 'Error exporting logs';
     }
@@ -256,7 +256,7 @@ class ErrorLogger {
       await prefs.setInt(_maxLogsKey, maxLogs);
     } catch (e) {
       if (kDebugMode) {
-        print('Error setting max logs: $e');
+        debugPrint('Error setting max logs: $e');
       }
     }
   }
@@ -268,7 +268,7 @@ class ErrorLogger {
       return prefs.getInt(_maxLogsKey) ?? _defaultMaxLogs;
     } catch (e) {
       if (kDebugMode) {
-        print('Error getting max logs: $e');
+        debugPrint('Error getting max logs: $e');
       }
       return _defaultMaxLogs;
     }
@@ -282,8 +282,8 @@ class ErrorLogger {
       if (logs.isEmpty) {
         return {
           'totalLogs': 0,
-          'errorTypes': {},
-          'contexts': {},
+          'errorTypes': <String, int>{},
+          'contexts': <String, int>{},
           'dateRange': null,
         };
       }
@@ -327,12 +327,12 @@ class ErrorLogger {
       };
     } catch (e) {
       if (kDebugMode) {
-        print('Error getting log statistics: $e');
+        debugPrint('Error getting log statistics: $e');
       }
       return {
         'totalLogs': 0,
-        'errorTypes': {},
-        'contexts': {},
+        'errorTypes': <String, int>{},
+        'contexts': <String, int>{},
         'dateRange': null,
       };
     }
@@ -351,7 +351,7 @@ class ErrorLogger {
       return 0;
     } catch (e) {
       if (kDebugMode) {
-        print('Error getting log file size: $e');
+        debugPrint('Error getting log file size: $e');
       }
       return 0;
     }
@@ -364,7 +364,7 @@ class ErrorLogger {
       return '${directory.path}/$_logFileName';
     } catch (e) {
       if (kDebugMode) {
-        print('Error getting log file path: $e');
+        debugPrint('Error getting log file path: $e');
       }
       return '';
     }

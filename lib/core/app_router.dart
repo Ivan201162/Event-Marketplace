@@ -181,11 +181,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/settings',
         name: 'settings',
-        builder: (context, state) {
-          // Получаем функцию изменения темы из контекста
-          final themeNotifier = ref.read(theme_provider.themeProvider.notifier);
-          return const SettingsPage();
-        },
+        builder: (context, state) => const SettingsPage(),
       ),
 
       // Редактирование профиля
@@ -251,7 +247,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/idea/:ideaId',
         name: 'idea-detail',
         builder: (context, state) {
-          final ideaId = state.pathParameters['ideaId']!;
           // TODO: Загрузить идею по ID
           return const IdeasScreen(); // Временная заглушка
         },
@@ -269,7 +264,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/share-idea/:ideaId',
         name: 'share-idea',
         builder: (context, state) {
-          final ideaId = state.pathParameters['ideaId']!;
           // TODO: Загрузить идею по ID
           return const IdeasScreen(); // Временная заглушка
         },

@@ -70,7 +70,7 @@ class _SearchSortingWidgetState extends ConsumerState<SearchSortingWidget> {
   }
 
   Widget _buildSortOption(sorting_utils.SpecialistSortOption option) {
-    final isSelected = _currentSorting.sortOption == option;
+    // final isSelected = _currentSorting.sortOption == option; // Unused variable
 
     return RadioListTile<sorting_utils.SpecialistSortOption>(
       title: Text(option.label),
@@ -115,7 +115,7 @@ class _SearchSortingWidgetState extends ConsumerState<SearchSortingWidget> {
       );
 
   void _applySorting() {
-    ref.read(searchSortingProvider.notifier).state = _currentSorting;
+    ref.read(searchSortingProvider.notifier).updateSorting(_currentSorting);
     widget.onSortingChanged?.call();
   }
 
@@ -123,7 +123,7 @@ class _SearchSortingWidgetState extends ConsumerState<SearchSortingWidget> {
     setState(() {
       _currentSorting = const sorting_utils.SpecialistSorting();
     });
-    ref.read(searchSortingProvider.notifier).state = _currentSorting;
+    ref.read(searchSortingProvider.notifier).updateSorting(_currentSorting);
     widget.onSortingChanged?.call();
   }
 }
@@ -153,18 +153,20 @@ class QuickSortingWidget extends ConsumerWidget {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: popularOptions.map((option) {
+            children: popularOptions.map<Widget>((option) {
               final isSelected = currentSorting.sortOption == option;
               return FilterChip(
                 label: Text(option.label),
                 selected: isSelected,
                 onSelected: (selected) {
                   if (selected) {
-                    ref.read(searchSortingProvider.notifier).state =
-                        sorting_utils.SpecialistSorting(sortOption: option);
+                    ref.read(searchSortingProvider.notifier).updateSorting(
+                          sorting_utils.SpecialistSorting(sortOption: option),
+                        );
                   } else {
-                    ref.read(searchSortingProvider.notifier).state =
-                        const sorting_utils.SpecialistSorting();
+                    ref
+                        .read(searchSortingProvider.notifier)
+                        .updateSorting(const sorting_utils.SpecialistSorting());
                   }
                 },
               );
@@ -205,8 +207,9 @@ class CurrentSortingWidget extends ConsumerWidget {
           const Spacer(),
           TextButton(
             onPressed: () {
-              ref.read(searchSortingProvider.notifier).state =
-                  const sorting_utils.SpecialistSorting();
+              ref
+                  .read(searchSortingProvider.notifier)
+                  .updateSorting(const sorting_utils.SpecialistSorting());
             },
             child: const Text('Сбросить'),
           ),
@@ -246,7 +249,7 @@ class _SortingDialogState extends ConsumerState<SortingDialog> {
           itemCount: sortOptions.length,
           itemBuilder: (context, index) {
             final option = sortOptions[index];
-            final isSelected = _selectedSorting.sortOption == option;
+            // final isSelected = _selectedSorting.sortOption == option;
 
             return RadioListTile<sorting_utils.SpecialistSortOption>(
               title: Text(option.label),
@@ -286,7 +289,9 @@ class _SortingDialogState extends ConsumerState<SortingDialog> {
         ),
         ElevatedButton(
           onPressed: () {
-            ref.read(searchSortingProvider.notifier).state = _selectedSorting;
+            ref
+                .read(searchSortingProvider.notifier)
+                .updateSorting(_selectedSorting);
             Navigator.of(context).pop();
           },
           child: const Text('Применить'),
@@ -340,21 +345,21 @@ class SortingStatsWidget extends ConsumerWidget {
               Expanded(
                 child: _buildStatItem(
                   'Найдено',
-                  '${searchStats.totalCount}',
+                  '${searchStats['totalCount'] ?? 0}',
                   Icons.search,
                 ),
               ),
               Expanded(
                 child: _buildStatItem(
                   'Средняя цена',
-                  '${searchStats.averagePrice.toInt()}₽',
+                  '${(searchStats['averagePrice'] ?? 0).toInt()}₽',
                   Icons.attach_money,
                 ),
               ),
               Expanded(
                 child: _buildStatItem(
                   'Средний рейтинг',
-                  searchStats.averageRating.toStringAsFixed(1),
+                  (searchStats['averageRating'] ?? 0.0).toStringAsFixed(1),
                   Icons.star,
                 ),
               ),

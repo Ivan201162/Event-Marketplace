@@ -471,7 +471,8 @@ class _EnhancedNotificationsScreenState
       builder: (context) => AlertDialog(
         title: const Text('Отметить все как прочитанные'),
         content: const Text(
-            'Вы уверены, что хотите отметить все уведомления как прочитанные?'),
+          'Вы уверены, что хотите отметить все уведомления как прочитанные?',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -595,7 +596,8 @@ class _EnhancedNotificationsScreenState
                 if (currentUser != null) {
                   ref.invalidate(notificationsProvider(currentUser.uid));
                   ref.invalidate(
-                      archivedNotificationsProvider(currentUser.uid));
+                    archivedNotificationsProvider(currentUser.uid),
+                  );
                   ref.invalidate(notificationStatsProvider(currentUser.uid));
                 }
               }).catchError((error) {
@@ -621,7 +623,8 @@ class _EnhancedNotificationsScreenState
       builder: (context) => AlertDialog(
         title: const Text('Очистить все уведомления'),
         content: const Text(
-            'Вы уверены, что хотите удалить все уведомления? Это действие необратимо.'),
+          'Вы уверены, что хотите удалить все уведомления? Это действие необратимо.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

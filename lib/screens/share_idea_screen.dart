@@ -215,8 +215,11 @@ class _ShareIdeaScreenState extends ConsumerState<ShareIdeaScreen> {
         },
       );
 
-  Widget _buildChatItem(String chatId, String otherParticipantId,
-          Map<String, dynamic> chat) =>
+  Widget _buildChatItem(
+    String chatId,
+    String otherParticipantId,
+    Map<String, dynamic> chat,
+  ) =>
       FutureBuilder<DocumentSnapshot>(
         future: _firestore.collection('users').doc(otherParticipantId).get(),
         builder: (context, snapshot) {
@@ -259,8 +262,11 @@ class _ShareIdeaScreenState extends ConsumerState<ShareIdeaScreen> {
         },
       );
 
-  Future<void> _shareToChat(String chatId, String otherParticipantId,
-      String otherParticipantName) async {
+  Future<void> _shareToChat(
+    String chatId,
+    String otherParticipantId,
+    String otherParticipantName,
+  ) async {
     final currentUser = ref.read(currentUserProvider).value;
     if (currentUser == null) return;
 

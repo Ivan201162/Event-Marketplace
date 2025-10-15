@@ -35,7 +35,8 @@ Future<void> main() async {
               await doc.reference.collection('messages').get();
 
           print(
-              '    Удаление ${messagesSnapshot.docs.length} сообщений из чата ${doc.id}');
+            '    Удаление ${messagesSnapshot.docs.length} сообщений из чата ${doc.id}',
+          );
 
           for (final messageDoc in messagesSnapshot.docs) {
             await messageDoc.reference.delete();

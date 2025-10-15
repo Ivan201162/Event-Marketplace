@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
@@ -406,7 +407,8 @@ class EnhancedFeedService {
         if (query.isEmpty ||
             post.content.toLowerCase().contains(query.toLowerCase()) ||
             post.tags.any(
-                (tag) => tag.toLowerCase().contains(query.toLowerCase()))) {
+              (tag) => tag.toLowerCase().contains(query.toLowerCase()),
+            )) {
           posts.add(post);
         }
       }
@@ -478,7 +480,7 @@ class EnhancedFeedService {
         thumbnailUrl: thumbnailUrl,
       );
     } catch (e) {
-      print('Ошибка загрузки медиафайла: $e');
+      debugPrint('Ошибка загрузки медиафайла: $e');
       return null;
     }
   }
@@ -489,7 +491,203 @@ class EnhancedFeedService {
       final ref = _storage.refFromURL(url);
       await ref.delete();
     } catch (e) {
-      print('Ошибка удаления медиафайла: $e');
+      debugPrint('Ошибка удаления медиафайла: $e');
+    }
+  }
+
+  /// Получить Reels
+  Future<List<EnhancedFeedPost>> getReels() async {
+    try {
+      final snapshot = await _firestore
+          .collection('feed')
+          .where('type', isEqualTo: 'reel')
+          .orderBy('createdAt', descending: true)
+          .limit(50)
+          .get();
+
+      final reels = <EnhancedFeedPost>[];
+      for (final doc in snapshot.docs) {
+        final reel = EnhancedFeedPost.fromMap(doc.data());
+        reels.add(reel);
+      }
+
+      return reels;
+    } catch (e) {
+      throw Exception('Ошибка загрузки Reels: $e');
+    }
+  }
+
+  /// Получить ленту по категории
+  Future<List<EnhancedFeedPost>> getCategoryFeed(String category) async {
+    try {
+      final snapshot = await _firestore
+          .collection('feed')
+          .where('category', isEqualTo: category)
+          .orderBy('createdAt', descending: true)
+          .limit(20)
+          .get();
+
+      final posts = <EnhancedFeedPost>[];
+      for (final doc in snapshot.docs) {
+        final post = EnhancedFeedPost.fromMap(doc.data());
+        posts.add(post);
+      }
+
+      return posts;
+    } catch (e) {
+      throw Exception('Ошибка загрузки категории $category: $e');
+    }
+  }
+
+  /// Получить ленту подписок
+  Future<List<EnhancedFeedPost>> getFollowingFeed(String userId) async {
+    try {
+      // Получаем список подписок пользователя
+      final followingSnapshot = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('following')
+          .get();
+
+      final followingIds = followingSnapshot.docs.map((doc) => doc.id).toList();
+
+      if (followingIds.isEmpty) {
+        return [];
+      }
+
+      // Получаем посты от подписок
+      final posts = <EnhancedFeedPost>[];
+      for (final authorId in followingIds) {
+        final snapshot = await _firestore
+            .collection('feed')
+            .where('authorId', isEqualTo: authorId)
+            .orderBy('createdAt', descending: true)
+            .limit(5)
+            .get();
+
+        for (final doc in snapshot.docs) {
+          final post = EnhancedFeedPost.fromMap(doc.data());
+          posts.add(post);
+        }
+      }
+
+      // Сортируем по дате создания
+      posts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+      return posts.take(20).toList();
+    } catch (e) {
+      throw Exception('Ошибка загрузки ленты подписок: $e');
+    }
+  }
+
+  /// Получить рекомендации
+  Future<List<EnhancedFeedPost>> getRecommendedPosts(String userId) async {
+    try {
+      // Простая реализация рекомендаций на основе популярности
+      final snapshot = await _firestore
+          .collection('feed')
+          .orderBy('likesCount', descending: true)
+          .orderBy('createdAt', descending: true)
+          .limit(20)
+          .get();
+
+      final posts = <EnhancedFeedPost>[];
+      for (final doc in snapshot.docs) {
+        final post = EnhancedFeedPost.fromMap(doc.data());
+        posts.add(post);
+      }
+
+      return posts;
+    } catch (e) {
+      throw Exception('Ошибка загрузки рекомендаций: $e');
+    }
+  }
+
+  /// Получить трендовые посты
+  Future<List<EnhancedFeedPost>> getTrendingPosts() async {
+    try {
+      final now = DateTime.now();
+      final weekAgo = now.subtract(const Duration(days: 7));
+
+      final snapshot = await _firestore
+          .collection('feed')
+          .where('createdAt', isGreaterThan: Timestamp.fromDate(weekAgo))
+          .orderBy('createdAt', descending: true)
+          .orderBy('likesCount', descending: true)
+          .limit(20)
+          .get();
+
+      final posts = <EnhancedFeedPost>[];
+      for (final doc in snapshot.docs) {
+        final post = EnhancedFeedPost.fromMap(doc.data());
+        posts.add(post);
+      }
+
+      return posts;
+    } catch (e) {
+      throw Exception('Ошибка загрузки трендовых постов: $e');
+    }
+  }
+
+  /// Подписаться на пользователя
+  Future<void> followUser(String userId, String targetUserId) async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('following')
+          .doc(targetUserId)
+          .set({
+        'followedAt': FieldValue.serverTimestamp(),
+      });
+
+      await _firestore
+          .collection('users')
+          .doc(targetUserId)
+          .collection('followers')
+          .doc(userId)
+          .set({
+        'followedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка подписки: $e');
+    }
+  }
+
+  /// Отписаться от пользователя
+  Future<void> unfollowUser(String userId, String targetUserId) async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('following')
+          .doc(targetUserId)
+          .delete();
+
+      await _firestore
+          .collection('users')
+          .doc(targetUserId)
+          .collection('followers')
+          .doc(userId)
+          .delete();
+    } catch (e) {
+      throw Exception('Ошибка отписки: $e');
+    }
+  }
+
+  /// Проверить подписку
+  Future<bool> isFollowing(String userId, String targetUserId) async {
+    try {
+      final doc = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('following')
+          .doc(targetUserId)
+          .get();
+
+      return doc.exists;
+    } catch (e) {
+      return false;
     }
   }
 }

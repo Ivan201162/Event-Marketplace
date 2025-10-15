@@ -12,8 +12,8 @@ class PortfolioWidget extends StatelessWidget {
   });
 
   final List<PortfolioItem> portfolioItems;
-  final Function(PortfolioItem)? onItemTap;
-  final Function(PortfolioItem)? onLike;
+  final void Function(PortfolioItem)? onItemTap;
+  final void Function(PortfolioItem)? onLike;
   final bool showActions;
 
   @override
@@ -106,7 +106,7 @@ class PortfolioWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -157,7 +157,7 @@ class PortfolioWidget extends StatelessWidget {
                         end: Alignment.bottomCenter,
                         colors: [
                           Colors.transparent,
-                          Colors.black.withOpacity(0.7),
+                          Colors.black.withValues(alpha: 0.7),
                         ],
                       ),
                     ),
@@ -212,7 +212,7 @@ class PortfolioWidget extends StatelessWidget {
                           child: Container(
                             padding: const EdgeInsets.all(6),
                             decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.5),
+                              color: Colors.black.withValues(alpha: 0.5),
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: Row(
@@ -248,9 +248,11 @@ class PortfolioWidget extends StatelessWidget {
                     left: 8,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 2),
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.5),
+                        color: Colors.black.withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(

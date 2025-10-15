@@ -98,7 +98,7 @@ class IdeasService {
       final docRef = await _firestore.collection('ideas').add(ideaData);
       return docRef.id;
     } on Exception catch (e) {
-      print('Ошибка создания идеи: $e');
+      debugPrint('Ошибка создания идеи: $e');
       return null;
     }
   }
@@ -110,7 +110,7 @@ class IdeasService {
       await _firestore.collection('ideas').doc(ideaId).update(updates);
       return true;
     } on Exception catch (e) {
-      print('Ошибка обновления идеи: $e');
+      debugPrint('Ошибка обновления идеи: $e');
       return false;
     }
   }
@@ -121,7 +121,7 @@ class IdeasService {
       await _firestore.collection('ideas').doc(ideaId).delete();
       return true;
     } on Exception catch (e) {
-      print('Ошибка удаления идеи: $e');
+      debugPrint('Ошибка удаления идеи: $e');
       return false;
     }
   }
@@ -154,7 +154,7 @@ class IdeasService {
         return true;
       });
     } on Exception catch (e) {
-      print('Ошибка лайка идеи: $e');
+      debugPrint('Ошибка лайка идеи: $e');
       return false;
     }
   }
@@ -187,7 +187,7 @@ class IdeasService {
         return true;
       });
     } on Exception catch (e) {
-      print('Ошибка сохранения идеи: $e');
+      debugPrint('Ошибка сохранения идеи: $e');
       return false;
     }
   }
@@ -217,7 +217,7 @@ class IdeasService {
         return true;
       });
     } on Exception catch (e) {
-      print('Ошибка репоста идеи: $e');
+      debugPrint('Ошибка репоста идеи: $e');
       return false;
     }
   }
@@ -267,7 +267,7 @@ class IdeasService {
 
       return docRef.id;
     } on Exception catch (e) {
-      print('Ошибка добавления комментария: $e');
+      debugPrint('Ошибка добавления комментария: $e');
       return null;
     }
   }
@@ -300,7 +300,7 @@ class IdeasService {
         return true;
       });
     } on Exception catch (e) {
-      print('Ошибка лайка комментария: $e');
+      debugPrint('Ошибка лайка комментария: $e');
       return false;
     }
   }
@@ -315,7 +315,7 @@ class IdeasService {
       }
       return null;
     } on Exception catch (e) {
-      print('Ошибка выбора медиа файла: $e');
+      debugPrint('Ошибка выбора медиа файла: $e');
       return null;
     }
   }
@@ -336,7 +336,7 @@ class IdeasService {
 
       return downloadUrl;
     } on Exception catch (e) {
-      print('Ошибка загрузки медиа файла: $e');
+      debugPrint('Ошибка загрузки медиа файла: $e');
       return null;
     }
   }
@@ -359,7 +359,7 @@ class IdeasService {
 
       return null;
     } on Exception catch (e) {
-      print('Ошибка генерации превью видео: $e');
+      debugPrint('Ошибка генерации превью видео: $e');
       return null;
     }
   }

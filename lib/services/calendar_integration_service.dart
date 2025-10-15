@@ -103,8 +103,9 @@ class CalendarIntegrationService {
 
       if (title != null) updates['title'] = title;
       if (description != null) updates['description'] = description;
-      if (startTime != null)
+      if (startTime != null) {
         updates['startTime'] = Timestamp.fromDate(startTime);
+      }
       if (endTime != null) updates['endTime'] = Timestamp.fromDate(endTime);
       if (location != null) updates['location'] = location;
       if (attendees != null) updates['attendees'] = attendees;
@@ -194,12 +195,16 @@ class CalendarIntegrationService {
           .where('userId', isEqualTo: userId);
 
       if (startDate != null) {
-        query = query.where('startTime',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where(
+          'startTime',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
+        );
       }
       if (endDate != null) {
-        query = query.where('endTime',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where(
+          'endTime',
+          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
+        );
       }
 
       query = query.orderBy('startTime').limit(limit);
@@ -221,7 +226,8 @@ class CalendarIntegrationService {
 
   /// Получить события по заказу
   Future<List<Map<String, dynamic>>> getOrderCalendarEvents(
-      String orderId) async {
+    String orderId,
+  ) async {
     try {
       final QuerySnapshot snapshot = await _firestore
           .collection('calendar_events')
@@ -245,7 +251,9 @@ class CalendarIntegrationService {
 
   /// Синхронизировать с внешним календарем
   Future<void> _syncWithExternalCalendar(
-      String eventId, Map<String, dynamic> event) async {
+    String eventId,
+    Map<String, dynamic> event,
+  ) async {
     try {
       // Здесь должна быть интеграция с Google Calendar API или Apple EventKit
       // Пока что имитируем успешную синхронизацию
@@ -456,12 +464,16 @@ class CalendarIntegrationService {
           .where('userId', isEqualTo: userId);
 
       if (startDate != null) {
-        query = query.where('reminderTime',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where(
+          'reminderTime',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
+        );
       }
       if (endDate != null) {
-        query = query.where('reminderTime',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where(
+          'reminderTime',
+          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
+        );
       }
       if (isTriggered != null) {
         query = query.where('isTriggered', isEqualTo: isTriggered);

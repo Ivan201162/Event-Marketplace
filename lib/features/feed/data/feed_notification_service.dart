@@ -60,12 +60,13 @@ class FeedNotificationService {
     final settings = await _messaging.requestPermission();
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('Пользователь предоставил разрешение на уведомления');
+      debugPrint('Пользователь предоставил разрешение на уведомления');
     } else if (settings.authorizationStatus ==
         AuthorizationStatus.provisional) {
-      print('Пользователь предоставил временное разрешение на уведомления');
+      debugPrint(
+          'Пользователь предоставил временное разрешение на уведомления',);
     } else {
-      print(
+      debugPrint(
         'Пользователь отклонил или не предоставил разрешение на уведомления',
       );
     }
@@ -93,7 +94,7 @@ class FeedNotificationService {
 
   /// Обработка сообщения в foreground
   Future<void> _handleForegroundMessage(RemoteMessage message) async {
-    print('Получено сообщение в foreground: ${message.messageId}');
+    debugPrint('Получено сообщение в foreground: ${message.messageId}');
 
     // Показываем локальное уведомление
     await _showLocalNotification(
@@ -105,14 +106,14 @@ class FeedNotificationService {
 
   /// Обработка нажатия на уведомление
   Future<void> _handleNotificationTap(RemoteMessage message) async {
-    print('Нажатие на уведомление: ${message.messageId}');
+    debugPrint('Нажатие на уведомление: ${message.messageId}');
     _handleNotificationPayload(message.data.toString());
   }
 
   /// Обработка данных уведомления
   void _handleNotificationPayload(String payload) {
     // TODO(developer): Реализовать навигацию к соответствующему экрану
-    print('Обработка payload: $payload');
+    debugPrint('Обработка payload: $payload');
   }
 
   /// Показать локальное уведомление
@@ -180,7 +181,7 @@ class FeedNotificationService {
         );
       }
     } catch (e) {
-      print('Ошибка отправки уведомления о новом посте: $e');
+      debugPrint('Ошибка отправки уведомления о новом посте: $e');
     }
   }
 
@@ -208,7 +209,7 @@ class FeedNotificationService {
         },
       );
     } catch (e) {
-      print('Ошибка отправки уведомления о лайке: $e');
+      debugPrint('Ошибка отправки уведомления о лайке: $e');
     }
   }
 
@@ -238,7 +239,7 @@ class FeedNotificationService {
         },
       );
     } catch (e) {
-      print('Ошибка отправки уведомления о комментарии: $e');
+      debugPrint('Ошибка отправки уведомления о комментарии: $e');
     }
   }
 
@@ -256,7 +257,7 @@ class FeedNotificationService {
 
       return [];
     } catch (e) {
-      print('Ошибка получения подписчиков: $e');
+      debugPrint('Ошибка получения подписчиков: $e');
       return [];
     }
   }
@@ -294,7 +295,7 @@ class FeedNotificationService {
         'read': false,
       });
     } catch (e) {
-      print('Ошибка отправки уведомления пользователю: $e');
+      debugPrint('Ошибка отправки уведомления пользователю: $e');
     }
   }
 
@@ -310,7 +311,7 @@ class FeedNotificationService {
         });
       }
     } catch (e) {
-      print('Ошибка сохранения FCM токена: $e');
+      debugPrint('Ошибка сохранения FCM токена: $e');
     }
   }
 
@@ -318,7 +319,7 @@ class FeedNotificationService {
   Future<void> setupTokenRefresh() async {
     _messaging.onTokenRefresh.listen((token) async {
       // TODO(developer): Обновить токен в базе данных для текущего пользователя
-      print('FCM токен обновлен: $token');
+      debugPrint('FCM токен обновлен: $token');
     });
   }
 }
@@ -326,5 +327,5 @@ class FeedNotificationService {
 /// Обработчик фоновых сообщений
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print('Обработка фонового сообщения: ${message.messageId}');
+  debugPrint('Обработка фонового сообщения: ${message.messageId}');
 }

@@ -37,7 +37,8 @@ class EnhancedNotification {
         imageUrl: map['imageUrl'] as String?,
         actionUrl: map['actionUrl'] as String?,
         priority: NotificationPriority.fromString(
-            map['priority'] as String? ?? 'normal'),
+          map['priority'] as String? ?? 'normal',
+        ),
         category: map['category'] as String?,
         senderId: map['senderId'] as String?,
         senderName: map['senderName'] as String?,

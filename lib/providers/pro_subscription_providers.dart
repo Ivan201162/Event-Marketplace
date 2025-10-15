@@ -50,61 +50,63 @@ class FeatureAccessParams {
     required this.userId,
     required this.feature,
   });
+
   final String userId;
   final String feature;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is FeatureAccessParams &&
-          runtimeType == other.runtimeType &&
-          userId == other.userId &&
-          feature == other.feature;
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is FeatureAccessParams &&
+        other.userId == userId &&
+        other.feature == feature;
+  }
 
   @override
   int get hashCode => userId.hashCode ^ feature.hashCode;
 }
-
-/// Провайдер для управления состоянием подписки
-final subscriptionStateProvider =
-    StateNotifierProvider<SubscriptionStateNotifier, SubscriptionState>((ref) =>
-        SubscriptionStateNotifier(ref.read(proSubscriptionServiceProvider)));
 
 /// Состояние подписки
 class SubscriptionState {
   const SubscriptionState({
     this.subscription,
     this.isLoading = false,
+    this.isPaymentInProgress = false,
     this.error,
     this.paymentHistory = const [],
-    this.isPaymentInProgress = false,
   });
+
   final ProSubscription? subscription;
   final bool isLoading;
-  final String? error;
-  final List<Payment> paymentHistory;
   final bool isPaymentInProgress;
+  final String? error;
+  final List<dynamic> paymentHistory;
 
   SubscriptionState copyWith({
     ProSubscription? subscription,
     bool? isLoading,
-    String? error,
-    List<Payment>? paymentHistory,
     bool? isPaymentInProgress,
+    String? error,
+    List<dynamic>? paymentHistory,
   }) =>
       SubscriptionState(
         subscription: subscription ?? this.subscription,
         isLoading: isLoading ?? this.isLoading,
+        isPaymentInProgress: isPaymentInProgress ?? this.isPaymentInProgress,
         error: error ?? this.error,
         paymentHistory: paymentHistory ?? this.paymentHistory,
-        isPaymentInProgress: isPaymentInProgress ?? this.isPaymentInProgress,
       );
 }
 
-/// Нотификатор состояния подписки
-class SubscriptionStateNotifier extends StateNotifier<SubscriptionState> {
-  SubscriptionStateNotifier(this._service) : super(const SubscriptionState());
-  final ProSubscriptionService _service;
+/// Notifier для состояния подписки (мигрирован с StateNotifier)
+class SubscriptionNotifier extends Notifier<SubscriptionState> {
+  late final ProSubscriptionService _service;
+
+  @override
+  SubscriptionState build() {
+    _service = ref.read(proSubscriptionServiceProvider);
+    return const SubscriptionState();
+  }
 
   /// Загрузить подписку пользователя
   Future<void> loadUserSubscription(String userId) async {
@@ -156,11 +158,7 @@ class SubscriptionStateNotifier extends StateNotifier<SubscriptionState> {
   /// Обновить подписку
   Future<void> updateSubscription({
     required String subscriptionId,
-    SubscriptionPlan? plan,
-    SubscriptionStatus? status,
-    DateTime? endDate,
-    bool? autoRenew,
-    Map<String, bool>? features,
+    required SubscriptionPlan plan,
   }) async {
     state = state.copyWith(isLoading: true);
 
@@ -168,16 +166,16 @@ class SubscriptionStateNotifier extends StateNotifier<SubscriptionState> {
       await _service.updateSubscription(
         subscriptionId: subscriptionId,
         plan: plan,
-        status: status,
-        endDate: endDate,
-        autoRenew: autoRenew,
-        features: features,
       );
 
-      // Перезагрузить подписку
+      // Перезагружаем подписку после обновления
       if (state.subscription != null) {
         await loadUserSubscription(state.subscription!.userId);
       }
+
+      state = state.copyWith(
+        isLoading: false,
+      );
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
@@ -187,22 +185,22 @@ class SubscriptionStateNotifier extends StateNotifier<SubscriptionState> {
   }
 
   /// Отменить подписку
-  Future<void> cancelSubscription({
-    required String subscriptionId,
-    String? reason,
-  }) async {
+  Future<void> cancelSubscription([String? subscriptionId]) async {
     state = state.copyWith(isLoading: true);
 
     try {
-      await _service.cancelSubscription(
-        subscriptionId: subscriptionId,
-        reason: reason,
-      );
+      final id = subscriptionId ?? state.subscription?.id;
+      if (id != null) {
+        await _service.cancelSubscription(id);
 
-      // Перезагрузить подписку
-      if (state.subscription != null) {
-        await loadUserSubscription(state.subscription!.userId);
+        if (state.subscription != null) {
+          await loadUserSubscription(state.subscription!.userId);
+        }
       }
+
+      state = state.copyWith(
+        isLoading: false,
+      );
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
@@ -211,22 +209,23 @@ class SubscriptionStateNotifier extends StateNotifier<SubscriptionState> {
     }
   }
 
-  /// Продлить подписку
-  Future<void> renewSubscription({
-    required String subscriptionId,
-    required String paymentMethodId,
-  }) async {
+  /// Возобновить подписку
+  Future<void> renewSubscription([String? subscriptionId]) async {
     state = state.copyWith(isPaymentInProgress: true);
 
     try {
-      await _service.renewSubscription(
-        subscriptionId: subscriptionId,
-        paymentMethodId: paymentMethodId,
-      );
+      final id = subscriptionId ?? state.subscription?.id;
+      if (id != null) {
+        final subscription = await _service.renewSubscription(id);
 
-      // Перезагрузить подписку
-      if (state.subscription != null) {
-        await loadUserSubscription(state.subscription!.userId);
+        if (state.subscription != null) {
+          await loadUserSubscription(state.subscription!.userId);
+        }
+
+        state = state.copyWith(
+          subscription: subscription,
+          isPaymentInProgress: false,
+        );
       }
     } catch (e) {
       state = state.copyWith(
@@ -237,31 +236,19 @@ class SubscriptionStateNotifier extends StateNotifier<SubscriptionState> {
   }
 
   /// Загрузить историю платежей
-  Future<void> loadPaymentHistory(String subscriptionId) async {
+  Future<void> loadPaymentHistory() async {
+    if (state.subscription == null) return;
+
     try {
       final paymentHistory = await _service.getPaymentHistory(
-        subscriptionId: subscriptionId,
+        subscriptionId: state.subscription!.id,
       );
 
-      state = state.copyWith(paymentHistory: paymentHistory);
-    } catch (e) {
-      state = state.copyWith(error: e.toString());
-    }
-  }
-
-  /// Проверить доступность функции
-  Future<bool> hasFeature({
-    required String userId,
-    required String feature,
-  }) async {
-    try {
-      return await _service.hasFeature(
-        userId: userId,
-        feature: feature,
+      state = state.copyWith(
+        paymentHistory: paymentHistory,
       );
     } catch (e) {
       state = state.copyWith(error: e.toString());
-      return false;
     }
   }
 
@@ -270,3 +257,9 @@ class SubscriptionStateNotifier extends StateNotifier<SubscriptionState> {
     state = state.copyWith();
   }
 }
+
+/// Провайдер состояния подписки (мигрирован с StateNotifierProvider)
+final subscriptionStateProvider =
+    NotifierProvider<SubscriptionNotifier, SubscriptionState>(
+  SubscriptionNotifier.new,
+);

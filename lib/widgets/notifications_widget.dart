@@ -158,7 +158,8 @@ class NotificationsWidget extends ConsumerWidget {
     // Отмечаем как прочитанное, если еще не прочитано
     if (notification['isRead'] != true) {
       ref.read(
-          markNotificationAsReadProvider(notification['id'].toString()).future);
+        markNotificationAsReadProvider(notification['id'].toString()).future,
+      );
     }
 
     // Обрабатываем нажатие в зависимости от типа уведомления
@@ -166,18 +167,24 @@ class NotificationsWidget extends ConsumerWidget {
       case 'new_booking':
         // Переходим к заявке
         _navigateToBooking(
-            context, notification['data']?['bookingId']?.toString() ?? '');
+          context,
+          notification['data']?['bookingId']?.toString() ?? '',
+        );
         break;
       case 'booking_confirmed':
       case 'booking_rejected':
         // Переходим к заявке
         _navigateToBooking(
-            context, notification['data']?['bookingId']?.toString() ?? '');
+          context,
+          notification['data']?['bookingId']?.toString() ?? '',
+        );
         break;
       case 'chat_message':
         // Переходим к чату
         _navigateToChat(
-            context, notification['data']?['chatId']?.toString() ?? '');
+          context,
+          notification['data']?['chatId']?.toString() ?? '',
+        );
         break;
       case 'system':
         // Показываем детали уведомления
@@ -214,8 +221,9 @@ class NotificationsWidget extends ConsumerWidget {
               Navigator.pop(context);
               try {
                 await ref.read(
-                    deleteNotificationProvider(notification['id'].toString())
-                        .future);
+                  deleteNotificationProvider(notification['id'].toString())
+                      .future,
+                );
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -361,7 +369,8 @@ class NotificationItem extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 _formatDate(
-                    notification['createdAt'] as DateTime? ?? DateTime.now()),
+                  notification['createdAt'] as DateTime? ?? DateTime.now(),
+                ),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Colors.grey[600],
                     ),

@@ -325,8 +325,11 @@ class _SmartSearchScreenState extends ConsumerState<SmartSearchScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.search_off,
-                                  size: 64, color: Colors.grey),
+                              Icon(
+                                Icons.search_off,
+                                size: 64,
+                                color: Colors.grey,
+                              ),
                               SizedBox(height: 16),
                               Text(
                                 'Специалисты не найдены',

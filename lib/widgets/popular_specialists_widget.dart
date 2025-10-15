@@ -106,13 +106,13 @@ class _PopularSpecialistsWidgetState
       );
 
   Widget _buildSpecialistCard(Map<String, dynamic> specialist) {
-    final name = specialist['name'] ?? 'Без имени';
-    final category = specialist['category'] ?? 'Специалист';
-    final rating = (specialist['rating'] ?? 0.0).toDouble();
+    final name = (specialist['name'] as String?) ?? 'Без имени';
+    final category = (specialist['category'] as String?) ?? 'Специалист';
+    final rating = (specialist['rating'] as num? ?? 0.0).toDouble();
     final price = (specialist['price'] ?? 0).toInt();
     final avatarUrl = specialist['avatarUrl'] as String?;
-    final isVerified = specialist['isVerified'] ?? false;
-    final isOnline = specialist['isOnline'] ?? false;
+    final isVerified = (specialist['isVerified'] as bool?) ?? false;
+    final isOnline = (specialist['isOnline'] as bool?) ?? false;
 
     return Container(
       width: 160,
@@ -122,7 +122,7 @@ class _PopularSpecialistsWidgetState
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -169,7 +169,7 @@ class _PopularSpecialistsWidgetState
                   padding:
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.7),
+                    color: Colors.black.withValues(alpha: 0.7),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(

@@ -84,7 +84,7 @@ class NotificationNotifier
     try {
       await NotificationService.markNotificationAsRead(notificationId);
     } on Exception catch (e) {
-      print('Ошибка при отметке уведомления как прочитанного: $e');
+      debugPrint('Ошибка при отметке уведомления как прочитанного: $e');
     }
   }
 
@@ -96,7 +96,7 @@ class NotificationNotifier
         await NotificationService.markAllAsRead(user.uid);
       }
     } on Exception catch (e) {
-      print('Ошибка при отметке всех уведомлений как прочитанных: $e');
+      debugPrint('Ошибка при отметке всех уведомлений как прочитанных: $e');
     }
   }
 
@@ -108,7 +108,7 @@ class NotificationNotifier
         await NotificationService.pinNotification(user.uid, notificationId);
       }
     } on Exception catch (e) {
-      print('Ошибка при закреплении уведомления: $e');
+      debugPrint('Ошибка при закреплении уведомления: $e');
     }
   }
 
@@ -120,7 +120,7 @@ class NotificationNotifier
         await NotificationService.unpinNotification(user.uid, notificationId);
       }
     } on Exception catch (e) {
-      print('Ошибка при откреплении уведомления: $e');
+      debugPrint('Ошибка при откреплении уведомления: $e');
     }
   }
 
@@ -132,14 +132,15 @@ class NotificationNotifier
         await NotificationService.deleteNotification(user.uid, notificationId);
       }
     } on Exception catch (e) {
-      print('Ошибка при удалении уведомления: $e');
+      debugPrint('Ошибка при удалении уведомления: $e');
     }
   }
 }
 
 final notificationNotifierProvider = StateNotifierProvider<NotificationNotifier,
-        AsyncValue<List<app_notification.AppNotification>>>(
-    (ref) => NotificationNotifier());
+    AsyncValue<List<app_notification.AppNotification>>>(
+  (ref) => NotificationNotifier(),
+);
 
 /// Временный класс для совместимости с DocumentSnapshot
 class MockDocumentSnapshot implements DocumentSnapshot {

@@ -65,8 +65,11 @@ class _DonationScreenState extends ConsumerState<DonationScreen> {
                           ? NetworkImage(widget.specialistAvatar!)
                           : null,
                       child: widget.specialistAvatar == null
-                          ? const Icon(Icons.person,
-                              size: 30, color: Colors.white)
+                          ? const Icon(
+                              Icons.person,
+                              size: 30,
+                              color: Colors.white,
+                            )
                           : null,
                     ),
                     const SizedBox(width: 16),

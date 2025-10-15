@@ -229,7 +229,10 @@ class ReviewsService {
 
   /// Поставить лайк отзыву
   Future<void> likeReview(
-      String reviewId, String userId, String userName) async {
+    String reviewId,
+    String userId,
+    String userName,
+  ) async {
     try {
       final likeRef = _firestore
           .collection('reviews')
@@ -356,7 +359,8 @@ class ReviewsService {
 
   /// Получить репутацию специалиста
   Future<SpecialistReputation> getSpecialistReputation(
-      String specialistId) async {
+    String specialistId,
+  ) async {
     try {
       final doc =
           await _firestore.collection('userStats').doc(specialistId).get();
@@ -437,7 +441,7 @@ class ReviewsService {
         'reputationStatus': status.value,
       });
     } catch (e) {
-      print('Ошибка при обновлении рейтинга: $e');
+      debugPrint('Ошибка при обновлении рейтинга: $e');
     }
   }
 

@@ -301,7 +301,8 @@ class _EnhancedReviewsScreenState extends ConsumerState<EnhancedReviewsScreen>
             ElevatedButton(
               onPressed: () {
                 ref.invalidate(
-                    specialistReviewStatsProvider(widget.specialistId));
+                  specialistReviewStatsProvider(widget.specialistId),
+                );
               },
               child: const Text('Повторить'),
             ),
@@ -352,7 +353,11 @@ class _EnhancedReviewsScreenState extends ConsumerState<EnhancedReviewsScreen>
 
   /// Построить элемент статистики
   Widget _buildStatItem(
-          String label, String value, IconData icon, Color color) =>
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) =>
       Column(
         children: [
           Icon(icon, color: color, size: 32),

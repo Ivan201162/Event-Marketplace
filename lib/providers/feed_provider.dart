@@ -147,7 +147,7 @@ class FeedNotifier extends StateNotifier<AsyncValue<List<FeedPost>>> {
         'createdAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      print('Ошибка при создании поста: $e');
+      debugPrint('Ошибка при создании поста: $e');
     }
   }
 
@@ -167,7 +167,7 @@ class FeedNotifier extends StateNotifier<AsyncValue<List<FeedPost>>> {
         }
       });
     } on Exception catch (e) {
-      print('Ошибка при изменении лайка: $e');
+      debugPrint('Ошибка при изменении лайка: $e');
     }
   }
 
@@ -179,7 +179,7 @@ class FeedNotifier extends StateNotifier<AsyncValue<List<FeedPost>>> {
           .doc(postId)
           .update({'isSaved': !isSaved});
     } on Exception catch (e) {
-      print('Ошибка при изменении сохранения: $e');
+      debugPrint('Ошибка при изменении сохранения: $e');
     }
   }
 
@@ -191,7 +191,7 @@ class FeedNotifier extends StateNotifier<AsyncValue<List<FeedPost>>> {
           .doc(postId)
           .update({'isFollowing': !isFollowing});
     } on Exception catch (e) {
-      print('Ошибка при изменении подписки: $e');
+      debugPrint('Ошибка при изменении подписки: $e');
     }
   }
 
@@ -219,11 +219,12 @@ class FeedNotifier extends StateNotifier<AsyncValue<List<FeedPost>>> {
         'createdAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      print('Ошибка при добавлении комментария: $e');
+      debugPrint('Ошибка при добавлении комментария: $e');
     }
   }
 }
 
 final feedNotifierProvider =
     StateNotifierProvider<FeedNotifier, AsyncValue<List<FeedPost>>>(
-        (ref) => FeedNotifier());
+  (ref) => FeedNotifier(),
+);

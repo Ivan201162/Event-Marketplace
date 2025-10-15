@@ -28,13 +28,13 @@ class MediaMessageWidget extends StatelessWidget {
           if (!isOwnMessage) ...[
             CircleAvatar(
               radius: 16,
-              backgroundImage: message.senderAvatar != null
-                  ? CachedNetworkImageProvider(message.senderAvatar!)
+              backgroundImage: (message as dynamic).senderAvatar != null
+                  ? CachedNetworkImageProvider((message as dynamic).senderAvatar as String)
                   : null,
-              child: message.senderAvatar == null
+              child: ((message as dynamic).senderAvatar as String?) == null
                   ? Text(
-                      message.senderName.isNotEmpty
-                          ? message.senderName[0].toUpperCase()
+                      (((message as dynamic).senderName as String?)?.isNotEmpty ?? false)
+                          ? ((message as dynamic).senderName as String)[0].toUpperCase()
                           : '?',
                       style: const TextStyle(fontSize: 12),
                     )
@@ -54,7 +54,7 @@ class MediaMessageWidget extends StatelessWidget {
                 children: [
                   if (!isOwnMessage) ...[
                     Text(
-                      message.senderName,
+                      ((message as dynamic).senderName as String?) ?? 'Неизвестный',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color:
                             theme.colorScheme.onSurface.withValues(alpha: 0.7),
@@ -92,7 +92,7 @@ class MediaMessageWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        _formatTime(message.timestamp),
+                        _formatTime(DateTime.parse((message as dynamic).timestamp as String)),
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurface
                               .withValues(alpha: 0.5),
@@ -111,13 +111,13 @@ class MediaMessageWidget extends StatelessWidget {
             const SizedBox(width: 8),
             CircleAvatar(
               radius: 16,
-              backgroundImage: message.senderAvatar != null
-                  ? CachedNetworkImageProvider(message.senderAvatar!)
+              backgroundImage: (message as dynamic).senderAvatar != null
+                  ? CachedNetworkImageProvider((message as dynamic).senderAvatar as String)
                   : null,
-              child: message.senderAvatar == null
+              child: ((message as dynamic).senderAvatar as String?) == null
                   ? Text(
-                      message.senderName.isNotEmpty
-                          ? message.senderName[0].toUpperCase()
+                      (((message as dynamic).senderName as String?)?.isNotEmpty ?? false)
+                          ? ((message as dynamic).senderName as String)[0].toUpperCase()
                           : '?',
                       style: const TextStyle(fontSize: 12),
                     )
@@ -407,7 +407,7 @@ class MediaMessageWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
-                _getFileIcon(message.fileType ?? ''),
+                _getFileIcon(((message as dynamic).fileType ?? '').toString()),
                 color: Colors.white,
                 size: 20,
               ),
@@ -426,7 +426,7 @@ class MediaMessageWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${message.formattedFileSize} • ${message.fileType?.toUpperCase() ?? 'ФАЙЛ'}',
+                    '${message.formattedFileSize} • ${(message as dynamic).fileType?.toUpperCase() ?? 'ФАЙЛ'}',
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),

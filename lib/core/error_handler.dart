@@ -284,7 +284,8 @@ class ErrorHandler {
   }
 
   /// Логирование ошибки
-  static void _logError(error, String? context, String type, String code) {
+  static void _logError(
+      error, String? context, String type, String code,) {
     final timestamp = DateTime.now().toIso8601String();
     final errorInfo = {
       'timestamp': timestamp,
@@ -297,7 +298,7 @@ class ErrorHandler {
 
     // Логирование в консоль в debug режиме
     if (kDebugMode) {
-      print('ERROR [$type]: $errorInfo');
+      debugPrint('ERROR [$type]: $errorInfo');
     }
 
     // Здесь можно добавить отправку ошибок в сервис аналитики
@@ -311,7 +312,7 @@ class ErrorHandler {
     // В реальном приложении здесь будет отправка в Firebase Crashlytics
     // или другой сервис аналитики
     if (kDebugMode) {
-      print('Sending error to analytics: $errorInfo');
+      debugPrint('Sending error to analytics: $errorInfo');
     }
   }
 
@@ -345,7 +346,8 @@ class ErrorHandler {
   }
 
   /// Создание отчета об ошибке
-  static Map<String, dynamic> createErrorReport(error, {String? context}) {
+  static Map<String, dynamic> createErrorReport(error,
+      {String? context,}) {
     final timestamp = DateTime.now().toIso8601String();
     final message = handleError(error, context: context);
 

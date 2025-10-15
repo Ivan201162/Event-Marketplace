@@ -3,8 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Провайдер для управления производительностью приложения
-final performanceProvider =
-    StateNotifierProvider<PerformanceNotifier, PerformanceState>(
+final performanceProvider = ChangeNotifierProvider<PerformanceNotifier>(
   (ref) => PerformanceNotifier(),
 );
 
@@ -68,10 +67,14 @@ enum OptimizationLevel {
 }
 
 /// Нотификатор производительности
-class PerformanceNotifier extends StateNotifier<PerformanceState> {
-  PerformanceNotifier() : super(const PerformanceState()) {
+class PerformanceNotifier extends ChangeNotifier {
+  PerformanceNotifier() {
+    _state = const PerformanceState();
     _initializePerformanceMonitoring();
   }
+
+  PerformanceState _state = const PerformanceState();
+  PerformanceState get state => _state;
 
   /// Инициализация мониторинга производительности
   void _initializePerformanceMonitoring() {
@@ -93,8 +96,9 @@ class PerformanceNotifier extends StateNotifier<PerformanceState> {
     // Простая логика для отслеживания FPS
     // В реальном приложении здесь должна быть более сложная логика
     const currentFPS = 60.0; // Заглушка
-    if (currentFPS != state.fps) {
-      state = state.copyWith(fps: currentFPS);
+    if (currentFPS != _state.fps) {
+      _state = _state.copyWith(fps: currentFPS);
+      notifyListeners();
     }
   }
 
@@ -105,11 +109,12 @@ class PerformanceNotifier extends StateNotifier<PerformanceState> {
     const memoryUsage = 50; // Заглушка в процентах
     const isLowMemory = memoryUsage > 80;
 
-    if (memoryUsage != state.memoryUsage || isLowMemory != state.isLowMemory) {
-      state = state.copyWith(
+    if (memoryUsage != _state.memoryUsage || isLowMemory != _state.isLowMemory) {
+      _state = _state.copyWith(
         memoryUsage: memoryUsage,
         isLowMemory: isLowMemory,
       );
+      notifyListeners();
     }
   }
 
@@ -120,12 +125,13 @@ class PerformanceNotifier extends StateNotifier<PerformanceState> {
     const batteryLevel = 75; // Заглушка в процентах
     const isLowBattery = batteryLevel < 20;
 
-    if (batteryLevel != state.batteryLevel ||
-        isLowBattery != state.isLowBattery) {
-      state = state.copyWith(
+    if (batteryLevel != _state.batteryLevel ||
+        isLowBattery != _state.isLowBattery) {
+      _state = _state.copyWith(
         batteryLevel: batteryLevel,
         isLowBattery: isLowBattery,
       );
+      notifyListeners();
     }
   }
 
@@ -136,19 +142,21 @@ class PerformanceNotifier extends StateNotifier<PerformanceState> {
     const connectionSpeed = ConnectionSpeed.fast; // Заглушка
     const isSlowConnection = connectionSpeed == ConnectionSpeed.slow;
 
-    if (connectionSpeed != state.connectionSpeed ||
-        isSlowConnection != state.isSlowConnection) {
-      state = state.copyWith(
+    if (connectionSpeed != _state.connectionSpeed ||
+        isSlowConnection != _state.isSlowConnection) {
+      _state = _state.copyWith(
         connectionSpeed: connectionSpeed,
         isSlowConnection: isSlowConnection,
       );
+      notifyListeners();
     }
   }
 
   /// Установка уровня оптимизации
   void setOptimizationLevel(OptimizationLevel level) {
-    state = state.copyWith(optimizationLevel: level);
+    _state = _state.copyWith(optimizationLevel: level);
     _applyOptimizations(level);
+    notifyListeners();
   }
 
   /// Применение оптимизаций

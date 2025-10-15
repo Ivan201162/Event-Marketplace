@@ -309,7 +309,11 @@ class MonetizationHubScreen extends ConsumerWidget {
       );
 
   Widget _buildQuickStatCard(
-          String title, String value, IconData icon, Color color) =>
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) =>
       Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(

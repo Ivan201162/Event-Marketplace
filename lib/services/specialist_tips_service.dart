@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/specialist.dart';
 import '../models/specialist_tip.dart';
@@ -24,7 +25,7 @@ class SpecialistTipsService {
 
       return querySnapshot.docs.map(SpecialistTip.fromFirestore).toList();
     } on Exception catch (e) {
-      print('Ошибка получения рекомендаций: $e');
+      debugPrint('Ошибка получения рекомендаций: $e');
       return [];
     }
   }
@@ -57,14 +58,17 @@ class SpecialistTipsService {
 
       return tips;
     } on Exception catch (e) {
-      print('Ошибка генерации рекомендаций: $e');
+      debugPrint('Ошибка генерации рекомендаций: $e');
       return [];
     }
   }
 
   /// Анализ профиля специалиста
   Future<void> _analyzeProfile(
-      Specialist specialist, List<SpecialistTip> tips, DateTime now) async {
+    Specialist specialist,
+    List<SpecialistTip> tips,
+    DateTime now,
+  ) async {
     // Проверка имени
     if (specialist.name.isEmpty || specialist.name.length < 2) {
       tips.add(
@@ -351,7 +355,7 @@ class SpecialistTipsService {
           .doc(userId)
           .set(stats.toFirestore());
     } on Exception catch (e) {
-      print('Ошибка обновления статистики профиля: $e');
+      debugPrint('Ошибка обновления статистики профиля: $e');
     }
   }
 
@@ -366,7 +370,7 @@ class SpecialistTipsService {
       }
       return null;
     } on Exception catch (e) {
-      print('Ошибка получения статистики профиля: $e');
+      debugPrint('Ошибка получения статистики профиля: $e');
       return null;
     }
   }
@@ -380,7 +384,7 @@ class SpecialistTipsService {
       });
       return true;
     } on Exception catch (e) {
-      print('Ошибка отметки совета как выполненного: $e');
+      debugPrint('Ошибка отметки совета как выполненного: $e');
       return false;
     }
   }
@@ -391,7 +395,7 @@ class SpecialistTipsService {
       await _firestore.collection(_tipsCollection).doc(tipId).delete();
       return true;
     } on Exception catch (e) {
-      print('Ошибка удаления совета: $e');
+      debugPrint('Ошибка удаления совета: $e');
       return false;
     }
   }
@@ -422,7 +426,7 @@ class SpecialistTipsService {
             tips.where((t) => t.priority == TipPriority.high).length,
       };
     } on Exception catch (e) {
-      print('Ошибка получения статистики рекомендаций: $e');
+      debugPrint('Ошибка получения статистики рекомендаций: $e');
       return {};
     }
   }
@@ -444,13 +448,14 @@ class SpecialistTipsService {
 
       if (querySnapshot.docs.isNotEmpty) {
         await batch.commit();
-        print(
-            'Удалено ${querySnapshot.docs.length} старых выполненных советов');
+        debugPrint(
+          'Удалено ${querySnapshot.docs.length} старых выполненных советов',
+        );
       }
 
       return querySnapshot.docs.length;
     } on Exception catch (e) {
-      print('Ошибка очистки старых советов: $e');
+      debugPrint('Ошибка очистки старых советов: $e');
       return 0;
     }
   }

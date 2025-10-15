@@ -182,7 +182,7 @@ class IdeasNotifier extends StateNotifier<AsyncValue<List<Idea>>> {
         'createdAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      print('Ошибка при создании идеи: $e');
+      debugPrint('Ошибка при создании идеи: $e');
     }
   }
 
@@ -203,7 +203,7 @@ class IdeasNotifier extends StateNotifier<AsyncValue<List<Idea>>> {
         }
       });
     } on Exception catch (e) {
-      print('Ошибка при изменении лайка: $e');
+      debugPrint('Ошибка при изменении лайка: $e');
     }
   }
 
@@ -215,7 +215,7 @@ class IdeasNotifier extends StateNotifier<AsyncValue<List<Idea>>> {
           .doc(ideaId)
           .update({'isSaved': !isSaved});
     } on Exception catch (e) {
-      print('Ошибка при изменении сохранения: $e');
+      debugPrint('Ошибка при изменении сохранения: $e');
     }
   }
 
@@ -244,11 +244,12 @@ class IdeasNotifier extends StateNotifier<AsyncValue<List<Idea>>> {
         'createdAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      print('Ошибка при добавлении комментария: $e');
+      debugPrint('Ошибка при добавлении комментария: $e');
     }
   }
 }
 
 final ideasNotifierProvider =
     StateNotifierProvider<IdeasNotifier, AsyncValue<List<Idea>>>(
-        (ref) => IdeasNotifier());
+  (ref) => IdeasNotifier(),
+);

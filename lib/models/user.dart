@@ -355,8 +355,9 @@ class AppUser {
 
     if (city?.trim().isNotEmpty ?? false) map['city'] = city!.trim();
     if (region?.trim().isNotEmpty ?? false) map['region'] = region!.trim();
-    if (avatarUrl?.trim().isNotEmpty ?? false)
+    if (avatarUrl?.trim().isNotEmpty ?? false) {
       map['avatarUrl'] = avatarUrl!.trim();
+    }
 
     return map;
   }

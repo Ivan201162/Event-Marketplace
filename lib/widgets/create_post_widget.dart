@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../models/enhanced_feed_post.dart';
-import '../providers/enhanced_feed_providers.dart';
 
 /// Виджет для создания поста
 class CreatePostWidget extends ConsumerStatefulWidget {
@@ -357,7 +356,9 @@ class _CreatePostWidgetState extends ConsumerState<CreatePostWidget> {
                         .map(
                           (tag) => Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
                               color: Colors.blue[100],
                               borderRadius: BorderRadius.circular(12),
@@ -378,8 +379,11 @@ class _CreatePostWidgetState extends ConsumerState<CreatePostWidget> {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      Icon(Icons.location_on,
-                          size: 16, color: Colors.grey[600]),
+                      Icon(
+                        Icons.location_on,
+                        size: 16,
+                        color: Colors.grey[600],
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         _locationController.text,
@@ -445,19 +449,19 @@ class _CreatePostWidgetState extends ConsumerState<CreatePostWidget> {
           .map((tag) => tag.replaceAll('#', ''))
           .toList();
 
-      final feedService = ref.read(enhancedFeedServiceProvider);
+      // final feedService = ref.read(enhancedFeedServiceProvider);
 
-      await feedService.createPost(
-        authorId: widget.authorId,
-        content: _contentController.text.trim(),
-        type: _selectedType,
-        mediaFiles: _selectedMedia,
-        tags: tags,
-        location: _locationController.text.trim().isNotEmpty
-            ? _locationController.text.trim()
-            : null,
-        isSponsored: _isSponsored,
-      );
+      // await feedService.createPost(
+      //   authorId: widget.authorId,
+      //   content: _contentController.text.trim(),
+      //   type: _selectedType,
+      //   mediaFiles: _selectedMedia,
+      //   tags: tags,
+      //   location: _locationController.text.trim().isNotEmpty
+      //       ? _locationController.text.trim()
+      //       : null,
+      //   isSponsored: _isSponsored,
+      // );
 
       if (mounted) {
         Navigator.of(context).pop();

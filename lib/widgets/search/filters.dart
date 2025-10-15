@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../models/specialist.dart';
 import '../../models/specialist_filters.dart';
 import '../../providers/search_providers.dart';
 
@@ -130,25 +129,23 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
           spacing: 8,
           runSpacing: 8,
           children: categories.map((category) {
-            final isSelected =
-                _currentFilters.subcategories.contains(category.displayName) ??
-                    false;
+            final isSelected = _currentFilters.subcategories.contains(category);
             return FilterChip(
-              label: Text(category.displayName),
+              label: Text(category),
               selected: isSelected,
               onSelected: (selected) {
                 setState(() {
                   if (selected) {
                     _currentFilters = _currentFilters.copyWith(
                       subcategories: [
-                        ...(_currentFilters.subcategories ?? []),
-                        category.displayName,
+                        ..._currentFilters.subcategories,
+                        category,
                       ],
                     );
                   } else {
                     _currentFilters = _currentFilters.copyWith(
-                      subcategories: (_currentFilters.subcategories ?? [])
-                          .where((cat) => cat != category.displayName)
+                      subcategories: _currentFilters.subcategories
+                          .where((cat) => cat != category)
                           .toList(),
                     );
                   }
@@ -317,33 +314,29 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
           ),
         ),
         const SizedBox(height: 8),
-        citiesAsync.when(
-          data: (cities) => DropdownButtonFormField<String>(
-            initialValue: _currentFilters.city,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              isDense: true,
-              hintText: 'Выберите город',
-            ),
-            items: [
-              const DropdownMenuItem<String>(
-                child: Text('Все города'),
-              ),
-              ...cities.map(
-                (city) => DropdownMenuItem<String>(
-                  value: city,
-                  child: Text(city),
-                ),
-              ),
-            ],
-            onChanged: (value) {
-              setState(() {
-                _currentFilters = _currentFilters.copyWith(city: value);
-              });
-            },
+        DropdownButtonFormField<String>(
+          initialValue: _currentFilters.city,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            isDense: true,
+            hintText: 'Выберите город',
           ),
-          loading: () => const CircularProgressIndicator(),
-          error: (error, stack) => Text('Ошибка загрузки городов: $error'),
+          items: [
+            const DropdownMenuItem<String>(
+              child: Text('Все города'),
+            ),
+            ...citiesAsync.map(
+              (city) => DropdownMenuItem<String>(
+                value: city,
+                child: Text(city),
+              ),
+            ),
+          ],
+          onChanged: (value) {
+            setState(() {
+              _currentFilters = _currentFilters.copyWith(city: value);
+            });
+          },
         ),
       ],
     );
@@ -495,7 +488,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
       );
 
   void _applyFilters() {
-    ref.read(searchFiltersProvider.notifier).state = _currentFilters;
+    ref.read(searchFiltersProvider.notifier).updateFilters(_currentFilters);
     widget.onFiltersChanged?.call();
   }
 
@@ -503,7 +496,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
     setState(() {
       _currentFilters = const SpecialistFilters();
     });
-    ref.read(searchFiltersProvider.notifier).state = _currentFilters;
+    ref.read(searchFiltersProvider.notifier).updateFilters(_currentFilters);
     widget.onFiltersChanged?.call();
   }
 }
@@ -524,8 +517,9 @@ class QuickFiltersWidget extends ConsumerWidget {
               ref,
               'Высокий рейтинг',
               Icons.star,
-              () => ref.read(searchFiltersProvider.notifier).state =
-                  ref.read(searchFiltersProvider).copyWith(minRating: 4.5),
+              () => ref.read(searchFiltersProvider.notifier).updateFilters(
+                    ref.read(searchFiltersProvider).copyWith(minRating: 4.5),
+                  ),
             ),
             const SizedBox(width: 8),
             _buildQuickFilter(
@@ -533,8 +527,9 @@ class QuickFiltersWidget extends ConsumerWidget {
               ref,
               'До 10 000₽',
               Icons.attach_money,
-              () => ref.read(searchFiltersProvider.notifier).state =
-                  ref.read(searchFiltersProvider).copyWith(maxPrice: 10000),
+              () => ref.read(searchFiltersProvider.notifier).updateFilters(
+                    ref.read(searchFiltersProvider).copyWith(maxPrice: 10000),
+                  ),
             ),
             const SizedBox(width: 8),
             _buildQuickFilter(
@@ -542,8 +537,9 @@ class QuickFiltersWidget extends ConsumerWidget {
               ref,
               'Верифицированные',
               Icons.verified,
-              () => ref.read(searchFiltersProvider.notifier).state =
-                  ref.read(searchFiltersProvider).copyWith(isVerified: true),
+              () => ref.read(searchFiltersProvider.notifier).updateFilters(
+                    ref.read(searchFiltersProvider).copyWith(isVerified: true),
+                  ),
             ),
             const SizedBox(width: 8),
             _buildQuickFilter(
@@ -551,8 +547,9 @@ class QuickFiltersWidget extends ConsumerWidget {
               ref,
               'Доступные',
               Icons.check_circle,
-              () => ref.read(searchFiltersProvider.notifier).state =
-                  ref.read(searchFiltersProvider).copyWith(isAvailable: true),
+              () => ref.read(searchFiltersProvider.notifier).updateFilters(
+                    ref.read(searchFiltersProvider).copyWith(isAvailable: true),
+                  ),
             ),
           ],
         ),
@@ -610,7 +607,7 @@ class ActiveFiltersWidget extends ConsumerWidget {
         _buildFilterChip(
           'Поиск: "$searchQuery"',
           Icons.search,
-          () => ref.read(searchQueryProvider.notifier).state = '',
+          () => ref.read(searchQueryProvider.notifier).updateQuery(''),
         ),
       );
     }
@@ -631,8 +628,9 @@ class ActiveFiltersWidget extends ConsumerWidget {
         _buildFilterChip(
           priceText,
           Icons.attach_money,
-          () => ref.read(searchFiltersProvider.notifier).state =
-              filters.copyWith(),
+          () => ref
+              .read(searchFiltersProvider.notifier)
+              .updateFilters(filters.copyWith()),
         ),
       );
     }
@@ -643,20 +641,20 @@ class ActiveFiltersWidget extends ConsumerWidget {
         _buildFilterChip(
           'Рейтинг ${filters.minRating!.toStringAsFixed(1)}+',
           Icons.star,
-          () => ref.read(searchFiltersProvider.notifier).state =
-              filters.copyWith(),
+          () => ref
+              .read(searchFiltersProvider.notifier)
+              .updateFilters(filters.copyWith()),
         ),
       );
     }
 
     // Город
-    if (filters.city != null && filters.city!.isNotEmpty) {
+    if (filters.location != null && filters.location!.isNotEmpty) {
       activeFilters.add(
         _buildFilterChip(
-          filters.city!,
+          filters.location!,
           Icons.location_on,
-          () => ref.read(searchFiltersProvider.notifier).state =
-              filters.copyWith(),
+          () => ref.read(searchFiltersProvider.notifier).updateLocation(null),
         ),
       );
     }
@@ -671,8 +669,9 @@ class ActiveFiltersWidget extends ConsumerWidget {
             final newSubcategories = filters.subcategories
                 .where((cat) => cat != subcategory)
                 .toList();
-            ref.read(searchFiltersProvider.notifier).state =
-                filters.copyWith(subcategories: newSubcategories);
+            ref.read(searchFiltersProvider.notifier).updateFilters(
+                  filters.copyWith(subcategories: newSubcategories),
+                );
           },
         ),
       );
@@ -684,8 +683,9 @@ class ActiveFiltersWidget extends ConsumerWidget {
         _buildFilterChip(
           'Верифицированные',
           Icons.verified,
-          () => ref.read(searchFiltersProvider.notifier).state =
-              filters.copyWith(),
+          () => ref
+              .read(searchFiltersProvider.notifier)
+              .updateFilters(filters.copyWith()),
         ),
       );
     }
@@ -696,8 +696,9 @@ class ActiveFiltersWidget extends ConsumerWidget {
         _buildFilterChip(
           'Доступные',
           Icons.check_circle,
-          () => ref.read(searchFiltersProvider.notifier).state =
-              filters.copyWith(),
+          () => ref
+              .read(searchFiltersProvider.notifier)
+              .updateFilters(filters.copyWith()),
         ),
       );
     }
@@ -709,8 +710,9 @@ class ActiveFiltersWidget extends ConsumerWidget {
         _buildFilterChip(
           '${date.day}.${date.month}.${date.year}',
           Icons.calendar_today,
-          () => ref.read(searchFiltersProvider.notifier).state =
-              filters.copyWith(),
+          () => ref
+              .read(searchFiltersProvider.notifier)
+              .updateFilters(filters.copyWith()),
         ),
       );
     }
@@ -736,9 +738,8 @@ class ActiveFiltersWidget extends ConsumerWidget {
               const Spacer(),
               TextButton(
                 onPressed: () {
-                  ref.read(searchFiltersProvider.notifier).state =
-                      const SpecialistFilters();
-                  ref.read(searchQueryProvider.notifier).state = '';
+                  ref.read(searchFiltersProvider.notifier).clearFilters();
+                  ref.read(searchQueryProvider.notifier).clearQuery();
                 },
                 child: const Text('Очистить все'),
               ),

@@ -280,8 +280,8 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
     // TODO: Открыть экран создания нового чата
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content:
-              Text('Создание нового чата будет доступно в следующей версии')),
+        content: Text('Создание нового чата будет доступно в следующей версии'),
+      ),
     );
   }
 

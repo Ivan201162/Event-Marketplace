@@ -64,7 +64,8 @@ class ReviewCard extends StatelessWidget {
           // Аватар пользователя
           CircleAvatar(
             radius: compact ? 16 : 20,
-            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+            backgroundColor:
+                Theme.of(context).primaryColor.withValues(alpha: 0.1),
             backgroundImage: review.customerAvatar != null
                 ? NetworkImage(review.customerAvatar!)
                 : null,

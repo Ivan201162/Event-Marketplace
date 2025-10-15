@@ -90,8 +90,11 @@ class _UserReportsScreenState extends ConsumerState<UserReportsScreen>
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.error_outline,
-                            size: 64, color: Colors.red[300]),
+                        Icon(
+                          Icons.error_outline,
+                          size: 64,
+                          color: Colors.red[300],
+                        ),
                         const SizedBox(height: 16),
                         Text(_error!, style: const TextStyle(fontSize: 16)),
                         const SizedBox(height: 16),
@@ -145,8 +148,11 @@ class _UserReportsScreenState extends ConsumerState<UserReportsScreen>
                           color: Colors.blue.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Icon(Icons.analytics,
-                            color: Colors.blue, size: 20),
+                        child: const Icon(
+                          Icons.analytics,
+                          color: Colors.blue,
+                          size: 20,
+                        ),
                       ),
                       const SizedBox(width: 12),
                       Text(
@@ -408,16 +414,24 @@ class _UserReportsScreenState extends ConsumerState<UserReportsScreen>
             const SizedBox(height: 16),
             if (isSpecialist) ...[
               _buildHistoryMetric(
-                  'Просмотры профиля', '${report['views'] ?? 0}'),
+                'Просмотры профиля',
+                '${report['views'] ?? 0}',
+              ),
               _buildHistoryMetric(
-                  'Получено заявок', '${report['requests'] ?? 0}'),
+                'Получено заявок',
+                '${report['requests'] ?? 0}',
+              ),
               _buildHistoryMetric('Сообщений', '${report['messages'] ?? 0}'),
               _buildHistoryMetric('Лайков', '${report['likes'] ?? 0}'),
             ] else ...[
               _buildHistoryMetric(
-                  'Создано заявок', '${report['totalRequests'] ?? 0}'),
-              _buildHistoryMetric('Просмотрено специалистами',
-                  '${report['viewedRequests'] ?? 0}'),
+                'Создано заявок',
+                '${report['totalRequests'] ?? 0}',
+              ),
+              _buildHistoryMetric(
+                'Просмотрено специалистами',
+                '${report['viewedRequests'] ?? 0}',
+              ),
             ],
           ],
         ),

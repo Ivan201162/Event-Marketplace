@@ -11,8 +11,8 @@ class SmartSearchWidget extends ConsumerStatefulWidget {
     this.hintText = 'Поиск специалистов...',
   });
 
-  final Function(String) onSearch;
-  final Function(SearchSuggestion) onSuggestionTap;
+  final void Function(String) onSearch;
+  final void Function(SearchSuggestion) onSuggestionTap;
   final String hintText;
 
   @override
@@ -144,7 +144,7 @@ class _SmartSearchWidgetState extends ConsumerState<SmartSearchWidget> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 10,
                     offset: const Offset(0, 2),
                   ),

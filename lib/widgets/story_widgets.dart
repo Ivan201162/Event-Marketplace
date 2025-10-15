@@ -207,7 +207,9 @@ class _CreateStoryWidgetState extends ConsumerState<CreateStoryWidget> {
         file = await _imagePicker.pickVideo(source: source);
       }
 
-      if (file == null) return;
+      if (file == null) {
+        return;
+      }
 
       final service = ref.read(storyServiceProvider);
       final story = Story(
@@ -262,7 +264,7 @@ class StoriesListWidget extends ConsumerWidget {
     this.onStoryTap,
   });
   final List<Story> stories;
-  final Function(Story)? onStoryTap;
+  final void Function(Story)? onStoryTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -352,7 +354,7 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
                         )
                       : Center(
                           child: Text(
-                            widget.story.caption ?? '',
+                            widget.story.caption,
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 24,

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    
+    <!-- Background circle -->
+    <path
+        android:fillColor="#E6B325"
+        android:pathData="M60,60m-50,0a50,50 0,1 1,100 0a50,50 0,1 1,-100 0" />
+    
+    <!-- Event icon -->
+    <path
+        android:fillColor="#121212"
+        android:pathData="M40,35 L80,35 L80,85 L40,85 Z M45,40 L75,40 L75,50 L45,50 Z M45,55 L65,55 L65,65 L45,65 Z M45,70 L70,70 L70,80 L45,80 Z" />
+    
+    <!-- Marketplace text -->
+    <path
+        android:fillColor="#121212"
+        android:pathData="M30,95 L90,95 L90,100 L30,100 Z" />
+</vector>
+
+
+
+
+

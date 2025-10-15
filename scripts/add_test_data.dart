@@ -154,11 +154,13 @@ Future<void> _addTestChats(FirebaseFirestore firestore) async {
       },
       'lastMessageContent': 'Спасибо за организацию свадьбы!',
       'lastMessageTime': Timestamp.fromDate(
-          DateTime.now().subtract(const Duration(minutes: 30))),
+        DateTime.now().subtract(const Duration(minutes: 30)),
+      ),
       'createdAt':
           Timestamp.fromDate(DateTime.now().subtract(const Duration(days: 3))),
       'updatedAt': Timestamp.fromDate(
-          DateTime.now().subtract(const Duration(minutes: 30))),
+        DateTime.now().subtract(const Duration(minutes: 30)),
+      ),
     },
     {
       'participants': ['user2', 'specialist1'],
@@ -196,11 +198,13 @@ Future<void> _addTestChats(FirebaseFirestore firestore) async {
       },
       'lastMessageContent': 'Отлично, ждем вас в 18:00',
       'lastMessageTime': Timestamp.fromDate(
-          DateTime.now().subtract(const Duration(minutes: 45))),
+        DateTime.now().subtract(const Duration(minutes: 45)),
+      ),
       'createdAt':
           Timestamp.fromDate(DateTime.now().subtract(const Duration(days: 4))),
       'updatedAt': Timestamp.fromDate(
-          DateTime.now().subtract(const Duration(minutes: 45))),
+        DateTime.now().subtract(const Duration(minutes: 45)),
+      ),
     },
     {
       'participants': ['user4', 'specialist1'],
@@ -246,7 +250,8 @@ Future<void> _addTestMessages(FirebaseFirestore firestore) async {
       'content': 'Здравствуйте! Интересует организация свадьбы',
       'status': 'read',
       'timestamp': Timestamp.fromDate(
-          DateTime.now().subtract(const Duration(days: 3, hours: 2))),
+        DateTime.now().subtract(const Duration(days: 3, hours: 2)),
+      ),
     },
     {
       'chatId': chatIds[0],
@@ -256,7 +261,8 @@ Future<void> _addTestMessages(FirebaseFirestore firestore) async {
       'content': 'Добро пожаловать! Расскажите подробнее о ваших пожеланиях',
       'status': 'read',
       'timestamp': Timestamp.fromDate(
-          DateTime.now().subtract(const Duration(days: 3, hours: 1))),
+        DateTime.now().subtract(const Duration(days: 3, hours: 1)),
+      ),
     },
     {
       'chatId': chatIds[0],
@@ -276,7 +282,8 @@ Future<void> _addTestMessages(FirebaseFirestore firestore) async {
       'content': 'Отличная идея! У нас есть опыт организации таких мероприятий',
       'status': 'read',
       'timestamp': Timestamp.fromDate(
-          DateTime.now().subtract(const Duration(days: 2, hours: 20))),
+        DateTime.now().subtract(const Duration(days: 2, hours: 20)),
+      ),
     },
     {
       'chatId': chatIds[0],
@@ -286,7 +293,8 @@ Future<void> _addTestMessages(FirebaseFirestore firestore) async {
       'content': 'Спасибо за организацию свадьбы!',
       'status': 'read',
       'timestamp': Timestamp.fromDate(
-          DateTime.now().subtract(const Duration(minutes: 30))),
+        DateTime.now().subtract(const Duration(minutes: 30)),
+      ),
     },
     {
       'chatId': chatIds[1],
@@ -296,7 +304,8 @@ Future<void> _addTestMessages(FirebaseFirestore firestore) async {
       'content': 'Здравствуйте! Нужна организация корпоратива',
       'status': 'read',
       'timestamp': Timestamp.fromDate(
-          DateTime.now().subtract(const Duration(days: 2, hours: 3))),
+        DateTime.now().subtract(const Duration(days: 2, hours: 3)),
+      ),
     },
     {
       'chatId': chatIds[1],
@@ -306,7 +315,8 @@ Future<void> _addTestMessages(FirebaseFirestore firestore) async {
       'content': 'Привет! Расскажите о вашем корпоративе',
       'status': 'read',
       'timestamp': Timestamp.fromDate(
-          DateTime.now().subtract(const Duration(days: 2, hours: 2))),
+        DateTime.now().subtract(const Duration(days: 2, hours: 2)),
+      ),
     },
     {
       'chatId': chatIds[1],
@@ -316,7 +326,8 @@ Future<void> _addTestMessages(FirebaseFirestore firestore) async {
       'content': 'Новогодний корпоратив на 30 человек',
       'status': 'read',
       'timestamp': Timestamp.fromDate(
-          DateTime.now().subtract(const Duration(days: 2, hours: 1))),
+        DateTime.now().subtract(const Duration(days: 2, hours: 1)),
+      ),
     },
     {
       'chatId': chatIds[1],
@@ -336,7 +347,8 @@ Future<void> _addTestMessages(FirebaseFirestore firestore) async {
       'content': 'Добрый день! Организуете детские праздники?',
       'status': 'read',
       'timestamp': Timestamp.fromDate(
-          DateTime.now().subtract(const Duration(days: 1, hours: 2))),
+        DateTime.now().subtract(const Duration(days: 1, hours: 2)),
+      ),
     },
     {
       'chatId': chatIds[2],
@@ -346,7 +358,8 @@ Future<void> _addTestMessages(FirebaseFirestore firestore) async {
       'content': 'Да, конечно! У нас большой опыт с детскими мероприятиями',
       'status': 'read',
       'timestamp': Timestamp.fromDate(
-          DateTime.now().subtract(const Duration(days: 1, hours: 1))),
+        DateTime.now().subtract(const Duration(days: 1, hours: 1)),
+      ),
     },
     {
       'chatId': chatIds[2],

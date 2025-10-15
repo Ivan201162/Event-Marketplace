@@ -6,7 +6,8 @@ class TestDataManagementScreen extends StatefulWidget {
   const TestDataManagementScreen({super.key});
 
   @override
-  State<TestDataManagementScreen> createState() => _TestDataManagementScreenState();
+  State<TestDataManagementScreen> createState() =>
+      _TestDataManagementScreenState();
 }
 
 class _TestDataManagementScreenState extends State<TestDataManagementScreen> {
@@ -23,11 +24,11 @@ class _TestDataManagementScreenState extends State<TestDataManagementScreen> {
 
   Future<void> _loadStats() async {
     setState(() => _isLoading = true);
-    
+
     try {
       final stats = await _testDataService.getTestDataStats();
       final hasData = await _testDataService.hasTestData();
-      
+
       setState(() {
         _stats = stats;
         _hasTestData = hasData;
@@ -41,7 +42,7 @@ class _TestDataManagementScreenState extends State<TestDataManagementScreen> {
 
   Future<void> _createTestData() async {
     setState(() => _isLoading = true);
-    
+
     try {
       await _testDataService.populateAll();
       await _loadStats();
@@ -57,13 +58,13 @@ class _TestDataManagementScreenState extends State<TestDataManagementScreen> {
       'Очистка данных',
       'Вы уверены, что хотите удалить все тестовые данные? Это действие нельзя отменить.',
     );
-    
+
     if (!confirmed) {
       return;
     }
-    
+
     setState(() => _isLoading = true);
-    
+
     try {
       await _testDataService.clearAllTestData();
       await _loadStats();
@@ -92,11 +93,12 @@ class _TestDataManagementScreenState extends State<TestDataManagementScreen> {
         ],
       ),
     );
-    
+
     return result ?? false;
   }
 
-  void _showSuccessSnackBar(String message) => ScaffoldMessenger.of(context).showSnackBar(
+  void _showSuccessSnackBar(String message) =>
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(message),
           backgroundColor: Colors.green,
@@ -113,141 +115,149 @@ class _TestDataManagementScreenState extends State<TestDataManagementScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Управление тестовыми данными'),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Статус
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Статус тестовых данных',
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Icon(
-                                _hasTestData ? Icons.check_circle : Icons.cancel,
-                                color: _hasTestData ? Colors.green : Colors.red,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                _hasTestData ? 'Данные существуют' : 'Данные отсутствуют',
-                                style: TextStyle(
-                                  color: _hasTestData ? Colors.green : Colors.red,
-                                  fontWeight: FontWeight.bold,
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Управление тестовыми данными'),
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+        ),
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Статус
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Статус тестовых данных',
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Icon(
+                                  _hasTestData
+                                      ? Icons.check_circle
+                                      : Icons.cancel,
+                                  color:
+                                      _hasTestData ? Colors.green : Colors.red,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                                const SizedBox(width: 8),
+                                Text(
+                                  _hasTestData
+                                      ? 'Данные существуют'
+                                      : 'Данные отсутствуют',
+                                  style: TextStyle(
+                                    color: _hasTestData
+                                        ? Colors.green
+                                        : Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  
-                  const SizedBox(height: 16),
-                  
-                  // Статистика
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Статистика',
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          const SizedBox(height: 8),
-                          if (_stats.isEmpty)
-                            const Text('Нет данных')
-                          else
-                            ..._stats.entries.map((entry) => Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 2),
+
+                    const SizedBox(height: 16),
+
+                    // Статистика
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Статистика',
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            const SizedBox(height: 8),
+                            if (_stats.isEmpty)
+                              const Text('Нет данных')
+                            else
+                              ..._stats.entries.map(
+                                (entry) => Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 2),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(_getCollectionDisplayName(entry.key)),
+                                      Text(
+                                        _getCollectionDisplayName(entry.key),
+                                      ),
                                       Text(
                                         entry.value.toString(),
-                                        style: const TextStyle(fontWeight: FontWeight.bold),
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ],
                                   ),
-                                ),),
-                        ],
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  
-                  const SizedBox(height: 16),
-                  
-                  // Кнопки управления
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text(
-                            'Управление',
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          const SizedBox(height: 16),
-                          
-                          ElevatedButton.icon(
-                            onPressed: _hasTestData ? null : _createTestData,
-                            icon: const Icon(Icons.add),
-                            label: const Text('Создать тестовые данные'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                              foregroundColor: Colors.white,
+
+                    const SizedBox(height: 16),
+
+                    // Кнопки управления
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              'Управление',
+                              style: Theme.of(context).textTheme.titleLarge,
                             ),
-                          ),
-                          
-                          const SizedBox(height: 8),
-                          
-                          ElevatedButton.icon(
-                            onPressed: _hasTestData ? _clearTestData : null,
-                            icon: const Icon(Icons.delete),
-                            label: const Text('Удалить тестовые данные'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
-                              foregroundColor: Colors.white,
+                            const SizedBox(height: 16),
+                            ElevatedButton.icon(
+                              onPressed: _hasTestData ? null : _createTestData,
+                              icon: const Icon(Icons.add),
+                              label: const Text('Создать тестовые данные'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                foregroundColor: Colors.white,
+                              ),
                             ),
-                          ),
-                          
-                          const SizedBox(height: 8),
-                          
-                          OutlinedButton.icon(
-                            onPressed: _loadStats,
-                            icon: const Icon(Icons.refresh),
-                            label: const Text('Обновить статистику'),
-                          ),
-                        ],
+                            const SizedBox(height: 8),
+                            ElevatedButton.icon(
+                              onPressed: _hasTestData ? _clearTestData : null,
+                              icon: const Icon(Icons.delete),
+                              label: const Text('Удалить тестовые данные'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                foregroundColor: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            OutlinedButton.icon(
+                              onPressed: _loadStats,
+                              icon: const Icon(Icons.refresh),
+                              label: const Text('Обновить статистику'),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-    );
-  }
+      );
 
   String _getCollectionDisplayName(String key) {
     switch (key) {

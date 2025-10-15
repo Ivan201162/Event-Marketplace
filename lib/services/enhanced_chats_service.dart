@@ -558,7 +558,8 @@ class EnhancedChatsService {
 
   /// Получить тип сообщения на основе вложений
   MessageType _getMessageTypeFromAttachments(
-      List<MessageAttachment> attachments) {
+    List<MessageAttachment> attachments,
+  ) {
     if (attachments.isEmpty) return MessageType.text;
 
     final firstAttachment = attachments.first;

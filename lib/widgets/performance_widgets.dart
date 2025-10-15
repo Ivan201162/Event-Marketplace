@@ -47,7 +47,7 @@ class VisibilityDetector extends StatefulWidget {
     required this.onVisibilityChanged,
   });
   final Widget child;
-  final Function(VisibilityInfo) onVisibilityChanged;
+  final void Function(VisibilityInfo) onVisibilityChanged;
 
   @override
   State<VisibilityDetector> createState() => _VisibilityDetectorState();
@@ -184,7 +184,7 @@ class PaginatedList extends StatefulWidget {
     this.emptyWidget,
   });
   final Future<List<dynamic>> Function(int page, int limit) loadData;
-  final Widget Function(BuildContext context, item) itemBuilder;
+  final Widget Function(BuildContext context, dynamic item) itemBuilder;
   final int itemsPerPage;
   final Widget? loadingWidget;
   final Widget? errorWidget;

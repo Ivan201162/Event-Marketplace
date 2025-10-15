@@ -31,7 +31,8 @@ class FirestoreConnectionTest {
 
       if (_retryCount < _maxRetries) {
         debugPrint(
-            '🔄 Повторная попытка через 3 секунды... ($_retryCount/$_maxRetries)');
+          '🔄 Повторная попытка через 3 секунды... ($_retryCount/$_maxRetries)',
+        );
         await Future.delayed(const Duration(seconds: 3));
         return testConnection();
       } else {

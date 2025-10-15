@@ -151,18 +151,20 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
         'customerId': uid,
         'specialistId': 'spec_test_3',
         'eventDate': Timestamp.fromDate(
-            DateTime.now().subtract(const Duration(days: 7))),
+          DateTime.now().subtract(const Duration(days: 7)),
+        ),
         'status': 'completed',
         'details': 'Завершенная тестовая заявка',
         'totalPrice': 10000.0,
         'createdAt': Timestamp.fromDate(
-            DateTime.now().subtract(const Duration(days: 10))),
+          DateTime.now().subtract(const Duration(days: 10)),
+        ),
         'eventTitle': 'Фотосессия в студии',
         'customerName': 'Тестовый клиент',
         'customerPhone': '+7 (999) 123-45-67',
       });
     } on Exception catch (e) {
-      print('Ошибка создания тестовых заявок: $e');
+      debugPrint('Ошибка создания тестовых заявок: $e');
     }
   }
 

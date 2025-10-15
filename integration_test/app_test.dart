@@ -30,9 +30,9 @@ void main() {
       final noResults = find.text('Никого не найдено 😅');
 
       expect(
-          searchResults.evaluate().isNotEmpty ||
-              noResults.evaluate().isNotEmpty,
-          isTrue);
+        searchResults.evaluate().isNotEmpty || noResults.evaluate().isNotEmpty,
+        isTrue,
+      );
 
       // Тестируем быстрые фильтры
       expect(find.text('Фотографы'), findsOneWidget);

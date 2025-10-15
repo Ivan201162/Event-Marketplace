@@ -159,7 +159,7 @@ class AIAssistantService {
       'здравствуйте',
       'добрый день',
       'добрый вечер',
-      'доброе утро'
+      'доброе утро',
     ];
     return greetings.any((greeting) => message.contains(greeting));
   }
@@ -178,7 +178,7 @@ class AIAssistantService {
       'корпоратив',
       'юбилей',
       'вечеринка',
-      'мероприятие'
+      'мероприятие',
     ];
     return eventWords.any((word) => message.contains(word));
   }
@@ -208,7 +208,7 @@ class AIAssistantService {
       'подбери',
       'рекомендуй',
       'покажи',
-      'дай'
+      'дай',
     ];
     return recommendationWords.any((word) => message.contains(word));
   }
@@ -227,7 +227,7 @@ class AIAssistantService {
       'корпоратив',
       'юбилей',
       'вечеринка',
-      'фотосессия'
+      'фотосессия',
     ];
     return eventTypes.any((type) => message.contains(type));
   }
@@ -252,7 +252,7 @@ class AIAssistantService {
       'екатеринбург',
       'новосибирск',
       'казань',
-      'нижний новгород'
+      'нижний новгород',
     ];
     return cities.any((city) => message.contains(city));
   }
@@ -265,7 +265,7 @@ class AIAssistantService {
       'юмор',
       'интерактив',
       'романтичный',
-      'официальный'
+      'официальный',
     ];
     return styles.any((style) => message.contains(style));
   }
@@ -331,7 +331,7 @@ class AIAssistantService {
       'екатеринбург',
       'новосибирск',
       'казань',
-      'нижний новгород'
+      'нижний новгород',
     ];
     for (final city in cities) {
       if (message.contains(city)) {
@@ -349,7 +349,7 @@ class AIAssistantService {
       'юмор',
       'интерактив',
       'романтичный',
-      'официальный'
+      'официальный',
     ];
     for (final style in styles) {
       if (message.contains(style)) {

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class TestDataService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
-  
+
   // Константы для батчевых операций
   static const int _batchSize = 500;
 
@@ -1039,10 +1039,10 @@ class TestDataService {
   /// Заполнить все тестовые данные
   Future<void> populateAll() async {
     final stopwatch = Stopwatch()..start();
-    
+
     try {
       debugPrint('🚀 Начало заполнения тестовых данных...');
-      
+
       // Проверяем, есть ли уже данные
       if (await hasTestData()) {
         debugPrint('⚠️ Тестовые данные уже существуют. Пропускаем создание.');
@@ -1055,21 +1055,22 @@ class TestDataService {
         _populateChats(),
         _populateBookings(),
       ]);
-      
+
       await Future.wait([
         _populatePosts(),
         _populateIdeas(),
         _populateNotifications(),
       ]);
-      
+
       await Future.wait([
         createTestPromotions(),
         _populateReviews(),
       ]);
 
       stopwatch.stop();
-      debugPrint('✅ Тестовые данные успешно созданы за ${stopwatch.elapsedMilliseconds}ms');
-      
+      debugPrint(
+        '✅ Тестовые данные успешно созданы за ${stopwatch.elapsedMilliseconds}ms',
+      );
     } on FirebaseException catch (e) {
       debugPrint('❌ Ошибка Firebase при заполнении данных: ${e.message}');
       rethrow;
@@ -1082,26 +1083,27 @@ class TestDataService {
   /// Заполнить специалистов
   Future<void> _populateSpecialists() async {
     debugPrint('👥 Создание специалистов...');
-    
+
     try {
       // Используем батчевые операции для лучшей производительности
       final batches = <WriteBatch>[];
       WriteBatch? currentBatch = _firestore.batch();
-      int batchCount = 0;
-      
+      var batchCount = 0;
+
       for (var i = 0; i < _testSpecialists.length; i++) {
         final specialist = _testSpecialists[i];
-        final docRef = _firestore.collection('specialists').doc('specialist_${i + 1}');
-        
+        final docRef =
+            _firestore.collection('specialists').doc('specialist_${i + 1}');
+
         currentBatch!.set(docRef, {
           ...specialist,
           'id': 'specialist_${i + 1}',
           'createdAt': FieldValue.serverTimestamp(),
           'updatedAt': FieldValue.serverTimestamp(),
         });
-        
+
         batchCount++;
-        
+
         // Создаем новый батч каждые _batchSize операций
         if (batchCount >= _batchSize) {
           batches.add(currentBatch);
@@ -1109,19 +1111,18 @@ class TestDataService {
           batchCount = 0;
         }
       }
-      
+
       // Добавляем последний батч если он не пустой
       if (batchCount > 0) {
         batches.add(currentBatch!);
       }
-      
+
       // Выполняем все батчи
       for (final batch in batches) {
         await batch.commit();
       }
-      
+
       debugPrint('✅ Создано ${_testSpecialists.length} специалистов');
-      
     } on FirebaseException catch (e) {
       debugPrint('❌ Ошибка при создании специалистов: ${e.message}');
       rethrow;
@@ -1165,7 +1166,7 @@ class TestDataService {
         });
       }
     }
-    print('Добавлено ${_testChats.length} чатов');
+    debugPrint('Добавлено ${_testChats.length} чатов');
   }
 
   /// Заполнить заявки
@@ -1178,7 +1179,7 @@ class TestDataService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     }
-    print('Добавлено ${_testBookings.length} заявок');
+    debugPrint('Добавлено ${_testBookings.length} заявок');
   }
 
   /// Заполнить посты
@@ -1191,7 +1192,7 @@ class TestDataService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     }
-    print('Добавлено ${_testPosts.length} постов');
+    debugPrint('Добавлено ${_testPosts.length} постов');
   }
 
   /// Получить список специалистов
@@ -1355,7 +1356,7 @@ class TestDataService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     }
-    print('Добавлено ${testIdeas.length} идей');
+    debugPrint('Добавлено ${testIdeas.length} идей');
   }
 
   /// Заполнить уведомления
@@ -1461,12 +1462,12 @@ class TestDataService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     }
-    print('Добавлено ${testNotifications.length} уведомлений');
+    debugPrint('Добавлено ${testNotifications.length} уведомлений');
   }
 
   /// Создать тестовые акции
   Future<void> createTestPromotions() async {
-    print('Создание тестовых акций...');
+    debugPrint('Создание тестовых акций...');
 
     final testPromotions = [
       {
@@ -1609,16 +1610,16 @@ class TestDataService {
         'updatedAt': Timestamp.fromDate(promotion['updatedAt']! as DateTime),
       });
     }
-    print('Добавлено ${testPromotions.length} акций');
+    debugPrint('Добавлено ${testPromotions.length} акций');
   }
 
   /// Очистить все тестовые данные
   Future<void> clearAllTestData() async {
     final stopwatch = Stopwatch()..start();
-    
+
     try {
       debugPrint('🧹 Начало очистки тестовых данных...');
-      
+
       // Удаляем все коллекции
       final collections = [
         'specialists',
@@ -1634,49 +1635,52 @@ class TestDataService {
         'subscriptions',
         'promoted_posts',
       ];
-      
-      int totalDeleted = 0;
-      
+
+      var totalDeleted = 0;
+
       for (final collection in collections) {
         try {
           final snapshot = await _firestore.collection(collection).get();
-          
+
           if (snapshot.docs.isNotEmpty) {
             // Используем батчевое удаление для лучшей производительности
             final batches = <WriteBatch>[];
             WriteBatch? currentBatch = _firestore.batch();
-            int batchCount = 0;
-            
+            var batchCount = 0;
+
             for (final doc in snapshot.docs) {
               currentBatch!.delete(doc.reference);
               batchCount++;
-              
+
               if (batchCount >= _batchSize) {
                 batches.add(currentBatch);
                 currentBatch = _firestore.batch();
                 batchCount = 0;
               }
             }
-            
+
             if (batchCount > 0) {
               batches.add(currentBatch!);
             }
-            
+
             for (final batch in batches) {
               await batch.commit();
             }
-            
+
             totalDeleted += snapshot.docs.length;
-            debugPrint('  ✅ Удалено ${snapshot.docs.length} документов из $collection');
+            debugPrint(
+              '  ✅ Удалено ${snapshot.docs.length} документов из $collection',
+            );
           }
         } on FirebaseException catch (e) {
           debugPrint('  ⚠️ Ошибка при удалении из $collection: ${e.message}');
         }
       }
-      
+
       stopwatch.stop();
-      debugPrint('✅ Очистка завершена. Удалено $totalDeleted документов за ${stopwatch.elapsedMilliseconds}ms');
-      
+      debugPrint(
+        '✅ Очистка завершена. Удалено $totalDeleted документов за ${stopwatch.elapsedMilliseconds}ms',
+      );
     } on Exception catch (e) {
       debugPrint('❌ Ошибка при удалении тестовых данных: $e');
       rethrow;
@@ -1698,7 +1702,7 @@ class TestDataService {
   Future<Map<String, int>> getTestDataStats() async {
     try {
       debugPrint('📊 Получение статистики тестовых данных...');
-      
+
       final collections = [
         'specialists',
         'chats',
@@ -1709,25 +1713,26 @@ class TestDataService {
         'promotions',
         'reviews',
       ];
-      
+
       final stats = <String, int>{};
-      
+
       for (final collection in collections) {
         try {
           final snapshot = await _firestore.collection(collection).get();
           stats[collection] = snapshot.docs.length;
         } on FirebaseException catch (e) {
-          debugPrint('⚠️ Ошибка при получении статистики для $collection: ${e.message}');
+          debugPrint(
+            '⚠️ Ошибка при получении статистики для $collection: ${e.message}',
+          );
           stats[collection] = 0;
         }
       }
-      
+
       final total = stats.values.fold(0, (sum, count) => sum + count);
       stats['total'] = total;
-      
+
       debugPrint('📊 Статистика тестовых данных: $stats');
       return stats;
-      
     } on Exception catch (e) {
       debugPrint('❌ Ошибка при получении статистики: $e');
       return {};
@@ -1748,7 +1753,7 @@ class TestDataService {
         'date': DateTime.now().subtract(const Duration(days: 5)),
         'photos': [
           'https://picsum.photos/400?random=201',
-          'https://picsum.photos/400?random=202'
+          'https://picsum.photos/400?random=202',
         ],
         'likes': 12,
         'responses': [
@@ -1823,7 +1828,7 @@ class TestDataService {
         'date': DateTime.now().subtract(const Duration(days: 20)),
         'photos': [
           'https://picsum.photos/400?random=204',
-          'https://picsum.photos/400?random=205'
+          'https://picsum.photos/400?random=205',
         ],
         'likes': 3,
         'responses': [],
@@ -1874,7 +1879,7 @@ class TestDataService {
         'date': DateTime.now().subtract(const Duration(days: 3)),
         'photos': [
           'https://picsum.photos/400?random=207',
-          'https://picsum.photos/400?random=208'
+          'https://picsum.photos/400?random=208',
         ],
         'likes': 18,
         'responses': [
@@ -1922,7 +1927,7 @@ class TestDataService {
         'date': DateTime.now().subtract(const Duration(days: 12)),
         'photos': [
           'https://picsum.photos/400?random=210',
-          'https://picsum.photos/400?random=211'
+          'https://picsum.photos/400?random=211',
         ],
         'likes': 22,
         'responses': [
@@ -2015,19 +2020,19 @@ class TestDataService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     }
-    print('Добавлено ${testReviews.length} отзывов');
+    debugPrint('Добавлено ${testReviews.length} отзывов');
   }
 
   // Создание тестовых данных для монетизации
   Future<void> createMonetizationTestData() async {
-    print('Создание тестовых данных монетизации...');
+    debugPrint('Создание тестовых данных монетизации...');
 
     await _createTestTransactions();
     await _createTestPremiumProfiles();
     await _createTestSubscriptions();
     await _createTestPromotedPosts();
 
-    print('Тестовые данные монетизации созданы успешно!');
+    debugPrint('Тестовые данные монетизации созданы успешно!');
   }
 
   // Тестовые транзакции
@@ -2111,7 +2116,7 @@ class TestDataService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     }
-    print('Добавлено ${testTransactions.length} транзакций');
+    debugPrint('Добавлено ${testTransactions.length} транзакций');
   }
 
   // Тестовые премиум-профили
@@ -2146,7 +2151,7 @@ class TestDataService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     }
-    print('Добавлено ${testPremiumProfiles.length} премиум-профилей');
+    debugPrint('Добавлено ${testPremiumProfiles.length} премиум-профилей');
   }
 
   // Тестовые подписки
@@ -2184,7 +2189,7 @@ class TestDataService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     }
-    print('Добавлено ${testSubscriptions.length} подписок');
+    debugPrint('Добавлено ${testSubscriptions.length} подписок');
   }
 
   // Тестовые продвигаемые посты
@@ -2228,7 +2233,7 @@ class TestDataService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     }
-    print('Добавлено ${testPromotedPosts.length} продвигаемых постов');
+    debugPrint('Добавлено ${testPromotedPosts.length} продвигаемых постов');
   }
 
   // Создание тестовых пользователей с монетизацией
@@ -2275,7 +2280,9 @@ class TestDataService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     }
-    print('Добавлено ${monetizationUsers.length} пользователей с монетизацией');
+    debugPrint(
+      'Добавлено ${monetizationUsers.length} пользователей с монетизацией',
+    );
   }
 
   /// Получить тестовые промоакции
@@ -2285,7 +2292,7 @@ class TestDataService {
 
   /// Добавить тестовых пользователей в Firestore
   Future<void> addTestUsersToFirestore() async {
-    print('👥 Добавление тестовых пользователей в Firestore...');
+    debugPrint('👥 Добавление тестовых пользователей в Firestore...');
 
     final users = [
       {
@@ -2350,13 +2357,13 @@ class TestDataService {
           .collection('users')
           .doc(user['uid']! as String)
           .set(user);
-      print('  ✅ Пользователь ${user['name']} добавлен');
+      debugPrint('  ✅ Пользователь ${user['name']} добавлен');
     }
   }
 
   /// Добавить посты в ленту Firestore
   Future<void> addFeedPostsToFirestore() async {
-    print('📢 Добавление постов в ленту Firestore...');
+    debugPrint('📢 Добавление постов в ленту Firestore...');
 
     final posts = [
       {
@@ -2463,13 +2470,13 @@ class TestDataService {
 
     for (final post in posts) {
       await _firestore.collection('feed').doc(post['id']! as String).set(post);
-      print('  ✅ Пост ${post['id']} добавлен');
+      debugPrint('  ✅ Пост ${post['id']} добавлен');
     }
   }
 
   /// Добавить заявки в Firestore
   Future<void> addOrdersToFirestore() async {
-    print('📝 Добавление заявок в Firestore...');
+    debugPrint('📝 Добавление заявок в Firestore...');
 
     final orders = [
       {
@@ -2567,13 +2574,13 @@ class TestDataService {
           .collection('orders')
           .doc(order['id']! as String)
           .set(order);
-      print('  ✅ Заявка ${order['id']} добавлена');
+      debugPrint('  ✅ Заявка ${order['id']} добавлена');
     }
   }
 
   /// Добавить чаты и сообщения в Firestore
   Future<void> addChatsToFirestore() async {
-    print('💬 Добавление чатов и сообщений в Firestore...');
+    debugPrint('💬 Добавление чатов и сообщений в Firestore...');
 
     final chats = [
       {
@@ -2616,7 +2623,7 @@ class TestDataService {
     // Создаем чаты
     for (final chat in chats) {
       await _firestore.collection('chats').doc(chat['id']! as String).set(chat);
-      print('  ✅ Чат ${chat['id']} добавлен');
+      debugPrint('  ✅ Чат ${chat['id']} добавлен');
 
       // Создаем сообщения для каждого чата
       final chatId = chat['id']! as String;
@@ -2668,13 +2675,13 @@ class TestDataService {
             .doc(message['id']! as String)
             .set(message);
       }
-      print('    ✅ 5 сообщений добавлено в чат $chatId');
+      debugPrint('    ✅ 5 сообщений добавлено в чат $chatId');
     }
   }
 
   /// Добавить идеи в Firestore
   Future<void> addIdeasToFirestore() async {
-    print('💡 Добавление идей в Firestore...');
+    debugPrint('💡 Добавление идей в Firestore...');
 
     final ideas = [
       {
@@ -2777,13 +2784,13 @@ class TestDataService {
 
     for (final idea in ideas) {
       await _firestore.collection('ideas').doc(idea['id']! as String).set(idea);
-      print('  ✅ Идея ${idea['id']} добавлена');
+      debugPrint('  ✅ Идея ${idea['id']} добавлена');
     }
   }
 
   /// Добавить все тестовые данные в Firestore
   Future<void> addAllTestDataToFirestore() async {
-    print('🚀 Начинаем добавление всех тестовых данных в Firestore...');
+    debugPrint('🚀 Начинаем добавление всех тестовых данных в Firestore...');
 
     try {
       await addTestUsersToFirestore();
@@ -2792,16 +2799,16 @@ class TestDataService {
       await addChatsToFirestore();
       await addIdeasToFirestore();
 
-      print('✅ Все тестовые данные успешно добавлены в Firestore!');
+      debugPrint('✅ Все тестовые данные успешно добавлены в Firestore!');
     } catch (e) {
-      print('❌ Ошибка при добавлении данных: $e');
+      debugPrint('❌ Ошибка при добавлении данных: $e');
       rethrow;
     }
   }
 
   /// Очистить все тестовые данные из Firestore
   Future<void> clearTestDataFromFirestore() async {
-    print('🧹 Очистка тестовых данных из Firestore...');
+    debugPrint('🧹 Очистка тестовых данных из Firestore...');
 
     try {
       // Удаляем тестовые данные из всех коллекций
@@ -2826,12 +2833,12 @@ class TestDataService {
           await doc.reference.delete();
         }
 
-        print('  ✅ Тестовые данные удалены из коллекции $collection');
+        debugPrint('  ✅ Тестовые данные удалены из коллекции $collection');
       }
 
-      print('✅ Все тестовые данные очищены из Firestore!');
+      debugPrint('✅ Все тестовые данные очищены из Firestore!');
     } catch (e) {
-      print('❌ Ошибка при очистке данных: $e');
+      debugPrint('❌ Ошибка при очистке данных: $e');
       rethrow;
     }
   }

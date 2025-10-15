@@ -13,7 +13,8 @@ Future<void> main() async {
   // Для standalone скрипта возможна инициализация только если есть правильные options
   try {
     await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform);
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     print('✅ Firebase инициализирован');
   } catch (e) {
     print('❌ Ошибка инициализации Firebase: $e');
@@ -31,25 +32,25 @@ Future<void> main() async {
         'id': 'u_customer_1',
         'name': 'Иван Петров',
         'city': 'Москва',
-        'role': 'customer'
+        'role': 'customer',
       },
       {
         'id': 'u_customer_2',
         'name': 'Елена Смирнова',
         'city': 'СПб',
-        'role': 'customer'
+        'role': 'customer',
       },
       {
         'id': 'u_spec_1',
         'name': 'Ведущий Артём',
         'city': 'Москва',
-        'role': 'specialist'
+        'role': 'specialist',
       },
       {
         'id': 'u_spec_2',
         'name': 'Фотограф Анна',
         'city': 'СПб',
-        'role': 'specialist'
+        'role': 'specialist',
       },
     ];
 
@@ -226,7 +227,7 @@ Future<void> main() async {
         'skills': [
           'Свадебная фотосъемка',
           'Семейная фотосъемка',
-          'Детская фотосъемка'
+          'Детская фотосъемка',
         ],
         'portfolio': [
           'https://picsum.photos/seed/photo1/300/200',

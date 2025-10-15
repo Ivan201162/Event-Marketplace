@@ -1,102 +1,100 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../theme/app_theme.dart';
 
 /// Провайдер для управления темами приложения
-class ThemeNotifier extends StateNotifier<ThemeMode> {
-  ThemeNotifier() : super(ThemeMode.system) {
-    _loadThemePreference();
-  }
+class ThemeNotifier extends Notifier<ThemeMode> {
 
-  /// Загрузка сохранённой темы
-  Future<void> _loadThemePreference() async {
+  @override
+  ThemeMode build() {
+    _loadTheme();
+    return ThemeMode.system;
+  }
+  
+  static const String _themeKey = 'theme_mode';
+
+  ThemeMode get themeMode => state;
+
+  /// Загружает сохранённую тему
+  Future<void> _loadTheme() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final themeString = prefs.getString('themeMode') ?? 'system';
-      state = _getThemeModeFromString(themeString);
-    } on Exception {
-      // Если ошибка, используем системную тему
+      final themeIndex = prefs.getInt(_themeKey) ?? 0;
+      state = ThemeMode.values[themeIndex];
+    } catch (e) {
+      debugPrint('Ошибка загрузки темы: $e');
       state = ThemeMode.system;
     }
   }
 
-  /// Сохранение выбранной темы
-  Future<void> _saveThemePreference(ThemeMode mode) async {
+  /// Сохраняет выбранную тему
+  Future<void> _saveTheme(ThemeMode theme) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('themeMode', mode.toString().split('.').last);
-    } on Exception {
-      // Игнорируем ошибки сохранения
+      await prefs.setInt(_themeKey, theme.index);
+    } catch (e) {
+      debugPrint('Ошибка сохранения темы: $e');
     }
   }
 
-  /// Преобразование строки в ThemeMode
-  ThemeMode _getThemeModeFromString(String value) {
-    switch (value) {
-      case 'light':
-        return ThemeMode.light;
-      case 'dark':
-        return ThemeMode.dark;
-      default:
-        return ThemeMode.system;
-    }
+  /// Устанавливает светлую тему
+  Future<void> setLightTheme() async {
+    state = ThemeMode.light;
+    await _saveTheme(state);
   }
 
-  /// Изменение темы
-  Future<void> changeTheme(ThemeMode mode) async {
-    state = mode;
-    await _saveThemePreference(mode);
+  /// Устанавливает тёмную тему
+  Future<void> setDarkTheme() async {
+    state = ThemeMode.dark;
+    await _saveTheme(state);
   }
 
-  /// Автоматическое определение темы по времени суток
-  void applyAutoThemeByTime() {
-    final hour = DateTime.now().hour;
-    if (hour >= 7 && hour < 19) {
-      // День (7:00 - 19:00) - светлая тема
-      state = ThemeMode.light;
+  /// Устанавливает автоматическую тему
+  Future<void> setSystemTheme() async {
+    state = ThemeMode.system;
+    await _saveTheme(state);
+  }
+
+  /// Переключает между светлой и тёмной темой
+  Future<void> toggleTheme() async {
+    if (state == ThemeMode.light) {
+      await setDarkTheme();
     } else {
-      // Ночь (19:00 - 7:00) - тёмная тема
-      state = ThemeMode.dark;
+      await setLightTheme();
     }
   }
 
-  /// Получение текущей темы с учётом времени суток
-  ThemeMode getCurrentThemeWithTime() {
-    if (state == ThemeMode.system) {
-      final hour = DateTime.now().hour;
-      return (hour >= 7 && hour < 19) ? ThemeMode.light : ThemeMode.dark;
+  /// Получает текущую тему
+  ThemeData getCurrentTheme(BuildContext context) {
+    switch (state) {
+      case ThemeMode.light:
+        return AppTheme.lightTheme;
+      case ThemeMode.dark:
+        return AppTheme.darkTheme;
+      case ThemeMode.system:
+        final brightness = MediaQuery.of(context).platformBrightness;
+        return brightness == Brightness.light
+            ? AppTheme.lightTheme
+            : AppTheme.darkTheme;
     }
-    return state;
+  }
+
+  /// Проверяет, является ли текущая тема тёмной
+  bool isDarkMode(BuildContext context) {
+    switch (state) {
+      case ThemeMode.light:
+        return false;
+      case ThemeMode.dark:
+        return true;
+      case ThemeMode.system:
+        return MediaQuery.of(context).platformBrightness == Brightness.dark;
+    }
   }
 }
 
 /// Провайдер для управления темами
-final themeProvider =
-    StateNotifierProvider<ThemeNotifier, ThemeMode>((ref) => ThemeNotifier());
+final themeProvider = NotifierProvider<ThemeNotifier, ThemeMode>(ThemeNotifier.new);
 
-/// Провайдер для получения текущей темы с учётом времени
-final currentThemeProvider = Provider<ThemeMode>((ref) {
-  final themeNotifier = ref.watch(themeProvider.notifier);
-  return themeNotifier.getCurrentThemeWithTime();
-});
-
-/// Провайдер для получения цветовой схемы
-final colorSchemeProvider = Provider<ColorScheme>((ref) {
-  final themeMode = ref.watch(currentThemeProvider);
-  final brightness =
-      themeMode == ThemeMode.dark ? Brightness.dark : Brightness.light;
-
-  if (brightness == Brightness.dark) {
-    return const ColorScheme.dark(
-      primary: Colors.amber,
-      secondary: Colors.deepPurple,
-      error: Colors.redAccent,
-    );
-  } else {
-    return const ColorScheme.light(
-      primary: Colors.deepPurple,
-      secondary: Colors.amber,
-      error: Colors.red,
-    );
-  }
-});
+/// Провайдер для получения текущего режима темы
+final themeModeProvider = Provider<ThemeMode>((ref) => ref.watch(themeProvider));

@@ -24,7 +24,8 @@ class TestNotificationsService {
           .get();
 
       if (existingNotifications.docs.isNotEmpty) {
-        print('Тестовые уведомления уже существуют для пользователя $userId');
+        debugPrint(
+            'Тестовые уведомления уже существуют для пользователя $userId',);
         return;
       }
 
@@ -119,10 +120,11 @@ class TestNotificationsService {
       }
       await batch.commit();
 
-      print(
-          'Создано ${testNotifications.length} тестовых уведомлений для пользователя $userId');
+      debugPrint(
+        'Создано ${testNotifications.length} тестовых уведомлений для пользователя $userId',
+      );
     } catch (e) {
-      print('Ошибка создания тестовых уведомлений: $e');
+      debugPrint('Ошибка создания тестовых уведомлений: $e');
     }
   }
 
@@ -137,10 +139,12 @@ class TestNotificationsService {
         await createTestNotifications(userId);
       }
 
-      print(
-          'Созданы тестовые уведомления для ${usersSnapshot.docs.length} пользователей');
+      debugPrint(
+        'Созданы тестовые уведомления для ${usersSnapshot.docs.length} пользователей',
+      );
     } catch (e) {
-      print('Ошибка создания тестовых уведомлений для всех пользователей: $e');
+      debugPrint(
+          'Ошибка создания тестовых уведомлений для всех пользователей: $e',);
     }
   }
 
@@ -155,9 +159,9 @@ class TestNotificationsService {
       }
 
       await batch.commit();
-      print('Очищены все тестовые уведомления');
+      debugPrint('Очищены все тестовые уведомления');
     } catch (e) {
-      print('Ошибка очистки тестовых уведомлений: $e');
+      debugPrint('Ошибка очистки тестовых уведомлений: $e');
     }
   }
 
@@ -175,9 +179,9 @@ class TestNotificationsService {
       }
 
       await batch.commit();
-      print('Очищены тестовые уведомления для пользователя $userId');
+      debugPrint('Очищены тестовые уведомления для пользователя $userId');
     } catch (e) {
-      print('Ошибка очистки тестовых уведомлений для пользователя: $e');
+      debugPrint('Ошибка очистки тестовых уведомлений для пользователя: $e');
     }
   }
 }

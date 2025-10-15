@@ -30,7 +30,7 @@ class _WorkActSignatureWidgetState extends State<WorkActSignatureWidget> {
 
   bool _isLoading = false;
   String? _error;
-  String? _rejectionReason;
+  // String? _rejectionReason; // Unused field removed
 
   @override
   void dispose() {

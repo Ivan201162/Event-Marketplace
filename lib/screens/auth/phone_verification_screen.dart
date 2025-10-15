@@ -199,7 +199,9 @@ class _PhoneVerificationScreenState
                     : const Text(
                         'Подтвердить',
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
               ),
               const SizedBox(height: 20),

@@ -313,8 +313,10 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen>
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 8),
-        ...specialists.map((specialist) =>
-            _buildSpecialistCard(specialist as Map<String, dynamic>)),
+        ...specialists.map(
+          (specialist) =>
+              _buildSpecialistCard(specialist as Map<String, dynamic>),
+        ),
       ],
     );
   }

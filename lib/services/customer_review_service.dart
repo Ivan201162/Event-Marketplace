@@ -290,7 +290,8 @@ class CustomerReviewService {
 
   /// Получить статистику отзывов специалиста
   Future<CustomerReviewStats?> getSpecialistReviewStats(
-      String specialistId) async {
+    String specialistId,
+  ) async {
     try {
       final DocumentSnapshot doc =
           await _firestore.collection('review_stats').doc(specialistId).get();
@@ -455,7 +456,8 @@ class CustomerReviewService {
 
   /// Вычислить и сохранить статистику отзывов
   Future<CustomerReviewStats?> _calculateAndSaveReviewStats(
-      String specialistId) async {
+    String specialistId,
+  ) async {
     try {
       final QuerySnapshot snapshot = await _firestore
           .collection('customer_reviews')

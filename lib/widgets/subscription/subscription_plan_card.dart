@@ -39,7 +39,7 @@ class SubscriptionPlanCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: _getIconColor().withOpacity(0.1),
+                      color: _getIconColor().withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
@@ -69,7 +69,9 @@ class SubscriptionPlanCard extends StatelessWidget {
                               const SizedBox(width: 8),
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 2),
+                                  horizontal: 8,
+                                  vertical: 2,
+                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.green,
                                   borderRadius: BorderRadius.circular(12),
@@ -167,10 +169,10 @@ class SubscriptionPlanCard extends StatelessWidget {
 
   Color _getBackgroundColor() {
     if (isCurrentPlan) {
-      return Colors.green.withOpacity(0.05);
+      return Colors.green.withValues(alpha: 0.05);
     }
     if (isSelected) {
-      return _getIconColor().withOpacity(0.05);
+      return _getIconColor().withValues(alpha: 0.05);
     }
     return Colors.white;
   }

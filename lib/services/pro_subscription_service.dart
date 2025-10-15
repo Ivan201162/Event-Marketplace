@@ -108,15 +108,12 @@ class ProSubscriptionService {
   }
 
   /// Отменить подписку
-  Future<void> cancelSubscription({
-    required String subscriptionId,
-    String? reason,
-  }) async {
+  Future<void> cancelSubscription(String subscriptionId) async {
     try {
       await _firestore.collection('subscriptions').doc(subscriptionId).update({
         'status': SubscriptionStatus.cancelled.value,
         'cancelledAt': FieldValue.serverTimestamp(),
-        'cancellationReason': reason,
+        'cancellationReason': 'Пользователь отменил подписку',
         'autoRenew': false,
       });
     } catch (e) {
@@ -125,10 +122,7 @@ class ProSubscriptionService {
   }
 
   /// Продлить подписку
-  Future<void> renewSubscription({
-    required String subscriptionId,
-    required String paymentMethodId,
-  }) async {
+  Future<ProSubscription> renewSubscription(String subscriptionId) async {
     try {
       // Получить текущую подписку
       final subscriptionDoc = await _firestore
@@ -144,18 +138,6 @@ class ProSubscriptionService {
         subscriptionDoc.data()!,
       );
 
-      // Создать новый платеж
-      final payment = await _createPayment(
-        subscriptionId: subscriptionId,
-        amount: subscription.plan.monthlyPrice,
-        currency: subscription.currency,
-        paymentMethodId: paymentMethodId,
-      );
-
-      if (payment.status != PaymentStatus.completed) {
-        throw Exception('Платеж не был завершен');
-      }
-
       // Обновить дату окончания
       final newEndDate = subscription.endDate.add(const Duration(days: 30));
       await updateSubscription(
@@ -163,6 +145,14 @@ class ProSubscriptionService {
         status: SubscriptionStatus.active,
         endDate: newEndDate,
       );
+
+      // Получить обновленную подписку
+      final updatedDoc = await _firestore
+          .collection('subscriptions')
+          .doc(subscriptionId)
+          .get();
+
+      return ProSubscription.fromMap(updatedDoc.data()!);
     } catch (e) {
       throw Exception('Ошибка продления подписки: $e');
     }
