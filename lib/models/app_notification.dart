@@ -166,3 +166,4 @@ extension NotificationTypeExtension on NotificationType {
     }
   }
 }
+

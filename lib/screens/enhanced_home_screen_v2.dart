@@ -8,6 +8,7 @@ import '../widgets/animated_interesting_section.dart';
 import '../widgets/animated_search_bar.dart';
 import '../widgets/animated_specialists_carousel.dart';
 import '../widgets/animated_user_header.dart';
+import '../widgets/filters_dialog.dart';
 
 /// Улучшенный главный экран с анимациями и адаптивным скроллом
 class EnhancedHomeScreenV2 extends ConsumerStatefulWidget {
@@ -25,6 +26,7 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
   
   bool _isUserHeaderVisible = true;
   double _lastScrollOffset = 0.0;
+  Map<String, dynamic> _currentFilters = {};
 
   @override
   void initState() {
@@ -152,11 +154,7 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
 
           // Поиск специалистов
           SliverToBoxAdapter(
-            child: AnimatedSearchBar(
-              onSearch: (query) {
-                context.push('/search?q=${Uri.encodeComponent(query)}');
-              },
-            ),
+            child: _buildSearchWithFilters(),
           ),
 
           // Категории специалистов
@@ -178,11 +176,6 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
             child: AnimatedInterestingSection(),
           ),
 
-          // Быстрые действия
-          SliverToBoxAdapter(
-            child: _buildQuickActionsSection(),
-          ),
-
           // Отступ внизу
           const SliverToBoxAdapter(
             child: SizedBox(height: 100),
@@ -192,161 +185,79 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
     );
   }
 
-  /// Быстрые действия
-  Widget _buildQuickActionsSection() => Container(
+  /// Поиск с фильтрами
+  Widget _buildSearchWithFilters() => Container(
         margin: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            Text(
-              'Быстрые действия',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+            Expanded(
+              child: AnimatedSearchBar(
+                onSearch: (query) {
+                  _performSearch(query);
+                },
+              ),
             ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: _QuickActionCard(
-                    icon: Icons.event,
-                    title: 'Создать заявку',
-                    onTap: () => context.push('/requests/create'),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _QuickActionCard(
-                    icon: Icons.photo_library,
-                    title: 'Мои идеи',
-                    onTap: () => context.push('/ideas'),
-                  ),
-                ),
-              ],
+            const SizedBox(width: 12),
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.tune, color: Colors.white),
+                onPressed: _showFiltersDialog,
+                tooltip: 'Фильтры',
+              ),
             ),
           ],
         ),
       );
-}
 
-/// Карточка быстрого действия
-class _QuickActionCard extends StatefulWidget {
-  const _QuickActionCard({
-    required this.icon,
-    required this.title,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final String title;
-  final VoidCallback onTap;
-
-  @override
-  State<_QuickActionCard> createState() => _QuickActionCardState();
-}
-
-class _QuickActionCardState extends State<_QuickActionCard>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
-  bool _isPressed = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 150),
-      vsync: this,
-    );
-
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.95,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => AnimatedBuilder(
-        animation: _scaleAnimation,
-        builder: (context, child) {
-          return Transform.scale(
-            scale: _scaleAnimation.value,
-            child: InkWell(
-              onTap: widget.onTap,
-              onTapDown: (_) {
-                setState(() => _isPressed = true);
-                _animationController.forward();
-              },
-              onTapUp: (_) {
-                setState(() => _isPressed = false);
-                _animationController.reverse();
-              },
-              onTapCancel: () {
-                setState(() => _isPressed = false);
-                _animationController.reverse();
-              },
-              borderRadius: BorderRadius.circular(16),
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: _isPressed
-                      ? Theme.of(context).primaryColor.withOpacity(0.1)
-                      : Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: _isPressed
-                        ? Theme.of(context).primaryColor.withOpacity(0.3)
-                        : Theme.of(context).dividerColor,
-                    width: _isPressed ? 2 : 1,
-                  ),
-                  boxShadow: _isPressed
-                      ? [
-                          BoxShadow(
-                            color: Theme.of(context).primaryColor.withOpacity(0.2),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
-                          ),
-                        ]
-                      : null,
-                ),
-                child: Column(
-                  children: [
-                    AnimatedScale(
-                      scale: _isPressed ? 1.1 : 1.0,
-                      duration: const Duration(milliseconds: 150),
-                      child: Icon(
-                        widget.icon,
-                        size: 32,
-                        color: _isPressed
-                            ? Theme.of(context).primaryColor
-                            : Theme.of(context).primaryColor,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      widget.title,
-                      style: TextStyle(
-                        fontWeight: _isPressed ? FontWeight.bold : FontWeight.w500,
-                        color: _isPressed
-                            ? Theme.of(context).primaryColor
-                            : Theme.of(context).textTheme.bodyMedium?.color,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
+  /// Показать диалог фильтров
+  void _showFiltersDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => FiltersDialog(
+        initialFilters: _currentFilters,
+        onApplyFilters: (filters) {
+          setState(() {
+            _currentFilters = filters;
+          });
+          _performSearch('');
         },
-      );
+      ),
+    );
+  }
+
+  /// Выполнить поиск с применением фильтров
+  void _performSearch(String query) {
+    final searchParams = <String, String>{};
+    
+    if (query.isNotEmpty) {
+      searchParams['q'] = query;
+    }
+    
+    if (_currentFilters['city'] != null) {
+      searchParams['city'] = _currentFilters['city'];
+    }
+    
+    if (_currentFilters['category'] != null) {
+      searchParams['category'] = _currentFilters['category'];
+    }
+    
+    if (_currentFilters['minRating'] != null) {
+      searchParams['minRating'] = _currentFilters['minRating'].toString();
+    }
+    
+    if (_currentFilters['specialistType'] != null) {
+      searchParams['type'] = _currentFilters['specialistType'];
+    }
+    
+    final queryString = searchParams.entries
+        .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
+        .join('&');
+    
+    context.push('/search?$queryString');
+  }
 }
+

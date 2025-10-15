@@ -191,3 +191,4 @@ class SpecialistBadge {
     return badges;
   }
 }
+

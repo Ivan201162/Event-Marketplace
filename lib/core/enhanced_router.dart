@@ -8,6 +8,14 @@ import '../screens/profile_screen.dart';
 import '../screens/specialists_screen.dart';
 import '../screens/splash_screen.dart';
 import '../screens/transliterate_demo_screen.dart';
+import '../screens/social_home_screen.dart';
+import '../screens/social_profile_screen.dart';
+import '../screens/social_chat_screen.dart';
+import '../screens/social_chats_list_screen.dart';
+import '../screens/social_followers_screen.dart';
+import '../screens/social_following_screen.dart';
+import '../screens/create_idea_screen.dart';
+import '../screens/edit_profile_screen.dart';
 
 /// Провайдер роутера приложения
 final routerProvider = Provider<GoRouter>((ref) => GoRouter(
@@ -207,6 +215,69 @@ final routerProvider = Provider<GoRouter>((ref) => GoRouter(
         name: 'transliterate-demo',
         builder: (context, state) => const TransliterateDemoScreen(),
       ),
+
+      // Социальные маршруты
+      GoRoute(
+        path: '/social-home',
+        name: 'social-home',
+        builder: (context, state) => const SocialHomeScreen(),
+      ),
+
+      GoRoute(
+        path: '/profile/:username',
+        name: 'social-profile',
+        builder: (context, state) {
+          final username = state.pathParameters['username']!;
+          return SocialProfileScreen(username: username);
+        },
+      ),
+
+      GoRoute(
+        path: '/chat/:chatId',
+        name: 'social-chat',
+        builder: (context, state) {
+          final chatId = state.pathParameters['chatId']!;
+          return SocialChatScreen(chatId: chatId);
+        },
+      ),
+
+      GoRoute(
+        path: '/chats',
+        name: 'social-chats-list',
+        builder: (context, state) => const SocialChatsListScreen(),
+      ),
+
+      GoRoute(
+        path: '/profile/:username/followers',
+        name: 'social-followers',
+        builder: (context, state) {
+          final username = state.pathParameters['username']!;
+          return SocialFollowersScreen(username: username);
+        },
+      ),
+
+      GoRoute(
+        path: '/profile/:username/following',
+        name: 'social-following',
+        builder: (context, state) {
+          final username = state.pathParameters['username']!;
+          return SocialFollowingScreen(username: username);
+        },
+      ),
+
+      // Создание идеи
+      GoRoute(
+        path: '/create-idea',
+        name: 'create-idea',
+        builder: (context, state) => const CreateIdeaScreen(),
+      ),
+
+      // Редактирование профиля
+      GoRoute(
+        path: '/edit-profile',
+        name: 'edit-profile',
+        builder: (context, state) => const EditProfileScreen(),
+      ),
     ],
   ),);
 
@@ -222,7 +293,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    const HomeScreen(),
+    const SocialHomeScreen(),
     const FeedScreen(),
     const RequestsScreen(),
     const ChatsScreen(),

@@ -46,6 +46,9 @@ dependencies:
   # Network & HTTP
   http: ^1.1.0
   
+  # Supabase
+  supabase_flutter: ^2.8.0
+  
   # Authentication (removed Google Sign-In)
   
   # Utilities

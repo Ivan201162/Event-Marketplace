@@ -101,3 +101,4 @@ class Transaction {
         metadata: metadata ?? this.metadata,
       );
 }
+

@@ -414,3 +414,4 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
   String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
 }
+

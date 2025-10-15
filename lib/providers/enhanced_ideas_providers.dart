@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/enhanced_idea.dart';
-import '../test_data/mock_data.dart';
+// import '../test_data/mock_data.dart';
 
 /// Состояние идей
 class EnhancedIdeasState {
@@ -29,12 +29,12 @@ class EnhancedIdeasState {
 
 /// Провайдер для управления состоянием идей
 class EnhancedIdeasNotifier extends ChangeNotifier {
-
   EnhancedIdeasNotifier() {
     _loadIdeas();
   }
+  
   EnhancedIdeasState _state = const EnhancedIdeasState();
-
+  
   EnhancedIdeasState get state => _state;
 
   Future<void> _loadIdeas() async {
@@ -45,13 +45,13 @@ class EnhancedIdeasNotifier extends ChangeNotifier {
       await Future.delayed(const Duration(seconds: 1));
 
       // Загружаем тестовые данные
-      final ideas = MockData.ideas;
+      // final ideas = MockData.ideas;
+      final ideas = <EnhancedIdea>[];
       _state = _state.copyWith(ideas: ideas, isLoading: false);
-      notifyListeners();
     } catch (e) {
       _state = _state.copyWith(isLoading: false, error: e.toString());
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   Future<void> refreshIdeas() async {
@@ -62,7 +62,7 @@ class EnhancedIdeasNotifier extends ChangeNotifier {
     final ideas = _state.ideas.map((idea) {
       if (idea.id == ideaId) {
         return idea.copyWith(
-          likes: idea.isLiked ? idea.likes - 1 : idea.likes + 1,
+          likesCount: idea.isLiked ? idea.likesCount - 1 : idea.likesCount + 1,
           isLiked: !idea.isLiked,
         );
       }
@@ -90,5 +90,4 @@ class EnhancedIdeasNotifier extends ChangeNotifier {
   }
 }
 
-final enhancedIdeasProvider =
-    ChangeNotifierProvider<EnhancedIdeasNotifier>((ref) => EnhancedIdeasNotifier());
+final enhancedIdeasProvider = Provider<EnhancedIdeasNotifier>((ref) => EnhancedIdeasNotifier());

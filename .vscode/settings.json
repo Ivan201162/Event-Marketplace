@@ -12,7 +12,9 @@
   ],
   "editor.formatOnSave": true,
   "editor.formatOnType": true,
-  "editor.rulers": [120],
+  "editor.rulers": [
+    120
+  ],
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
   "files.exclude": {
@@ -25,5 +27,6 @@
   "search.exclude": {
     "**/build": true,
     "**/.dart_tool": true
-  }
+  },
+  "cmake.sourceDirectory": "C:/Users/BlizZ/event_marketplace_app/linux"
 }

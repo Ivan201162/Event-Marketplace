@@ -10,6 +10,7 @@ import '../widgets/portfolio_widget.dart';
 import '../widgets/profile_statistics_widget.dart';
 import '../widgets/social_links_widget.dart';
 import '../widgets/specialist_badges_widget.dart';
+import 'edit_profile_screen.dart';
 
 /// Улучшенный экран профиля специалиста/пользователя
 class EnhancedProfileScreen extends ConsumerStatefulWidget {
@@ -701,8 +702,10 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
   }
 
   void _toggleEditMode() {
-    setState(() {
-      _isEditing = !_isEditing;
+    // Открываем экран редактирования профиля
+    context.push('/edit-profile').then((_) {
+      // Обновляем данные профиля после возврата
+      setState(() {});
     });
   }
 

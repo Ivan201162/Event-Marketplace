@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../models/enhanced_idea.dart';
 import '../providers/enhanced_ideas_providers.dart';
+import 'create_idea_screen.dart';
 
 class EnhancedIdeasScreen extends ConsumerStatefulWidget {
   const EnhancedIdeasScreen({super.key});
@@ -34,40 +36,51 @@ class _EnhancedIdeasScreenState extends ConsumerState<EnhancedIdeasScreen>
     final ideasNotifier = ref.watch(enhancedIdeasProvider);
     final ideasState = ideasNotifier.state;
 
-    return Column(
-      children: [
-        // TabBar для переключения между фото и видео
-        Container(
-          color: Theme.of(context).primaryColor,
-          child: TabBar(
-            controller: _tabController,
-            indicatorColor: Colors.white,
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.white70,
-            tabs: const [
-              Tab(
-                icon: Icon(Icons.photo_library),
-                text: 'Фото',
-              ),
-              Tab(
-                icon: Icon(Icons.video_library),
-                text: 'Видео',
-              ),
-            ],
+    return Scaffold(
+      body: Column(
+        children: [
+          // TabBar для переключения между фото и видео
+          Container(
+            color: Theme.of(context).primaryColor,
+            child: TabBar(
+              controller: _tabController,
+              indicatorColor: Colors.white,
+              labelColor: Colors.white,
+              unselectedLabelColor: Colors.white70,
+              tabs: const [
+                Tab(
+                  icon: Icon(Icons.photo_library),
+                  text: 'Фото',
+                ),
+                Tab(
+                  icon: Icon(Icons.video_library),
+                  text: 'Видео',
+                ),
+              ],
+            ),
           ),
-        ),
-        // Контент с TabBarView
-        Expanded(
-          child: TabBarView(
-            controller: _tabController,
-            children: [
-              _PhotoIdeasTab(ideasState: ideasState),
-              _VideoIdeasTab(ideasState: ideasState),
-            ],
+          // Контент с TabBarView
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                _PhotoIdeasTab(ideasState: ideasState),
+                _VideoIdeasTab(ideasState: ideasState),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _createNewIdea,
+        child: const Icon(Icons.add),
+        tooltip: 'Создать публикацию',
+      ),
     );
+  }
+
+  void _createNewIdea() {
+    context.push('/create-idea');
   }
 }
 

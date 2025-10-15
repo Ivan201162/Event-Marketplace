@@ -80,3 +80,4 @@ class PromotedPost {
         createdAt: createdAt ?? this.createdAt,
       );
 }
+

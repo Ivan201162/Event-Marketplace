@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../models/enhanced_order.dart';
 import '../widgets/order_card_widget.dart';
 import '../widgets/order_timeline_widget.dart';
+import '../providers/auth_providers.dart';
 
 /// Улучшенный экран заявок с полным функционалом
 class EnhancedRequestsScreen extends ConsumerStatefulWidget {
@@ -24,7 +25,7 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -39,15 +40,13 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
           // Поиск и фильтры
           _buildSearchAndFilters(),
 
-          // Табы статусов
+          // Табы заявок
           TabBar(
             controller: _tabController,
             isScrollable: true,
             tabs: const [
-              Tab(text: 'Все'),
-              Tab(text: 'Новые'),
-              Tab(text: 'В работе'),
-              Tab(text: 'Завершённые'),
+              Tab(text: 'Мои заявки'),
+              Tab(text: 'Заявки мне'),
             ],
           ),
 
@@ -56,10 +55,8 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
             child: TabBarView(
               controller: _tabController,
               children: [
-                _buildOrdersList('all'),
-                _buildOrdersList('pending'),
-                _buildOrdersList('in_progress'),
-                _buildOrdersList('completed'),
+                _buildMyRequestsList(),
+                _buildRequestsForMeList(),
               ],
             ),
           ),
@@ -101,12 +98,42 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
         ),
       );
 
-  Widget _buildOrdersList(String status) {
-    // Тестовые данные заявок
-    final orders = _getTestOrders(status);
+  Widget _buildMyRequestsList() {
+    // Заявки, созданные текущим пользователем
+    final orders = _getMyRequests();
 
     if (orders.isEmpty) {
-      return _buildEmptyState(status);
+      return _buildEmptyState('my_requests');
+    }
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        // TODO: Обновить данные
+        await Future.delayed(const Duration(seconds: 1));
+      },
+      child: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: orders.length,
+        itemBuilder: (context, index) {
+          final order = orders[index];
+          return OrderCardWidget(
+            order: order,
+            onTap: () => _openOrderDetails(order),
+            onEdit: () => _editOrder(order),
+            onCancel: () => _cancelOrder(order),
+            onComplete: () => _completeOrder(order),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildRequestsForMeList() {
+    // Заявки, назначенные на текущего пользователя
+    final orders = _getRequestsForMe();
+
+    if (orders.isEmpty) {
+      return _buildEmptyState('requests_for_me');
     }
 
     return RefreshIndicator(
@@ -137,20 +164,15 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
     IconData icon;
 
     switch (status) {
-      case 'pending':
-        title = 'Нет новых заявок';
-        subtitle = 'Новые заявки будут отображаться здесь';
-        icon = Icons.pending_actions;
+      case 'my_requests':
+        title = 'Нет ваших заявок';
+        subtitle = 'Создайте первую заявку к специалисту';
+        icon = Icons.assignment;
         break;
-      case 'in_progress':
-        title = 'Нет заявок в работе';
-        subtitle = 'Заявки в процессе выполнения появятся здесь';
-        icon = Icons.work;
-        break;
-      case 'completed':
-        title = 'Нет завершённых заявок';
-        subtitle = 'Завершённые заявки будут показаны здесь';
-        icon = Icons.check_circle;
+      case 'requests_for_me':
+        title = 'Нет заявок для вас';
+        subtitle = 'Заявки, назначенные на вас, будут отображаться здесь';
+        icon = Icons.assignment_ind;
         break;
       default:
         title = 'Нет заявок';
@@ -196,10 +218,13 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
   }
 
   List<EnhancedOrder> _getTestOrders(String status) {
+    final currentUser = ref.read(currentUserProvider).value;
+    final currentUserId = currentUser?.uid ?? 'current_user';
+    
     final allOrders = [
       EnhancedOrder(
         id: '1',
-        customerId: 'customer_1',
+        customerId: currentUserId,
         specialistId: 'specialist_1',
         title: 'Свадебная фотосъёмка',
         description:
@@ -213,7 +238,7 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
         comments: [
           OrderComment(
             id: '1',
-            authorId: 'customer_1',
+            authorId: currentUserId,
             text: 'Хотелось бы обсудить детали съёмки',
             createdAt: DateTime.now().subtract(const Duration(hours: 5)),
           ),
@@ -225,13 +250,13 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
             title: 'Заявка создана',
             description: 'Заявка на свадебную фотосъёмку создана',
             createdAt: DateTime.now().subtract(const Duration(days: 2)),
-            authorId: 'customer_1',
+            authorId: currentUserId,
           ),
         ],
       ),
       EnhancedOrder(
         id: '2',
-        customerId: 'customer_1',
+        customerId: currentUserId,
         specialistId: 'specialist_2',
         title: 'DJ на корпоратив',
         description: 'Нужен DJ для корпоративного мероприятия 25 мая.',
@@ -250,7 +275,7 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
             title: 'Заявка создана',
             description: 'Заявка на DJ создана',
             createdAt: DateTime.now().subtract(const Duration(days: 5)),
-            authorId: 'customer_1',
+            authorId: currentUserId,
           ),
           OrderTimelineEvent(
             id: '2',
@@ -264,7 +289,7 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
       ),
       EnhancedOrder(
         id: '3',
-        customerId: 'customer_1',
+        customerId: currentUserId,
         specialistId: 'specialist_3',
         title: 'Видеосъёмка мероприятия',
         description: 'Нужна видеосъёмка детского праздника',
@@ -283,7 +308,7 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
             title: 'Заявка создана',
             description: 'Заявка на видеосъёмку создана',
             createdAt: DateTime.now().subtract(const Duration(days: 15)),
-            authorId: 'customer_1',
+            authorId: currentUserId,
           ),
           OrderTimelineEvent(
             id: '2',
@@ -300,6 +325,64 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
             description: 'Видеосъёмка завершена',
             createdAt: DateTime.now().subtract(const Duration(days: 5)),
             authorId: 'specialist_3',
+          ),
+        ],
+      ),
+      // Заявки, где текущий пользователь является специалистом
+      EnhancedOrder(
+        id: '4',
+        customerId: 'customer_2',
+        specialistId: currentUserId,
+        title: 'Фотосессия для портфолио',
+        description: 'Нужна профессиональная фотосессия для обновления портфолио модели',
+        status: OrderStatus.pending,
+        createdAt: DateTime.now().subtract(const Duration(days: 1)),
+        budget: 12000,
+        deadline: DateTime.now().add(const Duration(days: 7)),
+        location: 'Москва, студия',
+        category: 'Фотограф',
+        comments: [],
+        timeline: [
+          OrderTimelineEvent(
+            id: '1',
+            type: OrderTimelineEventType.created,
+            title: 'Заявка создана',
+            description: 'Заявка на фотосессию создана',
+            createdAt: DateTime.now().subtract(const Duration(days: 1)),
+            authorId: 'customer_2',
+          ),
+        ],
+      ),
+      EnhancedOrder(
+        id: '5',
+        customerId: 'customer_3',
+        specialistId: currentUserId,
+        title: 'Свадебная видеосъёмка',
+        description: 'Полная видеосъёмка свадьбы с монтажом',
+        status: OrderStatus.inProgress,
+        createdAt: DateTime.now().subtract(const Duration(days: 3)),
+        budget: 35000,
+        deadline: DateTime.now().add(const Duration(days: 14)),
+        location: 'Москва, ресторан',
+        category: 'Видеограф',
+        priority: OrderPriority.high,
+        comments: [],
+        timeline: [
+          OrderTimelineEvent(
+            id: '1',
+            type: OrderTimelineEventType.created,
+            title: 'Заявка создана',
+            description: 'Заявка на видеосъёмку создана',
+            createdAt: DateTime.now().subtract(const Duration(days: 3)),
+            authorId: 'customer_3',
+          ),
+          OrderTimelineEvent(
+            id: '2',
+            type: OrderTimelineEventType.accepted,
+            title: 'Заявка принята',
+            description: 'Специалист принял заявку',
+            createdAt: DateTime.now().subtract(const Duration(days: 2)),
+            authorId: currentUserId,
           ),
         ],
       ),
@@ -321,6 +404,30 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
       default:
         return allOrders;
     }
+  }
+
+  List<EnhancedOrder> _getMyRequests() {
+    // Заявки, созданные текущим пользователем
+    final currentUser = ref.read(currentUserProvider).value;
+    if (currentUser == null) return [];
+    
+    final allOrders = _getTestOrders('all');
+    
+    return allOrders
+        .where((order) => order.customerId == currentUser.uid)
+        .toList();
+  }
+
+  List<EnhancedOrder> _getRequestsForMe() {
+    // Заявки, назначенные на текущего пользователя
+    final currentUser = ref.read(currentUserProvider).value;
+    if (currentUser == null) return [];
+    
+    final allOrders = _getTestOrders('all');
+    
+    return allOrders
+        .where((order) => order.specialistId == currentUser.uid)
+        .toList();
   }
 
   void _openOrderDetails(EnhancedOrder order) {

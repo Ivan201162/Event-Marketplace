@@ -29,6 +29,9 @@ class EnhancedIdea {
     this.isArchived = false,
     this.updatedAt,
     this.metadata = const {},
+    this.authorName,
+    this.isLiked = false,
+    this.isSaved = false,
   });
 
   /// Создать из Map
@@ -79,6 +82,9 @@ class EnhancedIdea {
             ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int)
             : null,
         metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
+        authorName: map['authorName'] as String?,
+        isLiked: (map['isLiked'] as bool?) ?? false,
+        isSaved: (map['isSaved'] as bool?) ?? false,
       );
 
   /// Уникальный идентификатор
@@ -165,6 +171,15 @@ class EnhancedIdea {
   /// Дополнительные данные
   final Map<String, dynamic> metadata;
 
+  /// Имя автора
+  final String? authorName;
+
+  /// Лайкнул ли текущий пользователь
+  final bool isLiked;
+
+  /// Сохранил ли текущий пользователь
+  final bool isSaved;
+
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
         'id': id,
@@ -195,6 +210,9 @@ class EnhancedIdea {
         'isArchived': isArchived,
         'updatedAt': updatedAt?.millisecondsSinceEpoch,
         'metadata': metadata,
+        'authorName': authorName,
+        'isLiked': isLiked,
+        'isSaved': isSaved,
       };
 
   /// Создать копию с изменениями
@@ -227,6 +245,9 @@ class EnhancedIdea {
     bool? isArchived,
     DateTime? updatedAt,
     Map<String, dynamic>? metadata,
+    String? authorName,
+    bool? isLiked,
+    bool? isSaved,
   }) =>
       EnhancedIdea(
         id: id ?? this.id,
@@ -257,6 +278,9 @@ class EnhancedIdea {
         isArchived: isArchived ?? this.isArchived,
         updatedAt: updatedAt ?? this.updatedAt,
         metadata: metadata ?? this.metadata,
+        authorName: authorName ?? this.authorName,
+        isLiked: isLiked ?? this.isLiked,
+        isSaved: isSaved ?? this.isSaved,
       );
 }
 

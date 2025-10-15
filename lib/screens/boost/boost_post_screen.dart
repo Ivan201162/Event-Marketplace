@@ -383,3 +383,4 @@ class _BoostPostScreenState extends ConsumerState<BoostPostScreen> {
     );
   }
 }
+
