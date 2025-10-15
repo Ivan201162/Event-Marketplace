@@ -58,16 +58,16 @@ class ImageCacheManager {
 final imagePreloadProvider =
     FutureProvider.family<void, String>((ref, imageUrl) async {
   try {
-    await precacheImage(
-      CachedNetworkImageProvider(imageUrl),
-      ref
-              .read(imageCacheProvider)
-              .initializeCache()!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-          as BuildContext,
-    );
+    // Инициализируем кэш
+    ref.read(imageCacheProvider).initializeCache();
+    
+    // Предварительная загрузка изображения
+    // Примечание: precacheImage требует BuildContext, который недоступен в провайдере
+    // Вместо этого мы просто инициализируем кэш
+    debugPrint('Image cache initialized for: $imageUrl');
   } on Exception catch (e) {
     // Игнорируем ошибки предварительной загрузки
-    debugPrint('Failed to preload image: $imageUrl, error: $e');
+    debugPrint('Failed to initialize cache for image: $imageUrl, error: $e');
   }
 });
 

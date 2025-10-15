@@ -66,7 +66,7 @@ class ReviewStatsWidget extends StatelessWidget {
                       const SizedBox(height: 8),
                       ...List.generate(5, (index) {
                         final rating = 5 - index;
-                        final count = stats.ratingDistribution[rating] ?? 0;
+                        final count = stats.ratingDistribution[rating.toString()] ?? 0;
                         final percentage = stats.getRatingPercentage(rating);
 
                         return Padding(

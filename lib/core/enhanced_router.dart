@@ -16,6 +16,13 @@ import '../screens/social_followers_screen.dart';
 import '../screens/social_following_screen.dart';
 import '../screens/create_idea_screen.dart';
 import '../screens/edit_profile_screen.dart';
+import '../screens/enhanced_social_home_screen.dart';
+import '../screens/ideas_feed_screen.dart';
+import '../screens/chats_list_screen.dart';
+import '../screens/chat_screen.dart';
+import '../screens/requests_screen.dart';
+import '../screens/create_request_screen.dart';
+import '../screens/profile_edit_screen.dart';
 
 /// Провайдер роутера приложения
 final routerProvider = Provider<GoRouter>((ref) => GoRouter(
@@ -45,21 +52,21 @@ final routerProvider = Provider<GoRouter>((ref) => GoRouter(
           GoRoute(
             path: 'home',
             name: 'home',
-            builder: (context, state) => const HomeScreen(),
+            builder: (context, state) => const EnhancedSocialHomeScreen(),
           ),
 
           // Лента
           GoRoute(
             path: 'feed',
             name: 'feed',
-            builder: (context, state) => const FeedScreen(),
+            builder: (context, state) => const IdeasFeedScreen(),
           ),
 
           // Идеи
           GoRoute(
             path: 'ideas',
             name: 'ideas',
-            builder: (context, state) => const IdeasScreen(),
+            builder: (context, state) => const IdeasFeedScreen(),
           ),
 
           // Настройки
@@ -75,25 +82,65 @@ final routerProvider = Provider<GoRouter>((ref) => GoRouter(
       GoRoute(
         path: '/home',
         name: 'home-direct',
-        builder: (context, state) => const HomeScreen(),
+        builder: (context, state) => const EnhancedSocialHomeScreen(),
       ),
 
       GoRoute(
         path: '/feed',
         name: 'feed-direct',
-        builder: (context, state) => const FeedScreen(),
+        builder: (context, state) => const IdeasFeedScreen(),
       ),
 
       GoRoute(
         path: '/ideas',
         name: 'ideas-direct',
-        builder: (context, state) => const IdeasScreen(),
+        builder: (context, state) => const IdeasFeedScreen(),
       ),
 
       GoRoute(
         path: '/settings',
         name: 'settings-direct',
         builder: (context, state) => const EnhancedSettingsScreen(),
+      ),
+
+      // Новые маршруты
+      GoRoute(
+        path: '/chats',
+        name: 'chats',
+        builder: (context, state) => const ChatsListScreen(),
+      ),
+
+      GoRoute(
+        path: '/chat/:chatId',
+        name: 'chat',
+        builder: (context, state) {
+          final chatId = state.pathParameters['chatId']!;
+          return ChatScreen(chatId: chatId);
+        },
+      ),
+
+      GoRoute(
+        path: '/ideas/create',
+        name: 'create-idea',
+        builder: (context, state) => const CreateIdeaScreen(),
+      ),
+
+      GoRoute(
+        path: '/requests',
+        name: 'requests',
+        builder: (context, state) => const RequestsScreen(),
+      ),
+
+      GoRoute(
+        path: '/requests/create',
+        name: 'create-request',
+        builder: (context, state) => const CreateRequestScreen(),
+      ),
+
+      GoRoute(
+        path: '/profile/edit',
+        name: 'edit-profile',
+        builder: (context, state) => const ProfileEditScreen(),
       ),
 
       // Профиль

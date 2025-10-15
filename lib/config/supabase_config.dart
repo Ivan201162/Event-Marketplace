@@ -5,17 +5,17 @@ class SupabaseConfig {
   // URL вашего Supabase проекта
   // Найти в Settings → API → Project URL
   // ЗАМЕНИТЕ НА ВАШ РЕАЛЬНЫЙ URL!
-  static const String url = 'https://your-project-id.supabase.co';
+  static const String url = 'https://eventmarketplace.supabase.co';
   
   // Anon public key (безопасен для клиентского кода)
   // Найти в Settings → API → anon public
   // ЗАМЕНИТЕ НА ВАШ РЕАЛЬНЫЙ КЛЮЧ!
-  static const String anonKey = 'your-anon-key-here';
+  static const String anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV2ZW50bWFya2V0cGxhY2UiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTczNDU2NzIwMCwiZXhwIjoyMDUwMTQzMjAwfQ.example-key';
   
   // Service role key (только для серверных операций!)
   // Найти в Settings → API → service_role
   // НЕ ИСПОЛЬЗУЙТЕ в клиентском коде!
-  static const String serviceRoleKey = 'your-service-role-key-here';
+  static const String serviceRoleKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV2ZW50bWFya2V0cGxhY2UiLCJyb2xlIjoic2VydmljZV9yb2xlIiwiaWF0IjoxNzM0NTY3MjAwLCJleHAiOjIwNTAxNDMyMDB9.example-service-key';
   
   // Настройки для разработки
   static const bool isDevelopment = true;

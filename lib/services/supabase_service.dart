@@ -346,4 +346,287 @@ class SupabaseService {
     
     return channel;
   }
+
+  // =============================================
+  // ИДЕИ/ПОСТЫ
+  // =============================================
+
+  // Получение идей с пагинацией
+  static Future<List<Idea>> getIdeas({
+    int limit = 20,
+    int offset = 0,
+    String? category,
+  }) async {
+    try {
+      var query = _client
+          .from('ideas')
+          .select('''
+            *,
+            profiles!inner(id, username, name, avatar_url)
+          ''')
+          .eq('is_public', true)
+          .order('created_at', ascending: false)
+          .range(offset, offset + limit - 1);
+
+      if (category != null) {
+        query = query.eq('category', category);
+      }
+
+      final response = await query;
+      
+      return (response as List)
+          .map((json) => Idea.fromJson(json))
+          .toList();
+    } catch (e) {
+      print('Error getting ideas: $e');
+      return [];
+    }
+  }
+
+  // Создание идеи
+  static Future<Idea?> createIdea({
+    required String type,
+    String? content,
+    List<String> mediaUrls = const [],
+    String? category,
+  }) async {
+    try {
+      final currentUserId = currentUser?.id;
+      if (currentUserId == null) return null;
+
+      final response = await _client.from('ideas').insert({
+        'user_id': currentUserId,
+        'type': type,
+        'content': content,
+        'media_urls': mediaUrls,
+        'category': category,
+        'is_public': true,
+      }).select('''
+        *,
+        profiles!inner(id, username, name, avatar_url)
+      ''').single();
+      
+      return Idea.fromJson(response);
+    } catch (e) {
+      print('Error creating idea: $e');
+      return null;
+    }
+  }
+
+  // Лайк идеи
+  static Future<bool> likeIdea(String ideaId) async {
+    try {
+      final currentUserId = currentUser?.id;
+      if (currentUserId == null) return false;
+
+      await _client.from('idea_likes').insert({
+        'idea_id': ideaId,
+        'user_id': currentUserId,
+      });
+      
+      return true;
+    } catch (e) {
+      print('Error liking idea: $e');
+      return false;
+    }
+  }
+
+  // Убрать лайк идеи
+  static Future<bool> unlikeIdea(String ideaId) async {
+    try {
+      final currentUserId = currentUser?.id;
+      if (currentUserId == null) return false;
+
+      await _client
+          .from('idea_likes')
+          .delete()
+          .eq('idea_id', ideaId)
+          .eq('user_id', currentUserId);
+      
+      return true;
+    } catch (e) {
+      print('Error unliking idea: $e');
+      return false;
+    }
+  }
+
+  // Проверка лайка
+  static Future<bool> isIdeaLiked(String ideaId) async {
+    try {
+      final currentUserId = currentUser?.id;
+      if (currentUserId == null) return false;
+
+      final response = await _client
+          .from('idea_likes')
+          .select('id')
+          .eq('idea_id', ideaId)
+          .eq('user_id', currentUserId)
+          .maybeSingle();
+      
+      return response != null;
+    } catch (e) {
+      print('Error checking idea like: $e');
+      return false;
+    }
+  }
+
+  // =============================================
+  // ЗАЯВКИ
+  // =============================================
+
+  // Получение заявок пользователя
+  static Future<List<Request>> getUserRequests({
+    required String userId,
+    bool isCreatedBy = true,
+    int limit = 20,
+    int offset = 0,
+  }) async {
+    try {
+      final column = isCreatedBy ? 'created_by' : 'assigned_to';
+      
+      final response = await _client
+          .from('requests')
+          .select('''
+            *,
+            creator:profiles!created_by(id, username, name, avatar_url),
+            assignee:profiles!assigned_to(id, username, name, avatar_url)
+          ''')
+          .eq(column, userId)
+          .order('created_at', ascending: false)
+          .range(offset, offset + limit - 1);
+      
+      return (response as List)
+          .map((json) => Request.fromJson(json))
+          .toList();
+    } catch (e) {
+      print('Error getting user requests: $e');
+      return [];
+    }
+  }
+
+  // Создание заявки
+  static Future<Request?> createRequest({
+    required String title,
+    String? description,
+    String? category,
+    double? budget,
+    DateTime? deadline,
+    String? location,
+  }) async {
+    try {
+      final currentUserId = currentUser?.id;
+      if (currentUserId == null) return null;
+
+      final response = await _client.from('requests').insert({
+        'created_by': currentUserId,
+        'title': title,
+        'description': description,
+        'category': category,
+        'budget': budget,
+        'deadline': deadline?.toIso8601String(),
+        'location': location,
+        'status': 'open',
+      }).select('''
+        *,
+        creator:profiles!created_by(id, username, name, avatar_url)
+      ''').single();
+      
+      return Request.fromJson(response);
+    } catch (e) {
+      print('Error creating request: $e');
+      return null;
+    }
+  }
+
+  // Обновление статуса заявки
+  static Future<bool> updateRequestStatus(String requestId, String status) async {
+    try {
+      await _client
+          .from('requests')
+          .update({'status': status})
+          .eq('id', requestId);
+      
+      return true;
+    } catch (e) {
+      print('Error updating request status: $e');
+      return false;
+    }
+  }
+
+  // Назначение исполнителя
+  static Future<bool> assignRequest(String requestId, String assigneeId) async {
+    try {
+      await _client
+          .from('requests')
+          .update({
+            'assigned_to': assigneeId,
+            'status': 'in_progress',
+          })
+          .eq('id', requestId);
+      
+      return true;
+    } catch (e) {
+      print('Error assigning request: $e');
+      return false;
+    }
+  }
+
+  // =============================================
+  // ПРОФИЛЬ
+  // =============================================
+
+  // Обновление профиля
+  static Future<bool> updateProfile({
+    String? name,
+    String? bio,
+    String? city,
+    List<String>? skills,
+    String? avatarUrl,
+  }) async {
+    try {
+      final currentUserId = currentUser?.id;
+      if (currentUserId == null) return false;
+
+      final updateData = <String, dynamic>{};
+      if (name != null) updateData['name'] = name;
+      if (bio != null) updateData['bio'] = bio;
+      if (city != null) updateData['city'] = city;
+      if (skills != null) updateData['skills'] = skills;
+      if (avatarUrl != null) updateData['avatar_url'] = avatarUrl;
+
+      await _client
+          .from('profiles')
+          .update(updateData)
+          .eq('id', currentUserId);
+      
+      return true;
+    } catch (e) {
+      print('Error updating profile: $e');
+      return false;
+    }
+  }
+
+  // Загрузка аватара
+  static Future<String?> uploadAvatar(String filePath, List<int> fileBytes) async {
+    try {
+      final currentUserId = currentUser?.id;
+      if (currentUserId == null) return null;
+
+      final fileName = '${currentUserId}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final filePath = 'avatars/$fileName';
+
+      await _client.storage
+          .from('avatars')
+          .uploadBinary(filePath, fileBytes);
+
+      final publicUrl = _client.storage
+          .from('avatars')
+          .getPublicUrl(filePath);
+
+      return publicUrl;
+    } catch (e) {
+      print('Error uploading avatar: $e');
+      return null;
+    }
+  }
 }

@@ -213,7 +213,7 @@ class HorizontalRecommendationList extends StatelessWidget {
     );
   }
 
-  Widget _buildAvatar(specialist) => CircleAvatar(
+  Widget _buildAvatar(dynamic specialist) => CircleAvatar(
         radius: 20,
         backgroundImage: specialist.avatarUrl != null
             ? NetworkImage(specialist.avatarUrl as String)
@@ -231,7 +231,7 @@ class HorizontalRecommendationList extends StatelessWidget {
             : null,
       );
 
-  Widget _buildName(specialist) => Text(
+  Widget _buildName(dynamic specialist) => Text(
         specialist.name as String,
         style: const TextStyle(
           fontSize: 14,
@@ -241,7 +241,7 @@ class HorizontalRecommendationList extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       );
 
-  Widget _buildRating(specialist) => Row(
+  Widget _buildRating(dynamic specialist) => Row(
         children: [
           const Icon(Icons.star, size: 12, color: Colors.amber),
           const SizedBox(width: 2),
@@ -255,7 +255,7 @@ class HorizontalRecommendationList extends StatelessWidget {
         ],
       );
 
-  Widget _buildPrice(specialist) => Text(
+  Widget _buildPrice(dynamic specialist) => Text(
         specialist.priceRangeString as String,
         style: TextStyle(
           fontSize: 12,

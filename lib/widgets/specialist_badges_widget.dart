@@ -14,7 +14,9 @@ class SpecialistBadgesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (badges.isEmpty) return const SizedBox.shrink();
+    if (badges.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     return Wrap(
       spacing: 4,
@@ -191,4 +193,3 @@ class SpecialistBadge {
     return badges;
   }
 }
-

@@ -1,342 +1,208 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../models/social_models.dart';
-import '../services/supabase_service.dart';
 
-class WeeklyLeadersWidget extends StatefulWidget {
-  final String? userCity;
+import '../models/social_models.dart';
+
+/// Виджет топ специалистов недели
+class WeeklyLeadersWidget extends StatelessWidget {
+  final List<WeeklyLeader> leaders;
+  final Function(WeeklyLeader)? onLeaderTap;
 
   const WeeklyLeadersWidget({
     super.key,
-    this.userCity,
+    required this.leaders,
+    this.onLeaderTap,
   });
 
   @override
-  State<WeeklyLeadersWidget> createState() => _WeeklyLeadersWidgetState();
-}
-
-class _WeeklyLeadersWidgetState extends State<WeeklyLeadersWidget> {
-  List<WeeklyLeader> _leaders = [];
-  bool _isLoading = true;
-  String? _error;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadLeaders();
-  }
-
-  Future<void> _loadLeaders() async {
-    try {
-      setState(() {
-        _isLoading = true;
-        _error = null;
-      });
-
-      final leaders = await SupabaseService.getWeeklyLeaders(
-        city: widget.userCity,
-        limit: 10,
-      );
-
-      setState(() {
-        _leaders = leaders;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _error = e.toString();
-        _isLoading = false;
-      });
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Заголовок
-          Row(
+    if (leaders.isEmpty) {
+      return Container(
+        height: 120,
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey[300]!),
+        ),
+        child: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.amber.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  Icons.emoji_events,
-                  color: Colors.amber.shade700,
-                  size: 24,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Лучшие специалисты недели',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      widget.userCity != null 
-                          ? 'в ${widget.userCity}'
-                          : 'по всей России',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).textTheme.bodySmall?.color,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(
-                onPressed: _loadLeaders,
-                icon: const Icon(Icons.refresh),
-                tooltip: 'Обновить',
+              Icon(Icons.people_outline, size: 32, color: Colors.grey),
+              SizedBox(height: 8),
+              Text(
+                'Пока нет данных',
+                style: TextStyle(color: Colors.grey),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+        ),
+      );
+    }
+
+    return SizedBox(
+      height: 120,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: leaders.length,
+        itemBuilder: (context, index) {
+          final leader = leaders[index];
+          final isTopThree = index < 3;
           
-          // Список лидеров
-          if (_isLoading)
-            const Center(
-              child: Padding(
-                padding: EdgeInsets.all(32),
-                child: CircularProgressIndicator(),
-              ),
-            )
-          else if (_error != null)
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: Colors.red.withOpacity(0.3),
-                  width: 1,
-                ),
-              ),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    color: Colors.red.shade700,
-                    size: 32,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Ошибка загрузки',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.red.shade700,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    _error!,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.red.shade600,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 12),
-                  ElevatedButton.icon(
-                    onPressed: _loadLeaders,
-                    icon: const Icon(Icons.refresh),
-                    label: const Text('Повторить'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red.shade700,
-                      foregroundColor: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            )
-          else if (_leaders.isEmpty)
-            Container(
-              padding: const EdgeInsets.all(32),
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Theme.of(context).primaryColor.withOpacity(0.2),
-                  width: 1,
-                ),
-              ),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.emoji_events_outlined,
-                    size: 48,
-                    color: Theme.of(context).primaryColor.withOpacity(0.5),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Пока нет данных',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Статистика будет доступна после активности специалистов',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).textTheme.bodySmall?.color,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            )
-          else
-            SizedBox(
-              height: 200,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: _leaders.length,
-                itemBuilder: (context, index) {
-                  final leader = _leaders[index];
-                  return _buildLeaderCard(leader, index + 1);
-                },
-              ),
+          return Container(
+            width: 100,
+            margin: EdgeInsets.only(
+              right: index < leaders.length - 1 ? 12 : 0,
             ),
-        ],
+            child: _buildLeaderCard(context, leader, index + 1, isTopThree),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildLeaderCard(WeeklyLeader leader, int position) {
-    return Container(
-      width: 140,
-      margin: const EdgeInsets.only(right: 12),
-      child: Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: InkWell(
-          onTap: () {
-            Navigator.pushNamed(
-              context,
-              '/profile/${leader.username}',
-            );
-          },
-          borderRadius: BorderRadius.circular(12),
+  Widget _buildLeaderCard(
+    BuildContext context,
+    WeeklyLeader leader,
+    int position,
+    bool isTopThree,
+  ) {
+    final theme = Theme.of(context);
+    
+    Color positionColor;
+    IconData positionIcon;
+    
+    switch (position) {
+      case 1:
+        positionColor = Colors.amber;
+        positionIcon = Icons.emoji_events;
+        break;
+      case 2:
+        positionColor = Colors.grey[400]!;
+        positionIcon = Icons.emoji_events;
+        break;
+      case 3:
+        positionColor = Colors.orange[300]!;
+        positionIcon = Icons.emoji_events;
+        break;
+      default:
+        positionColor = Colors.grey[300]!;
+        positionIcon = Icons.circle;
+    }
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => onLeaderTap?.call(leader),
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          decoration: BoxDecoration(
+            color: isTopThree 
+                ? positionColor.withValues(alpha: 0.1)
+                : Colors.grey[50],
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: isTopThree 
+                  ? positionColor.withValues(alpha: 0.3)
+                  : Colors.grey[300]!,
+            ),
+          ),
           child: Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(8),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Позиция
                 Container(
                   width: 24,
                   height: 24,
                   decoration: BoxDecoration(
-                    color: _getPositionColor(position),
+                    color: positionColor,
                     shape: BoxShape.circle,
                   ),
                   child: Center(
-                    child: Text(
-                      position.toString(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                
-                // Аватар
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: _getPositionColor(position),
-                      width: 2,
-                    ),
-                  ),
-                  child: ClipOval(
-                    child: leader.avatarUrl != null
-                        ? CachedNetworkImage(
-                            imageUrl: leader.avatarUrl!,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => Container(
-                              color: _getPositionColor(position).withOpacity(0.1),
-                              child: Icon(
-                                Icons.person,
-                                color: _getPositionColor(position),
-                                size: 24,
-                              ),
-                            ),
-                            errorWidget: (context, url, error) => Container(
-                              color: _getPositionColor(position).withOpacity(0.1),
-                              child: Icon(
-                                Icons.person,
-                                color: _getPositionColor(position),
-                                size: 24,
-                              ),
-                            ),
+                    child: position <= 3
+                        ? Icon(
+                            positionIcon,
+                            size: 14,
+                            color: Colors.white,
                           )
-                        : Container(
-                            color: _getPositionColor(position).withOpacity(0.1),
-                            child: Icon(
-                              Icons.person,
-                              color: _getPositionColor(position),
-                              size: 24,
+                        : Text(
+                            '$position',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
                           ),
                   ),
                 ),
+                
                 const SizedBox(height: 8),
+                
+                // Аватар
+                Hero(
+                  tag: 'leader_avatar_${leader.userId}',
+                  child: CircleAvatar(
+                    radius: 20,
+                    backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
+                    backgroundImage: leader.avatarUrl != null
+                        ? CachedNetworkImageProvider(leader.avatarUrl!)
+                        : null,
+                    child: leader.avatarUrl == null
+                        ? Icon(
+                            Icons.person,
+                            size: 20,
+                            color: theme.primaryColor,
+                          )
+                        : null,
+                  ),
+                ),
+                
+                const SizedBox(height: 4),
                 
                 // Имя
                 Text(
                   leader.name,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  style: const TextStyle(
+                    fontSize: 10,
                     fontWeight: FontWeight.w600,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 4),
+                
+                const SizedBox(height: 2),
                 
                 // Город
                 if (leader.city != null)
                   Text(
                     leader.city!,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).textTheme.bodySmall?.color,
+                    style: TextStyle(
+                      fontSize: 8,
+                      color: Colors.grey[600],
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                   ),
-                const SizedBox(height: 4),
                 
-                // Очки
+                const SizedBox(height: 2),
+                
+                // Счет
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 2,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                   decoration: BoxDecoration(
-                    color: _getPositionColor(position).withOpacity(0.1),
+                    color: positionColor.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    '${leader.score7d} очков',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: _getPositionColor(position),
-                      fontWeight: FontWeight.w600,
+                    '${leader.score7d}',
+                    style: TextStyle(
+                      fontSize: 8,
+                      fontWeight: FontWeight.bold,
+                      color: positionColor,
                     ),
                   ),
                 ),
@@ -347,18 +213,4 @@ class _WeeklyLeadersWidgetState extends State<WeeklyLeadersWidget> {
       ),
     );
   }
-
-  Color _getPositionColor(int position) {
-    switch (position) {
-      case 1:
-        return Colors.amber.shade600; // Золото
-      case 2:
-        return Colors.grey.shade500; // Серебро
-      case 3:
-        return Colors.orange.shade600; // Бронза
-      default:
-        return Theme.of(context).primaryColor;
-    }
-  }
 }
-

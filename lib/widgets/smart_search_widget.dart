@@ -56,7 +56,7 @@ class _SmartSearchWidgetState extends ConsumerState<SmartSearchWidget> {
         _suggestions = suggestions;
         _showSuggestions = _focusNode.hasFocus && suggestions.isNotEmpty;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка загрузки популярных подсказок: $e');
     } finally {
       setState(() => _isLoading = false);
@@ -76,7 +76,7 @@ class _SmartSearchWidgetState extends ConsumerState<SmartSearchWidget> {
         _suggestions = suggestions;
         _showSuggestions = _focusNode.hasFocus && suggestions.isNotEmpty;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Ошибка получения подсказок: $e');
     } finally {
       setState(() => _isLoading = false);

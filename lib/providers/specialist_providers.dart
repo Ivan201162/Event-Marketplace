@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/specialist.dart';
+import '../models/specialist_filters.dart';
 import '../services/specialist_service.dart';
 
 /// Провайдер сервиса специалистов
@@ -41,363 +43,178 @@ final topSpecialistsProvider = FutureProvider<List<Specialist>>((ref) {
   return specialistService.getTopSpecialists();
 });
 
+/// Провайдер лидеров недели
+final weeklyLeadersProvider = FutureProvider<List<Specialist>>((ref) {
+  final specialistService = ref.watch(specialistServiceProvider);
+  return specialistService.getWeeklyLeaders();
+});
+
 /// Провайдер специалистов по категории
 final specialistsByCategoryProvider =
-    FutureProvider.family<List<Specialist>, SpecialistCategory>(
-        (ref, category) {
+    FutureProvider.family<List<Specialist>, SpecialistCategory>((ref, category) {
   final specialistService = ref.watch(specialistServiceProvider);
   return specialistService.getSpecialistsByCategory(category);
 });
 
-/// Провайдер фильтров поиска
+/// Провайдер фильтров специалистов
 final specialistFiltersProvider =
-    NotifierProvider<SpecialistFiltersNotifier, SpecialistFilters>(
-  SpecialistFiltersNotifier.new,
-);
+    Provider<SpecialistFiltersNotifier>((ref) {
+  return SpecialistFiltersNotifier();
+});
 
-class SpecialistFiltersNotifier extends Notifier<SpecialistFilters> {
-  @override
-  SpecialistFilters build() => const SpecialistFilters();
-
-  void updateFilters(SpecialistFilters filters) {
-    state = filters;
-  }
-}
-
-/// Провайдер результатов поиска с фильтрами
-final searchResultsProvider = StreamProvider<List<Specialist>>((ref) {
+/// Провайдер поиска специалистов
+final specialistSearchProvider =
+    StreamProvider.family<List<Specialist>, Map<String, dynamic>>((ref, filters) {
   final specialistService = ref.watch(specialistServiceProvider);
-  final filters = ref.watch(specialistFiltersProvider);
-
   return specialistService.searchSpecialistsStream(filters);
 });
 
-/// Провайдер доступности специалиста на дату
+/// Провайдер доступности специалиста
 final specialistAvailabilityProvider =
-    FutureProvider.family<bool, SpecialistAvailabilityParams>((ref, params) {
+    FutureProvider.family<bool, Map<String, dynamic>>((ref, params) {
   final specialistService = ref.watch(specialistServiceProvider);
   return specialistService.isSpecialistAvailableOnDate(
-    params.specialistId,
-    params.date,
+    params['specialistId'] as String,
+    params['date'] as DateTime,
   );
 });
 
-/// Провайдер доступных временных слотов специалиста
-final specialistTimeSlotsProvider =
-    FutureProvider.family<List<DateTime>, SpecialistTimeSlotsParams>(
-        (ref, params) {
+/// Провайдер временных слотов
+final timeSlotsProvider =
+    FutureProvider.family<List<Map<String, dynamic>>, Map<String, dynamic>>((ref, params) {
   final specialistService = ref.watch(specialistServiceProvider);
   return specialistService.getAvailableTimeSlots(
-    params.specialistId,
-    params.date,
-    slotDuration: params.slotDuration,
+    params['specialistId'] as String,
+    params['date'] as DateTime,
   );
 });
+
+/// Notifier для фильтров специалистов
+class SpecialistFiltersNotifier extends ChangeNotifier {
+  SpecialistFilters _filters = const SpecialistFilters();
+  
+  SpecialistFilters get filters => _filters;
+
+  void updateFilters(SpecialistFilters filters) {
+    _filters = filters;
+    notifyListeners();
+  }
+
+  void clearFilters() {
+    _filters = const SpecialistFilters();
+    notifyListeners();
+  }
+
+  void setCategory(SpecialistCategory? category) {
+    _filters = _filters.copyWith(category: category);
+    notifyListeners();
+  }
+
+  void setCity(String? city) {
+    _filters = _filters.copyWith(city: city);
+    notifyListeners();
+  }
+
+  void setPriceRange(double? minPrice, double? maxPrice) {
+    _filters = _filters.copyWith(
+      minPrice: minPrice,
+      maxPrice: maxPrice,
+    );
+    notifyListeners();
+  }
+
+  void setRating(double? minRating) {
+    _filters = _filters.copyWith(minRating: minRating);
+    notifyListeners();
+  }
+
+  void setSortBy(SpecialistSortOption? sortBy) {
+    _filters = _filters.copyWith(sortBy: sortBy);
+    notifyListeners();
+  }
+}
 
 /// Провайдер состояния поиска
-final searchStateProvider =
-    NotifierProvider<SearchStateNotifier, SearchState>(SearchStateNotifier.new);
+final specialistSearchStateProvider =
+    Provider<SpecialistSearchNotifier>((ref) {
+  return SpecialistSearchNotifier();
+});
 
-/// Провайдер избранных специалистов
-final favoriteSpecialistsProvider =
-    NotifierProvider<FavoriteSpecialistsNotifier, List<String>>(
-  FavoriteSpecialistsNotifier.new,
-);
-
-/// Провайдер истории поиска
-final searchHistoryProvider =
-    NotifierProvider<SearchHistoryNotifier, List<String>>(
-  SearchHistoryNotifier.new,
-);
-
-/// Параметры для проверки доступности специалиста
-class SpecialistAvailabilityParams {
-  const SpecialistAvailabilityParams({
-    required this.specialistId,
-    required this.date,
-  });
-  final String specialistId;
-  final DateTime date;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is SpecialistAvailabilityParams &&
-          runtimeType == other.runtimeType &&
-          specialistId == other.specialistId &&
-          date == other.date;
-
-  @override
-  int get hashCode => specialistId.hashCode ^ date.hashCode;
-}
-
-/// Параметры для получения временных слотов специалиста
-class SpecialistTimeSlotsParams {
-  const SpecialistTimeSlotsParams({
-    required this.specialistId,
-    required this.date,
-    this.slotDuration = const Duration(hours: 1),
-  });
-  final String specialistId;
-  final DateTime date;
-  final Duration slotDuration;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is SpecialistTimeSlotsParams &&
-          runtimeType == other.runtimeType &&
-          specialistId == other.specialistId &&
-          date == other.date &&
-          slotDuration == other.slotDuration;
-
-  @override
-  int get hashCode =>
-      specialistId.hashCode ^ date.hashCode ^ slotDuration.hashCode;
-}
-
-/// Состояние поиска
-class SearchState {
-  const SearchState({
+/// Состояние поиска специалистов
+class SpecialistSearchState {
+  const SpecialistSearchState({
+    this.query = '',
     this.isSearching = false,
-    this.currentQuery,
-    this.currentFilters = const SpecialistFilters(),
     this.results = const [],
-    this.error,
+    this.currentFilters = const SpecialistFilters(),
+    this.hasActiveFilters = false,
   });
+
+  final String query;
   final bool isSearching;
-  final String? currentQuery;
-  final SpecialistFilters currentFilters;
   final List<Specialist> results;
-  final String? error;
-
-  SearchState copyWith({
-    bool? isSearching,
-    String? currentQuery,
-    SpecialistFilters? currentFilters,
-    List<Specialist>? results,
-    String? error,
-  }) =>
-      SearchState(
-        isSearching: isSearching ?? this.isSearching,
-        currentQuery: currentQuery ?? this.currentQuery,
-        currentFilters: currentFilters ?? this.currentFilters,
-        results: results ?? this.results,
-        error: error ?? this.error,
-      );
-}
-
-/// Нотификатор состояния поиска
-class SearchStateNotifier extends Notifier<SearchState> {
-  @override
-  SearchState build() => const SearchState();
-
-  /// Начать поиск
-  void startSearch(String query, SpecialistFilters filters) {
-    state = state.copyWith(
-      isSearching: true,
-      currentQuery: query,
-      currentFilters: filters,
-    );
-  }
-
-  /// Завершить поиск
-  void finishSearch(List<Specialist> results) {
-    state = state.copyWith(
-      isSearching: false,
-      results: results,
-    );
-  }
-
-  /// Ошибка поиска
-  void setError(String error) {
-    state = state.copyWith(
-      isSearching: false,
-      error: error,
-    );
-  }
-
-  /// Очистить результаты
-  void clearResults() {
-    state = state.copyWith(
-      results: [],
-    );
-  }
-
-  /// Обновить фильтры
-  void updateFilters(SpecialistFilters filters) {
-    state = state.copyWith(currentFilters: filters);
-  }
-
-  /// Сбросить фильтры
-  void resetFilters() {
-    state = state.copyWith(currentFilters: const SpecialistFilters());
-  }
-}
-
-/// Нотификатор избранных специалистов
-class FavoriteSpecialistsNotifier extends Notifier<List<String>> {
-  @override
-  List<String> build() => [];
-
-  /// Добавить в избранное
-  void addToFavorites(String specialistId) {
-    if (!state.contains(specialistId)) {
-      state = [...state, specialistId];
-    }
-  }
-
-  /// Удалить из избранного
-  void removeFromFavorites(String specialistId) {
-    state = state.where((id) => id != specialistId).toList();
-  }
-
-  /// Проверить, в избранном ли
-  bool isFavorite(String specialistId) => state.contains(specialistId);
-
-  /// Очистить избранное
-  void clearFavorites() {
-    state = [];
-  }
-}
-
-/// Нотификатор истории поиска
-class SearchHistoryNotifier extends Notifier<List<String>> {
-  @override
-  List<String> build() => [];
-
-  /// Добавить запрос в историю
-  void addToHistory(String query) {
-    if (query.trim().isEmpty) return;
-
-    // Удаляем дубликаты
-    state = state
-        .where((item) => item.toLowerCase() != query.toLowerCase())
-        .toList();
-
-    // Добавляем в начало
-    state = [query, ...state];
-
-    // Ограничиваем количество записей
-    if (state.length > 10) {
-      state = state.take(10).toList();
-    }
-  }
-
-  /// Очистить историю
-  void clearHistory() {
-    state = [];
-  }
-
-  /// Удалить запрос из истории
-  void removeFromHistory(String query) {
-    state = state.where((item) => item != query).toList();
-  }
-}
-
-/// Провайдер для получения специалистов с учетом избранного
-final specialistsWithFavoritesProvider = Provider<List<Specialist>>((ref) {
-  final specialists = ref.watch(searchResultsProvider).when(
-        data: (specialists) => specialists,
-        loading: () => <Specialist>[],
-        error: (_, __) => <Specialist>[],
-      );
-
-  final favorites = ref.watch(favoriteSpecialistsProvider);
-
-  // Сортируем: сначала избранные, потом остальные
-  final sortedSpecialists = List<Specialist>.from(specialists);
-  sortedSpecialists.sort((a, b) {
-    final aIsFavorite = favorites.contains(a.id);
-    final bIsFavorite = favorites.contains(b.id);
-
-    if (aIsFavorite && !bIsFavorite) return -1;
-    if (!aIsFavorite && bIsFavorite) return 1;
-
-    // Если оба в избранном или оба не в избранном, сортируем по рейтингу
-    return b.rating.compareTo(a.rating);
-  });
-
-  return sortedSpecialists;
-});
-
-/// Провайдер для статистики поиска
-final searchStatsProvider = Provider<SearchStats>((ref) {
-  final specialists = ref.watch(searchResultsProvider).when(
-        data: (specialists) => specialists,
-        loading: () => <Specialist>[],
-        error: (_, __) => <Specialist>[],
-      );
-
-  final filters = ref.watch(specialistFiltersProvider);
-
-  return SearchStats(
-    totalResults: specialists.length,
-    verifiedCount: specialists.where((s) => s.isVerified).length,
-    averageRating: specialists.isNotEmpty
-        ? specialists.map((s) => s.rating).reduce((a, b) => a + b) /
-            specialists.length
-        : 0.0,
-    priceRange: specialists.isNotEmpty
-        ? PriceRange(
-            min: specialists
-                .map((s) => s.hourlyRate)
-                .reduce((a, b) => a < b ? a : b),
-            max: specialists
-                .map((s) => s.hourlyRate)
-                .reduce((a, b) => a > b ? a : b),
-          )
-        : const PriceRange(min: 0, max: 0),
-    categoryDistribution: _getCategoryDistribution(specialists),
-    hasActiveFilters: filters.hasFilters,
-  );
-});
-
-/// Статистика поиска
-class SearchStats {
-  const SearchStats({
-    required this.totalResults,
-    required this.verifiedCount,
-    required this.averageRating,
-    required this.priceRange,
-    required this.categoryDistribution,
-    required this.hasActiveFilters,
-  });
-  final int totalResults;
-  final int verifiedCount;
-  final double averageRating;
-  final PriceRange priceRange;
-  final Map<SpecialistCategory, int> categoryDistribution;
+  final SpecialistFilters currentFilters;
   final bool hasActiveFilters;
-}
 
-/// Диапазон цен
-class PriceRange {
-  const PriceRange({
-    required this.min,
-    required this.max,
-  });
-  final double min;
-  final double max;
-
-  String get displayText {
-    if (min == max) {
-      return '${min.toStringAsFixed(0)} ₽/час';
-    }
-    return '${min.toStringAsFixed(0)} - ${max.toStringAsFixed(0)} ₽/час';
+  SpecialistSearchState copyWith({
+    String? query,
+    bool? isSearching,
+    List<Specialist>? results,
+    SpecialistFilters? currentFilters,
+    bool? hasActiveFilters,
+  }) {
+    return SpecialistSearchState(
+      query: query ?? this.query,
+      isSearching: isSearching ?? this.isSearching,
+      results: results ?? this.results,
+      currentFilters: currentFilters ?? this.currentFilters,
+      hasActiveFilters: hasActiveFilters ?? this.hasActiveFilters,
+    );
   }
 }
 
-/// Получить распределение по категориям
-Map<SpecialistCategory, int> _getCategoryDistribution(
-  List<Specialist> specialists,
-) {
-  final distribution = <SpecialistCategory, int>{};
+/// Notifier для поиска специалистов
+class SpecialistSearchNotifier extends ChangeNotifier {
+  SpecialistSearchState _state = const SpecialistSearchState();
+  
+  SpecialistSearchState get state => _state;
 
-  for (final specialist in specialists) {
-    distribution[specialist.category] =
-        (distribution[specialist.category] ?? 0) + 1;
+  void startSearch(String query, SpecialistFilters filters) {
+    _state = _state.copyWith(
+      query: query,
+      isSearching: true,
+      currentFilters: filters,
+      hasActiveFilters: _hasActiveFilters(filters),
+    );
+    notifyListeners();
   }
 
-  return distribution;
+  void updateResults(List<Specialist> results) {
+    _state = _state.copyWith(
+      results: results,
+      isSearching: false,
+    );
+    notifyListeners();
+  }
+
+  void updateFilters(SpecialistFilters filters) {
+    _state = _state.copyWith(
+      currentFilters: filters,
+      hasActiveFilters: _hasActiveFilters(filters),
+    );
+    notifyListeners();
+  }
+
+  void clearSearch() {
+    _state = const SpecialistSearchState();
+    notifyListeners();
+  }
+
+  bool _hasActiveFilters(SpecialistFilters filters) {
+    return filters.category != null ||
+        filters.city != null ||
+        filters.minPrice != null ||
+        filters.maxPrice != null ||
+        filters.minRating != null;
+  }
 }

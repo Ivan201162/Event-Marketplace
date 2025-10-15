@@ -32,7 +32,7 @@ class ReviewCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        review.title ?? 'Без заголовка',
+                        review.title.isNotEmpty ? review.title : 'Без заголовка',
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -270,7 +270,7 @@ class ReviewStatsWidget extends StatelessWidget {
         children: List.generate(5, (index) {
           final rating = 5 - index;
           final percentage = statistics.getRatingPercentage(rating);
-          final count = statistics.ratingDistribution[rating] ?? 0;
+          final count = statistics.ratingDistribution[rating.toString()] ?? 0;
 
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 2),
@@ -671,7 +671,7 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
         date: DateTime.now(),
       );
 
-      await ref.read(reviewStateProvider.notifier).createReview(review);
+      await ref.read<ReviewStateNotifier>(reviewStateProvider.notifier).createReview(review);
 
       ref
           .read<ReviewFormNotifier>(reviewFormProvider.notifier)

@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 
 Future<void> main() async {
   await Firebase.initializeApp();
 
   final firestore = FirebaseFirestore.instance;
 
-  print('Добавление тестовых данных в Firestore...');
+  debugPrint('Добавление тестовых данных в Firestore...');
 
   // Добавляем тестовые заявки
   await _addTestBookings(firestore);
@@ -17,11 +18,11 @@ Future<void> main() async {
   // Добавляем тестовые сообщения
   await _addTestMessages(firestore);
 
-  print('Тестовые данные успешно добавлены!');
+  debugPrint('Тестовые данные успешно добавлены!');
 }
 
 Future<void> _addTestBookings(FirebaseFirestore firestore) async {
-  print('Добавление тестовых заявок...');
+  debugPrint('Добавление тестовых заявок...');
 
   final testBookings = [
     {
@@ -139,11 +140,11 @@ Future<void> _addTestBookings(FirebaseFirestore firestore) async {
     await firestore.collection('bookings').add(booking);
   }
 
-  print('Добавлено ${testBookings.length} тестовых заявок');
+  debugPrint('Добавлено ${testBookings.length} тестовых заявок');
 }
 
 Future<void> _addTestChats(FirebaseFirestore firestore) async {
-  print('Добавление тестовых чатов...');
+  debugPrint('Добавление тестовых чатов...');
 
   final testChats = [
     {
@@ -226,18 +227,18 @@ Future<void> _addTestChats(FirebaseFirestore firestore) async {
     await firestore.collection('chats').add(chat);
   }
 
-  print('Добавлено ${testChats.length} тестовых чатов');
+  debugPrint('Добавлено ${testChats.length} тестовых чатов');
 }
 
 Future<void> _addTestMessages(FirebaseFirestore firestore) async {
-  print('Добавление тестовых сообщений...');
+  debugPrint('Добавление тестовых сообщений...');
 
   // Получаем ID чатов
   final chatsSnapshot = await firestore.collection('chats').get();
   final chatIds = chatsSnapshot.docs.map((doc) => doc.id).toList();
 
   if (chatIds.isEmpty) {
-    print('Нет чатов для добавления сообщений');
+    debugPrint('Нет чатов для добавления сообщений');
     return;
   }
 
@@ -381,5 +382,5 @@ Future<void> _addTestMessages(FirebaseFirestore firestore) async {
         .add(message);
   }
 
-  print('Добавлено ${testMessages.length} тестовых сообщений');
+  debugPrint('Добавлено ${testMessages.length} тестовых сообщений');
 }

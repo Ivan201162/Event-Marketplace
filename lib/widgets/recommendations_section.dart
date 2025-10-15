@@ -45,7 +45,7 @@ class RecommendationsSection extends ConsumerWidget {
     );
   }
 
-  void _onRecommendationTap(BuildContext context, recommendation) {
+  void _onRecommendationTap(BuildContext context, dynamic recommendation) {
     // TODO(developer): Navigate to specialist profile
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -54,7 +54,7 @@ class RecommendationsSection extends ConsumerWidget {
     );
   }
 
-  void _onRecommendationBook(BuildContext context, recommendation) {
+  void _onRecommendationBook(BuildContext context, dynamic recommendation) {
     // TODO(developer): Navigate to booking form
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

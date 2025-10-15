@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'story_type.dart';
+
 /// Модель сторис
 class Story {
   const Story({
@@ -110,7 +112,7 @@ class Story {
   }
 
   /// Получить тип контента
-  String get type => mediaUrl.contains('video') ? 'video' : 'image';
+  StoryType get type => mediaUrl.contains('video') ? StoryType.video : StoryType.image;
 
   /// Получить текст (для текстовых историй)
   String get text => title;

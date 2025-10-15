@@ -439,7 +439,7 @@ class LocalDataSeeder {
         'content': 'Новый микс для свадебной церемонии 🎵💒',
         'type': 'audio',
         'createdAt': '2024-01-17T19:15:00Z',
-        'media': [],
+        'media': <String>[],
         'likesCount': 56,
         'commentsCount': 18,
         'sharesCount': 12,

@@ -22,7 +22,7 @@ class StoryWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context);
+    // final l10n = AppLocalizations.of(context);
     final timeLeft = story.expiresAt.difference(DateTime.now());
 
     return GestureDetector(
@@ -147,7 +147,7 @@ class _CreateStoryWidgetState extends ConsumerState<CreateStoryWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    // final l10n = AppLocalizations.of(context);
 
     return FloatingActionButton(
       onPressed: _isUploading ? null : _showCreateStoryDialog,

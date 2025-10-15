@@ -366,4 +366,156 @@ class SpecialistService {
       return {};
     }
   }
+
+  /// Получить ленту специалиста (посты, активности)
+  Stream<List<Map<String, dynamic>>> getSpecialistFeed(String specialistId) async* {
+    try {
+      // TODO(developer): Implement specialist feed logic
+      // Пока возвращаем пустой список
+      yield <Map<String, dynamic>>[];
+    } on Exception catch (e) {
+      debugPrint('Ошибка получения ленты специалиста: $e');
+      yield <Map<String, dynamic>>[];
+    }
+  }
+
+  /// Получить поток специалиста по ID
+  Stream<Specialist?> getSpecialistStream(String specialistId) async* {
+    try {
+      final specialist = await getSpecialistById(specialistId);
+      yield specialist;
+    } on Exception catch (e) {
+      debugPrint('Ошибка получения потока специалиста: $e');
+      yield null;
+    }
+  }
+
+
+  /// Получить поток специалиста по ID пользователя
+  Stream<Specialist?> getSpecialistByUserIdStream(String userId) async* {
+    try {
+      final snapshot = await _firestore
+          .collection(_collection)
+          .where('userId', isEqualTo: userId)
+          .limit(1)
+          .get();
+      
+      if (snapshot.docs.isNotEmpty) {
+        yield Specialist.fromDocument(snapshot.docs.first);
+      } else {
+        yield null;
+      }
+    } on Exception catch (e) {
+      debugPrint('Ошибка получения специалиста по userId: $e');
+      yield null;
+    }
+  }
+
+  /// Получить топ специалистов
+  Future<List<Specialist>> getTopSpecialists({int limit = 10}) async {
+    try {
+      final snapshot = await _firestore
+          .collection(_collection)
+          .orderBy('rating', descending: true)
+          .orderBy('reviewsCount', descending: true)
+          .limit(limit)
+          .get();
+      
+      return snapshot.docs.map(Specialist.fromDocument).toList();
+    } on Exception catch (e) {
+      debugPrint('Ошибка получения топ специалистов: $e');
+      return <Specialist>[];
+    }
+  }
+
+  /// Получить лидеров недели
+  Future<List<Specialist>> getWeeklyLeaders({int limit = 10}) async {
+    try {
+      // Получаем специалистов с высоким рейтингом и активностью за последнюю неделю
+      final weekAgo = DateTime.now().subtract(const Duration(days: 7));
+      final snapshot = await _firestore
+          .collection(_collection)
+          .where('lastActivity', isGreaterThan: weekAgo)
+          .orderBy('lastActivity', descending: true)
+          .orderBy('rating', descending: true)
+          .limit(limit)
+          .get();
+      
+      return snapshot.docs.map(Specialist.fromDocument).toList();
+    } on Exception catch (e) {
+      debugPrint('Ошибка получения лидеров недели: $e');
+      return <Specialist>[];
+    }
+  }
+
+  /// Поиск специалистов с фильтрами (поток)
+  Stream<List<Specialist>> searchSpecialistsStream(Map<String, dynamic> filters) async* {
+    try {
+      Query query = _firestore.collection(_collection);
+      
+      // Применяем фильтры
+      if (filters['category'] != null) {
+        query = query.where('category', isEqualTo: filters['category']);
+      }
+      if (filters['city'] != null) {
+        query = query.where('city', isEqualTo: filters['city']);
+      }
+      if (filters['minRating'] != null) {
+        query = query.where('rating', isGreaterThanOrEqualTo: filters['minRating']);
+      }
+      if (filters['maxPrice'] != null) {
+        query = query.where('pricePerHour', isLessThanOrEqualTo: filters['maxPrice']);
+      }
+      
+      // Сортировка
+      final sortBy = filters['sortBy'] ?? 'rating';
+      final descending = filters['descending'] ?? true;
+      query = query.orderBy(sortBy, descending: descending);
+      
+      final snapshot = await query.limit(50).get();
+      final specialists = snapshot.docs.map(Specialist.fromDocument).toList();
+      yield specialists;
+    } on Exception catch (e) {
+      debugPrint('Ошибка поиска специалистов: $e');
+      yield <Specialist>[];
+    }
+  }
+
+  /// Проверить доступность специалиста на дату
+  Future<bool> isSpecialistAvailableOnDate(String specialistId, DateTime date) async {
+    try {
+      // TODO(developer): Implement availability check logic
+      // Пока возвращаем true для всех дат
+      return true;
+    } on Exception catch (e) {
+      debugPrint('Ошибка проверки доступности специалиста: $e');
+      return false;
+    }
+  }
+
+  /// Получить доступные временные слоты
+  Future<List<Map<String, dynamic>>> getAvailableTimeSlots(
+    String specialistId,
+    DateTime date,
+  ) async {
+    try {
+      // TODO(developer): Implement time slots logic
+      // Пока возвращаем базовые слоты
+      return [
+        {'time': '09:00', 'available': true},
+        {'time': '10:00', 'available': true},
+        {'time': '11:00', 'available': false},
+        {'time': '12:00', 'available': true},
+        {'time': '13:00', 'available': true},
+        {'time': '14:00', 'available': true},
+        {'time': '15:00', 'available': false},
+        {'time': '16:00', 'available': true},
+        {'time': '17:00', 'available': true},
+        {'time': '18:00', 'available': true},
+      ];
+    } on Exception catch (e) {
+      debugPrint('Ошибка получения временных слотов: $e');
+      return <Map<String, dynamic>>[];
+    }
+  }
 }

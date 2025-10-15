@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/user_activity.dart';
@@ -65,8 +67,8 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
         _recommendations = recommendations;
         _isLoading = false;
       });
-      _animationController.forward();
-    } catch (e) {
+      unawaited(_animationController.forward());
+    } on Exception catch (e) {
       setState(() {
         _isLoading = false;
       });
@@ -289,7 +291,7 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
                   child: InkWell(
                     onTap: () {
                       widget.onSpecialistTap?.call();
-                      // TODO: Переход к профилю специалиста
+                      // TODO(developer): Переход к профилю специалиста
                     },
                     borderRadius: BorderRadius.circular(12),
                     child: Column(

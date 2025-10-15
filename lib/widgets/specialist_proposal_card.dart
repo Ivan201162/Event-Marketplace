@@ -39,7 +39,7 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
   Future<void> _loadSpecialists() async {
     try {
       final specialists = <SpecialistProfile>[];
-      for (final specialistId in widget.proposal.specialistIds) {
+      for (final _ in widget.proposal.specialistIds) {
         // final specialist = await _specialistService.getSpecialistProfile(specialistId);
         // Временная заглушка - создаем пустой профиль
         // TODO(developer): Implement getSpecialistProfile

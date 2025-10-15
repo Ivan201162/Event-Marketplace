@@ -366,7 +366,7 @@ class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
   void _startTimer() {
     Future.doWhile(() async {
       if (_isRecording) {
-        await Future.delayed(const Duration(seconds: 1));
+        await Future<void>.delayed(const Duration(seconds: 1));
         setState(() {
           _recordingDuration =
               Duration(seconds: _recordingDuration.inSeconds + 1);

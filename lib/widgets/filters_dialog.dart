@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-/// Модальное окно с фильтрами поиска специалистов
+/// Диалог фильтров для поиска специалистов
 class FiltersDialog extends StatefulWidget {
+  final String? selectedCity;
+  final String? selectedCategory;
+
   const FiltersDialog({
     super.key,
-    this.initialFilters,
-    this.onApplyFilters,
+    this.selectedCity,
+    this.selectedCategory,
   });
-
-  final Map<String, dynamic>? initialFilters;
-  final Function(Map<String, dynamic>)? onApplyFilters;
 
   @override
   State<FiltersDialog> createState() => _FiltersDialogState();
@@ -18,71 +18,66 @@ class FiltersDialog extends StatefulWidget {
 class _FiltersDialogState extends State<FiltersDialog> {
   String? _selectedCity;
   String? _selectedCategory;
-  double _minRating = 0.0;
-  double _maxRating = 5.0;
-  String? _specialistType;
-  RangeValues _priceRange = const RangeValues(0, 100000);
+  String? _selectedRating;
+  String? _selectedType;
 
   final List<String> _cities = [
     'Москва',
     'Санкт-Петербург',
-    'Казань',
-    'Екатеринбург',
     'Новосибирск',
-    'Краснодар',
+    'Екатеринбург',
+    'Казань',
     'Нижний Новгород',
     'Челябинск',
     'Самара',
     'Омск',
+    'Ростов-на-Дону',
   ];
 
   final List<String> _categories = [
     'Фотограф',
     'Видеограф',
-    'DJ',
+    'Диджей',
     'Ведущий',
     'Декоратор',
     'Флорист',
-    'Аниматор',
     'Кейтеринг',
-    'Звукорежиссер',
-    'Осветитель',
+    'Аниматор',
+    'Музыкант',
+    'Танцор',
   ];
 
-  final List<String> _specialistTypes = [
-    'Любой',
+  final List<String> _ratings = [
+    'Любой рейтинг',
+    '4.5+ звезд',
+    '4.0+ звезд',
+    '3.5+ звезд',
+  ];
+
+  final List<String> _types = [
+    'Любой тип',
     'Физическое лицо',
-    'Студия/Агентство',
-    'Частный специалист',
+    'ИП',
+    'Организация',
   ];
 
   @override
   void initState() {
     super.initState();
-    if (widget.initialFilters != null) {
-      _selectedCity = widget.initialFilters!['city'];
-      _selectedCategory = widget.initialFilters!['category'];
-      _minRating = widget.initialFilters!['minRating'] ?? 0.0;
-      _maxRating = widget.initialFilters!['maxRating'] ?? 5.0;
-      _specialistType = widget.initialFilters!['specialistType'];
-      _priceRange = RangeValues(
-        widget.initialFilters!['minPrice']?.toDouble() ?? 0.0,
-        widget.initialFilters!['maxPrice']?.toDouble() ?? 100000.0,
-      );
-    }
+    _selectedCity = widget.selectedCity;
+    _selectedCategory = widget.selectedCategory;
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.9,
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.8,
-        ),
+        constraints: const BoxConstraints(maxHeight: 600),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -90,7 +85,7 @@ class _FiltersDialogState extends State<FiltersDialog> {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
+                color: theme.primaryColor.withValues(alpha: 0.1),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(16),
                   topRight: Radius.circular(16),
@@ -98,26 +93,23 @@ class _FiltersDialogState extends State<FiltersDialog> {
               ),
               child: Row(
                 children: [
-                  const Icon(
-                    Icons.tune,
-                    color: Colors.white,
-                    size: 24,
+                  Icon(
+                    Icons.filter_list,
+                    color: theme.primaryColor,
                   ),
                   const SizedBox(width: 12),
                   Text(
                     'Фильтры поиска',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: Colors.white,
+                    style: TextStyle(
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
+                      color: theme.primaryColor,
                     ),
                   ),
                   const Spacer(),
                   IconButton(
+                    icon: const Icon(Icons.close),
                     onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(
-                      Icons.close,
-                      color: Colors.white,
-                    ),
                   ),
                 ],
               ),
@@ -131,92 +123,103 @@ class _FiltersDialogState extends State<FiltersDialog> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Город
-                    _buildSectionTitle('📍 Город'),
-                    _buildDropdown(
-                      value: _selectedCity,
-                      items: _cities,
-                      hint: 'Выберите город',
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedCity = value;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Категория
-                    _buildSectionTitle('🧰 Категория'),
-                    _buildDropdown(
-                      value: _selectedCategory,
-                      items: _categories,
-                      hint: 'Выберите категорию',
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedCategory = value;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Рейтинг
-                    _buildSectionTitle('⭐ Рейтинг'),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text('От: ${_minRating.toStringAsFixed(1)}'),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: RangeSlider(
-                            values: RangeValues(_minRating, _maxRating),
-                            min: 0.0,
-                            max: 5.0,
-                            divisions: 50,
-                            onChanged: (values) {
+                    _buildFilterSection(
+                      title: 'Город',
+                      icon: Icons.location_on_outlined,
+                      child: Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: _cities.map((city) {
+                          final isSelected = _selectedCity == city;
+                          return FilterChip(
+                            label: Text(city),
+                            selected: isSelected,
+                            onSelected: (selected) {
                               setState(() {
-                                _minRating = values.start;
-                                _maxRating = values.end;
+                                _selectedCity = selected ? city : null;
                               });
                             },
-                          ),
-                        ),
-                        Expanded(
-                          child: Text('До: ${_maxRating.toStringAsFixed(1)}'),
-                        ),
-                      ],
+                            selectedColor: theme.primaryColor.withValues(alpha: 0.2),
+                            checkmarkColor: theme.primaryColor,
+                          );
+                        }).toList(),
+                      ),
                     ),
-                    const SizedBox(height: 20),
+
+                    const SizedBox(height: 24),
+
+                    // Категория
+                    _buildFilterSection(
+                      title: 'Категория',
+                      icon: Icons.category_outlined,
+                      child: Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: _categories.map((category) {
+                          final isSelected = _selectedCategory == category;
+                          return FilterChip(
+                            label: Text(category),
+                            selected: isSelected,
+                            onSelected: (selected) {
+                              setState(() {
+                                _selectedCategory = selected ? category : null;
+                              });
+                            },
+                            selectedColor: theme.primaryColor.withValues(alpha: 0.2),
+                            checkmarkColor: theme.primaryColor,
+                          );
+                        }).toList(),
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Рейтинг
+                    _buildFilterSection(
+                      title: 'Рейтинг',
+                      icon: Icons.star_outline,
+                      child: Column(
+                        children: _ratings.map((rating) {
+                          final isSelected = _selectedRating == rating;
+                          return RadioListTile<String>(
+                            title: Text(rating),
+                            value: rating,
+                            groupValue: _selectedRating,
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedRating = value;
+                              });
+                            },
+                            activeColor: theme.primaryColor,
+                            contentPadding: EdgeInsets.zero,
+                          );
+                        }).toList(),
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
 
                     // Тип специалиста
-                    _buildSectionTitle('👤 Тип специалиста'),
-                    _buildDropdown(
-                      value: _specialistType,
-                      items: _specialistTypes,
-                      hint: 'Выберите тип',
-                      onChanged: (value) {
-                        setState(() {
-                          _specialistType = value;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Ценовой диапазон
-                    _buildSectionTitle('💰 Ценовой диапазон'),
-                    Text(
-                      'От ${_priceRange.start.round()} до ${_priceRange.end.round()} ₽',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    RangeSlider(
-                      values: _priceRange,
-                      min: 0,
-                      max: 100000,
-                      divisions: 100,
-                      onChanged: (values) {
-                        setState(() {
-                          _priceRange = values;
-                        });
-                      },
+                    _buildFilterSection(
+                      title: 'Тип специалиста',
+                      icon: Icons.person_outline,
+                      child: Column(
+                        children: _types.map((type) {
+                          final isSelected = _selectedType == type;
+                          return RadioListTile<String>(
+                            title: Text(type),
+                            value: type,
+                            groupValue: _selectedType,
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedType = value;
+                              });
+                            },
+                            activeColor: theme.primaryColor,
+                            contentPadding: EdgeInsets.zero,
+                          );
+                        }).toList(),
+                      ),
                     ),
                   ],
                 ),
@@ -226,11 +229,21 @@ class _FiltersDialogState extends State<FiltersDialog> {
             // Кнопки
             Container(
               padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.grey[50],
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(16),
+                  bottomRight: Radius.circular(16),
+                ),
+              ),
               child: Row(
                 children: [
                   Expanded(
                     child: OutlinedButton(
                       onPressed: _clearFilters,
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
                       child: const Text('Сбросить'),
                     ),
                   ),
@@ -238,7 +251,14 @@ class _FiltersDialogState extends State<FiltersDialog> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: _applyFilters,
-                      child: const Text('Применить'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: theme.primaryColor,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      child: const Text(
+                        'Применить',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                 ],
@@ -250,41 +270,36 @@ class _FiltersDialogState extends State<FiltersDialog> {
     );
   }
 
-  Widget _buildSectionTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDropdown({
-    required String? value,
-    required List<String> items,
-    required String hint,
-    required Function(String?) onChanged,
+  Widget _buildFilterSection({
+    required String title,
+    required IconData icon,
+    required Widget child,
   }) {
-    return DropdownButtonFormField<String>(
-      value: value,
-      decoration: InputDecoration(
-        hintText: hint,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              icon,
+              size: 20,
+              color: theme.primaryColor,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
-        filled: true,
-        fillColor: Theme.of(context).cardColor,
-      ),
-      items: items.map((item) {
-        return DropdownMenuItem<String>(
-          value: item,
-          child: Text(item),
-        );
-      }).toList(),
-      onChanged: onChanged,
+        const SizedBox(height: 12),
+        child,
+      ],
     );
   }
 
@@ -292,26 +307,17 @@ class _FiltersDialogState extends State<FiltersDialog> {
     setState(() {
       _selectedCity = null;
       _selectedCategory = null;
-      _minRating = 0.0;
-      _maxRating = 5.0;
-      _specialistType = null;
-      _priceRange = const RangeValues(0, 100000);
+      _selectedRating = null;
+      _selectedType = null;
     });
   }
 
   void _applyFilters() {
-    final filters = {
+    Navigator.of(context).pop({
       'city': _selectedCity,
       'category': _selectedCategory,
-      'minRating': _minRating,
-      'maxRating': _maxRating,
-      'specialistType': _specialistType,
-      'minPrice': _priceRange.start,
-      'maxPrice': _priceRange.end,
-    };
-
-    widget.onApplyFilters?.call(filters);
-    Navigator.of(context).pop();
+      'rating': _selectedRating,
+      'type': _selectedType,
+    });
   }
 }
-

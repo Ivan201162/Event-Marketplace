@@ -78,9 +78,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
 
           // Лучшие специалисты недели
           SliverToBoxAdapter(
-            child: WeeklyLeadersWidget(
-              userCity: _currentProfile?.city,
-            ),
+            child: const WeeklyLeadersWidget(),
           ),
 
           // Категории

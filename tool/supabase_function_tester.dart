@@ -68,14 +68,14 @@ Future<void> _testGetProfiles(SupabaseClient supabase) async {
 Future<void> _testGetWeeklyLeaders(SupabaseClient supabase) async {
   try {
     // Тест функции get_weekly_leaders
-    final leaders = await supabase.rpc('get_weekly_leaders', params: {
+    final leaders = await supabase.rpc<List<Map<String, dynamic>>>('get_weekly_leaders', params: {
       'city_filter': null,
       'limit_count': 5,
     });
     
     print('  ✅ Получено лидеров: ${leaders.length}');
     
-    for (final leader in leaders) {
+    for (final leader in leaders as List<Map<String, dynamic>>) {
       print('  🏅 ${leader['name']} - ${leader['score_7d']} очков');
     }
   } catch (e) {

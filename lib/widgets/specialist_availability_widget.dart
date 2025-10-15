@@ -137,7 +137,9 @@ class _SpecialistAvailabilityWidgetState
         },
         calendarBuilders: CalendarBuilders(
           markerBuilder: (context, day, events) {
-            if (events.isEmpty) return null;
+            if (events.isEmpty) {
+              return null;
+            }
 
             final availability = events.first;
             return Container(
