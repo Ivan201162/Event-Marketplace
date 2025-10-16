@@ -27,8 +27,17 @@ import '../screens/monetization/my_subscriptions_screen.dart';
 import '../screens/monetization/my_promotions_screen.dart';
 import '../screens/monetization/my_advertisements_screen.dart';
 import '../screens/monetization/create_advertisement_screen.dart';
+import '../screens/admin/admin_dashboard_screen.dart';
+import '../screens/admin/admin_subscription_management_screen.dart';
+import '../screens/admin/admin_advertisement_management_screen.dart';
+import '../screens/admin/admin_promotions_management_screen.dart';
+import '../screens/admin/admin_referral_management_screen.dart';
+import '../screens/admin/admin_analytics_screen.dart';
+import '../screens/admin/admin_newsletter_management_screen.dart';
+import '../screens/admin/admin_logs_screen.dart';
 import '../models/transaction.dart';
 import '../models/advertisement.dart';
+import '../services/admin_service.dart';
 import '../screens/chats_list_screen.dart';
 import '../screens/chat_screen.dart';
 import '../screens/requests_screen.dart';
@@ -207,6 +216,48 @@ final routerProvider = Provider<GoRouter>((ref) => GoRouter(
           final type = state.extra as AdType? ?? AdType.banner;
           return CreateAdvertisementScreen();
         },
+      ),
+
+      // Админ-панель маркетинга
+      GoRoute(
+        path: '/admin',
+        name: 'admin-dashboard',
+        builder: (context, state) => const AdminDashboardScreen(),
+      ),
+      GoRoute(
+        path: '/admin/subscriptions',
+        name: 'admin-subscriptions',
+        builder: (context, state) => const AdminSubscriptionManagementScreen(),
+      ),
+      GoRoute(
+        path: '/admin/advertisements',
+        name: 'admin-advertisements',
+        builder: (context, state) => const AdminAdvertisementManagementScreen(),
+      ),
+      GoRoute(
+        path: '/admin/promotions',
+        name: 'admin-promotions',
+        builder: (context, state) => const AdminPromotionsManagementScreen(),
+      ),
+      GoRoute(
+        path: '/admin/referrals',
+        name: 'admin-referrals',
+        builder: (context, state) => const AdminReferralManagementScreen(),
+      ),
+      GoRoute(
+        path: '/admin/analytics',
+        name: 'admin-analytics',
+        builder: (context, state) => const AdminAnalyticsScreen(),
+      ),
+      GoRoute(
+        path: '/admin/newsletters',
+        name: 'admin-newsletters',
+        builder: (context, state) => const AdminNewsletterManagementScreen(),
+      ),
+      GoRoute(
+        path: '/admin/logs',
+        name: 'admin-logs',
+        builder: (context, state) => const AdminLogsScreen(),
       ),
 
       // Профиль
