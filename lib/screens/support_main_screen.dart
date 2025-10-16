@@ -338,7 +338,7 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
   void _createTicket() {
     Navigator.of(context)
         .push(
-      MaterialPageRoute<void>(
+      MaterialPageRoute<bool>(
         builder: (context) => const CreateSupportTicketScreen(),
       ),
     )
@@ -352,7 +352,7 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
   void _showTicketDetail(SupportTicket ticket) {
     Navigator.of(context)
         .push(
-      MaterialPageRoute<void>(
+      MaterialPageRoute<bool>(
         builder: (context) => SupportTicketDetailScreen(
           ticketId: ticket.id,
         ),

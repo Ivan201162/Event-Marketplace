@@ -232,3 +232,4 @@ class _SocialChatsListScreenState extends ConsumerState<SocialChatsListScreen> {
   }
 }
 
+

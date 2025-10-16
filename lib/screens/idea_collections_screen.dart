@@ -116,7 +116,7 @@ class _IdeaCollectionsScreenState extends ConsumerState<IdeaCollectionsScreen> {
   void _createCollection() {
     Navigator.of(context)
         .push(
-      MaterialPageRoute<void>(
+      MaterialPageRoute<bool>(
         builder: (context) => CreateIdeaCollectionScreen(
           userId: widget.userId,
         ),

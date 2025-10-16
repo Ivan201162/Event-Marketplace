@@ -358,7 +358,7 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
   void _showCreateReviewDialog() {
     Navigator.of(context)
         .push(
-      MaterialPageRoute<void>(
+      MaterialPageRoute<bool>(
         builder: (context) => CreateReviewExtendedScreen(
           specialistId: widget.specialistId,
           bookingId:

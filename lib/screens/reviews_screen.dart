@@ -799,7 +799,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
   void _createReview() {
     Navigator.of(context)
         .push(
-      MaterialPageRoute<void>(
+      MaterialPageRoute<bool>(
         builder: (context) => ReviewFormScreen(
           targetId: widget.targetId,
           type: widget.type,
@@ -817,7 +817,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
   void _editReview(Review review) {
     Navigator.of(context)
         .push(
-      MaterialPageRoute<void>(
+      MaterialPageRoute<bool>(
         builder: (context) => ReviewFormScreen(
           targetId: widget.targetId,
           type: widget.type,

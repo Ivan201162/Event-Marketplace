@@ -299,11 +299,12 @@ https://eventmarketplace.com
 #EventMarketplace #События #Организация
 ''';
 
-    final success = await _integrationService.shareContent();
-    if (!success) {
+    try {
+      await _integrationService.shareContent();
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Не удалось поделиться приложением'),
+        SnackBar(
+          content: Text('Не удалось поделиться приложением: $e'),
           backgroundColor: Colors.red,
         ),
       );
@@ -324,11 +325,12 @@ https://eventmarketplace.com
 #EventMarketplace #Профиль
 ''';
 
-    final success = await _integrationService.shareContent();
-    if (!success) {
+    try {
+      await _integrationService.shareContent();
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Не удалось поделиться профилем'),
+        SnackBar(
+          content: Text('Не удалось поделиться профилем: $e'),
           backgroundColor: Colors.red,
         ),
       );
@@ -351,11 +353,12 @@ https://eventmarketplace.com
 #EventMarketplace #Событие
 ''';
 
-    final success = await _integrationService.shareContent();
-    if (!success) {
+    try {
+      await _integrationService.shareContent();
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Не удалось поделиться событием'),
+        SnackBar(
+          content: Text('Не удалось поделиться событием: $e'),
           backgroundColor: Colors.red,
         ),
       );
@@ -375,11 +378,12 @@ https://eventmarketplace.com
 #EventMarketplace #Отзыв
 ''';
 
-    final success = await _integrationService.shareContent();
-    if (!success) {
+    try {
+      await _integrationService.shareContent();
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Не удалось поделиться отзывом'),
+        SnackBar(
+          content: Text('Не удалось поделиться отзывом: $e'),
           backgroundColor: Colors.red,
         ),
       );

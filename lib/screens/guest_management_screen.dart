@@ -374,7 +374,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
   void _createEvent() {
     Navigator.of(context)
         .push(
-      MaterialPageRoute<void>(
+      MaterialPageRoute<bool>(
         builder: (context) => CreateGuestEventScreen(
           organizerId: widget.organizerId,
         ),
@@ -390,7 +390,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
   void _addGuest() {
     Navigator.of(context)
         .push(
-      MaterialPageRoute<void>(
+      MaterialPageRoute<bool>(
         builder: (context) => GuestRegistrationScreen(
           eventId: _selectedEventId,
         ),
@@ -460,13 +460,11 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
-              final success = await _guestService.checkInGuest(guest.id);
-              if (success) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Гость зарегистрирован')),
-                );
-                setState(() {});
-              }
+              await _guestService.checkInGuest(guest.id);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Гость зарегистрирован')),
+              );
+              setState(() {});
             },
             child: const Text('Подтвердить'),
           ),
@@ -489,13 +487,11 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
-              final success = await _guestService.checkOutGuest(guest.id);
-              if (success) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Гость покинул мероприятие')),
-                );
-                setState(() {});
-              }
+              await _guestService.checkOutGuest(guest.id);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Гость покинул мероприятие')),
+              );
+              setState(() {});
             },
             child: const Text('Подтвердить'),
           ),
@@ -518,13 +514,11 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
-              final success = await _guestService.cancelGuest(guest.id);
-              if (success) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Участие отменено')),
-                );
-                setState(() {});
-              }
+              await _guestService.cancelGuest(guest.id);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Участие отменено')),
+              );
+              setState(() {});
             },
             child: const Text('Подтвердить'),
           ),

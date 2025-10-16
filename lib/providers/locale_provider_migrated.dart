@@ -130,3 +130,4 @@ final availableLocalesProvider = Provider<List<Locale>>((ref) {
   return localeNotifier.availableLocales;
 });
 
+

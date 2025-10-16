@@ -423,37 +423,27 @@ class _IntegrationDetailScreenState
     }
 
     try {
-      bool success;
       if (widget.integration.status == IntegrationStatus.connected) {
-        success = await _integrationService.disconnectIntegration(
+        await _integrationService.disconnectIntegration(
           widget.integration.id,
         );
       } else {
-        success = await _integrationService.connectIntegration(
+        await _integrationService.connectIntegration(
           widget.integration.id,
         );
       }
 
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              widget.integration.status == IntegrationStatus.connected
-                  ? 'Интеграция отключена'
-                  : 'Интеграция подключена',
-            ),
-            backgroundColor: Colors.green,
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            widget.integration.status == IntegrationStatus.connected
+                ? 'Интеграция отключена'
+                : 'Интеграция подключена',
           ),
-        );
-        setState(() {});
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Ошибка изменения статуса интеграции'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+          backgroundColor: Colors.green,
+        ),
+      );
+      setState(() {});
     } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -474,25 +464,16 @@ class _IntegrationDetailScreenState
     }
 
     try {
-      final success = await _integrationService.syncIntegrationData(
+      await _integrationService.syncIntegrationData(
         widget.integration.id,
       );
 
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Синхронизация завершена'),
-            backgroundColor: Colors.green,
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Ошибка синхронизации'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Синхронизация завершена'),
+          backgroundColor: Colors.green,
+        ),
+      );
     } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -505,12 +486,12 @@ class _IntegrationDetailScreenState
 
   Future<void> _openWebsite() async {
     if (widget.integration.websiteUrl != null) {
-      final success =
-          await _integrationService.openUrl(widget.integration.websiteUrl!);
-      if (!success) {
+      try {
+        await _integrationService.openUrl(widget.integration.websiteUrl!);
+      } on Exception catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Не удалось открыть сайт'),
+          SnackBar(
+            content: Text('Не удалось открыть сайт: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -520,12 +501,13 @@ class _IntegrationDetailScreenState
 
   Future<void> _openDocumentation() async {
     if (widget.integration.documentationUrl != null) {
-      final success = await _integrationService
-          .openUrl(widget.integration.documentationUrl!);
-      if (!success) {
+      try {
+        await _integrationService
+            .openUrl(widget.integration.documentationUrl!);
+      } on Exception catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Не удалось открыть документацию'),
+          SnackBar(
+            content: Text('Не удалось открыть документацию: $e'),
             backgroundColor: Colors.red,
           ),
         );

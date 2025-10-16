@@ -33,3 +33,4 @@ class PaymentConfig {
   static const List<double> donationAmounts = [100.0, 300.0, 500.0, 1000.0];
 }
 
+

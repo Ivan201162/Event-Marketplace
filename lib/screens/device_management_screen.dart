@@ -483,22 +483,13 @@ class _DeviceManagementScreenState
     try {
       final currentUser = await ref.read(authServiceProvider).getCurrentUser();
       if (currentUser != null) {
-        final success = await _securityService.trustDevice(device.id);
-        if (success) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Устройство добавлено в доверенные'),
-              backgroundColor: Colors.green,
-            ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Ошибка при добавлении устройства в доверенные'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
+        await _securityService.trustDevice(device.id);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Устройство добавлено в доверенные'),
+            backgroundColor: Colors.green,
+          ),
+        );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -537,22 +528,13 @@ class _DeviceManagementScreenState
         final currentUser =
             await ref.read(authServiceProvider).getCurrentUser();
         if (currentUser != null) {
-          final success = await _securityService.blockDevice(device.id);
-          if (success) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Устройство заблокировано'),
-                backgroundColor: Colors.green,
-              ),
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Ошибка при блокировке устройства'),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
+          await _securityService.blockDevice(device.id);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Устройство заблокировано'),
+              backgroundColor: Colors.green,
+            ),
+          );
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -569,22 +551,13 @@ class _DeviceManagementScreenState
     try {
       final currentUser = await ref.read(authServiceProvider).getCurrentUser();
       if (currentUser != null) {
-        final success = await _securityService.unblockDevice(device.id);
-        if (success) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Устройство разблокировано'),
-              backgroundColor: Colors.green,
-            ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Ошибка при разблокировке устройства'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
+        await _securityService.unblockDevice(device.id);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Устройство разблокировано'),
+            backgroundColor: Colors.green,
+          ),
+        );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
