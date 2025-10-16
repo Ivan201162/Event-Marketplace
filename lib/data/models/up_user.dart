@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
+
 /// Типизированная модель пользователя для Firestore
+@immutable
 class UpUser {
   // customer|specialist|guest
 

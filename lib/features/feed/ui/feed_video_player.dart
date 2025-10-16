@@ -208,7 +208,7 @@ class _FeedVideoPreviewState extends State<FeedVideoPreview> {
             if (!_isPlaying)
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.5),
+                  color: Colors.black.withValues(alpha: 0.5),
                   shape: BoxShape.circle,
                 ),
                 padding: const EdgeInsets.all(16),

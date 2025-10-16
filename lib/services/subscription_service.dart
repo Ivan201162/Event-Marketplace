@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import '../models/subscription_plan.dart';
-import '../models/transaction.dart';
+import '../models/transaction.dart' as transaction_model;
 import '../services/payment_service.dart';
 
 class SubscriptionService {
@@ -133,13 +133,13 @@ class SubscriptionService {
 
       if (paymentResult.success) {
         // Создаем транзакцию
-        final transaction = Transaction(
+        final transaction = transaction_model.Transaction(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           userId: userId,
-          type: TransactionType.subscription,
+          type: transaction_model.TransactionType.subscription,
           amount: plan.price,
           currency: 'RUB',
-          status: TransactionStatus.pending,
+          status: transaction_model.TransactionStatus.pending,
           timestamp: DateTime.now(),
           description: 'Подписка ${plan.name}',
           subscriptionId: planId,
@@ -219,7 +219,7 @@ class SubscriptionService {
           .collection('transactions')
           .doc(transactionId)
           .update({
-        'status': TransactionStatus.success.toString().split('.').last,
+        'status': 'success',
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
 

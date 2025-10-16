@@ -25,7 +25,7 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
   Future<void> _loadAdvertisements() async {
     try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final userId = authProvider.currentUser?.id;
+      final userId = authProvider.currentUser?['id'];
       
       if (userId != null) {
         // Получаем все рекламные объявления пользователя

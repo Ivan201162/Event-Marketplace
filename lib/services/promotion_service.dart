@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import '../models/promotion_boost.dart';
-import '../models/transaction.dart';
+import '../models/transaction.dart' as transaction_model;
 import '../services/payment_service.dart';
 
 class PromotionService {
@@ -134,13 +134,13 @@ class PromotionService {
 
       if (paymentResult.success) {
         // Создаем транзакцию
-        final transaction = Transaction(
+        final transaction = transaction_model.Transaction(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           userId: userId,
-          type: TransactionType.promotion,
+          type: transaction_model.TransactionType.promotion,
           amount: package.price,
           currency: 'RUB',
-          status: TransactionStatus.pending,
+          status: transaction_model.TransactionStatus.pending,
           timestamp: DateTime.now(),
           description: 'Продвижение ${package.name}',
           promotionId: packageId,
@@ -225,7 +225,7 @@ class PromotionService {
           .collection('transactions')
           .doc(transactionId)
           .update({
-        'status': TransactionStatus.success.toString().split('.').last,
+        'status': transaction_model.TransactionStatus.success.toString().split('.').last,
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
 

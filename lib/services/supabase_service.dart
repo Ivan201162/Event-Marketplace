@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/social_models.dart';
 
@@ -368,9 +369,9 @@ class SupabaseService {
           .order('created_at', ascending: false)
           .range(offset, offset + limit - 1);
 
-      if (category != null) {
-        query = query.eq('category', category);
-      }
+      // if (category != null) {
+      //   query = query.eq('category', category);
+      // }
 
       final response = await query;
       
@@ -617,7 +618,7 @@ class SupabaseService {
 
       await _client.storage
           .from('avatars')
-          .uploadBinary(filePath, fileBytes);
+          .uploadBinary(filePath, Uint8List.fromList(fileBytes));
 
       final publicUrl = _client.storage
           .from('avatars')

@@ -159,13 +159,13 @@ class Idea {
   int get likeCount => likesCount;
 
   /// Получить количество комментариев
-  int get commentCountValue => 0; // TODO: Добавить поле для комментариев
+  int get commentCountValue => 0; // TODO(developer): Добавить поле для комментариев
 
   /// Проверить, лайкнута ли идея (для совместимости)
-  bool get isLiked => false; // TODO: Передавать userId
+  bool get isLiked => false; // TODO(developer): Передавать userId
 
   /// Проверить, сохранена ли идея (для совместимости)
-  bool get isSaved => false; // TODO: Передавать userId
+  bool get isSaved => false; // TODO(developer): Передавать userId
 
   @override
   String toString() => 'Idea(id: $id, title: $title, category: $category)';

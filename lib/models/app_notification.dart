@@ -128,6 +128,10 @@ enum NotificationType {
   chatMessage,
   system,
   discount,
+  payment,
+  subscription,
+  promotion,
+  advertisement,
 }
 
 /// Расширение для получения отображаемого имени типа уведомления
@@ -146,6 +150,14 @@ extension NotificationTypeExtension on NotificationType {
         return 'Системное уведомление';
       case NotificationType.discount:
         return 'Скидка';
+      case NotificationType.payment:
+        return 'Платеж';
+      case NotificationType.subscription:
+        return 'Подписка';
+      case NotificationType.promotion:
+        return 'Продвижение';
+      case NotificationType.advertisement:
+        return 'Реклама';
     }
   }
 
@@ -163,6 +175,14 @@ extension NotificationTypeExtension on NotificationType {
         return '🔔';
       case NotificationType.discount:
         return '🎉';
+      case NotificationType.payment:
+        return '💳';
+      case NotificationType.subscription:
+        return '⭐';
+      case NotificationType.promotion:
+        return '🚀';
+      case NotificationType.advertisement:
+        return '📢';
     }
   }
 }

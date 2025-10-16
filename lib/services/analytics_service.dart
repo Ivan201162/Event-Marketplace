@@ -1,424 +1,485 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/transaction.dart' as transaction_model;
+import '../models/subscription_plan.dart';
+import '../models/promotion_boost.dart';
+import '../models/advertisement.dart';
 
-/// Сервис для работы с аналитикой Firebase и локальной статистикой
 class AnalyticsService {
-  factory AnalyticsService() => _instance;
-  AnalyticsService._internal();
-  static final AnalyticsService _instance = AnalyticsService._internal();
+  static final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
+  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  /// Логирование события входа пользователя
-  Future<void> logLogin({String? method}) async {
+  /// Инициализация сервиса аналитики
+  static Future<void> initialize() async {
     try {
-      await _analytics.logLogin(loginMethod: method ?? 'email');
-      await _logCustomEvent('login', {
-        'method': method ?? 'email',
-        'timestamp': DateTime.now().toIso8601String(),
-      });
-    } on Exception catch (e) {
-      debugPrint('Ошибка логирования входа: $e');
+      await _analytics.setAnalyticsCollectionEnabled(true);
+      debugPrint('INFO: [AnalyticsService] Initialized successfully');
+    } catch (e) {
+      debugPrint('ERROR: [AnalyticsService] Initialization failed: $e');
     }
   }
 
-  /// Логирование события выхода пользователя
-  Future<void> logLogout() async {
+  /// Отслеживание события покупки подписки
+  static Future<void> trackSubscriptionPurchase({
+    required String userId,
+    required SubscriptionPlan plan,
+    required transaction_model.Transaction transaction,
+  }) async {
     try {
-      await _analytics.logEvent(name: 'logout');
-      await _logCustomEvent('logout', {
-        'timestamp': DateTime.now().toIso8601String(),
-      });
-    } on Exception catch (e) {
-      debugPrint('Ошибка логирования выхода: $e');
-    }
-  }
-
-  /// Логирование просмотра профиля специалиста
-  Future<void> logViewProfile(
-    String specialistId,
-    String specialistName,
-  ) async {
-    try {
-      await _analytics.logEvent(
-        name: 'view_item',
+      // Firebase Analytics
+      await _analytics.logPurchase(
+        currency: transaction.currency,
+        value: transaction.amount,
         parameters: {
-          'item_id': specialistId,
-          'item_name': specialistName,
-          'item_category': 'specialist_profile',
+          'item_id': plan.id,
+          'item_name': plan.name,
+          'item_category': 'subscription',
+          'subscription_tier': plan.tier.toString(),
+          'duration_days': plan.durationDays,
+          'payment_method': transaction.paymentMethod,
+          'payment_provider': transaction.paymentProvider,
         },
       );
-      await _logCustomEvent('view_profile', {
-        'specialist_id': specialistId,
-        'specialist_name': specialistName,
-        'timestamp': DateTime.now().toIso8601String(),
-      });
 
-      // Обновляем статистику просмотров профиля
-      await _updateProfileViews(specialistId);
-    } on Exception catch (e) {
-      debugPrint('Ошибка логирования просмотра профиля: $e');
-    }
-  }
-
-  /// Логирование создания заявки
-  Future<void> logCreateRequest(
-    String requestId,
-    String specialistId,
-    String category,
-  ) async {
-    try {
+      // Custom event
       await _analytics.logEvent(
-        name: 'create_request',
+        name: 'subscription_purchased',
         parameters: {
-          'request_id': requestId,
-          'specialist_id': specialistId,
-          'category': category,
-          'timestamp': DateTime.now().toIso8601String(),
+          'user_id': userId,
+          'plan_id': plan.id,
+          'plan_name': plan.name,
+          'plan_tier': plan.tier.toString(),
+          'amount': transaction.amount,
+          'currency': transaction.currency,
+          'duration_days': plan.durationDays,
+          'payment_method': transaction.paymentMethod,
+          'payment_provider': transaction.paymentProvider,
+          'transaction_id': transaction.id,
         },
       );
-      await _logCustomEvent('create_request', {
-        'request_id': requestId,
-        'specialist_id': specialistId,
-        'category': category,
-        'timestamp': DateTime.now().toIso8601String(),
-      });
 
-      // Обновляем статистику заявок
-      await _updateRequestStats(specialistId, 'received');
-    } on Exception catch (e) {
-      debugPrint('Ошибка логирования создания заявки: $e');
+      // Сохранение в Firestore для детальной аналитики
+      await _saveAnalyticsEvent(
+        userId: userId,
+        eventType: 'subscription_purchased',
+        eventData: {
+          'plan_id': plan.id,
+          'plan_name': plan.name,
+          'plan_tier': plan.tier.toString(),
+          'amount': transaction.amount,
+          'currency': transaction.currency,
+          'duration_days': plan.durationDays,
+          'payment_method': transaction.paymentMethod,
+          'payment_provider': transaction.paymentProvider,
+          'transaction_id': transaction.id,
+        },
+      );
+
+      debugPrint('INFO: [AnalyticsService] Subscription purchase tracked: ${plan.name}');
+    } catch (e) {
+      debugPrint('ERROR: [AnalyticsService] Failed to track subscription purchase: $e');
     }
   }
 
-  /// Логирование отправки сообщения
-  Future<void> logSendMessage(String chatId, String recipientId) async {
+  /// Отслеживание события покупки продвижения
+  static Future<void> trackPromotionPurchase({
+    required String userId,
+    required PromotionBoost promotion,
+    required transaction_model.Transaction transaction,
+  }) async {
     try {
+      // Firebase Analytics
       await _analytics.logEvent(
-        name: 'send_message',
+        name: 'promotion_purchased',
         parameters: {
-          'chat_id': chatId,
-          'recipient_id': recipientId,
-          'timestamp': DateTime.now().toIso8601String(),
+          'user_id': userId,
+          'promotion_id': promotion.id,
+          'target_type': promotion.type.toString(),
+          'priority_level': promotion.priorityLevel,
+          'duration_days': promotion.endDate.difference(promotion.startDate).inDays,
+          'amount': transaction.amount,
+          'currency': transaction.currency,
+          'payment_method': transaction.paymentMethod,
+          'payment_provider': transaction.paymentProvider,
+          'transaction_id': transaction.id,
         },
       );
-      await _logCustomEvent('send_message', {
-        'chat_id': chatId,
-        'recipient_id': recipientId,
-        'timestamp': DateTime.now().toIso8601String(),
-      });
 
-      // Обновляем статистику сообщений
-      await _updateMessageStats(recipientId);
-    } on Exception catch (e) {
-      debugPrint('Ошибка логирования отправки сообщения: $e');
+      // Сохранение в Firestore
+      await _saveAnalyticsEvent(
+        userId: userId,
+        eventType: 'promotion_purchased',
+        eventData: {
+          'promotion_id': promotion.id,
+          'target_type': promotion.type.toString(),
+          'priority_level': promotion.priorityLevel,
+          'duration_days': promotion.endDate.difference(promotion.startDate).inDays,
+          'amount': transaction.amount,
+          'currency': transaction.currency,
+          'payment_method': transaction.paymentMethod,
+          'payment_provider': transaction.paymentProvider,
+          'transaction_id': transaction.id,
+        },
+      );
+
+      debugPrint('INFO: [AnalyticsService] Promotion purchase tracked: ${promotion.type}');
+    } catch (e) {
+      debugPrint('ERROR: [AnalyticsService] Failed to track promotion purchase: $e');
     }
   }
 
-  /// Логирование лайка поста/идеи
-  Future<void> logLikePost(String postId, String postType) async {
+  /// Отслеживание события создания рекламы
+  static Future<void> trackAdvertisementCreated({
+    required String userId,
+    required Advertisement advertisement,
+  }) async {
     try {
+      // Firebase Analytics
       await _analytics.logEvent(
-        name: 'like_post',
+        name: 'advertisement_created',
         parameters: {
-          'post_id': postId,
-          'post_type': postType,
-          'timestamp': DateTime.now().toIso8601String(),
+          'user_id': userId,
+          'advertisement_id': advertisement.id,
+          'advertisement_type': advertisement.type.toString(),
+          'title': advertisement.title,
+          'duration_days': advertisement.endDate.difference(advertisement.startDate).inDays,
+          'target_audience': advertisement.targetAudience?.toString() ?? 'none',
         },
       );
-      await _logCustomEvent('like_post', {
-        'post_id': postId,
-        'post_type': postType,
-        'timestamp': DateTime.now().toIso8601String(),
-      });
-    } on Exception catch (e) {
-      debugPrint('Ошибка логирования лайка: $e');
+
+      // Сохранение в Firestore
+      await _saveAnalyticsEvent(
+        userId: userId,
+        eventType: 'advertisement_created',
+        eventData: {
+          'advertisement_id': advertisement.id,
+          'advertisement_type': advertisement.type.toString(),
+          'title': advertisement.title,
+          'duration_days': advertisement.endDate.difference(advertisement.startDate).inDays,
+          'target_audience': advertisement.targetAudience,
+        },
+      );
+
+      debugPrint('INFO: [AnalyticsService] Advertisement created tracked: ${advertisement.type}');
+    } catch (e) {
+      debugPrint('ERROR: [AnalyticsService] Failed to track advertisement created: $e');
     }
   }
 
-  /// Логирование комментария к посту/идее
-  Future<void> logCommentPost(String postId, String postType) async {
+  /// Отслеживание события успешной оплаты
+  static Future<void> trackPaymentSuccess({
+    required String userId,
+    required transaction_model.Transaction transaction,
+  }) async {
     try {
+      // Firebase Analytics
       await _analytics.logEvent(
-        name: 'comment_post',
+        name: 'payment_success',
         parameters: {
-          'post_id': postId,
-          'post_type': postType,
-          'timestamp': DateTime.now().toIso8601String(),
+          'user_id': userId,
+          'transaction_id': transaction.id,
+          'amount': transaction.amount,
+          'currency': transaction.currency,
+          'type': transaction.type.toString(),
+          'payment_method': transaction.paymentMethod,
+          'payment_provider': transaction.paymentProvider,
         },
       );
-      await _logCustomEvent('comment_post', {
-        'post_id': postId,
-        'post_type': postType,
-        'timestamp': DateTime.now().toIso8601String(),
-      });
-    } on Exception catch (e) {
-      debugPrint('Ошибка логирования комментария: $e');
+
+      // Сохранение в Firestore
+      await _saveAnalyticsEvent(
+        userId: userId,
+        eventType: 'payment_success',
+        eventData: {
+          'transaction_id': transaction.id,
+          'amount': transaction.amount,
+          'currency': transaction.currency,
+          'type': transaction.type.toString(),
+          'payment_method': transaction.paymentMethod,
+          'payment_provider': transaction.paymentProvider,
+        },
+      );
+
+      debugPrint('INFO: [AnalyticsService] Payment success tracked: ${transaction.type}');
+    } catch (e) {
+      debugPrint('ERROR: [AnalyticsService] Failed to track payment success: $e');
     }
   }
 
-  /// Логирование сохранения поста/идеи
-  Future<void> logSavePost(String postId, String postType) async {
+  /// Отслеживание события неудачной оплаты
+  static Future<void> trackPaymentFailed({
+    required String userId,
+    required transaction_model.Transaction transaction,
+    required String errorMessage,
+  }) async {
     try {
+      // Firebase Analytics
       await _analytics.logEvent(
-        name: 'save_post',
+        name: 'payment_failed',
         parameters: {
-          'post_id': postId,
-          'post_type': postType,
-          'timestamp': DateTime.now().toIso8601String(),
+          'user_id': userId,
+          'transaction_id': transaction.id,
+          'amount': transaction.amount,
+          'currency': transaction.currency,
+          'type': transaction.type.toString(),
+          'payment_method': transaction.paymentMethod,
+          'payment_provider': transaction.paymentProvider,
+          'error_message': errorMessage,
         },
       );
-      await _logCustomEvent('save_post', {
-        'post_id': postId,
-        'post_type': postType,
-        'timestamp': DateTime.now().toIso8601String(),
-      });
-    } on Exception catch (e) {
-      debugPrint('Ошибка логирования сохранения: $e');
+
+      // Сохранение в Firestore
+      await _saveAnalyticsEvent(
+        userId: userId,
+        eventType: 'payment_failed',
+        eventData: {
+          'transaction_id': transaction.id,
+          'amount': transaction.amount,
+          'currency': transaction.currency,
+          'type': transaction.type.toString(),
+          'payment_method': transaction.paymentMethod,
+          'payment_provider': transaction.paymentProvider,
+          'error_message': errorMessage,
+        },
+      );
+
+      debugPrint('INFO: [AnalyticsService] Payment failed tracked: ${transaction.type}');
+    } catch (e) {
+      debugPrint('ERROR: [AnalyticsService] Failed to track payment failed: $e');
     }
   }
 
-  /// Логирование открытия настроек
-  Future<void> logOpenSettings() async {
+  /// Отслеживание просмотра рекламы
+  static Future<void> trackAdvertisementView({
+    required String userId,
+    required String advertisementId,
+    required AdType type,
+  }) async {
     try {
-      await _analytics.logEvent(name: 'open_settings');
-      await _logCustomEvent('open_settings', {
-        'timestamp': DateTime.now().toIso8601String(),
+      // Firebase Analytics
+      await _analytics.logEvent(
+        name: 'advertisement_view',
+        parameters: {
+          'user_id': userId,
+          'advertisement_id': advertisementId,
+          'advertisement_type': type.toString(),
+        },
+      );
+
+      // Увеличиваем счетчик показов в Firestore
+      await _firestore.collection('advertisements').doc(advertisementId).update({
+        'impressions': FieldValue.increment(1),
+        'updatedAt': FieldValue.serverTimestamp(),
       });
-    } on Exception catch (e) {
-      debugPrint('Ошибка логирования открытия настроек: $e');
+
+      debugPrint('INFO: [AnalyticsService] Advertisement view tracked: $advertisementId');
+    } catch (e) {
+      debugPrint('ERROR: [AnalyticsService] Failed to track advertisement view: $e');
     }
   }
 
-  /// Логирование изменения темы
-  Future<void> logChangeTheme(String theme) async {
+  /// Отслеживание клика по рекламе
+  static Future<void> trackAdvertisementClick({
+    required String userId,
+    required String advertisementId,
+    required AdType type,
+  }) async {
+    try {
+      // Firebase Analytics
+      await _analytics.logEvent(
+        name: 'advertisement_click',
+        parameters: {
+          'user_id': userId,
+          'advertisement_id': advertisementId,
+          'advertisement_type': type.toString(),
+        },
+      );
+
+      // Увеличиваем счетчик кликов в Firestore
+      await _firestore.collection('advertisements').doc(advertisementId).update({
+        'clicks': FieldValue.increment(1),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      debugPrint('INFO: [AnalyticsService] Advertisement click tracked: $advertisementId');
+    } catch (e) {
+      debugPrint('ERROR: [AnalyticsService] Failed to track advertisement click: $e');
+    }
+  }
+
+  /// Отслеживание входа в раздел монетизации
+  static Future<void> trackMonetizationHubView({
+    required String userId,
+  }) async {
     try {
       await _analytics.logEvent(
-        name: 'change_theme',
-        parameters: {'theme': theme},
+        name: 'monetization_hub_view',
+        parameters: {
+          'user_id': userId,
+        },
       );
-      await _logCustomEvent('change_theme', {
-        'theme': theme,
-        'timestamp': DateTime.now().toIso8601String(),
-      });
-    } on Exception catch (e) {
-      debugPrint('Ошибка логирования изменения темы: $e');
+
+      debugPrint('INFO: [AnalyticsService] Monetization hub view tracked');
+    } catch (e) {
+      debugPrint('ERROR: [AnalyticsService] Failed to track monetization hub view: $e');
     }
   }
 
-  /// Логирование переключения уведомлений
-  Future<void> logToggleNotifications(bool enabled) async {
+  /// Отслеживание просмотра планов подписки
+  static Future<void> trackSubscriptionPlansView({
+    required String userId,
+  }) async {
     try {
       await _analytics.logEvent(
-        name: 'toggle_notifications',
-        parameters: {'enabled': enabled},
+        name: 'subscription_plans_view',
+        parameters: {
+          'user_id': userId,
+        },
       );
-      await _logCustomEvent('toggle_notifications', {
-        'enabled': enabled,
-        'timestamp': DateTime.now().toIso8601String(),
+
+      debugPrint('INFO: [AnalyticsService] Subscription plans view tracked');
+    } catch (e) {
+      debugPrint('ERROR: [AnalyticsService] Failed to track subscription plans view: $e');
+    }
+  }
+
+  /// Отслеживание просмотра пакетов продвижения
+  static Future<void> trackPromotionPackagesView({
+    required String userId,
+  }) async {
+    try {
+      await _analytics.logEvent(
+        name: 'promotion_packages_view',
+        parameters: {
+          'user_id': userId,
+        },
+      );
+
+      debugPrint('INFO: [AnalyticsService] Promotion packages view tracked');
+    } catch (e) {
+      debugPrint('ERROR: [AnalyticsService] Failed to track promotion packages view: $e');
+    }
+  }
+
+  /// Отслеживание просмотра рекламных кампаний
+  static Future<void> trackAdvertisementCampaignsView({
+    required String userId,
+  }) async {
+    try {
+      await _analytics.logEvent(
+        name: 'advertisement_campaigns_view',
+        parameters: {
+          'user_id': userId,
+        },
+      );
+
+      debugPrint('INFO: [AnalyticsService] Advertisement campaigns view tracked');
+    } catch (e) {
+      debugPrint('ERROR: [AnalyticsService] Failed to track advertisement campaigns view: $e');
+    }
+  }
+
+  /// Сохранение события аналитики в Firestore
+  static Future<void> _saveAnalyticsEvent({
+    required String userId,
+    required String eventType,
+    required Map<String, dynamic> eventData,
+  }) async {
+    try {
+      await _firestore.collection('analytics_events').add({
+        'userId': userId,
+        'eventType': eventType,
+        'eventData': eventData,
+        'timestamp': FieldValue.serverTimestamp(),
+        'platform': 'mobile',
       });
-    } on Exception catch (e) {
-      debugPrint('Ошибка логирования переключения уведомлений: $e');
-    }
-  }
-
-  /// Логирование просмотра экрана
-  Future<void> logScreenView(String screenName, {String? screenClass}) async {
-    try {
-      await _analytics.logScreenView(
-        screenName: screenName,
-        screenClass: screenClass ?? screenName,
-      );
-    } on Exception catch (e) {
-      debugPrint('Ошибка логирования просмотра экрана: $e');
-    }
-  }
-
-  /// Логирование пользовательского события
-  Future<void> _logCustomEvent(
-    String eventName,
-    Map<String, dynamic> parameters,
-  ) async {
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        await _firestore.collection('analytics_events').add({
-          'event_name': eventName,
-          'user_id': user.uid,
-          'parameters': parameters,
-          'timestamp': FieldValue.serverTimestamp(),
-        });
-      }
-    } on Exception catch (e) {
-      debugPrint('Ошибка сохранения пользовательского события: $e');
-    }
-  }
-
-  /// Обновление статистики просмотров профиля
-  Future<void> _updateProfileViews(String specialistId) async {
-    try {
-      await _firestore.collection('userStats').doc(specialistId).set(
-        {
-          'userId': specialistId,
-          'views': FieldValue.increment(1),
-          'lastViewDate': FieldValue.serverTimestamp(),
-        },
-        SetOptions(merge: true),
-      );
-    } on Exception catch (e) {
-      debugPrint('Ошибка обновления статистики просмотров: $e');
-    }
-  }
-
-  /// Обновление статистики заявок
-  Future<void> _updateRequestStats(String specialistId, String type) async {
-    try {
-      final field = type == 'received' ? 'requests' : 'rejected_requests';
-      await _firestore.collection('userStats').doc(specialistId).set(
-        {
-          'userId': specialistId,
-          field: FieldValue.increment(1),
-          'lastRequestDate': FieldValue.serverTimestamp(),
-        },
-        SetOptions(merge: true),
-      );
-    } on Exception catch (e) {
-      debugPrint('Ошибка обновления статистики заявок: $e');
-    }
-  }
-
-  /// Обновление статистики сообщений
-  Future<void> _updateMessageStats(String userId) async {
-    try {
-      await _firestore.collection('userStats').doc(userId).set(
-        {
-          'userId': userId,
-          'messages': FieldValue.increment(1),
-          'lastMessageDate': FieldValue.serverTimestamp(),
-        },
-        SetOptions(merge: true),
-      );
-    } on Exception catch (e) {
-      debugPrint('Ошибка обновления статистики сообщений: $e');
+    } catch (e) {
+      debugPrint('ERROR: [AnalyticsService] Failed to save analytics event: $e');
     }
   }
 
   /// Получение статистики пользователя
-  Future<Map<String, dynamic>?> getUserStats(String userId) async {
+  static Future<Map<String, dynamic>> getUserAnalytics(String userId) async {
     try {
-      final doc = await _firestore.collection('userStats').doc(userId).get();
-      if (doc.exists) {
-        return doc.data();
+      final QuerySnapshot snapshot = await _firestore
+          .collection('analytics_events')
+          .where('userId', isEqualTo: userId)
+          .get();
+
+      final Map<String, int> eventCounts = {};
+      double totalSpent = 0.0;
+      int subscriptionPurchases = 0;
+      int promotionPurchases = 0;
+      int advertisementCreates = 0;
+
+      for (final doc in snapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>;
+        final eventType = data['eventType'] as String;
+        final eventData = data['eventData'] as Map<String, dynamic>;
+
+        eventCounts[eventType] = (eventCounts[eventType] ?? 0) + 1;
+
+        if (eventType == 'subscription_purchased' || 
+            eventType == 'promotion_purchased') {
+          totalSpent += (eventData['amount'] as num).toDouble();
+        }
+
+        if (eventType == 'subscription_purchased') subscriptionPurchases++;
+        if (eventType == 'promotion_purchased') promotionPurchases++;
+        if (eventType == 'advertisement_created') advertisementCreates++;
       }
-      return null;
-    } on Exception catch (e) {
-      debugPrint('Ошибка получения статистики пользователя: $e');
-      return null;
+
+      return {
+        'totalEvents': snapshot.docs.length,
+        'eventCounts': eventCounts,
+        'totalSpent': totalSpent,
+        'subscriptionPurchases': subscriptionPurchases,
+        'promotionPurchases': promotionPurchases,
+        'advertisementCreates': advertisementCreates,
+      };
+    } catch (e) {
+      debugPrint('ERROR: [AnalyticsService] Failed to get user analytics: $e');
+      return {};
     }
   }
 
-  /// Получение аналитических отчётов для админов
-  Future<Map<String, dynamic>> getAnalyticsReports() async {
+  /// Получение общей статистики платформы
+  static Future<Map<String, dynamic>> getPlatformAnalytics() async {
     try {
-      final doc =
-          await _firestore.collection('analyticsReports').doc('main').get();
-      if (doc.exists) {
-        return doc.data()!;
-      }
-      return {};
-    } on Exception catch (e) {
-      debugPrint('Ошибка получения аналитических отчётов: $e');
-      return {};
-    }
-  }
-
-  /// Обновление аналитических отчётов
-  Future<void> updateAnalyticsReports() async {
-    try {
-      // Получаем топ специалистов
-      final specialistsQuery = await _firestore
-          .collection('userStats')
-          .orderBy('views', descending: true)
-          .limit(10)
-          .get();
-
-      final topSpecialists = specialistsQuery.docs.map((doc) {
-        final data = doc.data();
-        return {
-          'userId': doc.id,
-          'views': data['views'] ?? 0,
-          'requests': data['requests'] ?? 0,
-          'messages': data['messages'] ?? 0,
-        };
-      }).toList();
-
-      // Получаем топ заказчиков
-      final customersQuery = await _firestore
+      final QuerySnapshot snapshot = await _firestore
           .collection('analytics_events')
-          .where('event_name', isEqualTo: 'create_request')
           .get();
 
-      final customerStats = <String, int>{};
-      for (final doc in customersQuery.docs) {
-        final data = doc.data();
-        final userId = data['user_id'] as String?;
-        if (userId != null) {
-          customerStats[userId] = (customerStats[userId] ?? 0) + 1;
+      final Map<String, int> eventCounts = {};
+      double totalRevenue = 0.0;
+      int totalUsers = 0;
+      final Set<String> uniqueUsers = {};
+
+      for (final doc in snapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>;
+        final eventType = data['eventType'] as String;
+        final eventData = data['eventData'] as Map<String, dynamic>;
+        final userId = data['userId'] as String;
+
+        uniqueUsers.add(userId);
+        eventCounts[eventType] = (eventCounts[eventType] ?? 0) + 1;
+
+        if (eventType == 'subscription_purchased' || 
+            eventType == 'promotion_purchased') {
+          totalRevenue += (eventData['amount'] as num).toDouble();
         }
       }
 
-      final topCustomers = customerStats.entries.toList()
-        ..sort((a, b) => b.value.compareTo(a.value));
-      final topCustomersList = topCustomers
-          .take(10)
-          .map(
-            (entry) => {
-              'userId': entry.key,
-              'requests': entry.value,
-            },
-          )
-          .toList();
-
-      // Получаем популярные категории
-      final categoriesQuery = await _firestore
-          .collection('analytics_events')
-          .where('event_name', isEqualTo: 'create_request')
-          .get();
-
-      final categoryStats = <String, int>{};
-      for (final doc in categoriesQuery.docs) {
-        final data = doc.data();
-        final parameters = data['parameters'] as Map<String, dynamic>?;
-        final category = parameters?['category'] as String?;
-        if (category != null) {
-          categoryStats[category] = (categoryStats[category] ?? 0) + 1;
-        }
-      }
-
-      final popularCategories = categoryStats.entries.toList()
-        ..sort((a, b) => b.value.compareTo(a.value));
-      final popularCategoriesList = popularCategories
-          .take(5)
-          .map(
-            (entry) => {
-              'category': entry.key,
-              'count': entry.value,
-            },
-          )
-          .toList();
-
-      // Сохраняем отчёт
-      await _firestore.collection('analyticsReports').doc('main').set({
-        'topSpecialists': topSpecialists,
-        'topCustomers': topCustomersList,
-        'popularCategories': popularCategoriesList,
-        'dateGenerated': FieldValue.serverTimestamp(),
-      });
-    } on Exception catch (e) {
-      debugPrint('Ошибка обновления аналитических отчётов: $e');
+      return {
+        'totalEvents': snapshot.docs.length,
+        'totalUsers': uniqueUsers.length,
+        'eventCounts': eventCounts,
+        'totalRevenue': totalRevenue,
+      };
+    } catch (e) {
+      debugPrint('ERROR: [AnalyticsService] Failed to get platform analytics: $e');
+      return {};
     }
   }
 }

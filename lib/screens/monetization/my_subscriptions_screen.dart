@@ -25,7 +25,7 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
   Future<void> _loadSubscriptions() async {
     try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final userId = authProvider.currentUser?.id;
+      final userId = authProvider.currentUser?['id'];
       
       if (userId != null) {
         final subscriptions = await _subscriptionService.getUserSubscriptions(userId);

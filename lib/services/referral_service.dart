@@ -1,388 +1,401 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../models/referral.dart';
+import 'package:uuid/uuid.dart';
+import 'package:flutter/material.dart';
+import 'dart:math';
+import '../models/referral_system.dart';
 
-/// Сервис для работы с партнёрской программой
 class ReferralService {
-  static const String _referralsCollection = 'referrals';
-  static const String _partnerProgramCollection = 'partnerProgram';
-  static const String _bonusesCollection = 'bonuses';
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final Uuid _uuid = const Uuid();
 
-  /// Создать партнёрскую программу для пользователя
-  Future<String?> createPartnerProgram(String userId) async {
+  /// Создание реферального кода для пользователя
+  Future<ReferralCode> createReferralCode(String userId) async {
     try {
-      final referralCode = _generateReferralCode(userId);
-
-      final partnerProgram = PartnerProgram(
-        userId: userId,
-        referralCode: referralCode,
-        totalReferrals: 0,
-        completedReferrals: 0,
-        totalBonus: 0,
-        status: PartnerStatus.bronze,
-        joinedAt: DateTime.now(),
-        lastActivityAt: DateTime.now(),
-      );
-
-      await _firestore
-          .collection(_partnerProgramCollection)
-          .doc(userId)
-          .set(partnerProgram.toFirestore());
-
-      return referralCode;
-    } on Exception catch (e) {
-      debugPrint('Ошибка создания партнёрской программы: $e');
-      return null;
-    }
-  }
-
-  /// Получить партнёрскую программу пользователя
-  Future<PartnerProgram?> getPartnerProgram(String userId) async {
-    try {
-      final doc = await _firestore
-          .collection(_partnerProgramCollection)
-          .doc(userId)
-          .get();
-
-      if (doc.exists) {
-        return PartnerProgram.fromFirestore(doc);
-      }
-      return null;
-    } on Exception catch (e) {
-      debugPrint('Ошибка получения партнёрской программы: $e');
-      return null;
-    }
-  }
-
-  /// Получить рефералов пользователя
-  Future<List<Referral>> getUserReferrals(String userId) async {
-    try {
-      final querySnapshot = await _firestore
-          .collection(_referralsCollection)
-          .where('inviterId', isEqualTo: userId)
-          .orderBy('timestamp', descending: true)
-          .get();
-
-      return querySnapshot.docs.map(Referral.fromFirestore).toList();
-    } on Exception catch (e) {
-      debugPrint('Ошибка получения рефералов: $e');
-      return [];
-    }
-  }
-
-  /// Обработать приглашение по реферальному коду
-  Future<bool> processReferral(
-    String referralCode,
-    String invitedUserId,
-  ) async {
-    try {
-      // Найти пользователя по реферальному коду
-      final partnerQuery = await _firestore
-          .collection(_partnerProgramCollection)
-          .where('referralCode', isEqualTo: referralCode)
+      // Проверяем, есть ли уже активный код
+      final existingCode = await _firestore
+          .collection('referral_codes')
+          .where('userId', isEqualTo: userId)
+          .where('isActive', isEqualTo: true)
           .limit(1)
           .get();
 
-      if (partnerQuery.docs.isEmpty) {
-        debugPrint('Реферальный код не найден: $referralCode');
-        return false;
+      if (existingCode.docs.isNotEmpty) {
+        return ReferralCode.fromMap(existingCode.docs.first.data());
       }
 
-      final inviterId = partnerQuery.docs.first.id;
+      // Создаем новый код
+      final String code = _generateReferralCode();
+      final String id = _uuid.v4();
+      
+      final ReferralCode referralCode = ReferralCode(
+        id: id,
+        userId: userId,
+        code: code,
+        createdAt: DateTime.now(),
+        expiresAt: DateTime.now().add(const Duration(days: 365)), // Год действия
+        isActive: true,
+        usageCount: 0,
+        maxUsage: 100,
+      );
 
-      // Проверить, не приглашал ли уже этого пользователя
+      await _firestore
+          .collection('referral_codes')
+          .doc(id)
+          .set(referralCode.toMap());
+
+      debugPrint('INFO: [ReferralService] Created referral code: $code for user: $userId');
+      return referralCode;
+    } catch (e) {
+      debugPrint('ERROR: [ReferralService] Failed to create referral code: $e');
+      rethrow;
+    }
+  }
+
+  /// Получение реферального кода пользователя
+  Future<ReferralCode?> getUserReferralCode(String userId) async {
+    try {
+      final QuerySnapshot snapshot = await _firestore
+          .collection('referral_codes')
+          .where('userId', isEqualTo: userId)
+          .where('isActive', isEqualTo: true)
+          .limit(1)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        return ReferralCode.fromMap(snapshot.docs.first.data() as Map<String, dynamic>);
+      }
+      return null;
+    } catch (e) {
+      debugPrint('ERROR: [ReferralService] Failed to get user referral code: $e');
+      return null;
+    }
+  }
+
+  /// Проверка и использование реферального кода
+  Future<Referral?> useReferralCode(String code, String referredUserId) async {
+    try {
+      // Находим код
+      final QuerySnapshot codeSnapshot = await _firestore
+          .collection('referral_codes')
+          .where('code', isEqualTo: code.toUpperCase())
+          .where('isActive', isEqualTo: true)
+          .limit(1)
+          .get();
+
+      if (codeSnapshot.docs.isEmpty) {
+        throw Exception('Реферальный код не найден или неактивен');
+      }
+
+      final ReferralCode referralCode = ReferralCode.fromMap(
+          codeSnapshot.docs.first.data() as Map<String, dynamic>);
+
+      if (!referralCode.canBeUsed) {
+        throw Exception('Реферальный код истек или достиг лимита использований');
+      }
+
+      // Проверяем, не использовал ли уже этот пользователь код
       final existingReferral = await _firestore
-          .collection(_referralsCollection)
-          .where('inviterId', isEqualTo: inviterId)
-          .where('invitedUserId', isEqualTo: invitedUserId)
+          .collection('referrals')
+          .where('referredId', isEqualTo: referredUserId)
           .limit(1)
           .get();
 
       if (existingReferral.docs.isNotEmpty) {
-        debugPrint('Пользователь уже приглашен этим рефералом');
-        return false;
+        throw Exception('Вы уже использовали реферальный код');
       }
 
-      // Создать запись о реферале
-      final referral = Referral(
-        id: '${inviterId}_$invitedUserId',
-        inviterId: inviterId,
-        invitedUserId: invitedUserId,
-        timestamp: DateTime.now(),
-        bonus: 100, // Базовый бонус за приглашение
+      // Создаем реферальную запись
+      final String referralId = _uuid.v4();
+      final Referral referral = Referral(
+        id: referralId,
+        referrerId: referralCode.userId,
+        referredId: referredUserId,
+        referralCode: code.toUpperCase(),
+        status: ReferralStatus.pending,
+        createdAt: DateTime.now(),
+        bonusApplied: false,
       );
 
-      await _firestore
-          .collection(_referralsCollection)
-          .doc(referral.id)
-          .set(referral.toFirestore());
+      await _firestore.collection('referrals').doc(referralId).set(referral.toMap());
 
-      // Обновить статистику партнёрской программы
-      await _updatePartnerProgramStats(inviterId);
+      // Увеличиваем счетчик использований кода
+      await _firestore.collection('referral_codes').doc(referralCode.id).update({
+        'usageCount': FieldValue.increment(1),
+      });
 
-      // Создать бонус для пригласившего
-      await _createBonus(
-        inviterId,
-        100,
-        BonusType.referral,
-        'За приглашение пользователя',
-      );
-
-      // Создать бонус для приглашенного
-      await _createBonus(
-        invitedUserId,
-        50,
-        BonusType.registration,
-        'За регистрацию по приглашению',
-      );
-
-      return true;
-    } on Exception catch (e) {
-      debugPrint('Ошибка обработки реферала: $e');
-      return false;
+      debugPrint('INFO: [ReferralService] Referral created: $referralId');
+      return referral;
+    } catch (e) {
+      debugPrint('ERROR: [ReferralService] Failed to use referral code: $e');
+      rethrow;
     }
   }
 
-  /// Отметить реферала как завершенного
-  Future<bool> completeReferral(String referralId) async {
+  /// Завершение реферала (когда новый пользователь совершает первое действие)
+  Future<void> completeReferral(String referralId) async {
     try {
-      final referralDoc = await _firestore
-          .collection(_referralsCollection)
+      final DocumentSnapshot doc = await _firestore
+          .collection('referrals')
           .doc(referralId)
           .get();
 
-      if (!referralDoc.exists) {
-        return false;
+      if (!doc.exists) {
+        throw Exception('Реферал не найден');
       }
 
-      final referral = Referral.fromFirestore(referralDoc);
+      final Referral referral = Referral.fromMap(doc.data() as Map<String, dynamic>);
 
       if (referral.isCompleted) {
-        return true; // Уже завершен
+        return; // Уже завершен
       }
 
-      // Обновить статус реферала
-      await _firestore.collection(_referralsCollection).doc(referralId).update({
-        'isCompleted': true,
-        'completedAt': Timestamp.now(),
+      // Обновляем статус реферала
+      await _firestore.collection('referrals').doc(referralId).update({
+        'status': ReferralStatus.completed.toString().split('.').last,
+        'completedAt': FieldValue.serverTimestamp(),
       });
 
-      // Обновить статистику партнёрской программы
-      await _updatePartnerProgramStats(referral.inviterId);
+      // Начисляем бонусы
+      await _applyReferralBonuses(referral);
 
-      // Создать дополнительный бонус за завершение
-      await _createBonus(
-        referral.inviterId,
-        200,
-        BonusType.milestone,
-        'За завершение реферала',
+      debugPrint('INFO: [ReferralService] Referral completed: $referralId');
+    } catch (e) {
+      debugPrint('ERROR: [ReferralService] Failed to complete referral: $e');
+      rethrow;
+    }
+  }
+
+  /// Применение бонусов за реферал
+  Future<void> _applyReferralBonuses(Referral referral) async {
+    try {
+      // Бонус для пригласившего
+      final ReferralReward referrerReward = ReferralReward(
+        id: _uuid.v4(),
+        userId: referral.referrerId,
+        referralId: referral.id,
+        type: ReferralBonusType.freePromotion,
+        value: 1.0, // 1 бесплатное продвижение
+        description: 'Бонус за приглашение друга',
+        createdAt: DateTime.now(),
+        expiresAt: DateTime.now().add(const Duration(days: 30)),
+        isUsed: false,
       );
 
-      return true;
-    } on Exception catch (e) {
-      debugPrint('Ошибка завершения реферала: $e');
-      return false;
-    }
-  }
-
-  /// Обновить статистику партнёрской программы
-  Future<void> _updatePartnerProgramStats(String userId) async {
-    try {
-      final referrals = await getUserReferrals(userId);
-      final completedReferrals = referrals.where((r) => r.isCompleted).length;
-      final totalBonus = referrals.fold(0, (sum, r) => sum + r.bonus);
-
-      // Определить новый статус
-      var newStatus = PartnerStatus.bronze;
-      if (completedReferrals >= 20) {
-        newStatus = PartnerStatus.platinum;
-      } else if (completedReferrals >= 10) {
-        newStatus = PartnerStatus.gold;
-      } else if (completedReferrals >= 5) {
-        newStatus = PartnerStatus.silver;
-      }
-
-      await _firestore
-          .collection(_partnerProgramCollection)
-          .doc(userId)
-          .update({
-        'totalReferrals': referrals.length,
-        'completedReferrals': completedReferrals,
-        'totalBonus': totalBonus,
-        'status': newStatus.value,
-        'lastActivityAt': Timestamp.now(),
-      });
-    } on Exception catch (e) {
-      debugPrint('Ошибка обновления статистики партнёрской программы: $e');
-    }
-  }
-
-  /// Создать бонус
-  Future<void> _createBonus(
-    String userId,
-    int amount,
-    BonusType type,
-    String description,
-  ) async {
-    try {
-      final bonus = Bonus(
-        id: '${userId}_${DateTime.now().millisecondsSinceEpoch}',
-        userId: userId,
-        amount: amount,
-        type: type.value,
-        description: description,
-        earnedAt: DateTime.now(),
+      // Бонус для приглашенного
+      final ReferralReward referredReward = ReferralReward(
+        id: _uuid.v4(),
+        userId: referral.referredId,
+        referralId: referral.id,
+        type: ReferralBonusType.premiumTrial,
+        value: 7.0, // 7 дней премиум
+        description: 'Приветственный бонус за регистрацию по приглашению',
+        createdAt: DateTime.now(),
+        expiresAt: DateTime.now().add(const Duration(days: 7)),
+        isUsed: false,
       );
 
+      // Сохраняем бонусы
       await _firestore
-          .collection(_bonusesCollection)
-          .doc(bonus.id)
-          .set(bonus.toFirestore());
-    } on Exception catch (e) {
-      debugPrint('Ошибка создания бонуса: $e');
+          .collection('referral_rewards')
+          .doc(referrerReward.id)
+          .set(referrerReward.toMap());
+
+      await _firestore
+          .collection('referral_rewards')
+          .doc(referredReward.id)
+          .set(referredReward.toMap());
+
+      // Обновляем статистику
+      await _updateReferralStats(referral.referrerId);
+      await _updateReferralStats(referral.referredId);
+
+      debugPrint('INFO: [ReferralService] Bonuses applied for referral: ${referral.id}');
+    } catch (e) {
+      debugPrint('ERROR: [ReferralService] Failed to apply referral bonuses: $e');
+      rethrow;
     }
   }
 
-  /// Получить бонусы пользователя
-  Future<List<Bonus>> getUserBonuses(String userId) async {
+  /// Обновление статистики рефералов
+  Future<void> _updateReferralStats(String userId) async {
     try {
-      final querySnapshot = await _firestore
-          .collection(_bonusesCollection)
-          .where('userId', isEqualTo: userId)
-          .orderBy('earnedAt', descending: true)
+      // Подсчитываем статистику
+      final QuerySnapshot referralsSnapshot = await _firestore
+          .collection('referrals')
+          .where('referrerId', isEqualTo: userId)
           .get();
 
-      return querySnapshot.docs.map(Bonus.fromFirestore).toList();
-    } on Exception catch (e) {
-      debugPrint('Ошибка получения бонусов: $e');
-      return [];
-    }
-  }
+      final QuerySnapshot rewardsSnapshot = await _firestore
+          .collection('referral_rewards')
+          .where('userId', isEqualTo: userId)
+          .get();
 
-  /// Получить общий баланс бонусов
-  Future<int> getUserBonusBalance(String userId) async {
-    try {
-      final bonuses = await getUserBonuses(userId);
-      final earned = bonuses.fold(0, (sum, bonus) => sum + bonus.amount);
-      final used = bonuses
-          .where((bonus) => bonus.isUsed)
-          .fold(0, (sum, bonus) => sum + bonus.amount);
+      int totalReferrals = referralsSnapshot.docs.length;
+      int completedReferrals = referralsSnapshot.docs
+          .where((doc) => Referral.fromMap(doc.data() as Map<String, dynamic>).isCompleted)
+          .length;
+      int pendingReferrals = totalReferrals - completedReferrals;
 
-      return earned - used;
-    } on Exception catch (e) {
-      debugPrint('Ошибка получения баланса бонусов: $e');
-      return 0;
-    }
-  }
+      double totalBonusesEarned = 0.0;
+      int activeRewards = 0;
+      int usedRewards = 0;
 
-  /// Использовать бонус
-  Future<bool> useBonus(String bonusId, String usedFor) async {
-    try {
-      final bonusDoc =
-          await _firestore.collection(_bonusesCollection).doc(bonusId).get();
-
-      if (!bonusDoc.exists) {
-        return false;
+      for (final doc in rewardsSnapshot.docs) {
+        final ReferralReward reward = ReferralReward.fromMap(doc.data() as Map<String, dynamic>);
+        totalBonusesEarned += reward.value;
+        if (reward.isUsed) {
+          usedRewards++;
+        } else if (reward.canBeUsed) {
+          activeRewards++;
+        }
       }
 
-      final bonus = Bonus.fromFirestore(bonusDoc);
+      final ReferralStats stats = ReferralStats(
+        userId: userId,
+        totalReferrals: totalReferrals,
+        completedReferrals: completedReferrals,
+        pendingReferrals: pendingReferrals,
+        totalBonusesEarned: totalBonusesEarned,
+        activeRewards: activeRewards,
+        usedRewards: usedRewards,
+        lastReferralAt: referralsSnapshot.docs.isNotEmpty
+            ? Referral.fromMap(referralsSnapshot.docs.last.data() as Map<String, dynamic>).createdAt
+            : null,
+      );
 
-      if (bonus.isUsed) {
-        return false; // Уже использован
+      await _firestore
+          .collection('referral_stats')
+          .doc(userId)
+          .set(stats.toMap());
+
+      debugPrint('INFO: [ReferralService] Stats updated for user: $userId');
+    } catch (e) {
+      debugPrint('ERROR: [ReferralService] Failed to update referral stats: $e');
+    }
+  }
+
+  /// Получение статистики рефералов пользователя
+  Future<ReferralStats?> getUserReferralStats(String userId) async {
+    try {
+      final DocumentSnapshot doc = await _firestore
+          .collection('referral_stats')
+          .doc(userId)
+          .get();
+
+      if (doc.exists) {
+        return ReferralStats.fromMap(doc.data() as Map<String, dynamic>);
       }
-
-      await _firestore.collection(_bonusesCollection).doc(bonusId).update({
-        'isUsed': true,
-        'usedAt': Timestamp.now(),
-        'usedFor': usedFor,
-      });
-
-      return true;
-    } on Exception catch (e) {
-      debugPrint('Ошибка использования бонуса: $e');
-      return false;
-    }
-  }
-
-  /// Генерация реферального кода
-  String _generateReferralCode(String userId) {
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final userHash = userId.hashCode.abs();
-    return 'REF${userHash.toString().substring(0, 6).toUpperCase()}';
-  }
-
-  /// Сохранить реферальный код локально
-  Future<void> saveReferralCodeLocally(String referralCode) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('referral_code', referralCode);
-    } on Exception catch (e) {
-      debugPrint('Ошибка сохранения реферального кода: $e');
-    }
-  }
-
-  /// Получить реферальный код из локального хранилища
-  Future<String?> getReferralCodeLocally() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      return prefs.getString('referral_code');
-    } on Exception catch (e) {
-      debugPrint('Ошибка получения реферального кода: $e');
+      return null;
+    } catch (e) {
+      debugPrint('ERROR: [ReferralService] Failed to get user referral stats: $e');
       return null;
     }
   }
 
-  /// Получить статистику партнёрской программы
-  Future<Map<String, dynamic>> getPartnerProgramStats(String userId) async {
+  /// Получение активных наград пользователя
+  Future<List<ReferralReward>> getUserActiveRewards(String userId) async {
     try {
-      final partnerProgram = await getPartnerProgram(userId);
-      final referrals = await getUserReferrals(userId);
-      final bonuses = await getUserBonuses(userId);
-      final balance = await getUserBonusBalance(userId);
+      final QuerySnapshot snapshot = await _firestore
+          .collection('referral_rewards')
+          .where('userId', isEqualTo: userId)
+          .where('isUsed', isEqualTo: false)
+          .orderBy('createdAt', descending: true)
+          .get();
 
-      return {
-        'partnerProgram': partnerProgram,
-        'totalReferrals': referrals.length,
-        'completedReferrals': referrals.where((r) => r.isCompleted).length,
-        'totalBonuses': bonuses.length,
-        'bonusBalance': balance,
-        'totalEarned': bonuses.fold(0, (sum, bonus) => sum + bonus.amount),
-        'totalUsed': bonuses
-            .where((bonus) => bonus.isUsed)
-            .fold(0, (sum, bonus) => sum + bonus.amount),
-      };
-    } on Exception catch (e) {
-      debugPrint('Ошибка получения статистики: $e');
-      return {};
+      return snapshot.docs
+          .map((doc) => ReferralReward.fromMap(doc.data() as Map<String, dynamic>))
+          .where((reward) => reward.canBeUsed)
+          .toList();
+    } catch (e) {
+      debugPrint('ERROR: [ReferralService] Failed to get user active rewards: $e');
+      return [];
     }
   }
 
-  /// Очистить старые неактивные рефералы
-  Future<int> cleanupOldReferrals() async {
+  /// Использование награды
+  Future<void> useReward(String rewardId) async {
     try {
-      final monthAgo = DateTime.now().subtract(const Duration(days: 30));
-      final querySnapshot = await _firestore
-          .collection(_referralsCollection)
-          .where('timestamp', isLessThan: Timestamp.fromDate(monthAgo))
-          .where('isCompleted', isEqualTo: false)
+      await _firestore.collection('referral_rewards').doc(rewardId).update({
+        'isUsed': true,
+        'usedAt': FieldValue.serverTimestamp(),
+      });
+
+      debugPrint('INFO: [ReferralService] Reward used: $rewardId');
+    } catch (e) {
+      debugPrint('ERROR: [ReferralService] Failed to use reward: $e');
+      rethrow;
+    }
+  }
+
+  /// Получение рефералов пользователя
+  Future<List<Referral>> getUserReferrals(String userId) async {
+    try {
+      final QuerySnapshot snapshot = await _firestore
+          .collection('referrals')
+          .where('referrerId', isEqualTo: userId)
+          .orderBy('createdAt', descending: true)
           .get();
 
-      final batch = _firestore.batch();
-      for (final doc in querySnapshot.docs) {
-        batch.delete(doc.reference);
+      return snapshot.docs
+          .map((doc) => Referral.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      debugPrint('ERROR: [ReferralService] Failed to get user referrals: $e');
+      return [];
+    }
+  }
+
+  /// Генерация уникального реферального кода
+  String _generateReferralCode() {
+    const String chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    final random = Random();
+    
+    String code;
+    bool isUnique = false;
+    
+    do {
+      code = '';
+      for (int i = 0; i < 8; i++) {
+        code += chars[random.nextInt(chars.length)];
+      }
+      
+      // Проверяем уникальность (упрощенная проверка)
+      isUnique = true; // В реальном приложении нужно проверить в БД
+    } while (!isUnique);
+    
+    return code;
+  }
+
+  /// Создание реферальной ссылки
+  String createReferralLink(String code) {
+    return 'https://eventmarketplace.app/invite/$code';
+  }
+
+  /// Проверка достижения уровней реферальной программы
+  Future<List<String>> checkReferralLevels(String userId) async {
+    try {
+      final ReferralStats? stats = await getUserReferralStats(userId);
+      if (stats == null) return [];
+
+      final List<String> achievements = [];
+
+      if (stats.completedReferrals >= 5) {
+        achievements.add('level_5_referrals');
+      }
+      if (stats.completedReferrals >= 10) {
+        achievements.add('level_10_referrals');
+      }
+      if (stats.completedReferrals >= 25) {
+        achievements.add('level_25_referrals');
+      }
+      if (stats.completedReferrals >= 50) {
+        achievements.add('level_50_referrals');
       }
 
-      if (querySnapshot.docs.isNotEmpty) {
-        await batch.commit();
-        debugPrint('Удалено ${querySnapshot.docs.length} старых рефералов');
-      }
-
-      return querySnapshot.docs.length;
-    } on Exception catch (e) {
-      debugPrint('Ошибка очистки старых рефералов: $e');
-      return 0;
+      return achievements;
+    } catch (e) {
+      debugPrint('ERROR: [ReferralService] Failed to check referral levels: $e');
+      return [];
     }
   }
 }

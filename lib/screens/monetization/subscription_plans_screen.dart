@@ -29,7 +29,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
     try {
       final plans = await _subscriptionService.getAvailablePlans();
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final userId = authProvider.currentUser?.id;
+      final userId = authProvider.currentUser?['id'];
       
       UserSubscription? activeSubscription;
       if (userId != null) {

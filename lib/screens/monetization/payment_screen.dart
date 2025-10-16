@@ -477,7 +477,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final userId = authProvider.currentUser?.id;
+      final userId = authProvider.currentUser?['id'];
       
       if (userId == null) {
         throw Exception('Пользователь не авторизован');

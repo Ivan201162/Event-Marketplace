@@ -38,10 +38,9 @@ class SupabaseConfig {
 
 /// Валидация конфигурации
 class SupabaseConfigValidator {
-  static bool get isConfigured {
-    return SupabaseConfig.url != 'https://your-project-id.supabase.co' &&
-           SupabaseConfig.anonKey != 'your-anon-key-here';
-  }
+  static bool get isConfigured =>
+      SupabaseConfig.url != 'https://your-project-id.supabase.co' &&
+      SupabaseConfig.anonKey != 'your-anon-key-here';
   
   static List<String> get missingConfigs {
     final List<String> missing = [];

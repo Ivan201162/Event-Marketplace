@@ -21,11 +21,9 @@ import '../screens/main_navigation_screen.dart';
 import '../screens/modern_auth_screen.dart';
 import '../screens/my_bookings_screen.dart';
 import '../screens/recommendations_screen.dart';
-import '../screens/restored_home_screen.dart';
 import '../screens/search_screen.dart' as screens;
 import '../screens/settings_page.dart';
 import '../screens/specialist_profile_edit_screen.dart';
-import '../screens/specialist_profile_screen.dart';
 import '../screens/splash_screen.dart';
 import '../screens/test_profile_screen.dart';
 import '../screens/video_reels_viewer.dart';
@@ -96,7 +94,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/home',
         name: 'home',
-        builder: (context, state) => const RestoredHomeScreen(),
+        builder: (context, state) => const MainNavigationScreen(),
       ),
 
       // Лента активности
@@ -126,7 +124,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'specialist',
         builder: (context, state) {
           final specialistId = state.pathParameters['specialistId']!;
-          return SpecialistProfileScreen(specialistId: specialistId);
+          return SpecialistProfileEditScreen(specialistId: specialistId);
         },
       ),
 
@@ -155,9 +153,6 @@ final routerProvider = Provider<GoRouter>((ref) {
               state.uri.queryParameters['otherParticipantAvatar'];
           return ChatScreen(
             chatId: chatId,
-            otherParticipantId: otherParticipantId,
-            otherParticipantName: otherParticipantName,
-            otherParticipantAvatar: otherParticipantAvatar,
           );
         },
       ),
@@ -247,7 +242,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/idea/:ideaId',
         name: 'idea-detail',
         builder: (context, state) {
-          // TODO: Загрузить идею по ID
+          // TODO(developer): Загрузить идею по ID
           return const IdeasScreen(); // Временная заглушка
         },
       ),
@@ -264,7 +259,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/share-idea/:ideaId',
         name: 'share-idea',
         builder: (context, state) {
-          // TODO: Загрузить идею по ID
+          // TODO(developer): Загрузить идею по ID
           return const IdeasScreen(); // Временная заглушка
         },
       ),

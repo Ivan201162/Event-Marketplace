@@ -211,7 +211,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
               const SizedBox(height: 16),
               
               // Таргетинг
-              _buildSectionHeader('Таргетинг', Icons.target),
+              _buildSectionHeader('Таргетинг', Icons.gps_fixed),
               const SizedBox(height: 16),
               
               DropdownButtonFormField<String>(
@@ -422,7 +422,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
 
     try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final userId = authProvider.currentUser?.id;
+      final userId = authProvider.currentUser?['id'];
       
       if (userId == null) {
         throw Exception('Пользователь не авторизован');

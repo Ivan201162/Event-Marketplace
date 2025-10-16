@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 /// Модель A/B теста
+@immutable
 class ABTest {
   const ABTest({
     required this.id,
@@ -211,6 +213,7 @@ class ABTest {
 }
 
 /// Модель варианта A/B теста
+@immutable
 class ABTestVariant {
   const ABTestVariant({
     required this.id,
@@ -304,6 +307,7 @@ class ABTestVariant {
 }
 
 /// Модель таргетинга A/B теста
+@immutable
 class ABTestTargeting {
   const ABTestTargeting({
     this.userIds = const [],
@@ -408,6 +412,7 @@ class ABTestTargeting {
 }
 
 /// Модель метрик A/B теста
+@immutable
 class ABTestMetrics {
   const ABTestMetrics({
     required this.primaryMetric,
@@ -503,6 +508,7 @@ class ABTestMetrics {
 }
 
 /// Модель участия пользователя в A/B тесте
+@immutable
 class ABTestParticipation {
   const ABTestParticipation({
     required this.id,

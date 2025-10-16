@@ -395,7 +395,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                   border: OutlineInputBorder(),
                   hintText: 'Например: Фотография, Видеосъемка',
                 ),
-                onSubmitted: (_) => _addSkill(),
+                onFieldSubmitted: (_) => _addSkill(),
               ),
             ),
             const SizedBox(width: 8),

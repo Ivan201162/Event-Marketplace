@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import '../models/advertisement.dart';
-import '../models/transaction.dart';
+import '../models/transaction.dart' as transaction_model;
 import '../services/payment_service.dart';
 
 class AdvertisementService {
@@ -257,13 +257,13 @@ class AdvertisementService {
 
       if (paymentResult.success) {
         // Создаем транзакцию
-        final transaction = Transaction(
+        final transaction = transaction_model.Transaction(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           userId: userId,
-          type: TransactionType.advertisement,
+          type: transaction_model.TransactionType.advertisement,
           amount: ad.price,
           currency: 'RUB',
-          status: TransactionStatus.pending,
+          status: transaction_model.TransactionStatus.pending,
           timestamp: DateTime.now(),
           description: 'Реклама ${ad.title ?? 'Без названия'}',
           adId: adId,
@@ -319,7 +319,7 @@ class AdvertisementService {
           .collection('transactions')
           .doc(transactionId)
           .update({
-        'status': TransactionStatus.success.toString().split('.').last,
+        'status': 'success',
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
 

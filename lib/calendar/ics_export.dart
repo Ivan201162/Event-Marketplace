@@ -177,9 +177,11 @@ class IcsExportService {
       }
 
       await SharePlus.instance.share(
-        filePath,
-        subject: subject ?? 'Календарное событие',
-        text: 'Экспорт календарного события',
+        ShareParams(
+          files: [filePath],
+          subject: subject ?? 'Календарное событие',
+          text: 'Экспорт календарного события',
+        ),
       );
 
       SafeLog.info('IcsExportService: ICS file shared successfully');
@@ -312,25 +314,28 @@ class IcsExportService {
   static String _generateIcsContent(Event event) {
     final buffer = StringBuffer();
 
-    buffer.writeln('BEGIN:VCALENDAR');
-    buffer.writeln('VERSION:2.0');
-    buffer.writeln('PRODID:-//Event Marketplace//Event Calendar//EN');
-    buffer.writeln('BEGIN:VEVENT');
-    buffer.writeln('UID:${event.id}@eventmarketplace.com');
-    buffer.writeln('DTSTART:${_formatDateTime(event.date)}');
-    buffer.writeln(
-      'DTEND:${_formatDateTime(event.date.add(const Duration(hours: 2)))}',
-    );
-    buffer.writeln('SUMMARY:${event.title}');
-    buffer.writeln('DESCRIPTION:${event.description}');
+    buffer
+      ..writeln('BEGIN:VCALENDAR')
+      ..writeln('VERSION:2.0')
+      ..writeln('PRODID:-//Event Marketplace//Event Calendar//EN')
+      ..writeln('BEGIN:VEVENT')
+      ..writeln('UID:${event.id}@eventmarketplace.com')
+      ..writeln('DTSTART:${_formatDateTime(event.date)}')
+      ..writeln(
+        'DTEND:${_formatDateTime(event.date.add(const Duration(hours: 2)))}',
+      )
+      ..writeln('SUMMARY:${event.title}');
+    buffer
+      ..writeln('DESCRIPTION:${event.description}');
     if (event.location.isNotEmpty) {
       buffer.writeln('LOCATION:${event.location}');
     }
-    buffer.writeln('STATUS:CONFIRMED');
-    buffer.writeln('CREATED:${_formatDateTime(DateTime.now())}');
-    buffer.writeln('LAST-MODIFIED:${_formatDateTime(DateTime.now())}');
-    buffer.writeln('END:VEVENT');
-    buffer.writeln('END:VCALENDAR');
+    buffer
+      ..writeln('STATUS:CONFIRMED')
+      ..writeln('CREATED:${_formatDateTime(DateTime.now())}')
+      ..writeln('LAST-MODIFIED:${_formatDateTime(DateTime.now())}')
+      ..writeln('END:VEVENT')
+      ..writeln('END:VCALENDAR');
 
     return buffer.toString();
   }

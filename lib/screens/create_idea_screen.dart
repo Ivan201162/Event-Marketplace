@@ -68,7 +68,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
   Future<void> _pickVideo() async {
     try {
       final ImagePicker picker = ImagePicker();
-      final XFile? video = await picker.pickVideo();
+      final XFile? video = await picker.pickVideo(source: ImageSource.gallery);
       
       if (video != null) {
         setState(() {

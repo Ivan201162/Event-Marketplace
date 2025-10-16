@@ -47,7 +47,7 @@ class _MonetizationHubScreenState extends State<MonetizationHubScreen>
 
   Future<void> _loadUserData() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final userId = authProvider.currentUser?.id;
+    final userId = authProvider.currentUser?['id'];
     
     if (userId != null) {
       final subscription = await _subscriptionService.getActiveSubscription(userId);

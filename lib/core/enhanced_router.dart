@@ -18,6 +18,17 @@ import '../screens/create_idea_screen.dart';
 import '../screens/edit_profile_screen.dart';
 import '../screens/enhanced_social_home_screen.dart';
 import '../screens/ideas_feed_screen.dart';
+import '../screens/monetization/monetization_hub_screen.dart';
+import '../screens/monetization/subscription_plans_screen.dart';
+import '../screens/monetization/promotion_packages_screen.dart';
+import '../screens/monetization/advertisement_campaigns_screen.dart';
+import '../screens/monetization/payment_screen.dart';
+import '../screens/monetization/my_subscriptions_screen.dart';
+import '../screens/monetization/my_promotions_screen.dart';
+import '../screens/monetization/my_advertisements_screen.dart';
+import '../screens/monetization/create_advertisement_screen.dart';
+import '../models/transaction.dart';
+import '../models/advertisement.dart';
 import '../screens/chats_list_screen.dart';
 import '../screens/chat_screen.dart';
 import '../screens/requests_screen.dart';
@@ -141,6 +152,61 @@ final routerProvider = Provider<GoRouter>((ref) => GoRouter(
         path: '/profile/edit',
         name: 'edit-profile',
         builder: (context, state) => const ProfileEditScreen(),
+      ),
+
+      // Маршруты монетизации
+      GoRoute(
+        path: '/monetization',
+        name: 'monetization',
+        builder: (context, state) => const MonetizationHubScreen(),
+      ),
+      GoRoute(
+        path: '/monetization/subscriptions',
+        name: 'subscriptions',
+        builder: (context, state) => const SubscriptionPlansScreen(),
+      ),
+      GoRoute(
+        path: '/monetization/promotions',
+        name: 'promotions',
+        builder: (context, state) => const PromotionPackagesScreen(),
+      ),
+      GoRoute(
+        path: '/monetization/advertisements',
+        name: 'advertisements',
+        builder: (context, state) => const AdvertisementCampaignsScreen(),
+      ),
+      GoRoute(
+        path: '/monetization/payment',
+        name: 'payment',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return PaymentScreen(
+            type: extra?['type'] ?? PaymentType.subscription,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/monetization/my-subscriptions',
+        name: 'my-subscriptions',
+        builder: (context, state) => const MySubscriptionsScreen(),
+      ),
+      GoRoute(
+        path: '/monetization/my-promotions',
+        name: 'my-promotions',
+        builder: (context, state) => const MyPromotionsScreen(),
+      ),
+      GoRoute(
+        path: '/monetization/my-advertisements',
+        name: 'my-advertisements',
+        builder: (context, state) => const MyAdvertisementsScreen(),
+      ),
+      GoRoute(
+        path: '/monetization/create-advertisement',
+        name: 'create-advertisement',
+        builder: (context, state) {
+          final type = state.extra as AdType? ?? AdType.banner;
+          return CreateAdvertisementScreen();
+        },
       ),
 
       // Профиль
@@ -345,6 +411,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     const RequestsScreen(),
     const ChatsScreen(),
     const IdeasScreen(),
+    const MonetizationHubScreen(), // Добавляем экран монетизации
   ];
 
   @override
@@ -398,6 +465,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.lightbulb),
             label: 'Идеи',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.monetization_on),
+            label: 'Монетизация',
           ),
         ],
       ),

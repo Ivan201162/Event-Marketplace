@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/ab_test.dart';
@@ -757,7 +759,7 @@ class _ABTestManagementScreenState
   Future<void> _startTest(ABTest test) async {
     try {
       await _abTestService.startABTest(test.id);
-      _loadTests();
+      unawaited(_loadTests());
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('A/B тест "${test.name}" запущен'),
@@ -777,7 +779,7 @@ class _ABTestManagementScreenState
   Future<void> _stopTest(ABTest test) async {
     try {
       await _abTestService.stopABTest(test.id);
-      _loadTests();
+      unawaited(_loadTests());
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('A/B тест "${test.name}" остановлен'),
@@ -828,7 +830,7 @@ class _ABTestManagementScreenState
               Navigator.pop(context);
               try {
                 await _abTestService.deleteABTest(test.id);
-                _loadTests();
+                unawaited(_loadTests());
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('A/B тест удален'),
@@ -907,7 +909,7 @@ class _ABTestManagementScreenState
         metrics: metrics,
       );
 
-      _loadTests();
+      unawaited(_loadTests());
       setState(() {
         _selectedTab = 'tests';
       });

@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../models/event.dart';
 
 /// Координаты на карте
+@immutable
 class MapCoordinates {
   const MapCoordinates({
     required this.latitude,
@@ -26,6 +28,7 @@ class MapCoordinates {
 }
 
 /// Маркер на карте
+@immutable
 class MapMarker {
   const MapMarker({
     required this.id,

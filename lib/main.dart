@@ -7,6 +7,11 @@ import 'config/supabase_config.dart';
 import 'core/enhanced_router.dart';
 import 'firebase_options.dart';
 import 'providers/theme_provider.dart';
+import 'providers/monetization_provider.dart';
+// import 'services/firestore_test_data_service.dart';
+// import 'services/notification_service.dart';
+// import 'services/analytics_service.dart';
+// import 'services/growth_pack_integration_service.dart';
 import 'theme/app_theme.dart';
 
 void main() async {
@@ -37,6 +42,32 @@ void main() async {
     debugPrint('❌ Supabase initialization error: $e');
     // Приложение может работать без Supabase (только Firebase функции)
   }
+  
+  // Инициализация тестовых данных (только в режиме разработки)
+  // try {
+  //   await FirestoreTestDataService.initializeTestData();
+  //   debugPrint('✅ Test data initialized successfully');
+  // } on Exception catch (e) {
+  //   debugPrint('❌ Test data initialization error: $e');
+  // }
+  
+  // Инициализация сервисов
+  // try {
+  //   await NotificationService.initialize();
+  //   await AnalyticsService.initialize();
+  //   debugPrint('✅ Services initialized successfully');
+  // } on Exception catch (e) {
+  //   debugPrint('❌ Services initialization error: $e');
+  // }
+  
+  // Инициализация Growth Pack
+  // try {
+  //   final growthPackService = GrowthPackIntegrationService();
+  //   await growthPackService.initializeGrowthPack();
+  //   debugPrint('✅ Growth Pack initialized successfully');
+  // } on Exception catch (e) {
+  //   debugPrint('❌ Growth Pack initialization error: $e');
+  // }
   
   runApp(const ProviderScope(child: EventMarketplaceApp()));
 }

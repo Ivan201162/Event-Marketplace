@@ -25,7 +25,7 @@ class _MyPromotionsScreenState extends State<MyPromotionsScreen> {
   Future<void> _loadPromotions() async {
     try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final userId = authProvider.currentUser?.id;
+      final userId = authProvider.currentUser?['id'];
       
       if (userId != null) {
         final promotions = await _promotionService.getUserPromotions(userId);
