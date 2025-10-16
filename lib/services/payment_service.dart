@@ -1,366 +1,543 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
-
-import '../config/payment_config.dart';
-import '../models/premium_profile.dart';
-import '../models/promoted_post.dart';
-import '../models/subscription.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
 import '../models/transaction.dart';
+import '../models/subscription_plan.dart';
+import '../models/promotion_boost.dart';
+import '../models/advertisement.dart';
+import '../config/payment_config.dart';
+
+enum PaymentProvider {
+  stripe,
+  yookassa,
+  cloudPayments,
+  tinkoffPay,
+}
+
+enum PaymentMethod {
+  card,
+  applePay,
+  googlePay,
+  yooMoney,
+  qiwi,
+  webmoney,
+}
+
+class PaymentResult {
+  final bool success;
+  final String? transactionId;
+  final String? externalTransactionId;
+  final String? errorMessage;
+  final Map<String, dynamic>? metadata;
+
+  PaymentResult({
+    required this.success,
+    this.transactionId,
+    this.externalTransactionId,
+    this.errorMessage,
+    this.metadata,
+  });
+}
 
 class PaymentService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
+  static final PaymentService _instance = PaymentService._internal();
+  factory PaymentService() => _instance;
+  PaymentService._internal();
 
-  // Initialize Stripe
-  Future<void> initializeStripe() async {
-    Stripe.publishableKey = PaymentConfig.stripePublishableKey;
-    await Stripe.instance.applySettings();
-  }
+  final String _baseUrl = 'https://api.stripe.com/v1';
+  final String _yookassaUrl = 'https://api.yookassa.ru/v3';
 
-  // Process payment for premium profile promotion
-  Future<bool> processPremiumPromotion({
-    required String userId,
-    required String plan,
-    required double amount,
-  }) async {
-    try {
-      // Create payment intent
-      final paymentIntent = await _createPaymentIntent(amount);
-
-      // Confirm payment
-      final result = await Stripe.instance.confirmPayment(
-        paymentIntentClientSecret: paymentIntent['client_secret'],
-        data: const PaymentMethodData(
-          billingDetails: BillingDetails(),
-        ),
-      );
-
-      if (result.status == PaymentIntentStatus.Succeeded) {
-        // Create transaction record
-        await _createTransaction(
-          userId: userId,
-          type: TransactionType.promotion,
-          amount: amount,
-          description: 'Продвижение профиля - $plan',
-        );
-
-        // Create premium profile
-        await _createPremiumProfile(userId: userId, plan: plan);
-
-        // Log analytics event
-        await _analytics.logEvent(
-          name: 'purchase_premium',
-          parameters: {
-            'user_id': userId,
-            'plan': plan,
-            'amount': amount,
-          },
-        );
-
-        return true;
-      }
-      return false;
-    } on Exception catch (e) {
-      debugPrint('Payment error: $e');
-      return false;
-    }
-  }
-
-  // Process subscription payment
-  Future<bool> processSubscription({
+  /// Создание платежа для подписки
+  Future<PaymentResult> createSubscriptionPayment({
     required String userId,
     required SubscriptionPlan plan,
-    required double amount,
+    required PaymentMethod paymentMethod,
+    PaymentProvider provider = PaymentProvider.stripe,
   }) async {
     try {
-      final paymentIntent = await _createPaymentIntent(amount);
-
-      final result = await Stripe.instance.confirmPayment(
-        paymentIntentClientSecret: paymentIntent['client_secret'],
-        data: const PaymentMethodData(
-          billingDetails: BillingDetails(),
-        ),
-      );
-
-      if (result.status == PaymentIntentStatus.Succeeded) {
-        // Create transaction record
-        await _createTransaction(
-          userId: userId,
-          type: TransactionType.subscription,
-          amount: amount,
-          description: 'Подписка ${plan.toString().split('.').last}',
-        );
-
-        // Create subscription
-        await _createSubscription(userId: userId, plan: plan, amount: amount);
-
-        // Log analytics event
-        await _analytics.logEvent(
-          name: 'buy_subscription',
-          parameters: {
-            'user_id': userId,
-            'plan': plan.toString().split('.').last,
-            'amount': amount,
-          },
-        );
-
-        return true;
+      debugPrint('INFO: [payment_service] Создание платежа для подписки ${plan.name}');
+      
+      final amount = (plan.price * 100).round(); // Конвертируем в копейки
+      
+      switch (provider) {
+        case PaymentProvider.stripe:
+          return await _createStripePayment(
+            amount: amount,
+            currency: PaymentConfig.defaultCurrency.toLowerCase(),
+            description: 'Подписка ${plan.name}',
+            metadata: {
+              'type': 'subscription',
+              'planId': plan.id,
+              'userId': userId,
+              'durationDays': plan.durationDays.toString(),
+            },
+          );
+        case PaymentProvider.yookassa:
+          return await _createYooKassaPayment(
+            amount: amount,
+            currency: PaymentConfig.defaultCurrency,
+            description: 'Подписка ${plan.name}',
+            metadata: {
+              'type': 'subscription',
+              'planId': plan.id,
+              'userId': userId,
+              'durationDays': plan.durationDays.toString(),
+            },
+          );
+        default:
+          throw Exception('Неподдерживаемый провайдер платежей');
       }
-      return false;
-    } on Exception catch (e) {
-      debugPrint('Subscription payment error: $e');
-      return false;
+    } catch (e) {
+      debugPrint('ERROR: [payment_service] Ошибка создания платежа подписки: $e');
+      return PaymentResult(
+        success: false,
+        errorMessage: e.toString(),
+      );
     }
   }
 
-  // Process donation
-  Future<bool> processDonation({
+  /// Создание платежа для продвижения
+  Future<PaymentResult> createPromotionPayment({
     required String userId,
-    required String targetUserId,
-    required double amount,
+    required PromotionPackage package,
+    required PaymentMethod paymentMethod,
+    PaymentProvider provider = PaymentProvider.stripe,
   }) async {
     try {
-      final paymentIntent = await _createPaymentIntent(amount);
-
-      final result = await Stripe.instance.confirmPayment(
-        paymentIntentClientSecret: paymentIntent['client_secret'],
-        data: const PaymentMethodData(
-          billingDetails: BillingDetails(),
-        ),
-      );
-
-      if (result.status == PaymentIntentStatus.Succeeded) {
-        // Create transaction record
-        await _createTransaction(
-          userId: userId,
-          type: TransactionType.donation,
-          amount: amount,
-          description: 'Донат специалисту',
-          targetUserId: targetUserId,
-        );
-
-        // Log analytics event
-        await _analytics.logEvent(
-          name: 'send_donation',
-          parameters: {
-            'user_id': userId,
-            'target_user_id': targetUserId,
-            'amount': amount,
-          },
-        );
-
-        return true;
+      debugPrint('INFO: [payment_service] Создание платежа для продвижения ${package.name}');
+      
+      final amount = (package.price * 100).round();
+      
+      switch (provider) {
+        case PaymentProvider.stripe:
+          return await _createStripePayment(
+            amount: amount,
+            currency: PaymentConfig.defaultCurrency.toLowerCase(),
+            description: 'Продвижение ${package.name}',
+            metadata: {
+              'type': 'promotion',
+              'packageId': package.id,
+              'userId': userId,
+              'durationDays': package.durationDays.toString(),
+              'priorityLevel': package.priorityLevel.toString(),
+            },
+          );
+        case PaymentProvider.yookassa:
+          return await _createYooKassaPayment(
+            amount: amount,
+            currency: PaymentConfig.defaultCurrency,
+            description: 'Продвижение ${package.name}',
+            metadata: {
+              'type': 'promotion',
+              'packageId': package.id,
+              'userId': userId,
+              'durationDays': package.durationDays.toString(),
+              'priorityLevel': package.priorityLevel.toString(),
+            },
+          );
+        default:
+          throw Exception('Неподдерживаемый провайдер платежей');
       }
-      return false;
-    } on Exception catch (e) {
-      debugPrint('Donation payment error: $e');
-      return false;
+    } catch (e) {
+      debugPrint('ERROR: [payment_service] Ошибка создания платежа продвижения: $e');
+      return PaymentResult(
+        success: false,
+        errorMessage: e.toString(),
+      );
     }
   }
 
-  // Process post boosting
-  Future<bool> processPostBoost({
+  /// Создание платежа для рекламы
+  Future<PaymentResult> createAdvertisementPayment({
     required String userId,
-    required String postId,
-    required double amount,
-    required int days,
+    required Advertisement ad,
+    required PaymentMethod paymentMethod,
+    PaymentProvider provider = PaymentProvider.stripe,
   }) async {
     try {
-      final paymentIntent = await _createPaymentIntent(amount);
-
-      final result = await Stripe.instance.confirmPayment(
-        paymentIntentClientSecret: paymentIntent['client_secret'],
-        data: const PaymentMethodData(
-          billingDetails: BillingDetails(),
-        ),
-      );
-
-      if (result.status == PaymentIntentStatus.Succeeded) {
-        // Create transaction record
-        await _createTransaction(
-          userId: userId,
-          type: TransactionType.boostPost,
-          amount: amount,
-          description: 'Продвижение поста на $days дней',
-          postId: postId,
-        );
-
-        // Create promoted post
-        await _createPromotedPost(
-          userId: userId,
-          postId: postId,
-          days: days,
-          budget: amount,
-        );
-
-        // Log analytics event
-        await _analytics.logEvent(
-          name: 'boost_post',
-          parameters: {
-            'user_id': userId,
-            'post_id': postId,
-            'amount': amount,
-            'days': days,
-          },
-        );
-
-        return true;
+      debugPrint('INFO: [payment_service] Создание платежа для рекламы');
+      
+      final amount = (ad.price * 100).round();
+      
+      switch (provider) {
+        case PaymentProvider.stripe:
+          return await _createStripePayment(
+            amount: amount,
+            currency: PaymentConfig.defaultCurrency.toLowerCase(),
+            description: 'Реклама ${ad.title ?? 'Без названия'}',
+            metadata: {
+              'type': 'advertisement',
+              'adId': ad.id,
+              'userId': userId,
+              'adType': ad.type.toString(),
+              'placement': ad.placement.toString(),
+            },
+          );
+        case PaymentProvider.yookassa:
+          return await _createYooKassaPayment(
+            amount: amount,
+            currency: PaymentConfig.defaultCurrency,
+            description: 'Реклама ${ad.title ?? 'Без названия'}',
+            metadata: {
+              'type': 'advertisement',
+              'adId': ad.id,
+              'userId': userId,
+              'adType': ad.type.toString(),
+              'placement': ad.placement.toString(),
+            },
+          );
+        default:
+          throw Exception('Неподдерживаемый провайдер платежей');
       }
-      return false;
-    } on Exception catch (e) {
-      debugPrint('Post boost payment error: $e');
-      return false;
+    } catch (e) {
+      debugPrint('ERROR: [payment_service] Ошибка создания платежа рекламы: $e');
+      return PaymentResult(
+        success: false,
+        errorMessage: e.toString(),
+      );
     }
   }
 
-  // Get user transactions
-  Future<List<Transaction>> getUserTransactions(String userId) async {
-    final snapshot = await _firestore
-        .collection('transactions')
-        .where('userId', isEqualTo: userId)
-        .orderBy('timestamp', descending: true)
-        .get();
-
-    return snapshot.docs.map((doc) => Transaction.fromMap(doc.data())).toList();
-  }
-
-  // Get user subscription
-  Future<Subscription?> getUserSubscription(String userId) async {
-    final snapshot = await _firestore
-        .collection('subscriptions')
-        .where('userId', isEqualTo: userId)
-        .where('isActive', isEqualTo: true)
-        .get();
-
-    if (snapshot.docs.isNotEmpty) {
-      return Subscription.fromMap(snapshot.docs.first.data());
-    }
-    return null;
-  }
-
-  // Get user premium profile
-  Future<PremiumProfile?> getUserPremiumProfile(String userId) async {
-    final snapshot = await _firestore
-        .collection('premiumProfiles')
-        .where('userId', isEqualTo: userId)
-        .where('isActive', isEqualTo: true)
-        .get();
-
-    if (snapshot.docs.isNotEmpty) {
-      return PremiumProfile.fromMap(snapshot.docs.first.data());
-    }
-    return null;
-  }
-
-  // Private helper methods
-  Future<Map<String, dynamic>> _createPaymentIntent(double amount) async {
-    // In a real app, this would call your backend API
-    // For now, we'll simulate a successful payment intent
-    return {
-      'client_secret': 'pi_test_1234567890_secret_abcdefghijklmnop',
-      'id': 'pi_test_1234567890',
-    };
-  }
-
-  Future<void> _createTransaction({
-    required String userId,
-    required TransactionType type,
-    required double amount,
+  /// Создание платежа через Stripe
+  Future<PaymentResult> _createStripePayment({
+    required int amount,
+    required String currency,
     required String description,
-    String? targetUserId,
-    String? postId,
+    required Map<String, dynamic> metadata,
   }) async {
-    final transaction = Transaction(
-      id: _firestore.collection('transactions').doc().id,
-      userId: userId,
-      type: type,
-      amount: amount,
-      currency: PaymentConfig.defaultCurrency,
-      status: TransactionStatus.success,
-      timestamp: DateTime.now(),
-      description: description,
-      targetUserId: targetUserId,
-      postId: postId,
-    );
+    try {
+      final headers = {
+        'Authorization': 'Bearer ${PaymentConfig.stripeSecretKey}',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      };
 
-    await _firestore
-        .collection('transactions')
-        .doc(transaction.id)
-        .set(transaction.toMap());
+      final body = {
+        'amount': amount.toString(),
+        'currency': currency,
+        'description': description,
+        'metadata': metadata.map((key, value) => MapEntry(key, value.toString())),
+      };
+
+      final response = await http.post(
+        Uri.parse('$_baseUrl/payment_intents'),
+        headers: headers,
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return PaymentResult(
+          success: true,
+          externalTransactionId: data['id'],
+          metadata: data,
+        );
+      } else {
+        final error = json.decode(response.body);
+        return PaymentResult(
+          success: false,
+          errorMessage: error['error']?['message'] ?? 'Ошибка платежа',
+        );
+      }
+    } catch (e) {
+      return PaymentResult(
+        success: false,
+        errorMessage: 'Ошибка соединения с Stripe: $e',
+      );
+    }
   }
 
-  Future<void> _createPremiumProfile({
-    required String userId,
-    required String plan,
+  /// Создание платежа через YooKassa
+  Future<PaymentResult> _createYooKassaPayment({
+    required int amount,
+    required String currency,
+    required String description,
+    required Map<String, dynamic> metadata,
   }) async {
-    final days = _getDaysFromPlan(plan);
-    final premiumProfile = PremiumProfile(
-      userId: userId,
-      activeUntil: DateTime.now().add(Duration(days: days)),
-      type: PremiumType.highlight,
-      region: 'Москва', // Default region
-      createdAt: DateTime.now(),
-    );
+    try {
+      final headers = {
+        'Authorization': 'Basic ${base64Encode(utf8.encode('${PaymentConfig.yookassaShopId}:${PaymentConfig.yookassaSecretKey}'))}',
+        'Content-Type': 'application/json',
+        'Idempotence-Key': DateTime.now().millisecondsSinceEpoch.toString(),
+      };
 
-    await _firestore
-        .collection('premiumProfiles')
-        .doc(userId)
-        .set(premiumProfile.toMap());
+      final body = {
+        'amount': {
+          'value': (amount / 100).toStringAsFixed(2),
+          'currency': currency,
+        },
+        'confirmation': {
+          'type': 'redirect',
+          'return_url': 'https://eventmarketplace.app/payment/success',
+        },
+        'description': description,
+        'metadata': metadata,
+      };
+
+      final response = await http.post(
+        Uri.parse('$_yookassaUrl/payments'),
+        headers: headers,
+        body: json.encode(body),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return PaymentResult(
+          success: true,
+          externalTransactionId: data['id'],
+          metadata: data,
+        );
+      } else {
+        final error = json.decode(response.body);
+        return PaymentResult(
+          success: false,
+          errorMessage: error['description'] ?? 'Ошибка платежа',
+        );
+      }
+    } catch (e) {
+      return PaymentResult(
+        success: false,
+        errorMessage: 'Ошибка соединения с YooKassa: $e',
+      );
+    }
   }
 
-  Future<void> _createSubscription({
-    required String userId,
-    required SubscriptionPlan plan,
+  /// Подтверждение платежа
+  Future<PaymentResult> confirmPayment({
+    required String externalTransactionId,
+    required PaymentProvider provider,
+  }) async {
+    try {
+      debugPrint('INFO: [payment_service] Подтверждение платежа $externalTransactionId');
+      
+      switch (provider) {
+        case PaymentProvider.stripe:
+          return await _confirmStripePayment(externalTransactionId);
+        case PaymentProvider.yookassa:
+          return await _confirmYooKassaPayment(externalTransactionId);
+        default:
+          throw Exception('Неподдерживаемый провайдер платежей');
+      }
+    } catch (e) {
+      debugPrint('ERROR: [payment_service] Ошибка подтверждения платежа: $e');
+      return PaymentResult(
+        success: false,
+        errorMessage: e.toString(),
+      );
+    }
+  }
+
+  /// Подтверждение платежа Stripe
+  Future<PaymentResult> _confirmStripePayment(String paymentIntentId) async {
+    try {
+      final headers = {
+        'Authorization': 'Bearer ${PaymentConfig.stripeSecretKey}',
+      };
+
+      final response = await http.get(
+        Uri.parse('$_baseUrl/payment_intents/$paymentIntentId'),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final status = data['status'];
+        
+        return PaymentResult(
+          success: status == 'succeeded',
+          externalTransactionId: paymentIntentId,
+          metadata: data,
+        );
+      } else {
+        return PaymentResult(
+          success: false,
+          errorMessage: 'Ошибка получения статуса платежа',
+        );
+      }
+    } catch (e) {
+      return PaymentResult(
+        success: false,
+        errorMessage: 'Ошибка соединения с Stripe: $e',
+      );
+    }
+  }
+
+  /// Подтверждение платежа YooKassa
+  Future<PaymentResult> _confirmYooKassaPayment(String paymentId) async {
+    try {
+      final headers = {
+        'Authorization': 'Basic ${base64Encode(utf8.encode('${PaymentConfig.yookassaShopId}:${PaymentConfig.yookassaSecretKey}'))}',
+      };
+
+      final response = await http.get(
+        Uri.parse('$_yookassaUrl/payments/$paymentId'),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final status = data['status'];
+        
+        return PaymentResult(
+          success: status == 'succeeded',
+          externalTransactionId: paymentId,
+          metadata: data,
+        );
+      } else {
+        return PaymentResult(
+          success: false,
+          errorMessage: 'Ошибка получения статуса платежа',
+        );
+      }
+    } catch (e) {
+      return PaymentResult(
+        success: false,
+        errorMessage: 'Ошибка соединения с YooKassa: $e',
+      );
+    }
+  }
+
+  /// Возврат средств
+  Future<PaymentResult> refundPayment({
+    required String externalTransactionId,
     required double amount,
+    required PaymentProvider provider,
+    String? reason,
   }) async {
-    final subscription = Subscription(
-      userId: userId,
-      plan: plan,
-      startedAt: DateTime.now(),
-      expiresAt: DateTime.now().add(const Duration(days: 30)),
-      autoRenew: true,
-      monthlyPrice: amount,
-    );
-
-    await _firestore
-        .collection('subscriptions')
-        .doc(userId)
-        .set(subscription.toMap());
+    try {
+      debugPrint('INFO: [payment_service] Возврат средств $externalTransactionId');
+      
+      switch (provider) {
+        case PaymentProvider.stripe:
+          return await _refundStripePayment(externalTransactionId, amount, reason);
+        case PaymentProvider.yookassa:
+          return await _refundYooKassaPayment(externalTransactionId, amount, reason);
+        default:
+          throw Exception('Неподдерживаемый провайдер платежей');
+      }
+    } catch (e) {
+      debugPrint('ERROR: [payment_service] Ошибка возврата средств: $e');
+      return PaymentResult(
+        success: false,
+        errorMessage: e.toString(),
+      );
+    }
   }
 
-  Future<void> _createPromotedPost({
-    required String userId,
-    required String postId,
-    required int days,
-    required double budget,
-  }) async {
-    final promotedPost = PromotedPost(
-      postId: postId,
-      userId: userId,
-      startDate: DateTime.now(),
-      endDate: DateTime.now().add(Duration(days: days)),
-      priority: 1,
-      budget: budget,
-      createdAt: DateTime.now(),
-    );
+  /// Возврат средств через Stripe
+  Future<PaymentResult> _refundStripePayment(String paymentIntentId, double amount, String? reason) async {
+    try {
+      final headers = {
+        'Authorization': 'Bearer ${PaymentConfig.stripeSecretKey}',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      };
 
-    await _firestore
-        .collection('promotedPosts')
-        .doc(postId)
-        .set(promotedPost.toMap());
+      final body = {
+        'payment_intent': paymentIntentId,
+        'amount': (amount * 100).round().toString(),
+        if (reason != null) 'reason': reason,
+      };
+
+      final response = await http.post(
+        Uri.parse('$_baseUrl/refunds'),
+        headers: headers,
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return PaymentResult(
+          success: true,
+          externalTransactionId: data['id'],
+          metadata: data,
+        );
+      } else {
+        final error = json.decode(response.body);
+        return PaymentResult(
+          success: false,
+          errorMessage: error['error']?['message'] ?? 'Ошибка возврата',
+        );
+      }
+    } catch (e) {
+      return PaymentResult(
+        success: false,
+        errorMessage: 'Ошибка соединения с Stripe: $e',
+      );
+    }
   }
 
-  int _getDaysFromPlan(String plan) {
-    switch (plan) {
-      case '7_days':
-        return 7;
-      case '14_days':
-        return 14;
-      case '30_days':
-        return 30;
-      default:
-        return 7;
+  /// Возврат средств через YooKassa
+  Future<PaymentResult> _refundYooKassaPayment(String paymentId, double amount, String? reason) async {
+    try {
+      final headers = {
+        'Authorization': 'Basic ${base64Encode(utf8.encode('${PaymentConfig.yookassaShopId}:${PaymentConfig.yookassaSecretKey}'))}',
+        'Content-Type': 'application/json',
+        'Idempotence-Key': DateTime.now().millisecondsSinceEpoch.toString(),
+      };
+
+      final body = {
+        'amount': {
+          'value': amount.toStringAsFixed(2),
+          'currency': PaymentConfig.defaultCurrency,
+        },
+        if (reason != null) 'description': reason,
+      };
+
+      final response = await http.post(
+        Uri.parse('$_yookassaUrl/refunds'),
+        headers: headers,
+        body: json.encode(body),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return PaymentResult(
+          success: true,
+          externalTransactionId: data['id'],
+          metadata: data,
+        );
+      } else {
+        final error = json.decode(response.body);
+        return PaymentResult(
+          success: false,
+          errorMessage: error['description'] ?? 'Ошибка возврата',
+        );
+      }
+    } catch (e) {
+      return PaymentResult(
+        success: false,
+        errorMessage: 'Ошибка соединения с YooKassa: $e',
+      );
+    }
+  }
+
+  /// Получение истории транзакций пользователя
+  Future<List<Transaction>> getUserTransactions(String userId) async {
+    try {
+      // Здесь должна быть интеграция с вашей базой данных
+      // Возвращаем пустой список для примера
+      return [];
+    } catch (e) {
+      debugPrint('ERROR: [payment_service] Ошибка получения истории транзакций: $e');
+      return [];
+    }
+  }
+
+  /// Проверка статуса платежа
+  Future<TransactionStatus> getPaymentStatus(String externalTransactionId, PaymentProvider provider) async {
+    try {
+      final result = await confirmPayment(
+        externalTransactionId: externalTransactionId,
+        provider: provider,
+      );
+      
+      if (result.success) {
+        return TransactionStatus.success;
+      } else {
+        return TransactionStatus.failed;
+      }
+    } catch (e) {
+      debugPrint('ERROR: [payment_service] Ошибка проверки статуса платежа: $e');
+      return TransactionStatus.failed;
     }
   }
 }

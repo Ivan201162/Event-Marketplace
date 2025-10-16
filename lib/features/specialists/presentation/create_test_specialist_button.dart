@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -134,8 +135,8 @@ class _CreateTestSpecialistButtonState
         }
       });
     } catch (e, stackTrace) {
-      print('Ошибка создания тест-специалиста: $e');
-      print('Stack trace: $stackTrace');
+      debugPrint('Ошибка создания тест-специалиста: $e');
+      debugPrint('Stack trace: $stackTrace');
 
       setState(() {
         _errorMessage =

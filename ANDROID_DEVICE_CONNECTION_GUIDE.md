@@ -209,3 +209,4 @@ adb logcat -d > build/installation_log.txt
 
 **🎊 ПОЗДРАВЛЯЕМ! Ваше приложение Event Marketplace готово к установке! 🎊**
 
+

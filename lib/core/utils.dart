@@ -35,8 +35,12 @@ class AppUtils {
 
   /// Форматирование размера файла
   static String formatFileSize(int bytes) {
-    if (bytes < 1024) return '$bytes B';
-    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
+    if (bytes < 1024) {
+      return '$bytes B';
+    }
+    if (bytes < 1024 * 1024) {
+      return '${(bytes / 1024).toStringAsFixed(1)} KB';
+    }
     if (bytes < 1024 * 1024 * 1024) {
       return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
     }
@@ -54,8 +58,12 @@ class AppUtils {
   /// Получение инициалов
   static String getInitials(String name) {
     final words = name.trim().split(' ');
-    if (words.isEmpty) return '';
-    if (words.length == 1) return words[0][0].toUpperCase();
+    if (words.isEmpty) {
+      return '';
+    }
+    if (words.length == 1) {
+      return words[0][0].toUpperCase();
+    }
     return '${words[0][0]}${words[1][0]}'.toUpperCase();
   }
 
@@ -167,7 +175,9 @@ class AppUtils {
 extension StringExtensions on String {
   /// Капитализация первой буквы
   String capitalize() {
-    if (isEmpty) return this;
+    if (isEmpty) {
+      return this;
+    }
     return '${this[0].toUpperCase()}${substring(1).toLowerCase()}';
   }
 

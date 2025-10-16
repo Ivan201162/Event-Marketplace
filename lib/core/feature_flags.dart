@@ -180,41 +180,111 @@ class FeatureFlags {
   static List<String> getEnabledFeatures() {
     final features = <String>[];
 
-    if (mapsEnabled) features.add('maps');
-    if (geolocationEnabled) features.add('geolocation');
-    if (paymentsEnabled) features.add('payments');
-    if (subscriptionPaymentsEnabled) features.add('subscription_payments');
-    if (analyticsEnabled) features.add('analytics');
-    if (pushNotificationsEnabled) features.add('push_notifications');
-    if (fileUploadEnabled) features.add('file_upload');
-    if (chatAttachmentsEnabled) features.add('chat_attachments');
-    if (crashlyticsEnabled) features.add('crashlytics');
-    if (performanceMonitoringEnabled) features.add('performance_monitoring');
-    if (adminPanelEnabled) features.add('admin_panel');
-    if (userModerationEnabled) features.add('user_moderation');
-    if (calendarExportEnabled) features.add('calendar_export');
-    if (calendarSyncEnabled) features.add('calendar_sync');
-    if (shareEnabled) features.add('share');
-    if (subscriptionsEnabled) features.add('subscriptions');
-    if (recommendationsEnabled) features.add('recommendations');
-    if (reviewsEnabled) features.add('reviews');
-    if (ideasEnabled) features.add('ideas');
-    if (guestModeEnabled) features.add('guest_mode');
-    if (vkIntegrationEnabled) features.add('vk_integration');
-    if (anniversaryTrackingEnabled) features.add('anniversary_tracking');
-    if (djPlaylistsEnabled) features.add('dj_playlists');
-    if (availabilityFilterEnabled) features.add('availability_filter');
-    if (featureRequestsEnabled) features.add('feature_requests');
-    if (contractsEnabled) features.add('contracts');
-    if (socialLoginEnabled) features.add('social_login');
-    if (vkLoginEnabled) features.add('vk_login');
-    if (socialPostsEnabled) features.add('social_posts');
-    if (storiesEnabled) features.add('stories');
-    if (audioMessagesEnabled) features.add('audio_messages');
-    if (callsEnabled) features.add('calls');
-    if (arPreviewsEnabled) features.add('ar_previews');
-    if (debugMode) features.add('debug');
-    if (verboseLogging) features.add('verbose_logging');
+    if (mapsEnabled) {
+      features.add('maps');
+    }
+    if (geolocationEnabled) {
+      features.add('geolocation');
+    }
+    if (paymentsEnabled) {
+      features.add('payments');
+    }
+    if (subscriptionPaymentsEnabled) {
+      features.add('subscription_payments');
+    }
+    if (analyticsEnabled) {
+      features.add('analytics');
+    }
+    if (pushNotificationsEnabled) {
+      features.add('push_notifications');
+    }
+    if (fileUploadEnabled) {
+      features.add('file_upload');
+    }
+    if (chatAttachmentsEnabled) {
+      features.add('chat_attachments');
+    }
+    if (crashlyticsEnabled) {
+      features.add('crashlytics');
+    }
+    if (performanceMonitoringEnabled) {
+      features.add('performance_monitoring');
+    }
+    if (adminPanelEnabled) {
+      features.add('admin_panel');
+    }
+    if (userModerationEnabled) {
+      features.add('user_moderation');
+    }
+    if (calendarExportEnabled) {
+      features.add('calendar_export');
+    }
+    if (calendarSyncEnabled) {
+      features.add('calendar_sync');
+    }
+    if (shareEnabled) {
+      features.add('share');
+    }
+    if (subscriptionsEnabled) {
+      features.add('subscriptions');
+    }
+    if (recommendationsEnabled) {
+      features.add('recommendations');
+    }
+    if (reviewsEnabled) {
+      features.add('reviews');
+    }
+    if (ideasEnabled) {
+      features.add('ideas');
+    }
+    if (guestModeEnabled) {
+      features.add('guest_mode');
+    }
+    if (vkIntegrationEnabled) {
+      features.add('vk_integration');
+    }
+    if (anniversaryTrackingEnabled) {
+      features.add('anniversary_tracking');
+    }
+    if (djPlaylistsEnabled) {
+      features.add('dj_playlists');
+    }
+    if (availabilityFilterEnabled) {
+      features.add('availability_filter');
+    }
+    if (featureRequestsEnabled) {
+      features.add('feature_requests');
+    }
+    if (contractsEnabled) {
+      features.add('contracts');
+    }
+    if (socialLoginEnabled) {
+      features.add('social_login');
+    }
+    if (vkLoginEnabled) {
+      features.add('vk_login');
+    }
+    if (socialPostsEnabled) {
+      features.add('social_posts');
+    }
+    if (storiesEnabled) {
+      features.add('stories');
+    }
+    if (audioMessagesEnabled) {
+      features.add('audio_messages');
+    }
+    if (callsEnabled) {
+      features.add('calls');
+    }
+    if (arPreviewsEnabled) {
+      features.add('ar_previews');
+    }
+    if (debugMode) {
+      features.add('debug');
+    }
+    if (verboseLogging) {
+      features.add('verbose_logging');
+    }
 
     return features;
   }

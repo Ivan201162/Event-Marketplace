@@ -1,398 +1,904 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
+import '../../models/subscription_plan.dart';
+import '../../models/promotion_boost.dart';
+import '../../models/advertisement.dart';
+import '../../services/subscription_service.dart';
+import '../../services/promotion_service.dart';
+import '../../services/advertisement_service.dart';
+import '../../providers/auth_provider.dart';
+import 'subscription_plans_screen.dart';
+import 'promotion_packages_screen.dart';
+import 'advertisement_campaigns_screen.dart';
+import 'my_subscriptions_screen.dart';
+import 'my_promotions_screen.dart';
+import 'my_advertisements_screen.dart';
 
-import '../../widgets/monetization/monetization_card.dart';
-import '../analytics/analytics_screen.dart';
-import '../boost/boost_post_screen.dart';
-import '../donation/donation_screen.dart';
-import '../premium/promotion_screen.dart';
-import '../subscription/subscription_screen.dart';
-
-class MonetizationHubScreen extends ConsumerWidget {
-  const MonetizationHubScreen({
-    super.key,
-    required this.userId,
-  });
-  final String userId;
+class MonetizationHubScreen extends StatefulWidget {
+  const MonetizationHubScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Монетизация'),
-          backgroundColor: Colors.indigo,
-          foregroundColor: Colors.white,
-          elevation: 0,
-        ),
-        body: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Colors.indigo, Colors.white],
-              stops: [0.0, 0.3],
-            ),
-          ),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Row(
-                        children: [
-                          Icon(
-                            Icons.monetization_on,
-                            color: Colors.indigo,
-                            size: 32,
-                          ),
-                          SizedBox(width: 12),
-                          Text(
-                            'Центр монетизации',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.indigo,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        'Увеличьте свой доход и продвиньте свой профиль с помощью премиум-функций',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+  State<MonetizationHubScreen> createState() => _MonetizationHubScreenState();
+}
 
-                const SizedBox(height: 24),
+class _MonetizationHubScreenState extends State<MonetizationHubScreen>
+    with TickerProviderStateMixin {
+  late TabController _tabController;
+  final SubscriptionService _subscriptionService = SubscriptionService();
+  final PromotionService _promotionService = PromotionService();
+  final AdvertisementService _advertisementService = AdvertisementService();
 
-                // Quick Stats
-                const Text(
-                  'Быстрая статистика',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 16),
+  UserSubscription? _activeSubscription;
+  List<PromotionBoost> _activePromotions = [];
+  List<Advertisement> _activeAdvertisements = [];
 
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildQuickStatCard(
-                        'Доход',
-                        '15,420 ₽',
-                        Icons.attach_money,
-                        Colors.green,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _buildQuickStatCard(
-                        'Донаты',
-                        '8',
-                        Icons.favorite,
-                        Colors.pink,
-                      ),
-                    ),
-                  ],
-                ),
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    _loadUserData();
+  }
 
-                const SizedBox(height: 12),
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildQuickStatCard(
-                        'Подписка',
-                        'Pro',
-                        Icons.diamond,
-                        Colors.purple,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _buildQuickStatCard(
-                        'Премиум',
-                        'Активен',
-                        Icons.star,
-                        Colors.amber,
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 32),
-
-                // Monetization Options
-                const Text(
-                  'Доступные функции',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                // Premium Promotion
-                MonetizationCard(
-                  title: 'Продвижение профиля',
-                  description: 'Поднимите свой профиль в топе поиска',
-                  icon: Icons.star,
-                  color: Colors.purple,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PromotionScreen(userId: userId),
-                      ),
-                    );
-                  },
-                ),
-
-                // Subscriptions
-                MonetizationCard(
-                  title: 'Подписки',
-                  description: 'Расширенные возможности для профессионалов',
-                  icon: Icons.diamond,
-                  color: Colors.blue,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            SubscriptionScreen(userId: userId),
-                      ),
-                    );
-                  },
-                ),
-
-                // Donations
-                MonetizationCard(
-                  title: 'Донаты',
-                  description: 'Получайте поддержку от клиентов',
-                  icon: Icons.favorite,
-                  color: Colors.pink,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DonationScreen(
-                          specialistId: userId,
-                          specialistName: 'Ваш профиль',
-                        ),
-                      ),
-                    );
-                  },
-                ),
-
-                // Post Boosting
-                MonetizationCard(
-                  title: 'Продвижение постов',
-                  description: 'Увеличьте охват ваших публикаций',
-                  icon: Icons.trending_up,
-                  color: Colors.orange,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const BoostPostScreen(
-                          postId: 'demo_post',
-                          postTitle: 'Демо пост для продвижения',
-                        ),
-                      ),
-                    );
-                  },
-                ),
-
-                // Analytics
-                MonetizationCard(
-                  title: 'Аналитика',
-                  description: 'Отслеживайте доходы и статистику',
-                  icon: Icons.analytics,
-                  color: Colors.indigo,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AnalyticsScreen(userId: userId),
-                      ),
-                    );
-                  },
-                ),
-
-                const SizedBox(height: 24),
-
-                // Tips Section
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Row(
-                        children: [
-                          Icon(
-                            Icons.lightbulb,
-                            color: Colors.amber,
-                            size: 24,
-                          ),
-                          SizedBox(width: 8),
-                          Text(
-                            'Советы по монетизации',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      _buildTipItem(
-                        'Регулярно обновляйте портфолио',
-                        'Качественные работы привлекают больше клиентов',
-                      ),
-                      _buildTipItem(
-                        'Используйте премиум-размещение',
-                        'Продвижение профиля увеличивает видимость на 300%',
-                      ),
-                      _buildTipItem(
-                        'Взаимодействуйте с аудиторией',
-                        'Отвечайте на комментарии и сообщения',
-                      ),
-                      _buildTipItem(
-                        'Создавайте качественный контент',
-                        'Полезные посты получают больше донатов',
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 32),
-              ],
-            ),
-          ),
-        ),
+  Future<void> _loadUserData() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final userId = authProvider.currentUser?.id;
+    
+    if (userId != null) {
+      final subscription = await _subscriptionService.getActiveSubscription(userId);
+      final promotions = await _promotionService.getActivePromotions(userId);
+      final advertisements = await _advertisementService.getActiveAdvertisements(
+        type: AdType.banner,
+        limit: 5,
       );
 
-  Widget _buildQuickStatCard(
-    String title,
-    String value,
-    IconData icon,
-    Color color,
-  ) =>
-      Container(
-        padding: const EdgeInsets.all(16),
+      setState(() {
+        _activeSubscription = subscription;
+        _activePromotions = promotions;
+        _activeAdvertisements = advertisements;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('💰 Монетизация'),
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        bottom: TabBar(
+          controller: _tabController,
+          indicatorColor: Colors.white,
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.white70,
+          tabs: const [
+            Tab(text: 'Подписки', icon: Icon(Icons.star)),
+            Tab(text: 'Продвижение', icon: Icon(Icons.trending_up)),
+            Tab(text: 'Реклама', icon: Icon(Icons.campaign)),
+          ],
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          _buildSubscriptionsTab(),
+          _buildPromotionsTab(),
+          _buildAdvertisementsTab(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSubscriptionsTab() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Текущая подписка
+          if (_activeSubscription != null) ...[
+            _buildCurrentSubscriptionCard(),
+            const SizedBox(height: 16),
+          ],
+          
+          // Планы подписки
+          _buildSectionHeader(
+            'Планы подписки',
+            'Выберите подходящий тариф для расширения возможностей',
+            Icons.star,
+            Colors.amber,
+          ),
+          const SizedBox(height: 12),
+          _buildSubscriptionPlansGrid(),
+          
+          const SizedBox(height: 24),
+          
+          // Мои подписки
+          _buildSectionHeader(
+            'Мои подписки',
+            'Управление активными подписками',
+            Icons.subscriptions,
+            Colors.blue,
+          ),
+          const SizedBox(height: 12),
+          _buildMySubscriptionsCard(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPromotionsTab() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Активные продвижения
+          if (_activePromotions.isNotEmpty) ...[
+            _buildActivePromotionsCard(),
+            const SizedBox(height: 16),
+          ],
+          
+          // Пакеты продвижения
+          _buildSectionHeader(
+            'Пакеты продвижения',
+            'Повысьте видимость вашего профиля',
+            Icons.trending_up,
+            Colors.green,
+          ),
+          const SizedBox(height: 12),
+          _buildPromotionPackagesGrid(),
+          
+          const SizedBox(height: 24),
+          
+          // Мои продвижения
+          _buildSectionHeader(
+            'Мои продвижения',
+            'Управление активными продвижениями',
+            Icons.campaign,
+            Colors.orange,
+          ),
+          const SizedBox(height: 12),
+          _buildMyPromotionsCard(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAdvertisementsTab() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Активная реклама
+          if (_activeAdvertisements.isNotEmpty) ...[
+            _buildActiveAdvertisementsCard(),
+            const SizedBox(height: 16),
+          ],
+          
+          // Рекламные кампании
+          _buildSectionHeader(
+            'Рекламные кампании',
+            'Создайте эффективную рекламную кампанию',
+            Icons.campaign,
+            Colors.purple,
+          ),
+          const SizedBox(height: 12),
+          _buildAdvertisementCampaignsGrid(),
+          
+          const SizedBox(height: 24),
+          
+          // Моя реклама
+          _buildSectionHeader(
+            'Моя реклама',
+            'Управление рекламными объявлениями',
+            Icons.ads_click,
+            Colors.red,
+          ),
+          const SizedBox(height: 12),
+          _buildMyAdvertisementsCard(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCurrentSubscriptionCard() {
+    final plan = _activeSubscription!;
+    return Card(
+      elevation: 4,
+      child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          gradient: const LinearGradient(
+            colors: [Colors.amber, Colors.orange],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
         ),
+        padding: const EdgeInsets.all(16),
         child: Column(
-          children: [
-            Icon(
-              icon,
-              color: color,
-              size: 24,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
-            ),
-            Text(
-              title,
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 12,
-              ),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildTipItem(String title, String description) => Padding(
-        padding: const EdgeInsets.only(bottom: 12),
-        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: 6,
-              height: 6,
-              margin: const EdgeInsets.only(top: 6),
-              decoration: const BoxDecoration(
-                color: Colors.amber,
-                shape: BoxShape.circle,
+            Row(
+              children: [
+                const Icon(Icons.star, color: Colors.white, size: 24),
+                const SizedBox(width: 8),
+                Text(
+                  'Активная подписка',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Осталось дней: ${plan.daysRemaining}',
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: Colors.white,
               ),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            const SizedBox(height: 8),
+            LinearProgressIndicator(
+              value: plan.progressPercentage,
+              backgroundColor: Colors.white30,
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Автопродление: ${plan.autoRenew ? "Включено" : "Выключено"}',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.white,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MySubscriptionsScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Управлять',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActivePromotionsCard() {
+    return Card(
+      elevation: 4,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          gradient: const LinearGradient(
+            colors: [Colors.green, Colors.teal],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.trending_up, color: Colors.white, size: 24),
+                const SizedBox(width: 8),
+                Text(
+                  'Активные продвижения (${_activePromotions.length})',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            ..._activePromotions.take(3).map((promotion) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                    promotion.type.toString().split('.').last,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.white,
                     ),
                   ),
                   Text(
-                    description,
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 12,
+                    '${promotion.daysRemaining} дн.',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.white,
                     ),
                   ),
                 ],
               ),
+            )),
+            if (_activePromotions.length > 3)
+              Text(
+                'И еще ${_activePromotions.length - 3}...',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Colors.white70,
+                ),
+              ),
+            const SizedBox(height: 12),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MyPromotionsScreen(),
+                  ),
+                );
+              },
+              child: const Text(
+                'Посмотреть все',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),
-      );
+      ),
+    );
+  }
+
+  Widget _buildActiveAdvertisementsCard() {
+    return Card(
+      elevation: 4,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          gradient: const LinearGradient(
+            colors: [Colors.purple, Colors.deepPurple],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.campaign, color: Colors.white, size: 24),
+                const SizedBox(width: 8),
+                Text(
+                  'Активная реклама (${_activeAdvertisements.length})',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            ..._activeAdvertisements.take(3).map((ad) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    ad.title ?? 'Без названия',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                  Text(
+                    '${ad.daysRemaining} дн.',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            )),
+            if (_activeAdvertisements.length > 3)
+              Text(
+                'И еще ${_activeAdvertisements.length - 3}...',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Colors.white70,
+                ),
+              ),
+            const SizedBox(height: 12),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MyAdvertisementsScreen(),
+                  ),
+                );
+              },
+              child: const Text(
+                'Посмотреть все',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title, String subtitle, IconData icon, Color color) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, color: color, size: 24),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                subtitle,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Colors.grey[600],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSubscriptionPlansGrid() {
+    return GridView.count(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisCount: 2,
+      crossAxisSpacing: 12,
+      mainAxisSpacing: 12,
+      childAspectRatio: 0.8,
+      children: [
+        _buildPlanCard(
+          'Бесплатный',
+          'Базовый функционал',
+          '0 ₽',
+          '30 дней',
+          ['Поиск специалистов', 'Просмотр профилей', 'Базовые фильтры'],
+          Colors.grey,
+          () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SubscriptionPlansScreen(),
+              ),
+            );
+          },
+        ),
+        _buildPlanCard(
+          'Премиум',
+          'Расширенные возможности',
+          '499 ₽',
+          '30 дней',
+          ['Приоритет в поиске', 'Аналитика', 'Продвижение'],
+          Colors.amber,
+          () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SubscriptionPlansScreen(),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPromotionPackagesGrid() {
+    return GridView.count(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisCount: 2,
+      crossAxisSpacing: 12,
+      mainAxisSpacing: 12,
+      childAspectRatio: 0.8,
+      children: [
+        _buildPackageCard(
+          'Топ профиль',
+          'Выделение в списке',
+          '299 ₽',
+          '7 дней',
+          ['Приоритет в поиске', 'Золотая рамка', 'Топ позиция'],
+          Colors.green,
+          () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const PromotionPackagesScreen(),
+              ),
+            );
+          },
+        ),
+        _buildPackageCard(
+          'Продвижение поста',
+          'Больше просмотров',
+          '199 ₽',
+          '3 дня',
+          ['Увеличение охвата', 'Приоритет в ленте', 'Аналитика'],
+          Colors.orange,
+          () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const PromotionPackagesScreen(),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAdvertisementCampaignsGrid() {
+    return GridView.count(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisCount: 2,
+      crossAxisSpacing: 12,
+      mainAxisSpacing: 12,
+      childAspectRatio: 0.8,
+      children: [
+        _buildCampaignCard(
+          'Баннерная реклама',
+          'Верхний баннер',
+          'от 500 ₽',
+          'за день',
+          ['Высокая видимость', 'Таргетинг', 'Аналитика'],
+          Colors.purple,
+          () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AdvertisementCampaignsScreen(),
+              ),
+            );
+          },
+        ),
+        _buildCampaignCard(
+          'Спонсорский контент',
+          'В ленте новостей',
+          'от 1000 ₽',
+          'за день',
+          ['Органичный вид', 'Высокий CTR', 'Детальная аналитика'],
+          Colors.red,
+          () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AdvertisementCampaignsScreen(),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPlanCard(
+    String title,
+    String subtitle,
+    String price,
+    String duration,
+    List<String> features,
+    Color color,
+    VoidCallback onTap,
+  ) {
+    return Card(
+      elevation: 2,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(Icons.star, color: color, size: 24),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                subtitle,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Colors.grey[600],
+                ),
+              ),
+              const Spacer(),
+              Text(
+                price,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                duration,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Colors.grey[600],
+                ),
+              ),
+              const SizedBox(height: 8),
+              ...features.take(2).map((feature) => Padding(
+                padding: const EdgeInsets.only(bottom: 2),
+                child: Row(
+                  children: [
+                    Icon(Icons.check, color: color, size: 16),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        feature,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPackageCard(
+    String title,
+    String subtitle,
+    String price,
+    String duration,
+    List<String> features,
+    Color color,
+    VoidCallback onTap,
+  ) {
+    return Card(
+      elevation: 2,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(Icons.trending_up, color: color, size: 24),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                subtitle,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Colors.grey[600],
+                ),
+              ),
+              const Spacer(),
+              Text(
+                price,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                duration,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Colors.grey[600],
+                ),
+              ),
+              const SizedBox(height: 8),
+              ...features.take(2).map((feature) => Padding(
+                padding: const EdgeInsets.only(bottom: 2),
+                child: Row(
+                  children: [
+                    Icon(Icons.check, color: color, size: 16),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        feature,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCampaignCard(
+    String title,
+    String subtitle,
+    String price,
+    String duration,
+    List<String> features,
+    Color color,
+    VoidCallback onTap,
+  ) {
+    return Card(
+      elevation: 2,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(Icons.campaign, color: color, size: 24),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                subtitle,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Colors.grey[600],
+                ),
+              ),
+              const Spacer(),
+              Text(
+                price,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                duration,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Colors.grey[600],
+                ),
+              ),
+              const SizedBox(height: 8),
+              ...features.take(2).map((feature) => Padding(
+                padding: const EdgeInsets.only(bottom: 2),
+                child: Row(
+                  children: [
+                    Icon(Icons.check, color: color, size: 16),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        feature,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMySubscriptionsCard() {
+    return Card(
+      child: ListTile(
+        leading: const Icon(Icons.subscriptions, color: Colors.blue),
+        title: const Text('Мои подписки'),
+        subtitle: const Text('Управление активными подписками'),
+        trailing: const Icon(Icons.arrow_forward_ios),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MySubscriptionsScreen(),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildMyPromotionsCard() {
+    return Card(
+      child: ListTile(
+        leading: const Icon(Icons.trending_up, color: Colors.green),
+        title: const Text('Мои продвижения'),
+        subtitle: const Text('Управление активными продвижениями'),
+        trailing: const Icon(Icons.arrow_forward_ios),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MyPromotionsScreen(),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildMyAdvertisementsCard() {
+    return Card(
+      child: ListTile(
+        leading: const Icon(Icons.campaign, color: Colors.purple),
+        title: const Text('Моя реклама'),
+        subtitle: const Text('Управление рекламными объявлениями'),
+        trailing: const Icon(Icons.arrow_forward_ios),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MyAdvertisementsScreen(),
+            ),
+          );
+        },
+      ),
+    );
+  }
 }
-
-

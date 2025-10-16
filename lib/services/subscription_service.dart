@@ -1,308 +1,433 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+import '../models/subscription_plan.dart';
+import '../models/transaction.dart';
+import '../services/payment_service.dart';
 
-import '../models/notification.dart';
-import '../models/notification_template.dart';
-import '../models/specialist_recommendation.dart';
-import '../models/subscription.dart';
-import '../models/subscription_notification.dart';
-
-/// Сервис для работы с подписками
 class SubscriptionService {
+  static final SubscriptionService _instance = SubscriptionService._internal();
+  factory SubscriptionService() => _instance;
+  SubscriptionService._internal();
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final PaymentService _paymentService = PaymentService();
 
-  /// Получить подписки пользователя
-  Stream<List<Subscription>> getUserSubscriptions(String userId) => _firestore
-      .collection('subscriptions')
-      .where('userId', isEqualTo: userId)
-      .where('isActive', isEqualTo: true)
-      .orderBy('createdAt', descending: true)
-      .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map(Subscription.fromDocument).toList(),
-      );
-
-  /// Получить подписчиков специалиста
-  Stream<List<Subscription>> getSpecialistSubscribers(String specialistId) =>
-      _firestore
-          .collection('subscriptions')
-          .where('specialistId', isEqualTo: specialistId)
-          .where('isActive', isEqualTo: true)
-          .orderBy('createdAt', descending: true)
-          .snapshots()
-          .map(
-            (snapshot) => snapshot.docs.map(Subscription.fromDocument).toList(),
-          );
-
-  /// Проверить, подписан ли пользователь на специалиста
-  Future<bool> isSubscribed(String userId, String specialistId) async {
+  /// Получение всех доступных планов подписки
+  Future<List<SubscriptionPlan>> getAvailablePlans() async {
     try {
-      final querySnapshot = await _firestore
-          .collection('subscriptions')
-          .where('userId', isEqualTo: userId)
-          .where('specialistId', isEqualTo: specialistId)
-          .where('isActive', isEqualTo: true)
-          .get();
-
-      return querySnapshot.docs.isNotEmpty;
-    } catch (e) {
-      throw Exception('Ошибка проверки подписки: $e');
-    }
-  }
-
-  /// Подписаться на специалиста
-  Future<String> subscribe(
-    String userId,
-    String specialistId,
-    String specialistName,
-    String? specialistPhotoUrl,
-  ) async {
-    try {
-      // Проверить, не подписан ли уже
-      final existingSubscription = await _firestore
-          .collection('subscriptions')
-          .where('userId', isEqualTo: userId)
-          .where('specialistId', isEqualTo: specialistId)
-          .get();
-
-      if (existingSubscription.docs.isNotEmpty) {
-        // Активировать существующую подписку
-        final doc = existingSubscription.docs.first;
-        await doc.reference.update({
-          'isActive': true,
-          'notificationsEnabled': true,
-          'updatedAt': Timestamp.fromDate(DateTime.now()),
-        });
-        return doc.id;
-      } else {
-        // Создать новую подписку
-        final subscription = Subscription(
-          id: '',
-          userId: userId,
-          specialistId: specialistId,
-          specialistName: specialistName,
-          specialistPhotoUrl: specialistPhotoUrl,
-          createdAt: DateTime.now(),
-        );
-
-        final docRef = await _firestore
-            .collection('subscriptions')
-            .add(subscription.toMap());
-        return docRef.id;
-      }
-    } catch (e) {
-      throw Exception('Ошибка подписки: $e');
-    }
-  }
-
-  /// Отписаться от специалиста
-  Future<void> unsubscribe(String userId, String specialistId) async {
-    try {
-      final querySnapshot = await _firestore
-          .collection('subscriptions')
-          .where('userId', isEqualTo: userId)
-          .where('specialistId', isEqualTo: specialistId)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        await querySnapshot.docs.first.reference.update({
-          'isActive': false,
-          'updatedAt': Timestamp.fromDate(DateTime.now()),
-        });
-      }
-    } catch (e) {
-      throw Exception('Ошибка отписки: $e');
-    }
-  }
-
-  /// Обновить настройки уведомлений
-  Future<void> updateNotificationSettings(
-    String subscriptionId,
-    bool notificationsEnabled,
-  ) async {
-    try {
-      await _firestore.collection('subscriptions').doc(subscriptionId).update({
-        'notificationsEnabled': notificationsEnabled,
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      });
-    } catch (e) {
-      throw Exception('Ошибка обновления настроек уведомлений: $e');
-    }
-  }
-
-  /// Получить количество подписчиков специалиста
-  Future<int> getSubscribersCount(String specialistId) async {
-    try {
-      final querySnapshot = await _firestore
-          .collection('subscriptions')
-          .where('specialistId', isEqualTo: specialistId)
-          .where('isActive', isEqualTo: true)
-          .get();
-
-      return querySnapshot.docs.length;
-    } catch (e) {
-      throw Exception('Ошибка получения количества подписчиков: $e');
-    }
-  }
-
-  /// Получить количество подписок пользователя
-  Future<int> getSubscriptionsCount(String userId) async {
-    try {
-      final querySnapshot = await _firestore
-          .collection('subscriptions')
-          .where('userId', isEqualTo: userId)
-          .where('isActive', isEqualTo: true)
-          .get();
-
-      return querySnapshot.docs.length;
-    } catch (e) {
-      throw Exception('Ошибка получения количества подписок: $e');
-    }
-  }
-
-  /// Получить статистику подписок
-  Future<Map<String, dynamic>> getSubscriptionStats(String specialistId) async {
-    try {
-      final subscribersQuery = await _firestore
-          .collection('subscriptions')
-          .where('specialistId', isEqualTo: specialistId)
-          .where('isActive', isEqualTo: true)
-          .get();
-
-      final totalSubscribers = subscribersQuery.docs.length;
-
-      // Подсчитать подписчиков с включенными уведомлениями
-      var subscribersWithNotifications = 0;
-      for (final doc in subscribersQuery.docs) {
-        if (doc.data()['notificationsEnabled'] == true) {
-          subscribersWithNotifications++;
-        }
-      }
-
-      return {
-        'totalSubscribers': totalSubscribers,
-        'subscribersWithNotifications': subscribersWithNotifications,
-      };
-    } catch (e) {
-      throw Exception('Ошибка получения статистики подписок: $e');
-    }
-  }
-
-  /// Получить уведомления пользователя
-  Stream<List<SubscriptionNotification>> getUserNotifications(String userId) =>
-      _firestore
-          .collection('subscription_notifications')
-          .where('userId', isEqualTo: userId)
-          .orderBy('createdAt', descending: true)
-          .snapshots()
-          .map(
-            (snapshot) => snapshot.docs
-                .map(
-                  (doc) => SubscriptionNotification(
-                    id: doc.id,
-                    userId: doc.data()['userId'] ?? '',
-                    specialistId: doc.data()['specialistId'] ?? '',
-                    type: NotificationType.values.firstWhere(
-                      (e) => e.toString().split('.').last == doc.data()['type'],
-                      orElse: () => NotificationType.system,
-                    ),
-                    title: doc.data()['title'] ?? '',
-                    body: doc.data()['body'] ?? '',
-                    data: Map<String, dynamic>.from(doc.data()['data'] ?? {}),
-                    createdAt: (doc.data()['createdAt'] as Timestamp).toDate(),
-                    isRead: doc.data()['isRead'] ?? false,
-                    specialistPhotoUrl: doc.data()['specialistPhotoUrl'],
-                  ),
-                )
-                .toList(),
-          );
-
-  /// Получить похожих специалистов
-  Future<List<SpecialistRecommendation>> getSimilarSpecialists(
-    String specialistId,
-  ) async {
-    try {
-      // Это заглушка - в реальном приложении здесь была бы логика рекомендаций
-      return [];
-    } catch (e) {
-      throw Exception('Ошибка получения похожих специалистов: $e');
-    }
-  }
-
-  /// Отписаться от специалиста
-  Future<void> unsubscribeFromSpecialist(
-    String userId,
-    String specialistId,
-  ) async {
-    try {
-      final querySnapshot = await _firestore
-          .collection('subscriptions')
-          .where('userId', isEqualTo: userId)
-          .where('specialistId', isEqualTo: specialistId)
-          .where('isActive', isEqualTo: true)
-          .get();
-
-      for (final doc in querySnapshot.docs) {
-        await doc.reference.update({'isActive': false});
-      }
-    } catch (e) {
-      throw Exception('Ошибка отписки от специалиста: $e');
-    }
-  }
-
-  /// Отметить уведомление как прочитанное
-  Future<void> markNotificationAsRead(String notificationId) async {
-    try {
-      await _firestore
-          .collection('subscription_notifications')
-          .doc(notificationId)
-          .update({'isRead': true});
-    } catch (e) {
-      throw Exception('Ошибка отметки уведомления как прочитанного: $e');
-    }
-  }
-
-  /// Подписаться на специалиста
-  Future<void> subscribeToSpecialist({
-    required String userId,
-    required String specialistId,
-    required String specialistName,
-    String? specialistPhotoUrl,
-  }) async {
-    try {
-      await _firestore.collection('subscriptions').add({
-        'userId': userId,
-        'specialistId': specialistId,
-        'specialistName': specialistName,
-        'specialistPhotoUrl': specialistPhotoUrl,
-        'isActive': true,
-        'createdAt': Timestamp.fromDate(DateTime.now()),
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      });
-    } catch (e) {
-      throw Exception('Ошибка подписки на специалиста: $e');
-    }
-  }
-
-  /// Получить подписку пользователя на специалиста
-  Future<Subscription?> getUserSubscription(
-    String userId,
-    String specialistId,
-  ) async {
-    try {
+      debugPrint('INFO: [subscription_service] Получение доступных планов подписки');
+      
       final snapshot = await _firestore
-          .collection('subscriptions')
-          .where('userId', isEqualTo: userId)
-          .where('specialistId', isEqualTo: specialistId)
+          .collection('subscription_plans')
           .where('isActive', isEqualTo: true)
+          .orderBy('price')
+          .get();
+
+      return snapshot.docs
+          .map((doc) => SubscriptionPlan.fromMap({
+                'id': doc.id,
+                ...doc.data(),
+              }))
+          .toList();
+    } catch (e) {
+      debugPrint('ERROR: [subscription_service] Ошибка получения планов: $e');
+      return [];
+    }
+  }
+
+  /// Получение плана подписки по ID
+  Future<SubscriptionPlan?> getPlanById(String planId) async {
+    try {
+      final doc = await _firestore
+          .collection('subscription_plans')
+          .doc(planId)
+          .get();
+
+      if (doc.exists) {
+        return SubscriptionPlan.fromMap({
+          'id': doc.id,
+          ...doc.data()!,
+        });
+      }
+      return null;
+    } catch (e) {
+      debugPrint('ERROR: [subscription_service] Ошибка получения плана: $e');
+      return null;
+    }
+  }
+
+  /// Получение активной подписки пользователя
+  Future<UserSubscription?> getActiveSubscription(String userId) async {
+    try {
+      debugPrint('INFO: [subscription_service] Получение активной подписки для пользователя $userId');
+      
+      final snapshot = await _firestore
+          .collection('user_subscriptions')
+          .where('userId', isEqualTo: userId)
+          .where('status', isEqualTo: 'active')
+          .orderBy('endDate', descending: true)
           .limit(1)
           .get();
 
       if (snapshot.docs.isNotEmpty) {
-        return Subscription.fromDocument(snapshot.docs.first);
+        final doc = snapshot.docs.first;
+        return UserSubscription.fromMap({
+          'id': doc.id,
+          ...doc.data(),
+        });
       }
       return null;
     } catch (e) {
-      throw Exception('Ошибка получения подписки пользователя: $e');
+      debugPrint('ERROR: [subscription_service] Ошибка получения активной подписки: $e');
+      return null;
+    }
+  }
+
+  /// Получение всех подписок пользователя
+  Future<List<UserSubscription>> getUserSubscriptions(String userId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('user_subscriptions')
+          .where('userId', isEqualTo: userId)
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      return snapshot.docs
+          .map((doc) => UserSubscription.fromMap({
+                'id': doc.id,
+                ...doc.data(),
+              }))
+          .toList();
+    } catch (e) {
+      debugPrint('ERROR: [subscription_service] Ошибка получения подписок пользователя: $e');
+      return [];
+    }
+  }
+
+  /// Покупка подписки
+  Future<PaymentResult> purchaseSubscription({
+    required String userId,
+    required String planId,
+    required PaymentMethod paymentMethod,
+    PaymentProvider provider = PaymentProvider.stripe,
+  }) async {
+    try {
+      debugPrint('INFO: [subscription_service] Покупка подписки $planId для пользователя $userId');
+      
+      // Получаем план подписки
+      final plan = await getPlanById(planId);
+      if (plan == null) {
+        return PaymentResult(
+          success: false,
+          errorMessage: 'План подписки не найден',
+        );
+      }
+
+      // Создаем платеж
+      final paymentResult = await _paymentService.createSubscriptionPayment(
+        userId: userId,
+        plan: plan,
+        paymentMethod: paymentMethod,
+        provider: provider,
+      );
+
+      if (paymentResult.success) {
+        // Создаем транзакцию
+        final transaction = Transaction(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          userId: userId,
+          type: TransactionType.subscription,
+          amount: plan.price,
+          currency: 'RUB',
+          status: TransactionStatus.pending,
+          timestamp: DateTime.now(),
+          description: 'Подписка ${plan.name}',
+          subscriptionId: planId,
+          paymentMethod: paymentMethod.toString().split('.').last,
+          paymentProvider: provider.toString().split('.').last,
+          externalTransactionId: paymentResult.externalTransactionId,
+          metadata: paymentResult.metadata,
+        );
+
+        // Сохраняем транзакцию
+        await _firestore
+            .collection('transactions')
+            .doc(transaction.id)
+            .set(transaction.toMap());
+
+        return PaymentResult(
+          success: true,
+          transactionId: transaction.id,
+          externalTransactionId: paymentResult.externalTransactionId,
+          metadata: paymentResult.metadata,
+        );
+      }
+
+      return paymentResult;
+    } catch (e) {
+      debugPrint('ERROR: [subscription_service] Ошибка покупки подписки: $e');
+      return PaymentResult(
+        success: false,
+        errorMessage: e.toString(),
+      );
+    }
+  }
+
+  /// Активация подписки после успешной оплаты
+  Future<bool> activateSubscription({
+    required String userId,
+    required String planId,
+    required String transactionId,
+  }) async {
+    try {
+      debugPrint('INFO: [subscription_service] Активация подписки для пользователя $userId');
+      
+      final plan = await getPlanById(planId);
+      if (plan == null) {
+        debugPrint('ERROR: [subscription_service] План подписки не найден');
+        return false;
+      }
+
+      // Отменяем предыдущие активные подписки
+      await _cancelActiveSubscriptions(userId);
+
+      // Создаем новую подписку
+      final startDate = DateTime.now();
+      final endDate = startDate.add(Duration(days: plan.durationDays));
+
+      final subscription = UserSubscription(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        userId: userId,
+        planId: planId,
+        startDate: startDate,
+        endDate: endDate,
+        status: SubscriptionStatus.active,
+        autoRenew: false,
+        transactionId: transactionId,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      // Сохраняем подписку
+      await _firestore
+          .collection('user_subscriptions')
+          .doc(subscription.id)
+          .set(subscription.toMap());
+
+      // Обновляем статус транзакции
+      await _firestore
+          .collection('transactions')
+          .doc(transactionId)
+          .update({
+        'status': TransactionStatus.success.toString().split('.').last,
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
+      });
+
+      debugPrint('INFO: [subscription_service] Подписка успешно активирована');
+      return true;
+    } catch (e) {
+      debugPrint('ERROR: [subscription_service] Ошибка активации подписки: $e');
+      return false;
+    }
+  }
+
+  /// Отмена активных подписок пользователя
+  Future<void> _cancelActiveSubscriptions(String userId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('user_subscriptions')
+          .where('userId', isEqualTo: userId)
+          .where('status', isEqualTo: 'active')
+          .get();
+
+      final batch = _firestore.batch();
+      for (final doc in snapshot.docs) {
+        batch.update(doc.reference, {
+          'status': SubscriptionStatus.cancelled.toString().split('.').last,
+          'cancelledAt': Timestamp.fromDate(DateTime.now()),
+          'updatedAt': Timestamp.fromDate(DateTime.now()),
+        });
+      }
+      await batch.commit();
+    } catch (e) {
+      debugPrint('ERROR: [subscription_service] Ошибка отмены подписок: $e');
+    }
+  }
+
+  /// Отмена подписки
+  Future<bool> cancelSubscription(String subscriptionId) async {
+    try {
+      debugPrint('INFO: [subscription_service] Отмена подписки $subscriptionId');
+      
+      await _firestore
+          .collection('user_subscriptions')
+          .doc(subscriptionId)
+          .update({
+        'status': SubscriptionStatus.cancelled.toString().split('.').last,
+        'cancelledAt': Timestamp.fromDate(DateTime.now()),
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
+      });
+
+      debugPrint('INFO: [subscription_service] Подписка успешно отменена');
+      return true;
+    } catch (e) {
+      debugPrint('ERROR: [subscription_service] Ошибка отмены подписки: $e');
+      return false;
+    }
+  }
+
+  /// Продление подписки
+  Future<bool> renewSubscription(String subscriptionId) async {
+    try {
+      debugPrint('INFO: [subscription_service] Продление подписки $subscriptionId');
+      
+      final doc = await _firestore
+          .collection('user_subscriptions')
+          .doc(subscriptionId)
+          .get();
+
+      if (!doc.exists) {
+        debugPrint('ERROR: [subscription_service] Подписка не найдена');
+        return false;
+      }
+
+      final subscription = UserSubscription.fromMap({
+        'id': doc.id,
+        ...doc.data()!,
+      });
+
+      final plan = await getPlanById(subscription.planId);
+      if (plan == null) {
+        debugPrint('ERROR: [subscription_service] План подписки не найден');
+        return false;
+      }
+
+      // Продлеваем подписку на срок плана
+      final newEndDate = subscription.endDate.add(Duration(days: plan.durationDays));
+
+      await _firestore
+          .collection('user_subscriptions')
+          .doc(subscriptionId)
+          .update({
+        'endDate': Timestamp.fromDate(newEndDate),
+        'status': SubscriptionStatus.active.toString().split('.').last,
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
+      });
+
+      debugPrint('INFO: [subscription_service] Подписка успешно продлена');
+      return true;
+    } catch (e) {
+      debugPrint('ERROR: [subscription_service] Ошибка продления подписки: $e');
+      return false;
+    }
+  }
+
+  /// Проверка истечения подписок
+  Future<void> checkExpiredSubscriptions() async {
+    try {
+      debugPrint('INFO: [subscription_service] Проверка истекших подписок');
+      
+      final now = DateTime.now();
+      final snapshot = await _firestore
+          .collection('user_subscriptions')
+          .where('status', isEqualTo: 'active')
+          .where('endDate', isLessThan: Timestamp.fromDate(now))
+          .get();
+
+      final batch = _firestore.batch();
+      for (final doc in snapshot.docs) {
+        batch.update(doc.reference, {
+          'status': SubscriptionStatus.expired.toString().split('.').last,
+          'updatedAt': Timestamp.fromDate(DateTime.now()),
+        });
+      }
+      await batch.commit();
+
+      debugPrint('INFO: [subscription_service] Обработано ${snapshot.docs.length} истекших подписок');
+    } catch (e) {
+      debugPrint('ERROR: [subscription_service] Ошибка проверки истекших подписок: $e');
+    }
+  }
+
+  /// Проверка, имеет ли пользователь активную подписку
+  Future<bool> hasActiveSubscription(String userId) async {
+    try {
+      final subscription = await getActiveSubscription(userId);
+      return subscription != null && subscription.isActive;
+    } catch (e) {
+      debugPrint('ERROR: [subscription_service] Ошибка проверки активной подписки: $e');
+      return false;
+    }
+  }
+
+  /// Получение уровня подписки пользователя
+  Future<SubscriptionTier> getUserSubscriptionTier(String userId) async {
+    try {
+      final subscription = await getActiveSubscription(userId);
+      if (subscription == null) {
+        return SubscriptionTier.free;
+      }
+
+      final plan = await getPlanById(subscription.planId);
+      return plan?.tier ?? SubscriptionTier.free;
+    } catch (e) {
+      debugPrint('ERROR: [subscription_service] Ошибка получения уровня подписки: $e');
+      return SubscriptionTier.free;
+    }
+  }
+
+  /// Проверка доступа к премиум функциям
+  Future<bool> hasPremiumAccess(String userId) async {
+    try {
+      final tier = await getUserSubscriptionTier(userId);
+      return tier == SubscriptionTier.premium || tier == SubscriptionTier.pro;
+    } catch (e) {
+      debugPrint('ERROR: [subscription_service] Ошибка проверки премиум доступа: $e');
+      return false;
+    }
+  }
+
+  /// Получение статистики подписок
+  Future<Map<String, dynamic>> getSubscriptionStats() async {
+    try {
+      final snapshot = await _firestore
+          .collection('user_subscriptions')
+          .get();
+
+      int activeCount = 0;
+      int expiredCount = 0;
+      int cancelledCount = 0;
+      double totalRevenue = 0.0;
+
+      for (final doc in snapshot.docs) {
+        final data = doc.data();
+        final status = data['status'] as String;
+        final amount = (data['amount'] as num?)?.toDouble() ?? 0.0;
+
+        switch (status) {
+          case 'active':
+            activeCount++;
+            break;
+          case 'expired':
+            expiredCount++;
+            break;
+          case 'cancelled':
+            cancelledCount++;
+            break;
+        }
+        totalRevenue += amount;
+      }
+
+      return {
+        'totalSubscriptions': snapshot.docs.length,
+        'activeSubscriptions': activeCount,
+        'expiredSubscriptions': expiredCount,
+        'cancelledSubscriptions': cancelledCount,
+        'totalRevenue': totalRevenue,
+      };
+    } catch (e) {
+      debugPrint('ERROR: [subscription_service] Ошибка получения статистики: $e');
+      return {};
     }
   }
 }

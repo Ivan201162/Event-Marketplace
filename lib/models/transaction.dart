@@ -5,6 +5,12 @@ enum TransactionType {
   subscription,
   donation,
   boostPost,
+  advertisement,
+  profileBoost,
+  categoryBoost,
+  searchBoost,
+  premiumUpgrade,
+  adCampaign,
 }
 
 enum TransactionStatus {
@@ -12,6 +18,8 @@ enum TransactionStatus {
   success,
   failed,
   cancelled,
+  refunded,
+  partiallyRefunded,
 }
 
 class Transaction {
@@ -26,6 +34,14 @@ class Transaction {
     required this.description,
     this.targetUserId,
     this.postId,
+    this.subscriptionId,
+    this.promotionId,
+    this.adId,
+    this.paymentMethod,
+    this.paymentProvider,
+    this.externalTransactionId,
+    this.refundAmount,
+    this.refundReason,
     this.metadata,
   });
 
@@ -46,6 +62,14 @@ class Transaction {
         description: map['description'] ?? '',
         targetUserId: map['targetUserId'],
         postId: map['postId'],
+        subscriptionId: map['subscriptionId'],
+        promotionId: map['promotionId'],
+        adId: map['adId'],
+        paymentMethod: map['paymentMethod'],
+        paymentProvider: map['paymentProvider'],
+        externalTransactionId: map['externalTransactionId'],
+        refundAmount: map['refundAmount']?.toDouble(),
+        refundReason: map['refundReason'],
         metadata: map['metadata'],
       );
   final String id;
@@ -58,6 +82,14 @@ class Transaction {
   final String description;
   final String? targetUserId; // For donations
   final String? postId; // For post boosting
+  final String? subscriptionId; // For subscription payments
+  final String? promotionId; // For promotion payments
+  final String? adId; // For advertisement payments
+  final String? paymentMethod; // card, apple_pay, google_pay, etc.
+  final String? paymentProvider; // stripe, yookassa, etc.
+  final String? externalTransactionId; // External payment system ID
+  final double? refundAmount;
+  final String? refundReason;
   final Map<String, dynamic>? metadata;
 
   Map<String, dynamic> toMap() => {
@@ -71,6 +103,14 @@ class Transaction {
         'description': description,
         'targetUserId': targetUserId,
         'postId': postId,
+        'subscriptionId': subscriptionId,
+        'promotionId': promotionId,
+        'adId': adId,
+        'paymentMethod': paymentMethod,
+        'paymentProvider': paymentProvider,
+        'externalTransactionId': externalTransactionId,
+        'refundAmount': refundAmount,
+        'refundReason': refundReason,
         'metadata': metadata,
       };
 
@@ -85,6 +125,14 @@ class Transaction {
     String? description,
     String? targetUserId,
     String? postId,
+    String? subscriptionId,
+    String? promotionId,
+    String? adId,
+    String? paymentMethod,
+    String? paymentProvider,
+    String? externalTransactionId,
+    double? refundAmount,
+    String? refundReason,
     Map<String, dynamic>? metadata,
   }) =>
       Transaction(
@@ -98,6 +146,14 @@ class Transaction {
         description: description ?? this.description,
         targetUserId: targetUserId ?? this.targetUserId,
         postId: postId ?? this.postId,
+        subscriptionId: subscriptionId ?? this.subscriptionId,
+        promotionId: promotionId ?? this.promotionId,
+        adId: adId ?? this.adId,
+        paymentMethod: paymentMethod ?? this.paymentMethod,
+        paymentProvider: paymentProvider ?? this.paymentProvider,
+        externalTransactionId: externalTransactionId ?? this.externalTransactionId,
+        refundAmount: refundAmount ?? this.refundAmount,
+        refundReason: refundReason ?? this.refundReason,
         metadata: metadata ?? this.metadata,
       );
 }

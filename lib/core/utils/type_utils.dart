@@ -5,7 +5,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Безопасное преобразование Map<dynamic, dynamic> в Map<String, dynamic>
 Map<String, dynamic> safeMapFromDynamic(Map<dynamic, dynamic>? data) {
-  if (data == null) return {};
+  if (data == null) {
+    return {};
+  }
   return data.map((key, value) => MapEntry(key.toString(), value));
 }
 

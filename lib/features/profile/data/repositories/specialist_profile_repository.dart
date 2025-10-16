@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/specialist_profile.dart';
 
@@ -66,7 +67,7 @@ class SpecialistProfileRepository {
       await ref.delete();
     } catch (e) {
       // Игнорируем ошибки удаления - файл может не существовать
-      print('Ошибка удаления изображения: $e');
+      debugPrint('Ошибка удаления изображения: $e');
     }
   }
 

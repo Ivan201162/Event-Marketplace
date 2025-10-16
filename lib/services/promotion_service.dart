@@ -1,321 +1,490 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import '../models/promotion.dart';
+import '../models/promotion_boost.dart';
+import '../models/transaction.dart';
+import '../services/payment_service.dart';
 
-/// Сервис для работы с акциями и предложениями
 class PromotionService {
-  static const String _collection = 'promotions';
+  static final PromotionService _instance = PromotionService._internal();
+  factory PromotionService() => _instance;
+  PromotionService._internal();
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final PaymentService _paymentService = PaymentService();
 
-  /// Получить все активные акции
-  Future<List<Promotion>> getActivePromotions() async {
+  /// Получение всех доступных пакетов продвижения
+  Future<List<PromotionPackage>> getAvailablePackages() async {
     try {
-      final now = Timestamp.now();
-      final querySnapshot = await _firestore
-          .collection(_collection)
+      debugPrint('INFO: [promotion_service] Получение доступных пакетов продвижения');
+      
+      final snapshot = await _firestore
+          .collection('promotion_packages')
           .where('isActive', isEqualTo: true)
-          .where('startDate', isLessThanOrEqualTo: now)
-          .where('endDate', isGreaterThan: now)
-          .orderBy('endDate')
-          .orderBy('discount', descending: true)
+          .orderBy('price')
           .get();
 
-      return querySnapshot.docs.map(Promotion.fromFirestore).toList();
+      return snapshot.docs
+          .map((doc) => PromotionPackage.fromMap({
+                'id': doc.id,
+                ...doc.data(),
+              }))
+          .toList();
     } catch (e) {
-      debugPrint('Ошибка получения активных акций: $e');
+      debugPrint('ERROR: [promotion_service] Ошибка получения пакетов: $e');
       return [];
     }
   }
 
-  /// Получить акции по категории
-  Future<List<Promotion>> getPromotionsByCategory(String category) async {
+  /// Получение пакета продвижения по ID
+  Future<PromotionPackage?> getPackageById(String packageId) async {
     try {
-      final now = Timestamp.now();
-      Query query = _firestore
-          .collection(_collection)
-          .where('isActive', isEqualTo: true)
-          .where('startDate', isLessThanOrEqualTo: now)
-          .where('endDate', isGreaterThan: now);
+      final doc = await _firestore
+          .collection('promotion_packages')
+          .doc(packageId)
+          .get();
 
-      if (category != 'all') {
-        query = query.where('category', isEqualTo: category);
+      if (doc.exists) {
+        return PromotionPackage.fromMap({
+          'id': doc.id,
+          ...doc.data()!,
+        });
       }
-
-      final querySnapshot = await query
-          .orderBy('endDate')
-          .orderBy('discount', descending: true)
-          .get();
-
-      return querySnapshot.docs.map(Promotion.fromFirestore).toList();
+      return null;
     } catch (e) {
-      debugPrint('Ошибка получения акций по категории: $e');
-      return [];
-    }
-  }
-
-  /// Получить акции по городу
-  Future<List<Promotion>> getPromotionsByCity(String city) async {
-    try {
-      final now = Timestamp.now();
-      final querySnapshot = await _firestore
-          .collection(_collection)
-          .where('isActive', isEqualTo: true)
-          .where('startDate', isLessThanOrEqualTo: now)
-          .where('endDate', isGreaterThan: now)
-          .where('city', isEqualTo: city)
-          .orderBy('endDate')
-          .orderBy('discount', descending: true)
-          .get();
-
-      return querySnapshot.docs.map(Promotion.fromFirestore).toList();
-    } catch (e) {
-      debugPrint('Ошибка получения акций по городу: $e');
-      return [];
-    }
-  }
-
-  /// Получить акции специалиста
-  Future<List<Promotion>> getSpecialistPromotions(String specialistId) async {
-    try {
-      final now = Timestamp.now();
-      final querySnapshot = await _firestore
-          .collection(_collection)
-          .where('specialistId', isEqualTo: specialistId)
-          .where('isActive', isEqualTo: true)
-          .where('startDate', isLessThanOrEqualTo: now)
-          .where('endDate', isGreaterThan: now)
-          .orderBy('endDate')
-          .get();
-
-      return querySnapshot.docs.map(Promotion.fromFirestore).toList();
-    } catch (e) {
-      debugPrint('Ошибка получения акций специалиста: $e');
-      return [];
-    }
-  }
-
-  /// Получить сезонные предложения
-  Future<List<Promotion>> getSeasonalPromotions() async {
-    try {
-      final now = Timestamp.now();
-      final querySnapshot = await _firestore
-          .collection(_collection)
-          .where('isActive', isEqualTo: true)
-          .where('startDate', isLessThanOrEqualTo: now)
-          .where('endDate', isGreaterThan: now)
-          .where('category', isEqualTo: 'seasonal')
-          .orderBy('endDate')
-          .get();
-
-      return querySnapshot.docs.map(Promotion.fromFirestore).toList();
-    } catch (e) {
-      debugPrint('Ошибка получения сезонных предложений: $e');
-      return [];
-    }
-  }
-
-  /// Получить промокоды и подарки
-  Future<List<Promotion>> getPromoCodesAndGifts() async {
-    try {
-      final now = Timestamp.now();
-      final querySnapshot = await _firestore
-          .collection(_collection)
-          .where('isActive', isEqualTo: true)
-          .where('startDate', isLessThanOrEqualTo: now)
-          .where('endDate', isGreaterThan: now)
-          .where('category', whereIn: ['promoCode', 'gift'])
-          .orderBy('endDate')
-          .get();
-
-      return querySnapshot.docs.map(Promotion.fromFirestore).toList();
-    } catch (e) {
-      debugPrint('Ошибка получения промокодов и подарков: $e');
-      return [];
-    }
-  }
-
-  /// Создать новую акцию
-  Future<String?> createPromotion(Promotion promotion) async {
-    try {
-      final docRef =
-          await _firestore.collection(_collection).add(promotion.toFirestore());
-      return docRef.id;
-    } catch (e) {
-      debugPrint('Ошибка создания акции: $e');
+      debugPrint('ERROR: [promotion_service] Ошибка получения пакета: $e');
       return null;
     }
   }
 
-  /// Обновить акцию
-  Future<bool> updatePromotion(String id, Map<String, dynamic> updates) async {
+  /// Получение активных продвижений пользователя
+  Future<List<PromotionBoost>> getActivePromotions(String userId) async {
     try {
-      await _firestore.collection(_collection).doc(id).update({
-        ...updates,
-        'updatedAt': Timestamp.now(),
-      });
-      return true;
-    } catch (e) {
-      debugPrint('Ошибка обновления акции: $e');
-      return false;
-    }
-  }
-
-  /// Удалить акцию
-  Future<bool> deletePromotion(String id) async {
-    try {
-      await _firestore.collection(_collection).doc(id).delete();
-      return true;
-    } catch (e) {
-      debugPrint('Ошибка удаления акции: $e');
-      return false;
-    }
-  }
-
-  /// Деактивировать акцию
-  Future<bool> deactivatePromotion(String id) async {
-    try {
-      await _firestore.collection(_collection).doc(id).update({
-        'isActive': false,
-        'updatedAt': Timestamp.now(),
-      });
-      return true;
-    } catch (e) {
-      debugPrint('Ошибка деактивации акции: $e');
-      return false;
-    }
-  }
-
-  /// Получить акции с фильтрацией
-  Future<List<Promotion>> getFilteredPromotions({
-    String? category,
-    String? city,
-    int? minDiscount,
-    int? maxDiscount,
-    DateTime? startDate,
-    DateTime? endDate,
-  }) async {
-    try {
-      Query query =
-          _firestore.collection(_collection).where('isActive', isEqualTo: true);
-
-      if (category != null && category != 'all') {
-        query = query.where('category', isEqualTo: category);
-      }
-
-      if (city != null && city.isNotEmpty) {
-        query = query.where('city', isEqualTo: city);
-      }
-
-      if (minDiscount != null) {
-        query = query.where('discount', isGreaterThanOrEqualTo: minDiscount);
-      }
-
-      if (maxDiscount != null) {
-        query = query.where('discount', isLessThanOrEqualTo: maxDiscount);
-      }
-
-      if (startDate != null) {
-        query = query.where(
-          'startDate',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
-        );
-      }
-
-      if (endDate != null) {
-        query = query.where(
-          'endDate',
-          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
-        );
-      }
-
-      final querySnapshot = await query
-          .orderBy('endDate')
-          .orderBy('discount', descending: true)
+      debugPrint('INFO: [promotion_service] Получение активных продвижений для пользователя $userId');
+      
+      final snapshot = await _firestore
+          .collection('promotions')
+          .where('userId', isEqualTo: userId)
+          .where('status', isEqualTo: 'active')
+          .orderBy('endDate', descending: true)
           .get();
 
-      return querySnapshot.docs.map(Promotion.fromFirestore).toList();
+      return snapshot.docs
+          .map((doc) => PromotionBoost.fromMap({
+                'id': doc.id,
+                ...doc.data(),
+              }))
+          .toList();
     } catch (e) {
-      debugPrint('Ошибка получения отфильтрованных акций: $e');
+      debugPrint('ERROR: [promotion_service] Ошибка получения активных продвижений: $e');
       return [];
     }
   }
 
-  /// Получить статистику акций
-  Future<Map<String, dynamic>> getPromotionStats() async {
+  /// Получение всех продвижений пользователя
+  Future<List<PromotionBoost>> getUserPromotions(String userId) async {
     try {
-      final now = Timestamp.now();
-
-      // Активные акции
-      final activeQuery = await _firestore
-          .collection(_collection)
-          .where('isActive', isEqualTo: true)
-          .where('startDate', isLessThanOrEqualTo: now)
-          .where('endDate', isGreaterThan: now)
+      final snapshot = await _firestore
+          .collection('promotions')
+          .where('userId', isEqualTo: userId)
+          .orderBy('createdAt', descending: true)
           .get();
 
-      // Завершенные акции
-      final completedQuery = await _firestore
-          .collection(_collection)
-          .where('endDate', isLessThan: now)
-          .get();
-
-      // Все акции
-      final allQuery = await _firestore.collection(_collection).get();
-
-      return {
-        'active': activeQuery.docs.length,
-        'completed': completedQuery.docs.length,
-        'total': allQuery.docs.length,
-        'categories': _getCategoryStats(allQuery.docs),
-      };
+      return snapshot.docs
+          .map((doc) => PromotionBoost.fromMap({
+                'id': doc.id,
+                ...doc.data(),
+              }))
+          .toList();
     } catch (e) {
-      debugPrint('Ошибка получения статистики акций: $e');
-      return {};
+      debugPrint('ERROR: [promotion_service] Ошибка получения продвижений пользователя: $e');
+      return [];
     }
   }
 
-  /// Получить статистику по категориям
-  Map<String, int> _getCategoryStats(List<QueryDocumentSnapshot> docs) {
-    final categoryStats = <String, int>{};
-
-    for (final doc in docs) {
-      final data = doc.data()! as Map<String, dynamic>;
-      final category = data['category'] ?? 'other';
-      categoryStats[category] = (categoryStats[category] ?? 0) + 1;
-    }
-
-    return categoryStats;
-  }
-
-  /// Автоматически деактивировать просроченные акции
-  Future<int> deactivateExpiredPromotions() async {
+  /// Покупка продвижения
+  Future<PaymentResult> purchasePromotion({
+    required String userId,
+    required String packageId,
+    required PaymentMethod paymentMethod,
+    String? targetId,
+    String? region,
+    String? city,
+    String? category,
+    PaymentProvider provider = PaymentProvider.stripe,
+  }) async {
     try {
-      final now = Timestamp.now();
-      final querySnapshot = await _firestore
-          .collection(_collection)
-          .where('isActive', isEqualTo: true)
-          .where('endDate', isLessThan: now)
+      debugPrint('INFO: [promotion_service] Покупка продвижения $packageId для пользователя $userId');
+      
+      // Получаем пакет продвижения
+      final package = await getPackageById(packageId);
+      if (package == null) {
+        return PaymentResult(
+          success: false,
+          errorMessage: 'Пакет продвижения не найден',
+        );
+      }
+
+      // Создаем платеж
+      final paymentResult = await _paymentService.createPromotionPayment(
+        userId: userId,
+        package: package,
+        paymentMethod: paymentMethod,
+        provider: provider,
+      );
+
+      if (paymentResult.success) {
+        // Создаем транзакцию
+        final transaction = Transaction(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          userId: userId,
+          type: TransactionType.promotion,
+          amount: package.price,
+          currency: 'RUB',
+          status: TransactionStatus.pending,
+          timestamp: DateTime.now(),
+          description: 'Продвижение ${package.name}',
+          promotionId: packageId,
+          paymentMethod: paymentMethod.toString().split('.').last,
+          paymentProvider: provider.toString().split('.').last,
+          externalTransactionId: paymentResult.externalTransactionId,
+          metadata: paymentResult.metadata,
+        );
+
+        // Сохраняем транзакцию
+        await _firestore
+            .collection('transactions')
+            .doc(transaction.id)
+            .set(transaction.toMap());
+
+        return PaymentResult(
+          success: true,
+          transactionId: transaction.id,
+          externalTransactionId: paymentResult.externalTransactionId,
+          metadata: paymentResult.metadata,
+        );
+      }
+
+      return paymentResult;
+    } catch (e) {
+      debugPrint('ERROR: [promotion_service] Ошибка покупки продвижения: $e');
+      return PaymentResult(
+        success: false,
+        errorMessage: e.toString(),
+      );
+    }
+  }
+
+  /// Активация продвижения после успешной оплаты
+  Future<bool> activatePromotion({
+    required String userId,
+    required String packageId,
+    required String transactionId,
+    String? targetId,
+    String? region,
+    String? city,
+    String? category,
+  }) async {
+    try {
+      debugPrint('INFO: [promotion_service] Активация продвижения для пользователя $userId');
+      
+      final package = await getPackageById(packageId);
+      if (package == null) {
+        debugPrint('ERROR: [promotion_service] Пакет продвижения не найден');
+        return false;
+      }
+
+      // Создаем продвижение
+      final startDate = DateTime.now();
+      final endDate = startDate.add(Duration(days: package.durationDays));
+
+      final promotion = PromotionBoost(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        userId: userId,
+        type: package.type,
+        startDate: startDate,
+        endDate: endDate,
+        status: PromotionStatus.active,
+        priorityLevel: package.priorityLevel,
+        price: package.price,
+        targetId: targetId,
+        region: region,
+        city: city,
+        category: category,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      // Сохраняем продвижение
+      await _firestore
+          .collection('promotions')
+          .doc(promotion.id)
+          .set(promotion.toMap());
+
+      // Обновляем статус транзакции
+      await _firestore
+          .collection('transactions')
+          .doc(transactionId)
+          .update({
+        'status': TransactionStatus.success.toString().split('.').last,
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
+      });
+
+      debugPrint('INFO: [promotion_service] Продвижение успешно активировано');
+      return true;
+    } catch (e) {
+      debugPrint('ERROR: [promotion_service] Ошибка активации продвижения: $e');
+      return false;
+    }
+  }
+
+  /// Отмена продвижения
+  Future<bool> cancelPromotion(String promotionId) async {
+    try {
+      debugPrint('INFO: [promotion_service] Отмена продвижения $promotionId');
+      
+      await _firestore
+          .collection('promotions')
+          .doc(promotionId)
+          .update({
+        'status': PromotionStatus.cancelled.toString().split('.').last,
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
+      });
+
+      debugPrint('INFO: [promotion_service] Продвижение успешно отменено');
+      return true;
+    } catch (e) {
+      debugPrint('ERROR: [promotion_service] Ошибка отмены продвижения: $e');
+      return false;
+    }
+  }
+
+  /// Пауза продвижения
+  Future<bool> pausePromotion(String promotionId) async {
+    try {
+      debugPrint('INFO: [promotion_service] Пауза продвижения $promotionId');
+      
+      await _firestore
+          .collection('promotions')
+          .doc(promotionId)
+          .update({
+        'status': PromotionStatus.paused.toString().split('.').last,
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
+      });
+
+      debugPrint('INFO: [promotion_service] Продвижение успешно поставлено на паузу');
+      return true;
+    } catch (e) {
+      debugPrint('ERROR: [promotion_service] Ошибка паузы продвижения: $e');
+      return false;
+    }
+  }
+
+  /// Возобновление продвижения
+  Future<bool> resumePromotion(String promotionId) async {
+    try {
+      debugPrint('INFO: [promotion_service] Возобновление продвижения $promotionId');
+      
+      await _firestore
+          .collection('promotions')
+          .doc(promotionId)
+          .update({
+        'status': PromotionStatus.active.toString().split('.').last,
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
+      });
+
+      debugPrint('INFO: [promotion_service] Продвижение успешно возобновлено');
+      return true;
+    } catch (e) {
+      debugPrint('ERROR: [promotion_service] Ошибка возобновления продвижения: $e');
+      return false;
+    }
+  }
+
+  /// Обновление статистики продвижения
+  Future<bool> updatePromotionStats({
+    required String promotionId,
+    int? impressions,
+    int? clicks,
+  }) async {
+    try {
+      final updateData = <String, dynamic>{
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
+      };
+
+      if (impressions != null) {
+        updateData['impressions'] = FieldValue.increment(impressions);
+      }
+
+      if (clicks != null) {
+        updateData['clicks'] = FieldValue.increment(clicks);
+      }
+
+      // Пересчитываем CTR
+      if (impressions != null || clicks != null) {
+        final doc = await _firestore
+            .collection('promotions')
+            .doc(promotionId)
+            .get();
+
+        if (doc.exists) {
+          final data = doc.data()!;
+          final currentImpressions = (data['impressions'] as int? ?? 0) + (impressions ?? 0);
+          final currentClicks = (data['clicks'] as int? ?? 0) + (clicks ?? 0);
+          
+          if (currentImpressions > 0) {
+            updateData['ctr'] = (currentClicks / currentImpressions) * 100;
+          }
+        }
+      }
+
+      await _firestore
+          .collection('promotions')
+          .doc(promotionId)
+          .update(updateData);
+
+      return true;
+    } catch (e) {
+      debugPrint('ERROR: [promotion_service] Ошибка обновления статистики: $e');
+      return false;
+    }
+  }
+
+  /// Проверка истечения продвижений
+  Future<void> checkExpiredPromotions() async {
+    try {
+      debugPrint('INFO: [promotion_service] Проверка истекших продвижений');
+      
+      final now = DateTime.now();
+      final snapshot = await _firestore
+          .collection('promotions')
+          .where('status', isEqualTo: 'active')
+          .where('endDate', isLessThan: Timestamp.fromDate(now))
           .get();
 
       final batch = _firestore.batch();
-      var deactivatedCount = 0;
-
-      for (final doc in querySnapshot.docs) {
+      for (final doc in snapshot.docs) {
         batch.update(doc.reference, {
-          'isActive': false,
-          'updatedAt': Timestamp.now(),
+          'status': PromotionStatus.expired.toString().split('.').last,
+          'updatedAt': Timestamp.fromDate(DateTime.now()),
         });
-        deactivatedCount++;
       }
+      await batch.commit();
 
-      if (deactivatedCount > 0) {
-        await batch.commit();
-      }
-
-      return deactivatedCount;
+      debugPrint('INFO: [promotion_service] Обработано ${snapshot.docs.length} истекших продвижений');
     } catch (e) {
-      debugPrint('Ошибка деактивации просроченных акций: $e');
-      return 0;
+      debugPrint('ERROR: [promotion_service] Ошибка проверки истекших продвижений: $e');
+    }
+  }
+
+  /// Получение продвинутых профилей для отображения в топе
+  Future<List<PromotionBoost>> getPromotedProfiles({
+    String? region,
+    String? city,
+    String? category,
+    int limit = 10,
+  }) async {
+    try {
+      debugPrint('INFO: [promotion_service] Получение продвинутых профилей');
+      
+      Query query = _firestore
+          .collection('promotions')
+          .where('status', isEqualTo: 'active')
+          .where('type', isEqualTo: 'profileBoost')
+          .where('endDate', isGreaterThan: Timestamp.fromDate(DateTime.now()));
+
+      if (region != null) {
+        query = query.where('region', isEqualTo: region);
+      }
+
+      if (city != null) {
+        query = query.where('city', isEqualTo: city);
+      }
+
+      if (category != null) {
+        query = query.where('category', isEqualTo: category);
+      }
+
+      final snapshot = await query
+          .orderBy('priorityLevel', descending: true)
+          .orderBy('createdAt', descending: true)
+          .limit(limit)
+          .get();
+
+      return snapshot.docs
+          .map((doc) => PromotionBoost.fromMap({
+                'id': doc.id,
+                ...doc.data() as Map<String, dynamic>,
+              }))
+          .toList();
+    } catch (e) {
+      debugPrint('ERROR: [promotion_service] Ошибка получения продвинутых профилей: $e');
+      return [];
+    }
+  }
+
+  /// Проверка, имеет ли пользователь активное продвижение
+  Future<bool> hasActivePromotion(String userId, PromotionType type) async {
+    try {
+      final promotions = await getActivePromotions(userId);
+      return promotions.any((promotion) => promotion.type == type);
+    } catch (e) {
+      debugPrint('ERROR: [promotion_service] Ошибка проверки активного продвижения: $e');
+      return false;
+    }
+  }
+
+  /// Получение статистики продвижений
+  Future<Map<String, dynamic>> getPromotionStats() async {
+    try {
+      final snapshot = await _firestore
+          .collection('promotions')
+          .get();
+
+      int activeCount = 0;
+      int expiredCount = 0;
+      int cancelledCount = 0;
+      double totalRevenue = 0.0;
+      int totalImpressions = 0;
+      int totalClicks = 0;
+
+      for (final doc in snapshot.docs) {
+        final data = doc.data();
+        final status = data['status'] as String;
+        final price = (data['price'] as num?)?.toDouble() ?? 0.0;
+        final impressions = data['impressions'] as int? ?? 0;
+        final clicks = data['clicks'] as int? ?? 0;
+
+        switch (status) {
+          case 'active':
+            activeCount++;
+            break;
+          case 'expired':
+            expiredCount++;
+            break;
+          case 'cancelled':
+            cancelledCount++;
+            break;
+        }
+        totalRevenue += price;
+        totalImpressions += impressions;
+        totalClicks += clicks;
+      }
+
+      final ctr = totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0.0;
+
+      return {
+        'totalPromotions': snapshot.docs.length,
+        'activePromotions': activeCount,
+        'expiredPromotions': expiredCount,
+        'cancelledPromotions': cancelledCount,
+        'totalRevenue': totalRevenue,
+        'totalImpressions': totalImpressions,
+        'totalClicks': totalClicks,
+        'averageCtr': ctr,
+      };
+    } catch (e) {
+      debugPrint('ERROR: [promotion_service] Ошибка получения статистики: $e');
+      return {};
     }
   }
 }

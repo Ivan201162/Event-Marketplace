@@ -32,8 +32,12 @@ String formatDateTime(
 
 /// Форматирование размера файла
 String formatFileSize(int bytes) {
-  if (bytes < 1024) return '$bytes B';
-  if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
+  if (bytes < 1024) {
+    return '$bytes B';
+  }
+  if (bytes < 1024 * 1024) {
+    return '${(bytes / 1024).toStringAsFixed(1)} KB';
+  }
   if (bytes < 1024 * 1024 * 1024) {
     return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
   }
@@ -51,7 +55,9 @@ String formatPhoneNumber(String phone) {
 
 /// Форматирование имени (первая буква заглавная)
 String formatName(String name) {
-  if (name.isEmpty) return name;
+  if (name.isEmpty) {
+    return name;
+  }
   return name.split(' ').map((word) {
     if (word.isEmpty) return word;
     return word[0].toUpperCase() + word.substring(1).toLowerCase();

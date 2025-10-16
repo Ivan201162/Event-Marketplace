@@ -169,7 +169,7 @@ class NewBadgeChecker extends Notifier<NewBadgeState> {
       _lastUserId = userId;
       _lastBadges = currentBadges;
     } catch (e) {
-      print('Error checking new badges: $e');
+      debugPrint('Error checking new badges: $e');
     }
   }
 
