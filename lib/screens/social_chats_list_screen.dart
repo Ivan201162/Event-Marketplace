@@ -57,7 +57,9 @@ class _SocialChatsListScreenState extends ConsumerState<SocialChatsListScreen> {
           ),
         ],
       ),
-      body: _buildBody(),
+      body: SafeArea(
+        child: _buildBody(),
+      ),
     );
   }
 

@@ -18,9 +18,13 @@ class _EnhancedFeedScreenState extends ConsumerState<EnhancedFeedScreen> {
     final feedNotifier = ref.watch(enhancedFeedProvider);
     final feedState = feedNotifier.state;
 
-    return RefreshIndicator(
-      onRefresh: () => feedNotifier.refreshFeed(),
-      child: _buildFeedContent(feedState),
+    return Scaffold(
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: () => feedNotifier.refreshFeed(),
+          child: _buildFeedContent(feedState),
+        ),
+      ),
     );
   }
 

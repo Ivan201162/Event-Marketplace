@@ -39,23 +39,23 @@ class _GuestAuthWidgetState extends ConsumerState<GuestAuthWidget> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Padding(
-      padding: const EdgeInsets.all(24),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Иконка гостя
           Container(
-            width: 80,
-            height: 80,
-            margin: const EdgeInsets.only(bottom: 24),
+            width: 70,
+            height: 70,
+            margin: const EdgeInsets.only(bottom: 20),
             decoration: BoxDecoration(
               color: theme.primaryColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(
               Icons.person_outline,
-              size: 40,
+              size: 35,
               color: theme.primaryColor,
             ),
           ),
@@ -98,7 +98,7 @@ class _GuestAuthWidgetState extends ConsumerState<GuestAuthWidget> {
               ),
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
 
           // Информация о возможностях гостя
           Container(
@@ -154,7 +154,7 @@ class _GuestAuthWidgetState extends ConsumerState<GuestAuthWidget> {
               ],
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
 
           // Предупреждение
           Container(
@@ -185,6 +185,9 @@ class _GuestAuthWidgetState extends ConsumerState<GuestAuthWidget> {
               ],
             ),
           ),
+          
+          // Дополнительный отступ снизу для безопасности
+          const SizedBox(height: 20),
         ],
       ),
     );

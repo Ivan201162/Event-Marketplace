@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import '../models/admin_models.dart';
-import '../models/user.dart'; // Assuming User model exists
 
 class AdminService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -100,7 +99,7 @@ class AdminService {
         .orderBy('timestamp', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => AdminLog.fromMap(doc.data())).toList());
+        .map((snapshot) => snapshot.docs.map((doc) => AdminLog.fromMap(doc.data() as Map<String, dynamic>)).toList());
   }
 
   /// Получение статистики действий администратора
@@ -116,7 +115,7 @@ class AdminService {
       }
 
       final snapshot = await query.get();
-      final logs = snapshot.docs.map((doc) => AdminLog.fromMap(doc.data())).toList();
+      final logs = snapshot.docs.map((doc) => AdminLog.fromMap(doc.data() as Map<String, dynamic>)).toList();
 
       final stats = <String, dynamic>{
         'totalActions': logs.length,
@@ -144,14 +143,14 @@ class AdminService {
   }
 
   /// Получение списка всех администраторов
-  Future<List<User>> getAllAdmins() async {
+  Future<List<Map<String, dynamic>>> getAllAdmins() async {
     try {
       final snapshot = await _firestore
           .collection('users')
           .where('isAdmin', isEqualTo: true)
           .get();
 
-      return snapshot.docs.map((doc) => User.fromMap(doc.data())).toList();
+      return snapshot.docs.map((doc) => doc.data()).toList();
     } catch (e) {
       debugPrint('ERROR: [AdminService] Failed to get all admins: $e');
       return [];
@@ -312,14 +311,14 @@ class AdminService {
       }
 
       // Создание CSV заголовков
-      final headers = docs.first.data().keys.toList();
+      final headers = (docs.first.data() as Map<String, dynamic>).keys.toList();
       final csv = StringBuffer();
       csv.writeln(headers.join(','));
 
       // Добавление данных
       for (final doc in docs) {
         final data = doc.data();
-        final row = headers.map((header) => data[header]?.toString() ?? '').join(',');
+        final row = headers.map((header) => (data as Map<String, dynamic>)[header]?.toString() ?? '').join(',');
         csv.writeln(row);
       }
 

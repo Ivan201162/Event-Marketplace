@@ -96,7 +96,7 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
                       Text('Длительность: ${plan.durationDays} дней'),
                       Text('Тип: ${_getPlanTypeName(plan.type)}'),
                       if (plan.features.isNotEmpty)
-                        Text('Функции: ${plan.features.keys.length}'),
+                        Text('Функции: ${plan.features.length}'),
                     ],
                   ),
                   trailing: PopupMenuButton<String>(
@@ -266,7 +266,7 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
       final plan = SubscriptionPlan(
         id: _uuid.v4(),
         name: _nameController.text,
-        type: _selectedType,
+        tier: _selectedType,
         price: double.parse(_priceController.text),
         durationDays: int.parse(_durationController.text),
         features: _features,
@@ -322,7 +322,7 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
     _durationController.text = plan.durationDays.toString();
     _selectedType = plan.type;
     _isActive = plan.isActive;
-    _features = Map.from(plan.features);
+    _features = Map.fromIterable(plan.features, key: (feature) => feature, value: (feature) => true);
 
     showDialog(
       context: context,

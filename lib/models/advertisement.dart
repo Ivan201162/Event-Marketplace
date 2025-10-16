@@ -9,6 +9,10 @@ enum AdType {
   searchAd,
 }
 
+// Алиасы для совместимости с админ-панелью
+typedef AdvertisementType = AdType;
+typedef AdvertisementStatus = AdStatus;
+
 enum AdStatus {
   active,
   paused,

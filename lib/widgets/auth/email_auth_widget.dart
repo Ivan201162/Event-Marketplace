@@ -102,8 +102,8 @@ class _EmailAuthWidgetState extends ConsumerState<EmailAuthWidget> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Padding(
-      padding: const EdgeInsets.all(24),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
       child: Form(
         key: _formKey,
         child: Column(
@@ -303,6 +303,9 @@ class _EmailAuthWidgetState extends ConsumerState<EmailAuthWidget> {
                   ),
                 ),
               ),
+              
+              // Дополнительный отступ снизу для безопасности
+              const SizedBox(height: 20),
           ],
         ),
       ),

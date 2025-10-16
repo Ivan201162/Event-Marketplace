@@ -292,3 +292,4 @@ final searchSettingsProvider = Provider<Map<String, dynamic>>((ref) {
 });
 
 
+

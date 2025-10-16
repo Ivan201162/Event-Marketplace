@@ -67,7 +67,7 @@ class AdminLog {
     this.targetId,
     this.description,
     this.status = AdminActionStatus.completed,
-    required this.datetime,
+    required this.timestamp,
     this.metadata,
     this.errorMessage,
   });

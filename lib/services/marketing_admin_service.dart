@@ -311,7 +311,7 @@ class MarketingAdminService {
       query = query.where('period', isEqualTo: period);
 
       final snapshot = await query.orderBy('date', descending: true).get();
-      return snapshot.docs.map((doc) => FinancialAnalytics.fromMap(doc.data())).toList();
+      return snapshot.docs.map((doc) => FinancialAnalytics.fromMap(doc.data() as Map<String, dynamic>)).toList();
     } catch (e) {
       debugPrint('ERROR: [MarketingAdminService] Failed to get financial analytics: $e');
       return [];

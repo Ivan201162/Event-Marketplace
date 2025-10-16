@@ -102,8 +102,8 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Padding(
-      padding: const EdgeInsets.all(24),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
       child: Form(
         key: _formKey,
         child: Column(
@@ -240,7 +240,7 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
               ),
             ],
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
 
             // Информация о безопасности
             Container(
@@ -271,6 +271,9 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
                 ],
               ),
             ),
+            
+            // Дополнительный отступ снизу для безопасности
+            const SizedBox(height: 20),
           ],
         ),
       ),

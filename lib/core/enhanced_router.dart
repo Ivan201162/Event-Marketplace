@@ -27,17 +27,18 @@ import '../screens/monetization/my_subscriptions_screen.dart';
 import '../screens/monetization/my_promotions_screen.dart';
 import '../screens/monetization/my_advertisements_screen.dart';
 import '../screens/monetization/create_advertisement_screen.dart';
-import '../screens/admin/admin_dashboard_screen.dart';
-import '../screens/admin/admin_subscription_management_screen.dart';
-import '../screens/admin/admin_advertisement_management_screen.dart';
-import '../screens/admin/admin_promotions_management_screen.dart';
-import '../screens/admin/admin_referral_management_screen.dart';
-import '../screens/admin/admin_analytics_screen.dart';
-import '../screens/admin/admin_newsletter_management_screen.dart';
-import '../screens/admin/admin_logs_screen.dart';
+// Временно отключено для сборки
+// import '../screens/admin/admin_dashboard_screen.dart';
+// import '../screens/admin/admin_subscription_management_screen.dart';
+// import '../screens/admin/admin_advertisement_management_screen.dart';
+// import '../screens/admin/admin_promotions_management_screen.dart';
+// import '../screens/admin/admin_referral_management_screen.dart';
+// import '../screens/admin/admin_analytics_screen.dart';
+// import '../screens/admin/admin_newsletter_management_screen.dart';
+// import '../screens/admin/admin_logs_screen.dart';
 import '../models/transaction.dart';
 import '../models/advertisement.dart';
-import '../services/admin_service.dart';
+// import '../services/admin_service.dart';
 import '../screens/chats_list_screen.dart';
 import '../screens/chat_screen.dart';
 import '../screens/requests_screen.dart';
@@ -132,7 +133,7 @@ final routerProvider = Provider<GoRouter>((ref) => GoRouter(
 
       GoRoute(
         path: '/chat/:chatId',
-        name: 'chat',
+        name: 'chat-detail',
         builder: (context, state) {
           final chatId = state.pathParameters['chatId']!;
           return ChatScreen(chatId: chatId);
@@ -141,7 +142,7 @@ final routerProvider = Provider<GoRouter>((ref) => GoRouter(
 
       GoRoute(
         path: '/ideas/create',
-        name: 'create-idea',
+        name: 'ideas-create',
         builder: (context, state) => const CreateIdeaScreen(),
       ),
 
@@ -153,13 +154,13 @@ final routerProvider = Provider<GoRouter>((ref) => GoRouter(
 
       GoRoute(
         path: '/requests/create',
-        name: 'create-request',
+        name: 'requests-create',
         builder: (context, state) => const CreateRequestScreen(),
       ),
 
       GoRoute(
         path: '/profile/edit',
-        name: 'edit-profile',
+        name: 'profile-edit',
         builder: (context, state) => const ProfileEditScreen(),
       ),
 
@@ -218,47 +219,12 @@ final routerProvider = Provider<GoRouter>((ref) => GoRouter(
         },
       ),
 
-      // Админ-панель маркетинга
-      GoRoute(
-        path: '/admin',
-        name: 'admin-dashboard',
-        builder: (context, state) => const AdminDashboardScreen(),
-      ),
-      GoRoute(
-        path: '/admin/subscriptions',
-        name: 'admin-subscriptions',
-        builder: (context, state) => const AdminSubscriptionManagementScreen(),
-      ),
-      GoRoute(
-        path: '/admin/advertisements',
-        name: 'admin-advertisements',
-        builder: (context, state) => const AdminAdvertisementManagementScreen(),
-      ),
-      GoRoute(
-        path: '/admin/promotions',
-        name: 'admin-promotions',
-        builder: (context, state) => const AdminPromotionsManagementScreen(),
-      ),
-      GoRoute(
-        path: '/admin/referrals',
-        name: 'admin-referrals',
-        builder: (context, state) => const AdminReferralManagementScreen(),
-      ),
-      GoRoute(
-        path: '/admin/analytics',
-        name: 'admin-analytics',
-        builder: (context, state) => const AdminAnalyticsScreen(),
-      ),
-      GoRoute(
-        path: '/admin/newsletters',
-        name: 'admin-newsletters',
-        builder: (context, state) => const AdminNewsletterManagementScreen(),
-      ),
-      GoRoute(
-        path: '/admin/logs',
-        name: 'admin-logs',
-        builder: (context, state) => const AdminLogsScreen(),
-      ),
+      // Админ-панель маркетинга (временно отключена)
+      // GoRoute(
+      //   path: '/admin',
+      //   name: 'admin-dashboard',
+      //   builder: (context, state) => const AdminDashboardScreen(),
+      // ),
 
       // Профиль
       GoRoute(
@@ -309,50 +275,7 @@ final routerProvider = Provider<GoRouter>((ref) => GoRouter(
         },
       ),
 
-      // Заявки
-      GoRoute(
-        path: '/requests',
-        name: 'requests',
-        builder: (context, state) => const RequestsScreen(),
-      ),
-
-      GoRoute(
-        path: '/requests/create',
-        name: 'requests-create',
-        builder: (context, state) => const CreateRequestScreen(),
-      ),
-
-      // Чаты
-      GoRoute(
-        path: '/chats',
-        name: 'chats',
-        builder: (context, state) => const ChatsScreen(),
-      ),
-
-      GoRoute(
-        path: '/chat/:chatId',
-        name: 'chat-detail',
-        builder: (context, state) {
-          final chatId = state.pathParameters['chatId']!;
-          return ChatDetailScreen(chatId: chatId);
-        },
-      ),
-
-      // Идеи
-      GoRoute(
-        path: '/idea/:id',
-        name: 'idea-detail',
-        builder: (context, state) {
-          final id = state.pathParameters['id']!;
-          return IdeaDetailScreen(ideaId: id);
-        },
-      ),
-
-      GoRoute(
-        path: '/ideas/create',
-        name: 'ideas-create',
-        builder: (context, state) => const CreateIdeaScreen(),
-      ),
+      // Дубликаты удалены - используются маршруты выше
 
       // Помощь и поддержка
       GoRoute(
@@ -397,7 +320,7 @@ final routerProvider = Provider<GoRouter>((ref) => GoRouter(
       ),
 
       GoRoute(
-        path: '/chat/:chatId',
+        path: '/social/chat/:chatId',
         name: 'social-chat',
         builder: (context, state) {
           final chatId = state.pathParameters['chatId']!;
@@ -406,7 +329,7 @@ final routerProvider = Provider<GoRouter>((ref) => GoRouter(
       ),
 
       GoRoute(
-        path: '/chats',
+        path: '/social/chats',
         name: 'social-chats-list',
         builder: (context, state) => const SocialChatsListScreen(),
       ),
@@ -429,19 +352,7 @@ final routerProvider = Provider<GoRouter>((ref) => GoRouter(
         },
       ),
 
-      // Создание идеи
-      GoRoute(
-        path: '/create-idea',
-        name: 'create-idea',
-        builder: (context, state) => const CreateIdeaScreen(),
-      ),
-
-      // Редактирование профиля
-      GoRoute(
-        path: '/edit-profile',
-        name: 'edit-profile',
-        builder: (context, state) => const EditProfileScreen(),
-      ),
+      // Дубликаты удалены - используются маршруты выше
     ],
   ),);
 

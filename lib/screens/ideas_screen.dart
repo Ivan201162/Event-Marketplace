@@ -25,29 +25,30 @@ class IdeasScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: ideasAsync.when(
-        data: (ideas) {
-          if (ideas.isEmpty) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.lightbulb_outline,
-                    size: 64,
-                    color: Colors.grey,
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    'Нет идей',
-                    style: TextStyle(
-                      fontSize: 18,
+      body: SafeArea(
+        child: ideasAsync.when(
+          data: (ideas) {
+            if (ideas.isEmpty) {
+              return const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.lightbulb_outline,
+                      size: 64,
                       color: Colors.grey,
                     ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Создайте первую идею или подпишитесь на специалистов',
+                    SizedBox(height: 16),
+                    Text(
+                      'Нет идей',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Создайте первую идею или подпишитесь на специалистов',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey,

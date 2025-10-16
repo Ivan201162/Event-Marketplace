@@ -87,7 +87,7 @@ class _AdminAdvertisementManagementScreenState extends State<AdminAdvertisementM
                     ),
                   ),
                   title: Text(
-                    ad.title,
+                    ad.title ?? 'Без названия',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   subtitle: Column(

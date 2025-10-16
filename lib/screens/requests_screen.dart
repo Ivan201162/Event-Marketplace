@@ -118,12 +118,14 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen>
           ),
         ],
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildMyRequestsTab(),
-          _buildAssignedRequestsTab(),
-        ],
+      body: SafeArea(
+        child: TabBarView(
+          controller: _tabController,
+          children: [
+            _buildMyRequestsTab(),
+            _buildAssignedRequestsTab(),
+          ],
+        ),
       ),
     );
   }

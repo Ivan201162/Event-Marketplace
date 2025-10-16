@@ -6,6 +6,9 @@ enum SubscriptionTier {
   pro,
 }
 
+// Алиас для совместимости с админ-панелью
+typedef SubscriptionPlanType = SubscriptionTier;
+
 enum SubscriptionStatus {
   active,
   expired,
@@ -63,6 +66,9 @@ class SubscriptionPlan {
   final double? discountPercentage;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+
+  // Геттер для совместимости с админ-панелью
+  SubscriptionTier get type => tier;
 
   Map<String, dynamic> toMap() => {
         'id': id,
