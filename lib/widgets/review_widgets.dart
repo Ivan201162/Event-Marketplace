@@ -32,7 +32,9 @@ class ReviewCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        review.title.isNotEmpty ? review.title : 'Без заголовка',
+                        review.title.isNotEmpty
+                            ? review.title
+                            : 'Без заголовка',
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -671,7 +673,9 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
         date: DateTime.now(),
       );
 
-      await ref.read<ReviewStateNotifier>(reviewStateProvider.notifier).createReview(review);
+      await ref
+          .read<ReviewStateNotifier>(reviewStateProvider.notifier)
+          .createReview(review);
 
       ref
           .read<ReviewFormNotifier>(reviewFormProvider.notifier)

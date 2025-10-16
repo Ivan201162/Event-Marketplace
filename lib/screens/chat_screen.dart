@@ -21,7 +21,7 @@ class ChatScreen extends ConsumerStatefulWidget {
 class _ChatScreenState extends ConsumerState<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  
+
   List<Message> _messages = [];
   bool _isLoading = true;
   String? _error;
@@ -171,7 +171,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           Expanded(
             child: _buildMessagesList(currentUserId),
           ),
-          
+
           // Поле ввода
           _buildMessageInput(),
         ],
@@ -259,7 +259,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       itemBuilder: (context, index) {
         final message = _messages[index];
         final isFromCurrentUser = message.senderId == currentUserId;
-        
+
         return _buildMessageBubble(message, isFromCurrentUser);
       },
     );
@@ -271,9 +271,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       child: Row(
-        mainAxisAlignment: isFromCurrentUser
-            ? MainAxisAlignment.end
-            : MainAxisAlignment.start,
+        mainAxisAlignment:
+            isFromCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (!isFromCurrentUser) ...[
@@ -293,7 +292,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             ),
             const SizedBox(width: 8),
           ],
-          
           Flexible(
             child: Container(
               constraints: BoxConstraints(
@@ -301,9 +299,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               ),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: isFromCurrentUser
-                    ? theme.primaryColor
-                    : Colors.grey[200],
+                color:
+                    isFromCurrentUser ? theme.primaryColor : Colors.grey[200],
                 borderRadius: BorderRadius.circular(20).copyWith(
                   bottomLeft: isFromCurrentUser
                       ? const Radius.circular(20)
@@ -319,9 +316,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   Text(
                     message.text,
                     style: TextStyle(
-                      color: isFromCurrentUser
-                          ? Colors.white
-                          : Colors.black87,
+                      color: isFromCurrentUser ? Colors.white : Colors.black87,
                       fontSize: 16,
                     ),
                   ),
@@ -339,16 +334,19 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               ),
             ),
           ),
-          
           if (isFromCurrentUser) ...[
             const SizedBox(width: 8),
             CircleAvatar(
               radius: 16,
               backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
-              backgroundImage: SupabaseService.currentUser?.userMetadata?['avatar_url'] != null
-                  ? NetworkImage(SupabaseService.currentUser!.userMetadata!['avatar_url'])
+              backgroundImage: SupabaseService
+                          .currentUser?.userMetadata?['avatar_url'] !=
+                      null
+                  ? NetworkImage(
+                      SupabaseService.currentUser!.userMetadata!['avatar_url'])
                   : null,
-              child: SupabaseService.currentUser?.userMetadata?['avatar_url'] == null
+              child: SupabaseService.currentUser?.userMetadata?['avatar_url'] ==
+                      null
                   ? Icon(
                       Icons.person,
                       size: 16,

@@ -108,7 +108,6 @@ class _EnhancedFeedScreenState extends ConsumerState<EnhancedFeedScreen> {
 }
 
 class _FeedPostCard extends ConsumerWidget {
-
   const _FeedPostCard({required this.post});
   final EnhancedFeedPost post;
 
@@ -215,15 +214,18 @@ class _FeedPostCard extends ConsumerWidget {
               child: Wrap(
                 spacing: 8,
                 children: post.tags
-                    .map((tag) => Chip(
-                          label: Text('#$tag'),
-                          backgroundColor:
-                              Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                          labelStyle: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontSize: 12,
-                          ),
-                        ),)
+                    .map(
+                      (tag) => Chip(
+                        label: Text('#$tag'),
+                        backgroundColor: Theme.of(context)
+                            .primaryColor
+                            .withValues(alpha: 0.1),
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 12,
+                        ),
+                      ),
+                    )
                     .toList(),
               ),
             ),
@@ -338,15 +340,15 @@ class _FeedPostCard extends ConsumerWidget {
   }
 
   Widget _buildMultipleMedia(List<FeedPostMedia> media) => GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 8,
-        mainAxisSpacing: 8,
-      ),
-      itemCount: media.length,
-      itemBuilder: (context, index) => ClipRRect(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 8,
+          mainAxisSpacing: 8,
+        ),
+        itemCount: media.length,
+        itemBuilder: (context, index) => ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: CachedNetworkImage(
             imageUrl: media[index].url,
@@ -365,7 +367,7 @@ class _FeedPostCard extends ConsumerWidget {
             ),
           ),
         ),
-    );
+      );
 
   String _formatDate(DateTime date) {
     final now = DateTime.now();

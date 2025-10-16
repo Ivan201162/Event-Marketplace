@@ -60,7 +60,7 @@ final imagePreloadProvider =
   try {
     // Инициализируем кэш
     ref.read(imageCacheProvider).initializeCache();
-    
+
     // Предварительная загрузка изображения
     // Примечание: precacheImage требует BuildContext, который недоступен в провайдере
     // Вместо этого мы просто инициализируем кэш

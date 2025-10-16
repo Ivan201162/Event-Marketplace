@@ -15,7 +15,8 @@ class EnhancedHomeScreenV2 extends ConsumerStatefulWidget {
   const EnhancedHomeScreenV2({super.key});
 
   @override
-  ConsumerState<EnhancedHomeScreenV2> createState() => _EnhancedHomeScreenV2State();
+  ConsumerState<EnhancedHomeScreenV2> createState() =>
+      _EnhancedHomeScreenV2State();
 }
 
 class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
@@ -23,7 +24,7 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
   late ScrollController _scrollController;
   late AnimationController _appBarAnimationController;
   late Animation<double> _appBarOpacityAnimation;
-  
+
   bool _isUserHeaderVisible = true;
   double _lastScrollOffset = 0.0;
   Map<String, dynamic> _currentFilters = {};
@@ -99,24 +100,30 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
                     color: Theme.of(context).scaffoldBackgroundColor,
                     child: SafeArea(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             // Логотип/название
                             Text(
                               'Event',
-                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColor,
-                              ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineSmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
                             ),
                             // Действия
                             Row(
                               children: [
                                 IconButton(
-                                  icon: const Icon(Icons.notifications_outlined),
-                                  onPressed: () => context.push('/notifications'),
+                                  icon:
+                                      const Icon(Icons.notifications_outlined),
+                                  onPressed: () =>
+                                      context.push('/notifications'),
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.settings_outlined),
@@ -161,7 +168,8 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
           SliverToBoxAdapter(
             child: AnimatedCategories(
               onCategorySelected: (category) {
-                context.push('/search?category=${Uri.encodeComponent(category)}');
+                context
+                    .push('/search?category=${Uri.encodeComponent(category)}');
               },
             ),
           ),
@@ -232,32 +240,31 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
   /// Выполнить поиск с применением фильтров
   void _performSearch(String query) {
     final searchParams = <String, String>{};
-    
+
     if (query.isNotEmpty) {
       searchParams['q'] = query;
     }
-    
+
     if (_currentFilters['city'] != null) {
       searchParams['city'] = _currentFilters['city'];
     }
-    
+
     if (_currentFilters['category'] != null) {
       searchParams['category'] = _currentFilters['category'];
     }
-    
+
     if (_currentFilters['minRating'] != null) {
       searchParams['minRating'] = _currentFilters['minRating'].toString();
     }
-    
+
     if (_currentFilters['specialistType'] != null) {
       searchParams['type'] = _currentFilters['specialistType'];
     }
-    
+
     final queryString = searchParams.entries
         .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
         .join('&');
-    
+
     context.push('/search?$queryString');
   }
 }
-

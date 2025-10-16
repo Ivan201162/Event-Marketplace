@@ -12,19 +12,20 @@ class EnhancedFiltersDialog extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<EnhancedFiltersDialog> createState() => _EnhancedFiltersDialogState();
+  ConsumerState<EnhancedFiltersDialog> createState() =>
+      _EnhancedFiltersDialogState();
 }
 
 class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
   late Map<String, dynamic> _filters;
-  
+
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _minPriceController = TextEditingController();
   final TextEditingController _maxPriceController = TextEditingController();
-  
+
   String? _selectedCategory;
   String? _selectedSpecialistType;
-  
+
   final List<String> _categories = [
     'Все',
     'Свадьбы',
@@ -40,7 +41,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
     'Аниматоры',
     'Организатор мероприятий',
   ];
-  
+
   final List<String> _specialistTypes = [
     'Все',
     'В студии/агентстве',
@@ -87,7 +88,8 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(20)),
               ),
               child: Row(
                 children: [
@@ -117,7 +119,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
                 ],
               ),
             ),
-            
+
             // Содержимое
             Flexible(
               child: SingleChildScrollView(
@@ -136,13 +138,14 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
                 ),
               ),
             ),
-            
+
             // Кнопки
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Colors.grey[50],
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
+                borderRadius:
+                    const BorderRadius.vertical(bottom: Radius.circular(20)),
                 border: Border(
                   top: BorderSide(color: Colors.grey[200]!),
                 ),

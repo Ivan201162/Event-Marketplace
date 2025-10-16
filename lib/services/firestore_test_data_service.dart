@@ -11,8 +11,9 @@ class FirestoreTestDataService {
   /// Инициализация всех тестовых данных
   static Future<void> initializeTestData() async {
     try {
-      debugPrint('INFO: [firestore_test_data] Начинаем инициализацию тестовых данных');
-      
+      debugPrint(
+          'INFO: [firestore_test_data] Начинаем инициализацию тестовых данных');
+
       await Future.wait([
         _createSubscriptionPlans(),
         _createPromotionPackages(),
@@ -20,10 +21,11 @@ class FirestoreTestDataService {
         _createTestAdvertisements(),
         _createTestTransactions(),
       ]);
-      
+
       debugPrint('INFO: [firestore_test_data] Тестовые данные успешно созданы');
     } catch (e) {
-      debugPrint('ERROR: [firestore_test_data] Ошибка создания тестовых данных: $e');
+      debugPrint(
+          'ERROR: [firestore_test_data] Ошибка создания тестовых данных: $e');
       rethrow;
     }
   }
@@ -31,13 +33,13 @@ class FirestoreTestDataService {
   /// Создание планов подписки
   static Future<void> _createSubscriptionPlans() async {
     debugPrint('INFO: [firestore_test_data] Создание планов подписки');
-    
+
     final batch = _firestore.batch();
-    
+
     for (final entry in PaymentConfig.subscriptionPlans.entries) {
       final planId = entry.key;
       final planData = entry.value;
-      
+
       final plan = SubscriptionPlan(
         id: planId,
         name: planData['name'],
@@ -50,11 +52,11 @@ class FirestoreTestDataService {
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
-      
+
       final docRef = _firestore.collection('subscription_plans').doc(planId);
       batch.set(docRef, plan.toMap());
     }
-    
+
     await batch.commit();
     debugPrint('INFO: [firestore_test_data] Планы подписки созданы');
   }
@@ -62,31 +64,32 @@ class FirestoreTestDataService {
   /// Создание пакетов продвижения
   static Future<void> _createPromotionPackages() async {
     debugPrint('INFO: [firestore_test_data] Создание пакетов продвижения');
-    
+
     final batch = _firestore.batch();
-    
+
     for (final entry in PaymentConfig.promotionPackages.entries) {
       final packageId = entry.key;
       final packageData = entry.value;
-      
+
       final package = PromotionPackage(
         id: packageId,
         name: packageData['name'],
         type: _getPromotionTypeFromString(packageData['type']),
         durationDays: packageData['durationDays'],
         price: packageData['price'].toDouble(),
-        priorityLevel: _getPromotionPriorityFromString(packageData['priorityLevel']),
+        priorityLevel:
+            _getPromotionPriorityFromString(packageData['priorityLevel']),
         isActive: true,
         description: 'Пакет продвижения ${packageData['name']}',
         features: List<String>.from(packageData['features']),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
-      
+
       final docRef = _firestore.collection('promotion_packages').doc(packageId);
       batch.set(docRef, package.toMap());
     }
-    
+
     await batch.commit();
     debugPrint('INFO: [firestore_test_data] Пакеты продвижения созданы');
   }
@@ -94,7 +97,7 @@ class FirestoreTestDataService {
   /// Создание тестовых пользователей
   static Future<void> _createTestUsers() async {
     debugPrint('INFO: [firestore_test_data] Создание тестовых пользователей');
-    
+
     final testUsers = [
       {
         'id': 'test_user_1',
@@ -104,7 +107,8 @@ class FirestoreTestDataService {
         'city': 'Москва',
         'region': 'Москва',
         'category': 'Фотографы',
-        'avatarUrl': 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
+        'avatarUrl':
+            'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
         'rating': 4.8,
         'reviewsCount': 127,
         'isVerified': true,
@@ -118,7 +122,8 @@ class FirestoreTestDataService {
         'city': 'Санкт-Петербург',
         'region': 'Санкт-Петербург',
         'category': 'Видеографы',
-        'avatarUrl': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
+        'avatarUrl':
+            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
         'rating': 4.9,
         'reviewsCount': 89,
         'isVerified': true,
@@ -132,16 +137,17 @@ class FirestoreTestDataService {
         'city': 'Новосибирск',
         'region': 'Новосибирская область',
         'category': 'Организаторы',
-        'avatarUrl': 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150',
+        'avatarUrl':
+            'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150',
         'rating': 4.7,
         'reviewsCount': 203,
         'isVerified': false,
         'createdAt': DateTime.now().subtract(const Duration(days: 60)),
       },
     ];
-    
+
     final batch = _firestore.batch();
-    
+
     for (final user in testUsers) {
       final docRef = _firestore.collection('users').doc(user['id']);
       batch.set(docRef, {
@@ -149,15 +155,16 @@ class FirestoreTestDataService {
         'createdAt': Timestamp.fromDate(user['createdAt'] as DateTime),
       });
     }
-    
+
     await batch.commit();
     debugPrint('INFO: [firestore_test_data] Тестовые пользователи созданы');
   }
 
   /// Создание тестовых рекламных объявлений
   static Future<void> _createTestAdvertisements() async {
-    debugPrint('INFO: [firestore_test_data] Создание тестовых рекламных объявлений');
-    
+    debugPrint(
+        'INFO: [firestore_test_data] Создание тестовых рекламных объявлений');
+
     final testAds = [
       {
         'id': 'test_ad_1',
@@ -166,7 +173,8 @@ class FirestoreTestDataService {
         'placement': 'topBanner',
         'title': 'Профессиональная фотосъемка',
         'description': 'Запечатлите важные моменты с нашими фотографами',
-        'imageUrl': 'https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=400',
+        'imageUrl':
+            'https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=400',
         'targetUrl': 'https://example.com/photography',
         'price': 500.0,
         'startDate': DateTime.now(),
@@ -188,7 +196,8 @@ class FirestoreTestDataService {
         'placement': 'homeFeed',
         'title': 'Видеосъемка мероприятий',
         'description': 'Качественная видеосъемка ваших событий',
-        'imageUrl': 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400',
+        'imageUrl':
+            'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400',
         'targetUrl': 'https://example.com/videography',
         'price': 1000.0,
         'startDate': DateTime.now(),
@@ -204,9 +213,9 @@ class FirestoreTestDataService {
         'cpm': 1123.6,
       },
     ];
-    
+
     final batch = _firestore.batch();
-    
+
     for (final ad in testAds) {
       final docRef = _firestore.collection('advertisements').doc(ad['id']);
       batch.set(docRef, {
@@ -217,15 +226,16 @@ class FirestoreTestDataService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     }
-    
+
     await batch.commit();
-    debugPrint('INFO: [firestore_test_data] Тестовые рекламные объявления созданы');
+    debugPrint(
+        'INFO: [firestore_test_data] Тестовые рекламные объявления созданы');
   }
 
   /// Создание тестовых транзакций
   static Future<void> _createTestTransactions() async {
     debugPrint('INFO: [firestore_test_data] Создание тестовых транзакций');
-    
+
     final testTransactions = [
       {
         'id': 'test_txn_1',
@@ -256,9 +266,9 @@ class FirestoreTestDataService {
         'externalTransactionId': 'test_payment_1234567890',
       },
     ];
-    
+
     final batch = _firestore.batch();
-    
+
     for (final txn in testTransactions) {
       final docRef = _firestore.collection('transactions').doc(txn['id']);
       batch.set(docRef, {
@@ -266,7 +276,7 @@ class FirestoreTestDataService {
         'timestamp': Timestamp.fromDate(txn['timestamp'] as DateTime),
       });
     }
-    
+
     await batch.commit();
     debugPrint('INFO: [firestore_test_data] Тестовые транзакции созданы');
   }
@@ -274,7 +284,7 @@ class FirestoreTestDataService {
   /// Создание тестовых подписок
   static Future<void> createTestSubscriptions() async {
     debugPrint('INFO: [firestore_test_data] Создание тестовых подписок');
-    
+
     final testSubscriptions = [
       {
         'id': 'test_sub_1',
@@ -289,9 +299,9 @@ class FirestoreTestDataService {
         'updatedAt': DateTime.now().subtract(const Duration(days: 5)),
       },
     ];
-    
+
     final batch = _firestore.batch();
-    
+
     for (final sub in testSubscriptions) {
       final docRef = _firestore.collection('user_subscriptions').doc(sub['id']);
       batch.set(docRef, {
@@ -302,7 +312,7 @@ class FirestoreTestDataService {
         'updatedAt': Timestamp.fromDate(sub['updatedAt'] as DateTime),
       });
     }
-    
+
     await batch.commit();
     debugPrint('INFO: [firestore_test_data] Тестовые подписки созданы');
   }
@@ -310,7 +320,7 @@ class FirestoreTestDataService {
   /// Создание тестовых продвижений
   static Future<void> createTestPromotions() async {
     debugPrint('INFO: [firestore_test_data] Создание тестовых продвижений');
-    
+
     final testPromotions = [
       {
         'id': 'test_promo_1',
@@ -331,9 +341,9 @@ class FirestoreTestDataService {
         'updatedAt': DateTime.now().subtract(const Duration(days: 2)),
       },
     ];
-    
+
     final batch = _firestore.batch();
-    
+
     for (final promo in testPromotions) {
       final docRef = _firestore.collection('promotions').doc(promo['id']);
       batch.set(docRef, {
@@ -344,7 +354,7 @@ class FirestoreTestDataService {
         'updatedAt': Timestamp.fromDate(promo['updatedAt'] as DateTime),
       });
     }
-    
+
     await batch.commit();
     debugPrint('INFO: [firestore_test_data] Тестовые продвижения созданы');
   }
@@ -353,7 +363,7 @@ class FirestoreTestDataService {
   static Future<void> clearTestData() async {
     try {
       debugPrint('INFO: [firestore_test_data] Очистка тестовых данных');
-      
+
       final collections = [
         'subscription_plans',
         'promotion_packages',
@@ -363,21 +373,22 @@ class FirestoreTestDataService {
         'transactions',
         'users',
       ];
-      
+
       for (final collection in collections) {
         final snapshot = await _firestore.collection(collection).get();
         final batch = _firestore.batch();
-        
+
         for (final doc in snapshot.docs) {
           batch.delete(doc.reference);
         }
-        
+
         await batch.commit();
       }
-      
+
       debugPrint('INFO: [firestore_test_data] Тестовые данные очищены');
     } catch (e) {
-      debugPrint('ERROR: [firestore_test_data] Ошибка очистки тестовых данных: $e');
+      debugPrint(
+          'ERROR: [firestore_test_data] Ошибка очистки тестовых данных: $e');
       rethrow;
     }
   }

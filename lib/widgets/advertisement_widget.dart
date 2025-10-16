@@ -68,7 +68,7 @@ class AdvertisementWidget extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             // Контент рекламы
             InkWell(
               onTap: onTap,
@@ -85,24 +85,25 @@ class AdvertisementWidget extends StatelessWidget {
                     if (advertisement.title != null) ...[
                       Text(
                         advertisement.title!,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                       ),
                       const SizedBox(height: 8),
                     ],
-                    
+
                     // Описание
                     if (advertisement.description != null) ...[
                       Text(
                         advertisement.description!,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[600],
-                        ),
+                              color: Colors.grey[600],
+                            ),
                       ),
                       const SizedBox(height: 8),
                     ],
-                    
+
                     // Изображение
                     if (advertisement.imageUrl != null) ...[
                       ClipRRect(
@@ -128,7 +129,7 @@ class AdvertisementWidget extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                     ],
-                    
+
                     // Видео
                     if (advertisement.videoUrl != null) ...[
                       Container(
@@ -172,7 +173,7 @@ class AdvertisementWidget extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                     ],
-                    
+
                     // Кнопка действия
                     if (advertisement.targetUrl != null) ...[
                       Container(
@@ -263,7 +264,7 @@ class AdvertisementBannerWidget extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      
+
                       // Текст
                       Expanded(
                         child: Column(
@@ -272,9 +273,12 @@ class AdvertisementBannerWidget extends StatelessWidget {
                           children: [
                             Text(
                               advertisement.title ?? 'Реклама',
-                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -282,9 +286,12 @@ class AdvertisementBannerWidget extends StatelessWidget {
                               const SizedBox(height: 2),
                               Text(
                                 advertisement.description!,
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Colors.grey[600],
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
+                                      color: Colors.grey[600],
+                                    ),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -292,7 +299,7 @@ class AdvertisementBannerWidget extends StatelessWidget {
                           ],
                         ),
                       ),
-                      
+
                       // Стрелка
                       const Icon(
                         Icons.arrow_forward_ios,
@@ -302,7 +309,7 @@ class AdvertisementBannerWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-                
+
                 // Кнопка закрытия
                 if (onClose != null)
                   Positioned(
@@ -355,7 +362,8 @@ class AdvertisementListWidget extends StatefulWidget {
   });
 
   @override
-  State<AdvertisementListWidget> createState() => _AdvertisementListWidgetState();
+  State<AdvertisementListWidget> createState() =>
+      _AdvertisementListWidgetState();
 }
 
 class _AdvertisementListWidgetState extends State<AdvertisementListWidget> {
@@ -402,7 +410,7 @@ class _AdvertisementListWidgetState extends State<AdvertisementListWidget> {
 
     return Column(
       children: _advertisements.map((ad) {
-        if (widget.placement == AdPlacement.topBanner || 
+        if (widget.placement == AdPlacement.topBanner ||
             widget.placement == AdPlacement.bottomBanner) {
           return AdvertisementBannerWidget(
             advertisement: ad,

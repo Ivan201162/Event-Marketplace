@@ -112,7 +112,8 @@ class Story {
   }
 
   /// Получить тип контента
-  StoryType get type => mediaUrl.contains('video') ? StoryType.video : StoryType.image;
+  StoryType get type =>
+      mediaUrl.contains('video') ? StoryType.video : StoryType.image;
 
   /// Получить текст (для текстовых историй)
   String get text => title;

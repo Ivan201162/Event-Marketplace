@@ -50,7 +50,8 @@ class AnimatedProfileBanner extends StatelessWidget {
                     tag: 'profile_avatar_${profile.id}',
                     child: CircleAvatar(
                       radius: 32,
-                      backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
+                      backgroundColor:
+                          theme.primaryColor.withValues(alpha: 0.1),
                       backgroundImage: profile.avatarUrl != null
                           ? CachedNetworkImageProvider(profile.avatarUrl!)
                           : null,
@@ -64,7 +65,7 @@ class AnimatedProfileBanner extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 16),
-                  
+
                   // Информация о профиле
                   Expanded(
                     child: Column(
@@ -117,7 +118,7 @@ class AnimatedProfileBanner extends StatelessWidget {
                       ],
                     ),
                   ),
-                  
+
                   // Стрелка
                   Icon(
                     Icons.arrow_forward_ios,

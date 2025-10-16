@@ -51,20 +51,21 @@ final weeklyLeadersProvider = FutureProvider<List<Specialist>>((ref) {
 
 /// Провайдер специалистов по категории
 final specialistsByCategoryProvider =
-    FutureProvider.family<List<Specialist>, SpecialistCategory>((ref, category) {
+    FutureProvider.family<List<Specialist>, SpecialistCategory>(
+        (ref, category) {
   final specialistService = ref.watch(specialistServiceProvider);
   return specialistService.getSpecialistsByCategory(category);
 });
 
 /// Провайдер фильтров специалистов
-final specialistFiltersProvider =
-    Provider<SpecialistFiltersNotifier>((ref) {
+final specialistFiltersProvider = Provider<SpecialistFiltersNotifier>((ref) {
   return SpecialistFiltersNotifier();
 });
 
 /// Провайдер поиска специалистов
 final specialistSearchProvider =
-    StreamProvider.family<List<Specialist>, Map<String, dynamic>>((ref, filters) {
+    StreamProvider.family<List<Specialist>, Map<String, dynamic>>(
+        (ref, filters) {
   final specialistService = ref.watch(specialistServiceProvider);
   return specialistService.searchSpecialistsStream(filters);
 });
@@ -81,7 +82,8 @@ final specialistAvailabilityProvider =
 
 /// Провайдер временных слотов
 final timeSlotsProvider =
-    FutureProvider.family<List<Map<String, dynamic>>, Map<String, dynamic>>((ref, params) {
+    FutureProvider.family<List<Map<String, dynamic>>, Map<String, dynamic>>(
+        (ref, params) {
   final specialistService = ref.watch(specialistServiceProvider);
   return specialistService.getAvailableTimeSlots(
     params['specialistId'] as String,
@@ -92,7 +94,7 @@ final timeSlotsProvider =
 /// Notifier для фильтров специалистов
 class SpecialistFiltersNotifier extends ChangeNotifier {
   SpecialistFilters _filters = const SpecialistFilters();
-  
+
   SpecialistFilters get filters => _filters;
 
   void updateFilters(SpecialistFilters filters) {
@@ -135,8 +137,7 @@ class SpecialistFiltersNotifier extends ChangeNotifier {
 }
 
 /// Провайдер состояния поиска
-final specialistSearchStateProvider =
-    Provider<SpecialistSearchNotifier>((ref) {
+final specialistSearchStateProvider = Provider<SpecialistSearchNotifier>((ref) {
   return SpecialistSearchNotifier();
 });
 
@@ -176,7 +177,7 @@ class SpecialistSearchState {
 /// Notifier для поиска специалистов
 class SpecialistSearchNotifier extends ChangeNotifier {
   SpecialistSearchState _state = const SpecialistSearchState();
-  
+
   SpecialistSearchState get state => _state;
 
   void startSearch(String query, SpecialistFilters filters) {

@@ -41,7 +41,8 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(_showFilters ? Icons.filter_list : Icons.filter_list_outlined),
+            icon: Icon(
+                _showFilters ? Icons.filter_list : Icons.filter_list_outlined),
             onPressed: () {
               setState(() {
                 _showFilters = !_showFilters;

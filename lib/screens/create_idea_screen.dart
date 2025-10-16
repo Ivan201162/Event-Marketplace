@@ -17,7 +17,7 @@ class CreateIdeaScreen extends ConsumerStatefulWidget {
 class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
   final _formKey = GlobalKey<FormState>();
   final _contentController = TextEditingController();
-  
+
   String _selectedType = 'text';
   String? _selectedCategory;
   List<File> _selectedImages = [];
@@ -50,7 +50,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
     try {
       final ImagePicker picker = ImagePicker();
       final List<XFile> images = await picker.pickMultiImage();
-      
+
       setState(() {
         _selectedImages = images.map((image) => File(image.path)).toList();
         _selectedType = 'photo';
@@ -69,7 +69,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
     try {
       final ImagePicker picker = ImagePicker();
       final XFile? video = await picker.pickVideo(source: ImageSource.gallery);
-      
+
       if (video != null) {
         setState(() {
           _selectedImages = [File(video.path)];
@@ -96,11 +96,11 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
     try {
       // TODO: Загрузить медиа файлы в Supabase Storage
       final mediaUrls = <String>[];
-      
+
       final idea = await SupabaseService.createIdea(
         type: _selectedType,
-        content: _contentController.text.trim().isEmpty 
-            ? null 
+        content: _contentController.text.trim().isEmpty
+            ? null
             : _contentController.text.trim(),
         mediaUrls: mediaUrls,
         category: _selectedCategory,

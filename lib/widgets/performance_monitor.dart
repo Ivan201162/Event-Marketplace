@@ -16,7 +16,8 @@ class PerformanceMonitor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final performanceNotifier = ref.watch<PerformanceNotifier>(performanceProvider);
+    final performanceNotifier =
+        ref.watch<PerformanceNotifier>(performanceProvider);
     final state = performanceNotifier.state;
     final needsOptimization = ref.watch<bool>(needsOptimizationProvider);
 
@@ -161,7 +162,8 @@ class OptimizationControls extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final performanceNotifier = ref.watch<PerformanceNotifier>(performanceProvider);
+    final performanceNotifier =
+        ref.watch<PerformanceNotifier>(performanceProvider);
     final state = performanceNotifier.state;
     final notifier = performanceNotifier;
 
@@ -252,7 +254,8 @@ class PerformanceStats extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final performanceNotifier = ref.watch<PerformanceNotifier>(performanceProvider);
+    final performanceNotifier =
+        ref.watch<PerformanceNotifier>(performanceProvider);
     final state = performanceNotifier.state;
 
     return Card(

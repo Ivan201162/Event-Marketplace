@@ -99,7 +99,8 @@ class RevenueDashboard {
     this.metadata,
   });
 
-  factory RevenueDashboard.fromMap(Map<String, dynamic> map) => RevenueDashboard(
+  factory RevenueDashboard.fromMap(Map<String, dynamic> map) =>
+      RevenueDashboard(
         period: RevenuePeriod.values.firstWhere(
           (e) => e.toString() == 'RevenuePeriod.${map['period']}',
           orElse: () => RevenuePeriod.monthly,
@@ -107,8 +108,10 @@ class RevenueDashboard {
         totalRevenue: (map['totalRevenue'] ?? 0.0).toDouble(),
         revenueBySource: Map<String, double>.from(map['revenueBySource'] ?? {}),
         revenueByRegion: Map<String, double>.from(map['revenueByRegion'] ?? {}),
-        dailyRevenue: List<Map<String, dynamic>>.from(map['dailyRevenue'] ?? []),
-        monthlyRevenue: List<Map<String, dynamic>>.from(map['monthlyRevenue'] ?? []),
+        dailyRevenue:
+            List<Map<String, dynamic>>.from(map['dailyRevenue'] ?? []),
+        monthlyRevenue:
+            List<Map<String, dynamic>>.from(map['monthlyRevenue'] ?? []),
         growthRate: (map['growthRate'] ?? 0.0).toDouble(),
         averageOrderValue: (map['averageOrderValue'] ?? 0.0).toDouble(),
         totalTransactions: map['totalTransactions'] ?? 0,
@@ -171,7 +174,8 @@ class UserLifetimeValue {
     this.metadata,
   });
 
-  factory UserLifetimeValue.fromMap(Map<String, dynamic> map) => UserLifetimeValue(
+  factory UserLifetimeValue.fromMap(Map<String, dynamic> map) =>
+      UserLifetimeValue(
         userId: map['userId'] ?? '',
         totalSpent: (map['totalSpent'] ?? 0.0).toDouble(),
         totalTransactions: map['totalTransactions'] ?? 0,
@@ -200,11 +204,11 @@ class UserLifetimeValue {
   final Map<String, dynamic>? metadata;
 
   /// Расчет дней с первой покупки
-  int get daysSinceFirstPurchase => 
+  int get daysSinceFirstPurchase =>
       DateTime.now().difference(firstPurchaseDate).inDays;
 
   /// Расчет дней с последней покупки
-  int get daysSinceLastPurchase => 
+  int get daysSinceLastPurchase =>
       DateTime.now().difference(lastPurchaseDate).inDays;
 
   /// Определение сегмента пользователя
@@ -245,7 +249,8 @@ class ConversionFunnel {
     this.metadata,
   });
 
-  factory ConversionFunnel.fromMap(Map<String, dynamic> map) => ConversionFunnel(
+  factory ConversionFunnel.fromMap(Map<String, dynamic> map) =>
+      ConversionFunnel(
         id: map['id'] ?? '',
         name: map['name'] ?? '',
         steps: List<String>.from(map['steps'] ?? []),
@@ -271,7 +276,7 @@ class ConversionFunnel {
   final Map<String, dynamic>? metadata;
 
   /// Общий коэффициент конверсии
-  double get overallConversionRate => 
+  double get overallConversionRate =>
       totalUsers > 0 ? (convertedUsers / totalUsers) * 100 : 0.0;
 
   Map<String, dynamic> toMap() => {
@@ -329,7 +334,7 @@ class RevenueForecast {
   double? get calculatedAccuracy {
     if (actualRevenue == null) return null;
     if (predictedRevenue == 0) return 0.0;
-    
+
     final double error = (actualRevenue! - predictedRevenue).abs();
     return ((1 - (error / predictedRevenue)) * 100).clamp(0.0, 100.0);
   }

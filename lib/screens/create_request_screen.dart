@@ -9,7 +9,8 @@ class CreateRequestScreen extends ConsumerStatefulWidget {
   const CreateRequestScreen({super.key});
 
   @override
-  ConsumerState<CreateRequestScreen> createState() => _CreateRequestScreenState();
+  ConsumerState<CreateRequestScreen> createState() =>
+      _CreateRequestScreenState();
 }
 
 class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
@@ -18,7 +19,7 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
   final _descriptionController = TextEditingController();
   final _budgetController = TextEditingController();
   final _locationController = TextEditingController();
-  
+
   String? _selectedCategory;
   DateTime? _selectedDeadline;
   bool _isLoading = false;
@@ -48,11 +49,12 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
   Future<void> _selectDeadline() async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDeadline ?? DateTime.now().add(const Duration(days: 7)),
+      initialDate:
+          _selectedDeadline ?? DateTime.now().add(const Duration(days: 7)),
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
-    
+
     if (picked != null) {
       setState(() {
         _selectedDeadline = picked;

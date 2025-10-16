@@ -42,10 +42,12 @@ class AutomatedPromotionsService {
           .doc(promotion.id)
           .set(promotion.toMap());
 
-      debugPrint('INFO: [AutomatedPromotionsService] Automated promotion created: ${promotion.id}');
+      debugPrint(
+          'INFO: [AutomatedPromotionsService] Automated promotion created: ${promotion.id}');
       return promotion.id;
     } catch (e) {
-      debugPrint('ERROR: [AutomatedPromotionsService] Failed to create automated promotion: $e');
+      debugPrint(
+          'ERROR: [AutomatedPromotionsService] Failed to create automated promotion: $e');
       rethrow;
     }
   }
@@ -53,47 +55,60 @@ class AutomatedPromotionsService {
   /// Активация автоматической промо-кампании
   Future<void> activatePromotion(String promotionId) async {
     try {
-      await _firestore.collection('automated_promotions').doc(promotionId).update({
+      await _firestore
+          .collection('automated_promotions')
+          .doc(promotionId)
+          .update({
         'isActive': true,
         'status': PromotionStatus.active.toString().split('.').last,
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugPrint('INFO: [AutomatedPromotionsService] Automated promotion activated: $promotionId');
+      debugPrint(
+          'INFO: [AutomatedPromotionsService] Automated promotion activated: $promotionId');
     } catch (e) {
-      debugPrint('ERROR: [AutomatedPromotionsService] Failed to activate promotion: $e');
+      debugPrint(
+          'ERROR: [AutomatedPromotionsService] Failed to activate promotion: $e');
     }
   }
 
   /// Деактивация автоматической промо-кампании
   Future<void> deactivatePromotion(String promotionId) async {
     try {
-      await _firestore.collection('automated_promotions').doc(promotionId).update({
+      await _firestore
+          .collection('automated_promotions')
+          .doc(promotionId)
+          .update({
         'isActive': false,
         'status': PromotionStatus.completed.toString().split('.').last,
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugPrint('INFO: [AutomatedPromotionsService] Automated promotion deactivated: $promotionId');
+      debugPrint(
+          'INFO: [AutomatedPromotionsService] Automated promotion deactivated: $promotionId');
     } catch (e) {
-      debugPrint('ERROR: [AutomatedPromotionsService] Failed to deactivate promotion: $e');
+      debugPrint(
+          'ERROR: [AutomatedPromotionsService] Failed to deactivate promotion: $e');
     }
   }
 
   /// Проверка и выполнение автоматических промо-кампаний
-  Future<void> checkAndExecutePromotions(String userId, String eventType, Map<String, dynamic> eventData) async {
+  Future<void> checkAndExecutePromotions(
+      String userId, String eventType, Map<String, dynamic> eventData) async {
     try {
       // Получаем все активные автоматические промо-кампании
       final QuerySnapshot promotionsSnapshot = await _firestore
           .collection('automated_promotions')
           .where('isActive', isEqualTo: true)
           .where('startDate', isLessThanOrEqualTo: FieldValue.serverTimestamp())
-          .where('endDate', isGreaterThanOrEqualTo: FieldValue.serverTimestamp())
+          .where('endDate',
+              isGreaterThanOrEqualTo: FieldValue.serverTimestamp())
           .get();
 
       for (final doc in promotionsSnapshot.docs) {
-        final AutomatedPromotion promotion = AutomatedPromotion.fromMap(doc.data() as Map<String, dynamic>);
-        
+        final AutomatedPromotion promotion =
+            AutomatedPromotion.fromMap(doc.data() as Map<String, dynamic>);
+
         // Проверяем, соответствует ли событие триггеру
         if (_matchesTrigger(promotion.trigger, eventType, eventData)) {
           // Проверяем условия
@@ -106,12 +121,14 @@ class AutomatedPromotionsService {
         }
       }
     } catch (e) {
-      debugPrint('ERROR: [AutomatedPromotionsService] Failed to check and execute promotions: $e');
+      debugPrint(
+          'ERROR: [AutomatedPromotionsService] Failed to check and execute promotions: $e');
     }
   }
 
   /// Проверка соответствия события триггеру
-  bool _matchesTrigger(PromotionTrigger trigger, String eventType, Map<String, dynamic> eventData) {
+  bool _matchesTrigger(PromotionTrigger trigger, String eventType,
+      Map<String, dynamic> eventData) {
     switch (trigger) {
       case PromotionTrigger.userRegistration:
         return eventType == 'user_registration';
@@ -135,7 +152,8 @@ class AutomatedPromotionsService {
   }
 
   /// Проверка условий промо-кампании
-  Future<bool> _checkConditions(String userId, Map<String, dynamic> conditions) async {
+  Future<bool> _checkConditions(
+      String userId, Map<String, dynamic> conditions) async {
     try {
       for (final condition in conditions.entries) {
         final String conditionType = condition.key;
@@ -148,7 +166,8 @@ class AutomatedPromotionsService {
             break;
 
           case 'subscription_type':
-            final String subscriptionType = await _getUserSubscriptionType(userId);
+            final String subscriptionType =
+                await _getUserSubscriptionType(userId);
             if (subscriptionType != conditionValue) return false;
             break;
 
@@ -158,8 +177,10 @@ class AutomatedPromotionsService {
             break;
 
           case 'registration_date':
-            final DateTime registrationDate = await _getUserRegistrationDate(userId);
-            final DateTime cutoffDate = DateTime.parse(conditionValue as String);
+            final DateTime registrationDate =
+                await _getUserRegistrationDate(userId);
+            final DateTime cutoffDate =
+                DateTime.parse(conditionValue as String);
             if (registrationDate.isAfter(cutoffDate)) return false;
             break;
 
@@ -182,13 +203,15 @@ class AutomatedPromotionsService {
 
       return true;
     } catch (e) {
-      debugPrint('ERROR: [AutomatedPromotionsService] Failed to check conditions: $e');
+      debugPrint(
+          'ERROR: [AutomatedPromotionsService] Failed to check conditions: $e');
       return false;
     }
   }
 
   /// Выполнение промо-кампании
-  Future<void> _executePromotion(String userId, AutomatedPromotion promotion) async {
+  Future<void> _executePromotion(
+      String userId, AutomatedPromotion promotion) async {
     try {
       // Выполняем действия промо-кампании
       for (final action in promotion.actions.entries) {
@@ -225,9 +248,11 @@ class AutomatedPromotionsService {
       // Записываем, что промо-кампания была применена к пользователю
       await _recordPromotionApplication(userId, promotion.id);
 
-      debugPrint('INFO: [AutomatedPromotionsService] Promotion executed: ${promotion.name} for user $userId');
+      debugPrint(
+          'INFO: [AutomatedPromotionsService] Promotion executed: ${promotion.name} for user $userId');
     } catch (e) {
-      debugPrint('ERROR: [AutomatedPromotionsService] Failed to execute promotion: $e');
+      debugPrint(
+          'ERROR: [AutomatedPromotionsService] Failed to execute promotion: $e');
     }
   }
 
@@ -343,19 +368,19 @@ class AutomatedPromotionsService {
         targetAudience: 'active_users',
       );
 
-      debugPrint('INFO: [AutomatedPromotionsService] Default automated promotions created');
+      debugPrint(
+          'INFO: [AutomatedPromotionsService] Default automated promotions created');
     } catch (e) {
-      debugPrint('ERROR: [AutomatedPromotionsService] Failed to create default promotions: $e');
+      debugPrint(
+          'ERROR: [AutomatedPromotionsService] Failed to create default promotions: $e');
     }
   }
 
   /// Вспомогательные методы для проверки условий
   Future<int> _getUserLevel(String userId) async {
-    final DocumentSnapshot doc = await _firestore
-        .collection('user_levels')
-        .doc(userId)
-        .get();
-    
+    final DocumentSnapshot doc =
+        await _firestore.collection('user_levels').doc(userId).get();
+
     if (doc.exists) {
       final data = doc.data() as Map<String, dynamic>;
       return data['level'] ?? 1;
@@ -379,11 +404,9 @@ class AutomatedPromotionsService {
   }
 
   Future<String> _getUserRegion(String userId) async {
-    final DocumentSnapshot doc = await _firestore
-        .collection('users')
-        .doc(userId)
-        .get();
-    
+    final DocumentSnapshot doc =
+        await _firestore.collection('users').doc(userId).get();
+
     if (doc.exists) {
       final data = doc.data() as Map<String, dynamic>;
       return data['region'] ?? 'unknown';
@@ -392,11 +415,9 @@ class AutomatedPromotionsService {
   }
 
   Future<DateTime> _getUserRegistrationDate(String userId) async {
-    final DocumentSnapshot doc = await _firestore
-        .collection('users')
-        .doc(userId)
-        .get();
-    
+    final DocumentSnapshot doc =
+        await _firestore.collection('users').doc(userId).get();
+
     if (doc.exists) {
       final data = doc.data() as Map<String, dynamic>;
       final timestamp = data['createdAt'] as Timestamp?;
@@ -411,7 +432,7 @@ class AutomatedPromotionsService {
         .where('userId', isEqualTo: userId)
         .where('status', isEqualTo: 'completed')
         .get();
-    
+
     double total = 0.0;
     for (final doc in snapshot.docs) {
       final data = doc.data() as Map<String, dynamic>;
@@ -430,11 +451,9 @@ class AutomatedPromotionsService {
   }
 
   Future<int> _getUserInactivityDays(String userId) async {
-    final DocumentSnapshot doc = await _firestore
-        .collection('users')
-        .doc(userId)
-        .get();
-    
+    final DocumentSnapshot doc =
+        await _firestore.collection('users').doc(userId).get();
+
     if (doc.exists) {
       final data = doc.data() as Map<String, dynamic>;
       final lastActivity = data['lastActivityAt'] as Timestamp?;
@@ -446,34 +465,45 @@ class AutomatedPromotionsService {
   }
 
   /// Вспомогательные методы для выполнения действий
-  Future<void> _sendPromotionNotification(String userId, AutomatedPromotion promotion, Map<String, dynamic> notificationData) async {
+  Future<void> _sendPromotionNotification(
+      String userId,
+      AutomatedPromotion promotion,
+      Map<String, dynamic> notificationData) async {
     // Логика отправки уведомления
-    debugPrint('INFO: [AutomatedPromotionsService] Sending promotion notification to user $userId');
+    debugPrint(
+        'INFO: [AutomatedPromotionsService] Sending promotion notification to user $userId');
   }
 
-  Future<void> _applyDiscount(String userId, Map<String, dynamic> discountData) async {
+  Future<void> _applyDiscount(
+      String userId, Map<String, dynamic> discountData) async {
     // Логика применения скидки
-    debugPrint('INFO: [AutomatedPromotionsService] Applying discount to user $userId');
+    debugPrint(
+        'INFO: [AutomatedPromotionsService] Applying discount to user $userId');
   }
 
   Future<void> _addPremiumDays(String userId, int days) async {
     // Логика добавления премиум дней
-    debugPrint('INFO: [AutomatedPromotionsService] Adding $days premium days to user $userId');
+    debugPrint(
+        'INFO: [AutomatedPromotionsService] Adding $days premium days to user $userId');
   }
 
   Future<void> _giveBonus(String userId, Map<String, dynamic> bonusData) async {
     // Логика выдачи бонуса
-    debugPrint('INFO: [AutomatedPromotionsService] Giving bonus to user $userId');
+    debugPrint(
+        'INFO: [AutomatedPromotionsService] Giving bonus to user $userId');
   }
 
   Future<void> _unlockFeature(String userId, String feature) async {
     // Логика разблокировки функции
-    debugPrint('INFO: [AutomatedPromotionsService] Unlocking feature $feature for user $userId');
+    debugPrint(
+        'INFO: [AutomatedPromotionsService] Unlocking feature $feature for user $userId');
   }
 
-  Future<void> _sendPromotionEmail(String userId, AutomatedPromotion promotion, Map<String, dynamic> emailData) async {
+  Future<void> _sendPromotionEmail(String userId, AutomatedPromotion promotion,
+      Map<String, dynamic> emailData) async {
     // Логика отправки email
-    debugPrint('INFO: [AutomatedPromotionsService] Sending promotion email to user $userId');
+    debugPrint(
+        'INFO: [AutomatedPromotionsService] Sending promotion email to user $userId');
   }
 
   /// Вспомогательные методы для проверки дат и событий
@@ -491,11 +521,12 @@ class AutomatedPromotionsService {
 
   bool _matchesMilestone(Map<String, dynamic> eventData) {
     // Проверка соответствия достижению
-    return eventData['milestone_type'] == 'referral_count' && 
-           eventData['count'] >= 10;
+    return eventData['milestone_type'] == 'referral_count' &&
+        eventData['count'] >= 10;
   }
 
-  Future<bool> _isPromotionAppliedToUser(String userId, String promotionId) async {
+  Future<bool> _isPromotionAppliedToUser(
+      String userId, String promotionId) async {
     final QuerySnapshot snapshot = await _firestore
         .collection('promotion_applications')
         .where('userId', isEqualTo: userId)
@@ -505,7 +536,8 @@ class AutomatedPromotionsService {
     return snapshot.docs.isNotEmpty;
   }
 
-  Future<void> _recordPromotionApplication(String userId, String promotionId) async {
+  Future<void> _recordPromotionApplication(
+      String userId, String promotionId) async {
     await _firestore.collection('promotion_applications').add({
       'userId': userId,
       'promotionId': promotionId,

@@ -186,5 +186,3 @@ extension NotificationTypeExtension on NotificationType {
     }
   }
 }
-
-

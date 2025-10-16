@@ -19,7 +19,7 @@ class _AnimatedCategoriesState extends State<AnimatedCategories>
   late AnimationController _animationController;
   late List<AnimationController> _itemControllers;
   late List<Animation<double>> _itemAnimations;
-  
+
   String _selectedCategory = 'Все';
 
   final List<Map<String, dynamic>> _categories = [

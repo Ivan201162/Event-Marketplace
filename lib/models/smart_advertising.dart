@@ -105,7 +105,8 @@ class SmartAdvertisement {
     this.metadata,
   });
 
-  factory SmartAdvertisement.fromMap(Map<String, dynamic> map) => SmartAdvertisement(
+  factory SmartAdvertisement.fromMap(Map<String, dynamic> map) =>
+      SmartAdvertisement(
         id: map['id'] ?? '',
         userId: map['userId'] ?? '',
         title: map['title'] ?? '',
@@ -145,7 +146,8 @@ class SmartAdvertisement {
         maxBid: (map['maxBid'] ?? 0.0).toDouble(),
         dailyBudget: (map['dailyBudget'] ?? 0.0).toDouble(),
         isAutoOptimized: map['isAutoOptimized'] ?? false,
-        optimizationSettings: Map<String, dynamic>.from(map['optimizationSettings'] ?? {}),
+        optimizationSettings:
+            Map<String, dynamic>.from(map['optimizationSettings'] ?? {}),
         metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
       );
 
@@ -185,7 +187,8 @@ class SmartAdvertisement {
   final Map<String, dynamic>? optimizationSettings;
   final Map<String, dynamic>? metadata;
 
-  bool get isActive => status == 'active' && DateTime.now().isBetween(startDate, endDate);
+  bool get isActive =>
+      status == 'active' && DateTime.now().isBetween(startDate, endDate);
   bool get isExpired => DateTime.now().isAfter(endDate);
   bool get isPending => status == 'pending';
   bool get isPaused => status == 'paused';
@@ -235,73 +238,87 @@ class SmartAdvertisement {
       case AdTargetingType.time:
         return _calculateTimeMatch(target.criteria);
       case AdTargetingType.custom:
-        return _calculateCustomMatch(target.criteria, userProfile, userBehavior);
+        return _calculateCustomMatch(
+            target.criteria, userProfile, userBehavior);
     }
   }
 
-  double _calculateInterestMatch(Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
-    final List<String> adInterests = List<String>.from(criteria['interests'] ?? []);
-    final List<String> userInterests = List<String>.from(userProfile['interests'] ?? []);
-    
+  double _calculateInterestMatch(
+      Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
+    final List<String> adInterests =
+        List<String>.from(criteria['interests'] ?? []);
+    final List<String> userInterests =
+        List<String>.from(userProfile['interests'] ?? []);
+
     if (adInterests.isEmpty || userInterests.isEmpty) return 0.0;
-    
-    final int matches = adInterests.where((interest) => userInterests.contains(interest)).length;
+
+    final int matches = adInterests
+        .where((interest) => userInterests.contains(interest))
+        .length;
     return matches / adInterests.length;
   }
 
-  double _calculateBehaviorMatch(Map<String, dynamic> criteria, Map<String, dynamic> userBehavior) {
-    final List<String> adBehaviors = List<String>.from(criteria['behaviors'] ?? []);
-    final List<String> userBehaviors = List<String>.from(userBehavior['recent_actions'] ?? []);
-    
+  double _calculateBehaviorMatch(
+      Map<String, dynamic> criteria, Map<String, dynamic> userBehavior) {
+    final List<String> adBehaviors =
+        List<String>.from(criteria['behaviors'] ?? []);
+    final List<String> userBehaviors =
+        List<String>.from(userBehavior['recent_actions'] ?? []);
+
     if (adBehaviors.isEmpty || userBehaviors.isEmpty) return 0.0;
-    
-    final int matches = adBehaviors.where((behavior) => userBehaviors.contains(behavior)).length;
+
+    final int matches = adBehaviors
+        .where((behavior) => userBehaviors.contains(behavior))
+        .length;
     return matches / adBehaviors.length;
   }
 
-  double _calculateLocationMatch(Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
+  double _calculateLocationMatch(
+      Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
     final String adRegion = criteria['region'] ?? '';
     final String userRegion = userProfile['region'] ?? '';
-    
+
     if (adRegion.isEmpty || userRegion.isEmpty) return 0.0;
-    
+
     return adRegion.toLowerCase() == userRegion.toLowerCase() ? 1.0 : 0.0;
   }
 
-  double _calculateDemographicMatch(Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
+  double _calculateDemographicMatch(
+      Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
     double score = 0.0;
     int factors = 0;
-    
+
     if (criteria['age_min'] != null && criteria['age_max'] != null) {
       final int userAge = userProfile['age'] ?? 0;
       final int minAge = criteria['age_min'];
       final int maxAge = criteria['age_max'];
-      
+
       if (userAge >= minAge && userAge <= maxAge) {
         score += 1.0;
       }
       factors++;
     }
-    
+
     if (criteria['gender'] != null) {
       final String adGender = criteria['gender'];
       final String userGender = userProfile['gender'] ?? '';
-      
+
       if (adGender.toLowerCase() == userGender.toLowerCase()) {
         score += 1.0;
       }
       factors++;
     }
-    
+
     return factors > 0 ? score / factors : 0.0;
   }
 
-  double _calculateDeviceMatch(Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
+  double _calculateDeviceMatch(
+      Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
     final String adDevice = criteria['device'] ?? '';
     final String userDevice = userProfile['device_type'] ?? '';
-    
+
     if (adDevice.isEmpty || userDevice.isEmpty) return 0.0;
-    
+
     return adDevice.toLowerCase() == userDevice.toLowerCase() ? 1.0 : 0.0;
   }
 
@@ -309,27 +326,27 @@ class SmartAdvertisement {
     final DateTime now = DateTime.now();
     final int currentHour = now.hour;
     final int currentDay = now.weekday;
-    
+
     final List<int> targetHours = List<int>.from(criteria['hours'] ?? []);
     final List<int> targetDays = List<int>.from(criteria['days'] ?? []);
-    
+
     double score = 0.0;
     int factors = 0;
-    
+
     if (targetHours.isNotEmpty) {
       if (targetHours.contains(currentHour)) {
         score += 1.0;
       }
       factors++;
     }
-    
+
     if (targetDays.isNotEmpty) {
       if (targetDays.contains(currentDay)) {
         score += 1.0;
       }
       factors++;
     }
-    
+
     return factors > 0 ? score / factors : 1.0;
   }
 

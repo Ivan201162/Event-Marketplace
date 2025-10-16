@@ -9,16 +9,18 @@ class AdminPromotionsManagementScreen extends StatefulWidget {
   const AdminPromotionsManagementScreen({super.key});
 
   @override
-  State<AdminPromotionsManagementScreen> createState() => _AdminPromotionsManagementScreenState();
+  State<AdminPromotionsManagementScreen> createState() =>
+      _AdminPromotionsManagementScreenState();
 }
 
-class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementScreen> {
+class _AdminPromotionsManagementScreen
+    extends State<AdminPromotionsManagementScreen> {
   final MarketingAdminService _marketingService = MarketingAdminService();
   final Uuid _uuid = const Uuid();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
-  
+
   MarketingCampaignType _selectedType = MarketingCampaignType.promotion;
   MarketingCampaignStatus _selectedStatus = MarketingCampaignStatus.draft;
   DateTime _startDate = DateTime.now();
@@ -72,9 +74,10 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
             padding: const EdgeInsets.all(16),
             itemCount: campaigns.length,
             itemBuilder: (context, index) {
-              final campaignData = campaigns[index].data() as Map<String, dynamic>;
+              final campaignData =
+                  campaigns[index].data() as Map<String, dynamic>;
               final campaign = MarketingCampaign.fromMap(campaignData);
-              
+
               return Card(
                 margin: const EdgeInsets.only(bottom: 12),
                 child: ListTile(
@@ -93,14 +96,17 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Тип: ${_getCampaignTypeName(campaign.type)}'),
-                      Text('Статус: ${_getCampaignStatusName(campaign.status)}'),
-                      if (campaign.budget != null) Text('Бюджет: ${campaign.budget}₽'),
+                      Text(
+                          'Статус: ${_getCampaignStatusName(campaign.status)}'),
+                      if (campaign.budget != null)
+                        Text('Бюджет: ${campaign.budget}₽'),
                       Text('Начало: ${_formatDate(campaign.startDate)}'),
                       Text('Окончание: ${_formatDate(campaign.endDate)}'),
                     ],
                   ),
                   trailing: PopupMenuButton<String>(
-                    onSelected: (value) => _handleCampaignAction(value, campaign),
+                    onSelected: (value) =>
+                        _handleCampaignAction(value, campaign),
                     itemBuilder: (context) => [
                       const PopupMenuItem(
                         value: 'edit',
@@ -114,7 +120,8 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
                         value: 'activate',
                         child: ListTile(
                           leading: Icon(Icons.play_arrow, color: Colors.green),
-                          title: Text('Активировать', style: TextStyle(color: Colors.green)),
+                          title: Text('Активировать',
+                              style: TextStyle(color: Colors.green)),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -122,7 +129,8 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
                         value: 'pause',
                         child: ListTile(
                           leading: Icon(Icons.pause, color: Colors.orange),
-                          title: Text('Приостановить', style: TextStyle(color: Colors.orange)),
+                          title: Text('Приостановить',
+                              style: TextStyle(color: Colors.orange)),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -130,7 +138,8 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
                         value: 'delete',
                         child: ListTile(
                           leading: Icon(Icons.delete, color: Colors.red),
-                          title: Text('Удалить', style: TextStyle(color: Colors.red)),
+                          title: Text('Удалить',
+                              style: TextStyle(color: Colors.red)),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -228,13 +237,15 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
               const SizedBox(height: 16),
               ListTile(
                 title: const Text('Дата начала'),
-                subtitle: Text('${_startDate.day}.${_startDate.month}.${_startDate.year}'),
+                subtitle: Text(
+                    '${_startDate.day}.${_startDate.month}.${_startDate.year}'),
                 trailing: const Icon(Icons.calendar_today),
                 onTap: () => _selectDate(true),
               ),
               ListTile(
                 title: const Text('Дата окончания'),
-                subtitle: Text('${_endDate.day}.${_endDate.month}.${_endDate.year}'),
+                subtitle:
+                    Text('${_endDate.day}.${_endDate.month}.${_endDate.year}'),
                 trailing: const Icon(Icons.calendar_today),
                 onTap: () => _selectDate(false),
               ),
@@ -291,7 +302,9 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
         status: _selectedStatus,
         startDate: _startDate,
         endDate: _endDate,
-        budget: _priceController.text.isNotEmpty ? double.parse(_priceController.text) : null,
+        budget: _priceController.text.isNotEmpty
+            ? double.parse(_priceController.text)
+            : null,
         createdBy: 'admin_123', // Mock admin user
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
@@ -424,13 +437,15 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
               const SizedBox(height: 16),
               ListTile(
                 title: const Text('Дата начала'),
-                subtitle: Text('${_startDate.day}.${_startDate.month}.${_startDate.year}'),
+                subtitle: Text(
+                    '${_startDate.day}.${_startDate.month}.${_startDate.year}'),
                 trailing: const Icon(Icons.calendar_today),
                 onTap: () => _selectDate(true),
               ),
               ListTile(
                 title: const Text('Дата окончания'),
-                subtitle: Text('${_endDate.day}.${_endDate.month}.${_endDate.year}'),
+                subtitle:
+                    Text('${_endDate.day}.${_endDate.month}.${_endDate.year}'),
                 trailing: const Icon(Icons.calendar_today),
                 onTap: () => _selectDate(false),
               ),
@@ -460,7 +475,9 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
         'status': _selectedStatus.name,
         'startDate': _startDate,
         'endDate': _endDate,
-        'budget': _priceController.text.isNotEmpty ? double.parse(_priceController.text) : null,
+        'budget': _priceController.text.isNotEmpty
+            ? double.parse(_priceController.text)
+            : null,
         'updatedAt': DateTime.now(),
       };
 
@@ -492,7 +509,8 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
     }
   }
 
-  Future<void> _toggleCampaignStatus(MarketingCampaign campaign, MarketingCampaignStatus newStatus) async {
+  Future<void> _toggleCampaignStatus(
+      MarketingCampaign campaign, MarketingCampaignStatus newStatus) async {
     try {
       // Mock admin data for testing
       const adminId = 'admin_123';
@@ -507,7 +525,9 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
 
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Статус кампании изменен на ${_getCampaignStatusName(newStatus)}')),
+          SnackBar(
+              content: Text(
+                  'Статус кампании изменен на ${_getCampaignStatusName(newStatus)}')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -526,7 +546,8 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить промо-кампанию'),
-        content: Text('Вы уверены, что хотите удалить кампанию "${campaign.name}"?'),
+        content:
+            Text('Вы уверены, что хотите удалить кампанию "${campaign.name}"?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -543,7 +564,10 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
 
     if (confirmed == true) {
       try {
-        await FirebaseFirestore.instance.collection('marketing_campaigns').doc(campaign.id).delete();
+        await FirebaseFirestore.instance
+            .collection('marketing_campaigns')
+            .doc(campaign.id)
+            .delete();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Промо-кампания удалена')),
         );

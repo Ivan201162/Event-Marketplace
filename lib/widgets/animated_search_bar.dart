@@ -101,8 +101,8 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar>
                   hintText: 'Найти специалиста…',
                   prefixIcon: Icon(
                     Icons.search,
-                    color: _isFocused 
-                        ? Theme.of(context).primaryColor 
+                    color: _isFocused
+                        ? Theme.of(context).primaryColor
                         : Colors.grey[600],
                   ),
                   suffixIcon: _searchController.text.isNotEmpty
@@ -124,8 +124,8 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar>
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                     borderSide: BorderSide(
-                      color: _isFocused 
-                          ? Theme.of(context).primaryColor 
+                      color: _isFocused
+                          ? Theme.of(context).primaryColor
                           : Colors.grey[300]!,
                       width: _isFocused ? 2 : 1,
                     ),
@@ -145,7 +145,7 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar>
                     ),
                   ),
                   filled: true,
-                  fillColor: _isFocused 
+                  fillColor: _isFocused
                       ? Theme.of(context).primaryColor.withOpacity(0.05)
                       : Theme.of(context).cardColor,
                 ),

@@ -109,7 +109,8 @@ class PerformanceNotifier extends ChangeNotifier {
     const memoryUsage = 50; // Заглушка в процентах
     const isLowMemory = memoryUsage > 80;
 
-    if (memoryUsage != _state.memoryUsage || isLowMemory != _state.isLowMemory) {
+    if (memoryUsage != _state.memoryUsage ||
+        isLowMemory != _state.isLowMemory) {
       _state = _state.copyWith(
         memoryUsage: memoryUsage,
         isLowMemory: isLowMemory,

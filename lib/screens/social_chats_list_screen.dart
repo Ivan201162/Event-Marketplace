@@ -10,7 +10,8 @@ class SocialChatsListScreen extends ConsumerStatefulWidget {
   const SocialChatsListScreen({super.key});
 
   @override
-  ConsumerState<SocialChatsListScreen> createState() => _SocialChatsListScreenState();
+  ConsumerState<SocialChatsListScreen> createState() =>
+      _SocialChatsListScreenState();
 }
 
 class _SocialChatsListScreenState extends ConsumerState<SocialChatsListScreen> {
@@ -120,8 +121,8 @@ class _SocialChatsListScreenState extends ConsumerState<SocialChatsListScreen> {
             Text(
               'Начните общение с другими пользователями',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).textTheme.bodySmall?.color,
-              ),
+                    color: Theme.of(context).textTheme.bodySmall?.color,
+                  ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
@@ -157,9 +158,8 @@ class _SocialChatsListScreenState extends ConsumerState<SocialChatsListScreen> {
         backgroundImage: chat.otherUser.avatarUrl != null
             ? CachedNetworkImageProvider(chat.otherUser.avatarUrl!)
             : null,
-        child: chat.otherUser.avatarUrl == null
-            ? const Icon(Icons.person)
-            : null,
+        child:
+            chat.otherUser.avatarUrl == null ? const Icon(Icons.person) : null,
       ),
       title: Text(
         chat.otherUser.name,
@@ -188,8 +188,8 @@ class _SocialChatsListScreenState extends ConsumerState<SocialChatsListScreen> {
             Text(
               _formatTime(chat.lastMessageTime!),
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).textTheme.bodySmall?.color,
-              ),
+                    color: Theme.of(context).textTheme.bodySmall?.color,
+                  ),
             ),
           const SizedBox(height: 4),
           // Индикатор непрочитанных сообщений (можно добавить позже)
@@ -233,5 +233,3 @@ class _SocialChatsListScreenState extends ConsumerState<SocialChatsListScreen> {
     }
   }
 }
-
-

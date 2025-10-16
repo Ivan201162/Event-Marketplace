@@ -41,7 +41,7 @@ class _UsernameEditorState extends ConsumerState<UsernameEditor> {
   void _validateUsername(String username) {
     setState(() {
       _currentUsername = username;
-      
+
       if (username.isEmpty) {
         _isValid = false;
         _errorText = 'Username не может быть пустым';
@@ -53,7 +53,8 @@ class _UsernameEditorState extends ConsumerState<UsernameEditor> {
         _errorText = 'Username не может быть длиннее 20 символов';
       } else if (!RegExp(r'^[a-z0-9_]+$').hasMatch(username)) {
         _isValid = false;
-        _errorText = 'Username может содержать только строчные буквы, цифры и подчеркивания';
+        _errorText =
+            'Username может содержать только строчные буквы, цифры и подчеркивания';
       } else {
         _isValid = true;
         _errorText = null;
@@ -67,7 +68,8 @@ class _UsernameEditorState extends ConsumerState<UsernameEditor> {
 
   void _generateFromName(String fullName) {
     if (fullName.isNotEmpty) {
-      final generatedUsername = TransliterateUtils.transliterateNameToUsername(fullName);
+      final generatedUsername =
+          TransliterateUtils.transliterateNameToUsername(fullName);
       _controller.text = generatedUsername;
       _validateUsername(generatedUsername);
     }
@@ -75,54 +77,54 @@ class _UsernameEditorState extends ConsumerState<UsernameEditor> {
 
   @override
   Widget build(BuildContext context) => Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Username',
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _controller,
-                enabled: widget.enabled,
-                onChanged: _validateUsername,
-                decoration: InputDecoration(
-                  hintText: 'username',
-                  prefixText: '@',
-                  errorText: _errorText,
-                  border: const OutlineInputBorder(),
-                  helperText: 'Только строчные буквы, цифры и подчеркивания',
-                ),
-                textInputAction: TextInputAction.done,
-              ),
-            ),
-            const SizedBox(width: 8),
-            if (widget.enabled)
-              IconButton(
-                onPressed: _showNameInputDialog,
-                icon: const Icon(Icons.auto_fix_high),
-                tooltip: 'Сгенерировать из имени',
-              ),
-          ],
-        ),
-        if (widget.enabled) ...[
-          const SizedBox(height: 8),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
           Text(
-            '💡 Совет: Нажмите на кнопку генерации, чтобы создать username из вашего имени',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
+            'Username',
+            style: Theme.of(context).textTheme.titleMedium,
           ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _controller,
+                  enabled: widget.enabled,
+                  onChanged: _validateUsername,
+                  decoration: InputDecoration(
+                    hintText: 'username',
+                    prefixText: '@',
+                    errorText: _errorText,
+                    border: const OutlineInputBorder(),
+                    helperText: 'Только строчные буквы, цифры и подчеркивания',
+                  ),
+                  textInputAction: TextInputAction.done,
+                ),
+              ),
+              const SizedBox(width: 8),
+              if (widget.enabled)
+                IconButton(
+                  onPressed: _showNameInputDialog,
+                  icon: const Icon(Icons.auto_fix_high),
+                  tooltip: 'Сгенерировать из имени',
+                ),
+            ],
+          ),
+          if (widget.enabled) ...[
+            const SizedBox(height: 8),
+            Text(
+              '💡 Совет: Нажмите на кнопку генерации, чтобы создать username из вашего имени',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+            ),
+          ],
         ],
-      ],
-    );
+      );
 
   void _showNameInputDialog() {
     final nameController = TextEditingController();
-    
+
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(

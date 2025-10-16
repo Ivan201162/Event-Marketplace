@@ -10,7 +10,8 @@ class SubscriptionPlansScreen extends StatefulWidget {
   const SubscriptionPlansScreen({super.key});
 
   @override
-  State<SubscriptionPlansScreen> createState() => _SubscriptionPlansScreenState();
+  State<SubscriptionPlansScreen> createState() =>
+      _SubscriptionPlansScreenState();
 }
 
 class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
@@ -30,10 +31,11 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
       final plans = await _subscriptionService.getAvailablePlans();
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       final userId = authProvider.currentUser?['id'];
-      
+
       UserSubscription? activeSubscription;
       if (userId != null) {
-        activeSubscription = await _subscriptionService.getActiveSubscription(userId);
+        activeSubscription =
+            await _subscriptionService.getActiveSubscription(userId);
       }
 
       setState(() {
@@ -73,23 +75,23 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
                     _buildCurrentSubscriptionCard(),
                     const SizedBox(height: 24),
                   ],
-                  
+
                   // Заголовок
                   Text(
                     'Выберите план подписки',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Расширьте возможности вашего профиля с премиум-функциями',
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                          color: Colors.grey[600],
+                        ),
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Планы подписки
                   ..._plans.map((plan) => _buildPlanCard(plan)),
                 ],
@@ -125,15 +127,15 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
                       Text(
                         'Активная подписка',
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       Text(
                         'Осталось дней: ${_activeSubscription!.daysRemaining}',
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Colors.white,
-                        ),
+                              color: Colors.white,
+                            ),
                       ),
                     ],
                   ),
@@ -153,8 +155,8 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
                 Text(
                   'Автопродление: ${_activeSubscription!.autoRenew ? "Включено" : "Выключено"}',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.white,
-                  ),
+                        color: Colors.white,
+                      ),
                 ),
                 TextButton(
                   onPressed: () {
@@ -176,7 +178,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
   Widget _buildPlanCard(SubscriptionPlan plan) {
     final isCurrentPlan = _activeSubscription?.planId == plan.id;
     final isPopular = plan.tier == SubscriptionTier.premium;
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       child: Card(
@@ -184,9 +186,8 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            border: isPopular
-                ? Border.all(color: Colors.amber, width: 2)
-                : null,
+            border:
+                isPopular ? Border.all(color: Colors.amber, width: 2) : null,
           ),
           child: Column(
             children: [
@@ -236,16 +237,22 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
                             children: [
                               Text(
                                 plan.name,
-                                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                               ),
                               if (plan.description != null)
                                 Text(
                                   plan.description!,
-                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: Colors.grey[600],
-                                  ),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        color: Colors.grey[600],
+                                      ),
                                 ),
                             ],
                           ),
@@ -258,26 +265,31 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
                       children: [
                         Text(
                           '${plan.price.toInt()} ₽',
-                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                            color: _getPlanColor(plan.tier),
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium
+                              ?.copyWith(
+                                color: _getPlanColor(plan.tier),
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
                         const SizedBox(width: 4),
                         Text(
                           '/ ${plan.durationDays} дн.',
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Colors.grey[600],
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    color: Colors.grey[600],
+                                  ),
                         ),
                         const Spacer(),
                         if (plan.hasDiscount) ...[
                           Text(
                             '${plan.originalPrice!.toInt()} ₽',
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: Colors.grey[500],
-                              decoration: TextDecoration.lineThrough,
-                            ),
+                            style:
+                                Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                      color: Colors.grey[500],
+                                      decoration: TextDecoration.lineThrough,
+                                    ),
                           ),
                           const SizedBox(width: 8),
                           Container(
@@ -304,7 +316,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
                   ],
                 ),
               ),
-              
+
               // Функции плана
               Padding(
                 padding: const EdgeInsets.all(20),
@@ -314,38 +326,37 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
                     Text(
                       'Включено в план:',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                     const SizedBox(height: 12),
                     ...plan.features.map((feature) => Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.check_circle,
-                            color: _getPlanColor(plan.tier),
-                            size: 20,
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.check_circle,
+                                color: _getPlanColor(plan.tier),
+                                size: 20,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  feature,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              feature,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )),
+                        )),
                     const SizedBox(height: 20),
-                    
+
                     // Кнопка действия
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: isCurrentPlan
-                            ? null
-                            : () => _selectPlan(plan),
+                        onPressed:
+                            isCurrentPlan ? null : () => _selectPlan(plan),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: _getPlanColor(plan.tier),
                           foregroundColor: Colors.white,

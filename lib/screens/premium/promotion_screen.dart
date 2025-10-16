@@ -301,6 +301,3 @@ class _PromotionScreenState extends ConsumerState<PromotionScreen> {
     );
   }
 }
-
-
-

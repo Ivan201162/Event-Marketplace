@@ -49,12 +49,12 @@ class IdeasScreen extends ConsumerWidget {
                     SizedBox(height: 8),
                     Text(
                       'Создайте первую идею или подпишитесь на специалистов',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
                 ],
               ),
             );

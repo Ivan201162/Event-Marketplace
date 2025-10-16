@@ -32,7 +32,8 @@ class SubscriptionPlan {
     this.updatedAt,
   });
 
-  factory SubscriptionPlan.fromMap(Map<String, dynamic> map) => SubscriptionPlan(
+  factory SubscriptionPlan.fromMap(Map<String, dynamic> map) =>
+      SubscriptionPlan(
         id: map['id'] ?? '',
         name: map['name'] ?? '',
         tier: SubscriptionTier.values.firstWhere(
@@ -46,11 +47,11 @@ class SubscriptionPlan {
         description: map['description'],
         originalPrice: map['originalPrice']?.toDouble(),
         discountPercentage: map['discountPercentage']?.toDouble(),
-        createdAt: map['createdAt'] != null 
-            ? (map['createdAt'] as Timestamp).toDate() 
+        createdAt: map['createdAt'] != null
+            ? (map['createdAt'] as Timestamp).toDate()
             : DateTime.now(),
-        updatedAt: map['updatedAt'] != null 
-            ? (map['updatedAt'] as Timestamp).toDate() 
+        updatedAt: map['updatedAt'] != null
+            ? (map['updatedAt'] as Timestamp).toDate()
             : DateTime.now(),
       );
 
@@ -86,8 +87,9 @@ class SubscriptionPlan {
       };
 
   bool get hasDiscount => originalPrice != null && originalPrice! > price;
-  
-  double get discountAmount => originalPrice != null ? originalPrice! - price : 0.0;
+
+  double get discountAmount =>
+      originalPrice != null ? originalPrice! - price : 0.0;
 
   SubscriptionPlan copyWith({
     String? id,
@@ -135,7 +137,8 @@ class UserSubscription {
     this.updatedAt,
   });
 
-  factory UserSubscription.fromMap(Map<String, dynamic> map) => UserSubscription(
+  factory UserSubscription.fromMap(Map<String, dynamic> map) =>
+      UserSubscription(
         id: map['id'] ?? '',
         userId: map['userId'] ?? '',
         planId: map['planId'] ?? '',
@@ -146,16 +149,16 @@ class UserSubscription {
           orElse: () => SubscriptionStatus.pending,
         ),
         autoRenew: map['autoRenew'] ?? false,
-        cancelledAt: map['cancelledAt'] != null 
-            ? (map['cancelledAt'] as Timestamp).toDate() 
+        cancelledAt: map['cancelledAt'] != null
+            ? (map['cancelledAt'] as Timestamp).toDate()
             : null,
         paymentMethod: map['paymentMethod'],
         transactionId: map['transactionId'],
-        createdAt: map['createdAt'] != null 
-            ? (map['createdAt'] as Timestamp).toDate() 
+        createdAt: map['createdAt'] != null
+            ? (map['createdAt'] as Timestamp).toDate()
             : DateTime.now(),
-        updatedAt: map['updatedAt'] != null 
-            ? (map['updatedAt'] as Timestamp).toDate() 
+        updatedAt: map['updatedAt'] != null
+            ? (map['updatedAt'] as Timestamp).toDate()
             : DateTime.now(),
       );
 
@@ -180,7 +183,8 @@ class UserSubscription {
         'endDate': Timestamp.fromDate(endDate),
         'status': status.toString().split('.').last,
         'autoRenew': autoRenew,
-        'cancelledAt': cancelledAt != null ? Timestamp.fromDate(cancelledAt!) : null,
+        'cancelledAt':
+            cancelledAt != null ? Timestamp.fromDate(cancelledAt!) : null,
         'paymentMethod': paymentMethod,
         'transactionId': transactionId,
         'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
@@ -189,10 +193,11 @@ class UserSubscription {
 
   bool get isActive => status == SubscriptionStatus.active && !isExpired;
   bool get isExpired => DateTime.now().isAfter(endDate);
-  bool get isExpiringSoon => DateTime.now().add(const Duration(days: 3)).isAfter(endDate);
-  
+  bool get isExpiringSoon =>
+      DateTime.now().add(const Duration(days: 3)).isAfter(endDate);
+
   int get daysRemaining => endDate.difference(DateTime.now()).inDays;
-  
+
   double get progressPercentage {
     final totalDays = endDate.difference(startDate).inDays;
     final remainingDays = endDate.difference(DateTime.now()).inDays;

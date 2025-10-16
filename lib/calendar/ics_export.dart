@@ -325,8 +325,7 @@ class IcsExportService {
         'DTEND:${_formatDateTime(event.date.add(const Duration(hours: 2)))}',
       )
       ..writeln('SUMMARY:${event.title}');
-    buffer
-      ..writeln('DESCRIPTION:${event.description}');
+    buffer..writeln('DESCRIPTION:${event.description}');
     if (event.location.isNotEmpty) {
       buffer.writeln('LOCATION:${event.location}');
     }

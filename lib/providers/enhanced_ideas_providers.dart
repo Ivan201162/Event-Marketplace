@@ -5,7 +5,6 @@ import '../models/enhanced_idea.dart';
 
 /// Состояние идей
 class EnhancedIdeasState {
-
   const EnhancedIdeasState({
     this.ideas = const [],
     this.isLoading = false,
@@ -32,9 +31,9 @@ class EnhancedIdeasNotifier extends ChangeNotifier {
   EnhancedIdeasNotifier() {
     _loadIdeas();
   }
-  
+
   EnhancedIdeasState _state = const EnhancedIdeasState();
-  
+
   EnhancedIdeasState get state => _state;
 
   Future<void> _loadIdeas() async {
@@ -90,4 +89,5 @@ class EnhancedIdeasNotifier extends ChangeNotifier {
   }
 }
 
-final enhancedIdeasProvider = Provider<EnhancedIdeasNotifier>((ref) => EnhancedIdeasNotifier());
+final enhancedIdeasProvider =
+    Provider<EnhancedIdeasNotifier>((ref) => EnhancedIdeasNotifier());

@@ -99,11 +99,11 @@ class Advertisement {
         ctr: (map['ctr'] ?? 0.0).toDouble(),
         cpc: (map['cpc'] ?? 0.0).toDouble(),
         cpm: (map['cpm'] ?? 0.0).toDouble(),
-        createdAt: map['createdAt'] != null 
-            ? (map['createdAt'] as Timestamp).toDate() 
+        createdAt: map['createdAt'] != null
+            ? (map['createdAt'] as Timestamp).toDate()
             : DateTime.now(),
-        updatedAt: map['updatedAt'] != null 
-            ? (map['updatedAt'] as Timestamp).toDate() 
+        updatedAt: map['updatedAt'] != null
+            ? (map['updatedAt'] as Timestamp).toDate()
             : DateTime.now(),
         metadata: map['metadata'],
       );
@@ -170,10 +170,11 @@ class Advertisement {
 
   bool get isActive => status == AdStatus.active && !isExpired;
   bool get isExpired => DateTime.now().isAfter(endDate);
-  bool get isExpiringSoon => DateTime.now().add(const Duration(days: 1)).isAfter(endDate);
-  
+  bool get isExpiringSoon =>
+      DateTime.now().add(const Duration(days: 1)).isAfter(endDate);
+
   int get daysRemaining => endDate.difference(DateTime.now()).inDays;
-  
+
   double get progressPercentage {
     final totalDays = endDate.difference(startDate).inDays;
     final remainingDays = endDate.difference(DateTime.now()).inDays;
@@ -300,11 +301,11 @@ class AdCampaign {
         impressions: map['impressions'] ?? 0,
         clicks: map['clicks'] ?? 0,
         ctr: (map['ctr'] ?? 0.0).toDouble(),
-        createdAt: map['createdAt'] != null 
-            ? (map['createdAt'] as Timestamp).toDate() 
+        createdAt: map['createdAt'] != null
+            ? (map['createdAt'] as Timestamp).toDate()
             : DateTime.now(),
-        updatedAt: map['updatedAt'] != null 
-            ? (map['updatedAt'] as Timestamp).toDate() 
+        updatedAt: map['updatedAt'] != null
+            ? (map['updatedAt'] as Timestamp).toDate()
             : DateTime.now(),
         ads: (map['ads'] as List<dynamic>?)
                 ?.map((ad) => Advertisement.fromMap(ad))
@@ -355,12 +356,13 @@ class AdCampaign {
       };
 
   bool get isExpired => DateTime.now().isAfter(endDate);
-  bool get isExpiringSoon => DateTime.now().add(const Duration(days: 3)).isAfter(endDate);
-  
+  bool get isExpiringSoon =>
+      DateTime.now().add(const Duration(days: 3)).isAfter(endDate);
+
   int get daysRemaining => endDate.difference(DateTime.now()).inDays;
-  
+
   double get remainingBudget => budget - spentAmount;
-  
+
   bool get isBudgetExceeded => spentAmount >= budget;
 
   AdCampaign copyWith({

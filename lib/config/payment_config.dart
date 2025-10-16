@@ -2,40 +2,41 @@ class PaymentConfig {
   // ========================================
   // 🔑 НАСТРОЙКИ ПЛАТЕЖНЫХ СИСТЕМ
   // ========================================
-  
+
   // Stripe Configuration
   // Получите ключи на https://dashboard.stripe.com/apikeys
-  static const String stripePublishableKey = 
+  static const String stripePublishableKey =
       'pk_test_51O8X...'; // Замените на ваш publishable key
-  static const String stripeSecretKey = 
+  static const String stripeSecretKey =
       'sk_test_51O8X...'; // Замените на ваш secret key
-  
-  // YooKassa Configuration  
+
+  // YooKassa Configuration
   // Получите ключи на https://yookassa.ru/my
-  static const String yookassaShopId = 'your_shop_id'; // Замените на ваш Shop ID
-  static const String yookassaSecretKey = 
+  static const String yookassaShopId =
+      'your_shop_id'; // Замените на ваш Shop ID
+  static const String yookassaSecretKey =
       'test_your_secret_key'; // Замените на ваш secret key
-  
+
   // CloudPayments Configuration
   static const String cloudPaymentsPublicId = 'your_public_id';
   static const String cloudPaymentsApiSecret = 'your_api_secret';
-  
+
   // Tinkoff Pay Configuration
   static const String tinkoffTerminalKey = 'your_terminal_key';
   static const String tinkoffPassword = 'your_password';
-  
+
   // ========================================
   // 💰 НАСТРОЙКИ ПЛАТЕЖЕЙ
   // ========================================
-  
+
   static const String defaultCurrency = 'RUB';
   static const double minPaymentAmount = 1.0;
   static const double maxPaymentAmount = 100000.0;
-  
+
   // ========================================
   // 📋 ПЛАНЫ ПОДПИСКИ
   // ========================================
-  
+
   static const Map<String, Map<String, dynamic>> subscriptionPlans = {
     'free': {
       'name': 'Бесплатный',
@@ -105,11 +106,11 @@ class PaymentConfig {
       ],
     },
   };
-  
+
   // ========================================
   // 🚀 ПАКЕТЫ ПРОДВИЖЕНИЯ
   // ========================================
-  
+
   static const Map<String, Map<String, dynamic>> promotionPackages = {
     'profile_boost_3days': {
       'name': 'Продвижение профиля (3 дня)',
@@ -176,11 +177,11 @@ class PaymentConfig {
       ],
     },
   };
-  
+
   // ========================================
   // 📢 РЕКЛАМНЫЕ ТАРИФЫ
   // ========================================
-  
+
   static const Map<String, Map<String, dynamic>> advertisementRates = {
     'banner_top': {
       'name': 'Верхний баннер',
@@ -236,16 +237,21 @@ class PaymentConfig {
       ],
     },
   };
-  
+
   // ========================================
   // 🎁 ДОПОЛНИТЕЛЬНЫЕ НАСТРОЙКИ
   // ========================================
-  
+
   // Суммы для быстрых донатов
   static const List<double> quickDonationAmounts = [
-    100.0, 300.0, 500.0, 1000.0, 2000.0, 5000.0
+    100.0,
+    300.0,
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
   ];
-  
+
   // Минимальные суммы для разных типов платежей
   static const Map<String, double> minAmounts = {
     'subscription': 1.0,
@@ -253,7 +259,7 @@ class PaymentConfig {
     'advertisement': 100.0,
     'donation': 10.0,
   };
-  
+
   // Максимальные суммы для разных типов платежей
   static const Map<String, double> maxAmounts = {
     'subscription': 50000.0,
@@ -261,23 +267,24 @@ class PaymentConfig {
     'advertisement': 100000.0,
     'donation': 100000.0,
   };
-  
+
   // ========================================
   // 🔧 НАСТРОЙКИ РАЗРАБОТКИ
   // ========================================
-  
+
   static const bool isDevelopment = true;
   static const bool enableTestPayments = true;
   static const bool enableLogging = true;
-  
+
   // URL для редиректов после оплаты
-  static const String successUrl = 'https://eventmarketplace.app/payment/success';
+  static const String successUrl =
+      'https://eventmarketplace.app/payment/success';
   static const String cancelUrl = 'https://eventmarketplace.app/payment/cancel';
-  
+
   // ========================================
   // 📊 НАСТРОЙКИ АНАЛИТИКИ
   // ========================================
-  
+
   static const Map<String, String> analyticsEvents = {
     'subscription_purchased': 'subscription_purchased',
     'promotion_activated': 'promotion_activated',
@@ -285,11 +292,11 @@ class PaymentConfig {
     'payment_success': 'payment_success',
     'payment_failed': 'payment_failed',
   };
-  
+
   // ========================================
   // 🔔 НАСТРОЙКИ УВЕДОМЛЕНИЙ
   // ========================================
-  
+
   static const Map<String, String> notificationTemplates = {
     'subscription_activated': 'Ваша подписка активирована!',
     'subscription_expiring': 'Подписка истекает через 3 дня',

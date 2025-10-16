@@ -29,12 +29,16 @@ class MediaMessageWidget extends StatelessWidget {
             CircleAvatar(
               radius: 16,
               backgroundImage: (message as dynamic).senderAvatar != null
-                  ? CachedNetworkImageProvider((message as dynamic).senderAvatar as String)
+                  ? CachedNetworkImageProvider(
+                      (message as dynamic).senderAvatar as String)
                   : null,
               child: ((message as dynamic).senderAvatar as String?) == null
                   ? Text(
-                      (((message as dynamic).senderName as String?)?.isNotEmpty ?? false)
-                          ? ((message as dynamic).senderName as String)[0].toUpperCase()
+                      (((message as dynamic).senderName as String?)
+                                  ?.isNotEmpty ??
+                              false)
+                          ? ((message as dynamic).senderName as String)[0]
+                              .toUpperCase()
                           : '?',
                       style: const TextStyle(fontSize: 12),
                     )
@@ -54,7 +58,8 @@ class MediaMessageWidget extends StatelessWidget {
                 children: [
                   if (!isOwnMessage) ...[
                     Text(
-                      ((message as dynamic).senderName as String?) ?? 'Неизвестный',
+                      ((message as dynamic).senderName as String?) ??
+                          'Неизвестный',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color:
                             theme.colorScheme.onSurface.withValues(alpha: 0.7),
@@ -92,7 +97,8 @@ class MediaMessageWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        _formatTime(DateTime.parse((message as dynamic).timestamp as String)),
+                        _formatTime(DateTime.parse(
+                            (message as dynamic).timestamp as String)),
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurface
                               .withValues(alpha: 0.5),
@@ -112,12 +118,16 @@ class MediaMessageWidget extends StatelessWidget {
             CircleAvatar(
               radius: 16,
               backgroundImage: (message as dynamic).senderAvatar != null
-                  ? CachedNetworkImageProvider((message as dynamic).senderAvatar as String)
+                  ? CachedNetworkImageProvider(
+                      (message as dynamic).senderAvatar as String)
                   : null,
               child: ((message as dynamic).senderAvatar as String?) == null
                   ? Text(
-                      (((message as dynamic).senderName as String?)?.isNotEmpty ?? false)
-                          ? ((message as dynamic).senderName as String)[0].toUpperCase()
+                      (((message as dynamic).senderName as String?)
+                                  ?.isNotEmpty ??
+                              false)
+                          ? ((message as dynamic).senderName as String)[0]
+                              .toUpperCase()
                           : '?',
                       style: const TextStyle(fontSize: 12),
                     )

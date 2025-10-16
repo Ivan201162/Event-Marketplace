@@ -285,7 +285,11 @@ class ErrorHandler {
 
   /// Логирование ошибки
   static void _logError(
-      error, String? context, String type, String code,) {
+    error,
+    String? context,
+    String type,
+    String code,
+  ) {
     final timestamp = DateTime.now().toIso8601String();
     final errorInfo = {
       'timestamp': timestamp,
@@ -346,8 +350,10 @@ class ErrorHandler {
   }
 
   /// Создание отчета об ошибке
-  static Map<String, dynamic> createErrorReport(error,
-      {String? context,}) {
+  static Map<String, dynamic> createErrorReport(
+    error, {
+    String? context,
+  }) {
     final timestamp = DateTime.now().toIso8601String();
     final message = handleError(error, context: context);
 

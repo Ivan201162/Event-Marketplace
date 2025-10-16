@@ -116,28 +116,29 @@ class ProfileStatsWidget extends StatelessWidget {
     String label,
     String value,
     IconData icon,
-  ) => Column(
-      children: [
-        Icon(
-          icon,
-          color: theme.primaryColor,
-          size: 24,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          value,
-          style: theme.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
+  ) =>
+      Column(
+        children: [
+          Icon(
+            icon,
             color: theme.primaryColor,
+            size: 24,
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.primaryColor,
+            ),
           ),
-        ),
-      ],
-    );
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
+            ),
+          ),
+        ],
+      );
 }

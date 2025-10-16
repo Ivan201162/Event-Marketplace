@@ -40,7 +40,7 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
       authError.clearError();
 
       await authService.signInWithPhone(_phoneController.text.trim());
-      
+
       setState(() {
         _isCodeSent = true;
       });
@@ -118,13 +118,14 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
-            
+
             Text(
               _isCodeSent
                   ? 'Введите код из SMS, отправленного на ${_phoneController.text}'
                   : 'Введите номер телефона для получения SMS кода',
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                color:
+                    theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
               ),
               textAlign: TextAlign.center,
             ),
@@ -271,7 +272,7 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
                 ],
               ),
             ),
-            
+
             // Дополнительный отступ снизу для безопасности
             const SizedBox(height: 20),
           ],

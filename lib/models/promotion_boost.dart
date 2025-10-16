@@ -69,11 +69,11 @@ class PromotionBoost {
         impressions: map['impressions'] ?? 0,
         clicks: map['clicks'] ?? 0,
         ctr: (map['ctr'] ?? 0.0).toDouble(),
-        createdAt: map['createdAt'] != null 
-            ? (map['createdAt'] as Timestamp).toDate() 
+        createdAt: map['createdAt'] != null
+            ? (map['createdAt'] as Timestamp).toDate()
             : DateTime.now(),
-        updatedAt: map['updatedAt'] != null 
-            ? (map['updatedAt'] as Timestamp).toDate() 
+        updatedAt: map['updatedAt'] != null
+            ? (map['updatedAt'] as Timestamp).toDate()
             : DateTime.now(),
         metadata: map['metadata'],
       );
@@ -120,10 +120,11 @@ class PromotionBoost {
 
   bool get isActive => status == PromotionStatus.active && !isExpired;
   bool get isExpired => DateTime.now().isAfter(endDate);
-  bool get isExpiringSoon => DateTime.now().add(const Duration(days: 1)).isAfter(endDate);
-  
+  bool get isExpiringSoon =>
+      DateTime.now().add(const Duration(days: 1)).isAfter(endDate);
+
   int get daysRemaining => endDate.difference(DateTime.now()).inDays;
-  
+
   double get progressPercentage {
     final totalDays = endDate.difference(startDate).inDays;
     final remainingDays = endDate.difference(DateTime.now()).inDays;
@@ -195,7 +196,8 @@ class PromotionPackage {
     this.updatedAt,
   });
 
-  factory PromotionPackage.fromMap(Map<String, dynamic> map) => PromotionPackage(
+  factory PromotionPackage.fromMap(Map<String, dynamic> map) =>
+      PromotionPackage(
         id: map['id'] ?? '',
         name: map['name'] ?? '',
         type: PromotionType.values.firstWhere(
@@ -213,11 +215,11 @@ class PromotionPackage {
         features: List<String>.from(map['features'] ?? []),
         originalPrice: map['originalPrice']?.toDouble(),
         discountPercentage: map['discountPercentage']?.toDouble(),
-        createdAt: map['createdAt'] != null 
-            ? (map['createdAt'] as Timestamp).toDate() 
+        createdAt: map['createdAt'] != null
+            ? (map['createdAt'] as Timestamp).toDate()
             : DateTime.now(),
-        updatedAt: map['updatedAt'] != null 
-            ? (map['updatedAt'] as Timestamp).toDate() 
+        updatedAt: map['updatedAt'] != null
+            ? (map['updatedAt'] as Timestamp).toDate()
             : DateTime.now(),
       );
 
@@ -252,8 +254,9 @@ class PromotionPackage {
       };
 
   bool get hasDiscount => originalPrice != null && originalPrice! > price;
-  
-  double get discountAmount => originalPrice != null ? originalPrice! - price : 0.0;
+
+  double get discountAmount =>
+      originalPrice != null ? originalPrice! - price : 0.0;
 
   PromotionPackage copyWith({
     String? id,

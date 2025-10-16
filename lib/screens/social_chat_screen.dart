@@ -22,7 +22,7 @@ class SocialChatScreen extends ConsumerStatefulWidget {
 class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  
+
   List<Message> _messages = [];
   bool _isLoading = true;
   String? _error;
@@ -52,7 +52,7 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
 
       // Загружаем сообщения
       final messages = await SupabaseService.getChatMessages(widget.chatId);
-      
+
       // Определяем собеседника
       final currentUser = SupabaseService.currentUser;
       if (currentUser != null && messages.isNotEmpty) {
@@ -60,7 +60,8 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
           (msg) => msg.senderId != currentUser.id,
           orElse: () => messages.first,
         );
-        _otherUser = await SupabaseService.getProfile(otherUserMessage.senderId);
+        _otherUser =
+            await SupabaseService.getProfile(otherUserMessage.senderId);
       }
 
       setState(() {
@@ -180,7 +181,7 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
           Expanded(
             child: _buildMessagesList(),
           ),
-          
+
           // Поле ввода сообщения
           _buildMessageInput(),
         ],
@@ -245,8 +246,8 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
             Text(
               'Отправьте первое сообщение',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).textTheme.bodySmall?.color,
-              ),
+                    color: Theme.of(context).textTheme.bodySmall?.color,
+                  ),
             ),
           ],
         ),
@@ -269,7 +270,8 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
     final isFromCurrentUser = currentUser?.id == message.senderId;
 
     return Align(
-      alignment: isFromCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
+      alignment:
+          isFromCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4),
         constraints: BoxConstraints(
@@ -296,8 +298,8 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
                   Text(
                     message.senderName ?? 'Пользователь',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
+                          fontWeight: FontWeight.w500,
+                        ),
                   ),
                 ],
               ),
@@ -339,8 +341,8 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
             Text(
               _formatMessageTime(message.createdAt),
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).textTheme.bodySmall?.color,
-              ),
+                    color: Theme.of(context).textTheme.bodySmall?.color,
+                  ),
             ),
           ],
         ),
@@ -462,6 +464,3 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
     );
   }
 }
-
-
-

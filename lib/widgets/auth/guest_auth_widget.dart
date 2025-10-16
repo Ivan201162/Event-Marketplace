@@ -69,7 +69,7 @@ class _GuestAuthWidgetState extends ConsumerState<GuestAuthWidget> {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
-          
+
           Text(
             'Просматривайте контент без регистрации',
             style: theme.textTheme.bodyMedium?.copyWith(
@@ -185,7 +185,7 @@ class _GuestAuthWidgetState extends ConsumerState<GuestAuthWidget> {
               ],
             ),
           ),
-          
+
           // Дополнительный отступ снизу для безопасности
           const SizedBox(height: 20),
         ],
@@ -193,25 +193,26 @@ class _GuestAuthWidgetState extends ConsumerState<GuestAuthWidget> {
     );
   }
 
-  Widget _buildFeatureItem(ThemeData theme, IconData icon, String text) => Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            size: 16,
-            color: theme.primaryColor,
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              text,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.primaryColor,
+  Widget _buildFeatureItem(ThemeData theme, IconData icon, String text) =>
+      Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              size: 16,
+              color: theme.primaryColor,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                text,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.primaryColor,
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
 }

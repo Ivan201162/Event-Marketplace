@@ -9,11 +9,10 @@ class AuthProvider extends ChangeNotifier {
   String? get currentUserId => _currentUserId;
   bool get isAuthenticated => _isAuthenticated;
   bool get isLoading => _isLoading;
-  
+
   // Для совместимости с существующим кодом
-  Map<String, dynamic>? get currentUser => _currentUserId != null 
-      ? {'id': _currentUserId} 
-      : null;
+  Map<String, dynamic>? get currentUser =>
+      _currentUserId != null ? {'id': _currentUserId} : null;
 
   // Методы
   Future<void> signIn(String userId) async {
@@ -22,7 +21,7 @@ class AuthProvider extends ChangeNotifier {
 
     // Симуляция входа
     await Future.delayed(const Duration(seconds: 1));
-    
+
     _currentUserId = userId;
     _isAuthenticated = true;
     _isLoading = false;
@@ -35,7 +34,7 @@ class AuthProvider extends ChangeNotifier {
 
     // Симуляция выхода
     await Future.delayed(const Duration(milliseconds: 500));
-    
+
     _currentUserId = null;
     _isAuthenticated = false;
     _isLoading = false;

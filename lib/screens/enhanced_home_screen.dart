@@ -22,11 +22,11 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   String _selectedCategory = 'Все';
-  
+
   late AnimationController _profileAnimationController;
   late Animation<double> _profileOpacityAnimation;
   late Animation<double> _profileScaleAnimation;
-  
+
   bool _showProfileBanner = true;
   Map<String, dynamic> _currentFilters = {};
 
@@ -43,7 +43,11 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
     {'name': 'Ведущие', 'icon': '🎤', 'color': Colors.teal},
     {'name': 'Декораторы', 'icon': '🎨', 'color': Colors.amber},
     {'name': 'Аниматоры', 'icon': '🎭', 'color': Colors.cyan},
-    {'name': 'Организатор мероприятий', 'icon': '🎪', 'color': Colors.deepOrange},
+    {
+      'name': 'Организатор мероприятий',
+      'icon': '🎪',
+      'color': Colors.deepOrange
+    },
   ];
 
   @override
@@ -53,7 +57,7 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     _profileOpacityAnimation = Tween<double>(
       begin: 1.0,
       end: 0.0,
@@ -61,7 +65,7 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
       parent: _profileAnimationController,
       curve: Curves.easeInOut,
     ));
-    
+
     _profileScaleAnimation = Tween<double>(
       begin: 1.0,
       end: 0.95,
@@ -69,7 +73,7 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
       parent: _profileAnimationController,
       curve: Curves.easeInOut,
     ));
-    
+
     _scrollController.addListener(_onScroll);
   }
 
@@ -84,7 +88,7 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
   void _onScroll() {
     final currentOffset = _scrollController.offset;
     const threshold = 100.0;
-    
+
     if (currentOffset > threshold && _showProfileBanner) {
       setState(() {
         _showProfileBanner = false;
@@ -117,21 +121,21 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
   void _applyFiltersToSearch() {
     // Создаем URL с параметрами фильтров
     final queryParams = <String, String>{};
-    
+
     if (_searchController.text.isNotEmpty) {
       queryParams['q'] = _searchController.text;
     }
-    
+
     _currentFilters.forEach((key, value) {
       if (value != null && value.toString().isNotEmpty) {
         queryParams[key] = value.toString();
       }
     });
-    
+
     final queryString = queryParams.entries
         .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
         .join('&');
-    
+
     context.push('/search?$queryString');
   }
 
@@ -182,50 +186,50 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
             controller: _scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
-          // Плашка пользователя
-          SliverToBoxAdapter(
-            child: currentUserAsync.when(
-              data: _buildUserProfileCard,
-              loading: () => _buildUserProfileCard(null),
-              error: (_, __) => _buildUserProfileCard(null),
-            ),
-          ),
+              // Плашка пользователя
+              SliverToBoxAdapter(
+                child: currentUserAsync.when(
+                  data: _buildUserProfileCard,
+                  loading: () => _buildUserProfileCard(null),
+                  error: (_, __) => _buildUserProfileCard(null),
+                ),
+              ),
 
-          // Поиск специалистов
-          SliverToBoxAdapter(
-            child: _buildSearchSection(),
-          ),
+              // Поиск специалистов
+              SliverToBoxAdapter(
+                child: _buildSearchSection(),
+              ),
 
-          // Категории специалистов
-          SliverToBoxAdapter(
-            child: _buildCategoriesSection(),
-          ),
+              // Категории специалистов
+              SliverToBoxAdapter(
+                child: _buildCategoriesSection(),
+              ),
 
-          // Карусель лучших специалистов недели
-          SliverToBoxAdapter(
-            child: _buildBestSpecialistsCarousel(),
-          ),
+              // Карусель лучших специалистов недели
+              SliverToBoxAdapter(
+                child: _buildBestSpecialistsCarousel(),
+              ),
 
-          // Лучшие специалисты по городу
-          SliverToBoxAdapter(
-            child: _buildCitySpecialistsCarousel(),
-          ),
+              // Лучшие специалисты по городу
+              SliverToBoxAdapter(
+                child: _buildCitySpecialistsCarousel(),
+              ),
 
-          // Блок "Интересное"
-          SliverToBoxAdapter(
-            child: _buildInterestingSection(),
-          ),
+              // Блок "Интересное"
+              SliverToBoxAdapter(
+                child: _buildInterestingSection(),
+              ),
 
-          // Быстрые действия
-          SliverToBoxAdapter(
-            child: _buildQuickActionsSection(),
-          ),
-          
-          // Дополнительный отступ внизу для предотвращения overflow
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 20),
-          ),
-        ],
+              // Быстрые действия
+              SliverToBoxAdapter(
+                child: _buildQuickActionsSection(),
+              ),
+
+              // Дополнительный отступ внизу для предотвращения overflow
+              const SliverToBoxAdapter(
+                child: SizedBox(height: 20),
+              ),
+            ],
           ),
         ),
       ),
@@ -257,7 +261,8 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Theme.of(context).primaryColor.withValues(alpha: 0.4),
+                      color:
+                          Theme.of(context).primaryColor.withValues(alpha: 0.4),
                       blurRadius: 15,
                       offset: const Offset(0, 8),
                       spreadRadius: 2,
@@ -269,248 +274,253 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                     ),
                   ],
                 ),
-        child: Row(
-          children: [
-            // Аватар пользователя
-            GestureDetector(
-              onTap: () {
-                if (user != null) {
-                  context.push('/profile/me');
-                }
-              },
-              child: Container(
-                width: 70,
-                height: 70,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 4,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.3),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                      spreadRadius: 1,
-                    ),
-                    BoxShadow(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      blurRadius: 8,
-                      offset: const Offset(0, -2),
-                    ),
-                  ],
-                ),
-                child: CircleAvatar(
-                  radius: 31,
-                  backgroundColor: Colors.white,
-                  child: user?.photoURL?.isNotEmpty == true
-                      ? ClipOval(
-                          child: CachedNetworkImage(
-                            imageUrl: user.photoURL!,
-                            width: 70,
-                            height: 70,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => Container(
-                              color: Colors.grey[200],
-                              child: const Center(
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
-                                ),
-                              ),
-                            ),
-                            errorWidget: (context, url, error) => Container(
-                              color: Colors.grey[200],
-                              child: Icon(
-                                Icons.person,
-                                size: 35,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                          ),
-                        )
-                      : Container(
-                          color: Colors.grey[200],
-                          child: Icon(
-                            Icons.person,
-                            size: 35,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            // Информация о пользователе
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    user?.displayName ?? 'Добро пожаловать!',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      shadows: [
-                        Shadow(
-                          color: Colors.black26,
-                          offset: Offset(0, 1),
-                          blurRadius: 2,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    user?.email ?? 'Войдите в аккаунт',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      shadows: [
-                        Shadow(
-                          color: Colors.black26,
-                          offset: Offset(0, 1),
-                          blurRadius: 1,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.location_on,
-                        color: Colors.white,
-                        size: 18,
-                      ),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: Text(
-                          user?.city?.trim().isNotEmpty == true
-                              ? user!.city!
-                              : 'Город не указан',
-                          style: const TextStyle(
+                child: Row(
+                  children: [
+                    // Аватар пользователя
+                    GestureDetector(
+                      onTap: () {
+                        if (user != null) {
+                          context.push('/profile/me');
+                        }
+                      },
+                      child: Container(
+                        width: 70,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
                             color: Colors.white,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black26,
-                                offset: Offset(0, 1),
-                                blurRadius: 1,
+                            width: 4,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.3),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                              spreadRadius: 1,
+                            ),
+                            BoxShadow(
+                              color: Colors.white.withValues(alpha: 0.2),
+                              blurRadius: 8,
+                              offset: const Offset(0, -2),
+                            ),
+                          ],
+                        ),
+                        child: CircleAvatar(
+                          radius: 31,
+                          backgroundColor: Colors.white,
+                          child: user?.photoURL?.isNotEmpty == true
+                              ? ClipOval(
+                                  child: CachedNetworkImage(
+                                    imageUrl: user.photoURL!,
+                                    width: 70,
+                                    height: 70,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) => Container(
+                                      color: Colors.grey[200],
+                                      child: const Center(
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  Colors.grey),
+                                        ),
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        Container(
+                                      color: Colors.grey[200],
+                                      child: Icon(
+                                        Icons.person,
+                                        size: 35,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Container(
+                                  color: Colors.grey[200],
+                                  child: Icon(
+                                    Icons.person,
+                                    size: 35,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    // Информация о пользователе
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            user?.displayName ?? 'Добро пожаловать!',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black26,
+                                  offset: Offset(0, 1),
+                                  blurRadius: 2,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            user?.email ?? 'Войдите в аккаунт',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black26,
+                                  offset: Offset(0, 1),
+                                  blurRadius: 1,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.location_on,
+                                color: Colors.white,
+                                size: 18,
+                              ),
+                              const SizedBox(width: 6),
+                              Expanded(
+                                child: Text(
+                                  user?.city?.trim().isNotEmpty == true
+                                      ? user!.city!
+                                      : 'Город не указан',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                    shadows: [
+                                      Shadow(
+                                        color: Colors.black26,
+                                        offset: Offset(0, 1),
+                                        blurRadius: 1,
+                                      ),
+                                    ],
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ],
                           ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  // Статус и подписчики
-                  Row(
-                    children: [
-                      // Статус онлайн/офлайн
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.green.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: Colors.green.withValues(alpha: 0.5),
-                            width: 1,
+                          const SizedBox(height: 8),
+                          // Статус и подписчики
+                          Row(
+                            children: [
+                              // Статус онлайн/офлайн
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: Colors.green.withValues(alpha: 0.2),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: Colors.green.withValues(alpha: 0.5),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      width: 8,
+                                      height: 8,
+                                      decoration: const BoxDecoration(
+                                        color: Colors.green,
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    const Text(
+                                      'Онлайн',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              // Количество подписчиков
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.2),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(
+                                      Icons.people,
+                                      color: Colors.white,
+                                      size: 14,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      '${_getRandomFollowers()} подписчиков',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              width: 8,
-                              height: 8,
-                              decoration: const BoxDecoration(
-                                color: Colors.green,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            const Text(
-                              'Онлайн',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
+                        ],
+                      ),
+                    ),
+                    // Кнопка редактирования профиля
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.3),
+                          width: 1,
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      // Количество подписчиков
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            width: 1,
-                          ),
+                      child: IconButton(
+                        onPressed: () => context.push('/profile/edit'),
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                          size: 20,
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.people,
-                              color: Colors.white,
-                              size: 14,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              '${_getRandomFollowers()} подписчиков',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
+                        tooltip: 'Редактировать профиль',
+                        padding: const EdgeInsets.all(8),
+                        constraints: const BoxConstraints(
+                          minWidth: 40,
+                          minHeight: 40,
                         ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            // Кнопка редактирования профиля
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.3),
-                  width: 1,
+                    ),
+                  ],
                 ),
-              ),
-              child: IconButton(
-                onPressed: () => context.push('/profile/edit'),
-                icon: const Icon(
-                  Icons.edit,
-                  color: Colors.white,
-                  size: 20,
-                ),
-                tooltip: 'Редактировать профиль',
-                padding: const EdgeInsets.all(8),
-                constraints: const BoxConstraints(
-                  minWidth: 40,
-                  minHeight: 40,
-                ),
-              ),
-            ),
-          ],
-        ),
               ),
             ),
           );
@@ -538,7 +548,8 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                     if (_currentFilters.isNotEmpty)
                       Container(
                         margin: const EdgeInsets.only(right: 8),
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: Theme.of(context).primaryColor,
                           borderRadius: BorderRadius.circular(12),
@@ -559,7 +570,9 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                       style: IconButton.styleFrom(
                         backgroundColor: _currentFilters.isNotEmpty
                             ? Theme.of(context).primaryColor
-                            : Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                            : Theme.of(context)
+                                .primaryColor
+                                .withValues(alpha: 0.1),
                         foregroundColor: _currentFilters.isNotEmpty
                             ? Colors.white
                             : Theme.of(context).primaryColor,
@@ -590,7 +603,8 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                     IconButton(
                       onPressed: () {
                         if (_searchController.text.isNotEmpty) {
-                          context.push('/search?q=${Uri.encodeComponent(_searchController.text)}');
+                          context.push(
+                              '/search?q=${Uri.encodeComponent(_searchController.text)}');
                         }
                       },
                       icon: const Icon(Icons.search),
@@ -625,12 +639,17 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                     final entry = _currentFilters.entries.elementAt(index);
                     return Container(
                       margin: const EdgeInsets.only(right: 8),
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                        color: Theme.of(context)
+                            .primaryColor
+                            .withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                          color: Theme.of(context)
+                              .primaryColor
+                              .withValues(alpha: 0.3),
                         ),
                       ),
                       child: Row(
@@ -692,7 +711,8 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                         _selectedCategory = category['name'] as String;
                       });
                       // Переход к отфильтрованным специалистам
-                      context.push('/search?category=${Uri.encodeComponent(category['name'] as String)}');
+                      context.push(
+                          '/search?category=${Uri.encodeComponent(category['name'] as String)}');
                     },
                     child: Container(
                       width: 80,
@@ -785,7 +805,8 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, __) => const Center(child: Text('Ошибка загрузки специалистов')),
+      error: (_, __) =>
+          const Center(child: Text('Ошибка загрузки специалистов')),
     );
   }
 
@@ -798,14 +819,16 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
         // Фильтруем специалистов по городу пользователя
         final currentUser = ref.read(currentUserProvider).value;
         final userCity = currentUser?.city?.trim();
-        
+
         List<Specialist> citySpecialists = specialists;
         if (userCity != null && userCity.isNotEmpty) {
           citySpecialists = specialists
-              .where((s) => s.city?.toLowerCase().contains(userCity.toLowerCase()) == true)
+              .where((s) =>
+                  s.city?.toLowerCase().contains(userCity.toLowerCase()) ==
+                  true)
               .toList();
         }
-        
+
         // Берем топ-5 специалистов по рейтингу в городе
         citySpecialists.sort((a, b) => b.rating.compareTo(a.rating));
         final top5City = citySpecialists.take(5).toList();
@@ -827,7 +850,8 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                         ),
                   ),
                   TextButton(
-                    onPressed: () => context.push('/search?city=${Uri.encodeComponent(userCity ?? '')}'),
+                    onPressed: () => context.push(
+                        '/search?city=${Uri.encodeComponent(userCity ?? '')}'),
                     child: const Text('Все'),
                   ),
                 ],
@@ -893,7 +917,8 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, __) => const Center(child: Text('Ошибка загрузки специалистов')),
+      error: (_, __) =>
+          const Center(child: Text('Ошибка загрузки специалистов')),
     );
   }
 
@@ -1093,7 +1118,8 @@ class _SpecialistCard extends StatelessWidget {
                             child: ElevatedButton(
                               onPressed: () => _openChat(context),
                               style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical: 4),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 4),
                                 minimumSize: Size.zero,
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
@@ -1108,7 +1134,8 @@ class _SpecialistCard extends StatelessWidget {
                             child: ElevatedButton(
                               onPressed: () => _openBooking(context),
                               style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical: 4),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 4),
                                 minimumSize: Size.zero,
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
@@ -1211,7 +1238,6 @@ class _InterestingCard extends StatelessWidget {
 }
 
 class _QuickActionCard extends StatelessWidget {
-
   const _QuickActionCard({
     required this.icon,
     required this.title,
@@ -1223,34 +1249,34 @@ class _QuickActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: Theme.of(context).dividerColor,
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Theme.of(context).cardColor,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: Theme.of(context).dividerColor,
+            ),
+          ),
+          child: Column(
+            children: [
+              Icon(
+                icon,
+                size: 32,
+                color: Theme.of(context).primaryColor,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
         ),
-        child: Column(
-          children: [
-            Icon(
-              icon,
-              size: 32,
-              color: Theme.of(context).primaryColor,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              title,
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
+      );
 }

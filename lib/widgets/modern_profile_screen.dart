@@ -153,7 +153,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     );
   }
 
-  Widget _buildProfileContent(Map<String, dynamic> specialist) => FadeTransition(
+  Widget _buildProfileContent(Map<String, dynamic> specialist) =>
+      FadeTransition(
         opacity: _fadeAnimation,
         child: CustomScrollView(
           controller: _scrollController,
@@ -170,7 +171,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ),
       );
 
-  Widget _buildProfileHeader(Map<String, dynamic> specialist) => SliverToBoxAdapter(
+  Widget _buildProfileHeader(Map<String, dynamic> specialist) =>
+      SliverToBoxAdapter(
         child: Container(
           height: 200,
           decoration: BoxDecoration(
@@ -235,7 +237,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ),
       );
 
-  Widget _buildProfileInfo(Map<String, dynamic> specialist) => SliverToBoxAdapter(
+  Widget _buildProfileInfo(Map<String, dynamic> specialist) =>
+      SliverToBoxAdapter(
         child: FadeTransition(
           opacity: _fadeAnimation,
           child: Padding(
@@ -263,7 +266,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                               placeholder: Icons.person,
                             )
                           : CachedNetworkImage(
-                              imageUrl: (specialist['imageUrl'] as String?) ?? '',
+                              imageUrl:
+                                  (specialist['imageUrl'] as String?) ?? '',
                               fit: BoxFit.cover,
                               placeholder: (context, url) => Container(
                                 color: Colors.grey[300],
@@ -334,7 +338,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ),
       );
 
-  Widget _buildStatsSection(Map<String, dynamic> specialist) => SliverToBoxAdapter(
+  Widget _buildStatsSection(Map<String, dynamic> specialist) =>
+      SliverToBoxAdapter(
         child: FadeTransition(
           opacity: _fadeAnimation,
           child: Container(
@@ -387,7 +392,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ],
       );
 
-  Widget _buildActionButtons(Map<String, dynamic> specialist) => SliverToBoxAdapter(
+  Widget _buildActionButtons(Map<String, dynamic> specialist) =>
+      SliverToBoxAdapter(
         child: FadeTransition(
           opacity: _fadeAnimation,
           child: Padding(
@@ -456,7 +462,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
       );
 
   Widget _buildBioSection(Map<String, dynamic> specialist) {
-    if (specialist['description'] == null || (specialist['description'] as String).isEmpty) {
+    if (specialist['description'] == null ||
+        (specialist['description'] as String).isEmpty) {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
     }
 
@@ -639,7 +646,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ),
       );
 
-  Widget _buildTabContent(Map<String, dynamic> specialist) => SliverFillRemaining(
+  Widget _buildTabContent(Map<String, dynamic> specialist) =>
+      SliverFillRemaining(
         child: TabBarView(
           controller: _tabController,
           children: [
@@ -792,7 +800,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: CachedNetworkImage(
-                  imageUrl: (specialist['portfolioImages'] as List)[index].toString(),
+                  imageUrl:
+                      (specialist['portfolioImages'] as List)[index].toString(),
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Container(
                     color: Colors.grey[300],

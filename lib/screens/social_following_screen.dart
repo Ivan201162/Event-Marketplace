@@ -15,7 +15,8 @@ class SocialFollowingScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<SocialFollowingScreen> createState() => _SocialFollowingScreenState();
+  ConsumerState<SocialFollowingScreen> createState() =>
+      _SocialFollowingScreenState();
 }
 
 class _SocialFollowingScreenState extends ConsumerState<SocialFollowingScreen> {
@@ -38,7 +39,8 @@ class _SocialFollowingScreenState extends ConsumerState<SocialFollowingScreen> {
       });
 
       // Загружаем профиль пользователя
-      final profile = await SupabaseService.getProfileByUsername(widget.username);
+      final profile =
+          await SupabaseService.getProfileByUsername(widget.username);
       if (profile == null) {
         setState(() {
           _error = 'Профиль не найден';
@@ -130,8 +132,8 @@ class _SocialFollowingScreenState extends ConsumerState<SocialFollowingScreen> {
             Text(
               '${_profile?.name ?? 'Пользователь'} пока ни на кого не подписан',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).textTheme.bodySmall?.color,
-              ),
+                    color: Theme.of(context).textTheme.bodySmall?.color,
+                  ),
               textAlign: TextAlign.center,
             ),
           ],
@@ -158,9 +160,7 @@ class _SocialFollowingScreenState extends ConsumerState<SocialFollowingScreen> {
         backgroundImage: following.avatarUrl != null
             ? CachedNetworkImageProvider(following.avatarUrl!)
             : null,
-        child: following.avatarUrl == null
-            ? const Icon(Icons.person)
-            : null,
+        child: following.avatarUrl == null ? const Icon(Icons.person) : null,
       ),
       title: Text(
         following.name,
@@ -232,12 +232,12 @@ class _SocialFollowingScreenState extends ConsumerState<SocialFollowingScreen> {
   Future<void> _unfollow(Profile following) async {
     try {
       final success = await SupabaseService.unfollowUser(following.id);
-      
+
       if (success) {
         setState(() {
           _following.removeWhere((user) => user.id == following.id);
         });
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Вы отписались от ${following.name}'),
@@ -262,7 +262,7 @@ class _SocialFollowingScreenState extends ConsumerState<SocialFollowingScreen> {
   Future<void> _refollow(Profile following) async {
     try {
       final success = await SupabaseService.followUser(following.id);
-      
+
       if (success) {
         setState(() {
           _following.add(following);
@@ -275,6 +275,3 @@ class _SocialFollowingScreenState extends ConsumerState<SocialFollowingScreen> {
     }
   }
 }
-
-
-

@@ -25,16 +25,15 @@ class ABTestingService {
       }
 
       // Получаем активный тест
-      final DocumentSnapshot testDoc = await _firestore
-          .collection('ab_tests')
-          .doc(testName)
-          .get();
+      final DocumentSnapshot testDoc =
+          await _firestore.collection('ab_tests').doc(testName).get();
 
       if (!testDoc.exists) {
         return 'control'; // Возвращаем контрольный вариант по умолчанию
       }
 
-      final ABTest test = ABTest.fromMap(testDoc.data() as Map<String, dynamic>);
+      final ABTest test =
+          ABTest.fromMap(testDoc.data() as Map<String, dynamic>);
 
       if (!test.isActive) {
         return 'control';
@@ -42,7 +41,7 @@ class ABTestingService {
 
       // Назначаем вариант на основе алгоритма (например, хеш от userId)
       final String variant = _assignVariant(userId, test);
-      
+
       // Сохраняем назначение
       final ABTestAssignment assignment = ABTestAssignment(
         id: _uuid.v4(),
@@ -58,10 +57,12 @@ class ABTestingService {
           .doc(assignment.id)
           .set(assignment.toMap());
 
-      debugPrint('INFO: [ABTestingService] Variant $variant assigned to user $userId for test $testName');
+      debugPrint(
+          'INFO: [ABTestingService] Variant $variant assigned to user $userId for test $testName');
       return variant;
     } catch (e) {
-      debugPrint('ERROR: [ABTestingService] Failed to get variant for user: $e');
+      debugPrint(
+          'ERROR: [ABTestingService] Failed to get variant for user: $e');
       return 'control';
     }
   }
@@ -83,7 +84,8 @@ class ABTestingService {
   }
 
   /// Логирование события для A/B теста
-  Future<void> logEvent(String userId, String testName, String eventName, Map<String, dynamic>? eventData) async {
+  Future<void> logEvent(String userId, String testName, String eventName,
+      Map<String, dynamic>? eventData) async {
     try {
       // Получаем назначенный вариант
       final String variant = await getVariantForUser(userId, testName);
@@ -103,7 +105,8 @@ class ABTestingService {
           .doc(event.id)
           .set(event.toMap());
 
-      debugPrint('INFO: [ABTestingService] Event logged: $eventName for test $testName, variant $variant');
+      debugPrint(
+          'INFO: [ABTestingService] Event logged: $eventName for test $testName, variant $variant');
     } catch (e) {
       debugPrint('ERROR: [ABTestingService] Failed to log event: $e');
     }
@@ -135,10 +138,7 @@ class ABTestingService {
         metadata: metadata,
       );
 
-      await _firestore
-          .collection('ab_tests')
-          .doc(test.id)
-          .set(test.toMap());
+      await _firestore.collection('ab_tests').doc(test.id).set(test.toMap());
 
       debugPrint('INFO: [ABTestingService] AB test created: ${test.id}');
       return test.id;
@@ -182,16 +182,15 @@ class ABTestingService {
   Future<ABTestResults> getABTestResults(String testId) async {
     try {
       // Получаем информацию о тесте
-      final DocumentSnapshot testDoc = await _firestore
-          .collection('ab_tests')
-          .doc(testId)
-          .get();
+      final DocumentSnapshot testDoc =
+          await _firestore.collection('ab_tests').doc(testId).get();
 
       if (!testDoc.exists) {
         throw Exception('AB test not found');
       }
 
-      final ABTest test = ABTest.fromMap(testDoc.data() as Map<String, dynamic>);
+      final ABTest test =
+          ABTest.fromMap(testDoc.data() as Map<String, dynamic>);
 
       // Получаем назначения пользователей
       final QuerySnapshot assignmentsSnapshot = await _firestore
@@ -211,17 +210,20 @@ class ABTestingService {
 
       // Подсчитываем пользователей по вариантам
       for (final doc in assignmentsSnapshot.docs) {
-        final ABTestAssignment assignment = ABTestAssignment.fromMap(doc.data() as Map<String, dynamic>);
-        variantUsers[assignment.variant] = (variantUsers[assignment.variant] ?? 0) + 1;
+        final ABTestAssignment assignment =
+            ABTestAssignment.fromMap(doc.data() as Map<String, dynamic>);
+        variantUsers[assignment.variant] =
+            (variantUsers[assignment.variant] ?? 0) + 1;
       }
 
       // Подсчитываем события по вариантам
       for (final doc in eventsSnapshot.docs) {
-        final ABTestEvent event = ABTestEvent.fromMap(doc.data() as Map<String, dynamic>);
+        final ABTestEvent event =
+            ABTestEvent.fromMap(doc.data() as Map<String, dynamic>);
         if (variantEvents[event.variant] == null) {
           variantEvents[event.variant] = {};
         }
-        variantEvents[event.variant]![event.eventName] = 
+        variantEvents[event.variant]![event.eventName] =
             (variantEvents[event.variant]![event.eventName] ?? 0) + 1;
       }
 
@@ -230,12 +232,13 @@ class ABTestingService {
       for (final variant in test.variants) {
         final int userCount = variantUsers[variant.name] ?? 0;
         final Map<String, int> events = variantEvents[variant.name] ?? {};
-        
+
         variantResults.add(VariantResult(
           variantName: variant.name,
           userCount: userCount,
           events: events,
-          conversionRate: userCount > 0 ? (events['conversion'] ?? 0) / userCount : 0.0,
+          conversionRate:
+              userCount > 0 ? (events['conversion'] ?? 0) / userCount : 0.0,
         ));
       }
 
@@ -286,7 +289,8 @@ class ABTestingService {
 
       return snapshot.docs.isNotEmpty;
     } catch (e) {
-      debugPrint('ERROR: [ABTestingService] Failed to check user test participation: $e');
+      debugPrint(
+          'ERROR: [ABTestingService] Failed to check user test participation: $e');
       return false;
     }
   }
@@ -301,10 +305,12 @@ class ABTestingService {
           .get();
 
       return snapshot.docs
-          .map((doc) => ABTestAssignment.fromMap(doc.data() as Map<String, dynamic>))
+          .map((doc) =>
+              ABTestAssignment.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      debugPrint('ERROR: [ABTestingService] Failed to get user test assignments: $e');
+      debugPrint(
+          'ERROR: [ABTestingService] Failed to get user test assignments: $e');
       return [];
     }
   }
@@ -401,7 +407,8 @@ class ABTestingService {
 
       debugPrint('INFO: [ABTestingService] Monetization AB tests created');
     } catch (e) {
-      debugPrint('ERROR: [ABTestingService] Failed to create monetization AB tests: $e');
+      debugPrint(
+          'ERROR: [ABTestingService] Failed to create monetization AB tests: $e');
     }
   }
 }

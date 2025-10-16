@@ -112,6 +112,3 @@ class FirestoreConnectionTest {
     return success;
   }
 }
-
-
-

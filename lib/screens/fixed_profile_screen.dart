@@ -480,6 +480,3 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
     );
   }
 }
-
-
-

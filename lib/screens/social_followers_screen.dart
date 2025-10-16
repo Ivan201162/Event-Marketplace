@@ -15,7 +15,8 @@ class SocialFollowersScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<SocialFollowersScreen> createState() => _SocialFollowersScreenState();
+  ConsumerState<SocialFollowersScreen> createState() =>
+      _SocialFollowersScreenState();
 }
 
 class _SocialFollowersScreenState extends ConsumerState<SocialFollowersScreen> {
@@ -38,7 +39,8 @@ class _SocialFollowersScreenState extends ConsumerState<SocialFollowersScreen> {
       });
 
       // Загружаем профиль пользователя
-      final profile = await SupabaseService.getProfileByUsername(widget.username);
+      final profile =
+          await SupabaseService.getProfileByUsername(widget.username);
       if (profile == null) {
         setState(() {
           _error = 'Профиль не найден';
@@ -130,8 +132,8 @@ class _SocialFollowersScreenState extends ConsumerState<SocialFollowersScreen> {
             Text(
               'У ${_profile?.name ?? 'пользователя'} пока нет подписчиков',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).textTheme.bodySmall?.color,
-              ),
+                    color: Theme.of(context).textTheme.bodySmall?.color,
+                  ),
               textAlign: TextAlign.center,
             ),
           ],
@@ -158,9 +160,7 @@ class _SocialFollowersScreenState extends ConsumerState<SocialFollowersScreen> {
         backgroundImage: follower.avatarUrl != null
             ? CachedNetworkImageProvider(follower.avatarUrl!)
             : null,
-        child: follower.avatarUrl == null
-            ? const Icon(Icons.person)
-            : null,
+        child: follower.avatarUrl == null ? const Icon(Icons.person) : null,
       ),
       title: Text(
         follower.name,
@@ -247,6 +247,3 @@ class _SocialFollowersScreenState extends ConsumerState<SocialFollowersScreen> {
     }
   }
 }
-
-
-

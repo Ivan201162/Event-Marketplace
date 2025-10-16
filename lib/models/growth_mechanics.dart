@@ -139,8 +139,8 @@ class UserAchievement {
         ),
         earnedAt: (map['earnedAt'] as Timestamp).toDate(),
         isClaimed: map['isClaimed'] ?? false,
-        rewardClaimedAt: map['rewardClaimedAt'] != null 
-            ? (map['rewardClaimedAt'] as Timestamp).toDate() 
+        rewardClaimedAt: map['rewardClaimedAt'] != null
+            ? (map['rewardClaimedAt'] as Timestamp).toDate()
             : null,
         progress: Map<String, dynamic>.from(map['progress'] ?? {}),
         metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
@@ -165,7 +165,9 @@ class UserAchievement {
         'achievementType': achievementType.toString().split('.').last,
         'earnedAt': Timestamp.fromDate(earnedAt),
         'isClaimed': isClaimed,
-        'rewardClaimedAt': rewardClaimedAt != null ? Timestamp.fromDate(rewardClaimedAt!) : null,
+        'rewardClaimedAt': rewardClaimedAt != null
+            ? Timestamp.fromDate(rewardClaimedAt!)
+            : null,
         'progress': progress,
         'metadata': metadata,
       };
@@ -233,11 +235,13 @@ class Challenge {
   final int completedCount;
   final Map<String, dynamic>? metadata;
 
-  bool get isActive => status == ChallengeStatus.active && 
-      DateTime.now().isAfter(startDate) && 
+  bool get isActive =>
+      status == ChallengeStatus.active &&
+      DateTime.now().isAfter(startDate) &&
       DateTime.now().isBefore(endDate);
 
-  double get completionRate => participants > 0 ? completedCount / participants : 0.0;
+  double get completionRate =>
+      participants > 0 ? completedCount / participants : 0.0;
 
   Map<String, dynamic> toMap() => {
         'id': id,
@@ -289,12 +293,12 @@ class UserChallenge {
           (e) => e.toString() == 'ChallengeStatus.${map['status']}',
           orElse: () => ChallengeStatus.active,
         ),
-        completedAt: map['completedAt'] != null 
-            ? (map['completedAt'] as Timestamp).toDate() 
+        completedAt: map['completedAt'] != null
+            ? (map['completedAt'] as Timestamp).toDate()
             : null,
         progress: Map<String, dynamic>.from(map['progress'] ?? {}),
-        rewardClaimedAt: map['rewardClaimedAt'] != null 
-            ? (map['rewardClaimedAt'] as Timestamp).toDate() 
+        rewardClaimedAt: map['rewardClaimedAt'] != null
+            ? (map['rewardClaimedAt'] as Timestamp).toDate()
             : null,
         metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
       );
@@ -322,9 +326,12 @@ class UserChallenge {
         'challengeType': challengeType.toString().split('.').last,
         'joinedAt': Timestamp.fromDate(joinedAt),
         'status': status.toString().split('.').last,
-        'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+        'completedAt':
+            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
         'progress': progress,
-        'rewardClaimedAt': rewardClaimedAt != null ? Timestamp.fromDate(rewardClaimedAt!) : null,
+        'rewardClaimedAt': rewardClaimedAt != null
+            ? Timestamp.fromDate(rewardClaimedAt!)
+            : null,
         'metadata': metadata,
       };
 }
@@ -478,7 +485,7 @@ class UserLevel {
   final Map<String, dynamic>? benefits;
   final Map<String, dynamic>? metadata;
 
-  double get progressToNextLevel => 
+  double get progressToNextLevel =>
       nextLevelExperience > 0 ? experience / nextLevelExperience : 0.0;
 
   int get experienceToNextLevel => nextLevelExperience - experience;
@@ -511,7 +518,8 @@ class GrowthNotification {
     this.readAt,
   });
 
-  factory GrowthNotification.fromMap(Map<String, dynamic> map) => GrowthNotification(
+  factory GrowthNotification.fromMap(Map<String, dynamic> map) =>
+      GrowthNotification(
         id: map['id'] ?? '',
         userId: map['userId'] ?? '',
         type: NotificationType.values.firstWhere(
@@ -525,7 +533,9 @@ class GrowthNotification {
         actionUrl: map['actionUrl'],
         actionText: map['actionText'],
         data: Map<String, dynamic>.from(map['data'] ?? {}),
-        readAt: map['readAt'] != null ? (map['readAt'] as Timestamp).toDate() : null,
+        readAt: map['readAt'] != null
+            ? (map['readAt'] as Timestamp).toDate()
+            : null,
       );
 
   final String id;

@@ -54,7 +54,7 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
         limit: _limit,
         offset: _offset,
       );
-      
+
       setState(() {
         _ideas = ideas;
         _isLoading = false;
@@ -80,7 +80,7 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
         limit: _limit,
         offset: _offset,
       );
-      
+
       setState(() {
         _ideas.addAll(ideas);
         _isLoadingMore = false;
@@ -432,7 +432,7 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
       } else {
         await SupabaseService.likeIdea(idea.id);
       }
-      
+
       // Обновляем локальное состояние
       setState(() {
         final index = _ideas.indexWhere((i) => i.id == idea.id);

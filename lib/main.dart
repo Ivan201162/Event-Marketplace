@@ -16,7 +16,7 @@ import 'theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Инициализация Firebase
   try {
     await Firebase.initializeApp(
@@ -25,24 +25,24 @@ void main() async {
   } on Exception catch (e) {
     debugPrint('Firebase initialization error: $e');
   }
-  
+
   // Инициализация Supabase
   try {
     // Проверяем конфигурацию
     SupabaseConfigValidator.validate();
-    
+
     await Supabase.initialize(
       url: SupabaseConfig.url,
       anonKey: SupabaseConfig.anonKey,
       debug: SupabaseConfig.isDevelopment,
     );
-    
+
     debugPrint('✅ Supabase initialized successfully');
   } on Exception catch (e) {
     debugPrint('❌ Supabase initialization error: $e');
     // Приложение может работать без Supabase (только Firebase функции)
   }
-  
+
   // Инициализация тестовых данных (только в режиме разработки)
   // try {
   //   await FirestoreTestDataService.initializeTestData();
@@ -50,7 +50,7 @@ void main() async {
   // } on Exception catch (e) {
   //   debugPrint('❌ Test data initialization error: $e');
   // }
-  
+
   // Инициализация сервисов
   // try {
   //   await NotificationService.initialize();
@@ -59,7 +59,7 @@ void main() async {
   // } on Exception catch (e) {
   //   debugPrint('❌ Services initialization error: $e');
   // }
-  
+
   // Инициализация Growth Pack
   // try {
   //   final growthPackService = GrowthPackIntegrationService();
@@ -68,7 +68,7 @@ void main() async {
   // } on Exception catch (e) {
   //   debugPrint('❌ Growth Pack initialization error: $e');
   // }
-  
+
   runApp(const ProviderScope(child: EventMarketplaceApp()));
 }
 
@@ -78,7 +78,7 @@ class EventMarketplaceApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeProvider);
-    
+
     return MaterialApp.router(
       title: 'Event Marketplace',
       theme: AppTheme.lightTheme,

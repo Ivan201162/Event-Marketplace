@@ -275,8 +275,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color:
-                    _getTransactionTypeColor(transaction.type).withValues(alpha: 0.1),
+                color: _getTransactionTypeColor(transaction.type)
+                    .withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
@@ -414,5 +414,3 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
   String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
 }
-
-

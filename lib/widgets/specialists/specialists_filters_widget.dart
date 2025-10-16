@@ -115,10 +115,14 @@ class SpecialistsFiltersWidget extends StatelessWidget {
                 vertical: 8,
               ),
             ),
-            items: cities.map((city) => DropdownMenuItem(
-                value: city,
-                child: Text(city),
-              ),).toList(),
+            items: cities
+                .map(
+                  (city) => DropdownMenuItem(
+                    value: city,
+                    child: Text(city),
+                  ),
+                )
+                .toList(),
             onChanged: (city) {
               if (city != null) {
                 onCityChanged(city);

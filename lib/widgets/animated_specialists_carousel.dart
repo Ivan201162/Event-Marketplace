@@ -13,10 +13,12 @@ class AnimatedSpecialistsCarousel extends ConsumerStatefulWidget {
   const AnimatedSpecialistsCarousel({super.key});
 
   @override
-  ConsumerState<AnimatedSpecialistsCarousel> createState() => _AnimatedSpecialistsCarouselState();
+  ConsumerState<AnimatedSpecialistsCarousel> createState() =>
+      _AnimatedSpecialistsCarouselState();
 }
 
-class _AnimatedSpecialistsCarouselState extends ConsumerState<AnimatedSpecialistsCarousel>
+class _AnimatedSpecialistsCarouselState
+    extends ConsumerState<AnimatedSpecialistsCarousel>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
   late List<AnimationController> _cardControllers;
@@ -143,7 +145,8 @@ class _AnimatedSpecialistsCarouselState extends ConsumerState<AnimatedSpecialist
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, __) => const Center(child: Text('Ошибка загрузки специалистов')),
+      error: (_, __) =>
+          const Center(child: Text('Ошибка загрузки специалистов')),
     );
   }
 }
@@ -207,7 +210,8 @@ class _SpecialistCardState extends State<_SpecialistCard>
                 ],
               ),
               child: InkWell(
-                onTap: () => context.push('/specialist/${widget.specialist.id}'),
+                onTap: () =>
+                    context.push('/specialist/${widget.specialist.id}'),
                 onTapDown: (_) {
                   setState(() => _isHovered = true);
                   _hoverController.forward();
@@ -233,7 +237,8 @@ class _SpecialistCardState extends State<_SpecialistCard>
                         ),
                         image: widget.specialist.avatar != null
                             ? DecorationImage(
-                                image: CachedNetworkImageProvider(widget.specialist.avatar!),
+                                image: CachedNetworkImageProvider(
+                                    widget.specialist.avatar!),
                                 fit: BoxFit.cover,
                               )
                             : null,
@@ -312,10 +317,13 @@ class _SpecialistCardState extends State<_SpecialistCard>
                                   child: ElevatedButton(
                                     onPressed: () => _openChat(context),
                                     style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(vertical: 6),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 6),
                                       minimumSize: Size.zero,
-                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                      backgroundColor: Theme.of(context).primaryColor,
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      backgroundColor:
+                                          Theme.of(context).primaryColor,
                                       foregroundColor: Colors.white,
                                     ),
                                     child: const Text(
@@ -329,9 +337,11 @@ class _SpecialistCardState extends State<_SpecialistCard>
                                   child: ElevatedButton(
                                     onPressed: () => _openBooking(context),
                                     style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(vertical: 6),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 6),
                                       minimumSize: Size.zero,
-                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
                                       backgroundColor: Colors.green,
                                       foregroundColor: Colors.white,
                                     ),

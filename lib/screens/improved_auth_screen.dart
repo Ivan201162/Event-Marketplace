@@ -18,16 +18,16 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   final _formKey = GlobalKey<FormState>();
-  
+
   // Контроллеры для Email/Password
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
-  
+
   // Контроллеры для телефона
   final _phoneController = TextEditingController();
   final _smsCodeController = TextEditingController();
-  
+
   bool _isLoading = false;
   bool _isLoginMode = true;
   bool _isPasswordVisible = false;
@@ -73,7 +73,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
           // Создаем профиль при первом входе
           await _createProfile(response.user!);
         }
-        
+
         context.go('/main');
       }
     } on AuthException catch (e) {
@@ -113,13 +113,14 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
       if (response.user != null && mounted) {
         // Создаем профиль
         await _createProfile(response.user!);
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Регистрация успешна! Проверьте email для подтверждения.'),
+            content:
+                Text('Регистрация успешна! Проверьте email для подтверждения.'),
           ),
         );
-        
+
         context.go('/main');
       }
     } on AuthException catch (e) {
@@ -161,7 +162,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
         setState(() {
           _isSmsSent = true;
         });
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('SMS код отправлен на ваш номер'),
@@ -212,7 +213,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
           // Создаем профиль при первом входе
           await _createProfile(response.user!);
         }
-        
+
         context.go('/main');
       }
     } on AuthException catch (e) {
@@ -234,9 +235,11 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
 
   Future<void> _createProfile(User user) async {
     try {
-      final name = user.userMetadata?['name'] ?? user.email?.split('@')[0] ?? 'Пользователь';
+      final name = user.userMetadata?['name'] ??
+          user.email?.split('@')[0] ??
+          'Пользователь';
       final username = _generateUsername(name);
-      
+
       await Supabase.instance.client.from('profiles').insert({
         'id': user.id,
         'username': username,
@@ -252,7 +255,8 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
   }
 
   String _generateUsername(String name) {
-    final base = name.toLowerCase()
+    final base = name
+        .toLowerCase()
         .replaceAll(RegExp(r'[^a-zа-я0-9]'), '')
         .substring(0, name.length > 10 ? 10 : name.length);
     return '$base${DateTime.now().millisecondsSinceEpoch % 1000}';
@@ -303,7 +307,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
                     ),
                   ),
                   const SizedBox(height: 16),
-                  
+
                   Text(
                     'Event Marketplace',
                     style: theme.textTheme.headlineMedium?.copyWith(
@@ -311,7 +315,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
                     ),
                   ),
                   const SizedBox(height: 8),
-                  
+
                   Text(
                     'Найдите идеального специалиста для вашего события',
                     style: theme.textTheme.bodyMedium?.copyWith(
@@ -368,7 +372,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
 
   Widget _buildEmailTab() {
     final theme = Theme.of(context);
-    
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Form(
@@ -390,13 +394,16 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         decoration: BoxDecoration(
-                          color: _isLoginMode ? theme.primaryColor : Colors.transparent,
+                          color: _isLoginMode
+                              ? theme.primaryColor
+                              : Colors.transparent,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
                           'Вход',
                           style: TextStyle(
-                            color: _isLoginMode ? Colors.white : Colors.grey[600],
+                            color:
+                                _isLoginMode ? Colors.white : Colors.grey[600],
                             fontWeight: FontWeight.w600,
                           ),
                           textAlign: TextAlign.center,
@@ -410,13 +417,16 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         decoration: BoxDecoration(
-                          color: !_isLoginMode ? theme.primaryColor : Colors.transparent,
+                          color: !_isLoginMode
+                              ? theme.primaryColor
+                              : Colors.transparent,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
                           'Регистрация',
                           style: TextStyle(
-                            color: !_isLoginMode ? Colors.white : Colors.grey[600],
+                            color:
+                                !_isLoginMode ? Colors.white : Colors.grey[600],
                             fontWeight: FontWeight.w600,
                           ),
                           textAlign: TextAlign.center,
@@ -461,7 +471,8 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
                 if (value == null || value.trim().isEmpty) {
                   return 'Введите email';
                 }
-                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                    .hasMatch(value)) {
                   return 'Введите корректный email';
                 }
                 return null;
@@ -477,8 +488,11 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
                 labelText: 'Пароль',
                 prefixIcon: const Icon(Icons.lock),
                 suffixIcon: IconButton(
-                  icon: Icon(_isPasswordVisible ? Icons.visibility : Icons.visibility_off),
-                  onPressed: () => setState(() => _isPasswordVisible = !_isPasswordVisible),
+                  icon: Icon(_isPasswordVisible
+                      ? Icons.visibility
+                      : Icons.visibility_off),
+                  onPressed: () =>
+                      setState(() => _isPasswordVisible = !_isPasswordVisible),
                 ),
                 border: const OutlineInputBorder(),
               ),
@@ -497,7 +511,9 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
 
             // Кнопка
             ElevatedButton(
-              onPressed: _isLoading ? null : (_isLoginMode ? _signInWithEmail : _signUpWithEmail),
+              onPressed: _isLoading
+                  ? null
+                  : (_isLoginMode ? _signInWithEmail : _signUpWithEmail),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
@@ -535,7 +551,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
 
   Widget _buildPhoneTab() {
     final theme = Theme.of(context);
-    
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -678,22 +694,19 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
 
   Widget _buildGuestTab() {
     final theme = Theme.of(context);
-    
+
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: 40),
-          
           Icon(
             Icons.person_outline,
             size: 80,
             color: Colors.grey[400],
           ),
-          
           const SizedBox(height: 24),
-          
           Text(
             'Гостевой режим',
             style: theme.textTheme.headlineSmall?.copyWith(
@@ -701,9 +714,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
             ),
             textAlign: TextAlign.center,
           ),
-          
           const SizedBox(height: 16),
-          
           Text(
             'Вы можете просматривать приложение без регистрации, но для полного функционала потребуется создать аккаунт.',
             style: theme.textTheme.bodyMedium?.copyWith(
@@ -711,9 +722,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
             ),
             textAlign: TextAlign.center,
           ),
-          
           const SizedBox(height: 40),
-          
           ElevatedButton(
             onPressed: () {
               // Создаем анонимного пользователя
@@ -724,9 +733,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
             ),
             child: const Text('Продолжить как гость'),
           ),
-          
           const SizedBox(height: 16),
-          
           OutlinedButton(
             onPressed: () {
               _tabController.animateTo(0);

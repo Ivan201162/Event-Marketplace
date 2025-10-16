@@ -219,6 +219,3 @@ class ChatsRepository {
     }
   }
 }
-
-
-

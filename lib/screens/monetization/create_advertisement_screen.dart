@@ -8,20 +8,21 @@ class CreateAdvertisementScreen extends StatefulWidget {
   const CreateAdvertisementScreen({super.key});
 
   @override
-  State<CreateAdvertisementScreen> createState() => _CreateAdvertisementScreenState();
+  State<CreateAdvertisementScreen> createState() =>
+      _CreateAdvertisementScreenState();
 }
 
 class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
   final AdvertisementService _advertisementService = AdvertisementService();
   final _formKey = GlobalKey<FormState>();
-  
+
   // Контроллеры формы
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _priceController = TextEditingController();
   final _budgetController = TextEditingController();
   final _targetUrlController = TextEditingController();
-  
+
   // Выбранные значения
   AdType _selectedType = AdType.banner;
   AdPlacement _selectedPlacement = AdPlacement.topBanner;
@@ -31,14 +32,35 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
   String? _selectedCity;
   String? _selectedCategory;
   String? _selectedTargetAudience;
-  
+
   bool _isLoading = false;
 
   // Списки для выбора
-  final List<String> _regions = ['Москва', 'Санкт-Петербург', 'Новосибирск', 'Екатеринбург'];
-  final List<String> _cities = ['Москва', 'Санкт-Петербург', 'Новосибирск', 'Екатеринбург'];
-  final List<String> _categories = ['Фотографы', 'Видеографы', 'Организаторы', 'Диджеи'];
-  final List<String> _targetAudiences = ['Все', '18-25 лет', '26-35 лет', '36-45 лет', '45+ лет'];
+  final List<String> _regions = [
+    'Москва',
+    'Санкт-Петербург',
+    'Новосибирск',
+    'Екатеринбург'
+  ];
+  final List<String> _cities = [
+    'Москва',
+    'Санкт-Петербург',
+    'Новосибирск',
+    'Екатеринбург'
+  ];
+  final List<String> _categories = [
+    'Фотографы',
+    'Видеографы',
+    'Организаторы',
+    'Диджеи'
+  ];
+  final List<String> _targetAudiences = [
+    'Все',
+    '18-25 лет',
+    '26-35 лет',
+    '36-45 лет',
+    '45+ лет'
+  ];
 
   @override
   void dispose() {
@@ -77,7 +99,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
               // Основная информация
               _buildSectionHeader('Основная информация', Icons.info),
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _titleController,
                 decoration: const InputDecoration(
@@ -93,7 +115,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _descriptionController,
                 decoration: const InputDecoration(
@@ -104,11 +126,11 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
                 maxLines: 3,
               ),
               const SizedBox(height: 16),
-              
+
               // Тип и размещение
               _buildSectionHeader('Тип и размещение', Icons.campaign),
               const SizedBox(height: 16),
-              
+
               DropdownButtonFormField<AdType>(
                 value: _selectedType,
                 decoration: const InputDecoration(
@@ -128,7 +150,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               DropdownButtonFormField<AdPlacement>(
                 value: _selectedPlacement,
                 decoration: const InputDecoration(
@@ -148,11 +170,11 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               // Даты
               _buildSectionHeader('Период показа', Icons.calendar_today),
               const SizedBox(height: 16),
-              
+
               Row(
                 children: [
                   Expanded(
@@ -174,11 +196,11 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
                 ],
               ),
               const SizedBox(height: 16),
-              
+
               // Цена и бюджет
               _buildSectionHeader('Цена и бюджет', Icons.attach_money),
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _priceController,
                 decoration: const InputDecoration(
@@ -198,7 +220,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _budgetController,
                 decoration: const InputDecoration(
@@ -209,11 +231,11 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 16),
-              
+
               // Таргетинг
               _buildSectionHeader('Таргетинг', Icons.gps_fixed),
               const SizedBox(height: 16),
-              
+
               DropdownButtonFormField<String>(
                 value: _selectedRegion,
                 decoration: const InputDecoration(
@@ -233,7 +255,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               DropdownButtonFormField<String>(
                 value: _selectedCity,
                 decoration: const InputDecoration(
@@ -253,7 +275,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               DropdownButtonFormField<String>(
                 value: _selectedCategory,
                 decoration: const InputDecoration(
@@ -273,7 +295,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               DropdownButtonFormField<String>(
                 value: _selectedTargetAudience,
                 decoration: const InputDecoration(
@@ -293,11 +315,11 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               // Ссылка
               _buildSectionHeader('Ссылка', Icons.link),
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _targetUrlController,
                 decoration: const InputDecoration(
@@ -308,7 +330,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
                 keyboardType: TextInputType.url,
               ),
               const SizedBox(height: 32),
-              
+
               // Кнопка создания
               SizedBox(
                 width: double.infinity,
@@ -342,8 +364,8 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
         Text(
           title,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
       ],
     );
@@ -423,14 +445,14 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
     try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       final userId = authProvider.currentUser?['id'];
-      
+
       if (userId == null) {
         throw Exception('Пользователь не авторизован');
       }
 
       final price = double.parse(_priceController.text);
-      final budget = _budgetController.text.isNotEmpty 
-          ? double.parse(_budgetController.text) 
+      final budget = _budgetController.text.isNotEmpty
+          ? double.parse(_budgetController.text)
           : null;
 
       final adId = await _advertisementService.createAdvertisement(

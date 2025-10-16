@@ -64,7 +64,8 @@ class FeedNotificationService {
     } else if (settings.authorizationStatus ==
         AuthorizationStatus.provisional) {
       debugPrint(
-          'Пользователь предоставил временное разрешение на уведомления',);
+        'Пользователь предоставил временное разрешение на уведомления',
+      );
     } else {
       debugPrint(
         'Пользователь отклонил или не предоставил разрешение на уведомления',

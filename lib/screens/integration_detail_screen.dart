@@ -502,8 +502,7 @@ class _IntegrationDetailScreenState
   Future<void> _openDocumentation() async {
     if (widget.integration.documentationUrl != null) {
       try {
-        await _integrationService
-            .openUrl(widget.integration.documentationUrl!);
+        await _integrationService.openUrl(widget.integration.documentationUrl!);
       } on Exception catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

@@ -16,8 +16,8 @@ class OAuthProfileService {
   Future<AppUser?> handleOAuthUser(User firebaseUser) async {
     try {
       final userId = firebaseUser.uid;
-      final userMetadata = firebaseUser.providerData.isNotEmpty 
-          ? firebaseUser.providerData.first 
+      final userMetadata = firebaseUser.providerData.isNotEmpty
+          ? firebaseUser.providerData.first
           : null;
 
       // Получаем данные из метаданных
@@ -31,7 +31,7 @@ class OAuthProfileService {
 
       // Проверяем, существует ли профиль
       final existingProfile = await _getExistingProfile(userId);
-      
+
       if (existingProfile != null) {
         return existingProfile;
       }
@@ -93,7 +93,7 @@ class OAuthProfileService {
   /// Определяет провайдера OAuth
   String _getProvider(UserInfo? userMetadata) {
     if (userMetadata == null) return 'unknown';
-    
+
     final providerId = userMetadata.providerId;
     switch (providerId) {
       case 'google.com':
@@ -176,7 +176,7 @@ class OAuthProfileService {
         parts.removeLast();
         username = parts.join('_');
       }
-      
+
       // Добавляем новый суффикс
       username = '${username}_${counter.toString().padLeft(4, '0')}';
       counter++;
@@ -193,7 +193,7 @@ class OAuthProfileService {
           .where('username', isEqualTo: username)
           .limit(1)
           .get();
-      
+
       return query.docs.isNotEmpty;
     } catch (e) {
       print('Ошибка проверки username: $e');
@@ -202,7 +202,8 @@ class OAuthProfileService {
   }
 
   /// Обновляет профиль пользователя
-  Future<void> updateProfile(String userId, Map<String, dynamic> updates) async {
+  Future<void> updateProfile(
+      String userId, Map<String, dynamic> updates) async {
     try {
       updates['updatedAt'] = FieldValue.serverTimestamp();
       await _firestore.collection('users').doc(userId).update(updates);
@@ -220,7 +221,7 @@ class OAuthProfileService {
           .where('username', isEqualTo: username)
           .limit(1)
           .get();
-      
+
       if (query.docs.isNotEmpty) {
         return AppUser.fromDocument(query.docs.first);
       }

@@ -82,7 +82,7 @@ class PricingRule {
     Map<String, dynamic>? additionalFactors,
   }) {
     double finalPrice = basePrice;
-    
+
     // Применяем факторы
     finalPrice *= demandFactor;
     finalPrice *= timeFactor;
@@ -90,7 +90,7 @@ class PricingRule {
     finalPrice *= seasonFactor;
     finalPrice *= userTierFactor;
     finalPrice *= competitionFactor;
-    
+
     // Применяем дополнительные факторы
     if (additionalFactors != null) {
       for (final factor in additionalFactors.entries) {
@@ -99,7 +99,7 @@ class PricingRule {
         }
       }
     }
-    
+
     // Применяем ограничения
     if (minPrice != null && finalPrice < minPrice!) {
       finalPrice = minPrice!;
@@ -107,7 +107,7 @@ class PricingRule {
     if (maxPrice != null && finalPrice > maxPrice!) {
       finalPrice = maxPrice!;
     }
-    
+
     return finalPrice;
   }
 
@@ -147,7 +147,8 @@ class PricingRule {
     double? maxPrice,
     String? description,
     Map<String, dynamic>? conditions,
-  }) => PricingRule(
+  }) =>
+      PricingRule(
         id: id ?? this.id,
         serviceType: serviceType ?? this.serviceType,
         basePrice: basePrice ?? this.basePrice,
@@ -208,7 +209,7 @@ class DemandMetrics {
   /// Расчет уровня спроса (0.5 - низкий, 1.0 - средний, 2.0 - высокий)
   double get calculatedDemandLevel {
     if (availableSlots == 0) return 2.0; // Максимальный спрос
-    
+
     final double utilizationRate = requestsCount / availableSlots;
     if (utilizationRate > 0.8) return 2.0;
     if (utilizationRate > 0.5) return 1.5;

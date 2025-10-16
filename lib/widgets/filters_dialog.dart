@@ -139,7 +139,8 @@ class _FiltersDialogState extends State<FiltersDialog> {
                                 _selectedCity = selected ? city : null;
                               });
                             },
-                            selectedColor: theme.primaryColor.withValues(alpha: 0.2),
+                            selectedColor:
+                                theme.primaryColor.withValues(alpha: 0.2),
                             checkmarkColor: theme.primaryColor,
                           );
                         }).toList(),
@@ -165,7 +166,8 @@ class _FiltersDialogState extends State<FiltersDialog> {
                                 _selectedCategory = selected ? category : null;
                               });
                             },
-                            selectedColor: theme.primaryColor.withValues(alpha: 0.2),
+                            selectedColor:
+                                theme.primaryColor.withValues(alpha: 0.2),
                             checkmarkColor: theme.primaryColor,
                           );
                         }).toList(),

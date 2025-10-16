@@ -220,7 +220,7 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
   List<EnhancedOrder> _getTestOrders(String status) {
     final currentUser = ref.read(currentUserProvider).value;
     final currentUserId = currentUser?.uid ?? 'current_user';
-    
+
     final allOrders = [
       EnhancedOrder(
         id: '1',
@@ -334,7 +334,8 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
         customerId: 'customer_2',
         specialistId: currentUserId,
         title: 'Фотосессия для портфолио',
-        description: 'Нужна профессиональная фотосессия для обновления портфолио модели',
+        description:
+            'Нужна профессиональная фотосессия для обновления портфолио модели',
         status: OrderStatus.pending,
         createdAt: DateTime.now().subtract(const Duration(days: 1)),
         budget: 12000,
@@ -410,9 +411,9 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
     // Заявки, созданные текущим пользователем
     final currentUser = ref.read(currentUserProvider).value;
     if (currentUser == null) return [];
-    
+
     final allOrders = _getTestOrders('all');
-    
+
     return allOrders
         .where((order) => order.customerId == currentUser.uid)
         .toList();
@@ -422,9 +423,9 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
     // Заявки, назначенные на текущего пользователя
     final currentUser = ref.read(currentUserProvider).value;
     if (currentUser == null) return [];
-    
+
     final allOrders = _getTestOrders('all');
-    
+
     return allOrders
         .where((order) => order.specialistId == currentUser.uid)
         .toList();

@@ -11,12 +11,9 @@ class SupabaseService {
   // Получение профиля пользователя по ID
   static Future<Profile?> getProfile(String userId) async {
     try {
-      final response = await _client
-          .from('profiles')
-          .select()
-          .eq('id', userId)
-          .single();
-      
+      final response =
+          await _client.from('profiles').select().eq('id', userId).single();
+
       return Profile.fromJson(response);
     } catch (e) {
       print('Error getting profile: $e');
@@ -32,7 +29,7 @@ class SupabaseService {
           .select()
           .eq('username', username)
           .single();
-      
+
       return Profile.fromJson(response);
     } catch (e) {
       print('Error getting profile by username: $e');
@@ -46,12 +43,11 @@ class SupabaseService {
     int limit = 10,
   }) async {
     try {
-      final response = await _client
-          .rpc('get_weekly_leaders', params: {
-            'city_filter': city,
-            'limit_count': limit,
-          });
-      
+      final response = await _client.rpc('get_weekly_leaders', params: {
+        'city_filter': city,
+        'limit_count': limit,
+      });
+
       return (response as List)
           .map((json) => WeeklyLeader.fromJson(json))
           .toList();
@@ -70,7 +66,7 @@ class SupabaseService {
           .eq('follower_id', followerId)
           .eq('following_id', followingId)
           .maybeSingle();
-      
+
       return response != null;
     } catch (e) {
       print('Error checking follow status: $e');
@@ -88,7 +84,7 @@ class SupabaseService {
         'follower_id': currentUserId,
         'following_id': followingId,
       });
-      
+
       return true;
     } catch (e) {
       print('Error following user: $e');
@@ -107,7 +103,7 @@ class SupabaseService {
           .delete()
           .eq('follower_id', currentUserId)
           .eq('following_id', followingId);
-      
+
       return true;
     } catch (e) {
       print('Error unfollowing user: $e');
@@ -118,11 +114,9 @@ class SupabaseService {
   // Получение количества подписчиков
   static Future<int> getFollowersCount(String userId) async {
     try {
-      final response = await _client
-          .from('follows')
-          .select('id')
-          .eq('following_id', userId);
-      
+      final response =
+          await _client.from('follows').select('id').eq('following_id', userId);
+
       return response.length;
     } catch (e) {
       print('Error getting followers count: $e');
@@ -133,11 +127,9 @@ class SupabaseService {
   // Получение количества подписок
   static Future<int> getFollowingCount(String userId) async {
     try {
-      final response = await _client
-          .from('follows')
-          .select('id')
-          .eq('follower_id', userId);
-      
+      final response =
+          await _client.from('follows').select('id').eq('follower_id', userId);
+
       return response.length;
     } catch (e) {
       print('Error getting following count: $e');
@@ -151,12 +143,11 @@ class SupabaseService {
       final currentUserId = currentUser?.id;
       if (currentUserId == null) return null;
 
-      final response = await _client
-          .rpc('get_or_create_chat', params: {
-            'user1_id': currentUserId,
-            'user2_id': otherUserId,
-          });
-      
+      final response = await _client.rpc('get_or_create_chat', params: {
+        'user1_id': currentUserId,
+        'user2_id': otherUserId,
+      });
+
       return response.toString();
     } catch (e) {
       print('Error getting or creating chat: $e');
@@ -170,30 +161,28 @@ class SupabaseService {
       final currentUserId = currentUser?.id;
       if (currentUserId == null) return [];
 
-      final response = await _client
-          .from('chat_participants')
-          .select('''
+      final response = await _client.from('chat_participants').select('''
             chat_id,
             chats!inner(id, created_at, updated_at),
             profiles!inner(id, username, name, avatar_url)
-          ''')
-          .eq('user_id', currentUserId);
+          ''').eq('user_id', currentUserId);
 
       final List<ChatListItem> chats = [];
-      
+
       for (final item in response) {
         final chatId = item['chat_id'] as String;
-        
+
         // Получаем второго участника
         final participants = await _client
             .from('chat_participants')
             .select('profiles!inner(id, username, name, avatar_url)')
             .eq('chat_id', chatId)
             .neq('user_id', currentUserId);
-        
+
         if (participants.isNotEmpty) {
-          final otherUser = participants.first['profiles'] as Map<String, dynamic>;
-          
+          final otherUser =
+              participants.first['profiles'] as Map<String, dynamic>;
+
           // Получаем последнее сообщение
           final lastMessage = await _client
               .from('messages')
@@ -202,7 +191,7 @@ class SupabaseService {
               .order('created_at', ascending: false)
               .limit(1)
               .maybeSingle();
-          
+
           chats.add(ChatListItem(
             chatId: chatId,
             otherUser: Profile.fromJson(otherUser),
@@ -212,10 +201,10 @@ class SupabaseService {
           ));
         }
       }
-      
+
       // Сортируем по времени последнего обновления
       chats.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
-      
+
       return chats;
     } catch (e) {
       print('Error getting chats list: $e');
@@ -226,21 +215,15 @@ class SupabaseService {
   // Получение сообщений чата
   static Future<List<Message>> getChatMessages(String chatId) async {
     try {
-      final response = await _client
-          .from('messages')
-          .select('''
+      final response = await _client.from('messages').select('''
             id,
             text,
             created_at,
             sender_id,
             profiles!inner(username, name, avatar_url)
-          ''')
-          .eq('chat_id', chatId)
-          .order('created_at', ascending: true);
-      
-      return (response as List)
-          .map((json) => Message.fromJson(json))
-          .toList();
+          ''').eq('chat_id', chatId).order('created_at', ascending: true);
+
+      return (response as List).map((json) => Message.fromJson(json)).toList();
     } catch (e) {
       print('Error getting chat messages: $e');
       return [];
@@ -258,13 +241,11 @@ class SupabaseService {
         'sender_id': currentUserId,
         'text': text,
       });
-      
+
       // Обновляем время последнего обновления чата
-      await _client
-          .from('chats')
-          .update({'updated_at': DateTime.now().toIso8601String()})
-          .eq('id', chatId);
-      
+      await _client.from('chats').update(
+          {'updated_at': DateTime.now().toIso8601String()}).eq('id', chatId);
+
       return true;
     } catch (e) {
       print('Error sending message: $e');
@@ -279,7 +260,7 @@ class SupabaseService {
           .from('follows')
           .select('profiles!inner(*)')
           .eq('following_id', userId);
-      
+
       return (response as List)
           .map((json) => Profile.fromJson(json['profiles']))
           .toList();
@@ -296,7 +277,7 @@ class SupabaseService {
           .from('follows')
           .select('profiles!inner(*)')
           .eq('follower_id', userId);
-      
+
       return (response as List)
           .map((json) => Profile.fromJson(json['profiles']))
           .toList();
@@ -314,10 +295,8 @@ class SupabaseService {
           .select()
           .or('name.ilike.%$query%,username.ilike.%$query%,skills.cs.{${query.toLowerCase()}}')
           .limit(20);
-      
-      return (response as List)
-          .map((json) => Profile.fromJson(json))
-          .toList();
+
+      return (response as List).map((json) => Profile.fromJson(json)).toList();
     } catch (e) {
       print('Error searching users: $e');
       return [];
@@ -330,21 +309,23 @@ class SupabaseService {
     Function(Map<String, dynamic>) onNewMessage,
   ) {
     final channel = _client.channel('chat_$chatId');
-    
-    channel.onPostgresChanges(
-      event: PostgresChangeEvent.insert,
-      schema: 'public',
-      table: 'messages',
-      filter: PostgresChangeFilter(
-        type: PostgresChangeFilterType.eq,
-        column: 'chat_id',
-        value: chatId,
-      ),
-      callback: (payload) {
-        onNewMessage(payload.newRecord);
-      },
-    ).subscribe();
-    
+
+    channel
+        .onPostgresChanges(
+          event: PostgresChangeEvent.insert,
+          schema: 'public',
+          table: 'messages',
+          filter: PostgresChangeFilter(
+            type: PostgresChangeFilterType.eq,
+            column: 'chat_id',
+            value: chatId,
+          ),
+          callback: (payload) {
+            onNewMessage(payload.newRecord);
+          },
+        )
+        .subscribe();
+
     return channel;
   }
 
@@ -374,10 +355,8 @@ class SupabaseService {
       // }
 
       final response = await query;
-      
-      return (response as List)
-          .map((json) => Idea.fromJson(json))
-          .toList();
+
+      return (response as List).map((json) => Idea.fromJson(json)).toList();
     } catch (e) {
       print('Error getting ideas: $e');
       return [];
@@ -406,7 +385,7 @@ class SupabaseService {
         *,
         profiles!inner(id, username, name, avatar_url)
       ''').single();
-      
+
       return Idea.fromJson(response);
     } catch (e) {
       print('Error creating idea: $e');
@@ -424,7 +403,7 @@ class SupabaseService {
         'idea_id': ideaId,
         'user_id': currentUserId,
       });
-      
+
       return true;
     } catch (e) {
       print('Error liking idea: $e');
@@ -443,7 +422,7 @@ class SupabaseService {
           .delete()
           .eq('idea_id', ideaId)
           .eq('user_id', currentUserId);
-      
+
       return true;
     } catch (e) {
       print('Error unliking idea: $e');
@@ -463,7 +442,7 @@ class SupabaseService {
           .eq('idea_id', ideaId)
           .eq('user_id', currentUserId)
           .maybeSingle();
-      
+
       return response != null;
     } catch (e) {
       print('Error checking idea like: $e');
@@ -484,7 +463,7 @@ class SupabaseService {
   }) async {
     try {
       final column = isCreatedBy ? 'created_by' : 'assigned_to';
-      
+
       final response = await _client
           .from('requests')
           .select('''
@@ -495,10 +474,8 @@ class SupabaseService {
           .eq(column, userId)
           .order('created_at', ascending: false)
           .range(offset, offset + limit - 1);
-      
-      return (response as List)
-          .map((json) => Request.fromJson(json))
-          .toList();
+
+      return (response as List).map((json) => Request.fromJson(json)).toList();
     } catch (e) {
       print('Error getting user requests: $e');
       return [];
@@ -531,7 +508,7 @@ class SupabaseService {
         *,
         creator:profiles!created_by(id, username, name, avatar_url)
       ''').single();
-      
+
       return Request.fromJson(response);
     } catch (e) {
       print('Error creating request: $e');
@@ -540,13 +517,13 @@ class SupabaseService {
   }
 
   // Обновление статуса заявки
-  static Future<bool> updateRequestStatus(String requestId, String status) async {
+  static Future<bool> updateRequestStatus(
+      String requestId, String status) async {
     try {
       await _client
           .from('requests')
-          .update({'status': status})
-          .eq('id', requestId);
-      
+          .update({'status': status}).eq('id', requestId);
+
       return true;
     } catch (e) {
       print('Error updating request status: $e');
@@ -557,14 +534,11 @@ class SupabaseService {
   // Назначение исполнителя
   static Future<bool> assignRequest(String requestId, String assigneeId) async {
     try {
-      await _client
-          .from('requests')
-          .update({
-            'assigned_to': assigneeId,
-            'status': 'in_progress',
-          })
-          .eq('id', requestId);
-      
+      await _client.from('requests').update({
+        'assigned_to': assigneeId,
+        'status': 'in_progress',
+      }).eq('id', requestId);
+
       return true;
     } catch (e) {
       print('Error assigning request: $e');
@@ -595,11 +569,8 @@ class SupabaseService {
       if (skills != null) updateData['skills'] = skills;
       if (avatarUrl != null) updateData['avatar_url'] = avatarUrl;
 
-      await _client
-          .from('profiles')
-          .update(updateData)
-          .eq('id', currentUserId);
-      
+      await _client.from('profiles').update(updateData).eq('id', currentUserId);
+
       return true;
     } catch (e) {
       print('Error updating profile: $e');
@@ -608,21 +579,21 @@ class SupabaseService {
   }
 
   // Загрузка аватара
-  static Future<String?> uploadAvatar(String filePath, List<int> fileBytes) async {
+  static Future<String?> uploadAvatar(
+      String filePath, List<int> fileBytes) async {
     try {
       final currentUserId = currentUser?.id;
       if (currentUserId == null) return null;
 
-      final fileName = '${currentUserId}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final fileName =
+          '${currentUserId}_${DateTime.now().millisecondsSinceEpoch}.jpg';
       final filePath = 'avatars/$fileName';
 
       await _client.storage
           .from('avatars')
           .uploadBinary(filePath, Uint8List.fromList(fileBytes));
 
-      final publicUrl = _client.storage
-          .from('avatars')
-          .getPublicUrl(filePath);
+      final publicUrl = _client.storage.from('avatars').getPublicUrl(filePath);
 
       return publicUrl;
     } catch (e) {

@@ -368,7 +368,8 @@ class SpecialistService {
   }
 
   /// Получить ленту специалиста (посты, активности)
-  Stream<List<Map<String, dynamic>>> getSpecialistFeed(String specialistId) async* {
+  Stream<List<Map<String, dynamic>>> getSpecialistFeed(
+      String specialistId) async* {
     try {
       // TODO(developer): Implement specialist feed logic
       // Пока возвращаем пустой список
@@ -390,7 +391,6 @@ class SpecialistService {
     }
   }
 
-
   /// Получить поток специалиста по ID пользователя
   Stream<Specialist?> getSpecialistByUserIdStream(String userId) async* {
     try {
@@ -399,7 +399,7 @@ class SpecialistService {
           .where('userId', isEqualTo: userId)
           .limit(1)
           .get();
-      
+
       if (snapshot.docs.isNotEmpty) {
         yield Specialist.fromDocument(snapshot.docs.first);
       } else {
@@ -420,7 +420,7 @@ class SpecialistService {
           .orderBy('reviewsCount', descending: true)
           .limit(limit)
           .get();
-      
+
       return snapshot.docs.map(Specialist.fromDocument).toList();
     } on Exception catch (e) {
       debugPrint('Ошибка получения топ специалистов: $e');
@@ -440,7 +440,7 @@ class SpecialistService {
           .orderBy('rating', descending: true)
           .limit(limit)
           .get();
-      
+
       return snapshot.docs.map(Specialist.fromDocument).toList();
     } on Exception catch (e) {
       debugPrint('Ошибка получения лидеров недели: $e');
@@ -449,10 +449,11 @@ class SpecialistService {
   }
 
   /// Поиск специалистов с фильтрами (поток)
-  Stream<List<Specialist>> searchSpecialistsStream(Map<String, dynamic> filters) async* {
+  Stream<List<Specialist>> searchSpecialistsStream(
+      Map<String, dynamic> filters) async* {
     try {
       Query query = _firestore.collection(_collection);
-      
+
       // Применяем фильтры
       if (filters['category'] != null) {
         query = query.where('category', isEqualTo: filters['category']);
@@ -461,17 +462,19 @@ class SpecialistService {
         query = query.where('city', isEqualTo: filters['city']);
       }
       if (filters['minRating'] != null) {
-        query = query.where('rating', isGreaterThanOrEqualTo: filters['minRating']);
+        query =
+            query.where('rating', isGreaterThanOrEqualTo: filters['minRating']);
       }
       if (filters['maxPrice'] != null) {
-        query = query.where('pricePerHour', isLessThanOrEqualTo: filters['maxPrice']);
+        query = query.where('pricePerHour',
+            isLessThanOrEqualTo: filters['maxPrice']);
       }
-      
+
       // Сортировка
       final sortBy = filters['sortBy'] ?? 'rating';
       final descending = filters['descending'] ?? true;
       query = query.orderBy(sortBy, descending: descending);
-      
+
       final snapshot = await query.limit(50).get();
       final specialists = snapshot.docs.map(Specialist.fromDocument).toList();
       yield specialists;
@@ -482,7 +485,8 @@ class SpecialistService {
   }
 
   /// Проверить доступность специалиста на дату
-  Future<bool> isSpecialistAvailableOnDate(String specialistId, DateTime date) async {
+  Future<bool> isSpecialistAvailableOnDate(
+      String specialistId, DateTime date) async {
     try {
       // TODO(developer): Implement availability check logic
       // Пока возвращаем true для всех дат

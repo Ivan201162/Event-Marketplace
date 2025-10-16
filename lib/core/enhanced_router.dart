@@ -46,7 +46,8 @@ import '../screens/create_request_screen.dart';
 import '../screens/profile_edit_screen.dart';
 
 /// Провайдер роутера приложения
-final routerProvider = Provider<GoRouter>((ref) => GoRouter(
+final routerProvider = Provider<GoRouter>(
+  (ref) => GoRouter(
     initialLocation: '/',
     routes: [
       // Splash screen
@@ -99,30 +100,7 @@ final routerProvider = Provider<GoRouter>((ref) => GoRouter(
         ],
       ),
 
-      // Прямые маршруты для быстрого доступа
-      GoRoute(
-        path: '/home',
-        name: 'home-direct',
-        builder: (context, state) => const EnhancedSocialHomeScreen(),
-      ),
-
-      GoRoute(
-        path: '/feed',
-        name: 'feed-direct',
-        builder: (context, state) => const IdeasFeedScreen(),
-      ),
-
-      GoRoute(
-        path: '/ideas',
-        name: 'ideas-direct',
-        builder: (context, state) => const IdeasFeedScreen(),
-      ),
-
-      GoRoute(
-        path: '/settings',
-        name: 'settings-direct',
-        builder: (context, state) => const EnhancedSettingsScreen(),
-      ),
+      // Прямые маршруты для быстрого доступа (удалены дубликаты)
 
       // Новые маршруты
       GoRoute(
@@ -354,7 +332,8 @@ final routerProvider = Provider<GoRouter>((ref) => GoRouter(
 
       // Дубликаты удалены - используются маршруты выше
     ],
-  ),);
+  ),
+);
 
 /// Главный экран навигации
 class MainNavigationScreen extends StatefulWidget {
@@ -378,63 +357,63 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(
-        title: const Text('Event'),
-        leading: IconButton(
-          icon: const Icon(Icons.person),
-          onPressed: () => context.push('/profile/me'),
+        appBar: AppBar(
+          title: const Text('Event'),
+          leading: IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: () => context.push('/profile/me'),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.notifications),
+              onPressed: () => context.push('/notifications'),
+            ),
+            IconButton(
+              icon: const Icon(Icons.settings),
+              onPressed: () => context.push('/settings'),
+            ),
+          ],
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () => context.push('/notifications'),
-          ),
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () => context.push('/settings'),
-          ),
-        ],
-      ),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _screens,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Главная',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.feed),
-            label: 'Лента',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assignment),
-            label: 'Заявки',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Чаты',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.lightbulb),
-            label: 'Идеи',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.monetization_on),
-            label: 'Монетизация',
-          ),
-        ],
-      ),
-    );
+        body: IndexedStack(
+          index: _currentIndex,
+          children: _screens,
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Главная',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.feed),
+              label: 'Лента',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.assignment),
+              label: 'Заявки',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.chat),
+              label: 'Чаты',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.lightbulb),
+              label: 'Идеи',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.monetization_on),
+              label: 'Монетизация',
+            ),
+          ],
+        ),
+      );
 }
 
 // Заглушки для экранов, которые будут реализованы позже
@@ -444,25 +423,25 @@ class NotificationsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(
-        title: const Text('Event'),
-        leading: IconButton(
-          icon: const Icon(Icons.person),
-          onPressed: () => context.push('/profile/me'),
+        appBar: AppBar(
+          title: const Text('Event'),
+          leading: IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: () => context.push('/profile/me'),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.notifications),
+              onPressed: () => context.push('/notifications'),
+            ),
+            IconButton(
+              icon: const Icon(Icons.settings),
+              onPressed: () => context.push('/settings'),
+            ),
+          ],
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () => context.push('/notifications'),
-          ),
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () => context.push('/settings'),
-          ),
-        ],
-      ),
-      body: const Center(child: Text('Уведомления')),
-    );
+        body: const Center(child: Text('Уведомления')),
+      );
 }
 
 class SearchScreen extends StatelessWidget {
@@ -471,11 +450,10 @@ class SearchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(title: const Text('Поиск')),
-      body: Center(child: Text('Поиск: $query')),
-    );
+        appBar: AppBar(title: const Text('Поиск')),
+        body: Center(child: Text('Поиск: $query')),
+      );
 }
-
 
 class SpecialistDetailScreen extends StatelessWidget {
   const SpecialistDetailScreen({super.key, required this.specialistId});
@@ -483,9 +461,9 @@ class SpecialistDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(title: const Text('Специалист')),
-      body: Center(child: Text('Специалист: $specialistId')),
-    );
+        appBar: AppBar(title: const Text('Специалист')),
+        body: Center(child: Text('Специалист: $specialistId')),
+      );
 }
 
 class RequestsScreen extends StatelessWidget {
@@ -493,8 +471,8 @@ class RequestsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => const Scaffold(
-      body: Center(child: Text('Заявки')),
-    );
+        body: Center(child: Text('Заявки')),
+      );
 }
 
 class CreateRequestScreen extends StatelessWidget {
@@ -502,9 +480,9 @@ class CreateRequestScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(title: const Text('Создать заявку')),
-      body: const Center(child: Text('Создать заявку')),
-    );
+        appBar: AppBar(title: const Text('Создать заявку')),
+        body: const Center(child: Text('Создать заявку')),
+      );
 }
 
 class ChatsScreen extends StatelessWidget {
@@ -512,8 +490,8 @@ class ChatsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => const Scaffold(
-      body: Center(child: Text('Чаты')),
-    );
+        body: Center(child: Text('Чаты')),
+      );
 }
 
 class ChatDetailScreen extends StatelessWidget {
@@ -522,9 +500,9 @@ class ChatDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(title: const Text('Чат')),
-      body: Center(child: Text('Чат: $chatId')),
-    );
+        appBar: AppBar(title: const Text('Чат')),
+        body: Center(child: Text('Чат: $chatId')),
+      );
 }
 
 class IdeaDetailScreen extends StatelessWidget {
@@ -533,9 +511,9 @@ class IdeaDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(title: const Text('Идея')),
-      body: Center(child: Text('Идея: $ideaId')),
-    );
+        appBar: AppBar(title: const Text('Идея')),
+        body: Center(child: Text('Идея: $ideaId')),
+      );
 }
 
 class CreateIdeaScreen extends StatelessWidget {
@@ -543,9 +521,9 @@ class CreateIdeaScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(title: const Text('Создать идею')),
-      body: const Center(child: Text('Создать идею')),
-    );
+        appBar: AppBar(title: const Text('Создать идею')),
+        body: const Center(child: Text('Создать идею')),
+      );
 }
 
 class HelpScreen extends StatelessWidget {
@@ -553,9 +531,9 @@ class HelpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(title: const Text('Справка')),
-      body: const Center(child: Text('Справка')),
-    );
+        appBar: AppBar(title: const Text('Справка')),
+        body: const Center(child: Text('Справка')),
+      );
 }
 
 class SupportScreen extends StatelessWidget {
@@ -563,9 +541,9 @@ class SupportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(title: const Text('Поддержка')),
-      body: const Center(child: Text('Поддержка')),
-    );
+        appBar: AppBar(title: const Text('Поддержка')),
+        body: const Center(child: Text('Поддержка')),
+      );
 }
 
 class BugReportScreen extends StatelessWidget {
@@ -573,9 +551,9 @@ class BugReportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(title: const Text('Сообщить об ошибке')),
-      body: const Center(child: Text('Сообщить об ошибке')),
-    );
+        appBar: AppBar(title: const Text('Сообщить об ошибке')),
+        body: const Center(child: Text('Сообщить об ошибке')),
+      );
 }
 
 // Основные экраны приложения
@@ -584,24 +562,24 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => const Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.home, size: 64, color: Colors.deepPurple),
-            SizedBox(height: 16),
-            Text('Главный экран', style: TextStyle(fontSize: 24)),
-            SizedBox(height: 8),
-            Text('Поиск специалистов и лучшие предложения'),
-            SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: null, // TODO: Добавить навигацию к поиску
-              child: Text('Найти специалистов'),
-            ),
-          ],
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.home, size: 64, color: Colors.deepPurple),
+              SizedBox(height: 16),
+              Text('Главный экран', style: TextStyle(fontSize: 24)),
+              SizedBox(height: 8),
+              Text('Поиск специалистов и лучшие предложения'),
+              SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: null, // TODO: Добавить навигацию к поиску
+                child: Text('Найти специалистов'),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
 }
 
 class FeedScreen extends StatelessWidget {
@@ -609,19 +587,19 @@ class FeedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => const Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.dynamic_feed, size: 64, color: Colors.deepPurple),
-            SizedBox(height: 16),
-            Text('Лента', style: TextStyle(fontSize: 24)),
-            SizedBox(height: 8),
-            Text('Посты, фото и видео от специалистов'),
-          ],
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.dynamic_feed, size: 64, color: Colors.deepPurple),
+              SizedBox(height: 16),
+              Text('Лента', style: TextStyle(fontSize: 24)),
+              SizedBox(height: 8),
+              Text('Посты, фото и видео от специалистов'),
+            ],
+          ),
         ),
-      ),
-    );
+      );
 }
 
 class IdeasScreen extends StatelessWidget {
@@ -629,19 +607,17 @@ class IdeasScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => const Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.lightbulb, size: 64, color: Colors.deepPurple),
-            SizedBox(height: 16),
-            Text('Идеи', style: TextStyle(fontSize: 24)),
-            SizedBox(height: 8),
-            Text('Фото и видео идеи для мероприятий'),
-          ],
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.lightbulb, size: 64, color: Colors.deepPurple),
+              SizedBox(height: 16),
+              Text('Идеи', style: TextStyle(fontSize: 24)),
+              SizedBox(height: 8),
+              Text('Фото и видео идеи для мероприятий'),
+            ],
+          ),
         ),
-      ),
-    );
+      );
 }
-
-

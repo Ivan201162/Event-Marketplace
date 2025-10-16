@@ -16,7 +16,7 @@ class RequestsScreen extends ConsumerStatefulWidget {
 class _RequestsScreenState extends ConsumerState<RequestsScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
-  
+
   List<Request> _myRequests = [];
   List<Request> _assignedRequests = [];
   bool _isLoadingMyRequests = true;
@@ -52,7 +52,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen>
         userId: currentUserId,
         isCreatedBy: true,
       );
-      
+
       setState(() {
         _myRequests = requests;
         _isLoadingMyRequests = false;
@@ -79,7 +79,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen>
         userId: currentUserId,
         isCreatedBy: false,
       );
-      
+
       setState(() {
         _assignedRequests = requests;
         _isLoadingAssignedRequests = false;
@@ -222,7 +222,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen>
             ),
             const SizedBox(height: 8),
             Text(
-              isMyRequests 
+              isMyRequests
                   ? 'Создайте заявку, чтобы найти исполнителя'
                   : 'Заявки, назначенные вам, появятся здесь',
               style: TextStyle(
@@ -344,7 +344,8 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen>
                     if (request.assignee != null) ...[
                       CircleAvatar(
                         radius: 12,
-                        backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
+                        backgroundColor:
+                            theme.primaryColor.withValues(alpha: 0.1),
                         backgroundImage: request.assignee!.avatarUrl != null
                             ? NetworkImage(request.assignee!.avatarUrl!)
                             : null,
@@ -365,7 +366,8 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen>
                         ),
                       ),
                     ] else ...[
-                      Icon(Icons.person_outline, size: 16, color: Colors.grey[600]),
+                      Icon(Icons.person_outline,
+                          size: 16, color: Colors.grey[600]),
                       const SizedBox(width: 4),
                       Text(
                         'Исполнитель не назначен',
@@ -379,7 +381,8 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen>
                     // Показываем заказчика
                     CircleAvatar(
                       radius: 12,
-                      backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
+                      backgroundColor:
+                          theme.primaryColor.withValues(alpha: 0.1),
                       backgroundImage: request.creator?.avatarUrl != null
                           ? NetworkImage(request.creator!.avatarUrl!)
                           : null,

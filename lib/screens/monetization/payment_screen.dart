@@ -59,15 +59,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
             // Информация о заказе
             _buildOrderInfo(),
             const SizedBox(height: 24),
-            
+
             // Способы оплаты
             _buildPaymentMethods(),
             const SizedBox(height: 24),
-            
+
             // Провайдеры платежей
             _buildPaymentProviders(),
             const SizedBox(height: 32),
-            
+
             // Кнопка оплаты
             _buildPaymentButton(),
           ],
@@ -86,12 +86,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
             Text(
               'Детали заказа',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
-            
-            if (widget.type == PaymentType.subscription && widget.plan != null) ...[
+            if (widget.type == PaymentType.subscription &&
+                widget.plan != null) ...[
               _buildOrderItem(
                 'Подписка ${widget.plan!.name}',
                 '${widget.plan!.durationDays} дней',
@@ -99,7 +99,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 Icons.star,
                 Colors.amber,
               ),
-            ] else if (widget.type == PaymentType.promotion && widget.promotionPackage != null) ...[
+            ] else if (widget.type == PaymentType.promotion &&
+                widget.promotionPackage != null) ...[
               _buildOrderItem(
                 'Продвижение ${widget.promotionPackage!.name}',
                 '${widget.promotionPackage!.durationDays} дней',
@@ -107,7 +108,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 Icons.trending_up,
                 Colors.green,
               ),
-            ] else if (widget.type == PaymentType.advertisement && widget.advertisement != null) ...[
+            ] else if (widget.type == PaymentType.advertisement &&
+                widget.advertisement != null) ...[
               _buildOrderItem(
                 'Реклама ${widget.advertisement!.title ?? "Без названия"}',
                 widget.advertisement!.placement.toString().split('.').last,
@@ -116,24 +118,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 Colors.purple,
               ),
             ],
-            
             const Divider(),
-            
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'Итого:',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
                 Text(
                   '${_getTotalAmount().toInt()} ₽',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.deepPurple,
-                  ),
+                        fontWeight: FontWeight.bold,
+                        color: Colors.deepPurple,
+                      ),
                 ),
               ],
             ),
@@ -168,14 +168,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
               Text(
                 title,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               Text(
                 subtitle,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey[600],
-                ),
+                      color: Colors.grey[600],
+                    ),
               ),
             ],
           ),
@@ -183,9 +183,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
         Text(
           price,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: color,
-          ),
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
         ),
       ],
     );
@@ -198,11 +198,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
         Text(
           'Способ оплаты',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         const SizedBox(height: 16),
-        
         _buildPaymentMethodOption(
           PaymentMethod.card,
           'Банковская карта',
@@ -211,7 +210,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
           Colors.blue,
         ),
         const SizedBox(height: 12),
-        
         _buildPaymentMethodOption(
           PaymentMethod.applePay,
           'Apple Pay',
@@ -220,7 +218,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
           Colors.black,
         ),
         const SizedBox(height: 12),
-        
         _buildPaymentMethodOption(
           PaymentMethod.googlePay,
           'Google Pay',
@@ -229,7 +226,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
           Colors.green,
         ),
         const SizedBox(height: 12),
-        
         _buildPaymentMethodOption(
           PaymentMethod.yooMoney,
           'ЮMoney',
@@ -249,7 +245,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     Color color,
   ) {
     final isSelected = _selectedPaymentMethod == method;
-    
+
     return Card(
       elevation: isSelected ? 4 : 1,
       child: InkWell(
@@ -263,9 +259,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            border: isSelected
-                ? Border.all(color: color, width: 2)
-                : null,
+            border: isSelected ? Border.all(color: color, width: 2) : null,
           ),
           child: Row(
             children: [
@@ -285,14 +279,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     Text(
                       title,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                     Text(
                       subtitle,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey[600],
-                      ),
+                            color: Colors.grey[600],
+                          ),
                     ),
                   ],
                 ),
@@ -321,11 +315,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
         Text(
           'Платежная система',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         const SizedBox(height: 16),
-        
         _buildProviderOption(
           PaymentProvider.stripe,
           'Stripe',
@@ -334,7 +327,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
           Colors.purple,
         ),
         const SizedBox(height: 12),
-        
         _buildProviderOption(
           PaymentProvider.yookassa,
           'ЮKassa',
@@ -354,7 +346,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     Color color,
   ) {
     final isSelected = _selectedProvider == provider;
-    
+
     return Card(
       elevation: isSelected ? 4 : 1,
       child: InkWell(
@@ -368,9 +360,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            border: isSelected
-                ? Border.all(color: color, width: 2)
-                : null,
+            border: isSelected ? Border.all(color: color, width: 2) : null,
           ),
           child: Row(
             children: [
@@ -390,14 +380,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     Text(
                       title,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                     Text(
                       subtitle,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey[600],
-                      ),
+                            color: Colors.grey[600],
+                          ),
                     ),
                   ],
                 ),
@@ -478,7 +468,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       final userId = authProvider.currentUser?['id'];
-      
+
       if (userId == null) {
         throw Exception('Пользователь не авторизован');
       }
@@ -497,7 +487,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             provider: _selectedProvider,
           );
           break;
-          
+
         case PaymentType.promotion:
           if (widget.promotionPackage == null) {
             throw Exception('Пакет продвижения не выбран');
@@ -509,7 +499,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             provider: _selectedProvider,
           );
           break;
-          
+
         case PaymentType.advertisement:
           if (widget.advertisement == null) {
             throw Exception('Рекламное объявление не выбрано');
@@ -526,7 +516,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       if (result.success) {
         // Активируем услугу
         bool activationResult = false;
-        
+
         switch (widget.type) {
           case PaymentType.subscription:
             activationResult = await _subscriptionService.activateSubscription(
@@ -535,7 +525,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               transactionId: result.transactionId!,
             );
             break;
-            
+
           case PaymentType.promotion:
             activationResult = await _promotionService.activatePromotion(
               userId: userId,
@@ -543,9 +533,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
               transactionId: result.transactionId!,
             );
             break;
-            
+
           case PaymentType.advertisement:
-            activationResult = await _advertisementService.activateAdvertisement(
+            activationResult =
+                await _advertisementService.activateAdvertisement(
               adId: widget.advertisement!.id,
               transactionId: result.transactionId!,
             );

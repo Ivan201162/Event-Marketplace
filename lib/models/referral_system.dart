@@ -32,8 +32,8 @@ class ReferralCode {
         userId: map['userId'] ?? '',
         code: map['code'] ?? '',
         createdAt: (map['createdAt'] as Timestamp).toDate(),
-        expiresAt: map['expiresAt'] != null 
-            ? (map['expiresAt'] as Timestamp).toDate() 
+        expiresAt: map['expiresAt'] != null
+            ? (map['expiresAt'] as Timestamp).toDate()
             : null,
         isActive: map['isActive'] ?? true,
         usageCount: map['usageCount'] ?? 0,
@@ -72,7 +72,8 @@ class ReferralCode {
     bool? isActive,
     int? usageCount,
     int? maxUsage,
-  }) => ReferralCode(
+  }) =>
+      ReferralCode(
         id: id ?? this.id,
         userId: userId ?? this.userId,
         code: code ?? this.code,
@@ -109,11 +110,11 @@ class Referral {
           orElse: () => ReferralStatus.pending,
         ),
         createdAt: (map['createdAt'] as Timestamp).toDate(),
-        completedAt: map['completedAt'] != null 
-            ? (map['completedAt'] as Timestamp).toDate() 
+        completedAt: map['completedAt'] != null
+            ? (map['completedAt'] as Timestamp).toDate()
             : null,
         bonusApplied: map['bonusApplied'] ?? false,
-        bonusType: map['bonusType'] != null 
+        bonusType: map['bonusType'] != null
             ? ReferralBonusType.values.firstWhere(
                 (e) => e.toString() == 'ReferralBonusType.${map['bonusType']}',
                 orElse: () => ReferralBonusType.freePromotion,
@@ -145,7 +146,8 @@ class Referral {
         'referralCode': referralCode,
         'status': status.toString().split('.').last,
         'createdAt': Timestamp.fromDate(createdAt),
-        'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+        'completedAt':
+            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
         'bonusApplied': bonusApplied,
         'bonusType': bonusType?.toString().split('.').last,
         'bonusValue': bonusValue,
@@ -164,7 +166,8 @@ class Referral {
     ReferralBonusType? bonusType,
     double? bonusValue,
     String? bonusDescription,
-  }) => Referral(
+  }) =>
+      Referral(
         id: id ?? this.id,
         referrerId: referrerId ?? this.referrerId,
         referredId: referredId ?? this.referredId,
@@ -204,12 +207,12 @@ class ReferralReward {
         value: (map['value'] ?? 0.0).toDouble(),
         description: map['description'] ?? '',
         createdAt: (map['createdAt'] as Timestamp).toDate(),
-        expiresAt: map['expiresAt'] != null 
-            ? (map['expiresAt'] as Timestamp).toDate() 
+        expiresAt: map['expiresAt'] != null
+            ? (map['expiresAt'] as Timestamp).toDate()
             : null,
         isUsed: map['isUsed'] ?? false,
-        usedAt: map['usedAt'] != null 
-            ? (map['usedAt'] as Timestamp).toDate() 
+        usedAt: map['usedAt'] != null
+            ? (map['usedAt'] as Timestamp).toDate()
             : null,
       );
 
@@ -251,7 +254,8 @@ class ReferralReward {
     DateTime? expiresAt,
     bool? isUsed,
     DateTime? usedAt,
-  }) => ReferralReward(
+  }) =>
+      ReferralReward(
         id: id ?? this.id,
         userId: userId ?? this.userId,
         referralId: referralId ?? this.referralId,
@@ -285,8 +289,8 @@ class ReferralStats {
         totalBonusesEarned: (map['totalBonusesEarned'] ?? 0.0).toDouble(),
         activeRewards: map['activeRewards'] ?? 0,
         usedRewards: map['usedRewards'] ?? 0,
-        lastReferralAt: map['lastReferralAt'] != null 
-            ? (map['lastReferralAt'] as Timestamp).toDate() 
+        lastReferralAt: map['lastReferralAt'] != null
+            ? (map['lastReferralAt'] as Timestamp).toDate()
             : null,
       );
 
@@ -299,7 +303,8 @@ class ReferralStats {
   final int usedRewards;
   final DateTime? lastReferralAt;
 
-  double get completionRate => totalReferrals > 0 ? completedReferrals / totalReferrals : 0.0;
+  double get completionRate =>
+      totalReferrals > 0 ? completedReferrals / totalReferrals : 0.0;
 
   Map<String, dynamic> toMap() => {
         'userId': userId,
@@ -309,6 +314,7 @@ class ReferralStats {
         'totalBonusesEarned': totalBonusesEarned,
         'activeRewards': activeRewards,
         'usedRewards': usedRewards,
-        'lastReferralAt': lastReferralAt != null ? Timestamp.fromDate(lastReferralAt!) : null,
+        'lastReferralAt':
+            lastReferralAt != null ? Timestamp.fromDate(lastReferralAt!) : null,
       };
 }

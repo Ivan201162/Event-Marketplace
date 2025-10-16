@@ -53,13 +53,17 @@ class SpecialistsSortWidget extends StatelessWidget {
               child: DropdownButton<String>(
                 value: selectedSort,
                 isDense: true,
-                items: sortOptions.map((option) => DropdownMenuItem(
-                    value: option,
-                    child: Text(
-                      option,
-                      style: theme.textTheme.bodyMedium,
-                    ),
-                  ),).toList(),
+                items: sortOptions
+                    .map(
+                      (option) => DropdownMenuItem(
+                        value: option,
+                        child: Text(
+                          option,
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ),
+                    )
+                    .toList(),
                 onChanged: (value) {
                   if (value != null) {
                     onSortChanged(value);

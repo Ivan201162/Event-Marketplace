@@ -9,10 +9,12 @@ class AdvertisementCampaignsScreen extends StatefulWidget {
   const AdvertisementCampaignsScreen({super.key});
 
   @override
-  State<AdvertisementCampaignsScreen> createState() => _AdvertisementCampaignsScreenState();
+  State<AdvertisementCampaignsScreen> createState() =>
+      _AdvertisementCampaignsScreenState();
 }
 
-class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScreen> {
+class _AdvertisementCampaignsScreenState
+    extends State<AdvertisementCampaignsScreen> {
   final AdvertisementService _advertisementService = AdvertisementService();
   List<AdCampaign> _campaigns = [];
   bool _isLoading = true;
@@ -27,7 +29,7 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
     try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       final userId = authProvider.currentUser?['id'];
-      
+
       if (userId != null) {
         final campaigns = await _advertisementService.getUserCampaigns(userId);
         setState(() {
@@ -101,15 +103,15 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
           Text(
             'У вас нет рекламных кампаний',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color: Colors.grey[600],
-            ),
+                  color: Colors.grey[600],
+                ),
           ),
           const SizedBox(height: 8),
           Text(
             'Создайте рекламную кампанию для продвижения ваших услуг',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Colors.grey[500],
-            ),
+                  color: Colors.grey[500],
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -150,7 +152,9 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: campaign.isActive ? Colors.green.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
+                    color: campaign.isActive
+                        ? Colors.green.withOpacity(0.1)
+                        : Colors.grey.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -166,16 +170,19 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
                     children: [
                       Text(
                         campaign.name,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                       ),
                       Text(
                         campaign.isActive ? 'Активна' : 'Приостановлена',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: campaign.isActive ? Colors.green : Colors.grey,
-                          fontWeight: FontWeight.w500,
-                        ),
+                              color: campaign.isActive
+                                  ? Colors.green
+                                  : Colors.grey,
+                              fontWeight: FontWeight.w500,
+                            ),
                       ),
                     ],
                   ),
@@ -184,22 +191,23 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Детали кампании
             _buildDetailRow('Бюджет:', '${campaign.budget.toInt()} ₽'),
             _buildDetailRow('Потрачено:', '${campaign.spentAmount.toInt()} ₽'),
-            _buildDetailRow('Остаток:', '${campaign.remainingBudget.toInt()} ₽'),
+            _buildDetailRow(
+                'Остаток:', '${campaign.remainingBudget.toInt()} ₽'),
             _buildDetailRow('Показы:', campaign.impressions.toString()),
             _buildDetailRow('Клики:', campaign.clicks.toString()),
             _buildDetailRow('CTR:', '${campaign.ctr.toStringAsFixed(2)}%'),
-            
+
             const SizedBox(height: 16),
-            
+
             // Прогресс бюджета
             _buildBudgetProgress(campaign),
-            
+
             const SizedBox(height: 16),
-            
+
             // Действия
             Row(
               children: [
@@ -214,10 +222,12 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
                   child: ElevatedButton(
                     onPressed: () => _manageCampaign(campaign),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: campaign.isActive ? Colors.orange : Colors.green,
+                      backgroundColor:
+                          campaign.isActive ? Colors.orange : Colors.green,
                       foregroundColor: Colors.white,
                     ),
-                    child: Text(campaign.isActive ? 'Управлять' : 'Активировать'),
+                    child:
+                        Text(campaign.isActive ? 'Управлять' : 'Активировать'),
                   ),
                 ),
               ],
@@ -237,14 +247,14 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
           Text(
             label,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey[600],
-            ),
+                  color: Colors.grey[600],
+                ),
           ),
           Text(
             value,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
+                  fontWeight: FontWeight.w500,
+                ),
           ),
         ],
       ),
@@ -252,8 +262,9 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
   }
 
   Widget _buildBudgetProgress(AdCampaign campaign) {
-    final progress = campaign.budget > 0 ? campaign.spentAmount / campaign.budget : 0.0;
-    
+    final progress =
+        campaign.budget > 0 ? campaign.spentAmount / campaign.budget : 0.0;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -263,14 +274,14 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
             Text(
               'Использование бюджета',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
+                    fontWeight: FontWeight.w500,
+                  ),
             ),
             Text(
               '${(progress * 100).toInt()}%',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
-              ),
+                    color: Colors.grey[600],
+                  ),
             ),
           ],
         ),
@@ -289,7 +300,7 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
   Widget _buildStatusChip(AdCampaign campaign) {
     Color color;
     String text;
-    
+
     if (campaign.isExpired) {
       color = Colors.red;
       text = 'Истекла';
@@ -303,7 +314,7 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
       color = Colors.grey;
       text = 'Приостановлена';
     }
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
@@ -358,7 +369,8 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
     // TODO: Реализовать управление кампанией
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Функция управления кампанией будет реализована в следующей версии'),
+        content: Text(
+            'Функция управления кампанией будет реализована в следующей версии'),
       ),
     );
   }

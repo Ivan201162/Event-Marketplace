@@ -59,6 +59,3 @@ class _ChatSearchWidgetState extends State<ChatSearchWidget> {
     widget.onSearchChanged('');
   }
 }
-
-
-

@@ -21,7 +21,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
   final _bioController = TextEditingController();
   final _cityController = TextEditingController();
   final _skillsController = TextEditingController();
-  
+
   Profile? _currentProfile;
   bool _isLoading = true;
   bool _isSaving = false;
@@ -53,7 +53,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
           _currentProfile = profile;
           _isLoading = false;
         });
-        
+
         if (profile != null) {
           _nameController.text = profile.name;
           _bioController.text = profile.bio ?? '';
@@ -82,7 +82,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     try {
       final ImagePicker picker = ImagePicker();
       final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-      
+
       if (image != null) {
         setState(() {
           _selectedImage = File(image.path);
@@ -107,7 +107,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
 
     try {
       String? avatarUrl;
-      
+
       // Загружаем аватар, если выбран новый
       if (_selectedImage != null) {
         final bytes = await _selectedImage!.readAsBytes();
@@ -120,8 +120,12 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
       // Обновляем профиль
       final success = await SupabaseService.updateProfile(
         name: _nameController.text.trim(),
-        bio: _bioController.text.trim().isEmpty ? null : _bioController.text.trim(),
-        city: _cityController.text.trim().isEmpty ? null : _cityController.text.trim(),
+        bio: _bioController.text.trim().isEmpty
+            ? null
+            : _bioController.text.trim(),
+        city: _cityController.text.trim().isEmpty
+            ? null
+            : _cityController.text.trim(),
         skills: _skills,
         avatarUrl: avatarUrl,
       );
@@ -287,13 +291,14 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                   : (_currentProfile?.avatarUrl != null
                       ? NetworkImage(_currentProfile!.avatarUrl!)
                       : null),
-              child: _selectedImage == null && _currentProfile?.avatarUrl == null
-                  ? Icon(
-                      Icons.person,
-                      size: 60,
-                      color: theme.primaryColor,
-                    )
-                  : null,
+              child:
+                  _selectedImage == null && _currentProfile?.avatarUrl == null
+                      ? Icon(
+                          Icons.person,
+                          size: 60,
+                          color: theme.primaryColor,
+                        )
+                      : null,
             ),
             Positioned(
               bottom: 0,
@@ -336,7 +341,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        
+
         // Имя
         TextFormField(
           controller: _nameController,
@@ -383,7 +388,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        
+
         // Поле для добавления навыков
         Row(
           children: [
@@ -456,7 +461,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        
+
         // Биография
         TextFormField(
           controller: _bioController,

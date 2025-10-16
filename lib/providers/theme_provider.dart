@@ -5,13 +5,12 @@ import '../theme/app_theme.dart';
 
 /// Провайдер для управления темами приложения
 class ThemeNotifier extends Notifier<ThemeMode> {
-
   @override
   ThemeMode build() {
     _loadTheme();
     return ThemeMode.system;
   }
-  
+
   static const String _themeKey = 'theme_mode';
 
   ThemeMode get themeMode => state;
@@ -94,7 +93,9 @@ class ThemeNotifier extends Notifier<ThemeMode> {
 }
 
 /// Провайдер для управления темами
-final themeProvider = NotifierProvider<ThemeNotifier, ThemeMode>(ThemeNotifier.new);
+final themeProvider =
+    NotifierProvider<ThemeNotifier, ThemeMode>(ThemeNotifier.new);
 
 /// Провайдер для получения текущего режима темы
-final themeModeProvider = Provider<ThemeMode>((ref) => ref.watch(themeProvider));
+final themeModeProvider =
+    Provider<ThemeMode>((ref) => ref.watch(themeProvider));

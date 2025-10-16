@@ -290,6 +290,3 @@ final searchSettingsProvider = Provider<Map<String, dynamic>>((ref) {
     'searchQuery': searchQuery,
   };
 });
-
-
-

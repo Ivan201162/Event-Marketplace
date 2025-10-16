@@ -85,7 +85,6 @@ class _EnhancedIdeasScreenState extends ConsumerState<EnhancedIdeasScreen>
 }
 
 class _PhotoIdeasTab extends ConsumerWidget {
-
   const _PhotoIdeasTab({required this.ideasState});
   final EnhancedIdeasState ideasState;
 
@@ -153,7 +152,6 @@ class _PhotoIdeasTab extends ConsumerWidget {
 }
 
 class _VideoIdeasTab extends ConsumerWidget {
-
   const _VideoIdeasTab({required this.ideasState});
   final EnhancedIdeasState ideasState;
 
@@ -215,7 +213,6 @@ class _VideoIdeasTab extends ConsumerWidget {
 }
 
 class _PhotoIdeaCard extends ConsumerWidget {
-
   const _PhotoIdeaCard({required this.idea});
   final EnhancedIdea idea;
 
@@ -347,7 +344,6 @@ class _PhotoIdeaCard extends ConsumerWidget {
 }
 
 class _VideoIdeaCard extends ConsumerWidget {
-
   const _VideoIdeaCard({required this.idea});
   final EnhancedIdea idea;
 

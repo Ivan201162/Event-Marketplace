@@ -5,7 +5,6 @@ import '../test_data/mock_data.dart';
 
 /// Состояние ленты
 class EnhancedFeedState {
-
   const EnhancedFeedState({
     this.posts = const [],
     this.isLoading = false,
@@ -29,7 +28,6 @@ class EnhancedFeedState {
 
 /// Провайдер ленты с тестовыми данными
 class EnhancedFeedNotifier extends ChangeNotifier {
-
   EnhancedFeedNotifier() {
     loadFeed();
   }
@@ -105,5 +103,5 @@ class EnhancedFeedNotifier extends ChangeNotifier {
 }
 
 /// Провайдер ленты
-final enhancedFeedProvider =
-    ChangeNotifierProvider<EnhancedFeedNotifier>((ref) => EnhancedFeedNotifier());
+final enhancedFeedProvider = ChangeNotifierProvider<EnhancedFeedNotifier>(
+    (ref) => EnhancedFeedNotifier());

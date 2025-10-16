@@ -83,7 +83,7 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
           userId: widget.userId,
           specialistId: widget.specialistId,
           specialistName: widget.specialistName,
-          specialistPhotoUrl: widget.specialistPhotoUrl,
+          specialistPhotoUrl: widget.specialistPhotoUrl ?? '',
         );
       }
 

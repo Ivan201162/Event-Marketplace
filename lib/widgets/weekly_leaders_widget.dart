@@ -48,7 +48,7 @@ class WeeklyLeadersWidget extends StatelessWidget {
         itemBuilder: (context, index) {
           final leader = leaders[index];
           final isTopThree = index < 3;
-          
+
           return Container(
             width: 100,
             margin: EdgeInsets.only(
@@ -68,10 +68,10 @@ class WeeklyLeadersWidget extends StatelessWidget {
     bool isTopThree,
   ) {
     final theme = Theme.of(context);
-    
+
     Color positionColor;
     IconData positionIcon;
-    
+
     switch (position) {
       case 1:
         positionColor = Colors.amber;
@@ -97,12 +97,12 @@ class WeeklyLeadersWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         child: Container(
           decoration: BoxDecoration(
-            color: isTopThree 
+            color: isTopThree
                 ? positionColor.withValues(alpha: 0.1)
                 : Colors.grey[50],
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isTopThree 
+              color: isTopThree
                   ? positionColor.withValues(alpha: 0.3)
                   : Colors.grey[300]!,
             ),
@@ -137,9 +137,9 @@ class WeeklyLeadersWidget extends StatelessWidget {
                           ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 8),
-                
+
                 // Аватар
                 Hero(
                   tag: 'leader_avatar_${leader.userId}',
@@ -158,9 +158,9 @@ class WeeklyLeadersWidget extends StatelessWidget {
                         : null,
                   ),
                 ),
-                
+
                 const SizedBox(height: 4),
-                
+
                 // Имя
                 Text(
                   leader.name,
@@ -172,9 +172,9 @@ class WeeklyLeadersWidget extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                 ),
-                
+
                 const SizedBox(height: 2),
-                
+
                 // Город
                 if (leader.city != null)
                   Text(
@@ -187,12 +187,13 @@ class WeeklyLeadersWidget extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                   ),
-                
+
                 const SizedBox(height: 2),
-                
+
                 // Счет
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                   decoration: BoxDecoration(
                     color: positionColor.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),

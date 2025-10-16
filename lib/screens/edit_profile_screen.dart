@@ -27,7 +27,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   final _cityController = TextEditingController();
   final _bioController = TextEditingController();
   final _skillsController = TextEditingController();
-  
+
   File? _selectedAvatar;
   bool _isLoading = false;
   bool _isUploading = false;
@@ -195,13 +195,15 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             children: [
               CircleAvatar(
                 radius: 60,
-                backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                backgroundColor:
+                    Theme.of(context).primaryColor.withOpacity(0.1),
                 backgroundImage: _selectedAvatar != null
                     ? FileImage(_selectedAvatar!)
                     : (widget.initialProfile?.avatarUrl != null
                         ? NetworkImage(widget.initialProfile!.avatarUrl!)
                         : null) as ImageProvider?,
-                child: _selectedAvatar == null && widget.initialProfile?.avatarUrl == null
+                child: _selectedAvatar == null &&
+                        widget.initialProfile?.avatarUrl == null
                     ? const Icon(
                         Icons.person,
                         size: 60,
@@ -245,7 +247,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
   Future<void> _pickAvatar() async {
     final ImagePicker picker = ImagePicker();
-    
+
     try {
       final XFile? image = await picker.pickImage(
         source: ImageSource.gallery,
@@ -253,7 +255,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         maxHeight: 512,
         imageQuality: 80,
       );
-      
+
       if (image != null) {
         setState(() {
           _selectedAvatar = File(image.path);
@@ -289,10 +291,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         setState(() {
           _isUploading = true;
         });
-        
+
         // TODO: Реализовать загрузку аватара в Supabase Storage
         // avatarUrl = await SupabaseService.uploadAvatar(_selectedAvatar!);
-        
+
         setState(() {
           _isUploading = false;
         });
@@ -308,7 +310,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       // Создаем обновленный профиль
       final updatedProfile = Profile(
         id: currentUser.uid,
-        username: widget.initialProfile?.username ?? currentUser.email?.split('@').first ?? 'user',
+        username: widget.initialProfile?.username ??
+            currentUser.email?.split('@').first ??
+            'user',
         name: _nameController.text.trim(),
         avatarUrl: avatarUrl,
         city: _cityController.text.trim(),
@@ -343,4 +347,3 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     }
   }
 }
-

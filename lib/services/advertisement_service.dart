@@ -5,7 +5,8 @@ import '../models/transaction.dart' as transaction_model;
 import '../services/payment_service.dart';
 
 class AdvertisementService {
-  static final AdvertisementService _instance = AdvertisementService._internal();
+  static final AdvertisementService _instance =
+      AdvertisementService._internal();
   factory AdvertisementService() => _instance;
   AdvertisementService._internal();
 
@@ -15,8 +16,9 @@ class AdvertisementService {
   /// Получение всех активных рекламных кампаний
   Future<List<AdCampaign>> getActiveCampaigns() async {
     try {
-      debugPrint('INFO: [advertisement_service] Получение активных рекламных кампаний');
-      
+      debugPrint(
+          'INFO: [advertisement_service] Получение активных рекламных кампаний');
+
       final snapshot = await _firestore
           .collection('ad_campaigns')
           .where('isActive', isEqualTo: true)
@@ -31,7 +33,8 @@ class AdvertisementService {
               }))
           .toList();
     } catch (e) {
-      debugPrint('ERROR: [advertisement_service] Ошибка получения кампаний: $e');
+      debugPrint(
+          'ERROR: [advertisement_service] Ошибка получения кампаний: $e');
       return [];
     }
   }
@@ -52,7 +55,8 @@ class AdvertisementService {
               }))
           .toList();
     } catch (e) {
-      debugPrint('ERROR: [advertisement_service] Ошибка получения кампаний пользователя: $e');
+      debugPrint(
+          'ERROR: [advertisement_service] Ошибка получения кампаний пользователя: $e');
       return [];
     }
   }
@@ -67,8 +71,9 @@ class AdvertisementService {
     int limit = 10,
   }) async {
     try {
-      debugPrint('INFO: [advertisement_service] Получение активных рекламных объявлений');
-      
+      debugPrint(
+          'INFO: [advertisement_service] Получение активных рекламных объявлений');
+
       Query query = _firestore
           .collection('advertisements')
           .where('status', isEqualTo: 'active')
@@ -79,7 +84,8 @@ class AdvertisementService {
       }
 
       if (placement != null) {
-        query = query.where('placement', isEqualTo: placement.toString().split('.').last);
+        query = query.where('placement',
+            isEqualTo: placement.toString().split('.').last);
       }
 
       if (region != null) {
@@ -94,10 +100,8 @@ class AdvertisementService {
         query = query.where('category', isEqualTo: category);
       }
 
-      final snapshot = await query
-          .orderBy('createdAt', descending: true)
-          .limit(limit)
-          .get();
+      final snapshot =
+          await query.orderBy('createdAt', descending: true).limit(limit).get();
 
       return snapshot.docs
           .map((doc) => Advertisement.fromMap({
@@ -106,7 +110,8 @@ class AdvertisementService {
               }))
           .toList();
     } catch (e) {
-      debugPrint('ERROR: [advertisement_service] Ошибка получения рекламных объявлений: $e');
+      debugPrint(
+          'ERROR: [advertisement_service] Ошибка получения рекламных объявлений: $e');
       return [];
     }
   }
@@ -125,8 +130,9 @@ class AdvertisementService {
     String? category,
   }) async {
     try {
-      debugPrint('INFO: [advertisement_service] Создание рекламной кампании для пользователя $userId');
-      
+      debugPrint(
+          'INFO: [advertisement_service] Создание рекламной кампании для пользователя $userId');
+
       final campaign = AdCampaign(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         userId: userId,
@@ -149,7 +155,8 @@ class AdvertisementService {
           .doc(campaign.id)
           .set(campaign.toMap());
 
-      debugPrint('INFO: [advertisement_service] Рекламная кампания успешно создана');
+      debugPrint(
+          'INFO: [advertisement_service] Рекламная кампания успешно создана');
       return campaign.id;
     } catch (e) {
       debugPrint('ERROR: [advertisement_service] Ошибка создания кампании: $e');
@@ -179,8 +186,9 @@ class AdvertisementService {
     String? campaignId,
   }) async {
     try {
-      debugPrint('INFO: [advertisement_service] Создание рекламного объявления для пользователя $userId');
-      
+      debugPrint(
+          'INFO: [advertisement_service] Создание рекламного объявления для пользователя $userId');
+
       final advertisement = Advertisement(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         userId: userId,
@@ -211,10 +219,12 @@ class AdvertisementService {
           .doc(advertisement.id)
           .set(advertisement.toMap());
 
-      debugPrint('INFO: [advertisement_service] Рекламное объявление успешно создано');
+      debugPrint(
+          'INFO: [advertisement_service] Рекламное объявление успешно создано');
       return advertisement.id;
     } catch (e) {
-      debugPrint('ERROR: [advertisement_service] Ошибка создания объявления: $e');
+      debugPrint(
+          'ERROR: [advertisement_service] Ошибка создания объявления: $e');
       return null;
     }
   }
@@ -227,13 +237,11 @@ class AdvertisementService {
     PaymentProvider provider = PaymentProvider.stripe,
   }) async {
     try {
-      debugPrint('INFO: [advertisement_service] Покупка рекламы $adId для пользователя $userId');
-      
+      debugPrint(
+          'INFO: [advertisement_service] Покупка рекламы $adId для пользователя $userId');
+
       // Получаем рекламное объявление
-      final doc = await _firestore
-          .collection('advertisements')
-          .doc(adId)
-          .get();
+      final doc = await _firestore.collection('advertisements').doc(adId).get();
 
       if (!doc.exists) {
         return PaymentResult(
@@ -304,21 +312,15 @@ class AdvertisementService {
   }) async {
     try {
       debugPrint('INFO: [advertisement_service] Активация рекламы $adId');
-      
+
       // Активируем рекламу
-      await _firestore
-          .collection('advertisements')
-          .doc(adId)
-          .update({
+      await _firestore.collection('advertisements').doc(adId).update({
         'status': AdStatus.active.toString().split('.').last,
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
 
       // Обновляем статус транзакции
-      await _firestore
-          .collection('transactions')
-          .doc(transactionId)
-          .update({
+      await _firestore.collection('transactions').doc(transactionId).update({
         'status': 'success',
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
@@ -335,16 +337,14 @@ class AdvertisementService {
   Future<bool> pauseAdvertisement(String adId) async {
     try {
       debugPrint('INFO: [advertisement_service] Пауза рекламы $adId');
-      
-      await _firestore
-          .collection('advertisements')
-          .doc(adId)
-          .update({
+
+      await _firestore.collection('advertisements').doc(adId).update({
         'status': AdStatus.paused.toString().split('.').last,
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
 
-      debugPrint('INFO: [advertisement_service] Реклама успешно поставлена на паузу');
+      debugPrint(
+          'INFO: [advertisement_service] Реклама успешно поставлена на паузу');
       return true;
     } catch (e) {
       debugPrint('ERROR: [advertisement_service] Ошибка паузы рекламы: $e');
@@ -356,11 +356,8 @@ class AdvertisementService {
   Future<bool> resumeAdvertisement(String adId) async {
     try {
       debugPrint('INFO: [advertisement_service] Возобновление рекламы $adId');
-      
-      await _firestore
-          .collection('advertisements')
-          .doc(adId)
-          .update({
+
+      await _firestore.collection('advertisements').doc(adId).update({
         'status': AdStatus.active.toString().split('.').last,
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
@@ -368,7 +365,8 @@ class AdvertisementService {
       debugPrint('INFO: [advertisement_service] Реклама успешно возобновлена');
       return true;
     } catch (e) {
-      debugPrint('ERROR: [advertisement_service] Ошибка возобновления рекламы: $e');
+      debugPrint(
+          'ERROR: [advertisement_service] Ошибка возобновления рекламы: $e');
       return false;
     }
   }
@@ -377,11 +375,8 @@ class AdvertisementService {
   Future<bool> rejectAdvertisement(String adId, String reason) async {
     try {
       debugPrint('INFO: [advertisement_service] Отклонение рекламы $adId');
-      
-      await _firestore
-          .collection('advertisements')
-          .doc(adId)
-          .update({
+
+      await _firestore.collection('advertisements').doc(adId).update({
         'status': AdStatus.rejected.toString().split('.').last,
         'updatedAt': Timestamp.fromDate(DateTime.now()),
         'metadata': {
@@ -392,7 +387,8 @@ class AdvertisementService {
       debugPrint('INFO: [advertisement_service] Реклама успешно отклонена');
       return true;
     } catch (e) {
-      debugPrint('ERROR: [advertisement_service] Ошибка отклонения рекламы: $e');
+      debugPrint(
+          'ERROR: [advertisement_service] Ошибка отклонения рекламы: $e');
       return false;
     }
   }
@@ -418,22 +414,21 @@ class AdvertisementService {
 
       // Пересчитываем CTR, CPC, CPM
       if (impressions != null || clicks != null) {
-        final doc = await _firestore
-            .collection('advertisements')
-            .doc(adId)
-            .get();
+        final doc =
+            await _firestore.collection('advertisements').doc(adId).get();
 
         if (doc.exists) {
           final data = doc.data()!;
-          final currentImpressions = (data['impressions'] as int? ?? 0) + (impressions ?? 0);
+          final currentImpressions =
+              (data['impressions'] as int? ?? 0) + (impressions ?? 0);
           final currentClicks = (data['clicks'] as int? ?? 0) + (clicks ?? 0);
           final price = (data['price'] as num?)?.toDouble() ?? 0.0;
-          
+
           if (currentImpressions > 0) {
             updateData['ctr'] = (currentClicks / currentImpressions) * 100;
             updateData['cpm'] = (price / currentImpressions) * 1000;
           }
-          
+
           if (currentClicks > 0) {
             updateData['cpc'] = price / currentClicks;
           }
@@ -447,7 +442,8 @@ class AdvertisementService {
 
       return true;
     } catch (e) {
-      debugPrint('ERROR: [advertisement_service] Ошибка обновления статистики: $e');
+      debugPrint(
+          'ERROR: [advertisement_service] Ошибка обновления статистики: $e');
       return false;
     }
   }
@@ -456,7 +452,7 @@ class AdvertisementService {
   Future<void> checkExpiredAdvertisements() async {
     try {
       debugPrint('INFO: [advertisement_service] Проверка истекшей рекламы');
-      
+
       final now = DateTime.now();
       final snapshot = await _firestore
           .collection('advertisements')
@@ -473,9 +469,11 @@ class AdvertisementService {
       }
       await batch.commit();
 
-      debugPrint('INFO: [advertisement_service] Обработано ${snapshot.docs.length} истекших рекламных объявлений');
+      debugPrint(
+          'INFO: [advertisement_service] Обработано ${snapshot.docs.length} истекших рекламных объявлений');
     } catch (e) {
-      debugPrint('ERROR: [advertisement_service] Ошибка проверки истекшей рекламы: $e');
+      debugPrint(
+          'ERROR: [advertisement_service] Ошибка проверки истекшей рекламы: $e');
     }
   }
 
@@ -488,8 +486,9 @@ class AdvertisementService {
     int limit = 5,
   }) async {
     try {
-      debugPrint('INFO: [advertisement_service] Получение рекламы для отображения в $placement');
-      
+      debugPrint(
+          'INFO: [advertisement_service] Получение рекламы для отображения в $placement');
+
       Query query = _firestore
           .collection('advertisements')
           .where('status', isEqualTo: 'active')
@@ -508,10 +507,8 @@ class AdvertisementService {
         query = query.where('category', isEqualTo: category);
       }
 
-      final snapshot = await query
-          .orderBy('createdAt', descending: true)
-          .limit(limit)
-          .get();
+      final snapshot =
+          await query.orderBy('createdAt', descending: true).limit(limit).get();
 
       return snapshot.docs
           .map((doc) => Advertisement.fromMap({
@@ -520,7 +517,8 @@ class AdvertisementService {
               }))
           .toList();
     } catch (e) {
-      debugPrint('ERROR: [advertisement_service] Ошибка получения рекламы для отображения: $e');
+      debugPrint(
+          'ERROR: [advertisement_service] Ошибка получения рекламы для отображения: $e');
       return [];
     }
   }
@@ -528,9 +526,7 @@ class AdvertisementService {
   /// Получение статистики рекламы
   Future<Map<String, dynamic>> getAdvertisementStats() async {
     try {
-      final snapshot = await _firestore
-          .collection('advertisements')
-          .get();
+      final snapshot = await _firestore.collection('advertisements').get();
 
       int activeCount = 0;
       int expiredCount = 0;
@@ -566,7 +562,8 @@ class AdvertisementService {
         totalClicks += clicks;
       }
 
-      final ctr = totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0.0;
+      final ctr =
+          totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0.0;
 
       return {
         'totalAdvertisements': snapshot.docs.length,
@@ -580,7 +577,8 @@ class AdvertisementService {
         'averageCtr': ctr,
       };
     } catch (e) {
-      debugPrint('ERROR: [advertisement_service] Ошибка получения статистики: $e');
+      debugPrint(
+          'ERROR: [advertisement_service] Ошибка получения статистики: $e');
       return {};
     }
   }

@@ -13,17 +13,19 @@ class EnhancedSocialHomeScreen extends ConsumerStatefulWidget {
   const EnhancedSocialHomeScreen({super.key});
 
   @override
-  ConsumerState<EnhancedSocialHomeScreen> createState() => _EnhancedSocialHomeScreenState();
+  ConsumerState<EnhancedSocialHomeScreen> createState() =>
+      _EnhancedSocialHomeScreenState();
 }
 
-class _EnhancedSocialHomeScreenState extends ConsumerState<EnhancedSocialHomeScreen>
+class _EnhancedSocialHomeScreenState
+    extends ConsumerState<EnhancedSocialHomeScreen>
     with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
-  
+
   late AnimationController _profileAnimationController;
   late Animation<double> _profileAnimation;
-  
+
   Profile? _currentProfile;
   List<WeeklyLeader> _weeklyLeaders = [];
   bool _isLoadingProfile = true;
@@ -40,9 +42,10 @@ class _EnhancedSocialHomeScreenState extends ConsumerState<EnhancedSocialHomeScr
       vsync: this,
     );
     _profileAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _profileAnimationController, curve: Curves.easeInOut),
+      CurvedAnimation(
+          parent: _profileAnimationController, curve: Curves.easeInOut),
     );
-    
+
     _scrollController.addListener(_onScroll);
     _loadCurrentProfile();
     _loadWeeklyLeaders();
@@ -168,7 +171,8 @@ class _EnhancedSocialHomeScreenState extends ConsumerState<EnhancedSocialHomeScr
                 onPressed: _showFiltersDialog,
               ),
               IconButton(
-                icon: const Icon(Icons.notifications_outlined, color: Colors.white),
+                icon: const Icon(Icons.notifications_outlined,
+                    color: Colors.white),
                 onPressed: () => context.push('/notifications'),
               ),
             ],
@@ -474,7 +478,8 @@ class _EnhancedSocialHomeScreenState extends ConsumerState<EnhancedSocialHomeScr
           else
             WeeklyLeadersWidget(
               leaders: _weeklyLeaders,
-              onLeaderTap: (leader) => context.push('/profile/${leader.userId}'),
+              onLeaderTap: (leader) =>
+                  context.push('/profile/${leader.userId}'),
             ),
         ],
       ),

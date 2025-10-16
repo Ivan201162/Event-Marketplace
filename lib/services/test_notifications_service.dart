@@ -25,7 +25,8 @@ class TestNotificationsService {
 
       if (existingNotifications.docs.isNotEmpty) {
         debugPrint(
-            'Тестовые уведомления уже существуют для пользователя $userId',);
+          'Тестовые уведомления уже существуют для пользователя $userId',
+        );
         return;
       }
 
@@ -144,7 +145,8 @@ class TestNotificationsService {
       );
     } catch (e) {
       debugPrint(
-          'Ошибка создания тестовых уведомлений для всех пользователей: $e',);
+        'Ошибка создания тестовых уведомлений для всех пользователей: $e',
+      );
     }
   }
 

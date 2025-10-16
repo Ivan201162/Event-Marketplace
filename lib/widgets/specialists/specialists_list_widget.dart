@@ -59,7 +59,7 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
 
     try {
       final specialists = _testDataService.getSpecialists();
-      
+
       // Фильтрация
       final filteredSpecialists = specialists.where((specialist) {
         // Поиск по имени
@@ -175,7 +175,8 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
             Text(
               'Попробуйте изменить параметры поиска',
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                color:
+                    theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
               ),
             ),
           ],
@@ -196,7 +197,8 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
     );
   }
 
-  Widget _buildSpecialistCard(BuildContext context, Map<String, dynamic> specialist) {
+  Widget _buildSpecialistCard(
+      BuildContext context, Map<String, dynamic> specialist) {
     final theme = Theme.of(context);
     final name = specialist['name'] as String? ?? 'Неизвестно';
     final city = specialist['city'] as String? ?? '';
@@ -281,7 +283,8 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
                       Text(
                         city,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
+                          color: theme.textTheme.bodySmall?.color
+                              ?.withValues(alpha: 0.7),
                         ),
                       ),
 
@@ -292,20 +295,27 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
                       Wrap(
                         spacing: 4,
                         runSpacing: 2,
-                        children: specialties.take(2).map((specialty) => Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: theme.primaryColor.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Text(
-                              specialty.toString(),
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.primaryColor,
-                                fontSize: 10,
+                        children: specialties
+                            .take(2)
+                            .map(
+                              (specialty) => Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color:
+                                      theme.primaryColor.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Text(
+                                  specialty.toString(),
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.primaryColor,
+                                    fontSize: 10,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),).toList(),
+                            )
+                            .toList(),
                       ),
 
                     const SizedBox(height: 8),
@@ -330,7 +340,8 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
                         Text(
                           '($reviewsCount)',
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
+                            color: theme.textTheme.bodySmall?.color
+                                ?.withValues(alpha: 0.7),
                           ),
                         ),
 
@@ -353,7 +364,8 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
               // Стрелка
               Icon(
                 Icons.chevron_right,
-                color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.5),
+                color:
+                    theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.5),
               ),
             ],
           ),

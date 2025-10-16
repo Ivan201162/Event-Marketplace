@@ -148,13 +148,15 @@ class ProfileHeaderWidget extends StatelessWidget {
                 Icon(
                   Icons.location_on,
                   size: 16,
-                  color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                  color:
+                      theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
                 ),
                 const SizedBox(width: 4),
                 Text(
                   user.city!,
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                    color: theme.textTheme.bodyMedium?.color
+                        ?.withValues(alpha: 0.7),
                   ),
                 ),
               ],
@@ -176,20 +178,26 @@ class ProfileHeaderWidget extends StatelessWidget {
             Wrap(
               spacing: 8,
               runSpacing: 4,
-              children: user.specialties.take(3).map((specialty) => Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: theme.primaryColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    specialty,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.primaryColor,
-                      fontWeight: FontWeight.w500,
+              children: user.specialties
+                  .take(3)
+                  .map(
+                    (specialty) => Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: theme.primaryColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        specialty,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.primaryColor,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
-                  ),
-                ),).toList(),
+                  )
+                  .toList(),
             ),
           ],
         ],

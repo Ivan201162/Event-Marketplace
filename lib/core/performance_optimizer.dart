@@ -185,8 +185,11 @@ class PerformanceOptimizer {
   }
 
   /// Оптимизация Firebase запросов
-  dynamic optimizeFirebaseQuery(query,
-      {int? limit, bool useCache = true,}) {
+  dynamic optimizeFirebaseQuery(
+    query, {
+    int? limit,
+    bool useCache = true,
+  }) {
     // Добавляем лимит если не указан
     if (limit != null && query != null) {
       // query = query.limit(limit);

@@ -6,7 +6,8 @@ class AnimatedInterestingSection extends StatefulWidget {
   const AnimatedInterestingSection({super.key});
 
   @override
-  State<AnimatedInterestingSection> createState() => _AnimatedInterestingSectionState();
+  State<AnimatedInterestingSection> createState() =>
+      _AnimatedInterestingSectionState();
 }
 
 class _AnimatedInterestingSectionState extends State<AnimatedInterestingSection>
@@ -260,7 +261,8 @@ class _InterestingCardState extends State<_InterestingCard>
                       widget.title,
                       style: TextStyle(
                         color: widget.color,
-                        fontWeight: _isHovered ? FontWeight.bold : FontWeight.w500,
+                        fontWeight:
+                            _isHovered ? FontWeight.bold : FontWeight.w500,
                         fontSize: 12,
                       ),
                       textAlign: TextAlign.center,

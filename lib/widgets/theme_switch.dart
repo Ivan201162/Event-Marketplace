@@ -172,7 +172,7 @@ class ThemeSwitch extends ConsumerWidget {
     }
 
     // Логируем изменение темы
-    AnalyticsService().logChangeTheme(themeMode.name);
+    AnalyticsService.logChangeTheme(themeMode.name);
   }
 
   void _showThemeDialog(BuildContext context, WidgetRef ref) {

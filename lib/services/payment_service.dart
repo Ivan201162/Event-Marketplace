@@ -55,10 +55,11 @@ class PaymentService {
     PaymentProvider provider = PaymentProvider.stripe,
   }) async {
     try {
-      debugPrint('INFO: [payment_service] Создание платежа для подписки ${plan.name}');
-      
+      debugPrint(
+          'INFO: [payment_service] Создание платежа для подписки ${plan.name}');
+
       final amount = (plan.price * 100).round(); // Конвертируем в копейки
-      
+
       switch (provider) {
         case PaymentProvider.stripe:
           return await _createStripePayment(
@@ -88,7 +89,8 @@ class PaymentService {
           throw Exception('Неподдерживаемый провайдер платежей');
       }
     } catch (e) {
-      debugPrint('ERROR: [payment_service] Ошибка создания платежа подписки: $e');
+      debugPrint(
+          'ERROR: [payment_service] Ошибка создания платежа подписки: $e');
       return PaymentResult(
         success: false,
         errorMessage: e.toString(),
@@ -104,10 +106,11 @@ class PaymentService {
     PaymentProvider provider = PaymentProvider.stripe,
   }) async {
     try {
-      debugPrint('INFO: [payment_service] Создание платежа для продвижения ${package.name}');
-      
+      debugPrint(
+          'INFO: [payment_service] Создание платежа для продвижения ${package.name}');
+
       final amount = (package.price * 100).round();
-      
+
       switch (provider) {
         case PaymentProvider.stripe:
           return await _createStripePayment(
@@ -139,7 +142,8 @@ class PaymentService {
           throw Exception('Неподдерживаемый провайдер платежей');
       }
     } catch (e) {
-      debugPrint('ERROR: [payment_service] Ошибка создания платежа продвижения: $e');
+      debugPrint(
+          'ERROR: [payment_service] Ошибка создания платежа продвижения: $e');
       return PaymentResult(
         success: false,
         errorMessage: e.toString(),
@@ -156,9 +160,9 @@ class PaymentService {
   }) async {
     try {
       debugPrint('INFO: [payment_service] Создание платежа для рекламы');
-      
+
       final amount = (ad.price * 100).round();
-      
+
       switch (provider) {
         case PaymentProvider.stripe:
           return await _createStripePayment(
@@ -190,7 +194,8 @@ class PaymentService {
           throw Exception('Неподдерживаемый провайдер платежей');
       }
     } catch (e) {
-      debugPrint('ERROR: [payment_service] Ошибка создания платежа рекламы: $e');
+      debugPrint(
+          'ERROR: [payment_service] Ошибка создания платежа рекламы: $e');
       return PaymentResult(
         success: false,
         errorMessage: e.toString(),
@@ -215,7 +220,8 @@ class PaymentService {
         'amount': amount.toString(),
         'currency': currency,
         'description': description,
-        'metadata': metadata.map((key, value) => MapEntry(key, value.toString())),
+        'metadata':
+            metadata.map((key, value) => MapEntry(key, value.toString())),
       };
 
       final response = await http.post(
@@ -255,7 +261,8 @@ class PaymentService {
   }) async {
     try {
       final headers = {
-        'Authorization': 'Basic ${base64Encode(utf8.encode('${PaymentConfig.yookassaShopId}:${PaymentConfig.yookassaSecretKey}'))}',
+        'Authorization':
+            'Basic ${base64Encode(utf8.encode('${PaymentConfig.yookassaShopId}:${PaymentConfig.yookassaSecretKey}'))}',
         'Content-Type': 'application/json',
         'Idempotence-Key': DateTime.now().millisecondsSinceEpoch.toString(),
       };
@@ -307,8 +314,9 @@ class PaymentService {
     required PaymentProvider provider,
   }) async {
     try {
-      debugPrint('INFO: [payment_service] Подтверждение платежа $externalTransactionId');
-      
+      debugPrint(
+          'INFO: [payment_service] Подтверждение платежа $externalTransactionId');
+
       switch (provider) {
         case PaymentProvider.stripe:
           return await _confirmStripePayment(externalTransactionId);
@@ -341,7 +349,7 @@ class PaymentService {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final status = data['status'];
-        
+
         return PaymentResult(
           success: status == 'succeeded',
           externalTransactionId: paymentIntentId,
@@ -365,7 +373,8 @@ class PaymentService {
   Future<PaymentResult> _confirmYooKassaPayment(String paymentId) async {
     try {
       final headers = {
-        'Authorization': 'Basic ${base64Encode(utf8.encode('${PaymentConfig.yookassaShopId}:${PaymentConfig.yookassaSecretKey}'))}',
+        'Authorization':
+            'Basic ${base64Encode(utf8.encode('${PaymentConfig.yookassaShopId}:${PaymentConfig.yookassaSecretKey}'))}',
       };
 
       final response = await http.get(
@@ -376,7 +385,7 @@ class PaymentService {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final status = data['status'];
-        
+
         return PaymentResult(
           success: status == 'succeeded',
           externalTransactionId: paymentId,
@@ -404,13 +413,16 @@ class PaymentService {
     String? reason,
   }) async {
     try {
-      debugPrint('INFO: [payment_service] Возврат средств $externalTransactionId');
-      
+      debugPrint(
+          'INFO: [payment_service] Возврат средств $externalTransactionId');
+
       switch (provider) {
         case PaymentProvider.stripe:
-          return await _refundStripePayment(externalTransactionId, amount, reason);
+          return await _refundStripePayment(
+              externalTransactionId, amount, reason);
         case PaymentProvider.yookassa:
-          return await _refundYooKassaPayment(externalTransactionId, amount, reason);
+          return await _refundYooKassaPayment(
+              externalTransactionId, amount, reason);
         default:
           throw Exception('Неподдерживаемый провайдер платежей');
       }
@@ -424,7 +436,8 @@ class PaymentService {
   }
 
   /// Возврат средств через Stripe
-  Future<PaymentResult> _refundStripePayment(String paymentIntentId, double amount, String? reason) async {
+  Future<PaymentResult> _refundStripePayment(
+      String paymentIntentId, double amount, String? reason) async {
     try {
       final headers = {
         'Authorization': 'Bearer ${PaymentConfig.stripeSecretKey}',
@@ -466,10 +479,12 @@ class PaymentService {
   }
 
   /// Возврат средств через YooKassa
-  Future<PaymentResult> _refundYooKassaPayment(String paymentId, double amount, String? reason) async {
+  Future<PaymentResult> _refundYooKassaPayment(
+      String paymentId, double amount, String? reason) async {
     try {
       final headers = {
-        'Authorization': 'Basic ${base64Encode(utf8.encode('${PaymentConfig.yookassaShopId}:${PaymentConfig.yookassaSecretKey}'))}',
+        'Authorization':
+            'Basic ${base64Encode(utf8.encode('${PaymentConfig.yookassaShopId}:${PaymentConfig.yookassaSecretKey}'))}',
         'Content-Type': 'application/json',
         'Idempotence-Key': DateTime.now().millisecondsSinceEpoch.toString(),
       };
@@ -517,26 +532,29 @@ class PaymentService {
       // Возвращаем пустой список для примера
       return [];
     } catch (e) {
-      debugPrint('ERROR: [payment_service] Ошибка получения истории транзакций: $e');
+      debugPrint(
+          'ERROR: [payment_service] Ошибка получения истории транзакций: $e');
       return [];
     }
   }
 
   /// Проверка статуса платежа
-  Future<TransactionStatus> getPaymentStatus(String externalTransactionId, PaymentProvider provider) async {
+  Future<TransactionStatus> getPaymentStatus(
+      String externalTransactionId, PaymentProvider provider) async {
     try {
       final result = await confirmPayment(
         externalTransactionId: externalTransactionId,
         provider: provider,
       );
-      
+
       if (result.success) {
         return TransactionStatus.success;
       } else {
         return TransactionStatus.failed;
       }
     } catch (e) {
-      debugPrint('ERROR: [payment_service] Ошибка проверки статуса платежа: $e');
+      debugPrint(
+          'ERROR: [payment_service] Ошибка проверки статуса платежа: $e');
       return TransactionStatus.failed;
     }
   }

@@ -9,17 +9,19 @@ class AdminSubscriptionManagementScreen extends StatefulWidget {
   const AdminSubscriptionManagementScreen({super.key});
 
   @override
-  State<AdminSubscriptionManagementScreen> createState() => _AdminSubscriptionManagementScreenState();
+  State<AdminSubscriptionManagementScreen> createState() =>
+      _AdminSubscriptionManagementScreenState();
 }
 
-class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionManagementScreen> {
+class _AdminSubscriptionManagementScreenState
+    extends State<AdminSubscriptionManagementScreen> {
   final MarketingAdminService _marketingService = MarketingAdminService();
   final Uuid _uuid = const Uuid();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _durationController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  
+
   SubscriptionPlanType _selectedType = SubscriptionPlanType.free;
   bool _isActive = true;
   Map<String, bool> _features = {};
@@ -74,7 +76,7 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
             itemBuilder: (context, index) {
               final planData = plans[index].data() as Map<String, dynamic>;
               final plan = SubscriptionPlan.fromMap(planData);
-              
+
               return Card(
                 margin: const EdgeInsets.only(bottom: 12),
                 child: ListTile(
@@ -122,7 +124,8 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
                         value: 'delete',
                         child: ListTile(
                           leading: Icon(Icons.delete, color: Colors.red),
-                          title: Text('Удалить', style: TextStyle(color: Colors.red)),
+                          title: Text('Удалить',
+                              style: TextStyle(color: Colors.red)),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -209,7 +212,8 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
                 },
               ),
               const SizedBox(height: 16),
-              const Text('Функции:', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text('Функции:',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
               ..._buildFeatureCheckboxes(),
             ],
           ),
@@ -255,7 +259,9 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
   }
 
   Future<void> _createPlan() async {
-    if (_nameController.text.isEmpty || _priceController.text.isEmpty || _durationController.text.isEmpty) {
+    if (_nameController.text.isEmpty ||
+        _priceController.text.isEmpty ||
+        _durationController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Заполните все обязательные поля')),
       );
@@ -322,7 +328,8 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
     _durationController.text = plan.durationDays.toString();
     _selectedType = plan.type;
     _isActive = plan.isActive;
-    _features = Map.fromIterable(plan.features, key: (feature) => feature, value: (feature) => true);
+    _features = Map.fromIterable(plan.features,
+        key: (feature) => feature, value: (feature) => true);
 
     showDialog(
       context: context,
@@ -387,7 +394,8 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
                 },
               ),
               const SizedBox(height: 16),
-              const Text('Функции:', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text('Функции:',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
               ..._buildFeatureCheckboxes(),
             ],
           ),
@@ -466,7 +474,9 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
 
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Статус плана изменен на ${!plan.isActive ? 'активен' : 'неактивен'}')),
+          SnackBar(
+              content: Text(
+                  'Статус плана изменен на ${!plan.isActive ? 'активен' : 'неактивен'}')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -502,7 +512,10 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
 
     if (confirmed == true) {
       try {
-        await FirebaseFirestore.instance.collection('subscription_plans').doc(plan.id).delete();
+        await FirebaseFirestore.instance
+            .collection('subscription_plans')
+            .doc(plan.id)
+            .delete();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Тарифный план удален')),
         );

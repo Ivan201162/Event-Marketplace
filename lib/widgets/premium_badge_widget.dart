@@ -234,12 +234,8 @@ class PremiumTextWidget extends StatelessWidget {
     return Text(
       text,
       style: (style ?? const TextStyle()).copyWith(
-        color: tier == SubscriptionTier.free 
-            ? null 
-            : _getColor(tier),
-        fontWeight: tier == SubscriptionTier.free 
-            ? null 
-            : FontWeight.bold,
+        color: tier == SubscriptionTier.free ? null : _getColor(tier),
+        fontWeight: tier == SubscriptionTier.free ? null : FontWeight.bold,
       ),
     );
   }

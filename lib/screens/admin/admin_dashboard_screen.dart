@@ -181,7 +181,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     );
   }
 
-  Widget _buildStatItem(String label, String value, IconData icon, Color color) {
+  Widget _buildStatItem(
+      String label, String value, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -240,7 +241,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   Colors.blue,
                   () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const AdminSubscriptionManagementScreen()),
+                    MaterialPageRoute(
+                        builder: (_) =>
+                            const AdminSubscriptionManagementScreen()),
                   ),
                 ),
                 _buildActionCard(
@@ -249,7 +252,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   Colors.orange,
                   () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const AdminAdvertisementManagementScreen()),
+                    MaterialPageRoute(
+                        builder: (_) =>
+                            const AdminAdvertisementManagementScreen()),
                   ),
                 ),
                 _buildActionCard(
@@ -258,7 +263,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   Colors.green,
                   () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const AdminPromotionsManagementScreen()),
+                    MaterialPageRoute(
+                        builder: (_) =>
+                            const AdminPromotionsManagementScreen()),
                   ),
                 ),
                 _buildActionCard(
@@ -267,7 +274,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   Colors.purple,
                   () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const AdminReferralManagementScreen()),
+                    MaterialPageRoute(
+                        builder: (_) => const AdminReferralManagementScreen()),
                   ),
                 ),
                 _buildActionCard(
@@ -276,7 +284,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   Colors.red,
                   () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const AdminAnalyticsScreen()),
+                    MaterialPageRoute(
+                        builder: (_) => const AdminAnalyticsScreen()),
                   ),
                 ),
                 _buildActionCard(
@@ -285,7 +294,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   Colors.teal,
                   () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const AdminNewsletterManagementScreen()),
+                    MaterialPageRoute(
+                        builder: (_) =>
+                            const AdminNewsletterManagementScreen()),
                   ),
                 ),
               ],
@@ -296,7 +307,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     );
   }
 
-  Widget _buildActionCard(String title, IconData icon, Color color, VoidCallback onTap) {
+  Widget _buildActionCard(
+      String title, IconData icon, Color color, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
@@ -460,10 +472,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               stream: _adminService.getAdminLogsStream(limit: 5).map((logs) {
                 // Convert logs to QuerySnapshot-like structure
                 return QuerySnapshot(
-                  docs: logs.map((log) => QueryDocumentSnapshot(
-                    log.id,
-                    log.toMap(),
-                  )).toList(),
+                  docs: logs
+                      .map((log) => QueryDocumentSnapshot(
+                            log.id,
+                            log.toMap(),
+                          ))
+                      .toList(),
                 );
               }),
               builder: (context, snapshot) {

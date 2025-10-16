@@ -26,7 +26,7 @@ class _MyPromotionsScreenState extends State<MyPromotionsScreen> {
     try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       final userId = authProvider.currentUser?['id'];
-      
+
       if (userId != null) {
         final promotions = await _promotionService.getUserPromotions(userId);
         setState(() {
@@ -87,15 +87,15 @@ class _MyPromotionsScreenState extends State<MyPromotionsScreen> {
           Text(
             'У вас нет продвижений',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color: Colors.grey[600],
-            ),
+                  color: Colors.grey[600],
+                ),
           ),
           const SizedBox(height: 8),
           Text(
             'Оформите продвижение для увеличения видимости',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Colors.grey[500],
-            ),
+                  color: Colors.grey[500],
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -147,16 +147,17 @@ class _MyPromotionsScreenState extends State<MyPromotionsScreen> {
                     children: [
                       Text(
                         _getTypeText(promotion.type),
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                       ),
                       Text(
                         _getStatusText(promotion.status),
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: _getStatusColor(promotion.status),
-                          fontWeight: FontWeight.w500,
-                        ),
+                              color: _getStatusColor(promotion.status),
+                              fontWeight: FontWeight.w500,
+                            ),
                       ),
                     ],
                   ),
@@ -165,23 +166,24 @@ class _MyPromotionsScreenState extends State<MyPromotionsScreen> {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Детали продвижения
-            _buildDetailRow('Приоритет:', _getPriorityText(promotion.priorityLevel)),
+            _buildDetailRow(
+                'Приоритет:', _getPriorityText(promotion.priorityLevel)),
             _buildDetailRow('Цена:', '${promotion.price.toInt()} ₽'),
             _buildDetailRow('Начало:', _formatDate(promotion.startDate)),
             _buildDetailRow('Окончание:', _formatDate(promotion.endDate)),
             _buildDetailRow('Показы:', promotion.impressions.toString()),
             _buildDetailRow('Клики:', promotion.clicks.toString()),
             _buildDetailRow('CTR:', '${promotion.ctr.toStringAsFixed(2)}%'),
-            
+
             if (promotion.isActive) ...[
               const SizedBox(height: 12),
               _buildProgressBar(promotion),
             ],
-            
+
             const SizedBox(height: 16),
-            
+
             // Действия
             if (promotion.isActive) ...[
               Row(
@@ -233,14 +235,14 @@ class _MyPromotionsScreenState extends State<MyPromotionsScreen> {
           Text(
             label,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey[600],
-            ),
+                  color: Colors.grey[600],
+                ),
           ),
           Text(
             value,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
+                  fontWeight: FontWeight.w500,
+                ),
           ),
         ],
       ),
@@ -257,14 +259,14 @@ class _MyPromotionsScreenState extends State<MyPromotionsScreen> {
             Text(
               'Осталось дней: ${promotion.daysRemaining}',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
+                    fontWeight: FontWeight.w500,
+                  ),
             ),
             Text(
               '${(promotion.progressPercentage * 100).toInt()}%',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
-              ),
+                    color: Colors.grey[600],
+                  ),
             ),
           ],
         ),
@@ -421,7 +423,8 @@ class _MyPromotionsScreenState extends State<MyPromotionsScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Отменить продвижение'),
-        content: const Text('Вы уверены, что хотите отменить продвижение? Это действие нельзя отменить.'),
+        content: const Text(
+            'Вы уверены, что хотите отменить продвижение? Это действие нельзя отменить.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),

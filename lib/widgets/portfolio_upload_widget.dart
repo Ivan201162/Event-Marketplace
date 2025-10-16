@@ -130,7 +130,8 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
                       icon: const Icon(Icons.close, size: 16),
                       onPressed: () {
                         ref
-                            .read<PortfolioUploadNotifier>(portfolioUploadStateProvider.notifier)
+                            .read<PortfolioUploadNotifier>(
+                                portfolioUploadStateProvider.notifier)
                             .clearError();
                       },
                     ),
@@ -237,7 +238,8 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
               icon: const Icon(Icons.close, size: 16),
               onPressed: () {
                 ref
-                    .read<PortfolioUploadNotifier>(portfolioUploadStateProvider.notifier)
+                    .read<PortfolioUploadNotifier>(
+                        portfolioUploadStateProvider.notifier)
                     .removePortfolioItem(
                       widget.userId,
                       item.id,

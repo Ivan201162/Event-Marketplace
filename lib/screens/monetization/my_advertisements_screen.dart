@@ -26,16 +26,16 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
     try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       final userId = authProvider.currentUser?['id'];
-      
+
       if (userId != null) {
         // Получаем все рекламные объявления пользователя
         final campaigns = await _advertisementService.getUserCampaigns(userId);
         final advertisements = <Advertisement>[];
-        
+
         for (final campaign in campaigns) {
           advertisements.addAll(campaign.ads);
         }
-        
+
         setState(() {
           _advertisements = advertisements;
           _isLoading = false;
@@ -94,15 +94,15 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
           Text(
             'У вас нет рекламных объявлений',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color: Colors.grey[600],
-            ),
+                  color: Colors.grey[600],
+                ),
           ),
           const SizedBox(height: 8),
           Text(
             'Создайте рекламное объявление для продвижения ваших услуг',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Colors.grey[500],
-            ),
+                  color: Colors.grey[500],
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -138,7 +138,8 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: _getStatusColor(advertisement.status).withOpacity(0.1),
+                    color:
+                        _getStatusColor(advertisement.status).withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -154,16 +155,17 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
                     children: [
                       Text(
                         advertisement.title ?? 'Без названия',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                       ),
                       Text(
                         _getStatusText(advertisement.status),
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: _getStatusColor(advertisement.status),
-                          fontWeight: FontWeight.w500,
-                        ),
+                              color: _getStatusColor(advertisement.status),
+                              fontWeight: FontWeight.w500,
+                            ),
                       ),
                     ],
                   ),
@@ -172,32 +174,37 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Детали рекламы
             _buildDetailRow('Тип:', _getTypeText(advertisement.type)),
-            _buildDetailRow('Размещение:', _getPlacementText(advertisement.placement)),
+            _buildDetailRow(
+                'Размещение:', _getPlacementText(advertisement.placement)),
             _buildDetailRow('Цена:', '${advertisement.price.toInt()} ₽'),
             _buildDetailRow('Начало:', _formatDate(advertisement.startDate)),
             _buildDetailRow('Окончание:', _formatDate(advertisement.endDate)),
             _buildDetailRow('Показы:', advertisement.impressions.toString()),
             _buildDetailRow('Клики:', advertisement.clicks.toString()),
             _buildDetailRow('CTR:', '${advertisement.ctr.toStringAsFixed(2)}%'),
-            _buildDetailRow('CPC:', '${advertisement.cpc.toStringAsFixed(2)} ₽'),
-            _buildDetailRow('CPM:', '${advertisement.cpm.toStringAsFixed(2)} ₽'),
-            
+            _buildDetailRow(
+                'CPC:', '${advertisement.cpc.toStringAsFixed(2)} ₽'),
+            _buildDetailRow(
+                'CPM:', '${advertisement.cpm.toStringAsFixed(2)} ₽'),
+
             if (advertisement.budget != null) ...[
               _buildDetailRow('Бюджет:', '${advertisement.budget!.toInt()} ₽'),
-              _buildDetailRow('Потрачено:', '${advertisement.spentAmount.toInt()} ₽'),
-              _buildDetailRow('Остаток:', '${advertisement.remainingBudget.toInt()} ₽'),
+              _buildDetailRow(
+                  'Потрачено:', '${advertisement.spentAmount.toInt()} ₽'),
+              _buildDetailRow(
+                  'Остаток:', '${advertisement.remainingBudget.toInt()} ₽'),
             ],
-            
+
             if (advertisement.isActive) ...[
               const SizedBox(height: 12),
               _buildProgressBar(advertisement),
             ],
-            
+
             const SizedBox(height: 16),
-            
+
             // Действия
             if (advertisement.isActive) ...[
               Row(
@@ -267,14 +274,14 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
           Text(
             label,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey[600],
-            ),
+                  color: Colors.grey[600],
+                ),
           ),
           Text(
             value,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
+                  fontWeight: FontWeight.w500,
+                ),
           ),
         ],
       ),
@@ -291,14 +298,14 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
             Text(
               'Осталось дней: ${advertisement.daysRemaining}',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
+                    fontWeight: FontWeight.w500,
+                  ),
             ),
             Text(
               '${(advertisement.progressPercentage * 100).toInt()}%',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
-              ),
+                    color: Colors.grey[600],
+                  ),
             ),
           ],
         ),
@@ -453,9 +460,12 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
               Text('CPM: ${advertisement.cpm.toStringAsFixed(2)} ₽'),
               Text('Начало: ${_formatDate(advertisement.startDate)}'),
               Text('Окончание: ${_formatDate(advertisement.endDate)}'),
-              if (advertisement.region != null) Text('Регион: ${advertisement.region}'),
-              if (advertisement.city != null) Text('Город: ${advertisement.city}'),
-              if (advertisement.category != null) Text('Категория: ${advertisement.category}'),
+              if (advertisement.region != null)
+                Text('Регион: ${advertisement.region}'),
+              if (advertisement.city != null)
+                Text('Город: ${advertisement.city}'),
+              if (advertisement.category != null)
+                Text('Категория: ${advertisement.category}'),
             ],
           ),
         ),
@@ -471,7 +481,8 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
 
   Future<void> _pauseAdvertisement(Advertisement advertisement) async {
     try {
-      final success = await _advertisementService.pauseAdvertisement(advertisement.id);
+      final success =
+          await _advertisementService.pauseAdvertisement(advertisement.id);
       if (success) {
         await _loadAdvertisements();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -492,7 +503,8 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
 
   Future<void> _resumeAdvertisement(Advertisement advertisement) async {
     try {
-      final success = await _advertisementService.resumeAdvertisement(advertisement.id);
+      final success =
+          await _advertisementService.resumeAdvertisement(advertisement.id);
       if (success) {
         await _loadAdvertisements();
         ScaffoldMessenger.of(context).showSnackBar(

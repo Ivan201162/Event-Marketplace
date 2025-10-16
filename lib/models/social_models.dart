@@ -275,7 +275,9 @@ class Idea {
       commentsCount: json['comments_count'] as int? ?? 0,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
-      author: json['profiles'] != null ? Profile.fromJson(json['profiles'] as Map<String, dynamic>) : null,
+      author: json['profiles'] != null
+          ? Profile.fromJson(json['profiles'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -367,14 +369,21 @@ class Request {
       title: json['title'] as String,
       description: json['description'] as String?,
       category: json['category'] as String?,
-      budget: json['budget'] != null ? (json['budget'] as num).toDouble() : null,
+      budget:
+          json['budget'] != null ? (json['budget'] as num).toDouble() : null,
       status: json['status'] as String? ?? 'open',
-      deadline: json['deadline'] != null ? DateTime.parse(json['deadline'] as String) : null,
+      deadline: json['deadline'] != null
+          ? DateTime.parse(json['deadline'] as String)
+          : null,
       location: json['location'] as String?,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
-      creator: json['creator'] != null ? Profile.fromJson(json['creator'] as Map<String, dynamic>) : null,
-      assignee: json['assignee'] != null ? Profile.fromJson(json['assignee'] as Map<String, dynamic>) : null,
+      creator: json['creator'] != null
+          ? Profile.fromJson(json['creator'] as Map<String, dynamic>)
+          : null,
+      assignee: json['assignee'] != null
+          ? Profile.fromJson(json['assignee'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -429,4 +438,3 @@ class Request {
     );
   }
 }
-

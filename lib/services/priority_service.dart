@@ -24,9 +24,11 @@ class PriorityService {
       int priority = 0;
 
       // Проверяем активную подписку
-      final subscription = await _subscriptionService.getActiveSubscription(userId);
+      final subscription =
+          await _subscriptionService.getActiveSubscription(userId);
       if (subscription != null) {
-        final plan = await _subscriptionService.getPlanById(subscription.planId);
+        final plan =
+            await _subscriptionService.getPlanById(subscription.planId);
         if (plan != null) {
           switch (plan.tier) {
             case SubscriptionTier.free:
@@ -63,7 +65,8 @@ class PriorityService {
 
       return priority;
     } catch (e) {
-      debugPrint('ERROR: [priority_service] Ошибка получения приоритета пользователя: $e');
+      debugPrint(
+          'ERROR: [priority_service] Ошибка получения приоритета пользователя: $e');
       return 0;
     }
   }
@@ -85,11 +88,13 @@ class PriorityService {
       }
 
       // Сортируем по приоритету (убывание)
-      usersWithPriority.sort((a, b) => (b['priority'] as int).compareTo(a['priority'] as int));
+      usersWithPriority.sort(
+          (a, b) => (b['priority'] as int).compareTo(a['priority'] as int));
 
       return usersWithPriority;
     } catch (e) {
-      debugPrint('ERROR: [priority_service] Ошибка сортировки пользователей: $e');
+      debugPrint(
+          'ERROR: [priority_service] Ошибка сортировки пользователей: $e');
       return users;
     }
   }
@@ -103,7 +108,7 @@ class PriorityService {
   }) async {
     try {
       debugPrint('INFO: [priority_service] Получение топ пользователей');
-      
+
       Query query = _firestore.collection('users');
 
       if (region != null) {
@@ -118,19 +123,23 @@ class PriorityService {
         query = query.where('category', isEqualTo: category);
       }
 
-      final snapshot = await query.limit(limit * 2).get(); // Берем больше для сортировки
-      
-      final users = snapshot.docs.map((doc) => {
-        'id': doc.id,
-        ...doc.data() as Map<String, dynamic>,
-      }).toList();
+      final snapshot =
+          await query.limit(limit * 2).get(); // Берем больше для сортировки
+
+      final users = snapshot.docs
+          .map((doc) => {
+                'id': doc.id,
+                ...doc.data() as Map<String, dynamic>,
+              })
+          .toList();
 
       // Сортируем по приоритету
       final sortedUsers = await sortUsersByPriority(users);
-      
+
       return sortedUsers.take(limit).toList();
     } catch (e) {
-      debugPrint('ERROR: [priority_service] Ошибка получения топ пользователей: $e');
+      debugPrint(
+          'ERROR: [priority_service] Ошибка получения топ пользователей: $e');
       return [];
     }
   }
@@ -143,8 +152,9 @@ class PriorityService {
     int limit = 5,
   }) async {
     try {
-      debugPrint('INFO: [priority_service] Получение продвинутых пользователей');
-      
+      debugPrint(
+          'INFO: [priority_service] Получение продвинутых пользователей');
+
       // Получаем активные продвижения профилей
       final promotions = await _promotionService.getPromotedProfiles(
         region: region,
@@ -156,10 +166,8 @@ class PriorityService {
       final promotedUsers = <Map<String, dynamic>>[];
 
       for (final promotion in promotions) {
-        final userDoc = await _firestore
-            .collection('users')
-            .doc(promotion.userId)
-            .get();
+        final userDoc =
+            await _firestore.collection('users').doc(promotion.userId).get();
 
         if (userDoc.exists) {
           final userData = userDoc.data()!;
@@ -174,7 +182,8 @@ class PriorityService {
 
       return promotedUsers;
     } catch (e) {
-      debugPrint('ERROR: [priority_service] Ошибка получения продвинутых пользователей: $e');
+      debugPrint(
+          'ERROR: [priority_service] Ошибка получения продвинутых пользователей: $e');
       return [];
     }
   }
@@ -204,13 +213,15 @@ class PriorityService {
   /// Проверка, является ли пользователь премиум
   Future<bool> isPremiumUser(String userId) async {
     try {
-      final subscription = await _subscriptionService.getActiveSubscription(userId);
+      final subscription =
+          await _subscriptionService.getActiveSubscription(userId);
       if (subscription == null) return false;
 
       final plan = await _subscriptionService.getPlanById(subscription.planId);
       return plan?.tier != SubscriptionTier.free;
     } catch (e) {
-      debugPrint('ERROR: [priority_service] Ошибка проверки премиум статуса: $e');
+      debugPrint(
+          'ERROR: [priority_service] Ошибка проверки премиум статуса: $e');
       return false;
     }
   }
@@ -220,7 +231,8 @@ class PriorityService {
     try {
       return await _subscriptionService.getUserSubscriptionTier(userId);
     } catch (e) {
-      debugPrint('ERROR: [priority_service] Ошибка получения уровня подписки: $e');
+      debugPrint(
+          'ERROR: [priority_service] Ошибка получения уровня подписки: $e');
       return SubscriptionTier.free;
     }
   }
@@ -230,7 +242,8 @@ class PriorityService {
     try {
       return await _subscriptionService.hasPremiumAccess(userId);
     } catch (e) {
-      debugPrint('ERROR: [priority_service] Ошибка проверки премиум доступа: $e');
+      debugPrint(
+          'ERROR: [priority_service] Ошибка проверки премиум доступа: $e');
       return false;
     }
   }
@@ -238,17 +251,19 @@ class PriorityService {
   /// Получение статистики приоритетов
   Future<Map<String, dynamic>> getPriorityStats() async {
     try {
-      final subscriptionStats = await _subscriptionService.getSubscriptionStats();
+      final subscriptionStats =
+          await _subscriptionService.getSubscriptionStats();
       final promotionStats = await _promotionService.getPromotionStats();
-      final advertisementStats = await _advertisementService.getAdvertisementStats();
+      final advertisementStats =
+          await _advertisementService.getAdvertisementStats();
 
       return {
         'subscriptions': subscriptionStats,
         'promotions': promotionStats,
         'advertisements': advertisementStats,
         'totalRevenue': (subscriptionStats['totalRevenue'] as double? ?? 0.0) +
-                       (promotionStats['totalRevenue'] as double? ?? 0.0) +
-                       (advertisementStats['totalRevenue'] as double? ?? 0.0),
+            (promotionStats['totalRevenue'] as double? ?? 0.0) +
+            (advertisementStats['totalRevenue'] as double? ?? 0.0),
       };
     } catch (e) {
       debugPrint('ERROR: [priority_service] Ошибка получения статистики: $e');

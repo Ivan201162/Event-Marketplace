@@ -59,8 +59,9 @@ class ABTest {
       name: map['name'] ?? '',
       description: map['description'] ?? '',
       variants: (map['variants'] as List<dynamic>?)
-          ?.map((v) => ABTestVariant.fromMap(v))
-          .toList() ?? [],
+              ?.map((v) => ABTestVariant.fromMap(v))
+              .toList() ??
+          [],
       status: ABTestStatus.values.byName(map['status'] ?? 'draft'),
       startDate: (map['startDate'] as Timestamp).toDate(),
       endDate: (map['endDate'] as Timestamp).toDate(),
