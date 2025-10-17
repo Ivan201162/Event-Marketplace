@@ -322,84 +322,47 @@ final routerProvider = Provider<GoRouter>(
 );
 
 /// Главный экран навигации
-class MainNavigationScreen extends StatefulWidget {
+class MainNavigationScreen extends StatelessWidget {
   const MainNavigationScreen({super.key});
 
   @override
-  State<MainNavigationScreen> createState() => _MainNavigationScreenState();
-}
-
-class _MainNavigationScreenState extends State<MainNavigationScreen> {
-  int _currentIndex = 0;
-
-  final List<Widget> _screens = [
-    const SocialHomeScreen(),
-    const FeedScreen(),
-    const RequestsScreen(),
-    const ChatsScreen(),
-    const IdeasScreen(),
-    const MonetizationHubScreen(), // Добавляем экран монетизации
-  ];
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Event'),
-          leading: IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () => context.push('/profile/me'),
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.notifications),
-              onPressed: () => context.push('/notifications'),
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Event Marketplace'),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+      ),
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.home,
+              size: 64,
+              color: Colors.blue,
             ),
-            IconButton(
-              icon: const Icon(Icons.settings),
-              onPressed: () => context.push('/settings'),
+            SizedBox(height: 16),
+            Text(
+              '🏠 Главный экран',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ],
-        ),
-        body: IndexedStack(
-          index: _currentIndex,
-          children: _screens,
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          currentIndex: _currentIndex,
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Главная',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.feed),
-              label: 'Лента',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.assignment),
-              label: 'Заявки',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat),
-              label: 'Чаты',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.lightbulb),
-              label: 'Идеи',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.monetization_on),
-              label: 'Монетизация',
+            SizedBox(height: 8),
+            Text(
+              'Навигация работает!',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+              ),
             ),
           ],
         ),
-      );
+      ),
+    );
+  }
 }
 
 // Заглушки для экранов, которые будут реализованы позже

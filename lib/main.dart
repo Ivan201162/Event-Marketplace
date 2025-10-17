@@ -32,61 +32,11 @@ void main() async {
   };
 
   try {
-    // Инициализация Firebase
-    try {
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
-      debugPrint('✅ Firebase initialized successfully');
-    } on Exception catch (e) {
-      debugPrint('❌ Firebase initialization error: $e');
-    }
-
-    // Инициализация Supabase
-    try {
-      // Проверяем конфигурацию
-      SupabaseConfigValidator.validate();
-
-      await Supabase.initialize(
-        url: SupabaseConfig.url,
-        anonKey: SupabaseConfig.anonKey,
-        debug: SupabaseConfig.isDevelopment,
-      );
-
-      debugPrint('✅ Supabase initialized successfully');
-    } on Exception catch (e) {
-      debugPrint('❌ Supabase initialization error: $e');
-      // Приложение может работать без Supabase (только Firebase функции)
-    }
-
-    // Инициализация тестовых данных (только в режиме разработки)
-    // try {
-    //   await FirestoreTestDataService.initializeTestData();
-    //   debugPrint('✅ Test data initialized successfully');
-    // } on Exception catch (e) {
-    //   debugPrint('❌ Test data initialization error: $e');
-    // }
-
-    // Инициализация сервисов
-    // try {
-    //   await NotificationService.initialize();
-    //   await AnalyticsService.initialize();
-    //   debugPrint('✅ Services initialized successfully');
-    // } on Exception catch (e) {
-    //   debugPrint('❌ Services initialization error: $e');
-    // }
-
-    // Инициализация Growth Pack
-    // try {
-    //   final growthPackService = GrowthPackIntegrationService();
-    //   await growthPackService.initializeGrowthPack();
-    //   debugPrint('✅ Growth Pack initialized successfully');
-    // } on Exception catch (e) {
-    //   debugPrint('❌ Growth Pack initialization error: $e');
-    // }
-
     debugPrint('🚀 Starting EventMarketplaceApp...');
     runApp(const ProviderScope(child: EventMarketplaceApp()));
+    
+    // Инициализация в фоне (не блокирует UI)
+    _initializeServicesInBackground();
   } catch (e, stack) {
     debugPrint('🚨 Startup error: $e');
     debugPrint('Stack: $stack');
@@ -96,18 +46,41 @@ void main() async {
   }
 }
 
+// Инициализация сервисов в фоне
+void _initializeServicesInBackground() async {
+  try {
+    // Инициализация Firebase
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    debugPrint('✅ Firebase initialized successfully');
+  } on Exception catch (e) {
+    debugPrint('❌ Firebase initialization error: $e');
+  }
+
+  try {
+    // Инициализация Supabase
+    SupabaseConfigValidator.validate();
+    await Supabase.initialize(
+      url: SupabaseConfig.url,
+      anonKey: SupabaseConfig.anonKey,
+      debug: SupabaseConfig.isDevelopment,
+    );
+    debugPrint('✅ Supabase initialized successfully');
+  } on Exception catch (e) {
+    debugPrint('❌ Supabase initialization error: $e');
+  }
+}
+
 class EventMarketplaceApp extends ConsumerWidget {
   const EventMarketplaceApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeProvider);
-
     return MaterialApp.router(
       title: 'Event Marketplace',
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: themeMode,
       routerConfig: ref.watch(routerProvider),
       debugShowCheckedModeBanner: false,
     );
