@@ -30,7 +30,7 @@ class PremiumBadgeWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(size / 2),
             boxShadow: [
               BoxShadow(
-                color: _getColor(tier).withValues(0.3),
+                color: _getColor(tier).withValues(alpha: 0.3),
                 blurRadius: 4,
                 offset: const Offset(0, 2),
               ),
@@ -139,7 +139,7 @@ class PremiumBorderWidget extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: _getColor(tier).withValues(0.2),
+            color: _getColor(tier).withValues(alpha: 0.2),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -186,14 +186,14 @@ class PremiumCardWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           gradient: LinearGradient(
             colors: [
-              _getColor(tier).withValues(0.1),
-              _getColor(tier).withValues(0.05),
+              _getColor(tier).withValues(alpha: 0.1),
+              _getColor(tier).withValues(alpha: 0.05),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           border: Border.all(
-            color: _getColor(tier).withValues(0.3),
+            color: _getColor(tier).withValues(alpha: 0.3),
           ),
         ),
         child: Padding(

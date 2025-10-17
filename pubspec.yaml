@@ -16,8 +16,8 @@ dependencies:
   
   # State Management
   flutter_riverpod: ^3.0.3
-  riverpod_annotation: ^3.0.1
   qr_flutter: ^4.1.0
+  riverpod_annotation: ^3.0.1
   
   # Firebase
   firebase_core: ^4.1.1
@@ -129,16 +129,16 @@ dependencies:
   audioplayers: any
   printing: any
 dev_dependencies:
+  build_runner: ^2.7.1
+  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
-  flutter_lints: ^6.0.0
-  mockito: ^5.5.0
-  # golden_toolkit: ^0.15.0  # Discontinued package removed
-  build_runner: ^2.7.1
-  riverpod_generator: ^3.0.1
   integration_test:
     sdk: flutter
+  mockito: ^5.5.0
   patrol: ^3.7.0
+  riverpod_generator: ^3.0.1
+  # golden_toolkit: ^0.15.0  # Discontinued package removed
 
   cloud_firestore_platform_interface: any
 flutter:

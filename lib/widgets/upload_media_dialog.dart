@@ -122,26 +122,26 @@ class _UploadMediaDialogState extends ConsumerState<UploadMediaDialog> {
                 child: RadioListTile<GalleryItemType>(
                   title: const Text('Изображение'),
                   value: GalleryItemType.image,
-                  groupValue: _selectedType,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedType = value ?? GalleryItemType.image;
-                      _selectedFile = null; // Сбрасываем выбранный файл
-                    });
-                  },
+                  // groupValue: _selectedType,
+                  // onChanged: (value) {
+                  //   setState(() {
+                  //     _selectedType = value ?? GalleryItemType.image;
+                  //     _selectedFile = null; // Сбрасываем выбранный файл
+                  //   });
+                  // },
                 ),
               ),
               Expanded(
                 child: RadioListTile<GalleryItemType>(
                   title: const Text('Видео'),
                   value: GalleryItemType.video,
-                  groupValue: _selectedType,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedType = value ?? GalleryItemType.image;
-                      _selectedFile = null; // Сбрасываем выбранный файл
-                    });
-                  },
+                  // groupValue: _selectedType,
+                  // onChanged: (value) {
+                  //   setState(() {
+                  //     _selectedType = value ?? GalleryItemType.image;
+                  //     _selectedFile = null; // Сбрасываем выбранный файл
+                  //   });
+                  // },
                 ),
               ),
             ],

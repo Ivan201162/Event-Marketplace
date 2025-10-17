@@ -133,7 +133,7 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
 
     return RefreshIndicator(
       onRefresh: () async {
-        ref
+        await ref
             .read<AdvancedSearchNotifier>(advancedSearchProvider.notifier)
             .searchSpecialists(widget.filters);
       },

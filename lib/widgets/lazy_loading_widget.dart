@@ -86,8 +86,9 @@ class _LazyLoadingWidgetState<T> extends State<LazyLoadingWidget<T>> {
     try {
       final items = await widget.loadData(0, widget.itemsPerPage);
       setState(() {
-        _items.clear();
-        _items.addAll(items);
+        _items
+          ..clear()
+          ..addAll(items);
         _currentPage = 0;
         _hasMoreData = items.length >= widget.itemsPerPage;
         _isLoading = false;
@@ -358,8 +359,9 @@ class _LazyLoadingGridState<T> extends State<LazyLoadingGrid<T>> {
     try {
       final items = await widget.loadData(0, widget.itemsPerPage);
       setState(() {
-        _items.clear();
-        _items.addAll(items);
+        _items
+          ..clear()
+          ..addAll(items);
         _currentPage = 0;
         _hasMoreData = items.length >= widget.itemsPerPage;
         _isLoading = false;

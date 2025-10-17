@@ -64,7 +64,7 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
       setState(() {
         _isLoading = false;
       });
-      _animationController.forward();
+      await _animationController.forward();
     } on Exception catch (e) {
       setState(() {
         _isLoading = false;

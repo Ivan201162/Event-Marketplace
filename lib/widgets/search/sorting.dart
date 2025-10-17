@@ -81,14 +81,14 @@ class _SearchSortingWidgetState extends ConsumerState<SearchSortingWidget> {
         ),
       ),
       value: option,
-      groupValue: _currentSorting.sortOption,
-      onChanged: (value) {
-        if (value != null) {
-          setState(() {
-            _currentSorting = _currentSorting.copyWith(sortOption: value);
-          });
-        }
-      },
+      // groupValue: _currentSorting.sortOption,
+      // onChanged: (value) {
+      //   if (value != null) {
+      //     setState(() {
+      //       _currentSorting = _currentSorting.copyWith(sortOption: value);
+      //     });
+      //   }
+      // },
       dense: true,
     );
   }
@@ -260,14 +260,14 @@ class _SortingDialogState extends ConsumerState<SortingDialog> {
                 ),
               ),
               value: option,
-              groupValue: _selectedSorting.sortOption,
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() {
-                    _selectedSorting = _selectedSorting.copyWith(sortOption: value);
-                  });
-                }
-              },
+              // groupValue: _selectedSorting.sortOption,
+              // onChanged: (value) {
+              //   if (value != null) {
+              //     setState(() {
+              //       _selectedSorting = _selectedSorting.copyWith(sortOption: value);
+              //     });
+              //   }
+              // },
             );
           },
         ),

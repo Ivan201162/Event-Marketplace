@@ -216,12 +216,12 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
                                 ),
                                 trailing: Radio<PhotoStudio>(
                                   value: studio,
-                                  groupValue: _selectedStudio,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _selectedStudio = value;
-                                    });
-                                  },
+                                  // groupValue: _selectedStudio,
+                                  // onChanged: (value) {
+                                  //   setState(() {
+                                  //     _selectedStudio = value;
+                                  //   });
+                                  // },
                                 ),
                                 onTap: () {
                                   setState(() {

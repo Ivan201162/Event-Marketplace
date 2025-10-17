@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../theme/app_theme.dart';
+
 import '../models/specialist.dart';
 import '../services/test_data_service.dart';
+import '../theme/app_theme.dart';
 
 /// Профиль специалиста в стиле Instagram
 class InstagramStyleProfile extends ConsumerStatefulWidget {
@@ -193,7 +194,7 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  _specialist!.category,
+                  _specialist!.category.toString(),
                   style: const TextStyle(
                     fontSize: 14,
                     color: BrandColors.textSecondary,
@@ -201,9 +202,9 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  _specialist!.about.isNotEmpty
-                      ? _specialist!.about
-                      : 'Опытный специалист в области ${_specialist!.category.toLowerCase()}',
+                  _specialist!.description?.isNotEmpty == true
+                      ? _specialist!.description!
+                      : 'Опытный специалист в области ${_specialist!.category.toString().toLowerCase()}',
                   style: const TextStyle(fontSize: 14),
                 ),
               ],
@@ -340,7 +341,7 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
         margin: const EdgeInsets.all(16),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: BrandColors.backgroundLight,
+          color: BrandColors.background,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -363,18 +364,18 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  _specialist!.city,
+                  _specialist!.city ?? '',
                   style: const TextStyle(color: BrandColors.textSecondary),
                 ),
                 const Spacer(),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: BrandColors.primaryLight,
+                    color: BrandColors.primary,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    '${_specialist!.pricePerHour.toInt()}₽/ч',
+                    '${(_specialist!.pricePerHour ?? 0).toInt()}₽/ч',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: BrandColors.primary,

@@ -14,7 +14,7 @@ class IdeaSelectorWidget extends ConsumerStatefulWidget {
     this.maxSelections = 5,
   });
 
-  final Function(List<EventIdea>) onIdeasSelected;
+  final void Function(List<EventIdea>) onIdeasSelected;
   final List<EventIdea> selectedIdeas;
   final int maxSelections;
 
@@ -398,7 +398,7 @@ class IdeaSelectorDialog extends StatelessWidget {
     this.maxSelections = 5,
   });
 
-  final Function(List<EventIdea>) onIdeasSelected;
+  final void Function(List<EventIdea>) onIdeasSelected;
   final List<EventIdea> selectedIdeas;
   final int maxSelections;
 

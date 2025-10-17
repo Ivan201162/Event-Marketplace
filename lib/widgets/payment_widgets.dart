@@ -339,11 +339,11 @@ class _PaymentDialogState extends ConsumerState<PaymentDialog> {
   }
 
   /// Построить селектор способа оплаты
-  Widget _buildPaymentMethodSelector() => Column(
+  Widget _buildPaymentMethodSelector() => const Column(
         children: [
           RadioListTile<String>(
-            title: const Text('Банковская карта'),
-            subtitle: const Text('Visa, MasterCard, МИР'),
+            title: Text('Банковская карта'),
+            subtitle: Text('Visa, MasterCard, МИР'),
             value: 'card',
             // groupValue: _selectedPaymentMethod,
             // onChanged: (value) {

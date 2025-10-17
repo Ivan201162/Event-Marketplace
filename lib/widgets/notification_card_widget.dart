@@ -65,7 +65,7 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
             elevation: widget.notification.isRead ? 1 : 3,
             color: widget.notification.isRead
                 ? Theme.of(context).colorScheme.surface
-                : Theme.of(context).colorScheme.primaryContainer.withValues(0.1),
+                : Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.1),
             child: InkWell(
               onTap: () {
                 _animationController.forward().then((_) {
@@ -139,7 +139,7 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color: _getTypeColor().withValues(0.1),
+          color: _getTypeColor().withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Center(
