@@ -11,8 +11,7 @@ class EventsCatalogScreen extends ConsumerStatefulWidget {
   const EventsCatalogScreen({super.key});
 
   @override
-  ConsumerState<EventsCatalogScreen> createState() =>
-      _EventsCatalogScreenState();
+  ConsumerState<EventsCatalogScreen> createState() => _EventsCatalogScreenState();
 }
 
 class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
@@ -37,8 +36,7 @@ class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
         elevation: 0,
         actions: [
           IconButton(
-            icon:
-                Icon(_showFilters ? Icons.filter_list_off : Icons.filter_list),
+            icon: Icon(_showFilters ? Icons.filter_list_off : Icons.filter_list),
             onPressed: () {
               setState(() {
                 _showFilters = !_showFilters;
@@ -156,8 +154,7 @@ class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
           Wrap(
             spacing: 8,
             children: EventCategory.values.map((category) {
-              final isSelected =
-                  _currentFilter.categories?.contains(category) ?? false;
+              final isSelected = _currentFilter.categories?.contains(category) ?? false;
               return FilterChip(
                 label: Text(category.categoryName),
                 selected: isSelected,
@@ -276,8 +273,7 @@ class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
       );
 
   /// Построить список мероприятий
-  Widget _buildEventsList(AsyncValue<List<Event>> eventsAsync) =>
-      eventsAsync.when(
+  Widget _buildEventsList(AsyncValue<List<Event>> eventsAsync) => eventsAsync.when(
         data: (events) {
           if (events.isEmpty) {
             return _buildEmptyState();
@@ -402,8 +398,7 @@ class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
   Future<void> _selectEndDate() async {
     final date = await showDatePicker(
       context: context,
-      initialDate: _currentFilter.endDate ??
-          DateTime.now().add(const Duration(days: 30)),
+      initialDate: _currentFilter.endDate ?? DateTime.now().add(const Duration(days: 30)),
       firstDate: _currentFilter.startDate ?? DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );

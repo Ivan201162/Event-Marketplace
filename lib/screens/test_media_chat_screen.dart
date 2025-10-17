@@ -11,8 +11,7 @@ class TestMediaChatScreen extends ConsumerStatefulWidget {
   const TestMediaChatScreen({super.key});
 
   @override
-  ConsumerState<TestMediaChatScreen> createState() =>
-      _TestMediaChatScreenState();
+  ConsumerState<TestMediaChatScreen> createState() => _TestMediaChatScreenState();
 }
 
 class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
@@ -42,8 +41,7 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
         chatId: 'test_chat',
         senderId: 'user1',
         senderName: 'Анна',
-        senderAvatar:
-            'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100',
+        senderAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100',
         type: MessageType.text,
         content: 'Привет! Как дела?',
         status: MessageStatus.read,
@@ -54,8 +52,7 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
         chatId: 'test_chat',
         senderId: 'user2',
         senderName: 'Максим',
-        senderAvatar:
-            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
+        senderAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
         type: MessageType.text,
         content: 'Привет! Всё отлично, спасибо! А у тебя?',
         status: MessageStatus.read,
@@ -66,12 +63,10 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
         chatId: 'test_chat',
         senderId: 'user1',
         senderName: 'Анна',
-        senderAvatar:
-            'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100',
+        senderAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100',
         type: MessageType.image,
         content: 'Посмотри на это фото!',
-        fileUrl:
-            'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
+        fileUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
         fileName: 'mountain_landscape.jpg',
         fileType: 'jpg',
         fileSize: 1024000,
@@ -83,12 +78,10 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
         chatId: 'test_chat',
         senderId: 'user2',
         senderName: 'Максим',
-        senderAvatar:
-            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
+        senderAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
         type: MessageType.video,
         content: 'А вот видео с концерта',
-        fileUrl:
-            'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4',
+        fileUrl: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4',
         fileName: 'concert_video.mp4',
         fileType: 'mp4',
         fileSize: 1048576,
@@ -100,12 +93,10 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
         chatId: 'test_chat',
         senderId: 'user1',
         senderName: 'Анна',
-        senderAvatar:
-            'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100',
+        senderAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100',
         type: MessageType.file,
         content: 'Документ для работы',
-        fileUrl:
-            'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+        fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
         fileName: 'project_document.pdf',
         fileType: 'pdf',
         fileSize: 512000,
@@ -117,8 +108,7 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
         chatId: 'test_chat',
         senderId: 'user2',
         senderName: 'Максим',
-        senderAvatar:
-            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
+        senderAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
         type: MessageType.audio,
         content: 'Голосовое сообщение',
         fileUrl: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav',
@@ -218,8 +208,8 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
                     itemCount: _messages.length,
                     itemBuilder: (context, index) {
                       final message = _messages[index];
-                      final isOwnMessage = message.senderId ==
-                          'user1'; // Симулируем текущего пользователя
+                      final isOwnMessage =
+                          message.senderId == 'user1'; // Симулируем текущего пользователя
 
                       return MediaMessageWidget(
                         message: message,
@@ -305,8 +295,7 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
       chatId: 'test_chat',
       senderId: 'user1',
       senderName: 'Анна',
-      senderAvatar:
-          'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100',
+      senderAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100',
       type: MessageType.text,
       content: content,
       status: MessageStatus.sent,
@@ -342,8 +331,7 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
         chatId: 'test_chat',
         senderId: 'user1',
         senderName: 'Анна',
-        senderAvatar:
-            'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100',
+        senderAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100',
         type: _getMessageTypeFromMediaType(mediaResult.mediaType),
         content: '${mediaResult.typeIcon} ${mediaResult.fileName}',
         fileUrl: mediaResult.fileUrl,

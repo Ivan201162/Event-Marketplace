@@ -7,24 +7,21 @@ import '../services/tax_service.dart';
 final taxServiceProvider = Provider<TaxService>((ref) => TaxService());
 
 /// Провайдер для получения налоговой информации специалиста
-final taxInfoProvider =
-    FutureProvider.family<List<TaxInfo>, String>((ref, specialistId) async {
+final taxInfoProvider = FutureProvider.family<List<TaxInfo>, String>((ref, specialistId) async {
   final taxService = ref.read(taxServiceProvider);
   return taxService.getTaxInfoForSpecialist(specialistId);
 });
 
 /// Провайдер для получения налоговой статистики специалиста
 final taxStatisticsProvider =
-    FutureProvider.family<Map<String, dynamic>, String>(
-        (ref, specialistId) async {
+    FutureProvider.family<Map<String, dynamic>, String>((ref, specialistId) async {
   final taxService = ref.read(taxServiceProvider);
   return taxService.getTaxStatistics(specialistId);
 });
 
 /// Провайдер для получения налоговой сводки за период
 final taxSummaryProvider =
-    FutureProvider.family<TaxSummary, ({String specialistId, String period})>(
-        (ref, params) async {
+    FutureProvider.family<TaxSummary, ({String specialistId, String period})>((ref, params) async {
   final taxService = ref.read(taxServiceProvider);
   return taxService.getTaxSummary(
     specialistId: params.specialistId,

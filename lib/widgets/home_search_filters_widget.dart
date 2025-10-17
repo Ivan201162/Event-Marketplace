@@ -11,12 +11,10 @@ class HomeSearchFiltersWidget extends ConsumerStatefulWidget {
   final Function(Map<String, dynamic>) onFiltersChanged;
 
   @override
-  ConsumerState<HomeSearchFiltersWidget> createState() =>
-      _HomeSearchFiltersWidgetState();
+  ConsumerState<HomeSearchFiltersWidget> createState() => _HomeSearchFiltersWidgetState();
 }
 
-class _HomeSearchFiltersWidgetState
-    extends ConsumerState<HomeSearchFiltersWidget> {
+class _HomeSearchFiltersWidgetState extends ConsumerState<HomeSearchFiltersWidget> {
   // Фильтры
   double _minPrice = 0;
   double _maxPrice = 10000;
@@ -276,9 +274,7 @@ class _HomeSearchFiltersWidgetState
                         ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}'
                         : 'Выберите дату',
                     style: TextStyle(
-                      color: _selectedDate != null
-                          ? Colors.black
-                          : Colors.grey[600],
+                      color: _selectedDate != null ? Colors.black : Colors.grey[600],
                     ),
                   ),
                   const Spacer(),

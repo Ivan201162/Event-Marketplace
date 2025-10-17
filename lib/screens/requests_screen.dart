@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../services/supabase_service.dart';
 import '../models/social_models.dart';
+import '../services/supabase_service.dart';
 
 /// Экран заявок с вкладками "Мои заявки" и "Заявки мне"
 class RequestsScreen extends ConsumerStatefulWidget {
@@ -13,8 +13,7 @@ class RequestsScreen extends ConsumerStatefulWidget {
   ConsumerState<RequestsScreen> createState() => _RequestsScreenState();
 }
 
-class _RequestsScreenState extends ConsumerState<RequestsScreen>
-    with TickerProviderStateMixin {
+class _RequestsScreenState extends ConsumerState<RequestsScreen> with TickerProviderStateMixin {
   late TabController _tabController;
 
   List<Request> _myRequests = [];
@@ -50,7 +49,6 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen>
 
       final requests = await SupabaseService.getUserRequests(
         userId: currentUserId,
-        isCreatedBy: true,
       );
 
       setState(() {
@@ -344,8 +342,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen>
                     if (request.assignee != null) ...[
                       CircleAvatar(
                         radius: 12,
-                        backgroundColor:
-                            theme.primaryColor.withValues(alpha: 0.1),
+                        backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
                         backgroundImage: request.assignee!.avatarUrl != null
                             ? NetworkImage(request.assignee!.avatarUrl!)
                             : null,
@@ -366,8 +363,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen>
                         ),
                       ),
                     ] else ...[
-                      Icon(Icons.person_outline,
-                          size: 16, color: Colors.grey[600]),
+                      Icon(Icons.person_outline, size: 16, color: Colors.grey[600]),
                       const SizedBox(width: 4),
                       Text(
                         'Исполнитель не назначен',
@@ -381,8 +377,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen>
                     // Показываем заказчика
                     CircleAvatar(
                       radius: 12,
-                      backgroundColor:
-                          theme.primaryColor.withValues(alpha: 0.1),
+                      backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
                       backgroundImage: request.creator?.avatarUrl != null
                           ? NetworkImage(request.creator!.avatarUrl!)
                           : null,

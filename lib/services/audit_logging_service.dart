@@ -49,10 +49,7 @@ class AuditLoggingService {
   /// Загрузка конфигурации логирования
   Future<void> _loadConfig() async {
     try {
-      final doc = await _firestore
-          .collection(_loggingConfigCollection)
-          .doc('default')
-          .get();
+      final doc = await _firestore.collection(_loggingConfigCollection).doc('default').get();
 
       if (doc.exists) {
         _config = LoggingConfig.fromMap(doc.data()!);
@@ -100,10 +97,7 @@ class AuditLoggingService {
 
   /// Сохранение конфигурации
   Future<void> _saveConfig(LoggingConfig config) async {
-    await _firestore
-        .collection(_loggingConfigCollection)
-        .doc(config.id)
-        .set(config.toMap());
+    await _firestore.collection(_loggingConfigCollection).doc(config.id).set(config.toMap());
   }
 
   /// Получение конфигурации
@@ -223,10 +217,7 @@ class AuditLoggingService {
         data['encryptionKey'] = _config!.encryptionKey;
       }
 
-      await _firestore
-          .collection(_auditLogsCollection)
-          .doc(auditLog.id)
-          .set(data);
+      await _firestore.collection(_auditLogsCollection).doc(auditLog.id).set(data);
     } catch (e) {
       await _crashlytics.recordError(e, null);
       rethrow;
@@ -249,10 +240,7 @@ class AuditLoggingService {
         data['encryptionKey'] = _config!.encryptionKey;
       }
 
-      await _firestore
-          .collection(_systemLogsCollection)
-          .doc(systemLog.id)
-          .set(data);
+      await _firestore.collection(_systemLogsCollection).doc(systemLog.id).set(data);
     } catch (e) {
       await _crashlytics.recordError(e, null);
       rethrow;
@@ -272,8 +260,7 @@ class AuditLoggingService {
     DocumentSnapshot? startAfter,
   }) async {
     try {
-      Query<Map<String, dynamic>> query =
-          _firestore.collection(_auditLogsCollection);
+      Query<Map<String, dynamic>> query = _firestore.collection(_auditLogsCollection);
 
       if (userId != null) {
         query = query.where('userId', isEqualTo: userId);
@@ -328,8 +315,7 @@ class AuditLoggingService {
     DocumentSnapshot? startAfter,
   }) async {
     try {
-      Query<Map<String, dynamic>> query =
-          _firestore.collection(_systemLogsCollection);
+      Query<Map<String, dynamic>> query = _firestore.collection(_systemLogsCollection);
 
       if (component != null) {
         query = query.where('component', isEqualTo: component);
@@ -411,8 +397,7 @@ class AuditLoggingService {
           endDate: endDate,
           limit: 10000,
         );
-        exportData['systemLogs'] =
-            systemLogs.map((log) => log.toMap()).toList();
+        exportData['systemLogs'] = systemLogs.map((log) => log.toMap()).toList();
       }
 
       if (format == 'json') {
@@ -467,8 +452,7 @@ class AuditLoggingService {
     if (!_isInitialized) return;
 
     try {
-      final cutoffDate =
-          DateTime.now().subtract(Duration(days: _config!.maxLogRetentionDays));
+      final cutoffDate = DateTime.now().subtract(Duration(days: _config!.maxLogRetentionDays));
 
       // Очистка аудита логов
       if (_config!.enableAuditLogging) {
@@ -523,9 +507,7 @@ class AuditLoggingService {
           .where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(end));
 
       final auditSnapshot = await auditQuery.get();
-      final auditLogs = auditSnapshot.docs
-          .map((doc) => AuditLog.fromMap(doc.data()))
-          .toList();
+      final auditLogs = auditSnapshot.docs.map((doc) => AuditLog.fromMap(doc.data())).toList();
 
       // Статистика системных логов
       final systemQuery = _firestore
@@ -534,9 +516,7 @@ class AuditLoggingService {
           .where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(end));
 
       final systemSnapshot = await systemQuery.get();
-      final systemLogs = systemSnapshot.docs
-          .map((doc) => SystemLog.fromMap(doc.data()))
-          .toList();
+      final systemLogs = systemSnapshot.docs.map((doc) => SystemLog.fromMap(doc.data())).toList();
 
       return {
         'auditLogs': {
@@ -544,8 +524,7 @@ class AuditLoggingService {
           'byLevel': _groupByLevel(auditLogs),
           'byCategory': _groupByCategory(auditLogs),
           'successRate': auditLogs.isNotEmpty
-              ? auditLogs.where((log) => log.isSuccess).length /
-                  auditLogs.length
+              ? auditLogs.where((log) => log.isSuccess).length / auditLogs.length
               : 0.0,
         },
         'systemLogs': {
@@ -633,9 +612,7 @@ class AuditLoggingService {
   /// Генерация уникального ID
   String _generateId() =>
       DateTime.now().millisecondsSinceEpoch.toString() +
-      (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000))
-          .round()
-          .toString();
+      (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000)).round().toString();
 
   /// Закрытие сервиса
   Future<void> dispose() async {

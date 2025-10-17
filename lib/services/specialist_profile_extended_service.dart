@@ -49,12 +49,10 @@ class SpecialistProfileExtendedService {
       final baseProfile = Specialist.fromDocument(baseProfileDoc.docs.first);
 
       // Создаём расширенный профиль
-      final extendedProfile =
-          SpecialistProfileExtended.fromSpecialist(baseProfile);
+      final extendedProfile = SpecialistProfileExtended.fromSpecialist(baseProfile);
 
-      final docRef = await _db
-          .collection('specialist_profiles_extended')
-          .add(extendedProfile.toMap());
+      final docRef =
+          await _db.collection('specialist_profiles_extended').add(extendedProfile.toMap());
 
       return extendedProfile.copyWith(id: docRef.id);
     } catch (e) {
@@ -141,8 +139,7 @@ class SpecialistProfileExtendedService {
       final profile = await getExtendedProfile(specialistId);
       if (profile == null) return;
 
-      final updatedFAQItems =
-          profile.faqItems.where((item) => item.id != faqItemId).toList();
+      final updatedFAQItems = profile.faqItems.where((item) => item.id != faqItemId).toList();
 
       final updatedProfile = profile.copyWith(faqItems: updatedFAQItems);
       await updateExtendedProfile(updatedProfile);
@@ -223,9 +220,7 @@ class SpecialistProfileExtendedService {
       final profile = await getExtendedProfile(specialistId);
       if (profile == null) return;
 
-      final updatedVideos = profile.portfolioVideos
-          .where((video) => video.id != videoId)
-          .toList();
+      final updatedVideos = profile.portfolioVideos.where((video) => video.id != videoId).toList();
 
       final updatedProfile = profile.copyWith(portfolioVideos: updatedVideos);
       await updateExtendedProfile(updatedProfile);
@@ -246,8 +241,7 @@ class SpecialistProfileExtendedService {
       if (profile.certifications.contains(certification)) return;
 
       final updatedCertifications = [...profile.certifications, certification];
-      final updatedProfile =
-          profile.copyWith(certifications: updatedCertifications);
+      final updatedProfile = profile.copyWith(certifications: updatedCertifications);
 
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
@@ -264,12 +258,10 @@ class SpecialistProfileExtendedService {
       final profile = await getExtendedProfile(specialistId);
       if (profile == null) return;
 
-      final updatedCertifications = profile.certifications
-          .where((cert) => cert != certification)
-          .toList();
+      final updatedCertifications =
+          profile.certifications.where((cert) => cert != certification).toList();
 
-      final updatedProfile =
-          profile.copyWith(certifications: updatedCertifications);
+      final updatedProfile = profile.copyWith(certifications: updatedCertifications);
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
       print('Error removing certification: $e');
@@ -315,8 +307,7 @@ class SpecialistProfileExtendedService {
       if (profile == null) return;
 
       final updatedTestimonials = [...profile.testimonials, testimonial];
-      final updatedProfile =
-          profile.copyWith(testimonials: updatedTestimonials);
+      final updatedProfile = profile.copyWith(testimonials: updatedTestimonials);
 
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
@@ -333,11 +324,9 @@ class SpecialistProfileExtendedService {
       final profile = await getExtendedProfile(specialistId);
       if (profile == null) return;
 
-      final updatedTestimonials =
-          profile.testimonials.where((t) => t != testimonial).toList();
+      final updatedTestimonials = profile.testimonials.where((t) => t != testimonial).toList();
 
-      final updatedProfile =
-          profile.copyWith(testimonials: updatedTestimonials);
+      final updatedProfile = profile.copyWith(testimonials: updatedTestimonials);
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
       print('Error removing testimonial: $e');
@@ -413,8 +402,7 @@ class SpecialistProfileExtendedService {
             (video) =>
                 video.title.toLowerCase().contains(lowercaseQuery) ||
                 video.description.toLowerCase().contains(lowercaseQuery) ||
-                video.tags
-                    .any((tag) => tag.toLowerCase().contains(lowercaseQuery)),
+                video.tags.any((tag) => tag.toLowerCase().contains(lowercaseQuery)),
           )
           .toList();
     } catch (e) {
@@ -433,11 +421,9 @@ class SpecialistProfileExtendedService {
 
       return SpecialistProfileStats(
         totalFAQItems: profile.faqItems.length,
-        publishedFAQItems:
-            profile.faqItems.where((item) => item.isPublished).length,
+        publishedFAQItems: profile.faqItems.where((item) => item.isPublished).length,
         totalVideos: profile.portfolioVideos.length,
-        publicVideos:
-            profile.portfolioVideos.where((video) => video.isPublic).length,
+        publicVideos: profile.portfolioVideos.where((video) => video.isPublic).length,
         totalCertifications: profile.certifications.length,
         totalAwards: profile.awards.length,
         totalTestimonials: profile.testimonials.length,

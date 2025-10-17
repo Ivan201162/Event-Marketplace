@@ -21,8 +21,7 @@ class VoiceRecorderWidget extends ConsumerStatefulWidget {
   final void Function(ChatMessageExtended) onVoiceMessageSent;
 
   @override
-  ConsumerState<VoiceRecorderWidget> createState() =>
-      _VoiceRecorderWidgetState();
+  ConsumerState<VoiceRecorderWidget> createState() => _VoiceRecorderWidgetState();
 }
 
 class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
@@ -158,8 +157,7 @@ class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.red
-                          .withValues(alpha: _pulseAnimation.value * 0.5),
+                      color: Colors.red.withValues(alpha: _pulseAnimation.value * 0.5),
                       blurRadius: 20,
                       spreadRadius: 5,
                     ),
@@ -368,8 +366,7 @@ class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
       if (_isRecording) {
         await Future<void>.delayed(const Duration(seconds: 1));
         setState(() {
-          _recordingDuration =
-              Duration(seconds: _recordingDuration.inSeconds + 1);
+          _recordingDuration = Duration(seconds: _recordingDuration.inSeconds + 1);
         });
         return true;
       }

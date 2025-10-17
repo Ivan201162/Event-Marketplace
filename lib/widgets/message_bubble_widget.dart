@@ -35,8 +35,7 @@ class MessageBubbleWidget extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
           child: Row(
-            mainAxisAlignment:
-                isCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+            mainAxisAlignment: isCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               if (!isCurrentUser && showAvatar) ...[
@@ -49,9 +48,8 @@ class MessageBubbleWidget extends StatelessWidget {
               ],
               Flexible(
                 child: Column(
-                  crossAxisAlignment: isCurrentUser
-                      ? CrossAxisAlignment.end
-                      : CrossAxisAlignment.start,
+                  crossAxisAlignment:
+                      isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                   children: [
                     // Ответ на сообщение
                     if (message.replyTo != null) ...[
@@ -159,12 +157,8 @@ class MessageBubbleWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: isCurrentUser ? Colors.blue : Colors.grey[200],
           borderRadius: BorderRadius.circular(18).copyWith(
-            bottomLeft: isCurrentUser
-                ? const Radius.circular(18)
-                : const Radius.circular(4),
-            bottomRight: isCurrentUser
-                ? const Radius.circular(4)
-                : const Radius.circular(18),
+            bottomLeft: isCurrentUser ? const Radius.circular(18) : const Radius.circular(4),
+            bottomRight: isCurrentUser ? const Radius.circular(4) : const Radius.circular(18),
           ),
         ),
         child: Column(
@@ -264,8 +258,7 @@ class MessageBubbleWidget extends StatelessWidget {
                 bottom: 8,
                 right: 8,
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: Colors.black.withOpacity(0.7),
                     borderRadius: BorderRadius.circular(4),
@@ -293,9 +286,7 @@ class MessageBubbleWidget extends StatelessWidget {
         child: Row(
           children: [
             Icon(
-              attachment.type == MessageAttachmentType.voice
-                  ? Icons.mic
-                  : Icons.audiotrack,
+              attachment.type == MessageAttachmentType.voice ? Icons.mic : Icons.audiotrack,
               color: Colors.grey[600],
             ),
             const SizedBox(width: 8),

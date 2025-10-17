@@ -156,8 +156,7 @@ class _AddTestDataScreenState extends ConsumerState<AddTestDataScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Подтверждение'),
-        content:
-            const Text('Вы уверены, что хотите удалить все тестовые данные?'),
+        content: const Text('Вы уверены, что хотите удалить все тестовые данные?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),

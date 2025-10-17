@@ -27,14 +27,10 @@ class UserProfileCard extends StatelessWidget {
                 // Аватар
                 CircleAvatar(
                   radius: 30,
-                  backgroundImage: user.avatarUrl != null
-                      ? NetworkImage(user.avatarUrl!)
-                      : null,
+                  backgroundImage: user.avatarUrl != null ? NetworkImage(user.avatarUrl!) : null,
                   child: user.avatarUrl == null
                       ? Text(
-                          user.name.isNotEmpty
-                              ? user.name[0].toUpperCase()
-                              : 'П',
+                          user.name.isNotEmpty ? user.name[0].toUpperCase() : 'П',
                           style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -51,19 +47,15 @@ class UserProfileCard extends StatelessWidget {
                     children: [
                       Text(
                         user.name.isNotEmpty ? user.name : 'Пользователь',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         user.email,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurface
-                                  .withValues(alpha: 0.6),
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                             ),
                       ),
                       const SizedBox(height: 8),

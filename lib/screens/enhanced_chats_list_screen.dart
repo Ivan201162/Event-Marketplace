@@ -10,12 +10,10 @@ class EnhancedChatsListScreen extends ConsumerStatefulWidget {
   const EnhancedChatsListScreen({super.key});
 
   @override
-  ConsumerState<EnhancedChatsListScreen> createState() =>
-      _EnhancedChatsListScreenState();
+  ConsumerState<EnhancedChatsListScreen> createState() => _EnhancedChatsListScreenState();
 }
 
-class _EnhancedChatsListScreenState
-    extends ConsumerState<EnhancedChatsListScreen>
+class _EnhancedChatsListScreenState extends ConsumerState<EnhancedChatsListScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final ChatService _chatService = ChatService();
@@ -82,9 +80,7 @@ class _EnhancedChatsListScreenState
   }
 
   Widget _buildChatsList(String? category) => StreamBuilder<List<Chat>>(
-        stream: category != null
-            ? _getChatsByCategoryStream(category)
-            : _getAllChatsStream(),
+        stream: category != null ? _getChatsByCategoryStream(category) : _getAllChatsStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -124,8 +120,7 @@ class _EnhancedChatsListScreenState
         },
       );
 
-  Stream<List<Chat>> _getAllChatsStream() =>
-      _chatService.getUserChats(_currentUserId!).asStream();
+  Stream<List<Chat>> _getAllChatsStream() => _chatService.getUserChats(_currentUserId!).asStream();
 
   Stream<List<Chat>> _getChatsByCategoryStream(String category) =>
       _chatService.getChatsByCategory(_currentUserId!, category).asStream();
@@ -138,14 +133,12 @@ class _EnhancedChatsListScreenState
     switch (category) {
       case 'orders':
         title = 'Нет чатов с заказами';
-        subtitle =
-            'Здесь будут отображаться чаты с организаторами ваших мероприятий';
+        subtitle = 'Здесь будут отображаться чаты с организаторами ваших мероприятий';
         icon = Icons.event;
         break;
       case 'specialists':
         title = 'Нет чатов с исполнителями';
-        subtitle =
-            'Здесь будут отображаться чаты с исполнителями ваших заказов';
+        subtitle = 'Здесь будут отображаться чаты с исполнителями ваших заказов';
         icon = Icons.people;
         break;
       default:
@@ -193,10 +186,8 @@ class _EnhancedChatsListScreenState
     return ListTile(
       leading: CircleAvatar(
         radius: 24,
-        backgroundImage:
-            displayAvatar != null ? NetworkImage(displayAvatar) : null,
-        child:
-            displayAvatar == null ? Text(displayName[0].toUpperCase()) : null,
+        backgroundImage: displayAvatar != null ? NetworkImage(displayAvatar) : null,
+        child: displayAvatar == null ? Text(displayName[0].toUpperCase()) : null,
       ),
       title: Row(
         children: [
@@ -244,8 +235,7 @@ class _EnhancedChatsListScreenState
             children: [
               if (chat.category != null)
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: _getCategoryColor(chat.category!),
                     borderRadius: BorderRadius.circular(8),
@@ -427,8 +417,7 @@ class _EnhancedChatsListScreenState
             if (chat.description != null) Text('Описание: ${chat.description}'),
             Text('Участников: ${chat.participants.length}'),
             Text('Создан: ${_formatDate(chat.createdAt)}'),
-            if (chat.category != null)
-              Text('Категория: ${_getCategoryLabel(chat.category!)}'),
+            if (chat.category != null) Text('Категория: ${_getCategoryLabel(chat.category!)}'),
           ],
         ),
         actions: [

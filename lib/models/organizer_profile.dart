@@ -47,19 +47,15 @@ class OrganizerProfile {
       location: data['location'] as String?,
       categories: List<String>.from(data['categories'] as List<dynamic>? ?? []),
       pastEvents: List<String>.from(data['pastEvents'] as List<dynamic>? ?? []),
-      teamMembers:
-          List<String>.from(data['teamMembers'] as List<dynamic>? ?? []),
+      teamMembers: List<String>.from(data['teamMembers'] as List<dynamic>? ?? []),
       rating: (data['rating'] as num?)?.toDouble() ?? 0.0,
       reviewCount: data['reviewCount'] as int? ?? 0,
       isVerified: data['isVerified'] as bool? ?? false,
       isActive: data['isActive'] as bool? ?? true,
       experienceYears: data['experienceYears'] as int? ?? 0,
-      specializations:
-          List<String>.from(data['specializations'] as List<dynamic>? ?? []),
-      portfolioImages:
-          List<String>.from(data['portfolioImages'] as List<dynamic>? ?? []),
-      portfolioVideos:
-          List<String>.from(data['portfolioVideos'] as List<dynamic>? ?? []),
+      specializations: List<String>.from(data['specializations'] as List<dynamic>? ?? []),
+      portfolioImages: List<String>.from(data['portfolioImages'] as List<dynamic>? ?? []),
+      portfolioVideos: List<String>.from(data['portfolioVideos'] as List<dynamic>? ?? []),
       socialLinks: Map<String, String>.from(
         data['socialLinks'] as Map<dynamic, dynamic>? ?? {},
       ),
@@ -67,12 +63,10 @@ class OrganizerProfile {
       responseTime: data['responseTime'] as String?,
       minBudget: (data['minBudget'] as num?)?.toDouble(),
       maxBudget: (data['maxBudget'] as num?)?.toDouble(),
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
-      updatedAt: data['updatedAt'] != null
-          ? (data['updatedAt'] as Timestamp).toDate()
-          : DateTime.now(),
+      createdAt:
+          data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
+      updatedAt:
+          data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : DateTime.now(),
     );
   }
 
@@ -240,8 +234,7 @@ class OrganizerProfile {
   }
 
   /// Проверить, есть ли портфолио
-  bool get hasPortfolio =>
-      portfolioImages.isNotEmpty || portfolioVideos.isNotEmpty;
+  bool get hasPortfolio => portfolioImages.isNotEmpty || portfolioVideos.isNotEmpty;
 
   /// Получить количество проектов
   int get projectCount => pastEvents.length;
@@ -262,8 +255,7 @@ class OrganizerProfile {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() =>
-      'OrganizerProfile(id: $id, name: $name, rating: $rating)';
+  String toString() => 'OrganizerProfile(id: $id, name: $name, rating: $rating)';
 }
 
 /// Категории мероприятий для организаторов

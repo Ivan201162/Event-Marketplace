@@ -24,8 +24,7 @@ class SpecialistProposalCard extends StatefulWidget {
 }
 
 class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
-  final SpecialistProposalService _proposalService =
-      SpecialistProposalService();
+  final SpecialistProposalService _proposalService = SpecialistProposalService();
   // final SpecialistService _specialistService = SpecialistService(); // Unused field removed
   List<SpecialistProfile>? _specialists;
   bool _isLoading = false;
@@ -116,8 +115,7 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
                       Text(
                         widget.proposal.timeAgo,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.textTheme.bodySmall?.color
-                              ?.withValues(alpha: 0.7),
+                          color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                         ),
                       ),
                     ],
@@ -171,10 +169,9 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed:
-                          _specialists != null && _specialists!.isNotEmpty
-                              ? _showSpecialistSelection
-                              : null,
+                      onPressed: _specialists != null && _specialists!.isNotEmpty
+                          ? _showSpecialistSelection
+                          : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: theme.colorScheme.primary,
                         foregroundColor: Colors.white,
@@ -186,13 +183,11 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
               ),
             ] else if (widget.proposal.isAccepted) ...[
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: Colors.green.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
-                  border:
-                      Border.all(color: Colors.green.withValues(alpha: 0.3)),
+                  border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   children: [
@@ -216,8 +211,7 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
               ),
             ] else if (widget.proposal.isRejected) ...[
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: Colors.red.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
@@ -314,11 +308,9 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
         children: [
           CircleAvatar(
             radius: 20,
-            backgroundImage: specialist.avatarUrl != null
-                ? NetworkImage(specialist.avatarUrl!)
-                : null,
-            child:
-                specialist.avatarUrl == null ? const Icon(Icons.person) : null,
+            backgroundImage:
+                specialist.avatarUrl != null ? NetworkImage(specialist.avatarUrl!) : null,
+            child: specialist.avatarUrl == null ? const Icon(Icons.person) : null,
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -335,8 +327,7 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
                   Text(
                     specialist.specialization,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.textTheme.bodySmall?.color
-                          ?.withValues(alpha: 0.7),
+                      color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                     ),
                   ),
                 if (specialist.rating > 0)
@@ -397,16 +388,13 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
                         backgroundImage: specialist.avatarUrl != null
                             ? NetworkImage(specialist.avatarUrl!)
                             : null,
-                        child: specialist.avatarUrl == null
-                            ? const Icon(Icons.person)
-                            : null,
+                        child: specialist.avatarUrl == null ? const Icon(Icons.person) : null,
                       ),
                       title: Text(specialist.displayName),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (specialist.specialization.isNotEmpty)
-                            Text(specialist.specialization),
+                          if (specialist.specialization.isNotEmpty) Text(specialist.specialization),
                           if (specialist.rating > 0)
                             Row(
                               children: [
@@ -478,8 +466,7 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Отклонить предложение'),
-        content:
-            const Text('Вы уверены, что хотите отклонить это предложение?'),
+        content: const Text('Вы уверены, что хотите отклонить это предложение?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),

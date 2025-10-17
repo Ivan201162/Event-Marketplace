@@ -153,11 +153,7 @@ class ChatsRepository {
       );
 
       // Добавляем сообщение
-      await _firestore
-          .collection('chats')
-          .doc(chatId)
-          .collection('messages')
-          .add(messageData);
+      await _firestore.collection('chats').doc(chatId).collection('messages').add(messageData);
 
       // Обновляем последнее сообщение в чате
       await _firestore.collection('chats').doc(chatId).update({
@@ -181,16 +177,12 @@ class ChatsRepository {
       );
 
       // Ищем существующий чат
-      final existingChats = await _firestore
-          .collection('chats')
-          .where('members', arrayContains: userId1)
-          .get();
+      final existingChats =
+          await _firestore.collection('chats').where('members', arrayContains: userId1).get();
 
       for (final doc in existingChats.docs) {
         final data = doc.data() as Map<String, dynamic>? ?? {};
-        final members = (data['members'] as List<dynamic>? ?? [])
-            .map((e) => e.toString())
-            .toList();
+        final members = (data['members'] as List<dynamic>? ?? []).map((e) => e.toString()).toList();
 
         if (members.contains(userId2)) {
           debugPrint(
@@ -219,4 +211,3 @@ class ChatsRepository {
     }
   }
 }
-

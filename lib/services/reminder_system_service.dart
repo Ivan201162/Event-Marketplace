@@ -10,8 +10,7 @@ import 'error_logging_service.dart';
 class ReminderSystemService {
   factory ReminderSystemService() => _instance;
   ReminderSystemService._internal();
-  static final ReminderSystemService _instance =
-      ReminderSystemService._internal();
+  static final ReminderSystemService _instance = ReminderSystemService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final ErrorLoggingService _errorLogger = ErrorLoggingService();
@@ -60,8 +59,7 @@ class ReminderSystemService {
     String? orderId,
     String? eventId,
     Map<String, dynamic>? metadata,
-    List<int>?
-        repeatDays, // Дни недели для повторения (1-7, где 1 = понедельник)
+    List<int>? repeatDays, // Дни недели для повторения (1-7, где 1 = понедельник)
     Duration? repeatInterval,
   }) async {
     try {
@@ -156,8 +154,7 @@ class ReminderSystemService {
       await _firestore.collection('reminders').doc(reminderId).update(updates);
 
       // Получаем обновленные данные и планируем заново
-      final doc =
-          await _firestore.collection('reminders').doc(reminderId).get();
+      final doc = await _firestore.collection('reminders').doc(reminderId).get();
 
       if (doc.exists) {
         await _scheduleReminder(reminderId, doc.data()!);
@@ -218,8 +215,7 @@ class ReminderSystemService {
     int limit = 50,
   }) async {
     try {
-      Query query =
-          _firestore.collection('reminders').where('userId', isEqualTo: userId);
+      Query query = _firestore.collection('reminders').where('userId', isEqualTo: userId);
 
       if (isActive != null) {
         query = query.where('isActive', isEqualTo: isActive);
@@ -243,9 +239,7 @@ class ReminderSystemService {
       query = query.orderBy('nextReminderTime').limit(limit);
 
       final snapshot = await query.get();
-      return snapshot.docs
-          .map((doc) => doc.data()! as Map<String, dynamic>)
-          .toList();
+      return snapshot.docs.map((doc) => doc.data()! as Map<String, dynamic>).toList();
     } catch (e, stackTrace) {
       await _errorLogger.logError(
         error: 'Failed to get user reminders: $e',
@@ -266,9 +260,7 @@ class ReminderSystemService {
           .orderBy('nextReminderTime')
           .get();
 
-      return snapshot.docs
-          .map((doc) => doc.data()! as Map<String, dynamic>)
-          .toList();
+      return snapshot.docs.map((doc) => doc.data()! as Map<String, dynamic>).toList();
     } catch (e, stackTrace) {
       await _errorLogger.logError(
         error: 'Failed to get order reminders: $e',
@@ -401,8 +393,7 @@ class ReminderSystemService {
   Future<void> _sendNotificationReminder(Map<String, dynamic> reminder) async {
     // Здесь должна быть интеграция с системой уведомлений
     if (kDebugMode) {
-      developer
-          .log('NOTIFICATION: ${reminder['title']} - ${reminder['message']}');
+      developer.log('NOTIFICATION: ${reminder['title']} - ${reminder['message']}');
     }
   }
 
@@ -453,8 +444,7 @@ class ReminderSystemService {
 
           // Планируем следующее напоминание
           final updatedReminder = reminder;
-          updatedReminder['nextReminderTime'] =
-              Timestamp.fromDate(nextReminderTime);
+          updatedReminder['nextReminderTime'] = Timestamp.fromDate(nextReminderTime);
           updatedReminder['isTriggered'] = false;
 
           await _scheduleReminder(reminderId, updatedReminder);
@@ -472,8 +462,7 @@ class ReminderSystemService {
 
         // Планируем следующее напоминание
         final updatedReminder = reminder;
-        updatedReminder['nextReminderTime'] =
-            Timestamp.fromDate(nextReminderTime);
+        updatedReminder['nextReminderTime'] = Timestamp.fromDate(nextReminderTime);
         updatedReminder['isTriggered'] = false;
 
         await _scheduleReminder(reminderId, updatedReminder);
@@ -563,15 +552,11 @@ class ReminderSystemService {
         'totalReminders': allReminders.length,
         'monthlyReminders': monthlyReminders.length,
         'activeReminders': activeReminders.length,
-        'triggeredReminders':
-            allReminders.where((r) => r['isTriggered'] == true).length,
-        'pendingReminders':
-            allReminders.where((r) => r['isTriggered'] == false).length,
+        'triggeredReminders': allReminders.where((r) => r['isTriggered'] == true).length,
+        'pendingReminders': allReminders.where((r) => r['isTriggered'] == false).length,
         'repeatingReminders': allReminders
             .where(
-              (r) =>
-                  (r['repeatDays'] as List).isNotEmpty ||
-                  r['repeatInterval'] != null,
+              (r) => (r['repeatDays'] as List).isNotEmpty || r['repeatInterval'] != null,
             )
             .length,
         'lastUpdated': now.toIso8601String(),

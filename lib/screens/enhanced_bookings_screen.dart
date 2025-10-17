@@ -12,8 +12,7 @@ class EnhancedBookingsScreen extends ConsumerStatefulWidget {
   const EnhancedBookingsScreen({super.key});
 
   @override
-  ConsumerState<EnhancedBookingsScreen> createState() =>
-      _EnhancedBookingsScreenState();
+  ConsumerState<EnhancedBookingsScreen> createState() => _EnhancedBookingsScreenState();
 }
 
 class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
@@ -380,9 +379,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
             ),
             const SizedBox(height: 8),
             Text(
-              title == 'Мои заявки'
-                  ? 'Создайте первую заявку'
-                  : 'Заявки появятся здесь',
+              title == 'Мои заявки' ? 'Создайте первую заявку' : 'Заявки появятся здесь',
               style: TextStyle(color: Colors.grey[500]),
             ),
             if (title == 'Мои заявки') ...[
@@ -408,10 +405,8 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
           .where(
             (booking) =>
                 (booking.title?.toLowerCase().contains(searchLower) ?? false) ||
-                (booking.customerName?.toLowerCase().contains(searchLower) ??
-                    false) ||
-                (booking.specialistName?.toLowerCase().contains(searchLower) ??
-                    false) ||
+                (booking.customerName?.toLowerCase().contains(searchLower) ?? false) ||
+                (booking.specialistName?.toLowerCase().contains(searchLower) ?? false) ||
                 (booking.message.toLowerCase().contains(searchLower)),
           )
           .toList();
@@ -419,9 +414,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
 
     // Фильтр по статусу
     if (_selectedStatus != null) {
-      filtered = filtered
-          .where((booking) => booking.status == _selectedStatus)
-          .toList();
+      filtered = filtered.where((booking) => booking.status == _selectedStatus).toList();
     }
 
     // Фильтр по дате
@@ -695,5 +688,4 @@ final bookingsBySpecialistStreamProvider =
 });
 
 /// Провайдер для сервиса Firestore
-final firestoreServiceProvider =
-    Provider<FirestoreService>((ref) => FirestoreService());
+final firestoreServiceProvider = Provider<FirestoreService>((ref) => FirestoreService());

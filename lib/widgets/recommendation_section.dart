@@ -81,8 +81,7 @@ class RecommendationSection extends StatelessWidget {
                     Text(
                       subtitle!,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                     ),
                   ],
@@ -215,9 +214,8 @@ class HorizontalRecommendationList extends StatelessWidget {
 
   Widget _buildAvatar(dynamic specialist) => CircleAvatar(
         radius: 20,
-        backgroundImage: specialist.avatarUrl != null
-            ? NetworkImage(specialist.avatarUrl as String)
-            : null,
+        backgroundImage:
+            specialist.avatarUrl != null ? NetworkImage(specialist.avatarUrl as String) : null,
         child: specialist.avatarUrl == null
             ? Text(
                 (specialist.name as String).isNotEmpty
@@ -264,12 +262,10 @@ class HorizontalRecommendationList extends StatelessWidget {
         ),
       );
 
-  Widget _buildTypeBadge(BuildContext context, Recommendation recommendation) =>
-      Container(
+  Widget _buildTypeBadge(BuildContext context, Recommendation recommendation) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
         decoration: BoxDecoration(
-          color: _getTypeColor(context, recommendation.type)
-              .withValues(alpha: 0.1),
+          color: _getTypeColor(context, recommendation.type).withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(

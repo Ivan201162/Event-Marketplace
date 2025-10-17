@@ -3,8 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/calendar_service.dart';
 
 /// Провайдер для сервиса календаря
-final calendarServiceProvider =
-    Provider<CalendarService>((ref) => CalendarService());
+final calendarServiceProvider = Provider<CalendarService>((ref) => CalendarService());
 
 /// Провайдер для получения занятых дат специалиста
 final specialistBusyDatesProvider =
@@ -15,8 +14,7 @@ final specialistBusyDatesProvider =
 
 /// Провайдер для получения свободных дат специалиста в диапазоне
 final specialistAvailableDatesProvider =
-    FutureProvider.family<List<DateTime>, Map<String, dynamic>>(
-        (ref, params) async {
+    FutureProvider.family<List<DateTime>, Map<String, dynamic>>((ref, params) async {
   final calendarService = ref.watch(calendarServiceProvider);
   final specialistId = params['specialistId'] as String;
   final startDate = params['startDate'] as DateTime;
@@ -47,8 +45,7 @@ final dateTimeAvailabilityProvider =
 
 /// Провайдер для получения доступных временных слотов
 final availableTimeSlotsProvider =
-    FutureProvider.family<List<DateTime>, Map<String, dynamic>>(
-        (ref, params) async {
+    FutureProvider.family<List<DateTime>, Map<String, dynamic>>((ref, params) async {
   final calendarService = ref.watch(calendarServiceProvider);
   final specialistId = params['specialistId'] as String;
   final date = params['date'] as DateTime;
@@ -62,8 +59,7 @@ final availableTimeSlotsProvider =
 });
 
 /// Провайдер для управления занятыми датами
-final busyDatesManagerProvider =
-    StateNotifierProvider<BusyDatesManager, AsyncValue<void>>((ref) {
+final busyDatesManagerProvider = StateNotifierProvider<BusyDatesManager, AsyncValue<void>>((ref) {
   final calendarService = ref.watch(calendarServiceProvider);
   return BusyDatesManager(calendarService);
 });
@@ -127,8 +123,7 @@ class BusyDatesManager extends StateNotifier<AsyncValue<void>> {
 
 /// Провайдер для получения календарных данных специалиста
 final specialistCalendarDataProvider =
-    FutureProvider.family<SpecialistCalendarData, String>(
-        (ref, specialistId) async {
+    FutureProvider.family<SpecialistCalendarData, String>((ref, specialistId) async {
   final calendarService = ref.watch(calendarServiceProvider);
 
   // Получаем занятые даты
@@ -189,8 +184,7 @@ class SpecialistCalendarData {
       totalDays: totalDays,
       availableDays: availableCount,
       busyDays: busyCount,
-      availabilityPercentage:
-          totalDays > 0 ? (availableCount / totalDays * 100) : 0.0,
+      availabilityPercentage: totalDays > 0 ? (availableCount / totalDays * 100) : 0.0,
     );
   }
 }

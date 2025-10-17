@@ -193,18 +193,15 @@ class SmartSearchService {
 
       // Фильтр по цене
       if (minPrice != null) {
-        queryBuilder =
-            queryBuilder.where('price', isGreaterThanOrEqualTo: minPrice);
+        queryBuilder = queryBuilder.where('price', isGreaterThanOrEqualTo: minPrice);
       }
       if (maxPrice != null) {
-        queryBuilder =
-            queryBuilder.where('price', isLessThanOrEqualTo: maxPrice);
+        queryBuilder = queryBuilder.where('price', isLessThanOrEqualTo: maxPrice);
       }
 
       // Фильтр по рейтингу
       if (minRating != null) {
-        queryBuilder =
-            queryBuilder.where('rating', isGreaterThanOrEqualTo: minRating);
+        queryBuilder = queryBuilder.where('rating', isGreaterThanOrEqualTo: minRating);
       }
 
       // Сортировка
@@ -237,10 +234,8 @@ class SmartSearchService {
         if (query != null && query.isNotEmpty) {
           final searchLower = query.toLowerCase();
           final name = ((data['name'] as String?) ?? '').toLowerCase();
-          final description =
-              ((data['description'] as String?) ?? '').toLowerCase();
-          final categoryName =
-              ((data['category'] as String?) ?? '').toLowerCase();
+          final description = ((data['description'] as String?) ?? '').toLowerCase();
+          final categoryName = ((data['category'] as String?) ?? '').toLowerCase();
 
           if (!name.contains(searchLower) &&
               !description.contains(searchLower) &&

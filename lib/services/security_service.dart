@@ -331,8 +331,7 @@ class SecurityService {
 
   /// Сгенерировать случайную строку
   String generateRandomString(int length, {bool includeSpecialChars = false}) {
-    const chars =
-        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     const specialChars = r'!@#$%^&*()_+-=[]{}|;:,.<>?';
 
     final charSet = includeSpecialChars ? chars + specialChars : chars;
@@ -419,12 +418,10 @@ class SecurityService {
     int limit = 100,
   }) async {
     try {
-      Query<Map<String, dynamic>> query =
-          _firestore.collection('securityAudits');
+      Query<Map<String, dynamic>> query = _firestore.collection('securityAudits');
 
       if (level != null) {
-        query =
-            query.where('level', isEqualTo: level.toString().split('.').last);
+        query = query.where('level', isEqualTo: level.toString().split('.').last);
       }
       if (eventType != null) {
         query = query.where('eventType', isEqualTo: eventType);
@@ -445,8 +442,7 @@ class SecurityService {
         );
       }
 
-      final snapshot =
-          await query.orderBy('timestamp', descending: true).limit(limit).get();
+      final snapshot = await query.orderBy('timestamp', descending: true).limit(limit).get();
 
       return snapshot.docs.map(SecurityAudit.fromDocument).toList();
     } catch (e) {
@@ -497,10 +493,7 @@ class SecurityService {
         updatedAt: now,
       );
 
-      await _firestore
-          .collection('securityPolicies')
-          .doc(policyId)
-          .set(policy.toMap());
+      await _firestore.collection('securityPolicies').doc(policyId).set(policy.toMap());
       _policies[policyId] = policy;
 
       await logSecurityEvent(
@@ -948,8 +941,7 @@ class SecurityService {
   Future<Map<String, dynamic>> checkPasswordStrength(String password) async {
     try {
       // Заглушка для проверки силы пароля
-      final score =
-          password.length >= 8 ? 100 : (password.length * 12.5).round();
+      final score = password.length >= 8 ? 100 : (password.length * 12.5).round();
       return {
         'score': score,
         'strength': score >= 80

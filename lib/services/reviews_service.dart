@@ -88,8 +88,7 @@ class ReviewsService {
       // Применяем фильтры
       if (filter != null) {
         if (filter.minRating != null) {
-          query =
-              query.where('rating', isGreaterThanOrEqualTo: filter.minRating);
+          query = query.where('rating', isGreaterThanOrEqualTo: filter.minRating);
         }
         if (filter.hasPhotos) {
           query = query.where('photos', isNotEqualTo: []);
@@ -234,11 +233,8 @@ class ReviewsService {
     String userName,
   ) async {
     try {
-      final likeRef = _firestore
-          .collection('reviews')
-          .doc(reviewId)
-          .collection('likes')
-          .doc(userId);
+      final likeRef =
+          _firestore.collection('reviews').doc(reviewId).collection('likes').doc(userId);
 
       final likeDoc = await likeRef.get();
 
@@ -362,8 +358,7 @@ class ReviewsService {
     String specialistId,
   ) async {
     try {
-      final doc =
-          await _firestore.collection('userStats').doc(specialistId).get();
+      final doc = await _firestore.collection('userStats').doc(specialistId).get();
 
       if (doc.exists) {
         return SpecialistReputation.fromMap(doc.data()!);
@@ -506,11 +501,8 @@ class ReviewFilter {
   factory ReviewFilter.fromJson(String json) {
     // Простая реализация парсинга JSON
     final hasPhotos = json.contains('"hasPhotos": true');
-    final minRatingMatch =
-        RegExp(r'"minRating": (\d+(?:\.\d+)?)').firstMatch(json);
-    final minRating = minRatingMatch != null
-        ? double.tryParse(minRatingMatch.group(1)!)
-        : null;
+    final minRatingMatch = RegExp(r'"minRating": (\d+(?:\.\d+)?)').firstMatch(json);
+    final minRating = minRatingMatch != null ? double.tryParse(minRatingMatch.group(1)!) : null;
 
     return ReviewFilter(
       minRating: minRating,

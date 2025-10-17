@@ -33,8 +33,7 @@ class _ReviewsToWriteScreenState extends State<ReviewsToWriteScreen> {
     try {
       setState(() => _isLoading = true);
 
-      final bookings =
-          await _reviewService.getCompletedBookingsForReview(widget.userId);
+      final bookings = await _reviewService.getCompletedBookingsForReview(widget.userId);
 
       setState(() {
         _bookings = bookings;

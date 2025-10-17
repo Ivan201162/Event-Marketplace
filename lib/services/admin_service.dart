@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
+
 import '../models/admin_models.dart';
 
 class AdminService {
@@ -13,9 +14,7 @@ class AdminService {
       final doc = await _firestore.collection('users').doc(userId).get();
       if (doc.exists) {
         final data = doc.data()!;
-        return data['isAdmin'] == true ||
-            data['role'] == 'admin' ||
-            data['role'] == 'superAdmin';
+        return data['isAdmin'] == true || data['role'] == 'admin' || data['role'] == 'superAdmin';
       }
       return false;
     } catch (e) {
@@ -68,8 +67,7 @@ class AdminService {
       );
 
       await _firestore.collection('admin_logs').doc(log.id).set(log.toMap());
-      debugPrint(
-          'INFO: [AdminService] Admin action logged: ${action.name} on ${target}');
+      debugPrint('INFO: [AdminService] Admin action logged: ${action.name} on $target');
     } catch (e) {
       debugPrint('ERROR: [AdminService] Failed to log admin action: $e');
     }
@@ -92,52 +90,37 @@ class AdminService {
       query = query.where('action', isEqualTo: action.name);
     }
     if (startDate != null) {
-      query = query.where('timestamp',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+      query = query.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
     }
     if (endDate != null) {
-      query = query.where('timestamp',
-          isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+      query = query.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
     }
 
-    return query
-        .orderBy('timestamp', descending: true)
-        .limit(limit)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => AdminLog.fromMap(doc.data() as Map<String, dynamic>))
-            .toList());
+    return query.orderBy('timestamp', descending: true).limit(limit).snapshots().map((snapshot) =>
+        snapshot.docs.map((doc) => AdminLog.fromMap(doc.data() as Map<String, dynamic>)).toList());
   }
 
   /// Получение статистики действий администратора
   Future<Map<String, dynamic>> getAdminStats(String adminId,
       {DateTime? startDate, DateTime? endDate}) async {
     try {
-      Query query = _firestore
-          .collection('admin_logs')
-          .where('adminId', isEqualTo: adminId);
+      Query query = _firestore.collection('admin_logs').where('adminId', isEqualTo: adminId);
 
       if (startDate != null) {
-        query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
       if (endDate != null) {
-        query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
       final snapshot = await query.get();
-      final logs = snapshot.docs
-          .map((doc) => AdminLog.fromMap(doc.data() as Map<String, dynamic>))
-          .toList();
+      final logs =
+          snapshot.docs.map((doc) => AdminLog.fromMap(doc.data() as Map<String, dynamic>)).toList();
 
       final stats = <String, dynamic>{
         'totalActions': logs.length,
-        'completedActions': logs
-            .where((log) => log.status == AdminActionStatus.completed)
-            .length,
-        'failedActions':
-            logs.where((log) => log.status == AdminActionStatus.failed).length,
+        'completedActions': logs.where((log) => log.status == AdminActionStatus.completed).length,
+        'failedActions': logs.where((log) => log.status == AdminActionStatus.failed).length,
         'actionsByType': <String, int>{},
         'actionsByTarget': <String, int>{},
       };
@@ -145,13 +128,11 @@ class AdminService {
       for (final log in logs) {
         // Подсчет по типам действий
         final actionType = log.action.name;
-        stats['actionsByType'][actionType] =
-            (stats['actionsByType'][actionType] ?? 0) + 1;
+        stats['actionsByType'][actionType] = (stats['actionsByType'][actionType] ?? 0) + 1;
 
         // Подсчет по целям
         final target = log.target;
-        stats['actionsByTarget'][target] =
-            (stats['actionsByTarget'][target] ?? 0) + 1;
+        stats['actionsByTarget'][target] = (stats['actionsByTarget'][target] ?? 0) + 1;
       }
 
       return stats;
@@ -164,10 +145,7 @@ class AdminService {
   /// Получение списка всех администраторов
   Future<List<Map<String, dynamic>>> getAllAdmins() async {
     try {
-      final snapshot = await _firestore
-          .collection('users')
-          .where('isAdmin', isEqualTo: true)
-          .get();
+      final snapshot = await _firestore.collection('users').where('isAdmin', isEqualTo: true).get();
 
       return snapshot.docs.map((doc) => doc.data()).toList();
     } catch (e) {
@@ -177,8 +155,7 @@ class AdminService {
   }
 
   /// Назначение прав администратора
-  Future<bool> grantAdminRights(
-      String userId, String adminId, String adminEmail) async {
+  Future<bool> grantAdminRights(String userId, String adminId, String adminEmail) async {
     try {
       await _firestore.collection('users').doc(userId).update({
         'isAdmin': true,
@@ -215,8 +192,7 @@ class AdminService {
   }
 
   /// Отзыв прав администратора
-  Future<bool> revokeAdminRights(
-      String userId, String adminId, String adminEmail) async {
+  Future<bool> revokeAdminRights(String userId, String adminId, String adminEmail) async {
     try {
       await _firestore.collection('users').doc(userId).update({
         'isAdmin': false,
@@ -265,14 +241,12 @@ class AdminService {
       final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
       final activeUsersSnapshot = await _firestore
           .collection('users')
-          .where('lastActiveAt',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(thirtyDaysAgo))
+          .where('lastActiveAt', isGreaterThanOrEqualTo: Timestamp.fromDate(thirtyDaysAgo))
           .get();
       stats['activeUsers'] = activeUsersSnapshot.docs.length;
 
       // Общее количество транзакций
-      final transactionsSnapshot =
-          await _firestore.collection('transactions').get();
+      final transactionsSnapshot = await _firestore.collection('transactions').get();
       stats['totalTransactions'] = transactionsSnapshot.docs.length;
 
       // Общая выручка
@@ -286,8 +260,7 @@ class AdminService {
       stats['totalRevenue'] = totalRevenue;
 
       // Количество подписок
-      final subscriptionsSnapshot =
-          await _firestore.collection('user_subscriptions').get();
+      final subscriptionsSnapshot = await _firestore.collection('user_subscriptions').get();
       stats['totalSubscriptions'] = subscriptionsSnapshot.docs.length;
 
       // Количество активных подписок
@@ -315,12 +288,10 @@ class AdminService {
       Query query = _firestore.collection(collection);
 
       if (startDate != null) {
-        query = query.where('createdAt',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
       if (endDate != null) {
-        query = query.where('createdAt',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
       if (filters != null) {
@@ -345,8 +316,7 @@ class AdminService {
       for (final doc in docs) {
         final data = doc.data();
         final row = headers
-            .map((header) =>
-                (data as Map<String, dynamic>)[header]?.toString() ?? '')
+            .map((header) => (data as Map<String, dynamic>)[header]?.toString() ?? '')
             .join(',');
         csv.writeln(row);
       }

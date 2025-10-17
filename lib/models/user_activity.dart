@@ -176,6 +176,5 @@ class Recommendation {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() =>
-      'Recommendation(id: $id, specialist: $specialistName, reason: $reason)';
+  String toString() => 'Recommendation(id: $id, specialist: $specialistName, reason: $reason)';
 }

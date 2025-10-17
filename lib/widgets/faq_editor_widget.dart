@@ -56,9 +56,7 @@ class _FAQEditorWidgetState extends ConsumerState<FAQEditorWidget> {
             children: [
               AppBar(
                 title: Text(
-                  widget.existingFAQ == null
-                      ? 'Новый вопрос'
-                      : 'Редактировать вопрос',
+                  widget.existingFAQ == null ? 'Новый вопрос' : 'Редактировать вопрос',
                 ),
                 actions: [
                   TextButton(

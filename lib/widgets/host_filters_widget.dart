@@ -327,8 +327,7 @@ class _HostFiltersWidgetState extends ConsumerState<HostFiltersWidget> {
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: _selectedDate != null
                             ? theme.colorScheme.onSurface
-                            : theme.colorScheme.onSurface
-                                .withValues(alpha: 0.6),
+                            : theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                   ),
@@ -373,9 +372,7 @@ class _HostFiltersWidgetState extends ConsumerState<HostFiltersWidget> {
       maxRating: _ratingRange.end,
       city: _selectedCity,
       availableDate: _selectedDate,
-      searchQuery: _searchController.text.trim().isEmpty
-          ? null
-          : _searchController.text.trim(),
+      searchQuery: _searchController.text.trim().isEmpty ? null : _searchController.text.trim(),
     );
 
     widget.onFiltersChanged(filters);

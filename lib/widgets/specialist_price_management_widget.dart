@@ -17,14 +17,11 @@ class SpecialistPriceManagementWidget extends StatefulWidget {
   final void Function(String)? onPriceDeleted;
 
   @override
-  State<SpecialistPriceManagementWidget> createState() =>
-      _SpecialistPriceManagementWidgetState();
+  State<SpecialistPriceManagementWidget> createState() => _SpecialistPriceManagementWidgetState();
 }
 
-class _SpecialistPriceManagementWidgetState
-    extends State<SpecialistPriceManagementWidget> {
-  final SpecialistPriceManagementService _service =
-      SpecialistPriceManagementService();
+class _SpecialistPriceManagementWidgetState extends State<SpecialistPriceManagementWidget> {
+  final SpecialistPriceManagementService _service = SpecialistPriceManagementService();
   final TextEditingController _serviceNameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -88,12 +85,8 @@ class _SpecialistPriceManagementWidgetState
         specialistId: widget.specialistId,
         serviceName: _serviceNameController.text,
         price: price,
-        description: _descriptionController.text.isNotEmpty
-            ? _descriptionController.text
-            : null,
-        duration: _durationController.text.isNotEmpty
-            ? _durationController.text
-            : null,
+        description: _descriptionController.text.isNotEmpty ? _descriptionController.text : null,
+        duration: _durationController.text.isNotEmpty ? _durationController.text : null,
       );
 
       final newPrice = ServicePrice(
@@ -101,12 +94,8 @@ class _SpecialistPriceManagementWidgetState
         specialistId: widget.specialistId,
         serviceName: _serviceNameController.text,
         price: price,
-        description: _descriptionController.text.isNotEmpty
-            ? _descriptionController.text
-            : null,
-        duration: _durationController.text.isNotEmpty
-            ? _durationController.text
-            : null,
+        description: _descriptionController.text.isNotEmpty ? _descriptionController.text : null,
+        duration: _durationController.text.isNotEmpty ? _durationController.text : null,
         isActive: true,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
@@ -145,12 +134,8 @@ class _SpecialistPriceManagementWidgetState
         priceId: _editingPrice!.id,
         serviceName: _serviceNameController.text,
         price: price,
-        description: _descriptionController.text.isNotEmpty
-            ? _descriptionController.text
-            : null,
-        duration: _durationController.text.isNotEmpty
-            ? _durationController.text
-            : null,
+        description: _descriptionController.text.isNotEmpty ? _descriptionController.text : null,
+        duration: _durationController.text.isNotEmpty ? _durationController.text : null,
       );
 
       final updatedPrice = ServicePrice(
@@ -158,12 +143,8 @@ class _SpecialistPriceManagementWidgetState
         specialistId: _editingPrice!.specialistId,
         serviceName: _serviceNameController.text,
         price: price,
-        description: _descriptionController.text.isNotEmpty
-            ? _descriptionController.text
-            : null,
-        duration: _durationController.text.isNotEmpty
-            ? _durationController.text
-            : null,
+        description: _descriptionController.text.isNotEmpty ? _descriptionController.text : null,
+        duration: _durationController.text.isNotEmpty ? _durationController.text : null,
         includedServices: _editingPrice!.includedServices,
         isActive: _editingPrice!.isActive,
         createdAt: _editingPrice!.createdAt,
@@ -273,8 +254,7 @@ class _SpecialistPriceManagementWidgetState
         children: [
           _buildHeader(),
           if (_isLoading) const _LoadingWidget(),
-          if (_error != null)
-            _ErrorWidget(error: _error!, onRetry: _loadPrices),
+          if (_error != null) _ErrorWidget(error: _error!, onRetry: _loadPrices),
           if (!_isLoading && _error == null) ...[
             if (_showAddForm) _buildAddForm(),
             _buildPricesList(),
@@ -317,9 +297,7 @@ class _SpecialistPriceManagementWidgetState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _editingPrice == null
-                      ? 'Добавить цену'
-                      : 'Редактировать цену',
+                  _editingPrice == null ? 'Добавить цену' : 'Редактировать цену',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -363,10 +341,8 @@ class _SpecialistPriceManagementWidgetState
                 Row(
                   children: [
                     ElevatedButton(
-                      onPressed:
-                          _editingPrice == null ? _addPrice : _updatePrice,
-                      child:
-                          Text(_editingPrice == null ? 'Добавить' : 'Обновить'),
+                      onPressed: _editingPrice == null ? _addPrice : _updatePrice,
+                      child: Text(_editingPrice == null ? 'Добавить' : 'Обновить'),
                     ),
                     const SizedBox(width: 8),
                     TextButton(
@@ -605,13 +581,11 @@ class _PriceCard extends StatelessWidget {
                         price.isActive ? Icons.pause : Icons.play_arrow,
                         size: 20,
                       ),
-                      tooltip:
-                          price.isActive ? 'Деактивировать' : 'Активировать',
+                      tooltip: price.isActive ? 'Деактивировать' : 'Активировать',
                     ),
                     IconButton(
                       onPressed: onDelete,
-                      icon:
-                          const Icon(Icons.delete, size: 20, color: Colors.red),
+                      icon: const Icon(Icons.delete, size: 20, color: Colors.red),
                       tooltip: 'Удалить',
                     ),
                     const Spacer(),

@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../models/subscription_plan.dart';
-import '../../services/subscription_service.dart';
-import '../../services/payment_service.dart';
 import '../../providers/auth_provider.dart';
+import '../../services/subscription_service.dart';
 import 'payment_screen.dart';
 
 class SubscriptionPlansScreen extends StatefulWidget {
   const SubscriptionPlansScreen({super.key});
 
   @override
-  State<SubscriptionPlansScreen> createState() =>
-      _SubscriptionPlansScreenState();
+  State<SubscriptionPlansScreen> createState() => _SubscriptionPlansScreenState();
 }
 
 class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
@@ -34,8 +33,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
 
       UserSubscription? activeSubscription;
       if (userId != null) {
-        activeSubscription =
-            await _subscriptionService.getActiveSubscription(userId);
+        activeSubscription = await _subscriptionService.getActiveSubscription(userId);
       }
 
       setState(() {
@@ -186,8 +184,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            border:
-                isPopular ? Border.all(color: Colors.amber, width: 2) : null,
+            border: isPopular ? Border.all(color: Colors.amber, width: 2) : null,
           ),
           child: Column(
             children: [
@@ -237,20 +234,14 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
                             children: [
                               Text(
                                 plan.name,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge
-                                    ?.copyWith(
+                                style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                       fontWeight: FontWeight.bold,
                                     ),
                               ),
                               if (plan.description != null)
                                 Text(
                                   plan.description!,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                         color: Colors.grey[600],
                                       ),
                                 ),
@@ -265,10 +256,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
                       children: [
                         Text(
                           '${plan.price.toInt()} ₽',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium
-                              ?.copyWith(
+                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                                 color: _getPlanColor(plan.tier),
                                 fontWeight: FontWeight.bold,
                               ),
@@ -276,20 +264,18 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
                         const SizedBox(width: 4),
                         Text(
                           '/ ${plan.durationDays} дн.',
-                          style:
-                              Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    color: Colors.grey[600],
-                                  ),
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                color: Colors.grey[600],
+                              ),
                         ),
                         const Spacer(),
                         if (plan.hasDiscount) ...[
                           Text(
                             '${plan.originalPrice!.toInt()} ₽',
-                            style:
-                                Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                      color: Colors.grey[500],
-                                      decoration: TextDecoration.lineThrough,
-                                    ),
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  color: Colors.grey[500],
+                                  decoration: TextDecoration.lineThrough,
+                                ),
                           ),
                           const SizedBox(width: 8),
                           Container(
@@ -355,8 +341,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed:
-                            isCurrentPlan ? null : () => _selectPlan(plan),
+                        onPressed: isCurrentPlan ? null : () => _selectPlan(plan),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: _getPlanColor(plan.tier),
                           foregroundColor: Colors.white,

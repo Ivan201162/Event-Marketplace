@@ -8,6 +8,5 @@ class ChatsScreen extends ConsumerWidget {
   const ChatsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) =>
-      const EnhancedChatsScreen();
+  Widget build(BuildContext context, WidgetRef ref) => const EnhancedChatsScreen();
 }

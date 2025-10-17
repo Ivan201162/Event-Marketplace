@@ -26,8 +26,7 @@ class FollowButton extends ConsumerWidget {
     );
   }
 
-  Widget _buildButton(BuildContext context, WidgetRef ref, bool isFollowing) =>
-      ElevatedButton(
+  Widget _buildButton(BuildContext context, WidgetRef ref, bool isFollowing) => ElevatedButton(
         onPressed: () => _handleFollow(context, ref, isFollowing),
         style: ElevatedButton.styleFrom(
           backgroundColor: isFollowing ? Colors.grey[300] : Colors.blue,
@@ -64,8 +63,7 @@ class FollowButton extends ConsumerWidget {
         ),
       );
 
-  Widget _buildErrorButton(BuildContext context, WidgetRef ref) =>
-      ElevatedButton(
+  Widget _buildErrorButton(BuildContext context, WidgetRef ref) => ElevatedButton(
         onPressed: () => ref.invalidate(isFollowingProvider(targetUserId)),
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.red[100],

@@ -41,8 +41,7 @@ class EventIdeaService {
         metadata: createIdea.metadata,
       );
 
-      final docRef =
-          await _firestore.collection('event_ideas').add(idea.toMap());
+      final docRef = await _firestore.collection('event_ideas').add(idea.toMap());
 
       debugPrint('Event idea created: ${docRef.id}');
       return docRef.id;
@@ -61,8 +60,7 @@ class EventIdeaService {
       final urls = <String>[];
 
       for (var i = 0; i < imageFiles.length; i++) {
-        final fileName =
-            '${DateTime.now().millisecondsSinceEpoch}_${i}_${imageFiles[i].name}';
+        final fileName = '${DateTime.now().millisecondsSinceEpoch}_${i}_${imageFiles[i].name}';
         final storagePath = 'event_ideas/$authorId/images/$fileName';
 
         final ref = _storage.ref().child(storagePath);
@@ -252,8 +250,7 @@ class EventIdeaService {
         parentId: parentId,
       );
 
-      final docRef =
-          await _firestore.collection('idea_comments').add(comment.toMap());
+      final docRef = await _firestore.collection('idea_comments').add(comment.toMap());
 
       // Увеличиваем счетчик комментариев
       await _firestore.collection('event_ideas').doc(ideaId).update({
@@ -325,10 +322,8 @@ class EventIdeaService {
   /// Получить популярные теги
   Future<List<String>> getPopularTags({int limit = 20}) async {
     try {
-      final snapshot = await _firestore
-          .collection('event_ideas')
-          .where('isPublic', isEqualTo: true)
-          .get();
+      final snapshot =
+          await _firestore.collection('event_ideas').where('isPublic', isEqualTo: true).get();
 
       final tagCounts = <String, int>{};
 
@@ -339,8 +334,7 @@ class EventIdeaService {
         }
       }
 
-      final sortedTags = tagCounts.entries.toList()
-        ..sort((a, b) => b.value.compareTo(a.value));
+      final sortedTags = tagCounts.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
 
       return sortedTags.take(limit).map((entry) => entry.key).toList();
     } on Exception catch (e) {

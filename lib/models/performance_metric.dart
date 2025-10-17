@@ -35,8 +35,7 @@ class PerformanceMetric {
   }
 
   /// Создать из Map
-  factory PerformanceMetric.fromMap(Map<String, dynamic> data) =>
-      PerformanceMetric(
+  factory PerformanceMetric.fromMap(Map<String, dynamic> data) => PerformanceMetric(
         id: data['id'] ?? '',
         name: data['name'] ?? '',
         category: data['category'] ?? '',
@@ -205,8 +204,7 @@ class PerformanceMetric {
       );
 
   @override
-  String toString() =>
-      'PerformanceMetric(id: $id, name: $name, value: $formattedValue)';
+  String toString() => 'PerformanceMetric(id: $id, name: $name, value: $formattedValue)';
 }
 
 /// Модель статистики производительности
@@ -266,10 +264,8 @@ class PerformanceStatistics {
     final p95Value = values[p95Index];
     final p99Value = values[p99Index];
 
-    final periodStart =
-        metrics.map((m) => m.timestamp).reduce((a, b) => a.isBefore(b) ? a : b);
-    final periodEnd =
-        metrics.map((m) => m.timestamp).reduce((a, b) => a.isAfter(b) ? a : b);
+    final periodStart = metrics.map((m) => m.timestamp).reduce((a, b) => a.isBefore(b) ? a : b);
+    final periodEnd = metrics.map((m) => m.timestamp).reduce((a, b) => a.isAfter(b) ? a : b);
 
     return PerformanceStatistics(
       metricName: metricName,
@@ -303,10 +299,8 @@ class PerformanceStatistics {
   String get trend {
     if (totalSamples < 2) return 'stable';
 
-    final firstHalf =
-        samples.take(totalSamples ~/ 2).map((m) => m.value).toList();
-    final secondHalf =
-        samples.skip(totalSamples ~/ 2).map((m) => m.value).toList();
+    final firstHalf = samples.take(totalSamples ~/ 2).map((m) => m.value).toList();
+    final secondHalf = samples.skip(totalSamples ~/ 2).map((m) => m.value).toList();
 
     final firstAvg = firstHalf.reduce((a, b) => a + b) / firstHalf.length;
     final secondAvg = secondHalf.reduce((a, b) => a + b) / secondHalf.length;
@@ -374,17 +368,14 @@ class PerformanceAlert {
       ),
       message: data['message'] ?? '',
       triggeredAt: (data['triggeredAt'] as Timestamp).toDate(),
-      resolvedAt: data['resolvedAt'] != null
-          ? (data['resolvedAt'] as Timestamp).toDate()
-          : null,
+      resolvedAt: data['resolvedAt'] != null ? (data['resolvedAt'] as Timestamp).toDate() : null,
       isActive: data['isActive'] as bool? ?? true,
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
   }
 
   /// Создать из Map
-  factory PerformanceAlert.fromMap(Map<String, dynamic> data) =>
-      PerformanceAlert(
+  factory PerformanceAlert.fromMap(Map<String, dynamic> data) => PerformanceAlert(
         id: data['id'] ?? '',
         metricName: data['metricName'] ?? '',
         category: data['category'] ?? '',
@@ -396,9 +387,7 @@ class PerformanceAlert {
         ),
         message: data['message'] ?? '',
         triggeredAt: (data['triggeredAt'] as Timestamp).toDate(),
-        resolvedAt: data['resolvedAt'] != null
-            ? (data['resolvedAt'] as Timestamp).toDate()
-            : null,
+        resolvedAt: data['resolvedAt'] != null ? (data['resolvedAt'] as Timestamp).toDate() : null,
         isActive: data['isActive'] as bool? ?? true,
         metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       );
@@ -423,8 +412,7 @@ class PerformanceAlert {
         'severity': severity.toString().split('.').last,
         'message': message,
         'triggeredAt': Timestamp.fromDate(triggeredAt),
-        'resolvedAt':
-            resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
+        'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
         'isActive': isActive,
         'metadata': metadata,
       };
@@ -499,8 +487,7 @@ class PerformanceAlert {
       );
 
   @override
-  String toString() =>
-      'PerformanceAlert(id: $id, metricName: $metricName, severity: $severity)';
+  String toString() => 'PerformanceAlert(id: $id, metricName: $metricName, severity: $severity)';
 }
 
 /// Уровни серьезности алертов

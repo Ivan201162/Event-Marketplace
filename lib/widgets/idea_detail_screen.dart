@@ -72,10 +72,9 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
                     // Заголовок
                     Text(
                       widget.idea.title,
-                      style:
-                          Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
 
                     const SizedBox(height: 8),
@@ -85,24 +84,20 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
                       children: [
                         CircleAvatar(
                           radius: 16,
-                          backgroundColor: Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withValues(alpha: 0.1),
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                           backgroundImage: widget.idea.authorAvatar != null
                               ? NetworkImage(widget.idea.authorAvatar!)
                               : null,
                           child: widget.idea.authorAvatar == null
                               ? Text(
                                   (widget.idea.authorName ?? 'П').isNotEmpty
-                                      ? (widget.idea.authorName ?? 'П')[0]
-                                          .toUpperCase()
+                                      ? (widget.idea.authorName ?? 'П')[0].toUpperCase()
                                       : '?',
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
+                                    color: Theme.of(context).colorScheme.primary,
                                   ),
                                 )
                               : null,
@@ -114,19 +109,13 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
                             children: [
                               Text(
                                 widget.idea.authorName ?? 'Пользователь',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall
-                                    ?.copyWith(
+                                style: Theme.of(context).textTheme.titleSmall?.copyWith(
                                       fontWeight: FontWeight.w600,
                                     ),
                               ),
                               Text(
                                 widget.idea.timeAgo,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                       color: Colors.grey[600],
                                     ),
                               ),
@@ -341,10 +330,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
                 .map(
                   (tag) => Chip(
                     label: Text('#$tag'),
-                    backgroundColor: Theme.of(context)
-                        .colorScheme
-                        .primary
-                        .withValues(alpha: 0.1),
+                    backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                     labelStyle: TextStyle(
                       color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.w500,

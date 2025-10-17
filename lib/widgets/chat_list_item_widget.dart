@@ -33,9 +33,8 @@ class ChatListItemWidget extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 25,
-                      backgroundImage: chat.avatarUrl != null
-                          ? NetworkImage(chat.avatarUrl!)
-                          : null,
+                      backgroundImage:
+                          chat.avatarUrl != null ? NetworkImage(chat.avatarUrl!) : null,
                       child: chat.avatarUrl == null
                           ? Text(
                               chat.name?.substring(0, 1).toUpperCase() ?? '?',
@@ -131,9 +130,7 @@ class ChatListItemWidget extends StatelessWidget {
                       child: Row(
                         children: [
                           Icon(
-                            chat.isPinned
-                                ? Icons.push_pin
-                                : Icons.push_pin_outlined,
+                            chat.isPinned ? Icons.push_pin : Icons.push_pin_outlined,
                             size: 20,
                           ),
                           const SizedBox(width: 8),

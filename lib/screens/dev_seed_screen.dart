@@ -35,8 +35,7 @@ class _DevSeedScreenState extends State<DevSeedScreen> {
     }
 
     return Scaffold(
-      appBar:
-          BackUtils.buildAppBar(context, title: 'Управление тестовыми данными'),
+      appBar: BackUtils.buildAppBar(context, title: 'Управление тестовыми данными'),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -305,9 +304,8 @@ class _DevSeedScreenState extends State<DevSeedScreen> {
       // final hasData = await _seedService._checkExistingTestData();
       const hasData = false; // Заглушка для теста
       setState(() {
-        _statusMessage = hasData
-            ? '✅ Тестовые данные уже созданы'
-            : 'ℹ️ Тестовые данные не созданы';
+        _statusMessage =
+            hasData ? '✅ Тестовые данные уже созданы' : 'ℹ️ Тестовые данные не созданы';
         _isError = false;
       });
     } catch (e) {

@@ -115,10 +115,9 @@ class _VkPlaylistWidgetState extends ConsumerState<VkPlaylistWidget> {
                         color: _isValid ? Colors.green : Colors.red,
                       ),
                 border: const OutlineInputBorder(),
-                errorText:
-                    _urlController.text.isNotEmpty && !_isValid && !_isLoading
-                        ? 'Неверный формат ссылки на плейлист VK'
-                        : null,
+                errorText: _urlController.text.isNotEmpty && !_isValid && !_isLoading
+                    ? 'Неверный формат ссылки на плейлист VK'
+                    : null,
               ),
               onChanged: (value) {
                 widget.onUrlChanged?.call(value.isEmpty ? null : value);

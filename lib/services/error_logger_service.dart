@@ -13,8 +13,7 @@ class ErrorLoggerService {
   ErrorLoggerService._internal();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
-  final StreamController<AppError> _errorController =
-      StreamController<AppError>.broadcast();
+  final StreamController<AppError> _errorController = StreamController<AppError>.broadcast();
 
   static final ErrorLoggerService _instance = ErrorLoggerService._internal();
 
@@ -307,8 +306,7 @@ class ErrorLoggerService {
         query = query.where('resolved', isEqualTo: false);
       }
 
-      final snapshot =
-          await query.orderBy('timestamp', descending: true).limit(limit).get();
+      final snapshot = await query.orderBy('timestamp', descending: true).limit(limit).get();
 
       return snapshot.docs.map(AppError.fromDocument).toList();
     } catch (e) {
@@ -421,8 +419,7 @@ class ErrorLoggerService {
           recentErrors++;
         }
 
-        errorsByType[error.errorType] =
-            (errorsByType[error.errorType] ?? 0) + 1;
+        errorsByType[error.errorType] = (errorsByType[error.errorType] ?? 0) + 1;
         errorsByScreen[error.screen] = (errorsByScreen[error.screen] ?? 0) + 1;
         errorsByDevice[error.device] = (errorsByDevice[error.device] ?? 0) + 1;
       }

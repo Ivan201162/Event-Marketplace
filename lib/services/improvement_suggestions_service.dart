@@ -36,9 +36,7 @@ class ImprovementSuggestionsService {
         metadata: {},
       );
 
-      final docRef = await _firestore
-          .collection('improvement_suggestions')
-          .add(suggestion.toMap());
+      final docRef = await _firestore.collection('improvement_suggestions').add(suggestion.toMap());
 
       return suggestion.copyWith(id: docRef.id);
     } on Exception catch (e) {
@@ -54,8 +52,7 @@ class ImprovementSuggestionsService {
     String? lastDocumentId,
   }) async {
     try {
-      Query<Map<String, dynamic>> query =
-          _firestore.collection('improvement_suggestions');
+      Query<Map<String, dynamic>> query = _firestore.collection('improvement_suggestions');
 
       if (status != null) {
         query = query.where('status', isEqualTo: status.name);
@@ -68,10 +65,8 @@ class ImprovementSuggestionsService {
       query = query.orderBy('createdAt', descending: true).limit(limit);
 
       if (lastDocumentId != null) {
-        final lastDoc = await _firestore
-            .collection('improvement_suggestions')
-            .doc(lastDocumentId)
-            .get();
+        final lastDoc =
+            await _firestore.collection('improvement_suggestions').doc(lastDocumentId).get();
         query = query.startAfterDocument(lastDoc);
       }
 
@@ -119,10 +114,7 @@ class ImprovementSuggestionsService {
 
       // Обновляем счетчик голосов
       final voteChange = isUpvote ? 1 : -1;
-      await _firestore
-          .collection('improvement_suggestions')
-          .doc(suggestionId)
-          .update({
+      await _firestore.collection('improvement_suggestions').doc(suggestionId).update({
         'votes': FieldValue.increment(voteChange),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
@@ -153,10 +145,7 @@ class ImprovementSuggestionsService {
         updateData['adminComment'] = adminComment;
       }
 
-      await _firestore
-          .collection('improvement_suggestions')
-          .doc(suggestionId)
-          .update(updateData);
+      await _firestore.collection('improvement_suggestions').doc(suggestionId).update(updateData);
     } on Exception catch (e) {
       throw Exception('Ошибка обновления статуса предложения: $e');
     }
@@ -198,26 +187,20 @@ class ImprovementSuggestionsService {
   /// Получить статистику предложений
   Future<SuggestionStatistics> getSuggestionStatistics() async {
     try {
-      final snapshot =
-          await _firestore.collection('improvement_suggestions').get();
-      final suggestions =
-          snapshot.docs.map(ImprovementSuggestion.fromDocument).toList();
+      final snapshot = await _firestore.collection('improvement_suggestions').get();
+      final suggestions = snapshot.docs.map(ImprovementSuggestion.fromDocument).toList();
 
       final totalSuggestions = suggestions.length;
-      final implementedSuggestions = suggestions
-          .where((s) => s.status == SuggestionStatus.implemented)
-          .length;
-      final pendingSuggestions = suggestions
-          .where((s) => s.status == SuggestionStatus.submitted)
-          .length;
-      final reviewedSuggestions = suggestions
-          .where((s) => s.status == SuggestionStatus.reviewed)
-          .length;
+      final implementedSuggestions =
+          suggestions.where((s) => s.status == SuggestionStatus.implemented).length;
+      final pendingSuggestions =
+          suggestions.where((s) => s.status == SuggestionStatus.submitted).length;
+      final reviewedSuggestions =
+          suggestions.where((s) => s.status == SuggestionStatus.reviewed).length;
 
       final categoryStats = <SuggestionCategory, int>{};
       for (final category in SuggestionCategory.values) {
-        categoryStats[category] =
-            suggestions.where((s) => s.category == category).length;
+        categoryStats[category] = suggestions.where((s) => s.category == category).length;
       }
 
       return SuggestionStatistics(
@@ -236,10 +219,7 @@ class ImprovementSuggestionsService {
 
   Future<ImprovementSuggestion?> _getSuggestion(String suggestionId) async {
     try {
-      final doc = await _firestore
-          .collection('improvement_suggestions')
-          .doc(suggestionId)
-          .get();
+      final doc = await _firestore.collection('improvement_suggestions').doc(suggestionId).get();
       if (doc.exists) {
         return ImprovementSuggestion.fromDocument(doc);
       }
@@ -295,12 +275,9 @@ class ImprovementSuggestion {
       votes: data['votes'] ?? 0,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      reviewedAt: data['reviewedAt'] != null
-          ? (data['reviewedAt'] as Timestamp).toDate()
-          : null,
-      implementedAt: data['implementedAt'] != null
-          ? (data['implementedAt'] as Timestamp).toDate()
-          : null,
+      reviewedAt: data['reviewedAt'] != null ? (data['reviewedAt'] as Timestamp).toDate() : null,
+      implementedAt:
+          data['implementedAt'] != null ? (data['implementedAt'] as Timestamp).toDate() : null,
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
   }
@@ -333,10 +310,8 @@ class ImprovementSuggestion {
         'votes': votes,
         'createdAt': Timestamp.fromDate(createdAt),
         'updatedAt': Timestamp.fromDate(updatedAt),
-        'reviewedAt':
-            reviewedAt != null ? Timestamp.fromDate(reviewedAt!) : null,
-        'implementedAt':
-            implementedAt != null ? Timestamp.fromDate(implementedAt!) : null,
+        'reviewedAt': reviewedAt != null ? Timestamp.fromDate(reviewedAt!) : null,
+        'implementedAt': implementedAt != null ? Timestamp.fromDate(implementedAt!) : null,
         'metadata': metadata,
       };
 

@@ -44,8 +44,7 @@ class _LazyLoadingWidgetState<T> extends State<LazyLoadingWidget<T>> {
   int _currentPage = 0;
   String? _errorMessage;
 
-  ScrollController get _effectiveScrollController =>
-      widget.scrollController ?? _scrollController;
+  ScrollController get _effectiveScrollController => widget.scrollController ?? _scrollController;
 
   @override
   void initState() {
@@ -148,8 +147,7 @@ class _LazyLoadingWidgetState<T> extends State<LazyLoadingWidget<T>> {
         ),
       );
 
-  Widget _buildLoadingWidget() =>
-      widget.loadingWidget ?? _buildShimmerLoading();
+  Widget _buildLoadingWidget() => widget.loadingWidget ?? _buildShimmerLoading();
 
   Widget _buildErrorWidget() =>
       widget.errorWidget ??
@@ -249,8 +247,7 @@ class _LazyLoadingWidgetState<T> extends State<LazyLoadingWidget<T>> {
     Widget listView = ListView.separated(
       controller: _effectiveScrollController,
       itemCount: _items.length + (_hasMoreData ? 1 : 0),
-      separatorBuilder: widget.separatorBuilder ??
-          (context, index) => const SizedBox(height: 8),
+      separatorBuilder: widget.separatorBuilder ?? (context, index) => const SizedBox(height: 8),
       itemBuilder: (context, index) {
         if (index >= _items.length) {
           return _buildLoadMoreIndicator();
@@ -319,8 +316,7 @@ class _LazyLoadingGridState<T> extends State<LazyLoadingGrid<T>> {
   int _currentPage = 0;
   String? _errorMessage;
 
-  ScrollController get _effectiveScrollController =>
-      widget.scrollController ?? _scrollController;
+  ScrollController get _effectiveScrollController => widget.scrollController ?? _scrollController;
 
   @override
   void initState() {
@@ -427,8 +423,7 @@ class _LazyLoadingGridState<T> extends State<LazyLoadingGrid<T>> {
         ),
       );
 
-  Widget _buildLoadingWidget() =>
-      widget.loadingWidget ?? _buildShimmerLoading();
+  Widget _buildLoadingWidget() => widget.loadingWidget ?? _buildShimmerLoading();
 
   Widget _buildErrorWidget() =>
       widget.errorWidget ??

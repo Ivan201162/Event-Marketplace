@@ -33,9 +33,7 @@ class SpecialistTip {
       ),
       isCompleted: data['isCompleted'] ?? false,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      completedAt: data['completedAt'] != null
-          ? (data['completedAt'] as Timestamp).toDate()
-          : null,
+      completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
     );
   }
   final String id;
@@ -61,8 +59,7 @@ class SpecialistTip {
         'priority': priority.value,
         'isCompleted': isCompleted,
         'createdAt': Timestamp.fromDate(createdAt),
-        'completedAt':
-            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+        'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
       };
 
   /// Копирование с изменениями
@@ -103,8 +100,7 @@ class SpecialistTip {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() =>
-      'SpecialistTip(id: $id, field: $field, title: $title, priority: $priority)';
+  String toString() => 'SpecialistTip(id: $id, field: $field, title: $title, priority: $priority)';
 }
 
 /// Приоритет совета
@@ -220,6 +216,5 @@ class ProfileStats {
   int get hashCode => userId.hashCode;
 
   @override
-  String toString() =>
-      'ProfileStats(userId: $userId, completion: $completionPercentage%)';
+  String toString() => 'ProfileStats(userId: $userId, completion: $completionPercentage%)';
 }

@@ -25,8 +25,7 @@ class ModernProfileScreen extends ConsumerStatefulWidget {
   final bool isOwnProfile;
 
   @override
-  ConsumerState<ModernProfileScreen> createState() =>
-      _ModernProfileScreenState();
+  ConsumerState<ModernProfileScreen> createState() => _ModernProfileScreenState();
 }
 
 class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
@@ -153,8 +152,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     );
   }
 
-  Widget _buildProfileContent(Map<String, dynamic> specialist) =>
-      FadeTransition(
+  Widget _buildProfileContent(Map<String, dynamic> specialist) => FadeTransition(
         opacity: _fadeAnimation,
         child: CustomScrollView(
           controller: _scrollController,
@@ -171,8 +169,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ),
       );
 
-  Widget _buildProfileHeader(Map<String, dynamic> specialist) =>
-      SliverToBoxAdapter(
+  Widget _buildProfileHeader(Map<String, dynamic> specialist) => SliverToBoxAdapter(
         child: Container(
           height: 200,
           decoration: BoxDecoration(
@@ -194,12 +191,10 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                     imageUrl: specialist['coverImageUrl'] as String,
                     fit: BoxFit.cover,
                     placeholder: (context, url) => Container(
-                      color:
-                          Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                      color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
                     ),
                     errorWidget: (context, url, error) => Container(
-                      color:
-                          Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                      color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
                     ),
                   ),
                 ),
@@ -237,8 +232,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ),
       );
 
-  Widget _buildProfileInfo(Map<String, dynamic> specialist) =>
-      SliverToBoxAdapter(
+  Widget _buildProfileInfo(Map<String, dynamic> specialist) => SliverToBoxAdapter(
         child: FadeTransition(
           opacity: _fadeAnimation,
           child: Padding(
@@ -266,8 +260,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                               placeholder: Icons.person,
                             )
                           : CachedNetworkImage(
-                              imageUrl:
-                                  (specialist['imageUrl'] as String?) ?? '',
+                              imageUrl: (specialist['imageUrl'] as String?) ?? '',
                               fit: BoxFit.cover,
                               placeholder: (context, url) => Container(
                                 color: Colors.grey[300],
@@ -338,8 +331,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ),
       );
 
-  Widget _buildStatsSection(Map<String, dynamic> specialist) =>
-      SliverToBoxAdapter(
+  Widget _buildStatsSection(Map<String, dynamic> specialist) => SliverToBoxAdapter(
         child: FadeTransition(
           opacity: _fadeAnimation,
           child: Container(
@@ -392,8 +384,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ],
       );
 
-  Widget _buildActionButtons(Map<String, dynamic> specialist) =>
-      SliverToBoxAdapter(
+  Widget _buildActionButtons(Map<String, dynamic> specialist) => SliverToBoxAdapter(
         child: FadeTransition(
           opacity: _fadeAnimation,
           child: Padding(
@@ -441,17 +432,13 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                         child: FilledButton.icon(
                           onPressed: _toggleFollow,
                           icon: Icon(
-                            _isFollowing
-                                ? Icons.person_remove
-                                : Icons.person_add,
+                            _isFollowing ? Icons.person_remove : Icons.person_add,
                           ),
-                          label:
-                              Text(_isFollowing ? 'Отписаться' : 'Подписаться'),
+                          label: Text(_isFollowing ? 'Отписаться' : 'Подписаться'),
                           style: FilledButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 12),
-                            backgroundColor: _isFollowing
-                                ? Colors.red
-                                : Theme.of(context).primaryColor,
+                            backgroundColor:
+                                _isFollowing ? Colors.red : Theme.of(context).primaryColor,
                           ),
                         ),
                       ),
@@ -462,8 +449,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
       );
 
   Widget _buildBioSection(Map<String, dynamic> specialist) {
-    if (specialist['description'] == null ||
-        (specialist['description'] as String).isEmpty) {
+    if (specialist['description'] == null || (specialist['description'] as String).isEmpty) {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
     }
 
@@ -518,23 +504,18 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: Theme.of(context)
-                                .primaryColor
-                                .withValues(alpha: 0.1),
+                            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: Theme.of(context)
-                                  .primaryColor
-                                  .withValues(alpha: 0.3),
+                              color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
                             ),
                           ),
                           child: Text(
                             service.toString(),
-                            style:
-                                Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Theme.of(context).primaryColor,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: Theme.of(context).primaryColor,
+                                  fontWeight: FontWeight.w500,
+                                ),
                           ),
                         ),
                       )
@@ -634,8 +615,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
             controller: _tabController,
             indicatorColor: Theme.of(context).primaryColor,
             labelColor: Theme.of(context).primaryColor,
-            unselectedLabelColor:
-                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+            unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
             tabs: const [
               Tab(icon: Icon(Icons.grid_on), text: 'Посты'),
               Tab(icon: Icon(Icons.star), text: 'Отзывы'),
@@ -646,8 +626,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ),
       );
 
-  Widget _buildTabContent(Map<String, dynamic> specialist) =>
-      SliverFillRemaining(
+  Widget _buildTabContent(Map<String, dynamic> specialist) => SliverFillRemaining(
         child: TabBarView(
           controller: _tabController,
           children: [
@@ -800,8 +779,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: CachedNetworkImage(
-                  imageUrl:
-                      (specialist['portfolioImages'] as List)[index].toString(),
+                  imageUrl: (specialist['portfolioImages'] as List)[index].toString(),
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Container(
                     color: Colors.grey[300],
@@ -845,8 +823,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     // TODO: Открыть экран редактирования профиля
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content:
-            Text('Редактирование профиля будет доступно в следующей версии'),
+        content: Text('Редактирование профиля будет доступно в следующей версии'),
       ),
     );
   }
@@ -900,8 +877,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     // TODO: Обновить изображение профиля
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content:
-            Text('Обновление изображения будет доступно в следующей версии'),
+        content: Text('Обновление изображения будет доступно в следующей версии'),
       ),
     );
   }
@@ -983,6 +959,5 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
       );
 
   @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
-      false;
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => false;
 }

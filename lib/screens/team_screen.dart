@@ -321,19 +321,16 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
             margin: const EdgeInsets.only(bottom: 8),
             child: ListTile(
               leading: CircleAvatar(
-                backgroundImage: specialist.avatar != null
-                    ? NetworkImage(specialist.avatar!)
-                    : null,
-                child:
-                    specialist.avatar == null ? const Icon(Icons.person) : null,
+                backgroundImage:
+                    specialist.avatar != null ? NetworkImage(specialist.avatar!) : null,
+                child: specialist.avatar == null ? const Icon(Icons.person) : null,
               ),
               title: Text(specialist.name),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (role != null) Text('Роль: $role'),
-                  if (payment > 0)
-                    Text('Оплата: ${payment.toStringAsFixed(0)} ₽'),
+                  if (payment > 0) Text('Оплата: ${payment.toStringAsFixed(0)} ₽'),
                   Text(specialist.specialization ?? ''),
                 ],
               ),
@@ -381,8 +378,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                   (entry) => FutureBuilder<Specialist?>(
                     future: ref.read(specialistProvider(entry.key).future),
                     builder: (context, snapshot) {
-                      final specialistName =
-                          snapshot.data?.name ?? 'Неизвестный';
+                      final specialistName = snapshot.data?.name ?? 'Неизвестный';
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 4),
                         child: Row(
@@ -425,9 +421,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                   const SizedBox(width: 16),
                   Expanded(
                     child: ElevatedButton.icon(
-                      onPressed: team.status == TeamStatus.draft
-                          ? () => _confirmTeam(team)
-                          : null,
+                      onPressed: team.status == TeamStatus.draft ? () => _confirmTeam(team) : null,
                       icon: const Icon(Icons.check),
                       label: const Text('Подтвердить'),
                       style: ElevatedButton.styleFrom(
@@ -607,9 +601,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                   description: _descriptionController.text.trim().isEmpty
                       ? null
                       : _descriptionController.text.trim(),
-                  notes: _notesController.text.trim().isEmpty
-                      ? null
-                      : _notesController.text.trim(),
+                  notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
                 );
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(

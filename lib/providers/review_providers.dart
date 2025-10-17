@@ -50,10 +50,8 @@ final specialistReviewsProvider = StreamProvider.family<List<Review>, String>(
 
 /// Провайдер для получения статистики отзывов специалиста
 final specialistReviewStatsProvider =
-    FutureProvider.family<SpecialistReviewStats, String>(
-        (ref, specialistId) async {
-  final reviews =
-      await ref.read(specialistReviewsProvider(specialistId).future);
+    FutureProvider.family<SpecialistReviewStats, String>((ref, specialistId) async {
+  final reviews = await ref.read(specialistReviewsProvider(specialistId).future);
   return SpecialistReviewStats.fromReviews(reviews);
 });
 
@@ -68,8 +66,7 @@ final customerReviewsProvider = StreamProvider.family<List<Review>, String>(
 );
 
 /// Провайдер для создания отзыва
-final createReviewProvider =
-    FutureProvider.family<void, CreateReviewParams>((ref, params) async {
+final createReviewProvider = FutureProvider.family<void, CreateReviewParams>((ref, params) async {
   final review = Review(
     id: '',
     specialistId: params.specialistId,
@@ -88,14 +85,12 @@ final createReviewProvider =
 final reviewServiceProvider = Provider<ReviewService>((ref) => ReviewService());
 
 /// Провайдер для состояния формы отзыва
-final reviewFormProvider =
-    StateNotifierProvider<ReviewFormNotifier, ReviewFormState>(
+final reviewFormProvider = StateNotifierProvider<ReviewFormNotifier, ReviewFormState>(
   (ref) => ReviewFormNotifier(ref.read(reviewServiceProvider)),
 );
 
 /// Провайдер для состояния отзывов
-final reviewStateProvider =
-    StateNotifierProvider<ReviewStateNotifier, ReviewState>(
+final reviewStateProvider = StateNotifierProvider<ReviewStateNotifier, ReviewState>(
   (ref) => ReviewStateNotifier(ref.read(reviewServiceProvider)),
 );
 
@@ -331,15 +326,13 @@ class SpecialistReviewStats {
     }
 
     // Вычисляем средний рейтинг
-    final totalRating =
-        reviews.fold<int>(0, (sum, review) => sum + review.rating);
+    final totalRating = reviews.fold<int>(0, (sum, review) => sum + review.rating);
     final averageRating = totalRating / reviews.length;
 
     // Подсчитываем распределение по звездам
     final ratingDistribution = <int, int>{};
     for (final review in reviews) {
-      ratingDistribution[review.rating] =
-          (ratingDistribution[review.rating] ?? 0) + 1;
+      ratingDistribution[review.rating] = (ratingDistribution[review.rating] ?? 0) + 1;
     }
 
     return SpecialistReviewStats(

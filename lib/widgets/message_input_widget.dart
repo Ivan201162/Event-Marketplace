@@ -16,8 +16,7 @@ class MessageInputWidget extends StatefulWidget {
   });
 
   final Function(String text) onSendMessage;
-  final Function(List<MessageAttachment> attachments, {String? caption})?
-      onSendMedia;
+  final Function(List<MessageAttachment> attachments, {String? caption})? onSendMedia;
   final Function(MessageAttachment voiceAttachment)? onSendVoice;
   final Function(List<MessageAttachment> documents)? onSendDocument;
   final MessageReply? replyTo;
@@ -315,8 +314,7 @@ class _MessageInputWidgetState extends State<MessageInputWidget> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Функция в разработке'),
-        content:
-            Text('Функция "$feature" будет реализована в следующих версиях'),
+        content: Text('Функция "$feature" будет реализована в следующих версиях'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),

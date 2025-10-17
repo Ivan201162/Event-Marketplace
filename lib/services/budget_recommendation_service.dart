@@ -17,8 +17,7 @@ class BudgetRecommendationService {
       }
 
       // Получаем информацию о выбранных специалистах
-      final selectedSpecialists =
-          await _getSpecialistsByIds(selectedSpecialistIds);
+      final selectedSpecialists = await _getSpecialistsByIds(selectedSpecialistIds);
 
       // Рассчитываем минимальную сумму для добавления специалистов
       final recommendations = await _calculateBudgetRecommendations(
@@ -87,10 +86,7 @@ class BudgetRecommendationService {
   /// Сохранить рекомендацию по бюджету как показанную
   Future<void> markBudgetRecommendationAsShown(String recommendationId) async {
     try {
-      await _firestore
-          .collection('budget_recommendations')
-          .doc(recommendationId)
-          .update({
+      await _firestore.collection('budget_recommendations').doc(recommendationId).update({
         'isShown': true,
         'shownAt': FieldValue.serverTimestamp(),
       });
@@ -130,13 +126,11 @@ class BudgetRecommendationService {
     final recommendations = <BudgetRecommendation>[];
 
     // Анализируем выбранные категории
-    final selectedCategories =
-        selectedSpecialists.map((s) => s.category).toSet();
+    final selectedCategories = selectedSpecialists.map((s) => s.category).toSet();
 
     // Получаем рекомендуемые категории для выбранных
     for (final selectedCategory in selectedCategories) {
-      final recommendedCategories =
-          _getRecommendedCategoriesFor(selectedCategory);
+      final recommendedCategories = _getRecommendedCategoriesFor(selectedCategory);
 
       for (final recommendedCategory in recommendedCategories) {
         // Проверяем, не выбран ли уже специалист этой категории
@@ -262,19 +256,13 @@ class BudgetRecommendationService {
   ) {
     // Базовые приоритеты совместимости
     final compatibilityScores = {
-      '${SpecialistCategory.host.name}_${SpecialistCategory.photographer.name}':
-          0.9,
-      '${SpecialistCategory.host.name}_${SpecialistCategory.videographer.name}':
-          0.9,
-      '${SpecialistCategory.host.name}_${SpecialistCategory.decorator.name}':
-          0.8,
-      '${SpecialistCategory.dj.name}_${SpecialistCategory.photographer.name}':
-          0.8,
+      '${SpecialistCategory.host.name}_${SpecialistCategory.photographer.name}': 0.9,
+      '${SpecialistCategory.host.name}_${SpecialistCategory.videographer.name}': 0.9,
+      '${SpecialistCategory.host.name}_${SpecialistCategory.decorator.name}': 0.8,
+      '${SpecialistCategory.dj.name}_${SpecialistCategory.photographer.name}': 0.8,
       '${SpecialistCategory.dj.name}_${SpecialistCategory.lighting.name}': 0.9,
-      '${SpecialistCategory.photographer.name}_${SpecialistCategory.videographer.name}':
-          0.95,
-      '${SpecialistCategory.photographer.name}_${SpecialistCategory.makeup.name}':
-          0.7,
+      '${SpecialistCategory.photographer.name}_${SpecialistCategory.videographer.name}': 0.95,
+      '${SpecialistCategory.photographer.name}_${SpecialistCategory.makeup.name}': 0.7,
     };
 
     final key = '${selected.name}_${recommended.name}';
@@ -296,8 +284,7 @@ class BudgetRecommendation {
     this.isShown = false,
   });
 
-  factory BudgetRecommendation.fromMap(Map<String, dynamic> data) =>
-      BudgetRecommendation(
+  factory BudgetRecommendation.fromMap(Map<String, dynamic> data) => BudgetRecommendation(
         id: data['id'] as String? ?? '',
         category: SpecialistCategory.values.firstWhere(
           (e) => e.name == data['category'] as String,
@@ -308,9 +295,8 @@ class BudgetRecommendation {
         totalBudget: (data['totalBudget'] as num?)?.toDouble() ?? 0.0,
         reason: data['reason'] as String? ?? '',
         priority: (data['priority'] as num?)?.toDouble() ?? 0.0,
-        timestamp: data['timestamp'] != null
-            ? (data['timestamp'] as Timestamp).toDate()
-            : DateTime.now(),
+        timestamp:
+            data['timestamp'] != null ? (data['timestamp'] as Timestamp).toDate() : DateTime.now(),
         isShown: data['isShown'] as bool? ?? false,
       );
 

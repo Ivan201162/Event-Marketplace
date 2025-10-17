@@ -44,9 +44,7 @@ class SpecialistPriceManagementService {
         updatedAt: DateTime.now(),
       );
 
-      final docRef = await _firestore
-          .collection('specialist_prices')
-          .add(servicePrice.toMap());
+      final docRef = await _firestore.collection('specialist_prices').add(servicePrice.toMap());
 
       // Обновляем время последнего обновления цен в профиле специалиста
       await _updateSpecialistLastPriceUpdate(specialistId);
@@ -78,8 +76,7 @@ class SpecialistPriceManagementService {
       });
 
       // Получаем specialistId для обновления времени последнего обновления
-      final doc =
-          await _firestore.collection('specialist_prices').doc(priceId).get();
+      final doc = await _firestore.collection('specialist_prices').doc(priceId).get();
 
       if (doc.exists) {
         final data = doc.data()!;
@@ -96,8 +93,7 @@ class SpecialistPriceManagementService {
   Future<void> deleteServicePrice(String priceId) async {
     try {
       // Получаем specialistId перед удалением
-      final doc =
-          await _firestore.collection('specialist_prices').doc(priceId).get();
+      final doc = await _firestore.collection('specialist_prices').doc(priceId).get();
 
       if (doc.exists) {
         final data = doc.data()!;
@@ -130,8 +126,7 @@ class SpecialistPriceManagementService {
   /// Проверить, нужно ли напомнить об обновлении цен
   Future<bool> shouldRemindAboutPriceUpdate(String specialistId) async {
     try {
-      final doc =
-          await _firestore.collection('specialists').doc(specialistId).get();
+      final doc = await _firestore.collection('specialists').doc(specialistId).get();
 
       if (!doc.exists) return false;
 
@@ -175,8 +170,7 @@ class SpecialistPriceManagementService {
     required String templateId,
   }) async {
     try {
-      final templateDoc =
-          await _firestore.collection('price_templates').doc(templateId).get();
+      final templateDoc = await _firestore.collection('price_templates').doc(templateId).get();
 
       if (!templateDoc.exists) {
         throw Exception('Шаблон не найден');
@@ -241,12 +235,10 @@ class ServicePrice {
       duration: data['duration'] as String?,
       includedServices: List<String>.from(data['includedServices'] ?? []),
       isActive: data['isActive'] as bool? ?? true,
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
-      updatedAt: data['updatedAt'] != null
-          ? (data['updatedAt'] as Timestamp).toDate()
-          : DateTime.now(),
+      createdAt:
+          data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
+      updatedAt:
+          data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : DateTime.now(),
     );
   }
 
@@ -301,9 +293,8 @@ class ServicePriceTemplate {
               )
               .toList() ??
           [],
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
+      createdAt:
+          data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
     );
   }
 

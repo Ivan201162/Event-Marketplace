@@ -78,17 +78,15 @@ class Recommendation {
       id: doc.id,
       userId: data['userId'] as String? ?? '',
       specialistId: data['specialistId'] as String? ?? '',
-      specialist:
-          Specialist.fromMap(data['specialist'] as Map<String, dynamic>),
+      specialist: Specialist.fromMap(data['specialist'] as Map<String, dynamic>),
       type: RecommendationType.values.firstWhere(
         (e) => e.name == (data['type'] as String?),
         orElse: () => RecommendationType.popular,
       ),
       score: (data['score'] as num?)?.toDouble() ?? 0.0,
       reason: data['reason'] as String? ?? '',
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
+      createdAt:
+          data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
       metadata: data['metadata'] as Map<String, dynamic>?,
       category: data['category'] as String?,
       location: data['location'] as String?,
@@ -98,15 +96,9 @@ class Recommendation {
       isViewed: data['isViewed'] as bool? ?? false,
       isClicked: data['isClicked'] as bool? ?? false,
       isBooked: data['isBooked'] as bool? ?? false,
-      viewedAt: data['viewedAt'] != null
-          ? (data['viewedAt'] as Timestamp).toDate()
-          : null,
-      clickedAt: data['clickedAt'] != null
-          ? (data['clickedAt'] as Timestamp).toDate()
-          : null,
-      bookedAt: data['bookedAt'] != null
-          ? (data['bookedAt'] as Timestamp).toDate()
-          : null,
+      viewedAt: data['viewedAt'] != null ? (data['viewedAt'] as Timestamp).toDate() : null,
+      clickedAt: data['clickedAt'] != null ? (data['clickedAt'] as Timestamp).toDate() : null,
+      bookedAt: data['bookedAt'] != null ? (data['bookedAt'] as Timestamp).toDate() : null,
     );
   }
 
@@ -115,17 +107,15 @@ class Recommendation {
         id: map['id'] as String? ?? '',
         userId: map['userId'] as String? ?? '',
         specialistId: map['specialistId'] as String? ?? '',
-        specialist:
-            Specialist.fromMap(map['specialist'] as Map<String, dynamic>),
+        specialist: Specialist.fromMap(map['specialist'] as Map<String, dynamic>),
         type: RecommendationType.values.firstWhere(
           (e) => e.name == map['type'],
           orElse: () => RecommendationType.popular,
         ),
         score: (map['score'] as num?)?.toDouble() ?? 0.0,
         reason: map['reason'] as String? ?? '',
-        createdAt: map['createdAt'] != null
-            ? (map['createdAt'] as Timestamp).toDate()
-            : DateTime.now(),
+        createdAt:
+            map['createdAt'] != null ? (map['createdAt'] as Timestamp).toDate() : DateTime.now(),
         metadata: map['metadata'] as Map<String, dynamic>?,
         category: map['category'] as String?,
         location: map['location'] as String?,
@@ -135,15 +125,9 @@ class Recommendation {
         isViewed: map['isViewed'] as bool? ?? false,
         isClicked: map['isClicked'] as bool? ?? false,
         isBooked: map['isBooked'] as bool? ?? false,
-        viewedAt: map['viewedAt'] != null
-            ? (map['viewedAt'] as Timestamp).toDate()
-            : null,
-        clickedAt: map['clickedAt'] != null
-            ? (map['clickedAt'] as Timestamp).toDate()
-            : null,
-        bookedAt: map['bookedAt'] != null
-            ? (map['bookedAt'] as Timestamp).toDate()
-            : null,
+        viewedAt: map['viewedAt'] != null ? (map['viewedAt'] as Timestamp).toDate() : null,
+        clickedAt: map['clickedAt'] != null ? (map['clickedAt'] as Timestamp).toDate() : null,
+        bookedAt: map['bookedAt'] != null ? (map['bookedAt'] as Timestamp).toDate() : null,
       );
 
   final String id;

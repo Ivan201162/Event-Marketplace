@@ -32,9 +32,8 @@ class IdeaCommentWidget extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 16,
-                    backgroundImage: comment.authorAvatar != null
-                        ? NetworkImage(comment.authorAvatar!)
-                        : null,
+                    backgroundImage:
+                        comment.authorAvatar != null ? NetworkImage(comment.authorAvatar!) : null,
                     child: comment.authorAvatar == null
                         ? Text(
                             comment.authorName.isNotEmpty
@@ -50,19 +49,15 @@ class IdeaCommentWidget extends StatelessWidget {
                       children: [
                         Text(
                           comment.authorName,
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w500,
+                              ),
                         ),
                         Text(
                           _formatDate(comment.createdAt),
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant,
-                                  ),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              ),
                         ),
                       ],
                     ),
@@ -103,14 +98,11 @@ class IdeaCommentWidget extends StatelessWidget {
                         const SizedBox(width: 4),
                         Text(
                           comment.likesCount.toString(),
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: comment.likesCount > 0
-                                        ? Theme.of(context).colorScheme.primary
-                                        : Theme.of(context)
-                                            .colorScheme
-                                            .onSurfaceVariant,
-                                  ),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: comment.likesCount > 0
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Theme.of(context).colorScheme.onSurfaceVariant,
+                              ),
                         ),
                       ],
                     ),
@@ -124,18 +116,14 @@ class IdeaCommentWidget extends StatelessWidget {
                           Icon(
                             Icons.reply,
                             size: 16,
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                           const SizedBox(width: 4),
                           Text(
                             'Ответить',
-                            style:
-                                Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurfaceVariant,
-                                    ),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                ),
                           ),
                         ],
                       ),
@@ -145,8 +133,7 @@ class IdeaCommentWidget extends StatelessWidget {
                     Text(
                       'изменено',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                             fontStyle: FontStyle.italic,
                           ),
                     ),
@@ -344,15 +331,9 @@ class CommentsListWidget extends StatelessWidget {
               final comment = comments[index];
               return IdeaCommentWidget(
                 comment: comment,
-                onLike: onCommentLike != null
-                    ? () => onCommentLike!(comment)
-                    : null,
-                onReply: onCommentReply != null
-                    ? () => onCommentReply!(comment)
-                    : null,
-                onDelete: onCommentDelete != null
-                    ? () => onCommentDelete!(comment)
-                    : null,
+                onLike: onCommentLike != null ? () => onCommentLike!(comment) : null,
+                onReply: onCommentReply != null ? () => onCommentReply!(comment) : null,
+                onDelete: onCommentDelete != null ? () => onCommentDelete!(comment) : null,
               );
             },
           ),

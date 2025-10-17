@@ -410,8 +410,7 @@ class AIAssistantService {
 
     return AIMessage(
       id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
-      text:
-          'Интересно! А какой это будет тип мероприятия? Свадьба, день рождения, корпоратив?',
+      text: 'Интересно! А какой это будет тип мероприятия? Свадьба, день рождения, корпоратив?',
       isFromUser: false,
       timestamp: DateTime.now(),
       messageType: AIMessageType.text,
@@ -473,8 +472,7 @@ class AIAssistantService {
     if (location != null) {
       return AIMessage(
         id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
-        text:
-            'Отлично, $location! Теперь скажите, какой у вас бюджет на специалиста?',
+        text: 'Отлично, $location! Теперь скажите, какой у вас бюджет на специалиста?',
         isFromUser: false,
         timestamp: DateTime.now(),
         messageType: AIMessageType.text,

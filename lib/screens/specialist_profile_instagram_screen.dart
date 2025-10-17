@@ -24,8 +24,7 @@ class SpecialistProfileInstagramScreen extends ConsumerStatefulWidget {
       _SpecialistProfileInstagramScreenState();
 }
 
-class _SpecialistProfileInstagramScreenState
-    extends ConsumerState<SpecialistProfileInstagramScreen>
+class _SpecialistProfileInstagramScreenState extends ConsumerState<SpecialistProfileInstagramScreen>
     with TickerProviderStateMixin {
   final SpecialistService _specialistService = SpecialistService();
   final PostService _postService = PostService();
@@ -267,8 +266,7 @@ class _SpecialistProfileInstagramScreenState
       shrinkWrap: true,
       itemCount: _specialist!.servicesWithPrices.length,
       itemBuilder: (context, index) {
-        final service =
-            _specialist!.servicesWithPrices.entries.elementAt(index);
+        final service = _specialist!.servicesWithPrices.entries.elementAt(index);
         return Card(
           margin: const EdgeInsets.only(bottom: 8),
           child: ListTile(
@@ -424,9 +422,7 @@ class _SpecialistProfileInstagramScreenState
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    _isFavorite
-                        ? 'Добавлено в избранное'
-                        : 'Удалено из избранного',
+                    _isFavorite ? 'Добавлено в избранное' : 'Удалено из избранного',
                   ),
                 ),
               );
@@ -448,14 +444,12 @@ class _SpecialistProfileInstagramScreenState
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Container(
                     color: Colors.grey.shade300,
-                    child:
-                        const Icon(Icons.person, size: 100, color: Colors.grey),
+                    child: const Icon(Icons.person, size: 100, color: Colors.grey),
                   ),
                 )
               : Container(
                   color: Colors.grey.shade300,
-                  child:
-                      const Icon(Icons.person, size: 100, color: Colors.grey),
+                  child: const Icon(Icons.person, size: 100, color: Colors.grey),
                 ),
         ),
       );
@@ -486,8 +480,7 @@ class _SpecialistProfileInstagramScreenState
                           color: Colors.grey.shade600,
                         ),
                       ),
-                      if (_specialist!.location != null &&
-                          _specialist!.location!.isNotEmpty) ...[
+                      if (_specialist!.location != null && _specialist!.location!.isNotEmpty) ...[
                         const SizedBox(height: 4),
                         Row(
                           children: [
@@ -517,16 +510,14 @@ class _SpecialistProfileInstagramScreenState
                       height: 80,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border:
-                            Border.all(color: Colors.grey.shade300, width: 2),
+                        border: Border.all(color: Colors.grey.shade300, width: 2),
                       ),
                       child: ClipOval(
                         child: _specialist!.imageUrl != null
                             ? Image.network(
                                 _specialist!.imageUrl!,
                                 fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    const Icon(
+                                errorBuilder: (context, error, stackTrace) => const Icon(
                                   Icons.person,
                                   size: 40,
                                   color: Colors.grey,
@@ -562,8 +553,7 @@ class _SpecialistProfileInstagramScreenState
             const SizedBox(height: 16),
 
             // Описание
-            if (_specialist!.description != null &&
-                _specialist!.description!.isNotEmpty) ...[
+            if (_specialist!.description != null && _specialist!.description!.isNotEmpty) ...[
               Text(
                 _specialist!.description!,
                 style: const TextStyle(fontSize: 14),

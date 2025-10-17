@@ -67,10 +67,7 @@ class ProSubscriptionService {
         features: _getPlanFeatures(plan),
       );
 
-      await _firestore
-          .collection('subscriptions')
-          .doc(subscriptionId)
-          .set(subscription.toMap());
+      await _firestore.collection('subscriptions').doc(subscriptionId).set(subscription.toMap());
 
       return subscription;
     } catch (e) {
@@ -98,10 +95,7 @@ class ProSubscriptionService {
       if (autoRenew != null) updates['autoRenew'] = autoRenew;
       if (features != null) updates['features'] = features;
 
-      await _firestore
-          .collection('subscriptions')
-          .doc(subscriptionId)
-          .update(updates);
+      await _firestore.collection('subscriptions').doc(subscriptionId).update(updates);
     } catch (e) {
       throw Exception('Ошибка обновления подписки: $e');
     }
@@ -125,10 +119,8 @@ class ProSubscriptionService {
   Future<ProSubscription> renewSubscription(String subscriptionId) async {
     try {
       // Получить текущую подписку
-      final subscriptionDoc = await _firestore
-          .collection('subscriptions')
-          .doc(subscriptionId)
-          .get();
+      final subscriptionDoc =
+          await _firestore.collection('subscriptions').doc(subscriptionId).get();
 
       if (!subscriptionDoc.exists) {
         throw Exception('Подписка не найдена');
@@ -147,10 +139,7 @@ class ProSubscriptionService {
       );
 
       // Получить обновленную подписку
-      final updatedDoc = await _firestore
-          .collection('subscriptions')
-          .doc(subscriptionId)
-          .get();
+      final updatedDoc = await _firestore.collection('subscriptions').doc(subscriptionId).get();
 
       return ProSubscription.fromMap(updatedDoc.data()!);
     } catch (e) {
@@ -228,10 +217,7 @@ class ProSubscriptionService {
 
       final payment = paymentIntent;
 
-      await _firestore
-          .collection('payments')
-          .doc(paymentId)
-          .set(payment.toMap());
+      await _firestore.collection('payments').doc(paymentId).set(payment.toMap());
 
       return payment;
     } catch (e) {
@@ -281,8 +267,7 @@ class ProSubscriptionService {
   /// Получить статистику подписок
   Future<Map<String, dynamic>> getSubscriptionStats() async {
     try {
-      final QuerySnapshot snapshot =
-          await _firestore.collection('subscriptions').get();
+      final QuerySnapshot snapshot = await _firestore.collection('subscriptions').get();
 
       var totalSubscriptions = 0;
       var activeSubscriptions = 0;

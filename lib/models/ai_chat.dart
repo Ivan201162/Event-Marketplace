@@ -131,8 +131,7 @@ class ChatSession {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() =>
-      'ChatSession(id: $id, title: $title, messages: ${messageIds.length})';
+  String toString() => 'ChatSession(id: $id, title: $title, messages: ${messageIds.length})';
 }
 
 /// Типы сообщений
@@ -160,9 +159,7 @@ class QuickReply {
   factory QuickReply.fromJson(Map<String, dynamic> json) => QuickReply(
         text: json['text'] ?? '',
         value: json['value'] ?? '',
-        icon: json['icon'] != null
-            ? IconData(json['icon'], fontFamily: 'MaterialIcons')
-            : null,
+        icon: json['icon'] != null ? IconData(json['icon'], fontFamily: 'MaterialIcons') : null,
       );
   final String text;
   final String value;
@@ -190,9 +187,7 @@ class UserContext {
   factory UserContext.fromJson(Map<String, dynamic> json) => UserContext(
         city: json['city'],
         eventType: json['eventType'],
-        eventDate: json['eventDate'] != null
-            ? DateTime.parse(json['eventDate'])
-            : null,
+        eventDate: json['eventDate'] != null ? DateTime.parse(json['eventDate']) : null,
         budget: json['budget'],
         preferences: List<String>.from(json['preferences'] ?? []),
         viewedSpecialists: List<String>.from(json['viewedSpecialists'] ?? []),

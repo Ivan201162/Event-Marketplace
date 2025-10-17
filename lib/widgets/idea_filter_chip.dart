@@ -37,9 +37,7 @@ class IdeaFilterChip extends StatelessWidget {
                 color: selectedCategory == null
                     ? theme.colorScheme.onPrimaryContainer
                     : theme.colorScheme.onSurface,
-                fontWeight: selectedCategory == null
-                    ? FontWeight.w600
-                    : FontWeight.normal,
+                fontWeight: selectedCategory == null ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
           ),

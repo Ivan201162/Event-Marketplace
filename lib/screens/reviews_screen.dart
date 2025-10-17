@@ -23,8 +23,7 @@ class ReviewsScreen extends ConsumerStatefulWidget {
   ConsumerState<ReviewsScreen> createState() => _ReviewsScreenState();
 }
 
-class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
-    with SingleTickerProviderStateMixin {
+class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTickerProviderStateMixin {
   final ReviewService _reviewService = ReviewService();
   late TabController _tabController;
 
@@ -145,8 +144,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
           return Column(
             children: [
               // Информация о фильтрах
-              if (_filter.hasActiveFilters || _searchQuery.isNotEmpty)
-                _buildFilterInfo(),
+              if (_filter.hasActiveFilters || _searchQuery.isNotEmpty) _buildFilterInfo(),
 
               // Список отзывов
               Expanded(
@@ -165,8 +163,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
       );
 
   Widget _buildStatisticsTab() => StreamBuilder<ReviewStats>(
-        stream:
-            _reviewService.getReviewStatsStream(widget.targetId, widget.type),
+        stream: _reviewService.getReviewStatsStream(widget.targetId, widget.type),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -302,20 +299,14 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                   Text(
                     '•',
                     style: TextStyle(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.5),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     _formatDate(review.createdAt),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.7),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                   ),
                 ],
@@ -403,8 +394,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
             .map(
               (tag) => Chip(
                 label: Text(tag),
-                backgroundColor:
-                    Theme.of(context).colorScheme.surfaceContainerHighest,
+                backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                 labelStyle: TextStyle(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                   fontSize: 12,
@@ -449,10 +439,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                   Text(
                     _formatDate(review.responseDate!),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.7),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                   ),
               ],
@@ -484,38 +471,26 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
             Icon(
               Icons.thumb_up,
               size: 16,
-              color: Theme.of(context)
-                  .colorScheme
-                  .onSurface
-                  .withValues(alpha: 0.5),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
             ),
             const SizedBox(width: 4),
             Text(
               '${review.helpfulCount}',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.5),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                   ),
             ),
             const SizedBox(width: 16),
             Icon(
               Icons.thumb_down,
               size: 16,
-              color: Theme.of(context)
-                  .colorScheme
-                  .onSurface
-                  .withValues(alpha: 0.5),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
             ),
             const SizedBox(width: 4),
             Text(
               '${review.notHelpfulCount}',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.5),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                   ),
             ),
           ],
@@ -553,21 +528,17 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                     children: [
                       Text(
                         stats.roundedAverageRating.toString(),
-                        style:
-                            Theme.of(context).textTheme.displayMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
+                        style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                       ),
                       _buildRatingStars(stats.averageRating.round()),
                       const SizedBox(height: 4),
                       Text(
                         '${stats.totalReviews} отзывов',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurface
-                                  .withValues(alpha: 0.7),
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                             ),
                       ),
                     ],

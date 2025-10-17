@@ -41,10 +41,8 @@ class Notification {
       ),
       data: data['data'],
       isRead: data['isRead'] ?? false,
-      createdAt:
-          (data['createdAt'] as Timestamp? ?? data['timestamp'] as Timestamp?)
-                  ?.toDate() ??
-              DateTime.now(),
+      createdAt: (data['createdAt'] as Timestamp? ?? data['timestamp'] as Timestamp?)?.toDate() ??
+          DateTime.now(),
       isPinned: data['isPinned'] ?? false,
       senderId: data['senderId'],
       targetId: data['targetId'],

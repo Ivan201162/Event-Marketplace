@@ -223,8 +223,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
               child: AnimatedButton(
                 onPressed: () => _sendQuickMessage(action['text']! as String),
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   decoration: BoxDecoration(
                     color: (action['color']! as Color).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(25),
@@ -264,8 +263,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(
-        mainAxisAlignment:
-            isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (!isUser) ...[
@@ -293,12 +291,8 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
               decoration: BoxDecoration(
                 color: isUser ? BrandColors.primary : Colors.grey[100],
                 borderRadius: BorderRadius.circular(20).copyWith(
-                  bottomLeft: isUser
-                      ? const Radius.circular(20)
-                      : const Radius.circular(4),
-                  bottomRight: isUser
-                      ? const Radius.circular(4)
-                      : const Radius.circular(20),
+                  bottomLeft: isUser ? const Radius.circular(20) : const Radius.circular(4),
+                  bottomRight: isUser ? const Radius.circular(4) : const Radius.circular(20),
                 ),
                 boxShadow: [
                   BoxShadow(
@@ -326,9 +320,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
                   Text(
                     message.formattedTime,
                     style: TextStyle(
-                      color: isUser
-                          ? Colors.white.withValues(alpha: 0.7)
-                          : Colors.grey[500],
+                      color: isUser ? Colors.white.withValues(alpha: 0.7) : Colors.grey[500],
                       fontSize: 12,
                     ),
                   ),
@@ -387,8 +379,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
                         child: Image.network(
                           message.specialistImageUrl!,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Icon(
+                          errorBuilder: (context, error, stackTrace) => const Icon(
                             Icons.person_rounded,
                             color: Colors.white,
                             size: 20,
@@ -460,8 +451,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
             children: [
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () =>
-                      _viewSpecialistProfile(message.specialistId!),
+                  onPressed: () => _viewSpecialistProfile(message.specialistId!),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: BrandColors.primary,
                     foregroundColor: Colors.white,

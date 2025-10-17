@@ -17,8 +17,7 @@ class SpecialistInvitation {
     this.metadata,
   });
 
-  factory SpecialistInvitation.fromMap(Map<String, dynamic> map) =>
-      SpecialistInvitation(
+  factory SpecialistInvitation.fromMap(Map<String, dynamic> map) => SpecialistInvitation(
         id: map['id'] as String,
         orderId: map['orderId'] as String,
         specialistId: map['specialistId'] as String,
@@ -30,12 +29,9 @@ class SpecialistInvitation {
         ),
         createdAt: _parseTimestamp(map['createdAt']),
         updatedAt: _parseTimestamp(map['updatedAt']),
-        expiresAt:
-            map['expiresAt'] != null ? _parseTimestamp(map['expiresAt']) : null,
+        expiresAt: map['expiresAt'] != null ? _parseTimestamp(map['expiresAt']) : null,
         responseMessage: map['responseMessage'] as String?,
-        respondedAt: map['respondedAt'] != null
-            ? _parseTimestamp(map['respondedAt'])
-            : null,
+        respondedAt: map['respondedAt'] != null ? _parseTimestamp(map['respondedAt']) : null,
         metadata: map['metadata'] as Map<String, dynamic>?,
       );
 
@@ -67,8 +63,7 @@ class SpecialistInvitation {
         'updatedAt': Timestamp.fromDate(updatedAt),
         if (expiresAt != null) 'expiresAt': Timestamp.fromDate(expiresAt!),
         if (responseMessage != null) 'responseMessage': responseMessage,
-        if (respondedAt != null)
-          'respondedAt': Timestamp.fromDate(respondedAt!),
+        if (respondedAt != null) 'respondedAt': Timestamp.fromDate(respondedAt!),
         if (metadata != null) 'metadata': metadata,
       };
 
@@ -157,8 +152,7 @@ class InvitationTemplate {
     required this.updatedAt,
   });
 
-  factory InvitationTemplate.fromMap(Map<String, dynamic> map) =>
-      InvitationTemplate(
+  factory InvitationTemplate.fromMap(Map<String, dynamic> map) => InvitationTemplate(
         id: map['id'] as String,
         userId: map['userId'] as String,
         name: map['name'] as String,

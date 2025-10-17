@@ -275,8 +275,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: _getTransactionTypeColor(transaction.type)
-                    .withValues(alpha: 0.1),
+                color: _getTransactionTypeColor(transaction.type).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
@@ -312,9 +311,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: transaction.status == TransactionStatus.success
-                    ? Colors.green
-                    : Colors.red,
+                color: transaction.status == TransactionStatus.success ? Colors.green : Colors.red,
               ),
             ),
           ],
@@ -327,8 +324,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     });
 
     try {
-      final transactions =
-          await _paymentService.getUserTransactions(widget.userId);
+      final transactions = await _paymentService.getUserTransactions(widget.userId);
       setState(() {
         _transactions = transactions;
         _isLoading = false;
@@ -346,17 +342,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
   int _getDonationsCount() => _transactions
       .where(
-        (t) =>
-            t.type == TransactionType.donation &&
-            t.status == TransactionStatus.success,
+        (t) => t.type == TransactionType.donation && t.status == TransactionStatus.success,
       )
       .length;
 
   int _getSubscriptionsCount() => _transactions
       .where(
-        (t) =>
-            t.type == TransactionType.subscription &&
-            t.status == TransactionStatus.success,
+        (t) => t.type == TransactionType.subscription && t.status == TransactionStatus.success,
       )
       .length;
 
@@ -365,8 +357,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
     for (final transaction in _transactions) {
       if (transaction.status == TransactionStatus.success) {
-        stats[transaction.type] =
-            (stats[transaction.type] ?? 0) + transaction.amount;
+        stats[transaction.type] = (stats[transaction.type] ?? 0) + transaction.amount;
       }
     }
 

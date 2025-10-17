@@ -137,8 +137,7 @@ class _StoryWidgetState extends ConsumerState<StoryWidget> {
               child: StoryCircle(
                 story: story,
                 onTap: () => _viewStory(story),
-                onDelete:
-                    !widget.showAllStories ? () => _deleteStory(story) : null,
+                onDelete: !widget.showAllStories ? () => _deleteStory(story) : null,
               ),
             );
           },
@@ -305,9 +304,7 @@ class StoryCircle extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: story.expiresAt.isBefore(DateTime.now())
-                  ? Colors.grey
-                  : Colors.blue,
+              color: story.expiresAt.isBefore(DateTime.now()) ? Colors.grey : Colors.blue,
               width: 3,
             ),
           ),
@@ -361,9 +358,7 @@ class StoryCircle extends StatelessWidget {
                                 ),
                               )
                             : Icon(
-                                story.isVideo
-                                    ? Icons.video_library
-                                    : Icons.image,
+                                story.isVideo ? Icons.video_library : Icons.image,
                                 color: Colors.grey[400],
                               ),
                       ),
@@ -414,8 +409,7 @@ class StoryCircle extends StatelessWidget {
                   bottom: 4,
                   left: 4,
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                     decoration: BoxDecoration(
                       color: Colors.black.withValues(alpha: 0.7),
                       borderRadius: BorderRadius.circular(8),

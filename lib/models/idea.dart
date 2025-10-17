@@ -159,8 +159,7 @@ class Idea {
   int get likeCount => likesCount;
 
   /// Получить количество комментариев
-  int get commentCountValue =>
-      0; // TODO(developer): Добавить поле для комментариев
+  int get commentCountValue => 0; // TODO(developer): Добавить поле для комментариев
 
   /// Проверить, лайкнута ли идея (для совместимости)
   bool get isLiked => false; // TODO(developer): Передавать userId

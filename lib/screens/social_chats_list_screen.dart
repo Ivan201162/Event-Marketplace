@@ -1,7 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 import '../models/social_models.dart';
 import '../services/supabase_service.dart';
@@ -10,8 +10,7 @@ class SocialChatsListScreen extends ConsumerStatefulWidget {
   const SocialChatsListScreen({super.key});
 
   @override
-  ConsumerState<SocialChatsListScreen> createState() =>
-      _SocialChatsListScreenState();
+  ConsumerState<SocialChatsListScreen> createState() => _SocialChatsListScreenState();
 }
 
 class _SocialChatsListScreenState extends ConsumerState<SocialChatsListScreen> {
@@ -158,8 +157,7 @@ class _SocialChatsListScreenState extends ConsumerState<SocialChatsListScreen> {
         backgroundImage: chat.otherUser.avatarUrl != null
             ? CachedNetworkImageProvider(chat.otherUser.avatarUrl!)
             : null,
-        child:
-            chat.otherUser.avatarUrl == null ? const Icon(Icons.person) : null,
+        child: chat.otherUser.avatarUrl == null ? const Icon(Icons.person) : null,
       ),
       title: Text(
         chat.otherUser.name,

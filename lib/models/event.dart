@@ -327,8 +327,7 @@ class Event {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() =>
-      'Event(id: $id, title: $title, date: $date, status: $status)';
+  String toString() => 'Event(id: $id, title: $title, date: $date, status: $status)';
 }
 
 /// Категории событий

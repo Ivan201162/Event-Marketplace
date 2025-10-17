@@ -142,15 +142,13 @@ class ProSubscription {
       );
 
   /// Проверить, активна ли подписка
-  bool get isActive =>
-      status == SubscriptionStatus.active && DateTime.now().isBefore(endDate);
+  bool get isActive => status == SubscriptionStatus.active && DateTime.now().isBefore(endDate);
 
   /// Проверить, истекла ли подписка
   bool get isExpired => DateTime.now().isAfter(endDate);
 
   /// Проверить, в пробном периоде ли подписка
-  bool get isTrial =>
-      trialEndDate != null && DateTime.now().isBefore(trialEndDate!);
+  bool get isTrial => trialEndDate != null && DateTime.now().isBefore(trialEndDate!);
 
   /// Получить оставшиеся дни
   int get remainingDays {

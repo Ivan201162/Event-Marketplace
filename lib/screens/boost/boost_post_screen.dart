@@ -184,9 +184,7 @@ class _BoostPostScreenState extends ConsumerState<BoostPostScreen> {
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: _selectedDays != null && !_isLoading
-                      ? _processBoost
-                      : null,
+                  onPressed: _selectedDays != null && !_isLoading ? _processBoost : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.orange,
                     foregroundColor: Colors.white,
@@ -255,8 +253,7 @@ class _BoostPostScreenState extends ConsumerState<BoostPostScreen> {
         ),
       );
 
-  Widget _buildBenefitItem(IconData icon, String title, String description) =>
-      Padding(
+  Widget _buildBenefitItem(IconData icon, String title, String description) => Padding(
         padding: const EdgeInsets.only(bottom: 16),
         child: Row(
           children: [
@@ -383,4 +380,3 @@ class _BoostPostScreenState extends ConsumerState<BoostPostScreen> {
     );
   }
 }
-

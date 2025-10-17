@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 /// Анимированная строка поиска с эффектами
 class AnimatedSearchBar extends StatefulWidget {
@@ -14,8 +13,7 @@ class AnimatedSearchBar extends StatefulWidget {
   State<AnimatedSearchBar> createState() => _AnimatedSearchBarState();
 }
 
-class _AnimatedSearchBarState extends State<AnimatedSearchBar>
-    with SingleTickerProviderStateMixin {
+class _AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
@@ -101,9 +99,7 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar>
                   hintText: 'Найти специалиста…',
                   prefixIcon: Icon(
                     Icons.search,
-                    color: _isFocused
-                        ? Theme.of(context).primaryColor
-                        : Colors.grey[600],
+                    color: _isFocused ? Theme.of(context).primaryColor : Colors.grey[600],
                   ),
                   suffixIcon: _searchController.text.isNotEmpty
                       ? IconButton(
@@ -124,9 +120,7 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar>
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                     borderSide: BorderSide(
-                      color: _isFocused
-                          ? Theme.of(context).primaryColor
-                          : Colors.grey[300]!,
+                      color: _isFocused ? Theme.of(context).primaryColor : Colors.grey[300]!,
                       width: _isFocused ? 2 : 1,
                     ),
                   ),
@@ -134,7 +128,6 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar>
                     borderRadius: BorderRadius.circular(16),
                     borderSide: BorderSide(
                       color: Colors.grey[300]!,
-                      width: 1,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(

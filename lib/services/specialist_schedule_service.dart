@@ -20,15 +20,13 @@ class SpecialistScheduleService {
 
     try {
       // Получаем бронирования специалиста
-      final bookings =
-          await _getSpecialistBookings(specialistId, startDate, endDate);
+      final bookings = await _getSpecialistBookings(specialistId, startDate, endDate);
 
       // Получаем рабочие часы специалиста
       final workingHours = await _getSpecialistWorkingHours(specialistId);
 
       // Получаем исключения (отпуска, больничные и т.д.)
-      final exceptions =
-          await _getSpecialistExceptions(specialistId, startDate, endDate);
+      final exceptions = await _getSpecialistExceptions(specialistId, startDate, endDate);
 
       return SpecialistSchedule(
         specialistId: specialistId,
@@ -70,8 +68,7 @@ class SpecialistScheduleService {
           start1: startTime,
           end1: endTime,
           start2: booking.eventDate,
-          end2: booking.endDate ??
-              booking.eventDate.add(const Duration(hours: 2)),
+          end2: booking.endDate ?? booking.eventDate.add(const Duration(hours: 2)),
         )) {
           return false;
         }
@@ -87,8 +84,7 @@ class SpecialistScheduleService {
       final startHour = startTime.hour + startTime.minute / 60.0;
       final endHour = endTime.hour + endTime.minute / 60.0;
 
-      if (startHour < workingHours.startHour ||
-          endHour > workingHours.endHour) {
+      if (startHour < workingHours.startHour || endHour > workingHours.endHour) {
         return false;
       }
 
@@ -142,13 +138,9 @@ class SpecialistScheduleService {
     required Map<int, WorkingHours> workingHours,
   }) async {
     try {
-      await _firestore
-          .collection('specialist_working_hours')
-          .doc(specialistId)
-          .set({
+      await _firestore.collection('specialist_working_hours').doc(specialistId).set({
         'specialistId': specialistId,
-        'workingHours': workingHours
-            .map((key, value) => MapEntry(key.toString(), value.toMap())),
+        'workingHours': workingHours.map((key, value) => MapEntry(key.toString(), value.toMap())),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
@@ -184,10 +176,7 @@ class SpecialistScheduleService {
     String specialistId,
   ) async {
     try {
-      final doc = await _firestore
-          .collection('specialist_working_hours')
-          .doc(specialistId)
-          .get();
+      final doc = await _firestore.collection('specialist_working_hours').doc(specialistId).get();
       if (doc.exists) {
         final data = doc.data();
         final workingHoursData = data['workingHours'] as Map<String, dynamic>;
@@ -295,8 +284,7 @@ class SpecialistScheduleService {
           if (currentDate.isAfter(
                 exception.startDate.subtract(const Duration(days: 1)),
               ) &&
-              currentDate
-                  .isBefore(exception.endDate.add(const Duration(days: 1)))) {
+              currentDate.isBefore(exception.endDate.add(const Duration(days: 1)))) {
             availability[currentDate] = AvailabilityStatus.blocked;
             hasException = true;
             break;

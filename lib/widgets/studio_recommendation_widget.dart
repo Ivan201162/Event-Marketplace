@@ -34,8 +34,7 @@ class StudioRecommendationWidget extends ConsumerWidget {
                 ),
                 if (recommendation.isExpired) ...[
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.grey.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
@@ -223,8 +222,7 @@ class _CreateStudioRecommendationWidgetState
                 setState(() {
                   _selectedStudio = value;
                   if (value != null) {
-                    _studioUrlController.text =
-                        'https://example.com/studio/${value.id}';
+                    _studioUrlController.text = 'https://example.com/studio/${value.id}';
                   }
                 });
               },
@@ -262,9 +260,7 @@ class _CreateStudioRecommendationWidgetState
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: _canCreateRecommendation()
-                        ? _createRecommendation
-                        : null,
+                    onPressed: _canCreateRecommendation() ? _createRecommendation : null,
                     icon: _isLoading
                         ? const SizedBox(
                             width: 16,
@@ -294,14 +290,11 @@ class _CreateStudioRecommendationWidgetState
                 )
                 .toList(),
             loading: () => [const DropdownMenuItem(child: Text('Загрузка...'))],
-            error: (error, stack) =>
-                [DropdownMenuItem(child: Text('Ошибка: $error'))],
+            error: (error, stack) => [DropdownMenuItem(child: Text('Ошибка: $error'))],
           );
 
   bool _canCreateRecommendation() =>
-      _selectedStudio != null &&
-      _studioUrlController.text.isNotEmpty &&
-      !_isLoading;
+      _selectedStudio != null && _studioUrlController.text.isNotEmpty && !_isLoading;
 
   void _loadRecommendedStudios() {
     // Загружаем рекомендуемые студии через провайдер
@@ -320,9 +313,7 @@ class _CreateStudioRecommendationWidgetState
         studioId: _selectedStudio!.id,
         studioName: _selectedStudio!.name,
         studioUrl: _studioUrlController.text.trim(),
-        message: _messageController.text.trim().isEmpty
-            ? null
-            : _messageController.text.trim(),
+        message: _messageController.text.trim().isEmpty ? null : _messageController.text.trim(),
         expiresIn: const Duration(days: 7),
       );
 
@@ -624,15 +615,13 @@ class DualBookingWidget extends ConsumerWidget {
 }
 
 /// Провайдер для сервиса рекомендаций студий
-final studioRecommendationServiceProvider =
-    Provider<StudioRecommendationService>(
+final studioRecommendationServiceProvider = Provider<StudioRecommendationService>(
   (ref) => StudioRecommendationService(),
 );
 
 /// Провайдер для рекомендуемых студий
 final recommendedStudiosProvider =
-    FutureProvider.family<List<PhotoStudio>, String>(
-        (ref, photographerId) async {
+    FutureProvider.family<List<PhotoStudio>, String>((ref, photographerId) async {
   final service = ref.read(studioRecommendationServiceProvider);
   return service.getRecommendedStudiosForPhotographer(photographerId);
 });

@@ -38,10 +38,7 @@ class SpecialistPortfolioWidget extends StatelessWidget {
             const SizedBox(height: 16),
 
             // Портфолио
-            if (specialist.portfolio.isEmpty)
-              _buildEmptyPortfolio()
-            else
-              _buildPortfolioGrid(),
+            if (specialist.portfolio.isEmpty) _buildEmptyPortfolio() else _buildPortfolioGrid(),
           ],
         ),
       );
@@ -92,8 +89,7 @@ class SpecialistPortfolioWidget extends StatelessWidget {
           mainAxisSpacing: 12,
           childAspectRatio: 1.2,
         ),
-        itemCount:
-            specialist.portfolio.length > 6 ? 6 : specialist.portfolio.length,
+        itemCount: specialist.portfolio.length > 6 ? 6 : specialist.portfolio.length,
         itemBuilder: (context, index) {
           final portfolioItem = specialist.portfolio[index];
           return _buildPortfolioItem(portfolioItem, index);

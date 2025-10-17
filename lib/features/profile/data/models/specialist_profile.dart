@@ -25,8 +25,7 @@ class SpecialistProfileForm {
   });
 
   /// Создание из Map (из Firestore)
-  factory SpecialistProfileForm.fromMap(Map<String, dynamic> map) =>
-      SpecialistProfileForm(
+  factory SpecialistProfileForm.fromMap(Map<String, dynamic> map) => SpecialistProfileForm(
         id: map['id'] ?? '',
         userId: map['userId'] ?? '',
         name: map['name'] ?? '',
@@ -173,8 +172,7 @@ class SpecialistProfileForm {
     if (description.trim().isEmpty) {
       errors['description'] = 'Краткое описание обязательно';
     } else if (description.trim().length < 5) {
-      errors['description'] =
-          'Краткое описание должно содержать минимум 5 символов';
+      errors['description'] = 'Краткое описание должно содержать минимум 5 символов';
     }
 
     if (location.trim().isEmpty) {

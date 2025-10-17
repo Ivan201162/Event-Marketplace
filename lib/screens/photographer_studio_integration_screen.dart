@@ -23,11 +23,9 @@ class PhotographerStudioIntegrationScreen extends ConsumerStatefulWidget {
 }
 
 class _PhotographerStudioIntegrationScreenState
-    extends ConsumerState<PhotographerStudioIntegrationScreen>
-    with TickerProviderStateMixin {
+    extends ConsumerState<PhotographerStudioIntegrationScreen> with TickerProviderStateMixin {
   final PhotoStudioService _photoStudioService = PhotoStudioService();
-  final PhotographerStudioLinkService _linkService =
-      PhotographerStudioLinkService();
+  final PhotographerStudioLinkService _linkService = PhotographerStudioLinkService();
 
   List<PhotoStudio> _availableStudios = [];
   List<PhotographerStudioLink> _existingLinks = [];
@@ -200,8 +198,7 @@ class _PhotographerStudioIntegrationScreenState
         itemCount: _availableStudios.length,
         itemBuilder: (context, index) {
           final studio = _availableStudios[index];
-          final isLinked =
-              _existingLinks.any((link) => link.studioId == studio.id);
+          final isLinked = _existingLinks.any((link) => link.studioId == studio.id);
 
           return StudioSuggestionWidget(
             photoStudio: studio,
@@ -460,10 +457,8 @@ class _PhotographerStudioIntegrationScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Статус: ${_getStatusText(link.status)}'),
-            if (link.commissionRate != null)
-              Text('Комиссия: ${link.formattedCommissionRate}'),
-            if (link.notes != null && link.notes!.isNotEmpty)
-              Text('Заметки: ${link.notes}'),
+            if (link.commissionRate != null) Text('Комиссия: ${link.formattedCommissionRate}'),
+            if (link.notes != null && link.notes!.isNotEmpty) Text('Заметки: ${link.notes}'),
             Text('Создано: ${link.timeAgo}'),
           ],
         ),
@@ -619,9 +614,7 @@ class _CreateLinkDialogState extends State<_CreateLinkDialog> {
           : null;
 
       Navigator.of(context).pop({
-        'notes': _notesController.text.trim().isEmpty
-            ? null
-            : _notesController.text.trim(),
+        'notes': _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
         'commissionRate': commissionRate,
       });
     } finally {

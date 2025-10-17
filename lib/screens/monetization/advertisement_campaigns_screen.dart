@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../models/advertisement.dart';
-import '../../services/advertisement_service.dart';
 import '../../providers/auth_provider.dart';
+import '../../services/advertisement_service.dart';
 import 'create_advertisement_screen.dart';
 
 class AdvertisementCampaignsScreen extends StatefulWidget {
   const AdvertisementCampaignsScreen({super.key});
 
   @override
-  State<AdvertisementCampaignsScreen> createState() =>
-      _AdvertisementCampaignsScreenState();
+  State<AdvertisementCampaignsScreen> createState() => _AdvertisementCampaignsScreenState();
 }
 
-class _AdvertisementCampaignsScreenState
-    extends State<AdvertisementCampaignsScreen> {
+class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScreen> {
   final AdvertisementService _advertisementService = AdvertisementService();
   List<AdCampaign> _campaigns = [];
   bool _isLoading = true;
@@ -170,17 +169,14 @@ class _AdvertisementCampaignsScreenState
                     children: [
                       Text(
                         campaign.name,
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       Text(
                         campaign.isActive ? 'Активна' : 'Приостановлена',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: campaign.isActive
-                                  ? Colors.green
-                                  : Colors.grey,
+                              color: campaign.isActive ? Colors.green : Colors.grey,
                               fontWeight: FontWeight.w500,
                             ),
                       ),
@@ -195,8 +191,7 @@ class _AdvertisementCampaignsScreenState
             // Детали кампании
             _buildDetailRow('Бюджет:', '${campaign.budget.toInt()} ₽'),
             _buildDetailRow('Потрачено:', '${campaign.spentAmount.toInt()} ₽'),
-            _buildDetailRow(
-                'Остаток:', '${campaign.remainingBudget.toInt()} ₽'),
+            _buildDetailRow('Остаток:', '${campaign.remainingBudget.toInt()} ₽'),
             _buildDetailRow('Показы:', campaign.impressions.toString()),
             _buildDetailRow('Клики:', campaign.clicks.toString()),
             _buildDetailRow('CTR:', '${campaign.ctr.toStringAsFixed(2)}%'),
@@ -222,12 +217,10 @@ class _AdvertisementCampaignsScreenState
                   child: ElevatedButton(
                     onPressed: () => _manageCampaign(campaign),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          campaign.isActive ? Colors.orange : Colors.green,
+                      backgroundColor: campaign.isActive ? Colors.orange : Colors.green,
                       foregroundColor: Colors.white,
                     ),
-                    child:
-                        Text(campaign.isActive ? 'Управлять' : 'Активировать'),
+                    child: Text(campaign.isActive ? 'Управлять' : 'Активировать'),
                   ),
                 ),
               ],
@@ -262,8 +255,7 @@ class _AdvertisementCampaignsScreenState
   }
 
   Widget _buildBudgetProgress(AdCampaign campaign) {
-    final progress =
-        campaign.budget > 0 ? campaign.spentAmount / campaign.budget : 0.0;
+    final progress = campaign.budget > 0 ? campaign.spentAmount / campaign.budget : 0.0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -369,8 +361,7 @@ class _AdvertisementCampaignsScreenState
     // TODO: Реализовать управление кампанией
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text(
-            'Функция управления кампанией будет реализована в следующей версии'),
+        content: Text('Функция управления кампанией будет реализована в следующей версии'),
       ),
     );
   }

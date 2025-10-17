@@ -33,8 +33,7 @@ class AdvancedSearchFilters {
   });
 
   /// Создать из JSON
-  factory AdvancedSearchFilters.fromJson(Map<String, dynamic> json) =>
-      AdvancedSearchFilters(
+  factory AdvancedSearchFilters.fromJson(Map<String, dynamic> json) => AdvancedSearchFilters(
         searchQuery: json['searchQuery'] as String? ?? '',
         categories: (json['categories'] as List<dynamic>?)
                 ?.map(
@@ -45,8 +44,7 @@ class AdvancedSearchFilters {
                 )
                 .toList() ??
             [],
-        subcategories:
-            (json['subcategories'] as List<dynamic>?)?.cast<String>() ?? [],
+        subcategories: (json['subcategories'] as List<dynamic>?)?.cast<String>() ?? [],
         selectedCity: json['selectedCity'] != null
             ? CityRegion.fromMap(json['selectedCity'] as Map<String, dynamic>)
             : null,
@@ -65,12 +63,10 @@ class AdvancedSearchFilters {
               )
             : null,
         isAvailableNow: json['isAvailableNow'] as bool? ?? false,
-        availableFrom: json['availableFrom'] != null
-            ? DateTime.parse(json['availableFrom'] as String)
-            : null,
-        availableTo: json['availableTo'] != null
-            ? DateTime.parse(json['availableTo'] as String)
-            : null,
+        availableFrom:
+            json['availableFrom'] != null ? DateTime.parse(json['availableFrom'] as String) : null,
+        availableTo:
+            json['availableTo'] != null ? DateTime.parse(json['availableTo'] as String) : null,
         hasPortfolio: json['hasPortfolio'] as bool? ?? false,
         isVerified: json['isVerified'] as bool? ?? false,
         hasReviews: json['hasReviews'] as bool? ?? false,
@@ -342,21 +338,15 @@ class AdvancedSearchResult {
   });
 
   /// Создать из JSON
-  factory AdvancedSearchResult.fromJson(Map<String, dynamic> json) =>
-      AdvancedSearchResult(
-        specialist:
-            Specialist.fromMap(json['specialist'] as Map<String, dynamic>),
+  factory AdvancedSearchResult.fromJson(Map<String, dynamic> json) => AdvancedSearchResult(
+        specialist: Specialist.fromMap(json['specialist'] as Map<String, dynamic>),
         relevanceScore: (json['relevanceScore'] as num).toDouble(),
         distance: (json['distance'] as num?)?.toDouble(),
         city: json['city'] as String?,
         region: json['region'] as String?,
-        matchingCategories:
-            (json['matchingCategories'] as List<dynamic>?)?.cast<String>() ??
-                [],
-        matchingServices:
-            (json['matchingServices'] as List<dynamic>?)?.cast<String>() ?? [],
-        availabilityScore:
-            (json['availabilityScore'] as num?)?.toDouble() ?? 0.0,
+        matchingCategories: (json['matchingCategories'] as List<dynamic>?)?.cast<String>() ?? [],
+        matchingServices: (json['matchingServices'] as List<dynamic>?)?.cast<String>() ?? [],
+        availabilityScore: (json['availabilityScore'] as num?)?.toDouble() ?? 0.0,
         priceScore: (json['priceScore'] as num?)?.toDouble() ?? 0.0,
         ratingScore: (json['ratingScore'] as num?)?.toDouble() ?? 0.0,
         experienceScore: (json['experienceScore'] as num?)?.toDouble() ?? 0.0,
@@ -438,12 +428,10 @@ class AdvancedSearchState {
   });
 
   /// Создать из JSON
-  factory AdvancedSearchState.fromJson(Map<String, dynamic> json) =>
-      AdvancedSearchState(
+  factory AdvancedSearchState.fromJson(Map<String, dynamic> json) => AdvancedSearchState(
         results: (json['results'] as List<dynamic>?)
                 ?.map(
-                  (e) =>
-                      AdvancedSearchResult.fromJson(e as Map<String, dynamic>),
+                  (e) => AdvancedSearchResult.fromJson(e as Map<String, dynamic>),
                 )
                 .toList() ??
             [],

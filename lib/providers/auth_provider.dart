@@ -11,8 +11,7 @@ class AuthProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   // Для совместимости с существующим кодом
-  Map<String, dynamic>? get currentUser =>
-      _currentUserId != null ? {'id': _currentUserId} : null;
+  Map<String, dynamic>? get currentUser => _currentUserId != null ? {'id': _currentUserId} : null;
 
   // Методы
   Future<void> signIn(String userId) async {

@@ -73,9 +73,8 @@ class ReviewsList extends ConsumerWidget {
                   backgroundImage: review.customerAvatarUrl != null
                       ? CachedNetworkImageProvider(review.customerAvatarUrl!)
                       : null,
-                  child: review.customerAvatarUrl == null
-                      ? const Icon(Icons.person, size: 20)
-                      : null,
+                  child:
+                      review.customerAvatarUrl == null ? const Icon(Icons.person, size: 20) : null,
                 ),
                 const SizedBox(width: 12),
                 // Информация о заказчике
@@ -85,10 +84,9 @@ class ReviewsList extends ConsumerWidget {
                     children: [
                       Text(
                         review.customerName,
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       Text(
                         _formatTimestamp(review.timestamp),
@@ -119,8 +117,7 @@ class ReviewsList extends ConsumerWidget {
                   icon: const Icon(Icons.thumb_up_outlined, size: 16),
                   label: const Text('Полезно'),
                   style: TextButton.styleFrom(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
@@ -131,8 +128,7 @@ class ReviewsList extends ConsumerWidget {
                   icon: const Icon(Icons.flag_outlined, size: 16),
                   label: const Text('Пожаловаться'),
                   style: TextButton.styleFrom(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),

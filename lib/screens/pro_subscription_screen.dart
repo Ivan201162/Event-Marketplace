@@ -14,8 +14,7 @@ class ProSubscriptionScreen extends ConsumerStatefulWidget {
   final String userId;
 
   @override
-  ConsumerState<ProSubscriptionScreen> createState() =>
-      _ProSubscriptionScreenState();
+  ConsumerState<ProSubscriptionScreen> createState() => _ProSubscriptionScreenState();
 }
 
 class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
@@ -29,9 +28,7 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
 
     // Загрузить подписку пользователя
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(subscriptionStateProvider.notifier)
-          .loadUserSubscription(widget.userId);
+      ref.read(subscriptionStateProvider.notifier).loadUserSubscription(widget.userId);
     });
   }
 
@@ -88,8 +85,7 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
       );
 
   Widget _buildPaymentHistoryTab() {
-    final subscriptionAsync =
-        ref.watch(userSubscriptionProvider(widget.userId));
+    final subscriptionAsync = ref.watch(userSubscriptionProvider(widget.userId));
 
     return subscriptionAsync.when(
       data: (subscription) {
@@ -248,8 +244,7 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
             userId: widget.userId,
             plan: plan,
             paymentMethodId: 'mock_payment_method_$paymentMethod',
-            isTrial: plan ==
-                SubscriptionPlan.basic, // Базовый план с пробным периодом
+            isTrial: plan == SubscriptionPlan.basic, // Базовый план с пробным периодом
           );
 
       // Показать результат
@@ -263,9 +258,7 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
       builder: (context) => AlertDialog(
         title: Text(success ? 'Успешно!' : 'Ошибка'),
         content: Text(
-          success
-              ? 'Подписка успешно оформлена!'
-              : 'Произошла ошибка при оформлении подписки.',
+          success ? 'Подписка успешно оформлена!' : 'Произошла ошибка при оформлении подписки.',
         ),
         actions: [
           ElevatedButton(

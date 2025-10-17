@@ -17,8 +17,7 @@ class ProposalsScreen extends ConsumerStatefulWidget {
 class _ProposalsScreenState extends ConsumerState<ProposalsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final SpecialistProposalService _proposalService =
-      SpecialistProposalService();
+  final SpecialistProposalService _proposalService = SpecialistProposalService();
 
   @override
   void initState() {
@@ -64,8 +63,7 @@ class _ProposalsScreenState extends ConsumerState<ProposalsScreen>
     );
   }
 
-  Widget _buildActiveProposals(String userId) =>
-      StreamBuilder<List<SpecialistProposal>>(
+  Widget _buildActiveProposals(String userId) => StreamBuilder<List<SpecialistProposal>>(
         stream: _proposalService.watchCustomerProposals(userId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -138,8 +136,7 @@ class _ProposalsScreenState extends ConsumerState<ProposalsScreen>
         },
       );
 
-  Widget _buildAcceptedProposals(String userId) =>
-      StreamBuilder<List<SpecialistProposal>>(
+  Widget _buildAcceptedProposals(String userId) => StreamBuilder<List<SpecialistProposal>>(
         stream: _proposalService.watchCustomerProposals(userId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -165,8 +162,7 @@ class _ProposalsScreenState extends ConsumerState<ProposalsScreen>
           }
 
           final proposals = snapshot.data ?? [];
-          final acceptedProposals =
-              proposals.where((p) => p.isAccepted).toList();
+          final acceptedProposals = proposals.where((p) => p.isAccepted).toList();
 
           if (acceptedProposals.isEmpty) {
             return const Center(
@@ -208,8 +204,7 @@ class _ProposalsScreenState extends ConsumerState<ProposalsScreen>
         },
       );
 
-  Widget _buildRejectedProposals(String userId) =>
-      StreamBuilder<List<SpecialistProposal>>(
+  Widget _buildRejectedProposals(String userId) => StreamBuilder<List<SpecialistProposal>>(
         stream: _proposalService.watchCustomerProposals(userId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -235,8 +230,7 @@ class _ProposalsScreenState extends ConsumerState<ProposalsScreen>
           }
 
           final proposals = snapshot.data ?? [];
-          final rejectedProposals =
-              proposals.where((p) => p.isRejected).toList();
+          final rejectedProposals = proposals.where((p) => p.isRejected).toList();
 
           if (rejectedProposals.isEmpty) {
             return const Center(

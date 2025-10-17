@@ -10,8 +10,7 @@ class EventOrganizerScreen extends ConsumerStatefulWidget {
   const EventOrganizerScreen({super.key});
 
   @override
-  ConsumerState<EventOrganizerScreen> createState() =>
-      _EventOrganizerScreenState();
+  ConsumerState<EventOrganizerScreen> createState() => _EventOrganizerScreenState();
 }
 
 class _EventOrganizerScreenState extends ConsumerState<EventOrganizerScreen> {
@@ -348,12 +347,10 @@ class CreateOrganizerProfileScreen extends ConsumerStatefulWidget {
   const CreateOrganizerProfileScreen({super.key});
 
   @override
-  ConsumerState<CreateOrganizerProfileScreen> createState() =>
-      _CreateOrganizerProfileScreenState();
+  ConsumerState<CreateOrganizerProfileScreen> createState() => _CreateOrganizerProfileScreenState();
 }
 
-class _CreateOrganizerProfileScreenState
-    extends ConsumerState<CreateOrganizerProfileScreen> {
+class _CreateOrganizerProfileScreenState extends ConsumerState<CreateOrganizerProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final EventOrganizerService _organizerService = EventOrganizerService();
   final ErrorLoggingService _errorLogger = ErrorLoggingService();
@@ -411,29 +408,17 @@ class _CreateOrganizerProfileScreenState
         description: _descriptionController.text.trim().isNotEmpty
             ? _descriptionController.text.trim()
             : null,
-        website: _websiteController.text.trim().isNotEmpty
-            ? _websiteController.text.trim()
-            : null,
-        phone: _phoneController.text.trim().isNotEmpty
-            ? _phoneController.text.trim()
-            : null,
-        email: _emailController.text.trim().isNotEmpty
-            ? _emailController.text.trim()
-            : null,
-        address: _addressController.text.trim().isNotEmpty
-            ? _addressController.text.trim()
-            : null,
-        city: _cityController.text.trim().isNotEmpty
-            ? _cityController.text.trim()
-            : null,
+        website: _websiteController.text.trim().isNotEmpty ? _websiteController.text.trim() : null,
+        phone: _phoneController.text.trim().isNotEmpty ? _phoneController.text.trim() : null,
+        email: _emailController.text.trim().isNotEmpty ? _emailController.text.trim() : null,
+        address: _addressController.text.trim().isNotEmpty ? _addressController.text.trim() : null,
+        city: _cityController.text.trim().isNotEmpty ? _cityController.text.trim() : null,
         eventTypes: _selectedEventTypes,
         specializations: _selectedSpecializations,
         licenseNumber: _licenseNumberController.text.trim().isNotEmpty
             ? _licenseNumberController.text.trim()
             : null,
-        taxId: _taxIdController.text.trim().isNotEmpty
-            ? _taxIdController.text.trim()
-            : null,
+        taxId: _taxIdController.text.trim().isNotEmpty ? _taxIdController.text.trim() : null,
       );
 
       if (organizer != null) {
@@ -594,8 +579,7 @@ class _CreateOrganizerProfileScreenState
                         spacing: 8,
                         runSpacing: 8,
                         children: EventType.values.map((type) {
-                          final isSelected =
-                              _selectedEventTypes.contains(type.name);
+                          final isSelected = _selectedEventTypes.contains(type.name);
                           return FilterChip(
                             label: Text(type.displayName),
                             selected: isSelected,
@@ -627,8 +611,7 @@ class _CreateOrganizerProfileScreenState
                         spacing: 8,
                         runSpacing: 8,
                         children: OrganizerSpecialization.values.map((spec) {
-                          final isSelected =
-                              _selectedSpecializations.contains(spec.name);
+                          final isSelected = _selectedSpecializations.contains(spec.name);
                           return FilterChip(
                             label: Text(spec.displayName),
                             selected: isSelected,

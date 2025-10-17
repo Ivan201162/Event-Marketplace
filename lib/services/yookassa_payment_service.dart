@@ -4,11 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class YooKassaPaymentService {
-  static const String _baseUrl =
-      'https://api.yookassa.ru/v3'; // YooKassa API base URL
+  static const String _baseUrl = 'https://api.yookassa.ru/v3'; // YooKassa API base URL
   static const String _shopId = 'YOUR_SHOP_ID'; // Replace with actual shop ID
-  static const String _secretKey =
-      'YOUR_SECRET_KEY'; // Replace with actual secret key
+  static const String _secretKey = 'YOUR_SECRET_KEY'; // Replace with actual secret key
 
   /// Creates a payment request for YooKassa
   Future<YooKassaPaymentResponse> createPayment({
@@ -55,8 +53,7 @@ class YooKassaPaymentService {
         Uri.parse('$_baseUrl/payments'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization':
-              'Basic ${base64Encode(utf8.encode('$_shopId:$_secretKey'))}',
+          'Authorization': 'Basic ${base64Encode(utf8.encode('$_shopId:$_secretKey'))}',
           'Idempotence-Key': paymentId,
         },
         body: jsonEncode(requestBody),
@@ -84,8 +81,7 @@ class YooKassaPaymentService {
       final response = await http.get(
         Uri.parse('$_baseUrl/payments/$yooKassaPaymentId'),
         headers: {
-          'Authorization':
-              'Basic ${base64Encode(utf8.encode('$_shopId:$_secretKey'))}',
+          'Authorization': 'Basic ${base64Encode(utf8.encode('$_shopId:$_secretKey'))}',
         },
       );
 
@@ -117,8 +113,7 @@ class YooKassaPaymentService {
         Uri.parse('$_baseUrl/payments/$yooKassaPaymentId/capture'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization':
-              'Basic ${base64Encode(utf8.encode('$_shopId:$_secretKey'))}',
+          'Authorization': 'Basic ${base64Encode(utf8.encode('$_shopId:$_secretKey'))}',
         },
         body: jsonEncode(requestBody),
       );
@@ -140,8 +135,7 @@ class YooKassaPaymentService {
       final response = await http.post(
         Uri.parse('$_baseUrl/payments/$yooKassaPaymentId/cancel'),
         headers: {
-          'Authorization':
-              'Basic ${base64Encode(utf8.encode('$_shopId:$_secretKey'))}',
+          'Authorization': 'Basic ${base64Encode(utf8.encode('$_shopId:$_secretKey'))}',
         },
       );
 
@@ -176,8 +170,7 @@ class YooKassaPaymentService {
         Uri.parse('$_baseUrl/refunds'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization':
-              'Basic ${base64Encode(utf8.encode('$_shopId:$_secretKey'))}',
+          'Authorization': 'Basic ${base64Encode(utf8.encode('$_shopId:$_secretKey'))}',
         },
         body: jsonEncode(requestBody),
       );
@@ -222,8 +215,7 @@ class YooKassaPaymentResponse {
     required this.createdAt,
   });
 
-  factory YooKassaPaymentResponse.fromJson(Map<String, dynamic> json) =>
-      YooKassaPaymentResponse(
+  factory YooKassaPaymentResponse.fromJson(Map<String, dynamic> json) => YooKassaPaymentResponse(
         id: json['id'] as String,
         status: json['status'] as String,
         amount: double.parse(json['amount']['value'] as String),
@@ -242,9 +234,7 @@ class YooKassaPaymentResponse {
         'id': id,
         'status': status,
         'amount': {'value': amount.toStringAsFixed(2), 'currency': 'RUB'},
-        'confirmation': confirmationUrl != null
-            ? {'confirmation_url': confirmationUrl}
-            : null,
+        'confirmation': confirmationUrl != null ? {'confirmation_url': confirmationUrl} : null,
         'description': description,
         'created_at': createdAt.toIso8601String(),
       };
@@ -261,15 +251,13 @@ class YooKassaPaymentStatus {
     this.description,
   });
 
-  factory YooKassaPaymentStatus.fromJson(Map<String, dynamic> json) =>
-      YooKassaPaymentStatus(
+  factory YooKassaPaymentStatus.fromJson(Map<String, dynamic> json) => YooKassaPaymentStatus(
         id: json['id'] as String,
         status: json['status'] as String,
         amount: double.parse(json['amount']['value'] as String),
         createdAt: DateTime.parse(json['created_at'] as String),
-        capturedAt: json['captured_at'] != null
-            ? DateTime.parse(json['captured_at'] as String)
-            : null,
+        capturedAt:
+            json['captured_at'] != null ? DateTime.parse(json['captured_at'] as String) : null,
         description: json['description'] as String?,
       );
   final String id;
@@ -303,8 +291,7 @@ class YooKassaRefundResponse {
     required this.createdAt,
   });
 
-  factory YooKassaRefundResponse.fromJson(Map<String, dynamic> json) =>
-      YooKassaRefundResponse(
+  factory YooKassaRefundResponse.fromJson(Map<String, dynamic> json) => YooKassaRefundResponse(
         id: json['id'] as String,
         status: json['status'] as String,
         amount: double.parse(json['amount']['value'] as String),

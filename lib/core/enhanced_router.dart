@@ -2,48 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../models/advertisement.dart';
 import '../screens/auth_screen.dart';
+import '../screens/chat_screen.dart';
+// import '../services/admin_service.dart';
+import '../screens/chats_list_screen.dart';
 import '../screens/enhanced_settings_screen.dart';
+import '../screens/enhanced_social_home_screen.dart';
+import '../screens/ideas_feed_screen.dart';
+import '../screens/monetization/advertisement_campaigns_screen.dart';
+import '../screens/monetization/create_advertisement_screen.dart';
+import '../screens/monetization/monetization_hub_screen.dart';
+import '../screens/monetization/my_advertisements_screen.dart';
+import '../screens/monetization/my_promotions_screen.dart';
+import '../screens/monetization/my_subscriptions_screen.dart';
+import '../screens/monetization/payment_screen.dart';
+import '../screens/monetization/promotion_packages_screen.dart';
+import '../screens/monetization/subscription_plans_screen.dart';
+import '../screens/profile_edit_screen.dart';
 import '../screens/profile_screen.dart';
-import '../screens/specialists_screen.dart';
-import '../screens/splash_screen.dart';
-import '../screens/transliterate_demo_screen.dart';
-import '../screens/social_home_screen.dart';
-import '../screens/social_profile_screen.dart';
 import '../screens/social_chat_screen.dart';
 import '../screens/social_chats_list_screen.dart';
 import '../screens/social_followers_screen.dart';
 import '../screens/social_following_screen.dart';
-import '../screens/create_idea_screen.dart';
-import '../screens/edit_profile_screen.dart';
-import '../screens/enhanced_social_home_screen.dart';
-import '../screens/ideas_feed_screen.dart';
-import '../screens/monetization/monetization_hub_screen.dart';
-import '../screens/monetization/subscription_plans_screen.dart';
-import '../screens/monetization/promotion_packages_screen.dart';
-import '../screens/monetization/advertisement_campaigns_screen.dart';
-import '../screens/monetization/payment_screen.dart';
-import '../screens/monetization/my_subscriptions_screen.dart';
-import '../screens/monetization/my_promotions_screen.dart';
-import '../screens/monetization/my_advertisements_screen.dart';
-import '../screens/monetization/create_advertisement_screen.dart';
-// Временно отключено для сборки
-// import '../screens/admin/admin_dashboard_screen.dart';
-// import '../screens/admin/admin_subscription_management_screen.dart';
-// import '../screens/admin/admin_advertisement_management_screen.dart';
-// import '../screens/admin/admin_promotions_management_screen.dart';
-// import '../screens/admin/admin_referral_management_screen.dart';
-// import '../screens/admin/admin_analytics_screen.dart';
-// import '../screens/admin/admin_newsletter_management_screen.dart';
-// import '../screens/admin/admin_logs_screen.dart';
-import '../models/transaction.dart';
-import '../models/advertisement.dart';
-// import '../services/admin_service.dart';
-import '../screens/chats_list_screen.dart';
-import '../screens/chat_screen.dart';
-import '../screens/requests_screen.dart';
-import '../screens/create_request_screen.dart';
-import '../screens/profile_edit_screen.dart';
+import '../screens/social_home_screen.dart';
+import '../screens/social_profile_screen.dart';
+import '../screens/specialists_screen.dart';
+import '../screens/splash_screen.dart';
+import '../screens/transliterate_demo_screen.dart';
 
 /// Провайдер роутера приложения
 final routerProvider = Provider<GoRouter>(
@@ -193,7 +179,7 @@ final routerProvider = Provider<GoRouter>(
         name: 'create-advertisement',
         builder: (context, state) {
           final type = state.extra as AdType? ?? AdType.banner;
-          return CreateAdvertisementScreen();
+          return const CreateAdvertisementScreen();
         },
       ),
 

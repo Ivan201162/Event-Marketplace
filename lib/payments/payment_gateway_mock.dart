@@ -68,8 +68,7 @@ class PaymentGatewayMock implements PaymentGateway {
       return PaymentResult(
         paymentId: '',
         status: PaymentStatus.failed,
-        errorMessage:
-            'Сумма меньше минимальной (${getMinimumAmount()} $currency)',
+        errorMessage: 'Сумма меньше минимальной (${getMinimumAmount()} $currency)',
       );
     }
 
@@ -77,8 +76,7 @@ class PaymentGatewayMock implements PaymentGateway {
       return PaymentResult(
         paymentId: '',
         status: PaymentStatus.failed,
-        errorMessage:
-            'Сумма больше максимальной (${getMaximumAmount()} $currency)',
+        errorMessage: 'Сумма больше максимальной (${getMaximumAmount()} $currency)',
       );
     }
 
@@ -169,8 +167,7 @@ class PaymentGatewayMock implements PaymentGateway {
 
     // 95% успешных подтверждений
     final isSuccess = _random.nextDouble() > 0.05;
-    final newStatus =
-        isSuccess ? PaymentStatus.completed : PaymentStatus.failed;
+    final newStatus = isSuccess ? PaymentStatus.completed : PaymentStatus.failed;
 
     _payments[paymentId] = PaymentInfo(
       id: payment.id,
@@ -338,9 +335,7 @@ class PaymentGatewayMock implements PaymentGateway {
 
     await Future.delayed(const Duration(milliseconds: 200));
 
-    return _payments.values
-        .where((payment) => payment.bookingId == bookingId)
-        .toList()
+    return _payments.values.where((payment) => payment.bookingId == bookingId).toList()
       ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
   }
 

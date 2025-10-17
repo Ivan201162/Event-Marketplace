@@ -19,13 +19,11 @@ class DiscountNotificationCard extends StatefulWidget {
   final bool showActions;
 
   @override
-  State<DiscountNotificationCard> createState() =>
-      _DiscountNotificationCardState();
+  State<DiscountNotificationCard> createState() => _DiscountNotificationCardState();
 }
 
 class _DiscountNotificationCardState extends State<DiscountNotificationCard> {
-  final DiscountNotificationService _notificationService =
-      DiscountNotificationService();
+  final DiscountNotificationService _notificationService = DiscountNotificationService();
   bool _isLoading = false;
 
   @override
@@ -91,8 +89,7 @@ class _DiscountNotificationCardState extends State<DiscountNotificationCard> {
                         Text(
                           widget.notification.timeAgo,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.textTheme.bodySmall?.color
-                                ?.withValues(alpha: 0.7),
+                            color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                           ),
                         ),
                       ],
@@ -126,8 +123,7 @@ class _DiscountNotificationCardState extends State<DiscountNotificationCard> {
                 children: [
                   CircleAvatar(
                     radius: 20,
-                    backgroundImage: widget.notification.specialistAvatar !=
-                            null
+                    backgroundImage: widget.notification.specialistAvatar != null
                         ? NetworkImage(widget.notification.specialistAvatar!)
                         : null,
                     child: widget.notification.specialistAvatar == null
@@ -148,8 +144,7 @@ class _DiscountNotificationCardState extends State<DiscountNotificationCard> {
                         Text(
                           'предлагает скидку на вашу заявку',
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.textTheme.bodySmall?.color
-                                ?.withValues(alpha: 0.7),
+                            color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                           ),
                         ),
                       ],
@@ -182,8 +177,7 @@ class _DiscountNotificationCardState extends State<DiscountNotificationCard> {
                           widget.notification.formattedOriginalPrice,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             decoration: TextDecoration.lineThrough,
-                            color: theme.textTheme.bodyMedium?.color
-                                ?.withValues(alpha: 0.6),
+                            color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
                           ),
                         ),
                       ],
@@ -307,13 +301,11 @@ class _DiscountNotificationCardState extends State<DiscountNotificationCard> {
               ] else if (widget.notification.isNew) ...[
                 Container(
                   width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                     color: Colors.blue.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
-                    border:
-                        Border.all(color: Colors.blue.withValues(alpha: 0.3)),
+                    border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
                   ),
                   child: Row(
                     children: [

@@ -11,12 +11,10 @@ class SupportTicketDetailScreen extends ConsumerStatefulWidget {
   final String ticketId;
 
   @override
-  ConsumerState<SupportTicketDetailScreen> createState() =>
-      _SupportTicketDetailScreenState();
+  ConsumerState<SupportTicketDetailScreen> createState() => _SupportTicketDetailScreenState();
 }
 
-class _SupportTicketDetailScreenState
-    extends ConsumerState<SupportTicketDetailScreen> {
+class _SupportTicketDetailScreenState extends ConsumerState<SupportTicketDetailScreen> {
   final TextEditingController _messageController = TextEditingController();
   bool _isLoading = false;
 
@@ -136,8 +134,7 @@ class _SupportTicketDetailScreenState
       Container(
         margin: const EdgeInsets.only(bottom: 16),
         child: Row(
-          mainAxisAlignment:
-              isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+          mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: [
             if (!isUser) ...[
               CircleAvatar(
@@ -174,18 +171,14 @@ class _SupportTicketDetailScreenState
                       sender,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: isUser
-                            ? Colors.white
-                            : Theme.of(context).colorScheme.onSurface,
+                        color: isUser ? Colors.white : Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       message,
                       style: TextStyle(
-                        color: isUser
-                            ? Colors.white
-                            : Theme.of(context).colorScheme.onSurface,
+                        color: isUser ? Colors.white : Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -195,10 +188,7 @@ class _SupportTicketDetailScreenState
                         fontSize: 12,
                         color: isUser
                             ? Colors.white70
-                            : Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withValues(alpha: 0.6),
+                            : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                   ],

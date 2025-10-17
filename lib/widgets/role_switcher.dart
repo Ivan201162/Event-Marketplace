@@ -10,8 +10,7 @@ class RoleSwitcher extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentRole = ref.watch(userRoleProvider);
-    final roleString =
-        currentRole == UserRole.customer ? 'Клиент' : 'Специалист';
+    final roleString = currentRole == UserRole.customer ? 'Клиент' : 'Специалист';
 
     return Card(
       margin: const EdgeInsets.all(16),
@@ -40,18 +39,14 @@ class RoleSwitcher extends ConsumerWidget {
                   child: ElevatedButton.icon(
                     onPressed: currentRole == UserRole.customer
                         ? null
-                        : () => ref
-                            .read(userRoleProvider.notifier)
-                            .setRole(UserRole.customer),
+                        : () => ref.read(userRoleProvider.notifier).setRole(UserRole.customer),
                     icon: const Icon(Icons.person),
                     label: const Text('Клиент'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: currentRole == UserRole.customer
-                          ? Colors.blue
-                          : Colors.grey[300],
-                      foregroundColor: currentRole == UserRole.customer
-                          ? Colors.white
-                          : Colors.grey[600],
+                      backgroundColor:
+                          currentRole == UserRole.customer ? Colors.blue : Colors.grey[300],
+                      foregroundColor:
+                          currentRole == UserRole.customer ? Colors.white : Colors.grey[600],
                     ),
                   ),
                 ),
@@ -60,18 +55,14 @@ class RoleSwitcher extends ConsumerWidget {
                   child: ElevatedButton.icon(
                     onPressed: currentRole == UserRole.specialist
                         ? null
-                        : () => ref
-                            .read(userRoleProvider.notifier)
-                            .setRole(UserRole.specialist),
+                        : () => ref.read(userRoleProvider.notifier).setRole(UserRole.specialist),
                     icon: const Icon(Icons.work),
                     label: const Text('Специалист'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: currentRole == UserRole.specialist
-                          ? Colors.green
-                          : Colors.grey[300],
-                      foregroundColor: currentRole == UserRole.specialist
-                          ? Colors.white
-                          : Colors.grey[600],
+                      backgroundColor:
+                          currentRole == UserRole.specialist ? Colors.green : Colors.grey[300],
+                      foregroundColor:
+                          currentRole == UserRole.specialist ? Colors.white : Colors.grey[600],
                     ),
                   ),
                 ),

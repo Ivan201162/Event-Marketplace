@@ -55,8 +55,7 @@ class BadgeLeaderboardEntry {
     this.position = 0,
   });
 
-  factory BadgeLeaderboardEntry.fromJson(Map<String, dynamic> json) =>
-      BadgeLeaderboardEntry(
+  factory BadgeLeaderboardEntry.fromJson(Map<String, dynamic> json) => BadgeLeaderboardEntry(
         userId: json['userId'] as String,
         userName: json['userName'] as String,
         userAvatar: json['userAvatar'] as String,

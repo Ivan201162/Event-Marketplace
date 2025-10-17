@@ -12,8 +12,7 @@ class UserManagementScreen extends ConsumerStatefulWidget {
   const UserManagementScreen({super.key});
 
   @override
-  ConsumerState<UserManagementScreen> createState() =>
-      _UserManagementScreenState();
+  ConsumerState<UserManagementScreen> createState() => _UserManagementScreenState();
 }
 
 class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
@@ -60,16 +59,13 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
               child: _buildTabButton('users', 'Пользователи', Icons.people),
             ),
             Expanded(
-              child:
-                  _buildTabButton('roles', 'Роли', Icons.admin_panel_settings),
+              child: _buildTabButton('roles', 'Роли', Icons.admin_panel_settings),
             ),
             Expanded(
-              child:
-                  _buildTabButton('permissions', 'Разрешения', Icons.security),
+              child: _buildTabButton('permissions', 'Разрешения', Icons.security),
             ),
             Expanded(
-              child:
-                  _buildTabButton('statistics', 'Статистика', Icons.analytics),
+              child: _buildTabButton('statistics', 'Статистика', Icons.analytics),
             ),
           ],
         ),
@@ -86,13 +82,10 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.blue.withValues(alpha: 0.1)
-              : Colors.transparent,
+          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color:
-                isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
+            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -186,8 +179,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
           Row(
             children: [
               CircleAvatar(
-                backgroundImage:
-                    user.photoUrl != null ? NetworkImage(user.photoUrl!) : null,
+                backgroundImage: user.photoUrl != null ? NetworkImage(user.photoUrl!) : null,
                 child: user.photoUrl == null
                     ? Text(
                         user.displayName?.isNotEmpty ?? false
@@ -384,8 +376,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
                 ),
                 if (role.isSystemRole)
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.orange.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
@@ -676,8 +667,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
                 const SizedBox(height: 8),
 
                 ...UserRole.values.map((role) {
-                  final count =
-                      stats['role_${role.toString().split('.').last}'] ?? 0;
+                  final count = stats['role_${role.toString().split('.').last}'] ?? 0;
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Column(
@@ -702,8 +692,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
                               ? count / stats['total']!
                               : 0.0,
                           backgroundColor: Colors.grey.withValues(alpha: 0.3),
-                          valueColor:
-                              const AlwaysStoppedAnimation<Color>(Colors.blue),
+                          valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
                         ),
                       ],
                     ),

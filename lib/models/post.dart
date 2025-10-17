@@ -92,6 +92,5 @@ class Post {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() =>
-      'Post(id: $id, specialistId: $specialistId, text: $text)';
+  String toString() => 'Post(id: $id, specialistId: $specialistId, text: $text)';
 }

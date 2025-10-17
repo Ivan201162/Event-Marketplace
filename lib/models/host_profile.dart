@@ -29,8 +29,7 @@ class HostProfile {
       lastName: data['lastName'] as String? ?? '',
       photoUrl: data['photoUrl'] as String?,
       city: data['city'] as String? ?? '',
-      eventCategories:
-          List<String>.from((data['eventCategories'] as List<dynamic>?) ?? []),
+      eventCategories: List<String>.from((data['eventCategories'] as List<dynamic>?) ?? []),
       priceRange: PriceRange.fromMap(
         Map<String, dynamic>.from(
           (data['priceRange'] as Map<dynamic, dynamic>?) ?? {},

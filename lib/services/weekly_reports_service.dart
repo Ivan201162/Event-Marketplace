@@ -8,21 +8,18 @@ import 'analytics_service.dart';
 class WeeklyReportsService {
   factory WeeklyReportsService() => _instance;
   WeeklyReportsService._internal();
-  static final WeeklyReportsService _instance =
-      WeeklyReportsService._internal();
+  static final WeeklyReportsService _instance = WeeklyReportsService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _notifications =
-      FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _notifications = FlutterLocalNotificationsPlugin();
   final AnalyticsService _analyticsService = AnalyticsService();
 
   /// Инициализация сервиса
   Future<void> initialize() async {
     try {
       // Инициализация локальных уведомлений
-      const androidSettings =
-          AndroidInitializationSettings('@mipmap/ic_launcher');
+      const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
       const iosSettings = DarwinInitializationSettings();
       const initSettings = InitializationSettings(
         android: androidSettings,
@@ -130,8 +127,7 @@ class WeeklyReportsService {
   ) async {
     try {
       const title = '📊 Ваша недельная статистика';
-      final body =
-          'Ваш профиль просмотрели $views раз, получено $requests заявок';
+      final body = 'Ваш профиль просмотрели $views раз, получено $requests заявок';
 
       // Локальное уведомление
       await _notifications.show(
@@ -165,8 +161,7 @@ class WeeklyReportsService {
   ) async {
     try {
       const title = '📈 Ваша активность за неделю';
-      final body =
-          'Создано $totalRequests заявок, просмотрено $viewedRequests специалистами';
+      final body = 'Создано $totalRequests заявок, просмотрено $viewedRequests специалистами';
 
       // Локальное уведомление
       await _notifications.show(
@@ -344,17 +339,14 @@ class WeeklyReportsService {
   Future<void> scheduleWeeklyReports() async {
     try {
       // Проверяем, не отправлялись ли отчёты на этой неделе
-      final lastReportQuery = await _firestore
-          .collection('system_settings')
-          .doc('weekly_reports')
-          .get();
+      final lastReportQuery =
+          await _firestore.collection('system_settings').doc('weekly_reports').get();
 
       final lastReportDate = lastReportQuery.data()?['lastSent'] as Timestamp?;
       final now = DateTime.now();
 
       if (lastReportDate != null) {
-        final daysSinceLastReport =
-            now.difference(lastReportDate.toDate()).inDays;
+        final daysSinceLastReport = now.difference(lastReportDate.toDate()).inDays;
         if (daysSinceLastReport < 7) {
           // Логирование:'Отчёты уже отправлялись на этой неделе');
           return;

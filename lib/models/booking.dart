@@ -89,9 +89,7 @@ class Booking {
       ),
       message: data['message'] as String? ?? '',
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: data['updatedAt'] != null
-          ? (data['updatedAt'] as Timestamp).toDate()
-          : null,
+      updatedAt: data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : null,
       // Дополнительные поля для совместимости
       eventId: data['eventId'] as String?,
       eventTitle: data['eventTitle'] as String?,
@@ -99,20 +97,14 @@ class Booking {
       userName: data['userName'] as String?,
       userEmail: data['userEmail'] as String?,
       userPhone: data['userPhone'] as String?,
-      bookingDate: data['bookingDate'] != null
-          ? (data['bookingDate'] as Timestamp).toDate()
-          : null,
+      bookingDate: data['bookingDate'] != null ? (data['bookingDate'] as Timestamp).toDate() : null,
       participantsCount: data['participantsCount'] as int?,
       notes: data['notes'] as String?,
       organizerId: data['organizerId'] as String?,
       organizerName: data['organizerName'] as String?,
-      expiresAt: data['expiresAt'] != null
-          ? (data['expiresAt'] as Timestamp).toDate()
-          : null,
+      expiresAt: data['expiresAt'] != null ? (data['expiresAt'] as Timestamp).toDate() : null,
       specialistName: data['specialistName'] as String?,
-      endDate: data['endDate'] != null
-          ? (data['endDate'] as Timestamp).toDate()
-          : null,
+      endDate: data['endDate'] != null ? (data['endDate'] as Timestamp).toDate() : null,
       title: data['title'] as String?,
       customerName: data['customerName'] as String?,
       customerPhone: data['customerPhone'] as String?,
@@ -123,20 +115,14 @@ class Booking {
       eventLocation: data['eventLocation'] as String?,
       eventType: data['eventType'] as String?,
       startTime: data['startTime'] as String?,
-      startDate: data['startDate'] != null
-          ? (data['startDate'] as Timestamp).toDate()
-          : null,
+      startDate: data['startDate'] != null ? (data['startDate'] as Timestamp).toDate() : null,
       totalAmount: (data['totalAmount'] as num?)?.toDouble(),
       advanceAmount: (data['advanceAmount'] as num?)?.toDouble(),
       location: data['location'] as String?,
-      duration: data['duration'] != null
-          ? Duration(seconds: data['duration'] as int)
-          : null,
+      duration: data['duration'] != null ? Duration(seconds: data['duration'] as int) : null,
       specialRequests: data['specialRequests'] as String?,
       currency: data['currency'] as String?,
-      dueDate: data['dueDate'] != null
-          ? (data['dueDate'] as Timestamp).toDate()
-          : null,
+      dueDate: data['dueDate'] != null ? (data['dueDate'] as Timestamp).toDate() : null,
       isPrepayment: data['isPrepayment'] as bool?,
       isFinalPayment: data['isFinalPayment'] as bool?,
       prepaymentPaid: data['prepaymentPaid'] as bool?,
@@ -298,8 +284,7 @@ class Booking {
         'userName': userName,
         'userEmail': userEmail,
         'userPhone': userPhone,
-        'bookingDate':
-            bookingDate != null ? Timestamp.fromDate(bookingDate!) : null,
+        'bookingDate': bookingDate != null ? Timestamp.fromDate(bookingDate!) : null,
         'participantsCount': participantsCount,
         'notes': notes,
         'organizerId': organizerId,
@@ -466,8 +451,7 @@ class Booking {
   }
 
   /// Проверить, можно ли отменить бронирование
-  bool get canBeCancelled =>
-      status == BookingStatus.pending || status == BookingStatus.confirmed;
+  bool get canBeCancelled => status == BookingStatus.pending || status == BookingStatus.confirmed;
 
   /// Проверить, можно ли подтвердить бронирование
   bool get canBeConfirmed => status == BookingStatus.pending;

@@ -242,8 +242,7 @@ class AppStyles {
   );
 
   // Стили BottomNavigationBar
-  static BottomNavigationBarThemeData bottomNavigationBarTheme =
-      const BottomNavigationBarThemeData(
+  static BottomNavigationBarThemeData bottomNavigationBarTheme = const BottomNavigationBarThemeData(
     elevation: 8,
     backgroundColor: Colors.white,
     selectedItemColor: primaryColor,

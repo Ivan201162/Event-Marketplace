@@ -45,10 +45,9 @@ class SupportTicket {
         (s) => s.name == data['status'],
         orElse: () => SupportStatus.open,
       ),
-      messages: (data['messages'] as List<dynamic>?)
-              ?.map((e) => SupportMessage.fromMap(e))
-              .toList() ??
-          [],
+      messages:
+          (data['messages'] as List<dynamic>?)?.map((e) => SupportMessage.fromMap(e)).toList() ??
+              [],
       attachments: List<String>.from(data['attachments'] ?? []),
       assignedTo: data['assignedTo'],
       assignedToName: data['assignedToName'],
@@ -93,8 +92,7 @@ class SupportTicket {
         'metadata': metadata,
         'createdAt': Timestamp.fromDate(createdAt),
         'updatedAt': Timestamp.fromDate(updatedAt),
-        'resolvedAt':
-            resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
+        'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
       };
 
   SupportTicket copyWith({

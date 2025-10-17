@@ -107,8 +107,7 @@ class ErrorHandler {
         message = 'Требуется повторный вход';
         break;
       default:
-        message =
-            'Ошибка аутентификации: ${error.message ?? 'Неизвестная ошибка'}';
+        message = 'Ошибка аутентификации: ${error.message ?? 'Неизвестная ошибка'}';
     }
 
     _logError(error, context, type, code);

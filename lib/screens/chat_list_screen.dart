@@ -165,9 +165,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
                   : null,
               child: otherParticipantAvatar == null
                   ? Text(
-                      otherParticipantName.isNotEmpty
-                          ? otherParticipantName[0].toUpperCase()
-                          : '?',
+                      otherParticipantName.isNotEmpty ? otherParticipantName[0].toUpperCase() : '?',
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

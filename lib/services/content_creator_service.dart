@@ -13,9 +13,7 @@ class ContentCreatorService {
     int limit = 20,
   }) async {
     try {
-      var query = _firestore
-          .collection('contentCreators')
-          .where('isActive', isEqualTo: true);
+      var query = _firestore.collection('contentCreators').where('isActive', isEqualTo: true);
 
       if (location != null) {
         query = query.where('location', isEqualTo: location);
@@ -25,8 +23,7 @@ class ContentCreatorService {
         query = query.where('categories', arrayContainsAny: categories);
       }
 
-      final snapshot =
-          await query.orderBy('rating', descending: true).limit(limit).get();
+      final snapshot = await query.orderBy('rating', descending: true).limit(limit).get();
 
       var creators = snapshot.docs.map(ContentCreator.fromDocument).toList();
 
@@ -34,8 +31,7 @@ class ContentCreatorService {
       if (formats != null && formats.isNotEmpty) {
         creators = creators
             .where(
-              (creator) => creator.formats
-                  .any((format) => formats.contains(format.name)),
+              (creator) => creator.formats.any((format) => formats.contains(format.name)),
             )
             .toList();
       }
@@ -62,8 +58,7 @@ class ContentCreatorService {
   /// Создать контент-мейкера
   Future<String> createContentCreator(ContentCreator creator) async {
     try {
-      final docRef =
-          await _firestore.collection('contentCreators').add(creator.toMap());
+      final docRef = await _firestore.collection('contentCreators').add(creator.toMap());
       return docRef.id;
     } catch (e) {
       throw Exception('Ошибка создания контент-мейкера: $e');
@@ -116,8 +111,7 @@ class ContentCreatorService {
   ) async {
     try {
       // Получаем текущий контент-мейкер
-      final doc =
-          await _firestore.collection('contentCreators').doc(creatorId).get();
+      final doc = await _firestore.collection('contentCreators').doc(creatorId).get();
       if (!doc.exists) throw Exception('Контент-мейкер не найден');
 
       final creator = ContentCreator.fromDocument(doc);
@@ -138,8 +132,7 @@ class ContentCreatorService {
   /// Получить портфолио контент-мейкера
   Future<List<MediaShowcase>> getPortfolio(String creatorId) async {
     try {
-      final doc =
-          await _firestore.collection('contentCreators').doc(creatorId).get();
+      final doc = await _firestore.collection('contentCreators').doc(creatorId).get();
       if (!doc.exists) return [];
 
       final creator = ContentCreator.fromDocument(doc);
@@ -191,10 +184,8 @@ class ContentCreatorService {
   /// Получить популярные форматы контента
   Future<List<String>> getPopularFormats() async {
     try {
-      final snapshot = await _firestore
-          .collection('contentCreators')
-          .where('isActive', isEqualTo: true)
-          .get();
+      final snapshot =
+          await _firestore.collection('contentCreators').where('isActive', isEqualTo: true).get();
 
       final formatCounts = <String, int>{};
 
@@ -240,10 +231,8 @@ class ContentCreatorService {
       }
 
       // Получаем средний рейтинг
-      final reviewsSnapshot = await _firestore
-          .collection('reviews')
-          .where('specialistId', isEqualTo: creatorId)
-          .get();
+      final reviewsSnapshot =
+          await _firestore.collection('reviews').where('specialistId', isEqualTo: creatorId).get();
 
       double averageRating = 0;
       if (reviewsSnapshot.docs.isNotEmpty) {
@@ -290,8 +279,7 @@ class ContentCreatorService {
         final data = doc.data();
         final categoryId = data['categoryId'] as String?;
         if (categoryId != null) {
-          preferredCategories[categoryId] =
-              (preferredCategories[categoryId] ?? 0) + 1;
+          preferredCategories[categoryId] = (preferredCategories[categoryId] ?? 0) + 1;
         }
       }
 
@@ -332,10 +320,8 @@ class ContentCreatorService {
   Future<void> updateCreatorRating(String creatorId) async {
     try {
       // Получаем все отзывы
-      final reviewsSnapshot = await _firestore
-          .collection('reviews')
-          .where('specialistId', isEqualTo: creatorId)
-          .get();
+      final reviewsSnapshot =
+          await _firestore.collection('reviews').where('specialistId', isEqualTo: creatorId).get();
 
       if (reviewsSnapshot.docs.isEmpty) return;
 

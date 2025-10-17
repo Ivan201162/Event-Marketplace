@@ -56,9 +56,8 @@ class BackUtils {
   }) =>
       AppBar(
         title: Text(title),
-        leading: automaticallyImplyLeading
-            ? createBackButton(context, onPressed: onBackPressed)
-            : null,
+        leading:
+            automaticallyImplyLeading ? createBackButton(context, onPressed: onBackPressed) : null,
         actions: actions,
       );
 
@@ -212,8 +211,7 @@ class BackUtils {
   }
 
   /// Показать диалог подтверждения выхода
-  static Future<bool?> showExitConfirmationDialog(BuildContext context) =>
-      showDialog<bool>(
+  static Future<bool?> showExitConfirmationDialog(BuildContext context) => showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Выход'),
@@ -232,13 +230,11 @@ class BackUtils {
       );
 
   /// Показать диалог подтверждения возврата
-  static Future<bool?> showBackConfirmationDialog(BuildContext context) =>
-      showDialog<bool>(
+  static Future<bool?> showBackConfirmationDialog(BuildContext context) => showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Возврат'),
-          content:
-              const Text('Несохраненные изменения будут потеряны. Продолжить?'),
+          content: const Text('Несохраненные изменения будут потеряны. Продолжить?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),

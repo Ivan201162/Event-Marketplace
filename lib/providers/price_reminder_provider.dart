@@ -6,8 +6,7 @@ final priceReminderServiceProvider =
     Provider<PriceReminderService>((ref) => PriceReminderService());
 
 /// Провайдер для статистики напоминаний
-final priceReminderStatsProvider =
-    FutureProvider<Map<String, int>>((ref) async {
+final priceReminderStatsProvider = FutureProvider<Map<String, int>>((ref) async {
   final service = ref.read(priceReminderServiceProvider);
   return service.getReminderStats();
 });

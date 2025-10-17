@@ -15,15 +15,11 @@ class SpecialistSchedule {
   });
 
   /// Создать из Map
-  factory SpecialistSchedule.fromMap(Map<String, dynamic> data) =>
-      SpecialistSchedule(
+  factory SpecialistSchedule.fromMap(Map<String, dynamic> data) => SpecialistSchedule(
         specialistId: data['specialistId'] ?? '',
-        startDate: data['startDate'] != null
-            ? (data['startDate'] as Timestamp).toDate()
-            : DateTime.now(),
-        endDate: data['endDate'] != null
-            ? (data['endDate'] as Timestamp).toDate()
-            : DateTime.now(),
+        startDate:
+            data['startDate'] != null ? (data['startDate'] as Timestamp).toDate() : DateTime.now(),
+        endDate: data['endDate'] != null ? (data['endDate'] as Timestamp).toDate() : DateTime.now(),
         bookings: (data['bookings'] as List<dynamic>?)
                 ?.map((e) => Booking.fromDocument(e as DocumentSnapshot))
                 .toList() ??
@@ -82,8 +78,7 @@ class SpecialistSchedule {
           id: booking.id,
           title: booking.eventTitle,
           startTime: booking.eventDate,
-          endTime: booking.endDate ??
-              booking.eventDate.add(const Duration(hours: 2)),
+          endTime: booking.endDate ?? booking.eventDate.add(const Duration(hours: 2)),
           type: ScheduleEventType.booking,
           bookingId: booking.id,
         ),
@@ -147,8 +142,7 @@ class ScheduleException {
     );
   }
 
-  factory ScheduleException.fromMap(Map<String, dynamic> data) =>
-      ScheduleException(
+  factory ScheduleException.fromMap(Map<String, dynamic> data) => ScheduleException(
         id: data['id'] ?? '',
         specialistId: data['specialistId'] ?? '',
         type: ScheduleExceptionType.values.firstWhere(
@@ -234,12 +228,9 @@ class ScheduleEvent {
   factory ScheduleEvent.fromMap(Map<String, dynamic> data) => ScheduleEvent(
         id: data['id'] ?? '',
         title: data['title'] ?? '',
-        startTime: data['startTime'] != null
-            ? (data['startTime'] as Timestamp).toDate()
-            : DateTime.now(),
-        endTime: data['endTime'] != null
-            ? (data['endTime'] as Timestamp).toDate()
-            : DateTime.now(),
+        startTime:
+            data['startTime'] != null ? (data['startTime'] as Timestamp).toDate() : DateTime.now(),
+        endTime: data['endTime'] != null ? (data['endTime'] as Timestamp).toDate() : DateTime.now(),
         type: ScheduleEventType.values.firstWhere(
           (e) => e.name == data['type'],
           orElse: () => ScheduleEventType.booking,

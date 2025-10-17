@@ -72,13 +72,10 @@ class SecuritySettingsWidget extends ConsumerWidget {
             children: [
               Expanded(
                 child: ElevatedButton.icon(
-                  onPressed: securityState.isLoading
-                      ? null
-                      : () => _showEncryptionDialog(context, ref),
+                  onPressed:
+                      securityState.isLoading ? null : () => _showEncryptionDialog(context, ref),
                   icon: Icon(
-                    securityState.isEncryptionEnabled
-                        ? Icons.lock_open
-                        : Icons.lock,
+                    securityState.isEncryptionEnabled ? Icons.lock_open : Icons.lock,
                   ),
                   label: Text(
                     securityState.isEncryptionEnabled
@@ -86,9 +83,7 @@ class SecuritySettingsWidget extends ConsumerWidget {
                         : 'Включить шифрование',
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: securityState.isEncryptionEnabled
-                        ? Colors.red
-                        : Colors.green,
+                    backgroundColor: securityState.isEncryptionEnabled ? Colors.red : Colors.green,
                     foregroundColor: Colors.white,
                   ),
                 ),
@@ -96,8 +91,7 @@ class SecuritySettingsWidget extends ConsumerWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: securityState.isLoading ||
-                          !securityState.isEncryptionEnabled
+                  onPressed: securityState.isLoading || !securityState.isEncryptionEnabled
                       ? null
                       : () => _showUpdateKeyDialog(context, ref),
                   icon: const Icon(Icons.key),
@@ -178,9 +172,7 @@ class SecuritySettingsWidget extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
-          securityState.isEncryptionEnabled
-              ? 'Отключить шифрование'
-              : 'Включить шифрование',
+          securityState.isEncryptionEnabled ? 'Отключить шифрование' : 'Включить шифрование',
         ),
         content: Text(
           securityState.isEncryptionEnabled
@@ -202,8 +194,7 @@ class SecuritySettingsWidget extends ConsumerWidget {
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  securityState.isEncryptionEnabled ? Colors.red : Colors.green,
+              backgroundColor: securityState.isEncryptionEnabled ? Colors.red : Colors.green,
               foregroundColor: Colors.white,
             ),
             child: Text(
@@ -269,13 +260,9 @@ class PasswordValidationWidget extends ConsumerWidget {
             hintText: hint ?? 'Введите пароль',
             suffixIcon: IconButton(
               icon: Icon(
-                passwordState.isVisible
-                    ? Icons.visibility
-                    : Icons.visibility_off,
+                passwordState.isVisible ? Icons.visibility : Icons.visibility_off,
               ),
-              onPressed: () => ref
-                  .read(passwordValidationProvider.notifier)
-                  .toggleVisibility(),
+              onPressed: () => ref.read(passwordValidationProvider.notifier).toggleVisibility(),
             ),
             border: const OutlineInputBorder(),
           ),
@@ -294,8 +281,7 @@ class PasswordValidationWidget extends ConsumerWidget {
         ],
 
         // Ошибки валидации
-        if (passwordState.validation != null &&
-            passwordState.validation!.errors.isNotEmpty) ...[
+        if (passwordState.validation != null && passwordState.validation!.errors.isNotEmpty) ...[
           const SizedBox(height: 8),
           ...passwordState.validation!.errors.map(
             (error) => Padding(
@@ -335,8 +321,7 @@ class PasswordValidationWidget extends ConsumerWidget {
                 child: LinearProgressIndicator(
                   value: state.strengthProgress,
                   backgroundColor: Colors.grey[300],
-                  valueColor:
-                      AlwaysStoppedAnimation<Color>(Color(state.strengthColor)),
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(state.strengthColor)),
                 ),
               ),
               const SizedBox(width: 8),

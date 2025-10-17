@@ -35,23 +35,19 @@ class PhotographerStudioLink {
       notes: data['notes']?.toString(),
       commissionRate: (data['commissionRate'] as num?)?.toDouble(),
       isPreferred: data['isPreferred'] == true,
-      updatedAt: data['updatedAt'] != null
-          ? (data['updatedAt'] as Timestamp).toDate()
-          : null,
+      updatedAt: data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : null,
       metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
     );
   }
 
   /// Создать из Map
-  factory PhotographerStudioLink.fromMap(Map<String, dynamic> data) =>
-      PhotographerStudioLink(
+  factory PhotographerStudioLink.fromMap(Map<String, dynamic> data) => PhotographerStudioLink(
         id: data['id']?.toString() ?? '',
         photographerId: data['photographerId']?.toString() ?? '',
         studioId: data['studioId']?.toString() ?? '',
         status: data['status']?.toString() ?? 'pending',
-        createdAt: data['createdAt'] != null
-            ? (data['createdAt'] as Timestamp).toDate()
-            : DateTime.now(),
+        createdAt:
+            data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
         photographerName: data['photographerName']?.toString(),
         photographerAvatar: data['photographerAvatar']?.toString(),
         studioName: data['studioName']?.toString(),
@@ -59,9 +55,7 @@ class PhotographerStudioLink {
         notes: data['notes']?.toString(),
         commissionRate: (data['commissionRate'] as num?)?.toDouble(),
         isPreferred: data['isPreferred'] == true,
-        updatedAt: data['updatedAt'] != null
-            ? (data['updatedAt'] as Timestamp).toDate()
-            : null,
+        updatedAt: data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : null,
         metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
       );
 
@@ -206,9 +200,7 @@ class CreatePhotographerStudioLink {
   final Map<String, dynamic> metadata;
 
   bool get isValid =>
-      photographerId.isNotEmpty &&
-      studioId.isNotEmpty &&
-      photographerId != studioId;
+      photographerId.isNotEmpty && studioId.isNotEmpty && photographerId != studioId;
 
   List<String> get validationErrors {
     final errors = <String>[];
@@ -265,12 +257,8 @@ class StudioSuggestion {
       notes: data['notes']?.toString(),
       isAccepted: data['isAccepted'] == true,
       isRejected: data['isRejected'] == true,
-      acceptedAt: data['acceptedAt'] != null
-          ? (data['acceptedAt'] as Timestamp).toDate()
-          : null,
-      rejectedAt: data['rejectedAt'] != null
-          ? (data['rejectedAt'] as Timestamp).toDate()
-          : null,
+      acceptedAt: data['acceptedAt'] != null ? (data['acceptedAt'] as Timestamp).toDate() : null,
+      rejectedAt: data['rejectedAt'] != null ? (data['rejectedAt'] as Timestamp).toDate() : null,
       metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
     );
   }
@@ -312,10 +300,8 @@ class StudioSuggestion {
         'notes': notes,
         'isAccepted': isAccepted,
         'isRejected': isRejected,
-        'acceptedAt':
-            acceptedAt != null ? Timestamp.fromDate(acceptedAt!) : null,
-        'rejectedAt':
-            rejectedAt != null ? Timestamp.fromDate(rejectedAt!) : null,
+        'acceptedAt': acceptedAt != null ? Timestamp.fromDate(acceptedAt!) : null,
+        'rejectedAt': rejectedAt != null ? Timestamp.fromDate(rejectedAt!) : null,
         'metadata': metadata,
       };
 

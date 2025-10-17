@@ -49,28 +49,22 @@ class CityRegion {
       density: (data['density'] as num?)?.toDouble(),
       foundedYear: data['foundedYear'] as int?,
       description: data['description'] as String?,
-      attractions:
-          List<String>.from((data['attractions'] as List<dynamic>?) ?? []),
+      attractions: List<String>.from((data['attractions'] as List<dynamic>?) ?? []),
       neighboringCities: List<String>.from(
         (data['neighboringCities'] as List<dynamic>?) ?? [],
       ),
-      transportHubs:
-          List<String>.from((data['transportHubs'] as List<dynamic>?) ?? []),
-      economicSectors:
-          List<String>.from((data['economicSectors'] as List<dynamic>?) ?? []),
+      transportHubs: List<String>.from((data['transportHubs'] as List<dynamic>?) ?? []),
+      economicSectors: List<String>.from((data['economicSectors'] as List<dynamic>?) ?? []),
       specialistCategories: List<String>.from(
         (data['specialistCategories'] as List<dynamic>?) ?? [],
       ),
-      avgSpecialistRating:
-          (data['avgSpecialistRating'] as num?)?.toDouble() ?? 0.0,
+      avgSpecialistRating: (data['avgSpecialistRating'] as num?)?.toDouble() ?? 0.0,
       totalSpecialists: data['totalSpecialists'] as int? ?? 0,
       isActive: data['isActive'] as bool? ?? true,
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
-      updatedAt: data['updatedAt'] != null
-          ? (data['updatedAt'] as Timestamp).toDate()
-          : DateTime.now(),
+      createdAt:
+          data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
+      updatedAt:
+          data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : DateTime.now(),
     );
   }
 
@@ -91,29 +85,24 @@ class CityRegion {
         density: (data['density'] as num?)?.toDouble(),
         foundedYear: data['foundedYear'] as int?,
         description: data['description'] as String?,
-        attractions:
-            List<String>.from((data['attractions'] as List<dynamic>?) ?? []),
+        attractions: List<String>.from((data['attractions'] as List<dynamic>?) ?? []),
         neighboringCities: List<String>.from(
           (data['neighboringCities'] as List<dynamic>?) ?? [],
         ),
-        transportHubs:
-            List<String>.from((data['transportHubs'] as List<dynamic>?) ?? []),
+        transportHubs: List<String>.from((data['transportHubs'] as List<dynamic>?) ?? []),
         economicSectors: List<String>.from(
           (data['economicSectors'] as List<dynamic>?) ?? [],
         ),
         specialistCategories: List<String>.from(
           (data['specialistCategories'] as List<dynamic>?) ?? [],
         ),
-        avgSpecialistRating:
-            (data['avgSpecialistRating'] as num?)?.toDouble() ?? 0.0,
+        avgSpecialistRating: (data['avgSpecialistRating'] as num?)?.toDouble() ?? 0.0,
         totalSpecialists: data['totalSpecialists'] as int? ?? 0,
         isActive: data['isActive'] as bool? ?? true,
-        createdAt: data['createdAt'] != null
-            ? (data['createdAt'] as Timestamp).toDate()
-            : DateTime.now(),
-        updatedAt: data['updatedAt'] != null
-            ? (data['updatedAt'] as Timestamp).toDate()
-            : DateTime.now(),
+        createdAt:
+            data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
+        updatedAt:
+            data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : DateTime.now(),
       );
 
   final String id;
@@ -253,8 +242,7 @@ class CityRegion {
       economicSectors.contains('развлечения');
 
   /// Получить расстояние до другого города (приблизительно)
-  double distanceTo(CityRegion other) =>
-      coordinates.distanceTo(other.coordinates);
+  double distanceTo(CityRegion other) => coordinates.distanceTo(other.coordinates);
 
   @override
   bool operator ==(Object other) =>
@@ -265,8 +253,7 @@ class CityRegion {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() =>
-      'CityRegion(id: $id, cityName: $cityName, regionName: $regionName)';
+  String toString() => 'CityRegion(id: $id, cityName: $cityName, regionName: $regionName)';
 }
 
 /// Координаты города

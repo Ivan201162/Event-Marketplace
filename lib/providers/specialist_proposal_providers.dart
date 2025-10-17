@@ -8,8 +8,7 @@ final specialistProposalServiceProvider =
 
 /// Провайдер для создания предложения
 final createProposalProvider =
-    FutureProvider.family<SpecialistProposal, CreateSpecialistProposal>(
-        (ref, params) async {
+    FutureProvider.family<SpecialistProposal, CreateSpecialistProposal>((ref, params) async {
   final service = ref.read(specialistProposalServiceProvider);
   return service.createProposal(params);
 });
@@ -30,8 +29,7 @@ final organizerProposalsProvider =
 
 /// Провайдер для получения активных предложений клиента
 final activeCustomerProposalsProvider =
-    FutureProvider.family<List<SpecialistProposal>, String>(
-        (ref, customerId) async {
+    FutureProvider.family<List<SpecialistProposal>, String>((ref, customerId) async {
   final service = ref.read(specialistProposalServiceProvider);
   return service.getActiveCustomerProposals(customerId);
 });
@@ -51,15 +49,13 @@ final acceptProposalProvider =
 });
 
 /// Провайдер для отклонения предложения
-final rejectProposalProvider =
-    FutureProvider.family<void, String>((ref, proposalId) async {
+final rejectProposalProvider = FutureProvider.family<void, String>((ref, proposalId) async {
   final service = ref.read(specialistProposalServiceProvider);
   return service.rejectProposal(proposalId);
 });
 
 /// Провайдер для удаления предложения
-final deleteProposalProvider =
-    FutureProvider.family<void, String>((ref, proposalId) async {
+final deleteProposalProvider = FutureProvider.family<void, String>((ref, proposalId) async {
   final service = ref.read(specialistProposalServiceProvider);
   return service.deleteProposal(proposalId);
 });

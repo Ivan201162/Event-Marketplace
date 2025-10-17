@@ -76,13 +76,10 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.blue.withValues(alpha: 0.1)
-              : Colors.transparent,
+          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color:
-                isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
+            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -253,8 +250,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
             children: [
               _buildInfoChip('Категория', metric.category, Colors.blue),
               const SizedBox(width: 8),
-              if (metric.source != null)
-                _buildInfoChip('Источник', metric.source!, Colors.green),
+              if (metric.source != null) _buildInfoChip('Источник', metric.source!, Colors.green),
             ],
           ),
 
@@ -551,8 +547,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                   ),
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.blue.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
@@ -570,8 +565,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                 if (dashboard.isPublic)
                   Container(
                     margin: const EdgeInsets.only(left: 8),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.green.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
@@ -587,8 +581,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                     ),
                   ),
                 PopupMenuButton<String>(
-                  onSelected: (value) =>
-                      _handleDashboardAction(value, dashboard),
+                  onSelected: (value) => _handleDashboardAction(value, dashboard),
                   itemBuilder: (context) => [
                     const PopupMenuItem(
                       value: 'view',
@@ -802,8 +795,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
               Text('Метрика: ${alert.metricName}'),
               if (alert.triggeredAt != null)
                 Text('Сработал: ${_formatDateTime(alert.triggeredAt!)}'),
-              if (alert.resolvedAt != null)
-                Text('Решен: ${_formatDateTime(alert.resolvedAt!)}'),
+              if (alert.resolvedAt != null) Text('Решен: ${_formatDateTime(alert.resolvedAt!)}'),
               if (alert.notificationChannels.isNotEmpty) ...[
                 const SizedBox(height: 8),
                 Text(
@@ -827,8 +819,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
     // TODO(developer): Реализовать редактирование алерта
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:
-            Text('Редактирование алерта "${alert.name}" будет реализовано'),
+        content: Text('Редактирование алерта "${alert.name}" будет реализовано'),
       ),
     );
   }

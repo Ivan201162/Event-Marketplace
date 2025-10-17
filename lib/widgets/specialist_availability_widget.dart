@@ -17,12 +17,10 @@ class SpecialistAvailabilityWidget extends ConsumerStatefulWidget {
   final bool isOwner;
 
   @override
-  ConsumerState<SpecialistAvailabilityWidget> createState() =>
-      _SpecialistAvailabilityWidgetState();
+  ConsumerState<SpecialistAvailabilityWidget> createState() => _SpecialistAvailabilityWidgetState();
 }
 
-class _SpecialistAvailabilityWidgetState
-    extends ConsumerState<SpecialistAvailabilityWidget> {
+class _SpecialistAvailabilityWidgetState extends ConsumerState<SpecialistAvailabilityWidget> {
   final AvailabilityService _availabilityService = AvailabilityService();
 
   DateTime _focusedDay = DateTime.now();

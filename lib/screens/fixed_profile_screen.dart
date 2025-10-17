@@ -70,10 +70,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
       body: widget.userId.isEmpty
           ? const Center(child: Text('Ошибка загрузки профиля'))
           : StreamBuilder<DocumentSnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(widget.userId)
-                  .snapshots(),
+              stream: FirebaseFirestore.instance.collection('users').doc(widget.userId).snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -186,9 +183,8 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
             CircleAvatar(
               radius: 50,
               backgroundColor: theme.primaryColor,
-              backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
-                  ? NetworkImage(avatarUrl)
-                  : null,
+              backgroundImage:
+                  avatarUrl != null && avatarUrl.isNotEmpty ? NetworkImage(avatarUrl) : null,
               child: avatarUrl == null || avatarUrl.isEmpty
                   ? Text(
                       name.isNotEmpty ? name[0].toUpperCase() : 'U',
@@ -480,4 +476,3 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
     );
   }
 }
-

@@ -27,8 +27,7 @@ class PhotoGallery extends ConsumerWidget {
 
   Widget _buildPhotoGrid(BuildContext context, List<UserPost> posts) {
     // Фильтруем только фото
-    final photos =
-        posts.where((post) => !post.isVideo && post.imageUrl != null).toList();
+    final photos = posts.where((post) => !post.isVideo && post.imageUrl != null).toList();
 
     if (photos.isEmpty) {
       return _buildEmptyState(context);
@@ -54,8 +53,7 @@ class PhotoGallery extends ConsumerWidget {
     );
   }
 
-  Widget _buildPhotoItem(BuildContext context, UserPost photo) =>
-      GestureDetector(
+  Widget _buildPhotoItem(BuildContext context, UserPost photo) => GestureDetector(
         onTap: () => _openPhotoViewer(context, photo),
         child: Container(
           decoration: BoxDecoration(

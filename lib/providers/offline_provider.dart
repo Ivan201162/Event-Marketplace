@@ -2,12 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/offline_service.dart';
 
 /// Провайдер для статуса подключения к интернету
-final connectivityProvider =
-    StreamProvider<bool>((ref) => OfflineService.isOnline().asStream());
+final connectivityProvider = StreamProvider<bool>((ref) => OfflineService.isOnline().asStream());
 
 /// Провайдер для статуса офлайн-режима
-final offlineModeProvider =
-    NotifierProvider<OfflineModeNotifier, OfflineModeState>(
+final offlineModeProvider = NotifierProvider<OfflineModeNotifier, OfflineModeState>(
   (ref) => OfflineModeNotifier(),
 );
 
@@ -17,8 +15,7 @@ final cacheInfoProvider = NotifierProvider<CacheInfoNotifier, CacheInfoState>(
 );
 
 /// Провайдер для синхронизации данных
-final syncProvider =
-    NotifierProvider<SyncNotifier, SyncState>((ref) => SyncNotifier());
+final syncProvider = NotifierProvider<SyncNotifier, SyncState>((ref) => SyncNotifier());
 
 /// Состояние офлайн-режима
 class OfflineModeState {
@@ -418,8 +415,7 @@ class SyncNotifier extends Notifier<SyncState> {
 }
 
 /// Провайдер для проверки возможности выполнения операции
-final canPerformOperationProvider =
-    Provider.family<bool, String>((ref, operation) {
+final canPerformOperationProvider = Provider.family<bool, String>((ref, operation) {
   final offlineState = ref.watch(offlineModeProvider);
 
   if (offlineState.isOfflineMode) {
@@ -430,12 +426,10 @@ final canPerformOperationProvider =
 });
 
 /// Провайдер для получения сообщения об ограничениях
-final operationLimitationProvider =
-    Provider.family<String, String>((ref, operation) {
+final operationLimitationProvider = Provider.family<String, String>((ref, operation) {
   final offlineState = ref.watch(offlineModeProvider);
 
-  if (offlineState.isOfflineMode &&
-      !OfflineUtils.canPerformOffline(operation)) {
+  if (offlineState.isOfflineMode && !OfflineUtils.canPerformOffline(operation)) {
     return OfflineUtils.getOfflineLimitationMessage(operation);
   }
 

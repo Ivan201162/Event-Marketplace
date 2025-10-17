@@ -18,8 +18,7 @@ class ChatAttachment {
     this.metadata,
   });
 
-  factory ChatAttachment.fromMap(Map<String, dynamic> map, String id) =>
-      ChatAttachment(
+  factory ChatAttachment.fromMap(Map<String, dynamic> map, String id) => ChatAttachment(
         id: id,
         messageId: map['messageId'] as String,
         fileName: map['fileName'] as String,

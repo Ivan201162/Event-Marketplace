@@ -57,8 +57,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
               lastDay: DateTime.utc(2030, 12, 31),
               focusedDay: _focusedDay,
               calendarFormat: _calendarFormat,
-              eventLoader: (day) =>
-                  _getEventsForDay(day, const AsyncValue.loading()),
+              eventLoader: (day) => _getEventsForDay(day, const AsyncValue.loading()),
               startingDayOfWeek: StartingDayOfWeek.monday,
               calendarStyle: CalendarStyle(
                 outsideDaysVisible: false,
@@ -73,10 +72,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                   shape: BoxShape.circle,
                 ),
                 todayDecoration: BoxDecoration(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .primary
-                      .withValues(alpha: 0.5),
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
                   shape: BoxShape.circle,
                 ),
                 markerDecoration: BoxDecoration(
@@ -159,10 +155,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                       text,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.7),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                     ),
                   );
@@ -185,9 +178,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                               ? Colors.grey.withValues(alpha: 0.2)
                               : null,
                       shape: BoxShape.circle,
-                      border: isBusy
-                          ? Border.all(color: Colors.red, width: 2)
-                          : null,
+                      border: isBusy ? Border.all(color: Colors.red, width: 2) : null,
                     ),
                     child: Center(
                       child: Text(
@@ -401,10 +392,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                       event.description!,
                       style: TextStyle(
                         fontSize: 12,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.7),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -413,10 +401,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                     '${_formatTime(event.startTime)} - ${_formatTime(event.endTime)}',
                     style: TextStyle(
                       fontSize: 12,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.7),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
                   ),
                 ],
@@ -462,8 +447,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
             SnackBar(content: Text('Выбран слот: ${_formatTime(timeSlot)}')),
           );
         },
-        backgroundColor:
-            Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+        backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
         labelStyle: TextStyle(
           color: Theme.of(context).colorScheme.primary,
           fontWeight: FontWeight.w500,
@@ -478,8 +462,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
       '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
 
   /// Проверить, занята ли дата
-  bool _isDateBusy(DateTime date, AsyncValue<List<DateTime>> busyDatesAsync) =>
-      busyDatesAsync.when(
+  bool _isDateBusy(DateTime date, AsyncValue<List<DateTime>> busyDatesAsync) => busyDatesAsync.when(
         data: (busyDates) => busyDates.any(
           (busyDate) =>
               busyDate.year == date.year &&

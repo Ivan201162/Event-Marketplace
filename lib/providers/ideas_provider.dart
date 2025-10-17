@@ -45,8 +45,7 @@ List<Idea> _getTestIdeas() => [
       Idea(
         id: 'idea_2',
         title: 'Детский день рождения',
-        description:
-            'Веселая вечеринка для детей с аниматорами, конкурсами и вкусными угощениями',
+        description: 'Веселая вечеринка для детей с аниматорами, конкурсами и вкусными угощениями',
         imageUrl: 'https://picsum.photos/400/600?random=11',
         category: 'Детские праздники',
         authorId: 'author_2',
@@ -59,8 +58,7 @@ List<Idea> _getTestIdeas() => [
       Idea(
         id: 'idea_3',
         title: 'Корпоратив в стиле 80-х',
-        description:
-            'Ретро-вечеринка с музыкой 80-х, яркими костюмами и атмосферой диско',
+        description: 'Ретро-вечеринка с музыкой 80-х, яркими костюмами и атмосферой диско',
         imageUrl: 'https://picsum.photos/400/600?random=12',
         category: 'Корпоративы',
         authorId: 'author_3',
@@ -100,8 +98,7 @@ List<Idea> _getTestIdeas() => [
       Idea(
         id: 'idea_6',
         title: 'Выпускной вечер',
-        description:
-            'Торжественный выпускной с награждениями, танцами и праздничным ужином',
+        description: 'Торжественный выпускной с награждениями, танцами и праздничным ужином',
         imageUrl: 'https://picsum.photos/400/600?random=15',
         category: 'Выпускные',
         authorId: 'author_1',
@@ -114,8 +111,7 @@ List<Idea> _getTestIdeas() => [
       Idea(
         id: 'idea_7',
         title: 'Хэллоуин-вечеринка',
-        description:
-            'Страшная вечеринка с костюмами, украшениями и тематическими угощениями',
+        description: 'Страшная вечеринка с костюмами, украшениями и тематическими угощениями',
         imageUrl: 'https://picsum.photos/400/600?random=16',
         category: 'Хэллоуин',
         authorId: 'author_2',
@@ -128,8 +124,7 @@ List<Idea> _getTestIdeas() => [
       Idea(
         id: 'idea_8',
         title: 'Новогодняя ночь',
-        description:
-            'Встреча Нового года с фейерверками, подарками и праздничным настроением',
+        description: 'Встреча Нового года с фейерверками, подарками и праздничным настроением',
         imageUrl: 'https://picsum.photos/400/600?random=17',
         category: 'Новый год',
         authorId: 'author_3',
@@ -189,8 +184,7 @@ class IdeasNotifier extends StateNotifier<AsyncValue<List<Idea>>> {
   /// Поставить/убрать лайк
   Future<void> toggleLike(String ideaId, bool isLiked) async {
     try {
-      final ideaRef =
-          FirebaseFirestore.instance.collection('ideas').doc(ideaId);
+      final ideaRef = FirebaseFirestore.instance.collection('ideas').doc(ideaId);
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         final ideaDoc = await transaction.get(ideaRef);
         if (ideaDoc.exists) {
@@ -222,8 +216,7 @@ class IdeasNotifier extends StateNotifier<AsyncValue<List<Idea>>> {
   /// Добавить комментарий
   Future<void> addComment(String ideaId, String comment) async {
     try {
-      final ideaRef =
-          FirebaseFirestore.instance.collection('ideas').doc(ideaId);
+      final ideaRef = FirebaseFirestore.instance.collection('ideas').doc(ideaId);
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         final ideaDoc = await transaction.get(ideaRef);
         if (ideaDoc.exists) {
@@ -235,11 +228,7 @@ class IdeasNotifier extends StateNotifier<AsyncValue<List<Idea>>> {
       });
 
       // Добавляем комментарий в подколлекцию
-      await FirebaseFirestore.instance
-          .collection('ideas')
-          .doc(ideaId)
-          .collection('comments')
-          .add({
+      await FirebaseFirestore.instance.collection('ideas').doc(ideaId).collection('comments').add({
         'text': comment,
         'createdAt': FieldValue.serverTimestamp(),
       });
@@ -249,7 +238,6 @@ class IdeasNotifier extends StateNotifier<AsyncValue<List<Idea>>> {
   }
 }
 
-final ideasNotifierProvider =
-    StateNotifierProvider<IdeasNotifier, AsyncValue<List<Idea>>>(
+final ideasNotifierProvider = StateNotifierProvider<IdeasNotifier, AsyncValue<List<Idea>>>(
   (ref) => IdeasNotifier(),
 );

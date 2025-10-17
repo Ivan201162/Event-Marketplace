@@ -366,9 +366,7 @@ class _RejectDiscountDialogState extends State<_RejectDiscountDialog> {
       await service.rejectDiscount(
         bookingId: widget.bookingId,
         customerId: 'current_user_id', // TODO(developer): Получить из контекста
-        reason: _reasonController.text.trim().isEmpty
-            ? null
-            : _reasonController.text.trim(),
+        reason: _reasonController.text.trim().isEmpty ? null : _reasonController.text.trim(),
       );
 
       Navigator.pop(context);
@@ -480,10 +478,8 @@ class _OfferDiscountDialogState extends State<_OfferDiscountDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final newPrice =
-        double.tryParse(_newPriceController.text) ?? widget.currentPrice;
-    final discountPercent =
-        ((widget.currentPrice - newPrice) / widget.currentPrice) * 100;
+    final newPrice = double.tryParse(_newPriceController.text) ?? widget.currentPrice;
+    final discountPercent = ((widget.currentPrice - newPrice) / widget.currentPrice) * 100;
     final savings = widget.currentPrice - newPrice;
 
     return AlertDialog(
@@ -607,13 +603,9 @@ class _OfferDiscountDialogState extends State<_OfferDiscountDialog> {
         bookingId: widget.bookingId,
         oldPrice: widget.currentPrice,
         newPrice: double.parse(_newPriceController.text),
-        specialistId:
-            'current_specialist_id', // TODO(developer): Получить из контекста
-        customerId:
-            'current_customer_id', // TODO(developer): Получить из контекста
-        reason: _reasonController.text.trim().isEmpty
-            ? null
-            : _reasonController.text.trim(),
+        specialistId: 'current_specialist_id', // TODO(developer): Получить из контекста
+        customerId: 'current_customer_id', // TODO(developer): Получить из контекста
+        reason: _reasonController.text.trim().isEmpty ? null : _reasonController.text.trim(),
       );
 
       Navigator.pop(context);
@@ -635,5 +627,4 @@ class _OfferDiscountDialogState extends State<_OfferDiscountDialog> {
 }
 
 /// Провайдер для сервиса скидок
-final discountServiceProvider =
-    Provider<DiscountService>((ref) => DiscountService());
+final discountServiceProvider = Provider<DiscountService>((ref) => DiscountService());

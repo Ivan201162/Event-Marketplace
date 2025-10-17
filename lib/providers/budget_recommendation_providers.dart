@@ -3,14 +3,13 @@ import '../models/specialist.dart';
 import '../services/budget_recommendation_service.dart';
 
 /// Провайдер сервиса рекомендаций по бюджету
-final budgetRecommendationServiceProvider =
-    Provider<BudgetRecommendationService>(
+final budgetRecommendationServiceProvider = Provider<BudgetRecommendationService>(
   (ref) => BudgetRecommendationService(),
 );
 
 /// Провайдер состояния рекомендаций по бюджету
-final budgetRecommendationsProvider = StateNotifierProvider<
-    BudgetRecommendationsNotifier, BudgetRecommendationsState>((ref) {
+final budgetRecommendationsProvider =
+    StateNotifierProvider<BudgetRecommendationsNotifier, BudgetRecommendationsState>((ref) {
   final service = ref.watch(budgetRecommendationServiceProvider);
   return BudgetRecommendationsNotifier(service);
 });
@@ -44,10 +43,8 @@ class BudgetRecommendationsState {
 }
 
 /// StateNotifier для управления рекомендациями по бюджету
-class BudgetRecommendationsNotifier
-    extends StateNotifier<BudgetRecommendationsState> {
-  BudgetRecommendationsNotifier(this._service)
-      : super(const BudgetRecommendationsState());
+class BudgetRecommendationsNotifier extends StateNotifier<BudgetRecommendationsState> {
+  BudgetRecommendationsNotifier(this._service) : super(const BudgetRecommendationsState());
 
   final BudgetRecommendationService _service;
 
@@ -150,9 +147,9 @@ class BudgetRecommendationsNotifier
 }
 
 /// Провайдер для получения рекомендаций по бюджету
-final budgetRecommendationsForParamsProvider = FutureProvider.family<
-    List<BudgetRecommendation>,
-    BudgetRecommendationsParams>((ref, params) async {
+final budgetRecommendationsForParamsProvider =
+    FutureProvider.family<List<BudgetRecommendation>, BudgetRecommendationsParams>(
+        (ref, params) async {
   final service = ref.watch(budgetRecommendationServiceProvider);
 
   if (params.selectedSpecialistIds.isEmpty) {

@@ -6,8 +6,7 @@ class AutomaticRecommendationService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Получить рекомендации на основе выбранных специалистов
-  Future<List<SpecialistRecommendation>>
-      getRecommendationsForSelectedSpecialists({
+  Future<List<SpecialistRecommendation>> getRecommendationsForSelectedSpecialists({
     required List<String> selectedSpecialistIds,
     required String userId,
   }) async {
@@ -17,8 +16,7 @@ class AutomaticRecommendationService {
       }
 
       // Получаем информацию о выбранных специалистах
-      final selectedSpecialists =
-          await _getSpecialistsByIds(selectedSpecialistIds);
+      final selectedSpecialists = await _getSpecialistsByIds(selectedSpecialistIds);
 
       // Анализируем категории выбранных специалистов
       final categoryAnalysis = _analyzeSelectedCategories(selectedSpecialists);
@@ -85,10 +83,7 @@ class AutomaticRecommendationService {
   /// Сохранить рекомендацию как показанную
   Future<void> markRecommendationAsShown(String recommendationId) async {
     try {
-      await _firestore
-          .collection('automatic_recommendations')
-          .doc(recommendationId)
-          .update({
+      await _firestore.collection('automatic_recommendations').doc(recommendationId).update({
         'isShown': true,
         'shownAt': FieldValue.serverTimestamp(),
       });
@@ -100,10 +95,7 @@ class AutomaticRecommendationService {
   /// Отметить рекомендацию как принятую
   Future<void> markRecommendationAsAccepted(String recommendationId) async {
     try {
-      await _firestore
-          .collection('automatic_recommendations')
-          .doc(recommendationId)
-          .update({
+      await _firestore.collection('automatic_recommendations').doc(recommendationId).update({
         'isAccepted': true,
         'acceptedAt': FieldValue.serverTimestamp(),
       });
@@ -141,8 +133,7 @@ class AutomaticRecommendationService {
     final categoryCount = <SpecialistCategory, int>{};
 
     for (final specialist in specialists) {
-      categoryCount[specialist.category] =
-          (categoryCount[specialist.category] ?? 0) + 1;
+      categoryCount[specialist.category] = (categoryCount[specialist.category] ?? 0) + 1;
     }
 
     return categoryCount;
@@ -162,8 +153,7 @@ class AutomaticRecommendationService {
       final count = entry.value;
 
       // Получаем рекомендуемые категории для выбранной
-      final recommendedCategories =
-          _getRecommendedCategoriesFor(selectedCategory);
+      final recommendedCategories = _getRecommendedCategoriesFor(selectedCategory);
 
       for (final recommendedCategory in recommendedCategories) {
         // Получаем специалистов в рекомендуемой категории
@@ -178,8 +168,7 @@ class AutomaticRecommendationService {
             id: '${userId}_${specialist.id}_auto_${selectedCategory.name}_${recommendedCategory.name}',
             specialistId: specialist.id,
             specialist: specialist,
-            reason:
-                _getRecommendationReason(selectedCategory, recommendedCategory),
+            reason: _getRecommendationReason(selectedCategory, recommendedCategory),
             score: _calculateRecommendationScore(
                   selectedCategory,
                   recommendedCategory,
@@ -325,21 +314,14 @@ class AutomaticRecommendationService {
   ) {
     // Базовые оценки совместимости категорий
     final compatibilityScores = {
-      '${SpecialistCategory.host.name}_${SpecialistCategory.photographer.name}':
-          0.9,
-      '${SpecialistCategory.host.name}_${SpecialistCategory.videographer.name}':
-          0.9,
-      '${SpecialistCategory.host.name}_${SpecialistCategory.decorator.name}':
-          0.8,
-      '${SpecialistCategory.dj.name}_${SpecialistCategory.photographer.name}':
-          0.8,
+      '${SpecialistCategory.host.name}_${SpecialistCategory.photographer.name}': 0.9,
+      '${SpecialistCategory.host.name}_${SpecialistCategory.videographer.name}': 0.9,
+      '${SpecialistCategory.host.name}_${SpecialistCategory.decorator.name}': 0.8,
+      '${SpecialistCategory.dj.name}_${SpecialistCategory.photographer.name}': 0.8,
       '${SpecialistCategory.dj.name}_${SpecialistCategory.lighting.name}': 0.9,
-      '${SpecialistCategory.photographer.name}_${SpecialistCategory.videographer.name}':
-          0.95,
-      '${SpecialistCategory.photographer.name}_${SpecialistCategory.makeup.name}':
-          0.7,
-      '${SpecialistCategory.decorator.name}_${SpecialistCategory.florist.name}':
-          0.8,
+      '${SpecialistCategory.photographer.name}_${SpecialistCategory.videographer.name}': 0.95,
+      '${SpecialistCategory.photographer.name}_${SpecialistCategory.makeup.name}': 0.7,
+      '${SpecialistCategory.decorator.name}_${SpecialistCategory.florist.name}': 0.8,
     };
 
     final key = '${selected.name}_${recommended.name}';
@@ -362,8 +344,7 @@ class SpecialistRecommendation {
     this.isAccepted = false,
   });
 
-  factory SpecialistRecommendation.fromMap(Map<String, dynamic> data) =>
-      SpecialistRecommendation(
+  factory SpecialistRecommendation.fromMap(Map<String, dynamic> data) => SpecialistRecommendation(
         id: data['id'] as String? ?? '',
         specialistId: data['specialistId'] as String? ?? '',
         specialist: Specialist.fromMap(
@@ -371,9 +352,8 @@ class SpecialistRecommendation {
         ),
         reason: data['reason'] as String? ?? '',
         score: (data['score'] as num?)?.toDouble() ?? 0.0,
-        timestamp: data['timestamp'] != null
-            ? (data['timestamp'] as Timestamp).toDate()
-            : DateTime.now(),
+        timestamp:
+            data['timestamp'] != null ? (data['timestamp'] as Timestamp).toDate() : DateTime.now(),
         category: data['category'] != null
             ? SpecialistCategory.values.firstWhere(
                 (e) => e.name == data['category'] as String,

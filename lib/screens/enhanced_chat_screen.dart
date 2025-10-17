@@ -290,10 +290,9 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
       itemCount: _messages.length,
       itemBuilder: (context, index) {
         final message = _messages[index];
-        final isCurrentUser =
-            message.senderId == 'current_user'; // TODO: Получить из провайдера
-        final showAvatar = index == _messages.length - 1 ||
-            _messages[index + 1].senderId != message.senderId;
+        final isCurrentUser = message.senderId == 'current_user'; // TODO: Получить из провайдера
+        final showAvatar =
+            index == _messages.length - 1 || _messages[index + 1].senderId != message.senderId;
 
         return MessageBubbleWidget(
           message: message,
@@ -338,8 +337,7 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
                     height: 16,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      valueColor:
-                          AlwaysStoppedAnimation<Color>(Colors.grey[400]!),
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[400]!),
                     ),
                   ),
                 ],
@@ -351,8 +349,7 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
 
   String _getOnlineStatus() {
     final otherMember = _chat!.members.firstWhere(
-      (member) =>
-          member.userId != 'current_user', // TODO: Получить из провайдера
+      (member) => member.userId != 'current_user', // TODO: Получить из провайдера
       orElse: () => _chat!.members.first,
     );
 
@@ -438,8 +435,7 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
               ),
               ListTile(
                 leading: const Icon(Icons.delete, color: Colors.red),
-                title:
-                    const Text('Удалить', style: TextStyle(color: Colors.red)),
+                title: const Text('Удалить', style: TextStyle(color: Colors.red)),
                 onTap: () {
                   Navigator.pop(context);
                   _deleteMessage(message);

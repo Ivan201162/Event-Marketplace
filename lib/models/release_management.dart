@@ -41,10 +41,8 @@ class Release {
         commitHash: map['commitHash'] as String?,
         features: List<String>.from(map['features'] as List<dynamic>? ?? []),
         bugFixes: List<String>.from(map['bugFixes'] as List<dynamic>? ?? []),
-        breakingChanges:
-            List<String>.from(map['breakingChanges'] as List<dynamic>? ?? []),
-        dependencies:
-            List<String>.from(map['dependencies'] as List<dynamic>? ?? []),
+        breakingChanges: List<String>.from(map['breakingChanges'] as List<dynamic>? ?? []),
+        dependencies: List<String>.from(map['dependencies'] as List<dynamic>? ?? []),
         metadata: Map<String, dynamic>.from(
           map['metadata'] as Map<dynamic, dynamic>? ?? {},
         ),
@@ -54,12 +52,10 @@ class Release {
         releaseNotes: map['releaseNotes'],
         downloadUrl: map['downloadUrl'],
         changelogUrl: map['changelogUrl'],
-        scheduledDate: map['scheduledDate'] != null
-            ? (map['scheduledDate'] as Timestamp).toDate()
-            : null,
-        releasedDate: map['releasedDate'] != null
-            ? (map['releasedDate'] as Timestamp).toDate()
-            : null,
+        scheduledDate:
+            map['scheduledDate'] != null ? (map['scheduledDate'] as Timestamp).toDate() : null,
+        releasedDate:
+            map['releasedDate'] != null ? (map['releasedDate'] as Timestamp).toDate() : null,
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         updatedAt: (map['updatedAt'] as Timestamp).toDate(),
         createdBy: map['createdBy'] ?? '',
@@ -111,10 +107,8 @@ class Release {
         'releaseNotes': releaseNotes,
         'downloadUrl': downloadUrl,
         'changelogUrl': changelogUrl,
-        'scheduledDate':
-            scheduledDate != null ? Timestamp.fromDate(scheduledDate!) : null,
-        'releasedDate':
-            releasedDate != null ? Timestamp.fromDate(releasedDate!) : null,
+        'scheduledDate': scheduledDate != null ? Timestamp.fromDate(scheduledDate!) : null,
+        'releasedDate': releasedDate != null ? Timestamp.fromDate(releasedDate!) : null,
         'createdAt': Timestamp.fromDate(createdAt),
         'updatedAt': Timestamp.fromDate(updatedAt),
         'createdBy': createdBy,
@@ -177,8 +171,7 @@ class Release {
       );
 
   @override
-  String toString() =>
-      'Release(id: $id, version: $version, name: $name, status: $status)';
+  String toString() => 'Release(id: $id, version: $version, name: $name, status: $status)';
 
   @override
   bool operator ==(Object other) {
@@ -265,8 +258,7 @@ enum ReleaseStatus {
   final String value;
   final String displayName;
 
-  static ReleaseStatus fromString(String value) =>
-      ReleaseStatus.values.firstWhere(
+  static ReleaseStatus fromString(String value) => ReleaseStatus.values.firstWhere(
         (status) => status.value == value,
         orElse: () => ReleaseStatus.draft,
       );
@@ -344,12 +336,8 @@ class ReleasePlan {
         releaseIds: List<String>.from(map['releaseIds'] ?? []),
         milestones: List<String>.from(map['milestones'] ?? []),
         requirements: Map<String, dynamic>.from(map['requirements'] ?? {}),
-        targetDate: map['targetDate'] != null
-            ? (map['targetDate'] as Timestamp).toDate()
-            : null,
-        actualDate: map['actualDate'] != null
-            ? (map['actualDate'] as Timestamp).toDate()
-            : null,
+        targetDate: map['targetDate'] != null ? (map['targetDate'] as Timestamp).toDate() : null,
+        actualDate: map['actualDate'] != null ? (map['actualDate'] as Timestamp).toDate() : null,
         status: PlanStatus.fromString(map['status'] ?? 'draft'),
         notes: map['notes'],
         createdAt: (map['createdAt'] as Timestamp).toDate(),
@@ -383,10 +371,8 @@ class ReleasePlan {
         'releaseIds': releaseIds,
         'milestones': milestones,
         'requirements': requirements,
-        'targetDate':
-            targetDate != null ? Timestamp.fromDate(targetDate!) : null,
-        'actualDate':
-            actualDate != null ? Timestamp.fromDate(actualDate!) : null,
+        'targetDate': targetDate != null ? Timestamp.fromDate(targetDate!) : null,
+        'actualDate': actualDate != null ? Timestamp.fromDate(actualDate!) : null,
         'status': status.value,
         'notes': notes,
         'createdAt': Timestamp.fromDate(createdAt),
@@ -433,8 +419,7 @@ class ReleasePlan {
       );
 
   @override
-  String toString() =>
-      'ReleasePlan(id: $id, name: $name, version: $version, status: $status)';
+  String toString() => 'ReleasePlan(id: $id, name: $name, version: $version, status: $status)';
 
   @override
   bool operator ==(Object other) {
@@ -524,12 +509,8 @@ class Deployment {
         deployUrl: map['deployUrl'],
         config: Map<String, dynamic>.from(map['config'] ?? {}),
         logs: List<String>.from(map['logs'] ?? []),
-        startedAt: map['startedAt'] != null
-            ? (map['startedAt'] as Timestamp).toDate()
-            : null,
-        completedAt: map['completedAt'] != null
-            ? (map['completedAt'] as Timestamp).toDate()
-            : null,
+        startedAt: map['startedAt'] != null ? (map['startedAt'] as Timestamp).toDate() : null,
+        completedAt: map['completedAt'] != null ? (map['completedAt'] as Timestamp).toDate() : null,
         errorMessage: map['errorMessage'],
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         updatedAt: (map['updatedAt'] as Timestamp).toDate(),
@@ -562,8 +543,7 @@ class Deployment {
         'config': config,
         'logs': logs,
         'startedAt': startedAt != null ? Timestamp.fromDate(startedAt!) : null,
-        'completedAt':
-            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+        'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
         'errorMessage': errorMessage,
         'createdAt': Timestamp.fromDate(createdAt),
         'updatedAt': Timestamp.fromDate(updatedAt),
@@ -634,8 +614,7 @@ enum DeploymentStatus {
   final String value;
   final String displayName;
 
-  static DeploymentStatus fromString(String value) =>
-      DeploymentStatus.values.firstWhere(
+  static DeploymentStatus fromString(String value) => DeploymentStatus.values.firstWhere(
         (status) => status.value == value,
         orElse: () => DeploymentStatus.pending,
       );

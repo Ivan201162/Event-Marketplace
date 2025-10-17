@@ -39,9 +39,7 @@ class IdeaService {
       return snapshot.docs.map(Idea.fromDocument).toList();
     } on Exception {
       // Возвращаем тестовые данные в случае ошибки
-      return _getTestIdeas()
-          .where((idea) => idea.category == category)
-          .toList();
+      return _getTestIdeas().where((idea) => idea.category == category).toList();
     }
   }
 
@@ -57,9 +55,7 @@ class IdeaService {
       return snapshot.docs.map(Idea.fromDocument).toList();
     } on Exception {
       // Возвращаем тестовые данные в случае ошибки
-      return _getTestIdeas()
-          .where((idea) => idea.authorId == authorId)
-          .toList();
+      return _getTestIdeas().where((idea) => idea.authorId == authorId).toList();
     }
   }
 
@@ -76,8 +72,7 @@ class IdeaService {
       return snapshot.docs.map(Idea.fromDocument).toList();
     } on Exception {
       // Возвращаем тестовые данные в случае ошибки
-      return _getTestIdeas()
-        ..sort((a, b) => b.likesCount.compareTo(a.likesCount));
+      return _getTestIdeas()..sort((a, b) => b.likesCount.compareTo(a.likesCount));
     }
   }
 
@@ -229,8 +224,7 @@ class IdeaService {
         title: 'Свадебная фотосессия в парке',
         description:
             'Романтическая фотосессия молодоженов среди цветущих деревьев. Идеально для весенних свадеб.',
-        imageUrl:
-            'https://placehold.co/400x300/FF6B6B/white?text=Wedding+Photo',
+        imageUrl: 'https://placehold.co/400x300/FF6B6B/white?text=Wedding+Photo',
         category: 'Свадьбы',
         authorId: 'specialist1',
         authorName: 'Анна Петрова',
@@ -246,8 +240,7 @@ class IdeaService {
         title: 'Корпоративный тимбилдинг',
         description:
             'Активные игры и квесты для сплочения команды. Отличный способ улучшить командную работу.',
-        imageUrl:
-            'https://placehold.co/400x300/4ECDC4/white?text=Team+Building',
+        imageUrl: 'https://placehold.co/400x300/4ECDC4/white?text=Team+Building',
         category: 'Корпоративы',
         authorId: 'specialist2',
         authorName: 'Михаил Соколов',
@@ -261,8 +254,7 @@ class IdeaService {
       Idea(
         id: '3',
         title: 'Детский день рождения в стиле пиратов',
-        description:
-            'Приключенческая вечеринка с поиском сокровищ, костюмами и пиратскими играми.',
+        description: 'Приключенческая вечеринка с поиском сокровищ, костюмами и пиратскими играми.',
         imageUrl: 'https://placehold.co/400x300/45B7D1/white?text=Pirate+Party',
         category: 'Детские праздники',
         authorId: 'specialist3',
@@ -277,8 +269,7 @@ class IdeaService {
       Idea(
         id: '4',
         title: 'Портретная съемка в студии',
-        description:
-            'Профессиональная портретная съемка с качественным освещением и реквизитом.',
+        description: 'Профессиональная портретная съемка с качественным освещением и реквизитом.',
         imageUrl: 'https://placehold.co/400x300/96CEB4/white?text=Portrait',
         category: 'Фотосессии',
         authorId: 'specialist1',
@@ -293,10 +284,8 @@ class IdeaService {
       Idea(
         id: '5',
         title: 'Видеосъемка свадебного танца',
-        description:
-            'Кинематографическая съемка первого танца молодоженов с красивыми ракурсами.',
-        imageUrl:
-            'https://placehold.co/400x300/FFEAA7/white?text=Wedding+Dance',
+        description: 'Кинематографическая съемка первого танца молодоженов с красивыми ракурсами.',
+        imageUrl: 'https://placehold.co/400x300/FFEAA7/white?text=Wedding+Dance',
         category: 'Видеосъемка',
         authorId: 'specialist4',
         authorName: 'Дмитрий Волков',
@@ -310,8 +299,7 @@ class IdeaService {
       Idea(
         id: '6',
         title: 'Тематическая вечеринка в стиле 80-х',
-        description:
-            'Ретро-вечеринка с музыкой, костюмами и атмосферой 1980-х годов.',
+        description: 'Ретро-вечеринка с музыкой, костюмами и атмосферой 1980-х годов.',
         imageUrl: 'https://placehold.co/400x300/FF7675/white?text=80s+Party',
         category: 'Дни рождения',
         authorId: 'specialist2',
@@ -342,10 +330,8 @@ class IdeaService {
       Idea(
         id: '8',
         title: 'Корпоративная новогодняя вечеринка',
-        description:
-            'Праздничное мероприятие с конкурсами, подарками и новогодней атмосферой.',
-        imageUrl:
-            'https://placehold.co/400x300/00B894/white?text=New+Year+Party',
+        description: 'Праздничное мероприятие с конкурсами, подарками и новогодней атмосферой.',
+        imageUrl: 'https://placehold.co/400x300/00B894/white?text=New+Year+Party',
         category: 'Корпоративы',
         authorId: 'specialist4',
         authorName: 'Дмитрий Волков',

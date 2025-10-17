@@ -12,12 +12,10 @@ class TransactionHistoryScreen extends ConsumerStatefulWidget {
   const TransactionHistoryScreen({super.key});
 
   @override
-  ConsumerState<TransactionHistoryScreen> createState() =>
-      _TransactionHistoryScreenState();
+  ConsumerState<TransactionHistoryScreen> createState() => _TransactionHistoryScreenState();
 }
 
-class _TransactionHistoryScreenState
-    extends ConsumerState<TransactionHistoryScreen> {
+class _TransactionHistoryScreenState extends ConsumerState<TransactionHistoryScreen> {
   final FinancialReportService _reportService = FinancialReportService();
 
   List<Payment> _transactions = [];
@@ -124,8 +122,7 @@ class _TransactionHistoryScreenState
               padding: const EdgeInsets.all(16),
               child: Center(
                 child: ElevatedButton(
-                  onPressed:
-                      _hasMore ? () => _loadTransactions(loadMore: true) : null,
+                  onPressed: _hasMore ? () => _loadTransactions(loadMore: true) : null,
                   child: const Text('Загрузить еще'),
                 ),
               ),

@@ -14,12 +14,10 @@ class CreateReviewExtendedScreen extends ConsumerStatefulWidget {
   final String bookingId;
 
   @override
-  ConsumerState<CreateReviewExtendedScreen> createState() =>
-      _CreateReviewExtendedScreenState();
+  ConsumerState<CreateReviewExtendedScreen> createState() => _CreateReviewExtendedScreenState();
 }
 
-class _CreateReviewExtendedScreenState
-    extends ConsumerState<CreateReviewExtendedScreen> {
+class _CreateReviewExtendedScreenState extends ConsumerState<CreateReviewExtendedScreen> {
   final _formKey = GlobalKey<FormState>();
   final _commentController = TextEditingController();
   final _tagsController = TextEditingController();
@@ -330,8 +328,7 @@ class _CreateReviewExtendedScreenState
                                 fit: BoxFit.cover,
                                 width: 100,
                                 height: 100,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    Container(
+                                errorBuilder: (context, error, stackTrace) => Container(
                                   color: Colors.grey[200],
                                   child: const Icon(Icons.error),
                                 ),
@@ -460,8 +457,7 @@ class _CreateReviewExtendedScreenState
 
   Future<void> _pickPhotos() async {
     try {
-      final images =
-          await _reviewService.pickPhotos(maxImages: 10 - _media.length);
+      final images = await _reviewService.pickPhotos(maxImages: 10 - _media.length);
       for (final image in images) {
         final media = await _reviewService.uploadPhoto(image);
         if (media != null) {

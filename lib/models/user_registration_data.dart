@@ -89,10 +89,9 @@ class UserRegistrationData {
       bankAccount: data['bankAccount'] as String?,
       correspondentAccount: data['correspondentAccount'] as String?,
       bik: data['bik'] as String?,
-      documents: (data['documents'] as List<dynamic>?)
-              ?.map((doc) => DocumentData.fromMap(doc))
-              .toList() ??
-          [],
+      documents:
+          (data['documents'] as List<dynamic>?)?.map((doc) => DocumentData.fromMap(doc)).toList() ??
+              [],
       specializations: List<String>.from(data['specializations'] ?? []),
       bio: data['bio'] as String?,
       portfolioImages: List<String>.from(data['portfolioImages'] ?? []),
@@ -400,6 +399,5 @@ class DocumentData {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() =>
-      'DocumentData(id: $id, type: $type, fullNumber: $fullNumber)';
+  String toString() => 'DocumentData(id: $id, type: $type, fullNumber: $fullNumber)';
 }

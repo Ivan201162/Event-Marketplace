@@ -19,8 +19,7 @@ class ChatBotMessage {
     required this.isFromBot,
   });
 
-  factory ChatBotMessage.fromMap(Map<String, dynamic> map, String id) =>
-      ChatBotMessage(
+  factory ChatBotMessage.fromMap(Map<String, dynamic> map, String id) => ChatBotMessage(
         id: id,
         chatId: map['chatId'] as String,
         message: map['message'] as String,
@@ -34,9 +33,7 @@ class ChatBotMessage {
                 .toList()
             : null,
         cards: map['cards'] != null
-            ? (map['cards'] as List)
-                .map((e) => BotCard.fromMap(e as Map<String, dynamic>))
-                .toList()
+            ? (map['cards'] as List).map((e) => BotCard.fromMap(e as Map<String, dynamic>)).toList()
             : null,
         listItems: map['listItems'] != null
             ? (map['listItems'] as List)
@@ -147,9 +144,8 @@ class BotListItem {
         title: map['title'] as String,
         subtitle: map['subtitle'] as String?,
         imageUrl: map['imageUrl'] as String?,
-        button: map['button'] != null
-            ? BotButton.fromMap(map['button'] as Map<String, dynamic>)
-            : null,
+        button:
+            map['button'] != null ? BotButton.fromMap(map['button'] as Map<String, dynamic>) : null,
       );
   final String title;
   final String? subtitle;
@@ -202,8 +198,7 @@ class BotConversation {
     required this.isActive,
   });
 
-  factory BotConversation.fromMap(Map<String, dynamic> map, String id) =>
-      BotConversation(
+  factory BotConversation.fromMap(Map<String, dynamic> map, String id) => BotConversation(
         id: id,
         chatId: map['chatId'] as String,
         userId: map['userId'] as String,

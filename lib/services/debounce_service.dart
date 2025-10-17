@@ -73,5 +73,4 @@ class DebounceService {
 }
 
 /// Провайдер для DebounceService
-final debounceServiceProvider =
-    Provider<DebounceService>((ref) => DebounceService());
+final debounceServiceProvider = Provider<DebounceService>((ref) => DebounceService());

@@ -24,8 +24,7 @@ class FeedPostCard extends StatefulWidget {
   State<FeedPostCard> createState() => _FeedPostCardState();
 }
 
-class _FeedPostCardState extends State<FeedPostCard>
-    with SingleTickerProviderStateMixin {
+class _FeedPostCardState extends State<FeedPostCard> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   bool _isLiked = false;

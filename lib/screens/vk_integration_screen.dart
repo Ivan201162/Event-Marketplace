@@ -15,8 +15,7 @@ class VKIntegrationScreen extends ConsumerStatefulWidget {
   final AppUser specialist;
 
   @override
-  ConsumerState<VKIntegrationScreen> createState() =>
-      _VKIntegrationScreenState();
+  ConsumerState<VKIntegrationScreen> createState() => _VKIntegrationScreenState();
 }
 
 class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
@@ -157,8 +156,7 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
               TextField(
                 controller: _vkUrlController,
                 decoration: InputDecoration(
-                  hintText:
-                      'https://vk.com/username или https://vk.com/id123456',
+                  hintText: 'https://vk.com/username или https://vk.com/id123456',
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.link),
                   suffixIcon: IconButton(
@@ -240,12 +238,9 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
               children: [
                 CircleAvatar(
                   radius: 30,
-                  backgroundImage: _vkProfile!.photoUrl != null
-                      ? NetworkImage(_vkProfile!.photoUrl!)
-                      : null,
-                  child: _vkProfile!.photoUrl == null
-                      ? const Icon(Icons.person, size: 30)
-                      : null,
+                  backgroundImage:
+                      _vkProfile!.photoUrl != null ? NetworkImage(_vkProfile!.photoUrl!) : null,
+                  child: _vkProfile!.photoUrl == null ? const Icon(Icons.person, size: 30) : null,
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -350,8 +345,7 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
         ),
       );
 
-  Widget _buildHelpItem(IconData icon, String title, String description) =>
-      Padding(
+  Widget _buildHelpItem(IconData icon, String title, String description) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -435,12 +429,9 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
                 children: [
                   CircleAvatar(
                     radius: 40,
-                    backgroundImage: _vkProfile!.photoUrl != null
-                        ? NetworkImage(_vkProfile!.photoUrl!)
-                        : null,
-                    child: _vkProfile!.photoUrl == null
-                        ? const Icon(Icons.person, size: 40)
-                        : null,
+                    backgroundImage:
+                        _vkProfile!.photoUrl != null ? NetworkImage(_vkProfile!.photoUrl!) : null,
+                    child: _vkProfile!.photoUrl == null ? const Icon(Icons.person, size: 40) : null,
                   ),
                   const SizedBox(width: 16),
                   Expanded(
@@ -611,12 +602,9 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
                 children: [
                   CircleAvatar(
                     radius: 20,
-                    backgroundImage: _vkProfile!.photoUrl != null
-                        ? NetworkImage(_vkProfile!.photoUrl!)
-                        : null,
-                    child: _vkProfile!.photoUrl == null
-                        ? const Icon(Icons.person)
-                        : null,
+                    backgroundImage:
+                        _vkProfile!.photoUrl != null ? NetworkImage(_vkProfile!.photoUrl!) : null,
+                    child: _vkProfile!.photoUrl == null ? const Icon(Icons.person) : null,
                   ),
                   const SizedBox(width: 12),
                   Expanded(

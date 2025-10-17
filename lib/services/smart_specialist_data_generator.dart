@@ -120,8 +120,8 @@ class SmartSpecialistDataGenerator {
 
         // Генерируем цены в зависимости от категории
         final priceRange = _getPriceRangeForCategory(category);
-        final price = priceRange['min'] +
-            _random.nextDouble() * (priceRange['max'] - priceRange['min']);
+        final price =
+            priceRange['min'] + _random.nextDouble() * (priceRange['max'] - priceRange['min']);
 
         // Генерируем рейтинг
         final rating = 3.0 + _random.nextDouble() * 2.0; // 3.0-5.0
@@ -176,22 +176,18 @@ class SmartSpecialistDataGenerator {
           workingHours: _generateWorkingHours(),
           availableDates: availableDates,
           busyDates: busyDates,
-          createdAt:
-              DateTime.now().subtract(Duration(days: _random.nextInt(365))),
+          createdAt: DateTime.now().subtract(Duration(days: _random.nextInt(365))),
           updatedAt: DateTime.now(),
-          lastActiveAt:
-              DateTime.now().subtract(Duration(hours: _random.nextInt(24))),
+          lastActiveAt: DateTime.now().subtract(Duration(hours: _random.nextInt(24))),
           // Новые поля для интеллектуального поиска
           styles: specialistStyles,
           keywords: _generateKeywords(category, city, specialistStyles),
-          reputationScore:
-              _calculateReputationScore(rating, reviewCount, experienceYears),
+          reputationScore: _calculateReputationScore(rating, reviewCount, experienceYears),
           searchTags: _generateSearchTags(category, city, specialistStyles),
           eventTypes: _generateEventTypes(category),
           specializations: _generateSpecializations(category),
           workingStyle: _generateWorkingStyle(category),
-          personalityTraits:
-              _generatePersonalityTraits(rating, experienceYears),
+          personalityTraits: _generatePersonalityTraits(rating, experienceYears),
           availabilityPattern: _generateAvailabilityPattern(),
           clientPreferences: _generateClientPreferences(price),
           performanceMetrics: _generatePerformanceMetrics(rating, reviewCount),
@@ -281,8 +277,7 @@ class SmartSpecialistDataGenerator {
       ],
     };
 
-    final categoryDescriptions =
-        descriptions[category] ?? ['Профессиональный специалист'];
+    final categoryDescriptions = descriptions[category] ?? ['Профессиональный специалист'];
     return categoryDescriptions[_random.nextInt(categoryDescriptions.length)];
   }
 
@@ -322,8 +317,7 @@ class SmartSpecialistDataGenerator {
     final images = <String>[];
 
     for (var i = 0; i < count; i++) {
-      images
-          .add('https://picsum.photos/400/300?random=${_random.nextInt(1000)}');
+      images.add('https://picsum.photos/400/300?random=${_random.nextInt(1000)}');
     }
 
     return images;

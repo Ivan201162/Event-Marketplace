@@ -27,9 +27,7 @@ class SupportService {
         createdAt: DateTime.now(),
       );
 
-      final docRef = await _firestore
-          .collection('support_messages')
-          .add(supportMessage.toMap());
+      final docRef = await _firestore.collection('support_messages').add(supportMessage.toMap());
 
       // Если сообщение от пользователя, генерируем ответ бота
       if (type == MessageType.text && isFromUser) {
@@ -56,8 +54,7 @@ class SupportService {
   /// Получить FAQ
   Future<List<FAQItem>> getFAQ() async {
     try {
-      final snapshot =
-          await _firestore.collection('faq').orderBy('order').get();
+      final snapshot = await _firestore.collection('faq').orderBy('order').get();
 
       return snapshot.docs.map(FAQItem.fromDocument).toList();
     } on Exception {
@@ -75,10 +72,8 @@ class SupportService {
 
       // Простой поиск по заголовку и содержанию
       return allFAQ.where((item) {
-        final titleMatch =
-            item.title.toLowerCase().contains(query.toLowerCase());
-        final contentMatch =
-            item.content.toLowerCase().contains(query.toLowerCase());
+        final titleMatch = item.title.toLowerCase().contains(query.toLowerCase());
+        final contentMatch = item.content.toLowerCase().contains(query.toLowerCase());
         return titleMatch || contentMatch;
       }).toList();
     } on Exception {
@@ -160,17 +155,13 @@ class SupportService {
   /// Получить статистику поддержки
   Future<SupportStats> getSupportStats(String userId) async {
     try {
-      final messagesSnapshot = await _firestore
-          .collection('support_messages')
-          .where('userId', isEqualTo: userId)
-          .get();
+      final messagesSnapshot =
+          await _firestore.collection('support_messages').where('userId', isEqualTo: userId).get();
 
-      final messages =
-          messagesSnapshot.docs.map(SupportMessage.fromDocument).toList();
+      final messages = messagesSnapshot.docs.map(SupportMessage.fromDocument).toList();
 
       final totalMessages = messages.length;
-      final unreadMessages =
-          messages.where((m) => !m.isRead && !m.isFromUser).length;
+      final unreadMessages = messages.where((m) => !m.isRead && !m.isFromUser).length;
       final lastMessage = messages.isNotEmpty ? messages.last.createdAt : null;
 
       return SupportStats(
@@ -299,12 +290,9 @@ class SupportMessage {
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       isFromUser: data['isFromUser'] as bool? ?? true,
       isRead: data['isRead'] as bool? ?? false,
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
-      readAt: data['readAt'] != null
-          ? (data['readAt'] as Timestamp).toDate()
-          : null,
+      createdAt:
+          data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
+      readAt: data['readAt'] != null ? (data['readAt'] as Timestamp).toDate() : null,
     );
   }
 

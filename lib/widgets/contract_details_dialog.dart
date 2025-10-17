@@ -18,8 +18,7 @@ class ContractDetailsDialog extends StatefulWidget {
 }
 
 class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
-  final PaymentIntegrationService _paymentIntegrationService =
-      PaymentIntegrationService();
+  final PaymentIntegrationService _paymentIntegrationService = PaymentIntegrationService();
   List<Payment> _payments = [];
   bool _isLoadingPayments = true;
 
@@ -31,8 +30,8 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
 
   Future<void> _loadPayments() async {
     try {
-      final payments = await _paymentIntegrationService
-          .getBookingPayments(widget.contract.bookingId);
+      final payments =
+          await _paymentIntegrationService.getBookingPayments(widget.contract.bookingId);
       setState(() {
         _payments = payments;
         _isLoadingPayments = false;
@@ -80,12 +79,10 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: _getStatusColor(widget.contract.status)
-                    .withValues(alpha: 0.1),
+                color: _getStatusColor(widget.contract.status).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: _getStatusColor(widget.contract.status)
-                      .withValues(alpha: 0.3),
+                  color: _getStatusColor(widget.contract.status).withValues(alpha: 0.3),
                 ),
               ),
               child: Text(
@@ -132,14 +129,12 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
                         _buildDetailRow(
                           theme,
                           'Дата создания',
-                          DateFormat('dd.MM.yyyy HH:mm')
-                              .format(widget.contract.createdAt),
+                          DateFormat('dd.MM.yyyy HH:mm').format(widget.contract.createdAt),
                         ),
                         _buildDetailRow(
                           theme,
                           'Дата обновления',
-                          DateFormat('dd.MM.yyyy HH:mm')
-                              .format(widget.contract.updatedAt),
+                          DateFormat('dd.MM.yyyy HH:mm').format(widget.contract.updatedAt),
                         ),
                       ],
                     ),
@@ -243,8 +238,7 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest
-                  .withValues(alpha: 0.3),
+              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -254,8 +248,7 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
         ],
       );
 
-  Widget _buildDetailRow(ThemeData theme, String label, String value) =>
-      Padding(
+  Widget _buildDetailRow(ThemeData theme, String label, String value) => Padding(
         padding: const EdgeInsets.only(bottom: 8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -309,9 +302,7 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
       ];
     }
 
-    return _payments
-        .map((payment) => _buildPaymentItem(theme, payment))
-        .toList();
+    return _payments.map((payment) => _buildPaymentItem(theme, payment)).toList();
   }
 
   Widget _buildPaymentItem(ThemeData theme, Payment payment) => Container(

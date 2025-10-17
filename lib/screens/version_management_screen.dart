@@ -9,12 +9,10 @@ class VersionManagementScreen extends ConsumerStatefulWidget {
   const VersionManagementScreen({super.key});
 
   @override
-  ConsumerState<VersionManagementScreen> createState() =>
-      _VersionManagementScreenState();
+  ConsumerState<VersionManagementScreen> createState() => _VersionManagementScreenState();
 }
 
-class _VersionManagementScreenState
-    extends ConsumerState<VersionManagementScreen> {
+class _VersionManagementScreenState extends ConsumerState<VersionManagementScreen> {
   final VersionManagementService _versionService = VersionManagementService();
   List<AppVersion> _versions = [];
   List<AppUpdate> _updates = [];
@@ -57,12 +55,10 @@ class _VersionManagementScreenState
               child: _buildTabButton('versions', 'Версии', Icons.apps),
             ),
             Expanded(
-              child:
-                  _buildTabButton('updates', 'Обновления', Icons.system_update),
+              child: _buildTabButton('updates', 'Обновления', Icons.system_update),
             ),
             Expanded(
-              child:
-                  _buildTabButton('statistics', 'Статистика', Icons.analytics),
+              child: _buildTabButton('statistics', 'Статистика', Icons.analytics),
             ),
           ],
         ),
@@ -79,13 +75,10 @@ class _VersionManagementScreenState
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.blue.withValues(alpha: 0.1)
-              : Colors.transparent,
+          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color:
-                isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
+            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -238,8 +231,7 @@ class _VersionManagementScreenState
               if (version.isForced)
                 Container(
                   margin: const EdgeInsets.only(left: 8),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.red.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
@@ -331,8 +323,7 @@ class _VersionManagementScreenState
                 version.isAvailable ? Colors.green : Colors.grey,
               ),
               const SizedBox(width: 8),
-              if (version.downloadUrl != null)
-                _buildInfoChip('Скачать', 'Да', Colors.blue),
+              if (version.downloadUrl != null) _buildInfoChip('Скачать', 'Да', Colors.blue),
             ],
           ),
 
@@ -903,8 +894,7 @@ class _VersionManagementScreenState
               try {
                 await _versionService.activateVersion(
                   version.id,
-                  activatedBy:
-                      'current_user', // TODO(developer): Получить ID текущего пользователя
+                  activatedBy: 'current_user', // TODO(developer): Получить ID текущего пользователя
                 );
                 _loadData();
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -933,8 +923,7 @@ class _VersionManagementScreenState
     // TODO(developer): Реализовать просмотр статистики версии
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:
-            Text('Статистика версии "${version.version}" будет реализована'),
+        content: Text('Статистика версии "${version.version}" будет реализована'),
       ),
     );
   }

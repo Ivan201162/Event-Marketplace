@@ -146,8 +146,7 @@ class AppReviewSettingsWidget extends ConsumerWidget {
                 child: ElevatedButton.icon(
                   onPressed: reviewState.isRequesting
                       ? null
-                      : () =>
-                          ref.read(appReviewProvider.notifier).requestReview(),
+                      : () => ref.read(appReviewProvider.notifier).requestReview(),
                   icon: reviewState.isRequesting
                       ? const SizedBox(
                           width: 16,
@@ -165,9 +164,7 @@ class AppReviewSettingsWidget extends ConsumerWidget {
                 child: OutlinedButton.icon(
                   onPressed: reviewState.isRequesting
                       ? null
-                      : () => ref
-                          .read(appReviewProvider.notifier)
-                          .openStoreListing(),
+                      : () => ref.read(appReviewProvider.notifier).openStoreListing(),
                   icon: const Icon(Icons.store),
                   label: const Text('Открыть магазин'),
                 ),
@@ -182,9 +179,7 @@ class AppReviewSettingsWidget extends ConsumerWidget {
             children: [
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: () => ref
-                      .read(appReviewProvider.notifier)
-                      .openReviewPageInBrowser(),
+                  onPressed: () => ref.read(appReviewProvider.notifier).openReviewPageInBrowser(),
                   icon: const Icon(Icons.open_in_browser),
                   label: const Text('Отзыв в браузере'),
                 ),
@@ -446,8 +441,7 @@ class ReviewRecommendationsWidget extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Color(ref.watch(reviewTimingColorProvider))
-                  .withValues(alpha: 0.1),
+              color: Color(ref.watch(reviewTimingColorProvider)).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: Color(ref.watch(reviewTimingColorProvider)),

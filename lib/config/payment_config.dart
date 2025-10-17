@@ -5,17 +5,13 @@ class PaymentConfig {
 
   // Stripe Configuration
   // Получите ключи на https://dashboard.stripe.com/apikeys
-  static const String stripePublishableKey =
-      'pk_test_51O8X...'; // Замените на ваш publishable key
-  static const String stripeSecretKey =
-      'sk_test_51O8X...'; // Замените на ваш secret key
+  static const String stripePublishableKey = 'pk_test_51O8X...'; // Замените на ваш publishable key
+  static const String stripeSecretKey = 'sk_test_51O8X...'; // Замените на ваш secret key
 
   // YooKassa Configuration
   // Получите ключи на https://yookassa.ru/my
-  static const String yookassaShopId =
-      'your_shop_id'; // Замените на ваш Shop ID
-  static const String yookassaSecretKey =
-      'test_your_secret_key'; // Замените на ваш secret key
+  static const String yookassaShopId = 'your_shop_id'; // Замените на ваш Shop ID
+  static const String yookassaSecretKey = 'test_your_secret_key'; // Замените на ваш secret key
 
   // CloudPayments Configuration
   static const String cloudPaymentsPublicId = 'your_public_id';
@@ -243,14 +239,7 @@ class PaymentConfig {
   // ========================================
 
   // Суммы для быстрых донатов
-  static const List<double> quickDonationAmounts = [
-    100.0,
-    300.0,
-    500.0,
-    1000.0,
-    2000.0,
-    5000.0
-  ];
+  static const List<double> quickDonationAmounts = [100.0, 300.0, 500.0, 1000.0, 2000.0, 5000.0];
 
   // Минимальные суммы для разных типов платежей
   static const Map<String, double> minAmounts = {
@@ -277,8 +266,7 @@ class PaymentConfig {
   static const bool enableLogging = true;
 
   // URL для редиректов после оплаты
-  static const String successUrl =
-      'https://eventmarketplace.app/payment/success';
+  static const String successUrl = 'https://eventmarketplace.app/payment/success';
   static const String cancelUrl = 'https://eventmarketplace.app/payment/cancel';
 
   // ========================================

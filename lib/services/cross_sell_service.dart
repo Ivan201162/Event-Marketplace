@@ -35,9 +35,7 @@ class CrossSellService {
         },
       );
 
-      final docRef = await _firestore
-          .collection('crossSellSuggestions')
-          .add(suggestion.toMap());
+      final docRef = await _firestore.collection('crossSellSuggestions').add(suggestion.toMap());
 
       // Отправляем уведомление клиенту
       await _sendCrossSellNotification(customerId, suggestion);
@@ -60,19 +58,14 @@ class CrossSellService {
       final now = DateTime.now();
 
       // Обновляем статус предложения
-      await _firestore
-          .collection('crossSellSuggestions')
-          .doc(suggestionId)
-          .update({
+      await _firestore.collection('crossSellSuggestions').doc(suggestionId).update({
         'status': CrossSellStatus.accepted.name,
         'respondedAt': Timestamp.fromDate(now),
       });
 
       // Получаем данные предложения
-      final suggestionDoc = await _firestore
-          .collection('crossSellSuggestions')
-          .doc(suggestionId)
-          .get();
+      final suggestionDoc =
+          await _firestore.collection('crossSellSuggestions').doc(suggestionId).get();
       if (!suggestionDoc.exists) throw Exception('Предложение не найдено');
 
       final suggestion = CrossSellSuggestion.fromDocument(suggestionDoc);
@@ -105,20 +98,15 @@ class CrossSellService {
       final now = DateTime.now();
 
       // Обновляем статус предложения
-      await _firestore
-          .collection('crossSellSuggestions')
-          .doc(suggestionId)
-          .update({
+      await _firestore.collection('crossSellSuggestions').doc(suggestionId).update({
         'status': CrossSellStatus.rejected.name,
         'respondedAt': Timestamp.fromDate(now),
         'metadata.rejectionReason': reason,
       });
 
       // Получаем данные предложения
-      final suggestionDoc = await _firestore
-          .collection('crossSellSuggestions')
-          .doc(suggestionId)
-          .get();
+      final suggestionDoc =
+          await _firestore.collection('crossSellSuggestions').doc(suggestionId).get();
       if (!suggestionDoc.exists) throw Exception('Предложение не найдено');
 
       final suggestion = CrossSellSuggestion.fromDocument(suggestionDoc);
@@ -140,10 +128,7 @@ class CrossSellService {
   /// Отметить предложение как просмотренное
   Future<void> markAsViewed(String suggestionId) async {
     try {
-      await _firestore
-          .collection('crossSellSuggestions')
-          .doc(suggestionId)
-          .update({
+      await _firestore.collection('crossSellSuggestions').doc(suggestionId).update({
         'status': CrossSellStatus.viewed.name,
         'viewedAt': Timestamp.fromDate(DateTime.now()),
       });
@@ -191,10 +176,7 @@ class CrossSellService {
   /// Получить кросс-селл предложение по ID
   Future<CrossSellSuggestion?> getSuggestion(String suggestionId) async {
     try {
-      final doc = await _firestore
-          .collection('crossSellSuggestions')
-          .doc(suggestionId)
-          .get();
+      final doc = await _firestore.collection('crossSellSuggestions').doc(suggestionId).get();
       if (doc.exists) {
         return CrossSellSuggestion.fromDocument(doc);
       }
@@ -212,15 +194,13 @@ class CrossSellService {
   }) async {
     try {
       // Получаем данные бронирования
-      final bookingDoc =
-          await _firestore.collection('bookings').doc(bookingId).get();
+      final bookingDoc = await _firestore.collection('bookings').doc(bookingId).get();
       if (!bookingDoc.exists) throw Exception('Бронирование не найдено');
 
       final booking = Booking.fromDocument(bookingDoc);
 
       // Определяем рекомендуемые категории на основе текущего бронирования
-      final recommendedCategories =
-          _getRecommendedCategories(booking.serviceId);
+      final recommendedCategories = _getRecommendedCategories(booking.serviceId);
 
       // Получаем специалистов по рекомендуемым категориям
       final specialists = <CrossSellItem>[];
@@ -280,12 +260,9 @@ class CrossSellService {
         'acceptedSuggestions': acceptedSuggestions,
         'rejectedSuggestions': rejectedSuggestions,
         'viewedSuggestions': viewedSuggestions,
-        'acceptanceRate': totalSuggestions > 0
-            ? (acceptedSuggestions / totalSuggestions) * 100
-            : 0,
+        'acceptanceRate': totalSuggestions > 0 ? (acceptedSuggestions / totalSuggestions) * 100 : 0,
         'totalRevenue': totalRevenue,
-        'averageSuggestionValue':
-            acceptedSuggestions > 0 ? totalRevenue / acceptedSuggestions : 0,
+        'averageSuggestionValue': acceptedSuggestions > 0 ? totalRevenue / acceptedSuggestions : 0,
       };
     } catch (e) {
       throw Exception('Ошибка получения статистики кросс-селл предложений: $e');
@@ -331,8 +308,7 @@ class CrossSellService {
   ) async {
     try {
       // Получаем FCM токены клиента
-      final customerDoc =
-          await _firestore.collection('users').doc(customerId).get();
+      final customerDoc = await _firestore.collection('users').doc(customerId).get();
       if (!customerDoc.exists) return;
 
       final customerData = customerDoc.data();
@@ -342,8 +318,7 @@ class CrossSellService {
 
       final notification = {
         'title': 'Рекомендуем дополнить заказ',
-        'body':
-            'Добавьте ${suggestion.itemCount} специалистов для полного комплекта услуг',
+        'body': 'Добавьте ${suggestion.itemCount} специалистов для полного комплекта услуг',
         'data': {
           'type': 'cross_sell_suggestion',
           'suggestionId': suggestion.id,
@@ -378,8 +353,7 @@ class CrossSellService {
   ) async {
     try {
       // Получаем FCM токены специалиста
-      final specialistDoc =
-          await _firestore.collection('users').doc(specialistId).get();
+      final specialistDoc = await _firestore.collection('users').doc(specialistId).get();
       if (!specialistDoc.exists) return;
 
       final specialistData = specialistDoc.data();
@@ -389,8 +363,7 @@ class CrossSellService {
 
       final notification = {
         'title': 'Кросс-селл предложение принято',
-        'body':
-            'Клиент принял ваше предложение ${suggestion.itemCount} дополнительных услуг',
+        'body': 'Клиент принял ваше предложение ${suggestion.itemCount} дополнительных услуг',
         'data': {
           'type': 'cross_sell_accepted',
           'suggestionId': suggestion.id,
@@ -427,8 +400,7 @@ class CrossSellService {
   ) async {
     try {
       // Получаем FCM токены специалиста
-      final specialistDoc =
-          await _firestore.collection('users').doc(specialistId).get();
+      final specialistDoc = await _firestore.collection('users').doc(specialistId).get();
       if (!specialistDoc.exists) return;
 
       final specialistData = specialistDoc.data();
@@ -525,10 +497,8 @@ class CrossSellService {
         if (specialist.id == excludeSpecialistId) continue;
 
         // Получаем название категории
-        final categoryDoc =
-            await _firestore.collection('categories').doc(categoryId).get();
-        final categoryName =
-            categoryDoc.data()?['name'] ?? 'Неизвестная категория';
+        final categoryDoc = await _firestore.collection('categories').doc(categoryId).get();
+        final categoryName = categoryDoc.data()?['name'] ?? 'Неизвестная категория';
 
         specialists.add(
           CrossSellItem(
@@ -538,8 +508,7 @@ class CrossSellService {
             categoryId: categoryId,
             categoryName: categoryName,
             description: specialist.description,
-            estimatedPrice:
-                specialist.hourlyRate ?? specialist.pricePerHour ?? 0.0,
+            estimatedPrice: specialist.hourlyRate ?? specialist.pricePerHour ?? 0.0,
             imageUrl: specialist.avatarUrl,
           ),
         );

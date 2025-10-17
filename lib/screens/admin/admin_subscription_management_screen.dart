@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-import '../../services/marketing_admin_service.dart';
+
 import '../../models/subscription_plan.dart';
-import '../../models/admin_models.dart';
+import '../../services/marketing_admin_service.dart';
 
 class AdminSubscriptionManagementScreen extends StatefulWidget {
   const AdminSubscriptionManagementScreen({super.key});
@@ -13,8 +13,7 @@ class AdminSubscriptionManagementScreen extends StatefulWidget {
       _AdminSubscriptionManagementScreenState();
 }
 
-class _AdminSubscriptionManagementScreenState
-    extends State<AdminSubscriptionManagementScreen> {
+class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionManagementScreen> {
   final MarketingAdminService _marketingService = MarketingAdminService();
   final Uuid _uuid = const Uuid();
   final TextEditingController _nameController = TextEditingController();
@@ -97,8 +96,7 @@ class _AdminSubscriptionManagementScreenState
                       Text('Цена: ${plan.price}₽'),
                       Text('Длительность: ${plan.durationDays} дней'),
                       Text('Тип: ${_getPlanTypeName(plan.type)}'),
-                      if (plan.features.isNotEmpty)
-                        Text('Функции: ${plan.features.length}'),
+                      if (plan.features.isNotEmpty) Text('Функции: ${plan.features.length}'),
                     ],
                   ),
                   trailing: PopupMenuButton<String>(
@@ -124,8 +122,7 @@ class _AdminSubscriptionManagementScreenState
                         value: 'delete',
                         child: ListTile(
                           leading: Icon(Icons.delete, color: Colors.red),
-                          title: Text('Удалить',
-                              style: TextStyle(color: Colors.red)),
+                          title: Text('Удалить', style: TextStyle(color: Colors.red)),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -184,7 +181,7 @@ class _AdminSubscriptionManagementScreenState
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<SubscriptionPlanType>(
-                value: _selectedType,
+                initialValue: _selectedType,
                 decoration: const InputDecoration(
                   labelText: 'Тип плана',
                   border: OutlineInputBorder(),
@@ -212,8 +209,7 @@ class _AdminSubscriptionManagementScreenState
                 },
               ),
               const SizedBox(height: 16),
-              const Text('Функции:',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text('Функции:', style: TextStyle(fontWeight: FontWeight.bold)),
               ..._buildFeatureCheckboxes(),
             ],
           ),
@@ -328,8 +324,7 @@ class _AdminSubscriptionManagementScreenState
     _durationController.text = plan.durationDays.toString();
     _selectedType = plan.type;
     _isActive = plan.isActive;
-    _features = Map.fromIterable(plan.features,
-        key: (feature) => feature, value: (feature) => true);
+    _features = {for (final feature in plan.features) feature: true};
 
     showDialog(
       context: context,
@@ -366,7 +361,7 @@ class _AdminSubscriptionManagementScreenState
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<SubscriptionPlanType>(
-                value: _selectedType,
+                initialValue: _selectedType,
                 decoration: const InputDecoration(
                   labelText: 'Тип плана',
                   border: OutlineInputBorder(),
@@ -394,8 +389,7 @@ class _AdminSubscriptionManagementScreenState
                 },
               ),
               const SizedBox(height: 16),
-              const Text('Функции:',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text('Функции:', style: TextStyle(fontWeight: FontWeight.bold)),
               ..._buildFeatureCheckboxes(),
             ],
           ),
@@ -475,8 +469,7 @@ class _AdminSubscriptionManagementScreenState
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text(
-                  'Статус плана изменен на ${!plan.isActive ? 'активен' : 'неактивен'}')),
+              content: Text('Статус плана изменен на ${!plan.isActive ? 'активен' : 'неактивен'}')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -512,10 +505,7 @@ class _AdminSubscriptionManagementScreenState
 
     if (confirmed == true) {
       try {
-        await FirebaseFirestore.instance
-            .collection('subscription_plans')
-            .doc(plan.id)
-            .delete();
+        await FirebaseFirestore.instance.collection('subscription_plans').doc(plan.id).delete();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Тарифный план удален')),
         );

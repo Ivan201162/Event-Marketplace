@@ -15,9 +15,7 @@ class CityRegionService {
     int limit = 100,
   }) async {
     try {
-      var query = _firestore
-          .collection(_collectionName)
-          .where('isActive', isEqualTo: true);
+      var query = _firestore.collection(_collectionName).where('isActive', isEqualTo: true);
 
       // Фильтр по региону
       if (filters.region != null && filters.region!.isNotEmpty) {
@@ -56,15 +54,13 @@ class CityRegionService {
       // Сортировка
       switch (filters.sortBy) {
         case CitySortBy.population:
-          query =
-              query.orderBy('population', descending: !filters.sortAscending);
+          query = query.orderBy('population', descending: !filters.sortAscending);
           break;
         case CitySortBy.name:
           query = query.orderBy('cityName', descending: !filters.sortAscending);
           break;
         case CitySortBy.region:
-          query =
-              query.orderBy('regionName', descending: !filters.sortAscending);
+          query = query.orderBy('regionName', descending: !filters.sortAscending);
           break;
         case CitySortBy.specialistCount:
           query = query.orderBy(
@@ -108,9 +104,7 @@ class CityRegionService {
     CitySearchFilters filters = const CitySearchFilters(),
     int limit = 100,
   }) {
-    var query = _firestore
-        .collection(_collectionName)
-        .where('isActive', isEqualTo: true);
+    var query = _firestore.collection(_collectionName).where('isActive', isEqualTo: true);
 
     // Применяем те же фильтры, что и в getCities
     if (filters.region != null && filters.region!.isNotEmpty) {
@@ -124,8 +118,7 @@ class CityRegionService {
       );
     }
     if (filters.maxPopulation < 10000000) {
-      query =
-          query.where('population', isLessThanOrEqualTo: filters.maxPopulation);
+      query = query.where('population', isLessThanOrEqualTo: filters.maxPopulation);
     }
 
     if (filters.isCapital != null) {
@@ -240,15 +233,10 @@ class CityRegionService {
   /// Получить все регионы
   Future<List<String>> getRegions() async {
     try {
-      final cities = await _firestore
-          .collection(_collectionName)
-          .where('isActive', isEqualTo: true)
-          .get();
+      final cities =
+          await _firestore.collection(_collectionName).where('isActive', isEqualTo: true).get();
 
-      final regions = cities.docs
-          .map((doc) => doc.data()['regionName'] as String)
-          .toSet()
-          .toList();
+      final regions = cities.docs.map((doc) => doc.data()['regionName'] as String).toSet().toList();
 
       regions.sort();
       return regions;
@@ -281,8 +269,7 @@ class CityRegionService {
             .limit(limit - popularCities.length)
             .get();
 
-        final additionalCities =
-            majorCities.docs.map(CityRegion.fromDocument).toList();
+        final additionalCities = majorCities.docs.map(CityRegion.fromDocument).toList();
 
         popularCities.addAll(additionalCities);
       }
@@ -303,18 +290,15 @@ class CityRegionService {
   }) async {
     try {
       // Получаем все города (это не оптимально, но для демо)
-      final cities = await _firestore
-          .collection(_collectionName)
-          .where('isActive', isEqualTo: true)
-          .get();
+      final cities =
+          await _firestore.collection(_collectionName).where('isActive', isEqualTo: true).get();
 
       final userCoordinates = Coordinates(
         latitude: latitude,
         longitude: longitude,
       );
 
-      final nearbyCities =
-          cities.docs.map(CityRegion.fromDocument).where((city) {
+      final nearbyCities = cities.docs.map(CityRegion.fromDocument).where((city) {
         final distance = city.coordinates.distanceTo(userCoordinates);
         return distance <= radiusKm;
       }).toList();
@@ -435,9 +419,7 @@ class CityRegionService {
 
     // Фильтр по размеру города
     if (filters.citySize != null) {
-      filteredCities = filteredCities
-          .where((city) => city.citySize == filters.citySize)
-          .toList();
+      filteredCities = filteredCities.where((city) => city.citySize == filters.citySize).toList();
     }
 
     // Фильтр по рейтингу специалистов
@@ -450,12 +432,10 @@ class CityRegionService {
     }
 
     // Фильтр по категории специалистов
-    if (filters.specialistCategory != null &&
-        filters.specialistCategory!.isNotEmpty) {
+    if (filters.specialistCategory != null && filters.specialistCategory!.isNotEmpty) {
       filteredCities = filteredCities
           .where(
-            (city) =>
-                city.specialistCategories.contains(filters.specialistCategory),
+            (city) => city.specialistCategories.contains(filters.specialistCategory),
           )
           .toList();
     }
@@ -478,8 +458,7 @@ class CityRegionService {
   Future<void> initializeRussianCities() async {
     try {
       // Проверяем, есть ли уже данные
-      final existingCities =
-          await _firestore.collection(_collectionName).limit(1).get();
+      final existingCities = await _firestore.collection(_collectionName).limit(1).get();
 
       if (existingCities.docs.isNotEmpty) {
         // Логирование:'Данные городов уже инициализированы');

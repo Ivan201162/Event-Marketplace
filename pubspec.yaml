@@ -140,6 +140,7 @@ dev_dependencies:
     sdk: flutter
   patrol: ^3.7.0
 
+  cloud_firestore_platform_interface: any
 flutter:
   uses-material-design: true
   

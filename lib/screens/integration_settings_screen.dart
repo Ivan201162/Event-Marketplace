@@ -26,8 +26,7 @@ class IntegrationSettingsScreen extends ConsumerWidget {
                   icon: Icons.extension,
                   title: 'Все интеграции',
                   subtitle: 'Управление всеми доступными интеграциями',
-                  onTap: () =>
-                      _navigateToScreen(context, const IntegrationsScreen()),
+                  onTap: () => _navigateToScreen(context, const IntegrationsScreen()),
                 ),
                 _buildSettingsTile(
                   icon: Icons.location_on,
@@ -42,8 +41,7 @@ class IntegrationSettingsScreen extends ConsumerWidget {
                   icon: Icons.share,
                   title: 'Шаринг',
                   subtitle: 'Настройки совместного использования контента',
-                  onTap: () =>
-                      _navigateToScreen(context, const SharingSettingsScreen()),
+                  onTap: () => _navigateToScreen(context, const SharingSettingsScreen()),
                 ),
                 _buildSettingsTile(
                   icon: Icons.wifi,
@@ -145,8 +143,7 @@ class IntegrationSettingsScreen extends ConsumerWidget {
                   icon: Icons.help_outline,
                   title: 'Справка по интеграциям',
                   subtitle: 'Как настроить и использовать интеграции',
-                  onTap: () =>
-                      _showComingSoon(context, 'Справка по интеграциям'),
+                  onTap: () => _showComingSoon(context, 'Справка по интеграциям'),
                 ),
                 _buildSettingsTile(
                   icon: Icons.bug_report,

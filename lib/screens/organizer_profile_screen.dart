@@ -16,12 +16,10 @@ class OrganizerProfileScreen extends ConsumerStatefulWidget {
   final bool isEditMode;
 
   @override
-  ConsumerState<OrganizerProfileScreen> createState() =>
-      _OrganizerProfileScreenState();
+  ConsumerState<OrganizerProfileScreen> createState() => _OrganizerProfileScreenState();
 }
 
-class _OrganizerProfileScreenState
-    extends ConsumerState<OrganizerProfileScreen> {
+class _OrganizerProfileScreenState extends ConsumerState<OrganizerProfileScreen> {
   final OrganizerService _organizerService = OrganizerService();
   OrganizerProfile? _profile;
   bool _isLoading = true;
@@ -72,8 +70,7 @@ class _OrganizerProfileScreenState
     });
 
     try {
-      final profile =
-          await _organizerService.getOrganizerProfile(widget.organizerId!);
+      final profile = await _organizerService.getOrganizerProfile(widget.organizerId!);
       if (profile != null) {
         setState(() {
           _profile = profile;
@@ -115,21 +112,12 @@ class _OrganizerProfileScreenState
     try {
       final updatedProfile = _profile!.copyWith(
         name: _nameController.text.trim(),
-        description: _descriptionController.text.trim().isEmpty
-            ? null
-            : _descriptionController.text.trim(),
-        phone: _phoneController.text.trim().isEmpty
-            ? null
-            : _phoneController.text.trim(),
-        email: _emailController.text.trim().isEmpty
-            ? null
-            : _emailController.text.trim(),
-        website: _websiteController.text.trim().isEmpty
-            ? null
-            : _websiteController.text.trim(),
-        location: _locationController.text.trim().isEmpty
-            ? null
-            : _locationController.text.trim(),
+        description:
+            _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
+        phone: _phoneController.text.trim().isEmpty ? null : _phoneController.text.trim(),
+        email: _emailController.text.trim().isEmpty ? null : _emailController.text.trim(),
+        website: _websiteController.text.trim().isEmpty ? null : _websiteController.text.trim(),
+        location: _locationController.text.trim().isEmpty ? null : _locationController.text.trim(),
         experienceYears: int.tryParse(_experienceController.text) ?? 0,
         responseTime: _responseTimeController.text.trim().isEmpty
             ? null
@@ -263,12 +251,9 @@ class _OrganizerProfileScreenState
             children: [
               CircleAvatar(
                 radius: 40,
-                backgroundImage: _profile!.logoUrl != null
-                    ? NetworkImage(_profile!.logoUrl!)
-                    : null,
-                child: _profile!.logoUrl == null
-                    ? const Icon(Icons.business, size: 40)
-                    : null,
+                backgroundImage:
+                    _profile!.logoUrl != null ? NetworkImage(_profile!.logoUrl!) : null,
+                child: _profile!.logoUrl == null ? const Icon(Icons.business, size: 40) : null,
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -312,8 +297,7 @@ class _OrganizerProfileScreenState
               ),
               if (_profile!.isVerified)
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.blue,
                     borderRadius: BorderRadius.circular(12),
@@ -376,9 +360,8 @@ class _OrganizerProfileScreenState
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: _profile!.categories
-                      .map((category) => Chip(label: Text(category)))
-                      .toList(),
+                  children:
+                      _profile!.categories.map((category) => Chip(label: Text(category))).toList(),
                 ),
               const SizedBox(height: 16),
               const Text(
@@ -395,9 +378,8 @@ class _OrganizerProfileScreenState
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: _profile!.specializations
-                      .map((spec) => Chip(label: Text(spec)))
-                      .toList(),
+                  children:
+                      _profile!.specializations.map((spec) => Chip(label: Text(spec))).toList(),
                 ),
             ],
           ),
@@ -418,12 +400,9 @@ class _OrganizerProfileScreenState
                 ),
               ),
               const SizedBox(height: 16),
-              if (_profile!.phone != null)
-                _buildContactRow(Icons.phone, _profile!.phone!),
-              if (_profile!.email != null)
-                _buildContactRow(Icons.email, _profile!.email!),
-              if (_profile!.website != null)
-                _buildContactRow(Icons.web, _profile!.website!),
+              if (_profile!.phone != null) _buildContactRow(Icons.phone, _profile!.phone!),
+              if (_profile!.email != null) _buildContactRow(Icons.email, _profile!.email!),
+              if (_profile!.website != null) _buildContactRow(Icons.web, _profile!.website!),
             ],
           ),
         ),
@@ -735,8 +714,7 @@ class _OrganizerProfileScreenState
                 spacing: 8,
                 runSpacing: 8,
                 children: EventCategory.values.map((category) {
-                  final isSelected =
-                      _selectedCategories.contains(category.name);
+                  final isSelected = _selectedCategories.contains(category.name);
                   return FilterChip(
                     label: Text(category.displayName),
                     selected: isSelected,

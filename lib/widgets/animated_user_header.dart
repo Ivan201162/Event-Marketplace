@@ -145,11 +145,9 @@ class _AnimatedUserHeaderState extends State<AnimatedUserHeader>
                               width: 70,
                               height: 70,
                               fit: BoxFit.cover,
-                              placeholder: (context, url) =>
-                                  const CircularProgressIndicator(
+                              placeholder: (context, url) => const CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                               errorWidget: (context, url, error) => Icon(
                                 Icons.person,

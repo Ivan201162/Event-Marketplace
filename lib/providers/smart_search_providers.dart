@@ -2,8 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/smart_search_service.dart';
 
 /// Провайдер сервиса умного поиска
-final smartSearchServiceProvider =
-    Provider<SmartSearchService>((ref) => SmartSearchService());
+final smartSearchServiceProvider = Provider<SmartSearchService>((ref) => SmartSearchService());
 
 /// Провайдер подсказок поиска
 final searchSuggestionsProvider =
@@ -14,8 +13,7 @@ final searchSuggestionsProvider =
 
 /// Провайдер результатов поиска специалистов
 final searchResultsProvider =
-    FutureProvider.family<List<Map<String, dynamic>>, SearchParams>(
-        (ref, params) async {
+    FutureProvider.family<List<Map<String, dynamic>>, SearchParams>((ref, params) async {
   final service = ref.read(smartSearchServiceProvider);
   return service.searchSpecialists(
     query: params.query,
@@ -30,22 +28,19 @@ final searchResultsProvider =
 });
 
 /// Провайдер популярных специалистов
-final popularSpecialistsProvider =
-    FutureProvider<List<Map<String, dynamic>>>((ref) async {
+final popularSpecialistsProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
   final service = ref.read(smartSearchServiceProvider);
   return service.getPopularSpecialists();
 });
 
 /// Провайдер популярных специалистов недели
-final weeklyPopularSpecialistsProvider =
-    FutureProvider<List<Map<String, dynamic>>>((ref) async {
+final weeklyPopularSpecialistsProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
   final service = ref.read(smartSearchServiceProvider);
   return service.getWeeklyPopularSpecialists();
 });
 
 /// Провайдер сохранённых фильтров поиска
-final savedSearchFiltersProvider =
-    FutureProvider<Map<String, dynamic>>((ref) async {
+final savedSearchFiltersProvider = FutureProvider<Map<String, dynamic>>((ref) async {
   final service = ref.read(smartSearchServiceProvider);
   return service.loadSearchFilters();
 });

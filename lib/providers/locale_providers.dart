@@ -6,8 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../generated/l10n/app_localizations.dart';
 
 /// Провайдер для текущей локали
-final localeProvider =
-    NotifierProvider<LocaleNotifier, Locale>(LocaleNotifier.new);
+final localeProvider = NotifierProvider<LocaleNotifier, Locale>(LocaleNotifier.new);
 
 /// Провайдер для списка поддерживаемых локалей
 final supportedLocalesProvider = Provider<List<Locale>>(
@@ -173,12 +172,10 @@ class LocalizationUtils {
   }
 
   /// Проверить, поддерживается ли язык
-  static bool isLanguageSupported(String languageCode) =>
-      ['en', 'ru'].contains(languageCode);
+  static bool isLanguageSupported(String languageCode) => ['en', 'ru'].contains(languageCode);
 
   /// Получить локаль по коду языка
-  static Locale getLocaleFromCode(String languageCode) =>
-      Locale(languageCode, '');
+  static Locale getLocaleFromCode(String languageCode) => Locale(languageCode, '');
 
   /// Получить код языка из локали
   static String getCodeFromLocale(Locale locale) => locale.languageCode;

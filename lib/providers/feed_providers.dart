@@ -12,15 +12,13 @@ final feedPostsProvider = StreamProvider<List<FeedPost>>((ref) {
 });
 
 /// Провайдер для комментариев поста
-final postCommentsProvider =
-    StreamProvider.family<List<FeedComment>, String>((ref, postId) {
+final postCommentsProvider = StreamProvider.family<List<FeedComment>, String>((ref, postId) {
   final feedService = ref.read(feedServiceProvider);
   return feedService.getPostComments(postId);
 });
 
 /// Провайдер для лайков поста
-final postLikesProvider =
-    StreamProvider.family<List<String>, String>((ref, postId) {
+final postLikesProvider = StreamProvider.family<List<String>, String>((ref, postId) {
   final feedService = ref.read(feedServiceProvider);
   return feedService.getPostLikes(postId);
 });
@@ -72,8 +70,7 @@ class FeedStateNotifier extends Notifier<FeedState> {
   }
 
   void updatePost(FeedPost post) {
-    final updatedPosts =
-        state.posts.map((p) => p.id == post.id ? post : p).toList();
+    final updatedPosts = state.posts.map((p) => p.id == post.id ? post : p).toList();
     state = state.copyWith(posts: updatedPosts);
   }
 
@@ -98,8 +95,7 @@ class FeedStateNotifier extends Notifier<FeedState> {
 }
 
 /// Провайдер для ленты специалиста
-final specialistFeedProvider =
-    StreamProvider.family<List<FeedPost>, String>((ref, specialistId) {
+final specialistFeedProvider = StreamProvider.family<List<FeedPost>, String>((ref, specialistId) {
   final feedService = ref.read(feedServiceProvider);
   return feedService.getSpecialistFeed(specialistId);
 });

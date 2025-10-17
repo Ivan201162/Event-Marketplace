@@ -27,8 +27,7 @@ class TeamListScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: () =>
-                ref.invalidate(organizerTeamsProvider(organizerId)),
+            onPressed: () => ref.invalidate(organizerTeamsProvider(organizerId)),
             tooltip: 'Обновить',
           ),
         ],
@@ -83,8 +82,7 @@ class TeamListScreen extends ConsumerWidget {
               Text('Ошибка загрузки: $error'),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () =>
-                    ref.invalidate(organizerTeamsProvider(organizerId)),
+                onPressed: () => ref.invalidate(organizerTeamsProvider(organizerId)),
                 child: const Text('Повторить'),
               ),
             ],
@@ -280,8 +278,7 @@ class TeamListScreen extends ConsumerWidget {
           if (team.status == TeamStatus.draft) ...[
             Expanded(
               child: ElevatedButton.icon(
-                onPressed: () =>
-                    _navigateToTeam(context, team, isEditable: true),
+                onPressed: () => _navigateToTeam(context, team, isEditable: true),
                 icon: const Icon(Icons.edit),
                 label: const Text('Редактировать'),
               ),
@@ -334,8 +331,7 @@ class SpecialistTeamListScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: () =>
-                ref.invalidate(specialistTeamsProvider(specialistId)),
+            onPressed: () => ref.invalidate(specialistTeamsProvider(specialistId)),
             tooltip: 'Обновить',
           ),
         ],
@@ -390,8 +386,7 @@ class SpecialistTeamListScreen extends ConsumerWidget {
               Text('Ошибка загрузки: $error'),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () =>
-                    ref.invalidate(specialistTeamsProvider(specialistId)),
+                onPressed: () => ref.invalidate(specialistTeamsProvider(specialistId)),
                 child: const Text('Повторить'),
               ),
             ],

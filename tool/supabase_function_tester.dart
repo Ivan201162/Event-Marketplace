@@ -75,7 +75,7 @@ Future<void> _testGetWeeklyLeaders(SupabaseClient supabase) async {
     
     print('  ✅ Получено лидеров: ${leaders.length}');
     
-    for (final leader in leaders as List<Map<String, dynamic>>) {
+    for (final leader in leaders) {
       print('  🏅 ${leader['name']} - ${leader['score_7d']} очков');
     }
   } catch (e) {

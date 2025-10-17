@@ -260,11 +260,7 @@ class IdeasRepository {
         'IdeasRepository.addComment: добавление комментария к идее $ideaId',
       );
 
-      await _firestore
-          .collection('ideas')
-          .doc(ideaId)
-          .collection('comments')
-          .add(commentData);
+      await _firestore.collection('ideas').doc(ideaId).collection('comments').add(commentData);
       debugPrint('IdeasRepository.addComment: комментарий добавлен успешно');
       return true;
     } catch (e) {

@@ -235,8 +235,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         ),
                         SizedBox(width: 12),
@@ -245,8 +244,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
                     )
                   : const Text(
                       'Отправить SMS код',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
             ),
           ] else ...[
@@ -267,8 +265,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         ),
                         SizedBox(width: 12),
@@ -277,8 +274,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
                     )
                   : const Text(
                       'Войти',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
             ),
 
@@ -411,8 +407,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
       if (user != null && mounted) {
         setState(() {
           _isVerifying = false;
-          _successMessage =
-              'Успешный вход! Добро пожаловать, ${user.displayNameOrEmail}';
+          _successMessage = 'Успешный вход! Добро пожаловать, ${user.displayNameOrEmail}';
         });
 
         // Показываем уведомление об успехе

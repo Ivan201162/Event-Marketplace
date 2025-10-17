@@ -12,8 +12,7 @@ class ReminderService {
   ReminderService._internal();
   static final ReminderService _instance = ReminderService._internal();
 
-  final FlutterLocalNotificationsPlugin _localNotifications =
-      FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -34,8 +33,7 @@ class ReminderService {
 
   /// Инициализация локальных уведомлений
   Future<void> _initializeLocalNotifications() async {
-    const androidSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosSettings = DarwinInitializationSettings();
 
     const initSettings = InitializationSettings(
@@ -68,8 +66,7 @@ class ReminderService {
       await _scheduleReminder(
         id: bookingId.hashCode,
         title: 'Напоминание о событии',
-        body:
-            'Завтра в ${_formatTime(eventDateTime)}: $eventTitle с $specialistName',
+        body: 'Завтра в ${_formatTime(eventDateTime)}: $eventTitle с $specialistName',
         scheduledTime: eventDateTime.subtract(const Duration(hours: 24)),
         payload: 'booking_24h_$bookingId',
       );
@@ -183,10 +180,8 @@ class ReminderService {
       if (user == null) return;
 
       // Получаем все напоминания пользователя
-      final remindersSnapshot = await _firestore
-          .collection('reminders')
-          .where('customerId', isEqualTo: user.uid)
-          .get();
+      final remindersSnapshot =
+          await _firestore.collection('reminders').where('customerId', isEqualTo: user.uid).get();
 
       // Отменяем все напоминания
       for (final doc in remindersSnapshot.docs) {
@@ -214,10 +209,8 @@ class ReminderService {
       final user = _auth.currentUser;
       if (user == null) return [];
 
-      final remindersSnapshot = await _firestore
-          .collection('reminders')
-          .where('customerId', isEqualTo: user.uid)
-          .get();
+      final remindersSnapshot =
+          await _firestore.collection('reminders').where('customerId', isEqualTo: user.uid).get();
 
       return remindersSnapshot.docs.map((doc) {
         final data = doc.data();

@@ -160,9 +160,7 @@ class SpecialistCard extends StatelessWidget {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: Theme.of(context)
-                                  .primaryColor
-                                  .withValues(alpha: 0.1),
+                              color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
@@ -341,14 +339,12 @@ class SpecialistCard extends StatelessWidget {
           : null;
 
   /// Получить стили
-  List<String> _getStyles() => specialist is SmartSpecialist
-      ? (specialist as SmartSpecialist).styles
-      : <String>[];
+  List<String> _getStyles() =>
+      specialist is SmartSpecialist ? (specialist as SmartSpecialist).styles : <String>[];
 
   /// Получить балл совместимости
-  double _getCompatibilityScore() => specialist is SmartSpecialist
-      ? (specialist as SmartSpecialist).compatibilityScore
-      : 0.0;
+  double _getCompatibilityScore() =>
+      specialist is SmartSpecialist ? (specialist as SmartSpecialist).compatibilityScore : 0.0;
 
   /// Получить диапазон цен
   String _getPriceRangeString() => specialist is SmartSpecialist

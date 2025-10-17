@@ -73,12 +73,8 @@ class _HelpScreenState extends ConsumerState<HelpScreen> {
                     : faqs
                         .where(
                           (faq) =>
-                              faq.question
-                                  .toLowerCase()
-                                  .contains(_searchQuery.toLowerCase()) ||
-                              faq.answer
-                                  .toLowerCase()
-                                  .contains(_searchQuery.toLowerCase()),
+                              faq.question.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+                              faq.answer.toLowerCase().contains(_searchQuery.toLowerCase()),
                         )
                         .toList();
 

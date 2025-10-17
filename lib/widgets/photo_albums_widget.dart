@@ -77,8 +77,7 @@ class PhotoAlbumsWidget extends ConsumerWidget {
         ),
       );
 
-  Widget _buildAlbumCard(BuildContext context, PhotoAlbum album) =>
-      ResponsiveCard(
+  Widget _buildAlbumCard(BuildContext context, PhotoAlbum album) => ResponsiveCard(
         child: InkWell(
           onTap: () => _openAlbum(context, album),
           borderRadius: BorderRadius.circular(12),
@@ -91,8 +90,7 @@ class PhotoAlbumsWidget extends ConsumerWidget {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    borderRadius:
-                        const BorderRadius.vertical(top: Radius.circular(12)),
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
                     image: DecorationImage(
                       image: NetworkImage(album.coverImageUrl),
                       fit: BoxFit.cover,
@@ -482,8 +480,7 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
         ),
       );
 
-  bool _canCreate() =>
-      _titleController.text.isNotEmpty && _selectedImages.isNotEmpty;
+  bool _canCreate() => _titleController.text.isNotEmpty && _selectedImages.isNotEmpty;
 
   void _selectImages() {
     // TODO(developer): Реализовать выбор изображений

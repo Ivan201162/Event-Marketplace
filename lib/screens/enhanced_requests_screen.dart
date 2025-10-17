@@ -3,17 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../models/enhanced_order.dart';
+import '../providers/auth_providers.dart';
 import '../widgets/order_card_widget.dart';
 import '../widgets/order_timeline_widget.dart';
-import '../providers/auth_providers.dart';
 
 /// Улучшенный экран заявок с полным функционалом
 class EnhancedRequestsScreen extends ConsumerStatefulWidget {
   const EnhancedRequestsScreen({super.key});
 
   @override
-  ConsumerState<EnhancedRequestsScreen> createState() =>
-      _EnhancedRequestsScreenState();
+  ConsumerState<EnhancedRequestsScreen> createState() => _EnhancedRequestsScreenState();
 }
 
 class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
@@ -227,8 +226,7 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
         customerId: currentUserId,
         specialistId: 'specialist_1',
         title: 'Свадебная фотосъёмка',
-        description:
-            'Нужен фотограф на свадьбу 15 июня. Съёмка в парке, около 6 часов.',
+        description: 'Нужен фотограф на свадьбу 15 июня. Съёмка в парке, около 6 часов.',
         status: OrderStatus.pending,
         createdAt: DateTime.now().subtract(const Duration(days: 2)),
         budget: 25000,
@@ -334,8 +332,7 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
         customerId: 'customer_2',
         specialistId: currentUserId,
         title: 'Фотосессия для портфолио',
-        description:
-            'Нужна профессиональная фотосессия для обновления портфолио модели',
+        description: 'Нужна профессиональная фотосессия для обновления портфолио модели',
         status: OrderStatus.pending,
         createdAt: DateTime.now().subtract(const Duration(days: 1)),
         budget: 12000,
@@ -391,17 +388,11 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
 
     switch (status) {
       case 'pending':
-        return allOrders
-            .where((order) => order.status == OrderStatus.pending)
-            .toList();
+        return allOrders.where((order) => order.status == OrderStatus.pending).toList();
       case 'in_progress':
-        return allOrders
-            .where((order) => order.status == OrderStatus.inProgress)
-            .toList();
+        return allOrders.where((order) => order.status == OrderStatus.inProgress).toList();
       case 'completed':
-        return allOrders
-            .where((order) => order.status == OrderStatus.completed)
-            .toList();
+        return allOrders.where((order) => order.status == OrderStatus.completed).toList();
       default:
         return allOrders;
     }
@@ -414,9 +405,7 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
 
     final allOrders = _getTestOrders('all');
 
-    return allOrders
-        .where((order) => order.customerId == currentUser.uid)
-        .toList();
+    return allOrders.where((order) => order.customerId == currentUser.uid).toList();
   }
 
   List<EnhancedOrder> _getRequestsForMe() {
@@ -426,9 +415,7 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
 
     final allOrders = _getTestOrders('all');
 
-    return allOrders
-        .where((order) => order.specialistId == currentUser.uid)
-        .toList();
+    return allOrders.where((order) => order.specialistId == currentUser.uid).toList();
   }
 
   void _openOrderDetails(EnhancedOrder order) {
@@ -467,8 +454,7 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
 
               // Статус
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: _getStatusColor(order.status).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),

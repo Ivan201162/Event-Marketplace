@@ -85,9 +85,7 @@ class DiscountRecommendationService {
 
     final daysUntilEvent = booking.eventDate.difference(DateTime.now()).inDays;
 
-    return booking.totalPrice > 50000 ||
-        booking.participantsCount > 50 ||
-        daysUntilEvent > 30;
+    return booking.totalPrice > 50000 || booking.participantsCount > 50 || daysUntilEvent > 30;
   }
 
   /// Рассчитывает рекомендуемый размер скидки

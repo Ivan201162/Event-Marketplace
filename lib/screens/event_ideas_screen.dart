@@ -50,8 +50,7 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
       _loadMoreIdeas();
     }
   }
@@ -243,8 +242,7 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
                         child: GridView.builder(
                           controller: _scrollController,
                           padding: const EdgeInsets.all(16),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             childAspectRatio: 0.8,
                             crossAxisSpacing: 12,
@@ -472,16 +470,13 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
       }
 
       // Обновляем в рекомендуемых
-      final recommendedIndex =
-          _recommendedIdeas.indexWhere((idea) => idea.id == ideaId);
+      final recommendedIndex = _recommendedIdeas.indexWhere((idea) => idea.id == ideaId);
       if (recommendedIndex != -1) {
-        _recommendedIdeas[recommendedIndex] =
-            updater(_recommendedIdeas[recommendedIndex]);
+        _recommendedIdeas[recommendedIndex] = updater(_recommendedIdeas[recommendedIndex]);
       }
 
       // Обновляем в избранных
-      final favoriteIndex =
-          _favoriteIdeas.indexWhere((idea) => idea.id == ideaId);
+      final favoriteIndex = _favoriteIdeas.indexWhere((idea) => idea.id == ideaId);
       if (favoriteIndex != -1) {
         _favoriteIdeas[favoriteIndex] = updater(_favoriteIdeas[favoriteIndex]);
       }
@@ -559,8 +554,7 @@ class _IdeaDetailScreenState extends State<IdeaDetailScreen> {
                   widget.idea.imageUrl,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Container(
-                    color:
-                        Theme.of(context).colorScheme.surfaceContainerHighest,
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
                     child: Icon(
                       Icons.image_not_supported,
                       size: 64,
@@ -621,9 +615,7 @@ class _IdeaDetailScreenState extends State<IdeaDetailScreen> {
                       Text(
                         'Пока нет комментариев',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                       )
                     else
@@ -662,14 +654,10 @@ class _IdeaDetailScreenState extends State<IdeaDetailScreen> {
                   'Количество гостей',
                   '${widget.idea.guestCount} человек',
                 ),
-              if (widget.idea.location != null)
-                _buildDetailRow('Локация', widget.idea.location!),
-              if (widget.idea.season != null)
-                _buildDetailRow('Сезон', widget.idea.season!),
-              if (widget.idea.style != null)
-                _buildDetailRow('Стиль', widget.idea.style!),
-              if (widget.idea.tags.isNotEmpty)
-                _buildDetailRow('Теги', widget.idea.tags.join(', ')),
+              if (widget.idea.location != null) _buildDetailRow('Локация', widget.idea.location!),
+              if (widget.idea.season != null) _buildDetailRow('Сезон', widget.idea.season!),
+              if (widget.idea.style != null) _buildDetailRow('Стиль', widget.idea.style!),
+              if (widget.idea.tags.isNotEmpty) _buildDetailRow('Теги', widget.idea.tags.join(', ')),
             ],
           ),
         ),
@@ -710,12 +698,10 @@ class _IdeaDetailScreenState extends State<IdeaDetailScreen> {
                 children: [
                   CircleAvatar(
                     radius: 16,
-                    backgroundImage: comment.userAvatar != null
-                        ? NetworkImage(comment.userAvatar!)
-                        : null,
-                    child: comment.userAvatar == null
-                        ? Text(comment.userName[0].toUpperCase())
-                        : null,
+                    backgroundImage:
+                        comment.userAvatar != null ? NetworkImage(comment.userAvatar!) : null,
+                    child:
+                        comment.userAvatar == null ? Text(comment.userName[0].toUpperCase()) : null,
                   ),
                   const SizedBox(width: 8),
                   Expanded(
@@ -724,19 +710,15 @@ class _IdeaDetailScreenState extends State<IdeaDetailScreen> {
                       children: [
                         Text(
                           comment.userName,
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w500,
+                              ),
                         ),
                         Text(
                           _formatDate(comment.createdAt),
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant,
-                                  ),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              ),
                         ),
                       ],
                     ),

@@ -30,34 +30,20 @@ class UserPreferences {
   /// Создать из Map
   factory UserPreferences.fromMap(Map<String, dynamic> data) => UserPreferences(
         userId: data['userId'] as String,
-        likedStyles:
-            (data['likedStyles'] as List<dynamic>?)?.cast<String>() ?? [],
+        likedStyles: (data['likedStyles'] as List<dynamic>?)?.cast<String>() ?? [],
         preferredBudget: (data['preferredBudget'] as num?)?.toDouble() ?? 0.0,
-        preferredCities:
-            (data['preferredCities'] as List<dynamic>?)?.cast<String>() ?? [],
-        pastRequests:
-            (data['pastRequests'] as List<dynamic>?)?.cast<String>() ?? [],
-        favoriteCategories:
-            (data['favoriteCategories'] as List<dynamic>?)?.cast<String>() ??
-                [],
-        dislikedStyles:
-            (data['dislikedStyles'] as List<dynamic>?)?.cast<String>() ?? [],
-        preferredEventTypes:
-            (data['preferredEventTypes'] as List<dynamic>?)?.cast<String>() ??
-                [],
+        preferredCities: (data['preferredCities'] as List<dynamic>?)?.cast<String>() ?? [],
+        pastRequests: (data['pastRequests'] as List<dynamic>?)?.cast<String>() ?? [],
+        favoriteCategories: (data['favoriteCategories'] as List<dynamic>?)?.cast<String>() ?? [],
+        dislikedStyles: (data['dislikedStyles'] as List<dynamic>?)?.cast<String>() ?? [],
+        preferredEventTypes: (data['preferredEventTypes'] as List<dynamic>?)?.cast<String>() ?? [],
         budgetRange: Map<String, dynamic>.from(data['budgetRange'] ?? {}),
-        locationPreferences:
-            Map<String, dynamic>.from(data['locationPreferences'] ?? {}),
-        stylePreferences:
-            Map<String, dynamic>.from(data['stylePreferences'] ?? {}),
-        experiencePreferences:
-            Map<String, dynamic>.from(data['experiencePreferences'] ?? {}),
-        ratingPreferences:
-            Map<String, dynamic>.from(data['ratingPreferences'] ?? {}),
-        availabilityPreferences:
-            Map<String, dynamic>.from(data['availabilityPreferences'] ?? {}),
-        personalityPreferences:
-            Map<String, dynamic>.from(data['personalityPreferences'] ?? {}),
+        locationPreferences: Map<String, dynamic>.from(data['locationPreferences'] ?? {}),
+        stylePreferences: Map<String, dynamic>.from(data['stylePreferences'] ?? {}),
+        experiencePreferences: Map<String, dynamic>.from(data['experiencePreferences'] ?? {}),
+        ratingPreferences: Map<String, dynamic>.from(data['ratingPreferences'] ?? {}),
+        availabilityPreferences: Map<String, dynamic>.from(data['availabilityPreferences'] ?? {}),
+        personalityPreferences: Map<String, dynamic>.from(data['personalityPreferences'] ?? {}),
         searchHistory: (data['searchHistory'] as List<dynamic>?)
                 ?.map((e) => Map<String, dynamic>.from(e))
                 .toList() ??
@@ -109,14 +95,11 @@ class UserPreferences {
   final Map<String, dynamic> stylePreferences; // Предпочтения по стилю
   final Map<String, dynamic> experiencePreferences; // Предпочтения по опыту
   final Map<String, dynamic> ratingPreferences; // Предпочтения по рейтингу
-  final Map<String, dynamic>
-      availabilityPreferences; // Предпочтения по доступности
-  final Map<String, dynamic>
-      personalityPreferences; // Предпочтения по характеру
+  final Map<String, dynamic> availabilityPreferences; // Предпочтения по доступности
+  final Map<String, dynamic> personalityPreferences; // Предпочтения по характеру
   final List<Map<String, dynamic>> searchHistory; // История поиска
   final List<Map<String, dynamic>> interactionHistory; // История взаимодействий
-  final List<Map<String, dynamic>>
-      recommendationHistory; // История рекомендаций
+  final List<Map<String, dynamic>> recommendationHistory; // История рекомендаций
   final List<Map<String, dynamic>> feedbackHistory; // История отзывов
   final Map<String, dynamic> learningData; // Данные для обучения модели
   final DateTime createdAt;
@@ -184,17 +167,13 @@ class UserPreferences {
         budgetRange: budgetRange ?? this.budgetRange,
         locationPreferences: locationPreferences ?? this.locationPreferences,
         stylePreferences: stylePreferences ?? this.stylePreferences,
-        experiencePreferences:
-            experiencePreferences ?? this.experiencePreferences,
+        experiencePreferences: experiencePreferences ?? this.experiencePreferences,
         ratingPreferences: ratingPreferences ?? this.ratingPreferences,
-        availabilityPreferences:
-            availabilityPreferences ?? this.availabilityPreferences,
-        personalityPreferences:
-            personalityPreferences ?? this.personalityPreferences,
+        availabilityPreferences: availabilityPreferences ?? this.availabilityPreferences,
+        personalityPreferences: personalityPreferences ?? this.personalityPreferences,
         searchHistory: searchHistory ?? this.searchHistory,
         interactionHistory: interactionHistory ?? this.interactionHistory,
-        recommendationHistory:
-            recommendationHistory ?? this.recommendationHistory,
+        recommendationHistory: recommendationHistory ?? this.recommendationHistory,
         feedbackHistory: feedbackHistory ?? this.feedbackHistory,
         learningData: learningData ?? this.learningData,
         createdAt: createdAt ?? this.createdAt,

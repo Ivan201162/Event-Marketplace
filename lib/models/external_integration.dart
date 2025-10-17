@@ -53,9 +53,7 @@ class ExternalIntegration {
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       createdBy: data['createdBy'] as String?,
-      lastSyncAt: data['lastSyncAt'] != null
-          ? (data['lastSyncAt'] as Timestamp).toDate()
-          : null,
+      lastSyncAt: data['lastSyncAt'] != null ? (data['lastSyncAt'] as Timestamp).toDate() : null,
       lastError: data['lastError'] as String?,
       metadata: Map<String, dynamic>.from(
         (data['metadata'] as Map<dynamic, dynamic>?) ?? {},
@@ -64,8 +62,7 @@ class ExternalIntegration {
   }
 
   /// Создать из Map
-  factory ExternalIntegration.fromMap(Map<String, dynamic> data) =>
-      ExternalIntegration(
+  factory ExternalIntegration.fromMap(Map<String, dynamic> data) => ExternalIntegration(
         id: data['id'] as String? ?? '',
         name: data['name'] as String? ?? '',
         description: data['description'] as String? ?? '',
@@ -94,9 +91,7 @@ class ExternalIntegration {
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
         createdBy: data['createdBy'] as String?,
-        lastSyncAt: data['lastSyncAt'] != null
-            ? (data['lastSyncAt'] as Timestamp).toDate()
-            : null,
+        lastSyncAt: data['lastSyncAt'] != null ? (data['lastSyncAt'] as Timestamp).toDate() : null,
         lastError: data['lastError'] as String?,
         metadata: Map<String, dynamic>.from(
           (data['metadata'] as Map<dynamic, dynamic>?) ?? {},
@@ -133,8 +128,7 @@ class ExternalIntegration {
         'createdAt': Timestamp.fromDate(createdAt),
         'updatedAt': Timestamp.fromDate(updatedAt),
         'createdBy': createdBy,
-        'lastSyncAt':
-            lastSyncAt != null ? Timestamp.fromDate(lastSyncAt!) : null,
+        'lastSyncAt': lastSyncAt != null ? Timestamp.fromDate(lastSyncAt!) : null,
         'lastError': lastError,
         'metadata': metadata,
       };
@@ -232,8 +226,7 @@ class ExternalIntegration {
       );
 
   @override
-  String toString() =>
-      'ExternalIntegration(id: $id, name: $name, type: $type, status: $status)';
+  String toString() => 'ExternalIntegration(id: $id, name: $name, type: $type, status: $status)';
 }
 
 /// Модель синхронизации данных
@@ -272,9 +265,7 @@ class DataSync {
       syncedRecords: data['syncedRecords'] as int? ?? 0,
       failedRecords: data['failedRecords'] as int? ?? 0,
       startedAt: (data['startedAt'] as Timestamp).toDate(),
-      completedAt: data['completedAt'] != null
-          ? (data['completedAt'] as Timestamp).toDate()
-          : null,
+      completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
       errorMessage: data['errorMessage'] as String?,
       metadata: Map<String, dynamic>.from(
         (data['metadata'] as Map<dynamic, dynamic>?) ?? {},
@@ -299,9 +290,8 @@ class DataSync {
         syncedRecords: data['syncedRecords'] as int? ?? 0,
         failedRecords: data['failedRecords'] as int? ?? 0,
         startedAt: (data['startedAt'] as Timestamp).toDate(),
-        completedAt: data['completedAt'] != null
-            ? (data['completedAt'] as Timestamp).toDate()
-            : null,
+        completedAt:
+            data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
         errorMessage: data['errorMessage'] as String?,
         metadata: Map<String, dynamic>.from(
           (data['metadata'] as Map<dynamic, dynamic>?) ?? {},
@@ -330,8 +320,7 @@ class DataSync {
         'syncedRecords': syncedRecords,
         'failedRecords': failedRecords,
         'startedAt': Timestamp.fromDate(startedAt),
-        'completedAt':
-            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+        'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
         'errorMessage': errorMessage,
         'metadata': metadata,
       };

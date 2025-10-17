@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../models/promotion_boost.dart';
-import '../../services/promotion_service.dart';
 import '../../providers/auth_provider.dart';
+import '../../services/promotion_service.dart';
 
 class MyPromotionsScreen extends StatefulWidget {
   const MyPromotionsScreen({super.key});
@@ -147,10 +148,9 @@ class _MyPromotionsScreenState extends State<MyPromotionsScreen> {
                     children: [
                       Text(
                         _getTypeText(promotion.type),
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       Text(
                         _getStatusText(promotion.status),
@@ -168,8 +168,7 @@ class _MyPromotionsScreenState extends State<MyPromotionsScreen> {
             const SizedBox(height: 16),
 
             // Детали продвижения
-            _buildDetailRow(
-                'Приоритет:', _getPriorityText(promotion.priorityLevel)),
+            _buildDetailRow('Приоритет:', _getPriorityText(promotion.priorityLevel)),
             _buildDetailRow('Цена:', '${promotion.price.toInt()} ₽'),
             _buildDetailRow('Начало:', _formatDate(promotion.startDate)),
             _buildDetailRow('Окончание:', _formatDate(promotion.endDate)),

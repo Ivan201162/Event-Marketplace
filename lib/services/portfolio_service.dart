@@ -21,8 +21,7 @@ class PortfolioService {
   }) async {
     try {
       // Генерируем уникальное имя файла
-      final fileName =
-          'portfolio_images/${userId}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final fileName = 'portfolio_images/${userId}_${DateTime.now().millisecondsSinceEpoch}.jpg';
 
       // Загружаем файл в Firebase Storage
       final ref = _storage.ref().child(fileName);
@@ -59,8 +58,7 @@ class PortfolioService {
   }) async {
     try {
       // Генерируем уникальное имя файла
-      final fileName =
-          'portfolio_videos/${userId}_${DateTime.now().millisecondsSinceEpoch}.mp4';
+      final fileName = 'portfolio_videos/${userId}_${DateTime.now().millisecondsSinceEpoch}.mp4';
 
       // Загружаем файл в Firebase Storage
       final ref = _storage.ref().child(fileName);
@@ -135,8 +133,7 @@ class PortfolioService {
     PortfolioItem item,
   ) async {
     try {
-      final profileRef =
-          _firestore.collection('specialist_profiles').doc(userId);
+      final profileRef = _firestore.collection('specialist_profiles').doc(userId);
 
       await _firestore.runTransaction((transaction) async {
         final snapshot = await transaction.get(profileRef);
@@ -164,8 +161,7 @@ class PortfolioService {
   /// Удалить элемент портфолио
   Future<void> removePortfolioItem(String userId, String itemId) async {
     try {
-      final profileRef =
-          _firestore.collection('specialist_profiles').doc(userId);
+      final profileRef = _firestore.collection('specialist_profiles').doc(userId);
 
       await _firestore.runTransaction((transaction) async {
         final snapshot = await transaction.get(profileRef);
@@ -197,8 +193,7 @@ class PortfolioService {
     PortfolioItem updatedItem,
   ) async {
     try {
-      final profileRef =
-          _firestore.collection('specialist_profiles').doc(userId);
+      final profileRef = _firestore.collection('specialist_profiles').doc(userId);
 
       await _firestore.runTransaction((transaction) async {
         final snapshot = await transaction.get(profileRef);
@@ -210,8 +205,7 @@ class PortfolioService {
               .toList();
 
           // Находим и обновляем элемент
-          final index =
-              portfolio.indexWhere((item) => item.id == updatedItem.id);
+          final index = portfolio.indexWhere((item) => item.id == updatedItem.id);
           if (index != -1) {
             portfolio[index] = updatedItem;
           }
@@ -231,8 +225,7 @@ class PortfolioService {
   /// Получить портфолио специалиста
   Future<List<PortfolioItem>> getPortfolio(String userId) async {
     try {
-      final doc =
-          await _firestore.collection('specialist_profiles').doc(userId).get();
+      final doc = await _firestore.collection('specialist_profiles').doc(userId).get();
 
       if (doc.exists) {
         final data = doc.data()!;

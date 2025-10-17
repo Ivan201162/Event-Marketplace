@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,12 +17,10 @@ class CreateTestSpecialistButton extends ConsumerStatefulWidget {
   final String? specialistType;
 
   @override
-  ConsumerState<CreateTestSpecialistButton> createState() =>
-      _CreateTestSpecialistButtonState();
+  ConsumerState<CreateTestSpecialistButton> createState() => _CreateTestSpecialistButtonState();
 }
 
-class _CreateTestSpecialistButtonState
-    extends ConsumerState<CreateTestSpecialistButton> {
+class _CreateTestSpecialistButtonState extends ConsumerState<CreateTestSpecialistButton> {
   final SpecialistService _specialistService = SpecialistService();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -102,14 +99,10 @@ class _CreateTestSpecialistButtonState
       final specialist = _createSpecialistData(specialistId);
 
       // Сохраняем в Firestore
-      await _firestore
-          .collection('specialists')
-          .doc(specialistId)
-          .set(specialist.toMap());
+      await _firestore.collection('specialists').doc(specialistId).set(specialist.toMap());
 
       setState(() {
-        _successMessage =
-            'Тест-специалист "${specialist.name}" создан успешно!';
+        _successMessage = 'Тест-специалист "${specialist.name}" создан успешно!';
       });
 
       // Вызываем callback если есть
@@ -139,8 +132,7 @@ class _CreateTestSpecialistButtonState
       debugPrint('Stack trace: $stackTrace');
 
       setState(() {
-        _errorMessage =
-            'Ошибка создания тест-специалиста: ${_getErrorMessage(e)}';
+        _errorMessage = 'Ошибка создания тест-специалиста: ${_getErrorMessage(e)}';
       });
 
       // Показываем SnackBar с ошибкой
@@ -163,8 +155,7 @@ class _CreateTestSpecialistButtonState
   /// Создание данных специалиста в зависимости от типа
   Specialist _createSpecialistData(String specialistId) {
     final now = DateTime.now();
-    final userId =
-        FirebaseAuth.instance.currentUser?.uid ?? 'test_user_$specialistId';
+    final userId = FirebaseAuth.instance.currentUser?.uid ?? 'test_user_$specialistId';
 
     switch (widget.specialistType) {
       case 'photographer':
@@ -192,8 +183,7 @@ class _CreateTestSpecialistButtonState
         name: 'Анна Фотограф',
         description:
             'Профессиональный фотограф с 5-летним опытом. Специализируюсь на свадебной и портретной фотографии.',
-        bio:
-            'Люблю создавать красивые моменты и запечатлевать эмоции. Работаю в Москве и области.',
+        bio: 'Люблю создавать красивые моменты и запечатлевать эмоции. Работаю в Москве и области.',
         category: SpecialistCategory.photographer,
         experienceLevel: ExperienceLevel.intermediate,
         yearsOfExperience: 5,
@@ -265,8 +255,7 @@ class _CreateTestSpecialistButtonState
       );
 
   /// Создание DJ
-  Specialist _createDJ(String specialistId, String userId, DateTime now) =>
-      Specialist(
+  Specialist _createDJ(String specialistId, String userId, DateTime now) => Specialist(
         id: specialistId,
         userId: userId,
         name: 'DJ Алексей',
@@ -303,8 +292,7 @@ class _CreateTestSpecialistButtonState
       );
 
   /// Создание ведущего
-  Specialist _createHost(String specialistId, String userId, DateTime now) =>
-      Specialist(
+  Specialist _createHost(String specialistId, String userId, DateTime now) => Specialist(
         id: specialistId,
         userId: userId,
         name: 'Ведущий Дмитрий',
@@ -350,10 +338,8 @@ class _CreateTestSpecialistButtonState
         id: specialistId,
         userId: userId,
         name: 'Тест Специалист',
-        description:
-            'Тестовый специалист для проверки функциональности приложения.',
-        bio:
-            'Это тестовый профиль, созданный для демонстрации возможностей приложения.',
+        description: 'Тестовый специалист для проверки функциональности приложения.',
+        bio: 'Это тестовый профиль, созданный для демонстрации возможностей приложения.',
         category: SpecialistCategory.other,
         experienceLevel: ExperienceLevel.beginner,
         yearsOfExperience: 1,

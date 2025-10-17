@@ -97,8 +97,7 @@ class PortfolioGridWidget extends StatelessWidget {
                   width: double.infinity,
                   height: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      _buildPlaceholder(type),
+                  errorBuilder: (context, error, stackTrace) => _buildPlaceholder(type),
                 )
               else
                 _buildPlaceholder(type),
@@ -198,8 +197,7 @@ class PortfolioGridWidget extends StatelessWidget {
               width: double.infinity,
               height: double.infinity,
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) =>
-                  _buildPlaceholder('image'),
+              errorBuilder: (context, error, stackTrace) => _buildPlaceholder('image'),
             ),
           ),
         ),

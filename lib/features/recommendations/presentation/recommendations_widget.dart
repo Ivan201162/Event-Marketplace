@@ -322,8 +322,7 @@ class SimilarSpecialistsWidget extends StatefulWidget {
   final int limit;
 
   @override
-  State<SimilarSpecialistsWidget> createState() =>
-      _SimilarSpecialistsWidgetState();
+  State<SimilarSpecialistsWidget> createState() => _SimilarSpecialistsWidgetState();
 }
 
 class _SimilarSpecialistsWidgetState extends State<SimilarSpecialistsWidget> {
@@ -347,8 +346,7 @@ class _SimilarSpecialistsWidgetState extends State<SimilarSpecialistsWidget> {
     });
 
     try {
-      final similarSpecialists =
-          await _recommendationService.getSimilarSpecialists(
+      final similarSpecialists = await _recommendationService.getSimilarSpecialists(
         specialistId: widget.specialistId,
         limit: widget.limit,
       );

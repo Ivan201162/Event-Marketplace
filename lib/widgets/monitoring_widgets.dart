@@ -31,9 +31,7 @@ class MonitoringStatusWidget extends ConsumerWidget {
                   monitoringState.isInitialized
                       ? Icons.monitor_heart
                       : Icons.monitor_heart_outlined,
-                  color: monitoringState.isInitialized
-                      ? Colors.green
-                      : Colors.orange,
+                  color: monitoringState.isInitialized ? Colors.green : Colors.orange,
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -139,8 +137,7 @@ class AppMetricsWidget extends ConsumerWidget {
                 Icons.wifi,
               ),
               loading: () => _buildLoadingRow(context, 'Сеть'),
-              error: (error, stack) =>
-                  _buildErrorRow(context, 'Сеть', error.toString()),
+              error: (error, stack) => _buildErrorRow(context, 'Сеть', error.toString()),
             ),
 
             const SizedBox(height: 8),
@@ -155,8 +152,7 @@ class AppMetricsWidget extends ConsumerWidget {
                 Icons.memory,
               ),
               loading: () => _buildLoadingRow(context, 'Память'),
-              error: (error, stack) =>
-                  _buildErrorRow(context, 'Память', error.toString()),
+              error: (error, stack) => _buildErrorRow(context, 'Память', error.toString()),
             ),
 
             const SizedBox(height: 8),
@@ -176,8 +172,7 @@ class AppMetricsWidget extends ConsumerWidget {
                 ],
               ),
               loading: () => _buildLoadingRow(context, 'Метрики'),
-              error: (error, stack) =>
-                  _buildErrorRow(context, 'Метрики', error.toString()),
+              error: (error, stack) => _buildErrorRow(context, 'Метрики', error.toString()),
             ),
           ],
         ),
@@ -225,8 +220,7 @@ class AppMetricsWidget extends ConsumerWidget {
         ],
       );
 
-  Widget _buildErrorRow(BuildContext context, String label, String error) =>
-      Row(
+  Widget _buildErrorRow(BuildContext context, String label, String error) => Row(
         children: [
           const Icon(Icons.error, color: Colors.red, size: 16),
           const SizedBox(width: 8),
@@ -358,11 +352,10 @@ class MonitoringLogsWidget extends ConsumerWidget {
                         const SizedBox(width: 8),
                         Text(
                           'Последняя ошибка',
-                          style:
-                              Theme.of(context).textTheme.titleSmall?.copyWith(
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
                       ],
                     ),
@@ -390,8 +383,7 @@ class MonitoringLogsWidget extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: Colors.green.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
-                  border:
-                      Border.all(color: Colors.green.withValues(alpha: 0.3)),
+                  border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   children: [

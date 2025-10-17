@@ -234,10 +234,7 @@ class PaymentIntegrationService {
         updatedAt: DateTime.now(),
       );
 
-      await _firestore
-          .collection('contracts')
-          .doc(contract.id)
-          .set(contract.toMap());
+      await _firestore.collection('contracts').doc(contract.id).set(contract.toMap());
 
       debugPrint('Booking contract created: ${contract.id}');
       return contract;
@@ -268,8 +265,7 @@ class PaymentIntegrationService {
   /// Gets contract by ID
   Future<Contract?> getContract(String contractId) async {
     try {
-      final doc =
-          await _firestore.collection('contracts').doc(contractId).get();
+      final doc = await _firestore.collection('contracts').doc(contractId).get();
       if (!doc.exists) return null;
       return Contract.fromMap(doc.data()!);
     } catch (e) {
@@ -320,8 +316,7 @@ class PaymentIntegrationService {
 
   Future<TaxStatus> _getSpecialistTaxStatus(String specialistId) async {
     try {
-      final doc =
-          await _firestore.collection('specialists').doc(specialistId).get();
+      final doc = await _firestore.collection('specialists').doc(specialistId).get();
       if (!doc.exists) {
         return TaxStatus.individual; // Default to individual
       }
@@ -410,8 +405,7 @@ class PaymentIntegrationService {
         'userId': payment.customerId,
         'type': 'payment_completed',
         'title': 'Платеж завершен',
-        'message':
-            'Ваш платеж на сумму ${payment.amount.toStringAsFixed(0)} ₽ успешно завершен',
+        'message': 'Ваш платеж на сумму ${payment.amount.toStringAsFixed(0)} ₽ успешно завершен',
         'data': {'paymentId': payment.id, 'bookingId': payment.bookingId},
         'createdAt': Timestamp.fromDate(DateTime.now()),
         'read': false,
@@ -422,8 +416,7 @@ class PaymentIntegrationService {
         'userId': payment.specialistId,
         'type': 'payment_received',
         'title': 'Получен платеж',
-        'message':
-            'Вы получили платеж на сумму ${payment.netAmount.toStringAsFixed(0)} ₽',
+        'message': 'Вы получили платеж на сумму ${payment.netAmount.toStringAsFixed(0)} ₽',
         'data': {'paymentId': payment.id, 'bookingId': payment.bookingId},
         'createdAt': Timestamp.fromDate(DateTime.now()),
         'read': false,

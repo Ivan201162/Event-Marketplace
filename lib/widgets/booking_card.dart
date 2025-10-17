@@ -400,9 +400,7 @@ class BookingCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    booking.status == BookingStatus.cancelled
-                        ? Icons.cancel
-                        : Icons.close,
+                    booking.status == BookingStatus.cancelled ? Icons.cancel : Icons.close,
                     color: Colors.red,
                     size: 16,
                   ),
@@ -449,8 +447,7 @@ class BookingCard extends StatelessWidget {
 
   /// Проверить, можно ли редактировать заявку
   bool _canEdit() =>
-      booking.status == BookingStatus.pending ||
-      booking.status == BookingStatus.confirmed;
+      booking.status == BookingStatus.pending || booking.status == BookingStatus.confirmed;
 
   /// Получить иконку статуса
   IconData _getStatusIcon(BookingStatus status) {

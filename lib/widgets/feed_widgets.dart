@@ -34,9 +34,7 @@ class FeedPostWidget extends ConsumerWidget {
                     backgroundImage: post.specialistPhotoUrl != null
                         ? CachedNetworkImageProvider(post.specialistPhotoUrl!)
                         : null,
-                    child: post.specialistPhotoUrl == null
-                        ? const Icon(Icons.person)
-                        : null,
+                    child: post.specialistPhotoUrl == null ? const Icon(Icons.person) : null,
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -138,13 +136,9 @@ class FeedPostWidget extends ConsumerWidget {
               Row(
                 children: [
                   _buildActionButton(
-                    icon: post.isLikedBy('current_user')
-                        ? Icons.favorite
-                        : Icons.favorite_border,
+                    icon: post.isLikedBy('current_user') ? Icons.favorite : Icons.favorite_border,
                     label: post.likes.toString(),
-                    color: post.isLikedBy('current_user')
-                        ? Colors.red
-                        : Colors.grey,
+                    color: post.isLikedBy('current_user') ? Colors.red : Colors.grey,
                     onTap: onLike,
                   ),
                   const SizedBox(width: 24),
@@ -455,10 +449,8 @@ class _PostCommentsWidgetState extends ConsumerState<PostCommentsWidget> {
       final comment = FeedComment(
         id: '', // Будет сгенерирован Firestore
         postId: widget.postId,
-        userId:
-            'current_user', // TODO(developer): Получить реальный ID пользователя
-        userName:
-            'Пользователь', // TODO(developer): Получить реальное имя пользователя
+        userId: 'current_user', // TODO(developer): Получить реальный ID пользователя
+        userName: 'Пользователь', // TODO(developer): Получить реальное имя пользователя
         content: _commentController.text.trim(),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
@@ -497,9 +489,7 @@ class CommentWidget extends ConsumerWidget {
                 ? CachedNetworkImageProvider(comment.userPhotoUrl!)
                 : null,
             radius: 16,
-            child: comment.userPhotoUrl == null
-                ? const Icon(Icons.person, size: 16)
-                : null,
+            child: comment.userPhotoUrl == null ? const Icon(Icons.person, size: 16) : null,
           ),
           const SizedBox(width: 8),
           Expanded(
@@ -551,9 +541,8 @@ class CommentWidget extends ConsumerWidget {
                                 ? Icons.favorite
                                 : Icons.favorite_border,
                             size: 14,
-                            color: comment.isLikedBy('current_user')
-                                ? Colors.red
-                                : Colors.grey[600],
+                            color:
+                                comment.isLikedBy('current_user') ? Colors.red : Colors.grey[600],
                           ),
                           if (comment.likesCount > 0) ...[
                             const SizedBox(width: 4),

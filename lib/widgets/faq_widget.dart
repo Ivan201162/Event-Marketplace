@@ -66,10 +66,8 @@ class _FAQWidgetState extends State<FAQWidget> {
 
     setState(() {
       _filteredItems = _faqItems.where((item) {
-        final titleMatch =
-            item.title.toLowerCase().contains(query.toLowerCase());
-        final contentMatch =
-            item.content.toLowerCase().contains(query.toLowerCase());
+        final titleMatch = item.title.toLowerCase().contains(query.toLowerCase());
+        final contentMatch = item.content.toLowerCase().contains(query.toLowerCase());
         return titleMatch || contentMatch;
       }).toList();
     });
@@ -95,8 +93,7 @@ class _FAQWidgetState extends State<FAQWidget> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
             ),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
           onChanged: _searchFAQ,
         ),
@@ -310,8 +307,7 @@ class FAQDetailWidget extends StatelessWidget {
             children: [
               if (item.category.isNotEmpty) ...[
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: Colors.blue.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),

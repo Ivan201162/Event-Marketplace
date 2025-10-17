@@ -189,9 +189,7 @@ class ReputationWidget extends StatelessWidget {
 
         _buildProgressBar(
           label: 'Нейтральные отзывы (3★)',
-          value: reputation.reviewsCount -
-              reputation.positiveReviews -
-              reputation.negativeReviews,
+          value: reputation.reviewsCount - reputation.positiveReviews - reputation.negativeReviews,
           total: reputation.reviewsCount,
           color: Colors.orange,
         ),

@@ -19,8 +19,7 @@ class FadeInWidget extends StatefulWidget {
   State<FadeInWidget> createState() => _FadeInWidgetState();
 }
 
-class _FadeInWidgetState extends State<FadeInWidget>
-    with SingleTickerProviderStateMixin {
+class _FadeInWidgetState extends State<FadeInWidget> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -83,8 +82,7 @@ class SlideInUpWidget extends StatefulWidget {
   State<SlideInUpWidget> createState() => _SlideInUpWidgetState();
 }
 
-class _SlideInUpWidgetState extends State<SlideInUpWidget>
-    with SingleTickerProviderStateMixin {
+class _SlideInUpWidgetState extends State<SlideInUpWidget> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _animation;
 
@@ -146,8 +144,7 @@ class ScaleInWidget extends StatefulWidget {
   State<ScaleInWidget> createState() => _ScaleInWidgetState();
 }
 
-class _ScaleInWidgetState extends State<ScaleInWidget>
-    with SingleTickerProviderStateMixin {
+class _ScaleInWidgetState extends State<ScaleInWidget> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -209,8 +206,7 @@ class RotateInWidget extends StatefulWidget {
   State<RotateInWidget> createState() => _RotateInWidgetState();
 }
 
-class _RotateInWidgetState extends State<RotateInWidget>
-    with SingleTickerProviderStateMixin {
+class _RotateInWidgetState extends State<RotateInWidget> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -283,8 +279,7 @@ class _AnimatedListViewState extends State<AnimatedListView> {
             curve: widget.curve,
             child: SlideInUpWidget(
               duration: widget.duration,
-              delay:
-                  Duration(milliseconds: widget.delay.inMilliseconds * index),
+              delay: Duration(milliseconds: widget.delay.inMilliseconds * index),
               curve: widget.curve,
               child: child,
             ),
@@ -314,8 +309,7 @@ class AnimatedButton extends StatefulWidget {
   State<AnimatedButton> createState() => _AnimatedButtonState();
 }
 
-class _AnimatedButtonState extends State<AnimatedButton>
-    with SingleTickerProviderStateMixin {
+class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -452,8 +446,7 @@ class AnimatedLoadingIndicator extends StatefulWidget {
   final Duration duration;
 
   @override
-  State<AnimatedLoadingIndicator> createState() =>
-      _AnimatedLoadingIndicatorState();
+  State<AnimatedLoadingIndicator> createState() => _AnimatedLoadingIndicatorState();
 }
 
 class _AnimatedLoadingIndicatorState extends State<AnimatedLoadingIndicator>

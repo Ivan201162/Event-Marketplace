@@ -7,8 +7,7 @@ import '../services/team_service.dart';
 final teamServiceProvider = Provider<TeamService>((ref) => TeamService());
 
 /// Провайдер команды по ID
-final teamProvider =
-    StreamProvider.family<SpecialistTeam?, String>((ref, teamId) {
+final teamProvider = StreamProvider.family<SpecialistTeam?, String>((ref, teamId) {
   final teamService = ref.watch(teamServiceProvider);
   return teamService.watchTeam(teamId);
 });
@@ -28,22 +27,19 @@ final specialistTeamsProvider =
 });
 
 /// Провайдер команды по мероприятию
-final teamByEventProvider =
-    FutureProvider.family<SpecialistTeam?, String>((ref, eventId) {
+final teamByEventProvider = FutureProvider.family<SpecialistTeam?, String>((ref, eventId) {
   final teamService = ref.watch(teamServiceProvider);
   return teamService.getTeamByEvent(eventId);
 });
 
 /// Провайдер статистики команды
-final teamStatsProvider =
-    FutureProvider.family<Map<String, dynamic>, String>((ref, teamId) {
+final teamStatsProvider = FutureProvider.family<Map<String, dynamic>, String>((ref, teamId) {
   final teamService = ref.watch(teamServiceProvider);
   return teamService.getTeamStats(teamId);
 });
 
 /// Провайдер для проверки возможности добавления специалиста в команду
-final canAddSpecialistProvider =
-    FutureProvider.family<bool, Map<String, String>>((ref, params) {
+final canAddSpecialistProvider = FutureProvider.family<bool, Map<String, String>>((ref, params) {
   final teamService = ref.watch(teamServiceProvider);
   return teamService.canAddSpecialistToTeam(
     teamId: params['teamId']!,
@@ -52,8 +48,7 @@ final canAddSpecialistProvider =
 });
 
 /// Провайдер состояния создания команды
-final teamCreationProvider =
-    StateNotifierProvider<TeamCreationNotifier, TeamCreationState>(
+final teamCreationProvider = StateNotifierProvider<TeamCreationNotifier, TeamCreationState>(
   (ref) => TeamCreationNotifier(ref.watch(teamServiceProvider)),
 );
 
@@ -129,8 +124,7 @@ class TeamCreationNotifier extends StateNotifier<TeamCreationState> {
 }
 
 /// Провайдер состояния управления командой
-final teamManagementProvider =
-    StateNotifierProvider<TeamManagementNotifier, TeamManagementState>(
+final teamManagementProvider = StateNotifierProvider<TeamManagementNotifier, TeamManagementState>(
   (ref) => TeamManagementNotifier(ref.watch(teamServiceProvider)),
 );
 
@@ -160,8 +154,7 @@ class TeamManagementState {
 
 /// Нотификатор для управления командой
 class TeamManagementNotifier extends StateNotifier<TeamManagementState> {
-  TeamManagementNotifier(this._teamService)
-      : super(const TeamManagementState());
+  TeamManagementNotifier(this._teamService) : super(const TeamManagementState());
 
   final TeamService _teamService;
 

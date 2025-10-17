@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../services/marketing_admin_service.dart';
+
 import '../../models/admin_models.dart';
+import '../../services/marketing_admin_service.dart';
 
 class AdminAnalyticsScreen extends StatefulWidget {
   const AdminAnalyticsScreen({super.key});
@@ -101,17 +101,15 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
               children: [
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    value: _selectedPeriod,
+                    initialValue: _selectedPeriod,
                     decoration: const InputDecoration(
                       labelText: 'Период',
                       border: OutlineInputBorder(),
                     ),
                     items: const [
                       DropdownMenuItem(value: 'daily', child: Text('Дневной')),
-                      DropdownMenuItem(
-                          value: 'weekly', child: Text('Недельный')),
-                      DropdownMenuItem(
-                          value: 'monthly', child: Text('Месячный')),
+                      DropdownMenuItem(value: 'weekly', child: Text('Недельный')),
+                      DropdownMenuItem(value: 'monthly', child: Text('Месячный')),
                     ],
                     onChanged: (value) {
                       setState(() {
@@ -125,8 +123,7 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
                 Expanded(
                   child: ListTile(
                     title: const Text('Начальная дата'),
-                    subtitle: Text(
-                        '${_startDate.day}.${_startDate.month}.${_startDate.year}'),
+                    subtitle: Text('${_startDate.day}.${_startDate.month}.${_startDate.year}'),
                     trailing: const Icon(Icons.calendar_today),
                     onTap: () => _selectDate(true),
                   ),
@@ -139,8 +136,7 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
                 Expanded(
                   child: ListTile(
                     title: const Text('Конечная дата'),
-                    subtitle: Text(
-                        '${_endDate.day}.${_endDate.month}.${_endDate.year}'),
+                    subtitle: Text('${_endDate.day}.${_endDate.month}.${_endDate.year}'),
                     trailing: const Icon(Icons.calendar_today),
                     onTap: () => _selectDate(false),
                   ),
@@ -168,19 +164,13 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
       );
     }
 
-    final totalRevenue =
-        _analytics.fold(0.0, (sum, item) => sum + item.totalRevenue);
-    final totalSubscriptions =
-        _analytics.fold(0.0, (sum, item) => sum + item.subscriptionRevenue);
-    final totalPromotions =
-        _analytics.fold(0.0, (sum, item) => sum + item.promotionRevenue);
-    final totalAds =
-        _analytics.fold(0.0, (sum, item) => sum + item.advertisementRevenue);
-    final totalTransactions =
-        _analytics.fold(0, (sum, item) => sum + item.totalTransactions);
+    final totalRevenue = _analytics.fold(0.0, (sum, item) => sum + item.totalRevenue);
+    final totalSubscriptions = _analytics.fold(0.0, (sum, item) => sum + item.subscriptionRevenue);
+    final totalPromotions = _analytics.fold(0.0, (sum, item) => sum + item.promotionRevenue);
+    final totalAds = _analytics.fold(0.0, (sum, item) => sum + item.advertisementRevenue);
+    final totalTransactions = _analytics.fold(0, (sum, item) => sum + item.totalTransactions);
     final avgArpu = _analytics.isNotEmpty
-        ? _analytics.fold(0.0, (sum, item) => sum + item.arpu) /
-            _analytics.length
+        ? _analytics.fold(0.0, (sum, item) => sum + item.arpu) / _analytics.length
         : 0.0;
 
     return Card(
@@ -262,8 +252,7 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
     );
   }
 
-  Widget _buildStatItem(
-      String label, String value, IconData icon, Color color) {
+  Widget _buildStatItem(String label, String value, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -328,8 +317,7 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
   }
 
   Widget _buildSimpleChart() {
-    final maxRevenue =
-        _analytics.map((e) => e.totalRevenue).reduce((a, b) => a > b ? a : b);
+    final maxRevenue = _analytics.map((e) => e.totalRevenue).reduce((a, b) => a > b ? a : b);
 
     return ListView.builder(
       scrollDirection: Axis.horizontal,
@@ -403,13 +391,11 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
                         ),
                       ),
                     ),
-                    title: Text(
-                        '${item.date.day}.${item.date.month}.${item.date.year}'),
+                    title: Text('${item.date.day}.${item.date.month}.${item.date.year}'),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                            'Выручка: ${item.totalRevenue.toStringAsFixed(0)}₽'),
+                        Text('Выручка: ${item.totalRevenue.toStringAsFixed(0)}₽'),
                         Text('Транзакций: ${item.totalTransactions}'),
                         Text('ARPU: ${item.arpu.toStringAsFixed(0)}₽'),
                       ],

@@ -248,8 +248,7 @@ class Review {
   List<String> get tags => serviceTags;
 
   @override
-  String toString() =>
-      'Review(id: $id, specialistId: $specialistId, rating: $rating)';
+  String toString() => 'Review(id: $id, specialistId: $specialistId, rating: $rating)';
 
   /// Проверить, можно ли редактировать отзыв (в течение 24 часов)
   bool get canEdit {
@@ -326,8 +325,7 @@ class Review {
   bool isValidRating(int rating) => rating >= 1 && rating <= 5;
 
   /// Проверить валидность комментария
-  bool isValidComment(String comment) =>
-      comment.isNotEmpty && comment.length >= 10;
+  bool isValidComment(String comment) => comment.isNotEmpty && comment.length >= 10;
 
   /// Проверить, можно ли пожаловаться на отзыв
   bool canReport() => !isDeleted && !metadata['reported'] == true;
@@ -348,8 +346,7 @@ class ReviewStats {
         specialistId: map['specialistId'] ?? '',
         averageRating: (map['averageRating'] ?? 0.0).toDouble(),
         totalReviews: map['totalReviews'] ?? 0,
-        ratingDistribution:
-            Map<String, int>.from(map['ratingDistribution'] ?? {}),
+        ratingDistribution: Map<String, int>.from(map['ratingDistribution'] ?? {}),
         lastUpdated: map['lastUpdated'] != null
             ? (map['lastUpdated'] as Timestamp).toDate()
             : DateTime.now(),
@@ -518,8 +515,7 @@ class SpecialistReputation {
     required this.lastUpdated,
   });
 
-  factory SpecialistReputation.fromMap(Map<String, dynamic> data) =>
-      SpecialistReputation(
+  factory SpecialistReputation.fromMap(Map<String, dynamic> data) => SpecialistReputation(
         specialistId: data['specialistId'] ?? '',
         ratingAverage: data['ratingAverage'] as double? ?? 0.0,
         reviewsCount: data['reviewsCount'] as int? ?? 0,

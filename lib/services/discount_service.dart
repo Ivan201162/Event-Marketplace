@@ -55,8 +55,7 @@ class DiscountService {
       final now = DateTime.now();
 
       // Получаем текущее бронирование
-      final bookingDoc =
-          await _firestore.collection('bookings').doc(bookingId).get();
+      final bookingDoc = await _firestore.collection('bookings').doc(bookingId).get();
       if (!bookingDoc.exists) throw Exception('Бронирование не найдено');
 
       final bookingData = bookingDoc.data();
@@ -104,8 +103,7 @@ class DiscountService {
       final now = DateTime.now();
 
       // Получаем текущее бронирование
-      final bookingDoc =
-          await _firestore.collection('bookings').doc(bookingId).get();
+      final bookingDoc = await _firestore.collection('bookings').doc(bookingId).get();
       if (!bookingDoc.exists) throw Exception('Бронирование не найдено');
 
       final bookingData = bookingDoc.data();
@@ -143,8 +141,7 @@ class DiscountService {
   /// Получить скидку для бронирования
   Future<BookingDiscount?> getBookingDiscount(String bookingId) async {
     try {
-      final bookingDoc =
-          await _firestore.collection('bookings').doc(bookingId).get();
+      final bookingDoc = await _firestore.collection('bookings').doc(bookingId).get();
       if (!bookingDoc.exists) return null;
 
       final bookingData = bookingDoc.data();
@@ -224,8 +221,7 @@ class DiscountService {
         'accepted': accepted,
         'rejected': rejected,
         'expired': expired,
-        'acceptanceRate':
-            totalOffered > 0 ? (accepted / totalOffered) * 100 : 0,
+        'acceptanceRate': totalOffered > 0 ? (accepted / totalOffered) * 100 : 0,
         'totalSavings': totalSavings,
         'averageSavings': accepted > 0 ? totalSavings / accepted : 0,
       };
@@ -241,8 +237,7 @@ class DiscountService {
   ) async {
     try {
       // Получаем FCM токены клиента
-      final customerDoc =
-          await _firestore.collection('users').doc(customerId).get();
+      final customerDoc = await _firestore.collection('users').doc(customerId).get();
       if (!customerDoc.exists) return;
 
       final customerData = customerDoc.data();
@@ -287,8 +282,7 @@ class DiscountService {
   ) async {
     try {
       // Получаем FCM токены специалиста
-      final specialistDoc =
-          await _firestore.collection('specialists').doc(specialistId).get();
+      final specialistDoc = await _firestore.collection('specialists').doc(specialistId).get();
       if (!specialistDoc.exists) return;
 
       final specialistData = specialistDoc.data();
@@ -332,8 +326,7 @@ class DiscountService {
   ) async {
     try {
       // Получаем FCM токены специалиста
-      final specialistDoc =
-          await _firestore.collection('specialists').doc(specialistId).get();
+      final specialistDoc = await _firestore.collection('specialists').doc(specialistId).get();
       if (!specialistDoc.exists) return;
 
       final specialistData = specialistDoc.data();

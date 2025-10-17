@@ -1,7 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 import '../models/social_models.dart';
 import '../services/supabase_service.dart';
@@ -15,8 +15,7 @@ class SocialFollowingScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<SocialFollowingScreen> createState() =>
-      _SocialFollowingScreenState();
+  ConsumerState<SocialFollowingScreen> createState() => _SocialFollowingScreenState();
 }
 
 class _SocialFollowingScreenState extends ConsumerState<SocialFollowingScreen> {
@@ -39,8 +38,7 @@ class _SocialFollowingScreenState extends ConsumerState<SocialFollowingScreen> {
       });
 
       // Загружаем профиль пользователя
-      final profile =
-          await SupabaseService.getProfileByUsername(widget.username);
+      final profile = await SupabaseService.getProfileByUsername(widget.username);
       if (profile == null) {
         setState(() {
           _error = 'Профиль не найден';
@@ -157,9 +155,8 @@ class _SocialFollowingScreenState extends ConsumerState<SocialFollowingScreen> {
     return ListTile(
       leading: CircleAvatar(
         radius: 24,
-        backgroundImage: following.avatarUrl != null
-            ? CachedNetworkImageProvider(following.avatarUrl!)
-            : null,
+        backgroundImage:
+            following.avatarUrl != null ? CachedNetworkImageProvider(following.avatarUrl!) : null,
         child: following.avatarUrl == null ? const Icon(Icons.person) : null,
       ),
       title: Text(
@@ -275,4 +272,3 @@ class _SocialFollowingScreenState extends ConsumerState<SocialFollowingScreen> {
     }
   }
 }
-

@@ -12,8 +12,7 @@ class EnhancedChatsScreen extends ConsumerStatefulWidget {
   const EnhancedChatsScreen({super.key});
 
   @override
-  ConsumerState<EnhancedChatsScreen> createState() =>
-      _EnhancedChatsScreenState();
+  ConsumerState<EnhancedChatsScreen> createState() => _EnhancedChatsScreenState();
 }
 
 class _EnhancedChatsScreenState extends ConsumerState<EnhancedChatsScreen>

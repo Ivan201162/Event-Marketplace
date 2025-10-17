@@ -28,8 +28,7 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
   @override
   void initState() {
     super.initState();
-    _searchController =
-        TextEditingController(text: widget.currentFilters.searchQuery ?? '');
+    _searchController = TextEditingController(text: widget.currentFilters.searchQuery ?? '');
     _selectedTags = List.from(widget.currentFilters.selectedTags);
     _showPinnedOnly = widget.currentFilters.showPinnedOnly;
     _showByDate = widget.currentFilters.showByDate;
@@ -177,9 +176,7 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
                         leading: const Icon(Icons.person),
                         title: const Text('Связанные со специалистом'),
                         subtitle: Text(
-                          _specialistId != null
-                              ? 'ID: $_specialistId'
-                              : 'Все заметки',
+                          _specialistId != null ? 'ID: $_specialistId' : 'Все заметки',
                         ),
                         trailing: _specialistId != null
                             ? IconButton(
@@ -365,9 +362,7 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
 
   void _applyFilters() {
     final filters = NoteFilters(
-      searchQuery: _searchController.text.trim().isEmpty
-          ? null
-          : _searchController.text.trim(),
+      searchQuery: _searchController.text.trim().isEmpty ? null : _searchController.text.trim(),
       selectedTags: _selectedTags,
       showPinnedOnly: _showPinnedOnly,
       showByDate: _showByDate,

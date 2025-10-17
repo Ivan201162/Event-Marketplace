@@ -115,8 +115,7 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                   });
                 },
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                     color: isSelected ? Colors.blue : Colors.grey[200],
                     borderRadius: BorderRadius.circular(20),
@@ -130,8 +129,7 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                         type.displayName,
                         style: TextStyle(
                           color: isSelected ? Colors.white : Colors.black,
-                          fontWeight:
-                              isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
                     ],
@@ -282,8 +280,7 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
           TextField(
             controller: _tagsController,
             decoration: const InputDecoration(
-              hintText:
-                  'Введите теги через пробел (например: #событие #праздник)',
+              hintText: 'Введите теги через пробел (например: #событие #праздник)',
               border: OutlineInputBorder(),
             ),
           ),
@@ -403,9 +400,7 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                     CircleAvatar(
                       radius: 16,
                       child: Text(
-                        widget.authorId.isNotEmpty
-                            ? widget.authorId[0].toUpperCase()
-                            : 'U',
+                        widget.authorId.isNotEmpty ? widget.authorId[0].toUpperCase() : 'U',
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -532,8 +527,7 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
     );
   }
 
-  Widget _buildPreviewDetailRow(IconData icon, String label, String value) =>
-      Padding(
+  Widget _buildPreviewDetailRow(IconData icon, String label, String value) => Padding(
         padding: const EdgeInsets.only(bottom: 4),
         child: Row(
           children: [
@@ -621,16 +615,13 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
         type: _selectedType,
         media: [], // Будет заполнено в сервисе
         tags: tags,
-        category: _categoryController.text.trim().isNotEmpty
-            ? _categoryController.text.trim()
-            : null,
+        category:
+            _categoryController.text.trim().isNotEmpty ? _categoryController.text.trim() : null,
         budget: budget,
-        timeline: _timelineController.text.trim().isNotEmpty
-            ? _timelineController.text.trim()
-            : null,
-        location: _locationController.text.trim().isNotEmpty
-            ? _locationController.text.trim()
-            : null,
+        timeline:
+            _timelineController.text.trim().isNotEmpty ? _timelineController.text.trim() : null,
+        location:
+            _locationController.text.trim().isNotEmpty ? _locationController.text.trim() : null,
         isPublic: _isPublic,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),

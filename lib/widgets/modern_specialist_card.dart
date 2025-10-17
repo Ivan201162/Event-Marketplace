@@ -62,16 +62,12 @@ class ModernSpecialistCard extends ConsumerWidget {
         children: [
           CircleAvatar(
             radius: isCompact ? 25 : 32,
-            backgroundColor:
-                Theme.of(context).primaryColor.withValues(alpha: 0.1),
-            backgroundImage: specialist.imageUrlValue != null
-                ? NetworkImage(specialist.imageUrlValue!)
-                : null,
+            backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+            backgroundImage:
+                specialist.imageUrlValue != null ? NetworkImage(specialist.imageUrlValue!) : null,
             child: specialist.imageUrlValue == null
                 ? Text(
-                    specialist.name.isNotEmpty
-                        ? specialist.name[0].toUpperCase()
-                        : '?',
+                    specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : '?',
                     style: TextStyle(
                       fontSize: isCompact ? 18 : 22,
                       fontWeight: FontWeight.bold,
@@ -112,8 +108,7 @@ class ModernSpecialistCard extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: isCompact ? 16 : 18,
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).textTheme.bodyLarge?.color ??
-                        Colors.black,
+                    color: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -126,8 +121,7 @@ class ModernSpecialistCard extends ConsumerWidget {
             specialist.category.displayName ?? 'Категория',
             style: TextStyle(
               fontSize: isCompact ? 12 : 14,
-              color:
-                  Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey,
+              color: Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey,
             ),
           ),
           const SizedBox(height: 4),
@@ -136,8 +130,7 @@ class ModernSpecialistCard extends ConsumerWidget {
               Icon(
                 Icons.location_on,
                 size: 14,
-                color: Theme.of(context).textTheme.bodyMedium?.color ??
-                    Colors.grey,
+                color: Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey,
               ),
               const SizedBox(width: 4),
               Expanded(
@@ -145,8 +138,7 @@ class ModernSpecialistCard extends ConsumerWidget {
                   specialist.city ?? 'Город не указан',
                   style: TextStyle(
                     fontSize: isCompact ? 12 : 14,
-                    color: Theme.of(context).textTheme.bodyMedium?.color ??
-                        Colors.grey,
+                    color: Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

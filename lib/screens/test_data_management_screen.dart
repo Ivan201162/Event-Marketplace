@@ -6,8 +6,7 @@ class TestDataManagementScreen extends StatefulWidget {
   const TestDataManagementScreen({super.key});
 
   @override
-  State<TestDataManagementScreen> createState() =>
-      _TestDataManagementScreenState();
+  State<TestDataManagementScreen> createState() => _TestDataManagementScreenState();
 }
 
 class _TestDataManagementScreenState extends State<TestDataManagementScreen> {
@@ -97,8 +96,7 @@ class _TestDataManagementScreenState extends State<TestDataManagementScreen> {
     return result ?? false;
   }
 
-  void _showSuccessSnackBar(String message) =>
-      ScaffoldMessenger.of(context).showSnackBar(
+  void _showSuccessSnackBar(String message) => ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(message),
           backgroundColor: Colors.green,
@@ -143,21 +141,14 @@ class _TestDataManagementScreenState extends State<TestDataManagementScreen> {
                             Row(
                               children: [
                                 Icon(
-                                  _hasTestData
-                                      ? Icons.check_circle
-                                      : Icons.cancel,
-                                  color:
-                                      _hasTestData ? Colors.green : Colors.red,
+                                  _hasTestData ? Icons.check_circle : Icons.cancel,
+                                  color: _hasTestData ? Colors.green : Colors.red,
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  _hasTestData
-                                      ? 'Данные существуют'
-                                      : 'Данные отсутствуют',
+                                  _hasTestData ? 'Данные существуют' : 'Данные отсутствуют',
                                   style: TextStyle(
-                                    color: _hasTestData
-                                        ? Colors.green
-                                        : Colors.red,
+                                    color: _hasTestData ? Colors.green : Colors.red,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -187,11 +178,9 @@ class _TestDataManagementScreenState extends State<TestDataManagementScreen> {
                             else
                               ..._stats.entries.map(
                                 (entry) => Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 2),
+                                  padding: const EdgeInsets.symmetric(vertical: 2),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         _getCollectionDisplayName(entry.key),

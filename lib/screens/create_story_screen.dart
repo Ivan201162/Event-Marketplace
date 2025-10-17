@@ -104,8 +104,7 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
                       onTap: () {
                         setState(() {
                           _selectedType = type;
-                          _selectedFile =
-                              null; // Сбрасываем файл при смене типа
+                          _selectedFile = null; // Сбрасываем файл при смене типа
                         });
                       },
                       child: Container(
@@ -411,8 +410,7 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
         contentType: _selectedType,
         contentFile: _selectedFile!,
         text: _textController.text.isEmpty ? null : _textController.text,
-        caption:
-            _captionController.text.isEmpty ? null : _captionController.text,
+        caption: _captionController.text.isEmpty ? null : _captionController.text,
       );
 
       if (mounted) {

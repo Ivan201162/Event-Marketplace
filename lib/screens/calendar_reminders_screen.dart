@@ -11,15 +11,12 @@ class CalendarRemindersScreen extends ConsumerStatefulWidget {
   const CalendarRemindersScreen({super.key});
 
   @override
-  ConsumerState<CalendarRemindersScreen> createState() =>
-      _CalendarRemindersScreenState();
+  ConsumerState<CalendarRemindersScreen> createState() => _CalendarRemindersScreenState();
 }
 
-class _CalendarRemindersScreenState
-    extends ConsumerState<CalendarRemindersScreen>
+class _CalendarRemindersScreenState extends ConsumerState<CalendarRemindersScreen>
     with TickerProviderStateMixin {
-  final CalendarIntegrationService _calendarService =
-      CalendarIntegrationService();
+  final CalendarIntegrationService _calendarService = CalendarIntegrationService();
   final ReminderSystemService _reminderService = ReminderSystemService();
   final ErrorLoggingService _errorLogger = ErrorLoggingService();
 
@@ -253,8 +250,7 @@ class _CalendarRemindersScreenState
                   children: [
                     const Text(
                       'Статистика Календаря',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 16),
                     if (_calendarStats.isNotEmpty) ...[
@@ -292,8 +288,7 @@ class _CalendarRemindersScreenState
                   children: [
                     const Text(
                       'Статистика Напоминаний',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 16),
                     if (_reminderStats.isNotEmpty) ...[
@@ -351,8 +346,7 @@ class _CalendarRemindersScreenState
                     ),
                   ),
                 ),
-                if (isSynced)
-                  const Icon(Icons.sync, color: Colors.green, size: 16),
+                if (isSynced) const Icon(Icons.sync, color: Colors.green, size: 16),
               ],
             ),
             const SizedBox(height: 8),
@@ -420,8 +414,7 @@ class _CalendarRemindersScreenState
                     ),
                   ),
                 ),
-                if (isTriggered)
-                  const Icon(Icons.check_circle, color: Colors.green, size: 16),
+                if (isTriggered) const Icon(Icons.check_circle, color: Colors.green, size: 16),
               ],
             ),
             const SizedBox(height: 8),
@@ -519,8 +512,7 @@ class CreateEventScreen extends ConsumerStatefulWidget {
 
 class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
   final _formKey = GlobalKey<FormState>();
-  final CalendarIntegrationService _calendarService =
-      CalendarIntegrationService();
+  final CalendarIntegrationService _calendarService = CalendarIntegrationService();
 
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -612,9 +604,8 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
         description: _descriptionController.text.trim(),
         startTime: _startTime,
         endTime: _endTime,
-        location: _locationController.text.trim().isNotEmpty
-            ? _locationController.text.trim()
-            : null,
+        location:
+            _locationController.text.trim().isNotEmpty ? _locationController.text.trim() : null,
         userId: userId,
       );
 
@@ -751,8 +742,7 @@ class CreateReminderScreen extends ConsumerStatefulWidget {
   const CreateReminderScreen({super.key});
 
   @override
-  ConsumerState<CreateReminderScreen> createState() =>
-      _CreateReminderScreenState();
+  ConsumerState<CreateReminderScreen> createState() => _CreateReminderScreenState();
 }
 
 class _CreateReminderScreenState extends ConsumerState<CreateReminderScreen> {
@@ -968,8 +958,7 @@ class _CreateReminderScreenState extends ConsumerState<CreateReminderScreen> {
                         ].asMap().entries.map((entry) {
                           final index = entry.key + 1; // 1-7 для дней недели
                           final dayName = entry.value;
-                          final isSelected =
-                              _selectedRepeatDays.contains(index);
+                          final isSelected = _selectedRepeatDays.contains(index);
 
                           return FilterChip(
                             label: Text(dayName),

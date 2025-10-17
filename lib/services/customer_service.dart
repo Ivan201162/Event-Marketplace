@@ -10,8 +10,7 @@ class CustomerService {
   /// Получить заказчика по ID
   Future<Customer?> getCustomerById(String customerId) async {
     try {
-      final doc =
-          await _firestore.collection(_collection).doc(customerId).get();
+      final doc = await _firestore.collection(_collection).doc(customerId).get();
 
       if (!doc.exists) return null;
       return Customer.fromDocument(doc);
@@ -23,11 +22,8 @@ class CustomerService {
   /// Получить заказчика по email
   Future<Customer?> getCustomerByEmail(String email) async {
     try {
-      final querySnapshot = await _firestore
-          .collection(_collection)
-          .where('email', isEqualTo: email)
-          .limit(1)
-          .get();
+      final querySnapshot =
+          await _firestore.collection(_collection).where('email', isEqualTo: email).limit(1).get();
 
       if (querySnapshot.docs.isEmpty) return null;
       return Customer.fromDocument(querySnapshot.docs.first);
@@ -88,10 +84,7 @@ class CustomerService {
         updateData['anniversaryRemindersEnabled'] = anniversaryRemindersEnabled;
       }
 
-      await _firestore
-          .collection(_collection)
-          .doc(customerId)
-          .update(updateData);
+      await _firestore.collection(_collection).doc(customerId).update(updateData);
     } on Exception catch (e) {
       throw Exception('Ошибка обновления профиля: $e');
     }
@@ -211,15 +204,12 @@ class CustomerService {
       }
 
       // Получить количество бронирований
-      final bookingsSnapshot = await _firestore
-          .collection('bookings')
-          .where('customerId', isEqualTo: customerId)
-          .get();
+      final bookingsSnapshot =
+          await _firestore.collection('bookings').where('customerId', isEqualTo: customerId).get();
 
       final totalBookings = bookingsSnapshot.docs.length;
-      final completedBookings = bookingsSnapshot.docs
-          .where((doc) => doc.data()['status'] == 'completed')
-          .length;
+      final completedBookings =
+          bookingsSnapshot.docs.where((doc) => doc.data()['status'] == 'completed').length;
 
       return {
         'totalBookings': totalBookings,

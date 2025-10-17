@@ -57,9 +57,8 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
             children: [
               CircleAvatar(
                 radius: 16,
-                backgroundImage: widget.otherUserAvatar != null
-                    ? NetworkImage(widget.otherUserAvatar!)
-                    : null,
+                backgroundImage:
+                    widget.otherUserAvatar != null ? NetworkImage(widget.otherUserAvatar!) : null,
                 child: widget.otherUserAvatar == null
                     ? Text(
                         widget.otherUserName.isNotEmpty
@@ -169,20 +168,17 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
         ),
       );
 
-  Widget _buildMessageBubble(ChatMessageExtended message, bool isOwnMessage) =>
-      Container(
+  Widget _buildMessageBubble(ChatMessageExtended message, bool isOwnMessage) => Container(
         margin: const EdgeInsets.symmetric(vertical: 4),
         child: Row(
-          mainAxisAlignment:
-              isOwnMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
+          mainAxisAlignment: isOwnMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             if (!isOwnMessage) ...[
               CircleAvatar(
                 radius: 16,
-                backgroundImage: widget.otherUserAvatar != null
-                    ? NetworkImage(widget.otherUserAvatar!)
-                    : null,
+                backgroundImage:
+                    widget.otherUserAvatar != null ? NetworkImage(widget.otherUserAvatar!) : null,
                 child: widget.otherUserAvatar == null
                     ? Text(
                         widget.otherUserName.isNotEmpty
@@ -200,16 +196,11 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
                 ),
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: isOwnMessage
-                      ? Theme.of(context).primaryColor
-                      : Colors.grey[200],
+                  color: isOwnMessage ? Theme.of(context).primaryColor : Colors.grey[200],
                   borderRadius: BorderRadius.circular(16).copyWith(
-                    bottomLeft: isOwnMessage
-                        ? const Radius.circular(16)
-                        : const Radius.circular(4),
-                    bottomRight: isOwnMessage
-                        ? const Radius.circular(4)
-                        : const Radius.circular(16),
+                    bottomLeft: isOwnMessage ? const Radius.circular(16) : const Radius.circular(4),
+                    bottomRight:
+                        isOwnMessage ? const Radius.circular(4) : const Radius.circular(16),
                   ),
                 ),
                 child: Column(
@@ -308,9 +299,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
             IconButton(
               icon: Icon(
                 _showVoiceRecorder ? Icons.keyboard : Icons.mic,
-                color: _showVoiceRecorder
-                    ? Theme.of(context).primaryColor
-                    : Colors.grey[600],
+                color: _showVoiceRecorder ? Theme.of(context).primaryColor : Colors.grey[600],
               ),
               onPressed: () {
                 setState(() {
@@ -480,9 +469,8 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
           children: [
             ListTile(
               leading: CircleAvatar(
-                backgroundImage: widget.otherUserAvatar != null
-                    ? NetworkImage(widget.otherUserAvatar!)
-                    : null,
+                backgroundImage:
+                    widget.otherUserAvatar != null ? NetworkImage(widget.otherUserAvatar!) : null,
                 child: widget.otherUserAvatar == null
                     ? Text(
                         widget.otherUserName.isNotEmpty

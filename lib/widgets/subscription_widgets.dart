@@ -103,9 +103,7 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              isSubscribed
-                  ? 'Отписались от специалиста'
-                  : 'Подписались на специалиста',
+              isSubscribed ? 'Отписались от специалиста' : 'Подписались на специалиста',
             ),
             backgroundColor: Colors.green,
           ),
@@ -414,9 +412,7 @@ class NotificationTile extends StatelessWidget {
           backgroundImage: notification.specialistPhotoUrl != null
               ? CachedNetworkImageProvider(notification.specialistPhotoUrl!)
               : null,
-          child: notification.specialistPhotoUrl == null
-              ? const Icon(Icons.person)
-              : null,
+          child: notification.specialistPhotoUrl == null ? const Icon(Icons.person) : null,
         ),
         title: Text(notification.title),
         subtitle: Text(notification.body),

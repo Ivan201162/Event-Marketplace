@@ -16,14 +16,11 @@ class AutomaticRecommendationsWidget extends StatefulWidget {
   final void Function(Specialist)? onSpecialistSelected;
 
   @override
-  State<AutomaticRecommendationsWidget> createState() =>
-      _AutomaticRecommendationsWidgetState();
+  State<AutomaticRecommendationsWidget> createState() => _AutomaticRecommendationsWidgetState();
 }
 
-class _AutomaticRecommendationsWidgetState
-    extends State<AutomaticRecommendationsWidget> {
-  final AutomaticRecommendationService _service =
-      AutomaticRecommendationService();
+class _AutomaticRecommendationsWidgetState extends State<AutomaticRecommendationsWidget> {
+  final AutomaticRecommendationService _service = AutomaticRecommendationService();
   List<SpecialistRecommendation> _recommendations = [];
   bool _isLoading = false;
   String? _error;
@@ -57,8 +54,7 @@ class _AutomaticRecommendationsWidgetState
     });
 
     try {
-      final recommendations =
-          await _service.getRecommendationsForSelectedSpecialists(
+      final recommendations = await _service.getRecommendationsForSelectedSpecialists(
         selectedSpecialistIds: widget.selectedSpecialistIds,
         userId: widget.userId,
       );
@@ -260,15 +256,13 @@ class _RecommendationCard extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 16,
-                        backgroundImage: recommendation.specialist.avatarUrl !=
-                                null
+                        backgroundImage: recommendation.specialist.avatarUrl != null
                             ? NetworkImage(recommendation.specialist.avatarUrl!)
                             : null,
                         child: recommendation.specialist.avatarUrl == null
                             ? Text(
                                 recommendation.specialist.name.isNotEmpty
-                                    ? recommendation.specialist.name[0]
-                                        .toUpperCase()
+                                    ? recommendation.specialist.name[0].toUpperCase()
                                     : '?',
                                 style: const TextStyle(fontSize: 12),
                               )

@@ -91,8 +91,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         width: 60,
                         height: 60,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) =>
-                            const Icon(
+                        errorBuilder: (context, error, stackTrace) => const Icon(
                           Icons.person,
                           size: 30,
                           color: Colors.grey,
@@ -136,9 +135,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        user?.city?.trim().isNotEmpty == true
-                            ? user!.city!
-                            : 'Город не указан',
+                        user?.city?.trim().isNotEmpty == true ? user!.city! : 'Город не указан',
                         style: const TextStyle(
                           color: Colors.white70,
                           fontSize: 12,

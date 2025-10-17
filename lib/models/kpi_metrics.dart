@@ -39,9 +39,7 @@ class KPIMetric {
         changePercentage: map['changePercentage']?.toDouble(),
         status: MetricStatus.fromString(map['status'] ?? 'normal'),
         timestamp: (map['timestamp'] as Timestamp).toDate(),
-        lastUpdated: map['lastUpdated'] != null
-            ? (map['lastUpdated'] as Timestamp).toDate()
-            : null,
+        lastUpdated: map['lastUpdated'] != null ? (map['lastUpdated'] as Timestamp).toDate() : null,
         dataSource: map['dataSource'],
         metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
         tags: List<String>.from(map['tags'] ?? []),
@@ -84,8 +82,7 @@ class KPIMetric {
         'changePercentage': changePercentage,
         'status': status.value,
         'timestamp': Timestamp.fromDate(timestamp),
-        'lastUpdated':
-            lastUpdated != null ? Timestamp.fromDate(lastUpdated!) : null,
+        'lastUpdated': lastUpdated != null ? Timestamp.fromDate(lastUpdated!) : null,
         'dataSource': dataSource,
         'metadata': metadata,
         'tags': tags,
@@ -140,8 +137,7 @@ class KPIMetric {
       );
 
   @override
-  String toString() =>
-      'KPIMetric(id: $id, name: $name, value: $value, status: $status)';
+  String toString() => 'KPIMetric(id: $id, name: $name, value: $value, status: $status)';
 
   @override
   bool operator ==(Object other) {
@@ -250,8 +246,7 @@ enum MetricCategory {
   final String value;
   final String displayName;
 
-  static MetricCategory fromString(String value) =>
-      MetricCategory.values.firstWhere(
+  static MetricCategory fromString(String value) => MetricCategory.values.firstWhere(
         (category) => category.value == value,
         orElse: () => MetricCategory.business,
       );
@@ -320,8 +315,7 @@ enum MetricStatus {
   final String value;
   final String displayName;
 
-  static MetricStatus fromString(String value) =>
-      MetricStatus.values.firstWhere(
+  static MetricStatus fromString(String value) => MetricStatus.values.firstWhere(
         (status) => status.value == value,
         orElse: () => MetricStatus.normal,
       );
@@ -452,8 +446,7 @@ class KPIDashboard {
       );
 
   @override
-  String toString() =>
-      'KPIDashboard(id: $id, name: $name, metricIds: ${metricIds.length})';
+  String toString() => 'KPIDashboard(id: $id, name: $name, metricIds: ${metricIds.length})';
 
   @override
   bool operator ==(Object other) {
@@ -478,8 +471,7 @@ enum DashboardLayout {
   final String value;
   final String displayName;
 
-  static DashboardLayout fromString(String value) =>
-      DashboardLayout.values.firstWhere(
+  static DashboardLayout fromString(String value) => DashboardLayout.values.firstWhere(
         (layout) => layout.value == value,
         orElse: () => DashboardLayout.grid,
       );
@@ -619,8 +611,7 @@ class KPIReport {
       );
 
   @override
-  String toString() =>
-      'KPIReport(id: $id, name: $name, type: $type, status: $status)';
+  String toString() => 'KPIReport(id: $id, name: $name, type: $type, status: $status)';
 
   @override
   bool operator ==(Object other) {
@@ -679,8 +670,7 @@ enum ReportStatus {
   final String value;
   final String displayName;
 
-  static ReportStatus fromString(String value) =>
-      ReportStatus.values.firstWhere(
+  static ReportStatus fromString(String value) => ReportStatus.values.firstWhere(
         (status) => status.value == value,
         orElse: () => ReportStatus.draft,
       );

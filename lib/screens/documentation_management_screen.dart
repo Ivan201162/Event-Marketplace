@@ -13,10 +13,8 @@ class DocumentationManagementScreen extends ConsumerStatefulWidget {
       _DocumentationManagementScreenState();
 }
 
-class _DocumentationManagementScreenState
-    extends ConsumerState<DocumentationManagementScreen> {
-  final DocumentationManagementService _docService =
-      DocumentationManagementService();
+class _DocumentationManagementScreenState extends ConsumerState<DocumentationManagementScreen> {
+  final DocumentationManagementService _docService = DocumentationManagementService();
   List<Documentation> _documents = [];
   List<DocumentTemplate> _templates = [];
   List<DocumentComment> _comments = [];
@@ -69,12 +67,10 @@ class _DocumentationManagementScreenState
         child: Row(
           children: [
             Expanded(
-              child:
-                  _buildTabButton('documents', 'Документы', Icons.description),
+              child: _buildTabButton('documents', 'Документы', Icons.description),
             ),
             Expanded(
-              child:
-                  _buildTabButton('templates', 'Шаблоны', Icons.content_copy),
+              child: _buildTabButton('templates', 'Шаблоны', Icons.content_copy),
             ),
             Expanded(
               child: _buildTabButton('comments', 'Комментарии', Icons.comment),
@@ -94,13 +90,10 @@ class _DocumentationManagementScreenState
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.blue.withValues(alpha: 0.1)
-              : Colors.transparent,
+          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color:
-                isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
+            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -780,8 +773,7 @@ class _DocumentationManagementScreenState
                     if (document != null)
                       Text(
                         'К документу: ${document.title}',
-                        style:
-                            const TextStyle(fontSize: 12, color: Colors.grey),
+                        style: const TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                   ],
                 ),
@@ -959,13 +951,11 @@ class _DocumentationManagementScreenState
     }
 
     if (_selectedCategory != null) {
-      filtered =
-          filtered.where((doc) => doc.category == _selectedCategory).toList();
+      filtered = filtered.where((doc) => doc.category == _selectedCategory).toList();
     }
 
     if (_selectedStatus != null) {
-      filtered =
-          filtered.where((doc) => doc.status == _selectedStatus).toList();
+      filtered = filtered.where((doc) => doc.status == _selectedStatus).toList();
     }
 
     return filtered;
@@ -1086,8 +1076,7 @@ class _DocumentationManagementScreenState
     // TODO(developer): Реализовать просмотр документа
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:
-            Text('Просмотр документа "${document.title}" будет реализован'),
+        content: Text('Просмотр документа "${document.title}" будет реализован'),
       ),
     );
   }
@@ -1127,8 +1116,7 @@ class _DocumentationManagementScreenState
     // TODO(developer): Реализовать редактирование шаблона
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:
-            Text('Редактирование шаблона "${template.name}" будет реализовано'),
+        content: Text('Редактирование шаблона "${template.name}" будет реализовано'),
       ),
     );
   }

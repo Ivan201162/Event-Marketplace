@@ -11,8 +11,7 @@ class SupportTicketsScreen extends ConsumerStatefulWidget {
   const SupportTicketsScreen({super.key});
 
   @override
-  ConsumerState<SupportTicketsScreen> createState() =>
-      _SupportTicketsScreenState();
+  ConsumerState<SupportTicketsScreen> createState() => _SupportTicketsScreenState();
 }
 
 class _SupportTicketsScreenState extends ConsumerState<SupportTicketsScreen> {
@@ -236,12 +235,10 @@ class SupportTicketDetailScreen extends ConsumerStatefulWidget {
   final SupportTicket ticket;
 
   @override
-  ConsumerState<SupportTicketDetailScreen> createState() =>
-      _SupportTicketDetailScreenState();
+  ConsumerState<SupportTicketDetailScreen> createState() => _SupportTicketDetailScreenState();
 }
 
-class _SupportTicketDetailScreenState
-    extends ConsumerState<SupportTicketDetailScreen> {
+class _SupportTicketDetailScreenState extends ConsumerState<SupportTicketDetailScreen> {
   final SupportService _supportService = SupportService();
   final _messageController = TextEditingController();
 
@@ -310,8 +307,7 @@ class _SupportTicketDetailScreenState
                   ),
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: widget.ticket.statusColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -420,8 +416,7 @@ class _SupportTicketDetailScreenState
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       child: Row(
-        mainAxisAlignment:
-            isFromSupport ? MainAxisAlignment.start : MainAxisAlignment.end,
+        mainAxisAlignment: isFromSupport ? MainAxisAlignment.start : MainAxisAlignment.end,
         children: [
           if (isFromSupport) ...[
             const CircleAvatar(
@@ -500,8 +495,7 @@ class _SupportTicketDetailScreenState
                 decoration: const InputDecoration(
                   hintText: 'Введите сообщение...',
                   border: OutlineInputBorder(),
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 ),
                 maxLines: null,
               ),

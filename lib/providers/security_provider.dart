@@ -123,10 +123,8 @@ class SecurityNotifier extends Notifier<SecurityState> {
   /// Обновить статус безопасности
   Future<void> _updateSecurityStatus() async {
     try {
-      final isEncryptionEnabled =
-          await SecureStorageService.isEncryptionEnabled();
-      final hasEncryptionKey =
-          await SecureStorageService.getEncryptionKey() != null;
+      final isEncryptionEnabled = await SecureStorageService.isEncryptionEnabled();
+      final hasEncryptionKey = await SecureStorageService.getEncryptionKey() != null;
       final lastUpdate = await SecureStorageService.getLastEncryptionUpdate();
 
       state = state.copyWith(
@@ -253,8 +251,7 @@ class PasswordValidationNotifier extends Notifier<PasswordValidationState> {
 }
 
 /// Провайдер для проверки безопасности данных
-final dataSecurityProvider =
-    Provider<DataSecurityChecker>((ref) => DataSecurityChecker());
+final dataSecurityProvider = Provider<DataSecurityChecker>((ref) => DataSecurityChecker());
 
 /// Класс для проверки безопасности данных
 class DataSecurityChecker {
@@ -330,8 +327,7 @@ enum SecurityLevel {
 }
 
 /// Провайдер для генерации безопасных токенов
-final secureTokenProvider =
-    Provider<SecureTokenGenerator>((ref) => SecureTokenGenerator());
+final secureTokenProvider = Provider<SecureTokenGenerator>((ref) => SecureTokenGenerator());
 
 /// Генератор безопасных токенов
 class SecureTokenGenerator {

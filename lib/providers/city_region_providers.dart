@@ -5,8 +5,7 @@ import '../models/city_region.dart';
 import '../services/city_region_service.dart';
 
 /// Провайдер сервиса городов и регионов
-final cityRegionServiceProvider =
-    Provider<CityRegionService>((ref) => CityRegionService());
+final cityRegionServiceProvider = Provider<CityRegionService>((ref) => CityRegionService());
 
 /// Провайдер для получения всех городов
 final citiesProvider = FutureProvider<List<CityRegion>>((ref) async {
@@ -16,16 +15,14 @@ final citiesProvider = FutureProvider<List<CityRegion>>((ref) async {
 
 /// Провайдер для получения городов с фильтрами
 final filteredCitiesProvider =
-    StateNotifierProvider<FilteredCitiesNotifier, AsyncValue<List<CityRegion>>>(
-        (ref) {
+    StateNotifierProvider<FilteredCitiesNotifier, AsyncValue<List<CityRegion>>>((ref) {
   final service = ref.read(cityRegionServiceProvider);
   return FilteredCitiesNotifier(service);
 });
 
 /// Провайдер для поиска городов по названию
 final citySearchProvider =
-    StateNotifierProvider<CitySearchNotifier, AsyncValue<List<CityRegion>>>(
-        (ref) {
+    StateNotifierProvider<CitySearchNotifier, AsyncValue<List<CityRegion>>>((ref) {
   final service = ref.read(cityRegionServiceProvider);
   return CitySearchNotifier(service);
 });
@@ -50,8 +47,7 @@ final currentLocationProvider = FutureProvider<Position?>((ref) async {
 
 /// Провайдер для получения ближайших городов
 final nearbyCitiesProvider =
-    StateNotifierProvider<NearbyCitiesNotifier, AsyncValue<List<CityRegion>>>(
-        (ref) {
+    StateNotifierProvider<NearbyCitiesNotifier, AsyncValue<List<CityRegion>>>((ref) {
   final service = ref.read(cityRegionServiceProvider);
   return NearbyCitiesNotifier(service);
 });
@@ -75,8 +71,7 @@ final citiesInitializationProvider = FutureProvider<bool>((ref) async {
 });
 
 /// Нотификатор для фильтрованных городов
-class FilteredCitiesNotifier
-    extends StateNotifier<AsyncValue<List<CityRegion>>> {
+class FilteredCitiesNotifier extends StateNotifier<AsyncValue<List<CityRegion>>> {
   FilteredCitiesNotifier(this._service) : super(const AsyncValue.loading()) {
     loadCities();
   }
@@ -204,8 +199,7 @@ class NearbyCitiesNotifier extends StateNotifier<AsyncValue<List<CityRegion>>> {
           longitude: position.longitude,
         );
       } else {
-        state =
-            const AsyncValue.error('Не удалось получить местоположение', null);
+        state = const AsyncValue.error('Не удалось получить местоположение', null);
       }
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
@@ -226,16 +220,14 @@ final citiesByRegionProvider =
 });
 
 /// Провайдер для получения города по ID
-final cityByIdProvider =
-    FutureProvider.family<CityRegion?, String>((ref, cityId) async {
+final cityByIdProvider = FutureProvider.family<CityRegion?, String>((ref, cityId) async {
   final service = ref.read(cityRegionServiceProvider);
   return service.getCityById(cityId);
 });
 
 /// Провайдер для получения города по координатам
 final cityByCoordinatesProvider =
-    FutureProvider.family<CityRegion?, Map<String, double>>(
-        (ref, coordinates) async {
+    FutureProvider.family<CityRegion?, Map<String, double>>((ref, coordinates) async {
   final service = ref.read(cityRegionServiceProvider);
   return service.getCityByCoordinates(
     latitude: coordinates['latitude']!,

@@ -3,14 +3,12 @@ import '../services/image_optimization_service.dart';
 import '../services/video_optimization_service.dart';
 
 /// Провайдер для управления кэшем изображений
-final imageCacheProvider =
-    NotifierProvider<ImageCacheNotifier, ImageCacheState>(
+final imageCacheProvider = NotifierProvider<ImageCacheNotifier, ImageCacheState>(
   ImageCacheNotifier.new,
 );
 
 /// Провайдер для управления кэшем видео
-final videoCacheProvider =
-    NotifierProvider<VideoCacheNotifier, VideoCacheState>(
+final videoCacheProvider = NotifierProvider<VideoCacheNotifier, VideoCacheState>(
   VideoCacheNotifier.new,
 );
 
@@ -135,8 +133,7 @@ class ImageCacheNotifier extends Notifier<ImageCacheState> {
   }
 
   /// Получить отформатированный размер кэша
-  String getFormattedCacheSize() =>
-      ImageOptimizationService.formatBytes(state.cacheSize);
+  String getFormattedCacheSize() => ImageOptimizationService.formatBytes(state.cacheSize);
 }
 
 /// Нотификатор для кэша видео
@@ -189,14 +186,13 @@ class VideoCacheNotifier extends Notifier<VideoCacheState> {
   }
 
   /// Получить отформатированный размер кэша
-  String getFormattedCacheSize() =>
-      ImageOptimizationService.formatBytes(state.cacheSize);
+  String getFormattedCacheSize() => ImageOptimizationService.formatBytes(state.cacheSize);
 }
 
 /// Провайдер для настроек оптимизации медиа
-final mediaOptimizationSettingsProvider = NotifierProvider<
-    MediaOptimizationSettingsNotifier,
-    MediaOptimizationSettings>((ref) => MediaOptimizationSettingsNotifier());
+final mediaOptimizationSettingsProvider =
+    NotifierProvider<MediaOptimizationSettingsNotifier, MediaOptimizationSettings>(
+        (ref) => MediaOptimizationSettingsNotifier());
 
 /// Настройки оптимизации медиа
 class MediaOptimizationSettings {
@@ -233,10 +229,8 @@ class MediaOptimizationSettings {
     int? cacheMaxSize,
   }) =>
       MediaOptimizationSettings(
-        enableImageCompression:
-            enableImageCompression ?? this.enableImageCompression,
-        enableVideoCompression:
-            enableVideoCompression ?? this.enableVideoCompression,
+        enableImageCompression: enableImageCompression ?? this.enableImageCompression,
+        enableVideoCompression: enableVideoCompression ?? this.enableVideoCompression,
         enableCaching: enableCaching ?? this.enableCaching,
         imageQuality: imageQuality ?? this.imageQuality,
         maxImageWidth: maxImageWidth ?? this.maxImageWidth,
@@ -248,8 +242,7 @@ class MediaOptimizationSettings {
 }
 
 /// Нотификатор для настроек оптимизации медиа
-class MediaOptimizationSettingsNotifier
-    extends Notifier<MediaOptimizationSettings> {
+class MediaOptimizationSettingsNotifier extends Notifier<MediaOptimizationSettings> {
   MediaOptimizationSettingsNotifier() : super();
 
   /// Обновить настройки сжатия изображений
@@ -306,8 +299,7 @@ class MediaOptimizationSettingsNotifier
 }
 
 /// Провайдер для статистики использования медиа
-final mediaUsageStatsProvider =
-    NotifierProvider<MediaUsageStatsNotifier, MediaUsageStats>(
+final mediaUsageStatsProvider = NotifierProvider<MediaUsageStatsNotifier, MediaUsageStats>(
   (ref) => MediaUsageStatsNotifier(),
 );
 
@@ -342,10 +334,8 @@ class MediaUsageStats {
       MediaUsageStats(
         totalImagesLoaded: totalImagesLoaded ?? this.totalImagesLoaded,
         totalVideosLoaded: totalVideosLoaded ?? this.totalVideosLoaded,
-        totalImagesCompressed:
-            totalImagesCompressed ?? this.totalImagesCompressed,
-        totalVideosCompressed:
-            totalVideosCompressed ?? this.totalVideosCompressed,
+        totalImagesCompressed: totalImagesCompressed ?? this.totalImagesCompressed,
+        totalVideosCompressed: totalVideosCompressed ?? this.totalVideosCompressed,
         totalCacheHits: totalCacheHits ?? this.totalCacheHits,
         totalCacheMisses: totalCacheMisses ?? this.totalCacheMisses,
         totalBytesSaved: totalBytesSaved ?? this.totalBytesSaved,
@@ -359,8 +349,7 @@ class MediaUsageStats {
   }
 
   /// Получить отформатированный размер сэкономленных данных
-  String get formattedBytesSaved =>
-      ImageOptimizationService.formatBytes(totalBytesSaved);
+  String get formattedBytesSaved => ImageOptimizationService.formatBytes(totalBytesSaved);
 }
 
 /// Нотификатор для статистики использования медиа

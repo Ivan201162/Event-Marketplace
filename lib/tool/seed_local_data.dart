@@ -27,8 +27,7 @@ class LocalDataSeeder {
         'id': 'user_1',
         'displayName': 'Тестовый Пользователь',
         'email': 'test@example.com',
-        'avatarUrl':
-            'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
+        'avatarUrl': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
         'city': 'Москва',
         'phone': '+7 (999) 123-45-67',
       },
@@ -52,9 +51,7 @@ class LocalDataSeeder {
           'description': 'Требуется DJ для корпоративного мероприятия',
           'budget': 25000,
           'status': 'pending',
-          'createdAt': DateTime.now()
-              .subtract(const Duration(days: 1))
-              .toIso8601String(),
+          'createdAt': DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
         },
       ],
       'chats': [
@@ -62,24 +59,18 @@ class LocalDataSeeder {
           'id': 'chat_1',
           'participantId': 'specialist_1',
           'participantName': 'Анна Петрова',
-          'participantAvatar':
-              'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
+          'participantAvatar': 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
           'lastMessage': 'Здравствуйте! Интересует ваша услуга',
-          'lastMessageTime': DateTime.now()
-              .subtract(const Duration(minutes: 5))
-              .toIso8601String(),
+          'lastMessageTime': DateTime.now().subtract(const Duration(minutes: 5)).toIso8601String(),
           'unreadCount': 2,
         },
         {
           'id': 'chat_2',
           'participantId': 'specialist_2',
           'participantName': 'Михаил Смирнов',
-          'participantAvatar':
-              'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
+          'participantAvatar': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
           'lastMessage': 'Спасибо за заказ!',
-          'lastMessageTime': DateTime.now()
-              .subtract(const Duration(hours: 2))
-              .toIso8601String(),
+          'lastMessageTime': DateTime.now().subtract(const Duration(hours: 2)).toIso8601String(),
           'unreadCount': 0,
         },
       ],

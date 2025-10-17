@@ -20,8 +20,7 @@ class SpecialistPortfolioVideosScreen extends ConsumerStatefulWidget {
       _SpecialistPortfolioVideosScreenState();
 }
 
-class _SpecialistPortfolioVideosScreenState
-    extends ConsumerState<SpecialistPortfolioVideosScreen>
+class _SpecialistPortfolioVideosScreenState extends ConsumerState<SpecialistPortfolioVideosScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
@@ -41,10 +40,8 @@ class _SpecialistPortfolioVideosScreenState
 
   @override
   Widget build(BuildContext context) {
-    final videosAsync =
-        ref.watch(specialistPortfolioVideosProvider(widget.specialistId));
-    final statsAsync =
-        ref.watch(specialistProfileStatsProvider(widget.specialistId));
+    final videosAsync = ref.watch(specialistPortfolioVideosProvider(widget.specialistId));
+    final statsAsync = ref.watch(specialistProfileStatsProvider(widget.specialistId));
     final videoFilters = ref.watch(videoFiltersProvider);
 
     return Scaffold(
@@ -133,8 +130,7 @@ class _SpecialistPortfolioVideosScreenState
         ],
       );
 
-  Widget _buildAllVideosTab(AsyncValue<List<PortfolioVideo>> videosAsync) =>
-      videosAsync.when(
+  Widget _buildAllVideosTab(AsyncValue<List<PortfolioVideo>> videosAsync) => videosAsync.when(
         data: (videos) {
           if (videos.isEmpty) {
             return _buildEmptyState(
@@ -168,8 +164,7 @@ class _SpecialistPortfolioVideosScreenState
       );
 
   Widget _buildPublicVideosTab() {
-    final publicVideosAsync =
-        ref.watch(specialistPublicVideosProvider(widget.specialistId));
+    final publicVideosAsync = ref.watch(specialistPublicVideosProvider(widget.specialistId));
 
     return publicVideosAsync.when(
       data: (videos) {
@@ -202,13 +197,11 @@ class _SpecialistPortfolioVideosScreenState
   }
 
   Widget _buildPlatformsTab() {
-    final videosAsync =
-        ref.watch(specialistPortfolioVideosProvider(widget.specialistId));
+    final videosAsync = ref.watch(specialistPortfolioVideosProvider(widget.specialistId));
 
     return videosAsync.when(
       data: (videos) {
-        final platforms =
-            videos.map((video) => video.platform).toSet().toList();
+        final platforms = videos.map((video) => video.platform).toSet().toList();
         platforms.sort();
 
         if (platforms.isEmpty) {
@@ -234,13 +227,11 @@ class _SpecialistPortfolioVideosScreenState
   }
 
   Widget _buildPlatformCard(String platform) {
-    final videosAsync =
-        ref.watch(specialistPortfolioVideosProvider(widget.specialistId));
+    final videosAsync = ref.watch(specialistPortfolioVideosProvider(widget.specialistId));
 
     return videosAsync.when(
       data: (videos) {
-        final platformVideos =
-            videos.where((video) => video.platform == platform).toList();
+        final platformVideos = videos.where((video) => video.platform == platform).toList();
 
         return Card(
           margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -268,8 +259,7 @@ class _SpecialistPortfolioVideosScreenState
     );
   }
 
-  Widget _buildEmptyState(String title, String subtitle, IconData icon) =>
-      Center(
+  Widget _buildEmptyState(String title, String subtitle, IconData icon) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -410,8 +400,7 @@ class _SpecialistPortfolioVideosScreenState
                           child: Image.network(
                             video.thumbnailUrl,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                const Icon(
+                            errorBuilder: (context, error, stackTrace) => const Icon(
                               Icons.video_library,
                               size: 64,
                               color: Colors.grey,
@@ -430,8 +419,7 @@ class _SpecialistPortfolioVideosScreenState
                       Row(
                         children: [
                           Chip(
-                            label:
-                                Text(_getPlatformDisplayName(video.platform)),
+                            label: Text(_getPlatformDisplayName(video.platform)),
                             backgroundColor: _getPlatformColor(video.platform),
                           ),
                           const SizedBox(width: 8),
@@ -519,8 +507,7 @@ class _SpecialistPortfolioVideosScreenState
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
-              final service =
-                  ref.read(specialistProfileExtendedServiceProvider);
+              final service = ref.read(specialistProfileExtendedServiceProvider);
               await service.removePortfolioVideo(widget.specialistId, video.id);
               ref.refresh(
                 specialistPortfolioVideosProvider(widget.specialistId),
@@ -568,8 +555,7 @@ class _SpecialistPortfolioVideosScreenState
   }
 
   int _getPlatformsCount() {
-    final videosAsync =
-        ref.read(specialistPortfolioVideosProvider(widget.specialistId));
+    final videosAsync = ref.read(specialistPortfolioVideosProvider(widget.specialistId));
     return videosAsync.when(
       data: (videos) => videos.map((video) => video.platform).toSet().length,
       loading: () => 0,
@@ -631,8 +617,7 @@ class VideosByPlatformScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final videosAsync =
-        ref.watch(specialistPortfolioVideosProvider(specialistId));
+    final videosAsync = ref.watch(specialistPortfolioVideosProvider(specialistId));
 
     return Scaffold(
       appBar: AppBar(
@@ -640,8 +625,7 @@ class VideosByPlatformScreen extends ConsumerWidget {
       ),
       body: videosAsync.when(
         data: (videos) {
-          final platformVideos =
-              videos.where((video) => video.platform == platform).toList();
+          final platformVideos = videos.where((video) => video.platform == platform).toList();
 
           if (platformVideos.isEmpty) {
             return const Center(
@@ -722,8 +706,7 @@ class VideoSearchResultsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final videosAsync =
-        ref.watch(specialistVideoSearchProvider((specialistId, query)));
+    final videosAsync = ref.watch(specialistVideoSearchProvider((specialistId, query)));
 
     return Scaffold(
       appBar: AppBar(

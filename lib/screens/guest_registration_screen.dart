@@ -12,12 +12,10 @@ class GuestRegistrationScreen extends ConsumerStatefulWidget {
   final String eventId;
 
   @override
-  ConsumerState<GuestRegistrationScreen> createState() =>
-      _GuestRegistrationScreenState();
+  ConsumerState<GuestRegistrationScreen> createState() => _GuestRegistrationScreenState();
 }
 
-class _GuestRegistrationScreenState
-    extends ConsumerState<GuestRegistrationScreen> {
+class _GuestRegistrationScreenState extends ConsumerState<GuestRegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -47,9 +45,7 @@ class _GuestRegistrationScreenState
         appBar: AppBar(
           title: const Text('Регистрация гостя'),
         ),
-        body: _event == null
-            ? const Center(child: CircularProgressIndicator())
-            : _buildContent(),
+        body: _event == null ? const Center(child: CircularProgressIndicator()) : _buildContent(),
       );
 
   Widget _buildContent() => SingleChildScrollView(
@@ -231,8 +227,7 @@ class _GuestRegistrationScreenState
                     if (value == null || value.trim().isEmpty) {
                       return 'Пожалуйста, введите email';
                     }
-                    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                        .hasMatch(value)) {
+                    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
                       return 'Пожалуйста, введите корректный email';
                     }
                     return null;
@@ -346,9 +341,7 @@ class _GuestRegistrationScreenState
         eventId: widget.eventId,
         guestName: _nameController.text.trim(),
         guestEmail: _emailController.text.trim(),
-        guestPhone: _phoneController.text.trim().isNotEmpty
-            ? _phoneController.text.trim()
-            : null,
+        guestPhone: _phoneController.text.trim().isNotEmpty ? _phoneController.text.trim() : null,
       );
 
       Navigator.pop(context, true);

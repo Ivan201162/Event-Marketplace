@@ -92,8 +92,7 @@ extension BookingStatusExtension on BookingStatus {
   }
 
   /// Проверить, можно ли отменить бронирование
-  bool get canCancel =>
-      this == BookingStatus.pending || this == BookingStatus.confirmed;
+  bool get canCancel => this == BookingStatus.pending || this == BookingStatus.confirmed;
 
   /// Проверить, можно ли подтвердить бронирование
   bool get canConfirm => this == BookingStatus.pending;
@@ -121,8 +120,7 @@ class BookingStatusInfo {
   });
 
   /// Создать из статуса
-  factory BookingStatusInfo.fromStatus(BookingStatus status) =>
-      BookingStatusInfo(
+  factory BookingStatusInfo.fromStatus(BookingStatus status) => BookingStatusInfo(
         status: status,
         name: status.name,
         description: status.description,

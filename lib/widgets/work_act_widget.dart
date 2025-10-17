@@ -30,8 +30,7 @@ class _WorkActWidgetState extends State<WorkActWidget> {
 
   final TextEditingController _eventNameController = TextEditingController();
   final TextEditingController _eventDateController = TextEditingController();
-  final TextEditingController _eventLocationController =
-      TextEditingController();
+  final TextEditingController _eventLocationController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
 
   List<ServiceItem> _services = [];
@@ -285,8 +284,7 @@ class _WorkActWidgetState extends State<WorkActWidget> {
       );
 
   Widget _buildTotalAmount() {
-    final totalAmount =
-        _services.fold<double>(0, (sum, service) => sum + service.totalPrice);
+    final totalAmount = _services.fold<double>(0, (sum, service) => sum + service.totalPrice);
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -419,8 +417,7 @@ class _WorkActWidgetState extends State<WorkActWidget> {
     });
 
     try {
-      final totalAmount =
-          _services.fold<double>(0, (sum, service) => sum + service.totalPrice);
+      final totalAmount = _services.fold<double>(0, (sum, service) => sum + service.totalPrice);
 
       await _workActService.createWorkAct(
         bookingId: widget.bookingId,
@@ -431,9 +428,7 @@ class _WorkActWidgetState extends State<WorkActWidget> {
         eventLocation: _eventLocationController.text.trim(),
         services: _services,
         totalAmount: totalAmount,
-        notes: _notesController.text.trim().isEmpty
-            ? null
-            : _notesController.text.trim(),
+        notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
       );
 
       if (widget.onActCreated != null) {
@@ -468,8 +463,7 @@ class _WorkActWidgetState extends State<WorkActWidget> {
     });
 
     try {
-      final totalAmount =
-          _services.fold<double>(0, (sum, service) => sum + service.totalPrice);
+      final totalAmount = _services.fold<double>(0, (sum, service) => sum + service.totalPrice);
 
       await _workActService.updateWorkAct(
         workActId: widget.workAct!.id,
@@ -478,9 +472,7 @@ class _WorkActWidgetState extends State<WorkActWidget> {
         eventLocation: _eventLocationController.text.trim(),
         services: _services,
         totalAmount: totalAmount,
-        notes: _notesController.text.trim().isEmpty
-            ? null
-            : _notesController.text.trim(),
+        notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
       );
 
       if (mounted) {
@@ -666,9 +658,8 @@ class _ServiceDialogState extends State<_ServiceDialog> {
       name: _nameController.text.trim(),
       quantity: int.parse(_quantityController.text),
       price: double.parse(_priceController.text),
-      description: _descriptionController.text.trim().isEmpty
-          ? null
-          : _descriptionController.text.trim(),
+      description:
+          _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
     );
 
     widget.onSave(service);

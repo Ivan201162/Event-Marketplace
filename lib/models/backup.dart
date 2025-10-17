@@ -34,16 +34,13 @@ class Backup {
         (e) => e.toString().split('.').last == data['status'],
         orElse: () => BackupStatus.pending,
       ),
-      collections:
-          List<String>.from(data['collections'] as List<dynamic>? ?? []),
+      collections: List<String>.from(data['collections'] as List<dynamic>? ?? []),
       filters: Map<String, dynamic>.from(
         data['filters'] as Map<dynamic, dynamic>? ?? {},
       ),
       createdBy: data['createdBy'] as String?,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      completedAt: data['completedAt'] != null
-          ? (data['completedAt'] as Timestamp).toDate()
-          : null,
+      completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
       fileUrl: data['fileUrl'] as String?,
       fileSize: data['fileSize'] as int?,
       errorMessage: data['errorMessage'] as String?,
@@ -66,16 +63,14 @@ class Backup {
           (e) => e.toString().split('.').last == data['status'],
           orElse: () => BackupStatus.pending,
         ),
-        collections:
-            List<String>.from(data['collections'] as List<dynamic>? ?? []),
+        collections: List<String>.from(data['collections'] as List<dynamic>? ?? []),
         filters: Map<String, dynamic>.from(
           data['filters'] as Map<dynamic, dynamic>? ?? {},
         ),
         createdBy: data['createdBy'] as String?,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
-        completedAt: data['completedAt'] != null
-            ? (data['completedAt'] as Timestamp).toDate()
-            : null,
+        completedAt:
+            data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
         fileUrl: data['fileUrl'] as String?,
         fileSize: data['fileSize'] as int?,
         errorMessage: data['errorMessage'] as String?,
@@ -110,8 +105,7 @@ class Backup {
         'filters': filters,
         'createdBy': createdBy,
         'createdAt': Timestamp.fromDate(createdAt),
-        'completedAt':
-            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+        'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
         'fileUrl': fileUrl,
         'fileSize': fileSize,
         'errorMessage': errorMessage,
@@ -276,16 +270,13 @@ class Restore {
         (e) => e.toString().split('.').last == data['status'],
         orElse: () => RestoreStatus.pending,
       ),
-      collections:
-          List<String>.from(data['collections'] as List<dynamic>? ?? []),
+      collections: List<String>.from(data['collections'] as List<dynamic>? ?? []),
       options: Map<String, dynamic>.from(
         data['options'] as Map<dynamic, dynamic>? ?? {},
       ),
       createdBy: data['createdBy'] as String?,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      completedAt: data['completedAt'] != null
-          ? (data['completedAt'] as Timestamp).toDate()
-          : null,
+      completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
       errorMessage: data['errorMessage'] as String?,
       metadata: data['metadata'] != null
           ? Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>)
@@ -307,16 +298,14 @@ class Restore {
           (e) => e.toString().split('.').last == data['status'],
           orElse: () => RestoreStatus.pending,
         ),
-        collections:
-            List<String>.from(data['collections'] as List<dynamic>? ?? []),
+        collections: List<String>.from(data['collections'] as List<dynamic>? ?? []),
         options: Map<String, dynamic>.from(
           data['options'] as Map<dynamic, dynamic>? ?? {},
         ),
         createdBy: data['createdBy'] as String?,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
-        completedAt: data['completedAt'] != null
-            ? (data['completedAt'] as Timestamp).toDate()
-            : null,
+        completedAt:
+            data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
         errorMessage: data['errorMessage'] as String?,
         metadata: data['metadata'] != null
             ? Map<String, dynamic>.from(
@@ -349,8 +338,7 @@ class Restore {
         'options': options,
         'createdBy': createdBy,
         'createdAt': Timestamp.fromDate(createdAt),
-        'completedAt':
-            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+        'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
         'errorMessage': errorMessage,
         'metadata': metadata,
       };

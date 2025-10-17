@@ -57,8 +57,7 @@ class SearchFiltersNotifier extends Notifier<filters.SpecialistFilters> {
 /// Notifier для сортировки (мигрирован с StateProvider)
 class SearchSortingNotifier extends Notifier<sorting_utils.SpecialistSorting> {
   @override
-  sorting_utils.SpecialistSorting build() =>
-      const sorting_utils.SpecialistSorting();
+  sorting_utils.SpecialistSorting build() => const sorting_utils.SpecialistSorting();
 
   void updateSorting(sorting_utils.SpecialistSorting newSorting) {
     state = newSorting;
@@ -74,12 +73,10 @@ class SearchSortingNotifier extends Notifier<sorting_utils.SpecialistSorting> {
 }
 
 /// Провайдер для поискового запроса (мигрирован)
-final searchQueryProvider =
-    NotifierProvider<SearchQueryNotifier, String>(SearchQueryNotifier.new);
+final searchQueryProvider = NotifierProvider<SearchQueryNotifier, String>(SearchQueryNotifier.new);
 
 /// Провайдер для фильтров поиска (мигрирован)
-final searchFiltersProvider =
-    NotifierProvider<SearchFiltersNotifier, filters.SpecialistFilters>(
+final searchFiltersProvider = NotifierProvider<SearchFiltersNotifier, filters.SpecialistFilters>(
   SearchFiltersNotifier.new,
 );
 
@@ -90,8 +87,7 @@ final searchSortingProvider =
 );
 
 /// Провайдер для сервиса специалистов
-final specialistServiceProvider =
-    Provider<SpecialistService>((ref) => SpecialistService());
+final specialistServiceProvider = Provider<SpecialistService>((ref) => SpecialistService());
 
 /// Провайдер для всех специалистов из Firestore
 final allSpecialistsProvider = StreamProvider<List<Specialist>>((ref) {
@@ -100,8 +96,7 @@ final allSpecialistsProvider = StreamProvider<List<Specialist>>((ref) {
 });
 
 /// Провайдер для отфильтрованных и отсортированных специалистов
-final filteredSpecialistsProvider =
-    Provider<AsyncValue<List<Specialist>>>((ref) {
+final filteredSpecialistsProvider = Provider<AsyncValue<List<Specialist>>>((ref) {
   final specialistsAsync = ref.watch(allSpecialistsProvider);
   final filters = ref.watch(searchFiltersProvider);
   final sorting = ref.watch(searchSortingProvider);
@@ -110,12 +105,10 @@ final filteredSpecialistsProvider =
   return specialistsAsync.when(
     data: (specialists) {
       // Применяем фильтры
-      var filteredSpecialists =
-          _applyFilters(specialists, filters, searchQuery);
+      var filteredSpecialists = _applyFilters(specialists, filters, searchQuery);
 
       // Применяем сортировку
-      filteredSpecialists =
-          sorting_utils.SpecialistSortingUtils.sortSpecialists(
+      filteredSpecialists = sorting_utils.SpecialistSortingUtils.sortSpecialists(
         filteredSpecialists,
         sorting,
       );
@@ -139,8 +132,7 @@ List<Specialist> _applyFilters(
       final query = searchQuery.toLowerCase();
       final matchesName = specialist.name.toLowerCase().contains(query);
       final matchesCategory = specialist.category.toLowerCase().contains(query);
-      final matchesDescription =
-          specialist.description.toLowerCase().contains(query);
+      final matchesDescription = specialist.description.toLowerCase().contains(query);
 
       if (!matchesName && !matchesCategory && !matchesDescription) {
         return false;
@@ -148,20 +140,16 @@ List<Specialist> _applyFilters(
     }
 
     // Фильтр по цене
-    if (filters.minPrice != null &&
-        specialist.pricePerHour < filters.minPrice!) {
+    if (filters.minPrice != null && specialist.pricePerHour < filters.minPrice!) {
       return false;
     }
-    if (filters.maxPrice != null &&
-        specialist.pricePerHour > filters.maxPrice!) {
+    if (filters.maxPrice != null && specialist.pricePerHour > filters.maxPrice!) {
       return false;
     }
 
     // Фильтр по местоположению
     if (filters.location != null && filters.location!.isNotEmpty) {
-      if (!specialist.location
-          .toLowerCase()
-          .contains(filters.location!.toLowerCase())) {
+      if (!specialist.location.toLowerCase().contains(filters.location!.toLowerCase())) {
         return false;
       }
     }
@@ -179,8 +167,7 @@ List<Specialist> _applyFilters(
     }
 
     // Фильтр по доступности
-    if (filters.isAvailable != null &&
-        specialist.isAvailable != filters.isAvailable) {
+    if (filters.isAvailable != null && specialist.isAvailable != filters.isAvailable) {
       return false;
     }
 
@@ -231,8 +218,7 @@ final popularCategoriesProvider = Provider<List<String>>((ref) {
       final categoryCount = <String, int>{};
 
       for (final specialist in specialists) {
-        categoryCount[specialist.category] =
-            (categoryCount[specialist.category] ?? 0) + 1;
+        categoryCount[specialist.category] = (categoryCount[specialist.category] ?? 0) + 1;
       }
 
       final sortedCategories = categoryCount.entries.toList()
@@ -290,4 +276,3 @@ final searchSettingsProvider = Provider<Map<String, dynamic>>((ref) {
     'searchQuery': searchQuery,
   };
 });
-

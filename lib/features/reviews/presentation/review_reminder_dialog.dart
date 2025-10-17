@@ -259,11 +259,10 @@ class _ReviewReminderBannerState extends State<ReviewReminderBanner> {
                     children: [
                       Text(
                         'Оцените специалиста',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       const SizedBox(height: 4),
                       Text(
@@ -343,8 +342,7 @@ class _ReviewStatusWidgetState extends State<ReviewStatusWidget> {
 
   Future<void> _checkReviewStatus() async {
     try {
-      final review =
-          await _reviewRepository.getReviewByBookingId(widget.bookingId);
+      final review = await _reviewRepository.getReviewByBookingId(widget.bookingId);
       if (mounted) {
         setState(() {
           _hasReview = review != null;

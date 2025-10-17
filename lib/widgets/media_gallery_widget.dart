@@ -223,8 +223,7 @@ class _MediaGalleryWidgetState extends State<MediaGalleryWidget> {
                   Image.network(
                     file.downloadUrl,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) =>
-                        _buildErrorPlaceholder(),
+                    errorBuilder: (context, error, stackTrace) => _buildErrorPlaceholder(),
                   )
                 else if (file.isVideo)
                   _buildVideoThumbnail(file)
@@ -564,8 +563,7 @@ class _MediaDetailsDialog extends StatelessWidget {
           _buildInfoRow('Размер:', file.formattedSize),
           _buildInfoRow('Тип:', file.mimeType),
           _buildInfoRow('Загружен:', _formatDate(file.uploadedAt)),
-          if (file.description != null)
-            _buildInfoRow('Описание:', file.description!),
+          if (file.description != null) _buildInfoRow('Описание:', file.description!),
         ],
       );
 

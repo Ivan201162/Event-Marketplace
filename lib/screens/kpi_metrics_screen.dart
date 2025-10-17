@@ -88,13 +88,10 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.blue.withValues(alpha: 0.1)
-              : Colors.transparent,
+          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color:
-                isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
+            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -620,8 +617,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                   ),
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.blue.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
@@ -639,8 +635,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                 if (dashboard.isPublic)
                   Container(
                     margin: const EdgeInsets.only(left: 8),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.green.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
@@ -658,8 +653,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                 if (dashboard.isDefault)
                   Container(
                     margin: const EdgeInsets.only(left: 8),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.orange.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
@@ -675,8 +669,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                     ),
                   ),
                 PopupMenuButton<String>(
-                  onSelected: (value) =>
-                      _handleDashboardAction(value, dashboard),
+                  onSelected: (value) => _handleDashboardAction(value, dashboard),
                   itemBuilder: (context) => [
                     const PopupMenuItem(
                       value: 'view',
@@ -842,8 +835,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                         title: Text('Генерировать'),
                       ),
                     ),
-                  if (report.status == ReportStatus.ready &&
-                      report.fileUrl != null)
+                  if (report.status == ReportStatus.ready && report.fileUrl != null)
                     const PopupMenuItem(
                       value: 'download',
                       child: ListTile(
@@ -1009,8 +1001,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
     var filtered = _metrics;
 
     if (_selectedCategory != null) {
-      filtered =
-          filtered.where((m) => m.category == _selectedCategory).toList();
+      filtered = filtered.where((m) => m.category == _selectedCategory).toList();
     }
 
     if (_selectedType != null) {
@@ -1144,8 +1135,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
     // TODO(developer): Реализовать редактирование метрики
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:
-            Text('Редактирование метрики "${metric.name}" будет реализовано'),
+        content: Text('Редактирование метрики "${metric.name}" будет реализовано'),
       ),
     );
   }

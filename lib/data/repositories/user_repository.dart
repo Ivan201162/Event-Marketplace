@@ -82,8 +82,7 @@ class UserRepository {
 }
 
 /// Провайдер репозитория пользователя
-final userRepositoryProvider =
-    Provider<UserRepository>((ref) => UserRepository());
+final userRepositoryProvider = Provider<UserRepository>((ref) => UserRepository());
 
 /// Провайдер пользователя по ID
 final userProvider = StreamProvider.family<AppUser?, String>((ref, uid) {
@@ -92,8 +91,7 @@ final userProvider = StreamProvider.family<AppUser?, String>((ref, uid) {
 });
 
 /// Провайдер для обновления пользователя
-final updateUserProvider =
-    FutureProvider.family<bool, Map<String, dynamic>>((ref, params) async {
+final updateUserProvider = FutureProvider.family<bool, Map<String, dynamic>>((ref, params) async {
   final repository = ref.watch(userRepositoryProvider);
   final uid = params['uid'] as String;
   final updates = Map<String, dynamic>.from(params);

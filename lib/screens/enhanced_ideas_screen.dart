@@ -5,14 +5,12 @@ import 'package:go_router/go_router.dart';
 
 import '../models/enhanced_idea.dart';
 import '../providers/enhanced_ideas_providers.dart';
-import 'create_idea_screen.dart';
 
 class EnhancedIdeasScreen extends ConsumerStatefulWidget {
   const EnhancedIdeasScreen({super.key});
 
   @override
-  ConsumerState<EnhancedIdeasScreen> createState() =>
-      _EnhancedIdeasScreenState();
+  ConsumerState<EnhancedIdeasScreen> createState() => _EnhancedIdeasScreenState();
 }
 
 class _EnhancedIdeasScreenState extends ConsumerState<EnhancedIdeasScreen>
@@ -73,8 +71,8 @@ class _EnhancedIdeasScreenState extends ConsumerState<EnhancedIdeasScreen>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _createNewIdea,
-        child: const Icon(Icons.add),
         tooltip: 'Создать публикацию',
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -90,8 +88,7 @@ class _PhotoIdeasTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final photoIdeas =
-        ideasState.ideas.where((idea) => idea.type == 'image').toList();
+    final photoIdeas = ideasState.ideas.where((idea) => idea.type == 'image').toList();
 
     if (ideasState.isLoading && photoIdeas.isEmpty) {
       return const Center(
@@ -157,8 +154,7 @@ class _VideoIdeasTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final videoIdeas =
-        ideasState.ideas.where((idea) => idea.type == 'video').toList();
+    final videoIdeas = ideasState.ideas.where((idea) => idea.type == 'video').toList();
 
     if (ideasState.isLoading && videoIdeas.isEmpty) {
       return const Center(

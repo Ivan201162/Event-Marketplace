@@ -1,11 +1,13 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+
 import 'package:flutter/foundation.dart';
-import '../models/transaction.dart';
-import '../models/subscription_plan.dart';
-import '../models/promotion_boost.dart';
-import '../models/advertisement.dart';
+import 'package:http/http.dart' as http;
+
 import '../config/payment_config.dart';
+import '../models/advertisement.dart';
+import '../models/promotion_boost.dart';
+import '../models/subscription_plan.dart';
+import '../models/transaction.dart';
 
 enum PaymentProvider {
   stripe,
@@ -55,8 +57,7 @@ class PaymentService {
     PaymentProvider provider = PaymentProvider.stripe,
   }) async {
     try {
-      debugPrint(
-          'INFO: [payment_service] Создание платежа для подписки ${plan.name}');
+      debugPrint('INFO: [payment_service] Создание платежа для подписки ${plan.name}');
 
       final amount = (plan.price * 100).round(); // Конвертируем в копейки
 
@@ -89,8 +90,7 @@ class PaymentService {
           throw Exception('Неподдерживаемый провайдер платежей');
       }
     } catch (e) {
-      debugPrint(
-          'ERROR: [payment_service] Ошибка создания платежа подписки: $e');
+      debugPrint('ERROR: [payment_service] Ошибка создания платежа подписки: $e');
       return PaymentResult(
         success: false,
         errorMessage: e.toString(),
@@ -106,8 +106,7 @@ class PaymentService {
     PaymentProvider provider = PaymentProvider.stripe,
   }) async {
     try {
-      debugPrint(
-          'INFO: [payment_service] Создание платежа для продвижения ${package.name}');
+      debugPrint('INFO: [payment_service] Создание платежа для продвижения ${package.name}');
 
       final amount = (package.price * 100).round();
 
@@ -142,8 +141,7 @@ class PaymentService {
           throw Exception('Неподдерживаемый провайдер платежей');
       }
     } catch (e) {
-      debugPrint(
-          'ERROR: [payment_service] Ошибка создания платежа продвижения: $e');
+      debugPrint('ERROR: [payment_service] Ошибка создания платежа продвижения: $e');
       return PaymentResult(
         success: false,
         errorMessage: e.toString(),
@@ -194,8 +192,7 @@ class PaymentService {
           throw Exception('Неподдерживаемый провайдер платежей');
       }
     } catch (e) {
-      debugPrint(
-          'ERROR: [payment_service] Ошибка создания платежа рекламы: $e');
+      debugPrint('ERROR: [payment_service] Ошибка создания платежа рекламы: $e');
       return PaymentResult(
         success: false,
         errorMessage: e.toString(),
@@ -220,8 +217,7 @@ class PaymentService {
         'amount': amount.toString(),
         'currency': currency,
         'description': description,
-        'metadata':
-            metadata.map((key, value) => MapEntry(key, value.toString())),
+        'metadata': metadata.map((key, value) => MapEntry(key, value.toString())),
       };
 
       final response = await http.post(
@@ -314,8 +310,7 @@ class PaymentService {
     required PaymentProvider provider,
   }) async {
     try {
-      debugPrint(
-          'INFO: [payment_service] Подтверждение платежа $externalTransactionId');
+      debugPrint('INFO: [payment_service] Подтверждение платежа $externalTransactionId');
 
       switch (provider) {
         case PaymentProvider.stripe:
@@ -413,16 +408,13 @@ class PaymentService {
     String? reason,
   }) async {
     try {
-      debugPrint(
-          'INFO: [payment_service] Возврат средств $externalTransactionId');
+      debugPrint('INFO: [payment_service] Возврат средств $externalTransactionId');
 
       switch (provider) {
         case PaymentProvider.stripe:
-          return await _refundStripePayment(
-              externalTransactionId, amount, reason);
+          return await _refundStripePayment(externalTransactionId, amount, reason);
         case PaymentProvider.yookassa:
-          return await _refundYooKassaPayment(
-              externalTransactionId, amount, reason);
+          return await _refundYooKassaPayment(externalTransactionId, amount, reason);
         default:
           throw Exception('Неподдерживаемый провайдер платежей');
       }
@@ -532,8 +524,7 @@ class PaymentService {
       // Возвращаем пустой список для примера
       return [];
     } catch (e) {
-      debugPrint(
-          'ERROR: [payment_service] Ошибка получения истории транзакций: $e');
+      debugPrint('ERROR: [payment_service] Ошибка получения истории транзакций: $e');
       return [];
     }
   }
@@ -553,8 +544,7 @@ class PaymentService {
         return TransactionStatus.failed;
       }
     } catch (e) {
-      debugPrint(
-          'ERROR: [payment_service] Ошибка проверки статуса платежа: $e');
+      debugPrint('ERROR: [payment_service] Ошибка проверки статуса платежа: $e');
       return TransactionStatus.failed;
     }
   }

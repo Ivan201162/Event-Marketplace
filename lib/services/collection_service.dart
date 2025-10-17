@@ -93,9 +93,7 @@ class CollectionService {
     }
 
     try {
-      final docRef = await _firestore
-          .collection('idea_collections')
-          .add(collection.toMap());
+      final docRef = await _firestore.collection('idea_collections').add(collection.toMap());
       return docRef.id;
     } catch (e) {
       debugPrint('Error creating collection: $e');
@@ -130,10 +128,7 @@ class CollectionService {
     }
 
     try {
-      await _firestore
-          .collection('idea_collections')
-          .doc(collectionId)
-          .delete();
+      await _firestore.collection('idea_collections').doc(collectionId).delete();
     } catch (e) {
       debugPrint('Error deleting collection: $e');
       throw Exception('Ошибка удаления коллекции: $e');
@@ -147,8 +142,7 @@ class CollectionService {
     }
 
     try {
-      final collectionRef =
-          _firestore.collection('idea_collections').doc(collectionId);
+      final collectionRef = _firestore.collection('idea_collections').doc(collectionId);
 
       await _firestore.runTransaction((transaction) async {
         final collectionDoc = await transaction.get(collectionRef);
@@ -189,8 +183,7 @@ class CollectionService {
     }
 
     try {
-      final collectionRef =
-          _firestore.collection('idea_collections').doc(collectionId);
+      final collectionRef = _firestore.collection('idea_collections').doc(collectionId);
 
       await _firestore.runTransaction((transaction) async {
         final collectionDoc = await transaction.get(collectionRef);
@@ -210,8 +203,7 @@ class CollectionService {
         final newIdeaIds = List<String>.from(collection.ideaIds)..add(ideaId);
 
         // Получаем изображения идеи для превью
-        final ideaDoc =
-            await transaction.get(_firestore.collection('ideas').doc(ideaId));
+        final ideaDoc = await transaction.get(_firestore.collection('ideas').doc(ideaId));
         if (ideaDoc.exists) {
           final idea = Idea.fromMap({
             'id': ideaDoc.id,
@@ -219,8 +211,7 @@ class CollectionService {
           });
 
           final newImages = List<String>.from(collection.images);
-          if (idea.images.isNotEmpty &&
-              !newImages.contains(idea.images.first)) {
+          if (idea.images.isNotEmpty && !newImages.contains(idea.images.first)) {
             newImages.add(idea.images.first);
             // Ограничиваем количество превью
             if (newImages.length > 4) {
@@ -256,8 +247,7 @@ class CollectionService {
     }
 
     try {
-      final collectionRef =
-          _firestore.collection('idea_collections').doc(collectionId);
+      final collectionRef = _firestore.collection('idea_collections').doc(collectionId);
 
       await _firestore.runTransaction((transaction) async {
         final collectionDoc = await transaction.get(collectionRef);
@@ -270,12 +260,10 @@ class CollectionService {
           ...collectionDoc.data()!,
         });
 
-        final newIdeaIds = List<String>.from(collection.ideaIds)
-          ..remove(ideaId);
+        final newIdeaIds = List<String>.from(collection.ideaIds)..remove(ideaId);
 
         // Удаляем изображение идеи из превью, если оно есть
-        final ideaDoc =
-            await transaction.get(_firestore.collection('ideas').doc(ideaId));
+        final ideaDoc = await transaction.get(_firestore.collection('ideas').doc(ideaId));
         if (ideaDoc.exists) {
           final idea = Idea.fromMap({
             'id': ideaDoc.id,
@@ -312,10 +300,7 @@ class CollectionService {
     }
 
     try {
-      final doc = await _firestore
-          .collection('idea_collections')
-          .doc(collectionId)
-          .get();
+      final doc = await _firestore.collection('idea_collections').doc(collectionId).get();
       if (!doc.exists) {
         return null;
       }

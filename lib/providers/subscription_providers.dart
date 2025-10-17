@@ -6,19 +6,16 @@ import '../models/subscription_notification.dart';
 import '../services/subscription_service.dart';
 
 /// Провайдер сервиса подписок
-final subscriptionServiceProvider =
-    Provider<SubscriptionService>((ref) => SubscriptionService());
+final subscriptionServiceProvider = Provider<SubscriptionService>((ref) => SubscriptionService());
 
 /// Провайдер для подписок пользователя
-final userSubscriptionsProvider =
-    StreamProvider.family<List<Subscription>, String>((ref, userId) {
+final userSubscriptionsProvider = StreamProvider.family<List<Subscription>, String>((ref, userId) {
   final subscriptionService = ref.read(subscriptionServiceProvider);
   return subscriptionService.getUserSubscriptions(userId);
 });
 
 /// Провайдер для проверки подписки
-final isSubscribedProvider =
-    FutureProvider.family<bool, IsSubscribedParams>((ref, params) async {
+final isSubscribedProvider = FutureProvider.family<bool, IsSubscribedParams>((ref, params) async {
   final subscriptionService = ref.read(subscriptionServiceProvider);
   return subscriptionService.isSubscribed(params.userId, params.specialistId);
 });
@@ -41,8 +38,7 @@ final specialistSubscribersProvider =
 });
 
 /// Провайдер для состояния подписок
-final subscriptionStateProvider =
-    NotifierProvider<SubscriptionStateNotifier, SubscriptionState>(
+final subscriptionStateProvider = NotifierProvider<SubscriptionStateNotifier, SubscriptionState>(
   SubscriptionStateNotifier.new,
 );
 
@@ -88,8 +84,7 @@ class SubscriptionStateNotifier extends Notifier<SubscriptionState> {
   }
 
   void removeSubscription(String subscriptionId) {
-    final updatedSubscriptions =
-        state.subscriptions.where((s) => s.id != subscriptionId).toList();
+    final updatedSubscriptions = state.subscriptions.where((s) => s.id != subscriptionId).toList();
     state = state.copyWith(subscriptions: updatedSubscriptions);
   }
 
@@ -110,16 +105,14 @@ class SubscriptionStateNotifier extends Notifier<SubscriptionState> {
 
 /// Провайдер для уведомлений подписок
 final userNotificationsProvider =
-    StreamProvider.family<List<SubscriptionNotification>, String>(
-        (ref, userId) {
+    StreamProvider.family<List<SubscriptionNotification>, String>((ref, userId) {
   final subscriptionService = ref.read(subscriptionServiceProvider);
   return subscriptionService.getUserNotifications(userId);
 });
 
 /// Провайдер для похожих специалистов
 final similarSpecialistsRecommendationsProvider =
-    FutureProvider.family<List<SpecialistRecommendation>, String>(
-        (ref, specialistId) async {
+    FutureProvider.family<List<SpecialistRecommendation>, String>((ref, specialistId) async {
   final subscriptionService = ref.read(subscriptionServiceProvider);
   return subscriptionService.getSimilarSpecialists(specialistId);
 });

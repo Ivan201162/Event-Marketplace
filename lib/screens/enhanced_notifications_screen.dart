@@ -11,12 +11,10 @@ class EnhancedNotificationsScreen extends ConsumerStatefulWidget {
   const EnhancedNotificationsScreen({super.key});
 
   @override
-  ConsumerState<EnhancedNotificationsScreen> createState() =>
-      _EnhancedNotificationsScreenState();
+  ConsumerState<EnhancedNotificationsScreen> createState() => _EnhancedNotificationsScreenState();
 }
 
-class _EnhancedNotificationsScreenState
-    extends ConsumerState<EnhancedNotificationsScreen>
+class _EnhancedNotificationsScreenState extends ConsumerState<EnhancedNotificationsScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   final ScrollController _scrollController = ScrollController();
@@ -85,8 +83,7 @@ class _EnhancedNotificationsScreenState
                 return _buildLoginPrompt();
               }
 
-              final notificationsAsync =
-                  ref.watch(notificationsProvider(user.uid));
+              final notificationsAsync = ref.watch(notificationsProvider(user.uid));
 
               return notificationsAsync.when(
                 data: (notifications) {
@@ -107,8 +104,7 @@ class _EnhancedNotificationsScreenState
                           notification: notification,
                           onTap: () => _handleNotificationTap(notification),
                           onMarkAsRead: () => _markAsRead(notification.id),
-                          onArchive: () =>
-                              _archiveNotification(notification.id),
+                          onArchive: () => _archiveNotification(notification.id),
                           onDelete: () => _deleteNotification(notification.id),
                         );
                       },
@@ -135,8 +131,7 @@ class _EnhancedNotificationsScreenState
                 return _buildLoginPrompt();
               }
 
-              final unreadNotificationsAsync =
-                  ref.watch(unreadNotificationsProvider(user.uid));
+              final unreadNotificationsAsync = ref.watch(unreadNotificationsProvider(user.uid));
 
               return unreadNotificationsAsync.when(
                 data: (notifications) {
@@ -156,8 +151,7 @@ class _EnhancedNotificationsScreenState
                           notification: notification,
                           onTap: () => _handleNotificationTap(notification),
                           onMarkAsRead: () => _markAsRead(notification.id),
-                          onArchive: () =>
-                              _archiveNotification(notification.id),
+                          onArchive: () => _archiveNotification(notification.id),
                           onDelete: () => _deleteNotification(notification.id),
                         );
                       },
@@ -184,8 +178,7 @@ class _EnhancedNotificationsScreenState
                 return _buildLoginPrompt();
               }
 
-              final archivedNotificationsAsync =
-                  ref.watch(archivedNotificationsProvider(user.uid));
+              final archivedNotificationsAsync = ref.watch(archivedNotificationsProvider(user.uid));
 
               return archivedNotificationsAsync.when(
                 data: (notifications) {
@@ -205,8 +198,7 @@ class _EnhancedNotificationsScreenState
                           notification: notification,
                           onTap: () => _handleNotificationTap(notification),
                           onMarkAsRead: () => _markAsRead(notification.id),
-                          onArchive: () =>
-                              _archiveNotification(notification.id),
+                          onArchive: () => _archiveNotification(notification.id),
                           onDelete: () => _deleteNotification(notification.id),
                         );
                       },
@@ -588,8 +580,7 @@ class _EnhancedNotificationsScreenState
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              final notificationsService =
-                  ref.read(enhancedNotificationsServiceProvider);
+              final notificationsService = ref.read(enhancedNotificationsServiceProvider);
               notificationsService.deleteNotification(notificationId).then((_) {
                 // Обновить провайдеры
                 final currentUser = ref.read(currentUserProvider).value;
@@ -636,11 +627,8 @@ class _EnhancedNotificationsScreenState
               final currentUser = ref.read(currentUserProvider).value;
               if (currentUser == null) return;
 
-              final notificationsService =
-                  ref.read(enhancedNotificationsServiceProvider);
-              notificationsService
-                  .clearAllNotifications(currentUser.uid)
-                  .then((_) {
+              final notificationsService = ref.read(enhancedNotificationsServiceProvider);
+              notificationsService.clearAllNotifications(currentUser.uid).then((_) {
                 // Обновить провайдеры
                 ref.invalidate(notificationsProvider(currentUser.uid));
                 ref.invalidate(unreadNotificationsProvider(currentUser.uid));

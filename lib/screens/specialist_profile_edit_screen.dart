@@ -12,12 +12,10 @@ class SpecialistProfileEditScreen extends ConsumerStatefulWidget {
   final String specialistId;
 
   @override
-  ConsumerState<SpecialistProfileEditScreen> createState() =>
-      _SpecialistProfileEditScreenState();
+  ConsumerState<SpecialistProfileEditScreen> createState() => _SpecialistProfileEditScreenState();
 }
 
-class _SpecialistProfileEditScreenState
-    extends ConsumerState<SpecialistProfileEditScreen> {
+class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileEditScreen> {
   final SpecialistProfileService _profileService = SpecialistProfileService();
   final SpecialistService _specialistService = SpecialistService();
 
@@ -51,8 +49,7 @@ class _SpecialistProfileEditScreenState
 
   Future<void> _loadSpecialist() async {
     try {
-      final specialist =
-          await _specialistService.getSpecialistById(widget.specialistId);
+      final specialist = await _specialistService.getSpecialistById(widget.specialistId);
       setState(() {
         _specialist = specialist;
         _isLoading = false;
@@ -60,16 +57,13 @@ class _SpecialistProfileEditScreenState
 
       // Инициализируем контроллеры для контактов
       for (final contact in specialist?.contacts.entries ?? []) {
-        _contactControllers[contact.key] =
-            TextEditingController(text: contact.value);
+        _contactControllers[contact.key] = TextEditingController(text: contact.value);
       }
 
       // Инициализируем контроллеры для услуг
       for (final service in specialist?.servicesWithPrices.entries ?? []) {
-        _serviceControllers[service.key] =
-            TextEditingController(text: service.key);
-        _priceControllers[service.key] =
-            TextEditingController(text: service.value.toString());
+        _serviceControllers[service.key] = TextEditingController(text: service.key);
+        _priceControllers[service.key] = TextEditingController(text: service.value.toString());
       }
     } on Exception catch (e) {
       setState(() {

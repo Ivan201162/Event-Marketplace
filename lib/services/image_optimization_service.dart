@@ -488,8 +488,7 @@ class _LazyImageGridState extends State<LazyImageGrid> {
     final visibleIndices = <int>{};
     for (var i = 0; i < widget.imageUrls.length; i++) {
       // Упрощенная логика определения видимости
-      if (i >= (offset / 100).floor() &&
-          i <= ((offset + viewportHeight) / 100).ceil()) {
+      if (i >= (offset / 100).floor() && i <= ((offset + viewportHeight) / 100).ceil()) {
         visibleIndices.add(i);
       }
     }

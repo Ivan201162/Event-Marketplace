@@ -19,8 +19,7 @@ class PortfolioTestScreen extends StatefulWidget {
 class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
   final CustomerPortfolioService _portfolioService = CustomerPortfolioService();
   final BookingService _bookingService = BookingService();
-  final AnniversaryNotificationService _notificationService =
-      AnniversaryNotificationService();
+  final AnniversaryNotificationService _notificationService = AnniversaryNotificationService();
   final AuthService _authService = AuthService();
 
   String _testResults = '';
@@ -43,8 +42,7 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
 
   void _addTestResult(String result) {
     setState(() {
-      _testResults +=
-          '${DateTime.now().toString().substring(11, 19)}: $result\n';
+      _testResults += '${DateTime.now().toString().substring(11, 19)}: $result\n';
     });
   }
 
@@ -79,9 +77,6 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
 
     try {
       final currentUser = _authService.currentUser;
-      if (currentUser == null) {
-        throw Exception('Пользователь не авторизован');
-      }
 
       // Создаем тестовое портфолио
       final testPortfolio = CustomerPortfolio(
@@ -106,8 +101,7 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
       _addTestResult('✅ Портфолио создано успешно');
 
       // Проверяем загрузку
-      final loadedPortfolio =
-          await _portfolioService.getCustomerPortfolio(currentUser.uid);
+      final loadedPortfolio = await _portfolioService.getCustomerPortfolio(currentUser.uid);
       if (loadedPortfolio == null) {
         throw Exception('Портфолио не загружено');
       }
@@ -127,9 +121,6 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
 
     try {
       final currentUser = _authService.currentUser;
-      if (currentUser == null) {
-        throw Exception('Пользователь не авторизован');
-      }
 
       // Создаем тестовый заказ
       final testOrder = OrderHistory(
@@ -157,8 +148,7 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
       _addTestResult('✅ Заказ добавлен в историю');
 
       // Проверяем загрузку истории
-      final orderHistory =
-          await _portfolioService.getOrderHistory(currentUser.uid);
+      final orderHistory = await _portfolioService.getOrderHistory(currentUser.uid);
       _addTestResult(
         '✅ История заказов загружена: ${orderHistory.length} заказов',
       );
@@ -182,9 +172,6 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
 
     try {
       final currentUser = _authService.currentUser;
-      if (currentUser == null) {
-        throw Exception('Пользователь не авторизован');
-      }
 
       // Добавляем специалиста в избранное
       const testSpecialistId = 'test_specialist_123';
@@ -202,8 +189,7 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
       _addTestResult('✅ Специалист найден в избранном');
 
       // Получаем список избранных
-      final favorites =
-          await _portfolioService.getFavoriteSpecialists(currentUser.uid);
+      final favorites = await _portfolioService.getFavoriteSpecialists(currentUser.uid);
       _addTestResult('✅ Избранных специалистов: ${favorites.length}');
 
       // Удаляем из избранного
@@ -222,9 +208,6 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
 
     try {
       final currentUser = _authService.currentUser;
-      if (currentUser == null) {
-        throw Exception('Пользователь не авторизован');
-      }
 
       // Добавляем годовщину
       final testAnniversary = DateTime(2022, 12, 25);
@@ -234,13 +217,11 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
       );
 
       // Получаем список годовщин
-      final anniversaries =
-          await _portfolioService.getAnniversaries(currentUser.uid);
+      final anniversaries = await _portfolioService.getAnniversaries(currentUser.uid);
       _addTestResult('✅ Годовщин в портфолио: ${anniversaries.length}');
 
       // Проверяем ближайшие годовщины
-      final portfolio =
-          await _portfolioService.getCustomerPortfolio(currentUser.uid);
+      final portfolio = await _portfolioService.getCustomerPortfolio(currentUser.uid);
       if (portfolio != null) {
         final upcoming = portfolio.upcomingAnniversaries;
         _addTestResult('✅ Ближайших годовщин: ${upcoming.length}');
@@ -279,9 +260,6 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
 
     try {
       final currentUser = _authService.currentUser;
-      if (currentUser == null) {
-        throw Exception('Пользователь не авторизован');
-      }
 
       // Создаем тестовое бронирование
       final testBooking = Booking(
@@ -320,8 +298,7 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
       );
 
       // Проверяем рекомендации
-      final recommendations =
-          await _portfolioService.getRecommendations(currentUser.uid);
+      final recommendations = await _portfolioService.getRecommendations(currentUser.uid);
       _addTestResult('✅ Рекомендаций: ${recommendations.length}');
       for (final recommendation in recommendations) {
         _addTestResult('   - $recommendation');
@@ -336,12 +313,8 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
 
     try {
       final currentUser = _authService.currentUser;
-      if (currentUser == null) {
-        throw Exception('Пользователь не авторизован');
-      }
 
-      const testNotes =
-          'Это тестовые заметки для проверки функционала портфолио заказчика.';
+      const testNotes = 'Это тестовые заметки для проверки функционала портфолио заказчика.';
       await _portfolioService.updateNotes(currentUser.uid, testNotes);
       _addTestResult('✅ Заметки обновлены');
 
@@ -410,8 +383,7 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
                           onPressed: _isRunningTests
                               ? null
                               : () async {
-                                  await _notificationService
-                                      .sendTestNotification();
+                                  await _notificationService.sendTestNotification();
                                   _addTestResult(
                                     '🔔 Тестовое уведомление отправлено',
                                   );

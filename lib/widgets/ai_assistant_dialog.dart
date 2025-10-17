@@ -202,9 +202,7 @@ class _AIAssistantDialogState extends State<AIAssistantDialog> {
   Widget _buildMessageBubble(AIMessage message) => Padding(
         padding: const EdgeInsets.only(bottom: 16),
         child: Row(
-          mainAxisAlignment: message.isFromUser
-              ? MainAxisAlignment.end
-              : MainAxisAlignment.start,
+          mainAxisAlignment: message.isFromUser ? MainAxisAlignment.end : MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (!message.isFromUser) ...[
@@ -226,9 +224,7 @@ class _AIAssistantDialogState extends State<AIAssistantDialog> {
                 ),
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: message.isFromUser
-                      ? Theme.of(context).primaryColor
-                      : Colors.grey[200],
+                  color: message.isFromUser ? Theme.of(context).primaryColor : Colors.grey[200],
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Column(
@@ -241,8 +237,7 @@ class _AIAssistantDialogState extends State<AIAssistantDialog> {
                       Text(
                         message.text,
                         style: TextStyle(
-                          color:
-                              message.isFromUser ? Colors.white : Colors.black,
+                          color: message.isFromUser ? Colors.white : Colors.black,
                           fontSize: 16,
                         ),
                       ),
@@ -250,9 +245,7 @@ class _AIAssistantDialogState extends State<AIAssistantDialog> {
                     Text(
                       _formatTime(message.timestamp),
                       style: TextStyle(
-                        color: message.isFromUser
-                            ? Colors.white70
-                            : Colors.grey[600],
+                        color: message.isFromUser ? Colors.white70 : Colors.grey[600],
                         fontSize: 12,
                       ),
                     ),

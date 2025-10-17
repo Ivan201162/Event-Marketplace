@@ -24,8 +24,7 @@ class OfflineStatusWidget extends ConsumerWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding:
-            padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: Color(offlineState.statusColor).withValues(alpha: 0.1),
           border: Border.all(
@@ -93,8 +92,7 @@ class OfflineDetailsWidget extends ConsumerWidget {
               ),
               IconButton(
                 icon: const Icon(Icons.refresh),
-                onPressed: () =>
-                    ref.read(offlineModeProvider.notifier).refresh(),
+                onPressed: () => ref.read(offlineModeProvider.notifier).refresh(),
               ),
             ],
           ),
@@ -145,19 +143,13 @@ class OfflineDetailsWidget extends ConsumerWidget {
               Expanded(
                 child: ElevatedButton.icon(
                   onPressed: offlineState.isOfflineMode
-                      ? () => ref
-                          .read(offlineModeProvider.notifier)
-                          .disableOfflineMode()
-                      : () => ref
-                          .read(offlineModeProvider.notifier)
-                          .enableOfflineMode(),
+                      ? () => ref.read(offlineModeProvider.notifier).disableOfflineMode()
+                      : () => ref.read(offlineModeProvider.notifier).enableOfflineMode(),
                   icon: Icon(
                     offlineState.isOfflineMode ? Icons.wifi : Icons.wifi_off,
                   ),
                   label: Text(
-                    offlineState.isOfflineMode
-                        ? 'Включить онлайн'
-                        : 'Включить офлайн',
+                    offlineState.isOfflineMode ? 'Включить онлайн' : 'Включить офлайн',
                   ),
                 ),
               ),
@@ -175,9 +167,7 @@ class OfflineDetailsWidget extends ConsumerWidget {
                         )
                       : const Icon(Icons.sync),
                   label: Text(
-                    syncState.isSyncing
-                        ? 'Синхронизация...'
-                        : 'Синхронизировать',
+                    syncState.isSyncing ? 'Синхронизация...' : 'Синхронизировать',
                   ),
                 ),
               ),
@@ -302,9 +292,7 @@ class CacheInfoWidget extends ConsumerWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
-              onPressed: cacheInfo.isLoading
-                  ? null
-                  : () => _showClearCacheDialog(context, ref),
+              onPressed: cacheInfo.isLoading ? null : () => _showClearCacheDialog(context, ref),
               icon: cacheInfo.isLoading
                   ? const SizedBox(
                       width: 16,
@@ -521,9 +509,7 @@ class SyncStatusWidget extends ConsumerWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: ResponsiveText(
-                  syncState.isSyncing
-                      ? 'Синхронизация...'
-                      : 'Последняя синхронизация',
+                  syncState.isSyncing ? 'Синхронизация...' : 'Последняя синхронизация',
                   isTitle: true,
                 ),
               ),

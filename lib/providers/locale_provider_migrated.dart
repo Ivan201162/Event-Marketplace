@@ -93,8 +93,7 @@ class LocaleNotifier extends Notifier<Locale> {
 }
 
 /// Провайдер для управления локализацией (мигрирован с StateNotifierProvider)
-final localeProvider =
-    NotifierProvider<LocaleNotifier, Locale>(LocaleNotifier.new);
+final localeProvider = NotifierProvider<LocaleNotifier, Locale>(LocaleNotifier.new);
 
 /// Провайдер для получения текущего языка
 final currentLanguageProvider = Provider<String>((ref) {
@@ -129,4 +128,3 @@ final availableLocalesProvider = Provider<List<Locale>>((ref) {
   final localeNotifier = ref.watch(localeProvider.notifier);
   return localeNotifier.availableLocales;
 });
-

@@ -134,8 +134,7 @@ class _AutomaticRecommendationsTestScreenState
     }).toList();
   }
 
-  List<Widget> _buildSelectedSpecialistChips() =>
-      _selectedSpecialistIds.map((id) {
+  List<Widget> _buildSelectedSpecialistChips() => _selectedSpecialistIds.map((id) {
         final specialist = _getTestSpecialistById(id);
         return Chip(
           label: Text(specialist.name),

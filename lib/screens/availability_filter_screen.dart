@@ -9,12 +9,10 @@ class AvailabilityFilterScreen extends ConsumerStatefulWidget {
   const AvailabilityFilterScreen({super.key});
 
   @override
-  ConsumerState<AvailabilityFilterScreen> createState() =>
-      _AvailabilityFilterScreenState();
+  ConsumerState<AvailabilityFilterScreen> createState() => _AvailabilityFilterScreenState();
 }
 
-class _AvailabilityFilterScreenState
-    extends ConsumerState<AvailabilityFilterScreen>
+class _AvailabilityFilterScreenState extends ConsumerState<AvailabilityFilterScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   final AvailabilityFilterService _filterService = AvailabilityFilterService();
@@ -202,9 +200,7 @@ class _AvailabilityFilterScreenState
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      date != null
-                          ? '${date.day}.${date.month}.${date.year}'
-                          : 'Выберите дату',
+                      date != null ? '${date.day}.${date.month}.${date.year}' : 'Выберите дату',
                       style: TextStyle(
                         color: date != null ? Colors.black : Colors.grey[600],
                       ),
@@ -472,11 +468,9 @@ class _AvailabilityFilterScreenState
                     ),
                   ),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color:
-                          _getAvailabilityColor(specialist.availabilityScore),
+                      color: _getAvailabilityColor(specialist.availabilityScore),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(

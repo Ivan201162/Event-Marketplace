@@ -19,8 +19,7 @@ class PaymentsScreen extends ConsumerStatefulWidget {
   ConsumerState<PaymentsScreen> createState() => _PaymentsScreenState();
 }
 
-class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
-    with TickerProviderStateMixin {
+class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with TickerProviderStateMixin {
   late TabController _tabController;
   final PaymentFilter _currentFilter = const PaymentFilter();
 

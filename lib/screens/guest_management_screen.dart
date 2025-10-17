@@ -15,8 +15,7 @@ class GuestManagementScreen extends ConsumerStatefulWidget {
   final String organizerId;
 
   @override
-  ConsumerState<GuestManagementScreen> createState() =>
-      _GuestManagementScreenState();
+  ConsumerState<GuestManagementScreen> createState() => _GuestManagementScreenState();
 }
 
 class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
@@ -55,9 +54,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
 
             // Список гостей
             Expanded(
-              child: _selectedEventId.isEmpty
-                  ? _buildEmptyState()
-                  : _buildGuestsList(),
+              child: _selectedEventId.isEmpty ? _buildEmptyState() : _buildGuestsList(),
             ),
           ],
         ),
@@ -112,8 +109,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
                 ),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
-                  initialValue:
-                      _selectedEventId.isEmpty ? null : _selectedEventId,
+                  initialValue: _selectedEventId.isEmpty ? null : _selectedEventId,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Выберите событие',
@@ -417,14 +413,11 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
             Text('Статус: ${guest.statusText}'),
             if (guest.registeredAt != null)
               Text('Зарегистрирован: ${_formatDate(guest.registeredAt!)}'),
-            if (guest.confirmedAt != null)
-              Text('Подтвержден: ${_formatDate(guest.confirmedAt!)}'),
+            if (guest.confirmedAt != null) Text('Подтвержден: ${_formatDate(guest.confirmedAt!)}'),
             if (guest.checkedInAt != null)
               Text('На мероприятии: ${_formatDate(guest.checkedInAt!)}'),
-            if (guest.checkedOutAt != null)
-              Text('Покинул: ${_formatDate(guest.checkedOutAt!)}'),
-            if (guest.greetingsCount > 0)
-              Text('Поздравлений: ${guest.greetingsCount}'),
+            if (guest.checkedOutAt != null) Text('Покинул: ${_formatDate(guest.checkedOutAt!)}'),
+            if (guest.greetingsCount > 0) Text('Поздравлений: ${guest.greetingsCount}'),
           ],
         ),
         actions: [
@@ -450,8 +443,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Регистрация гостя'),
-        content:
-            Text('Подтвердить регистрацию ${guest.guestName} на мероприятие?'),
+        content: Text('Подтвердить регистрацию ${guest.guestName} на мероприятие?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -630,8 +622,7 @@ class _FilterDialogState extends State<_FilterDialog> {
                   setState(() {
                     final statuses = _filter.statuses ?? [];
                     if (value ?? false) {
-                      _filter =
-                          _filter.copyWith(statuses: [...statuses, status]);
+                      _filter = _filter.copyWith(statuses: [...statuses, status]);
                     } else {
                       _filter = _filter.copyWith(
                         statuses: statuses.where((s) => s != status).toList(),

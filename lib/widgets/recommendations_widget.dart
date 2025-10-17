@@ -16,8 +16,7 @@ class RecommendationsWidget extends ConsumerStatefulWidget {
   final VoidCallback? onSpecialistTap;
 
   @override
-  ConsumerState<RecommendationsWidget> createState() =>
-      _RecommendationsWidgetState();
+  ConsumerState<RecommendationsWidget> createState() => _RecommendationsWidgetState();
 }
 
 class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
@@ -61,8 +60,7 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
 
   Future<void> _loadRecommendations() async {
     try {
-      final recommendations =
-          await _recommendationService.getRecommendations(widget.userId);
+      final recommendations = await _recommendationService.getRecommendations(widget.userId);
       setState(() {
         _recommendations = recommendations;
         _isLoading = false;
@@ -268,13 +266,11 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
         ),
       );
 
-  Widget _buildRecommendationCard(Recommendation recommendation, int index) =>
-      AnimatedBuilder(
+  Widget _buildRecommendationCard(Recommendation recommendation, int index) => AnimatedBuilder(
         animation: _animationController,
         builder: (context, child) {
           final delay = index * 0.1;
-          final animationValue =
-              (_animationController.value - delay).clamp(0.0, 1.0);
+          final animationValue = (_animationController.value - delay).clamp(0.0, 1.0);
 
           return Transform.translate(
             offset: Offset(0, 20 * (1 - animationValue)),
@@ -323,9 +319,8 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
                                     child: Image.network(
                                       recommendation.photoUrl!,
                                       fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) =>
-                                              _buildDefaultAvatar(),
+                                      errorBuilder: (context, error, stackTrace) =>
+                                          _buildDefaultAvatar(),
                                     ),
                                   )
                                 : _buildDefaultAvatar(),
@@ -342,10 +337,7 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
                               children: [
                                 Text(
                                   recommendation.specialistName,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                         fontWeight: FontWeight.w600,
                                       ),
                                   maxLines: 1,
@@ -354,10 +346,7 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
                                 const SizedBox(height: 2),
                                 Text(
                                   recommendation.city,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                         color: Colors.grey.shade600,
                                         fontSize: 10,
                                       ),
@@ -375,10 +364,7 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
                                     const SizedBox(width: 2),
                                     Text(
                                       recommendation.rating.toStringAsFixed(1),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall
-                                          ?.copyWith(
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                             fontSize: 10,
                                             fontWeight: FontWeight.w500,
                                           ),
@@ -386,10 +372,7 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
                                     const Spacer(),
                                     Text(
                                       '${recommendation.price.toInt()}₽',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall
-                                          ?.copyWith(
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                             fontSize: 10,
                                             fontWeight: FontWeight.w600,
                                             color: Colors.green.shade600,

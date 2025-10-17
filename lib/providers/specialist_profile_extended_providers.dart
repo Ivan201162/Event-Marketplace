@@ -3,15 +3,13 @@ import '../models/specialist_profile_extended.dart';
 import '../services/specialist_profile_extended_service.dart';
 
 /// Провайдер сервиса расширенного профиля специалиста
-final specialistProfileExtendedServiceProvider =
-    Provider<SpecialistProfileExtendedService>(
+final specialistProfileExtendedServiceProvider = Provider<SpecialistProfileExtendedService>(
   (ref) => SpecialistProfileExtendedService(),
 );
 
 /// Провайдер расширенного профиля специалиста
 final specialistProfileExtendedProvider =
-    FutureProvider.family<SpecialistProfileExtended?, String>(
-        (ref, specialistId) async {
+    FutureProvider.family<SpecialistProfileExtended?, String>((ref, specialistId) async {
   final service = ref.read(specialistProfileExtendedServiceProvider);
   return service.getExtendedProfile(specialistId);
 });
@@ -19,41 +17,35 @@ final specialistProfileExtendedProvider =
 /// Провайдер FAQ специалиста
 final specialistFAQProvider =
     FutureProvider.family<List<FAQItem>, String>((ref, specialistId) async {
-  final profile =
-      await ref.read(specialistProfileExtendedProvider(specialistId).future);
+  final profile = await ref.read(specialistProfileExtendedProvider(specialistId).future);
   return profile?.faqItems ?? [];
 });
 
 /// Провайдер портфолио видео специалиста
 final specialistPortfolioVideosProvider =
-    FutureProvider.family<List<PortfolioVideo>, String>(
-        (ref, specialistId) async {
-  final profile =
-      await ref.read(specialistProfileExtendedProvider(specialistId).future);
+    FutureProvider.family<List<PortfolioVideo>, String>((ref, specialistId) async {
+  final profile = await ref.read(specialistProfileExtendedProvider(specialistId).future);
   return profile?.portfolioVideos ?? [];
 });
 
 /// Провайдер сертификатов специалиста
 final specialistCertificationsProvider =
     FutureProvider.family<List<String>, String>((ref, specialistId) async {
-  final profile =
-      await ref.read(specialistProfileExtendedProvider(specialistId).future);
+  final profile = await ref.read(specialistProfileExtendedProvider(specialistId).future);
   return profile?.certifications ?? [];
 });
 
 /// Провайдер наград специалиста
 final specialistAwardsProvider =
     FutureProvider.family<List<String>, String>((ref, specialistId) async {
-  final profile =
-      await ref.read(specialistProfileExtendedProvider(specialistId).future);
+  final profile = await ref.read(specialistProfileExtendedProvider(specialistId).future);
   return profile?.awards ?? [];
 });
 
 /// Провайдер отзывов специалиста
 final specialistTestimonialsProvider =
     FutureProvider.family<List<String>, String>((ref, specialistId) async {
-  final profile =
-      await ref.read(specialistProfileExtendedProvider(specialistId).future);
+  final profile = await ref.read(specialistProfileExtendedProvider(specialistId).future);
   return profile?.testimonials ?? [];
 });
 
@@ -67,8 +59,7 @@ final specialistFAQByCategoryProvider =
 
 /// Провайдер публичных видео
 final specialistPublicVideosProvider =
-    FutureProvider.family<List<PortfolioVideo>, String>(
-        (ref, specialistId) async {
+    FutureProvider.family<List<PortfolioVideo>, String>((ref, specialistId) async {
   final service = ref.read(specialistProfileExtendedServiceProvider);
   return service.getPublicVideos(specialistId);
 });
@@ -83,8 +74,7 @@ final specialistFAQSearchProvider =
 
 /// Провайдер поиска по видео
 final specialistVideoSearchProvider =
-    FutureProvider.family<List<PortfolioVideo>, (String, String)>(
-        (ref, params) async {
+    FutureProvider.family<List<PortfolioVideo>, (String, String)>((ref, params) async {
   final (specialistId, query) = params;
   final service = ref.read(specialistProfileExtendedServiceProvider);
   return service.searchVideos(specialistId, query);
@@ -92,8 +82,7 @@ final specialistVideoSearchProvider =
 
 /// Провайдер статистики профиля специалиста
 final specialistProfileStatsProvider =
-    FutureProvider.family<SpecialistProfileStats, String>(
-        (ref, specialistId) async {
+    FutureProvider.family<SpecialistProfileStats, String>((ref, specialistId) async {
   final service = ref.read(specialistProfileExtendedServiceProvider);
   return service.getProfileStats(specialistId);
 });
@@ -113,8 +102,7 @@ class VideoUploadStateNotifier extends Notifier<Map<String, bool>> {
 }
 
 /// Провайдер для управления состоянием загрузки видео
-final videoUploadStateProvider =
-    NotifierProvider<VideoUploadStateNotifier, Map<String, bool>>(
+final videoUploadStateProvider = NotifierProvider<VideoUploadStateNotifier, Map<String, bool>>(
   VideoUploadStateNotifier.new,
 );
 
@@ -133,8 +121,7 @@ class FaqCreationStateNotifier extends Notifier<Map<String, bool>> {
 }
 
 /// Провайдер для управления состоянием создания FAQ
-final faqCreationStateProvider =
-    NotifierProvider<FaqCreationStateNotifier, Map<String, bool>>(
+final faqCreationStateProvider = NotifierProvider<FaqCreationStateNotifier, Map<String, bool>>(
   FaqCreationStateNotifier.new,
 );
 
@@ -177,8 +164,7 @@ class SelectedFAQCategoriesNotifier extends Notifier<Set<String>> {
 }
 
 /// Провайдер для управления выбранными категориями FAQ
-final selectedFAQCategoriesProvider =
-    NotifierProvider<SelectedFAQCategoriesNotifier, Set<String>>(
+final selectedFAQCategoriesProvider = NotifierProvider<SelectedFAQCategoriesNotifier, Set<String>>(
   SelectedFAQCategoriesNotifier.new,
 );
 
@@ -216,8 +202,7 @@ class VideoFiltersNotifier extends Notifier<VideoFilters> {
 }
 
 /// Провайдер для управления фильтрами видео
-final videoFiltersProvider =
-    NotifierProvider<VideoFiltersNotifier, VideoFilters>(
+final videoFiltersProvider = NotifierProvider<VideoFiltersNotifier, VideoFilters>(
   VideoFiltersNotifier.new,
 );
 

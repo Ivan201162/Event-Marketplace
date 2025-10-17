@@ -35,8 +35,7 @@ class SecurityAuditScreen extends ConsumerStatefulWidget {
   const SecurityAuditScreen({super.key});
 
   @override
-  ConsumerState<SecurityAuditScreen> createState() =>
-      _SecurityAuditScreenState();
+  ConsumerState<SecurityAuditScreen> createState() => _SecurityAuditScreenState();
 }
 
 class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
@@ -160,8 +159,7 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
 
   Widget _buildEventsList() => Consumer(
         builder: (context, ref, child) {
-          final currentUser =
-              await ref.watch(authServiceProvider).getCurrentUser();
+          final currentUser = await ref.watch(authServiceProvider).getCurrentUser();
 
           if (currentUser == null) {
             return const Center(
@@ -251,8 +249,7 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
                 width: 32,
                 height: 32,
                 decoration: BoxDecoration(
-                  color: _getEventTypeColor(event.eventType)
-                      .withValues(alpha: 0.1),
+                  color: _getEventTypeColor(event.eventType).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -318,14 +315,11 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
                   ),
                   _buildInfoRow('Время', _formatDateTime(event.timestamp)),
 
-                  if (event.ipAddress != null)
-                    _buildInfoRow('IP адрес', event.ipAddress!),
+                  if (event.ipAddress != null) _buildInfoRow('IP адрес', event.ipAddress!),
 
-                  if (event.deviceId != null)
-                    _buildInfoRow('ID устройства', event.deviceId!),
+                  if (event.deviceId != null) _buildInfoRow('ID устройства', event.deviceId!),
 
-                  if (event.userAgent != null)
-                    _buildInfoRow('User Agent', event.userAgent!),
+                  if (event.userAgent != null) _buildInfoRow('User Agent', event.userAgent!),
 
                   // Метаданные
                   if (event.metadata != null && event.metadata!.isNotEmpty) ...[
@@ -394,16 +388,12 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
 
     // Фильтр по типу события
     if (_selectedEventType != null) {
-      filtered = filtered
-          .where((event) => event.eventType == _selectedEventType)
-          .toList();
+      filtered = filtered.where((event) => event.eventType == _selectedEventType).toList();
     }
 
     // Фильтр по серьезности
     if (_selectedSeverity != null) {
-      filtered = filtered
-          .where((event) => event.severity == _selectedSeverity)
-          .toList();
+      filtered = filtered.where((event) => event.severity == _selectedSeverity).toList();
     }
 
     // Фильтр по поисковому запросу

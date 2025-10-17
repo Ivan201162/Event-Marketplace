@@ -141,10 +141,8 @@ class RussianBankService {
       await Future.delayed(const Duration(seconds: 1));
 
       return TinkoffPaymentResponse(
-        paymentId:
-            'tinkoff_${paymentId}_${DateTime.now().millisecondsSinceEpoch}',
-        paymentUrl:
-            'https://securepay.tinkoff.ru/v2/Checkout?OrderId=$paymentId',
+        paymentId: 'tinkoff_${paymentId}_${DateTime.now().millisecondsSinceEpoch}',
+        paymentUrl: 'https://securepay.tinkoff.ru/v2/Checkout?OrderId=$paymentId',
         qrCode:
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
       );

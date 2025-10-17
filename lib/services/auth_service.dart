@@ -71,12 +71,10 @@ class AuthService {
   Future<void> signOut() async => _firebaseAuth.signOut();
 
   /// Сброс пароля
-  Future<void> resetPassword(String email) async =>
-      _firebaseAuth.resetPassword(email);
+  Future<void> resetPassword(String email) async => _firebaseAuth.resetPassword(email);
 
   /// Вход с тестовым email
-  Future<AppUser?> signInWithTestEmail() async =>
-      signInWithEmail('test@example.com', 'Test1234');
+  Future<AppUser?> signInWithTestEmail() async => signInWithEmail('test@example.com', 'Test1234');
 
   /// Регистрация с тестовым email (если не существует)
   Future<AppUser?> signUpWithTestEmail() async {

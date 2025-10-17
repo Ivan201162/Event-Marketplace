@@ -12,8 +12,7 @@ class SpecialistProfileService {
   /// Получить статистику профиля
   Future<ProfileStatistics> getProfileStatistics(String specialistId) async {
     try {
-      final doc =
-          await _firestore.collection('specialists').doc(specialistId).get();
+      final doc = await _firestore.collection('specialists').doc(specialistId).get();
 
       if (!doc.exists) {
         return _getDefaultStatistics();
@@ -224,11 +223,7 @@ class SpecialistProfileService {
   /// Закрепить пост
   Future<void> pinPost(String specialistId, String postId) async {
     try {
-      await _firestore
-          .collection('specialists')
-          .doc(specialistId)
-          .collection('pinnedPosts')
-          .add({
+      await _firestore.collection('specialists').doc(specialistId).collection('pinnedPosts').add({
         'postId': postId,
         'pinnedAt': FieldValue.serverTimestamp(),
       });
@@ -332,8 +327,7 @@ class SpecialistProfileService {
           id: '1',
           specialistId: 'test',
           title: 'Свадебная фотосессия в парке',
-          description:
-              'Романтическая свадебная съёмка в парке с красивыми кадрами',
+          description: 'Романтическая свадебная съёмка в парке с красивыми кадрами',
           mediaUrl: 'https://picsum.photos/400/300?random=1',
           mediaType: PortfolioMediaType.image,
           category: 'Свадебная съёмка',

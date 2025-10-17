@@ -99,8 +99,7 @@ class ContractService {
       );
 
       // Сохраняем в Firestore
-      final docRef =
-          await _firestore.collection('contracts').add(contract.toMap());
+      final docRef = await _firestore.collection('contracts').add(contract.toMap());
 
       return contract.copyWith(id: docRef.id);
     } catch (e) {
@@ -147,27 +146,22 @@ class ContractService {
       }
 
       // Если обе стороны подписали, обновляем статус договора
-      final willBeFullySigned =
-          (isCustomer ? true : contract.signedByCustomer) &&
-              (isSpecialist ? true : contract.signedBySpecialist);
+      final willBeFullySigned = (isCustomer ? true : contract.signedByCustomer) &&
+          (isSpecialist ? true : contract.signedBySpecialist);
 
       if (willBeFullySigned) {
         updateData['status'] = ContractStatus.signed.name;
         updateData['signedAt'] = Timestamp.fromDate(DateTime.now());
       }
 
-      await _firestore
-          .collection('contracts')
-          .doc(contractId)
-          .update(updateData);
+      await _firestore.collection('contracts').doc(contractId).update(updateData);
     } catch (e) {
       throw Exception('Ошибка подписания договора: $e');
     }
   }
 
   /// Получить договор по ID
-  Future<Contract?> getContract(String contractId) async =>
-      _getContract(contractId);
+  Future<Contract?> getContract(String contractId) async => _getContract(contractId);
 
   /// Получить договоры по бронированию
   Future<List<Contract>> getContractsByBooking(String bookingId) async {
@@ -212,8 +206,7 @@ class ContractService {
 
   Future<Specialist?> _getSpecialist(String specialistId) async {
     try {
-      final doc =
-          await _firestore.collection('specialists').doc(specialistId).get();
+      final doc = await _firestore.collection('specialists').doc(specialistId).get();
       if (doc.exists) {
         return Specialist.fromDocument(doc);
       }
@@ -225,8 +218,7 @@ class ContractService {
 
   Future<Contract?> _getContract(String contractId) async {
     try {
-      final doc =
-          await _firestore.collection('contracts').doc(contractId).get();
+      final doc = await _firestore.collection('contracts').doc(contractId).get();
       if (doc.exists) {
         return Contract.fromDocument(doc);
       }
@@ -241,8 +233,7 @@ class ContractService {
     final year = now.year;
     final month = now.month.toString().padLeft(2, '0');
     final day = now.day.toString().padLeft(2, '0');
-    final random =
-        (now.millisecondsSinceEpoch % 1000).toString().padLeft(3, '0');
+    final random = (now.millisecondsSinceEpoch % 1000).toString().padLeft(3, '0');
 
     return 'ДУ-$year$month$day-$random';
   }
@@ -425,8 +416,7 @@ Email: ${customer.email ?? 'Не указан'}
   Future<String> generateContractPDF(String contractId) async {
     try {
       // Получаем договор
-      final contractDoc =
-          await _firestore.collection('contracts').doc(contractId).get();
+      final contractDoc = await _firestore.collection('contracts').doc(contractId).get();
 
       if (!contractDoc.exists) {
         throw Exception('Договор не найден');

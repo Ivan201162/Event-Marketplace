@@ -56,8 +56,7 @@ class ChatService {
         isFromCurrentUser: true,
       );
 
-      final docRef =
-          await _firestore.collection(_messagesCollection).add(message.toMap());
+      final docRef = await _firestore.collection(_messagesCollection).add(message.toMap());
 
       // Обновляем последнее сообщение в чате
       await _updateLastMessage(chatId, message);
@@ -107,8 +106,7 @@ class ChatService {
         isFromCurrentUser: true,
       );
 
-      final docRef =
-          await _firestore.collection(_messagesCollection).add(message.toMap());
+      final docRef = await _firestore.collection(_messagesCollection).add(message.toMap());
       return docRef.id;
     } on Exception catch (e) {
       debugPrint('Ошибка отправки изображения: $e');
@@ -148,8 +146,7 @@ class ChatService {
         isFromCurrentUser: true,
       );
 
-      final docRef =
-          await _firestore.collection(_messagesCollection).add(message.toMap());
+      final docRef = await _firestore.collection(_messagesCollection).add(message.toMap());
 
       // Обновляем последнее сообщение в чате
       await _updateLastMessage(chatId, message);
@@ -192,8 +189,7 @@ class ChatService {
         isFromCurrentUser: true,
       );
 
-      final docRef =
-          await _firestore.collection(_messagesCollection).add(message.toMap());
+      final docRef = await _firestore.collection(_messagesCollection).add(message.toMap());
 
       // Обновляем последнее сообщение в чате
       await _updateLastMessage(chatId, message);
@@ -233,8 +229,7 @@ class ChatService {
         isFromCurrentUser: true,
       );
 
-      final docRef =
-          await _firestore.collection(_messagesCollection).add(message.toMap());
+      final docRef = await _firestore.collection(_messagesCollection).add(message.toMap());
       return docRef.id;
     } on Exception catch (e) {
       debugPrint('Ошибка отправки документа: $e');
@@ -245,8 +240,7 @@ class ChatService {
   /// Загрузить файл в Storage
   Future<String?> _uploadFile(file, String folder) async {
     try {
-      final fileName =
-          '${DateTime.now().millisecondsSinceEpoch}_${file.path.split('/').last}';
+      final fileName = '${DateTime.now().millisecondsSinceEpoch}_${file.path.split('/').last}';
       final ref = _storage.ref().child('$folder/$fileName');
 
       UploadTask uploadTask;
@@ -292,8 +286,7 @@ class ChatService {
         'lastMessageAt': null,
       };
 
-      final docRef =
-          await _firestore.collection(_chatsCollection).add(chatData);
+      final docRef = await _firestore.collection(_chatsCollection).add(chatData);
       return docRef.id;
     } on Exception catch (e) {
       debugPrint('Ошибка создания/получения чата: $e');
@@ -418,8 +411,7 @@ class ChatService {
   ) async {
     try {
       // Получаем информацию о чате
-      final chatDoc =
-          await _firestore.collection(_chatsCollection).doc(chatId).get();
+      final chatDoc = await _firestore.collection(_chatsCollection).doc(chatId).get();
       if (!chatDoc.exists) return;
 
       final chatData = chatDoc.data()!;
@@ -555,9 +547,7 @@ class ChatService {
           isFromCurrentUser: true,
         );
 
-        final docRef = await _firestore
-            .collection(_messagesCollection)
-            .add(message.toMap());
+        final docRef = await _firestore.collection(_messagesCollection).add(message.toMap());
 
         // Обновляем последнее сообщение в чате
         await _updateLastMessage(chatId, message);
@@ -620,8 +610,7 @@ class ChatService {
       final chat = Chat(
         id: '',
         customerId: participants.first,
-        specialistId:
-            participants.length > 1 ? participants[1] : participants.first,
+        specialistId: participants.length > 1 ? participants[1] : participants.first,
         name: name ?? '',
         participants: participants,
         participantNames: participantNames,
@@ -630,8 +619,7 @@ class ChatService {
         updatedAt: DateTime.now(),
       );
 
-      final docRef =
-          await _firestore.collection(_chatsCollection).add(chat.toMap());
+      final docRef = await _firestore.collection(_chatsCollection).add(chat.toMap());
       return docRef.id;
     } on Exception catch (e) {
       throw Exception('Ошибка создания чата: $e');
@@ -654,10 +642,8 @@ class ChatService {
   Future<void> deleteChat(String chatId) async {
     try {
       // Удаляем все сообщения чата
-      final messagesSnapshot = await _firestore
-          .collection(_messagesCollection)
-          .where('chatId', isEqualTo: chatId)
-          .get();
+      final messagesSnapshot =
+          await _firestore.collection(_messagesCollection).where('chatId', isEqualTo: chatId).get();
 
       final batch = _firestore.batch();
       for (final doc in messagesSnapshot.docs) {

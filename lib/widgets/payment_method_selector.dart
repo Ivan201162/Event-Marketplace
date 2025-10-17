@@ -34,8 +34,7 @@ class PaymentMethodSelector extends StatelessWidget {
                     ),
                     borderRadius: BorderRadius.circular(12),
                     color: selectedMethod == method
-                        ? theme.colorScheme.primaryContainer
-                            .withValues(alpha: 0.3)
+                        ? theme.colorScheme.primaryContainer.withValues(alpha: 0.3)
                         : null,
                   ),
                   child: Row(
@@ -70,17 +69,14 @@ class PaymentMethodSelector extends StatelessWidget {
                               _getMethodDisplayName(method),
                               style: theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.w600,
-                                color: selectedMethod == method
-                                    ? theme.colorScheme.primary
-                                    : null,
+                                color: selectedMethod == method ? theme.colorScheme.primary : null,
                               ),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               _getMethodDescription(method),
                               style: theme.textTheme.bodyMedium?.copyWith(
-                                color: theme.colorScheme.onSurface
-                                    .withValues(alpha: 0.7),
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                               ),
                             ),
                           ],

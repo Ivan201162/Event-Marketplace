@@ -13,12 +13,10 @@ class PhoneVerificationScreen extends ConsumerStatefulWidget {
   final String phoneNumber;
 
   @override
-  ConsumerState<PhoneVerificationScreen> createState() =>
-      _PhoneVerificationScreenState();
+  ConsumerState<PhoneVerificationScreen> createState() => _PhoneVerificationScreenState();
 }
 
-class _PhoneVerificationScreenState
-    extends ConsumerState<PhoneVerificationScreen> {
+class _PhoneVerificationScreenState extends ConsumerState<PhoneVerificationScreen> {
   final _codeController = TextEditingController();
   bool _isLoading = false;
   String? _errorMessage;
@@ -192,8 +190,7 @@ class _PhoneVerificationScreenState
                         width: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       )
                     : const Text(
@@ -215,13 +212,9 @@ class _PhoneVerificationScreenState
                   TextButton(
                     onPressed: _canResend ? _sendSMS : null,
                     child: Text(
-                      _canResend
-                          ? 'Отправить повторно'
-                          : 'Повторно через $_resendTimer сек',
+                      _canResend ? 'Отправить повторно' : 'Повторно через $_resendTimer сек',
                       style: TextStyle(
-                        color: _canResend
-                            ? Theme.of(context).primaryColor
-                            : Colors.grey,
+                        color: _canResend ? Theme.of(context).primaryColor : Colors.grey,
                       ),
                     ),
                   ),

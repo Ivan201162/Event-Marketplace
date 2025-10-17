@@ -71,10 +71,7 @@ class PaymentCard extends ConsumerWidget {
                     payment.description,
                     style: TextStyle(
                       fontSize: 14,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.7),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -86,20 +83,14 @@ class PaymentCard extends ConsumerWidget {
                     Icon(
                       Icons.schedule,
                       size: 16,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.7),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
                     const SizedBox(width: 8),
                     Text(
                       'Создан: ${_formatDate(payment.createdAt)}',
                       style: TextStyle(
                         fontSize: 12,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.7),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -478,9 +469,7 @@ class PaymentStatisticsWidget extends ConsumerWidget {
                 value: (statistics['completionRate'] as num? ?? 0) / 100,
                 backgroundColor: Colors.grey.withValues(alpha: 0.3),
                 valueColor: AlwaysStoppedAnimation<Color>(
-                  (statistics['completionRate'] as num? ?? 0) > 80
-                      ? Colors.green
-                      : Colors.orange,
+                  (statistics['completionRate'] as num? ?? 0) > 80 ? Colors.green : Colors.orange,
                 ),
               ),
               const SizedBox(height: 8),
@@ -488,10 +477,7 @@ class PaymentStatisticsWidget extends ConsumerWidget {
                 'Процент завершенных: ${(statistics['completionRate'] as num? ?? 0).toStringAsFixed(1)}%',
                 style: TextStyle(
                   fontSize: 12,
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.7),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
               ),
             ],
@@ -529,10 +515,7 @@ class PaymentStatisticsWidget extends ConsumerWidget {
               label,
               style: TextStyle(
                 fontSize: 12,
-                color: Theme.of(context)
-                    .colorScheme
-                    .onSurface
-                    .withValues(alpha: 0.7),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ),
             const SizedBox(height: 4),
@@ -582,14 +565,10 @@ class PaymentCalculationWidget extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              calculation['paymentSchemeDescription'] as String? ??
-                  'Расчет платежей',
+              calculation['paymentSchemeDescription'] as String? ?? 'Расчет платежей',
               style: TextStyle(
                 fontSize: 12,
-                color: Theme.of(context)
-                    .colorScheme
-                    .onSurface
-                    .withValues(alpha: 0.7),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ),
             const SizedBox(height: 16),

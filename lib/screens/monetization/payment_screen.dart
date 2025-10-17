@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../models/subscription_plan.dart';
-import '../../models/promotion_boost.dart';
+
 import '../../models/advertisement.dart';
-import '../../services/payment_service.dart';
-import '../../services/subscription_service.dart';
-import '../../services/promotion_service.dart';
-import '../../services/advertisement_service.dart';
+import '../../models/promotion_boost.dart';
+import '../../models/subscription_plan.dart';
 import '../../providers/auth_provider.dart';
+import '../../services/advertisement_service.dart';
+import '../../services/payment_service.dart';
+import '../../services/promotion_service.dart';
+import '../../services/subscription_service.dart';
 
 enum PaymentType {
   subscription,
@@ -90,8 +91,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
             ),
             const SizedBox(height: 16),
-            if (widget.type == PaymentType.subscription &&
-                widget.plan != null) ...[
+            if (widget.type == PaymentType.subscription && widget.plan != null) ...[
               _buildOrderItem(
                 'Подписка ${widget.plan!.name}',
                 '${widget.plan!.durationDays} дней',
@@ -99,8 +99,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 Icons.star,
                 Colors.amber,
               ),
-            ] else if (widget.type == PaymentType.promotion &&
-                widget.promotionPackage != null) ...[
+            ] else if (widget.type == PaymentType.promotion && widget.promotionPackage != null) ...[
               _buildOrderItem(
                 'Продвижение ${widget.promotionPackage!.name}',
                 '${widget.promotionPackage!.durationDays} дней',
@@ -535,8 +534,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             break;
 
           case PaymentType.advertisement:
-            activationResult =
-                await _advertisementService.activateAdvertisement(
+            activationResult = await _advertisementService.activateAdvertisement(
               adId: widget.advertisement!.id,
               transactionId: result.transactionId!,
             );

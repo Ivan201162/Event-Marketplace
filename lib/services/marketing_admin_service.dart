@@ -1,12 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
+
 import '../models/admin_models.dart';
 import '../models/subscription_plan.dart';
-import '../models/promotion_boost.dart';
-import '../models/advertisement.dart';
-import '../models/referral_system.dart';
-import '../models/partnership_program.dart';
 import 'admin_service.dart';
 
 class MarketingAdminService {
@@ -21,10 +18,7 @@ class MarketingAdminService {
     required String adminEmail,
   }) async {
     try {
-      await _firestore
-          .collection('subscription_plans')
-          .doc(plan.id)
-          .set(plan.toMap());
+      await _firestore.collection('subscription_plans').doc(plan.id).set(plan.toMap());
 
       await _adminService.logAdminAction(
         adminId: adminId,
@@ -36,12 +30,10 @@ class MarketingAdminService {
         metadata: {'planName': plan.name, 'price': plan.price},
       );
 
-      debugPrint(
-          'INFO: [MarketingAdminService] Subscription plan created: ${plan.name}');
+      debugPrint('INFO: [MarketingAdminService] Subscription plan created: ${plan.name}');
       return true;
     } catch (e) {
-      debugPrint(
-          'ERROR: [MarketingAdminService] Failed to create subscription plan: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to create subscription plan: $e');
       await _adminService.logAdminAction(
         adminId: adminId,
         adminEmail: adminEmail,
@@ -78,12 +70,10 @@ class MarketingAdminService {
         metadata: updates,
       );
 
-      debugPrint(
-          'INFO: [MarketingAdminService] Subscription plan updated: $planId');
+      debugPrint('INFO: [MarketingAdminService] Subscription plan updated: $planId');
       return true;
     } catch (e) {
-      debugPrint(
-          'ERROR: [MarketingAdminService] Failed to update subscription plan: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to update subscription plan: $e');
       return false;
     }
   }
@@ -95,10 +85,7 @@ class MarketingAdminService {
     required String adminEmail,
   }) async {
     try {
-      await _firestore
-          .collection('marketing_campaigns')
-          .doc(campaign.id)
-          .set(campaign.toMap());
+      await _firestore.collection('marketing_campaigns').doc(campaign.id).set(campaign.toMap());
 
       await _adminService.logAdminAction(
         adminId: adminId,
@@ -110,12 +97,10 @@ class MarketingAdminService {
         metadata: {'campaignName': campaign.name, 'type': campaign.type.name},
       );
 
-      debugPrint(
-          'INFO: [MarketingAdminService] Marketing campaign created: ${campaign.name}');
+      debugPrint('INFO: [MarketingAdminService] Marketing campaign created: ${campaign.name}');
       return true;
     } catch (e) {
-      debugPrint(
-          'ERROR: [MarketingAdminService] Failed to create marketing campaign: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to create marketing campaign: $e');
       return false;
     }
   }
@@ -127,10 +112,7 @@ class MarketingAdminService {
     required String adminEmail,
   }) async {
     try {
-      await _firestore
-          .collection('marketing_campaigns')
-          .doc(campaignId)
-          .update({
+      await _firestore.collection('marketing_campaigns').doc(campaignId).update({
         ...updates,
         'updatedAt': DateTime.now(),
       });
@@ -145,12 +127,10 @@ class MarketingAdminService {
         metadata: updates,
       );
 
-      debugPrint(
-          'INFO: [MarketingAdminService] Marketing campaign updated: $campaignId');
+      debugPrint('INFO: [MarketingAdminService] Marketing campaign updated: $campaignId');
       return true;
     } catch (e) {
-      debugPrint(
-          'ERROR: [MarketingAdminService] Failed to update marketing campaign: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to update marketing campaign: $e');
       return false;
     }
   }
@@ -174,18 +154,13 @@ class MarketingAdminService {
         target: 'newsletter',
         targetId: newsletter.id,
         description: 'Created newsletter: ${newsletter.title}',
-        metadata: {
-          'newsletterTitle': newsletter.title,
-          'type': newsletter.type.name
-        },
+        metadata: {'newsletterTitle': newsletter.title, 'type': newsletter.type.name},
       );
 
-      debugPrint(
-          'INFO: [MarketingAdminService] Newsletter created: ${newsletter.title}');
+      debugPrint('INFO: [MarketingAdminService] Newsletter created: ${newsletter.title}');
       return true;
     } catch (e) {
-      debugPrint(
-          'ERROR: [MarketingAdminService] Failed to create newsletter: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to create newsletter: $e');
       return false;
     }
   }
@@ -196,10 +171,7 @@ class MarketingAdminService {
     required String adminEmail,
   }) async {
     try {
-      await _firestore
-          .collection('marketing_newsletters')
-          .doc(newsletterId)
-          .update({
+      await _firestore.collection('marketing_newsletters').doc(newsletterId).update({
         'status': NewsletterStatus.sending.name,
         'sentAt': DateTime.now(),
         'updatedAt': DateTime.now(),
@@ -214,12 +186,10 @@ class MarketingAdminService {
         description: 'Sent newsletter: $newsletterId',
       );
 
-      debugPrint(
-          'INFO: [MarketingAdminService] Newsletter sent: $newsletterId');
+      debugPrint('INFO: [MarketingAdminService] Newsletter sent: $newsletterId');
       return true;
     } catch (e) {
-      debugPrint(
-          'ERROR: [MarketingAdminService] Failed to send newsletter: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to send newsletter: $e');
       return false;
     }
   }
@@ -234,19 +204,16 @@ class MarketingAdminService {
       stats['totalReferrals'] = referralsSnapshot.docs.length;
 
       // Активные рефералы
-      final activeReferralsSnapshot = await _firestore
-          .collection('referrals')
-          .where('status', isEqualTo: 'completed')
-          .get();
+      final activeReferralsSnapshot =
+          await _firestore.collection('referrals').where('status', isEqualTo: 'completed').get();
       stats['activeReferrals'] = activeReferralsSnapshot.docs.length;
 
       // Статистика по месяцам
       final now = DateTime.now();
-      final thisMonth = DateTime(now.year, now.month, 1);
+      final thisMonth = DateTime(now.year, now.month);
       final thisMonthReferrals = await _firestore
           .collection('referrals')
-          .where('createdAt',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(thisMonth))
+          .where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(thisMonth))
           .get();
       stats['thisMonthReferrals'] = thisMonthReferrals.docs.length;
 
@@ -270,8 +237,7 @@ class MarketingAdminService {
 
       return stats;
     } catch (e) {
-      debugPrint(
-          'ERROR: [MarketingAdminService] Failed to get referral stats: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to get referral stats: $e');
       return {};
     }
   }
@@ -286,15 +252,12 @@ class MarketingAdminService {
       stats['totalPartners'] = partnersSnapshot.docs.length;
 
       // Активные партнёры
-      final activePartnersSnapshot = await _firestore
-          .collection('partners')
-          .where('isActive', isEqualTo: true)
-          .get();
+      final activePartnersSnapshot =
+          await _firestore.collection('partners').where('isActive', isEqualTo: true).get();
       stats['activePartners'] = activePartnersSnapshot.docs.length;
 
       // Общая сумма комиссий
-      final partnerTransactionsSnapshot =
-          await _firestore.collection('partner_transactions').get();
+      final partnerTransactionsSnapshot = await _firestore.collection('partner_transactions').get();
       double totalCommissions = 0.0;
       for (final doc in partnerTransactionsSnapshot.docs) {
         totalCommissions += (doc.data()['commissionAmount'] ?? 0.0).toDouble();
@@ -307,8 +270,7 @@ class MarketingAdminService {
         final data = doc.data();
         final partnerId = data['partnerId'] ?? '';
         final commission = (data['commissionAmount'] ?? 0.0).toDouble();
-        partnerEarnings[partnerId] =
-            (partnerEarnings[partnerId] ?? 0.0) + commission;
+        partnerEarnings[partnerId] = (partnerEarnings[partnerId] ?? 0.0) + commission;
       }
 
       final sortedPartners = partnerEarnings.entries.toList()
@@ -324,8 +286,7 @@ class MarketingAdminService {
 
       return stats;
     } catch (e) {
-      debugPrint(
-          'ERROR: [MarketingAdminService] Failed to get partner stats: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to get partner stats: $e');
       return {};
     }
   }
@@ -340,24 +301,20 @@ class MarketingAdminService {
       Query query = _firestore.collection('financial_analytics');
 
       if (startDate != null) {
-        query = query.where('date',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
       if (endDate != null) {
-        query = query.where('date',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where('date', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
       query = query.where('period', isEqualTo: period);
 
       final snapshot = await query.orderBy('date', descending: true).get();
       return snapshot.docs
-          .map((doc) =>
-              FinancialAnalytics.fromMap(doc.data() as Map<String, dynamic>))
+          .map((doc) => FinancialAnalytics.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      debugPrint(
-          'ERROR: [MarketingAdminService] Failed to get financial analytics: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to get financial analytics: $e');
       return [];
     }
   }
@@ -382,10 +339,7 @@ class MarketingAdminService {
         createdBy: segment.createdBy,
       );
 
-      await _firestore
-          .collection('user_segments')
-          .doc(segment.id)
-          .set(segmentWithCount.toMap());
+      await _firestore.collection('user_segments').doc(segment.id).set(segmentWithCount.toMap());
 
       await _adminService.logAdminAction(
         adminId: adminId,
@@ -397,12 +351,10 @@ class MarketingAdminService {
         metadata: {'segmentName': segment.name, 'userCount': userCount},
       );
 
-      debugPrint(
-          'INFO: [MarketingAdminService] User segment created: ${segment.name}');
+      debugPrint('INFO: [MarketingAdminService] User segment created: ${segment.name}');
       return true;
     } catch (e) {
-      debugPrint(
-          'ERROR: [MarketingAdminService] Failed to create user segment: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to create user segment: $e');
       return false;
     }
   }
@@ -416,11 +368,9 @@ class MarketingAdminService {
         if (entry.value is Map) {
           final condition = entry.value as Map<String, dynamic>;
           if (condition.containsKey('gte')) {
-            query = query.where(entry.key,
-                isGreaterThanOrEqualTo: condition['gte']);
+            query = query.where(entry.key, isGreaterThanOrEqualTo: condition['gte']);
           } else if (condition.containsKey('lte')) {
-            query =
-                query.where(entry.key, isLessThanOrEqualTo: condition['lte']);
+            query = query.where(entry.key, isLessThanOrEqualTo: condition['lte']);
           } else if (condition.containsKey('in')) {
             query = query.where(entry.key, whereIn: condition['in']);
           }
@@ -432,8 +382,7 @@ class MarketingAdminService {
       final snapshot = await query.get();
       return snapshot.docs.length;
     } catch (e) {
-      debugPrint(
-          'ERROR: [MarketingAdminService] Failed to count users in segment: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to count users in segment: $e');
       return 0;
     }
   }
@@ -444,9 +393,8 @@ class MarketingAdminService {
         .collection('marketing_campaigns')
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => MarketingCampaign.fromMap(doc.data()))
-            .toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => MarketingCampaign.fromMap(doc.data())).toList());
   }
 
   /// Получение всех рассылок
@@ -455,9 +403,8 @@ class MarketingAdminService {
         .collection('marketing_newsletters')
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => MarketingNewsletter.fromMap(doc.data()))
-            .toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => MarketingNewsletter.fromMap(doc.data())).toList());
   }
 
   /// Получение всех сегментов пользователей
@@ -466,9 +413,7 @@ class MarketingAdminService {
         .collection('user_segments')
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => UserSegment.fromMap(doc.data()))
-            .toList());
+        .map((snapshot) => snapshot.docs.map((doc) => UserSegment.fromMap(doc.data())).toList());
   }
 
   /// Активация/деактивация кампании
@@ -479,10 +424,7 @@ class MarketingAdminService {
     required String adminEmail,
   }) async {
     try {
-      await _firestore
-          .collection('marketing_campaigns')
-          .doc(campaignId)
-          .update({
+      await _firestore.collection('marketing_campaigns').doc(campaignId).update({
         'status': newStatus.name,
         'updatedAt': DateTime.now(),
       });
@@ -502,8 +444,7 @@ class MarketingAdminService {
           'INFO: [MarketingAdminService] Campaign status changed: $campaignId to ${newStatus.name}');
       return true;
     } catch (e) {
-      debugPrint(
-          'ERROR: [MarketingAdminService] Failed to toggle campaign status: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to toggle campaign status: $e');
       return false;
     }
   }

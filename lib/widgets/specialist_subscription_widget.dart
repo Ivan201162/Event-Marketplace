@@ -13,12 +13,10 @@ class SpecialistSubscriptionWidget extends StatefulWidget {
   final VoidCallback? onSubscriptionChanged;
 
   @override
-  State<SpecialistSubscriptionWidget> createState() =>
-      _SpecialistSubscriptionWidgetState();
+  State<SpecialistSubscriptionWidget> createState() => _SpecialistSubscriptionWidgetState();
 }
 
-class _SpecialistSubscriptionWidgetState
-    extends State<SpecialistSubscriptionWidget> {
+class _SpecialistSubscriptionWidgetState extends State<SpecialistSubscriptionWidget> {
   final NewsFeedService _newsService = NewsFeedService();
 
   List<String> _subscriptions = [];
@@ -214,8 +212,7 @@ class _SpecialistSubscriptionWidgetState
     });
 
     try {
-      final subscriptions =
-          await _newsService.getUserSubscriptions(widget.userId);
+      final subscriptions = await _newsService.getUserSubscriptions(widget.userId);
       setState(() {
         _subscriptions = subscriptions;
         _isLoading = false;

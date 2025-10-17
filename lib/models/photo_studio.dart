@@ -45,17 +45,10 @@ class PhotoStudio {
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       avatarUrl: data['avatarUrl']?.toString(),
       coverImageUrl: data['coverImageUrl']?.toString(),
-      images: (data['images'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList() ??
-          [],
-      amenities: (data['amenities'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList() ??
-          [],
+      images: (data['images'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      amenities: (data['amenities'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
       pricing: Map<String, dynamic>.from(data['pricing'] as Map? ?? {}),
-      workingHours:
-          Map<String, dynamic>.from(data['workingHours'] as Map? ?? {}),
+      workingHours: Map<String, dynamic>.from(data['workingHours'] as Map? ?? {}),
       rating: (data['rating'] as num?)?.toDouble() ?? 0.0,
       reviewCount: (data['reviewCount'] as num?)?.toInt() ?? 0,
       isActive: data['isActive'] == true,
@@ -74,22 +67,13 @@ class PhotoStudio {
         phone: data['phone']?.toString() ?? '',
         email: data['email']?.toString() ?? '',
         ownerId: data['ownerId']?.toString() ?? '',
-        createdAt: data['createdAt'] != null
-            ? (data['createdAt'] as Timestamp).toDate()
-            : DateTime.now(),
+        createdAt:
+            data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
         avatarUrl: data['avatarUrl']?.toString(),
         coverImageUrl: data['coverImageUrl']?.toString(),
-        images: (data['images'] as List<dynamic>?)
-                ?.map((e) => e.toString())
-                .toList() ??
-            [],
-        amenities: (data['amenities'] as List<dynamic>?)
-                ?.map((e) => e.toString())
-                .toList() ??
-            [],
-        pricing: data['pricing'] != null
-            ? Map<String, dynamic>.from(data['pricing'] as Map)
-            : {},
+        images: (data['images'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+        amenities: (data['amenities'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+        pricing: data['pricing'] != null ? Map<String, dynamic>.from(data['pricing'] as Map) : {},
         workingHours: data['workingHours'] != null
             ? Map<String, dynamic>.from(data['workingHours'] as Map)
             : {},
@@ -97,12 +81,10 @@ class PhotoStudio {
         reviewCount: (data['reviewCount'] as num?)?.toInt() ?? 0,
         isActive: data['isActive'] == true,
         isVerified: data['isVerified'] == true,
-        location: data['location'] != null
-            ? Map<String, dynamic>.from(data['location'] as Map)
-            : {},
-        metadata: data['metadata'] != null
-            ? Map<String, dynamic>.from(data['metadata'] as Map)
-            : {},
+        location:
+            data['location'] != null ? Map<String, dynamic>.from(data['location'] as Map) : {},
+        metadata:
+            data['metadata'] != null ? Map<String, dynamic>.from(data['metadata'] as Map) : {},
         priceRange: data['priceRange'] != null
             ? PriceRange.fromMap(Map<String, dynamic>.from(data['priceRange']))
             : null,
@@ -111,10 +93,7 @@ class PhotoStudio {
                 ?.map((e) => StudioOption.fromMap(Map<String, dynamic>.from(e)))
                 .toList() ??
             [],
-        photos: (data['photos'] as List<dynamic>?)
-                ?.map((e) => e.toString())
-                .toList() ??
-            [],
+        photos: (data['photos'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
       );
 
   final String id;
@@ -448,8 +427,7 @@ class PhotoStudioBooking {
   final Map<String, dynamic> metadata;
 
   /// Получить продолжительность в часах
-  double get durationInHours =>
-      endTime.difference(startTime).inHours.toDouble();
+  double get durationInHours => endTime.difference(startTime).inHours.toDouble();
 
   /// Получить отформатированную продолжительность
   String get formattedDuration {
@@ -522,8 +500,7 @@ class PhotoStudioBooking {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() =>
-      'PhotoStudioBooking(id: $id, studioId: $studioId, status: $status)';
+  String toString() => 'PhotoStudioBooking(id: $id, studioId: $studioId, status: $status)';
 }
 
 /// Опция студии

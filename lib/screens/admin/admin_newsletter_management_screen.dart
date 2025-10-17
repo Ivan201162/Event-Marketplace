@@ -1,19 +1,18 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-import '../../services/marketing_admin_service.dart';
+
 import '../../models/admin_models.dart';
+import '../../services/marketing_admin_service.dart';
 
 class AdminNewsletterManagementScreen extends StatefulWidget {
   const AdminNewsletterManagementScreen({super.key});
 
   @override
-  State<AdminNewsletterManagementScreen> createState() =>
-      _AdminNewsletterManagementScreenState();
+  State<AdminNewsletterManagementScreen> createState() => _AdminNewsletterManagementScreenState();
 }
 
-class _AdminNewsletterManagementScreenState
-    extends State<AdminNewsletterManagementScreen> {
+class _AdminNewsletterManagementScreenState extends State<AdminNewsletterManagementScreen> {
   final MarketingAdminService _marketingService = MarketingAdminService();
   final Uuid _uuid = const Uuid();
   final TextEditingController _titleController = TextEditingController();
@@ -72,8 +71,7 @@ class _AdminNewsletterManagementScreenState
             padding: const EdgeInsets.all(16),
             itemCount: newsletters.length,
             itemBuilder: (context, index) {
-              final newsletterData =
-                  newsletters[index].data() as Map<String, dynamic>;
+              final newsletterData = newsletters[index].data() as Map<String, dynamic>;
               final newsletter = MarketingNewsletter.fromMap(newsletterData);
 
               return Card(
@@ -94,8 +92,7 @@ class _AdminNewsletterManagementScreenState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Тип: ${_getNewsletterTypeName(newsletter.type)}'),
-                      Text(
-                          'Статус: ${_getNewsletterStatusName(newsletter.status)}'),
+                      Text('Статус: ${_getNewsletterStatusName(newsletter.status)}'),
                       if (newsletter.totalRecipients != null)
                         Text('Получателей: ${newsletter.totalRecipients}'),
                       if (newsletter.deliveredCount != null)
@@ -107,8 +104,7 @@ class _AdminNewsletterManagementScreenState
                     ],
                   ),
                   trailing: PopupMenuButton<String>(
-                    onSelected: (value) =>
-                        _handleNewsletterAction(value, newsletter),
+                    onSelected: (value) => _handleNewsletterAction(value, newsletter),
                     itemBuilder: (context) => [
                       const PopupMenuItem(
                         value: 'edit',
@@ -122,8 +118,7 @@ class _AdminNewsletterManagementScreenState
                         value: 'send',
                         child: ListTile(
                           leading: Icon(Icons.send, color: Colors.green),
-                          title: Text('Отправить',
-                              style: TextStyle(color: Colors.green)),
+                          title: Text('Отправить', style: TextStyle(color: Colors.green)),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -131,8 +126,7 @@ class _AdminNewsletterManagementScreenState
                         value: 'schedule',
                         child: ListTile(
                           leading: Icon(Icons.schedule, color: Colors.blue),
-                          title: Text('Запланировать',
-                              style: TextStyle(color: Colors.blue)),
+                          title: Text('Запланировать', style: TextStyle(color: Colors.blue)),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -140,8 +134,7 @@ class _AdminNewsletterManagementScreenState
                         value: 'cancel',
                         child: ListTile(
                           leading: Icon(Icons.cancel, color: Colors.red),
-                          title: Text('Отменить',
-                              style: TextStyle(color: Colors.red)),
+                          title: Text('Отменить', style: TextStyle(color: Colors.red)),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -149,8 +142,7 @@ class _AdminNewsletterManagementScreenState
                         value: 'delete',
                         child: ListTile(
                           leading: Icon(Icons.delete, color: Colors.red),
-                          title: Text('Удалить',
-                              style: TextStyle(color: Colors.red)),
+                          title: Text('Удалить', style: TextStyle(color: Colors.red)),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -208,7 +200,7 @@ class _AdminNewsletterManagementScreenState
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<NewsletterType>(
-                value: _selectedType,
+                initialValue: _selectedType,
                 decoration: const InputDecoration(
                   labelText: 'Тип рассылки',
                   border: OutlineInputBorder(),
@@ -227,21 +219,16 @@ class _AdminNewsletterManagementScreenState
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: _selectedSegment,
+                initialValue: _selectedSegment,
                 decoration: const InputDecoration(
                   labelText: 'Сегмент получателей',
                   border: OutlineInputBorder(),
                 ),
                 items: const [
-                  DropdownMenuItem(
-                      value: 'all', child: Text('Все пользователи')),
-                  DropdownMenuItem(
-                      value: 'active', child: Text('Активные пользователи')),
-                  DropdownMenuItem(
-                      value: 'premium', child: Text('Premium пользователи')),
-                  DropdownMenuItem(
-                      value: 'inactive',
-                      child: Text('Неактивные пользователи')),
+                  DropdownMenuItem(value: 'all', child: Text('Все пользователи')),
+                  DropdownMenuItem(value: 'active', child: Text('Активные пользователи')),
+                  DropdownMenuItem(value: 'premium', child: Text('Premium пользователи')),
+                  DropdownMenuItem(value: 'inactive', child: Text('Неактивные пользователи')),
                 ],
                 onChanged: (value) {
                   setState(() {
@@ -418,7 +405,7 @@ class _AdminNewsletterManagementScreenState
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<NewsletterType>(
-                value: _selectedType,
+                initialValue: _selectedType,
                 decoration: const InputDecoration(
                   labelText: 'Тип рассылки',
                   border: OutlineInputBorder(),
@@ -437,21 +424,16 @@ class _AdminNewsletterManagementScreenState
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: _selectedSegment,
+                initialValue: _selectedSegment,
                 decoration: const InputDecoration(
                   labelText: 'Сегмент получателей',
                   border: OutlineInputBorder(),
                 ),
                 items: const [
-                  DropdownMenuItem(
-                      value: 'all', child: Text('Все пользователи')),
-                  DropdownMenuItem(
-                      value: 'active', child: Text('Активные пользователи')),
-                  DropdownMenuItem(
-                      value: 'premium', child: Text('Premium пользователи')),
-                  DropdownMenuItem(
-                      value: 'inactive',
-                      child: Text('Неактивные пользователи')),
+                  DropdownMenuItem(value: 'all', child: Text('Все пользователи')),
+                  DropdownMenuItem(value: 'active', child: Text('Активные пользователи')),
+                  DropdownMenuItem(value: 'premium', child: Text('Premium пользователи')),
+                  DropdownMenuItem(value: 'inactive', child: Text('Неактивные пользователи')),
                 ],
                 onChanged: (value) {
                   setState(() {
@@ -605,8 +587,7 @@ class _AdminNewsletterManagementScreenState
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить рассылку'),
-        content: Text(
-            'Вы уверены, что хотите удалить рассылку "${newsletter.title}"?'),
+        content: Text('Вы уверены, что хотите удалить рассылку "${newsletter.title}"?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),

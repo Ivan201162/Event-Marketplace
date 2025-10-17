@@ -126,8 +126,7 @@ class AnalyticsService {
   }
 
   /// Проверить, доступна ли аналитика
-  bool get isAvailable =>
-      FeatureFlags.analyticsEnabled && _isInitialized && _analytics != null;
+  bool get isAvailable => FeatureFlags.analyticsEnabled && _isInitialized && _analytics != null;
 
   /// Установить пользователя
   Future<void> setUserId(String userId) async {

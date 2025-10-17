@@ -14,8 +14,7 @@ class IdeaCollectionsScreen extends ConsumerStatefulWidget {
   final String userId;
 
   @override
-  ConsumerState<IdeaCollectionsScreen> createState() =>
-      _IdeaCollectionsScreenState();
+  ConsumerState<IdeaCollectionsScreen> createState() => _IdeaCollectionsScreenState();
 }
 
 class _IdeaCollectionsScreenState extends ConsumerState<IdeaCollectionsScreen> {
@@ -184,12 +183,10 @@ class CreateIdeaCollectionScreen extends ConsumerStatefulWidget {
   final String userId;
 
   @override
-  ConsumerState<CreateIdeaCollectionScreen> createState() =>
-      _CreateIdeaCollectionScreenState();
+  ConsumerState<CreateIdeaCollectionScreen> createState() => _CreateIdeaCollectionScreenState();
 }
 
-class _CreateIdeaCollectionScreenState
-    extends ConsumerState<CreateIdeaCollectionScreen> {
+class _CreateIdeaCollectionScreenState extends ConsumerState<CreateIdeaCollectionScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();

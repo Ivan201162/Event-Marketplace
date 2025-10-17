@@ -35,8 +35,7 @@ class AppConstants {
   static const int longAnimationDuration = 500;
 
   // Error messages
-  static const String networkErrorMessage =
-      'Ошибка сети. Проверьте подключение к интернету.';
+  static const String networkErrorMessage = 'Ошибка сети. Проверьте подключение к интернету.';
   static const String unknownErrorMessage = 'Произошла неизвестная ошибка.';
   static const String authErrorMessage = 'Ошибка авторизации.';
 
@@ -45,4 +44,3 @@ class AppConstants {
   static const String profileUpdatedMessage = 'Профиль обновлен.';
   static const String passwordChangedMessage = 'Пароль изменен.';
 }
-

@@ -28,8 +28,7 @@ class SpecialistProfileExtendedScreen extends ConsumerStatefulWidget {
       _SpecialistProfileExtendedScreenState();
 }
 
-class _SpecialistProfileExtendedScreenState
-    extends ConsumerState<SpecialistProfileExtendedScreen>
+class _SpecialistProfileExtendedScreenState extends ConsumerState<SpecialistProfileExtendedScreen>
     with TickerProviderStateMixin {
   final SpecialistService _specialistService = SpecialistService();
   final ReviewService _reviewService = ReviewService();
@@ -184,8 +183,7 @@ class _SpecialistProfileExtendedScreenState
               ? Image.network(
                   _specialist!.imageUrlValue!,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      _buildDefaultHeader(),
+                  errorBuilder: (context, error, stackTrace) => _buildDefaultHeader(),
                 )
               : _buildDefaultHeader(),
         ),
@@ -207,9 +205,7 @@ class _SpecialistProfileExtendedScreenState
                 radius: 50,
                 backgroundColor: Colors.white,
                 child: Text(
-                  _specialist!.name.isNotEmpty
-                      ? _specialist!.name[0].toUpperCase()
-                      : 'С',
+                  _specialist!.name.isNotEmpty ? _specialist!.name[0].toUpperCase() : 'С',
                   style: const TextStyle(
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
@@ -316,8 +312,7 @@ class _SpecialistProfileExtendedScreenState
               const SizedBox(height: 16),
 
               // Дополнительная информация
-              if (_specialist!.location != null &&
-                  _specialist!.location!.isNotEmpty) ...[
+              if (_specialist!.location != null && _specialist!.location!.isNotEmpty) ...[
                 Row(
                   children: [
                     Icon(
@@ -356,8 +351,7 @@ class _SpecialistProfileExtendedScreenState
               ],
 
               // Описание
-              if (_specialist!.description != null &&
-                  _specialist!.description!.isNotEmpty) ...[
+              if (_specialist!.description != null && _specialist!.description!.isNotEmpty) ...[
                 Text(
                   _specialist!.description!,
                   style: const TextStyle(fontSize: 14),
@@ -423,8 +417,7 @@ class _SpecialistProfileExtendedScreenState
               ],
             ),
             const SizedBox(height: 16),
-            if (_specialist!.portfolioItems.isEmpty &&
-                _specialist!.portfolioImages.isEmpty)
+            if (_specialist!.portfolioItems.isEmpty && _specialist!.portfolioImages.isEmpty)
               const Center(
                 child: Column(
                   children: [
@@ -469,9 +462,8 @@ class _SpecialistProfileExtendedScreenState
             // Сводка по рейтингу
             if (_reviews.isNotEmpty)
               RatingSummaryWidget(
-                averageRating: _specialist!.avgRating > 0
-                    ? _specialist!.avgRating
-                    : _specialist!.rating,
+                averageRating:
+                    _specialist!.avgRating > 0 ? _specialist!.avgRating : _specialist!.rating,
                 totalReviews: _reviews.length,
                 ratingDistribution: _getRatingDistribution(),
               ),

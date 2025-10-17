@@ -17,8 +17,7 @@ class SpecialistCalendarWidget extends StatefulWidget {
   final void Function(DateTime)? onDateTapped;
 
   @override
-  State<SpecialistCalendarWidget> createState() =>
-      _SpecialistCalendarWidgetState();
+  State<SpecialistCalendarWidget> createState() => _SpecialistCalendarWidgetState();
 }
 
 class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
@@ -115,8 +114,7 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
                   _focusedDay = focusedDay;
                 },
                 calendarBuilders: CalendarBuilders(
-                  defaultBuilder: (context, day, focusedDay) =>
-                      _buildDayCell(day, focusedDay),
+                  defaultBuilder: (context, day, focusedDay) => _buildDayCell(day, focusedDay),
                   todayBuilder: (context, day, focusedDay) =>
                       _buildDayCell(day, focusedDay, isToday: true),
                   selectedBuilder: (context, day, focusedDay) =>
@@ -198,8 +196,7 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
     bool isSelected = false,
   }) {
     final isBusy = widget.specialist.isDateBusy(day);
-    final isPast =
-        day.isBefore(DateTime.now().subtract(const Duration(days: 1)));
+    final isPast = day.isBefore(DateTime.now().subtract(const Duration(days: 1)));
 
     var backgroundColor = Colors.transparent;
     var textColor = Colors.black;
@@ -248,15 +245,12 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
 
   Widget _buildSelectedDateInfo() {
     final isBusy = widget.specialist.isDateBusy(_selectedDay!);
-    final isPast = _selectedDay!
-        .isBefore(DateTime.now().subtract(const Duration(days: 1)));
+    final isPast = _selectedDay!.isBefore(DateTime.now().subtract(const Duration(days: 1)));
 
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isBusy
-            ? Colors.red.withValues(alpha: 0.1)
-            : Colors.green.withValues(alpha: 0.1),
+        color: isBusy ? Colors.red.withValues(alpha: 0.1) : Colors.green.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: isBusy ? Colors.red : Colors.green,
@@ -301,8 +295,7 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
                 foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               ),
               child: const Text('Забронировать'),
             ),
@@ -458,8 +451,7 @@ class CompactSpecialistCalendarWidget extends StatelessWidget {
                             : isBusy
                                 ? Colors.red
                                 : Colors.green,
-                        fontWeight:
-                            isToday ? FontWeight.bold : FontWeight.normal,
+                        fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
                       ),
                     ),
                   ),

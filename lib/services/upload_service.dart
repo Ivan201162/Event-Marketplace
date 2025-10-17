@@ -258,8 +258,7 @@ class UploadService {
       // Получаем информацию о файле
       final fileStat = await file.stat();
       final fileName = path.basename(file.path);
-      final fileExtension =
-          path.extension(fileName).toLowerCase().replaceFirst('.', '');
+      final fileExtension = path.extension(fileName).toLowerCase().replaceFirst('.', '');
 
       // Валидация размера файла
       _validateFileSize(fileStat.size, fileType);
@@ -350,8 +349,7 @@ class UploadService {
       _validateFileSize(bytes.length, fileType);
 
       // Валидация расширения файла
-      final fileExtension =
-          path.extension(fileName).toLowerCase().replaceFirst('.', '');
+      final fileExtension = path.extension(fileName).toLowerCase().replaceFirst('.', '');
       _validateFileExtension(fileExtension, fileType);
 
       // Генерируем уникальное имя файла
@@ -549,8 +547,7 @@ class UploadService {
 
   /// Получить путь для загрузки
   String _getUploadPath(FileType fileType, String fileName) {
-    final timestamp =
-        DateTime.now().toIso8601String().split('T')[0]; // YYYY-MM-DD
+    final timestamp = DateTime.now().toIso8601String().split('T')[0]; // YYYY-MM-DD
 
     switch (fileType) {
       case FileType.image:

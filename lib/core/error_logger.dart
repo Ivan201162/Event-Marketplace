@@ -231,8 +231,7 @@ class ErrorLogger {
           buffer.writeln(log['stackTrace']);
         }
 
-        if (log['additionalData'] != null &&
-            (log['additionalData'] as Map).isNotEmpty) {
+        if (log['additionalData'] != null && (log['additionalData'] as Map).isNotEmpty) {
           buffer.writeln('Additional Data:');
           buffer.writeln(json.encode(log['additionalData']));
         }

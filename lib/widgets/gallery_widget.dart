@@ -262,8 +262,7 @@ class _GalleryWidgetState extends ConsumerState<GalleryWidget> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить работу'),
-        content:
-            const Text('Вы уверены, что хотите удалить эту работу из галереи?'),
+        content: const Text('Вы уверены, что хотите удалить эту работу из галереи?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),

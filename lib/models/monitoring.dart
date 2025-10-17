@@ -42,8 +42,7 @@ class MonitoringMetric {
   }
 
   /// Создать из Map
-  factory MonitoringMetric.fromMap(Map<String, dynamic> data) =>
-      MonitoringMetric(
+  factory MonitoringMetric.fromMap(Map<String, dynamic> data) => MonitoringMetric(
         id: data['id'] as String? ?? '',
         name: data['name'] as String? ?? '',
         description: data['description'] as String? ?? '',
@@ -162,8 +161,7 @@ class MonitoringMetric {
       );
 
   @override
-  String toString() =>
-      'MonitoringMetric(id: $id, name: $name, value: $formattedValue)';
+  String toString() => 'MonitoringMetric(id: $id, name: $name, value: $formattedValue)';
 }
 
 /// Модель алерта
@@ -208,17 +206,12 @@ class MonitoringAlert {
       threshold: (data['threshold'] as num?)?.toDouble() ?? 0.0,
       operator: data['operator'] ?? '',
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      triggeredAt: data['triggeredAt'] != null
-          ? (data['triggeredAt'] as Timestamp).toDate()
-          : null,
-      resolvedAt: data['resolvedAt'] != null
-          ? (data['resolvedAt'] as Timestamp).toDate()
-          : null,
+      triggeredAt: data['triggeredAt'] != null ? (data['triggeredAt'] as Timestamp).toDate() : null,
+      resolvedAt: data['resolvedAt'] != null ? (data['resolvedAt'] as Timestamp).toDate() : null,
       triggeredBy: data['triggeredBy'],
       resolvedBy: data['resolvedBy'],
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-      notificationChannels:
-          List<String>.from(data['notificationChannels'] ?? []),
+      notificationChannels: List<String>.from(data['notificationChannels'] ?? []),
     );
   }
 
@@ -240,17 +233,13 @@ class MonitoringAlert {
         threshold: (data['threshold'] as num?)?.toDouble() ?? 0.0,
         operator: data['operator'] ?? '',
         createdAt: (data['createdAt'] as Timestamp).toDate(),
-        triggeredAt: data['triggeredAt'] != null
-            ? (data['triggeredAt'] as Timestamp).toDate()
-            : null,
-        resolvedAt: data['resolvedAt'] != null
-            ? (data['resolvedAt'] as Timestamp).toDate()
-            : null,
+        triggeredAt:
+            data['triggeredAt'] != null ? (data['triggeredAt'] as Timestamp).toDate() : null,
+        resolvedAt: data['resolvedAt'] != null ? (data['resolvedAt'] as Timestamp).toDate() : null,
         triggeredBy: data['triggeredBy'],
         resolvedBy: data['resolvedBy'],
         metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-        notificationChannels:
-            List<String>.from(data['notificationChannels'] ?? []),
+        notificationChannels: List<String>.from(data['notificationChannels'] ?? []),
       );
   final String id;
   final String name;
@@ -281,10 +270,8 @@ class MonitoringAlert {
         'threshold': threshold,
         'operator': operator,
         'createdAt': Timestamp.fromDate(createdAt),
-        'triggeredAt':
-            triggeredAt != null ? Timestamp.fromDate(triggeredAt!) : null,
-        'resolvedAt':
-            resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
+        'triggeredAt': triggeredAt != null ? Timestamp.fromDate(triggeredAt!) : null,
+        'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
         'triggeredBy': triggeredBy,
         'resolvedBy': resolvedBy,
         'metadata': metadata,
@@ -432,8 +419,7 @@ class MonitoringDashboard {
   }
 
   /// Создать из Map
-  factory MonitoringDashboard.fromMap(Map<String, dynamic> data) =>
-      MonitoringDashboard(
+  factory MonitoringDashboard.fromMap(Map<String, dynamic> data) => MonitoringDashboard(
         id: data['id'] ?? '',
         name: data['name'] ?? '',
         description: data['description'] ?? '',

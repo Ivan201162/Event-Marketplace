@@ -14,8 +14,7 @@ class OrganizerChatScreen extends ConsumerStatefulWidget {
   final String chatId;
 
   @override
-  ConsumerState<OrganizerChatScreen> createState() =>
-      _OrganizerChatScreenState();
+  ConsumerState<OrganizerChatScreen> createState() => _OrganizerChatScreenState();
 }
 
 class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
@@ -124,14 +123,11 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              _currentUserType == 'customer'
-                  ? _chat!.organizerName
-                  : _chat!.customerName,
+              _currentUserType == 'customer' ? _chat!.organizerName : _chat!.customerName,
             ),
             Text(
               _chat!.eventTitle,
-              style:
-                  const TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
             ),
           ],
         ),
@@ -216,20 +212,14 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
                     Text(
                       _chat!.eventDescription!,
                       style: TextStyle(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.7),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                         fontSize: 12,
                       ),
                     ),
                   Text(
                     'Дата: ${_formatDate(_chat!.eventDate)}',
                     style: TextStyle(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.7),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                       fontSize: 12,
                     ),
                   ),
@@ -306,8 +296,7 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
                 decoration: const InputDecoration(
                   hintText: 'Введите сообщение...',
                   border: OutlineInputBorder(),
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 ),
                 maxLines: null,
                 textCapitalization: TextCapitalization.sentences,
@@ -336,9 +325,7 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
       await _chatService.sendMessage(
         chatId: widget.chatId,
         senderId: _currentUserId!,
-        senderName: _currentUserType == 'customer'
-            ? _chat!.customerName
-            : _chat!.organizerName,
+        senderName: _currentUserType == 'customer' ? _chat!.customerName : _chat!.organizerName,
         senderType: _currentUserType!,
         type: OrganizerMessageType.text,
         text: text,

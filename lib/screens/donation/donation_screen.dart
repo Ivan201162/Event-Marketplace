@@ -167,8 +167,7 @@ class _DonationScreenState extends ConsumerState<DonationScreen> {
                       ),
                       onChanged: (value) {
                         final amount = double.tryParse(value);
-                        if (amount != null &&
-                            amount >= PaymentConfig.minDonationAmount) {
+                        if (amount != null && amount >= PaymentConfig.minDonationAmount) {
                           setState(() {
                             _selectedAmount = amount;
                           });
@@ -212,9 +211,7 @@ class _DonationScreenState extends ConsumerState<DonationScreen> {
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: _selectedAmount != null && !_isLoading
-                      ? _processDonation
-                      : null,
+                  onPressed: _selectedAmount != null && !_isLoading ? _processDonation : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.pink,
                     foregroundColor: Colors.white,
@@ -368,4 +365,3 @@ class _DonationScreenState extends ConsumerState<DonationScreen> {
     );
   }
 }
-

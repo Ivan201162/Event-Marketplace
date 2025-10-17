@@ -6,8 +6,7 @@ import 'package:intl/intl.dart';
 /// Утилиты для приложения
 class AppUtils {
   /// Форматирование даты
-  static String formatDate(DateTime date) =>
-      DateFormat('dd.MM.yyyy').format(date);
+  static String formatDate(DateTime date) => DateFormat('dd.MM.yyyy').format(date);
 
   /// Форматирование времени
   static String formatTime(DateTime time) => DateFormat('HH:mm').format(time);
@@ -17,8 +16,7 @@ class AppUtils {
       DateFormat('dd.MM.yyyy HH:mm').format(dateTime);
 
   /// Форматирование валюты
-  static String formatCurrency(double amount, {String currency = '₽'}) =>
-      NumberFormat.currency(
+  static String formatCurrency(double amount, {String currency = '₽'}) => NumberFormat.currency(
         locale: 'ru_RU',
         symbol: currency,
         decimalDigits: 0,
@@ -82,12 +80,10 @@ class AppUtils {
   static bool get isWeb => !isAndroid && !isIOS;
 
   /// Получение размера экрана
-  static Size getScreenSize(BuildContext context) =>
-      MediaQuery.of(context).size;
+  static Size getScreenSize(BuildContext context) => MediaQuery.of(context).size;
 
   /// Проверка мобильного устройства
-  static bool isMobile(BuildContext context) =>
-      getScreenSize(context).width < 600;
+  static bool isMobile(BuildContext context) => getScreenSize(context).width < 600;
 
   /// Проверка планшета
   static bool isTablet(BuildContext context) {
@@ -96,12 +92,10 @@ class AppUtils {
   }
 
   /// Проверка десктопа
-  static bool isDesktop(BuildContext context) =>
-      getScreenSize(context).width >= 1200;
+  static bool isDesktop(BuildContext context) => getScreenSize(context).width >= 1200;
 
   /// Получение безопасной области
-  static EdgeInsets getSafeArea(BuildContext context) =>
-      MediaQuery.of(context).padding;
+  static EdgeInsets getSafeArea(BuildContext context) => MediaQuery.of(context).padding;
 
   /// Скрытие клавиатуры
   static void hideKeyboard(BuildContext context) {
@@ -202,17 +196,13 @@ extension DateTimeExtensions on DateTime {
   /// Проверка на вчера
   bool get isYesterday {
     final yesterday = DateTime.now().subtract(const Duration(days: 1));
-    return year == yesterday.year &&
-        month == yesterday.month &&
-        day == yesterday.day;
+    return year == yesterday.year && month == yesterday.month && day == yesterday.day;
   }
 
   /// Проверка на завтра
   bool get isTomorrow {
     final tomorrow = DateTime.now().add(const Duration(days: 1));
-    return year == tomorrow.year &&
-        month == tomorrow.month &&
-        day == tomorrow.day;
+    return year == tomorrow.year && month == tomorrow.month && day == tomorrow.day;
   }
 
   /// Получение относительного времени

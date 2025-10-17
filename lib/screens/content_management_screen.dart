@@ -11,12 +11,10 @@ class ContentManagementScreen extends ConsumerStatefulWidget {
   const ContentManagementScreen({super.key});
 
   @override
-  ConsumerState<ContentManagementScreen> createState() =>
-      _ContentManagementScreenState();
+  ConsumerState<ContentManagementScreen> createState() => _ContentManagementScreenState();
 }
 
-class _ContentManagementScreenState
-    extends ConsumerState<ContentManagementScreen> {
+class _ContentManagementScreenState extends ConsumerState<ContentManagementScreen> {
   final ContentManagementService _contentService = ContentManagementService();
   List<MediaContent> _mediaContent = [];
   List<ContentGallery> _galleries = [];
@@ -77,13 +75,10 @@ class _ContentManagementScreenState
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.blue.withValues(alpha: 0.1)
-              : Colors.transparent,
+          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color:
-                isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
+            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -157,8 +152,7 @@ class _ContentManagementScreenState
                 ? const Center(child: Text('Медиа контент не найден'))
                 : GridView.builder(
                     padding: const EdgeInsets.all(16),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 16,
@@ -493,17 +487,13 @@ class _ContentManagementScreenState
                     // Автоматически определяем тип по расширению
                     final extension = file.extension?.toLowerCase();
                     if (extension != null) {
-                      if (['jpg', 'jpeg', 'png', 'gif', 'webp']
-                          .contains(extension)) {
+                      if (['jpg', 'jpeg', 'png', 'gif', 'webp'].contains(extension)) {
                         selectedType = MediaType.image;
-                      } else if (['mp4', 'avi', 'mov', 'webm']
-                          .contains(extension)) {
+                      } else if (['mp4', 'avi', 'mov', 'webm'].contains(extension)) {
                         selectedType = MediaType.video;
-                      } else if (['mp3', 'wav', 'ogg', 'm4a']
-                          .contains(extension)) {
+                      } else if (['mp3', 'wav', 'ogg', 'm4a'].contains(extension)) {
                         selectedType = MediaType.audio;
-                      } else if (['pdf', 'txt', 'doc', 'docx']
-                          .contains(extension)) {
+                      } else if (['pdf', 'txt', 'doc', 'docx'].contains(extension)) {
                         selectedType = MediaType.document;
                       } else {
                         selectedType = MediaType.other;
@@ -736,8 +726,7 @@ class _ContentManagementScreenState
     // TODO(developer): Реализовать добавление в галерею
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:
-            Text('Добавление "${media.title}" в галерею будет реализовано'),
+        content: Text('Добавление "${media.title}" в галерею будет реализовано'),
       ),
     );
   }
@@ -913,8 +902,7 @@ class _ContentManagementScreenState
     // TODO(developer): Реализовать редактирование галереи
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:
-            Text('Редактирование галереи "${gallery.name}" будет реализовано'),
+        content: Text('Редактирование галереи "${gallery.name}" будет реализовано'),
       ),
     );
   }
@@ -935,8 +923,7 @@ class _ContentManagementScreenState
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить галерею'),
-        content:
-            Text('Вы уверены, что хотите удалить галерею "${gallery.name}"?'),
+        content: Text('Вы уверены, что хотите удалить галерею "${gallery.name}"?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -982,11 +969,8 @@ class _ContentManagementScreenState
     MediaType type,
   ) async {
     try {
-      final tagsList = tags
-          .split(',')
-          .map((tag) => tag.trim())
-          .where((tag) => tag.isNotEmpty)
-          .toList();
+      final tagsList =
+          tags.split(',').map((tag) => tag.trim()).where((tag) => tag.isNotEmpty).toList();
 
       await _contentService.uploadMedia(
         filePath: filePath,

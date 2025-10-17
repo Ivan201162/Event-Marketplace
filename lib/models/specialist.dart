@@ -350,18 +350,15 @@ class Specialist {
       location: data['location'] as String?,
       isAvailable: data['isAvailable'] as bool? ?? true,
       isVerified: data['isVerified'] as bool? ?? false,
-      portfolioImages:
-          List<String>.from(data['portfolioImages'] as List<dynamic>? ?? []),
-      portfolioVideos:
-          List<String>.from(data['portfolioVideos'] as List<dynamic>? ?? []),
+      portfolioImages: List<String>.from(data['portfolioImages'] as List<dynamic>? ?? []),
+      portfolioVideos: List<String>.from(data['portfolioVideos'] as List<dynamic>? ?? []),
       portfolioItems: (data['portfolioItems'] as List<dynamic>?)
               ?.map((e) => Map<String, dynamic>.from(e))
               .toList() ??
           [],
-      reviews: (data['reviews'] as List<dynamic>?)
-              ?.map((e) => Map<String, dynamic>.from(e))
-              .toList() ??
-          [],
+      reviews:
+          (data['reviews'] as List<dynamic>?)?.map((e) => Map<String, dynamic>.from(e)).toList() ??
+              [],
       avgRating: (data['avgRating'] as num?)?.toDouble() ?? 0.0,
       services: List<String>.from(data['services'] as List<dynamic>? ?? []),
       equipment: List<String>.from(data['equipment'] as List<dynamic>? ?? []),
@@ -412,9 +409,7 @@ class Specialist {
           : null,
       busyDates: (data['busyDates'] as List<dynamic>?)
               ?.map(
-                (e) => e is Timestamp
-                    ? e.toDate()
-                    : DateTime.tryParse(e.toString()),
+                (e) => e is Timestamp ? e.toDate() : DateTime.tryParse(e.toString()),
               )
               .where((e) => e != null)
               .cast<DateTime>()
@@ -436,9 +431,7 @@ class Specialist {
           ? PriceRange.fromMap(Map<String, dynamic>.from(data['priceRange']))
           : null,
       // Новые поля для Instagram/ВК-стиля профиля
-      contacts: data['contacts'] != null
-          ? Map<String, String>.from(data['contacts'])
-          : const {},
+      contacts: data['contacts'] != null ? Map<String, String>.from(data['contacts']) : const {},
       servicesWithPrices: data['servicesWithPrices'] != null
           ? Map<String, double>.from(data['servicesWithPrices'])
           : const {},
@@ -472,12 +465,10 @@ class Specialist {
       isVerified: data['isVerified'] as bool? ?? false,
       rating: (data['rating'] as num? ?? 0.0).toDouble(),
       reviewCount: data['reviewCount'] as int? ?? 0,
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
-      updatedAt: data['updatedAt'] != null
-          ? (data['updatedAt'] as Timestamp).toDate()
-          : DateTime.now(),
+      createdAt:
+          data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
+      updatedAt:
+          data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : DateTime.now(),
       metadata: data['metadata'],
       avatarUrl: data['avatarUrl'],
       avatar: data['avatar'],
@@ -485,10 +476,9 @@ class Specialist {
       avgPriceByService: data['avgPriceByService'] != null
           ? Map<String, double>.from(data['avgPriceByService'])
           : null,
-      busyDates: (data['busyDates'] as List<dynamic>?)
-              ?.map((e) => (e as Timestamp).toDate())
-              .toList() ??
-          [],
+      busyDates:
+          (data['busyDates'] as List<dynamic>?)?.map((e) => (e as Timestamp).toDate()).toList() ??
+              [],
       taxType: data['taxType'] != null
           ? TaxType.values.firstWhere(
               (e) => e.name == data['taxType'],
@@ -505,9 +495,7 @@ class Specialist {
           ? PriceRange.fromMap(Map<String, dynamic>.from(data['priceRange']))
           : null,
       // Новые поля для Instagram/ВК-стиля профиля
-      contacts: data['contacts'] != null
-          ? Map<String, String>.from(data['contacts'])
-          : const {},
+      contacts: data['contacts'] != null ? Map<String, String>.from(data['contacts']) : const {},
       servicesWithPrices: data['servicesWithPrices'] != null
           ? Map<String, double>.from(data['servicesWithPrices'])
           : const {},
@@ -560,8 +548,7 @@ class Specialist {
   final List<String> portfolio; // Ссылки на портфолио
   final List<String> portfolioImages; // Изображения портфолио
   final List<String> portfolioVideos; // Видео портфолио
-  final List<Map<String, dynamic>>
-      portfolioItems; // Расширенное портфолио с описаниями
+  final List<Map<String, dynamic>> portfolioItems; // Расширенное портфолио с описаниями
   final List<Map<String, dynamic>> reviews; // Отзывы клиентов
   final double avgRating; // Средний рейтинг
   final Map<String, String> workingHours; // Рабочие часы
@@ -607,8 +594,7 @@ class Specialist {
 
   // Новые поля для Instagram/ВК-стиля профиля
   final Map<String, String> contacts; // Контакты (телефон, email, соцсети)
-  final Map<String, double>
-      servicesWithPrices; // Услуги с ценами (название -> цена)
+  final Map<String, double> servicesWithPrices; // Услуги с ценами (название -> цена)
 
   // Дополнительные поля для совместимости
   final String? firstName;
@@ -647,8 +633,7 @@ class Specialist {
         'reviewCount': reviewCount,
         'imageUrl': imageUrl,
         'experience': experience,
-        'availableDates':
-            availableDates.map((date) => date.toIso8601String()).toList(),
+        'availableDates': availableDates.map((date) => date.toIso8601String()).toList(),
         'createdAt': Timestamp.fromDate(createdAt),
         'updatedAt': Timestamp.fromDate(updatedAt),
         'metadata': metadata,
@@ -896,9 +881,7 @@ class Specialist {
     final date = DateTime(dateTime.year, dateTime.month, dateTime.day);
     return !busyDates.any(
       (busyDate) =>
-          busyDate.year == date.year &&
-          busyDate.month == date.month &&
-          busyDate.day == date.day,
+          busyDate.year == date.year && busyDate.month == date.month && busyDate.day == date.day,
     );
   }
 

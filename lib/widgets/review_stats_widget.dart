@@ -31,11 +31,10 @@ class ReviewStatsWidget extends StatelessWidget {
                   children: [
                     Text(
                       stats.averageRating.toStringAsFixed(1),
-                      style:
-                          Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
+                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                     ),
                     RatingWidget(
                       rating: stats.averageRating,
@@ -66,8 +65,7 @@ class ReviewStatsWidget extends StatelessWidget {
                       const SizedBox(height: 8),
                       ...List.generate(5, (index) {
                         final rating = 5 - index;
-                        final count =
-                            stats.ratingDistribution[rating.toString()] ?? 0;
+                        final count = stats.ratingDistribution[rating.toString()] ?? 0;
                         final percentage = stats.getRatingPercentage(rating);
 
                         return Padding(
@@ -110,10 +108,7 @@ class ReviewStatsWidget extends StatelessWidget {
                                 width: 24,
                                 child: Text(
                                   count.toString(),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                         color: Colors.grey[600],
                                       ),
                                   textAlign: TextAlign.right,

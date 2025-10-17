@@ -161,8 +161,7 @@ extension UserRoleExtension on UserRole {
   }
 
   /// Проверить, есть ли у роли определенное право
-  bool hasPermission(String permission) =>
-      defaultPermissions.contains(permission);
+  bool hasPermission(String permission) => defaultPermissions.contains(permission);
 
   /// Получить отображаемое имя для совместимости
   String get displayName => roleDisplayName;
@@ -202,13 +201,11 @@ class AppUser {
   factory AppUser.fromMap(Map<String, dynamic> data, [String? id]) => AppUser(
         id: id ?? data['id'] ?? '',
         email: data['email'] ?? '',
-        displayName:
-            (data['displayName'] ?? data['name'] ?? 'Без имени') as String?,
+        displayName: (data['displayName'] ?? data['name'] ?? 'Без имени') as String?,
         photoURL: data['photoURL'],
         role: _parseUserRole(data['role']),
         createdAt: _parseTs(data['createdAt']),
-        lastLoginAt:
-            data['lastLoginAt'] != null ? _parseTs(data['lastLoginAt']) : null,
+        lastLoginAt: data['lastLoginAt'] != null ? _parseTs(data['lastLoginAt']) : null,
         isActive: data['isActive'] as bool? ?? true,
         socialProvider: data['socialProvider'],
         socialId: data['socialId'],
@@ -219,16 +216,13 @@ class AppUser {
                 orElse: () => MaritalStatus.single,
               )
             : null,
-        weddingDate:
-            data['weddingDate'] != null ? _parseTs(data['weddingDate']) : null,
+        weddingDate: data['weddingDate'] != null ? _parseTs(data['weddingDate']) : null,
         partnerName: data['partnerName'],
-        anniversaryRemindersEnabled:
-            data['anniversaryRemindersEnabled'] as bool? ?? false,
+        anniversaryRemindersEnabled: data['anniversaryRemindersEnabled'] as bool? ?? false,
         city: data['city'] as String?,
         region: data['region'] as String?,
         avatarUrl: data['avatarUrl'] as String?,
-        updatedAt:
-            data['updatedAt'] != null ? _parseTs(data['updatedAt']) : null,
+        updatedAt: data['updatedAt'] != null ? _parseTs(data['updatedAt']) : null,
       );
 
   /// Создать пользователя из Firebase User
@@ -386,8 +380,7 @@ class AppUser {
   bool get isVerified => additionalData?['isVerified'] as bool? ?? false;
 
   /// Геттер для специализаций
-  List<String> get specialties =>
-      List<String>.from(additionalData?['specialties'] ?? []);
+  List<String> get specialties => List<String>.from(additionalData?['specialties'] ?? []);
 
   /// Геттер для специализации (строка)
   String? get specialization => additionalData?['specialization'] as String?;
@@ -456,6 +449,5 @@ class AppUser {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() =>
-      'AppUser(id: $id, email: $email, role: $role, displayName: $displayName)';
+  String toString() => 'AppUser(id: $id, email: $email, role: $role, displayName: $displayName)';
 }

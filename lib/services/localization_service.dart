@@ -42,8 +42,7 @@ class LocalizationService {
   }
 
   /// Получить все доступные локализации
-  List<LocalizationModel> get availableLocalizations =>
-      _localizations.values.toList();
+  List<LocalizationModel> get availableLocalizations => _localizations.values.toList();
 
   /// Получить все поддерживаемые языки
   List<SupportedLanguage> get supportedLanguages => SupportedLanguage.values;
@@ -95,8 +94,7 @@ class LocalizationService {
       // Загружаем другие языки по мере необходимости
       for (final language in SupportedLanguage.values) {
         if (!_localizations.containsKey(language.languageCode)) {
-          _localizations[language.languageCode] =
-              await _loadLocalization(language.languageCode);
+          _localizations[language.languageCode] = await _loadLocalization(language.languageCode);
         }
       }
     } catch (e) {
@@ -472,8 +470,7 @@ class LocalizationService {
   }
 
   /// Проверить наличие перевода
-  bool hasTranslation(String key) =>
-      _currentLocalization?.hasTranslation(key) ?? false;
+  bool hasTranslation(String key) => _currentLocalization?.hasTranslation(key) ?? false;
 
   /// Обновить настройки локализации
   Future<void> updateSettings(LocalizationSettings newSettings) async {
@@ -502,12 +499,10 @@ class LocalizationService {
       }
 
       final totalKeys = localization.translations.length;
-      final translatedKeys = localization.translations.values
-          .where((value) => value.isNotEmpty)
-          .length;
+      final translatedKeys =
+          localization.translations.values.where((value) => value.isNotEmpty).length;
       final missingKeys = totalKeys - translatedKeys;
-      final completionPercentage =
-          totalKeys > 0 ? (translatedKeys / totalKeys) * 100 : 0.0;
+      final completionPercentage = totalKeys > 0 ? (translatedKeys / totalKeys) * 100 : 0.0;
 
       return LocalizationStats(
         language: languageCode,

@@ -16,8 +16,7 @@ class EnhancedSearchScreen extends ConsumerStatefulWidget {
   const EnhancedSearchScreen({super.key});
 
   @override
-  ConsumerState<EnhancedSearchScreen> createState() =>
-      _EnhancedSearchScreenState();
+  ConsumerState<EnhancedSearchScreen> createState() => _EnhancedSearchScreenState();
 }
 
 class _EnhancedSearchScreenState extends ConsumerState<EnhancedSearchScreen>
@@ -67,8 +66,7 @@ class _EnhancedSearchScreenState extends ConsumerState<EnhancedSearchScreen>
                 ),
                 child: SafeArea(
                   child: Padding(
-                    padding:
-                        const EdgeInsets.only(top: 40, left: 16, right: 16),
+                    padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -87,9 +85,7 @@ class _EnhancedSearchScreenState extends ConsumerState<EnhancedSearchScreen>
                           ),
                           child: IconButton(
                             icon: Icon(
-                              _showFilters
-                                  ? Icons.filter_list_off
-                                  : Icons.filter_list,
+                              _showFilters ? Icons.filter_list_off : Icons.filter_list,
                               color: Colors.white,
                             ),
                             onPressed: () {
@@ -196,8 +192,7 @@ class _EnhancedSearchScreenState extends ConsumerState<EnhancedSearchScreen>
             ),
 
             // История поиска
-            if (_searchController.text.isEmpty &&
-                ref.watch(searchHistoryProvider).isNotEmpty)
+            if (_searchController.text.isEmpty && ref.watch(searchHistoryProvider).isNotEmpty)
               _buildSearchHistory(),
 
             const SizedBox(height: 16),
@@ -223,9 +218,7 @@ class _EnhancedSearchScreenState extends ConsumerState<EnhancedSearchScreen>
               label: Text(query),
               deleteIcon: const Icon(Icons.close),
               onDeleted: () {
-                ref
-                    .read(searchHistoryProvider.notifier)
-                    .removeFromHistory(query);
+                ref.read(searchHistoryProvider.notifier).removeFromHistory(query);
               },
             ),
           );
@@ -252,8 +245,7 @@ class _EnhancedSearchScreenState extends ConsumerState<EnhancedSearchScreen>
             if (stats.hasActiveFilters)
               TextButton(
                 onPressed: () {
-                  ref.read(specialistFiltersProvider.notifier).state =
-                      const SpecialistFilters();
+                  ref.read(specialistFiltersProvider.notifier).state = const SpecialistFilters();
                   _performSearch();
                 },
                 child: const Text('Сбросить фильтры'),
@@ -507,8 +499,7 @@ class _EnhancedSearchScreenState extends ConsumerState<EnhancedSearchScreen>
   void _navigateToSpecialistProfile(Specialist specialist) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (context) =>
-            SpecialistProfileScreen(specialistId: specialist.id),
+        builder: (context) => SpecialistProfileScreen(specialistId: specialist.id),
       ),
     );
   }

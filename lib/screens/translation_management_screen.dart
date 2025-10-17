@@ -8,12 +8,10 @@ class TranslationManagementScreen extends ConsumerStatefulWidget {
   const TranslationManagementScreen({super.key});
 
   @override
-  ConsumerState<TranslationManagementScreen> createState() =>
-      _TranslationManagementScreenState();
+  ConsumerState<TranslationManagementScreen> createState() => _TranslationManagementScreenState();
 }
 
-class _TranslationManagementScreenState
-    extends ConsumerState<TranslationManagementScreen> {
+class _TranslationManagementScreenState extends ConsumerState<TranslationManagementScreen> {
   final LocalizationService _localizationService = LocalizationService();
   String _selectedLanguage = 'ru';
   String _searchQuery = '';
@@ -55,8 +53,7 @@ class _TranslationManagementScreenState
                 Expanded(
                   child: Consumer(
                     builder: (context, ref, child) {
-                      final supportedLanguages =
-                          ref.watch(supportedLanguagesProvider);
+                      final supportedLanguages = ref.watch(supportedLanguagesProvider);
 
                       return DropdownButton<String>(
                         value: _selectedLanguage,
@@ -153,8 +150,7 @@ class _TranslationManagementScreenState
             return const Center(child: CircularProgressIndicator());
           }
 
-          final translations =
-              _filterTranslations(currentLocalization.translations);
+          final translations = _filterTranslations(currentLocalization.translations);
 
           if (translations.isEmpty) {
             return _buildEmptyState();
@@ -292,8 +288,7 @@ class _TranslationManagementScreenState
       filtered = Map.fromEntries(
         filtered.entries.where(
           (entry) =>
-              entry.key.toLowerCase().contains(query) ||
-              entry.value.toLowerCase().contains(query),
+              entry.key.toLowerCase().contains(query) || entry.value.toLowerCase().contains(query),
         ),
       );
     }
@@ -434,9 +429,7 @@ class _TranslationDialogState extends State<_TranslationDialog> {
   @override
   Widget build(BuildContext context) => AlertDialog(
         title: Text(
-          widget.initialKey == null
-              ? 'Добавить перевод'
-              : 'Редактировать перевод',
+          widget.initialKey == null ? 'Добавить перевод' : 'Редактировать перевод',
         ),
         content: Form(
           key: _formKey,

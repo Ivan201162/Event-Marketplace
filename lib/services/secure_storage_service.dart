@@ -91,8 +91,7 @@ class SecureStorageService {
   /// Сохранить данные безопасно
   static Future<void> storeSecure(String key, String value) async {
     try {
-      final isEncryptionEnabled =
-          await SecureStorageService.isEncryptionEnabled();
+      final isEncryptionEnabled = await SecureStorageService.isEncryptionEnabled();
 
       if (isEncryptionEnabled) {
         final encryptionKey = await getEncryptionKey();
@@ -121,8 +120,7 @@ class SecureStorageService {
       final value = await _secureStorage.read(key: key);
       if (value == null) return null;
 
-      final isEncryptionEnabled =
-          await SecureStorageService.isEncryptionEnabled();
+      final isEncryptionEnabled = await SecureStorageService.isEncryptionEnabled();
 
       if (isEncryptionEnabled) {
         final encryptionKey = await getEncryptionKey();
@@ -185,8 +183,7 @@ class SecureStorageService {
     String password,
   ) async {
     try {
-      final encryptedData =
-          EncryptionService.encryptWithPassword(value, password);
+      final encryptedData = EncryptionService.encryptWithPassword(value, password);
       final encryptedJson = jsonEncode(encryptedData.toJson());
       await _secureStorage.write(key: key, value: encryptedJson);
 
@@ -227,9 +224,7 @@ class SecureStorageService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final timestamp = prefs.getInt(_lastEncryptionUpdateKey);
-      return timestamp != null
-          ? DateTime.fromMillisecondsSinceEpoch(timestamp)
-          : null;
+      return timestamp != null ? DateTime.fromMillisecondsSinceEpoch(timestamp) : null;
     } catch (e) {
       debugPrint(
         'Ошибка получения времени последнего обновления шифрования: $e',
@@ -241,8 +236,7 @@ class SecureStorageService {
   /// Обновить ключ шифрования
   static Future<void> updateEncryptionKey() async {
     try {
-      final isEncryptionEnabled =
-          await SecureStorageService.isEncryptionEnabled();
+      final isEncryptionEnabled = await SecureStorageService.isEncryptionEnabled();
       if (!isEncryptionEnabled) {
         throw Exception('Шифрование не включено');
       }
@@ -265,12 +259,10 @@ class SecureStorageService {
           // Расшифровываем старым ключом
           final encryptedJson = jsonDecode(entry.value);
           final encryptedData = EncryptedData.fromJson(encryptedJson);
-          final decryptedValue =
-              EncryptionService.decrypt(encryptedData, oldKey);
+          final decryptedValue = EncryptionService.decrypt(encryptedData, oldKey);
 
           // Шифруем новым ключом
-          final newEncryptedData =
-              EncryptionService.encrypt(decryptedValue, newKey);
+          final newEncryptedData = EncryptionService.encrypt(decryptedValue, newKey);
           final newEncryptedJson = jsonEncode(newEncryptedData.toJson());
 
           await _secureStorage.write(key: entry.key, value: newEncryptedJson);
@@ -302,8 +294,7 @@ class SecureStorageService {
   /// Получить статистику безопасности
   static Future<SecurityStats> getSecurityStats() async {
     try {
-      final isEncryptionEnabled =
-          await SecureStorageService.isEncryptionEnabled();
+      final isEncryptionEnabled = await SecureStorageService.isEncryptionEnabled();
       final lastUpdate = await getLastEncryptionUpdate();
       final allData = await getAllSecure();
       final encryptedCount = allData.length;

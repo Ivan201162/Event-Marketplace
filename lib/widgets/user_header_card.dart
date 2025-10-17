@@ -69,8 +69,7 @@ class UserHeaderCard extends ConsumerWidget {
                 child: CircleAvatar(
                   radius: 27,
                   backgroundColor: Colors.white,
-                  backgroundImage:
-                      avatarUrl != null ? NetworkImage(avatarUrl!) : null,
+                  backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl!) : null,
                   child: avatarUrl == null
                       ? Icon(
                           Icons.person,

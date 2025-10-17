@@ -9,14 +9,11 @@ class DependencyManagementScreen extends ConsumerStatefulWidget {
   const DependencyManagementScreen({super.key});
 
   @override
-  ConsumerState<DependencyManagementScreen> createState() =>
-      _DependencyManagementScreenState();
+  ConsumerState<DependencyManagementScreen> createState() => _DependencyManagementScreenState();
 }
 
-class _DependencyManagementScreenState
-    extends ConsumerState<DependencyManagementScreen> {
-  final DependencyManagementService _dependencyService =
-      DependencyManagementService();
+class _DependencyManagementScreenState extends ConsumerState<DependencyManagementScreen> {
+  final DependencyManagementService _dependencyService = DependencyManagementService();
   List<Dependency> _dependencies = [];
   List<DependencyUpdate> _updates = [];
   bool _isLoading = true;
@@ -73,8 +70,7 @@ class _DependencyManagementScreenState
               ),
             ),
             Expanded(
-              child:
-                  _buildTabButton('updates', 'Обновления', Icons.system_update),
+              child: _buildTabButton('updates', 'Обновления', Icons.system_update),
             ),
           ],
         ),
@@ -91,13 +87,10 @@ class _DependencyManagementScreenState
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.blue.withValues(alpha: 0.1)
-              : Colors.transparent,
+          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color:
-                isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
+            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -445,8 +438,7 @@ class _DependencyManagementScreenState
                 ),
               ),
               PopupMenuButton<String>(
-                onSelected: (value) =>
-                    _handleDependencyAction(value, dependency),
+                onSelected: (value) => _handleDependencyAction(value, dependency),
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: 'view',
@@ -839,8 +831,7 @@ class _DependencyManagementScreenState
     }
 
     if (_selectedPriority != null) {
-      filtered =
-          filtered.where((u) => u.priority == _selectedPriority).toList();
+      filtered = filtered.where((u) => u.priority == _selectedPriority).toList();
     }
 
     return filtered;
@@ -958,8 +949,7 @@ class _DependencyManagementScreenState
     // TODO(developer): Реализовать просмотр зависимости
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:
-            Text('Просмотр зависимости "${dependency.name}" будет реализован'),
+        content: Text('Просмотр зависимости "${dependency.name}" будет реализован'),
       ),
     );
   }

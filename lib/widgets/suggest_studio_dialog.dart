@@ -16,8 +16,7 @@ class SuggestStudioDialog extends ConsumerStatefulWidget {
   final String bookingId;
 
   @override
-  ConsumerState<SuggestStudioDialog> createState() =>
-      _SuggestStudioDialogState();
+  ConsumerState<SuggestStudioDialog> createState() => _SuggestStudioDialogState();
 }
 
 class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
@@ -25,8 +24,7 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
   final _notesController = TextEditingController();
   final _priceController = TextEditingController();
 
-  final PhotographerStudioLinkService _linkService =
-      PhotographerStudioLinkService();
+  final PhotographerStudioLinkService _linkService = PhotographerStudioLinkService();
   // final PhotoStudioService _photoStudioService = PhotoStudioService(); // Unused field removed
 
   List<PhotoStudio> _availableStudios = [];
@@ -150,8 +148,7 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
                             color: theme.colorScheme.surface,
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(
-                              color: theme.colorScheme.outline
-                                  .withValues(alpha: 0.2),
+                              color: theme.colorScheme.outline.withValues(alpha: 0.2),
                             ),
                           ),
                           child: Column(
@@ -183,8 +180,7 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
                           height: 200,
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: theme.colorScheme.outline
-                                  .withValues(alpha: 0.2),
+                              color: theme.colorScheme.outline.withValues(alpha: 0.2),
                             ),
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -211,8 +207,7 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
                                     if (studio.hourlyRate != null)
                                       Text(
                                         studio.getFormattedHourlyRate(),
-                                        style:
-                                            theme.textTheme.bodySmall?.copyWith(
+                                        style: theme.textTheme.bodySmall?.copyWith(
                                           color: Colors.green,
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -266,8 +261,7 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
                         controller: _notesController,
                         decoration: const InputDecoration(
                           labelText: 'Сообщение клиенту',
-                          hintText:
-                              'Объясните, почему эта фотостудия подходит для заказа...',
+                          hintText: 'Объясните, почему эта фотостудия подходит для заказа...',
                           border: OutlineInputBorder(),
                         ),
                         maxLines: 3,
@@ -292,18 +286,14 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
               children: [
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: _isSubmitting
-                        ? null
-                        : () => Navigator.of(context).pop(),
+                    onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
                     child: const Text('Отмена'),
                   ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: _isSubmitting || _selectedStudio == null
-                        ? null
-                        : _submitSuggestion,
+                    onPressed: _isSubmitting || _selectedStudio == null ? null : _submitSuggestion,
                     child: _isSubmitting
                         ? const SizedBox(
                             height: 20,
@@ -352,9 +342,8 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
     });
 
     try {
-      final suggestedPrice = _priceController.text.isNotEmpty
-          ? double.tryParse(_priceController.text)
-          : null;
+      final suggestedPrice =
+          _priceController.text.isNotEmpty ? double.tryParse(_priceController.text) : null;
 
       await _linkService.createStudioSuggestion(
         bookingId: widget.bookingId,

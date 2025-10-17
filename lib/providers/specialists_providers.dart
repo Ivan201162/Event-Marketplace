@@ -120,8 +120,7 @@ final paginatedSpecialistsProvider = StateNotifierProvider.family<
     String>((ref, category) => PaginatedSpecialistsNotifier(category));
 
 /// Провайдер для получения уникальных городов специалистов по категории
-final specialistCitiesProvider =
-    FutureProvider.family<List<String>, String>((ref, category) async {
+final specialistCitiesProvider = FutureProvider.family<List<String>, String>((ref, category) async {
   final specialists = MockDataService.getSpecialistsByCategory(category);
   final cities = specialists
       .map((specialist) => specialist.city)
@@ -155,17 +154,15 @@ final specialistPriceRangeProvider =
 });
 
 /// Провайдер для поиска специалистов
-final searchSpecialistsProvider =
-    FutureProvider.family<List<Specialist>, String>(
+final searchSpecialistsProvider = FutureProvider.family<List<Specialist>, String>(
   (ref, query) async => MockDataService.searchSpecialists(query),
 );
 
 /// Загрузка специалистов по категории с применением фильтров
 Future<List<Specialist>> _loadSpecialistsByCategory(String category) async {
   try {
-    final query = FirebaseFirestore.instance
-        .collection('specialists')
-        .where('category', isEqualTo: category);
+    final query =
+        FirebaseFirestore.instance.collection('specialists').where('category', isEqualTo: category);
 
     final querySnapshot = await query.get();
     final specialists = <Specialist>[];
@@ -190,10 +187,8 @@ Future<List<Specialist>> _loadSpecialistsByCategory(String category) async {
 }
 
 /// Notifier для пагинированной загрузки специалистов
-class PaginatedSpecialistsNotifier
-    extends StateNotifier<AsyncValue<List<Specialist>>> {
-  PaginatedSpecialistsNotifier(this.category)
-      : super(const AsyncValue.loading()) {
+class PaginatedSpecialistsNotifier extends StateNotifier<AsyncValue<List<Specialist>>> {
+  PaginatedSpecialistsNotifier(this.category) : super(const AsyncValue.loading()) {
     loadSpecialists();
   }
   final String category;
@@ -225,10 +220,8 @@ class PaginatedSpecialistsNotifier
           .toList();
 
       // Пагинация
-      final startIndex =
-          (_lastDocument != null ? _getCurrentPage() : 0) * _pageSize;
-      final endIndex =
-          (startIndex + _pageSize).clamp(0, filteredSpecialists.length);
+      final startIndex = (_lastDocument != null ? _getCurrentPage() : 0) * _pageSize;
+      final endIndex = (startIndex + _pageSize).clamp(0, filteredSpecialists.length);
 
       if (startIndex >= filteredSpecialists.length) {
         _hasMore = false;
@@ -241,8 +234,7 @@ class PaginatedSpecialistsNotifier
       _lastDocument ??= _createMockDocument();
 
       final currentList = state.valueOrNull ?? <Specialist>[];
-      final updatedList =
-          refresh ? newSpecialists : [...currentList, ...newSpecialists];
+      final updatedList = refresh ? newSpecialists : [...currentList, ...newSpecialists];
 
       state = AsyncValue.data(updatedList);
     } on Exception catch (e) {
@@ -282,12 +274,10 @@ class PaginatedSpecialistsNotifier
     if (filters.minPrice != null || filters.maxPrice != null) {
       final priceRange = specialist.priceRange;
       if (priceRange != null) {
-        if (filters.minPrice != null &&
-            priceRange.maxPrice < filters.minPrice!) {
+        if (filters.minPrice != null && priceRange.maxPrice < filters.minPrice!) {
           return false;
         }
-        if (filters.maxPrice != null &&
-            priceRange.minPrice > filters.maxPrice!) {
+        if (filters.maxPrice != null && priceRange.minPrice > filters.maxPrice!) {
           return false;
         }
       }
@@ -311,9 +301,7 @@ class PaginatedSpecialistsNotifier
     // Фильтр по поисковому запросу
     if (filters.searchQuery != null && filters.searchQuery!.isNotEmpty) {
       final query = filters.searchQuery!.toLowerCase();
-      final fullName =
-          '${specialist.firstName ?? ''} ${specialist.lastName ?? ''}'
-              .toLowerCase();
+      final fullName = '${specialist.firstName ?? ''} ${specialist.lastName ?? ''}'.toLowerCase();
       final city = specialist.city?.toLowerCase() ?? '';
 
       if (!fullName.contains(query) && !city.contains(query)) {
@@ -349,8 +337,7 @@ class MockDocumentSnapshot implements DocumentSnapshot<Map<String, dynamic>> {
   bool get exists => true;
 
   @override
-  DocumentReference<Map<String, dynamic>> get reference =>
-      throw UnimplementedError();
+  DocumentReference<Map<String, dynamic>> get reference => throw UnimplementedError();
 
   @override
   SnapshotMetadata get metadata => throw UnimplementedError();
@@ -413,8 +400,7 @@ List<Specialist> _generateMockSpecialistsForCategory(String category) {
       city: city,
       category: _getSpecialistCategoryFromString(categoryEnum.displayName),
       subcategories: subcategories,
-      experienceLevel:
-          ExperienceLevel.values[index % ExperienceLevel.values.length],
+      experienceLevel: ExperienceLevel.values[index % ExperienceLevel.values.length],
       yearsOfExperience: 1 + (index % 10),
       hourlyRate: priceRange.minPrice / 2,
       price: priceRange.minPrice,

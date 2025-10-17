@@ -8,8 +8,7 @@ part 'anniversary_providers.g.dart';
 
 /// Провайдер сервиса годовщин
 @riverpod
-AnniversaryService anniversaryService(AnniversaryServiceRef ref) =>
-    AnniversaryService();
+AnniversaryService anniversaryService(AnniversaryServiceRef ref) => AnniversaryService();
 
 /// Провайдер информации о годовщине пользователя
 @riverpod
@@ -20,8 +19,7 @@ Future<Map<String, dynamic>> userAnniversaryInfo(
   final service = ref.read(anniversaryServiceProvider);
 
   // Получаем пользователя из Firestore
-  final userDoc =
-      await ref.read(firestoreProvider).collection('users').doc(userId).get();
+  final userDoc = await ref.read(firestoreProvider).collection('users').doc(userId).get();
   if (!userDoc.exists) {
     return {
       'hasWeddingDate': false,

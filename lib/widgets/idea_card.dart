@@ -24,8 +24,7 @@ class IdeaCard extends StatefulWidget {
   State<IdeaCard> createState() => _IdeaCardState();
 }
 
-class _IdeaCardState extends State<IdeaCard>
-    with SingleTickerProviderStateMixin {
+class _IdeaCardState extends State<IdeaCard> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   bool _isLiked = false;

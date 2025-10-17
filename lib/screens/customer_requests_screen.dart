@@ -104,8 +104,7 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
         ),
       );
 
-  Widget _buildBookingsList(String customerId, String statusFilter) =>
-      StreamBuilder<List<Booking>>(
+  Widget _buildBookingsList(String customerId, String statusFilter) => StreamBuilder<List<Booking>>(
         stream: _firestoreService.bookingsByCustomerStream(customerId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -447,8 +446,7 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
     // TODO(developer): Implement reschedule functionality
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content:
-            Text('Функция переноса будет добавлена в следующем обновлении'),
+        content: Text('Функция переноса будет добавлена в следующем обновлении'),
       ),
     );
   }

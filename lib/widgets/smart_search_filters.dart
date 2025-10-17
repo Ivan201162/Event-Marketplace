@@ -306,9 +306,7 @@ class _SmartSearchFiltersState extends State<SmartSearchFilters> {
                         ? '${widget.selectedDate!.day}.${widget.selectedDate!.month}.${widget.selectedDate!.year}'
                         : 'Выберите дату',
                     style: TextStyle(
-                      color: widget.selectedDate != null
-                          ? Colors.black
-                          : Colors.grey,
+                      color: widget.selectedDate != null ? Colors.black : Colors.grey,
                     ),
                   ),
                   const Spacer(),
@@ -345,8 +343,7 @@ class _SmartSearchFiltersState extends State<SmartSearchFilters> {
                     label: style,
                     selected: widget.selectedStyles.contains(style),
                     onSelected: (selected) {
-                      final newStyles =
-                          List<String>.from(widget.selectedStyles);
+                      final newStyles = List<String>.from(widget.selectedStyles);
                       if (selected) {
                         newStyles.add(style);
                       } else {

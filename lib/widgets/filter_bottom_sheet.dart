@@ -80,8 +80,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: theme.colorScheme.surfaceContainerHighest,
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
             ),
             child: Row(
               children: [
@@ -181,8 +180,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                 borderRadius: BorderRadius.circular(12),
               ),
               filled: true,
-              fillColor: theme.colorScheme.surfaceContainerHighest
-                  .withValues(alpha: 0.3),
+              fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
             ),
             onChanged: (value) {
               setState(() {
@@ -356,8 +354,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
               );
               if (selectedDate != null) {
                 setState(() {
-                  _currentFilters =
-                      _currentFilters.copyWith(availableDate: selectedDate);
+                  _currentFilters = _currentFilters.copyWith(availableDate: selectedDate);
                 });
               }
             },
@@ -377,8 +374,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                   Expanded(
                     child: Text(
                       _currentFilters.availableDate != null
-                          ? DateFormat('dd.MM.yyyy')
-                              .format(_currentFilters.availableDate!)
+                          ? DateFormat('dd.MM.yyyy').format(_currentFilters.availableDate!)
                           : 'Выберите дату',
                       style: theme.textTheme.bodyLarge,
                     ),
@@ -426,8 +422,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
               borderRadius: BorderRadius.circular(12),
             ),
             filled: true,
-            fillColor: theme.colorScheme.surfaceContainerHighest
-                .withValues(alpha: 0.3),
+            fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
           ),
           items: [
             const DropdownMenuItem(child: Text('Все города')),

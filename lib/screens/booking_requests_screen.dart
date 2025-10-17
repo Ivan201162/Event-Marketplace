@@ -11,8 +11,7 @@ class BookingRequestsScreen extends ConsumerStatefulWidget {
   const BookingRequestsScreen({super.key});
 
   @override
-  ConsumerState<BookingRequestsScreen> createState() =>
-      _BookingRequestsScreenState();
+  ConsumerState<BookingRequestsScreen> createState() => _BookingRequestsScreenState();
 }
 
 class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
@@ -24,8 +23,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    _recommendationService =
-        DiscountRecommendationService(NotificationService());
+    _recommendationService = DiscountRecommendationService(NotificationService());
   }
 
   @override
@@ -133,9 +131,8 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
           return Booking.fromMap({...data, 'id': doc.id});
         }).toList();
 
-        final filteredBookings = bookings
-            .where((booking) => _getStatusString(booking.status) == status)
-            .toList();
+        final filteredBookings =
+            bookings.where((booking) => _getStatusString(booking.status) == status).toList();
 
         if (filteredBookings.isEmpty) {
           return Center(
@@ -193,31 +190,26 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                       children: [
                         Text(
                           booking.title ?? 'Без названия',
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           _formatDateTime(booking.eventDate),
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: Colors.grey[600],
-                                  ),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: Colors.grey[600],
+                              ),
                         ),
                       ],
                     ),
                   ),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: _getStatusColor(booking.status)
-                          .withValues(alpha: 0.1),
+                      color: _getStatusColor(booking.status).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
-                      border:
-                          Border.all(color: _getStatusColor(booking.status)),
+                      border: Border.all(color: _getStatusColor(booking.status)),
                     ),
                     child: Text(
                       _getStatusText(booking.status),
@@ -304,31 +296,25 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      if (booking.discount != null &&
-                          booking.discount! > 0) ...[
+                      if (booking.discount != null && booking.discount! > 0) ...[
                         Text(
                           '${booking.totalPrice.toStringAsFixed(0)} ₽',
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    decoration: TextDecoration.lineThrough,
-                                    color: Colors.grey[600],
-                                  ),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                decoration: TextDecoration.lineThrough,
+                                color: Colors.grey[600],
+                              ),
                         ),
                         Text(
                           '${(booking.totalPrice * (1 - booking.discount! / 100)).toStringAsFixed(0)} ₽',
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.green,
-                                  ),
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green,
+                              ),
                         ),
                       ] else
                         Text(
                           '${booking.totalPrice.toStringAsFixed(0)} ₽',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: Theme.of(context).colorScheme.primary,
                               ),
@@ -342,8 +328,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
               if (booking.discount != null && booking.discount! > 0) ...[
                 const SizedBox(height: 4),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.green.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
@@ -492,10 +477,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
 
   Future<void> _confirmBooking(Booking booking) async {
     try {
-      await FirebaseFirestore.instance
-          .collection('bookings')
-          .doc(booking.id)
-          .update({
+      await FirebaseFirestore.instance.collection('bookings').doc(booking.id).update({
         'status': 'confirmed',
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -542,10 +524,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
 
     if (confirmed ?? false) {
       try {
-        await FirebaseFirestore.instance
-            .collection('bookings')
-            .doc(booking.id)
-            .update({
+        await FirebaseFirestore.instance.collection('bookings').doc(booking.id).update({
           'status': 'rejected',
           'updatedAt': FieldValue.serverTimestamp(),
         });
@@ -588,10 +567,8 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
               _buildDetailRow('Заказчик:', booking.customerName ?? 'Не указан'),
               if (booking.customerPhone != null)
                 _buildDetailRow('Телефон:', booking.customerPhone!),
-              if (booking.customerEmail != null)
-                _buildDetailRow('Email:', booking.customerEmail!),
-              if (booking.description != null)
-                _buildDetailRow('Описание:', booking.description!),
+              if (booking.customerEmail != null) _buildDetailRow('Email:', booking.customerEmail!),
+              if (booking.description != null) _buildDetailRow('Описание:', booking.description!),
               _buildDetailRow(
                 'Стоимость:',
                 '${booking.totalPrice.toStringAsFixed(0)} ₽',
@@ -726,9 +703,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
               child: const Text('Отмена'),
             ),
             ElevatedButton(
-              onPressed: discountPercent != null
-                  ? () => Navigator.of(context).pop(true)
-                  : null,
+              onPressed: discountPercent != null ? () => Navigator.of(context).pop(true) : null,
               child: const Text('Применить скидку'),
             ),
           ],
@@ -740,10 +715,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
       try {
         final finalPrice = booking.totalPrice * (1 - discountPercent! / 100);
 
-        await FirebaseFirestore.instance
-            .collection('bookings')
-            .doc(booking.id)
-            .update({
+        await FirebaseFirestore.instance.collection('bookings').doc(booking.id).update({
           'discount': discountPercent,
           'finalPrice': finalPrice,
           'updatedAt': FieldValue.serverTimestamp(),
@@ -920,10 +892,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
       try {
         final finalPrice = booking.totalPrice * (1 - recommendedDiscount / 100);
 
-        await FirebaseFirestore.instance
-            .collection('bookings')
-            .doc(booking.id)
-            .update({
+        await FirebaseFirestore.instance.collection('bookings').doc(booking.id).update({
           'discount': recommendedDiscount,
           'finalPrice': finalPrice,
           'updatedAt': FieldValue.serverTimestamp(),

@@ -212,10 +212,8 @@ class ResponsiveContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final effectiveMaxWidth =
-        maxWidth ?? ResponsiveUtils.getMaxContentWidth(screenWidth);
-    final effectivePadding =
-        padding ?? ResponsiveUtils.getScreenPadding(screenWidth);
+    final effectiveMaxWidth = maxWidth ?? ResponsiveUtils.getMaxContentWidth(screenWidth);
+    final effectivePadding = padding ?? ResponsiveUtils.getScreenPadding(screenWidth);
 
     return Align(
       alignment: alignment,
@@ -249,12 +247,10 @@ class ResponsiveGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final gridCrossAxisCount =
-        crossAxisCount ?? ResponsiveUtils.getGridColumns(screenWidth);
+    final gridCrossAxisCount = crossAxisCount ?? ResponsiveUtils.getGridColumns(screenWidth);
     final effectiveCrossAxisSpacing =
         crossAxisSpacing ?? ResponsiveUtils.getItemSpacing(screenWidth);
-    final effectiveMainAxisSpacing =
-        mainAxisSpacing ?? ResponsiveUtils.getItemSpacing(screenWidth);
+    final effectiveMainAxisSpacing = mainAxisSpacing ?? ResponsiveUtils.getItemSpacing(screenWidth);
 
     return GridView.builder(
       shrinkWrap: true,
@@ -306,8 +302,7 @@ class ResponsiveText extends StatelessWidget {
 
     return Text(
       text,
-      style:
-          style?.copyWith(fontSize: fontSize) ?? TextStyle(fontSize: fontSize),
+      style: style?.copyWith(fontSize: fontSize) ?? TextStyle(fontSize: fontSize),
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,
@@ -384,8 +379,7 @@ class ResponsiveDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final effectiveHeight =
-        height ?? ResponsiveUtils.getItemSpacing(screenWidth);
+    final effectiveHeight = height ?? ResponsiveUtils.getItemSpacing(screenWidth);
 
     return Divider(
       height: effectiveHeight,
@@ -400,8 +394,7 @@ class ResponsiveDivider extends StatelessWidget {
 /// Расширения для BuildContext
 extension ResponsiveContext on BuildContext {
   /// Получить тип экрана
-  ScreenType get screenType =>
-      ResponsiveUtils.getScreenType(MediaQuery.of(this).size.width);
+  ScreenType get screenType => ResponsiveUtils.getScreenType(MediaQuery.of(this).size.width);
 
   /// Проверить, является ли экран мобильным
   bool get isMobile => screenType == ScreenType.mobile;

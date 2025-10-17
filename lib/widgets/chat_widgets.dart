@@ -137,8 +137,7 @@ class ChatListItem extends StatelessWidget {
                           'Пользователь $otherUserId',
                           style: TextStyle(
                             fontSize: 16,
-                            fontWeight:
-                                hasUnread ? FontWeight.bold : FontWeight.normal,
+                            fontWeight: hasUnread ? FontWeight.bold : FontWeight.normal,
                           ),
                         ),
                         if (chat.lastMessage != null)
@@ -146,10 +145,7 @@ class ChatListItem extends StatelessWidget {
                             _formatTime(chat.lastMessage!.createdAt),
                             style: TextStyle(
                               fontSize: 12,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurface
-                                  .withValues(alpha: 0.6),
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                             ),
                           ),
                       ],
@@ -163,13 +159,9 @@ class ChatListItem extends StatelessWidget {
                               _getMessagePreview(chat.lastMessage!),
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSurface
-                                    .withValues(alpha: 0.7),
-                                fontWeight: hasUnread
-                                    ? FontWeight.w500
-                                    : FontWeight.normal,
+                                color:
+                                    Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                                fontWeight: hasUnread ? FontWeight.w500 : FontWeight.normal,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -203,10 +195,7 @@ class ChatListItem extends StatelessWidget {
                         'Нет сообщений',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.5),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                           fontStyle: FontStyle.italic,
                         ),
                       ),
@@ -344,8 +333,7 @@ class MessageBubble extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         child: Row(
-          mainAxisAlignment:
-              isCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+          mainAxisAlignment: isCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: [
             if (!isCurrentUser) ...[
               CircleAvatar(
@@ -364,26 +352,20 @@ class MessageBubble extends StatelessWidget {
             ],
             Flexible(
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
                   color: isCurrentUser
                       ? Theme.of(context).colorScheme.primary
                       : Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(20).copyWith(
-                    bottomLeft: isCurrentUser
-                        ? const Radius.circular(20)
-                        : const Radius.circular(4),
-                    bottomRight: isCurrentUser
-                        ? const Radius.circular(4)
-                        : const Radius.circular(20),
+                    bottomLeft:
+                        isCurrentUser ? const Radius.circular(20) : const Radius.circular(4),
+                    bottomRight:
+                        isCurrentUser ? const Radius.circular(4) : const Radius.circular(20),
                   ),
                   border: !isCurrentUser
                       ? Border.all(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .outline
-                              .withValues(alpha: 0.2),
+                          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
                         )
                       : null,
                 ),
@@ -415,9 +397,8 @@ class MessageBubble extends StatelessWidget {
                     Text(
                       message.content,
                       style: TextStyle(
-                        color: isCurrentUser
-                            ? Colors.white
-                            : Theme.of(context).colorScheme.onSurface,
+                        color:
+                            isCurrentUser ? Colors.white : Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -430,10 +411,7 @@ class MessageBubble extends StatelessWidget {
                             fontSize: 11,
                             color: isCurrentUser
                                 ? Colors.white.withValues(alpha: 0.7)
-                                : Theme.of(context)
-                                    .colorScheme
-                                    .onSurface
-                                    .withValues(alpha: 0.5),
+                                : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                           ),
                         ),
                         if (isCurrentUser) ...[
@@ -441,8 +419,7 @@ class MessageBubble extends StatelessWidget {
                           Icon(
                             _getStatusIcon(message.status),
                             size: 12,
-                            color:
-                                _getStatusColor(message.status, isCurrentUser),
+                            color: _getStatusColor(message.status, isCurrentUser),
                           ),
                         ],
                       ],
@@ -609,13 +586,10 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
   Future<void> _sendToWhatsApp() async {
     if (_attachments.isEmpty) return;
 
-    final phoneNumber =
-        widget.receiverId; // Предполагаем, что receiverId - это номер телефона
+    final phoneNumber = widget.receiverId; // Предполагаем, что receiverId - это номер телефона
     if (phoneNumber == null) return;
 
-    final message = _controller.text.isNotEmpty
-        ? _controller.text
-        : 'Файлы для мероприятия';
+    final message = _controller.text.isNotEmpty ? _controller.text : 'Файлы для мероприятия';
     final encodedMessage = Uri.encodeComponent(message);
 
     final whatsappUrl = 'https://wa.me/$phoneNumber?text=$encodedMessage';
@@ -635,13 +609,10 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
   Future<void> _sendToTelegram() async {
     if (_attachments.isEmpty) return;
 
-    final username =
-        widget.receiverId; // Предполагаем, что receiverId - это username
+    final username = widget.receiverId; // Предполагаем, что receiverId - это username
     if (username == null) return;
 
-    final message = _controller.text.isNotEmpty
-        ? _controller.text
-        : 'Файлы для мероприятия';
+    final message = _controller.text.isNotEmpty ? _controller.text : 'Файлы для мероприятия';
     final encodedMessage = Uri.encodeComponent(message);
 
     final telegramUrl = 'https://t.me/$username?text=$encodedMessage';
@@ -673,10 +644,7 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
             color: Theme.of(context).colorScheme.surface,
             border: Border(
               top: BorderSide(
-                color: Theme.of(context)
-                    .colorScheme
-                    .outline
-                    .withValues(alpha: 0.2),
+                color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
               ),
             ),
           ),
@@ -717,13 +685,10 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
                       ),
                       maxLines: null,
                       onChanged: (value) {
-                        ref
-                            .read(messageFormProvider.notifier)
-                            .updateContent(value);
+                        ref.read(messageFormProvider.notifier).updateContent(value);
                       },
                       onSubmitted: (value) {
-                        if (value.trim().isNotEmpty ||
-                            _attachments.isNotEmpty) {
+                        if (value.trim().isNotEmpty || _attachments.isNotEmpty) {
                           _sendMessage();
                         }
                       },
@@ -735,8 +700,7 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
                   // Кнопка отправки
                   FloatingActionButton.small(
                     onPressed: formState.isSending ||
-                            (_controller.text.trim().isEmpty &&
-                                _attachments.isEmpty)
+                            (_controller.text.trim().isEmpty && _attachments.isEmpty)
                         ? null
                         : _sendMessage,
                     child: formState.isSending
@@ -790,8 +754,7 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
           color: Theme.of(context).colorScheme.surface,
           border: Border(
             bottom: BorderSide(
-              color:
-                  Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+              color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
             ),
           ),
         ),
@@ -862,8 +825,7 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
           color: Theme.of(context).colorScheme.surface,
           border: Border(
             bottom: BorderSide(
-              color:
-                  Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+              color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
             ),
           ),
         ),
@@ -1049,8 +1011,7 @@ class NotificationWidget extends StatelessWidget {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: _getPriorityColor(notification.priority)
-                        .withValues(alpha: 0.1),
+                    color: _getPriorityColor(notification.priority).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Center(
@@ -1075,9 +1036,8 @@ class NotificationWidget extends StatelessWidget {
                               notification.title,
                               style: TextStyle(
                                 fontSize: 16,
-                                fontWeight: notification.isUnread
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
+                                fontWeight:
+                                    notification.isUnread ? FontWeight.bold : FontWeight.normal,
                               ),
                             ),
                           ),
@@ -1085,10 +1045,7 @@ class NotificationWidget extends StatelessWidget {
                             _formatTime(notification.createdAt),
                             style: TextStyle(
                               fontSize: 12,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurface
-                                  .withValues(alpha: 0.6),
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                             ),
                           ),
                         ],
@@ -1098,10 +1055,7 @@ class NotificationWidget extends StatelessWidget {
                         notification.body,
                         style: TextStyle(
                           fontSize: 14,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.7),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,

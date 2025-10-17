@@ -1,7 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/social_models.dart';
@@ -60,8 +60,7 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
           (msg) => msg.senderId != currentUser.id,
           orElse: () => messages.first,
         );
-        _otherUser =
-            await SupabaseService.getProfile(otherUserMessage.senderId);
+        _otherUser = await SupabaseService.getProfile(otherUserMessage.senderId);
       }
 
       setState(() {
@@ -139,9 +138,8 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
                     backgroundImage: _otherUser!.avatarUrl != null
                         ? CachedNetworkImageProvider(_otherUser!.avatarUrl!)
                         : null,
-                    child: _otherUser!.avatarUrl == null
-                        ? const Icon(Icons.person, size: 16)
-                        : null,
+                    child:
+                        _otherUser!.avatarUrl == null ? const Icon(Icons.person, size: 16) : null,
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -270,17 +268,14 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
     final isFromCurrentUser = currentUser?.id == message.senderId;
 
     return Align(
-      alignment:
-          isFromCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
+      alignment: isFromCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4),
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width * 0.75,
         ),
         child: Column(
-          crossAxisAlignment: isFromCurrentUser
-              ? CrossAxisAlignment.end
-              : CrossAxisAlignment.start,
+          crossAxisAlignment: isFromCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             if (!isFromCurrentUser) ...[
               Row(
@@ -290,9 +285,8 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
                     backgroundImage: message.senderAvatarUrl != null
                         ? CachedNetworkImageProvider(message.senderAvatarUrl!)
                         : null,
-                    child: message.senderAvatarUrl == null
-                        ? const Icon(Icons.person, size: 12)
-                        : null,
+                    child:
+                        message.senderAvatarUrl == null ? const Icon(Icons.person, size: 12) : null,
                   ),
                   const SizedBox(width: 8),
                   Text(
@@ -315,12 +309,10 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
                     ? Theme.of(context).primaryColor
                     : Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(18).copyWith(
-                  bottomLeft: isFromCurrentUser
-                      ? const Radius.circular(18)
-                      : const Radius.circular(4),
-                  bottomRight: isFromCurrentUser
-                      ? const Radius.circular(4)
-                      : const Radius.circular(18),
+                  bottomLeft:
+                      isFromCurrentUser ? const Radius.circular(18) : const Radius.circular(4),
+                  bottomRight:
+                      isFromCurrentUser ? const Radius.circular(4) : const Radius.circular(18),
                 ),
                 border: !isFromCurrentUser
                     ? Border.all(
@@ -464,4 +456,3 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
     );
   }
 }
-

@@ -63,9 +63,7 @@ class EventMedia {
         ),
         fileSize: data['fileSize'] as int? ?? 0,
         mimeType: data['mimeType'] as String?,
-        duration: data['duration'] != null
-            ? Duration(milliseconds: data['duration'] as int)
-            : null,
+        duration: data['duration'] != null ? Duration(milliseconds: data['duration'] as int) : null,
         metadata: data['metadata'] as Map<String, dynamic>?,
         tags: List<String>.from((data['tags'] as List<dynamic>?) ?? []),
         isPublic: data['isPublic'] as bool? ?? true,
@@ -233,15 +231,13 @@ class EventMediaCollection {
   final DateTime lastUpdated;
 
   /// Получить медиафайлы по типу
-  List<EventMedia> getMediaByType(MediaType type) =>
-      media.where((m) => m.type == type).toList();
+  List<EventMedia> getMediaByType(MediaType type) => media.where((m) => m.type == type).toList();
 
   /// Получить публичные медиафайлы
   List<EventMedia> get publicMedia => media.where((m) => m.isPublic).toList();
 
   /// Получить рекомендуемые медиафайлы
-  List<EventMedia> get featuredMedia =>
-      media.where((m) => m.isFeatured).toList();
+  List<EventMedia> get featuredMedia => media.where((m) => m.isFeatured).toList();
 
   /// Получить медиафайлы пользователя
   List<EventMedia> getUserMedia(String userId) =>

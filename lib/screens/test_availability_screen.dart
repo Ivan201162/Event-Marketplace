@@ -8,12 +8,10 @@ class TestAvailabilityScreen extends ConsumerStatefulWidget {
   const TestAvailabilityScreen({super.key});
 
   @override
-  ConsumerState<TestAvailabilityScreen> createState() =>
-      _TestAvailabilityScreenState();
+  ConsumerState<TestAvailabilityScreen> createState() => _TestAvailabilityScreenState();
 }
 
-class _TestAvailabilityScreenState
-    extends ConsumerState<TestAvailabilityScreen> {
+class _TestAvailabilityScreenState extends ConsumerState<TestAvailabilityScreen> {
   final AvailabilityService _availabilityService = AvailabilityService();
   final String _testSpecialistId = 'test_specialist_1';
 
@@ -165,8 +163,7 @@ class _TestAvailabilityScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(availability.isAvailable ? 'Доступен' : 'Занят'),
-                if (availability.note != null)
-                  Text('Примечание: ${availability.note}'),
+                if (availability.note != null) Text('Примечание: ${availability.note}'),
                 if (availability.timeSlots.isNotEmpty)
                   Text('Слотов: ${availability.timeSlots.length}'),
               ],

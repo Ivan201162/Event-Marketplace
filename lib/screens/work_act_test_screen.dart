@@ -11,8 +11,7 @@ class WorkActTestScreen extends StatefulWidget {
   State<WorkActTestScreen> createState() => _WorkActTestScreenState();
 }
 
-class _WorkActTestScreenState extends State<WorkActTestScreen>
-    with TickerProviderStateMixin {
+class _WorkActTestScreenState extends State<WorkActTestScreen> with TickerProviderStateMixin {
   final WorkActService _workActService = WorkActService();
 
   final String _testBookingId = 'test_booking_123';
@@ -150,8 +149,7 @@ class _WorkActTestScreenState extends State<WorkActTestScreen>
       return const Center(child: CircularProgressIndicator());
     }
 
-    final draftActs =
-        _workActs.where((act) => act.status == WorkActStatus.draft).toList();
+    final draftActs = _workActs.where((act) => act.status == WorkActStatus.draft).toList();
 
     if (draftActs.isEmpty) {
       return Center(

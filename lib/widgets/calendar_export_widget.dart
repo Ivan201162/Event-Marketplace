@@ -278,8 +278,7 @@ class CalendarExportDialog extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.calendar_today),
             title: const Text('iCalendar (.ics)'),
-            subtitle:
-                const Text('Совместим с большинством календарных приложений'),
+            subtitle: const Text('Совместим с большинством календарных приложений'),
             onTap: () => _exportIcs(context),
           ),
         ],
@@ -313,9 +312,7 @@ class CalendarExportDialog extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              success
-                  ? 'Событие экспортировано в календарь'
-                  : 'Ошибка экспорта в календарь',
+              success ? 'Событие экспортировано в календарь' : 'Ошибка экспорта в календарь',
             ),
             backgroundColor: success ? Colors.green : Colors.red,
           ),

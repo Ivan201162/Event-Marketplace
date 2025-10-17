@@ -12,12 +12,10 @@ class SpecialistReviewsWidgetSimple extends StatefulWidget {
   final String specialistId;
 
   @override
-  State<SpecialistReviewsWidgetSimple> createState() =>
-      _SpecialistReviewsWidgetSimpleState();
+  State<SpecialistReviewsWidgetSimple> createState() => _SpecialistReviewsWidgetSimpleState();
 }
 
-class _SpecialistReviewsWidgetSimpleState
-    extends State<SpecialistReviewsWidgetSimple> {
+class _SpecialistReviewsWidgetSimpleState extends State<SpecialistReviewsWidgetSimple> {
   final _reviewsService = ReviewsService();
   List<Review> _reviews = [];
   bool _isLoading = true;
@@ -36,8 +34,7 @@ class _SpecialistReviewsWidgetSimpleState
         _error = '';
       });
 
-      final reviews =
-          await _reviewsService.getSpecialistReviews(widget.specialistId);
+      final reviews = await _reviewsService.getSpecialistReviews(widget.specialistId);
 
       setState(() {
         _reviews = reviews;
@@ -201,9 +198,7 @@ class _SpecialistReviewsWidgetSimpleState
                     radius: 16,
                     backgroundColor: Colors.blue.shade100,
                     child: Text(
-                      review.customerName.isNotEmpty
-                          ? review.customerName[0].toUpperCase()
-                          : 'П',
+                      review.customerName.isNotEmpty ? review.customerName[0].toUpperCase() : 'П',
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
@@ -238,9 +233,7 @@ class _SpecialistReviewsWidgetSimpleState
                       ...List.generate(
                         5,
                         (index) => Icon(
-                          index < review.rating
-                              ? Icons.star
-                              : Icons.star_border,
+                          index < review.rating ? Icons.star : Icons.star_border,
                           color: Colors.amber,
                           size: 12,
                         ),
@@ -285,8 +278,7 @@ class _SpecialistReviewsWidgetSimpleState
                           width: 40,
                           height: 40,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              Container(
+                          errorBuilder: (context, error, stackTrace) => Container(
                             width: 40,
                             height: 40,
                             color: Colors.grey.shade300,
@@ -340,8 +332,7 @@ class _SpecialistReviewsWidgetSimpleState
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              if (response != review.responses.last)
-                                const SizedBox(height: 4),
+                              if (response != review.responses.last) const SizedBox(height: 4),
                             ],
                           ),
                         )

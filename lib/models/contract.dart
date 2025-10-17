@@ -166,20 +166,14 @@ class Contract {
       ),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      signedAt: data['signedAt'] != null
-          ? (data['signedAt'] as Timestamp).toDate()
-          : null,
+      signedAt: data['signedAt'] != null ? (data['signedAt'] as Timestamp).toDate() : null,
       expiresAt: (data['expiresAt'] as Timestamp).toDate(),
       metadata: Map<String, dynamic>.from(
         data['metadata'] as Map<dynamic, dynamic>? ?? {},
       ),
       specialistName: data['specialistName'] as String?,
-      startDate: data['startDate'] != null
-          ? (data['startDate'] as Timestamp).toDate()
-          : null,
-      endDate: data['endDate'] != null
-          ? (data['endDate'] as Timestamp).toDate()
-          : null,
+      startDate: data['startDate'] != null ? (data['startDate'] as Timestamp).toDate() : null,
+      endDate: data['endDate'] != null ? (data['endDate'] as Timestamp).toDate() : null,
       totalAmount: data['totalAmount'] as double?,
       currency: data['currency'] as String?,
       partiesInfo: data['partiesInfo'] != null
@@ -245,10 +239,8 @@ class Contract {
         'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
         'totalAmount': totalAmount,
         'currency': currency,
-        'partiesInfo':
-            partiesInfo?.map((key, value) => MapEntry(key, value.toMap())),
-        'servicesList':
-            servicesList?.map((service) => service.toMap()).toList(),
+        'partiesInfo': partiesInfo?.map((key, value) => MapEntry(key, value.toMap())),
+        'servicesList': servicesList?.map((service) => service.toMap()).toList(),
         'signedByCustomer': signedByCustomer,
         'signedBySpecialist': signedBySpecialist,
       };

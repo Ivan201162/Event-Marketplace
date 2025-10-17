@@ -48,9 +48,8 @@ class PaymentMethodCard extends StatelessWidget {
                 ),
                 child: Icon(
                   _getMethodIcon(methodInfo),
-                  color: isSelected
-                      ? theme.colorScheme.primary
-                      : theme.colorScheme.onSurfaceVariant,
+                  color:
+                      isSelected ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant,
                   size: 24,
                 ),
               ),
@@ -67,8 +66,7 @@ class PaymentMethodCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         color: methodInfo.isAvailable
                             ? theme.colorScheme.onSurface
-                            : theme.colorScheme.onSurface
-                                .withValues(alpha: 0.5),
+                            : theme.colorScheme.onSurface.withValues(alpha: 0.5),
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -77,8 +75,7 @@ class PaymentMethodCard extends StatelessWidget {
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: methodInfo.isAvailable
                             ? theme.colorScheme.onSurface.withValues(alpha: 0.7)
-                            : theme.colorScheme.onSurface
-                                .withValues(alpha: 0.3),
+                            : theme.colorScheme.onSurface.withValues(alpha: 0.3),
                       ),
                     ),
                     if (methodInfo.fee > 0) ...[

@@ -8,12 +8,10 @@ class SpecialistReportsScreen extends ConsumerStatefulWidget {
   const SpecialistReportsScreen({super.key});
 
   @override
-  ConsumerState<SpecialistReportsScreen> createState() =>
-      _SpecialistReportsScreenState();
+  ConsumerState<SpecialistReportsScreen> createState() => _SpecialistReportsScreenState();
 }
 
-class _SpecialistReportsScreenState
-    extends ConsumerState<SpecialistReportsScreen>
+class _SpecialistReportsScreenState extends ConsumerState<SpecialistReportsScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   final SpecialistReportService _reportService = SpecialistReportService();
@@ -604,8 +602,7 @@ class _SpecialistReportsScreenState
         ),
       );
 
-  Widget _buildTopRatedSpecialistsCard(List<SpecialistProfile> specialists) =>
-      Card(
+  Widget _buildTopRatedSpecialistsCard(List<SpecialistProfile> specialists) => Card(
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -630,10 +627,7 @@ class _SpecialistReportsScreenState
                                 : null,
                             child: specialist.photoURL == null
                                 ? Text(
-                                    specialist.name
-                                            ?.substring(0, 1)
-                                            .toUpperCase() ??
-                                        '?',
+                                    specialist.name?.substring(0, 1).toUpperCase() ?? '?',
                                   )
                                 : null,
                           ),
@@ -732,15 +726,11 @@ class _SpecialistReportsScreenState
                     children: [
                       CircleAvatar(
                         radius: 16,
-                        backgroundImage: specialist.photoURL != null
-                            ? NetworkImage(specialist.photoURL!)
-                            : null,
+                        backgroundImage:
+                            specialist.photoURL != null ? NetworkImage(specialist.photoURL!) : null,
                         child: specialist.photoURL == null
                             ? Text(
-                                specialist.name
-                                        ?.substring(0, 1)
-                                        .toUpperCase() ??
-                                    '?',
+                                specialist.name?.substring(0, 1).toUpperCase() ?? '?',
                               )
                             : null,
                       ),
@@ -751,8 +741,7 @@ class _SpecialistReportsScreenState
                           children: [
                             Text(
                               specialist.name ?? 'Без имени',
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w600),
+                              style: const TextStyle(fontWeight: FontWeight.w600),
                             ),
                             Text(
                               specialist.categoryDisplayNames.join(', '),

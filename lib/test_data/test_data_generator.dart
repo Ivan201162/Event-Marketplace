@@ -314,8 +314,7 @@ class TestDataGenerator {
   }
 
   /// Генерация случайного города
-  String _generateRandomCity() =>
-      russianCities[_random.nextInt(russianCities.length)];
+  String _generateRandomCity() => russianCities[_random.nextInt(russianCities.length)];
 
   /// Генерация URL фото-заглушки
   String _generatePhotoUrl() {
@@ -429,9 +428,7 @@ class TestDataGenerator {
       final specialistCount = _random.nextInt(5) + 1;
       final selectedSpecialists = specialists..shuffle();
 
-      for (var i = 0;
-          i < specialistCount && i < selectedSpecialists.length;
-          i++) {
+      for (var i = 0; i < specialistCount && i < selectedSpecialists.length; i++) {
         final specialist = selectedSpecialists[i];
         final bookingCount = _random.nextInt(maxBookingsPerPair) + 1;
 
@@ -491,8 +488,7 @@ class TestDataGenerator {
       if (_random.nextDouble() > 0.7) continue;
 
       final customer = customers.firstWhere((c) => c.id == booking.customerId);
-      final specialist =
-          specialists.firstWhere((s) => s.id == booking.specialistId);
+      final specialist = specialists.firstWhere((s) => s.id == booking.specialistId);
 
       final rating = _generateReviewRating();
 
@@ -745,8 +741,7 @@ class TestDataGenerator {
     }
   }
 
-  List<String> _generatePortfolioImages() =>
-      List.generate(5, (index) => _generatePhotoUrl());
+  List<String> _generatePortfolioImages() => List.generate(5, (index) => _generatePhotoUrl());
 
   Map<String, String> _generateWorkingHours() => {
         'monday': '09:00-18:00',
@@ -956,8 +951,7 @@ class TestDataGenerator {
     }
   }
 
-  List<String> _generateIdeaImages() =>
-      List.generate(3, (index) => _generatePhotoUrl());
+  List<String> _generateIdeaImages() => List.generate(3, (index) => _generatePhotoUrl());
 
   List<String> _generateIdeaTags(String category) {
     switch (category) {
@@ -1010,8 +1004,7 @@ class TestDataGenerator {
     for (var i = 0; i < totalBatches; i++) {
       final start = i * batchSize;
       final end = (i + 1) * batchSize;
-      final batch =
-          items.sublist(start, end > items.length ? items.length : end);
+      final batch = items.sublist(start, end > items.length ? items.length : end);
 
       final writeBatch = _firestore.batch();
 
@@ -1054,8 +1047,7 @@ class TestDataGenerator {
 
     try {
       // Пример специалиста
-      final specialistSnapshot =
-          await _firestore.collection('specialists').limit(1).get();
+      final specialistSnapshot = await _firestore.collection('specialists').limit(1).get();
 
       if (specialistSnapshot.docs.isNotEmpty) {
         final specialist = specialistSnapshot.docs.first.data();
@@ -1067,8 +1059,7 @@ class TestDataGenerator {
       }
 
       // Пример идеи
-      final ideaSnapshot =
-          await _firestore.collection('event_ideas').limit(1).get();
+      final ideaSnapshot = await _firestore.collection('event_ideas').limit(1).get();
 
       if (ideaSnapshot.docs.isNotEmpty) {
         final idea = ideaSnapshot.docs.first.data();

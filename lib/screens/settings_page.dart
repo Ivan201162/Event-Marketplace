@@ -105,9 +105,7 @@ class SettingsPage extends ConsumerWidget {
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage: user.photoURL != null
-                        ? NetworkImage(user.photoURL!)
-                        : null,
+                    backgroundImage: user.photoURL != null ? NetworkImage(user.photoURL!) : null,
                     child: user.photoURL == null
                         ? Text(
                             user.displayNameOrEmail[0].toUpperCase(),
@@ -141,10 +139,7 @@ class SettingsPage extends ConsumerWidget {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .primary
-                                .withValues(alpha: 0.1),
+                            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -183,8 +178,7 @@ class SettingsPage extends ConsumerWidget {
               SwitchListTile(
                 title: const Text('Push-уведомления'),
                 subtitle: const Text('Получать уведомления о новых событиях'),
-                value:
-                    true, // TODO(developer): Получить из настроек пользователя
+                value: true, // TODO(developer): Получить из настроек пользователя
                 onChanged: (value) {
                   // TODO(developer): Сохранить настройку
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -200,8 +194,7 @@ class SettingsPage extends ConsumerWidget {
               SwitchListTile(
                 title: const Text('Email-уведомления'),
                 subtitle: const Text('Получать уведомления на email'),
-                value:
-                    true, // TODO(developer): Получить из настроек пользователя
+                value: true, // TODO(developer): Получить из настроек пользователя
                 onChanged: (value) {
                   // TODO(developer): Сохранить настройку
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -216,10 +209,8 @@ class SettingsPage extends ConsumerWidget {
               const Divider(),
               SwitchListTile(
                 title: const Text('Уведомления о бронированиях'),
-                subtitle:
-                    const Text('Получать уведомления о новых бронированиях'),
-                value:
-                    true, // TODO(developer): Получить из настроек пользователя
+                subtitle: const Text('Получать уведомления о новых бронированиях'),
+                value: true, // TODO(developer): Получить из настроек пользователя
                 onChanged: (value) {
                   // TODO(developer): Сохранить настройку
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -281,10 +272,9 @@ class SettingsPage extends ConsumerWidget {
                 title: const Text('English'),
                 subtitle: const Text('Язык'),
                 trailing: Consumer(
-                  builder: (context, ref, child) =>
-                      ref.watch(localeProvider).languageCode == 'en'
-                          ? const Icon(Icons.check, color: Colors.green)
-                          : const SizedBox.shrink(),
+                  builder: (context, ref, child) => ref.watch(localeProvider).languageCode == 'en'
+                      ? const Icon(Icons.check, color: Colors.green)
+                      : const SizedBox.shrink(),
                 ),
                 onTap: () {
                   // TODO(developer): Implement locale change

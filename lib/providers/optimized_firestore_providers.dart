@@ -79,8 +79,7 @@ final userProfileProvider = StreamProvider.family<DocumentSnapshot?, String>(
 );
 
 /// Провайдер для получения профиля специалиста с оптимизацией
-final specialistProfileProvider =
-    StreamProvider.family<DocumentSnapshot?, String>(
+final specialistProfileProvider = StreamProvider.family<DocumentSnapshot?, String>(
   (ref, specialistId) => Stream.fromFuture(
     OptimizedFirestoreService.getDocument('specialists', specialistId),
   ),
@@ -108,8 +107,7 @@ final bookingDetailsProvider = StreamProvider.family<DocumentSnapshot?, String>(
 );
 
 /// Провайдер для поиска специалистов с оптимизацией
-final searchSpecialistsProvider =
-    StreamProvider.family<QuerySnapshot, String>((ref, query) {
+final searchSpecialistsProvider = StreamProvider.family<QuerySnapshot, String>((ref, query) {
   if (query.isEmpty) {
     return const Stream.empty();
   }
@@ -124,8 +122,7 @@ final searchSpecialistsProvider =
 });
 
 /// Провайдер для поиска событий с оптимизацией
-final searchEventsProvider =
-    StreamProvider.family<QuerySnapshot, String>((ref, query) {
+final searchEventsProvider = StreamProvider.family<QuerySnapshot, String>((ref, query) {
   if (query.isEmpty) {
     return const Stream.empty();
   }
@@ -140,8 +137,7 @@ final searchEventsProvider =
 });
 
 /// Провайдер для поиска идей с оптимизацией
-final searchIdeasProvider =
-    StreamProvider.family<QuerySnapshot, String>((ref, query) {
+final searchIdeasProvider = StreamProvider.family<QuerySnapshot, String>((ref, query) {
   if (query.isEmpty) {
     return const Stream.empty();
   }
@@ -158,14 +154,10 @@ final searchIdeasProvider =
 /// Провайдер для получения статистики с оптимизацией
 final statisticsProvider = StreamProvider<Map<String, dynamic>>(
   (ref) => Stream.periodic(const Duration(minutes: 5), (_) async {
-    final specialists =
-        await OptimizedFirestoreService.getCollection('specialists', limit: 1);
-    final events =
-        await OptimizedFirestoreService.getCollection('events', limit: 1);
-    final ideas =
-        await OptimizedFirestoreService.getCollection('ideas', limit: 1);
-    final bookings =
-        await OptimizedFirestoreService.getCollection('bookings', limit: 1);
+    final specialists = await OptimizedFirestoreService.getCollection('specialists', limit: 1);
+    final events = await OptimizedFirestoreService.getCollection('events', limit: 1);
+    final ideas = await OptimizedFirestoreService.getCollection('ideas', limit: 1);
+    final bookings = await OptimizedFirestoreService.getCollection('bookings', limit: 1);
 
     return {
       'specialistsCount': specialists.docs.length,
@@ -178,8 +170,7 @@ final statisticsProvider = StreamProvider<Map<String, dynamic>>(
 );
 
 /// Провайдер для управления кэшем Firestore
-final firestoreCacheProvider =
-    Provider<FirestoreCacheManager>((ref) => FirestoreCacheManager());
+final firestoreCacheProvider = Provider<FirestoreCacheManager>((ref) => FirestoreCacheManager());
 
 /// Менеджер кэша Firestore
 class FirestoreCacheManager {
@@ -189,8 +180,7 @@ class FirestoreCacheManager {
   }
 
   /// Получение статистики кэша
-  Map<String, dynamic> getCacheStats() =>
-      OptimizedFirestoreService.getCacheStats();
+  Map<String, dynamic> getCacheStats() => OptimizedFirestoreService.getCacheStats();
 
   /// Очистка кэша для конкретной коллекции
   void clearCollectionCache(String collection) {

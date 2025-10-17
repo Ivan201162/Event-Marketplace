@@ -211,3 +211,4 @@ adb logcat -d > build/installation_log.txt
 
 
 
+

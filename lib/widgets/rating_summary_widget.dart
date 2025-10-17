@@ -144,8 +144,7 @@ class RatingSummaryWidget extends StatelessWidget {
             children: List.generate(5, (index) {
               final rating = 5 - index;
               final count = ratingDistribution[rating] ?? 0;
-              final percentage =
-                  totalReviews > 0 ? (count / totalReviews * 100) : 0.0;
+              final percentage = totalReviews > 0 ? (count / totalReviews * 100) : 0.0;
 
               return Column(
                 children: [

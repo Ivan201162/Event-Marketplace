@@ -55,9 +55,7 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
             children: [
               AppBar(
                 title: Text(
-                  widget.existingNote == null
-                      ? 'Новая заметка'
-                      : 'Редактировать заметку',
+                  widget.existingNote == null ? 'Новая заметка' : 'Редактировать заметку',
                 ),
                 actions: [
                   TextButton(
@@ -224,8 +222,7 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
           const SizedBox(height: 8),
           SwitchListTile(
             title: const Text('Закрепить заметку'),
-            subtitle:
-                const Text('Закреплённые заметки отображаются вверху списка'),
+            subtitle: const Text('Закреплённые заметки отображаются вверху списка'),
             value: _isPinned,
             onChanged: (value) {
               setState(() {
@@ -297,9 +294,7 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            widget.existingNote == null
-                ? 'Заметка создана'
-                : 'Заметка обновлена',
+            widget.existingNote == null ? 'Заметка создана' : 'Заметка обновлена',
           ),
         ),
       );

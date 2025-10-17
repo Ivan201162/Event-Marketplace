@@ -7,8 +7,8 @@ final recommendationServiceProvider =
     Provider<RecommendationService>((ref) => RecommendationService());
 
 /// Провайдер для взаимодействий с рекомендациями
-final recommendationInteractionProvider = NotifierProvider<
-    RecommendationInteractionNotifier, RecommendationInteractionState>(
+final recommendationInteractionProvider =
+    NotifierProvider<RecommendationInteractionNotifier, RecommendationInteractionState>(
   (ref) => RecommendationInteractionNotifier(),
 );
 
@@ -36,8 +36,7 @@ class RecommendationInteractionState {
 }
 
 /// Нотификатор для взаимодействий с рекомендациями
-class RecommendationInteractionNotifier
-    extends Notifier<RecommendationInteractionState> {
+class RecommendationInteractionNotifier extends Notifier<RecommendationInteractionState> {
   RecommendationInteractionNotifier() : super();
 
   void addInteraction(RecommendationInteraction interaction) {
@@ -53,8 +52,7 @@ class RecommendationInteractionNotifier
     final updatedInteractions =
         Map<String, List<RecommendationInteraction>>.from(state.interactions);
     final userInteractions = updatedInteractions[userId] ?? [];
-    updatedInteractions[userId] =
-        userInteractions.where((i) => i.id != interactionId).toList();
+    updatedInteractions[userId] = userInteractions.where((i) => i.id != interactionId).toList();
     state = state.copyWith(interactions: updatedInteractions);
   }
 

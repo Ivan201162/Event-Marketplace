@@ -75,8 +75,7 @@ class ChatDataGenerator {
     // Создаем чаты для существующих бронирований
     for (final booking in bookings) {
       final customer = customers.firstWhere((c) => c.id == booking.customerId);
-      final specialist =
-          specialists.firstWhere((s) => s.id == booking.specialistId);
+      final specialist = specialists.firstWhere((s) => s.id == booking.specialistId);
 
       await _createChatConversation(customer, specialist, booking);
       chatCount++;
@@ -144,9 +143,7 @@ class ChatDataGenerator {
         'id': 'msg_${chatId}_$i',
         'chatId': chatId,
         'senderId': isCustomerTurn ? customer.id : specialist.id,
-        'senderName': isCustomerTurn
-            ? (customer.displayName ?? 'Заказчик')
-            : specialist.name,
+        'senderName': isCustomerTurn ? (customer.displayName ?? 'Заказчик') : specialist.name,
         'text': message,
         'timestamp': Timestamp.fromDate(messageTime),
         'isRead': true,
@@ -178,11 +175,8 @@ class ChatDataGenerator {
       // Сохраняем сообщения
       final batch = _firestore.batch();
       for (final message in messages) {
-        final messageRef = _firestore
-            .collection('chats')
-            .doc(chatId)
-            .collection('messages')
-            .doc(message['id']);
+        final messageRef =
+            _firestore.collection('chats').doc(chatId).collection('messages').doc(message['id']);
         batch.set(messageRef, message);
       }
       await batch.commit();
@@ -282,8 +276,7 @@ class ChatDataGenerator {
       );
 
       // Уведомления для специалиста
-      final specialist =
-          specialists.firstWhere((s) => s.id == booking.specialistId);
+      final specialist = specialists.firstWhere((s) => s.id == booking.specialistId);
       await _createNotification(
         userId: specialist.userId,
         title: 'Новое бронирование',

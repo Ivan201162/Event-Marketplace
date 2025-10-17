@@ -98,10 +98,7 @@ class BadgeInfoWidget extends StatelessWidget {
                   Text(
                     badge.description,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.7),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -132,10 +129,7 @@ class BadgeInfoWidget extends StatelessWidget {
             Text(
               badge.description,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.7),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
               textAlign: TextAlign.center,
             ),
@@ -143,10 +137,7 @@ class BadgeInfoWidget extends StatelessWidget {
             Text(
               _formatDate(badge.earnedAt),
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.5),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                   ),
             ),
           ],
@@ -279,29 +270,20 @@ class BadgeCollectionWidget extends ConsumerWidget {
             Icon(
               Icons.emoji_events_outlined,
               size: 64,
-              color: Theme.of(context)
-                  .colorScheme
-                  .onSurface
-                  .withValues(alpha: 0.3),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
             ),
             const SizedBox(height: 16),
             Text(
               'Пока нет бейджей',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.5),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                   ),
             ),
             const SizedBox(height: 8),
             Text(
               'Выполняйте задания, чтобы получить бейджи!',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.5),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                   ),
               textAlign: TextAlign.center,
             ),
@@ -381,8 +363,7 @@ class BadgeStatsWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildStats(BuildContext context, badge_model.BadgeStats stats) =>
-      AnimatedCard(
+  Widget _buildStats(BuildContext context, badge_model.BadgeStats stats) => AnimatedCard(
         child: Column(
           children: [
             Text(
@@ -449,10 +430,7 @@ class BadgeStatsWidget extends ConsumerWidget {
           Text(
             label,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.7),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
           ),
         ],
@@ -545,12 +523,8 @@ class BadgeLeaderboardWidget extends ConsumerWidget {
             const SizedBox(width: 12),
             CircleAvatar(
               radius: 20,
-              backgroundImage: user.userAvatar != null
-                  ? NetworkImage(user.userAvatar!)
-                  : null,
-              child: user.userAvatar == null
-                  ? Text(user.userName[0].toUpperCase())
-                  : null,
+              backgroundImage: user.userAvatar != null ? NetworkImage(user.userAvatar!) : null,
+              child: user.userAvatar == null ? Text(user.userName[0].toUpperCase()) : null,
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -566,10 +540,7 @@ class BadgeLeaderboardWidget extends ConsumerWidget {
                   Text(
                     '${user.badgeCount} бейджей',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.7),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                   ),
                 ],
@@ -583,10 +554,7 @@ class BadgeLeaderboardWidget extends ConsumerWidget {
         child: Text(
           'Таблица лидеров пуста',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context)
-                    .colorScheme
-                    .onSurface
-                    .withValues(alpha: 0.5),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
               ),
         ),
       );

@@ -44,10 +44,7 @@ class AdvertisingService {
         updatedAt: now,
       );
 
-      await _firestore
-          .collection('advertisements')
-          .doc(adId)
-          .set(advertisement.toMap());
+      await _firestore.collection('advertisements').doc(adId).set(advertisement.toMap());
 
       return advertisement;
     } catch (e) {
@@ -75,8 +72,7 @@ class AdvertisingService {
         query = query.where('advertiserId', isEqualTo: advertiserId);
       }
 
-      final snapshot =
-          await query.orderBy('createdAt', descending: true).limit(limit).get();
+      final snapshot = await query.orderBy('createdAt', descending: true).limit(limit).get();
 
       final advertisements = <Advertisement>[];
 
@@ -127,8 +123,7 @@ class AdvertisingService {
 
       // Сортируем по релевантности и возвращаем лимит
       availableAds.sort(
-        (a, b) => _calculateRelevance(b, userId)
-            .compareTo(_calculateRelevance(a, userId)),
+        (a, b) => _calculateRelevance(b, userId).compareTo(_calculateRelevance(a, userId)),
       );
 
       return availableAds.take(limit).toList();
@@ -271,8 +266,7 @@ class AdvertisingService {
   /// Получить статистику рекламы
   Future<Map<String, dynamic>> getAdvertisementStats(String adId) async {
     try {
-      final DocumentSnapshot doc =
-          await _firestore.collection('advertisements').doc(adId).get();
+      final DocumentSnapshot doc = await _firestore.collection('advertisements').doc(adId).get();
 
       if (!doc.exists) {
         throw Exception('Реклама не найдена');
@@ -309,8 +303,7 @@ class AdvertisingService {
   /// Получить общую статистику рекламы
   Future<Map<String, dynamic>> getOverallStats() async {
     try {
-      final QuerySnapshot snapshot =
-          await _firestore.collection('advertisements').get();
+      final QuerySnapshot snapshot = await _firestore.collection('advertisements').get();
 
       var totalAds = 0;
       var activeAds = 0;
@@ -336,10 +329,8 @@ class AdvertisingService {
         totalConversions += data['conversions'] as int? ?? 0;
       }
 
-      final overallCtr =
-          totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0.0;
-      final overallCpm =
-          totalImpressions > 0 ? (totalSpent / totalImpressions) * 1000 : 0.0;
+      final overallCtr = totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0.0;
+      final overallCpm = totalImpressions > 0 ? (totalSpent / totalImpressions) * 1000 : 0.0;
       final overallCpc = totalClicks > 0 ? totalSpent / totalClicks : 0.0;
 
       return {
@@ -353,8 +344,7 @@ class AdvertisingService {
         'overallCtr': overallCtr,
         'overallCpm': overallCpm,
         'overallCpc': overallCpc,
-        'conversionRate':
-            totalClicks > 0 ? (totalConversions / totalClicks) * 100 : 0.0,
+        'conversionRate': totalClicks > 0 ? (totalConversions / totalClicks) * 100 : 0.0,
       };
     } catch (e) {
       throw Exception('Ошибка получения общей статистики: $e');
@@ -366,14 +356,11 @@ class AdvertisingService {
     // Простая логика фильтрации по контексту
     switch (context) {
       case 'feed':
-        return ad.type == AdvertisementType.feed ||
-            ad.type == AdvertisementType.banner;
+        return ad.type == AdvertisementType.feed || ad.type == AdvertisementType.banner;
       case 'ideas':
-        return ad.type == AdvertisementType.ideas ||
-            ad.type == AdvertisementType.banner;
+        return ad.type == AdvertisementType.ideas || ad.type == AdvertisementType.banner;
       case 'search':
-        return ad.type == AdvertisementType.search ||
-            ad.type == AdvertisementType.banner;
+        return ad.type == AdvertisementType.search || ad.type == AdvertisementType.banner;
       default:
         return true;
     }
@@ -415,8 +402,7 @@ class AdvertisingService {
         status: PaymentStatus.completed,
         createdAt: DateTime.now(),
         paymentMethod: paymentMethodId,
-        transactionId:
-            'mock_transaction_${DateTime.now().millisecondsSinceEpoch}',
+        transactionId: 'mock_transaction_${DateTime.now().millisecondsSinceEpoch}',
       );
 
       return paymentIntent;

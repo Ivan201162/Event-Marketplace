@@ -38,11 +38,9 @@ class Incident {
         title: map['title'] as String? ?? '',
         description: map['description'] as String? ?? '',
         type: IncidentType.fromString(map['type'] as String? ?? 'technical'),
-        severity:
-            IncidentSeverity.fromString(map['severity'] as String? ?? 'medium'),
+        severity: IncidentSeverity.fromString(map['severity'] as String? ?? 'medium'),
         status: IncidentStatus.fromString(map['status'] as String? ?? 'open'),
-        priority:
-            IncidentPriority.fromString(map['priority'] as String? ?? 'medium'),
+        priority: IncidentPriority.fromString(map['priority'] as String? ?? 'medium'),
         assignedTo: map['assignedTo'] as String?,
         assignedToName: map['assignedToName'] as String?,
         reporterId: map['reporterId'] as String?,
@@ -51,31 +49,20 @@ class Incident {
         affectedServices: List<String>.from(
           (map['affectedServices'] as List<dynamic>?) ?? [],
         ),
-        affectedUsers:
-            List<String>.from((map['affectedUsers'] as List<dynamic>?) ?? []),
+        affectedUsers: List<String>.from((map['affectedUsers'] as List<dynamic>?) ?? []),
         rootCause: map['rootCause'] as String?,
         resolution: map['resolution'] as String?,
         tags: List<String>.from((map['tags'] as List<dynamic>?) ?? []),
         metadata: Map<String, dynamic>.from(
           (map['metadata'] as Map<dynamic, dynamic>?) ?? {},
         ),
-        attachments:
-            List<String>.from((map['attachments'] as List<dynamic>?) ?? []),
-        detectedAt: map['detectedAt'] != null
-            ? (map['detectedAt'] as Timestamp).toDate()
-            : null,
-        reportedAt: map['reportedAt'] != null
-            ? (map['reportedAt'] as Timestamp).toDate()
-            : null,
-        acknowledgedAt: map['acknowledgedAt'] != null
-            ? (map['acknowledgedAt'] as Timestamp).toDate()
-            : null,
-        resolvedAt: map['resolvedAt'] != null
-            ? (map['resolvedAt'] as Timestamp).toDate()
-            : null,
-        closedAt: map['closedAt'] != null
-            ? (map['closedAt'] as Timestamp).toDate()
-            : null,
+        attachments: List<String>.from((map['attachments'] as List<dynamic>?) ?? []),
+        detectedAt: map['detectedAt'] != null ? (map['detectedAt'] as Timestamp).toDate() : null,
+        reportedAt: map['reportedAt'] != null ? (map['reportedAt'] as Timestamp).toDate() : null,
+        acknowledgedAt:
+            map['acknowledgedAt'] != null ? (map['acknowledgedAt'] as Timestamp).toDate() : null,
+        resolvedAt: map['resolvedAt'] != null ? (map['resolvedAt'] as Timestamp).toDate() : null,
+        closedAt: map['closedAt'] != null ? (map['closedAt'] as Timestamp).toDate() : null,
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         updatedAt: (map['updatedAt'] as Timestamp).toDate(),
         createdBy: map['createdBy'] as String? ?? '',
@@ -130,14 +117,10 @@ class Incident {
         'tags': tags,
         'metadata': metadata,
         'attachments': attachments,
-        'detectedAt':
-            detectedAt != null ? Timestamp.fromDate(detectedAt!) : null,
-        'reportedAt':
-            reportedAt != null ? Timestamp.fromDate(reportedAt!) : null,
-        'acknowledgedAt':
-            acknowledgedAt != null ? Timestamp.fromDate(acknowledgedAt!) : null,
-        'resolvedAt':
-            resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
+        'detectedAt': detectedAt != null ? Timestamp.fromDate(detectedAt!) : null,
+        'reportedAt': reportedAt != null ? Timestamp.fromDate(reportedAt!) : null,
+        'acknowledgedAt': acknowledgedAt != null ? Timestamp.fromDate(acknowledgedAt!) : null,
+        'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
         'closedAt': closedAt != null ? Timestamp.fromDate(closedAt!) : null,
         'createdAt': Timestamp.fromDate(createdAt),
         'updatedAt': Timestamp.fromDate(updatedAt),
@@ -207,8 +190,7 @@ class Incident {
       );
 
   @override
-  String toString() =>
-      'Incident(id: $id, title: $title, severity: $severity, status: $status)';
+  String toString() => 'Incident(id: $id, title: $title, severity: $severity, status: $status)';
 
   @override
   bool operator ==(Object other) {
@@ -236,8 +218,7 @@ enum IncidentType {
   final String value;
   final String displayName;
 
-  static IncidentType fromString(String value) =>
-      IncidentType.values.firstWhere(
+  static IncidentType fromString(String value) => IncidentType.values.firstWhere(
         (type) => type.value == value,
         orElse: () => IncidentType.technical,
       );
@@ -298,8 +279,7 @@ enum IncidentSeverity {
   final String value;
   final String displayName;
 
-  static IncidentSeverity fromString(String value) =>
-      IncidentSeverity.values.firstWhere(
+  static IncidentSeverity fromString(String value) => IncidentSeverity.values.firstWhere(
         (severity) => severity.value == value,
         orElse: () => IncidentSeverity.medium,
       );
@@ -349,8 +329,7 @@ enum IncidentStatus {
   final String value;
   final String displayName;
 
-  static IncidentStatus fromString(String value) =>
-      IncidentStatus.values.firstWhere(
+  static IncidentStatus fromString(String value) => IncidentStatus.values.firstWhere(
         (status) => status.value == value,
         orElse: () => IncidentStatus.open,
       );
@@ -403,8 +382,7 @@ enum IncidentPriority {
   final String value;
   final String displayName;
 
-  static IncidentPriority fromString(String value) =>
-      IncidentPriority.values.firstWhere(
+  static IncidentPriority fromString(String value) => IncidentPriority.values.firstWhere(
         (priority) => priority.value == value,
         orElse: () => IncidentPriority.p3,
       );
@@ -467,8 +445,7 @@ class IncidentComment {
         authorEmail: map['authorEmail'] as String?,
         type: CommentType.fromString(map['type'] as String? ?? 'comment'),
         isInternal: map['isInternal'] as bool? ?? false,
-        attachments:
-            List<String>.from((map['attachments'] as List<dynamic>?) ?? []),
+        attachments: List<String>.from((map['attachments'] as List<dynamic>?) ?? []),
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         updatedAt: (map['updatedAt'] as Timestamp).toDate(),
       );
@@ -530,8 +507,7 @@ class IncidentComment {
       );
 
   @override
-  String toString() =>
-      'IncidentComment(id: $id, incidentId: $incidentId, authorName: $authorName)';
+  String toString() => 'IncidentComment(id: $id, incidentId: $incidentId, authorName: $authorName)';
 
   @override
   bool operator ==(Object other) {
@@ -624,12 +600,9 @@ class IncidentSLA {
         resolvedDeadline: map['resolvedDeadline'] != null
             ? (map['resolvedDeadline'] as Timestamp).toDate()
             : null,
-        acknowledgedAt: map['acknowledgedAt'] != null
-            ? (map['acknowledgedAt'] as Timestamp).toDate()
-            : null,
-        resolvedAt: map['resolvedAt'] != null
-            ? (map['resolvedAt'] as Timestamp).toDate()
-            : null,
+        acknowledgedAt:
+            map['acknowledgedAt'] != null ? (map['acknowledgedAt'] as Timestamp).toDate() : null,
+        resolvedAt: map['resolvedAt'] != null ? (map['resolvedAt'] as Timestamp).toDate() : null,
         acknowledgedOnTime: map['acknowledgedOnTime'] as bool? ?? true,
         resolvedOnTime: map['resolvedOnTime'] as bool? ?? true,
         breachReason: map['breachReason'] as String?,
@@ -653,16 +626,11 @@ class IncidentSLA {
         'id': id,
         'incidentId': incidentId,
         'status': status.value,
-        'acknowledgedDeadline': acknowledgedDeadline != null
-            ? Timestamp.fromDate(acknowledgedDeadline!)
-            : null,
-        'resolvedDeadline': resolvedDeadline != null
-            ? Timestamp.fromDate(resolvedDeadline!)
-            : null,
-        'acknowledgedAt':
-            acknowledgedAt != null ? Timestamp.fromDate(acknowledgedAt!) : null,
-        'resolvedAt':
-            resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
+        'acknowledgedDeadline':
+            acknowledgedDeadline != null ? Timestamp.fromDate(acknowledgedDeadline!) : null,
+        'resolvedDeadline': resolvedDeadline != null ? Timestamp.fromDate(resolvedDeadline!) : null,
+        'acknowledgedAt': acknowledgedAt != null ? Timestamp.fromDate(acknowledgedAt!) : null,
+        'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
         'acknowledgedOnTime': acknowledgedOnTime,
         'resolvedOnTime': resolvedOnTime,
         'breachReason': breachReason,
@@ -700,8 +668,7 @@ class IncidentSLA {
       );
 
   @override
-  String toString() =>
-      'IncidentSLA(id: $id, incidentId: $incidentId, status: $status)';
+  String toString() => 'IncidentSLA(id: $id, incidentId: $incidentId, status: $status)';
 
   @override
   bool operator ==(Object other) {

@@ -44,10 +44,8 @@ class PhotographerStudioLinkService {
     }
 
     // Получить данные фотографа
-    final photographerDoc = await _firestore
-        .collection(_usersCollection)
-        .doc(data.photographerId)
-        .get();
+    final photographerDoc =
+        await _firestore.collection(_usersCollection).doc(data.photographerId).get();
 
     if (!photographerDoc.exists) {
       throw Exception('Фотограф не найден');
@@ -57,10 +55,7 @@ class PhotographerStudioLinkService {
     final photographer = AppUser.fromMap(photographerData);
 
     // Получить данные фотостудии
-    final studioDoc = await _firestore
-        .collection(_studiosCollection)
-        .doc(data.studioId)
-        .get();
+    final studioDoc = await _firestore.collection(_studiosCollection).doc(data.studioId).get();
 
     if (!studioDoc.exists) {
       throw Exception('Фотостудия не найдена');
@@ -86,8 +81,7 @@ class PhotographerStudioLinkService {
     );
 
     // Сохранить в Firestore
-    final docRef =
-        await _firestore.collection(_linksCollection).add(link.toMap());
+    final docRef = await _firestore.collection(_linksCollection).add(link.toMap());
 
     // Обновить ID
     final createdLink = link.copyWith(id: docRef.id);
@@ -162,10 +156,7 @@ class PhotographerStudioLinkService {
     }
 
     // Проверить права доступа
-    final studio = await _firestore
-        .collection(_studiosCollection)
-        .doc(link.studioId)
-        .get();
+    final studio = await _firestore.collection(_studiosCollection).doc(link.studioId).get();
     if (!studio.exists) {
       throw Exception('Фотостудия не найдена');
     }
@@ -229,15 +220,13 @@ class PhotographerStudioLinkService {
     }
 
     // Проверить, что связка активна
-    final link =
-        await _getLinkByPhotographerAndStudio(photographerId, studioId);
+    final link = await _getLinkByPhotographerAndStudio(photographerId, studioId);
     if (link == null || !link.isActive) {
       throw Exception('Связка с фотостудией не активна');
     }
 
     // Получить данные фотографа
-    final photographerDoc =
-        await _firestore.collection(_usersCollection).doc(photographerId).get();
+    final photographerDoc = await _firestore.collection(_usersCollection).doc(photographerId).get();
 
     if (!photographerDoc.exists) {
       throw Exception('Фотограф не найден');
@@ -247,8 +236,7 @@ class PhotographerStudioLinkService {
     final photographer = AppUser.fromMap(photographerData);
 
     // Получить данные фотостудии
-    final studioDoc =
-        await _firestore.collection(_studiosCollection).doc(studioId).get();
+    final studioDoc = await _firestore.collection(_studiosCollection).doc(studioId).get();
 
     if (!studioDoc.exists) {
       throw Exception('Фотостудия не найдена');
@@ -276,9 +264,7 @@ class PhotographerStudioLinkService {
     );
 
     // Сохранить в Firestore
-    final docRef = await _firestore
-        .collection(_suggestionsCollection)
-        .add(suggestion.toMap());
+    final docRef = await _firestore.collection(_suggestionsCollection).add(suggestion.toMap());
 
     // Обновить ID
     final createdSuggestion = StudioSuggestion(
@@ -328,10 +314,8 @@ class PhotographerStudioLinkService {
       throw Exception('Пользователь не авторизован');
     }
 
-    final suggestionDoc = await _firestore
-        .collection(_suggestionsCollection)
-        .doc(suggestionId)
-        .get();
+    final suggestionDoc =
+        await _firestore.collection(_suggestionsCollection).doc(suggestionId).get();
     if (!suggestionDoc.exists) {
       throw Exception('Предложение не найдено');
     }
@@ -343,10 +327,7 @@ class PhotographerStudioLinkService {
     //   throw Exception('Только клиент может принимать предложения');
     // }
 
-    await _firestore
-        .collection(_suggestionsCollection)
-        .doc(suggestionId)
-        .update({
+    await _firestore.collection(_suggestionsCollection).doc(suggestionId).update({
       'isAccepted': true,
       'acceptedAt': Timestamp.fromDate(DateTime.now()),
     });
@@ -365,10 +346,8 @@ class PhotographerStudioLinkService {
       throw Exception('Пользователь не авторизован');
     }
 
-    final suggestionDoc = await _firestore
-        .collection(_suggestionsCollection)
-        .doc(suggestionId)
-        .get();
+    final suggestionDoc =
+        await _firestore.collection(_suggestionsCollection).doc(suggestionId).get();
     if (!suggestionDoc.exists) {
       throw Exception('Предложение не найдено');
     }
@@ -380,10 +359,7 @@ class PhotographerStudioLinkService {
     //   throw Exception('Только клиент может отклонять предложения');
     // }
 
-    await _firestore
-        .collection(_suggestionsCollection)
-        .doc(suggestionId)
-        .update({
+    await _firestore.collection(_suggestionsCollection).doc(suggestionId).update({
       'isRejected': true,
       'rejectedAt': Timestamp.fromDate(DateTime.now()),
     });
@@ -406,9 +382,7 @@ class PhotographerStudioLinkService {
     final allStudios = snapshot.docs.map(PhotoStudio.fromDocument).toList();
 
     // Исключить уже связанные студии
-    return allStudios
-        .where((studio) => !linkedStudioIds.contains(studio.id))
-        .toList();
+    return allStudios.where((studio) => !linkedStudioIds.contains(studio.id)).toList();
   }
 
   /// Подписаться на изменения связок фотографа
@@ -421,31 +395,26 @@ class PhotographerStudioLinkService {
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map(
-            (snapshot) =>
-                snapshot.docs.map(PhotographerStudioLink.fromDocument).toList(),
+            (snapshot) => snapshot.docs.map(PhotographerStudioLink.fromDocument).toList(),
           );
 
   /// Подписаться на изменения связок фотостудии
-  Stream<List<PhotographerStudioLink>> watchStudioLinks(String studioId) =>
-      _firestore
-          .collection(_linksCollection)
-          .where('studioId', isEqualTo: studioId)
-          .orderBy('createdAt', descending: true)
-          .snapshots()
-          .map(
-            (snapshot) =>
-                snapshot.docs.map(PhotographerStudioLink.fromDocument).toList(),
-          );
+  Stream<List<PhotographerStudioLink>> watchStudioLinks(String studioId) => _firestore
+      .collection(_linksCollection)
+      .where('studioId', isEqualTo: studioId)
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(PhotographerStudioLink.fromDocument).toList(),
+      );
 
   /// Подписаться на изменения предложений для заказа
-  Stream<List<StudioSuggestion>> watchBookingSuggestions(String bookingId) =>
-      _firestore
-          .collection(_suggestionsCollection)
-          .where('bookingId', isEqualTo: bookingId)
-          .orderBy('suggestedAt', descending: true)
-          .snapshots()
-          .map(
-            (snapshot) =>
-                snapshot.docs.map(StudioSuggestion.fromDocument).toList(),
-          );
+  Stream<List<StudioSuggestion>> watchBookingSuggestions(String bookingId) => _firestore
+      .collection(_suggestionsCollection)
+      .where('bookingId', isEqualTo: bookingId)
+      .orderBy('suggestedAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(StudioSuggestion.fromDocument).toList(),
+      );
 }

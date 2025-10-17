@@ -37,8 +37,7 @@ class WorkActService {
         updatedAt: DateTime.now(),
       );
 
-      final docRef =
-          await _firestore.collection('work_acts').add(workAct.toMap());
+      final docRef = await _firestore.collection('work_acts').add(workAct.toMap());
 
       return workAct.copyWith(id: docRef.id);
     } on Exception {
@@ -170,10 +169,7 @@ class WorkActService {
       if (totalAmount != null) updateData['totalAmount'] = totalAmount;
       if (notes != null) updateData['notes'] = notes;
 
-      await _firestore
-          .collection('work_acts')
-          .doc(workActId)
-          .update(updateData);
+      await _firestore.collection('work_acts').doc(workActId).update(updateData);
     } on Exception {
       // Логирование:'Ошибка обновления акта: $e');
       rethrow;
@@ -434,12 +430,9 @@ class WorkActService {
       final acts = snapshot.docs.map(WorkAct.fromDocument).toList();
 
       final totalActs = acts.length;
-      final signedActs =
-          acts.where((act) => act.status == WorkActStatus.signed).length;
-      final draftActs =
-          acts.where((act) => act.status == WorkActStatus.draft).length;
-      final rejectedActs =
-          acts.where((act) => act.status == WorkActStatus.rejected).length;
+      final signedActs = acts.where((act) => act.status == WorkActStatus.signed).length;
+      final draftActs = acts.where((act) => act.status == WorkActStatus.draft).length;
+      final rejectedActs = acts.where((act) => act.status == WorkActStatus.rejected).length;
       final totalAmount = acts
           .where((act) => act.status == WorkActStatus.signed)
           .fold<double>(0, (sum, act) => sum + act.totalAmount);
@@ -509,15 +502,11 @@ class WorkAct {
         (status) => status.name == data['status'],
         orElse: () => WorkActStatus.draft,
       ),
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
-      updatedAt: data['updatedAt'] != null
-          ? (data['updatedAt'] as Timestamp).toDate()
-          : DateTime.now(),
-      signedAt: data['signedAt'] != null
-          ? (data['signedAt'] as Timestamp).toDate()
-          : null,
+      createdAt:
+          data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
+      updatedAt:
+          data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : DateTime.now(),
+      signedAt: data['signedAt'] != null ? (data['signedAt'] as Timestamp).toDate() : null,
       signedBy: data['signedBy'] as String?,
       signature: data['signature'] as String?,
       rejectionReason: data['rejectionReason'] as String?,
@@ -666,8 +655,7 @@ class WorkActStats {
   final double totalAmount;
   final DateTime lastUpdated;
 
-  double get signedPercentage =>
-      totalActs > 0 ? (signedActs / totalActs) * 100 : 0.0;
+  double get signedPercentage => totalActs > 0 ? (signedActs / totalActs) * 100 : 0.0;
 }
 
 /// Сервис для управления актами выполненных работ (расширенная версия)
@@ -683,9 +671,7 @@ class WorkActServiceExtended {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => WorkAct.fromMap(doc.data(), doc.id))
-          .toList();
+      return querySnapshot.docs.map((doc) => WorkAct.fromMap(doc.data(), doc.id)).toList();
     } on Exception {
       // Логирование:'Ошибка получения актов выполненных работ по бронированию: $e');
       return [];
@@ -696,8 +682,7 @@ class WorkActServiceExtended {
   Future<WorkAct> generateWorkAct(String bookingId) async {
     try {
       // Получить данные бронирования
-      final bookingDoc =
-          await _firestore.collection('bookings').doc(bookingId).get();
+      final bookingDoc = await _firestore.collection('bookings').doc(bookingId).get();
 
       if (!bookingDoc.exists) {
         throw Exception('Бронирование не найдено');
@@ -727,8 +712,7 @@ class WorkActServiceExtended {
         currency: 'RUB',
       );
 
-      final docRef =
-          await _firestore.collection('work_acts').add(workAct.toMap());
+      final docRef = await _firestore.collection('work_acts').add(workAct.toMap());
 
       return workAct.copyWith(id: docRef.id);
     } on Exception {
@@ -757,8 +741,7 @@ class WorkActServiceExtended {
     final year = now.year.toString().substring(2);
     final month = now.month.toString().padLeft(2, '0');
     final day = now.day.toString().padLeft(2, '0');
-    final random =
-        (now.millisecondsSinceEpoch % 1000).toString().padLeft(3, '0');
+    final random = (now.millisecondsSinceEpoch % 1000).toString().padLeft(3, '0');
 
     return 'АВР-$year$month$day-$random';
   }

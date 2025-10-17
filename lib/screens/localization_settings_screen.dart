@@ -9,12 +9,10 @@ class LocalizationSettingsScreen extends ConsumerStatefulWidget {
   const LocalizationSettingsScreen({super.key});
 
   @override
-  ConsumerState<LocalizationSettingsScreen> createState() =>
-      _LocalizationSettingsScreenState();
+  ConsumerState<LocalizationSettingsScreen> createState() => _LocalizationSettingsScreenState();
 }
 
-class _LocalizationSettingsScreenState
-    extends ConsumerState<LocalizationSettingsScreen> {
+class _LocalizationSettingsScreenState extends ConsumerState<LocalizationSettingsScreen> {
   final LocalizationService _localizationService = LocalizationService();
 
   @override
@@ -39,8 +37,7 @@ class _LocalizationSettingsScreenState
         ),
         body: Consumer(
           builder: (context, ref, child) {
-            final initializationAsync =
-                ref.watch(localizationInitializationProvider);
+            final initializationAsync = ref.watch(localizationInitializationProvider);
 
             return initializationAsync.when(
               data: (_) => _buildContent(),
@@ -172,8 +169,7 @@ class _LocalizationSettingsScreenState
               const SizedBox(height: 16),
               Consumer(
                 builder: (context, ref, child) {
-                  final supportedLanguages =
-                      ref.watch(supportedLanguagesProvider);
+                  final supportedLanguages = ref.watch(supportedLanguagesProvider);
                   final currentLanguage = ref.watch(currentLanguageProvider);
 
                   return ListView.builder(
@@ -182,8 +178,7 @@ class _LocalizationSettingsScreenState
                     itemCount: supportedLanguages.length,
                     itemBuilder: (context, index) {
                       final language = supportedLanguages[index];
-                      final isSelected =
-                          language.languageCode == currentLanguage;
+                      final isSelected = language.languageCode == currentLanguage;
 
                       return ListTile(
                         leading: Container(
@@ -204,9 +199,7 @@ class _LocalizationSettingsScreenState
                         title: Text(
                           language.displayName,
                           style: TextStyle(
-                            fontWeight: isSelected
-                                ? FontWeight.bold
-                                : FontWeight.normal,
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                             color: isSelected ? Colors.blue : null,
                           ),
                         ),
@@ -216,9 +209,7 @@ class _LocalizationSettingsScreenState
                             color: Colors.grey[600],
                           ),
                         ),
-                        trailing: isSelected
-                            ? const Icon(Icons.check, color: Colors.blue)
-                            : null,
+                        trailing: isSelected ? const Icon(Icons.check, color: Colors.blue) : null,
                         onTap: () => _changeLanguage(language.languageCode),
                       );
                     },
@@ -252,8 +243,7 @@ class _LocalizationSettingsScreenState
                   // Автоматическое определение языка
                   SwitchListTile(
                     title: const Text('Автоматическое определение языка'),
-                    subtitle:
-                        const Text('Определять язык системы автоматически'),
+                    subtitle: const Text('Определять язык системы автоматически'),
                     value: settings?.autoDetectLanguage ?? true,
                     onChanged: (value) {
                       _updateSettings(

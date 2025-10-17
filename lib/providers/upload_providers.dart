@@ -8,12 +8,10 @@ import '../services/upload_service.dart';
 final uploadServiceProvider = Provider<UploadService>((ref) => UploadService());
 
 /// Провайдер для проверки доступности загрузки файлов
-final fileUploadAvailableProvider =
-    Provider<bool>((ref) => FeatureFlags.fileUploadEnabled);
+final fileUploadAvailableProvider = Provider<bool>((ref) => FeatureFlags.fileUploadEnabled);
 
 /// Провайдер для загрузки изображения
-final imageUploadProvider =
-    FutureProvider.family<UploadResult?, ImageSource>((ref, source) async {
+final imageUploadProvider = FutureProvider.family<UploadResult?, ImageSource>((ref, source) async {
   final uploadService = ref.read(uploadServiceProvider);
   if (!uploadService.isAvailable) return null;
 
@@ -21,8 +19,7 @@ final imageUploadProvider =
 });
 
 /// Провайдер для загрузки видео
-final videoUploadProvider =
-    FutureProvider.family<UploadResult?, ImageSource>((ref, source) async {
+final videoUploadProvider = FutureProvider.family<UploadResult?, ImageSource>((ref, source) async {
   final uploadService = ref.read(uploadServiceProvider);
   if (!uploadService.isAvailable) return null;
 
@@ -30,8 +27,8 @@ final videoUploadProvider =
 });
 
 /// Провайдер для загрузки файла
-final fileUploadProvider = FutureProvider.family<UploadResult?, List<String>?>(
-    (ref, allowedExtensions) async {
+final fileUploadProvider =
+    FutureProvider.family<UploadResult?, List<String>?>((ref, allowedExtensions) async {
   final uploadService = ref.read(uploadServiceProvider);
   if (!uploadService.isAvailable) return null;
 
@@ -47,8 +44,7 @@ final maxFileSizeProvider = Provider.family<int, FileType>((ref, fileType) {
 });
 
 /// Провайдер для получения разрешенных расширений
-final allowedExtensionsProvider =
-    Provider.family<List<String>, FileType>((ref, fileType) {
+final allowedExtensionsProvider = Provider.family<List<String>, FileType>((ref, fileType) {
   final uploadService = ref.read(uploadServiceProvider);
   return uploadService.getAllowedExtensions(fileType);
 });

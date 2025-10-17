@@ -77,8 +77,7 @@ class HostFilters {
 }
 
 /// Провайдер фильтров для ведущих
-final hostFiltersProvider =
-    StateProvider<HostFilters>((ref) => const HostFilters());
+final hostFiltersProvider = StateProvider<HostFilters>((ref) => const HostFilters());
 
 /// Провайдер для загрузки всех ведущих с фильтрами
 final hostsProvider = FutureProvider.family<List<Specialist>, HostFilters>(
@@ -92,9 +91,9 @@ final paginatedHostsProvider =
 );
 
 /// Провайдер для получения mock-данных ведущих (для тестирования)
-final mockPaginatedHostsProvider = StateNotifierProvider<
-    MockPaginatedHostsNotifier,
-    AsyncValue<List<Specialist>>>((ref) => MockPaginatedHostsNotifier());
+final mockPaginatedHostsProvider =
+    StateNotifierProvider<MockPaginatedHostsNotifier, AsyncValue<List<Specialist>>>(
+        (ref) => MockPaginatedHostsNotifier());
 
 /// Провайдер для получения уникальных городов ведущих
 final hostCitiesProvider = FutureProvider<List<String>>((ref) async {
@@ -194,8 +193,7 @@ bool _matchesFilters(Specialist specialist, HostFilters filters) {
   // Фильтр по поисковому запросу
   if (filters.searchQuery != null && filters.searchQuery!.isNotEmpty) {
     final query = filters.searchQuery!.toLowerCase();
-    final fullName =
-        '${specialist.firstName} ${specialist.lastName}'.toLowerCase();
+    final fullName = '${specialist.firstName} ${specialist.lastName}'.toLowerCase();
     final city = specialist.city.toLowerCase();
 
     if (!fullName.contains(query) && !city.contains(query)) {
@@ -213,8 +211,7 @@ bool _matchesFilters(Specialist specialist, HostFilters filters) {
 }
 
 /// Notifier для пагинированной загрузки ведущих
-class PaginatedHostsNotifier
-    extends StateNotifier<AsyncValue<List<Specialist>>> {
+class PaginatedHostsNotifier extends StateNotifier<AsyncValue<List<Specialist>>> {
   PaginatedHostsNotifier() : super(const AsyncValue.loading()) {
     loadHosts();
   }
@@ -270,13 +267,11 @@ class PaginatedHostsNotifier
         }
       }
 
-      _lastDocument =
-          querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
+      _lastDocument = querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
       _hasMore = querySnapshot.docs.length == _pageSize;
 
       final currentList = state.valueOrNull ?? <Specialist>[];
-      final updatedList =
-          refresh ? newSpecialists : [...currentList, ...newSpecialists];
+      final updatedList = refresh ? newSpecialists : [...currentList, ...newSpecialists];
 
       state = AsyncValue.data(updatedList);
     } on Exception catch (e) {
@@ -302,8 +297,7 @@ class PaginatedHostsNotifier
 }
 
 /// Провайдер для получения mock-данных ведущих (для тестирования)
-final mockHostsProvider =
-    Provider<List<Specialist>>((ref) => _generateMockHosts());
+final mockHostsProvider = Provider<List<Specialist>>((ref) => _generateMockHosts());
 
 /// Генерация mock-данных для ведущих
 List<Specialist> _generateMockHosts() {
@@ -354,8 +348,7 @@ List<Specialist> _generateMockHosts() {
       ),
       rating: rating,
       totalReviews: 10 + (index % 50),
-      description:
-          'Профессиональный ведущий с ${5 + (index % 10)}-летним опытом работы. '
+      description: 'Профессиональный ведущий с ${5 + (index % 10)}-летним опытом работы. '
           'Специализируюсь на ${index % 2 == 0 ? 'свадебных церемониях' : 'корпоративных мероприятиях'}. '
           'Создаю незабываемую атмосферу для вашего праздника.',
       photoUrl:
@@ -368,8 +361,7 @@ List<Specialist> _generateMockHosts() {
 }
 
 /// Notifier для пагинированной загрузки mock-данных ведущих
-class MockPaginatedHostsNotifier
-    extends StateNotifier<AsyncValue<List<Specialist>>> {
+class MockPaginatedHostsNotifier extends StateNotifier<AsyncValue<List<Specialist>>> {
   MockPaginatedHostsNotifier() : super(const AsyncValue.loading()) {
     loadHosts();
   }
@@ -396,9 +388,8 @@ class MockPaginatedHostsNotifier
       }
 
       // Применяем фильтры
-      final filteredHosts = _allHosts
-          .where((host) => _matchesFilters(host, _currentFilters))
-          .toList();
+      final filteredHosts =
+          _allHosts.where((host) => _matchesFilters(host, _currentFilters)).toList();
 
       // Пагинация
       final startIndex = _currentPage * _pageSize;
@@ -444,12 +435,10 @@ class MockPaginatedHostsNotifier
     if (filters.minPrice != null || filters.maxPrice != null) {
       final priceRange = specialist.priceRange;
       if (priceRange != null) {
-        if (filters.minPrice != null &&
-            priceRange.maxPrice < filters.minPrice!) {
+        if (filters.minPrice != null && priceRange.maxPrice < filters.minPrice!) {
           return false;
         }
-        if (filters.maxPrice != null &&
-            priceRange.minPrice > filters.maxPrice!) {
+        if (filters.maxPrice != null && priceRange.minPrice > filters.maxPrice!) {
           return false;
         }
       }
@@ -473,8 +462,7 @@ class MockPaginatedHostsNotifier
     // Фильтр по поисковому запросу
     if (filters.searchQuery != null && filters.searchQuery!.isNotEmpty) {
       final query = filters.searchQuery!.toLowerCase();
-      final fullName =
-          '${specialist.firstName} ${specialist.lastName}'.toLowerCase();
+      final fullName = '${specialist.firstName} ${specialist.lastName}'.toLowerCase();
       final city = specialist.city.toLowerCase();
 
       if (!fullName.contains(query) && !city.contains(query)) {

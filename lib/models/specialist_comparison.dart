@@ -37,8 +37,7 @@ class SpecialistComparison {
   }
 
   /// Удалить специалиста из сравнения
-  SpecialistComparison removeSpecialist(String specialistId) =>
-      SpecialistComparison(
+  SpecialistComparison removeSpecialist(String specialistId) => SpecialistComparison(
         specialists: specialists.where((s) => s.id != specialistId).toList(),
         createdAt: createdAt,
       );
@@ -48,8 +47,7 @@ class SpecialistComparison {
 
   /// Проверить, можно ли добавить специалиста
   bool canAddSpecialist(Specialist specialist) =>
-      specialists.length < maxSpecialists &&
-      !specialists.any((s) => s.id == specialist.id);
+      specialists.length < maxSpecialists && !specialists.any((s) => s.id == specialist.id);
 
   /// Получить количество специалистов
   int get count => specialists.length;
@@ -224,8 +222,7 @@ class ComparisonStats {
   Specialist? getMostExperienced(List<Specialist> specialists) {
     if (specialists.isEmpty) return null;
 
-    return specialists
-        .reduce((a, b) => a.yearsOfExperience > b.yearsOfExperience ? a : b);
+    return specialists.reduce((a, b) => a.yearsOfExperience > b.yearsOfExperience ? a : b);
   }
 
   /// Получить специалиста с наибольшим количеством отзывов

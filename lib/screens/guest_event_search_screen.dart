@@ -11,12 +11,10 @@ class GuestEventSearchScreen extends ConsumerStatefulWidget {
   const GuestEventSearchScreen({super.key});
 
   @override
-  ConsumerState<GuestEventSearchScreen> createState() =>
-      _GuestEventSearchScreenState();
+  ConsumerState<GuestEventSearchScreen> createState() => _GuestEventSearchScreenState();
 }
 
-class _GuestEventSearchScreenState
-    extends ConsumerState<GuestEventSearchScreen> {
+class _GuestEventSearchScreenState extends ConsumerState<GuestEventSearchScreen> {
   final TextEditingController _accessCodeController = TextEditingController();
   final GuestService _guestService = GuestService();
   final EventService _eventService = EventService();
@@ -370,8 +368,7 @@ class _GuestEventSearchScreenState
         ),
       );
 
-  Widget _buildHelpItem(IconData icon, String title, String description) =>
-      Padding(
+  Widget _buildHelpItem(IconData icon, String title, String description) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -462,8 +459,7 @@ class _GuestEventSearchScreenState
         // TODO(developer): Перейти к экрану гостевого доступа к событию
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content:
-                Text('Добро пожаловать на событие "${_foundEvent!.title}"!'),
+            content: Text('Добро пожаловать на событие "${_foundEvent!.title}"!'),
             backgroundColor: Colors.green,
           ),
         );

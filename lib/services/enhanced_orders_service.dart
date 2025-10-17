@@ -12,9 +12,7 @@ class EnhancedOrdersService {
     OrderStatus? status,
   }) async {
     try {
-      Query query = _firestore
-          .collection('orders')
-          .where('customerId', isEqualTo: userId);
+      Query query = _firestore.collection('orders').where('customerId', isEqualTo: userId);
 
       if (status != null) {
         query = query.where('status', isEqualTo: status.value);
@@ -42,9 +40,7 @@ class EnhancedOrdersService {
     OrderStatus? status,
   }) async {
     try {
-      Query query = _firestore
-          .collection('orders')
-          .where('specialistId', isEqualTo: specialistId);
+      Query query = _firestore.collection('orders').where('specialistId', isEqualTo: specialistId);
 
       if (status != null) {
         query = query.where('status', isEqualTo: status.value);
@@ -226,9 +222,8 @@ class EnhancedOrdersService {
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           type: OrderTimelineEventType.comment,
           title: 'Добавлен комментарий',
-          description: comment.text.length > 50
-              ? '${comment.text.substring(0, 50)}...'
-              : comment.text,
+          description:
+              comment.text.length > 50 ? '${comment.text.substring(0, 50)}...' : comment.text,
           createdAt: DateTime.now(),
           authorId: comment.authorId,
         ),
@@ -293,8 +288,7 @@ class EnhancedOrdersService {
     Map<String, dynamic> customizations,
   ) async {
     try {
-      final templateDoc =
-          await _firestore.collection('orderTemplates').doc(templateId).get();
+      final templateDoc = await _firestore.collection('orderTemplates').doc(templateId).get();
 
       if (!templateDoc.exists) {
         throw Exception('Шаблон не найден');
@@ -306,27 +300,21 @@ class EnhancedOrdersService {
         id: '', // Будет установлен при создании
         customerId: customerId,
         specialistId: specialistId,
-        title: (customizations['title'] as String?) ??
-            (template['title'] as String),
-        description: (customizations['description'] as String?) ??
-            (template['description'] as String),
+        title: (customizations['title'] as String?) ?? (template['title'] as String),
+        description:
+            (customizations['description'] as String?) ?? (template['description'] as String),
         status: OrderStatus.pending,
         createdAt: DateTime.now(),
-        budget: (customizations['budget'] as double?) ??
-            (template['budget'] as double?),
+        budget: (customizations['budget'] as double?) ?? (template['budget'] as double?),
         deadline: customizations['deadline'] != null
             ? DateTime.fromMillisecondsSinceEpoch(
                 customizations['deadline'] as int,
               )
             : null,
-        location: (customizations['location'] as String?) ??
-            (template['location'] as String?),
-        category: (customizations['category'] as String?) ??
-            (template['category'] as String?),
+        location: (customizations['location'] as String?) ?? (template['location'] as String?),
+        category: (customizations['category'] as String?) ?? (template['category'] as String?),
         priority: OrderPriority.fromString(
-          (customizations['priority'] as String?) ??
-              (template['priority'] as String?) ??
-              'medium',
+          (customizations['priority'] as String?) ?? (template['priority'] as String?) ?? 'medium',
         ),
       );
 

@@ -122,8 +122,7 @@ class PortfolioWidget extends StatelessWidget {
                       ? Image.network(
                           item.mediaUrl,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              Container(
+                          errorBuilder: (context, error, stackTrace) => Container(
                             color: Colors.grey[300],
                             child: const Icon(
                               Icons.image_not_supported,
@@ -267,9 +266,7 @@ class PortfolioWidget extends StatelessWidget {
                           ),
                           const SizedBox(width: 2),
                           Text(
-                            item.mediaType == PortfolioMediaType.image
-                                ? 'Фото'
-                                : 'Видео',
+                            item.mediaType == PortfolioMediaType.image ? 'Фото' : 'Видео',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 8,

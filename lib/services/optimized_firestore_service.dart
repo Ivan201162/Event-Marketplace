@@ -20,8 +20,7 @@ class OptimizedFirestoreService {
 
     if (useCache && _queryCache.containsKey(cacheKey)) {
       final timestamp = _cacheTimestamps[cacheKey];
-      if (timestamp != null &&
-          DateTime.now().difference(timestamp) < _cacheExpiration) {
+      if (timestamp != null && DateTime.now().difference(timestamp) < _cacheExpiration) {
         // Возвращаем кэшированный результат
         return _queryCache[cacheKey]?.docs.first;
       }
@@ -51,13 +50,11 @@ class OptimizedFirestoreService {
     List<QueryFilter>? where,
     bool useCache = true,
   }) async {
-    final cacheKey =
-        _generateCacheKey(collection, limit, startAfter, orderBy, where);
+    final cacheKey = _generateCacheKey(collection, limit, startAfter, orderBy, where);
 
     if (useCache && _queryCache.containsKey(cacheKey)) {
       final timestamp = _cacheTimestamps[cacheKey];
-      if (timestamp != null &&
-          DateTime.now().difference(timestamp) < _cacheExpiration) {
+      if (timestamp != null && DateTime.now().difference(timestamp) < _cacheExpiration) {
         return _queryCache[cacheKey]!;
       }
     }

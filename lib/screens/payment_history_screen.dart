@@ -15,8 +15,7 @@ class PaymentHistoryScreen extends ConsumerStatefulWidget {
   final bool isSpecialist;
 
   @override
-  ConsumerState<PaymentHistoryScreen> createState() =>
-      _PaymentHistoryScreenState();
+  ConsumerState<PaymentHistoryScreen> createState() => _PaymentHistoryScreenState();
 }
 
 class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
@@ -83,8 +82,7 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
         ),
         body: Column(
           children: [
-            if (_selectedStatus != null || _selectedType != null)
-              _buildActiveFilters(),
+            if (_selectedStatus != null || _selectedType != null) _buildActiveFilters(),
             Expanded(
               child: _buildContent(),
             ),
@@ -316,14 +314,12 @@ class _PaymentDetailsDialog extends StatelessWidget {
                 _DetailRow('Обработан', _formatDate(payment.processedAt!)),
               if (payment.completedAt != null)
                 _DetailRow('Завершен', _formatDate(payment.completedAt!)),
-              if (payment.failedAt != null)
-                _DetailRow('Неудачен', _formatDate(payment.failedAt!)),
+              if (payment.failedAt != null) _DetailRow('Неудачен', _formatDate(payment.failedAt!)),
               if (payment.cancelledAt != null)
                 _DetailRow('Отменен', _formatDate(payment.cancelledAt!)),
               if (payment.refundedAt != null)
                 _DetailRow('Возвращен', _formatDate(payment.refundedAt!)),
-              if (payment.dueDate != null)
-                _DetailRow('Срок оплаты', _formatDate(payment.dueDate!)),
+              if (payment.dueDate != null) _DetailRow('Срок оплаты', _formatDate(payment.dueDate!)),
               if (payment.refundReason != null)
                 _DetailRow('Причина возврата', payment.refundReason!),
             ],

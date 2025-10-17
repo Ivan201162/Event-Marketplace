@@ -42,8 +42,7 @@ class OrganizerProposal {
       title: data['title'] as String? ?? '',
       description: data['description'] as String? ?? '',
       proposedBudget: (data['proposedBudget'] as num?)?.toDouble() ?? 0.0,
-      teamMembers:
-          List<String>.from(data['teamMembers'] as List<dynamic>? ?? []),
+      teamMembers: List<String>.from(data['teamMembers'] as List<dynamic>? ?? []),
       services: List<String>.from(data['services'] as List<dynamic>? ?? []),
       timeline: data['timeline'] as Map<String, dynamic>?,
       terms: data['terms'] as Map<String, dynamic>?,
@@ -51,12 +50,9 @@ class OrganizerProposal {
         (e) => e.name == data['status'],
         orElse: () => ProposalStatus.pending,
       ),
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
-      updatedAt: data['updatedAt'] != null
-          ? (data['updatedAt'] as Timestamp).toDate()
-          : null,
+      createdAt:
+          data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
+      updatedAt: data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : null,
       customerResponse: data['customerResponse'] as String?,
       customerResponseAt: data['customerResponseAt'] != null
           ? (data['customerResponseAt'] as Timestamp).toDate()
@@ -99,9 +95,8 @@ class OrganizerProposal {
         'createdAt': Timestamp.fromDate(createdAt),
         'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
         'customerResponse': customerResponse,
-        'customerResponseAt': customerResponseAt != null
-            ? Timestamp.fromDate(customerResponseAt!)
-            : null,
+        'customerResponseAt':
+            customerResponseAt != null ? Timestamp.fromDate(customerResponseAt!) : null,
         'notes': notes,
       };
 
@@ -199,8 +194,7 @@ class OrganizerProposal {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() =>
-      'OrganizerProposal(id: $id, title: $title, status: $status)';
+  String toString() => 'OrganizerProposal(id: $id, title: $title, status: $status)';
 }
 
 /// Расширение для ProposalStatus

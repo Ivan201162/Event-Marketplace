@@ -5,8 +5,7 @@ import 'package:http/http.dart' as http;
 
 class SBPPaymentService {
   static const String _baseUrl = 'https://api.sbp.nspk.ru'; // SBP API base URL
-  static const String _merchantId =
-      'YOUR_MERCHANT_ID'; // Replace with actual merchant ID
+  static const String _merchantId = 'YOUR_MERCHANT_ID'; // Replace with actual merchant ID
   static const String _apiKey = 'YOUR_API_KEY'; // Replace with actual API key
 
   /// Creates a payment request for SBP
@@ -111,8 +110,7 @@ class SBPaymentResponse {
     this.errorMessage,
   });
 
-  factory SBPaymentResponse.fromJson(Map<String, dynamic> json) =>
-      SBPaymentResponse(
+  factory SBPaymentResponse.fromJson(Map<String, dynamic> json) => SBPaymentResponse(
         paymentId: json['paymentId'] as String,
         qrCodeUrl: json['qrCodeUrl'] as String,
         paymentUrl: json['paymentUrl'] as String,
@@ -145,8 +143,7 @@ class SBPaymentStatus {
     this.errorMessage,
   });
 
-  factory SBPaymentStatus.fromJson(Map<String, dynamic> json) =>
-      SBPaymentStatus(
+  factory SBPaymentStatus.fromJson(Map<String, dynamic> json) => SBPaymentStatus(
         paymentId: json['paymentId'] as String,
         status: json['status'] as String,
         amount: (json['amount'] as int) / 100.0, // Convert from kopecks

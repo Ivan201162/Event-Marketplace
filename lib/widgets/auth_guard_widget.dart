@@ -89,10 +89,7 @@ class AuthGuard extends ConsumerWidget {
                 Text(
                   'Для доступа к этому разделу необходимо войти в систему',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.7),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                   textAlign: TextAlign.center,
                 ),
@@ -116,8 +113,7 @@ class AuthGuard extends ConsumerWidget {
       );
 
   /// Виджет для пользователей без нужных прав
-  Widget _buildUnauthorizedWidget(BuildContext context, UserRole userRole) =>
-      Scaffold(
+  Widget _buildUnauthorizedWidget(BuildContext context, UserRole userRole) => Scaffold(
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -141,10 +137,7 @@ class AuthGuard extends ConsumerWidget {
                 Text(
                   'Ваша роль: ${userRole.roleDisplayName}\n\nДля доступа к этому разделу требуется другая роль',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.7),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                   textAlign: TextAlign.center,
                 ),
@@ -187,10 +180,7 @@ class AuthGuard extends ConsumerWidget {
                 Text(
                   'Произошла ошибка при проверке авторизации: ${error.toString()}',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.7),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                   textAlign: TextAlign.center,
                 ),

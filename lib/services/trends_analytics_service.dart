@@ -135,14 +135,10 @@ class TrendsAnalyticsService {
         weeklyTrends: weeklyCounts,
         totalEvents: events.length,
         peakMonth: monthlyCounts.entries.isNotEmpty
-            ? monthlyCounts.entries
-                .reduce((a, b) => a.value > b.value ? a : b)
-                .key
+            ? monthlyCounts.entries.reduce((a, b) => a.value > b.value ? a : b).key
             : null,
         peakWeekday: weeklyCounts.entries.isNotEmpty
-            ? weeklyCounts.entries
-                .reduce((a, b) => a.value > b.value ? a : b)
-                .key
+            ? weeklyCounts.entries.reduce((a, b) => a.value > b.value ? a : b).key
             : null,
       );
     } catch (e) {
@@ -183,8 +179,7 @@ class TrendsAnalyticsService {
               location: entry.key,
               count: entry.value,
               percentage: (entry.value / events.length * 100).round(),
-              averagePrice:
-                  _calculateAveragePrice(entry.key, startDate, endDate),
+              averagePrice: _calculateAveragePrice(entry.key, startDate, endDate),
             ),
           )
           .toList();
@@ -265,14 +260,10 @@ class TrendsAnalyticsService {
     required DateTime endDate,
   }) async {
     try {
-      final categoryTrends =
-          await getCategoryTrends(startDate: startDate, endDate: endDate);
-      final serviceTrends =
-          await getServiceTrends(startDate: startDate, endDate: endDate);
-      final geographicTrends =
-          await getGeographicTrends(startDate: startDate, endDate: endDate);
-      final priceTrends =
-          await getPriceTrends(startDate: startDate, endDate: endDate);
+      final categoryTrends = await getCategoryTrends(startDate: startDate, endDate: endDate);
+      final serviceTrends = await getServiceTrends(startDate: startDate, endDate: endDate);
+      final geographicTrends = await getGeographicTrends(startDate: startDate, endDate: endDate);
+      final priceTrends = await getPriceTrends(startDate: startDate, endDate: endDate);
 
       return TrendsAnalytics(
         period: AnalyticsPeriod(

@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/app_notification.dart';
-import '../models/transaction.dart' as transaction_model;
-import '../models/subscription_plan.dart';
-import '../models/promotion_boost.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+
 import '../models/advertisement.dart';
+import '../models/app_notification.dart';
+import '../models/promotion_boost.dart';
+import '../models/subscription_plan.dart';
+import '../models/transaction.dart' as transaction_model;
 
 class NotificationService {
   static final FirebaseMessaging _messaging = FirebaseMessaging.instance;
@@ -15,18 +16,9 @@ class NotificationService {
   static Future<void> initialize() async {
     try {
       // Запрос разрешений на уведомления
-      final NotificationSettings settings = await _messaging.requestPermission(
-        alert: true,
-        announcement: false,
-        badge: true,
-        carPlay: false,
-        criticalAlert: false,
-        provisional: false,
-        sound: true,
-      );
+      final NotificationSettings settings = await _messaging.requestPermission();
 
-      debugPrint(
-          'INFO: [NotificationService] Permission status: ${settings.authorizationStatus}');
+      debugPrint('INFO: [NotificationService] Permission status: ${settings.authorizationStatus}');
 
       // Получение FCM токена
       final String? token = await _messaging.getToken();
@@ -36,8 +28,7 @@ class NotificationService {
       }
 
       // Обработка уведомлений в фоне
-      FirebaseMessaging.onBackgroundMessage(
-          _firebaseMessagingBackgroundHandler);
+      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
       // Обработка уведомлений в foreground
       FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
@@ -69,21 +60,16 @@ class NotificationService {
   }
 
   /// Обработка уведомлений в фоне
-  static Future<void> _firebaseMessagingBackgroundHandler(
-      RemoteMessage message) async {
-    debugPrint(
-        'INFO: [NotificationService] Background message: ${message.messageId}');
+  static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    debugPrint('INFO: [NotificationService] Background message: ${message.messageId}');
     debugPrint('INFO: [NotificationService] Data: ${message.data}');
   }
 
   /// Обработка уведомлений в foreground
   static void _handleForegroundMessage(RemoteMessage message) {
-    debugPrint(
-        'INFO: [NotificationService] Foreground message: ${message.messageId}');
-    debugPrint(
-        'INFO: [NotificationService] Title: ${message.notification?.title}');
-    debugPrint(
-        'INFO: [NotificationService] Body: ${message.notification?.body}');
+    debugPrint('INFO: [NotificationService] Foreground message: ${message.messageId}');
+    debugPrint('INFO: [NotificationService] Title: ${message.notification?.title}');
+    debugPrint('INFO: [NotificationService] Body: ${message.notification?.body}');
     debugPrint('INFO: [NotificationService] Data: ${message.data}');
 
     // Здесь можно показать in-app уведомление
@@ -92,8 +78,7 @@ class NotificationService {
 
   /// Обработка нажатий на уведомления
   static void _handleNotificationTap(RemoteMessage message) {
-    debugPrint(
-        'INFO: [NotificationService] Notification tapped: ${message.messageId}');
+    debugPrint('INFO: [NotificationService] Notification tapped: ${message.messageId}');
     debugPrint('INFO: [NotificationService] Data: ${message.data}');
 
     // Навигация на соответствующий экран
@@ -159,8 +144,7 @@ class NotificationService {
         data: notification.data,
       );
     } catch (e) {
-      debugPrint(
-          'ERROR: [NotificationService] Failed to send payment success notification: $e');
+      debugPrint('ERROR: [NotificationService] Failed to send payment success notification: $e');
     }
   }
 
@@ -331,13 +315,9 @@ class NotificationService {
   /// Создание уведомления в Firestore
   static Future<void> _createNotification(AppNotification notification) async {
     try {
-      await _firestore
-          .collection('notifications')
-          .doc(notification.id)
-          .set(notification.toMap());
+      await _firestore.collection('notifications').doc(notification.id).set(notification.toMap());
     } catch (e) {
-      debugPrint(
-          'ERROR: [NotificationService] Failed to create notification: $e');
+      debugPrint('ERROR: [NotificationService] Failed to create notification: $e');
     }
   }
 
@@ -354,30 +334,25 @@ class NotificationService {
           await _firestore.collection('user_tokens').doc(userId).get();
 
       if (!tokenDoc.exists) {
-        debugPrint(
-            'WARNING: [NotificationService] No FCM token found for user $userId');
+        debugPrint('WARNING: [NotificationService] No FCM token found for user $userId');
         return;
       }
 
-      final Map<String, dynamic>? data =
-          tokenDoc.data() as Map<String, dynamic>?;
+      final Map<String, dynamic>? data = tokenDoc.data() as Map<String, dynamic>?;
       final String? token = data?['token'] as String?;
       if (token == null) {
-        debugPrint(
-            'WARNING: [NotificationService] Invalid FCM token for user $userId');
+        debugPrint('WARNING: [NotificationService] Invalid FCM token for user $userId');
         return;
       }
 
       // Отправляем уведомление через Cloud Functions
       // В реальном приложении это должно быть реализовано через Cloud Functions
-      debugPrint(
-          'INFO: [NotificationService] Would send push notification to token: $token');
+      debugPrint('INFO: [NotificationService] Would send push notification to token: $token');
       debugPrint('INFO: [NotificationService] Title: $title');
       debugPrint('INFO: [NotificationService] Body: $body');
       debugPrint('INFO: [NotificationService] Data: $data');
     } catch (e) {
-      debugPrint(
-          'ERROR: [NotificationService] Failed to send push notification: $e');
+      debugPrint('ERROR: [NotificationService] Failed to send push notification: $e');
     }
   }
 
@@ -388,9 +363,8 @@ class NotificationService {
         .where('userId', isEqualTo: userId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => AppNotification.fromMap(doc.data()))
-            .toList());
+        .map(
+            (snapshot) => snapshot.docs.map((doc) => AppNotification.fromMap(doc.data())).toList());
   }
 
   /// Отметка уведомления как прочитанного
@@ -401,8 +375,7 @@ class NotificationService {
         'readAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      debugPrint(
-          'ERROR: [NotificationService] Failed to mark notification as read: $e');
+      debugPrint('ERROR: [NotificationService] Failed to mark notification as read: $e');
     }
   }
 
@@ -411,8 +384,7 @@ class NotificationService {
     try {
       await _firestore.collection('notifications').doc(notificationId).delete();
     } catch (e) {
-      debugPrint(
-          'ERROR: [NotificationService] Failed to delete notification: $e');
+      debugPrint('ERROR: [NotificationService] Failed to delete notification: $e');
     }
   }
 

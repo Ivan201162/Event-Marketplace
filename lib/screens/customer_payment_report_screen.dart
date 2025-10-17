@@ -11,12 +11,10 @@ class CustomerPaymentReportScreen extends ConsumerStatefulWidget {
   const CustomerPaymentReportScreen({super.key});
 
   @override
-  ConsumerState<CustomerPaymentReportScreen> createState() =>
-      _CustomerPaymentReportScreenState();
+  ConsumerState<CustomerPaymentReportScreen> createState() => _CustomerPaymentReportScreenState();
 }
 
-class _CustomerPaymentReportScreenState
-    extends ConsumerState<CustomerPaymentReportScreen>
+class _CustomerPaymentReportScreenState extends ConsumerState<CustomerPaymentReportScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   final FinancialReportService _reportService = FinancialReportService();
@@ -313,8 +311,7 @@ class _CustomerPaymentReportScreenState
           ),
           const SizedBox(height: 16),
           ...report.monthlyBreakdown.entries.map((entry) {
-            final maxAmount =
-                report.monthlyBreakdown.values.reduce((a, b) => a > b ? a : b);
+            final maxAmount = report.monthlyBreakdown.values.reduce((a, b) => a > b ? a : b);
             final percentage = entry.value / maxAmount;
 
             return Card(
@@ -347,8 +344,7 @@ class _CustomerPaymentReportScreenState
                     LinearProgressIndicator(
                       value: percentage,
                       backgroundColor: Colors.grey[300],
-                      valueColor:
-                          const AlwaysStoppedAnimation<Color>(Colors.green),
+                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
                     ),
                   ],
                 ),

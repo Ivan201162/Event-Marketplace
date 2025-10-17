@@ -26,8 +26,7 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
   @override
   void initState() {
     super.initState();
-    _searchController =
-        TextEditingController(text: widget.currentFilters.searchQuery ?? '');
+    _searchController = TextEditingController(text: widget.currentFilters.searchQuery ?? '');
     _selectedCategories = List.from(widget.currentFilters.selectedCategories);
     _showPublishedOnly = widget.currentFilters.showPublishedOnly;
     _showByDate = widget.currentFilters.showByDate;
@@ -280,9 +279,7 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
 
   void _applyFilters() {
     final filters = FAQFilters(
-      searchQuery: _searchController.text.trim().isEmpty
-          ? null
-          : _searchController.text.trim(),
+      searchQuery: _searchController.text.trim().isEmpty ? null : _searchController.text.trim(),
       selectedCategories: _selectedCategories,
       showPublishedOnly: _showPublishedOnly,
       showByDate: _showByDate,

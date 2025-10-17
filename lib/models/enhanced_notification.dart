@@ -23,8 +23,7 @@ class EnhancedNotification {
   });
 
   /// Создать из Map
-  factory EnhancedNotification.fromMap(Map<String, dynamic> map) =>
-      EnhancedNotification(
+  factory EnhancedNotification.fromMap(Map<String, dynamic> map) => EnhancedNotification(
         id: map['id'] as String,
         userId: map['userId'] as String,
         title: map['title'] as String,
@@ -347,8 +346,7 @@ class NotificationStats {
     this.byPriority = const {},
   });
 
-  factory NotificationStats.fromMap(Map<String, dynamic> map) =>
-      NotificationStats(
+  factory NotificationStats.fromMap(Map<String, dynamic> map) => NotificationStats(
         total: (map['total'] as int?) ?? 0,
         unread: (map['unread'] as int?) ?? 0,
         archived: (map['archived'] as int?) ?? 0,
@@ -383,7 +381,6 @@ class NotificationStats {
         'unread': unread,
         'archived': archived,
         'byType': byType.map((key, value) => MapEntry(key.value, value)),
-        'byPriority':
-            byPriority.map((key, value) => MapEntry(key.value, value)),
+        'byPriority': byPriority.map((key, value) => MapEntry(key.value, value)),
       };
 }

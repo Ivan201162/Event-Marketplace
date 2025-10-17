@@ -35,8 +35,7 @@ class CalendarService {
     String userId,
     CalendarFilter filter,
   ) {
-    Query<Map<String, dynamic>> query =
-        _firestore.collection('calendar_events');
+    Query<Map<String, dynamic>> query = _firestore.collection('calendar_events');
 
     // Фильтр по пользователю
     query = query.where('customerId', isEqualTo: userId);
@@ -109,8 +108,7 @@ class CalendarService {
     String specialistId,
     CalendarFilter filter,
   ) {
-    Query<Map<String, dynamic>> query =
-        _firestore.collection('calendar_events');
+    Query<Map<String, dynamic>> query = _firestore.collection('calendar_events');
 
     // Фильтр по специалисту
     query = query.where('specialistId', isEqualTo: specialistId);
@@ -176,10 +174,7 @@ class CalendarService {
   /// Обновить событие
   Future<bool> updateEvent(CalendarEvent event) async {
     try {
-      await _firestore
-          .collection('calendar_events')
-          .doc(event.id)
-          .update(event.toMap());
+      await _firestore.collection('calendar_events').doc(event.id).update(event.toMap());
       return true;
     } on Exception catch (e) {
       debugPrint('Ошибка обновления события: $e');
@@ -262,8 +257,7 @@ class CalendarService {
       final endTime =
           '${event.endTime.toUtc().toIso8601String().replaceAll(':', '').split('.')[0]}Z';
 
-      final url = Uri.parse(
-          'https://calendar.google.com/calendar/render?action=TEMPLATE'
+      final url = Uri.parse('https://calendar.google.com/calendar/render?action=TEMPLATE'
           '&text=${Uri.encodeComponent(event.title)}'
           '&dates=$startTime/$endTime'
           '&details=${Uri.encodeComponent(event.description)}'
@@ -283,13 +277,12 @@ class CalendarService {
       final startTime = event.startTime.toUtc().toIso8601String();
       final endTime = event.endTime.toUtc().toIso8601String();
 
-      final url =
-          Uri.parse('https://outlook.live.com/calendar/0/deeplink/compose?'
-              'subject=${Uri.encodeComponent(event.title)}'
-              '&startdt=$startTime'
-              '&enddt=$endTime'
-              '&body=${Uri.encodeComponent(event.description)}'
-              '&location=${Uri.encodeComponent(event.location)}');
+      final url = Uri.parse('https://outlook.live.com/calendar/0/deeplink/compose?'
+          'subject=${Uri.encodeComponent(event.title)}'
+          '&startdt=$startTime'
+          '&enddt=$endTime'
+          '&body=${Uri.encodeComponent(event.description)}'
+          '&location=${Uri.encodeComponent(event.location)}');
 
       if (await canLaunchUrl(url)) {
         await launchUrl(url, mode: LaunchMode.externalApplication);
@@ -414,8 +407,7 @@ class CalendarService {
   Stream<List<CalendarEvent>> getTomorrowEvents(String userId) {
     final tomorrow = DateTime.now().add(const Duration(days: 1));
     final startOfDay = DateTime(tomorrow.year, tomorrow.month, tomorrow.day);
-    final endOfDay =
-        DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 23, 59, 59);
+    final endOfDay = DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 23, 59, 59);
 
     final filter = CalendarFilter(
       startDate: startOfDay,
@@ -470,10 +462,8 @@ class CalendarService {
 
   CalendarStats _calculateStats(List<CalendarEvent> events) {
     final totalEvents = events.length;
-    final completedEvents =
-        events.where((e) => e.status == EventStatus.completed).length;
-    final cancelledEvents =
-        events.where((e) => e.status == EventStatus.cancelled).length;
+    final completedEvents = events.where((e) => e.status == EventStatus.completed).length;
+    final cancelledEvents = events.where((e) => e.status == EventStatus.cancelled).length;
     final upcomingEvents = events.where((e) => e.isFuture).length;
 
     double totalDuration = 0;
@@ -495,11 +485,9 @@ class CalendarService {
       dayEventCounts[day] = (dayEventCounts[day] ?? 0) + 1;
     }
 
-    final averageEventDuration =
-        totalEvents > 0 ? totalDuration / totalEvents : 0.0;
+    final averageEventDuration = totalEvents > 0 ? totalDuration / totalEvents : 0.0;
 
-    final sortedDays = dayEventCounts.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
+    final sortedDays = dayEventCounts.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
     final busiestDays = sortedDays.take(5).map((e) => e.key).toList();
 
     return CalendarStats(
@@ -556,13 +544,11 @@ class CalendarService {
           .where('startTime', isLessThan: Timestamp.fromDate(endOfDay))
           .get();
 
-      final events =
-          querySnapshot.docs.map(CalendarEvent.fromDocument).toList();
+      final events = querySnapshot.docs.map(CalendarEvent.fromDocument).toList();
 
       // Проверяем, есть ли конфликтующие события
       for (final event in events) {
-        if (dateTime.isAfter(event.startTime) &&
-            dateTime.isBefore(event.endTime)) {
+        if (dateTime.isAfter(event.startTime) && dateTime.isBefore(event.endTime)) {
           return false;
         }
       }
@@ -593,8 +579,7 @@ class CalendarService {
           .where('startTime', isLessThan: Timestamp.fromDate(endOfDay))
           .get();
 
-      final events =
-          querySnapshot.docs.map(CalendarEvent.fromDocument).toList();
+      final events = querySnapshot.docs.map(CalendarEvent.fromDocument).toList();
 
       final availableSlots = <DateTime>[];
 
@@ -604,14 +589,12 @@ class CalendarService {
 
       for (var hour = startHour; hour < endHour; hour++) {
         for (var minute = 0; minute < 60; minute += slotDuration.inMinutes) {
-          final slotTime =
-              DateTime(date.year, date.month, date.day, hour, minute);
+          final slotTime = DateTime(date.year, date.month, date.day, hour, minute);
 
           // Проверяем, не конфликтует ли слот с существующими событиями
           var isAvailable = true;
           for (final event in events) {
-            if (slotTime.isAfter(event.startTime) &&
-                slotTime.isBefore(event.endTime)) {
+            if (slotTime.isAfter(event.startTime) && slotTime.isBefore(event.endTime)) {
               isAvailable = false;
               break;
             }
@@ -691,8 +674,7 @@ class CalendarService {
   }
 
   /// Создать событие бронирования
-  Future<String?> createBookingEvent(CalendarEvent event) async =>
-      createEvent(event);
+  Future<String?> createBookingEvent(CalendarEvent event) async => createEvent(event);
 
   /// Удалить событие бронирования
   Future<void> removeBookingEvent(String eventId) async {
@@ -701,11 +683,7 @@ class CalendarService {
 
   /// Получить расписание специалиста
   Stream<SpecialistSchedule?> getSpecialistSchedule(String specialistId) =>
-      _firestore
-          .collection('specialist_schedules')
-          .doc(specialistId)
-          .snapshots()
-          .map((doc) {
+      _firestore.collection('specialist_schedules').doc(specialistId).snapshots().map((doc) {
         if (!doc.exists) return null;
         return SpecialistSchedule.fromMap(doc.data()!);
       });
@@ -713,9 +691,8 @@ class CalendarService {
   /// Получить все расписания
   Stream<List<SpecialistSchedule>> getAllSchedules() =>
       _firestore.collection('specialist_schedules').snapshots().map(
-            (snapshot) => snapshot.docs
-                .map((doc) => SpecialistSchedule.fromMap(doc.data()))
-                .toList(),
+            (snapshot) =>
+                snapshot.docs.map((doc) => SpecialistSchedule.fromMap(doc.data())).toList(),
           );
 
   /// Создать событие недоступности
@@ -782,8 +759,7 @@ class CalendarService {
           'specialistId': specialistId,
           'title': 'Тестовое событие 1',
           'startDate': Timestamp.fromDate(now.add(const Duration(days: 1))),
-          'endDate':
-              Timestamp.fromDate(now.add(const Duration(days: 1, hours: 2))),
+          'endDate': Timestamp.fromDate(now.add(const Duration(days: 1, hours: 2))),
           'type': 'booking',
           'createdAt': FieldValue.serverTimestamp(),
         },
@@ -791,8 +767,7 @@ class CalendarService {
           'specialistId': specialistId,
           'title': 'Тестовое событие 2',
           'startDate': Timestamp.fromDate(now.add(const Duration(days: 2))),
-          'endDate':
-              Timestamp.fromDate(now.add(const Duration(days: 2, hours: 1))),
+          'endDate': Timestamp.fromDate(now.add(const Duration(days: 2, hours: 1))),
           'type': 'unavailable',
           'createdAt': FieldValue.serverTimestamp(),
         },
@@ -809,8 +784,7 @@ class CalendarService {
   /// Пометить дату как занятую
   Future<bool> markDateBusy(String specialistId, DateTime date) async {
     try {
-      final specialistRef =
-          _firestore.collection('specialists').doc(specialistId);
+      final specialistRef = _firestore.collection('specialists').doc(specialistId);
       final normalizedDate = DateTime(date.year, date.month, date.day);
 
       // Получаем текущие занятые даты
@@ -820,10 +794,9 @@ class CalendarService {
       }
 
       final data = doc.data()!;
-      final busyDates = (data['busyDates'] as List<dynamic>?)
-              ?.map((e) => (e as Timestamp).toDate())
-              .toList() ??
-          [];
+      final busyDates =
+          (data['busyDates'] as List<dynamic>?)?.map((e) => (e as Timestamp).toDate()).toList() ??
+              [];
 
       // Проверяем, не занята ли уже эта дата
       final isAlreadyBusy = busyDates.any(
@@ -851,8 +824,7 @@ class CalendarService {
   /// Пометить дату как свободную
   Future<bool> markDateFree(String specialistId, DateTime date) async {
     try {
-      final specialistRef =
-          _firestore.collection('specialists').doc(specialistId);
+      final specialistRef = _firestore.collection('specialists').doc(specialistId);
       final normalizedDate = DateTime(date.year, date.month, date.day);
 
       // Получаем текущие занятые даты
@@ -862,10 +834,9 @@ class CalendarService {
       }
 
       final data = doc.data()!;
-      final busyDates = (data['busyDates'] as List<dynamic>?)
-              ?.map((e) => (e as Timestamp).toDate())
-              .toList() ??
-          [];
+      final busyDates =
+          (data['busyDates'] as List<dynamic>?)?.map((e) => (e as Timestamp).toDate()).toList() ??
+              [];
 
       // Удаляем дату из списка занятых
       busyDates.removeWhere(
@@ -890,17 +861,15 @@ class CalendarService {
   /// Получить занятые даты специалиста
   Future<List<DateTime>> getBusyDates(String specialistId) async {
     try {
-      final doc =
-          await _firestore.collection('specialists').doc(specialistId).get();
+      final doc = await _firestore.collection('specialists').doc(specialistId).get();
       if (!doc.exists) {
         return [];
       }
 
       final data = doc.data()!;
-      final busyDates = (data['busyDates'] as List<dynamic>?)
-              ?.map((e) => (e as Timestamp).toDate())
-              .toList() ??
-          [];
+      final busyDates =
+          (data['busyDates'] as List<dynamic>?)?.map((e) => (e as Timestamp).toDate()).toList() ??
+              [];
 
       return busyDates;
     } on Exception catch (e) {
@@ -931,8 +900,7 @@ class CalendarService {
         );
 
         if (!isBusy) {
-          availableDates
-              .add(DateTime(current.year, current.month, current.day));
+          availableDates.add(DateTime(current.year, current.month, current.day));
         }
 
         current = current.add(const Duration(days: 1));
@@ -960,8 +928,7 @@ class CalendarService {
       for (final doc in bookingsSnapshot.docs) {
         final data = doc.data();
         final eventDate = (data['eventDate'] as Timestamp).toDate();
-        final normalizedDate =
-            DateTime(eventDate.year, eventDate.month, eventDate.day);
+        final normalizedDate = DateTime(eventDate.year, eventDate.month, eventDate.day);
 
         if (!busyDates.any(
           (date) =>

@@ -6,13 +6,11 @@ import '../models/specialist_filters.dart';
 import '../services/specialist_service.dart';
 
 /// Провайдер сервиса специалистов
-final specialistServiceProvider =
-    Provider<SpecialistService>((ref) => SpecialistService());
+final specialistServiceProvider = Provider<SpecialistService>((ref) => SpecialistService());
 
 /// Провайдер для ленты специалиста
 final specialistFeedProvider =
-    StreamProvider.family<List<Map<String, dynamic>>, String>(
-        (ref, specialistId) {
+    StreamProvider.family<List<Map<String, dynamic>>, String>((ref, specialistId) {
   final specialistService = ref.watch(specialistServiceProvider);
   return specialistService.getSpecialistFeed(specialistId);
 });
@@ -24,15 +22,13 @@ final allSpecialistsProvider = StreamProvider<List<Specialist>>((ref) {
 });
 
 /// Провайдер специалиста по ID
-final specialistProvider =
-    StreamProvider.family<Specialist?, String>((ref, specialistId) {
+final specialistProvider = StreamProvider.family<Specialist?, String>((ref, specialistId) {
   final specialistService = ref.watch(specialistServiceProvider);
   return specialistService.getSpecialistStream(specialistId);
 });
 
 /// Провайдер специалиста по ID пользователя
-final specialistByUserIdProvider =
-    StreamProvider.family<Specialist?, String>((ref, userId) {
+final specialistByUserIdProvider = StreamProvider.family<Specialist?, String>((ref, userId) {
   final specialistService = ref.watch(specialistServiceProvider);
   return specialistService.getSpecialistByUserIdStream(userId);
 });
@@ -51,8 +47,7 @@ final weeklyLeadersProvider = FutureProvider<List<Specialist>>((ref) {
 
 /// Провайдер специалистов по категории
 final specialistsByCategoryProvider =
-    FutureProvider.family<List<Specialist>, SpecialistCategory>(
-        (ref, category) {
+    FutureProvider.family<List<Specialist>, SpecialistCategory>((ref, category) {
   final specialistService = ref.watch(specialistServiceProvider);
   return specialistService.getSpecialistsByCategory(category);
 });
@@ -64,8 +59,7 @@ final specialistFiltersProvider = Provider<SpecialistFiltersNotifier>((ref) {
 
 /// Провайдер поиска специалистов
 final specialistSearchProvider =
-    StreamProvider.family<List<Specialist>, Map<String, dynamic>>(
-        (ref, filters) {
+    StreamProvider.family<List<Specialist>, Map<String, dynamic>>((ref, filters) {
   final specialistService = ref.watch(specialistServiceProvider);
   return specialistService.searchSpecialistsStream(filters);
 });
@@ -82,8 +76,7 @@ final specialistAvailabilityProvider =
 
 /// Провайдер временных слотов
 final timeSlotsProvider =
-    FutureProvider.family<List<Map<String, dynamic>>, Map<String, dynamic>>(
-        (ref, params) {
+    FutureProvider.family<List<Map<String, dynamic>>, Map<String, dynamic>>((ref, params) {
   final specialistService = ref.watch(specialistServiceProvider);
   return specialistService.getAvailableTimeSlots(
     params['specialistId'] as String,

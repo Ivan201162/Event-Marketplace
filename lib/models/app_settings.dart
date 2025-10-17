@@ -302,8 +302,7 @@ class AppSettings {
       );
 
   @override
-  String toString() =>
-      'AppSettings(id: $id, key: $key, type: $type, value: $value)';
+  String toString() => 'AppSettings(id: $id, key: $key, type: $type, value: $value)';
 }
 
 /// Модель конфигурации приложения
@@ -346,8 +345,7 @@ class AppConfiguration {
   }
 
   /// Создать из Map
-  factory AppConfiguration.fromMap(Map<String, dynamic> data) =>
-      AppConfiguration(
+  factory AppConfiguration.fromMap(Map<String, dynamic> data) => AppConfiguration(
         id: (data['id'] as String?) ?? '',
         name: (data['name'] as String?) ?? '',
         description: (data['description'] as String?) ?? '',
@@ -462,8 +460,7 @@ class AppConfiguration {
       );
 
   @override
-  String toString() =>
-      'AppConfiguration(id: $id, name: $name, type: $type, isActive: $isActive)';
+  String toString() => 'AppConfiguration(id: $id, name: $name, type: $type, isActive: $isActive)';
 }
 
 /// Модель истории изменений настроек
@@ -587,8 +584,7 @@ class SettingsHistory {
       );
 
   @override
-  String toString() =>
-      'SettingsHistory(id: $id, settingKey: $settingKey, changedBy: $changedBy)';
+  String toString() => 'SettingsHistory(id: $id, settingKey: $settingKey, changedBy: $changedBy)';
 }
 
 /// Типы настроек

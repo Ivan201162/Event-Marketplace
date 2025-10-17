@@ -14,8 +14,7 @@ class BadgesScreen extends ConsumerStatefulWidget {
   ConsumerState<BadgesScreen> createState() => _BadgesScreenState();
 }
 
-class _BadgesScreenState extends ConsumerState<BadgesScreen>
-    with SingleTickerProviderStateMixin {
+class _BadgesScreenState extends ConsumerState<BadgesScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -187,10 +186,7 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
           Text(
             info.description,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.7),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
             textAlign: TextAlign.center,
           ),
@@ -205,15 +201,13 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
       case models.BadgeCategory.specialist:
         return const CategoryInfo(
           title: 'Бейджи специалиста',
-          description:
-              'Получайте бейджи за качественную работу и достижения в профессии',
+          description: 'Получайте бейджи за качественную работу и достижения в профессии',
           icon: Icons.person,
         );
       case models.BadgeCategory.customer:
         return const CategoryInfo(
           title: 'Бейджи заказчика',
-          description:
-              'Зарабатывайте бейджи за активность и организацию мероприятий',
+          description: 'Зарабатывайте бейджи за активность и организацию мероприятий',
           icon: Icons.event,
         );
       case models.BadgeCategory.general:
@@ -326,10 +320,7 @@ class BadgeDetailScreen extends StatelessWidget {
                   Text(
                     label,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.7),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                   ),
                   Text(

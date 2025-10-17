@@ -5,8 +5,7 @@ class AppLocalizations {
     return AppLocalizations();
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   String get appTitle => 'Event Marketplace';
   String get home => 'Главная';
@@ -42,8 +41,7 @@ class AppLocalizations {
   String get bookings => 'Бронирования';
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override

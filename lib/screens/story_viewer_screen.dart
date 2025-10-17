@@ -40,8 +40,7 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
       duration: const Duration(seconds: 5),
       vsync: this,
     );
-    _progressAnimation =
-        Tween<double>(begin: 0, end: 1).animate(_progressController);
+    _progressAnimation = Tween<double>(begin: 0, end: 1).animate(_progressController);
 
     _startStory();
   }
@@ -196,8 +195,7 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
             _buildMainContent(story),
 
             // Текст и подпись
-            if (story.text != null || story.caption != null)
-              _buildTextOverlay(story),
+            if (story.text != null || story.caption != null) _buildTextOverlay(story),
           ],
         ),
       );
@@ -335,8 +333,7 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
                         builder: (context, child) => LinearProgressIndicator(
                           value: _progressAnimation.value,
                           backgroundColor: Colors.transparent,
-                          valueColor:
-                              const AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       )
                     : Container(
@@ -363,14 +360,11 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
           CircleAvatar(
             radius: 20,
             backgroundColor: Colors.white,
-            backgroundImage: story.specialistAvatar != null
-                ? NetworkImage(story.specialistAvatar!)
-                : null,
+            backgroundImage:
+                story.specialistAvatar != null ? NetworkImage(story.specialistAvatar!) : null,
             child: story.specialistAvatar == null
                 ? Text(
-                    story.specialistName.isNotEmpty
-                        ? story.specialistName[0].toUpperCase()
-                        : '?',
+                    story.specialistName.isNotEmpty ? story.specialistName[0].toUpperCase() : '?',
                     style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,

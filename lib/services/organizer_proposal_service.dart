@@ -8,9 +8,7 @@ class OrganizerProposalService {
   /// Создать предложение организатора
   Future<String> createProposal(OrganizerProposal proposal) async {
     try {
-      final docRef = await _firestore
-          .collection('organizer_proposals')
-          .add(proposal.toMap());
+      final docRef = await _firestore.collection('organizer_proposals').add(proposal.toMap());
       return docRef.id;
     } catch (e) {
       print('Ошибка создания предложения: $e');
@@ -21,10 +19,7 @@ class OrganizerProposalService {
   /// Получить предложение по ID
   Future<OrganizerProposal?> getProposal(String proposalId) async {
     try {
-      final doc = await _firestore
-          .collection('organizer_proposals')
-          .doc(proposalId)
-          .get();
+      final doc = await _firestore.collection('organizer_proposals').doc(proposalId).get();
 
       if (doc.exists) {
         return OrganizerProposal.fromDocument(doc);
@@ -139,10 +134,7 @@ class OrganizerProposalService {
     String customerResponse,
   ) async {
     try {
-      await _firestore
-          .collection('organizer_proposals')
-          .doc(proposalId)
-          .update({
+      await _firestore.collection('organizer_proposals').doc(proposalId).update({
         'status': ProposalStatus.accepted.name,
         'customerResponse': customerResponse,
         'customerResponseAt': Timestamp.fromDate(DateTime.now()),
@@ -160,10 +152,7 @@ class OrganizerProposalService {
     String customerResponse,
   ) async {
     try {
-      await _firestore
-          .collection('organizer_proposals')
-          .doc(proposalId)
-          .update({
+      await _firestore.collection('organizer_proposals').doc(proposalId).update({
         'status': ProposalStatus.rejected.name,
         'customerResponse': customerResponse,
         'customerResponseAt': Timestamp.fromDate(DateTime.now()),
@@ -178,10 +167,7 @@ class OrganizerProposalService {
   /// Отменить предложение
   Future<void> cancelProposal(String proposalId) async {
     try {
-      await _firestore
-          .collection('organizer_proposals')
-          .doc(proposalId)
-          .update({
+      await _firestore.collection('organizer_proposals').doc(proposalId).update({
         'status': ProposalStatus.cancelled.name,
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
@@ -194,10 +180,7 @@ class OrganizerProposalService {
   /// Завершить предложение
   Future<void> completeProposal(String proposalId) async {
     try {
-      await _firestore
-          .collection('organizer_proposals')
-          .doc(proposalId)
-          .update({
+      await _firestore.collection('organizer_proposals').doc(proposalId).update({
         'status': ProposalStatus.completed.name,
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
@@ -210,10 +193,7 @@ class OrganizerProposalService {
   /// Удалить предложение
   Future<void> deleteProposal(String proposalId) async {
     try {
-      await _firestore
-          .collection('organizer_proposals')
-          .doc(proposalId)
-          .delete();
+      await _firestore.collection('organizer_proposals').doc(proposalId).delete();
     } catch (e) {
       print('Ошибка удаления предложения: $e');
       throw Exception('Ошибка удаления предложения: $e');
@@ -278,10 +258,7 @@ class OrganizerProposalService {
     int limit = 20,
   }) async {
     try {
-      Query query = _firestore
-          .collection('organizer_proposals')
-          .orderBy('title')
-          .limit(limit);
+      Query query = _firestore.collection('organizer_proposals').orderBy('title').limit(limit);
 
       if (organizerId != null) {
         query = query.where('organizerId', isEqualTo: organizerId);
@@ -292,8 +269,7 @@ class OrganizerProposalService {
       }
 
       final querySnapshot = await query.get();
-      final allProposals =
-          querySnapshot.docs.map(OrganizerProposal.fromDocument).toList();
+      final allProposals = querySnapshot.docs.map(OrganizerProposal.fromDocument).toList();
 
       // Фильтруем результаты на клиенте
       final searchLower = searchQuery.toLowerCase();

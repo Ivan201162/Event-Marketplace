@@ -62,9 +62,7 @@ class SpecialistProfileExtended {
         phone: specialist.contactInfo?['phone'],
         avatarUrl: specialist.businessInfo?['avatarUrl'],
         bio: specialist.description,
-        location: specialist.serviceAreas.isNotEmpty
-            ? specialist.serviceAreas.first
-            : null,
+        location: specialist.serviceAreas.isNotEmpty ? specialist.serviceAreas.first : null,
         categories: [specialist.category],
         experienceYears: specialist.yearsOfExperience,
         hourlyRate: specialist.hourlyRate,
@@ -74,8 +72,7 @@ class SpecialistProfileExtended {
         isVerified: specialist.isVerified,
         createdAt: specialist.createdAt,
         updatedAt: specialist.updatedAt,
-        portfolio:
-            specialist.portfolio.isNotEmpty ? specialist.portfolio.first : null,
+        portfolio: specialist.portfolio.isNotEmpty ? specialist.portfolio.first : null,
         socialLinks: specialist.businessInfo?['socialLinks'] ?? {},
         languages: specialist.languages,
         specializations: specialist.subcategories,
@@ -133,13 +130,11 @@ class SpecialistProfileExtended {
       portfolio: data['portfolio'] as String?,
       socialLinks: Map<String, String>.from(data['socialLinks'] as Map? ?? {}),
       languages: List<String>.from(data['languages'] as List? ?? []),
-      specializations:
-          List<String>.from(data['specializations'] as List? ?? []),
+      specializations: List<String>.from(data['specializations'] as List? ?? []),
       equipment: List<String>.from(data['equipment'] as List? ?? []),
       insurance: data['insurance'] as bool? ?? false,
       licenses: List<String>.from(data['licenses'] as List? ?? []),
-      availability:
-          Map<String, dynamic>.from(data['availability'] as Map? ?? {}),
+      availability: Map<String, dynamic>.from(data['availability'] as Map? ?? {}),
       pricing: Map<String, dynamic>.from(data['pricing'] as Map? ?? {}),
       policies: Map<String, dynamic>.from(data['policies'] as Map? ?? {}),
       gallery: List<String>.from(data['gallery'] as List? ?? []),
@@ -147,14 +142,12 @@ class SpecialistProfileExtended {
       bookings: data['bookings'] as List? ?? [],
       earnings: Map<String, dynamic>.from(data['earnings'] as Map? ?? {}),
       performance: Map<String, dynamic>.from(data['performance'] as Map? ?? {}),
-      verification:
-          Map<String, dynamic>.from(data['verification'] as Map? ?? {}),
+      verification: Map<String, dynamic>.from(data['verification'] as Map? ?? {}),
       badges: data['badges'] as List? ?? [],
       achievements: data['achievements'] as List? ?? [],
       analytics: Map<String, dynamic>.from(data['analytics'] as Map? ?? {}),
       settings: Map<String, dynamic>.from(data['settings'] as Map? ?? {}),
-      notifications:
-          Map<String, dynamic>.from(data['notifications'] as Map? ?? {}),
+      notifications: Map<String, dynamic>.from(data['notifications'] as Map? ?? {}),
       preferences: Map<String, dynamic>.from(data['preferences'] as Map? ?? {}),
       metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
       faqItems: (data['faqItems'] as List?)
@@ -163,16 +156,14 @@ class SpecialistProfileExtended {
           [],
       portfolioVideos: (data['portfolioVideos'] as List?)
               ?.map(
-                (video) =>
-                    PortfolioVideo.fromMap(video as Map<String, dynamic>),
+                (video) => PortfolioVideo.fromMap(video as Map<String, dynamic>),
               )
               .toList() ??
           [],
       certifications: List<String>.from(data['certifications'] as List? ?? []),
       awards: List<String>.from(data['awards'] as List? ?? []),
       testimonials: List<String>.from(data['testimonials'] as List? ?? []),
-      additionalInfo:
-          Map<String, dynamic>.from(data['additionalInfo'] as Map? ?? {}),
+      additionalInfo: Map<String, dynamic>.from(data['additionalInfo'] as Map? ?? {}),
       lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
     );
   }
@@ -466,8 +457,7 @@ class PortfolioVideo {
         tags: List<String>.from(map['tags'] ?? []),
         isPublic: map['isPublic'] ?? true,
         viewCount: map['viewCount'] ?? 0,
-        uploadedAt:
-            (map['uploadedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        uploadedAt: (map['uploadedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
         updatedAt: (map['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       );
   final String id;

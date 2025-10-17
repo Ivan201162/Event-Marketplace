@@ -20,15 +20,13 @@ class SecurityPasswordStrength {
     this.hasNoCommonPatterns = false,
   });
 
-  factory SecurityPasswordStrength.fromJson(Map<String, dynamic> json) =>
-      SecurityPasswordStrength(
+  factory SecurityPasswordStrength.fromJson(Map<String, dynamic> json) => SecurityPasswordStrength(
         strength: PasswordStrength.values.firstWhere(
           (e) => e.name == json['strength'],
           orElse: () => PasswordStrength.weak,
         ),
         score: json['score'] as int? ?? 0,
-        suggestions:
-            (json['suggestions'] as List<dynamic>?)?.cast<String>() ?? [],
+        suggestions: (json['suggestions'] as List<dynamic>?)?.cast<String>() ?? [],
         hasMinLength: json['hasMinLength'] as bool? ?? false,
         hasUppercase: json['hasUppercase'] as bool? ?? false,
         hasLowercase: json['hasLowercase'] as bool? ?? false,

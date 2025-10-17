@@ -91,8 +91,7 @@ class _ContractSigningWidgetState extends State<ContractSigningWidget> {
         ],
       );
 
-  Widget _buildSignatureRow(String label, bool isSigned, bool isCurrentUser) =>
-      Container(
+  Widget _buildSignatureRow(String label, bool isSigned, bool isCurrentUser) => Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: isSigned ? Colors.green.shade50 : Colors.orange.shade50,
@@ -132,9 +131,7 @@ class _ContractSigningWidgetState extends State<ContractSigningWidget> {
                   Text(
                     isSigned ? 'Подписан' : 'Ожидает подписи',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: isSigned
-                              ? Colors.green.shade700
-                              : Colors.orange.shade700,
+                          color: isSigned ? Colors.green.shade700 : Colors.orange.shade700,
                         ),
                   ),
                   if (isCurrentUser && !isSigned)

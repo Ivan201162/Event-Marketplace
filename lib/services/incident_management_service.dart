@@ -12,8 +12,7 @@ import '../models/incident_management.dart';
 class IncidentManagementService {
   factory IncidentManagementService() => _instance;
   IncidentManagementService._internal();
-  static final IncidentManagementService _instance =
-      IncidentManagementService._internal();
+  static final IncidentManagementService _instance = IncidentManagementService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -162,10 +161,7 @@ class IncidentManagementService {
         updatedBy: user.uid,
       );
 
-      await _firestore
-          .collection(_incidentsCollection)
-          .doc(incident.id)
-          .set(incident.toMap());
+      await _firestore.collection(_incidentsCollection).doc(incident.id).set(incident.toMap());
 
       _incidentCache[incident.id] = incident;
       _incidentStreamController.add(incident);
@@ -223,26 +219,21 @@ class IncidentManagementService {
         tags: tags,
         metadata: metadata,
         attachments: attachments,
-        acknowledgedAt: status == IncidentStatus.acknowledged &&
-                existingIncident.acknowledgedAt == null
-            ? now
-            : existingIncident.acknowledgedAt,
-        resolvedAt: status == IncidentStatus.resolved &&
-                existingIncident.resolvedAt == null
+        acknowledgedAt:
+            status == IncidentStatus.acknowledged && existingIncident.acknowledgedAt == null
+                ? now
+                : existingIncident.acknowledgedAt,
+        resolvedAt: status == IncidentStatus.resolved && existingIncident.resolvedAt == null
             ? now
             : existingIncident.resolvedAt,
-        closedAt:
-            status == IncidentStatus.closed && existingIncident.closedAt == null
-                ? now
-                : existingIncident.closedAt,
+        closedAt: status == IncidentStatus.closed && existingIncident.closedAt == null
+            ? now
+            : existingIncident.closedAt,
         updatedAt: now,
         updatedBy: user.uid,
       );
 
-      await _firestore
-          .collection(_incidentsCollection)
-          .doc(id)
-          .update(updatedIncident.toMap());
+      await _firestore.collection(_incidentsCollection).doc(id).update(updatedIncident.toMap());
 
       _incidentCache[id] = updatedIncident;
       _incidentStreamController.add(updatedIncident);
@@ -269,31 +260,23 @@ class IncidentManagementService {
 
   /// Получение инцидентов по серьезности
   List<Incident> getIncidentsBySeverity(IncidentSeverity severity) =>
-      _incidentCache.values
-          .where((incident) => incident.severity == severity)
-          .toList();
+      _incidentCache.values.where((incident) => incident.severity == severity).toList();
 
   /// Получение инцидентов по статусу
   List<Incident> getIncidentsByStatus(IncidentStatus status) =>
-      _incidentCache.values
-          .where((incident) => incident.status == status)
-          .toList();
+      _incidentCache.values.where((incident) => incident.status == status).toList();
 
   /// Получение инцидентов по приоритету
   List<Incident> getIncidentsByPriority(IncidentPriority priority) =>
-      _incidentCache.values
-          .where((incident) => incident.priority == priority)
-          .toList();
+      _incidentCache.values.where((incident) => incident.priority == priority).toList();
 
   /// Получение инцидентов назначенных пользователю
-  List<Incident> getIncidentsAssignedTo(String userId) => _incidentCache.values
-      .where((incident) => incident.assignedTo == userId)
-      .toList();
+  List<Incident> getIncidentsAssignedTo(String userId) =>
+      _incidentCache.values.where((incident) => incident.assignedTo == userId).toList();
 
   /// Получение открытых инцидентов
-  List<Incident> getOpenIncidents() => _incidentCache.values
-      .where((incident) => incident.status == IncidentStatus.open)
-      .toList();
+  List<Incident> getOpenIncidents() =>
+      _incidentCache.values.where((incident) => incident.status == IncidentStatus.open).toList();
 
   /// Создание комментария
   Future<IncidentComment> createComment({
@@ -326,10 +309,7 @@ class IncidentManagementService {
         updatedAt: now,
       );
 
-      await _firestore
-          .collection(_commentsCollection)
-          .doc(comment.id)
-          .set(comment.toMap());
+      await _firestore.collection(_commentsCollection).doc(comment.id).set(comment.toMap());
 
       _commentCache[comment.id] = comment;
       _commentStreamController.add(comment);
@@ -364,10 +344,7 @@ class IncidentManagementService {
         updatedAt: DateTime.now(),
       );
 
-      await _firestore
-          .collection(_commentsCollection)
-          .doc(id)
-          .update(updatedComment.toMap());
+      await _firestore.collection(_commentsCollection).doc(id).update(updatedComment.toMap());
 
       _commentCache[id] = updatedComment;
       _commentStreamController.add(updatedComment);
@@ -381,9 +358,7 @@ class IncidentManagementService {
 
   /// Получение комментариев к инциденту
   List<IncidentComment> getIncidentComments(String incidentId) =>
-      _commentCache.values
-          .where((comment) => comment.incidentId == incidentId)
-          .toList();
+      _commentCache.values.where((comment) => comment.incidentId == incidentId).toList();
 
   /// Получение всех комментариев
   List<IncidentComment> getAllComments() => _commentCache.values.toList();
@@ -419,9 +394,7 @@ class IncidentManagementService {
   /// Обновление SLA
   Future<void> _updateSLA(Incident incident) async {
     try {
-      final sla = _slaCache.values
-          .where((s) => s.incidentId == incident.id)
-          .firstOrNull;
+      final sla = _slaCache.values.where((s) => s.incidentId == incident.id).firstOrNull;
 
       if (sla == null) return;
 
@@ -443,10 +416,7 @@ class IncidentManagementService {
         updatedAt: now,
       );
 
-      await _firestore
-          .collection(_slaCollection)
-          .doc(sla.id)
-          .update(updatedSLA.toMap());
+      await _firestore.collection(_slaCollection).doc(sla.id).update(updatedSLA.toMap());
 
       _slaCache[sla.id] = updatedSLA;
       _slaStreamController.add(updatedSLA);
@@ -463,9 +433,8 @@ class IncidentManagementService {
   List<IncidentSLA> getAllSLA() => _slaCache.values.toList();
 
   /// Получение нарушенных SLA
-  List<IncidentSLA> getBreachedSLA() => _slaCache.values
-      .where((sla) => sla.status == SLAStatus.breached)
-      .toList();
+  List<IncidentSLA> getBreachedSLA() =>
+      _slaCache.values.where((sla) => sla.status == SLAStatus.breached).toList();
 
   /// Расчет приоритета на основе серьезности
   IncidentPriority _calculatePriority(IncidentSeverity severity) {
@@ -531,13 +500,9 @@ class IncidentManagementService {
           'bySeverity': _groupIncidentsBySeverity(incidents),
           'byStatus': _groupIncidentsByStatus(incidents),
           'byPriority': _groupIncidentsByPriority(incidents),
-          'open':
-              incidents.where((i) => i.status == IncidentStatus.open).length,
-          'resolved': incidents
-              .where((i) => i.status == IncidentStatus.resolved)
-              .length,
-          'closed':
-              incidents.where((i) => i.status == IncidentStatus.closed).length,
+          'open': incidents.where((i) => i.status == IncidentStatus.open).length,
+          'resolved': incidents.where((i) => i.status == IncidentStatus.resolved).length,
+          'closed': incidents.where((i) => i.status == IncidentStatus.closed).length,
         },
         'comments': {
           'total': comments.length,
@@ -573,8 +538,7 @@ class IncidentManagementService {
   Map<String, int> _groupIncidentsBySeverity(List<Incident> incidents) {
     final groups = <String, int>{};
     for (final incident in incidents) {
-      groups[incident.severity.value] =
-          (groups[incident.severity.value] ?? 0) + 1;
+      groups[incident.severity.value] = (groups[incident.severity.value] ?? 0) + 1;
     }
     return groups;
   }
@@ -592,8 +556,7 @@ class IncidentManagementService {
   Map<String, int> _groupIncidentsByPriority(List<Incident> incidents) {
     final groups = <String, int>{};
     for (final incident in incidents) {
-      groups[incident.priority.value] =
-          (groups[incident.priority.value] ?? 0) + 1;
+      groups[incident.priority.value] = (groups[incident.priority.value] ?? 0) + 1;
     }
     return groups;
   }
@@ -656,9 +619,7 @@ class IncidentManagementService {
   /// Генерация уникального ID
   String _generateId() =>
       DateTime.now().millisecondsSinceEpoch.toString() +
-      (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000))
-          .round()
-          .toString();
+      (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000)).round().toString();
 
   /// Закрытие сервиса
   Future<void> dispose() async {

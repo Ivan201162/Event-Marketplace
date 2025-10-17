@@ -34,8 +34,7 @@ class AnimatedButton extends StatefulWidget {
   State<AnimatedButton> createState() => _AnimatedButtonState();
 }
 
-class _AnimatedButtonState extends State<AnimatedButton>
-    with SingleTickerProviderStateMixin {
+class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   bool _isPressed = false;
@@ -519,8 +518,7 @@ class PulsingButton extends StatefulWidget {
   State<PulsingButton> createState() => _PulsingButtonState();
 }
 
-class _PulsingButtonState extends State<PulsingButton>
-    with SingleTickerProviderStateMixin {
+class _PulsingButtonState extends State<PulsingButton> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _pulseAnimation;
 

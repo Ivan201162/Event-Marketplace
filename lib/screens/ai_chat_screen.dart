@@ -15,8 +15,7 @@ class AiChatScreen extends ConsumerStatefulWidget {
   ConsumerState<AiChatScreen> createState() => _AiChatScreenState();
 }
 
-class _AiChatScreenState extends ConsumerState<AiChatScreen>
-    with TickerProviderStateMixin {
+class _AiChatScreenState extends ConsumerState<AiChatScreen> with TickerProviderStateMixin {
   final AiChatService _aiChatService = AiChatService();
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -223,8 +222,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen>
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       child: Row(
-        mainAxisAlignment:
-            isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (!isUser) ...[
@@ -252,12 +250,8 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen>
               decoration: BoxDecoration(
                 color: isUser ? Colors.blue.shade600 : Colors.grey.shade100,
                 borderRadius: BorderRadius.circular(20).copyWith(
-                  bottomLeft: isUser
-                      ? const Radius.circular(20)
-                      : const Radius.circular(4),
-                  bottomRight: isUser
-                      ? const Radius.circular(4)
-                      : const Radius.circular(20),
+                  bottomLeft: isUser ? const Radius.circular(20) : const Radius.circular(4),
+                  bottomRight: isUser ? const Radius.circular(4) : const Radius.circular(20),
                 ),
               ),
               child: Column(
@@ -314,8 +308,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen>
         ),
         const SizedBox(height: 8),
         ...specialists.map(
-          (specialist) =>
-              _buildSpecialistCard(specialist as Map<String, dynamic>),
+          (specialist) => _buildSpecialistCard(specialist as Map<String, dynamic>),
         ),
       ],
     );
@@ -333,12 +326,9 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen>
           children: [
             CircleAvatar(
               radius: 20,
-              backgroundImage: specialist['photoUrl'] != null
-                  ? NetworkImage(specialist['photoUrl'])
-                  : null,
-              child: specialist['photoUrl'] == null
-                  ? const Icon(Icons.person, size: 20)
-                  : null,
+              backgroundImage:
+                  specialist['photoUrl'] != null ? NetworkImage(specialist['photoUrl']) : null,
+              child: specialist['photoUrl'] == null ? const Icon(Icons.person, size: 20) : null,
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -399,8 +389,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen>
             return GestureDetector(
               onTap: () => _sendMessage(quickReply.value),
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: Colors.blue.shade50,
                   borderRadius: BorderRadius.circular(16),
@@ -464,8 +453,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen>
         animation: _animationController,
         builder: (context, child) {
           final delay = index * 0.2;
-          final animationValue =
-              (_animationController.value - delay).clamp(0.0, 1.0);
+          final animationValue = (_animationController.value - delay).clamp(0.0, 1.0);
           return Opacity(
             opacity: animationValue,
             child: Container(

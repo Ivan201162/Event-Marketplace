@@ -9,14 +9,11 @@ class IncidentManagementScreen extends ConsumerStatefulWidget {
   const IncidentManagementScreen({super.key});
 
   @override
-  ConsumerState<IncidentManagementScreen> createState() =>
-      _IncidentManagementScreenState();
+  ConsumerState<IncidentManagementScreen> createState() => _IncidentManagementScreenState();
 }
 
-class _IncidentManagementScreenState
-    extends ConsumerState<IncidentManagementScreen> {
-  final IncidentManagementService _incidentService =
-      IncidentManagementService();
+class _IncidentManagementScreenState extends ConsumerState<IncidentManagementScreen> {
+  final IncidentManagementService _incidentService = IncidentManagementService();
   List<Incident> _incidents = [];
   List<IncidentComment> _comments = [];
   List<IncidentSLA> _sla = [];
@@ -93,13 +90,10 @@ class _IncidentManagementScreenState
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.blue.withValues(alpha: 0.1)
-              : Colors.transparent,
+          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color:
-                isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
+            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -684,8 +678,7 @@ class _IncidentManagementScreenState
                     if (incident != null)
                       Text(
                         'К инциденту: ${incident.title}',
-                        style:
-                            const TextStyle(fontSize: 12, color: Colors.grey),
+                        style: const TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                   ],
                 ),
@@ -709,8 +702,7 @@ class _IncidentManagementScreenState
               if (comment.isInternal)
                 Container(
                   margin: const EdgeInsets.only(left: 8),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.orange.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
@@ -1027,15 +1019,10 @@ class _IncidentManagementScreenState
       filtered = filtered
           .where(
             (incident) =>
-                incident.title
-                    .toLowerCase()
-                    .contains(_searchQuery.toLowerCase()) ||
-                incident.description
-                    .toLowerCase()
-                    .contains(_searchQuery.toLowerCase()) ||
+                incident.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+                incident.description.toLowerCase().contains(_searchQuery.toLowerCase()) ||
                 incident.tags.any(
-                  (tag) =>
-                      tag.toLowerCase().contains(_searchQuery.toLowerCase()),
+                  (tag) => tag.toLowerCase().contains(_searchQuery.toLowerCase()),
                 ),
           )
           .toList();
@@ -1043,26 +1030,19 @@ class _IncidentManagementScreenState
 
     // Фильтры
     if (_selectedType != null) {
-      filtered =
-          filtered.where((incident) => incident.type == _selectedType).toList();
+      filtered = filtered.where((incident) => incident.type == _selectedType).toList();
     }
 
     if (_selectedSeverity != null) {
-      filtered = filtered
-          .where((incident) => incident.severity == _selectedSeverity)
-          .toList();
+      filtered = filtered.where((incident) => incident.severity == _selectedSeverity).toList();
     }
 
     if (_selectedStatus != null) {
-      filtered = filtered
-          .where((incident) => incident.status == _selectedStatus)
-          .toList();
+      filtered = filtered.where((incident) => incident.status == _selectedStatus).toList();
     }
 
     if (_selectedPriority != null) {
-      filtered = filtered
-          .where((incident) => incident.priority == _selectedPriority)
-          .toList();
+      filtered = filtered.where((incident) => incident.priority == _selectedPriority).toList();
     }
 
     return filtered;
@@ -1165,8 +1145,7 @@ class _IncidentManagementScreenState
     // TODO(developer): Реализовать просмотр инцидента
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:
-            Text('Просмотр инцидента "${incident.title}" будет реализован'),
+        content: Text('Просмотр инцидента "${incident.title}" будет реализован'),
       ),
     );
   }

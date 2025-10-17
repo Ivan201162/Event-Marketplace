@@ -193,9 +193,7 @@ class SupportTicketListTile extends StatelessWidget {
           ),
           child: Icon(
             ticket.categoryIcon,
-            color: ticket.categoryIcon == Icons.help_outline
-                ? Colors.blue
-                : Colors.green,
+            color: ticket.categoryIcon == Icons.help_outline ? Colors.blue : Colors.green,
             size: 24,
           ),
         ),
@@ -217,8 +215,7 @@ class SupportTicketListTile extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: ticket.statusColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
@@ -325,9 +322,7 @@ class SupportTicketGridTile extends StatelessWidget {
                     Icon(
                       ticket.categoryIcon,
                       size: 20,
-                      color: ticket.categoryIcon == Icons.help_outline
-                          ? Colors.blue
-                          : Colors.green,
+                      color: ticket.categoryIcon == Icons.help_outline ? Colors.blue : Colors.green,
                     ),
                     const Spacer(),
                     Container(

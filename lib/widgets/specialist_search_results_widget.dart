@@ -23,8 +23,7 @@ class SpecialistSearchResultsWidget extends ConsumerStatefulWidget {
       _SpecialistSearchResultsWidgetState();
 }
 
-class _SpecialistSearchResultsWidgetState
-    extends ConsumerState<SpecialistSearchResultsWidget> {
+class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearchResultsWidget> {
   final ScrollController _scrollController = ScrollController();
   bool _isLoadingMore = false;
 
@@ -35,9 +34,7 @@ class _SpecialistSearchResultsWidgetState
 
     // Запускаем поиск при инициализации
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(advancedSearchProvider.notifier)
-          .searchSpecialists(widget.filters);
+      ref.read(advancedSearchProvider.notifier).searchSpecialists(widget.filters);
     });
   }
 
@@ -53,15 +50,12 @@ class _SpecialistSearchResultsWidgetState
 
     // Запускаем новый поиск при изменении фильтров
     if (oldWidget.filters != widget.filters) {
-      ref
-          .read(advancedSearchProvider.notifier)
-          .searchSpecialists(widget.filters);
+      ref.read(advancedSearchProvider.notifier).searchSpecialists(widget.filters);
     }
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
       _loadMore();
     }
   }
@@ -69,9 +63,7 @@ class _SpecialistSearchResultsWidgetState
   void _loadMore() {
     if (!_isLoadingMore) {
       setState(() => _isLoadingMore = true);
-      ref
-          .read<AdvancedSearchNotifier>(advancedSearchProvider.notifier)
-          .loadMore();
+      ref.read<AdvancedSearchNotifier>(advancedSearchProvider.notifier).loadMore();
     }
   }
 
@@ -96,8 +88,7 @@ class _SpecialistSearchResultsWidgetState
     );
   }
 
-  Widget _buildSearchStats(AsyncValue<AdvancedSearchState> searchState) =>
-      searchState.when(
+  Widget _buildSearchStats(AsyncValue<AdvancedSearchState> searchState) => searchState.when(
         data: (state) {
           if (state.results.isEmpty && !state.isLoading) {
             return const SizedBox.shrink();
@@ -182,14 +173,11 @@ class _SpecialistSearchResultsWidgetState
                   CircleAvatar(
                     radius: 30,
                     backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
-                    backgroundImage: specialist.avatarUrl != null
-                        ? NetworkImage(specialist.avatarUrl!)
-                        : null,
+                    backgroundImage:
+                        specialist.avatarUrl != null ? NetworkImage(specialist.avatarUrl!) : null,
                     child: specialist.avatarUrl == null
                         ? Text(
-                            specialist.name.isNotEmpty
-                                ? specialist.name[0].toUpperCase()
-                                : '?',
+                            specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : '?',
                             style: theme.textTheme.titleLarge?.copyWith(
                               color: theme.primaryColor,
                             ),
@@ -287,8 +275,7 @@ class _SpecialistSearchResultsWidgetState
               const SizedBox(height: 12),
 
               // Описание
-              if (specialist.description != null &&
-                  specialist.description!.isNotEmpty) ...[
+              if (specialist.description != null && specialist.description!.isNotEmpty) ...[
                 Text(
                   specialist.description!,
                   style: theme.textTheme.bodyMedium,
@@ -311,10 +298,8 @@ class _SpecialistSearchResultsWidgetState
                             '${category.icon} ${category.displayName}',
                             style: theme.textTheme.bodySmall,
                           ),
-                          backgroundColor:
-                              theme.primaryColor.withValues(alpha: 0.1),
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
+                          backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
                       )
                       .toList(),

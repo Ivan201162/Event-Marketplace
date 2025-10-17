@@ -119,9 +119,7 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: isCurrentUser
-                              ? Colors.blue[700]
-                              : Colors.grey[700],
+                          color: isCurrentUser ? Colors.blue[700] : Colors.grey[700],
                         ),
                       ),
                       if (comment.isInternal) ...[
@@ -191,8 +189,7 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
                   // TODO: Открыть вложение
                 },
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
@@ -245,8 +242,7 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
                 const Spacer(),
                 if (_isInternal)
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.orange[100],
                       borderRadius: BorderRadius.circular(8),
@@ -294,9 +290,7 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
 
                 // Кнопка отправки
                 ElevatedButton(
-                  onPressed: _commentController.text.trim().isEmpty
-                      ? null
-                      : _sendComment,
+                  onPressed: _commentController.text.trim().isEmpty ? null : _sendComment,
                   child: const Text('Отправить'),
                 ),
               ],
@@ -322,8 +316,7 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Добавить вложение'),
-        content:
-            const Text('Функция добавления вложений будет реализована позже'),
+        content: const Text('Функция добавления вложений будет реализована позже'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),

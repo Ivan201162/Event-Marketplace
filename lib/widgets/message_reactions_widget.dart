@@ -19,12 +19,10 @@ class MessageReactionsWidget extends ConsumerStatefulWidget {
   final bool isOwnMessage;
 
   @override
-  ConsumerState<MessageReactionsWidget> createState() =>
-      _MessageReactionsWidgetState();
+  ConsumerState<MessageReactionsWidget> createState() => _MessageReactionsWidgetState();
 }
 
-class _MessageReactionsWidgetState
-    extends ConsumerState<MessageReactionsWidget> {
+class _MessageReactionsWidgetState extends ConsumerState<MessageReactionsWidget> {
   final MessageReactionService _reactionService = MessageReactionService();
   bool _showEmojiPicker = false;
 
@@ -63,8 +61,7 @@ class _MessageReactionsWidgetState
         final emoji = entry.key;
         final reactions = entry.value;
         final count = reactions.length;
-        final hasCurrentUserReaction =
-            reactions.any((r) => r.userId == widget.currentUserId);
+        final hasCurrentUserReaction = reactions.any((r) => r.userId == widget.currentUserId);
 
         return GestureDetector(
           onTap: () => _toggleReaction(emoji),
@@ -313,9 +310,7 @@ class ReactionDetailsWidget extends StatelessWidget {
                     leading: CircleAvatar(
                       backgroundColor: Colors.grey[300],
                       child: Text(
-                        reaction.userName.isNotEmpty
-                            ? reaction.userName[0].toUpperCase()
-                            : '?',
+                        reaction.userName.isNotEmpty ? reaction.userName[0].toUpperCase() : '?',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,

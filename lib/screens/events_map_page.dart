@@ -116,8 +116,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
             Icon(
               Icons.map_outlined,
               size: 120,
-              color:
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
             ),
             const SizedBox(height: 32),
             Text(
@@ -131,10 +130,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
             Text(
               'Функция карт отключена в настройках приложения. Вы можете просматривать события в списке.',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.7),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
               textAlign: TextAlign.center,
             ),
@@ -177,10 +173,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
             Text(
               _error ?? 'Неизвестная ошибка',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.7),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
               textAlign: TextAlign.center,
             ),
@@ -248,8 +241,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
                   hintText: 'Поиск событий на карте...',
                   prefixIcon: Icon(Icons.search),
                   border: OutlineInputBorder(),
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 ),
                 onChanged: _onSearchChanged,
               ),
@@ -343,10 +335,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
   Widget _buildInfoItem(String label, String value, IconData icon) => Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Theme.of(context)
-              .colorScheme
-              .surfaceContainerHighest
-              .withValues(alpha: 0.3),
+          color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Column(
@@ -360,10 +349,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
             Text(
               label,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.7),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
               textAlign: TextAlign.center,
             ),

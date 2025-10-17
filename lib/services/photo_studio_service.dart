@@ -51,8 +51,7 @@ class PhotoStudioService {
     );
 
     // Сохранить в Firestore
-    final docRef =
-        await _firestore.collection(_collection).add(photoStudio.toMap());
+    final docRef = await _firestore.collection(_collection).add(photoStudio.toMap());
 
     // Обновить ID
     final createdPhotoStudio = photoStudio.copyWith(id: docRef.id);
@@ -95,13 +94,11 @@ class PhotoStudioService {
     List<String>? amenities,
     int limit = 20,
   }) async {
-    Query firestoreQuery =
-        _firestore.collection(_collection).where('isActive', isEqualTo: true);
+    Query firestoreQuery = _firestore.collection(_collection).where('isActive', isEqualTo: true);
 
     // Фильтр по местоположению
     if (location != null && location.isNotEmpty) {
-      firestoreQuery =
-          firestoreQuery.where('address', isGreaterThanOrEqualTo: location);
+      firestoreQuery = firestoreQuery.where('address', isGreaterThanOrEqualTo: location);
     }
 
     // Фильтр по цене
@@ -141,8 +138,7 @@ class PhotoStudioService {
     if (amenities != null && amenities.isNotEmpty) {
       studios = studios
           .where(
-            (studio) => amenities
-                .every((amenity) => studio.amenities.contains(amenity)),
+            (studio) => amenities.every((amenity) => studio.amenities.contains(amenity)),
           )
           .toList();
     }
@@ -225,15 +221,13 @@ class PhotoStudioService {
     }
 
     // Проверить доступность времени
-    final isAvailable =
-        await _isTimeSlotAvailable(studioId, startTime, endTime);
+    final isAvailable = await _isTimeSlotAvailable(studioId, startTime, endTime);
     if (!isAvailable) {
       throw Exception('Выбранное время недоступно');
     }
 
     // Получить данные клиента
-    final customerDoc =
-        await _firestore.collection(_usersCollection).doc(customerId).get();
+    final customerDoc = await _firestore.collection(_usersCollection).doc(customerId).get();
 
     if (!customerDoc.exists) {
       throw Exception('Клиент не найден');
@@ -338,8 +332,7 @@ class PhotoStudioService {
       throw Exception('Пользователь не авторизован');
     }
 
-    final bookingDoc =
-        await _firestore.collection(_bookingsCollection).doc(bookingId).get();
+    final bookingDoc = await _firestore.collection(_bookingsCollection).doc(bookingId).get();
     if (!bookingDoc.exists) {
       throw Exception('Бронирование не найдено');
     }
@@ -352,8 +345,7 @@ class PhotoStudioService {
     }
 
     // Проверить права доступа
-    if (currentUser.uid != booking.customerId &&
-        currentUser.uid != photoStudio.ownerId) {
+    if (currentUser.uid != booking.customerId && currentUser.uid != photoStudio.ownerId) {
       throw Exception('Недостаточно прав для изменения статуса');
     }
 
@@ -467,8 +459,7 @@ class PhotoStudioService {
 
       // Проверить пересечение с существующими бронированиями
       for (final bookedSlot in bookedSlots) {
-        if (currentTime.isBefore(bookedSlot['end']!) &&
-            slotEnd.isAfter(bookedSlot['start']!)) {
+        if (currentTime.isBefore(bookedSlot['end']!) && slotEnd.isAfter(bookedSlot['start']!)) {
           isAvailable = false;
           break;
         }
@@ -503,9 +494,7 @@ class PhotoStudioService {
   }
 
   bool _isSameDay(DateTime date1, DateTime date2) =>
-      date1.year == date2.year &&
-      date1.month == date2.month &&
-      date1.day == date2.day;
+      date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
 
   /// Подписаться на изменения фотостудий
   Stream<List<PhotoStudio>> watchPhotoStudios() => _firestore
@@ -518,14 +507,12 @@ class PhotoStudioService {
       );
 
   /// Подписаться на изменения бронирований клиента
-  Stream<List<PhotoStudioBooking>> watchCustomerBookings(String customerId) =>
-      _firestore
-          .collection(_bookingsCollection)
-          .where('customerId', isEqualTo: customerId)
-          .orderBy('startTime', descending: true)
-          .snapshots()
-          .map(
-            (snapshot) =>
-                snapshot.docs.map(PhotoStudioBooking.fromDocument).toList(),
-          );
+  Stream<List<PhotoStudioBooking>> watchCustomerBookings(String customerId) => _firestore
+      .collection(_bookingsCollection)
+      .where('customerId', isEqualTo: customerId)
+      .orderBy('startTime', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(PhotoStudioBooking.fromDocument).toList(),
+      );
 }

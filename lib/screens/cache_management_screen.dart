@@ -9,8 +9,7 @@ class CacheManagementScreen extends ConsumerStatefulWidget {
   const CacheManagementScreen({super.key});
 
   @override
-  ConsumerState<CacheManagementScreen> createState() =>
-      _CacheManagementScreenState();
+  ConsumerState<CacheManagementScreen> createState() => _CacheManagementScreenState();
 }
 
 class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
@@ -63,8 +62,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
               child: _buildTabButton('config', 'Настройки', Icons.settings),
             ),
             Expanded(
-              child:
-                  _buildTabButton('statistics', 'Статистика', Icons.analytics),
+              child: _buildTabButton('statistics', 'Статистика', Icons.analytics),
             ),
           ],
         ),
@@ -84,13 +82,10 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.blue.withValues(alpha: 0.1)
-              : Colors.transparent,
+          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color:
-                isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
+            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -435,9 +430,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
                     if (_config!.excludedKeys.isNotEmpty) ...[
                       _buildConfigSection(
                         'Исключенные ключи',
-                        _config!.excludedKeys
-                            .map((key) => _buildConfigItem('Ключ', key))
-                            .toList(),
+                        _config!.excludedKeys.map((key) => _buildConfigItem('Ключ', key)).toList(),
                       ),
                       const SizedBox(height: 16),
                     ],
@@ -625,8 +618,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
                           ),
                           const SizedBox(height: 8),
                           ..._statistics!.itemsByType.entries.map(
-                            (entry) =>
-                                _buildStatRow(entry.key, '${entry.value}'),
+                            (entry) => _buildStatRow(entry.key, '${entry.value}'),
                           ),
                         ],
 

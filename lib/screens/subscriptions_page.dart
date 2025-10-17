@@ -164,10 +164,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
           Text(
             'Получите доступ к расширенным возможностям и улучшите свой опыт работы с платформой',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.7),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
           ),
         ],
@@ -205,9 +202,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Theme.of(context).colorScheme.primary
-              : Colors.transparent,
+          color: isSelected ? Theme.of(context).colorScheme.primary : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Column(
@@ -227,10 +222,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                 'Экономия 17%',
                 style: TextStyle(
                   color: isSelected
-                      ? Theme.of(context)
-                          .colorScheme
-                          .onPrimary
-                          .withValues(alpha: 0.8)
+                      ? Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.8)
                       : Theme.of(context).colorScheme.primary,
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
@@ -271,8 +263,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
               top: 0,
               right: 16,
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.primary,
                   borderRadius: const BorderRadius.only(
@@ -304,20 +295,14 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                         children: [
                           Text(
                             plan.name,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge
-                                ?.copyWith(
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             plan.description,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                   color: Theme.of(context)
                                       .colorScheme
                                       .onSurface
@@ -332,33 +317,26 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                       children: [
                         Text(
                           plan.formattedPrice,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall
-                              ?.copyWith(
+                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: Theme.of(context).colorScheme.primary,
                               ),
                         ),
                         Text(
                           _getPeriodLabel(),
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withValues(alpha: 0.7),
-                                  ),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color:
+                                    Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                              ),
                         ),
                         if (savings > 0) ...[
                           const SizedBox(height: 4),
                           Text(
                             'Экономия ${savings.toStringAsFixed(2)} ${plan.currency}',
-                            style:
-                                Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Colors.green,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                ),
                           ),
                         ],
                       ],
@@ -379,18 +357,12 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                   child: ElevatedButton(
                     onPressed: () => _selectPlan(plan),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: isPopular
-                          ? Theme.of(context).colorScheme.primary
-                          : null,
-                      foregroundColor: isPopular
-                          ? Theme.of(context).colorScheme.onPrimary
-                          : null,
+                      backgroundColor: isPopular ? Theme.of(context).colorScheme.primary : null,
+                      foregroundColor: isPopular ? Theme.of(context).colorScheme.onPrimary : null,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                     child: Text(
-                      plan.type == SubscriptionType.free
-                          ? 'Текущий план'
-                          : 'Выбрать план',
+                      plan.type == SubscriptionType.free ? 'Текущий план' : 'Выбрать план',
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -484,10 +456,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
             child: Text(
               answer,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.7),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
             ),
           ),
@@ -564,31 +533,25 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                       children: [
                         Text(
                           subscription.planType,
-                          style:
-                              Theme.of(context).textTheme.titleLarge?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           'Подписка на ${subscription.planType}',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withValues(alpha: 0.7),
-                                  ),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color:
+                                    Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                              ),
                         ),
                       ],
                     ),
                   ),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color:
-                          subscription.isActive ? Colors.green : Colors.orange,
+                      color: subscription.isActive ? Colors.green : Colors.orange,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -731,9 +694,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
               value: percentage,
               backgroundColor: Colors.grey[300],
               valueColor: AlwaysStoppedAnimation<Color>(
-                percentage > 0.8
-                    ? Colors.red
-                    : Theme.of(context).colorScheme.primary,
+                percentage > 0.8 ? Colors.red : Theme.of(context).colorScheme.primary,
               ),
             ),
         ],

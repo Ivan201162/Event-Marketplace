@@ -21,10 +21,8 @@ class EnhancedFeedService {
     DocumentSnapshot? lastDocument,
   }) async {
     try {
-      Query query = _firestore
-          .collection('feed')
-          .orderBy('createdAt', descending: true)
-          .limit(limit);
+      Query query =
+          _firestore.collection('feed').orderBy('createdAt', descending: true).limit(limit);
 
       if (lastDocument != null) {
         query = query.startAfterDocument(lastDocument);
@@ -34,8 +32,7 @@ class EnhancedFeedService {
       final posts = <EnhancedFeedPost>[];
 
       for (final doc in snapshot.docs) {
-        final post =
-            EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
+        final post = EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
         posts.add(post);
       }
 
@@ -66,8 +63,7 @@ class EnhancedFeedService {
       final posts = <EnhancedFeedPost>[];
 
       for (final doc in snapshot.docs) {
-        final post =
-            EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
+        final post = EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
         posts.add(post);
       }
 
@@ -80,8 +76,7 @@ class EnhancedFeedService {
   /// Получить пост по ID
   Future<EnhancedFeedPost?> getPostById(String postId) async {
     try {
-      final DocumentSnapshot doc =
-          await _firestore.collection('feed').doc(postId).get();
+      final DocumentSnapshot doc = await _firestore.collection('feed').doc(postId).get();
 
       if (doc.exists) {
         return EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
@@ -226,10 +221,7 @@ class EnhancedFeedService {
       );
 
       // Добавляем комментарий в коллекцию комментариев
-      await _firestore
-          .collection('comments')
-          .doc(commentId)
-          .set(comment.toMap());
+      await _firestore.collection('comments').doc(commentId).set(comment.toMap());
 
       // Обновляем счётчик комментариев в посте
       await _firestore.collection('feed').doc(postId).update({
@@ -264,8 +256,7 @@ class EnhancedFeedService {
       final comments = <FeedPostComment>[];
 
       for (final doc in snapshot.docs) {
-        final comment =
-            FeedPostComment.fromMap(doc.data()! as Map<String, dynamic>);
+        final comment = FeedPostComment.fromMap(doc.data()! as Map<String, dynamic>);
         comments.add(comment);
       }
 
@@ -356,8 +347,7 @@ class EnhancedFeedService {
       final posts = <EnhancedFeedPost>[];
 
       for (final doc in snapshot.docs) {
-        final post =
-            EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
+        final post = EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
         posts.add(post);
       }
 
@@ -393,15 +383,13 @@ class EnhancedFeedService {
         queryBuilder = queryBuilder.where('location', isEqualTo: location);
       }
 
-      queryBuilder =
-          queryBuilder.orderBy('createdAt', descending: true).limit(limit);
+      queryBuilder = queryBuilder.orderBy('createdAt', descending: true).limit(limit);
 
       final snapshot = await queryBuilder.get();
       final posts = <EnhancedFeedPost>[];
 
       for (final doc in snapshot.docs) {
-        final post =
-            EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
+        final post = EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
 
         // Фильтр по тексту (на клиенте, так как Firestore не поддерживает полнотекстовый поиск)
         if (query.isEmpty ||
@@ -543,11 +531,8 @@ class EnhancedFeedService {
   Future<List<EnhancedFeedPost>> getFollowingFeed(String userId) async {
     try {
       // Получаем список подписок пользователя
-      final followingSnapshot = await _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('following')
-          .get();
+      final followingSnapshot =
+          await _firestore.collection('users').doc(userId).collection('following').get();
 
       final followingIds = followingSnapshot.docs.map((doc) => doc.id).toList();
 

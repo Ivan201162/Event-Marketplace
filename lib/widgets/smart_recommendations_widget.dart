@@ -133,8 +133,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                 );
               },
               loading: () => _buildLoadingCard(context),
-              error: (error, stack) =>
-                  _buildErrorCard(context, error.toString()),
+              error: (error, stack) => _buildErrorCard(context, error.toString()),
             ),
           ],
         );
@@ -194,8 +193,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                 );
               },
               loading: () => _buildLoadingCard(context),
-              error: (error, stack) =>
-                  _buildErrorCard(context, error.toString()),
+              error: (error, stack) => _buildErrorCard(context, error.toString()),
             ),
           ],
         );
@@ -246,8 +244,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                 );
               },
               loading: () => _buildLoadingCard(context),
-              error: (error, stack) =>
-                  _buildErrorCard(context, error.toString()),
+              error: (error, stack) => _buildErrorCard(context, error.toString()),
             ),
           ],
         );
@@ -295,8 +292,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                 ),
               ),
               loading: () => _buildLoadingCard(context),
-              error: (error, stack) =>
-                  _buildErrorCard(context, error.toString()),
+              error: (error, stack) => _buildErrorCard(context, error.toString()),
             ),
           ],
         );
@@ -327,14 +323,11 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                 CircleAvatar(
                   radius: 24,
                   backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
-                  backgroundImage: specialist.avatarUrl != null
-                      ? NetworkImage(specialist.avatarUrl!)
-                      : null,
+                  backgroundImage:
+                      specialist.avatarUrl != null ? NetworkImage(specialist.avatarUrl!) : null,
                   child: specialist.avatarUrl == null
                       ? Text(
-                          specialist.name.isNotEmpty
-                              ? specialist.name[0].toUpperCase()
-                              : '?',
+                          specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : '?',
                           style: theme.textTheme.titleMedium?.copyWith(
                             color: theme.primaryColor,
                           ),
@@ -521,8 +514,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
               .take(5)
               .map(
                 (item) => Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(12),
@@ -556,8 +548,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
         ),
       );
 
-  Widget _buildEmptyRecommendations(BuildContext context, String message) =>
-      Container(
+  Widget _buildEmptyRecommendations(BuildContext context, String message) => Container(
         height: 100,
         margin: const EdgeInsets.symmetric(horizontal: 16),
         child: Center(

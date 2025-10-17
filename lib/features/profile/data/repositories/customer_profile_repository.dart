@@ -10,8 +10,7 @@ class CustomerProfileRepository {
   /// Получить профиль заказчика по ID
   Future<CustomerProfile?> getProfile(String customerId) async {
     try {
-      final doc =
-          await _firestore.collection(_collection).doc(customerId).get();
+      final doc = await _firestore.collection(_collection).doc(customerId).get();
       if (doc.exists) {
         return CustomerProfile.fromFirestore(doc);
       }

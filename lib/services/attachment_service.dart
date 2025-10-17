@@ -60,8 +60,7 @@ class AttachmentService {
 
       // Генерируем уникальное имя файла
       final fileExtension = path.extension(originalFileName);
-      final fileName =
-          '${DateTime.now().millisecondsSinceEpoch}_$userId$fileExtension';
+      final fileName = '${DateTime.now().millisecondsSinceEpoch}_$userId$fileExtension';
 
       // Загружаем основной файл
       final fileRef = _storage.ref().child('chat_attachments/$fileName');
@@ -77,8 +76,7 @@ class AttachmentService {
       }
 
       // Создаем запись в Firestore
-      final attachmentId =
-          'attachment_${DateTime.now().millisecondsSinceEpoch}';
+      final attachmentId = 'attachment_${DateTime.now().millisecondsSinceEpoch}';
       final attachment = ChatAttachment(
         id: attachmentId,
         messageId: messageId,
@@ -92,22 +90,15 @@ class AttachmentService {
         uploadedAt: DateTime.now(),
         uploadedBy: userId,
         metadata: {
-          'width': fileType == AttachmentType.image
-              ? _getImageWidth(fileData)
-              : null,
-          'height': fileType == AttachmentType.image
-              ? _getImageHeight(fileData)
-              : null,
+          'width': fileType == AttachmentType.image ? _getImageWidth(fileData) : null,
+          'height': fileType == AttachmentType.image ? _getImageHeight(fileData) : null,
           'duration': fileType == AttachmentType.video
               ? null
               : null, // TODO(developer): Получить длительность видео
         },
       );
 
-      await _firestore
-          .collection('chat_attachments')
-          .doc(attachmentId)
-          .set(attachment.toMap());
+      await _firestore.collection('chat_attachments').doc(attachmentId).set(attachment.toMap());
 
       AppLogger.logI('Файл успешно загружен: $fileName', 'attachment_service');
       return attachment;
@@ -131,13 +122,11 @@ class AttachmentService {
 
       // Создаем миниатюру (максимум 200x200)
       final thumbnail = img.copyResize(image, width: 200, height: 200);
-      final thumbnailData =
-          Uint8List.fromList(img.encodeJpg(thumbnail, quality: 80));
+      final thumbnailData = Uint8List.fromList(img.encodeJpg(thumbnail, quality: 80));
 
       // Загружаем миниатюру
       final thumbnailName = 'thumb_$fileName';
-      final thumbnailRef =
-          _storage.ref().child('chat_attachments/thumbnails/$thumbnailName');
+      final thumbnailRef = _storage.ref().child('chat_attachments/thumbnails/$thumbnailName');
       final uploadTask = thumbnailRef.putData(thumbnailData);
       final snapshot = await uploadTask;
       return await snapshot.ref.getDownloadURL();
@@ -156,9 +145,7 @@ class AttachmentService {
           .orderBy('uploadedAt', descending: false)
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => ChatAttachment.fromMap(doc.data(), doc.id))
-          .toList();
+      return querySnapshot.docs.map((doc) => ChatAttachment.fromMap(doc.data(), doc.id)).toList();
     } catch (e, stackTrace) {
       AppLogger.logE(
         'Ошибка получения вложений',
@@ -174,32 +161,24 @@ class AttachmentService {
   Future<bool> deleteAttachment(String attachmentId) async {
     try {
       // Получаем информацию о вложении
-      final doc = await _firestore
-          .collection('chat_attachments')
-          .doc(attachmentId)
-          .get();
+      final doc = await _firestore.collection('chat_attachments').doc(attachmentId).get();
       if (!doc.exists) return false;
 
       final attachment = ChatAttachment.fromMap(doc.data()!, doc.id);
 
       // Удаляем файл из Storage
-      final fileRef =
-          _storage.ref().child('chat_attachments/${attachment.fileName}');
+      final fileRef = _storage.ref().child('chat_attachments/${attachment.fileName}');
       await fileRef.delete();
 
       // Удаляем миниатюру, если есть
       if (attachment.thumbnailUrl != null) {
-        final thumbnailRef = _storage
-            .ref()
-            .child('chat_attachments/thumbnails/thumb_${attachment.fileName}');
+        final thumbnailRef =
+            _storage.ref().child('chat_attachments/thumbnails/thumb_${attachment.fileName}');
         await thumbnailRef.delete();
       }
 
       // Удаляем запись из Firestore
-      await _firestore
-          .collection('chat_attachments')
-          .doc(attachmentId)
-          .delete();
+      await _firestore.collection('chat_attachments').doc(attachmentId).delete();
 
       AppLogger.logI('Вложение удалено: $attachmentId', 'attachment_service');
       return true;

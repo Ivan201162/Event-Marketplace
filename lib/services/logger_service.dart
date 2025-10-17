@@ -79,13 +79,11 @@ class LoggerService {
     final tagString = tag != null ? '[$tag]' : '';
 
     // Формируем основное сообщение
-    final logMessage =
-        '$levelColor$levelString$_resetColor $tagString $message';
+    final logMessage = '$levelColor$levelString$_resetColor $tagString $message';
 
     // Добавляем данные, если есть
     if (data != null && data.isNotEmpty) {
-      final dataString =
-          data.entries.map((e) => '${e.key}: ${e.value}').join(', ');
+      final dataString = data.entries.map((e) => '${e.key}: ${e.value}').join(', ');
       developer.log('$logMessage | Data: $dataString');
     } else {
       developer.log(logMessage);

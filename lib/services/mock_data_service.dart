@@ -72,9 +72,8 @@ class MockDataService {
     String query, {
     String? categoryId,
   }) {
-    final specialists = categoryId != null
-        ? getSpecialistsByCategory(categoryId)
-        : getAllSpecialists();
+    final specialists =
+        categoryId != null ? getSpecialistsByCategory(categoryId) : getAllSpecialists();
 
     if (query.isEmpty) return specialists;
 
@@ -82,12 +81,9 @@ class MockDataService {
     return specialists
         .where(
           (specialist) =>
-              (specialist.firstName?.toLowerCase().contains(lowerQuery) ??
-                  false) ||
-              (specialist.lastName?.toLowerCase().contains(lowerQuery) ??
-                  false) ||
-              (specialist.description?.toLowerCase().contains(lowerQuery) ??
-                  false) ||
+              (specialist.firstName?.toLowerCase().contains(lowerQuery) ?? false) ||
+              (specialist.lastName?.toLowerCase().contains(lowerQuery) ?? false) ||
+              (specialist.description?.toLowerCase().contains(lowerQuery) ?? false) ||
               (specialist.city?.toLowerCase().contains(lowerQuery) ?? false),
         )
         .toList();
@@ -98,17 +94,14 @@ class MockDataService {
     String? categoryId,
     SpecialistFilters? filters,
   }) {
-    final specialists = categoryId != null
-        ? getSpecialistsByCategory(categoryId)
-        : getAllSpecialists();
+    final specialists =
+        categoryId != null ? getSpecialistsByCategory(categoryId) : getAllSpecialists();
 
     if (filters == null || !filters.hasActiveFilters) {
       return specialists;
     }
 
-    return specialists
-        .where((specialist) => _matchesFilters(specialist, filters))
-        .toList();
+    return specialists.where((specialist) => _matchesFilters(specialist, filters)).toList();
   }
 
   /// Получить отсортированных специалистов
@@ -125,8 +118,7 @@ class MockDataService {
 
     // Затем применяем сортировку
     if (sorting != null && sorting.isActive) {
-      specialists =
-          SpecialistSortingUtils.sortSpecialists(specialists, sorting);
+      specialists = SpecialistSortingUtils.sortSpecialists(specialists, sorting);
     }
 
     return specialists;
@@ -155,12 +147,10 @@ class MockDataService {
     if (filters.minPrice != null || filters.maxPrice != null) {
       final priceRange = specialist.priceRange;
       if (priceRange != null) {
-        if (filters.minPrice != null &&
-            priceRange.maxPrice < filters.minPrice!) {
+        if (filters.minPrice != null && priceRange.maxPrice < filters.minPrice!) {
           return false;
         }
-        if (filters.maxPrice != null &&
-            priceRange.minPrice > filters.maxPrice!) {
+        if (filters.maxPrice != null && priceRange.minPrice > filters.maxPrice!) {
           return false;
         }
       } else {
@@ -186,14 +176,11 @@ class MockDataService {
     // Фильтр по поисковому запросу
     if (filters.searchQuery != null && filters.searchQuery!.isNotEmpty) {
       final query = filters.searchQuery!.toLowerCase();
-      final fullName =
-          '${specialist.firstName} ${specialist.lastName}'.toLowerCase();
+      final fullName = '${specialist.firstName} ${specialist.lastName}'.toLowerCase();
       final city = specialist.city?.toLowerCase() ?? '';
       final description = specialist.description?.toLowerCase() ?? '';
 
-      if (!fullName.contains(query) &&
-          !city.contains(query) &&
-          !description.contains(query)) {
+      if (!fullName.contains(query) && !city.contains(query) && !description.contains(query)) {
         return false;
       }
     }
@@ -242,8 +229,7 @@ class MockDataService {
     for (var i = 1; i <= 30; i++) {
       final date = now.add(Duration(days: i));
       // Исключаем выходные для демонстрации
-      if (date.weekday != DateTime.saturday &&
-          date.weekday != DateTime.sunday) {
+      if (date.weekday != DateTime.saturday && date.weekday != DateTime.sunday) {
         availableDates.add(date);
       }
     }
@@ -845,8 +831,7 @@ class MockDataService {
         orElse: () => SpecialistCategory.photographer,
       ),
       subcategories: _getSubcategoriesForCategory(category),
-      experienceLevel: ExperienceLevel
-          .values[_random.nextInt(ExperienceLevel.values.length)],
+      experienceLevel: ExperienceLevel.values[_random.nextInt(ExperienceLevel.values.length)],
       yearsOfExperience: 1 + _random.nextInt(10),
       hourlyRate: priceRange.minPrice / 2,
       price: priceRange.minPrice,

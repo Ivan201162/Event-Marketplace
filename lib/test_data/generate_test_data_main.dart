@@ -24,8 +24,7 @@ class TestDataGeneratorScreen extends StatefulWidget {
   const TestDataGeneratorScreen({super.key});
 
   @override
-  State<TestDataGeneratorScreen> createState() =>
-      _TestDataGeneratorScreenState();
+  State<TestDataGeneratorScreen> createState() => _TestDataGeneratorScreenState();
 }
 
 class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
@@ -89,8 +88,7 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
       _addLog('✅ Сгенерировано ${bookings.length} бронирований');
 
       _addLog('⭐ Генерация отзывов...');
-      final reviews =
-          await generator.generateReviews(bookings, customers, specialists);
+      final reviews = await generator.generateReviews(bookings, customers, specialists);
       _addLog('✅ Сгенерировано ${reviews.length} отзывов');
 
       _addLog('💡 Генерация идей...');
@@ -191,10 +189,7 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
                           const SizedBox(width: 8),
                           Text(
                             'Генератор тестовых данных',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge
-                                ?.copyWith(
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                   color: Colors.blue[700],
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -263,14 +258,11 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
                         )
                       : const Icon(Icons.play_arrow),
                   label: Text(
-                    _isGenerating
-                        ? 'Генерация в процессе...'
-                        : 'Запустить генерацию данных',
+                    _isGenerating ? 'Генерация в процессе...' : 'Запустить генерацию данных',
                     style: const TextStyle(fontSize: 16),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        _isGenerating ? Colors.grey : Colors.blue[600],
+                    backgroundColor: _isGenerating ? Colors.grey : Colors.blue[600],
                     foregroundColor: Colors.white,
                   ),
                 ),

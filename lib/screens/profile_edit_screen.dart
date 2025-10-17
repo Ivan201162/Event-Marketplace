@@ -1,11 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 
-import '../services/supabase_service.dart';
 import '../models/social_models.dart';
+import '../services/supabase_service.dart';
 
 /// Экран редактирования профиля
 class ProfileEditScreen extends ConsumerStatefulWidget {
@@ -120,12 +121,8 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
       // Обновляем профиль
       final success = await SupabaseService.updateProfile(
         name: _nameController.text.trim(),
-        bio: _bioController.text.trim().isEmpty
-            ? null
-            : _bioController.text.trim(),
-        city: _cityController.text.trim().isEmpty
-            ? null
-            : _cityController.text.trim(),
+        bio: _bioController.text.trim().isEmpty ? null : _bioController.text.trim(),
+        city: _cityController.text.trim().isEmpty ? null : _cityController.text.trim(),
         skills: _skills,
         avatarUrl: avatarUrl,
       );
@@ -291,14 +288,13 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                   : (_currentProfile?.avatarUrl != null
                       ? NetworkImage(_currentProfile!.avatarUrl!)
                       : null),
-              child:
-                  _selectedImage == null && _currentProfile?.avatarUrl == null
-                      ? Icon(
-                          Icons.person,
-                          size: 60,
-                          color: theme.primaryColor,
-                        )
-                      : null,
+              child: _selectedImage == null && _currentProfile?.avatarUrl == null
+                  ? Icon(
+                      Icons.person,
+                      size: 60,
+                      color: theme.primaryColor,
+                    )
+                  : null,
             ),
             Positioned(
               bottom: 0,

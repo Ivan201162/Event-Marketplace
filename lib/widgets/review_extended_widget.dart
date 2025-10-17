@@ -274,8 +274,7 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
                   color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color:
-                        Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                    color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Text(

@@ -218,9 +218,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                 onPressed: _selectMedia,
                 icon: const Icon(Icons.add_photo_alternate),
                 label: Text(
-                  _selectedType == PostType.photo
-                      ? 'Выбрать фото'
-                      : 'Выбрать видео',
+                  _selectedType == PostType.photo ? 'Выбрать фото' : 'Выбрать видео',
                 ),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 12),
@@ -372,8 +370,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
           children: [
             Expanded(
               child: OutlinedButton(
-                onPressed:
-                    _isUploading ? null : () => Navigator.of(context).pop(),
+                onPressed: _isUploading ? null : () => Navigator.of(context).pop(),
                 child: const Text('Отмена'),
               ),
             ),
@@ -387,8 +384,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                         height: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       )
                     : const Text('Опубликовать'),
@@ -460,8 +456,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
       await ref.read(
         createPostProvider({
           'description': _descriptionController.text.trim(),
-          'taggedCategories':
-              <String>[], // TODO(developer): Получить выбранные категории
+          'taggedCategories': <String>[], // TODO(developer): Получить выбранные категории
           'type': _selectedType,
           'mediaFile': _selectedFile,
         }).future,

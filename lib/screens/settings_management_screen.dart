@@ -13,12 +13,10 @@ class SettingsManagementScreen extends ConsumerStatefulWidget {
   const SettingsManagementScreen({super.key});
 
   @override
-  ConsumerState<SettingsManagementScreen> createState() =>
-      _SettingsManagementScreenState();
+  ConsumerState<SettingsManagementScreen> createState() => _SettingsManagementScreenState();
 }
 
-class _SettingsManagementScreenState
-    extends ConsumerState<SettingsManagementScreen> {
+class _SettingsManagementScreenState extends ConsumerState<SettingsManagementScreen> {
   final SettingsService _settingsService = SettingsService();
   List<AppSettings> _settings = [];
   List<AppConfiguration> _configurations = [];
@@ -60,8 +58,7 @@ class _SettingsManagementScreenState
               child: _buildTabButton('settings', 'Настройки', Icons.settings),
             ),
             Expanded(
-              child:
-                  _buildTabButton('configurations', 'Конфигурации', Icons.tune),
+              child: _buildTabButton('configurations', 'Конфигурации', Icons.tune),
             ),
             Expanded(
               child: _buildTabButton('history', 'История', Icons.history),
@@ -81,13 +78,10 @@ class _SettingsManagementScreenState
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.blue.withValues(alpha: 0.1)
-              : Colors.transparent,
+          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color:
-                isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
+            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -290,10 +284,8 @@ class _SettingsManagementScreenState
                 _buildInfoChip('Категория', setting.category!, Colors.blue),
                 const SizedBox(width: 8),
               ],
-              if (setting.isPublic)
-                _buildInfoChip('Публичная', 'Да', Colors.green),
-              if (setting.isRequired)
-                _buildInfoChip('Обязательная', 'Да', Colors.orange),
+              if (setting.isPublic) _buildInfoChip('Публичная', 'Да', Colors.green),
+              if (setting.isRequired) _buildInfoChip('Обязательная', 'Да', Colors.orange),
             ],
           ),
 
@@ -415,8 +407,7 @@ class _SettingsManagementScreenState
               if (configuration.isActive)
                 Container(
                   margin: const EdgeInsets.only(left: 8),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.green.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
@@ -432,8 +423,7 @@ class _SettingsManagementScreenState
                   ),
                 ),
               PopupMenuButton<String>(
-                onSelected: (value) =>
-                    _handleConfigurationAction(value, configuration),
+                onSelected: (value) => _handleConfigurationAction(value, configuration),
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: 'view',
@@ -671,8 +661,7 @@ class _SettingsManagementScreenState
     }
 
     try {
-      final settings =
-          await _settingsService.getSettingsByCategory(_selectedCategory!);
+      final settings = await _settingsService.getSettingsByCategory(_selectedCategory!);
       setState(() {
         _settings = settings;
       });
@@ -711,8 +700,7 @@ class _SettingsManagementScreenState
   }
 
   Widget _buildEditSettingDialog(AppSettings setting) {
-    final valueController =
-        TextEditingController(text: _formatSettingValue(setting.value));
+    final valueController = TextEditingController(text: _formatSettingValue(setting.value));
 
     return AlertDialog(
       title: Text('Редактировать настройку: ${setting.key}'),
@@ -750,8 +738,7 @@ class _SettingsManagementScreenState
                 isPublic: setting.isPublic,
                 isRequired: setting.isRequired,
                 validation: setting.validation,
-                updatedBy:
-                    'current_user', // TODO(developer): Получить ID текущего пользователя
+                updatedBy: 'current_user', // TODO(developer): Получить ID текущего пользователя
               );
               _loadData();
               ScaffoldMessenger.of(context).showSnackBar(
@@ -798,8 +785,7 @@ class _SettingsManagementScreenState
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить настройку'),
-        content:
-            Text('Вы уверены, что хотите удалить настройку "${setting.key}"?'),
+        content: Text('Вы уверены, что хотите удалить настройку "${setting.key}"?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -811,8 +797,7 @@ class _SettingsManagementScreenState
               try {
                 await _settingsService.removeSetting(
                   setting.key,
-                  removedBy:
-                      'current_user', // TODO(developer): Получить ID текущего пользователя
+                  removedBy: 'current_user', // TODO(developer): Получить ID текущего пользователя
                 );
                 _loadData();
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -903,8 +888,7 @@ class _SettingsManagementScreenState
               try {
                 await _settingsService.activateConfiguration(
                   configuration.id,
-                  activatedBy:
-                      'current_user', // TODO(developer): Получить ID текущего пользователя
+                  activatedBy: 'current_user', // TODO(developer): Получить ID текущего пользователя
                 );
                 _loadData();
                 ScaffoldMessenger.of(context).showSnackBar(

@@ -24,10 +24,7 @@ class AiChatService {
         context: const UserContext().toJson(),
       );
 
-      await _firestore
-          .collection(_sessionsCollection)
-          .doc(session.id)
-          .set(session.toFirestore());
+      await _firestore.collection(_sessionsCollection).doc(session.id).set(session.toFirestore());
 
       return session.id;
     } on Exception catch (e) {
@@ -109,8 +106,7 @@ class AiChatService {
   ) async {
     try {
       // Получаем контекст сессии
-      final sessionDoc =
-          await _firestore.collection(_sessionsCollection).doc(sessionId).get();
+      final sessionDoc = await _firestore.collection(_sessionsCollection).doc(sessionId).get();
 
       if (!sessionDoc.exists) {
         return null;
@@ -178,8 +174,7 @@ class AiChatService {
               value: 'birthday',
               icon: Icons.cake,
             ).toJson(),
-            const QuickReply(text: 'Другое', value: 'other', icon: Icons.event)
-                .toJson(),
+            const QuickReply(text: 'Другое', value: 'other', icon: Icons.event).toJson(),
           ],
         },
         'newContext': context,
@@ -199,8 +194,7 @@ class AiChatService {
           'quickReplies': [
             const QuickReply(text: 'Москва', value: 'moscow').toJson(),
             const QuickReply(text: 'Санкт-Петербург', value: 'spb').toJson(),
-            const QuickReply(text: 'Другой город', value: 'other_city')
-                .toJson(),
+            const QuickReply(text: 'Другой город', value: 'other_city').toJson(),
           ],
         },
         'newContext': newContext,
@@ -217,10 +211,8 @@ class AiChatService {
         'type': MessageType.question.value,
         'metadata': {
           'quickReplies': [
-            const QuickReply(text: 'В этом месяце', value: 'this_month')
-                .toJson(),
-            const QuickReply(text: 'В следующем месяце', value: 'next_month')
-                .toJson(),
+            const QuickReply(text: 'В этом месяце', value: 'this_month').toJson(),
+            const QuickReply(text: 'В следующем месяце', value: 'next_month').toJson(),
             const QuickReply(text: 'Через 3+ месяцев', value: 'later').toJson(),
           ],
         },
@@ -234,8 +226,7 @@ class AiChatService {
       final newContext = context.copyWith(budget: budget);
 
       return {
-        'content':
-            'Бюджет $budget ₽ учтен. Теперь подберу подходящих специалистов...',
+        'content': 'Бюджет $budget ₽ учтен. Теперь подберу подходящих специалистов...',
         'type': MessageType.text.value,
         'metadata': {},
         'newContext': newContext,
@@ -264,8 +255,7 @@ class AiChatService {
       'type': MessageType.question.value,
       'metadata': {
         'quickReplies': [
-          const QuickReply(text: 'Подобрать специалистов', value: 'search')
-              .toJson(),
+          const QuickReply(text: 'Подобрать специалистов', value: 'search').toJson(),
           const QuickReply(text: 'Помощь', value: 'help').toJson(),
         ],
       },
@@ -296,11 +286,9 @@ class AiChatService {
           final category = specialist.category.name;
 
           if (eventType == 'wedding' &&
-              !['photographer', 'videographer', 'host', 'dj']
-                  .contains(category)) {
+              !['photographer', 'videographer', 'host', 'dj'].contains(category)) {
             matches = false;
-          } else if (eventType == 'corporate' &&
-              !['host', 'dj', 'caterer'].contains(category)) {
+          } else if (eventType == 'corporate' && !['host', 'dj', 'caterer'].contains(category)) {
             matches = false;
           } else if (eventType == 'birthday' &&
               !['photographer', 'host', 'dj'].contains(category)) {
@@ -328,8 +316,7 @@ class AiChatService {
                 text: 'Изменить критерии',
                 value: 'change_criteria',
               ).toJson(),
-              const QuickReply(text: 'Показать всех', value: 'show_all')
-                  .toJson(),
+              const QuickReply(text: 'Показать всех', value: 'show_all').toJson(),
             ],
           },
           'newContext': context,
@@ -354,8 +341,7 @@ class AiChatService {
               )
               .toList(),
           'quickReplies': [
-            const QuickReply(text: 'Показать больше', value: 'show_more')
-                .toJson(),
+            const QuickReply(text: 'Показать больше', value: 'show_more').toJson(),
             const QuickReply(text: 'Новый поиск', value: 'new_search').toJson(),
           ],
         },
@@ -364,8 +350,7 @@ class AiChatService {
     } on Exception catch (e) {
       debugPrint('Ошибка поиска специалистов: $e');
       return {
-        'content':
-            'Произошла ошибка при поиске специалистов. Попробуйте позже.',
+        'content': 'Произошла ошибка при поиске специалистов. Попробуйте позже.',
         'type': MessageType.text.value,
         'metadata': {},
         'newContext': context,
@@ -491,8 +476,7 @@ class AiChatService {
     if (message.contains('что такое') || message.contains('что это')) {
       return 'Event Marketplace - это платформа для поиска и бронирования специалистов для мероприятий. Я помогу найти фотографов, ведущих, DJ, декораторов и других профессионалов.';
     }
-    if (message.contains('как работает') ||
-        message.contains('как пользоваться')) {
+    if (message.contains('как работает') || message.contains('как пользоваться')) {
       return 'Просто расскажите мне о вашем мероприятии: тип события, город, дату и бюджет. Я подберу подходящих специалистов и помогу с бронированием.';
     }
     if (message.contains('сколько стоит') || message.contains('цена')) {

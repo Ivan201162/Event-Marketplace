@@ -67,15 +67,10 @@ class Proposal {
         (e) => e.name == (data['status'] as String?),
         orElse: () => ProposalStatus.pending,
       ),
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
-      updatedAt: data['updatedAt'] != null
-          ? (data['updatedAt'] as Timestamp).toDate()
-          : null,
-      expiresAt: data['expiresAt'] != null
-          ? (data['expiresAt'] as Timestamp).toDate()
-          : null,
+      createdAt:
+          data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
+      updatedAt: data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : null,
+      expiresAt: data['expiresAt'] != null ? (data['expiresAt'] as Timestamp).toDate() : null,
       message: data['message'] as String?,
       notes: data['notes'] as String?,
     );
@@ -94,15 +89,10 @@ class Proposal {
           (e) => e.name == map['status'],
           orElse: () => ProposalStatus.pending,
         ),
-        createdAt: map['createdAt'] != null
-            ? (map['createdAt'] as Timestamp).toDate()
-            : DateTime.now(),
-        updatedAt: map['updatedAt'] != null
-            ? (map['updatedAt'] as Timestamp).toDate()
-            : null,
-        expiresAt: map['expiresAt'] != null
-            ? (map['expiresAt'] as Timestamp).toDate()
-            : null,
+        createdAt:
+            map['createdAt'] != null ? (map['createdAt'] as Timestamp).toDate() : DateTime.now(),
+        updatedAt: map['updatedAt'] != null ? (map['updatedAt'] as Timestamp).toDate() : null,
+        expiresAt: map['expiresAt'] != null ? (map['expiresAt'] as Timestamp).toDate() : null,
         message: map['message'] as String?,
         notes: map['notes'] as String?,
       );

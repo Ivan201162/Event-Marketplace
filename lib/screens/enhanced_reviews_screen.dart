@@ -20,8 +20,7 @@ class EnhancedReviewsScreen extends ConsumerStatefulWidget {
   final String? specialistName;
 
   @override
-  ConsumerState<EnhancedReviewsScreen> createState() =>
-      _EnhancedReviewsScreenState();
+  ConsumerState<EnhancedReviewsScreen> createState() => _EnhancedReviewsScreenState();
 }
 
 class _EnhancedReviewsScreenState extends ConsumerState<EnhancedReviewsScreen>
@@ -48,9 +47,7 @@ class _EnhancedReviewsScreenState extends ConsumerState<EnhancedReviewsScreen>
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text(
-            widget.specialistName != null
-                ? 'Отзывы о ${widget.specialistName}'
-                : 'Отзывы',
+            widget.specialistName != null ? 'Отзывы о ${widget.specialistName}' : 'Отзывы',
           ),
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           bottom: TabBar(
@@ -178,8 +175,7 @@ class _EnhancedReviewsScreenState extends ConsumerState<EnhancedReviewsScreen>
 
   /// Построить вкладку отзывов
   Widget _buildReviewsTab() {
-    final reviewsAsync =
-        ref.watch(specialistReviewsProvider(widget.specialistId));
+    final reviewsAsync = ref.watch(specialistReviewsProvider(widget.specialistId));
 
     return reviewsAsync.when(
       data: (reviews) {
@@ -246,8 +242,7 @@ class _EnhancedReviewsScreenState extends ConsumerState<EnhancedReviewsScreen>
 
   /// Построить вкладку статистики
   Widget _buildStatsTab() {
-    final statsAsync =
-        ref.watch(specialistReviewStatsProvider(widget.specialistId));
+    final statsAsync = ref.watch(specialistReviewStatsProvider(widget.specialistId));
 
     return statsAsync.when(
       data: (stats) {
@@ -424,8 +419,7 @@ class _EnhancedReviewsScreenState extends ConsumerState<EnhancedReviewsScreen>
 
   /// Построить последние отзывы
   Widget _buildRecentReviews() {
-    final reviewsAsync =
-        ref.watch(specialistReviewsProvider(widget.specialistId));
+    final reviewsAsync = ref.watch(specialistReviewsProvider(widget.specialistId));
 
     return reviewsAsync.when(
       data: (reviews) {
@@ -559,9 +553,7 @@ class _EnhancedReviewsScreenState extends ConsumerState<EnhancedReviewsScreen>
 
     // Фильтр по рейтингу
     if (_selectedRatingFilter > 0) {
-      filtered = filtered
-          .where((review) => review.rating == _selectedRatingFilter)
-          .toList();
+      filtered = filtered.where((review) => review.rating == _selectedRatingFilter).toList();
     }
 
     return filtered;
@@ -626,9 +618,7 @@ class _EnhancedReviewsScreenState extends ConsumerState<EnhancedReviewsScreen>
             onPressed: () async {
               Navigator.of(context).pop();
               try {
-                await ref
-                    .read(enhancedReviewServiceProvider)
-                    .deleteReview(review.id);
+                await ref.read(enhancedReviewServiceProvider).deleteReview(review.id);
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Отзыв удален')),
@@ -655,8 +645,7 @@ final enhancedReviewServiceProvider =
     Provider<EnhancedReviewService>((ref) => EnhancedReviewService());
 
 /// Провайдер для отзывов специалиста
-final specialistReviewsProvider =
-    StreamProvider.family<List<Review>, String>((ref, specialistId) {
+final specialistReviewsProvider = StreamProvider.family<List<Review>, String>((ref, specialistId) {
   final service = ref.watch(enhancedReviewServiceProvider);
   return service.getSpecialistReviewsStream(specialistId);
 });

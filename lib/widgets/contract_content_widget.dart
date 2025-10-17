@@ -118,9 +118,7 @@ class ContractContentWidget extends StatelessWidget {
 
   String _formatTermValue(value) {
     if (value is Map<String, dynamic>) {
-      return value.entries
-          .map((e) => '${_getTermTitle(e.key)}: ${e.value}')
-          .join('\n');
+      return value.entries.map((e) => '${_getTermTitle(e.key)}: ${e.value}').join('\n');
     } else if (value is List) {
       return value.join(', ');
     } else {

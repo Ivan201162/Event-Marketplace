@@ -28,8 +28,7 @@ class OrderHistory {
   }
 
   /// Создать из Map
-  factory OrderHistory.fromMap(Map<String, dynamic> data, [String? id]) =>
-      OrderHistory(
+  factory OrderHistory.fromMap(Map<String, dynamic> data, [String? id]) => OrderHistory(
         id: id ?? data['id'] ?? '',
         specialistId: data['specialistId'] ?? '',
         specialistName: data['specialistName'] ?? '',
@@ -203,8 +202,7 @@ class OrderHistory {
   double get originalPrice => additionalData?['originalPrice'] ?? price;
 
   /// Проверить, была ли скидка
-  bool get hadDiscount =>
-      additionalData?['discount'] != null && additionalData!['discount'] > 0;
+  bool get hadDiscount => additionalData?['discount'] != null && additionalData!['discount'] > 0;
 
   /// Получить размер скидки
   double get discountAmount {

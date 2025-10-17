@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../models/subscription_plan.dart';
-import '../../models/promotion_boost.dart';
+
 import '../../models/advertisement.dart';
-import '../../services/subscription_service.dart';
-import '../../services/promotion_service.dart';
-import '../../services/advertisement_service.dart';
+import '../../models/promotion_boost.dart';
+import '../../models/subscription_plan.dart';
 import '../../providers/auth_provider.dart';
-import 'subscription_plans_screen.dart';
-import 'promotion_packages_screen.dart';
+import '../../services/advertisement_service.dart';
+import '../../services/promotion_service.dart';
+import '../../services/subscription_service.dart';
 import 'advertisement_campaigns_screen.dart';
-import 'my_subscriptions_screen.dart';
-import 'my_promotions_screen.dart';
 import 'my_advertisements_screen.dart';
+import 'my_promotions_screen.dart';
+import 'my_subscriptions_screen.dart';
+import 'promotion_packages_screen.dart';
+import 'subscription_plans_screen.dart';
 
 class MonetizationHubScreen extends StatefulWidget {
   const MonetizationHubScreen({super.key});
@@ -50,11 +51,9 @@ class _MonetizationHubScreenState extends State<MonetizationHubScreen>
     final userId = authProvider.currentUser?['id'];
 
     if (userId != null) {
-      final subscription =
-          await _subscriptionService.getActiveSubscription(userId);
+      final subscription = await _subscriptionService.getActiveSubscription(userId);
       final promotions = await _promotionService.getActivePromotions(userId);
-      final advertisements =
-          await _advertisementService.getActiveAdvertisements(
+      final advertisements = await _advertisementService.getActiveAdvertisements(
         type: AdType.banner,
         limit: 5,
       );
@@ -443,8 +442,7 @@ class _MonetizationHubScreenState extends State<MonetizationHubScreen>
     );
   }
 
-  Widget _buildSectionHeader(
-      String title, String subtitle, IconData icon, Color color) {
+  Widget _buildSectionHeader(String title, String subtitle, IconData icon, Color color) {
     return Row(
       children: [
         Container(

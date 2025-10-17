@@ -205,12 +205,9 @@ class CachedImageGrid extends StatelessWidget {
         mainAxisSpacing: spacing,
         childAspectRatio: childAspectRatio,
       ),
-      itemCount:
-          displayImages.length + (hasMoreImages && showMoreIndicator ? 1 : 0),
+      itemCount: displayImages.length + (hasMoreImages && showMoreIndicator ? 1 : 0),
       itemBuilder: (context, index) {
-        if (hasMoreImages &&
-            showMoreIndicator &&
-            index == displayImages.length) {
+        if (hasMoreImages && showMoreIndicator && index == displayImages.length) {
           return _buildMoreIndicator(context, imageUrls.length - maxImages!);
         }
 
@@ -219,8 +216,7 @@ class CachedImageGrid extends StatelessWidget {
     );
   }
 
-  Widget _buildImageItem(BuildContext context, String imageUrl, int index) =>
-      GestureDetector(
+  Widget _buildImageItem(BuildContext context, String imageUrl, int index) => GestureDetector(
         onTap: onImageTap,
         child: CachedImageWidget(
           imageUrl: imageUrl,
@@ -240,8 +236,7 @@ class CachedImageGrid extends StatelessWidget {
         ),
       );
 
-  Widget _buildMoreIndicator(BuildContext context, int remainingCount) =>
-      Container(
+  Widget _buildMoreIndicator(BuildContext context, int remainingCount) => Container(
         decoration: BoxDecoration(
           color: Colors.black.withValues(alpha: 0.6),
           borderRadius: BorderRadius.circular(8),

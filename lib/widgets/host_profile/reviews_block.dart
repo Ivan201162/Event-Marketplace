@@ -157,8 +157,7 @@ class ReviewsBlock extends StatelessWidget {
                             child: Icon(
                               Icons.person,
                               size: isMobile ? 16 : 20,
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.5),
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                             ),
                           ),
                           errorWidget: (context, url, error) => Container(
@@ -166,8 +165,7 @@ class ReviewsBlock extends StatelessWidget {
                             child: Icon(
                               Icons.person,
                               size: isMobile ? 16 : 20,
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.5),
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                             ),
                           ),
                         )
@@ -176,8 +174,7 @@ class ReviewsBlock extends StatelessWidget {
                           child: Icon(
                             Icons.person,
                             size: isMobile ? 16 : 20,
-                            color: theme.colorScheme.onSurface
-                                .withValues(alpha: 0.5),
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                           ),
                         ),
                 ),
@@ -201,9 +198,7 @@ class ReviewsBlock extends StatelessWidget {
                         ...List.generate(
                           5,
                           (index) => Icon(
-                            index < review.rating
-                                ? Icons.star
-                                : Icons.star_border,
+                            index < review.rating ? Icons.star : Icons.star_border,
                             size: 14,
                             color: Colors.amber,
                           ),
@@ -212,8 +207,7 @@ class ReviewsBlock extends StatelessWidget {
                         Text(
                           review.eventType,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface
-                                .withValues(alpha: 0.6),
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                           ),
                         ),
                       ],

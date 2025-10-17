@@ -17,8 +17,7 @@ class ProfileTabsWidget extends StatefulWidget {
   State<ProfileTabsWidget> createState() => _ProfileTabsWidgetState();
 }
 
-class _ProfileTabsWidgetState extends State<ProfileTabsWidget>
-    with SingleTickerProviderStateMixin {
+class _ProfileTabsWidgetState extends State<ProfileTabsWidget> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -60,8 +59,7 @@ class _ProfileTabsWidgetState extends State<ProfileTabsWidget>
             controller: _tabController,
             indicatorColor: theme.primaryColor,
             labelColor: theme.primaryColor,
-            unselectedLabelColor:
-                theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
+            unselectedLabelColor: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
             labelStyle: const TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 14,
@@ -164,8 +162,7 @@ class _ProfileTabsWidgetState extends State<ProfileTabsWidget>
             SizedBox(height: 16),
             Text('Избранное пусто'),
             SizedBox(height: 8),
-            Text('Добавьте специалистов в избранное',
-                style: TextStyle(color: Colors.grey)),
+            Text('Добавьте специалистов в избранное', style: TextStyle(color: Colors.grey)),
           ],
         ),
       );
@@ -201,10 +198,8 @@ class _ProfileTabsWidgetState extends State<ProfileTabsWidget>
           const SizedBox(height: 8),
           _buildInfoRow('Роль', widget.user.roleDisplayName),
           _buildInfoRow('Дата регистрации', _formatDate(widget.user.createdAt)),
-          if (widget.user.city != null)
-            _buildInfoRow('Город', widget.user.city!),
-          if (widget.user.phone != null)
-            _buildInfoRow('Телефон', widget.user.phone!),
+          if (widget.user.city != null) _buildInfoRow('Город', widget.user.city!),
+          if (widget.user.phone != null) _buildInfoRow('Телефон', widget.user.phone!),
         ],
       ),
     );
@@ -223,8 +218,7 @@ class _ProfileTabsWidgetState extends State<ProfileTabsWidget>
             child: Text(
               '$label:',
               style: theme.textTheme.bodyMedium?.copyWith(
-                color:
-                    theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
               ),
             ),
           ),

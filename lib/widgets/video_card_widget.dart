@@ -72,8 +72,7 @@ class VideoCardWidget extends StatelessWidget {
                             children: [
                               Icon(
                                 video.isPublic ? Icons.lock : Icons.public,
-                                color:
-                                    video.isPublic ? Colors.grey : Colors.green,
+                                color: video.isPublic ? Colors.grey : Colors.green,
                               ),
                               const SizedBox(width: 8),
                               Text(video.isPublic ? 'Скрыть' : 'Опубликовать'),

@@ -9,12 +9,10 @@ class EnvironmentConfigScreen extends ConsumerStatefulWidget {
   const EnvironmentConfigScreen({super.key});
 
   @override
-  ConsumerState<EnvironmentConfigScreen> createState() =>
-      _EnvironmentConfigScreenState();
+  ConsumerState<EnvironmentConfigScreen> createState() => _EnvironmentConfigScreenState();
 }
 
-class _EnvironmentConfigScreenState
-    extends ConsumerState<EnvironmentConfigScreen> {
+class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScreen> {
   final EnvironmentConfigService _configService = EnvironmentConfigService();
   List<EnvironmentConfig> _environments = [];
   List<EnvironmentVariable> _variables = [];
@@ -86,13 +84,10 @@ class _EnvironmentConfigScreenState
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.blue.withValues(alpha: 0.1)
-              : Colors.transparent,
+          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color:
-                isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
+            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -292,8 +287,7 @@ class _EnvironmentConfigScreenState
               if (environment.isActive)
                 Container(
                   margin: const EdgeInsets.only(left: 8),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.green.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
@@ -309,8 +303,7 @@ class _EnvironmentConfigScreenState
                   ),
                 ),
               PopupMenuButton<String>(
-                onSelected: (value) =>
-                    _handleEnvironmentAction(value, environment),
+                onSelected: (value) => _handleEnvironmentAction(value, environment),
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: 'view',
@@ -517,8 +510,7 @@ class _EnvironmentConfigScreenState
               if (variable.isSecret)
                 Container(
                   margin: const EdgeInsets.only(left: 8),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.red.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
@@ -536,8 +528,7 @@ class _EnvironmentConfigScreenState
               if (variable.isRequired)
                 Container(
                   margin: const EdgeInsets.only(left: 8),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.orange.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
@@ -750,8 +741,7 @@ class _EnvironmentConfigScreenState
                 ),
               ),
               PopupMenuButton<String>(
-                onSelected: (value) =>
-                    _handleDeploymentAction(value, deployment),
+                onSelected: (value) => _handleDeploymentAction(value, deployment),
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: 'view',
@@ -996,8 +986,7 @@ class _EnvironmentConfigScreenState
     // TODO(developer): Реализовать просмотр окружения
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:
-            Text('Просмотр окружения "${environment.name}" будет реализован'),
+        content: Text('Просмотр окружения "${environment.name}" будет реализован'),
       ),
     );
   }
@@ -1035,8 +1024,7 @@ class _EnvironmentConfigScreenState
 
   Future<void> _exportEnvironment(EnvironmentConfig environment) async {
     try {
-      final exportData =
-          await _configService.exportEnvironmentConfig(environment.id);
+      final exportData = await _configService.exportEnvironmentConfig(environment.id);
       // TODO(developer): Реализовать сохранение файла
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -1055,8 +1043,7 @@ class _EnvironmentConfigScreenState
 
   Future<void> _validateEnvironment(EnvironmentConfig environment) async {
     try {
-      final errors =
-          await _configService.validateEnvironmentConfig(environment.id);
+      final errors = await _configService.validateEnvironmentConfig(environment.id);
       if (errors.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

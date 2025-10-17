@@ -11,16 +11,13 @@ class DiscountNotificationsScreen extends ConsumerStatefulWidget {
   const DiscountNotificationsScreen({super.key});
 
   @override
-  ConsumerState<DiscountNotificationsScreen> createState() =>
-      _DiscountNotificationsScreenState();
+  ConsumerState<DiscountNotificationsScreen> createState() => _DiscountNotificationsScreenState();
 }
 
-class _DiscountNotificationsScreenState
-    extends ConsumerState<DiscountNotificationsScreen>
+class _DiscountNotificationsScreenState extends ConsumerState<DiscountNotificationsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final DiscountNotificationService _notificationService =
-      DiscountNotificationService();
+  final DiscountNotificationService _notificationService = DiscountNotificationService();
 
   @override
   void initState() {
@@ -45,15 +42,13 @@ class _DiscountNotificationsScreenState
         foregroundColor: Colors.white,
         actions: [
           StreamBuilder<int>(
-            stream: _notificationService
-                .watchUnreadCount(currentUser.value?.uid ?? ''),
+            stream: _notificationService.watchUnreadCount(currentUser.value?.uid ?? ''),
             builder: (context, snapshot) {
               final unreadCount = snapshot.data ?? 0;
               if (unreadCount > 0) {
                 return Container(
                   margin: const EdgeInsets.only(right: 16),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.red,
                     borderRadius: BorderRadius.circular(12),
@@ -98,8 +93,7 @@ class _DiscountNotificationsScreenState
     );
   }
 
-  Widget _buildUnreadNotifications(String userId) =>
-      StreamBuilder<List<DiscountNotification>>(
+  Widget _buildUnreadNotifications(String userId) => StreamBuilder<List<DiscountNotification>>(
         stream: _notificationService.watchUnreadCustomerNotifications(userId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -171,8 +165,7 @@ class _DiscountNotificationsScreenState
         },
       );
 
-  Widget _buildAllNotifications(String userId) =>
-      StreamBuilder<List<DiscountNotification>>(
+  Widget _buildAllNotifications(String userId) => StreamBuilder<List<DiscountNotification>>(
         stream: _notificationService.watchCustomerNotifications(userId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

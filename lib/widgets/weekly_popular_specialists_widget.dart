@@ -104,8 +104,7 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
           Stack(
             children: [
               ClipRRect(
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(12)),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
                 child: Container(
                   height: 80,
                   width: double.infinity,
@@ -231,12 +230,7 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
 
   Widget _buildAvatarPlaceholder(String name) {
     final initials = name.isNotEmpty
-        ? name
-            .split(' ')
-            .map((word) => word.isNotEmpty ? word[0] : '')
-            .take(2)
-            .join()
-            .toUpperCase()
+        ? name.split(' ').map((word) => word.isNotEmpty ? word[0] : '').take(2).join().toUpperCase()
         : '?';
 
     return Container(

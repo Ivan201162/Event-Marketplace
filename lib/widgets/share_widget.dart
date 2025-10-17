@@ -85,8 +85,7 @@ class ShareWidget extends ConsumerWidget {
       var success = false;
 
       if (event != null) {
-        success =
-            await ShareService.shareEvent(event!, customMessage: customMessage);
+        success = await ShareService.shareEvent(event!, customMessage: customMessage);
       } else if (user != null) {
         success = await ShareService.shareProfile(
           user!,
@@ -377,10 +376,7 @@ class ShareDialog extends StatelessWidget {
               onTap: () => _copyLink(context),
             ),
           ],
-          if (text != null ||
-              event != null ||
-              user != null ||
-              booking != null) ...[
+          if (text != null || event != null || user != null || booking != null) ...[
             const SizedBox(height: 8),
             _buildShareOption(
               context,
@@ -423,8 +419,7 @@ class ShareDialog extends StatelessWidget {
       var success = false;
 
       if (event != null) {
-        success =
-            await ShareService.shareEvent(event!, customMessage: customMessage);
+        success = await ShareService.shareEvent(event!, customMessage: customMessage);
       } else if (user != null) {
         success = await ShareService.shareProfile(
           user!,
@@ -461,9 +456,7 @@ class ShareDialog extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              success
-                  ? 'Контент успешно поделен'
-                  : 'Ошибка при попытке поделиться',
+              success ? 'Контент успешно поделен' : 'Ошибка при попытке поделиться',
             ),
             backgroundColor: success ? Colors.green : Colors.red,
           ),
@@ -580,20 +573,17 @@ class ShareUtils {
   }
 
   /// Быстрый шаринг события
-  static Future<bool> quickShare(Event event) async =>
-      ShareService.shareEvent(event);
+  static Future<bool> quickShare(Event event) async => ShareService.shareEvent(event);
 
   /// Быстрый шаринг профиля
-  static Future<bool> quickShareProfile(AppUser user) async =>
-      ShareService.shareProfile(user);
+  static Future<bool> quickShareProfile(AppUser user) async => ShareService.shareProfile(user);
 
   /// Быстрый шаринг бронирования
   static Future<bool> quickShareBooking(Booking booking) async =>
       ShareService.shareBooking(booking);
 
   /// Быстрый шаринг текста
-  static Future<bool> quickShareText(String text) async =>
-      ShareService.shareText(text);
+  static Future<bool> quickShareText(String text) async => ShareService.shareText(text);
 
   /// Быстрый шаринг ссылки
   static Future<bool> quickShareLink(

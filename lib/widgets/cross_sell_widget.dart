@@ -341,8 +341,7 @@ class CreateCrossSellWidget extends ConsumerStatefulWidget {
   final VoidCallback? onSuggestionCreated;
 
   @override
-  ConsumerState<CreateCrossSellWidget> createState() =>
-      _CreateCrossSellWidgetState();
+  ConsumerState<CreateCrossSellWidget> createState() => _CreateCrossSellWidgetState();
 }
 
 class _CreateCrossSellWidgetState extends ConsumerState<CreateCrossSellWidget> {
@@ -396,8 +395,7 @@ class _CreateCrossSellWidgetState extends ConsumerState<CreateCrossSellWidget> {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : const Icon(Icons.refresh),
-              label:
-                  Text(_isLoading ? 'Загрузка...' : 'Загрузить рекомендации'),
+              label: Text(_isLoading ? 'Загрузка...' : 'Загрузить рекомендации'),
             ),
 
             // Список рекомендуемых специалистов
@@ -429,8 +427,7 @@ class _CreateCrossSellWidgetState extends ConsumerState<CreateCrossSellWidget> {
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed:
-                        _canCreateSuggestion() ? _createSuggestion : null,
+                    onPressed: _canCreateSuggestion() ? _createSuggestion : null,
                     icon: _isLoading
                         ? const SizedBox(
                             width: 16,
@@ -544,9 +541,7 @@ class _CreateCrossSellWidgetState extends ConsumerState<CreateCrossSellWidget> {
         customerId: widget.customerId,
         specialistId: widget.specialistId,
         suggestedItems: _selectedItems,
-        message: _messageController.text.trim().isEmpty
-            ? null
-            : _messageController.text.trim(),
+        message: _messageController.text.trim().isEmpty ? null : _messageController.text.trim(),
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -582,8 +577,7 @@ class _RejectSuggestionDialog extends StatefulWidget {
   final VoidCallback onRejected;
 
   @override
-  State<_RejectSuggestionDialog> createState() =>
-      _RejectSuggestionDialogState();
+  State<_RejectSuggestionDialog> createState() => _RejectSuggestionDialogState();
 }
 
 class _RejectSuggestionDialogState extends State<_RejectSuggestionDialog> {
@@ -646,9 +640,7 @@ class _RejectSuggestionDialogState extends State<_RejectSuggestionDialog> {
       await service.rejectCrossSellSuggestion(
         suggestionId: widget.suggestion.id,
         customerId: 'current_user_id', // TODO(developer): Получить из контекста
-        reason: _reasonController.text.trim().isEmpty
-            ? null
-            : _reasonController.text.trim(),
+        reason: _reasonController.text.trim().isEmpty ? null : _reasonController.text.trim(),
       );
 
       Navigator.pop(context);
@@ -676,5 +668,4 @@ class _RejectSuggestionDialogState extends State<_RejectSuggestionDialog> {
 }
 
 /// Провайдер для сервиса кросс-селл
-final crossSellServiceProvider =
-    Provider<CrossSellService>((ref) => CrossSellService());
+final crossSellServiceProvider = Provider<CrossSellService>((ref) => CrossSellService());

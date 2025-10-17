@@ -5,16 +5,13 @@ import '../services/firestore_service.dart';
 import '../services/payment_service.dart';
 
 /// Провайдер для сервиса платежей
-final paymentServiceProvider =
-    Provider<PaymentService>((ref) => PaymentService());
+final paymentServiceProvider = Provider<PaymentService>((ref) => PaymentService());
 
 /// Провайдер для FirestoreService
-final firestoreServiceProvider =
-    Provider<FirestoreService>((ref) => FirestoreService());
+final firestoreServiceProvider = Provider<FirestoreService>((ref) => FirestoreService());
 
 /// Провайдер для получения платежей пользователя
-final userPaymentsProvider =
-    StreamProvider.family<List<Payment>, String>((ref, userId) {
+final userPaymentsProvider = StreamProvider.family<List<Payment>, String>((ref, userId) {
   final firestoreService = ref.watch(firestoreServiceProvider);
   return firestoreService.paymentsByUserStream(userId);
 });
@@ -27,29 +24,25 @@ final specialistPaymentsProvider =
 });
 
 /// Провайдер для получения платежей по бронированию
-final bookingPaymentsProvider =
-    StreamProvider.family<List<Payment>, String>((ref, bookingId) {
+final bookingPaymentsProvider = StreamProvider.family<List<Payment>, String>((ref, bookingId) {
   final firestoreService = ref.watch(firestoreServiceProvider);
   return firestoreService.paymentsByBookingStream(bookingId);
 });
 
 /// Провайдер для получения платежа по ID
-final paymentByIdProvider =
-    FutureProvider.family<Payment?, String>((ref, paymentId) async {
+final paymentByIdProvider = FutureProvider.family<Payment?, String>((ref, paymentId) async {
   final firestoreService = ref.watch(firestoreServiceProvider);
   return firestoreService.getPaymentById(paymentId);
 });
 
 /// Провайдер для проверки оплаты предоплаты
-final prepaymentStatusProvider =
-    FutureProvider.family<bool, String>((ref, bookingId) async {
+final prepaymentStatusProvider = FutureProvider.family<bool, String>((ref, bookingId) async {
   final firestoreService = ref.watch(firestoreServiceProvider);
   return firestoreService.isPrepaymentPaid(bookingId);
 });
 
 /// Провайдер для статистики платежей пользователя
-final userPaymentStatsProvider =
-    FutureProvider.family<PaymentStats, String>((ref, userId) async {
+final userPaymentStatsProvider = FutureProvider.family<PaymentStats, String>((ref, userId) async {
   final firestoreService = ref.watch(firestoreServiceProvider);
   return firestoreService.getUserPaymentStats(userId);
 });
@@ -62,8 +55,7 @@ final specialistPaymentStatsProvider =
 });
 
 /// Провайдер для управления платежами
-final paymentManagerProvider =
-    StateNotifierProvider<PaymentManager, AsyncValue<void>>((ref) {
+final paymentManagerProvider = StateNotifierProvider<PaymentManager, AsyncValue<void>>((ref) {
   final paymentService = ref.watch(paymentServiceProvider);
   final firestoreService = ref.watch(firestoreServiceProvider);
   return PaymentManager(paymentService, firestoreService);
@@ -71,8 +63,7 @@ final paymentManagerProvider =
 
 /// Менеджер для управления платежами
 class PaymentManager extends StateNotifier<AsyncValue<void>> {
-  PaymentManager(this._paymentService, this._firestoreService)
-      : super(const AsyncValue.data(null));
+  PaymentManager(this._paymentService, this._firestoreService) : super(const AsyncValue.data(null));
 
   final PaymentService _paymentService;
   final FirestoreService _firestoreService;
@@ -277,8 +268,7 @@ class PaymentManager extends StateNotifier<AsyncValue<void>> {
 }
 
 /// Провайдер для получения платежей с фильтрацией
-final filteredPaymentsProvider =
-    StreamProvider.family<List<Payment>, PaymentFilter>((ref, filter) {
+final filteredPaymentsProvider = StreamProvider.family<List<Payment>, PaymentFilter>((ref, filter) {
   final firestoreService = ref.watch(firestoreServiceProvider);
 
   if (filter.userId != null) {
@@ -367,9 +357,7 @@ final paymentsByStatusProvider =
       return payments;
     });
   } else if (specialistId != null) {
-    return firestoreService
-        .paymentsBySpecialistStream(specialistId)
-        .map((payments) {
+    return firestoreService.paymentsBySpecialistStream(specialistId).map((payments) {
       if (status != null) {
         return payments.where((payment) => payment.status == status).toList();
       }
@@ -396,9 +384,7 @@ final paymentsByTypeProvider =
       return payments;
     });
   } else if (specialistId != null) {
-    return firestoreService
-        .paymentsBySpecialistStream(specialistId)
-        .map((payments) {
+    return firestoreService.paymentsBySpecialistStream(specialistId).map((payments) {
       if (type != null) {
         return payments.where((payment) => payment.type == type).toList();
       }

@@ -78,8 +78,7 @@ class AnniversaryWidget extends StatelessWidget {
               // Индикатор статуса
               if (isToday)
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.blue,
                     borderRadius: BorderRadius.circular(12),
@@ -95,8 +94,7 @@ class AnniversaryWidget extends StatelessWidget {
                 )
               else if (isUpcoming)
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.orange,
                     borderRadius: BorderRadius.circular(12),
@@ -171,8 +169,7 @@ class AnniversaryWidget extends StatelessWidget {
                     icon: const Icon(Icons.edit, size: 16),
                     label: const Text('Редактировать'),
                   ),
-                if (onEdit != null && onDelete != null)
-                  const SizedBox(width: 8),
+                if (onEdit != null && onDelete != null) const SizedBox(width: 8),
                 if (onDelete != null)
                   TextButton.icon(
                     onPressed: onDelete,
@@ -192,9 +189,7 @@ class AnniversaryWidget extends StatelessWidget {
 
   bool _isToday(DateTime date) {
     final now = DateTime.now();
-    return date.year == now.year &&
-        date.month == now.month &&
-        date.day == now.day;
+    return date.year == now.year && date.month == now.month && date.day == now.day;
   }
 
   String _formatDate(DateTime date) {
@@ -219,8 +214,7 @@ class AnniversaryWidget extends StatelessWidget {
   String _getYearsText(int years) {
     if (years % 10 == 1 && years % 100 != 11) {
       return 'год';
-    } else if ([2, 3, 4].contains(years % 10) &&
-        ![12, 13, 14].contains(years % 100)) {
+    } else if ([2, 3, 4].contains(years % 10) && ![12, 13, 14].contains(years % 100)) {
       return 'года';
     } else {
       return 'лет';

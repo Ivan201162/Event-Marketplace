@@ -36,18 +36,14 @@ class Report {
       parameters: Map<String, dynamic>.from(data['parameters'] ?? {}),
       generatedBy: data['generatedBy'],
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      generatedAt: data['generatedAt'] != null
-          ? (data['generatedAt'] as Timestamp).toDate()
-          : null,
+      generatedAt: data['generatedAt'] != null ? (data['generatedAt'] as Timestamp).toDate() : null,
       status: ReportStatus.values.firstWhere(
         (e) => e.toString().split('.').last == data['status'],
         orElse: () => ReportStatus.pending,
       ),
       fileUrl: data['fileUrl'],
       errorMessage: data['errorMessage'],
-      metadata: data['metadata'] != null
-          ? Map<String, dynamic>.from(data['metadata'])
-          : null,
+      metadata: data['metadata'] != null ? Map<String, dynamic>.from(data['metadata']) : null,
     );
   }
 
@@ -67,18 +63,15 @@ class Report {
         parameters: Map<String, dynamic>.from(data['parameters'] ?? {}),
         generatedBy: data['generatedBy'],
         createdAt: (data['createdAt'] as Timestamp).toDate(),
-        generatedAt: data['generatedAt'] != null
-            ? (data['generatedAt'] as Timestamp).toDate()
-            : null,
+        generatedAt:
+            data['generatedAt'] != null ? (data['generatedAt'] as Timestamp).toDate() : null,
         status: ReportStatus.values.firstWhere(
           (e) => e.toString().split('.').last == data['status'],
           orElse: () => ReportStatus.pending,
         ),
         fileUrl: data['fileUrl'],
         errorMessage: data['errorMessage'],
-        metadata: data['metadata'] != null
-            ? Map<String, dynamic>.from(data['metadata'])
-            : null,
+        metadata: data['metadata'] != null ? Map<String, dynamic>.from(data['metadata']) : null,
       );
   final String id;
   final String name;
@@ -103,8 +96,7 @@ class Report {
         'parameters': parameters,
         'generatedBy': generatedBy,
         'createdAt': Timestamp.fromDate(createdAt),
-        'generatedAt':
-            generatedAt != null ? Timestamp.fromDate(generatedAt!) : null,
+        'generatedAt': generatedAt != null ? Timestamp.fromDate(generatedAt!) : null,
         'status': status.toString().split('.').last,
         'fileUrl': fileUrl,
         'errorMessage': errorMessage,
@@ -285,8 +277,7 @@ class ReportData {
   }
 
   /// Получить все значения колонки
-  List<dynamic> getColumnValues(String columnName) =>
-      rows.map((row) => row[columnName]).toList();
+  List<dynamic> getColumnValues(String columnName) => rows.map((row) => row[columnName]).toList();
 
   /// Получить уникальные значения колонки
   List<dynamic> getUniqueColumnValues(String columnName) {
@@ -308,8 +299,7 @@ class ReportData {
 
   /// Получить статистику по числовой колонке
   Map<String, dynamic> getNumericColumnStats(String columnName) {
-    final values =
-        getColumnValues(columnName).whereType<num>().cast<num>().toList();
+    final values = getColumnValues(columnName).whereType<num>().cast<num>().toList();
 
     if (values.isEmpty) {
       return {
@@ -367,8 +357,7 @@ class ReportTemplate {
         (e) => e.toString().split('.').last == data['category'],
         orElse: () => ReportCategory.general,
       ),
-      defaultParameters:
-          Map<String, dynamic>.from(data['defaultParameters'] ?? {}),
+      defaultParameters: Map<String, dynamic>.from(data['defaultParameters'] ?? {}),
       requiredParameters: List<String>.from(data['requiredParameters'] ?? []),
       isActive: data['isActive'] as bool? ?? true,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
@@ -389,8 +378,7 @@ class ReportTemplate {
           (e) => e.toString().split('.').last == data['category'],
           orElse: () => ReportCategory.general,
         ),
-        defaultParameters:
-            Map<String, dynamic>.from(data['defaultParameters'] ?? {}),
+        defaultParameters: Map<String, dynamic>.from(data['defaultParameters'] ?? {}),
         requiredParameters: List<String>.from(data['requiredParameters'] ?? []),
         isActive: data['isActive'] as bool? ?? true,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
@@ -449,8 +437,7 @@ class ReportTemplate {
   /// Проверить, валидны ли параметры
   bool areParametersValid(Map<String, dynamic> parameters) {
     for (final requiredParam in requiredParameters) {
-      if (!parameters.containsKey(requiredParam) ||
-          parameters[requiredParam] == null) {
+      if (!parameters.containsKey(requiredParam) || parameters[requiredParam] == null) {
         return false;
       }
     }

@@ -15,12 +15,10 @@ class SpecialistDiscountOfferWidget extends StatefulWidget {
   final void Function(SpecialistDiscount)? onDiscountOffered;
 
   @override
-  State<SpecialistDiscountOfferWidget> createState() =>
-      _SpecialistDiscountOfferWidgetState();
+  State<SpecialistDiscountOfferWidget> createState() => _SpecialistDiscountOfferWidgetState();
 }
 
-class _SpecialistDiscountOfferWidgetState
-    extends State<SpecialistDiscountOfferWidget> {
+class _SpecialistDiscountOfferWidgetState extends State<SpecialistDiscountOfferWidget> {
   final SpecialistDiscountService _service = SpecialistDiscountService();
   final TextEditingController _messageController = TextEditingController();
 
@@ -71,8 +69,7 @@ class _SpecialistDiscountOfferWidgetState
         specialistId: widget.specialistId,
         bookingId: widget.bookingId,
         discountPercent: discountPercent,
-        message:
-            _messageController.text.isNotEmpty ? _messageController.text : null,
+        message: _messageController.text.isNotEmpty ? _messageController.text : null,
         expiresAt: DateTime.now().add(const Duration(days: 7)),
       );
 
@@ -81,8 +78,7 @@ class _SpecialistDiscountOfferWidgetState
         specialistId: widget.specialistId,
         bookingId: widget.bookingId,
         discountPercent: discountPercent,
-        message:
-            _messageController.text.isNotEmpty ? _messageController.text : null,
+        message: _messageController.text.isNotEmpty ? _messageController.text : null,
         isActive: true,
         isAccepted: false,
         createdAt: DateTime.now(),
@@ -239,8 +235,7 @@ class _DiscountOfferFormState extends State<_DiscountOfferForm> {
                                 min: 5,
                                 max: 50,
                                 divisions: 9,
-                                label:
-                                    '${_selectedDiscount.toStringAsFixed(0)}%',
+                                label: '${_selectedDiscount.toStringAsFixed(0)}%',
                                 onChanged: (value) {
                                   setState(() {
                                     _selectedDiscount = value;
@@ -276,8 +271,7 @@ class _DiscountOfferFormState extends State<_DiscountOfferForm> {
                           decoration: const InputDecoration(
                             labelText: 'Сообщение заказчику (необязательно)',
                             border: OutlineInputBorder(),
-                            hintText:
-                                'Например: "Специальное предложение для вашего мероприятия"',
+                            hintText: 'Например: "Специальное предложение для вашего мероприятия"',
                           ),
                           maxLines: 2,
                         ),
@@ -288,8 +282,7 @@ class _DiscountOfferFormState extends State<_DiscountOfferForm> {
                               child: ElevatedButton.icon(
                                 onPressed: widget.isLoading
                                     ? null
-                                    : () => widget
-                                        .onOfferDiscount(_selectedDiscount),
+                                    : () => widget.onOfferDiscount(_selectedDiscount),
                                 icon: widget.isLoading
                                     ? const SizedBox(
                                         width: 16,
@@ -300,9 +293,7 @@ class _DiscountOfferFormState extends State<_DiscountOfferForm> {
                                       )
                                     : const Icon(Icons.send),
                                 label: Text(
-                                  widget.isLoading
-                                      ? 'Отправка...'
-                                      : 'Предложить скидку',
+                                  widget.isLoading ? 'Отправка...' : 'Предложить скидку',
                                 ),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.orange,
@@ -312,9 +303,8 @@ class _DiscountOfferFormState extends State<_DiscountOfferForm> {
                             ),
                             const SizedBox(width: 8),
                             TextButton(
-                              onPressed: widget.isLoading
-                                  ? null
-                                  : () => setState(() => _showForm = false),
+                              onPressed:
+                                  widget.isLoading ? null : () => setState(() => _showForm = false),
                               child: const Text('Отмена'),
                             ),
                           ],

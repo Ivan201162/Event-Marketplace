@@ -11,8 +11,7 @@ class NotificationsScreen extends ConsumerStatefulWidget {
   const NotificationsScreen({super.key});
 
   @override
-  ConsumerState<NotificationsScreen> createState() =>
-      _NotificationsScreenState();
+  ConsumerState<NotificationsScreen> createState() => _NotificationsScreenState();
 }
 
 class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
@@ -171,9 +170,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              color: notification.isRead
-                  ? null
-                  : Theme.of(context).primaryColor.withOpacity(0.05),
+              color: notification.isRead ? null : Theme.of(context).primaryColor.withOpacity(0.05),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,13 +186,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
                           Expanded(
                             child: Text(
                               notification.title,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall
-                                  ?.copyWith(
-                                    fontWeight: notification.isRead
-                                        ? FontWeight.normal
-                                        : FontWeight.bold,
+                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    fontWeight:
+                                        notification.isRead ? FontWeight.normal : FontWeight.bold,
                                   ),
                             ),
                           ),
@@ -214,11 +207,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
                       Text(
                         notification.body,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.color
-                                  ?.withOpacity(0.7),
+                              color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.7),
                             ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -227,11 +216,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
                       Text(
                         _formatDateTime(notification.createdAt),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.color
-                                  ?.withOpacity(0.5),
+                              color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.5),
                               fontSize: 11,
                             ),
                       ),
@@ -335,8 +320,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Скоро'),
-        content:
-            Text('Функция "$feature" будет реализована в следующих версиях.'),
+        content: Text('Функция "$feature" будет реализована в следующих версиях.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

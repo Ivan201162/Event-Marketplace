@@ -194,7 +194,6 @@ class PremiumCardWidget extends StatelessWidget {
           ),
           border: Border.all(
             color: _getColor(tier).withOpacity(0.3),
-            width: 1,
           ),
         ),
         child: Padding(

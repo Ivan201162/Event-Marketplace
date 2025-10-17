@@ -16,8 +16,7 @@ class CustomerNotesScreen extends ConsumerStatefulWidget {
   final String userId;
 
   @override
-  ConsumerState<CustomerNotesScreen> createState() =>
-      _CustomerNotesScreenState();
+  ConsumerState<CustomerNotesScreen> createState() => _CustomerNotesScreenState();
 }
 
 class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
@@ -126,8 +125,7 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
         ],
       );
 
-  Widget _buildAllNotesTab(AsyncValue<List<CustomerNote>> notesAsync) =>
-      notesAsync.when(
+  Widget _buildAllNotesTab(AsyncValue<List<CustomerNote>> notesAsync) => notesAsync.when(
         data: (notes) {
           if (notes.isEmpty) {
             return _buildEmptyState(
@@ -243,8 +241,7 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
     );
   }
 
-  Widget _buildEmptyState(String title, String subtitle, IconData icon) =>
-      Center(
+  Widget _buildEmptyState(String title, String subtitle, IconData icon) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -273,8 +270,7 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
             Text('Ошибка: $error'),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () =>
-                  ref.refresh(customerNotesProvider(widget.userId)),
+              onPressed: () => ref.refresh(customerNotesProvider(widget.userId)),
               child: const Text('Повторить'),
             ),
           ],

@@ -61,8 +61,7 @@ class ReportService {
   }) async {
     try {
       // Получаем шаблон
-      final templateDoc =
-          await _firestore.collection('reportTemplates').doc(templateId).get();
+      final templateDoc = await _firestore.collection('reportTemplates').doc(templateId).get();
 
       if (!templateDoc.exists) {
         throw Exception('Шаблон отчета не найден');
@@ -106,8 +105,7 @@ class ReportService {
       await _updateReportStatus(reportId, ReportStatus.generating);
 
       // Получаем отчет
-      final reportDoc =
-          await _firestore.collection('reports').doc(reportId).get();
+      final reportDoc = await _firestore.collection('reports').doc(reportId).get();
       if (!reportDoc.exists) return;
 
       final report = Report.fromDocument(reportDoc);
@@ -144,10 +142,7 @@ class ReportService {
       }
 
       // Сохраняем данные отчета
-      await _firestore
-          .collection('reportData')
-          .doc(reportId)
-          .set(reportData.toMap());
+      await _firestore.collection('reportData').doc(reportId).set(reportData.toMap());
 
       // Генерируем файл отчета
       final fileUrl = await _generateReportFile(reportId, reportData);
@@ -245,8 +240,7 @@ class ReportService {
           'specialistId': data['specialistId'],
           'status': data['status'],
           'totalPrice': data['totalPrice'],
-          'createdAt':
-              (data['createdAt'] as Timestamp).toDate().toIso8601String(),
+          'createdAt': (data['createdAt'] as Timestamp).toDate().toIso8601String(),
           'startTime': data['startTime'] != null
               ? (data['startTime'] as Timestamp).toDate().toIso8601String()
               : null,
@@ -279,8 +273,7 @@ class ReportService {
           'totalBookings': rows.length,
           'completedBookings': completedBookings,
           'totalRevenue': totalRevenue,
-          'averageBookingValue':
-              rows.isNotEmpty ? totalRevenue / rows.length : 0,
+          'averageBookingValue': rows.isNotEmpty ? totalRevenue / rows.length : 0,
         },
         generatedAt: DateTime.now(),
         totalRows: rows.length,
@@ -333,8 +326,7 @@ class ReportService {
           'amount': data['amount'],
           'method': data['method'],
           'status': data['status'],
-          'createdAt':
-              (data['createdAt'] as Timestamp).toDate().toIso8601String(),
+          'createdAt': (data['createdAt'] as Timestamp).toDate().toIso8601String(),
         };
         rows.add(row);
 
@@ -352,8 +344,7 @@ class ReportService {
           'totalPayments': rows.length,
           'successfulPayments': successfulPayments,
           'totalAmount': totalAmount,
-          'averagePaymentAmount':
-              rows.isNotEmpty ? totalAmount / rows.length : 0,
+          'averagePaymentAmount': rows.isNotEmpty ? totalAmount / rows.length : 0,
         },
         generatedAt: DateTime.now(),
         totalRows: rows.length,
@@ -395,8 +386,7 @@ class ReportService {
           'email': data['email'],
           'type': data['type'],
           'isActive': data['isActive'],
-          'createdAt':
-              (data['createdAt'] as Timestamp).toDate().toIso8601String(),
+          'createdAt': (data['createdAt'] as Timestamp).toDate().toIso8601String(),
           'lastLoginAt': data['lastLoginAt'] != null
               ? (data['lastLoginAt'] as Timestamp).toDate().toIso8601String()
               : null,
@@ -468,8 +458,7 @@ class ReportService {
           'rating': data['rating'],
           'reviewCount': data['reviewCount'],
           'isVerified': data['isVerified'],
-          'createdAt':
-              (data['createdAt'] as Timestamp).toDate().toIso8601String(),
+          'createdAt': (data['createdAt'] as Timestamp).toDate().toIso8601String(),
         };
         rows.add(row);
 
@@ -516,8 +505,7 @@ class ReportService {
       final startDate = parameters['startDate'] as DateTime?;
       final endDate = parameters['endDate'] as DateTime?;
 
-      Query<Map<String, dynamic>> query =
-          _firestore.collection('analyticsEvents');
+      Query<Map<String, dynamic>> query = _firestore.collection('analyticsEvents');
 
       if (startDate != null) {
         query = query.where(
@@ -543,8 +531,7 @@ class ReportService {
           'eventName': data['eventName'],
           'screen': data['screen'],
           'userId': data['userId'],
-          'timestamp':
-              (data['timestamp'] as Timestamp).toDate().toIso8601String(),
+          'timestamp': (data['timestamp'] as Timestamp).toDate().toIso8601String(),
         };
         rows.add(row);
 
@@ -581,8 +568,7 @@ class ReportService {
       final endDate = parameters['endDate'] as DateTime?;
       final type = parameters['type'] as String?;
 
-      Query<Map<String, dynamic>> query =
-          _firestore.collection('sentNotifications');
+      Query<Map<String, dynamic>> query = _firestore.collection('sentNotifications');
 
       if (startDate != null) {
         query = query.where(
@@ -648,10 +634,8 @@ class ReportService {
           'totalSent': rows.length,
           'deliveredCount': deliveredCount,
           'readCount': readCount,
-          'deliveryRate':
-              rows.isNotEmpty ? (deliveredCount / rows.length) * 100 : 0,
-          'readRate':
-              deliveredCount > 0 ? (readCount / deliveredCount) * 100 : 0,
+          'deliveryRate': rows.isNotEmpty ? (deliveredCount / rows.length) * 100 : 0,
+          'readRate': deliveredCount > 0 ? (readCount / deliveredCount) * 100 : 0,
         },
         generatedAt: DateTime.now(),
         totalRows: rows.length,
@@ -704,8 +688,7 @@ class ReportService {
           'screen': data['screen'],
           'errorMessage': data['errorMessage'],
           'resolved': data['resolved'],
-          'timestamp':
-              (data['timestamp'] as Timestamp).toDate().toIso8601String(),
+          'timestamp': (data['timestamp'] as Timestamp).toDate().toIso8601String(),
         };
         rows.add(row);
 
@@ -805,9 +788,7 @@ class ReportService {
 
       // Данные
       for (final row in reportData.rows) {
-        final values = reportData.columns
-            .map((col) => row[col]?.toString() ?? '')
-            .toList();
+        final values = reportData.columns.map((col) => row[col]?.toString() ?? '').toList();
         csv.writeln(values.join(','));
       }
 
@@ -870,12 +851,10 @@ class ReportService {
         query = query.where('type', isEqualTo: type.toString().split('.').last);
       }
       if (status != null) {
-        query =
-            query.where('status', isEqualTo: status.toString().split('.').last);
+        query = query.where('status', isEqualTo: status.toString().split('.').last);
       }
 
-      final snapshot =
-          await query.orderBy('createdAt', descending: true).limit(limit).get();
+      final snapshot = await query.orderBy('createdAt', descending: true).limit(limit).get();
 
       return snapshot.docs.map(Report.fromDocument).toList();
     } catch (e) {

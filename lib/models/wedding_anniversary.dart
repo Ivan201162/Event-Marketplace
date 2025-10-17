@@ -18,8 +18,7 @@ class WeddingAnniversary {
   });
 
   /// Создать из Map
-  factory WeddingAnniversary.fromMap(Map<String, dynamic> data) =>
-      WeddingAnniversary(
+  factory WeddingAnniversary.fromMap(Map<String, dynamic> data) => WeddingAnniversary(
         id: data['id'] ?? '',
         customerId: data['customerId'] ?? '',
         customerName: data['customerName'] ?? '',
@@ -28,8 +27,7 @@ class WeddingAnniversary {
         yearsMarried: data['yearsMarried'] as int? ?? 0,
         nextAnniversary: (data['nextAnniversary'] as Timestamp).toDate(),
         isActive: data['isActive'] as bool? ?? true,
-        reminderDates:
-            List<String>.from(data['reminderDates'] ?? ['30', '7', '1']),
+        reminderDates: List<String>.from(data['reminderDates'] ?? ['30', '7', '1']),
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
         metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
@@ -112,10 +110,8 @@ class WeddingAnniversary {
     var currentYear = now.year;
 
     // Проверяем, была ли годовщина в этом году
-    final anniversaryThisYear =
-        DateTime(currentYear, weddingDate.month, weddingDate.day);
-    if (anniversaryThisYear.isBefore(now) ||
-        anniversaryThisYear.isAtSameMomentAs(now)) {
+    final anniversaryThisYear = DateTime(currentYear, weddingDate.month, weddingDate.day);
+    if (anniversaryThisYear.isBefore(now) || anniversaryThisYear.isAtSameMomentAs(now)) {
       currentYear++;
     }
 
@@ -261,17 +257,14 @@ class AnniversaryReminder {
   });
 
   /// Создать из Map
-  factory AnniversaryReminder.fromMap(Map<String, dynamic> data) =>
-      AnniversaryReminder(
+  factory AnniversaryReminder.fromMap(Map<String, dynamic> data) => AnniversaryReminder(
         id: data['id'] ?? '',
         anniversaryId: data['anniversaryId'] ?? '',
         customerId: data['customerId'] ?? '',
         reminderDate: (data['reminderDate'] as Timestamp).toDate(),
         message: data['message'] ?? '',
         isSent: data['isSent'] as bool? ?? false,
-        sentAt: data['sentAt'] != null
-            ? (data['sentAt'] as Timestamp).toDate()
-            : null,
+        sentAt: data['sentAt'] != null ? (data['sentAt'] as Timestamp).toDate() : null,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
       );
   final String id;

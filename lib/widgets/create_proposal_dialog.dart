@@ -19,8 +19,7 @@ class CreateProposalDialog extends ConsumerStatefulWidget {
   final String? customerName;
 
   @override
-  ConsumerState<CreateProposalDialog> createState() =>
-      _CreateProposalDialogState();
+  ConsumerState<CreateProposalDialog> createState() => _CreateProposalDialogState();
 }
 
 class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
@@ -29,8 +28,7 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
   final _descriptionController = TextEditingController();
   final _searchController = TextEditingController();
 
-  final SpecialistProposalService _proposalService =
-      SpecialistProposalService();
+  final SpecialistProposalService _proposalService = SpecialistProposalService();
   final SpecialistService _specialistService = SpecialistService();
 
   final List<SpecialistProfile> _selectedSpecialists = [];
@@ -96,8 +94,7 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
                           color: theme.colorScheme.surface,
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                            color: theme.colorScheme.outline
-                                .withValues(alpha: 0.2),
+                            color: theme.colorScheme.outline.withValues(alpha: 0.2),
                           ),
                         ),
                         child: Row(
@@ -140,8 +137,7 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
                         controller: _descriptionController,
                         decoration: const InputDecoration(
                           labelText: 'Описание',
-                          hintText:
-                              'Опишите, почему эти специалисты подходят для клиента...',
+                          hintText: 'Опишите, почему эти специалисты подходят для клиента...',
                           border: OutlineInputBorder(),
                         ),
                         maxLines: 3,
@@ -202,8 +198,7 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
                           height: 200,
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: theme.colorScheme.outline
-                                  .withValues(alpha: 0.2),
+                              color: theme.colorScheme.outline.withValues(alpha: 0.2),
                             ),
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -211,8 +206,8 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
                             itemCount: _searchResults.length,
                             itemBuilder: (context, index) {
                               final specialist = _searchResults[index];
-                              final isSelected = _selectedSpecialists
-                                  .any((s) => s.id == specialist.id);
+                              final isSelected =
+                                  _selectedSpecialists.any((s) => s.id == specialist.id);
 
                               return ListTile(
                                 leading: CircleAvatar(
@@ -239,20 +234,16 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
                                           ),
                                           const SizedBox(width: 4),
                                           Text(
-                                            specialist.rating
-                                                .toStringAsFixed(1),
+                                            specialist.rating.toStringAsFixed(1),
                                           ),
                                         ],
                                       ),
                                   ],
                                 ),
                                 trailing: IconButton(
-                                  onPressed: () =>
-                                      _toggleSpecialist(specialist),
+                                  onPressed: () => _toggleSpecialist(specialist),
                                   icon: Icon(
-                                    isSelected
-                                        ? Icons.check_circle
-                                        : Icons.add_circle_outline,
+                                    isSelected ? Icons.check_circle : Icons.add_circle_outline,
                                     color: isSelected ? Colors.green : null,
                                   ),
                                 ),
@@ -282,16 +273,14 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
                                   label: Text(specialist.displayName),
                                   avatar: CircleAvatar(
                                     radius: 12,
-                                    backgroundImage: specialist.avatarUrl !=
-                                            null
+                                    backgroundImage: specialist.avatarUrl != null
                                         ? NetworkImage(specialist.avatarUrl!)
                                         : null,
                                     child: specialist.avatarUrl == null
                                         ? const Icon(Icons.person, size: 12)
                                         : null,
                                   ),
-                                  onDeleted: () =>
-                                      _removeSpecialist(specialist),
+                                  onDeleted: () => _removeSpecialist(specialist),
                                   deleteIcon: const Icon(Icons.close, size: 18),
                                 ),
                               )
@@ -310,9 +299,7 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
               children: [
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: _isSubmitting
-                        ? null
-                        : () => Navigator.of(context).pop(),
+                    onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
                     child: const Text('Отмена'),
                   ),
                 ),
@@ -358,8 +345,7 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
       // Исключить уже выбранных специалистов
       final filteredResults = results
           .where(
-            (specialist) => !_selectedSpecialists
-                .any((selected) => selected.id == specialist.id),
+            (specialist) => !_selectedSpecialists.any((selected) => selected.id == specialist.id),
           )
           .toList();
 

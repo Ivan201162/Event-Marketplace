@@ -59,9 +59,8 @@ class IdeaWidget extends StatelessWidget {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color:
-                                ColorUtils.getCategoryColor(idea.categoryColor)
-                                    .withValues(alpha: 0.1),
+                            color: ColorUtils.getCategoryColor(idea.categoryColor)
+                                .withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: ColorUtils.getCategoryColor(
@@ -385,8 +384,7 @@ class IdeaListTile extends StatelessWidget {
                 width: 60,
                 height: 60,
                 decoration: BoxDecoration(
-                  color: ColorUtils.getCategoryColor(idea.categoryColor)
-                      .withValues(alpha: 0.1),
+                  color: ColorUtils.getCategoryColor(idea.categoryColor).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -413,11 +411,9 @@ class IdeaListTile extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: ColorUtils.getCategoryColor(idea.categoryColor)
-                        .withValues(alpha: 0.1),
+                    color: ColorUtils.getCategoryColor(idea.categoryColor).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -545,8 +541,8 @@ class IdeaGridTile extends StatelessWidget {
                         ),
                       )
                     : Container(
-                        color: ColorUtils.getCategoryColor(idea.categoryColor)
-                            .withValues(alpha: 0.1),
+                        color:
+                            ColorUtils.getCategoryColor(idea.categoryColor).withValues(alpha: 0.1),
                         child: Center(
                           child: Text(
                             idea.categoryIcon,
@@ -597,8 +593,7 @@ class IdeaGridTile extends StatelessWidget {
                           idea.category,
                           style: TextStyle(
                             fontSize: 10,
-                            color:
-                                ColorUtils.getCategoryColor(idea.categoryColor),
+                            color: ColorUtils.getCategoryColor(idea.categoryColor),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -614,9 +609,7 @@ class IdeaGridTile extends StatelessWidget {
                             child: Icon(
                               Icons.favorite,
                               size: 16,
-                              color: idea.likesCount > 0
-                                  ? Colors.red
-                                  : Colors.grey[600],
+                              color: idea.likesCount > 0 ? Colors.red : Colors.grey[600],
                             ),
                           ),
                           const SizedBox(width: 4),
@@ -630,9 +623,7 @@ class IdeaGridTile extends StatelessWidget {
                             child: Icon(
                               Icons.bookmark,
                               size: 16,
-                              color: idea.savesCount > 0
-                                  ? Colors.blue
-                                  : Colors.grey[600],
+                              color: idea.savesCount > 0 ? Colors.blue : Colors.grey[600],
                             ),
                           ),
                           const SizedBox(width: 4),

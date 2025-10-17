@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../models/advertisement.dart';
-import '../../services/advertisement_service.dart';
 import '../../providers/auth_provider.dart';
+import '../../services/advertisement_service.dart';
 
 class MyAdvertisementsScreen extends StatefulWidget {
   const MyAdvertisementsScreen({super.key});
@@ -138,8 +139,7 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color:
-                        _getStatusColor(advertisement.status).withOpacity(0.1),
+                    color: _getStatusColor(advertisement.status).withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -155,10 +155,9 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
                     children: [
                       Text(
                         advertisement.title ?? 'Без названия',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       Text(
                         _getStatusText(advertisement.status),
@@ -177,25 +176,20 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
 
             // Детали рекламы
             _buildDetailRow('Тип:', _getTypeText(advertisement.type)),
-            _buildDetailRow(
-                'Размещение:', _getPlacementText(advertisement.placement)),
+            _buildDetailRow('Размещение:', _getPlacementText(advertisement.placement)),
             _buildDetailRow('Цена:', '${advertisement.price.toInt()} ₽'),
             _buildDetailRow('Начало:', _formatDate(advertisement.startDate)),
             _buildDetailRow('Окончание:', _formatDate(advertisement.endDate)),
             _buildDetailRow('Показы:', advertisement.impressions.toString()),
             _buildDetailRow('Клики:', advertisement.clicks.toString()),
             _buildDetailRow('CTR:', '${advertisement.ctr.toStringAsFixed(2)}%'),
-            _buildDetailRow(
-                'CPC:', '${advertisement.cpc.toStringAsFixed(2)} ₽'),
-            _buildDetailRow(
-                'CPM:', '${advertisement.cpm.toStringAsFixed(2)} ₽'),
+            _buildDetailRow('CPC:', '${advertisement.cpc.toStringAsFixed(2)} ₽'),
+            _buildDetailRow('CPM:', '${advertisement.cpm.toStringAsFixed(2)} ₽'),
 
             if (advertisement.budget != null) ...[
               _buildDetailRow('Бюджет:', '${advertisement.budget!.toInt()} ₽'),
-              _buildDetailRow(
-                  'Потрачено:', '${advertisement.spentAmount.toInt()} ₽'),
-              _buildDetailRow(
-                  'Остаток:', '${advertisement.remainingBudget.toInt()} ₽'),
+              _buildDetailRow('Потрачено:', '${advertisement.spentAmount.toInt()} ₽'),
+              _buildDetailRow('Остаток:', '${advertisement.remainingBudget.toInt()} ₽'),
             ],
 
             if (advertisement.isActive) ...[
@@ -460,12 +454,9 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
               Text('CPM: ${advertisement.cpm.toStringAsFixed(2)} ₽'),
               Text('Начало: ${_formatDate(advertisement.startDate)}'),
               Text('Окончание: ${_formatDate(advertisement.endDate)}'),
-              if (advertisement.region != null)
-                Text('Регион: ${advertisement.region}'),
-              if (advertisement.city != null)
-                Text('Город: ${advertisement.city}'),
-              if (advertisement.category != null)
-                Text('Категория: ${advertisement.category}'),
+              if (advertisement.region != null) Text('Регион: ${advertisement.region}'),
+              if (advertisement.city != null) Text('Город: ${advertisement.city}'),
+              if (advertisement.category != null) Text('Категория: ${advertisement.category}'),
             ],
           ),
         ),
@@ -481,8 +472,7 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
 
   Future<void> _pauseAdvertisement(Advertisement advertisement) async {
     try {
-      final success =
-          await _advertisementService.pauseAdvertisement(advertisement.id);
+      final success = await _advertisementService.pauseAdvertisement(advertisement.id);
       if (success) {
         await _loadAdvertisements();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -503,8 +493,7 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
 
   Future<void> _resumeAdvertisement(Advertisement advertisement) async {
     try {
-      final success =
-          await _advertisementService.resumeAdvertisement(advertisement.id);
+      final success = await _advertisementService.resumeAdvertisement(advertisement.id);
       if (success) {
         await _loadAdvertisements();
         ScaffoldMessenger.of(context).showSnackBar(

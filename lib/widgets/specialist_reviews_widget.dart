@@ -81,9 +81,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                       children: List.generate(
                         5,
                         (index) => Icon(
-                          index < statistics.averageRating
-                              ? Icons.star
-                              : Icons.star_border,
+                          index < statistics.averageRating ? Icons.star : Icons.star_border,
                           color: Colors.amber,
                           size: 20,
                         ),
@@ -107,8 +105,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: List.generate(5, (index) {
                       final rating = 5 - index;
-                      const count =
-                          0; // TODO(developer): Implement ratingCounts
+                      const count = 0; // TODO(developer): Implement ratingCounts
                       final percentage = statistics.totalReviews > 0
                           ? (count / statistics.totalReviews * 100)
                           : 0.0;
@@ -245,9 +242,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                               children: List.generate(
                                 5,
                                 (index) => Icon(
-                                  index < review.rating
-                                      ? Icons.star
-                                      : Icons.star_border,
+                                  index < review.rating ? Icons.star : Icons.star_border,
                                   color: Colors.amber,
                                   size: 14,
                                 ),

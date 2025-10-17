@@ -25,8 +25,7 @@ class EnhancedChat {
         type: ChatType.fromString(map['type'] as String),
         members: (map['members'] as List?)
                 ?.map(
-                  (member) =>
-                      ChatMember.fromMap(member as Map<String, dynamic>),
+                  (member) => ChatMember.fromMap(member as Map<String, dynamic>),
                 )
                 .toList() ??
             [],
@@ -365,8 +364,7 @@ class ChatLastMessage {
         'text': text,
         'type': type.value,
         'createdAt': createdAt.millisecondsSinceEpoch,
-        'attachments':
-            attachments.map((attachment) => attachment.toMap()).toList(),
+        'attachments': attachments.map((attachment) => attachment.toMap()).toList(),
       };
 }
 

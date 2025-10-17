@@ -18,8 +18,7 @@ class GuestAccess {
     this.metadata,
   });
 
-  factory GuestAccess.fromMap(Map<String, dynamic> map, String id) =>
-      GuestAccess(
+  factory GuestAccess.fromMap(Map<String, dynamic> map, String id) => GuestAccess(
         id: id,
         eventId: map['eventId'] as String,
         organizerId: map['organizerId'] as String,
@@ -31,12 +30,8 @@ class GuestAccess {
           orElse: () => GuestAccessStatus.active,
         ),
         createdAt: (map['createdAt'] as Timestamp).toDate(),
-        expiresAt: map['expiresAt'] != null
-            ? (map['expiresAt'] as Timestamp).toDate()
-            : null,
-        lastUsedAt: map['lastUsedAt'] != null
-            ? (map['lastUsedAt'] as Timestamp).toDate()
-            : null,
+        expiresAt: map['expiresAt'] != null ? (map['expiresAt'] as Timestamp).toDate() : null,
+        lastUsedAt: map['lastUsedAt'] != null ? (map['lastUsedAt'] as Timestamp).toDate() : null,
         usageCount: map['usageCount'] as int,
         metadata: map['metadata'] as Map<String, dynamic>?,
       );
@@ -62,8 +57,7 @@ class GuestAccess {
         'status': status.toString().split('.').last,
         'createdAt': Timestamp.fromDate(createdAt),
         'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
-        'lastUsedAt':
-            lastUsedAt != null ? Timestamp.fromDate(lastUsedAt!) : null,
+        'lastUsedAt': lastUsedAt != null ? Timestamp.fromDate(lastUsedAt!) : null,
         'usageCount': usageCount,
         'metadata': metadata,
       };

@@ -10,8 +10,7 @@ final currentUserProvider =
     StreamProvider<User?>((ref) => FirebaseAuth.instance.authStateChanges());
 
 /// Провайдер для управления уведомлениями пользователя
-final userNotificationsProvider =
-    StreamProvider<List<app_notification.AppNotification>>((ref) {
+final userNotificationsProvider = StreamProvider<List<app_notification.AppNotification>>((ref) {
   final userAsync = ref.watch(currentUserProvider);
   return userAsync.when(
     data: (user) {
@@ -22,9 +21,8 @@ final userNotificationsProvider =
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map(
-            (snapshot) => snapshot.docs
-                .map(app_notification.AppNotification.fromFirestore)
-                .toList(),
+            (snapshot) =>
+                snapshot.docs.map(app_notification.AppNotification.fromFirestore).toList(),
           );
     },
     loading: () => Stream.value([]),
@@ -70,9 +68,7 @@ class NotificationNotifier
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map(
-          (snapshot) => snapshot.docs
-              .map(app_notification.AppNotification.fromFirestore)
-              .toList(),
+          (snapshot) => snapshot.docs.map(app_notification.AppNotification.fromFirestore).toList(),
         )
         .listen((notifications) {
       state = AsyncValue.data(notifications);
@@ -137,8 +133,8 @@ class NotificationNotifier
   }
 }
 
-final notificationNotifierProvider = StateNotifierProvider<NotificationNotifier,
-    AsyncValue<List<app_notification.AppNotification>>>(
+final notificationNotifierProvider =
+    StateNotifierProvider<NotificationNotifier, AsyncValue<List<app_notification.AppNotification>>>(
   (ref) => NotificationNotifier(),
 );
 

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 
 import '../models/social_models.dart';
 
@@ -97,14 +97,10 @@ class WeeklyLeadersWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         child: Container(
           decoration: BoxDecoration(
-            color: isTopThree
-                ? positionColor.withValues(alpha: 0.1)
-                : Colors.grey[50],
+            color: isTopThree ? positionColor.withValues(alpha: 0.1) : Colors.grey[50],
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isTopThree
-                  ? positionColor.withValues(alpha: 0.3)
-                  : Colors.grey[300]!,
+              color: isTopThree ? positionColor.withValues(alpha: 0.3) : Colors.grey[300]!,
             ),
           ),
           child: Padding(
@@ -192,8 +188,7 @@ class WeeklyLeadersWidget extends StatelessWidget {
 
                 // Счет
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                   decoration: BoxDecoration(
                     color: positionColor.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),

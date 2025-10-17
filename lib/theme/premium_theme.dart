@@ -208,8 +208,7 @@ class PremiumTheme {
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(color: errorColor, width: 2),
           ),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           hintStyle: const TextStyle(
             color: secondaryText,
             fontSize: 14,

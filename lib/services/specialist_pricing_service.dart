@@ -26,8 +26,7 @@ class SpecialistPricingService {
       final bookings = bookingsSnapshot.docs.map(Booking.fromDocument).toList();
 
       // Рассчитываем среднюю цену
-      final totalPrice =
-          bookings.fold<double>(0, (sum, booking) => sum + booking.totalPrice);
+      final totalPrice = bookings.fold<double>(0, (sum, booking) => sum + booking.totalPrice);
       final averagePrice = totalPrice / bookings.length;
 
       return averagePrice;
@@ -52,8 +51,7 @@ class SpecialistPricingService {
         return 0.0;
       }
 
-      final specialists =
-          specialistsSnapshot.docs.map(Specialist.fromDocument).toList();
+      final specialists = specialistsSnapshot.docs.map(Specialist.fromDocument).toList();
 
       // Рассчитываем среднюю цену
       final totalPrice = specialists.fold<double>(
@@ -161,8 +159,7 @@ class SpecialistPricingService {
 
       for (final entry in monthlyPrices.entries) {
         final prices = entry.value;
-        final averagePrice =
-            prices.fold<double>(0, (sum, price) => sum + price) / prices.length;
+        final averagePrice = prices.fold<double>(0, (sum, price) => sum + price) / prices.length;
 
         history.add(
           PriceHistoryEntry(
@@ -222,8 +219,7 @@ class SpecialistPricingStats {
         lastUpdated: DateTime.now(),
       );
 
-  factory SpecialistPricingStats.fromMap(Map<String, dynamic> data) =>
-      SpecialistPricingStats(
+  factory SpecialistPricingStats.fromMap(Map<String, dynamic> data) => SpecialistPricingStats(
         specialistId: data['specialistId'] as String? ?? '',
         totalOrders: data['totalOrders'] as int? ?? 0,
         averagePrice: (data['averagePrice'] as num?)?.toDouble() ?? 0.0,
@@ -262,8 +258,7 @@ class PriceHistoryEntry {
     required this.orderCount,
   });
 
-  factory PriceHistoryEntry.fromMap(Map<String, dynamic> data) =>
-      PriceHistoryEntry(
+  factory PriceHistoryEntry.fromMap(Map<String, dynamic> data) => PriceHistoryEntry(
         month: data['month'] as String? ?? '',
         averagePrice: (data['averagePrice'] as num?)?.toDouble() ?? 0.0,
         orderCount: data['orderCount'] as int? ?? 0,

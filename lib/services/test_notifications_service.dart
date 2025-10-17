@@ -18,10 +18,8 @@ class TestNotificationsService {
   static Future<void> createTestNotifications(String userId) async {
     try {
       // Проверяем, есть ли уже уведомления
-      final existingNotifications = await _firestore
-          .collection('notifications')
-          .where('userId', isEqualTo: userId)
-          .get();
+      final existingNotifications =
+          await _firestore.collection('notifications').where('userId', isEqualTo: userId).get();
 
       if (existingNotifications.docs.isNotEmpty) {
         debugPrint(
@@ -61,8 +59,7 @@ class TestNotificationsService {
         {
           'userId': userId,
           'title': 'Новый отзыв',
-          'body':
-              'Кто-то оставил отзыв о вашей работе - "Отличная организация!"',
+          'body': 'Кто-то оставил отзыв о вашей работе - "Отличная организация!"',
           'type': 'review',
           'data': {
             'reviewId': 'review_1',
@@ -75,8 +72,7 @@ class TestNotificationsService {
         {
           'userId': userId,
           'title': 'Системное уведомление',
-          'body':
-              'Приложение обновлено до версии 1.0.0. Добавлены новые функции!',
+          'body': 'Приложение обновлено до версии 1.0.0. Добавлены новые функции!',
           'type': 'system',
           'data': {
             'version': '1.0.0',
@@ -171,10 +167,8 @@ class TestNotificationsService {
   static Future<void> clearTestNotificationsForUser(String userId) async {
     try {
       final batch = _firestore.batch();
-      final notifications = await _firestore
-          .collection('notifications')
-          .where('userId', isEqualTo: userId)
-          .get();
+      final notifications =
+          await _firestore.collection('notifications').where('userId', isEqualTo: userId).get();
 
       for (final doc in notifications.docs) {
         batch.delete(doc.reference);

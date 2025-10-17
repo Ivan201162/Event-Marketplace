@@ -7,12 +7,10 @@ class PopularSpecialistsWidget extends ConsumerStatefulWidget {
   const PopularSpecialistsWidget({super.key});
 
   @override
-  ConsumerState<PopularSpecialistsWidget> createState() =>
-      _PopularSpecialistsWidgetState();
+  ConsumerState<PopularSpecialistsWidget> createState() => _PopularSpecialistsWidgetState();
 }
 
-class _PopularSpecialistsWidgetState
-    extends ConsumerState<PopularSpecialistsWidget> {
+class _PopularSpecialistsWidgetState extends ConsumerState<PopularSpecialistsWidget> {
   final SmartSearchService _searchService = SmartSearchService();
   List<Map<String, dynamic>> _specialists = [];
   bool _isLoading = true;
@@ -137,8 +135,7 @@ class _PopularSpecialistsWidgetState
               Container(
                 height: 100,
                 decoration: BoxDecoration(
-                  borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(12)),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
                   image: avatarUrl != null
                       ? DecorationImage(
                           image: NetworkImage(avatarUrl),
@@ -166,8 +163,7 @@ class _PopularSpecialistsWidgetState
                 bottom: 8,
                 right: 8,
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: Colors.black.withValues(alpha: 0.7),
                     borderRadius: BorderRadius.circular(12),

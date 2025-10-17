@@ -25,16 +25,13 @@ class StudioRecommendation {
       studioUrl: data['studioUrl'] ?? '',
       message: data['message'],
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      expiresAt: data['expiresAt'] != null
-          ? (data['expiresAt'] as Timestamp).toDate()
-          : null,
+      expiresAt: data['expiresAt'] != null ? (data['expiresAt'] as Timestamp).toDate() : null,
       isActive: data['isActive'] as bool? ?? true,
     );
   }
 
   /// Создать из Map
-  factory StudioRecommendation.fromMap(Map<String, dynamic> data) =>
-      StudioRecommendation(
+  factory StudioRecommendation.fromMap(Map<String, dynamic> data) => StudioRecommendation(
         id: data['id'] ?? '',
         photographerId: data['photographerId'] ?? '',
         studioId: data['studioId'] ?? '',
@@ -42,9 +39,7 @@ class StudioRecommendation {
         studioUrl: data['studioUrl'] ?? '',
         message: data['message'],
         createdAt: (data['createdAt'] as Timestamp).toDate(),
-        expiresAt: data['expiresAt'] != null
-            ? (data['expiresAt'] as Timestamp).toDate()
-            : null,
+        expiresAt: data['expiresAt'] != null ? (data['expiresAt'] as Timestamp).toDate() : null,
         isActive: data['isActive'] as bool? ?? true,
       );
   final String id;
@@ -259,8 +254,7 @@ class DualBooking {
       );
 
   /// Получить продолжительность в часах
-  double get durationInHours =>
-      endTime.difference(startTime).inHours.toDouble();
+  double get durationInHours => endTime.difference(startTime).inHours.toDouble();
 
   /// Проверить, активно ли бронирование
   bool get isActive => status == 'confirmed' || status == 'in_progress';
@@ -314,6 +308,5 @@ class DualBooking {
       );
 
   @override
-  String toString() =>
-      'DualBooking(id: $id, customerId: $customerId, status: $status)';
+  String toString() => 'DualBooking(id: $id, customerId: $customerId, status: $status)';
 }

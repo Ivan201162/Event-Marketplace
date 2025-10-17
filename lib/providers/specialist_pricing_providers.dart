@@ -8,8 +8,7 @@ final specialistPricingServiceProvider =
 
 /// Провайдер состояния цен специалиста
 final specialistPricingProvider =
-    StateNotifierProvider<SpecialistPricingNotifier, SpecialistPricingState>(
-        (ref) {
+    StateNotifierProvider<SpecialistPricingNotifier, SpecialistPricingState>((ref) {
   final service = ref.watch(specialistPricingServiceProvider);
   return SpecialistPricingNotifier(service);
 });
@@ -48,8 +47,7 @@ class SpecialistPricingState {
 
 /// StateNotifier для управления ценами специалиста
 class SpecialistPricingNotifier extends StateNotifier<SpecialistPricingState> {
-  SpecialistPricingNotifier(this._service)
-      : super(const SpecialistPricingState());
+  SpecialistPricingNotifier(this._service) : super(const SpecialistPricingState());
 
   final SpecialistPricingService _service;
 
@@ -161,8 +159,7 @@ class SpecialistPricingNotifier extends StateNotifier<SpecialistPricingState> {
 
 /// Провайдер для получения статистики цен специалиста
 final specialistPricingStatsProvider =
-    FutureProvider.family<SpecialistPricingStats, String>(
-        (ref, specialistId) async {
+    FutureProvider.family<SpecialistPricingStats, String>((ref, specialistId) async {
   final service = ref.watch(specialistPricingServiceProvider);
   return service.getSpecialistPricingStats(specialistId);
 });
@@ -183,8 +180,7 @@ final categoryAveragePriceProvider =
 
 /// Провайдер для получения истории цен специалиста
 final specialistPriceHistoryProvider =
-    FutureProvider.family<List<PriceHistoryEntry>, String>(
-        (ref, specialistId) async {
+    FutureProvider.family<List<PriceHistoryEntry>, String>((ref, specialistId) async {
   final service = ref.watch(specialistPricingServiceProvider);
   return service.getSpecialistPriceHistory(specialistId);
 });

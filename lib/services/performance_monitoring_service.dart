@@ -15,8 +15,7 @@ class PerformanceMonitoringService {
   final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
   final Uuid _uuid = const Uuid();
 
-  static final PerformanceMonitoringService _instance =
-      PerformanceMonitoringService._internal();
+  static final PerformanceMonitoringService _instance = PerformanceMonitoringService._internal();
 
   Timer? _monitoringTimer;
   String? _currentSessionId;
@@ -178,8 +177,7 @@ class PerformanceMonitoringService {
         description: 'Задержка сети',
         timestamp: timestamp,
         metadata: {
-          'connectionType':
-              'wifi', // В реальном приложении получать из connectivity_plus
+          'connectionType': 'wifi', // В реальном приложении получать из connectivity_plus
         },
       );
     } catch (e) {
@@ -477,8 +475,7 @@ class PerformanceMonitoringService {
     int limit = 100,
   }) async {
     try {
-      Query<Map<String, dynamic>> query =
-          _firestore.collection('performanceMetrics');
+      Query<Map<String, dynamic>> query = _firestore.collection('performanceMetrics');
 
       if (metricName != null) {
         query = query.where('name', isEqualTo: metricName);
@@ -499,8 +496,7 @@ class PerformanceMonitoringService {
         );
       }
 
-      final snapshot =
-          await query.orderBy('timestamp', descending: true).limit(limit).get();
+      final snapshot = await query.orderBy('timestamp', descending: true).limit(limit).get();
 
       return snapshot.docs.map(PerformanceMetric.fromDocument).toList();
     } catch (e) {

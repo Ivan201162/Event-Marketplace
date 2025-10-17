@@ -9,12 +9,10 @@ class LocationSettingsScreen extends ConsumerStatefulWidget {
   const LocationSettingsScreen({super.key});
 
   @override
-  ConsumerState<LocationSettingsScreen> createState() =>
-      _LocationSettingsScreenState();
+  ConsumerState<LocationSettingsScreen> createState() => _LocationSettingsScreenState();
 }
 
-class _LocationSettingsScreenState
-    extends ConsumerState<LocationSettingsScreen> {
+class _LocationSettingsScreenState extends ConsumerState<LocationSettingsScreen> {
   final IntegrationService _integrationService = IntegrationService();
 
   bool _locationEnabled = false;
@@ -240,8 +238,7 @@ class _LocationSettingsScreenState
                             children: [
                               Expanded(
                                 child: OutlinedButton.icon(
-                                  onPressed: () =>
-                                      _getAddressFromLocation(location),
+                                  onPressed: () => _getAddressFromLocation(location),
                                   icon: const Icon(Icons.map),
                                   label: const Text('Показать на карте'),
                                 ),
@@ -306,8 +303,7 @@ class _LocationSettingsScreenState
               _buildInfoRow('Точность', '${location.accuracy!.toInt()} м'),
             if (location.altitude != null)
               _buildInfoRow('Высота', '${location.altitude!.toInt()} м'),
-            if (location.speed != null)
-              _buildInfoRow('Скорость', '${location.speed!.toInt()} м/с'),
+            if (location.speed != null) _buildInfoRow('Скорость', '${location.speed!.toInt()} м/с'),
             _buildInfoRow('Время', _formatDateTime(location.timestamp)),
           ],
         ),

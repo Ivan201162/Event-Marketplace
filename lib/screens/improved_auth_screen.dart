@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../services/supabase_service.dart';
-import '../models/social_models.dart';
 
 /// Улучшенный экран авторизации с вкладками и интеграцией Supabase
 class ImprovedAuthScreen extends ConsumerStatefulWidget {
@@ -116,8 +115,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content:
-                Text('Регистрация успешна! Проверьте email для подтверждения.'),
+            content: Text('Регистрация успешна! Проверьте email для подтверждения.'),
           ),
         );
 
@@ -235,9 +233,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
 
   Future<void> _createProfile(User user) async {
     try {
-      final name = user.userMetadata?['name'] ??
-          user.email?.split('@')[0] ??
-          'Пользователь';
+      final name = user.userMetadata?['name'] ?? user.email?.split('@')[0] ?? 'Пользователь';
       final username = _generateUsername(name);
 
       await Supabase.instance.client.from('profiles').insert({
@@ -394,16 +390,13 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         decoration: BoxDecoration(
-                          color: _isLoginMode
-                              ? theme.primaryColor
-                              : Colors.transparent,
+                          color: _isLoginMode ? theme.primaryColor : Colors.transparent,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
                           'Вход',
                           style: TextStyle(
-                            color:
-                                _isLoginMode ? Colors.white : Colors.grey[600],
+                            color: _isLoginMode ? Colors.white : Colors.grey[600],
                             fontWeight: FontWeight.w600,
                           ),
                           textAlign: TextAlign.center,
@@ -417,16 +410,13 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         decoration: BoxDecoration(
-                          color: !_isLoginMode
-                              ? theme.primaryColor
-                              : Colors.transparent,
+                          color: !_isLoginMode ? theme.primaryColor : Colors.transparent,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
                           'Регистрация',
                           style: TextStyle(
-                            color:
-                                !_isLoginMode ? Colors.white : Colors.grey[600],
+                            color: !_isLoginMode ? Colors.white : Colors.grey[600],
                             fontWeight: FontWeight.w600,
                           ),
                           textAlign: TextAlign.center,
@@ -471,8 +461,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
                 if (value == null || value.trim().isEmpty) {
                   return 'Введите email';
                 }
-                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                    .hasMatch(value)) {
+                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
                   return 'Введите корректный email';
                 }
                 return null;
@@ -488,11 +477,8 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
                 labelText: 'Пароль',
                 prefixIcon: const Icon(Icons.lock),
                 suffixIcon: IconButton(
-                  icon: Icon(_isPasswordVisible
-                      ? Icons.visibility
-                      : Icons.visibility_off),
-                  onPressed: () =>
-                      setState(() => _isPasswordVisible = !_isPasswordVisible),
+                  icon: Icon(_isPasswordVisible ? Icons.visibility : Icons.visibility_off),
+                  onPressed: () => setState(() => _isPasswordVisible = !_isPasswordVisible),
                 ),
                 border: const OutlineInputBorder(),
               ),
@@ -511,9 +497,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
 
             // Кнопка
             ElevatedButton(
-              onPressed: _isLoading
-                  ? null
-                  : (_isLoginMode ? _signInWithEmail : _signUpWithEmail),
+              onPressed: _isLoading ? null : (_isLoginMode ? _signInWithEmail : _signUpWithEmail),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),

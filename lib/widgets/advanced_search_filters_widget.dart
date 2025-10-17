@@ -17,12 +17,10 @@ class AdvancedSearchFiltersWidget extends ConsumerStatefulWidget {
   final Function(AdvancedSearchFilters)? onFiltersChanged;
 
   @override
-  ConsumerState<AdvancedSearchFiltersWidget> createState() =>
-      _AdvancedSearchFiltersWidgetState();
+  ConsumerState<AdvancedSearchFiltersWidget> createState() => _AdvancedSearchFiltersWidgetState();
 }
 
-class _AdvancedSearchFiltersWidgetState
-    extends ConsumerState<AdvancedSearchFiltersWidget> {
+class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFiltersWidget> {
   late AdvancedSearchFilters _filters;
   final PageController _pageController = PageController();
 
@@ -91,8 +89,7 @@ class _AdvancedSearchFiltersWidgetState
             // Выбор города
             CitySelectionWidget(
               selectedCity: _filters.selectedCity,
-              onCitySelected: (city) =>
-                  _updateFilters(_filters.copyWith(selectedCity: city)),
+              onCitySelected: (city) => _updateFilters(_filters.copyWith(selectedCity: city)),
               hintText: 'Выберите город',
             ),
 
@@ -176,8 +173,7 @@ class _AdvancedSearchFiltersWidgetState
                   label: Text('${category.icon} ${category.displayName}'),
                   selected: isSelected,
                   onSelected: (selected) {
-                    final newCategories =
-                        List<SpecialistCategory>.from(_filters.categories);
+                    final newCategories = List<SpecialistCategory>.from(_filters.categories);
                     if (selected) {
                       newCategories.add(category);
                     } else {
@@ -206,11 +202,8 @@ class _AdvancedSearchFiltersWidgetState
                 border: OutlineInputBorder(),
               ),
               onChanged: (value) {
-                final subcategories = value
-                    .split(',')
-                    .map((s) => s.trim())
-                    .where((s) => s.isNotEmpty)
-                    .toList();
+                final subcategories =
+                    value.split(',').map((s) => s.trim()).where((s) => s.isNotEmpty).toList();
                 _updateFilters(_filters.copyWith(subcategories: subcategories));
               },
             ),
@@ -230,11 +223,8 @@ class _AdvancedSearchFiltersWidgetState
                 border: OutlineInputBorder(),
               ),
               onChanged: (value) {
-                final services = value
-                    .split(',')
-                    .map((s) => s.trim())
-                    .where((s) => s.isNotEmpty)
-                    .toList();
+                final services =
+                    value.split(',').map((s) => s.trim()).where((s) => s.isNotEmpty).toList();
                 _updateFilters(_filters.copyWith(services: services));
               },
             ),

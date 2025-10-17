@@ -19,26 +19,15 @@ class AvailabilityFilter {
   });
 
   /// Создать из Map
-  factory AvailabilityFilter.fromMap(Map<String, dynamic> data) =>
-      AvailabilityFilter(
-        startDate: data['startDate'] != null
-            ? (data['startDate'] as Timestamp).toDate()
-            : null,
-        endDate: data['endDate'] != null
-            ? (data['endDate'] as Timestamp).toDate()
-            : null,
-        preferredHours: data['preferredHours'] != null
-            ? List<int>.from(data['preferredHours'])
-            : null,
-        preferredDays: data['preferredDays'] != null
-            ? List<String>.from(data['preferredDays'])
-            : null,
-        minDuration: data['minDuration'] != null
-            ? Duration(minutes: data['minDuration'])
-            : null,
-        maxDuration: data['maxDuration'] != null
-            ? Duration(minutes: data['maxDuration'])
-            : null,
+  factory AvailabilityFilter.fromMap(Map<String, dynamic> data) => AvailabilityFilter(
+        startDate: data['startDate'] != null ? (data['startDate'] as Timestamp).toDate() : null,
+        endDate: data['endDate'] != null ? (data['endDate'] as Timestamp).toDate() : null,
+        preferredHours:
+            data['preferredHours'] != null ? List<int>.from(data['preferredHours']) : null,
+        preferredDays:
+            data['preferredDays'] != null ? List<String>.from(data['preferredDays']) : null,
+        minDuration: data['minDuration'] != null ? Duration(minutes: data['minDuration']) : null,
+        maxDuration: data['maxDuration'] != null ? Duration(minutes: data['maxDuration']) : null,
         onlyAvailable: data['onlyAvailable'] ?? true,
       );
   final DateTime? startDate;
@@ -96,8 +85,7 @@ class SpecialistAvailability {
   });
 
   /// Создать из Map
-  factory SpecialistAvailability.fromMap(Map<String, dynamic> data) =>
-      SpecialistAvailability(
+  factory SpecialistAvailability.fromMap(Map<String, dynamic> data) => SpecialistAvailability(
         specialistId: data['specialistId'] ?? '',
         specialistName: data['specialistName'] ?? '',
         specialistPhoto: data['specialistPhoto'],
@@ -105,17 +93,14 @@ class SpecialistAvailability {
                 ?.map((slot) => (slot as Timestamp).toDate())
                 .toList() ??
             [],
-        busySlots: (data['busySlots'] as List?)
-                ?.map((slot) => (slot as Timestamp).toDate())
-                .toList() ??
-            [],
+        busySlots:
+            (data['busySlots'] as List?)?.map((slot) => (slot as Timestamp).toDate()).toList() ??
+                [],
         weeklyAvailability: Map<String, List<DateTime>>.from(
           (data['weeklyAvailability'] as Map?)?.map(
                 (key, value) => MapEntry(
                   key.toString(),
-                  (value as List)
-                      .map((slot) => (slot as Timestamp).toDate())
-                      .toList(),
+                  (value as List).map((slot) => (slot as Timestamp).toDate()).toList(),
                 ),
               ) ??
               {},
@@ -196,11 +181,9 @@ class AvailabilityFilterService {
           .get();
 
       // Получаем информацию о специалисте
-      final specialistDoc =
-          await _firestore.collection('users').doc(specialistId).get();
+      final specialistDoc = await _firestore.collection('users').doc(specialistId).get();
 
-      final specialistName =
-          specialistDoc.data()?['displayName'] ?? 'Специалист';
+      final specialistName = specialistDoc.data()?['displayName'] ?? 'Специалист';
       final specialistPhoto = specialistDoc.data()?['photoURL'];
 
       // Обрабатываем расписание
@@ -276,8 +259,7 @@ class AvailabilityFilterService {
       }
 
       // Сортируем по score доступности
-      availabilityList
-          .sort((a, b) => b.availabilityScore.compareTo(a.availabilityScore));
+      availabilityList.sort((a, b) => b.availabilityScore.compareTo(a.availabilityScore));
 
       return availabilityList;
     } catch (e) {
@@ -478,8 +460,7 @@ class AvailabilityFilterService {
 
     // Вычисляем score доступности
     final totalSlots = availableSlots.length + busySlots.length;
-    final availabilityScore =
-        totalSlots > 0 ? availableSlots.length / totalSlots : 0.0;
+    final availabilityScore = totalSlots > 0 ? availableSlots.length / totalSlots : 0.0;
 
     return SpecialistAvailability(
       specialistId: specialistId,
@@ -596,8 +577,7 @@ class AvailabilityFilterService {
     return SpecialistAvailability(
       specialistId: specialistId,
       specialistName: 'Mock Специалист',
-      specialistPhoto:
-          'https://via.placeholder.com/100x100/4CAF50/FFFFFF?text=MS',
+      specialistPhoto: 'https://via.placeholder.com/100x100/4CAF50/FFFFFF?text=MS',
       availableSlots: availableSlots,
       busySlots: busySlots,
       weeklyAvailability: weeklyAvailability,

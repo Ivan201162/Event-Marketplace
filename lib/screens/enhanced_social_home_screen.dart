@@ -2,23 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../services/supabase_service.dart';
 import '../models/social_models.dart';
+import '../services/supabase_service.dart';
 import '../widgets/animated_profile_banner.dart';
-import '../widgets/weekly_leaders_widget.dart';
 import '../widgets/filters_dialog.dart';
+import '../widgets/weekly_leaders_widget.dart';
 
 /// Улучшенный главный экран с профилем, фильтрами и топом специалистов
 class EnhancedSocialHomeScreen extends ConsumerStatefulWidget {
   const EnhancedSocialHomeScreen({super.key});
 
   @override
-  ConsumerState<EnhancedSocialHomeScreen> createState() =>
-      _EnhancedSocialHomeScreenState();
+  ConsumerState<EnhancedSocialHomeScreen> createState() => _EnhancedSocialHomeScreenState();
 }
 
-class _EnhancedSocialHomeScreenState
-    extends ConsumerState<EnhancedSocialHomeScreen>
+class _EnhancedSocialHomeScreenState extends ConsumerState<EnhancedSocialHomeScreen>
     with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
@@ -42,8 +40,7 @@ class _EnhancedSocialHomeScreenState
       vsync: this,
     );
     _profileAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-          parent: _profileAnimationController, curve: Curves.easeInOut),
+      CurvedAnimation(parent: _profileAnimationController, curve: Curves.easeInOut),
     );
 
     _scrollController.addListener(_onScroll);
@@ -99,7 +96,6 @@ class _EnhancedSocialHomeScreenState
     try {
       final leaders = await SupabaseService.getWeeklyLeaders(
         city: _selectedCity,
-        limit: 10,
       );
       setState(() {
         _weeklyLeaders = leaders;
@@ -141,7 +137,6 @@ class _EnhancedSocialHomeScreenState
           // App Bar
           SliverAppBar(
             expandedHeight: 120,
-            floating: false,
             pinned: true,
             backgroundColor: theme.primaryColor,
             flexibleSpace: FlexibleSpaceBar(
@@ -171,8 +166,7 @@ class _EnhancedSocialHomeScreenState
                 onPressed: _showFiltersDialog,
               ),
               IconButton(
-                icon: const Icon(Icons.notifications_outlined,
-                    color: Colors.white),
+                icon: const Icon(Icons.notifications_outlined, color: Colors.white),
                 onPressed: () => context.push('/notifications'),
               ),
             ],
@@ -478,8 +472,7 @@ class _EnhancedSocialHomeScreenState
           else
             WeeklyLeadersWidget(
               leaders: _weeklyLeaders,
-              onLeaderTap: (leader) =>
-                  context.push('/profile/${leader.userId}'),
+              onLeaderTap: (leader) => context.push('/profile/${leader.userId}'),
             ),
         ],
       ),

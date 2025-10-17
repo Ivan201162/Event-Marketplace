@@ -46,15 +46,13 @@ class Customer {
                 : DateTime.parse(data['weddingDate'].toString()))
             : null,
         partnerName: data['partnerName'],
-        favoriteSpecialists:
-            List<String>.from(data['favoriteSpecialists'] ?? []),
+        favoriteSpecialists: List<String>.from(data['favoriteSpecialists'] ?? []),
         ordersHistory: List<String>.from(data['ordersHistory'] ?? []),
         anniversaries: (data['anniversaries'] as List<dynamic>?)
                 ?.map((e) => Map<String, dynamic>.from(e))
                 .toList() ??
             [],
-        anniversaryRemindersEnabled:
-            data['anniversaryRemindersEnabled'] as bool? ?? false,
+        anniversaryRemindersEnabled: data['anniversaryRemindersEnabled'] as bool? ?? false,
         createdAt: data['createdAt'] != null
             ? (data['createdAt'] is Timestamp
                 ? (data['createdAt'] as Timestamp).toDate()
@@ -127,8 +125,7 @@ class Customer {
   }
 
   /// Проверить, является ли специалист в избранном
-  bool isFavoriteSpecialist(String specialistId) =>
-      favoriteSpecialists.contains(specialistId);
+  bool isFavoriteSpecialist(String specialistId) => favoriteSpecialists.contains(specialistId);
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -137,16 +134,14 @@ class Customer {
         'avatarUrl': avatarUrl,
         'phoneNumber': phoneNumber,
         'maritalStatus': maritalStatus.name,
-        'weddingDate':
-            weddingDate != null ? Timestamp.fromDate(weddingDate!) : null,
+        'weddingDate': weddingDate != null ? Timestamp.fromDate(weddingDate!) : null,
         'partnerName': partnerName,
         'favoriteSpecialists': favoriteSpecialists,
         'ordersHistory': ordersHistory,
         'anniversaries': anniversaries,
         'anniversaryRemindersEnabled': anniversaryRemindersEnabled,
         'createdAt': Timestamp.fromDate(createdAt),
-        'lastLoginAt':
-            lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
+        'lastLoginAt': lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
         'additionalData': additionalData,
       };
 

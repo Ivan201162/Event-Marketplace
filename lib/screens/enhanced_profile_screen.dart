@@ -10,7 +10,6 @@ import '../widgets/portfolio_widget.dart';
 import '../widgets/profile_statistics_widget.dart';
 import '../widgets/social_links_widget.dart';
 import '../widgets/specialist_badges_widget.dart';
-import 'edit_profile_screen.dart';
 
 /// Улучшенный экран профиля специалиста/пользователя
 class EnhancedProfileScreen extends ConsumerStatefulWidget {
@@ -23,15 +22,14 @@ class EnhancedProfileScreen extends ConsumerStatefulWidget {
   final String? specialistId;
 
   @override
-  ConsumerState<EnhancedProfileScreen> createState() =>
-      _EnhancedProfileScreenState();
+  ConsumerState<EnhancedProfileScreen> createState() => _EnhancedProfileScreenState();
 }
 
 class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final bool _isOnline = true;
-  bool _isEditing = false;
+  final bool _isEditing = false;
 
   @override
   void initState() {
@@ -49,8 +47,7 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
   Widget build(BuildContext context) {
     final currentUserAsync = ref.watch(currentUserProvider);
     final currentUser = currentUserAsync.value;
-    final isOwnProfile =
-        widget.specialistId == null || widget.specialistId == currentUser?.uid;
+    final isOwnProfile = widget.specialistId == null || widget.specialistId == currentUser?.uid;
 
     return Scaffold(
       appBar: AppBar(
@@ -133,15 +130,11 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
               children: [
                 CircleAvatar(
                   radius: 50,
-                  backgroundImage: currentUser?.photoURL != null
-                      ? NetworkImage(currentUser!.photoURL!)
-                      : null,
+                  backgroundImage:
+                      currentUser?.photoURL != null ? NetworkImage(currentUser!.photoURL!) : null,
                   child: currentUser?.photoURL == null
                       ? Text(
-                          currentUser?.displayName
-                                  ?.substring(0, 1)
-                                  .toUpperCase() ??
-                              '?',
+                          currentUser?.displayName?.substring(0, 1).toUpperCase() ?? '?',
                           style: const TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,

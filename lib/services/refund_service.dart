@@ -76,8 +76,7 @@ class RefundService {
   /// Processes a refund through the appropriate payment gateway
   Future<void> processRefund(String refundId) async {
     try {
-      final refundDoc =
-          await _firestore.collection('refunds').doc(refundId).get();
+      final refundDoc = await _firestore.collection('refunds').doc(refundId).get();
       if (!refundDoc.exists) {
         throw Exception('Возврат не найден');
       }
@@ -241,8 +240,7 @@ class RefundService {
     }
 
     // Check if payment is within refund window (typically 30 days)
-    final daysSincePayment =
-        DateTime.now().difference(payment.completedAt!).inDays;
+    final daysSincePayment = DateTime.now().difference(payment.completedAt!).inDays;
     if (daysSincePayment > 30) {
       return false;
     }
@@ -411,8 +409,7 @@ class Refund {
         'failureReason': failureReason,
         'createdAt': Timestamp.fromDate(createdAt),
         'updatedAt': Timestamp.fromDate(updatedAt),
-        'completedAt':
-            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+        'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
       };
 }
 

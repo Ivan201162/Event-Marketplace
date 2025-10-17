@@ -13,16 +13,13 @@ class HomeScreenWithSmartSearch extends ConsumerStatefulWidget {
   const HomeScreenWithSmartSearch({super.key});
 
   @override
-  ConsumerState<HomeScreenWithSmartSearch> createState() =>
-      _HomeScreenWithSmartSearchState();
+  ConsumerState<HomeScreenWithSmartSearch> createState() => _HomeScreenWithSmartSearchState();
 }
 
-class _HomeScreenWithSmartSearchState
-    extends ConsumerState<HomeScreenWithSmartSearch> {
+class _HomeScreenWithSmartSearchState extends ConsumerState<HomeScreenWithSmartSearch> {
   final SmartSearchService _smartSearchService = SmartSearchService();
   final AIAssistantService _aiAssistantService = AIAssistantService();
-  final SmartSpecialistDataGenerator _dataGenerator =
-      SmartSpecialistDataGenerator();
+  final SmartSpecialistDataGenerator _dataGenerator = SmartSpecialistDataGenerator();
 
   List<SmartSpecialist> _recommendations = [];
   List<SmartSpecialist> _popularSpecialists = [];
@@ -41,8 +38,7 @@ class _HomeScreenWithSmartSearchState
 
     try {
       // Загружаем популярных специалистов
-      final popularSpecialists =
-          await _smartSearchService.getPopularSpecialists(limit: 6);
+      final popularSpecialists = await _smartSearchService.getPopularSpecialists(limit: 6);
 
       // Загружаем персональные рекомендации если есть userId
       var recommendations = <SmartSpecialist>[];
@@ -76,8 +72,7 @@ class _HomeScreenWithSmartSearchState
 
   /// Открыть AI-помощника
   Future<void> _openAIAssistant() async {
-    final conversation =
-        await _aiAssistantService.startConversation(userId: _currentUserId);
+    final conversation = await _aiAssistantService.startConversation(userId: _currentUserId);
 
     if (mounted) {
       showDialog(

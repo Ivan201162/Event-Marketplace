@@ -19,8 +19,7 @@ class HostProfileScreen extends StatefulWidget {
   State<HostProfileScreen> createState() => _HostProfileScreenState();
 }
 
-class _HostProfileScreenState extends State<HostProfileScreen>
-    with TickerProviderStateMixin {
+class _HostProfileScreenState extends State<HostProfileScreen> with TickerProviderStateMixin {
   late AnimationController _fadeController;
   late AnimationController _slideController;
   late Animation<double> _fadeAnimation;
@@ -104,9 +103,8 @@ class _HostProfileScreenState extends State<HostProfileScreen>
         elevation: 0,
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
-          statusBarIconBrightness: theme.brightness == Brightness.dark
-              ? Brightness.light
-              : Brightness.dark,
+          statusBarIconBrightness:
+              theme.brightness == Brightness.dark ? Brightness.light : Brightness.dark,
         ),
         actions: [
           IconButton(

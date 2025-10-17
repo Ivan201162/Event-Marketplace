@@ -70,8 +70,7 @@ class RecommendationService {
       }
 
       // Анализируем активность и генерируем рекомендации
-      final recommendations =
-          await _generateRecommendations(userId, activities);
+      final recommendations = await _generateRecommendations(userId, activities);
 
       // Сохраняем рекомендации
       await _saveRecommendations(userId, recommendations);
@@ -176,8 +175,7 @@ class RecommendationService {
 
     for (final activity in activities) {
       final weight = categoryWeights[activity.activityType] ?? 1.0;
-      categoryCount[activity.category] =
-          (categoryCount[activity.category] ?? 0) + weight.toInt();
+      categoryCount[activity.category] = (categoryCount[activity.category] ?? 0) + weight.toInt();
     }
 
     // Нормализуем значения
@@ -282,9 +280,7 @@ class RecommendationService {
 
       // Добавляем новые рекомендации
       for (final recommendation in recommendations) {
-        final docRef = _firestore
-            .collection(_recommendationsCollection)
-            .doc(recommendation.id);
+        final docRef = _firestore.collection(_recommendationsCollection).doc(recommendation.id);
         batch.set(docRef, recommendation.toFirestore());
       }
 
@@ -352,8 +348,7 @@ class RecommendationService {
       final activityTypeStats = <String, int>{};
 
       for (final activity in activities) {
-        categoryStats[activity.category] =
-            (categoryStats[activity.category] ?? 0) + 1;
+        categoryStats[activity.category] = (categoryStats[activity.category] ?? 0) + 1;
         if (activity.city != null) {
           cityStats[activity.city!] = (cityStats[activity.city!] ?? 0) + 1;
         }
@@ -366,8 +361,7 @@ class RecommendationService {
         'categories': categoryStats,
         'cities': cityStats,
         'activityTypes': activityTypeStats,
-        'lastActivity':
-            activities.isNotEmpty ? activities.first.timestamp : null,
+        'lastActivity': activities.isNotEmpty ? activities.first.timestamp : null,
       };
     } catch (e) {
       debugPrint('Ошибка получения статистики активности: $e');

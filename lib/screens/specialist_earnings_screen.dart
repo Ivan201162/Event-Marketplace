@@ -14,12 +14,10 @@ class SpecialistEarningsScreen extends ConsumerStatefulWidget {
   final String specialistId;
 
   @override
-  ConsumerState<SpecialistEarningsScreen> createState() =>
-      _SpecialistEarningsScreenState();
+  ConsumerState<SpecialistEarningsScreen> createState() => _SpecialistEarningsScreenState();
 }
 
-class _SpecialistEarningsScreenState
-    extends ConsumerState<SpecialistEarningsScreen> {
+class _SpecialistEarningsScreenState extends ConsumerState<SpecialistEarningsScreen> {
   final PaymentService _paymentService = PaymentService();
   Map<String, dynamic>? _stats;
   List<Payment> _recentPayments = [];
@@ -41,8 +39,7 @@ class _SpecialistEarningsScreenState
       });
 
       // Загружаем статистику
-      final stats = await _paymentService
-          .getSpecialistFinancialStats(widget.specialistId);
+      final stats = await _paymentService.getSpecialistFinancialStats(widget.specialistId);
 
       // Загружаем последние платежи
       final recentPayments = await _paymentService.getSpecialistPayments(
@@ -430,18 +427,14 @@ class _SpecialistEarningsScreenState
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
-                    color: payment.type == PaymentType.refund
-                        ? Colors.red
-                        : Colors.green,
+                    color: payment.type == PaymentType.refund ? Colors.red : Colors.green,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color:
-                        _getStatusColor(payment.status).withValues(alpha: 0.1),
+                    color: _getStatusColor(payment.status).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -524,9 +517,7 @@ class _SpecialistEarningsScreenState
               ),
             ),
             Text(
-              value < 1000
-                  ? value.toStringAsFixed(0)
-                  : '${value.toStringAsFixed(0)} ₽',
+              value < 1000 ? value.toStringAsFixed(0) : '${value.toStringAsFixed(0)} ₽',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: color,

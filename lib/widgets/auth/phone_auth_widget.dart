@@ -124,8 +124,7 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
                   ? 'Введите код из SMS, отправленного на ${_phoneController.text}'
                   : 'Введите номер телефона для получения SMS кода',
               style: theme.textTheme.bodyMedium?.copyWith(
-                color:
-                    theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
               ),
               textAlign: TextAlign.center,
             ),

@@ -249,8 +249,7 @@ class _SupportChatWidgetState extends State<SupportChatWidget> {
                 decoration: const InputDecoration(
                   hintText: 'Введите сообщение...',
                   border: OutlineInputBorder(),
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 ),
                 maxLines: null,
                 onSubmitted: (_) => _sendMessage(),
@@ -384,18 +383,14 @@ class _MessageBubble extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         margin: const EdgeInsets.only(bottom: 8),
         child: Row(
-          mainAxisAlignment: message.isFromUser
-              ? MainAxisAlignment.end
-              : MainAxisAlignment.start,
+          mainAxisAlignment: message.isFromUser ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: [
             if (!message.isFromUser) ...[
               CircleAvatar(
                 radius: 16,
                 backgroundColor: Colors.blue,
                 child: Icon(
-                  message.type == MessageType.system
-                      ? Icons.settings
-                      : Icons.support_agent,
+                  message.type == MessageType.system ? Icons.settings : Icons.support_agent,
                   color: Colors.white,
                   size: 16,
                 ),
@@ -404,8 +399,7 @@ class _MessageBubble extends StatelessWidget {
             ],
             Flexible(
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
                   color: message.isFromUser ? Colors.blue : Colors.grey[200],
                   borderRadius: BorderRadius.circular(16),
@@ -416,8 +410,7 @@ class _MessageBubble extends StatelessWidget {
                     Text(
                       message.message,
                       style: TextStyle(
-                        color:
-                            message.isFromUser ? Colors.white : Colors.black87,
+                        color: message.isFromUser ? Colors.white : Colors.black87,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -425,9 +418,7 @@ class _MessageBubble extends StatelessWidget {
                       _formatTime(message.createdAt),
                       style: TextStyle(
                         fontSize: 12,
-                        color: message.isFromUser
-                            ? Colors.white70
-                            : Colors.grey[600],
+                        color: message.isFromUser ? Colors.white70 : Colors.grey[600],
                       ),
                     ),
                   ],

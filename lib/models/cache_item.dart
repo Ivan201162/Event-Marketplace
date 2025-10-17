@@ -33,9 +33,8 @@ class CacheItem<T> {
         ),
         size: data['size'] as int?,
         etag: data['etag'] as String?,
-        lastAccessed: data['lastAccessed'] != null
-            ? (data['lastAccessed'] as Timestamp).toDate()
-            : null,
+        lastAccessed:
+            data['lastAccessed'] != null ? (data['lastAccessed'] as Timestamp).toDate() : null,
       );
   final String key;
   final T data;
@@ -57,8 +56,7 @@ class CacheItem<T> {
         'metadata': metadata,
         'size': size,
         'etag': etag,
-        'lastAccessed':
-            lastAccessed != null ? Timestamp.fromDate(lastAccessed!) : null,
+        'lastAccessed': lastAccessed != null ? Timestamp.fromDate(lastAccessed!) : null,
       };
 
   /// Создать копию с изменениями
@@ -107,8 +105,7 @@ class CacheItem<T> {
   double get priority {
     final ageInHours = age.inHours.toDouble();
     final accessTime = lastAccessed ?? createdAt;
-    final timeSinceAccess =
-        DateTime.now().difference(accessTime).inHours.toDouble();
+    final timeSinceAccess = DateTime.now().difference(accessTime).inHours.toDouble();
 
     // Приоритет основан на времени последнего доступа и возрасте
     return 1.0 / (1.0 + timeSinceAccess + ageInHours * 0.1);
@@ -159,8 +156,7 @@ class CacheItem<T> {
       );
 
   @override
-  String toString() =>
-      'CacheItem(key: $key, type: $type, expiresAt: $expiresAt)';
+  String toString() => 'CacheItem(key: $key, type: $type, expiresAt: $expiresAt)';
 }
 
 /// Типы кэша
@@ -290,24 +286,20 @@ class CacheStatistics {
     final expiredItems = items.length - validItems;
     final totalSize = items.fold(0, (sum, item) => sum + (item.size ?? 0));
 
-    final hitRate =
-        (hitCount + missCount) > 0 ? hitCount / (hitCount + missCount) : 0.0;
+    final hitRate = (hitCount + missCount) > 0 ? hitCount / (hitCount + missCount) : 0.0;
 
     final averageAge = items.isNotEmpty
         ? Duration(
-            milliseconds: items
-                    .map((item) => item.age.inMilliseconds)
-                    .reduce((a, b) => a + b) ~/
+            milliseconds: items.map((item) => item.age.inMilliseconds).reduce((a, b) => a + b) ~/
                 items.length,
           )
         : Duration.zero;
 
     final averageTimeToExpiry = items.isNotEmpty
         ? Duration(
-            milliseconds: items
-                    .map((item) => item.timeToExpiry.inMilliseconds)
-                    .reduce((a, b) => a + b) ~/
-                items.length,
+            milliseconds:
+                items.map((item) => item.timeToExpiry.inMilliseconds).reduce((a, b) => a + b) ~/
+                    items.length,
           )
         : Duration.zero;
 
@@ -370,10 +362,7 @@ class CacheStatistics {
   /// Проверить, нужна ли очистка
   bool get needsCleanup =>
       expiredItems > totalItems * 0.3 ||
-      totalSize >
-          CacheType.values
-              .firstWhere((type) => type.displayName == cacheType)
-              .maxSize;
+      totalSize > CacheType.values.firstWhere((type) => type.displayName == cacheType).maxSize;
 
   @override
   String toString() =>
@@ -404,8 +393,7 @@ class CacheConfig {
         maxItems: data['maxItems'] as int? ?? 1000,
         enableCompression: data['enableCompression'] as bool? ?? false,
         enableEncryption: data['enableEncryption'] as bool? ?? false,
-        excludedKeys:
-            List<String>.from(data['excludedKeys'] as List<dynamic>? ?? []),
+        excludedKeys: List<String>.from(data['excludedKeys'] as List<dynamic>? ?? []),
         customTTL: Map<String, Duration>.from(
           (data['customTTL'] as Map<String, dynamic>?)?.map(
                 (key, value) => MapEntry(key, Duration(seconds: value as int)),
@@ -440,8 +428,7 @@ class CacheConfig {
         'enableCompression': enableCompression,
         'enableEncryption': enableEncryption,
         'excludedKeys': excludedKeys,
-        'customTTL':
-            customTTL.map((key, value) => MapEntry(key, value.inSeconds)),
+        'customTTL': customTTL.map((key, value) => MapEntry(key, value.inSeconds)),
         'evictionPolicy': evictionPolicy.toString().split('.').last,
         'enableStatistics': enableStatistics,
         'enableLogging': enableLogging,
@@ -479,8 +466,7 @@ class CacheConfig {
   Duration getTTL(String key) => customTTL[key] ?? defaultTTL;
 
   /// Проверить, исключен ли ключ
-  bool isKeyExcluded(String key) =>
-      excludedKeys.any((excludedKey) => key.contains(excludedKey));
+  bool isKeyExcluded(String key) => excludedKeys.any((excludedKey) => key.contains(excludedKey));
 
   @override
   bool operator ==(Object other) {

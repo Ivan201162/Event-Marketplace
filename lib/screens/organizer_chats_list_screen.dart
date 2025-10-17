@@ -16,12 +16,10 @@ class OrganizerChatsListScreen extends ConsumerStatefulWidget {
   final String userType;
 
   @override
-  ConsumerState<OrganizerChatsListScreen> createState() =>
-      _OrganizerChatsListScreenState();
+  ConsumerState<OrganizerChatsListScreen> createState() => _OrganizerChatsListScreenState();
 }
 
-class _OrganizerChatsListScreenState
-    extends ConsumerState<OrganizerChatsListScreen> {
+class _OrganizerChatsListScreenState extends ConsumerState<OrganizerChatsListScreen> {
   final OrganizerChatService _chatService = OrganizerChatService();
   List<OrganizerChat> _chats = [];
   bool _isLoading = true;
@@ -65,9 +63,7 @@ class _OrganizerChatsListScreenState
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text(
-            widget.userType == 'customer'
-                ? 'Чаты с организаторами'
-                : 'Чаты с заказчиками',
+            widget.userType == 'customer' ? 'Чаты с организаторами' : 'Чаты с заказчиками',
           ),
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           actions: [
@@ -147,13 +143,9 @@ class _OrganizerChatsListScreenState
                 radius: 24,
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 child: Text(
-                  (widget.userType == 'customer'
-                              ? chat.organizerName
-                              : chat.customerName)
+                  (widget.userType == 'customer' ? chat.organizerName : chat.customerName)
                           .isNotEmpty
-                      ? (widget.userType == 'customer'
-                              ? chat.organizerName
-                              : chat.customerName)[0]
+                      ? (widget.userType == 'customer' ? chat.organizerName : chat.customerName)[0]
                           .toUpperCase()
                       : '?',
                   style: const TextStyle(
@@ -175,13 +167,9 @@ class _OrganizerChatsListScreenState
                       children: [
                         Expanded(
                           child: Text(
-                            widget.userType == 'customer'
-                                ? chat.organizerName
-                                : chat.customerName,
+                            widget.userType == 'customer' ? chat.organizerName : chat.customerName,
                             style: TextStyle(
-                              fontWeight: isUnread
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
+                              fontWeight: isUnread ? FontWeight.bold : FontWeight.normal,
                               fontSize: 16,
                             ),
                           ),
@@ -218,14 +206,9 @@ class _OrganizerChatsListScreenState
                           child: Text(
                             chat.lastMessageText ?? 'Нет сообщений',
                             style: TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurface
-                                  .withValues(alpha: 0.7),
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                               fontSize: 14,
-                              fontWeight: isUnread
-                                  ? FontWeight.w500
-                                  : FontWeight.normal,
+                              fontWeight: isUnread ? FontWeight.w500 : FontWeight.normal,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,

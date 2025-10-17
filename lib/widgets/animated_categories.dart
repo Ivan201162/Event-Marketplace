@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 /// Анимированные категории специалистов
 class AnimatedCategories extends StatefulWidget {
@@ -14,8 +13,7 @@ class AnimatedCategories extends StatefulWidget {
   State<AnimatedCategories> createState() => _AnimatedCategoriesState();
 }
 
-class _AnimatedCategoriesState extends State<AnimatedCategories>
-    with TickerProviderStateMixin {
+class _AnimatedCategoriesState extends State<AnimatedCategories> with TickerProviderStateMixin {
   late AnimationController _animationController;
   late List<AnimationController> _itemControllers;
   late List<Animation<double>> _itemAnimations;
@@ -82,7 +80,7 @@ class _AnimatedCategoriesState extends State<AnimatedCategories>
   @override
   void dispose() {
     _animationController.dispose();
-    for (var controller in _itemControllers) {
+    for (final controller in _itemControllers) {
       controller.dispose();
     }
     super.dispose();
@@ -177,9 +175,7 @@ class _AnimatedCategoriesState extends State<AnimatedCategories>
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                color: isSelected
-                    ? (category['color'] as Color)
-                    : Colors.grey[700],
+                color: isSelected ? (category['color'] as Color) : Colors.grey[700],
               ),
               textAlign: TextAlign.center,
             ),

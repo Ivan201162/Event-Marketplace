@@ -57,19 +57,14 @@ class Reminder {
       ),
       eventId: data['eventId'] as String?,
       bookingId: data['bookingId'] as String?,
-      anniversaryDate: data['anniversaryDate'] != null
-          ? (data['anniversaryDate'] as Timestamp).toDate()
-          : null,
+      anniversaryDate:
+          data['anniversaryDate'] != null ? (data['anniversaryDate'] as Timestamp).toDate() : null,
       isRecurring: data['isRecurring'] as bool? ?? false,
       recurrenceInterval: data['recurrenceInterval'] as int?,
       metadata: data['metadata'] as Map<String, dynamic>?,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      sentAt: data['sentAt'] != null
-          ? (data['sentAt'] as Timestamp).toDate()
-          : null,
-      cancelledAt: data['cancelledAt'] != null
-          ? (data['cancelledAt'] as Timestamp).toDate()
-          : null,
+      sentAt: data['sentAt'] != null ? (data['sentAt'] as Timestamp).toDate() : null,
+      cancelledAt: data['cancelledAt'] != null ? (data['cancelledAt'] as Timestamp).toDate() : null,
     );
   }
 
@@ -100,16 +95,13 @@ class Reminder {
         'status': status.name,
         'eventId': eventId,
         'bookingId': bookingId,
-        'anniversaryDate': anniversaryDate != null
-            ? Timestamp.fromDate(anniversaryDate!)
-            : null,
+        'anniversaryDate': anniversaryDate != null ? Timestamp.fromDate(anniversaryDate!) : null,
         'isRecurring': isRecurring,
         'recurrenceInterval': recurrenceInterval,
         'metadata': metadata,
         'createdAt': Timestamp.fromDate(createdAt),
         'sentAt': sentAt != null ? Timestamp.fromDate(sentAt!) : null,
-        'cancelledAt':
-            cancelledAt != null ? Timestamp.fromDate(cancelledAt!) : null,
+        'cancelledAt': cancelledAt != null ? Timestamp.fromDate(cancelledAt!) : null,
       };
 
   /// Создать копию с изменениями
@@ -155,8 +147,7 @@ class Reminder {
 
   /// Проверить, является ли напоминание просроченным
   bool get isOverdue =>
-      status == ReminderStatus.scheduled &&
-      scheduledTime.isBefore(DateTime.now());
+      status == ReminderStatus.scheduled && scheduledTime.isBefore(DateTime.now());
 
   /// Получить иконку для типа напоминания
   String get typeIcon {
@@ -237,17 +228,14 @@ class ReminderSettings {
     return ReminderSettings(
       userId: doc.id,
       eventRemindersEnabled: data['eventRemindersEnabled'] as bool? ?? true,
-      anniversaryRemindersEnabled:
-          data['anniversaryRemindersEnabled'] as bool? ?? true,
+      anniversaryRemindersEnabled: data['anniversaryRemindersEnabled'] as bool? ?? true,
       weekBeforeReminder: data['weekBeforeReminder'] as bool? ?? true,
       dayBeforeReminder: data['dayBeforeReminder'] as bool? ?? true,
       customRemindersEnabled: data['customRemindersEnabled'] as bool? ?? true,
-      quietHoursStart: data['quietHoursStart'] != null
-          ? (data['quietHoursStart'] as Timestamp).toDate()
-          : null,
-      quietHoursEnd: data['quietHoursEnd'] != null
-          ? (data['quietHoursEnd'] as Timestamp).toDate()
-          : null,
+      quietHoursStart:
+          data['quietHoursStart'] != null ? (data['quietHoursStart'] as Timestamp).toDate() : null,
+      quietHoursEnd:
+          data['quietHoursEnd'] != null ? (data['quietHoursEnd'] as Timestamp).toDate() : null,
       timezone: data['timezone'] as String? ?? 'Europe/Moscow',
       language: data['language'] as String? ?? 'ru',
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
@@ -273,11 +261,8 @@ class ReminderSettings {
         'weekBeforeReminder': weekBeforeReminder,
         'dayBeforeReminder': dayBeforeReminder,
         'customRemindersEnabled': customRemindersEnabled,
-        'quietHoursStart': quietHoursStart != null
-            ? Timestamp.fromDate(quietHoursStart!)
-            : null,
-        'quietHoursEnd':
-            quietHoursEnd != null ? Timestamp.fromDate(quietHoursEnd!) : null,
+        'quietHoursStart': quietHoursStart != null ? Timestamp.fromDate(quietHoursStart!) : null,
+        'quietHoursEnd': quietHoursEnd != null ? Timestamp.fromDate(quietHoursEnd!) : null,
         'timezone': timezone,
         'language': language,
         'updatedAt': Timestamp.fromDate(updatedAt),
@@ -299,14 +284,12 @@ class ReminderSettings {
   }) =>
       ReminderSettings(
         userId: userId ?? this.userId,
-        eventRemindersEnabled:
-            eventRemindersEnabled ?? this.eventRemindersEnabled,
+        eventRemindersEnabled: eventRemindersEnabled ?? this.eventRemindersEnabled,
         anniversaryRemindersEnabled:
             anniversaryRemindersEnabled ?? this.anniversaryRemindersEnabled,
         weekBeforeReminder: weekBeforeReminder ?? this.weekBeforeReminder,
         dayBeforeReminder: dayBeforeReminder ?? this.dayBeforeReminder,
-        customRemindersEnabled:
-            customRemindersEnabled ?? this.customRemindersEnabled,
+        customRemindersEnabled: customRemindersEnabled ?? this.customRemindersEnabled,
         quietHoursStart: quietHoursStart ?? this.quietHoursStart,
         quietHoursEnd: quietHoursEnd ?? this.quietHoursEnd,
         timezone: timezone ?? this.timezone,

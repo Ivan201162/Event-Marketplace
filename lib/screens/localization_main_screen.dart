@@ -247,8 +247,7 @@ class LocalizationMainScreen extends ConsumerWidget {
                                       width: 40,
                                       height: 40,
                                       decoration: BoxDecoration(
-                                        color:
-                                            Colors.blue.withValues(alpha: 0.1),
+                                        color: Colors.blue.withValues(alpha: 0.1),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: Center(
@@ -268,23 +267,19 @@ class LocalizationMainScreen extends ConsumerWidget {
                                     // Информация
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
                                                 '${stat.completionPercentage.toStringAsFixed(1)}%',
                                                 style: TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold,
-                                                  color: stat.completionPercentage >=
-                                                          80
+                                                  color: stat.completionPercentage >= 80
                                                       ? Colors.green
-                                                      : stat.completionPercentage >=
-                                                              50
+                                                      : stat.completionPercentage >= 50
                                                           ? Colors.orange
                                                           : Colors.red,
                                                 ),
@@ -300,15 +295,12 @@ class LocalizationMainScreen extends ConsumerWidget {
                                           ),
                                           const SizedBox(height: 4),
                                           LinearProgressIndicator(
-                                            value:
-                                                stat.completionPercentage / 100,
+                                            value: stat.completionPercentage / 100,
                                             backgroundColor: Colors.grey[300],
-                                            valueColor:
-                                                AlwaysStoppedAnimation<Color>(
+                                            valueColor: AlwaysStoppedAnimation<Color>(
                                               stat.completionPercentage >= 80
                                                   ? Colors.green
-                                                  : stat.completionPercentage >=
-                                                          50
+                                                  : stat.completionPercentage >= 50
                                                       ? Colors.orange
                                                       : Colors.red,
                                             ),
@@ -366,8 +358,7 @@ class LocalizationMainScreen extends ConsumerWidget {
               const SizedBox(height: 8),
               Consumer(
                 builder: (context, ref, child) {
-                  final supportedLanguages =
-                      ref.watch(supportedLanguagesProvider);
+                  final supportedLanguages = ref.watch(supportedLanguagesProvider);
 
                   return Wrap(
                     spacing: 8,

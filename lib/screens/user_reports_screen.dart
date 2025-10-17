@@ -378,8 +378,7 @@ class _UserReportsScreenState extends ConsumerState<UserReportsScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: (isSpecialist ? Colors.amber : Colors.blue)
-                        .withOpacity(0.1),
+                    color: (isSpecialist ? Colors.amber : Colors.blue).withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -395,10 +394,9 @@ class _UserReportsScreenState extends ConsumerState<UserReportsScreen>
                     children: [
                       Text(
                         isSpecialist ? 'Отчёт специалиста' : 'Отчёт заказчика',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       Text(
                         _formatDate(report['createdAt']),

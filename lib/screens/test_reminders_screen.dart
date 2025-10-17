@@ -9,8 +9,7 @@ class TestRemindersScreen extends ConsumerStatefulWidget {
   const TestRemindersScreen({super.key});
 
   @override
-  ConsumerState<TestRemindersScreen> createState() =>
-      _TestRemindersScreenState();
+  ConsumerState<TestRemindersScreen> createState() => _TestRemindersScreenState();
 }
 
 class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
@@ -41,8 +40,7 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
       final reminders = await _reminderService.getUserReminders(testUserId);
 
       // Загружаем годовщины
-      final anniversaries =
-          await _anniversaryService.getUserAnniversaries(testUserId);
+      final anniversaries = await _anniversaryService.getUserAnniversaries(testUserId);
 
       setState(() {
         _reminders = reminders;
@@ -297,8 +295,7 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
                       Text(
                         reminder.typeName,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface
-                              .withValues(alpha: 0.6),
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -375,11 +372,9 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
                         ),
                       ),
                       Text(
-                        _anniversaryService
-                            .getAnniversaryTypeName(anniversary.type),
+                        _anniversaryService.getAnniversaryTypeName(anniversary.type),
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface
-                              .withValues(alpha: 0.6),
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -389,9 +384,7 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
                   label: Text(
                     anniversary.isRecurring ? 'Повторяющаяся' : 'Одноразовая',
                   ),
-                  backgroundColor: anniversary.isRecurring
-                      ? Colors.green[100]
-                      : Colors.blue[100],
+                  backgroundColor: anniversary.isRecurring ? Colors.green[100] : Colors.blue[100],
                 ),
               ],
             ),

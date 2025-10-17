@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../services/admin_service.dart';
+
 import '../../models/admin_models.dart';
+import '../../services/admin_service.dart';
 
 class AdminLogsScreen extends StatefulWidget {
   const AdminLogsScreen({super.key});
@@ -45,7 +45,6 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
                 action: _selectedAction,
                 startDate: _startDate,
                 endDate: _endDate,
-                limit: 100,
               ),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -80,8 +79,7 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
                           ),
                         ),
                         title: Text(
-                          log.description ??
-                              '${_getActionName(log.action)} ${log.target}',
+                          log.description ?? '${_getActionName(log.action)} ${log.target}',
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Column(
@@ -91,8 +89,7 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
                             Text(
                                 'Цель: ${log.target}${log.targetId != null ? ' (${log.targetId})' : ''}'),
                             Text('Время: ${_formatTimestamp(log.timestamp)}'),
-                            if (log.metadata != null &&
-                                log.metadata!.isNotEmpty)
+                            if (log.metadata != null && log.metadata!.isNotEmpty)
                               Text('Детали: ${log.metadata.toString()}'),
                             if (log.errorMessage != null)
                               Text(
@@ -183,16 +180,14 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             DropdownButtonFormField<String>(
-              value: _selectedAdmin,
+              initialValue: _selectedAdmin,
               decoration: const InputDecoration(
                 labelText: 'Администратор',
                 border: OutlineInputBorder(),
               ),
               items: const [
-                DropdownMenuItem(
-                    value: 'admin_123', child: Text('admin@example.com')),
-                DropdownMenuItem(
-                    value: 'admin_456', child: Text('superadmin@example.com')),
+                DropdownMenuItem(value: 'admin_123', child: Text('admin@example.com')),
+                DropdownMenuItem(value: 'admin_456', child: Text('superadmin@example.com')),
               ],
               onChanged: (value) {
                 setState(() {
@@ -202,7 +197,7 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<AdminAction>(
-              value: _selectedAction,
+              initialValue: _selectedAction,
               decoration: const InputDecoration(
                 labelText: 'Действие',
                 border: OutlineInputBorder(),
@@ -222,15 +217,13 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
             const SizedBox(height: 16),
             ListTile(
               title: const Text('Начальная дата'),
-              subtitle: Text(
-                  _startDate != null ? _formatDate(_startDate!) : 'Не выбрана'),
+              subtitle: Text(_startDate != null ? _formatDate(_startDate!) : 'Не выбрана'),
               trailing: const Icon(Icons.calendar_today),
               onTap: () => _selectDate(true),
             ),
             ListTile(
               title: const Text('Конечная дата'),
-              subtitle: Text(
-                  _endDate != null ? _formatDate(_endDate!) : 'Не выбрана'),
+              subtitle: Text(_endDate != null ? _formatDate(_endDate!) : 'Не выбрана'),
               trailing: const Icon(Icons.calendar_today),
               onTap: () => _selectDate(false),
             ),
@@ -256,9 +249,7 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
   Future<void> _selectDate(bool isStartDate) async {
     final date = await showDatePicker(
       context: context,
-      initialDate: isStartDate
-          ? (_startDate ?? DateTime.now())
-          : (_endDate ?? DateTime.now()),
+      initialDate: isStartDate ? (_startDate ?? DateTime.now()) : (_endDate ?? DateTime.now()),
       firstDate: DateTime.now().subtract(const Duration(days: 365)),
       lastDate: DateTime.now(),
     );

@@ -101,16 +101,14 @@ class PhotoStudioCard extends StatelessWidget {
                         Text(
                           '(${photoStudio.reviewCount})',
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.textTheme.bodySmall?.color
-                                ?.withValues(alpha: 0.7),
+                            color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                           ),
                         ),
                       ] else ...[
                         Text(
                           'Нет отзывов',
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.textTheme.bodySmall?.color
-                                ?.withValues(alpha: 0.7),
+                            color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                           ),
                         ),
                       ],
@@ -143,8 +141,7 @@ class PhotoStudioCard extends StatelessWidget {
                   Text(
                     photoStudio.description,
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.textTheme.bodyMedium?.color
-                          ?.withValues(alpha: 0.8),
+                      color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.8),
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -168,8 +165,7 @@ class PhotoStudioCard extends StatelessWidget {
                                 color: theme.colorScheme.surface,
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: theme.colorScheme.outline
-                                      .withValues(alpha: 0.2),
+                                  color: theme.colorScheme.outline.withValues(alpha: 0.2),
                                 ),
                               ),
                               child: Text(
@@ -187,8 +183,7 @@ class PhotoStudioCard extends StatelessWidget {
                       Text(
                         '+${photoStudio.amenities.length - 3} еще',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.textTheme.bodySmall?.color
-                              ?.withValues(alpha: 0.7),
+                          color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                         ),
                       ),
                     ],
@@ -263,15 +258,13 @@ class PhotoStudioCard extends StatelessWidget {
           // Основное изображение
           if (photoStudio.coverImageUrl != null) ...[
             ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(12)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
               child: Image.network(
                 photoStudio.coverImageUrl!,
                 width: double.infinity,
                 height: double.infinity,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) =>
-                    _buildPlaceholderImage(theme),
+                errorBuilder: (context, error, stackTrace) => _buildPlaceholderImage(theme),
               ),
             ),
           ] else ...[
@@ -294,8 +287,7 @@ class PhotoStudioCard extends StatelessWidget {
                     Colors.black.withValues(alpha: 0.7),
                   ],
                 ),
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(12)),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
               ),
             ),
           ),

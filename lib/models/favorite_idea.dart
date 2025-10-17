@@ -80,6 +80,5 @@ class FavoriteIdea {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() =>
-      'FavoriteIdea(id: $id, userId: $userId, ideaId: $ideaId)';
+  String toString() => 'FavoriteIdea(id: $id, userId: $userId, ideaId: $ideaId)';
 }

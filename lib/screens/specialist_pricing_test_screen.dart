@@ -10,12 +10,10 @@ class SpecialistPricingTestScreen extends ConsumerStatefulWidget {
   const SpecialistPricingTestScreen({super.key});
 
   @override
-  ConsumerState<SpecialistPricingTestScreen> createState() =>
-      _SpecialistPricingTestScreenState();
+  ConsumerState<SpecialistPricingTestScreen> createState() => _SpecialistPricingTestScreenState();
 }
 
-class _SpecialistPricingTestScreenState
-    extends ConsumerState<SpecialistPricingTestScreen> {
+class _SpecialistPricingTestScreenState extends ConsumerState<SpecialistPricingTestScreen> {
   String? _selectedSpecialistId;
   bool _showHistory = false;
 
@@ -77,8 +75,7 @@ class _SpecialistPricingTestScreenState
               const SizedBox(height: 8),
               SwitchListTile(
                 title: const Text('Показать историю цен'),
-                subtitle:
-                    const Text('Отображать график изменения цен по месяцам'),
+                subtitle: const Text('Отображать график изменения цен по месяцам'),
                 value: _showHistory,
                 onChanged: (value) {
                   setState(() {

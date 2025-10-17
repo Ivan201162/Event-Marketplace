@@ -154,27 +154,22 @@ class _ContractTabWidgetState extends ConsumerState<ContractTabWidget> {
                       children: [
                         Text(
                           contract.title,
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           '№ ${contract.contractNumber}',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant,
-                                  ),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              ),
                         ),
                       ],
                     ),
                   ),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: contract.status.statusColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
@@ -238,9 +233,7 @@ class _ContractTabWidgetState extends ConsumerState<ContractTabWidget> {
           if (contract.status == ContractStatus.signed)
             Expanded(
               child: ElevatedButton.icon(
-                onPressed: _isDownloadingPdf
-                    ? null
-                    : () => _downloadContractPdf(contract),
+                onPressed: _isDownloadingPdf ? null : () => _downloadContractPdf(contract),
                 icon: _isDownloadingPdf
                     ? const SizedBox(
                         width: 16,
@@ -293,8 +286,7 @@ class _ContractTabWidgetState extends ConsumerState<ContractTabWidget> {
   String _formatDate(DateTime date) =>
       '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';
 
-  bool _canGenerateContract() =>
-      widget.booking.status == BookingStatus.confirmed;
+  bool _canGenerateContract() => widget.booking.status == BookingStatus.confirmed;
 
   bool _canSignContract(Contract contract) {
     // Здесь должна быть логика проверки прав пользователя на подписание

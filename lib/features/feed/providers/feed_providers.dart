@@ -9,8 +9,7 @@ import '../data/subscription_service.dart';
 final feedServiceProvider = Provider<FeedService>((ref) => FeedService());
 
 /// Провайдер сервиса подписок
-final subscriptionServiceProvider =
-    Provider<SubscriptionService>((ref) => SubscriptionService());
+final subscriptionServiceProvider = Provider<SubscriptionService>((ref) => SubscriptionService());
 
 /// Провайдер текущего фильтра ленты
 final feedFilterProvider = StateProvider<FeedFilter>((ref) => FeedFilter.all);
@@ -54,8 +53,7 @@ final feedPostsProvider = StreamProvider<List<FeedPost>>((ref) {
 });
 
 /// Провайдер постов пользователя
-final userPostsProvider =
-    StreamProvider.family<List<FeedPost>, String>((ref, userId) {
+final userPostsProvider = StreamProvider.family<List<FeedPost>, String>((ref, userId) {
   final feedService = ref.watch(feedServiceProvider);
   return feedService.getUserPosts(userId);
 });
@@ -67,8 +65,7 @@ final feedLoadingProvider = StateProvider<bool>((ref) => false);
 final feedErrorProvider = StateProvider<String?>((ref) => null);
 
 /// Провайдер для управления лайками
-final likePostProvider =
-    FutureProvider.family<void, String>((ref, postId) async {
+final likePostProvider = FutureProvider.family<void, String>((ref, postId) async {
   final feedService = ref.watch(feedServiceProvider);
   final currentUser = ref.watch(currentUserProvider);
 
@@ -86,8 +83,7 @@ final likePostProvider =
 });
 
 /// Провайдер для добавления комментариев
-final addCommentProvider =
-    FutureProvider.family<void, Map<String, dynamic>>((ref, params) async {
+final addCommentProvider = FutureProvider.family<void, Map<String, dynamic>>((ref, params) async {
   final feedService = ref.watch(feedServiceProvider);
   final postId = params['postId'] as String;
   final comment = params['comment'] as FeedComment;
@@ -101,8 +97,7 @@ final addCommentProvider =
 });
 
 /// Провайдер для создания постов
-final createPostProvider =
-    FutureProvider.family<void, Map<String, dynamic>>((ref, params) async {
+final createPostProvider = FutureProvider.family<void, Map<String, dynamic>>((ref, params) async {
   final feedService = ref.watch(feedServiceProvider);
   final currentUser = ref.watch(currentUserProvider);
 
@@ -129,8 +124,7 @@ final createPostProvider =
 });
 
 /// Провайдер для удаления постов
-final deletePostProvider =
-    FutureProvider.family<void, String>((ref, postId) async {
+final deletePostProvider = FutureProvider.family<void, String>((ref, postId) async {
   final feedService = ref.watch(feedServiceProvider);
   final currentUser = ref.watch(currentUserProvider);
 
@@ -208,8 +202,7 @@ final subscriptionProvider = StreamProvider<List<String>>((ref) {
 });
 
 /// Провайдер для подписки/отписки
-final followUserProvider =
-    FutureProvider.family<void, String>((ref, targetUserId) async {
+final followUserProvider = FutureProvider.family<void, String>((ref, targetUserId) async {
   final subscriptionService = ref.watch(subscriptionServiceProvider);
   final currentUser = ref.watch(currentUserProvider);
 
@@ -227,8 +220,7 @@ final followUserProvider =
 });
 
 /// Провайдер для отписки
-final unfollowUserProvider =
-    FutureProvider.family<void, String>((ref, targetUserId) async {
+final unfollowUserProvider = FutureProvider.family<void, String>((ref, targetUserId) async {
   final subscriptionService = ref.watch(subscriptionServiceProvider);
   final currentUser = ref.watch(currentUserProvider);
 
@@ -246,8 +238,7 @@ final unfollowUserProvider =
 });
 
 /// Провайдер для проверки подписки
-final isFollowingProvider =
-    FutureProvider.family<bool, String>((ref, targetUserId) async {
+final isFollowingProvider = FutureProvider.family<bool, String>((ref, targetUserId) async {
   final subscriptionService = ref.watch(subscriptionServiceProvider);
   final currentUser = ref.watch(currentUserProvider);
 
@@ -271,8 +262,7 @@ final subscriptionStatsProvider =
 });
 
 /// Провайдер для управления состоянием создания поста
-final createPostStateProvider =
-    StateNotifierProvider<CreatePostNotifier, CreatePostState>(
+final createPostStateProvider = StateNotifierProvider<CreatePostNotifier, CreatePostState>(
   (ref) => CreatePostNotifier(),
 );
 

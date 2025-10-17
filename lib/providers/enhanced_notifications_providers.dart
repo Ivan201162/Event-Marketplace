@@ -4,39 +4,34 @@ import '../models/enhanced_notification.dart';
 import '../services/enhanced_notifications_service.dart';
 
 /// Провайдер сервиса уведомлений
-final enhancedNotificationsServiceProvider =
-    Provider<EnhancedNotificationsService>(
+final enhancedNotificationsServiceProvider = Provider<EnhancedNotificationsService>(
   (ref) => EnhancedNotificationsService(),
 );
 
 /// Провайдер уведомлений пользователя
 final notificationsProvider =
-    FutureProvider.family<List<EnhancedNotification>, String>(
-        (ref, userId) async {
+    FutureProvider.family<List<EnhancedNotification>, String>((ref, userId) async {
   final service = ref.read(enhancedNotificationsServiceProvider);
   return service.getNotifications(userId: userId);
 });
 
 /// Провайдер непрочитанных уведомлений
 final unreadNotificationsProvider =
-    FutureProvider.family<List<EnhancedNotification>, String>(
-        (ref, userId) async {
+    FutureProvider.family<List<EnhancedNotification>, String>((ref, userId) async {
   final service = ref.read(enhancedNotificationsServiceProvider);
   return service.getUnreadNotifications(userId: userId);
 });
 
 /// Провайдер архивированных уведомлений
 final archivedNotificationsProvider =
-    FutureProvider.family<List<EnhancedNotification>, String>(
-        (ref, userId) async {
+    FutureProvider.family<List<EnhancedNotification>, String>((ref, userId) async {
   final service = ref.read(enhancedNotificationsServiceProvider);
   return service.getNotifications(userId: userId, includeArchived: true);
 });
 
 /// Провайдер уведомления по ID
 final notificationProvider =
-    FutureProvider.family<EnhancedNotification?, String>(
-        (ref, notificationId) async {
+    FutureProvider.family<EnhancedNotification?, String>((ref, notificationId) async {
   final service = ref.read(enhancedNotificationsServiceProvider);
   return service.getNotificationById(notificationId);
 });
@@ -49,8 +44,8 @@ final notificationStatsProvider =
 });
 
 /// Провайдер состояния создания уведомления
-final createNotificationStateProvider = StateNotifierProvider<
-    CreateNotificationStateNotifier, CreateNotificationState>(
+final createNotificationStateProvider =
+    StateNotifierProvider<CreateNotificationStateNotifier, CreateNotificationState>(
   (ref) => CreateNotificationStateNotifier(
     ref.read(enhancedNotificationsServiceProvider),
   ),
@@ -81,10 +76,8 @@ class CreateNotificationState {
 }
 
 /// Нотификатор состояния создания уведомления
-class CreateNotificationStateNotifier
-    extends StateNotifier<CreateNotificationState> {
-  CreateNotificationStateNotifier(this._service)
-      : super(const CreateNotificationState());
+class CreateNotificationStateNotifier extends StateNotifier<CreateNotificationState> {
+  CreateNotificationStateNotifier(this._service) : super(const CreateNotificationState());
 
   final EnhancedNotificationsService _service;
 
@@ -137,8 +130,8 @@ class CreateNotificationStateNotifier
 }
 
 /// Провайдер состояния уведомлений
-final notificationStateProvider = StateNotifierProvider.family<
-    NotificationStateNotifier, NotificationState, String>(
+final notificationStateProvider =
+    StateNotifierProvider.family<NotificationStateNotifier, NotificationState, String>(
   (ref, notificationId) => NotificationStateNotifier(
     ref.read(enhancedNotificationsServiceProvider),
     notificationId,
@@ -171,8 +164,7 @@ class NotificationState {
 
 /// Нотификатор состояния уведомления
 class NotificationStateNotifier extends StateNotifier<NotificationState> {
-  NotificationStateNotifier(this._service, this._notificationId)
-      : super(const NotificationState());
+  NotificationStateNotifier(this._service, this._notificationId) : super(const NotificationState());
 
   final EnhancedNotificationsService _service;
   final String _notificationId;

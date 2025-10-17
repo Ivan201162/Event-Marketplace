@@ -16,8 +16,7 @@ class VideoReelsViewer extends ConsumerStatefulWidget {
   ConsumerState<VideoReelsViewer> createState() => _VideoReelsViewerState();
 }
 
-class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer>
-    with TickerProviderStateMixin {
+class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with TickerProviderStateMixin {
   late PageController _pageController;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -164,8 +163,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer>
         fit: StackFit.expand,
         children: [
           // Видео
-          if (_currentController != null &&
-              _currentController!.value.isInitialized)
+          if (_currentController != null && _currentController!.value.isInitialized)
             GestureDetector(
               onTap: _togglePlayPause,
               child: FittedBox(
@@ -238,9 +236,8 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer>
                     children: [
                       CircleAvatar(
                         radius: 16,
-                        backgroundImage: video.authorAvatar != null
-                            ? NetworkImage(video.authorAvatar!)
-                            : null,
+                        backgroundImage:
+                            video.authorAvatar != null ? NetworkImage(video.authorAvatar!) : null,
                         child: video.authorAvatar == null
                             ? const Icon(
                                 Icons.person,
@@ -352,8 +349,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer>
           ),
 
           // Индикатор прогресса
-          if (_currentController != null &&
-              _currentController!.value.isInitialized)
+          if (_currentController != null && _currentController!.value.isInitialized)
             Positioned(
               bottom: 0,
               left: 0,

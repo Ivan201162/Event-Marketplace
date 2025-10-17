@@ -261,8 +261,7 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: actions,
       leading: leading,
       centerTitle: centerTitle,
-      backgroundColor:
-          backgroundColor ?? Theme.of(context).colorScheme.inversePrimary,
+      backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.inversePrimary,
       foregroundColor: foregroundColor,
       elevation: elevation ?? (isTablet ? 2 : 1),
       systemOverlayStyle: SystemUiOverlayStyle.dark,

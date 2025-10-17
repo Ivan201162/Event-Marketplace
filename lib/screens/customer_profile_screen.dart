@@ -20,8 +20,7 @@ class CustomerProfileScreen extends ConsumerStatefulWidget {
   final bool isOwnProfile;
 
   @override
-  ConsumerState<CustomerProfileScreen> createState() =>
-      _CustomerProfileScreenState();
+  ConsumerState<CustomerProfileScreen> createState() => _CustomerProfileScreenState();
 }
 
 class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
@@ -111,14 +110,10 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
                       imageUrl: profile.coverUrl,
                       fit: BoxFit.cover,
                       placeholder: (context, url) => Container(
-                        color: Theme.of(context)
-                            .primaryColor
-                            .withValues(alpha: 0.3),
+                        color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
                       ),
                       errorWidget: (context, url, error) => Container(
-                        color: Theme.of(context)
-                            .primaryColor
-                            .withValues(alpha: 0.3),
+                        color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
                       ),
                     ),
                   ),
@@ -363,9 +358,7 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  ref
-                      .read(userProfileNotifierProvider.notifier)
-                      .loadProfile(widget.userId);
+                  ref.read(userProfileNotifierProvider.notifier).loadProfile(widget.userId);
                 },
                 child: const Text('Повторить'),
               ),

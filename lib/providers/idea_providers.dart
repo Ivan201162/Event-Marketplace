@@ -38,8 +38,7 @@ final ideaCommentsProvider = StreamProvider.family<List<IdeaComment>, String>(
 );
 
 /// Провайдер для получения коллекций пользователя
-final userCollectionsProvider =
-    StreamProvider.family<List<IdeaCollection>, String>(
+final userCollectionsProvider = StreamProvider.family<List<IdeaCollection>, String>(
   (ref, userId) => ref.watch(ideaServiceProvider).getUserCollections(userId),
 );
 

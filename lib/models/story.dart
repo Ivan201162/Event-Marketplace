@@ -112,8 +112,7 @@ class Story {
   }
 
   /// Получить тип контента
-  StoryType get type =>
-      mediaUrl.contains('video') ? StoryType.video : StoryType.image;
+  StoryType get type => mediaUrl.contains('video') ? StoryType.video : StoryType.image;
 
   /// Получить текст (для текстовых историй)
   String get text => title;
@@ -161,6 +160,5 @@ class Story {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() =>
-      'Story(id: $id, title: $title, specialistId: $specialistId)';
+  String toString() => 'Story(id: $id, title: $title, specialistId: $specialistId)';
 }

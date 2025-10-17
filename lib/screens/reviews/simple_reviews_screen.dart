@@ -16,8 +16,7 @@ class SimpleReviewsScreen extends ConsumerStatefulWidget {
   final String specialistName;
 
   @override
-  ConsumerState<SimpleReviewsScreen> createState() =>
-      _SimpleReviewsScreenState();
+  ConsumerState<SimpleReviewsScreen> createState() => _SimpleReviewsScreenState();
 }
 
 class _SimpleReviewsScreenState extends ConsumerState<SimpleReviewsScreen> {
@@ -39,8 +38,7 @@ class _SimpleReviewsScreenState extends ConsumerState<SimpleReviewsScreen> {
         _error = '';
       });
 
-      final reviews =
-          await _reviewsService.getSpecialistReviews(widget.specialistId);
+      final reviews = await _reviewsService.getSpecialistReviews(widget.specialistId);
 
       setState(() {
         _reviews = reviews;
@@ -192,9 +190,7 @@ class _SimpleReviewsScreenState extends ConsumerState<SimpleReviewsScreen> {
                     radius: 20,
                     backgroundColor: Colors.blue.shade100,
                     child: Text(
-                      review.customerName.isNotEmpty
-                          ? review.customerName[0].toUpperCase()
-                          : 'П',
+                      review.customerName.isNotEmpty ? review.customerName[0].toUpperCase() : 'П',
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -229,9 +225,7 @@ class _SimpleReviewsScreenState extends ConsumerState<SimpleReviewsScreen> {
                       ...List.generate(
                         5,
                         (index) => Icon(
-                          index < review.rating
-                              ? Icons.star
-                              : Icons.star_border,
+                          index < review.rating ? Icons.star : Icons.star_border,
                           color: Colors.amber,
                           size: 16,
                         ),
@@ -273,8 +267,7 @@ class _SimpleReviewsScreenState extends ConsumerState<SimpleReviewsScreen> {
                           width: 80,
                           height: 80,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              Container(
+                          errorBuilder: (context, error, stackTrace) => Container(
                             width: 80,
                             height: 80,
                             color: Colors.grey.shade300,
@@ -377,8 +370,7 @@ class _SimpleReviewsScreenState extends ConsumerState<SimpleReviewsScreen> {
                                   ),
                                   const Spacer(),
                                   Text(
-                                    DateFormat('dd.MM.yyyy')
-                                        .format(response.date),
+                                    DateFormat('dd.MM.yyyy').format(response.date),
                                     style: TextStyle(
                                       color: Colors.grey.shade600,
                                       fontSize: 10,
@@ -391,8 +383,7 @@ class _SimpleReviewsScreenState extends ConsumerState<SimpleReviewsScreen> {
                                 response.text,
                                 style: const TextStyle(fontSize: 12),
                               ),
-                              if (response != review.responses.last)
-                                const SizedBox(height: 8),
+                              if (response != review.responses.last) const SizedBox(height: 8),
                             ],
                           ),
                         )

@@ -19,8 +19,7 @@ class GuestGreetingsScreen extends ConsumerStatefulWidget {
   final String guestName;
 
   @override
-  ConsumerState<GuestGreetingsScreen> createState() =>
-      _GuestGreetingsScreenState();
+  ConsumerState<GuestGreetingsScreen> createState() => _GuestGreetingsScreenState();
 }
 
 class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
@@ -149,12 +148,9 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
                 children: [
                   CircleAvatar(
                     radius: 20,
-                    backgroundImage: greeting.guestAvatar != null
-                        ? NetworkImage(greeting.guestAvatar!)
-                        : null,
-                    child: greeting.guestAvatar == null
-                        ? const Icon(Icons.person)
-                        : null,
+                    backgroundImage:
+                        greeting.guestAvatar != null ? NetworkImage(greeting.guestAvatar!) : null,
+                    child: greeting.guestAvatar == null ? const Icon(Icons.person) : null,
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -180,8 +176,7 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
                   ),
                   Chip(
                     label: Text(greeting.type.displayName),
-                    backgroundColor:
-                        _getTypeColor(greeting.type).withValues(alpha: 0.1),
+                    backgroundColor: _getTypeColor(greeting.type).withValues(alpha: 0.1),
                     labelStyle: TextStyle(
                       color: _getTypeColor(greeting.type),
                       fontSize: 12,
@@ -199,9 +194,7 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
                       greeting.likedBy.contains(widget.guestId)
                           ? Icons.favorite
                           : Icons.favorite_border,
-                      color: greeting.likedBy.contains(widget.guestId)
-                          ? Colors.red
-                          : Colors.grey,
+                      color: greeting.likedBy.contains(widget.guestId) ? Colors.red : Colors.grey,
                     ),
                     onPressed: () => _toggleLike(greeting),
                   ),
@@ -251,8 +244,7 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
                   errorBuilder: (context, error, stackTrace) => Container(
                     height: 200,
                     color: Colors.grey[300],
-                    child:
-                        const Icon(Icons.image, size: 48, color: Colors.grey),
+                    child: const Icon(Icons.image, size: 48, color: Colors.grey),
                   ),
                 ),
               ),
@@ -611,9 +603,7 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
         guestId: widget.guestId,
         guestName: widget.guestName,
         type: _selectedType,
-        text: _textController.text.trim().isNotEmpty
-            ? _textController.text.trim()
-            : null,
+        text: _textController.text.trim().isNotEmpty ? _textController.text.trim() : null,
         imageUrl: _imageUrl,
         videoUrl: _videoUrl,
         audioUrl: _audioUrl,

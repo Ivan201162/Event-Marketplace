@@ -210,8 +210,7 @@ class PaymentMethodInfo {
     this.iconUrl,
   });
 
-  factory PaymentMethodInfo.fromMap(Map<String, dynamic> map) =>
-      PaymentMethodInfo(
+  factory PaymentMethodInfo.fromMap(Map<String, dynamic> map) => PaymentMethodInfo(
         method: PaymentMethod.values.firstWhere(
           (e) => e.name == map['method'],
           orElse: () => PaymentMethod.card,
@@ -299,29 +298,15 @@ class Payment {
       providerTransactionId: data['providerTransactionId'] as String?,
       fee: data['fee'] != null ? (data['fee'] as num).toDouble() : null,
       tax: data['tax'] != null ? (data['tax'] as num).toDouble() : null,
-      totalAmount: data['totalAmount'] != null
-          ? (data['totalAmount'] as num).toDouble()
-          : null,
+      totalAmount: data['totalAmount'] != null ? (data['totalAmount'] as num).toDouble() : null,
       metadata: data['metadata'] as Map<String, dynamic>?,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      processedAt: data['processedAt'] != null
-          ? (data['processedAt'] as Timestamp).toDate()
-          : null,
-      completedAt: data['completedAt'] != null
-          ? (data['completedAt'] as Timestamp).toDate()
-          : null,
-      failedAt: data['failedAt'] != null
-          ? (data['failedAt'] as Timestamp).toDate()
-          : null,
-      cancelledAt: data['cancelledAt'] != null
-          ? (data['cancelledAt'] as Timestamp).toDate()
-          : null,
-      refundedAt: data['refundedAt'] != null
-          ? (data['refundedAt'] as Timestamp).toDate()
-          : null,
-      dueDate: data['dueDate'] != null
-          ? (data['dueDate'] as Timestamp).toDate()
-          : null,
+      processedAt: data['processedAt'] != null ? (data['processedAt'] as Timestamp).toDate() : null,
+      completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
+      failedAt: data['failedAt'] != null ? (data['failedAt'] as Timestamp).toDate() : null,
+      cancelledAt: data['cancelledAt'] != null ? (data['cancelledAt'] as Timestamp).toDate() : null,
+      refundedAt: data['refundedAt'] != null ? (data['refundedAt'] as Timestamp).toDate() : null,
+      dueDate: data['dueDate'] != null ? (data['dueDate'] as Timestamp).toDate() : null,
       refundReason: data['refundReason'] as String?,
     );
   }
@@ -421,15 +406,11 @@ class Payment {
         'totalAmount': totalAmount,
         'metadata': metadata,
         'createdAt': Timestamp.fromDate(createdAt),
-        'processedAt':
-            processedAt != null ? Timestamp.fromDate(processedAt!) : null,
-        'completedAt':
-            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+        'processedAt': processedAt != null ? Timestamp.fromDate(processedAt!) : null,
+        'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
         'failedAt': failedAt != null ? Timestamp.fromDate(failedAt!) : null,
-        'cancelledAt':
-            cancelledAt != null ? Timestamp.fromDate(cancelledAt!) : null,
-        'refundedAt':
-            refundedAt != null ? Timestamp.fromDate(refundedAt!) : null,
+        'cancelledAt': cancelledAt != null ? Timestamp.fromDate(cancelledAt!) : null,
+        'refundedAt': refundedAt != null ? Timestamp.fromDate(refundedAt!) : null,
         'dueDate': dueDate != null ? Timestamp.fromDate(dueDate!) : null,
         'refundReason': refundReason,
       };
@@ -475,8 +456,7 @@ class Payment {
         description: description ?? this.description,
         transactionId: transactionId ?? this.transactionId,
         paymentProvider: paymentProvider ?? this.paymentProvider,
-        providerTransactionId:
-            providerTransactionId ?? this.providerTransactionId,
+        providerTransactionId: providerTransactionId ?? this.providerTransactionId,
         fee: fee ?? this.fee,
         tax: tax ?? this.tax,
         totalAmount: totalAmount ?? this.totalAmount,
@@ -503,8 +483,7 @@ class Payment {
   }
 
   /// Проверить, является ли платеж активным
-  bool get isActive =>
-      status == PaymentStatus.pending || status == PaymentStatus.processing;
+  bool get isActive => status == PaymentStatus.pending || status == PaymentStatus.processing;
 
   /// Проверить, завершен ли платеж
   bool get isCompleted => status == PaymentStatus.completed;
@@ -519,8 +498,7 @@ class Payment {
   bool get isRefunded => status == PaymentStatus.refunded;
 
   /// Проверить, просрочен ли платеж
-  bool get isOverdue =>
-      dueDate != null && DateTime.now().isAfter(dueDate!) && isActive;
+  bool get isOverdue => dueDate != null && DateTime.now().isAfter(dueDate!) && isActive;
 
   /// Получить иконку для типа платежа
   String get typeIcon {
@@ -614,8 +592,7 @@ class Payment {
   String get formattedAmount => '${amount.toStringAsFixed(2)} $currency';
 
   /// Форматировать итоговую сумму
-  String get formattedTotalAmount =>
-      '${finalAmount.toStringAsFixed(2)} $currency';
+  String get formattedTotalAmount => '${finalAmount.toStringAsFixed(2)} $currency';
 
   @override
   bool operator ==(Object other) {
@@ -627,8 +604,7 @@ class Payment {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() =>
-      'Payment(id: $id, type: $type, amount: $amount, status: $status)';
+  String toString() => 'Payment(id: $id, type: $type, amount: $amount, status: $status)';
 }
 
 /// Модель финансового отчета
@@ -705,8 +681,7 @@ class FinancialReport {
   String get formattedIncome => '${totalIncome.toStringAsFixed(2)} $currency';
 
   /// Форматировать расходы
-  String get formattedExpenses =>
-      '${totalExpenses.toStringAsFixed(2)} $currency';
+  String get formattedExpenses => '${totalExpenses.toStringAsFixed(2)} $currency';
 
   /// Форматировать чистый доход
   String get formattedNetIncome => '${netIncome.toStringAsFixed(2)} $currency';

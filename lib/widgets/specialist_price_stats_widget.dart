@@ -17,67 +17,65 @@ class SpecialistPriceStatsWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Consumer(
-        builder: (context, ref, child) => ref
-            .watch(specialistPriceStatsProvider(specialistId))
-            .when(
-              data: (stats) {
-                if (stats == null) {
-                  return _buildNoDataWidget(context);
-                }
+        builder: (context, ref, child) =>
+            ref.watch(specialistPriceStatsProvider(specialistId)).when(
+                  data: (stats) {
+                    if (stats == null) {
+                      return _buildNoDataWidget(context);
+                    }
 
-                return ResponsiveCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+                    return ResponsiveCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Icon(Icons.analytics, color: Colors.blue),
-                          const SizedBox(width: 8),
+                          Row(
+                            children: [
+                              const Icon(Icons.analytics, color: Colors.blue),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Статистика цен',
+                                style: Theme.of(context).textTheme.headlineSmall,
+                              ),
+                              const Spacer(),
+                              IconButton(
+                                onPressed: () => _refreshStats(ref),
+                                icon: const Icon(Icons.refresh),
+                                tooltip: 'Обновить статистику',
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 16),
+
+                          // Общая статистика
+                          if (showOverallStats) ...[
+                            _buildOverallStats(context, stats),
+                            const SizedBox(height: 16),
+                          ],
+
+                          // Статистика по категориям
                           Text(
-                            'Статистика цен',
+                            'По категориям',
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
-                          const Spacer(),
-                          IconButton(
-                            onPressed: () => _refreshStats(ref),
-                            icon: const Icon(Icons.refresh),
-                            tooltip: 'Обновить статистику',
+
+                          const SizedBox(height: 8),
+
+                          ...stats.categoryStats.values.map(
+                            (stats) => _buildCategoryStatsCard(context, stats),
                           ),
+
+                          const SizedBox(height: 16),
+
+                          // Предупреждение о том, что цены зависят от условий
+                          _buildDisclaimer(),
                         ],
                       ),
-
-                      const SizedBox(height: 16),
-
-                      // Общая статистика
-                      if (showOverallStats) ...[
-                        _buildOverallStats(context, stats),
-                        const SizedBox(height: 16),
-                      ],
-
-                      // Статистика по категориям
-                      Text(
-                        'По категориям',
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-
-                      const SizedBox(height: 8),
-
-                      ...stats.categoryStats.values.map(
-                        (stats) => _buildCategoryStatsCard(context, stats),
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // Предупреждение о том, что цены зависят от условий
-                      _buildDisclaimer(),
-                    ],
-                  ),
-                );
-              },
-              loading: _buildLoadingWidget,
-              error: (error, stack) =>
-                  _buildErrorWidget(context, error.toString()),
-            ),
+                    );
+                  },
+                  loading: _buildLoadingWidget,
+                  error: (error, stack) => _buildErrorWidget(context, error.toString()),
+                ),
       );
 
   Widget _buildNoDataWidget(BuildContext context) => ResponsiveCard(
@@ -109,8 +107,7 @@ class SpecialistPriceStatsWidget extends ConsumerWidget {
         ),
       );
 
-  Widget _buildErrorWidget(BuildContext context, String error) =>
-      ResponsiveCard(
+  Widget _buildErrorWidget(BuildContext context, String error) => ResponsiveCard(
         child: Column(
           children: [
             const Icon(Icons.error_outline, size: 64, color: Colors.red),
@@ -220,8 +217,7 @@ class SpecialistPriceStatsWidget extends ConsumerWidget {
                   ),
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.blue.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
@@ -317,8 +313,7 @@ class SpecialistPriceStatsWidget extends ConsumerWidget {
         ],
       );
 
-  Widget _buildCategoryStatItem(String label, String value, IconData icon) =>
-      Row(
+  Widget _buildCategoryStatItem(String label, String value, IconData icon) => Row(
         children: [
           Icon(icon, size: 16, color: Colors.grey),
           const SizedBox(width: 4),
@@ -346,8 +341,7 @@ class SpecialistPriceStatsWidget extends ConsumerWidget {
       );
 
   Widget _buildAdditionalStats(Map<String, dynamic> additionalStats) {
-    final priceDistribution =
-        additionalStats['priceDistribution'] as Map<String, int>?;
+    final priceDistribution = additionalStats['priceDistribution'] as Map<String, int>?;
 
     if (priceDistribution == null) return const SizedBox.shrink();
 
@@ -368,8 +362,7 @@ class SpecialistPriceStatsWidget extends ConsumerWidget {
           children: priceDistribution.entries
               .map(
                 (entry) => Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: Colors.blue.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
@@ -428,66 +421,65 @@ class SpecialistProfilePriceStatsWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Consumer(
-        builder: (context, ref, child) => ref
-            .watch(specialistPriceStatsProvider(specialistId))
-            .when(
-              data: (stats) {
-                if (stats == null) {
-                  return const SizedBox.shrink();
-                }
+        builder: (context, ref, child) =>
+            ref.watch(specialistPriceStatsProvider(specialistId)).when(
+                  data: (stats) {
+                    if (stats == null) {
+                      return const SizedBox.shrink();
+                    }
 
-                return ResponsiveCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+                    return ResponsiveCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Icon(Icons.analytics, color: Colors.blue),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Средняя стоимость заказов',
-                            style: Theme.of(context).textTheme.headlineSmall,
+                          Row(
+                            children: [
+                              const Icon(Icons.analytics, color: Colors.blue),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Средняя стоимость заказов',
+                                style: Theme.of(context).textTheme.headlineSmall,
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 12),
+
+                          // Краткая статистика
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _buildQuickStat(
+                                  'Средняя цена',
+                                  '${stats.overallAveragePrice.toStringAsFixed(0)} ₽',
+                                  Colors.green,
+                                ),
+                              ),
+                              Expanded(
+                                child: _buildQuickStat(
+                                  'Завершено',
+                                  '${stats.totalCompletedBookings} заказов',
+                                  Colors.blue,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 8),
+
+                          // Ссылка на подробную статистику
+                          TextButton.icon(
+                            onPressed: () => _showDetailedStats(context, ref),
+                            icon: const Icon(Icons.arrow_forward),
+                            label: const Text('Подробная статистика'),
                           ),
                         ],
                       ),
-
-                      const SizedBox(height: 12),
-
-                      // Краткая статистика
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildQuickStat(
-                              'Средняя цена',
-                              '${stats.overallAveragePrice.toStringAsFixed(0)} ₽',
-                              Colors.green,
-                            ),
-                          ),
-                          Expanded(
-                            child: _buildQuickStat(
-                              'Завершено',
-                              '${stats.totalCompletedBookings} заказов',
-                              Colors.blue,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 8),
-
-                      // Ссылка на подробную статистику
-                      TextButton.icon(
-                        onPressed: () => _showDetailedStats(context, ref),
-                        icon: const Icon(Icons.arrow_forward),
-                        label: const Text('Подробная статистика'),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              loading: () => const SizedBox.shrink(),
-              error: (error, stack) => const SizedBox.shrink(),
-            ),
+                    );
+                  },
+                  loading: () => const SizedBox.shrink(),
+                  error: (error, stack) => const SizedBox.shrink(),
+                ),
       );
 
   Widget _buildQuickStat(String label, String value, Color color) => Column(
@@ -536,14 +528,12 @@ class SpecialistProfilePriceStatsWidget extends ConsumerWidget {
 
 /// Провайдер для статистики цен специалиста
 final specialistPriceStatsProvider =
-    FutureProvider.family<SpecialistPriceAggregate?, String>(
-        (ref, specialistId) async {
+    FutureProvider.family<SpecialistPriceAggregate?, String>((ref, specialistId) async {
   final service = ref.read(specialistPriceStatsServiceProvider);
   return service.getSpecialistPriceStats(specialistId);
 });
 
 /// Провайдер для сервиса статистики цен
-final specialistPriceStatsServiceProvider =
-    Provider<SpecialistPriceStatsService>(
+final specialistPriceStatsServiceProvider = Provider<SpecialistPriceStatsService>(
   (ref) => SpecialistPriceStatsService(),
 );

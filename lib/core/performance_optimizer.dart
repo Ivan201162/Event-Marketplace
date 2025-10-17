@@ -8,8 +8,7 @@ import 'package:flutter/material.dart';
 class PerformanceOptimizer {
   factory PerformanceOptimizer() => _instance;
   PerformanceOptimizer._internal();
-  static final PerformanceOptimizer _instance =
-      PerformanceOptimizer._internal();
+  static final PerformanceOptimizer _instance = PerformanceOptimizer._internal();
 
   final Map<String, DateTime> _lastRequestTimes = {};
   final Map<String, int> _requestCounts = {};
@@ -245,6 +244,5 @@ extension PerformanceListExtension<T> on List<T> {
 extension PerformanceQueryExtension on dynamic {
   /// Оптимизировать Firebase запрос
   dynamic optimized({int? limit, bool useCache = true}) =>
-      PerformanceOptimizer()
-          .optimizeFirebaseQuery(this, limit: limit, useCache: useCache);
+      PerformanceOptimizer().optimizeFirebaseQuery(this, limit: limit, useCache: useCache);
 }

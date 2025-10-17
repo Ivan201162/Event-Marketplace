@@ -193,8 +193,7 @@ class _GuestAuthWidgetState extends ConsumerState<GuestAuthWidget> {
     );
   }
 
-  Widget _buildFeatureItem(ThemeData theme, IconData icon, String text) =>
-      Padding(
+  Widget _buildFeatureItem(ThemeData theme, IconData icon, String text) => Padding(
         padding: const EdgeInsets.only(bottom: 8),
         child: Row(
           children: [

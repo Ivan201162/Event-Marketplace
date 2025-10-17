@@ -52,8 +52,7 @@ class DJPlaylistService {
         updatedAt: DateTime.now(),
       );
 
-      final docRef =
-          await _firestore.collection('dj_media_files').add(mediaFile.toMap());
+      final docRef = await _firestore.collection('dj_media_files').add(mediaFile.toMap());
 
       // Обновляем статус на готов
       await _firestore.collection('dj_media_files').doc(docRef.id).update({
@@ -122,8 +121,7 @@ class DJPlaylistService {
         updatedAt: DateTime.now(),
       );
 
-      final docRef =
-          await _firestore.collection('dj_playlists').add(playlist.toMap());
+      final docRef = await _firestore.collection('dj_playlists').add(playlist.toMap());
 
       return docRef.id;
     } catch (e) {
@@ -233,8 +231,7 @@ class DJPlaylistService {
 
     try {
       // Получаем информацию о файле
-      final doc =
-          await _firestore.collection('dj_media_files').doc(mediaFileId).get();
+      final doc = await _firestore.collection('dj_media_files').doc(mediaFileId).get();
 
       if (!doc.exists) {
         throw Exception('Файл не найден');
@@ -375,8 +372,7 @@ class DJPlaylistService {
           ...doc.data(),
         });
 
-        final updatedMediaFileIds =
-            playlist.mediaFileIds.where((id) => id != mediaFileId).toList();
+        final updatedMediaFileIds = playlist.mediaFileIds.where((id) => id != mediaFileId).toList();
 
         batch.update(doc.reference, {
           'mediaFileIds': updatedMediaFileIds,
@@ -428,8 +424,7 @@ class DJPlaylistService {
         id: 'mock_vk_playlist',
         title: 'Лучшие хиты 2024',
         description: 'Популярные треки этого года',
-        coverImageUrl:
-            'https://via.placeholder.com/300x300/4CAF50/FFFFFF?text=VK+Playlist',
+        coverImageUrl: 'https://via.placeholder.com/300x300/4CAF50/FFFFFF?text=VK+Playlist',
         trackCount: 5,
         ownerId: 'mock_user',
         ownerName: 'Mock DJ',
@@ -479,31 +474,30 @@ class DJPlaylistService {
       );
 
   /// Создать mock медиафайлы для демонстрации
-  List<MediaFile> _createMockMediaFiles(String djId, List<VKTrack> tracks) =>
-      tracks
-          .map(
-            (track) => MediaFile(
-              id: 'mock_${track.id}',
-              djId: djId,
-              fileName: '${track.artist} - ${track.title}.mp3',
-              originalName: '${track.artist} - ${track.title}.mp3',
-              filePath: track.url ?? 'https://example.com/mock_track.mp3',
-              type: MediaType.audio,
-              status: MediaStatus.ready,
-              fileSize: 5000000, // 5MB
-              duration: track.duration,
-              mimeType: 'audio/mpeg',
-              metadata: {
-                'artist': track.artist,
-                'title': track.title,
-                'album': track.albumTitle,
-                'source': 'vk_import',
-              },
-              uploadedAt: DateTime.now(),
-              updatedAt: DateTime.now(),
-            ),
-          )
-          .toList();
+  List<MediaFile> _createMockMediaFiles(String djId, List<VKTrack> tracks) => tracks
+      .map(
+        (track) => MediaFile(
+          id: 'mock_${track.id}',
+          djId: djId,
+          fileName: '${track.artist} - ${track.title}.mp3',
+          originalName: '${track.artist} - ${track.title}.mp3',
+          filePath: track.url ?? 'https://example.com/mock_track.mp3',
+          type: MediaType.audio,
+          status: MediaStatus.ready,
+          fileSize: 5000000, // 5MB
+          duration: track.duration,
+          mimeType: 'audio/mpeg',
+          metadata: {
+            'artist': track.artist,
+            'title': track.title,
+            'album': track.albumTitle,
+            'source': 'vk_import',
+          },
+          uploadedAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      )
+      .toList();
 
   /// Получить статистику плейлистов диджея
   Future<Map<String, dynamic>> getDJPlaylistStats(String djId) async {
@@ -512,15 +506,11 @@ class DJPlaylistService {
     }
 
     try {
-      final playlistsQuery = await _firestore
-          .collection('dj_playlists')
-          .where('djId', isEqualTo: djId)
-          .get();
+      final playlistsQuery =
+          await _firestore.collection('dj_playlists').where('djId', isEqualTo: djId).get();
 
-      final mediaFilesQuery = await _firestore
-          .collection('dj_media_files')
-          .where('djId', isEqualTo: djId)
-          .get();
+      final mediaFilesQuery =
+          await _firestore.collection('dj_media_files').where('djId', isEqualTo: djId).get();
 
       final stats = <String, dynamic>{
         'total_playlists': playlistsQuery.docs.length,
@@ -537,8 +527,7 @@ class DJPlaylistService {
           ...doc.data(),
         });
 
-        stats['total_play_count'] =
-            (stats['total_play_count'] as int) + playlist.playCount;
+        stats['total_play_count'] = (stats['total_play_count'] as int) + playlist.playCount;
         if (playlist.isPublic) {
           stats['public_playlists'] = (stats['public_playlists'] as int) + 1;
         }

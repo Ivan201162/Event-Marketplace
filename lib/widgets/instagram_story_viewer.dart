@@ -19,8 +19,7 @@ class InstagramStoryViewer extends StatefulWidget {
   State<InstagramStoryViewer> createState() => _InstagramStoryViewerState();
 }
 
-class _InstagramStoryViewerState extends State<InstagramStoryViewer>
-    with TickerProviderStateMixin {
+class _InstagramStoryViewerState extends State<InstagramStoryViewer> with TickerProviderStateMixin {
   late PageController _pageController;
   late AnimationController _progressController;
   late Animation<double> _progressAnimation;

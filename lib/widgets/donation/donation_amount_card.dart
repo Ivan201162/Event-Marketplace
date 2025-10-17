@@ -23,8 +23,7 @@ class DonationAmountCard extends StatelessWidget {
               width: isSelected ? 2 : 1,
             ),
             borderRadius: BorderRadius.circular(12),
-            color:
-                isSelected ? Colors.pink.withValues(alpha: 0.1) : Colors.white,
+            color: isSelected ? Colors.pink.withValues(alpha: 0.1) : Colors.white,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

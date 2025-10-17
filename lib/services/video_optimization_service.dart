@@ -27,8 +27,7 @@ class VideoOptimizationService {
         path: videoPath,
         fileName: fileName,
         fileSize: fileSize,
-        duration:
-            const Duration(), // TODO(developer): Получить реальную длительность
+        duration: const Duration(), // TODO(developer): Получить реальную длительность
         format: fileExtension,
         resolution: const Size(
           1920,
@@ -258,8 +257,7 @@ class VideoInfo {
   }
 
   /// Получить разрешение в читаемом виде
-  String get formattedResolution =>
-      '${resolution.width.toInt()}x${resolution.height.toInt()}';
+  String get formattedResolution => '${resolution.width.toInt()}x${resolution.height.toInt()}';
 }
 
 /// Настройки сжатия видео

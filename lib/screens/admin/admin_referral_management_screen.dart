@@ -1,17 +1,16 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+
 import '../../services/marketing_admin_service.dart';
 
 class AdminReferralManagementScreen extends StatefulWidget {
   const AdminReferralManagementScreen({super.key});
 
   @override
-  State<AdminReferralManagementScreen> createState() =>
-      _AdminReferralManagementScreenState();
+  State<AdminReferralManagementScreen> createState() => _AdminReferralManagementScreenState();
 }
 
-class _AdminReferralManagementScreenState
-    extends State<AdminReferralManagementScreen> {
+class _AdminReferralManagementScreenState extends State<AdminReferralManagementScreen> {
   final MarketingAdminService _marketingService = MarketingAdminService();
   Map<String, dynamic> _referralStats = {};
   bool _isLoading = true;
@@ -134,8 +133,7 @@ class _AdminReferralManagementScreenState
     );
   }
 
-  Widget _buildStatItem(
-      String label, String value, IconData icon, Color color) {
+  Widget _buildStatItem(String label, String value, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -203,8 +201,7 @@ class _AdminReferralManagementScreenState
                       ),
                     ),
                     title: Text('Пользователь ${referrer['userId']}'),
-                    subtitle: Text(
-                        'Пригласил ${referrer['invitedCount']} пользователей'),
+                    subtitle: Text('Пригласил ${referrer['invitedCount']} пользователей'),
                     trailing: Text(
                       '${referrer['bonusesActivated']} бонусов',
                       style: const TextStyle(fontWeight: FontWeight.bold),
@@ -233,16 +230,14 @@ class _AdminReferralManagementScreenState
             ListTile(
               leading: const Icon(Icons.settings),
               title: const Text('Бонус за приглашение'),
-              subtitle:
-                  const Text('5 дней Premium для реферера, 3 дня для реферала'),
+              subtitle: const Text('5 дней Premium для реферера, 3 дня для реферала'),
               trailing: const Icon(Icons.edit),
               onTap: () => _showBonusSettingsDialog(),
             ),
             ListTile(
               leading: const Icon(Icons.star),
               title: const Text('Награды за достижения'),
-              subtitle: const Text(
-                  '5 приглашений = 30 дней Premium, 10 = 1 месяц PRO'),
+              subtitle: const Text('5 приглашений = 30 дней Premium, 10 = 1 месяц PRO'),
               trailing: const Icon(Icons.edit),
               onTap: () => _showRewardsSettingsDialog(),
             ),
@@ -298,12 +293,10 @@ class _AdminReferralManagementScreenState
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: referrals.length,
                   itemBuilder: (context, index) {
-                    final referralData =
-                        referrals[index].data() as Map<String, dynamic>;
+                    final referralData = referrals[index].data() as Map<String, dynamic>;
                     return ListTile(
                       leading: CircleAvatar(
-                        backgroundColor:
-                            _getReferralStatusColor(referralData['status']),
+                        backgroundColor: _getReferralStatusColor(referralData['status']),
                         child: Icon(
                           _getReferralStatusIcon(referralData['status']),
                           color: Colors.white,
@@ -317,8 +310,7 @@ class _AdminReferralManagementScreenState
                       trailing: Text(
                         _getReferralStatusName(referralData['status']),
                         style: TextStyle(
-                          color:
-                              _getReferralStatusColor(referralData['status']),
+                          color: _getReferralStatusColor(referralData['status']),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -424,8 +416,7 @@ class _AdminReferralManagementScreenState
   void _toggleReferralProgram(bool isActive) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-            'Реферальная программа ${isActive ? 'активирована' : 'деактивирована'}'),
+        content: Text('Реферальная программа ${isActive ? 'активирована' : 'деактивирована'}'),
       ),
     );
   }

@@ -37,12 +37,10 @@ class LoggingService {
 
       // Инициализируем Firebase Crashlytics
       if (_enableCrashlytics) {
-        await FirebaseCrashlytics.instance
-            .setCrashlyticsCollectionEnabled(true);
+        await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
 
         // Устанавливаем обработчик ошибок Flutter
-        FlutterError.onError =
-            FirebaseCrashlytics.instance.recordFlutterFatalError;
+        FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
         // Устанавливаем обработчик ошибок платформы
         PlatformDispatcher.instance.onError = (error, stack) {
@@ -53,8 +51,7 @@ class LoggingService {
 
       // Инициализируем Firebase Performance
       if (_enablePerformance) {
-        await FirebasePerformance.instance
-            .setPerformanceCollectionEnabled(true);
+        await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
       }
 
       debugPrint('LoggingService initialized successfully');
@@ -92,8 +89,7 @@ class LoggingService {
     );
 
     // Логируем в Firebase Crashlytics для ошибок
-    if (_enableCrashlytics &&
-        (level == LogLevel.error || level == LogLevel.fatal)) {
+    if (_enableCrashlytics && (level == LogLevel.error || level == LogLevel.fatal)) {
       FirebaseCrashlytics.instance.log('[$levelName] $logTag: $message');
 
       if (error != null) {
@@ -101,9 +97,7 @@ class LoggingService {
           error,
           stackTrace,
           fatal: level == LogLevel.fatal,
-          information: extra?.entries
-              .map((e) => DiagnosticsProperty(e.key, e.value))
-              .toList(),
+          information: extra?.entries.map((e) => DiagnosticsProperty(e.key, e.value)).toList(),
         );
       }
     }
@@ -337,9 +331,7 @@ class LoggingService {
         stackTrace,
         reason: reason,
         fatal: fatal,
-        information: information?.entries
-            .map((e) => DiagnosticsProperty(e.key, e.value))
-            .toList(),
+        information: information?.entries.map((e) => DiagnosticsProperty(e.key, e.value)).toList(),
       );
     }
   }

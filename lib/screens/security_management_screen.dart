@@ -12,12 +12,10 @@ class SecurityManagementScreen extends ConsumerStatefulWidget {
   const SecurityManagementScreen({super.key});
 
   @override
-  ConsumerState<SecurityManagementScreen> createState() =>
-      _SecurityManagementScreenState();
+  ConsumerState<SecurityManagementScreen> createState() => _SecurityManagementScreenState();
 }
 
-class _SecurityManagementScreenState
-    extends ConsumerState<SecurityManagementScreen> {
+class _SecurityManagementScreenState extends ConsumerState<SecurityManagementScreen> {
   final SecurityService _securityService = SecurityService();
   List<SecurityAudit> _audits = [];
   List<SecurityPolicy> _policies = [];
@@ -69,8 +67,7 @@ class _SecurityManagementScreenState
               child: _buildTabButton('policies', 'Политики', Icons.policy),
             ),
             Expanded(
-              child:
-                  _buildTabButton('statistics', 'Статистика', Icons.analytics),
+              child: _buildTabButton('statistics', 'Статистика', Icons.analytics),
             ),
             Expanded(
               child: _buildTabButton('encryption', 'Шифрование', Icons.lock),
@@ -93,13 +90,10 @@ class _SecurityManagementScreenState
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.blue.withValues(alpha: 0.1)
-              : Colors.transparent,
+          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color:
-                isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
+            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -178,12 +172,11 @@ class _SecurityManagementScreenState
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: _getRiskColor(_statistics!.overallRiskLevel)
-                                .withValues(alpha: 0.1),
+                            color:
+                                _getRiskColor(_statistics!.overallRiskLevel).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(
-                              color:
-                                  _getRiskColor(_statistics!.overallRiskLevel),
+                              color: _getRiskColor(_statistics!.overallRiskLevel),
                             ),
                           ),
                           child: Row(
@@ -361,8 +354,7 @@ class _SecurityManagementScreenState
                   _buildInfoChip('Пользователь', audit.userId!, Colors.blue),
                   const SizedBox(width: 8),
                 ],
-                if (audit.ipAddress != null)
-                  _buildInfoChip('IP', audit.ipAddress!, Colors.green),
+                if (audit.ipAddress != null) _buildInfoChip('IP', audit.ipAddress!, Colors.green),
               ],
             ),
             const SizedBox(height: 8),
@@ -662,8 +654,7 @@ class _SecurityManagementScreenState
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(entry.key),
                                       Text('${entry.value}'),
@@ -671,12 +662,9 @@ class _SecurityManagementScreenState
                                   ),
                                   const SizedBox(height: 4),
                                   LinearProgressIndicator(
-                                    value:
-                                        entry.value / _statistics!.totalEvents,
-                                    backgroundColor:
-                                        Colors.grey.withValues(alpha: 0.3),
-                                    valueColor:
-                                        const AlwaysStoppedAnimation<Color>(
+                                    value: entry.value / _statistics!.totalEvents,
+                                    backgroundColor: Colors.grey.withValues(alpha: 0.3),
+                                    valueColor: const AlwaysStoppedAnimation<Color>(
                                       Colors.blue,
                                     ),
                                   ),
@@ -1010,8 +998,7 @@ class _SecurityManagementScreenState
     // TODO(developer): Реализовать разрешение события аудита
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:
-            Text('Разрешение события "${audit.eventType}" будет реализовано'),
+        content: Text('Разрешение события "${audit.eventType}" будет реализовано'),
       ),
     );
   }
@@ -1035,8 +1022,7 @@ class _SecurityManagementScreenState
     // TODO(developer): Реализовать редактирование политики
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:
-            Text('Редактирование политики "${policy.name}" будет реализовано'),
+        content: Text('Редактирование политики "${policy.name}" будет реализовано'),
       ),
     );
   }
@@ -1057,8 +1043,7 @@ class _SecurityManagementScreenState
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить политику'),
-        content:
-            Text('Вы уверены, что хотите удалить политику "${policy.name}"?'),
+        content: Text('Вы уверены, что хотите удалить политику "${policy.name}"?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

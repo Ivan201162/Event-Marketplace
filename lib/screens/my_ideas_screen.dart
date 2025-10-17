@@ -19,8 +19,7 @@ class MyIdeasScreen extends ConsumerStatefulWidget {
   ConsumerState<MyIdeasScreen> createState() => _MyIdeasScreenState();
 }
 
-class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen>
-    with SingleTickerProviderStateMixin {
+class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final EventIdeasService _ideasService = EventIdeasService();
 
@@ -67,19 +66,15 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen>
     }
   }
 
-  List<EventIdea> _getFilteredIdeas(List<EventIdea> ideas) =>
-      ideas.where((idea) {
+  List<EventIdea> _getFilteredIdeas(List<EventIdea> ideas) => ideas.where((idea) {
         final matchesSearch = _searchQuery.isEmpty ||
             idea.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-            idea.description
-                .toLowerCase()
-                .contains(_searchQuery.toLowerCase()) ||
+            idea.description.toLowerCase().contains(_searchQuery.toLowerCase()) ||
             idea.tags.any(
               (tag) => tag.toLowerCase().contains(_searchQuery.toLowerCase()),
             );
 
-        final matchesCategory =
-            _selectedCategory == null || idea.category == _selectedCategory;
+        final matchesCategory = _selectedCategory == null || idea.category == _selectedCategory;
 
         return matchesSearch && matchesCategory;
       }).toList();
@@ -297,8 +292,7 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen>
 
   Future<void> _toggleFavorite(EventIdea idea) async {
     try {
-      final isFavorite =
-          await _ideasService.isIdeaInFavorites(idea.id, widget.userId);
+      final isFavorite = await _ideasService.isIdeaInFavorites(idea.id, widget.userId);
 
       if (isFavorite) {
         await _ideasService.removeFromFavorites(idea.id, widget.userId);
@@ -326,8 +320,7 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen>
       }
 
       // Обновляем в созданных
-      final createdIndex =
-          _createdIdeas.indexWhere((idea) => idea.id == ideaId);
+      final createdIndex = _createdIdeas.indexWhere((idea) => idea.id == ideaId);
       if (createdIndex != -1) {
         _createdIdeas[createdIndex] = updater(_createdIdeas[createdIndex]);
       }

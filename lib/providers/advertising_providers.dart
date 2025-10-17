@@ -5,13 +5,11 @@ import '../models/advertisement.dart';
 import '../services/advertising_service.dart';
 
 /// Провайдер сервиса рекламы
-final advertisingServiceProvider =
-    Provider<AdvertisingService>((ref) => AdvertisingService());
+final advertisingServiceProvider = Provider<AdvertisingService>((ref) => AdvertisingService());
 
 /// Провайдер рекламных объявлений
 final advertisementsProvider =
-    FutureProvider.family<List<Advertisement>, AdvertisementFilters>(
-        (ref, filters) async {
+    FutureProvider.family<List<Advertisement>, AdvertisementFilters>((ref, filters) async {
   final service = ref.read(advertisingServiceProvider);
   return service.getAdvertisements(
     status: filters.status,
@@ -23,8 +21,7 @@ final advertisementsProvider =
 
 /// Провайдер рекламы для показа
 final displayAdvertisementsProvider =
-    FutureProvider.family<List<Advertisement>, DisplayAdParams>(
-        (ref, params) async {
+    FutureProvider.family<List<Advertisement>, DisplayAdParams>((ref, params) async {
   final service = ref.read(advertisingServiceProvider);
   return service.getAdvertisementsForDisplay(
     userId: params.userId,
@@ -41,8 +38,7 @@ final advertisementStatsProvider =
 });
 
 /// Провайдер общей статистики рекламы
-final overallAdStatsProvider =
-    FutureProvider<Map<String, dynamic>>((ref) async {
+final overallAdStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
   final service = ref.read(advertisingServiceProvider);
   return service.getOverallStats();
 });
@@ -72,8 +68,7 @@ class AdvertisementFilters {
   }
 
   @override
-  int get hashCode =>
-      status.hashCode ^ type.hashCode ^ advertiserId.hashCode ^ limit.hashCode;
+  int get hashCode => status.hashCode ^ type.hashCode ^ advertiserId.hashCode ^ limit.hashCode;
 }
 
 /// Параметры для показа рекламы
@@ -254,8 +249,7 @@ class AdvertisingNotifier extends Notifier<AdvertisingState> {
       await _service.deleteAdvertisement(adId);
 
       state = state.copyWith(
-        advertisements:
-            state.advertisements.where((ad) => ad.id != adId).toList(),
+        advertisements: state.advertisements.where((ad) => ad.id != adId).toList(),
         isLoading: false,
       );
     } catch (e) {
@@ -303,7 +297,6 @@ class AdvertisingNotifier extends Notifier<AdvertisingState> {
 }
 
 /// Провайдер состояния рекламы (мигрирован с StateNotifierProvider)
-final advertisingStateProvider =
-    NotifierProvider<AdvertisingNotifier, AdvertisingState>(
+final advertisingStateProvider = NotifierProvider<AdvertisingNotifier, AdvertisingState>(
   AdvertisingNotifier.new,
 );

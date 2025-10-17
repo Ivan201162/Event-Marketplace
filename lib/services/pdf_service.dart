@@ -184,8 +184,7 @@ class PdfService {
 
               // Описание работ
               pw.Text(
-                workAct.workDescription ??
-                    'Работы выполнены в соответствии с договором',
+                workAct.workDescription ?? 'Работы выполнены в соответствии с договором',
                 style: const pw.TextStyle(fontSize: 12),
               ),
               pw.SizedBox(height: 10),
@@ -313,10 +312,8 @@ class PdfService {
                 style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
               ),
               pw.Text(specialist.name),
-              if (specialist.email != null)
-                pw.Text('Email: ${specialist.email}'),
-              if (specialist.phone != null)
-                pw.Text('Телефон: ${specialist.phone}'),
+              if (specialist.email != null) pw.Text('Email: ${specialist.email}'),
+              if (specialist.phone != null) pw.Text('Телефон: ${specialist.phone}'),
               pw.SizedBox(height: 10),
 
               // Покупатель
@@ -334,8 +331,7 @@ class PdfService {
                 border: pw.TableBorder.all(),
                 children: [
                   pw.TableRow(
-                    decoration:
-                        const pw.BoxDecoration(color: PdfColors.grey300),
+                    decoration: const pw.BoxDecoration(color: PdfColors.grey300),
                     children: [
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(8),

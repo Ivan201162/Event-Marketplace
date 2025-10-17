@@ -111,16 +111,14 @@ class VoiceMessageService {
       if (!await file.exists()) return null;
 
       // Создаём уникальное имя файла
-      final fileName =
-          'voice_${chatId}_${senderId}_${DateTime.now().millisecondsSinceEpoch}.m4a';
+      final fileName = 'voice_${chatId}_${senderId}_${DateTime.now().millisecondsSinceEpoch}.m4a';
       // final ref = _storage.ref().child('voice_messages/$fileName');
 
       // Загружаем файл
       // final uploadTask = ref.putFile(file);
       // final snapshot = await uploadTask;
       // final downloadUrl = await snapshot.ref.getDownloadURL();
-      final downloadUrl =
-          await _uploadVoiceMessage(File(_currentRecordingPath!));
+      final downloadUrl = await _uploadVoiceMessage(File(_currentRecordingPath!));
 
       // Удаляем временный файл
       await file.delete();

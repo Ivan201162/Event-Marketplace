@@ -93,12 +93,9 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
             children: [
               CircleAvatar(
                 radius: 30,
-                backgroundColor:
-                    Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                 child: Text(
-                  widget.specialistName.isNotEmpty
-                      ? widget.specialistName[0].toUpperCase()
-                      : 'С',
+                  widget.specialistName.isNotEmpty ? widget.specialistName[0].toUpperCase() : 'С',
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
                     fontSize: 24,
@@ -150,9 +147,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                 return const CircularProgressIndicator();
               }
 
-              if (snapshot.hasError ||
-                  snapshot.data == null ||
-                  snapshot.data!.isEmpty) {
+              if (snapshot.hasError || snapshot.data == null || snapshot.data!.isEmpty) {
                 return Card(
                   child: Padding(
                     padding: const EdgeInsets.all(16),
@@ -166,19 +161,17 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                         const SizedBox(height: 8),
                         Text(
                           'Нет доступных заказов для отзыва',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: Colors.grey[600],
-                                  ),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: Colors.grey[600],
+                              ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 4),
                         Text(
                           'Отзыв можно оставить только для завершенных заказов',
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Colors.grey[500],
-                                  ),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Colors.grey[500],
+                              ),
                           textAlign: TextAlign.center,
                         ),
                       ],

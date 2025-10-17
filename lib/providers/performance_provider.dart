@@ -109,8 +109,7 @@ class PerformanceNotifier extends ChangeNotifier {
     const memoryUsage = 50; // Заглушка в процентах
     const isLowMemory = memoryUsage > 80;
 
-    if (memoryUsage != _state.memoryUsage ||
-        isLowMemory != _state.isLowMemory) {
+    if (memoryUsage != _state.memoryUsage || isLowMemory != _state.isLowMemory) {
       _state = _state.copyWith(
         memoryUsage: memoryUsage,
         isLowMemory: isLowMemory,
@@ -126,8 +125,7 @@ class PerformanceNotifier extends ChangeNotifier {
     const batteryLevel = 75; // Заглушка в процентах
     const isLowBattery = batteryLevel < 20;
 
-    if (batteryLevel != _state.batteryLevel ||
-        isLowBattery != _state.isLowBattery) {
+    if (batteryLevel != _state.batteryLevel || isLowBattery != _state.isLowBattery) {
       _state = _state.copyWith(
         batteryLevel: batteryLevel,
         isLowBattery: isLowBattery,
@@ -143,8 +141,7 @@ class PerformanceNotifier extends ChangeNotifier {
     const connectionSpeed = ConnectionSpeed.fast; // Заглушка
     const isSlowConnection = connectionSpeed == ConnectionSpeed.slow;
 
-    if (connectionSpeed != _state.connectionSpeed ||
-        isSlowConnection != _state.isSlowConnection) {
+    if (connectionSpeed != _state.connectionSpeed || isSlowConnection != _state.isSlowConnection) {
       _state = _state.copyWith(
         connectionSpeed: connectionSpeed,
         isSlowConnection: isSlowConnection,
@@ -239,8 +236,7 @@ class PerformanceNotifier extends ChangeNotifier {
     }
 
     if (state.fps < 30) {
-      recommendations
-          .add('Низкий FPS: рекомендуется снизить качество анимаций');
+      recommendations.add('Низкий FPS: рекомендуется снизить качество анимаций');
     }
 
     return recommendations;
@@ -257,8 +253,5 @@ final optimizationRecommendationsProvider = Provider<List<String>>((ref) {
 /// Провайдер для проверки необходимости оптимизации
 final needsOptimizationProvider = Provider<bool>((ref) {
   final state = ref.watch(performanceProvider);
-  return state.isLowMemory ||
-      state.isLowBattery ||
-      state.isSlowConnection ||
-      state.fps < 30;
+  return state.isLowMemory || state.isLowBattery || state.isSlowConnection || state.fps < 30;
 });

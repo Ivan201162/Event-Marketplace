@@ -12,8 +12,7 @@ class DataGenerationConfig {
   static const double verifiedSpecialistsRatio = 0.7; // 70% проверенных
   static const double activeUsersRatio = 0.9; // 90% активных
   static const double positiveReviewsRatio = 0.8; // 80% положительных отзывов
-  static const double completedBookingsRatio =
-      0.6; // 60% завершенных бронирований
+  static const double completedBookingsRatio = 0.6; // 60% завершенных бронирований
 
   /// Настройки Firestore
   static const int batchSize = 500;
@@ -347,11 +346,9 @@ class DataGenerationConfig {
 
   /// Методы для получения конфигурации
 
-  static List<String> getAllCities() =>
-      citiesByRegion.values.expand((cities) => cities).toList();
+  static List<String> getAllCities() => citiesByRegion.values.expand((cities) => cities).toList();
 
-  static List<String> getCitiesByRegion(String region) =>
-      citiesByRegion[region] ?? [];
+  static List<String> getCitiesByRegion(String region) => citiesByRegion[region] ?? [];
 
   static Map<String, double> getPricingForCategory(String category) =>
       categoryPricing[category] ?? {'min': 2000, 'max': 10000};

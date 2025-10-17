@@ -120,9 +120,8 @@ class MemoryManager {
     void Function() callback, {
     bool periodic = false,
   }) {
-    final timer = periodic
-        ? Timer.periodic(duration, (_) => callback())
-        : Timer(duration, callback);
+    final timer =
+        periodic ? Timer.periodic(duration, (_) => callback()) : Timer(duration, callback);
     trackTimer(timer);
     return timer;
   }
@@ -161,9 +160,8 @@ mixin MemoryManagerMixin<T extends StatefulWidget> on State<T> {
     void Function() callback, {
     bool periodic = false,
   }) {
-    final timer = periodic
-        ? Timer.periodic(duration, (_) => callback())
-        : Timer(duration, callback);
+    final timer =
+        periodic ? Timer.periodic(duration, (_) => callback()) : Timer(duration, callback);
     _memoryManager.trackTimer(timer);
     return timer;
   }

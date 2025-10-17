@@ -157,8 +157,7 @@ class _MediaAttachmentWidgetState extends State<MediaAttachmentWidget> {
           SizedBox(
             width: double.infinity,
             child: OutlinedButton(
-              onPressed:
-                  _isUploading ? null : () => Navigator.of(context).pop(),
+              onPressed: _isUploading ? null : () => Navigator.of(context).pop(),
               child: const Text('Отмена'),
             ),
           ),

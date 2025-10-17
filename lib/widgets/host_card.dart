@@ -120,16 +120,14 @@ class HostCard extends StatelessWidget {
                         Icon(
                           Icons.location_on,
                           size: isMobile ? 12 : 14,
-                          color: theme.colorScheme.onSurface
-                              .withValues(alpha: 0.6),
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                         const SizedBox(width: 2),
                         Expanded(
                           child: Text(
                             specialist.city,
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.6),
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                               fontSize: isMobile ? 10 : 12,
                             ),
                             maxLines: 1,
@@ -161,8 +159,7 @@ class HostCard extends StatelessWidget {
                         Text(
                           '(${specialist.totalReviews})',
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface
-                                .withValues(alpha: 0.6),
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                             fontSize: isMobile ? 9 : 11,
                           ),
                         ),

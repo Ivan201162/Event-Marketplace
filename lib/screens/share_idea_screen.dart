@@ -84,8 +84,7 @@ class _ShareIdeaScreenState extends ConsumerState<ShareIdeaScreen> {
                               Image.network(
                                 widget.idea.mediaUrl!,
                                 fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    Container(
+                                errorBuilder: (context, error, stackTrace) => Container(
                                   color: Colors.grey[300],
                                   child: const Icon(Icons.video_library),
                                 ),
@@ -102,16 +101,13 @@ class _ShareIdeaScreenState extends ConsumerState<ShareIdeaScreen> {
                         : Image.network(
                             widget.idea.mediaUrl!,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                Container(
+                            errorBuilder: (context, error, stackTrace) => Container(
                               color: Colors.grey[300],
                               child: const Icon(Icons.image),
                             ),
                           )
                     : Icon(
-                        widget.idea.isVideo ?? false
-                            ? Icons.video_library
-                            : Icons.image,
+                        widget.idea.isVideo ?? false ? Icons.video_library : Icons.image,
                         color: Colors.grey,
                       ),
               ),
@@ -202,8 +198,7 @@ class _ShareIdeaScreenState extends ConsumerState<ShareIdeaScreen> {
               final chatId = chats[index].id;
 
               // Найти собеседника
-              final participants =
-                  List<String>.from(chat['participants'] ?? []);
+              final participants = List<String>.from(chat['participants'] ?? []);
               final otherParticipantId = participants.firstWhere(
                 (id) => id != currentUserId,
                 orElse: () => '',
@@ -236,8 +231,7 @@ class _ShareIdeaScreenState extends ConsumerState<ShareIdeaScreen> {
 
           return ListTile(
             leading: CircleAvatar(
-              backgroundImage:
-                  userAvatar != null ? NetworkImage(userAvatar) : null,
+              backgroundImage: userAvatar != null ? NetworkImage(userAvatar) : null,
               child: userAvatar == null ? const Icon(Icons.person) : null,
             ),
             title: Text(userName),
@@ -254,8 +248,7 @@ class _ShareIdeaScreenState extends ConsumerState<ShareIdeaScreen> {
                   )
                 : IconButton(
                     icon: const Icon(Icons.send),
-                    onPressed: () =>
-                        _shareToChat(chatId, otherParticipantId, userName),
+                    onPressed: () => _shareToChat(chatId, otherParticipantId, userName),
                   ),
             onTap: () => _shareToChat(chatId, otherParticipantId, userName),
           );
@@ -294,11 +287,7 @@ class _ShareIdeaScreenState extends ConsumerState<ShareIdeaScreen> {
       };
 
       // Добавить сообщение в чат
-      await _firestore
-          .collection('chats')
-          .doc(chatId)
-          .collection('messages')
-          .add(messageData);
+      await _firestore.collection('chats').doc(chatId).collection('messages').add(messageData);
 
       // Обновить информацию о чате
       await _firestore.collection('chats').doc(chatId).update({

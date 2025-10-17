@@ -119,8 +119,7 @@ class ArchiveService {
       FileType fileType;
       if (['.jpg', '.jpeg', '.png', '.gif', '.webp'].contains(fileExtension)) {
         fileType = FileType.image;
-      } else if (['.mp4', '.avi', '.mov', '.wmv', '.flv', '.webm']
-          .contains(fileExtension)) {
+      } else if (['.mp4', '.avi', '.mov', '.wmv', '.flv', '.webm'].contains(fileExtension)) {
         fileType = FileType.video;
       } else {
         fileType = FileType.other;
@@ -156,10 +155,7 @@ class ArchiveService {
         },
       );
 
-      await _firestore
-          .collection(_collection)
-          .doc(archive.id)
-          .set(archive.toMap());
+      await _firestore.collection(_collection).doc(archive.id).set(archive.toMap());
 
       SafeLog.info(
         'ArchiveService: Archive uploaded successfully: ${archive.id}',
@@ -182,8 +178,7 @@ class ArchiveService {
           .orderBy('uploadedAt', descending: true)
           .get();
 
-      final archives =
-          querySnapshot.docs.map(EventArchive.fromDocument).toList();
+      final archives = querySnapshot.docs.map(EventArchive.fromDocument).toList();
 
       SafeLog.info('ArchiveService: Found ${archives.length} archives');
       return archives;
@@ -275,10 +270,8 @@ class ArchiveService {
         'ArchiveService: Getting archive stats for booking: $bookingId',
       );
 
-      final querySnapshot = await _firestore
-          .collection(_collection)
-          .where('bookingId', isEqualTo: bookingId)
-          .get();
+      final querySnapshot =
+          await _firestore.collection(_collection).where('bookingId', isEqualTo: bookingId).get();
 
       var totalArchives = 0;
       var totalSize = 0;

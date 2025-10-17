@@ -26,9 +26,7 @@ class PriceHistory {
       reason: data['reason'] ?? '',
       changedBy: data['changedBy'] ?? '',
       changedAt: (data['changedAt'] as Timestamp).toDate(),
-      metadata: data['metadata'] != null
-          ? Map<String, dynamic>.from(data['metadata'])
-          : null,
+      metadata: data['metadata'] != null ? Map<String, dynamic>.from(data['metadata']) : null,
     );
   }
 
@@ -42,9 +40,7 @@ class PriceHistory {
         reason: data['reason'] ?? '',
         changedBy: data['changedBy'] ?? '',
         changedAt: (data['changedAt'] as Timestamp).toDate(),
-        metadata: data['metadata'] != null
-            ? Map<String, dynamic>.from(data['metadata'])
-            : null,
+        metadata: data['metadata'] != null ? Map<String, dynamic>.from(data['metadata']) : null,
       );
   final String id;
   final String bookingId;

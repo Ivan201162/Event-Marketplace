@@ -228,9 +228,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
 
     // Фильтр по типу
     if (_selectedType != null) {
-      filtered = filtered
-          .where((integration) => integration.type == _selectedType)
-          .toList();
+      filtered = filtered.where((integration) => integration.type == _selectedType).toList();
     }
 
     // Фильтр по поисковому запросу
@@ -406,9 +404,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  isConnected
-                      ? 'Подключено к интернету'
-                      : 'Нет подключения к интернету',
+                  isConnected ? 'Подключено к интернету' : 'Нет подключения к интернету',
                   style: TextStyle(
                     color: isConnected ? Colors.green : Colors.red,
                     fontWeight: FontWeight.bold,

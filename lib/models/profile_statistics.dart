@@ -16,8 +16,7 @@ class ProfileStatistics {
   });
 
   /// Создать из Map
-  factory ProfileStatistics.fromMap(Map<String, dynamic> map) =>
-      ProfileStatistics(
+  factory ProfileStatistics.fromMap(Map<String, dynamic> map) => ProfileStatistics(
         views: (map['views'] as int?) ?? 0,
         likes: (map['likes'] as int?) ?? 0,
         rating: (map['rating'] as num?)?.toDouble() ?? 0.0,
@@ -80,8 +79,7 @@ class ProfileStatistics {
         'completedOrders': completedOrders,
         'responseTime': responseTime,
         'onlineStatus': onlineStatus,
-        if (lastActive != null)
-          'lastActive': lastActive!.millisecondsSinceEpoch,
+        if (lastActive != null) 'lastActive': lastActive!.millisecondsSinceEpoch,
         'portfolioItems': portfolioItems,
         'socialLinks': socialLinks,
         'pinnedPosts': pinnedPosts,

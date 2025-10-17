@@ -270,9 +270,7 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
       final photo = await service.addInspirationPhoto(
         userId: widget.userId,
         imageFile: _selectedImage!,
-        caption: _captionController.text.trim().isEmpty
-            ? null
-            : _captionController.text.trim(),
+        caption: _captionController.text.trim().isEmpty ? null : _captionController.text.trim(),
         tags: _tags,
         isPublic: _isPublic,
       );

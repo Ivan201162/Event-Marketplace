@@ -69,8 +69,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
               child: _buildTabButton('audit', 'Аудит действий', Icons.security),
             ),
             Expanded(
-              child:
-                  _buildTabButton('system', 'Системные логи', Icons.bug_report),
+              child: _buildTabButton('system', 'Системные логи', Icons.bug_report),
             ),
           ],
         ),
@@ -88,13 +87,10 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.blue.withValues(alpha: 0.1)
-              : Colors.transparent,
+          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color:
-                isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
+            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -506,8 +502,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Пользователь: ${log.userEmail}'),
-                if (log.description != null)
-                  Text('Описание: ${log.description}'),
+                if (log.description != null) Text('Описание: ${log.description}'),
                 if (log.errorMessage != null)
                   Text(
                     'Ошибка: ${log.errorMessage}',
@@ -846,9 +841,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
         );
       } else {
         _systemLogs = await _auditService.getSystemLogs(
-          level: _selectedLevel != null
-              ? SystemLogLevel.fromString(_selectedLevel!.value)
-              : null,
+          level: _selectedLevel != null ? SystemLogLevel.fromString(_selectedLevel!.value) : null,
           startDate: _startDate,
           endDate: _endDate,
         );
@@ -907,8 +900,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
 
   Future<void> _exportLogs() async {
     try {
-      final startDate =
-          _startDate ?? DateTime.now().subtract(const Duration(days: 30));
+      final startDate = _startDate ?? DateTime.now().subtract(const Duration(days: 30));
       final endDate = _endDate ?? DateTime.now();
 
       final exportData = await _auditService.exportLogs(
@@ -921,8 +913,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
       // TODO(developer): Реализовать сохранение файла
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content:
-              Text('Экспорт завершен. Размер: ${exportData.length} символов'),
+          content: Text('Экспорт завершен. Размер: ${exportData.length} символов'),
         ),
       );
     } catch (e) {
@@ -1061,8 +1052,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
     // TODO(developer): Реализовать экспорт отдельного системного лога
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:
-            Text('Экспорт системного лога "${log.component}" будет реализован'),
+        content: Text('Экспорт системного лога "${log.component}" будет реализован'),
       ),
     );
   }

@@ -6,13 +6,10 @@ class FeedService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Получить посты ленты
-  Stream<List<FeedPost>> getFeedPosts() => _firestore
-      .collection('feed_posts')
-      .orderBy('createdAt', descending: true)
-      .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map(FeedPost.fromDocument).toList(),
-      );
+  Stream<List<FeedPost>> getFeedPosts() =>
+      _firestore.collection('feed_posts').orderBy('createdAt', descending: true).snapshots().map(
+            (snapshot) => snapshot.docs.map(FeedPost.fromDocument).toList(),
+          );
 
   /// Получить комментарии поста
   Stream<List<FeedComment>> getPostComments(String postId) => _firestore
@@ -34,8 +31,7 @@ class FeedService {
   /// Создать пост
   Future<String> createPost(FeedPost post) async {
     try {
-      final docRef =
-          await _firestore.collection('feed_posts').add(post.toMap());
+      final docRef = await _firestore.collection('feed_posts').add(post.toMap());
       return docRef.id;
     } catch (e) {
       throw Exception('Ошибка создания поста: $e');
@@ -45,10 +41,7 @@ class FeedService {
   /// Обновить пост
   Future<void> updatePost(FeedPost post) async {
     try {
-      await _firestore
-          .collection('feed_posts')
-          .doc(post.id)
-          .update(post.toMap());
+      await _firestore.collection('feed_posts').doc(post.id).update(post.toMap());
     } catch (e) {
       throw Exception('Ошибка обновления поста: $e');
     }
@@ -141,11 +134,8 @@ class FeedService {
     String userId,
   ) async {
     try {
-      final commentRef = _firestore
-          .collection('feed_posts')
-          .doc(postId)
-          .collection('comments')
-          .doc(commentId);
+      final commentRef =
+          _firestore.collection('feed_posts').doc(postId).collection('comments').doc(commentId);
 
       final commentDoc = await commentRef.get();
 
@@ -176,12 +166,7 @@ class FeedService {
   /// Лайкнуть пост
   Future<void> likePost(String postId, String userId) async {
     try {
-      await _firestore
-          .collection('feed_posts')
-          .doc(postId)
-          .collection('likes')
-          .doc(userId)
-          .set({
+      await _firestore.collection('feed_posts').doc(postId).collection('likes').doc(userId).set({
         'userId': userId,
         'createdAt': FieldValue.serverTimestamp(),
       });
@@ -210,12 +195,7 @@ class FeedService {
   /// Поделиться постом
   Future<void> sharePost(String postId, String userId) async {
     try {
-      await _firestore
-          .collection('feed_posts')
-          .doc(postId)
-          .collection('shares')
-          .doc(userId)
-          .set({
+      await _firestore.collection('feed_posts').doc(postId).collection('shares').doc(userId).set({
         'userId': userId,
         'createdAt': FieldValue.serverTimestamp(),
       });

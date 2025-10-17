@@ -22,8 +22,7 @@ class CustomerProfileExtendedScreen extends ConsumerStatefulWidget {
       _CustomerProfileExtendedScreenState();
 }
 
-class _CustomerProfileExtendedScreenState
-    extends ConsumerState<CustomerProfileExtendedScreen>
+class _CustomerProfileExtendedScreenState extends ConsumerState<CustomerProfileExtendedScreen>
     with TickerProviderStateMixin {
   final CustomerService _customerService = CustomerService();
   final BookingService _bookingService = BookingService();
@@ -68,8 +67,7 @@ class _CustomerProfileExtendedScreenState
       final favoriteSpecialists = <Specialist>[];
       for (final specialistId in favoriteIds) {
         try {
-          final specialist =
-              await _specialistService.getSpecialistById(specialistId);
+          final specialist = await _specialistService.getSpecialistById(specialistId);
           if (specialist != null) {
             favoriteSpecialists.add(specialist);
           }
@@ -104,9 +102,8 @@ class _CustomerProfileExtendedScreenState
         if (_customer!.favoriteSpecialists.contains(specialistId)) {
           // Удаляем из избранного
           _customer = _customer!.copyWith(
-            favoriteSpecialists: _customer!.favoriteSpecialists
-                .where((id) => id != specialistId)
-                .toList(),
+            favoriteSpecialists:
+                _customer!.favoriteSpecialists.where((id) => id != specialistId).toList(),
           );
           _favoriteSpecialists.removeWhere((s) => s.id == specialistId);
         } else {
@@ -118,8 +115,7 @@ class _CustomerProfileExtendedScreenState
             ],
           );
           // Загружаем данные специалиста
-          final specialist =
-              await _specialistService.getSpecialistById(specialistId);
+          final specialist = await _specialistService.getSpecialistById(specialistId);
           if (specialist != null) {
             _favoriteSpecialists.add(specialist);
           }
@@ -225,9 +221,8 @@ class _CustomerProfileExtendedScreenState
             CircleAvatar(
               radius: 50,
               backgroundColor: Colors.white,
-              backgroundImage: _customer!.avatarUrl != null
-                  ? NetworkImage(_customer!.avatarUrl!)
-                  : null,
+              backgroundImage:
+                  _customer!.avatarUrl != null ? NetworkImage(_customer!.avatarUrl!) : null,
               child: _customer!.avatarUrl == null
                   ? const Icon(Icons.person, size: 50, color: Colors.grey)
                   : null,
@@ -256,8 +251,7 @@ class _CustomerProfileExtendedScreenState
             if (_customer!.weddingDate != null) ...[
               const SizedBox(height: 8),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(16),
@@ -427,8 +421,7 @@ class _CustomerProfileExtendedScreenState
                   child: SpecialistCardWidget(
                     specialist: specialist,
                     isFavorite: true,
-                    onFavoriteToggle: () =>
-                        _toggleFavoriteSpecialist(specialist.id),
+                    onFavoriteToggle: () => _toggleFavoriteSpecialist(specialist.id),
                     onTap: () {
                       context.go('/specialist/${specialist.id}');
                     },
@@ -484,8 +477,7 @@ class _CustomerProfileExtendedScreenState
                 ),
               ),
 
-            if (_customer!.weddingDate == null &&
-                _customer!.anniversaries.isEmpty)
+            if (_customer!.weddingDate == null && _customer!.anniversaries.isEmpty)
               const Center(
                 child: Column(
                   children: [

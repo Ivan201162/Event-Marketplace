@@ -16,8 +16,7 @@ class PaymentsExtendedScreen extends ConsumerStatefulWidget {
   final bool isCustomer;
 
   @override
-  ConsumerState<PaymentsExtendedScreen> createState() =>
-      _PaymentsExtendedScreenState();
+  ConsumerState<PaymentsExtendedScreen> createState() => _PaymentsExtendedScreenState();
 }
 
 class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
@@ -119,15 +118,11 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
               return PaymentCardWidget(
                 payment: payment,
                 onTap: () => _showPaymentDetails(payment),
-                onPay: payment.remainingAmount > 0
-                    ? () => _showPaymentDialog(payment)
-                    : null,
-                onDownloadReceipt: payment.receiptPdfUrl != null
-                    ? () => _downloadReceipt(payment)
-                    : null,
-                onDownloadInvoice: payment.invoicePdfUrl != null
-                    ? () => _downloadInvoice(payment)
-                    : null,
+                onPay: payment.remainingAmount > 0 ? () => _showPaymentDialog(payment) : null,
+                onDownloadReceipt:
+                    payment.receiptPdfUrl != null ? () => _downloadReceipt(payment) : null,
+                onDownloadInvoice:
+                    payment.invoicePdfUrl != null ? () => _downloadInvoice(payment) : null,
               );
             },
           );
@@ -147,9 +142,7 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
           final allPayments = snapshot.data ?? [];
           final pendingPayments = allPayments
               .where(
-                (p) =>
-                    p.status == PaymentStatus.pending ||
-                    p.status == PaymentStatus.processing,
+                (p) => p.status == PaymentStatus.pending || p.status == PaymentStatus.processing,
               )
               .toList();
 
@@ -170,12 +163,10 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
                 payment: payment,
                 onTap: () => _showPaymentDetails(payment),
                 onPay: () => _showPaymentDialog(payment),
-                onDownloadReceipt: payment.receiptPdfUrl != null
-                    ? () => _downloadReceipt(payment)
-                    : null,
-                onDownloadInvoice: payment.invoicePdfUrl != null
-                    ? () => _downloadInvoice(payment)
-                    : null,
+                onDownloadReceipt:
+                    payment.receiptPdfUrl != null ? () => _downloadReceipt(payment) : null,
+                onDownloadInvoice:
+                    payment.invoicePdfUrl != null ? () => _downloadInvoice(payment) : null,
               );
             },
           );
@@ -289,8 +280,7 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
         },
       );
 
-  Widget _buildEmptyState(String title, String subtitle, IconData icon) =>
-      Center(
+  Widget _buildEmptyState(String title, String subtitle, IconData icon) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -370,8 +360,7 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
           child: PaymentTypeSelector(
             totalAmount: 50000, // TODO(developer): Получить из контекста
             settings: _settings,
-            onPaymentTypeSelected:
-                (type, advancePercentage, installments) async {
+            onPaymentTypeSelected: (type, advancePercentage, installments) async {
               Navigator.pop(context);
               await _createPayment(type, advancePercentage, installments);
             },
@@ -497,8 +486,7 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
     final success = await _paymentService.payInstallment(
       paymentId: payment.id,
       installmentId: payment.installments.first.id,
-      transactionId:
-          'demo_transaction_${DateTime.now().millisecondsSinceEpoch}',
+      transactionId: 'demo_transaction_${DateTime.now().millisecondsSinceEpoch}',
     );
 
     if (mounted) {

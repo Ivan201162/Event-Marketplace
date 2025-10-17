@@ -5,8 +5,7 @@ import 'package:flutter/foundation.dart';
 class FirestoreSeederService {
   factory FirestoreSeederService() => _instance;
   FirestoreSeederService._internal();
-  static final FirestoreSeederService _instance =
-      FirestoreSeederService._internal();
+  static final FirestoreSeederService _instance = FirestoreSeederService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -69,8 +68,7 @@ class FirestoreSeederService {
         6,
         (i) => {
           'title': 'Идея #${i + 1}',
-          'description':
-              'Описание идеи #${i + 1}. Это отличная идея для вашего мероприятия!',
+          'description': 'Описание идеи #${i + 1}. Это отличная идея для вашего мероприятия!',
           'category': i.isEven ? 'Фото' : 'Видео',
           'isVideo': i.isOdd,
           'mediaUrl': i.isOdd
@@ -253,8 +251,7 @@ class FirestoreSeederService {
     try {
       final ideasSnapshot = await _firestore.collection('ideas').limit(1).get();
       final chatsSnapshot = await _firestore.collection('chats').limit(1).get();
-      final bookingsSnapshot =
-          await _firestore.collection('bookings').limit(1).get();
+      final bookingsSnapshot = await _firestore.collection('bookings').limit(1).get();
 
       return ideasSnapshot.docs.isNotEmpty ||
           chatsSnapshot.docs.isNotEmpty ||
@@ -265,4 +262,3 @@ class FirestoreSeederService {
     }
   }
 }
-

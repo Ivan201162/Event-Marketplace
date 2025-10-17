@@ -65,9 +65,7 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
             children: [
               AppBar(
                 title: Text(
-                  widget.existingVideo == null
-                      ? 'Новое видео'
-                      : 'Редактировать видео',
+                  widget.existingVideo == null ? 'Новое видео' : 'Редактировать видео',
                 ),
                 actions: [
                   TextButton(
@@ -398,9 +396,7 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            widget.existingVideo == null
-                ? 'Видео добавлено'
-                : 'Видео обновлено',
+            widget.existingVideo == null ? 'Видео добавлено' : 'Видео обновлено',
           ),
         ),
       );

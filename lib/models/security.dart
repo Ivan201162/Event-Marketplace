@@ -203,9 +203,7 @@ class SecurityAlert {
         orElse: () => SecurityAlertSeverity.medium,
       ),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      resolvedAt: data['resolvedAt'] != null
-          ? (data['resolvedAt'] as Timestamp).toDate()
-          : null,
+      resolvedAt: data['resolvedAt'] != null ? (data['resolvedAt'] as Timestamp).toDate() : null,
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
   }
@@ -226,8 +224,7 @@ class SecurityAlert {
         'status': status.name,
         'severity': severity.name,
         'createdAt': Timestamp.fromDate(createdAt),
-        'resolvedAt':
-            resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
+        'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
         'metadata': metadata,
       };
 }

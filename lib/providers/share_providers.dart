@@ -4,36 +4,31 @@ import '../core/feature_flags.dart';
 import '../services/share_service.dart';
 
 /// Провайдер для проверки доступности шаринга
-final shareAvailableProvider =
-    Provider<bool>((ref) => FeatureFlags.shareEnabled);
+final shareAvailableProvider = Provider<bool>((ref) => FeatureFlags.shareEnabled);
 
 /// Провайдер для получения информации о шаринге
-final shareInfoProvider =
-    Provider<Map<String, dynamic>>((ref) => ShareService.shareInfo);
+final shareInfoProvider = Provider<Map<String, dynamic>>((ref) => ShareService.shareInfo);
 
 /// Провайдер для получения поддерживаемых платформ
 final supportedSharePlatformsProvider =
     Provider<List<String>>((ref) => ShareService.supportedPlatforms);
 
 /// Провайдер для шаринга события
-final shareEventProvider =
-    FutureProvider.family<bool, String>((ref, eventId) async {
+final shareEventProvider = FutureProvider.family<bool, String>((ref, eventId) async {
   // Здесь можно добавить логику получения события по ID
   // Пока возвращаем false, так как нужен объект Event
   return false;
 });
 
 /// Провайдер для шаринга профиля
-final shareProfileProvider =
-    FutureProvider.family<bool, String>((ref, userId) async {
+final shareProfileProvider = FutureProvider.family<bool, String>((ref, userId) async {
   // Здесь можно добавить логику получения пользователя по ID
   // Пока возвращаем false, так как нужен объект AppUser
   return false;
 });
 
 /// Провайдер для шаринга бронирования
-final shareBookingProvider =
-    FutureProvider.family<bool, String>((ref, bookingId) async {
+final shareBookingProvider = FutureProvider.family<bool, String>((ref, bookingId) async {
   // Здесь можно добавить логику получения бронирования по ID
   // Пока возвращаем false, так как нужен объект Booking
   return false;
@@ -45,8 +40,8 @@ final shareTextProvider = FutureProvider.family<bool, String>(
 );
 
 /// Провайдер для шаринга ссылки
-final shareLinkProvider = FutureProvider.family<bool,
-    ({String url, String? title, String? description})>(
+final shareLinkProvider =
+    FutureProvider.family<bool, ({String url, String? title, String? description})>(
   (ref, params) async => ShareService.shareLink(
     params.url,
     title: params.title,
@@ -55,8 +50,8 @@ final shareLinkProvider = FutureProvider.family<bool,
 );
 
 /// Провайдер для шаринга файла
-final shareFileProvider = FutureProvider.family<bool,
-    ({String filePath, String? text, String? subject})>(
+final shareFileProvider =
+    FutureProvider.family<bool, ({String filePath, String? text, String? subject})>(
   (ref, params) async => ShareService.shareFile(
     params.filePath,
     text: params.text,
@@ -65,8 +60,8 @@ final shareFileProvider = FutureProvider.family<bool,
 );
 
 /// Провайдер для шаринга нескольких файлов
-final shareFilesProvider = FutureProvider.family<bool,
-    ({List<String> filePaths, String? text, String? subject})>(
+final shareFilesProvider =
+    FutureProvider.family<bool, ({List<String> filePaths, String? text, String? subject})>(
   (ref, params) async => ShareService.shareFiles(
     params.filePaths,
     text: params.text,
@@ -80,8 +75,8 @@ final openLinkProvider = FutureProvider.family<bool, String>(
 );
 
 /// Провайдер для открытия email
-final openEmailProvider = FutureProvider.family<bool,
-    ({String email, String? subject, String? body})>(
+final openEmailProvider =
+    FutureProvider.family<bool, ({String email, String? subject, String? body})>(
   (ref, params) async => ShareService.openEmail(
     params.email,
     subject: params.subject,
@@ -95,10 +90,8 @@ final openPhoneProvider = FutureProvider.family<bool, String>(
 );
 
 /// Провайдер для открытия SMS
-final openSmsProvider =
-    FutureProvider.family<bool, ({String phone, String? message})>(
-  (ref, params) async =>
-      ShareService.openSms(params.phone, message: params.message),
+final openSmsProvider = FutureProvider.family<bool, ({String phone, String? message})>(
+  (ref, params) async => ShareService.openSms(params.phone, message: params.message),
 );
 
 /// Нотификатор для статуса шаринга
@@ -116,8 +109,7 @@ class ShareStatusNotifier extends Notifier<String> {
 }
 
 /// Провайдер для статуса шаринга
-final shareStatusProvider =
-    NotifierProvider<ShareStatusNotifier, String>(ShareStatusNotifier.new);
+final shareStatusProvider = NotifierProvider<ShareStatusNotifier, String>(ShareStatusNotifier.new);
 
 /// Нотификатор для прогресса шаринга
 class ShareProgressNotifier extends Notifier<double> {
@@ -152,8 +144,7 @@ class ShareErrorNotifier extends Notifier<String?> {
 }
 
 /// Провайдер для последней ошибки шаринга
-final shareErrorProvider =
-    NotifierProvider<ShareErrorNotifier, String?>(ShareErrorNotifier.new);
+final shareErrorProvider = NotifierProvider<ShareErrorNotifier, String?>(ShareErrorNotifier.new);
 
 /// Нотификатор для истории шаринга
 class ShareHistoryNotifier extends Notifier<List<Map<String, dynamic>>> {
@@ -170,14 +161,12 @@ class ShareHistoryNotifier extends Notifier<List<Map<String, dynamic>>> {
 }
 
 /// Провайдер для истории шаринга
-final shareHistoryProvider =
-    NotifierProvider<ShareHistoryNotifier, List<Map<String, dynamic>>>(
+final shareHistoryProvider = NotifierProvider<ShareHistoryNotifier, List<Map<String, dynamic>>>(
   ShareHistoryNotifier.new,
 );
 
 /// Провайдер для настроек шаринга
-final shareSettingsProvider =
-    NotifierProvider<ShareSettingsNotifier, ShareSettings>(
+final shareSettingsProvider = NotifierProvider<ShareSettingsNotifier, ShareSettings>(
   ShareSettingsNotifier.new,
 );
 
@@ -217,8 +206,7 @@ class ShareSettings {
         includeAppLink: includeAppLink ?? this.includeAppLink,
         includeUserInfo: includeUserInfo ?? this.includeUserInfo,
         includeEventDetails: includeEventDetails ?? this.includeEventDetails,
-        includeBookingDetails:
-            includeBookingDetails ?? this.includeBookingDetails,
+        includeBookingDetails: includeBookingDetails ?? this.includeBookingDetails,
         defaultMessage: defaultMessage ?? this.defaultMessage,
         autoCopyToClipboard: autoCopyToClipboard ?? this.autoCopyToClipboard,
         showShareDialog: showShareDialog ?? this.showShareDialog,
@@ -302,8 +290,7 @@ class ShareStatsNotifier extends Notifier<Map<String, int>> {
 }
 
 /// Провайдер для статистики шаринга
-final shareStatsProvider =
-    NotifierProvider<ShareStatsNotifier, Map<String, int>>(
+final shareStatsProvider = NotifierProvider<ShareStatsNotifier, Map<String, int>>(
   ShareStatsNotifier.new,
 );
 
@@ -322,8 +309,7 @@ class LastShareNotifier extends Notifier<Map<String, dynamic>?> {
 }
 
 /// Провайдер для последнего шаринга
-final lastShareProvider =
-    NotifierProvider<LastShareNotifier, Map<String, dynamic>?>(
+final lastShareProvider = NotifierProvider<LastShareNotifier, Map<String, dynamic>?>(
   LastShareNotifier.new,
 );
 
@@ -346,8 +332,7 @@ class ActiveSharesNotifier extends Notifier<Set<String>> {
 }
 
 /// Провайдер для активных шарингов
-final activeSharesProvider =
-    NotifierProvider<ActiveSharesNotifier, Set<String>>(
+final activeSharesProvider = NotifierProvider<ActiveSharesNotifier, Set<String>>(
   ActiveSharesNotifier.new,
 );
 
@@ -370,8 +355,7 @@ class ShareQueueNotifier extends Notifier<List<Map<String, dynamic>>> {
 }
 
 /// Провайдер для очереди шаринга
-final shareQueueProvider =
-    NotifierProvider<ShareQueueNotifier, List<Map<String, dynamic>>>(
+final shareQueueProvider = NotifierProvider<ShareQueueNotifier, List<Map<String, dynamic>>>(
   ShareQueueNotifier.new,
 );
 

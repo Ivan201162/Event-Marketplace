@@ -63,10 +63,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   Text(
                     'Заполните форму для создания нового аккаунта',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.7),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                     textAlign: TextAlign.center,
                   ),
@@ -121,8 +118,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       if (value == null || value.trim().isEmpty) {
                         return 'Введите email';
                       }
-                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                          .hasMatch(value.trim())) {
+                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value.trim())) {
                         return 'Введите корректный email';
                       }
                       return null;
@@ -376,6 +372,5 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     }
   }
 
-  String _getErrorMessage(String error) =>
-      ErrorLogger.getFriendlyErrorMessage(error);
+  String _getErrorMessage(String error) => ErrorLogger.getFriendlyErrorMessage(error);
 }

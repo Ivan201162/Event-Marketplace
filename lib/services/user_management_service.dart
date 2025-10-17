@@ -14,8 +14,7 @@ class UserManagementService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Uuid _uuid = const Uuid();
 
-  static final UserManagementService _instance =
-      UserManagementService._internal();
+  static final UserManagementService _instance = UserManagementService._internal();
 
   final Map<String, ManagedUser> _usersCache = {};
   final Map<String, UserRoleDefinition> _rolesCache = {};
@@ -311,8 +310,7 @@ class UserManagementService {
         return; // Разрешения нет
       }
 
-      final updatedPermissions =
-          user.permissions.where((p) => p != permission).toList();
+      final updatedPermissions = user.permissions.where((p) => p != permission).toList();
       final updatedUser = user.copyWith(
         permissions: updatedPermissions,
         lastModifiedBy: removedBy,
@@ -430,9 +428,8 @@ class UserManagementService {
       }
 
       // Проверяем, используется ли роль
-      final usersWithRole = _usersCache.values
-          .where((user) => user.role.toString() == role.name)
-          .toList();
+      final usersWithRole =
+          _usersCache.values.where((user) => user.role.toString() == role.name).toList();
       if (usersWithRole.isNotEmpty) {
         throw Exception(
           'Роль используется ${usersWithRole.length} пользователями',
@@ -483,10 +480,7 @@ class UserManagementService {
         createdAt: now,
       );
 
-      await _firestore
-          .collection('permissions')
-          .doc(permissionId)
-          .set(permission.toMap());
+      await _firestore.collection('permissions').doc(permissionId).set(permission.toMap());
       _permissionsCache[permissionId] = permission;
 
       // Логируем действие
@@ -532,8 +526,7 @@ class UserManagementService {
   List<UserRoleDefinition> getAllRoles() => _rolesCache.values.toList();
 
   /// Получить разрешение по ID
-  Permission? getPermission(String permissionId) =>
-      _permissionsCache[permissionId];
+  Permission? getPermission(String permissionId) => _permissionsCache[permissionId];
 
   /// Получить все разрешения
   List<Permission> getAllPermissions() => _permissionsCache.values.toList();
@@ -584,8 +577,7 @@ class UserManagementService {
 
     // Статистика по ролям
     for (final role in UserRole.values) {
-      stats['role_${role.toString().split('.').last}'] =
-          users.where((u) => u.role == role).length;
+      stats['role_${role.toString().split('.').last}'] = users.where((u) => u.role == role).length;
     }
 
     return stats;
@@ -617,10 +609,7 @@ class UserManagementService {
         timestamp: DateTime.now(),
       );
 
-      await _firestore
-          .collection('userActions')
-          .doc(actionId)
-          .set(userAction.toMap());
+      await _firestore.collection('userActions').doc(actionId).set(userAction.toMap());
     } catch (e) {
       if (kDebugMode) {
         print('Ошибка логирования действия пользователя: $e');
@@ -695,8 +684,7 @@ class UserManagementService {
   /// Загрузить кэш пользователей
   Future<void> _loadUsersCache() async {
     try {
-      final snapshot =
-          await _firestore.collection('managedUsers').limit(1000).get();
+      final snapshot = await _firestore.collection('managedUsers').limit(1000).get();
 
       for (final doc in snapshot.docs) {
         final user = ManagedUser.fromDocument(doc);

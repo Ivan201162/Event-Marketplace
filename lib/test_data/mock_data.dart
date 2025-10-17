@@ -19,8 +19,7 @@ class MockData {
           price: 15000,
           rating: 4.8,
           reviewCount: 127,
-          avatar:
-              'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
+          avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
           portfolio: [
             'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
             'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
@@ -44,8 +43,7 @@ class MockData {
           price: 20000,
           rating: 4.9,
           reviewCount: 98,
-          avatar:
-              'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
+          avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
           portfolio: [
             'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
             'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
@@ -69,8 +67,7 @@ class MockData {
           price: 18000,
           rating: 4.7,
           reviewCount: 150,
-          avatar:
-              'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150',
+          avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150',
           portfolio: [
             'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
             'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
@@ -94,8 +91,7 @@ class MockData {
           price: 12000,
           rating: 4.6,
           reviewCount: 80,
-          avatar:
-              'https://images.unsplash.com/photo-1507003211169-e69fe1c5a39f?w=150',
+          avatar: 'https://images.unsplash.com/photo-1507003211169-e69fe1c5a39f?w=150',
           portfolio: [
             'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
             'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
@@ -119,8 +115,7 @@ class MockData {
           price: 13000,
           rating: 4.7,
           reviewCount: 110,
-          avatar:
-              'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
           portfolio: [
             'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
             'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
@@ -200,8 +195,7 @@ class MockData {
         Event(
           id: 'event5',
           title: 'Юбилей компании',
-          description:
-              'Празднование 10-летия компании с приглашенными звездами.',
+          description: 'Празднование 10-летия компании с приглашенными звездами.',
           date: DateTime.now().add(const Duration(days: 120)),
           location: 'Концертный зал "Алатау"',
           price: 2000000,
@@ -222,8 +216,7 @@ class MockData {
           customerId: 'user6',
           customerName: 'Мария Иванова',
           rating: 5,
-          text:
-              'Отличный фотограф! Снимки получились просто потрясающие. Рекомендую всем!',
+          text: 'Отличный фотограф! Снимки получились просто потрясающие. Рекомендую всем!',
           date: DateTime.now().subtract(const Duration(days: 5)),
           serviceTags: ['Фотосъемка', 'Свадьба'],
           createdAt: DateTime.now(),
@@ -235,8 +228,7 @@ class MockData {
           customerId: 'user7',
           customerName: 'Алексей Петров',
           rating: 4,
-          text:
-              'Качественная работа, но немного задержался с монтажом. В целом доволен.',
+          text: 'Качественная работа, но немного задержался с монтажом. В целом доволен.',
           date: DateTime.now().subtract(const Duration(days: 10)),
           serviceTags: ['Видеосъемка', 'Корпоратив'],
           createdAt: DateTime.now(),
@@ -248,8 +240,7 @@ class MockData {
           customerId: 'user8',
           customerName: 'Наталья Сидорова',
           rating: 5,
-          text:
-              'Отличный DJ! Музыка была на высоте, все гости танцевали до утра.',
+          text: 'Отличный DJ! Музыка была на высоте, все гости танцевали до утра.',
           date: DateTime.now().subtract(const Duration(days: 7)),
           serviceTags: ['Ведущий', 'День рождения'],
           createdAt: DateTime.now(),
@@ -287,22 +278,18 @@ class MockData {
           id: 'post1',
           authorId: 'user1',
           authorName: 'Анна Петрова',
-          authorAvatar:
-              'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
-          content:
-              'Новая серия свадебных фотографий! Было очень весело работать с этой парой.',
+          authorAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
+          content: 'Новая серия свадебных фотографий! Было очень весело работать с этой парой.',
           media: [
             FeedPostMedia(
               id: 'media1_1',
               type: 'image',
-              url:
-                  'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
+              url: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
             ),
             FeedPostMedia(
               id: 'media1_2',
               type: 'image',
-              url:
-                  'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
+              url: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
             ),
           ],
           likes: 150,
@@ -318,18 +305,14 @@ class MockData {
           id: 'post2',
           authorId: 'user2',
           authorName: 'Иван Смирнов',
-          authorAvatar:
-              'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
-          content:
-              'Смонтировал новый промо-ролик для компании "TechSolutions". Как вам?',
+          authorAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
+          content: 'Смонтировал новый промо-ролик для компании "TechSolutions". Как вам?',
           media: [
             FeedPostMedia(
               id: 'media2_1',
               type: 'video',
-              url:
-                  'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
-              thumbnail:
-                  'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400',
+              url: 'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
+              thumbnail: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400',
             ),
           ],
           likes: 200,
@@ -345,22 +328,18 @@ class MockData {
           id: 'post3',
           authorId: 'user3',
           authorName: 'Елена Козлова',
-          authorAvatar:
-              'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150',
-          content:
-              'Вчерашний юбилей прошел на ура! Гости были в восторге от программы.',
+          authorAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150',
+          content: 'Вчерашний юбилей прошел на ура! Гости были в восторге от программы.',
           media: [
             FeedPostMedia(
               id: 'media3_1',
               type: 'image',
-              url:
-                  'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400',
+              url: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400',
             ),
             FeedPostMedia(
               id: 'media3_2',
               type: 'image',
-              url:
-                  'https://images.unsplash.com/photo-1519167758481-83f1426e0b3b?w=400',
+              url: 'https://images.unsplash.com/photo-1519167758481-83f1426e0b3b?w=400',
             ),
           ],
           likes: 180,
@@ -376,16 +355,13 @@ class MockData {
           id: 'post4',
           authorId: 'user4',
           authorName: 'Дмитрий Соколов',
-          authorAvatar:
-              'https://images.unsplash.com/photo-1507003211169-e69fe1c5a39f?w=150',
-          content:
-              'Новый микс для летних вечеринок уже в сети! Слушайте и наслаждайтесь.',
+          authorAvatar: 'https://images.unsplash.com/photo-1507003211169-e69fe1c5a39f?w=150',
+          content: 'Новый микс для летних вечеринок уже в сети! Слушайте и наслаждайтесь.',
           media: [
             FeedPostMedia(
               id: 'media4_1',
               type: 'audio',
-              url:
-                  'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+              url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
             ),
           ],
           likes: 250,
@@ -401,22 +377,19 @@ class MockData {
           id: 'post5',
           authorId: 'user5',
           authorName: 'Ольга Морозова',
-          authorAvatar:
-              'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+          authorAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
           content:
               'Декор для детского дня рождения в стиле "Маленький принц". Получилось волшебно!',
           media: [
             FeedPostMedia(
               id: 'media5_1',
               type: 'image',
-              url:
-                  'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
+              url: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
             ),
             FeedPostMedia(
               id: 'media5_2',
               type: 'image',
-              url:
-                  'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
+              url: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
             ),
           ],
           likes: 190,
@@ -439,27 +412,22 @@ class MockData {
               'Нежные пастельные тона, много света и живых цветов. Идеально для летней свадьбы.',
           authorId: 'user1',
           authorName: 'Анна Петрова',
-          authorAvatar:
-              'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
+          authorAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
           media: [
             IdeaMedia(
               id: 'idea_media1_1',
               type: 'image',
-              url:
-                  'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
+              url: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
             ),
             IdeaMedia(
               id: 'idea_media1_2',
               type: 'image',
-              url:
-                  'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
+              url: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
             ),
           ],
           likes: 120,
           comments: 15,
           shares: 5,
-          isLiked: false,
-          isSaved: false,
           createdAt: DateTime.now().subtract(Duration(days: 10)),
           tags: ['свадьба', 'фото', 'декор'],
           category: 'Фотосессии',
@@ -473,23 +441,19 @@ class MockData {
               'Динамичный ролик с интервью сотрудников и кадрами с тимбилдинга. Подчеркнет командный дух.',
           authorId: 'user2',
           authorName: 'Иван Смирнов',
-          authorAvatar:
-              'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
+          authorAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
           media: [
             IdeaMedia(
               id: 'idea_media2_1',
               type: 'video',
-              url:
-                  'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
-              thumbnail:
-                  'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400',
+              url: 'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
+              thumbnail: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400',
             ),
           ],
           likes: 90,
           comments: 10,
           shares: 3,
           isLiked: true,
-          isSaved: false,
           createdAt: DateTime.now().subtract(Duration(days: 15)),
           tags: ['корпоратив', 'видео', 'тимбилдинг'],
           category: 'Видеосъемка',
@@ -503,26 +467,22 @@ class MockData {
               'Яркие цвета, экзотические цветы, фрукты и легкая музыка. Создадим атмосферу тропического рая.',
           authorId: 'user5',
           authorName: 'Ольга Морозова',
-          authorAvatar:
-              'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+          authorAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
           media: [
             IdeaMedia(
               id: 'idea_media3_1',
               type: 'image',
-              url:
-                  'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
+              url: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
             ),
             IdeaMedia(
               id: 'idea_media3_2',
               type: 'image',
-              url:
-                  'https://images.unsplash.com/photo-1465495976277-4387d4b0e4a6?w=400',
+              url: 'https://images.unsplash.com/photo-1465495976277-4387d4b0e4a6?w=400',
             ),
           ],
           likes: 150,
           comments: 20,
           shares: 7,
-          isLiked: false,
           isSaved: true,
           createdAt: DateTime.now().subtract(Duration(days: 7)),
           tags: ['день рождения', 'декор', 'гавайи'],

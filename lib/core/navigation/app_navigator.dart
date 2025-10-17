@@ -4,8 +4,7 @@ import 'package:go_router/go_router.dart';
 
 /// Универсальный навигационный сервис для обработки кнопки "Назад"
 class AppNavigator {
-  static final GlobalKey<NavigatorState> navigatorKey =
-      GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   static DateTime? _lastExitAttempt;
 
   /// Обработка кнопки "Назад" с правильной логикой

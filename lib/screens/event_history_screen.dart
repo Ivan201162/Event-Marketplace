@@ -15,8 +15,7 @@ class EventHistoryScreen extends StatefulWidget {
   State<EventHistoryScreen> createState() => _EventHistoryScreenState();
 }
 
-class _EventHistoryScreenState extends State<EventHistoryScreen>
-    with TickerProviderStateMixin {
+class _EventHistoryScreenState extends State<EventHistoryScreen> with TickerProviderStateMixin {
   final FirestoreService _firestoreService = FirestoreService();
 
   late TabController _tabController;
@@ -132,8 +131,7 @@ class _EventHistoryScreenState extends State<EventHistoryScreen>
         ),
       );
 
-  Widget _buildHistoryList(String userId, String statusFilter) =>
-      StreamBuilder<List<Booking>>(
+  Widget _buildHistoryList(String userId, String statusFilter) => StreamBuilder<List<Booking>>(
         stream: _firestoreService.bookingsByCustomerStream(userId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

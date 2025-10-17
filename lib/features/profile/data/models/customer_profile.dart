@@ -43,9 +43,7 @@ class CustomerProfile {
       companyName: safeData['companyName'] as String?,
       website: safeData['website'] as String?,
       avatarUrl: safeData['avatarUrl'] as String?,
-      contacts: safeData['contacts'] != null
-          ? Map<String, String>.from(safeData['contacts'])
-          : {},
+      contacts: safeData['contacts'] != null ? Map<String, String>.from(safeData['contacts']) : {},
       createdAt: safeData['createdAt'] != null
           ? (safeData['createdAt'] is Timestamp
               ? (safeData['createdAt'] as Timestamp).toDate()
@@ -129,8 +127,7 @@ class CustomerProfileForm {
     this.contacts = const {},
   });
 
-  factory CustomerProfileForm.fromProfile(CustomerProfile profile) =>
-      CustomerProfileForm(
+  factory CustomerProfileForm.fromProfile(CustomerProfile profile) => CustomerProfileForm(
         name: profile.name,
         email: profile.email,
         phone: profile.phone,

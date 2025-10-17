@@ -41,8 +41,7 @@ class Documentation {
         version: map['version'] as String?,
         parentId: map['parentId'] as String?,
         tags: List<String>.from((map['tags'] as List<dynamic>?) ?? []),
-        attachments:
-            List<String>.from((map['attachments'] as List<dynamic>?) ?? []),
+        attachments: List<String>.from((map['attachments'] as List<dynamic>?) ?? []),
         metadata: Map<String, dynamic>.from(
           (map['metadata'] as Map<dynamic, dynamic>?) ?? {},
         ),
@@ -50,8 +49,7 @@ class Documentation {
         isArchived: map['isArchived'] as bool? ?? false,
         viewCount: map['viewCount'] as int? ?? 0,
         likeCount: map['likeCount'] as int? ?? 0,
-        contributors:
-            List<String>.from((map['contributors'] as List<dynamic>?) ?? []),
+        contributors: List<String>.from((map['contributors'] as List<dynamic>?) ?? []),
         authorId: map['authorId'] as String?,
         authorName: map['authorName'] as String?,
         createdAt: (map['createdAt'] as Timestamp).toDate(),
@@ -161,8 +159,7 @@ class Documentation {
       );
 
   @override
-  String toString() =>
-      'Documentation(id: $id, title: $title, type: $type, status: $status)';
+  String toString() => 'Documentation(id: $id, title: $title, type: $type, status: $status)';
 
   @override
   bool operator ==(Object other) {
@@ -192,8 +189,7 @@ enum DocumentType {
   final String value;
   final String displayName;
 
-  static DocumentType fromString(String value) =>
-      DocumentType.values.firstWhere(
+  static DocumentType fromString(String value) => DocumentType.values.firstWhere(
         (type) => type.value == value,
         orElse: () => DocumentType.article,
       );
@@ -267,8 +263,7 @@ enum DocumentCategory {
   final String value;
   final String displayName;
 
-  static DocumentCategory fromString(String value) =>
-      DocumentCategory.values.firstWhere(
+  static DocumentCategory fromString(String value) => DocumentCategory.values.firstWhere(
         (category) => category.value == value,
         orElse: () => DocumentCategory.general,
       );
@@ -338,8 +333,7 @@ enum DocumentStatus {
   final String value;
   final String displayName;
 
-  static DocumentStatus fromString(String value) =>
-      DocumentStatus.values.firstWhere(
+  static DocumentStatus fromString(String value) => DocumentStatus.values.firstWhere(
         (status) => status.value == value,
         orElse: () => DocumentStatus.draft,
       );
@@ -398,8 +392,7 @@ class DocumentTemplate {
     required this.updatedBy,
   });
 
-  factory DocumentTemplate.fromMap(Map<String, dynamic> map) =>
-      DocumentTemplate(
+  factory DocumentTemplate.fromMap(Map<String, dynamic> map) => DocumentTemplate(
         id: map['id'] as String? ?? '',
         name: map['name'] as String? ?? '',
         description: map['description'] as String? ?? '',
@@ -581,8 +574,7 @@ class DocumentComment {
       );
 
   @override
-  String toString() =>
-      'DocumentComment(id: $id, documentId: $documentId, authorName: $authorName)';
+  String toString() => 'DocumentComment(id: $id, documentId: $documentId, authorName: $authorName)';
 
   @override
   bool operator ==(Object other) {

@@ -9,12 +9,10 @@ class ReleaseManagementScreen extends ConsumerStatefulWidget {
   const ReleaseManagementScreen({super.key});
 
   @override
-  ConsumerState<ReleaseManagementScreen> createState() =>
-      _ReleaseManagementScreenState();
+  ConsumerState<ReleaseManagementScreen> createState() => _ReleaseManagementScreenState();
 }
 
-class _ReleaseManagementScreenState
-    extends ConsumerState<ReleaseManagementScreen> {
+class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScreen> {
   final ReleaseManagementService _releaseService = ReleaseManagementService();
   List<Release> _releases = [];
   List<ReleasePlan> _plans = [];
@@ -73,8 +71,7 @@ class _ReleaseManagementScreenState
               child: _buildTabButton('plans', 'Планы', Icons.assignment),
             ),
             Expanded(
-              child:
-                  _buildTabButton('deployments', 'Деплои', Icons.cloud_upload),
+              child: _buildTabButton('deployments', 'Деплои', Icons.cloud_upload),
             ),
           ],
         ),
@@ -91,13 +88,10 @@ class _ReleaseManagementScreenState
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.blue.withValues(alpha: 0.1)
-              : Colors.transparent,
+          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color:
-                isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
+            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -810,8 +804,7 @@ class _ReleaseManagementScreenState
                 ),
               ),
               PopupMenuButton<String>(
-                onSelected: (value) =>
-                    _handleDeploymentAction(value, deployment),
+                onSelected: (value) => _handleDeploymentAction(value, deployment),
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: 'view',
@@ -974,30 +967,20 @@ class _ReleaseManagementScreenState
       filtered = filtered
           .where(
             (release) =>
-                release.name
-                    .toLowerCase()
-                    .contains(_searchQuery.toLowerCase()) ||
-                release.version
-                    .toLowerCase()
-                    .contains(_searchQuery.toLowerCase()) ||
-                (release.description
-                        ?.toLowerCase()
-                        .contains(_searchQuery.toLowerCase()) ??
-                    false),
+                release.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+                release.version.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+                (release.description?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false),
           )
           .toList();
     }
 
     // Фильтры
     if (_selectedType != null) {
-      filtered =
-          filtered.where((release) => release.type == _selectedType).toList();
+      filtered = filtered.where((release) => release.type == _selectedType).toList();
     }
 
     if (_selectedStatus != null) {
-      filtered = filtered
-          .where((release) => release.status == _selectedStatus)
-          .toList();
+      filtered = filtered.where((release) => release.status == _selectedStatus).toList();
     }
 
     return filtered;
@@ -1126,8 +1109,7 @@ class _ReleaseManagementScreenState
     // TODO(developer): Реализовать редактирование релиза
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:
-            Text('Редактирование релиза "${release.name}" будет реализовано'),
+        content: Text('Редактирование релиза "${release.name}" будет реализовано'),
       ),
     );
   }

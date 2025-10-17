@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../services/supabase_service.dart';
 import '../models/social_models.dart';
+import '../services/supabase_service.dart';
 
 /// Экран чата с Realtime сообщениями
 class ChatScreen extends ConsumerStatefulWidget {
@@ -138,9 +138,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   CircleAvatar(
                     radius: 16,
                     backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
-                    backgroundImage: _otherUser!.avatarUrl != null
-                        ? NetworkImage(_otherUser!.avatarUrl!)
-                        : null,
+                    backgroundImage:
+                        _otherUser!.avatarUrl != null ? NetworkImage(_otherUser!.avatarUrl!) : null,
                     child: _otherUser!.avatarUrl == null
                         ? Icon(
                             Icons.person,
@@ -271,17 +270,15 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       child: Row(
-        mainAxisAlignment:
-            isFromCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: isFromCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (!isFromCurrentUser) ...[
             CircleAvatar(
               radius: 16,
               backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
-              backgroundImage: message.senderAvatarUrl != null
-                  ? NetworkImage(message.senderAvatarUrl!)
-                  : null,
+              backgroundImage:
+                  message.senderAvatarUrl != null ? NetworkImage(message.senderAvatarUrl!) : null,
               child: message.senderAvatarUrl == null
                   ? Icon(
                       Icons.person,
@@ -299,15 +296,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               ),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color:
-                    isFromCurrentUser ? theme.primaryColor : Colors.grey[200],
+                color: isFromCurrentUser ? theme.primaryColor : Colors.grey[200],
                 borderRadius: BorderRadius.circular(20).copyWith(
-                  bottomLeft: isFromCurrentUser
-                      ? const Radius.circular(20)
-                      : const Radius.circular(4),
-                  bottomRight: isFromCurrentUser
-                      ? const Radius.circular(4)
-                      : const Radius.circular(20),
+                  bottomLeft:
+                      isFromCurrentUser ? const Radius.circular(20) : const Radius.circular(4),
+                  bottomRight:
+                      isFromCurrentUser ? const Radius.circular(4) : const Radius.circular(20),
                 ),
               ),
               child: Column(
@@ -339,14 +333,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             CircleAvatar(
               radius: 16,
               backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
-              backgroundImage: SupabaseService
-                          .currentUser?.userMetadata?['avatar_url'] !=
-                      null
-                  ? NetworkImage(
-                      SupabaseService.currentUser!.userMetadata!['avatar_url'])
+              backgroundImage: SupabaseService.currentUser?.userMetadata?['avatar_url'] != null
+                  ? NetworkImage(SupabaseService.currentUser!.userMetadata!['avatar_url'])
                   : null,
-              child: SupabaseService.currentUser?.userMetadata?['avatar_url'] ==
-                      null
+              child: SupabaseService.currentUser?.userMetadata?['avatar_url'] == null
                   ? Icon(
                       Icons.person,
                       size: 16,

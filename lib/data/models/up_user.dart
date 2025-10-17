@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 class UpUser {
   // customer|specialist|guest
 
-  UpUser({
+  const UpUser({
     required this.uid,
     required this.name,
     required this.email,
@@ -82,6 +82,5 @@ class UpUser {
   int get hashCode => uid.hashCode;
 
   @override
-  String toString() =>
-      'UpUser(uid: $uid, name: $name, email: $email, role: $role)';
+  String toString() => 'UpUser(uid: $uid, name: $name, email: $email, role: $role)';
 }

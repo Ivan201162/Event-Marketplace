@@ -86,8 +86,7 @@ class GroupChatService {
   /// Удалить участника из группового чата
   Future<void> removeParticipantFromChat(String chatId, String userId) async {
     try {
-      final chatDoc =
-          await _firestore.collection('group_chats').doc(chatId).get();
+      final chatDoc = await _firestore.collection('group_chats').doc(chatId).get();
       if (!chatDoc.exists) {
         throw Exception('Чат не найден');
       }
@@ -340,11 +339,8 @@ class GroupChatService {
   /// Получить статистику чата
   Future<Map<String, dynamic>> getChatStats(String chatId) async {
     try {
-      final messagesQuery = await _firestore
-          .collection('group_chats')
-          .doc(chatId)
-          .collection('messages')
-          .get();
+      final messagesQuery =
+          await _firestore.collection('group_chats').doc(chatId).collection('messages').get();
 
       final messages = messagesQuery.docs;
       final totalMessages = messages.length;
@@ -365,8 +361,7 @@ class GroupChatService {
         'totalMessages': totalMessages,
         'uniqueParticipants': participants.length,
         'messageTypes': messageTypes,
-        'lastActivity':
-            messages.isNotEmpty ? messages.first.data()['createdAt'] : null,
+        'lastActivity': messages.isNotEmpty ? messages.first.data()['createdAt'] : null,
       };
     } catch (e) {
       debugPrint('Error getting chat stats: $e');

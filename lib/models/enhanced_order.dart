@@ -37,19 +37,16 @@ class EnhancedOrder {
             : null,
         location: map['location'] as String?,
         category: map['category'] as String?,
-        priority:
-            OrderPriority.fromString(map['priority'] as String? ?? 'medium'),
+        priority: OrderPriority.fromString(map['priority'] as String? ?? 'medium'),
         comments: (map['comments'] as List?)
                 ?.map(
-                  (comment) =>
-                      OrderComment.fromMap(comment as Map<String, dynamic>),
+                  (comment) => OrderComment.fromMap(comment as Map<String, dynamic>),
                 )
                 .toList() ??
             [],
         timeline: (map['timeline'] as List?)
                 ?.map(
-                  (event) =>
-                      OrderTimelineEvent.fromMap(event as Map<String, dynamic>),
+                  (event) => OrderTimelineEvent.fromMap(event as Map<String, dynamic>),
                 )
                 .toList() ??
             [],
@@ -146,8 +143,7 @@ class EnhancedOrder {
         'priority': priority.value,
         'comments': comments.map((comment) => comment.toMap()).toList(),
         'timeline': timeline.map((event) => event.toMap()).toList(),
-        'attachments':
-            attachments.map((attachment) => attachment.toMap()).toList(),
+        'attachments': attachments.map((attachment) => attachment.toMap()).toList(),
         'updatedAt': updatedAt?.millisecondsSinceEpoch,
         'completedAt': completedAt?.millisecondsSinceEpoch,
         'cancelledAt': cancelledAt?.millisecondsSinceEpoch,
@@ -350,8 +346,7 @@ class OrderComment {
         'text': text,
         'createdAt': createdAt.millisecondsSinceEpoch,
         'isInternal': isInternal,
-        'attachments':
-            attachments.map((attachment) => attachment.toMap()).toList(),
+        'attachments': attachments.map((attachment) => attachment.toMap()).toList(),
       };
 }
 
@@ -367,8 +362,7 @@ class OrderTimelineEvent {
     this.metadata = const {},
   });
 
-  factory OrderTimelineEvent.fromMap(Map<String, dynamic> map) =>
-      OrderTimelineEvent(
+  factory OrderTimelineEvent.fromMap(Map<String, dynamic> map) => OrderTimelineEvent(
         id: map['id'] as String,
         type: OrderTimelineEventType.fromString(map['type'] as String),
         title: map['title'] as String,
@@ -469,8 +463,7 @@ class OrderAttachment {
         url: map['url'] as String,
         type: OrderAttachmentType.fromString(map['type'] as String),
         size: map['size'] as int,
-        uploadedAt:
-            DateTime.fromMillisecondsSinceEpoch(map['uploadedAt'] as int),
+        uploadedAt: DateTime.fromMillisecondsSinceEpoch(map['uploadedAt'] as int),
         uploadedBy: map['uploadedBy'] as String,
       );
 

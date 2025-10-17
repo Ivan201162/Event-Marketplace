@@ -38,8 +38,7 @@ class ProfileService {
   }
 
   /// Получить пользователя по ID
-  Future<AppUser?> getUser(String uid) async =>
-      _userRepository.getUserById(uid);
+  Future<AppUser?> getUser(String uid) async => _userRepository.getUserById(uid);
 }
 
 /// Провайдер сервиса профиля

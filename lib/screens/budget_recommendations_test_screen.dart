@@ -12,8 +12,7 @@ class BudgetRecommendationsTestScreen extends ConsumerStatefulWidget {
       _BudgetRecommendationsTestScreenState();
 }
 
-class _BudgetRecommendationsTestScreenState
-    extends ConsumerState<BudgetRecommendationsTestScreen> {
+class _BudgetRecommendationsTestScreenState extends ConsumerState<BudgetRecommendationsTestScreen> {
   final List<String> _selectedSpecialistIds = [];
   final String _testUserId = 'test_user_123';
   double _currentBudget = 50000;
@@ -79,13 +78,11 @@ class _BudgetRecommendationsTestScreenState
                   ),
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: Colors.green.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(6),
-                    border:
-                        Border.all(color: Colors.green.withValues(alpha: 0.3)),
+                    border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
                   ),
                   child: Text(
                     '${_currentBudget.toStringAsFixed(0)} ₽',
@@ -183,8 +180,7 @@ class _BudgetRecommendationsTestScreenState
     }).toList();
   }
 
-  List<Widget> _buildSelectedSpecialistChips() =>
-      _selectedSpecialistIds.map((id) {
+  List<Widget> _buildSelectedSpecialistChips() => _selectedSpecialistIds.map((id) {
         final specialist = _getTestSpecialistById(id);
         return Chip(
           label: Text(specialist.name),

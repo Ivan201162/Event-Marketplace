@@ -18,8 +18,7 @@ class TaxDetailsScreen extends ConsumerStatefulWidget {
   ConsumerState<TaxDetailsScreen> createState() => _TaxDetailsScreenState();
 }
 
-class _TaxDetailsScreenState extends ConsumerState<TaxDetailsScreen>
-    with TickerProviderStateMixin {
+class _TaxDetailsScreenState extends ConsumerState<TaxDetailsScreen> with TickerProviderStateMixin {
   late TabController _tabController;
   final TaxService _taxService = TaxService();
 
@@ -343,8 +342,7 @@ class _TaxDetailsScreenState extends ConsumerState<TaxDetailsScreen>
                   'Прогресс оплаты',
                   [
                     LinearProgressIndicator(
-                      value:
-                          (stats['paymentPercentage'] as double? ?? 0.0) / 100,
+                      value: (stats['paymentPercentage'] as double? ?? 0.0) / 100,
                       backgroundColor: Colors.grey[300],
                       valueColor: AlwaysStoppedAnimation<Color>(
                         (stats['paymentPercentage'] as double? ?? 0.0) == 100

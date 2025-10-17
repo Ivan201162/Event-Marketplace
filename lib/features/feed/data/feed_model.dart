@@ -39,8 +39,7 @@ class FeedPost extends Equatable {
         likedBy: List<String>.from((map['likedBy'] as List<dynamic>?) ?? []),
         comments: (map['comments'] as List<dynamic>?)
                 ?.map(
-                  (comment) =>
-                      FeedComment.fromMap(comment as Map<String, dynamic>),
+                  (comment) => FeedComment.fromMap(comment as Map<String, dynamic>),
                 )
                 .toList() ??
             [],

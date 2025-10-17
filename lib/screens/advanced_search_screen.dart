@@ -11,8 +11,7 @@ class AdvancedSearchScreen extends ConsumerStatefulWidget {
   const AdvancedSearchScreen({super.key});
 
   @override
-  ConsumerState<AdvancedSearchScreen> createState() =>
-      _AdvancedSearchScreenState();
+  ConsumerState<AdvancedSearchScreen> createState() => _AdvancedSearchScreenState();
 }
 
 class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
@@ -39,16 +38,15 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
     });
 
     try {
-      final specialists =
-          await ref.read(specialistServiceProvider).searchSpecialists(
-                query: _filters.query,
-                category: _filters.category,
-                minPrice: _filters.minPrice,
-                maxPrice: _filters.maxPrice,
-                minRating: _filters.minRating,
-                location: _filters.location,
-                availableDates: _filters.availableDates,
-              );
+      final specialists = await ref.read(specialistServiceProvider).searchSpecialists(
+            query: _filters.query,
+            category: _filters.category,
+            minPrice: _filters.minPrice,
+            maxPrice: _filters.maxPrice,
+            minRating: _filters.minRating,
+            location: _filters.location,
+            availableDates: _filters.availableDates,
+          );
       setState(() {
         _specialists = specialists;
         _isLoading = false;
@@ -251,9 +249,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
             if (_filters.sortBy != null)
               IconButton(
                 icon: Icon(
-                  _filters.sortAscending
-                      ? Icons.arrow_upward
-                      : Icons.arrow_downward,
+                  _filters.sortAscending ? Icons.arrow_upward : Icons.arrow_downward,
                 ),
                 onPressed: () {
                   _updateFilters(
@@ -262,8 +258,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                     ),
                   );
                 },
-                tooltip:
-                    _filters.sortAscending ? 'По возрастанию' : 'По убыванию',
+                tooltip: _filters.sortAscending ? 'По возрастанию' : 'По убыванию',
               ),
           ],
         ),

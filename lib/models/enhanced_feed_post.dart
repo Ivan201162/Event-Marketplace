@@ -27,8 +27,7 @@ class EnhancedFeedPost {
   });
 
   /// Создать из Map
-  factory EnhancedFeedPost.fromMap(Map<String, dynamic> map) =>
-      EnhancedFeedPost(
+  factory EnhancedFeedPost.fromMap(Map<String, dynamic> map) => EnhancedFeedPost(
         id: map['id'] as String,
         authorId: map['authorId'] as String,
         content: map['content'] as String,
@@ -36,8 +35,7 @@ class EnhancedFeedPost {
         createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
         media: (map['media'] as List?)
                 ?.map(
-                  (media) =>
-                      FeedPostMedia.fromMap(media as Map<String, dynamic>),
+                  (media) => FeedPostMedia.fromMap(media as Map<String, dynamic>),
                 )
                 .toList() ??
             [],
@@ -49,15 +47,13 @@ class EnhancedFeedPost {
         likes: List<String>.from((map['likes'] as List?) ?? []),
         comments: (map['comments'] as List?)
                 ?.map(
-                  (comment) =>
-                      FeedPostComment.fromMap(comment as Map<String, dynamic>),
+                  (comment) => FeedPostComment.fromMap(comment as Map<String, dynamic>),
                 )
                 .toList() ??
             [],
         shares: (map['shares'] as List?)
                 ?.map(
-                  (share) =>
-                      FeedPostShare.fromMap(share as Map<String, dynamic>),
+                  (share) => FeedPostShare.fromMap(share as Map<String, dynamic>),
                 )
                 .toList() ??
             [],
@@ -318,9 +314,7 @@ class FeedPostMedia {
         width: map['width'] as int,
         height: map['height'] as int,
         thumbnailUrl: map['thumbnailUrl'] as String?,
-        duration: map['duration'] != null
-            ? Duration(milliseconds: map['duration'] as int)
-            : null,
+        duration: map['duration'] != null ? Duration(milliseconds: map['duration'] as int) : null,
         caption: map['caption'] as String?,
         altText: map['altText'] as String?,
         metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
@@ -416,8 +410,7 @@ class FeedPostComment {
         parentId: map['parentId'] as String?,
         replies: (map['replies'] as List?)
                 ?.map(
-                  (reply) =>
-                      FeedPostComment.fromMap(reply as Map<String, dynamic>),
+                  (reply) => FeedPostComment.fromMap(reply as Map<String, dynamic>),
                 )
                 .toList() ??
             [],

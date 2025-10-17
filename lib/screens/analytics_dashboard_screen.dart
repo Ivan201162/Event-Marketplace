@@ -9,17 +9,14 @@ class AnalyticsDashboardScreen extends ConsumerStatefulWidget {
   const AnalyticsDashboardScreen({super.key});
 
   @override
-  ConsumerState<AnalyticsDashboardScreen> createState() =>
-      _AnalyticsDashboardScreenState();
+  ConsumerState<AnalyticsDashboardScreen> createState() => _AnalyticsDashboardScreenState();
 }
 
-class _AnalyticsDashboardScreenState
-    extends ConsumerState<AnalyticsDashboardScreen> {
+class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScreen> {
   final AnalyticsService _analyticsService = AnalyticsService();
   AnalyticsStatistics? _statistics;
   bool _isLoading = true;
-  DateTime _selectedStartDate =
-      DateTime.now().subtract(const Duration(days: 30));
+  DateTime _selectedStartDate = DateTime.now().subtract(const Duration(days: 30));
   DateTime _selectedEndDate = DateTime.now();
 
   @override
@@ -330,11 +327,9 @@ class _AnalyticsDashboardScreenState
                     trailing: Text('${entry.value}'),
                     subtitle: LinearProgressIndicator(
                       value: entry.value /
-                          _statistics!.eventsByScreen.values
-                              .reduce((a, b) => a > b ? a : b),
+                          _statistics!.eventsByScreen.values.reduce((a, b) => a > b ? a : b),
                       backgroundColor: Colors.grey.withValues(alpha: 0.3),
-                      valueColor:
-                          const AlwaysStoppedAnimation<Color>(Colors.blue),
+                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
                     ),
                   ),
                 )

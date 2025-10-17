@@ -11,8 +11,7 @@ class NewsFeedTestScreen extends StatefulWidget {
   State<NewsFeedTestScreen> createState() => _NewsFeedTestScreenState();
 }
 
-class _NewsFeedTestScreenState extends State<NewsFeedTestScreen>
-    with TickerProviderStateMixin {
+class _NewsFeedTestScreenState extends State<NewsFeedTestScreen> with TickerProviderStateMixin {
   final NewsFeedService _newsService = NewsFeedService();
 
   final String _testUserId = 'test_user_123';
@@ -211,9 +210,7 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen>
                     radius: 20,
                     backgroundColor: Colors.blue.shade100,
                     child: Text(
-                      newsItem.authorName.isNotEmpty
-                          ? newsItem.authorName[0].toUpperCase()
-                          : '?',
+                      newsItem.authorName.isNotEmpty ? newsItem.authorName[0].toUpperCase() : '?',
                       style: TextStyle(
                         color: Colors.blue.shade700,
                         fontWeight: FontWeight.bold,
@@ -389,8 +386,7 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen>
         authorName: 'Тестовый специалист',
         type: NewsType.promotion,
         title: 'Специальное предложение',
-        content:
-            'Скидка 30% на все услуги при заказе до конца месяца. Успейте забронировать!',
+        content: 'Скидка 30% на все услуги при заказе до конца месяца. Успейте забронировать!',
       );
 
       if (mounted) {

@@ -55,10 +55,8 @@ class OptimizedImage extends StatelessWidget {
       memCacheHeight: memCacheHeight,
       maxWidthDiskCache: maxWidthDiskCache,
       maxHeightDiskCache: maxHeightDiskCache,
-      placeholder: (context, url) =>
-          placeholder ?? _buildDefaultPlaceholder(theme),
-      errorWidget: (context, url, error) =>
-          errorWidget ?? _buildDefaultErrorWidget(theme),
+      placeholder: (context, url) => placeholder ?? _buildDefaultPlaceholder(theme),
+      errorWidget: (context, url, error) => errorWidget ?? _buildDefaultErrorWidget(theme),
       imageBuilder: (context, imageProvider) => Container(
         width: width,
         height: height,
@@ -154,8 +152,7 @@ class OptimizedAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final effectiveBorderRadius =
-        borderRadius ?? BorderRadius.circular(size / 2);
+    final effectiveBorderRadius = borderRadius ?? BorderRadius.circular(size / 2);
 
     Widget avatarWidget = CachedNetworkImage(
       imageUrl: imageUrl,
@@ -262,8 +259,7 @@ class OptimizedImageGallery extends StatelessWidget {
         mainAxisSpacing: mainAxisSpacing,
         childAspectRatio: aspectRatio,
       ),
-      itemCount: displayImages.length +
-          (showMoreIndicator && remainingCount > 0 ? 1 : 0),
+      itemCount: displayImages.length + (showMoreIndicator && remainingCount > 0 ? 1 : 0),
       itemBuilder: (context, index) {
         if (index < displayImages.length) {
           return _buildImageItem(context, displayImages[index], index);
@@ -274,8 +270,7 @@ class OptimizedImageGallery extends StatelessWidget {
     );
   }
 
-  Widget _buildImageItem(BuildContext context, String imageUrl, int index) =>
-      GestureDetector(
+  Widget _buildImageItem(BuildContext context, String imageUrl, int index) => GestureDetector(
         onTap: () => onImageTap?.call(imageUrl, index),
         child: OptimizedImage(
           imageUrl: imageUrl,

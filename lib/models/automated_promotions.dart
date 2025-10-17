@@ -75,8 +75,7 @@ class AutomatedPromotion {
       id: map['id'] ?? '',
       name: map['name'] ?? '',
       description: map['description'] ?? '',
-      trigger:
-          PromotionTrigger.values.byName(map['trigger'] ?? 'userRegistration'),
+      trigger: PromotionTrigger.values.byName(map['trigger'] ?? 'userRegistration'),
       conditions: map['conditions'] ?? {},
       actions: map['actions'] ?? {},
       status: PromotionStatus.values.byName(map['status'] ?? 'draft'),

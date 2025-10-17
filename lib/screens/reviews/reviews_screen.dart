@@ -47,8 +47,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
       _loadMoreReviews();
     }
   }
@@ -226,8 +225,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     if (_reviews.isEmpty) return const SizedBox.shrink();
 
     final totalReviews = _reviews.length;
-    final averageRating =
-        _reviews.fold(0, (sum, review) => sum + review.rating) / totalReviews;
+    final averageRating = _reviews.fold(0, (sum, review) => sum + review.rating) / totalReviews;
     final ratingDistribution = <int, int>{};
 
     for (final review in _reviews) {

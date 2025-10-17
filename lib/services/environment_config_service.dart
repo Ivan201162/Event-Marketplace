@@ -12,8 +12,7 @@ import '../models/environment_config.dart';
 class EnvironmentConfigService {
   factory EnvironmentConfigService() => _instance;
   EnvironmentConfigService._internal();
-  static final EnvironmentConfigService _instance =
-      EnvironmentConfigService._internal();
+  static final EnvironmentConfigService _instance = EnvironmentConfigService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -67,8 +66,7 @@ class EnvironmentConfigService {
       }
 
       // Загружаем переменные окружения
-      final variablesSnapshot =
-          await _firestore.collection(_variablesCollection).get();
+      final variablesSnapshot = await _firestore.collection(_variablesCollection).get();
 
       for (final doc in variablesSnapshot.docs) {
         final variable = EnvironmentVariable.fromMap(doc.data());
@@ -76,8 +74,7 @@ class EnvironmentConfigService {
       }
 
       // Загружаем конфигурации развертывания
-      final deploymentsSnapshot =
-          await _firestore.collection(_deploymentsCollection).get();
+      final deploymentsSnapshot = await _firestore.collection(_deploymentsCollection).get();
 
       for (final doc in deploymentsSnapshot.docs) {
         final deployment = DeploymentConfig.fromMap(doc.data());
@@ -89,16 +86,13 @@ class EnvironmentConfigService {
   }
 
   /// Поток конфигураций окружений
-  Stream<EnvironmentConfig> get environmentStream =>
-      _environmentStreamController.stream;
+  Stream<EnvironmentConfig> get environmentStream => _environmentStreamController.stream;
 
   /// Поток переменных окружения
-  Stream<EnvironmentVariable> get variableStream =>
-      _variableStreamController.stream;
+  Stream<EnvironmentVariable> get variableStream => _variableStreamController.stream;
 
   /// Поток конфигураций развертывания
-  Stream<DeploymentConfig> get deploymentStream =>
-      _deploymentStreamController.stream;
+  Stream<DeploymentConfig> get deploymentStream => _deploymentStreamController.stream;
 
   /// Создание конфигурации окружения
   Future<EnvironmentConfig> createEnvironmentConfig({
@@ -212,10 +206,7 @@ class EnvironmentConfigService {
         updatedBy: user.uid,
       );
 
-      await _firestore
-          .collection(_environmentsCollection)
-          .doc(id)
-          .update(updatedConfig.toMap());
+      await _firestore.collection(_environmentsCollection).doc(id).update(updatedConfig.toMap());
 
       _environmentCache[id] = updatedConfig;
       _environmentStreamController.add(updatedConfig);
@@ -231,16 +222,12 @@ class EnvironmentConfigService {
   EnvironmentConfig? getEnvironmentConfig(String id) => _environmentCache[id];
 
   /// Получение всех конфигураций окружений
-  List<EnvironmentConfig> getAllEnvironmentConfigs() =>
-      _environmentCache.values.toList();
+  List<EnvironmentConfig> getAllEnvironmentConfigs() => _environmentCache.values.toList();
 
   /// Получение активной конфигурации окружения
-  EnvironmentConfig? getActiveEnvironmentConfig() =>
-      _environmentCache.values.firstWhere(
+  EnvironmentConfig? getActiveEnvironmentConfig() => _environmentCache.values.firstWhere(
         (config) => config.isActive,
-        orElse: () => _environmentCache.values.isNotEmpty
-            ? _environmentCache.values.first
-            : null,
+        orElse: () => _environmentCache.values.isNotEmpty ? _environmentCache.values.first : null,
       );
 
   /// Активация конфигурации окружения
@@ -253,8 +240,7 @@ class EnvironmentConfigService {
       final batch = _firestore.batch();
       for (final config in _environmentCache.values) {
         if (config.id != id && config.isActive) {
-          final docRef =
-              _firestore.collection(_environmentsCollection).doc(config.id);
+          final docRef = _firestore.collection(_environmentsCollection).doc(config.id);
           batch.update(docRef, {
             'isActive': false,
             'updatedAt': Timestamp.fromDate(DateTime.now()),
@@ -331,10 +317,7 @@ class EnvironmentConfigService {
         updatedBy: user.uid,
       );
 
-      await _firestore
-          .collection(_variablesCollection)
-          .doc(variable.id)
-          .set(variable.toMap());
+      await _firestore.collection(_variablesCollection).doc(variable.id).set(variable.toMap());
 
       _variableCache[variable.id] = variable;
       _variableStreamController.add(variable);
@@ -384,10 +367,7 @@ class EnvironmentConfigService {
         updatedBy: user.uid,
       );
 
-      await _firestore
-          .collection(_variablesCollection)
-          .doc(id)
-          .update(updatedVariable.toMap());
+      await _firestore.collection(_variablesCollection).doc(id).update(updatedVariable.toMap());
 
       _variableCache[id] = updatedVariable;
       _variableStreamController.add(updatedVariable);
@@ -403,15 +383,13 @@ class EnvironmentConfigService {
   EnvironmentVariable? getEnvironmentVariable(String id) => _variableCache[id];
 
   /// Получение переменной окружения по ключу
-  EnvironmentVariable? getEnvironmentVariableByKey(String key) =>
-      _variableCache.values.firstWhere(
+  EnvironmentVariable? getEnvironmentVariableByKey(String key) => _variableCache.values.firstWhere(
         (variable) => variable.key == key,
         orElse: () => null,
       );
 
   /// Получение всех переменных окружения
-  List<EnvironmentVariable> getAllEnvironmentVariables() =>
-      _variableCache.values.toList();
+  List<EnvironmentVariable> getAllEnvironmentVariables() => _variableCache.values.toList();
 
   /// Создание конфигурации развертывания
   Future<DeploymentConfig> createDeploymentConfig({
@@ -511,10 +489,7 @@ class EnvironmentConfigService {
         updatedBy: user.uid,
       );
 
-      await _firestore
-          .collection(_deploymentsCollection)
-          .doc(id)
-          .update(updatedDeployment.toMap());
+      await _firestore.collection(_deploymentsCollection).doc(id).update(updatedDeployment.toMap());
 
       _deploymentCache[id] = updatedDeployment;
       _deploymentStreamController.add(updatedDeployment);
@@ -530,8 +505,7 @@ class EnvironmentConfigService {
   DeploymentConfig? getDeploymentConfig(String id) => _deploymentCache[id];
 
   /// Получение всех конфигураций развертывания
-  List<DeploymentConfig> getAllDeploymentConfigs() =>
-      _deploymentCache.values.toList();
+  List<DeploymentConfig> getAllDeploymentConfigs() => _deploymentCache.values.toList();
 
   /// Получение конфигураций развертывания для окружения
   List<DeploymentConfig> getDeploymentConfigsForEnvironment(
@@ -606,21 +580,15 @@ class EnvironmentConfigService {
         ),
         config: Map<String, dynamic>.from(environmentData['config'] ?? {}),
         secrets: Map<String, dynamic>.from(environmentData['secrets'] ?? {}),
-        featureFlags:
-            Map<String, dynamic>.from(environmentData['featureFlags'] ?? {}),
-        apiEndpoints:
-            Map<String, dynamic>.from(environmentData['apiEndpoints'] ?? {}),
-        databaseConfig:
-            Map<String, dynamic>.from(environmentData['databaseConfig'] ?? {}),
-        cacheConfig:
-            Map<String, dynamic>.from(environmentData['cacheConfig'] ?? {}),
-        loggingConfig:
-            Map<String, dynamic>.from(environmentData['loggingConfig'] ?? {}),
+        featureFlags: Map<String, dynamic>.from(environmentData['featureFlags'] ?? {}),
+        apiEndpoints: Map<String, dynamic>.from(environmentData['apiEndpoints'] ?? {}),
+        databaseConfig: Map<String, dynamic>.from(environmentData['databaseConfig'] ?? {}),
+        cacheConfig: Map<String, dynamic>.from(environmentData['cacheConfig'] ?? {}),
+        loggingConfig: Map<String, dynamic>.from(environmentData['loggingConfig'] ?? {}),
         monitoringConfig: Map<String, dynamic>.from(
           environmentData['monitoringConfig'] ?? {},
         ),
-        securityConfig:
-            Map<String, dynamic>.from(environmentData['securityConfig'] ?? {}),
+        securityConfig: Map<String, dynamic>.from(environmentData['securityConfig'] ?? {}),
         isActive: false,
         description: environmentData['description'],
         tags: List<String>.from(environmentData['tags'] ?? []),
@@ -660,10 +628,7 @@ class EnvironmentConfigService {
           updatedBy: user.uid,
         );
 
-        await _firestore
-            .collection(_variablesCollection)
-            .doc(variable.id)
-            .set(variable.toMap());
+        await _firestore.collection(_variablesCollection).doc(variable.id).set(variable.toMap());
 
         _variableCache[variable.id] = variable;
       }
@@ -674,19 +639,16 @@ class EnvironmentConfigService {
           id: _generateId(),
           environmentId: environmentConfig.id,
           version: deploymentData['version'] ?? '1.0.0',
-          status:
-              DeploymentStatus.fromString(deploymentData['status'] ?? 'draft'),
+          status: DeploymentStatus.fromString(deploymentData['status'] ?? 'draft'),
           config: Map<String, dynamic>.from(deploymentData['config'] ?? {}),
           secrets: Map<String, dynamic>.from(deploymentData['secrets'] ?? {}),
           dependencies: List<String>.from(deploymentData['dependencies'] ?? []),
           healthChecks: List<String>.from(deploymentData['healthChecks'] ?? []),
-          scalingConfig:
-              Map<String, dynamic>.from(deploymentData['scalingConfig'] ?? {}),
+          scalingConfig: Map<String, dynamic>.from(deploymentData['scalingConfig'] ?? {}),
           networkingConfig: Map<String, dynamic>.from(
             deploymentData['networkingConfig'] ?? {},
           ),
-          storageConfig:
-              Map<String, dynamic>.from(deploymentData['storageConfig'] ?? {}),
+          storageConfig: Map<String, dynamic>.from(deploymentData['storageConfig'] ?? {}),
           monitoringConfig: Map<String, dynamic>.from(
             deploymentData['monitoringConfig'] ?? {},
           ),
@@ -832,8 +794,7 @@ class EnvironmentConfigService {
   ) {
     final groups = <String, int>{};
     for (final deployment in deployments) {
-      groups[deployment.status.value] =
-          (groups[deployment.status.value] ?? 0) + 1;
+      groups[deployment.status.value] = (groups[deployment.status.value] ?? 0) + 1;
     }
     return groups;
   }
@@ -841,9 +802,7 @@ class EnvironmentConfigService {
   /// Генерация уникального ID
   String _generateId() =>
       DateTime.now().millisecondsSinceEpoch.toString() +
-      (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000))
-          .round()
-          .toString();
+      (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000)).round().toString();
 
   /// Закрытие сервиса
   Future<void> dispose() async {

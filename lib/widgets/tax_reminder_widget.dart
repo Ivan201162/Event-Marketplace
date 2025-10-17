@@ -248,8 +248,7 @@ class TaxReminderStatsWidget extends ConsumerWidget {
   const TaxReminderStatsWidget({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) =>
-      FutureBuilder<Map<String, dynamic>>(
+  Widget build(BuildContext context, WidgetRef ref) => FutureBuilder<Map<String, dynamic>>(
         future: TaxReminderService().getReminderStatistics(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

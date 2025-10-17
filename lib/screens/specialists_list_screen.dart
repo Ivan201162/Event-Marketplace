@@ -15,8 +15,7 @@ class SpecialistsListScreen extends ConsumerStatefulWidget {
   final SpecialistCategoryInfo category;
 
   @override
-  ConsumerState<SpecialistsListScreen> createState() =>
-      _SpecialistsListScreenState();
+  ConsumerState<SpecialistsListScreen> createState() => _SpecialistsListScreenState();
 }
 
 class _SpecialistsListScreenState extends ConsumerState<SpecialistsListScreen> {
@@ -33,8 +32,7 @@ class _SpecialistsListScreenState extends ConsumerState<SpecialistsListScreen> {
   @override
   Widget build(BuildContext context) {
     // Получаем специалистов по категории
-    final specialistsAsync =
-        ref.watch(specialistsByCategoryProvider(widget.category.name));
+    final specialistsAsync = ref.watch(specialistsByCategoryProvider(widget.category.name));
 
     return Scaffold(
       appBar: AppBar(
@@ -401,11 +399,8 @@ class _SpecialistsListScreenState extends ConsumerState<SpecialistsListScreen> {
               specialist.name.toLowerCase().contains(searchLower) ||
                   specialist.description?.toLowerCase().contains(searchLower) ??
               false ||
-                  specialist.category.displayName
-                      .toLowerCase()
-                      .contains(searchLower) ||
-                  specialist.subcategories
-                      .any((sub) => sub.toLowerCase().contains(searchLower)),
+                  specialist.category.displayName.toLowerCase().contains(searchLower) ||
+                  specialist.subcategories.any((sub) => sub.toLowerCase().contains(searchLower)),
         )
         .toList();
   }
@@ -414,8 +409,7 @@ class _SpecialistsListScreenState extends ConsumerState<SpecialistsListScreen> {
   void _navigateToSpecialistProfile(Specialist specialist) {
     Navigator.of(context).push(
       MaterialPageRoute<SpecialistProfileScreen>(
-        builder: (context) =>
-            SpecialistProfileScreen(specialistId: specialist.id),
+        builder: (context) => SpecialistProfileScreen(specialistId: specialist.id),
       ),
     );
   }

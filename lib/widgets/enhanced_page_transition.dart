@@ -116,8 +116,7 @@ class AnimatedContent extends StatefulWidget {
   State<AnimatedContent> createState() => _AnimatedContentState();
 }
 
-class _AnimatedContentState extends State<AnimatedContent>
-    with SingleTickerProviderStateMixin {
+class _AnimatedContentState extends State<AnimatedContent> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -258,8 +257,7 @@ class _AnimatedListState extends State<AnimatedList> {
           final child = entry.value;
 
           return AnimatedContent(
-            delay:
-                Duration(milliseconds: index * widget.itemDelay.inMilliseconds),
+            delay: Duration(milliseconds: index * widget.itemDelay.inMilliseconds),
             duration: widget.itemDuration,
             curve: widget.curve,
             type: widget.itemType,
@@ -307,8 +305,7 @@ class _AnimatedGridState extends State<AnimatedGrid> {
         ),
         itemCount: widget.children.length,
         itemBuilder: (context, index) => AnimatedContent(
-          delay:
-              Duration(milliseconds: index * widget.itemDelay.inMilliseconds),
+          delay: Duration(milliseconds: index * widget.itemDelay.inMilliseconds),
           duration: widget.itemDuration,
           curve: widget.curve,
           type: widget.itemType,
@@ -337,8 +334,7 @@ class AnimatedButton extends StatefulWidget {
   State<AnimatedButton> createState() => _AnimatedButtonState();
 }
 
-class _AnimatedButtonState extends State<AnimatedButton>
-    with SingleTickerProviderStateMixin {
+class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 

@@ -45,8 +45,7 @@ class ServicesList extends ConsumerWidget {
     );
   }
 
-  Widget _buildServiceItem(BuildContext context, ServicePrice service) =>
-      Container(
+  Widget _buildServiceItem(BuildContext context, ServicePrice service) => Container(
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -83,8 +82,7 @@ class ServicesList extends ConsumerWidget {
                 ),
                 // Статус активности
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: service.isActive
                         ? Colors.green.withValues(alpha: 0.1)
@@ -117,11 +115,9 @@ class ServicesList extends ConsumerWidget {
               children: [
                 // Цена
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color:
-                        Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                    color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -136,8 +132,7 @@ class ServicesList extends ConsumerWidget {
                 // Длительность
                 if (service.duration != null)
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: Colors.blue.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),

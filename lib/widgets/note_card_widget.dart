@@ -70,11 +70,8 @@ class NoteCardWidget extends StatelessWidget {
                           child: Row(
                             children: [
                               Icon(
-                                note.isPinned
-                                    ? Icons.push_pin_outlined
-                                    : Icons.push_pin,
-                                color:
-                                    note.isPinned ? Colors.grey : Colors.orange,
+                                note.isPinned ? Icons.push_pin_outlined : Icons.push_pin,
+                                color: note.isPinned ? Colors.grey : Colors.orange,
                               ),
                               const SizedBox(width: 8),
                               Text(note.isPinned ? 'Открепить' : 'Закрепить'),
@@ -133,8 +130,7 @@ class NoteCardWidget extends StatelessWidget {
                               tag,
                               style: const TextStyle(fontSize: 12),
                             ),
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             visualDensity: VisualDensity.compact,
                           ),
                         )

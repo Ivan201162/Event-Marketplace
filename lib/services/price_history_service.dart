@@ -16,8 +16,7 @@ class PriceHistoryService {
   }) async {
     try {
       final now = DateTime.now();
-      final discountPercent =
-          newPrice < oldPrice ? ((oldPrice - newPrice) / oldPrice) * 100 : null;
+      final discountPercent = newPrice < oldPrice ? ((oldPrice - newPrice) / oldPrice) * 100 : null;
 
       final priceHistory = PriceHistory(
         id: '', // Будет сгенерирован Firestore
@@ -89,9 +88,8 @@ class PriceHistoryService {
       final discountOffers = priceHistory.where((p) => p.isDiscount).length;
       final priceIncreases = priceHistory.where((p) => !p.isDiscount).length;
 
-      final totalSavings = priceHistory
-          .where((p) => p.isDiscount)
-          .fold(0, (sum, p) => sum + p.savings);
+      final totalSavings =
+          priceHistory.where((p) => p.isDiscount).fold(0, (sum, p) => sum + p.savings);
 
       final averageDiscount = discountOffers > 0
           ? priceHistory
@@ -106,8 +104,7 @@ class PriceHistoryService {
         'priceIncreases': priceIncreases,
         'totalSavings': totalSavings,
         'averageDiscount': averageDiscount,
-        'discountRate':
-            totalChanges > 0 ? (discountOffers / totalChanges) * 100 : 0,
+        'discountRate': totalChanges > 0 ? (discountOffers / totalChanges) * 100 : 0,
       };
     } catch (e) {
       throw Exception('Ошибка получения статистики изменений цен: $e');

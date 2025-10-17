@@ -10,8 +10,7 @@ class FeatureRequestScreen extends ConsumerStatefulWidget {
   const FeatureRequestScreen({super.key});
 
   @override
-  ConsumerState<FeatureRequestScreen> createState() =>
-      _FeatureRequestScreenState();
+  ConsumerState<FeatureRequestScreen> createState() => _FeatureRequestScreenState();
 }
 
 class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
@@ -542,8 +541,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
     try {
       await _featureRequestService.createFeatureRequest(
         userId: 'current_user_id', // TODO(developer): Получить реальный ID
-        userName:
-            'Текущий пользователь', // TODO(developer): Получить реальное имя
+        userName: 'Текущий пользователь', // TODO(developer): Получить реальное имя
         userType: UserType.customer, // TODO(developer): Получить реальный тип
         title: title,
         description: description,

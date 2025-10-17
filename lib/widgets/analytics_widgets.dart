@@ -48,10 +48,7 @@ class KPIWidget extends StatelessWidget {
                     kpi.unit,
                     style: TextStyle(
                       fontSize: 14,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.7),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
                   ),
                 ],
@@ -66,10 +63,7 @@ class KPIWidget extends StatelessWidget {
                     'Цель: ${kpi.target.toStringAsFixed(0)} ${kpi.unit}',
                     style: TextStyle(
                       fontSize: 12,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.7),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
                   ),
                   _buildChangeIndicator(context, kpi.percentageChange),
@@ -108,14 +102,11 @@ class KPIWidget extends StatelessWidget {
   }
 
   /// Построить прогресс-бар
-  Widget _buildProgressBar(BuildContext context, double percentage) =>
-      LinearProgressIndicator(
+  Widget _buildProgressBar(BuildContext context, double percentage) => LinearProgressIndicator(
         value: percentage / 100,
         backgroundColor: Colors.grey.withValues(alpha: 0.3),
         valueColor: AlwaysStoppedAnimation<Color>(
-          percentage >= 100
-              ? Colors.green
-              : Theme.of(context).colorScheme.primary,
+          percentage >= 100 ? Colors.green : Theme.of(context).colorScheme.primary,
         ),
       );
 
@@ -163,9 +154,7 @@ class MetricWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final change = previousValue != null
-        ? ((value - previousValue!) / previousValue!) * 100
-        : 0.0;
+    final change = previousValue != null ? ((value - previousValue!) / previousValue!) * 100 : 0.0;
     final isPositive = change >= 0;
 
     return Card(
@@ -194,8 +183,7 @@ class MetricWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (previousValue != null)
-                  _buildChangeIndicator(context, change, isPositive),
+                if (previousValue != null) _buildChangeIndicator(context, change, isPositive),
               ],
             ),
             const SizedBox(height: 8),
@@ -266,10 +254,7 @@ class PeriodStatisticsWidget extends StatelessWidget {
                 '${_formatDate(statistics.startDate)} - ${_formatDate(statistics.endDate)}',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.7),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
               ),
               const SizedBox(height: 16),
@@ -373,10 +358,7 @@ class ReportWidget extends StatelessWidget {
                   report.description,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.7),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -387,20 +369,14 @@ class ReportWidget extends StatelessWidget {
                       '${_formatDate(report.startDate)} - ${_formatDate(report.endDate)}',
                       style: TextStyle(
                         fontSize: 12,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.6),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                     Text(
                       _formatDate(report.createdAt),
                       style: TextStyle(
                         fontSize: 12,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.6),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                   ],
@@ -507,10 +483,7 @@ class DashboardWidget extends StatelessWidget {
                   dashboard.description,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.7),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -521,20 +494,14 @@ class DashboardWidget extends StatelessWidget {
                       '${dashboard.widgets.length} виджетов',
                       style: TextStyle(
                         fontSize: 12,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.6),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                     Text(
                       _formatDate(dashboard.updatedAt),
                       style: TextStyle(
                         fontSize: 12,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.6),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                   ],
@@ -555,8 +522,7 @@ class ReportFormWidget extends ConsumerStatefulWidget {
     super.key,
     this.onSubmit,
   });
-  final Function(ReportType type, AnalyticsPeriod period, DateTime date)?
-      onSubmit;
+  final Function(ReportType type, AnalyticsPeriod period, DateTime date)? onSubmit;
 
   @override
   ConsumerState<ReportFormWidget> createState() => _ReportFormWidgetState();
@@ -592,8 +558,7 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
               initialValue: formState.selectedType,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               ),
               items: ReportType.values
                   .map(
@@ -621,8 +586,7 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
               initialValue: formState.selectedPeriod,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               ),
               items: AnalyticsPeriod.values
                   .map(
@@ -649,8 +613,7 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
             InkWell(
               onTap: () => _selectDate(context),
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(4),

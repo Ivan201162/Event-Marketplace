@@ -197,10 +197,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
           Text(
             _getRatingText(_rating),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.7),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
           ),
         ],
@@ -264,11 +261,8 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
               border: OutlineInputBorder(),
             ),
             onChanged: (value) {
-              _tags = value
-                  .split(',')
-                  .map((tag) => tag.trim())
-                  .where((tag) => tag.isNotEmpty)
-                  .toList();
+              _tags =
+                  value.split(',').map((tag) => tag.trim()).where((tag) => tag.isNotEmpty).toList();
             },
           ),
           if (_tags.isNotEmpty) ...[
@@ -307,10 +301,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
           Text(
             'Добавьте фотографии (максимум 5)',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.7),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
           ),
           const SizedBox(height: 12),
@@ -416,8 +407,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
         children: [
           Expanded(
             child: OutlinedButton(
-              onPressed:
-                  _isSubmitting ? null : () => Navigator.of(context).pop(),
+              onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
               child: const Text('Отмена'),
             ),
           ),
@@ -432,9 +422,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : Text(
-                      widget.existingReview != null
-                          ? 'Обновить'
-                          : 'Опубликовать',
+                      widget.existingReview != null ? 'Обновить' : 'Опубликовать',
                     ),
             ),
           ),
@@ -552,9 +540,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              widget.existingReview != null
-                  ? 'Отзыв обновлен'
-                  : 'Отзыв отправлен на модерацию',
+              widget.existingReview != null ? 'Отзыв обновлен' : 'Отзыв отправлен на модерацию',
             ),
             backgroundColor: Colors.green,
           ),

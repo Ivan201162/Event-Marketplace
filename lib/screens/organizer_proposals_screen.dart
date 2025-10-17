@@ -12,8 +12,7 @@ class OrganizerProposalsScreen extends StatefulWidget {
   const OrganizerProposalsScreen({super.key});
 
   @override
-  State<OrganizerProposalsScreen> createState() =>
-      _OrganizerProposalsScreenState();
+  State<OrganizerProposalsScreen> createState() => _OrganizerProposalsScreenState();
 }
 
 class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
@@ -68,8 +67,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
     );
   }
 
-  Widget _buildProposalsList(String status) =>
-      StreamBuilder<List<SpecialistProposal>>(
+  Widget _buildProposalsList(String status) => StreamBuilder<List<SpecialistProposal>>(
         stream: ProposalService.getProposalsByStatus(
           _currentUserId!,
           status,
@@ -96,8 +94,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
           return ListView.builder(
             padding: const EdgeInsets.all(16),
             itemCount: proposals.length,
-            itemBuilder: (context, index) =>
-                _buildProposalCard(proposals[index]),
+            itemBuilder: (context, index) => _buildProposalCard(proposals[index]),
           );
         },
       );
@@ -185,8 +182,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
                   ),
                   Chip(
                     label: Text(proposal.statusDisplayName),
-                    backgroundColor:
-                        _getStatusColor(proposal.status).withValues(alpha: 0.2),
+                    backgroundColor: _getStatusColor(proposal.status).withValues(alpha: 0.2),
                   ),
                 ],
               ),
@@ -238,8 +234,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
         ),
       );
 
-  Widget _buildSpecialistsList(List<String> specialistIds) =>
-      FutureBuilder<List<Specialist>>(
+  Widget _buildSpecialistsList(List<String> specialistIds) => FutureBuilder<List<Specialist>>(
         future: _getSpecialists(specialistIds),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -265,14 +260,11 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
                 .map(
                   (specialist) => Chip(
                     avatar: CircleAvatar(
-                      backgroundImage: specialist.photoUrl != null
-                          ? NetworkImage(specialist.photoUrl!)
-                          : null,
+                      backgroundImage:
+                          specialist.photoUrl != null ? NetworkImage(specialist.photoUrl!) : null,
                       child: specialist.photoUrl == null
                           ? Text(
-                              specialist.name.isNotEmpty
-                                  ? specialist.name[0]
-                                  : '?',
+                              specialist.name.isNotEmpty ? specialist.name[0] : '?',
                             )
                           : null,
                     ),
@@ -346,8 +338,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
               _buildDetailRow('Создано', _formatDate(proposal.createdAt)),
               if (proposal.updatedAt != null)
                 _buildDetailRow('Обновлено', _formatDate(proposal.updatedAt!)),
-              if (proposal.message != null)
-                _buildDetailRow('Сообщение', proposal.message!),
+              if (proposal.message != null) _buildDetailRow('Сообщение', proposal.message!),
               const SizedBox(height: 8),
               Text(
                 'Специалисты:',

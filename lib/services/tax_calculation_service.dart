@@ -115,17 +115,14 @@ class TaxCalculationService {
         totalTaxAmount += calculation.taxAmount;
         totalNetAmount += calculation.netAmount;
 
-        taxStatusCounts[calculation.taxStatus] =
-            (taxStatusCounts[calculation.taxStatus] ?? 0) + 1;
+        taxStatusCounts[calculation.taxStatus] = (taxStatusCounts[calculation.taxStatus] ?? 0) + 1;
       }
 
       return {
         'totalGrossAmount': totalGrossAmount,
         'totalTaxAmount': totalTaxAmount,
         'totalNetAmount': totalNetAmount,
-        'averageTaxRate': totalGrossAmount > 0
-            ? (totalTaxAmount / totalGrossAmount) * 100
-            : 0,
+        'averageTaxRate': totalGrossAmount > 0 ? (totalTaxAmount / totalGrossAmount) * 100 : 0,
         'taxStatusCounts': taxStatusCounts.map(
           (key, value) => MapEntry(key.name, value),
         ),

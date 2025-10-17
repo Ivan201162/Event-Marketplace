@@ -12,8 +12,7 @@ final specialistSortingProvider =
 );
 
 /// Провайдер для отсортированных специалистов
-final sortedSpecialistsProvider =
-    FutureProvider.family<List<Specialist>, SortParams>(
+final sortedSpecialistsProvider = FutureProvider.family<List<Specialist>, SortParams>(
   (ref, params) async => MockDataService.getSortedSpecialists(
     categoryId: params.categoryId,
     filters: params.filters,
@@ -110,8 +109,7 @@ final sortStatsProvider = Provider.family<SortStats, SortParams>((ref, params) {
   final specialists = ref.watch(sortedSpecialistsProvider(params));
 
   return specialists.when(
-    data: (specialists) =>
-        SpecialistSortingUtils.getSortStats(specialists, params.sorting),
+    data: (specialists) => SpecialistSortingUtils.getSortStats(specialists, params.sorting),
     loading: () => const SortStats(
       totalCount: 0,
       priceRange: null,
@@ -143,8 +141,7 @@ final extendedSortOptionsProvider = Provider<List<SpecialistSortOption>>(
 );
 
 /// Провайдер для комбинированных параметров (фильтры + сортировка)
-final combinedParamsProvider =
-    Provider.family<SortParams, CombinedParams>((ref, params) {
+final combinedParamsProvider = Provider.family<SortParams, CombinedParams>((ref, params) {
   final filters = ref.watch(params.filtersProvider);
   final sorting = ref.watch(params.sortingProvider);
 

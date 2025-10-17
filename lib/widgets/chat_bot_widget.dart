@@ -182,15 +182,13 @@ class _ChatBotWidgetState extends ConsumerState<ChatBotWidget> {
             ],
             Expanded(
               child: Column(
-                crossAxisAlignment: message.isBot
-                    ? CrossAxisAlignment.start
-                    : CrossAxisAlignment.end,
+                crossAxisAlignment:
+                    message.isBot ? CrossAxisAlignment.start : CrossAxisAlignment.end,
                 children: [
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color:
-                          message.isBot ? Colors.grey[100] : Colors.blue[600],
+                      color: message.isBot ? Colors.grey[100] : Colors.blue[600],
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(
@@ -199,8 +197,7 @@ class _ChatBotWidgetState extends ConsumerState<ChatBotWidget> {
                         Text(
                           message.content,
                           style: TextStyle(
-                            color:
-                                message.isBot ? Colors.black87 : Colors.white,
+                            color: message.isBot ? Colors.black87 : Colors.white,
                           ),
                         ),
                         if (message.suggestions.isNotEmpty) ...[
@@ -220,23 +217,19 @@ class _ChatBotWidgetState extends ConsumerState<ChatBotWidget> {
                                       decoration: BoxDecoration(
                                         color: message.isBot
                                             ? Colors.blue[50]
-                                            : Colors.white
-                                                .withValues(alpha: 0.2),
+                                            : Colors.white.withValues(alpha: 0.2),
                                         borderRadius: BorderRadius.circular(16),
                                         border: Border.all(
                                           color: message.isBot
                                               ? Colors.blue[200]!
-                                              : Colors.white
-                                                  .withValues(alpha: 0.3),
+                                              : Colors.white.withValues(alpha: 0.3),
                                         ),
                                       ),
                                       child: Text(
                                         suggestion,
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: message.isBot
-                                              ? Colors.blue[700]
-                                              : Colors.white,
+                                          color: message.isBot ? Colors.blue[700] : Colors.white,
                                         ),
                                       ),
                                     ),

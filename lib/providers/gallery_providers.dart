@@ -3,8 +3,7 @@ import '../models/gallery_item.dart';
 import '../services/gallery_service.dart';
 
 /// Провайдер сервиса галереи
-final galleryServiceProvider =
-    Provider<GalleryService>((ref) => GalleryService());
+final galleryServiceProvider = Provider<GalleryService>((ref) => GalleryService());
 
 /// Провайдер галереи специалиста
 final specialistGalleryProvider =
@@ -21,8 +20,7 @@ final specialistFeaturedGalleryProvider =
 });
 
 /// Провайдер для загрузки медиа
-final uploadMediaProvider =
-    FutureProvider.family<String, UploadMediaParams>((ref, params) async {
+final uploadMediaProvider = FutureProvider.family<String, UploadMediaParams>((ref, params) async {
   final galleryService = ref.read(galleryServiceProvider);
 
   if (params.type == GalleryItemType.image) {

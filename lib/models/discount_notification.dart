@@ -35,9 +35,7 @@ class DiscountNotification {
       message: data['message']?.toString() ?? '',
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       isRead: data['isRead'] == true,
-      readAt: data['readAt'] != null
-          ? (data['readAt'] as Timestamp).toDate()
-          : null,
+      readAt: data['readAt'] != null ? (data['readAt'] as Timestamp).toDate() : null,
       specialistName: data['specialistName']?.toString(),
       specialistAvatar: data['specialistAvatar']?.toString(),
       customerName: data['customerName']?.toString(),
@@ -47,8 +45,7 @@ class DiscountNotification {
   }
 
   /// Создать из Map
-  factory DiscountNotification.fromMap(Map<String, dynamic> data) =>
-      DiscountNotification(
+  factory DiscountNotification.fromMap(Map<String, dynamic> data) => DiscountNotification(
         id: data['id']?.toString() ?? '',
         customerId: data['customerId']?.toString() ?? '',
         specialistId: data['specialistId']?.toString() ?? '',
@@ -57,13 +54,10 @@ class DiscountNotification {
         newPrice: (data['newPrice'] as num).toDouble(),
         discountPercent: (data['discountPercent'] as num).toDouble(),
         message: data['message']?.toString() ?? '',
-        createdAt: data['createdAt'] != null
-            ? (data['createdAt'] as Timestamp).toDate()
-            : DateTime.now(),
+        createdAt:
+            data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
         isRead: data['isRead'] == true,
-        readAt: data['readAt'] != null
-            ? (data['readAt'] as Timestamp).toDate()
-            : null,
+        readAt: data['readAt'] != null ? (data['readAt'] as Timestamp).toDate() : null,
         specialistName: data['specialistName']?.toString(),
         specialistAvatar: data['specialistAvatar']?.toString(),
         customerName: data['customerName']?.toString(),
@@ -172,8 +166,7 @@ class DiscountNotification {
   /// Получить отформатированную цену
   String get formattedOriginalPrice => '${originalPrice.toStringAsFixed(0)} ₽';
   String get formattedNewPrice => '${newPrice.toStringAsFixed(0)} ₽';
-  String get formattedDiscountAmount =>
-      '${discountAmount.toStringAsFixed(0)} ₽';
+  String get formattedDiscountAmount => '${discountAmount.toStringAsFixed(0)} ₽';
 
   @override
   bool operator ==(Object other) {

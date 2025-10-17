@@ -15,8 +15,7 @@ class EnhancedSpecialistSearchScreen extends ConsumerStatefulWidget {
       _EnhancedSpecialistSearchScreenState();
 }
 
-class _EnhancedSpecialistSearchScreenState
-    extends ConsumerState<EnhancedSpecialistSearchScreen>
+class _EnhancedSpecialistSearchScreenState extends ConsumerState<EnhancedSpecialistSearchScreen>
     with TickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
   late TabController _tabController;
@@ -248,8 +247,7 @@ class _EnhancedSpecialistSearchScreenState
             children: [
               Expanded(
                 child: TextFormField(
-                  initialValue:
-                      _minPrice > 0 ? _minPrice.toInt().toString() : '',
+                  initialValue: _minPrice > 0 ? _minPrice.toInt().toString() : '',
                   decoration: const InputDecoration(
                     labelText: 'От',
                     border: OutlineInputBorder(),
@@ -264,8 +262,7 @@ class _EnhancedSpecialistSearchScreenState
               const SizedBox(width: 16),
               Expanded(
                 child: TextFormField(
-                  initialValue:
-                      _maxPrice < 10000 ? _maxPrice.toInt().toString() : '',
+                  initialValue: _maxPrice < 10000 ? _maxPrice.toInt().toString() : '',
                   decoration: const InputDecoration(
                     labelText: 'До',
                     border: OutlineInputBorder(),
@@ -479,8 +476,7 @@ class _EnhancedSpecialistSearchScreenState
       );
 
   /// Построить чип быстрого фильтра
-  Widget _buildQuickFilterChip(SpecialistCategory category, String label) =>
-      FilterChip(
+  Widget _buildQuickFilterChip(SpecialistCategory category, String label) => FilterChip(
         label: Text(label),
         selected: _quickFilters.contains(category),
         onSelected: (selected) {
@@ -603,9 +599,8 @@ class _EnhancedSpecialistSearchScreenState
 
     return specialistsAsync.when(
       data: (specialists) {
-        final filteredSpecialists = specialists
-            .where((specialist) => _quickFilters.contains(specialist.category))
-            .toList();
+        final filteredSpecialists =
+            specialists.where((specialist) => _quickFilters.contains(specialist.category)).toList();
 
         if (filteredSpecialists.isEmpty) {
           return _buildEmptyState();
@@ -706,24 +701,17 @@ class _EnhancedSpecialistSearchScreenState
         final searchLower = _searchQuery.toLowerCase();
         final matchesName = specialist.name.toLowerCase().contains(searchLower);
         final matchesDescription =
-            specialist.description?.toLowerCase().contains(searchLower) ??
-                false;
-        final matchesCategory =
-            specialist.category.displayName.toLowerCase().contains(searchLower);
-        final matchesLocation =
-            specialist.location?.toLowerCase().contains(searchLower) ?? false;
+            specialist.description?.toLowerCase().contains(searchLower) ?? false;
+        final matchesCategory = specialist.category.displayName.toLowerCase().contains(searchLower);
+        final matchesLocation = specialist.location?.toLowerCase().contains(searchLower) ?? false;
 
-        if (!matchesName &&
-            !matchesDescription &&
-            !matchesCategory &&
-            !matchesLocation) {
+        if (!matchesName && !matchesDescription && !matchesCategory && !matchesLocation) {
           return false;
         }
       }
 
       // Фильтр по категории
-      if (_selectedCategory != null &&
-          specialist.category != _selectedCategory) {
+      if (_selectedCategory != null && specialist.category != _selectedCategory) {
         return false;
       }
 
@@ -738,8 +726,7 @@ class _EnhancedSpecialistSearchScreenState
       }
 
       // Фильтр по опыту
-      if (_selectedExperience != null &&
-          specialist.experienceLevel != _selectedExperience) {
+      if (_selectedExperience != null && specialist.experienceLevel != _selectedExperience) {
         return false;
       }
 
@@ -764,8 +751,7 @@ class _EnhancedSpecialistSearchScreenState
         filtered.sort((a, b) => b.price.compareTo(a.price));
         break;
       case SpecialistSorting.experience:
-        filtered
-            .sort((a, b) => b.yearsOfExperience.compareTo(a.yearsOfExperience));
+        filtered.sort((a, b) => b.yearsOfExperience.compareTo(a.yearsOfExperience));
         break;
       case SpecialistSorting.reviews:
         filtered.sort((a, b) => b.reviewCount.compareTo(a.reviewCount));
@@ -819,8 +805,7 @@ class _EnhancedSpecialistSearchScreenState
   void _navigateToSpecialistProfile(Specialist specialist) {
     Navigator.of(context).push(
       MaterialPageRoute<SpecialistProfileScreen>(
-        builder: (context) =>
-            SpecialistProfileScreen(specialistId: specialist.id),
+        builder: (context) => SpecialistProfileScreen(specialistId: specialist.id),
       ),
     );
   }

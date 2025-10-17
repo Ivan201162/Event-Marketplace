@@ -94,8 +94,7 @@ class EnhancedIdeasService {
   /// Получить идею по ID
   Future<EnhancedIdea?> getIdeaById(String ideaId) async {
     try {
-      final DocumentSnapshot doc =
-          await _firestore.collection('ideas').doc(ideaId).get();
+      final DocumentSnapshot doc = await _firestore.collection('ideas').doc(ideaId).get();
 
       if (doc.exists) {
         return EnhancedIdea.fromMap(doc.data()! as Map<String, dynamic>);
@@ -228,10 +227,7 @@ class EnhancedIdeasService {
       );
 
       // Добавляем комментарий в коллекцию комментариев
-      await _firestore
-          .collection('idea_comments')
-          .doc(commentId)
-          .set(comment.toMap());
+      await _firestore.collection('idea_comments').doc(commentId).set(comment.toMap());
 
       // Обновляем счётчик комментариев в идее
       await _firestore.collection('ideas').doc(ideaId).update({
@@ -266,8 +262,7 @@ class EnhancedIdeasService {
       final comments = <IdeaComment>[];
 
       for (final doc in snapshot.docs) {
-        final comment =
-            IdeaComment.fromMap(doc.data()! as Map<String, dynamic>);
+        final comment = IdeaComment.fromMap(doc.data()! as Map<String, dynamic>);
         comments.add(comment);
       }
 
@@ -300,10 +295,7 @@ class EnhancedIdeasService {
       );
 
       // Добавляем репост в коллекцию репостов
-      await _firestore
-          .collection('idea_shares')
-          .doc(shareId)
-          .set(share.toMap());
+      await _firestore.collection('idea_shares').doc(shareId).set(share.toMap());
 
       // Обновляем счётчик репостов в идее
       await _firestore.collection('ideas').doc(ideaId).update({
@@ -420,18 +412,13 @@ class EnhancedIdeasService {
         final matchesQuery = query.isEmpty ||
             idea.title.toLowerCase().contains(query.toLowerCase()) ||
             idea.description.toLowerCase().contains(query.toLowerCase()) ||
-            idea.tags
-                .any((tag) => tag.toLowerCase().contains(query.toLowerCase()));
+            idea.tags.any((tag) => tag.toLowerCase().contains(query.toLowerCase()));
 
         var matchesBudget = true;
-        if (minBudget != null &&
-            idea.budget != null &&
-            idea.budget! < minBudget) {
+        if (minBudget != null && idea.budget != null && idea.budget! < minBudget) {
           matchesBudget = false;
         }
-        if (maxBudget != null &&
-            idea.budget != null &&
-            idea.budget! > maxBudget) {
+        if (maxBudget != null && idea.budget != null && idea.budget! > maxBudget) {
           matchesBudget = false;
         }
 
@@ -501,10 +488,7 @@ class EnhancedIdeasService {
         isPublic: isPublic,
       );
 
-      await _firestore
-          .collection('idea_collections')
-          .doc(collectionId)
-          .set(collection.toMap());
+      await _firestore.collection('idea_collections').doc(collectionId).set(collection.toMap());
 
       return collection;
     } catch (e) {
@@ -528,8 +512,7 @@ class EnhancedIdeasService {
       final collections = <IdeaCollection>[];
 
       for (final doc in snapshot.docs) {
-        final collection =
-            IdeaCollection.fromMap(doc.data()! as Map<String, dynamic>);
+        final collection = IdeaCollection.fromMap(doc.data()! as Map<String, dynamic>);
         collections.add(collection);
       }
 
@@ -729,11 +712,7 @@ class EnhancedIdeasService {
       }
 
       // Добавляем сообщение в чат
-      await _firestore
-          .collection('chats')
-          .doc(chatId)
-          .collection('messages')
-          .add({
+      await _firestore.collection('chats').doc(chatId).collection('messages').add({
         'id': DateTime.now().millisecondsSinceEpoch.toString(),
         'senderId': userId,
         'type': 'idea_share',

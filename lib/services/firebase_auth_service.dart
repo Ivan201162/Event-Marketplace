@@ -15,8 +15,9 @@ class FirebaseAuthService {
   StreamSubscription<User?>? _authStateSubscription;
 
   /// Поток изменений состояния аутентификации
-  Stream<AppUser?> get authStateChanges => _auth.authStateChanges().asyncMap(
-      (user) async => user != null ? await _convertFirebaseUser(user) : null);
+  Stream<AppUser?> get authStateChanges => _auth
+      .authStateChanges()
+      .asyncMap((user) async => user != null ? await _convertFirebaseUser(user) : null);
 
   /// Получить текущего пользователя
   Future<AppUser?> get currentUser async {
@@ -212,8 +213,7 @@ class FirebaseAuthService {
       return AppUser(
         id: user.uid,
         email: user.email ?? '',
-        displayName:
-            user.displayName ?? user.email?.split('@')[0] ?? 'Пользователь',
+        displayName: user.displayName ?? user.email?.split('@')[0] ?? 'Пользователь',
         role: UserRole.customer, // По умолчанию все пользователи - клиенты
         createdAt: user.metadata.creationTime ?? DateTime.now(),
         additionalData: {
@@ -228,8 +228,7 @@ class FirebaseAuthService {
       return AppUser(
         id: user.uid,
         email: user.email ?? '',
-        displayName:
-            user.displayName ?? user.email?.split('@')[0] ?? 'Пользователь',
+        displayName: user.displayName ?? user.email?.split('@')[0] ?? 'Пользователь',
         role: UserRole.customer,
         createdAt: user.metadata.creationTime ?? DateTime.now(),
         additionalData: {

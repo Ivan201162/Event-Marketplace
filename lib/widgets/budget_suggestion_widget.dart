@@ -98,10 +98,9 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                       children: [
                         ResponsiveText(
                           'Диапазон цен:',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w500,
+                              ),
                         ),
                         ResponsiveText(
                           '${suggestion.minCost.toStringAsFixed(0)} - ${suggestion.maxCost.toStringAsFixed(0)} ₽',
@@ -248,10 +247,9 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                         const SizedBox(height: 2),
                         ResponsiveText(
                           item.specialistName!,
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w500,
+                              ),
                         ),
                       ],
                     ],
@@ -259,8 +257,7 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                 ),
                 if (item.estimatedPrice != null) ...[
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.green.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
@@ -400,12 +397,10 @@ class CreateBudgetSuggestionWidget extends ConsumerStatefulWidget {
   final VoidCallback? onSuggestionCreated;
 
   @override
-  ConsumerState<CreateBudgetSuggestionWidget> createState() =>
-      _CreateBudgetSuggestionWidgetState();
+  ConsumerState<CreateBudgetSuggestionWidget> createState() => _CreateBudgetSuggestionWidgetState();
 }
 
-class _CreateBudgetSuggestionWidgetState
-    extends ConsumerState<CreateBudgetSuggestionWidget> {
+class _CreateBudgetSuggestionWidgetState extends ConsumerState<CreateBudgetSuggestionWidget> {
   final _messageController = TextEditingController();
   final List<BudgetSuggestionItem> _selectedItems = [];
   bool _isLoading = false;
@@ -492,8 +487,7 @@ class _CreateBudgetSuggestionWidgetState
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed:
-                        _canCreateSuggestion() ? _createSuggestion : null,
+                    onPressed: _canCreateSuggestion() ? _createSuggestion : null,
                     icon: _isLoading
                         ? const SizedBox(
                             width: 16,
@@ -652,8 +646,7 @@ class _RejectSuggestionDialog extends StatefulWidget {
   final VoidCallback onRejected;
 
   @override
-  State<_RejectSuggestionDialog> createState() =>
-      _RejectSuggestionDialogState();
+  State<_RejectSuggestionDialog> createState() => _RejectSuggestionDialogState();
 }
 
 class _RejectSuggestionDialogState extends State<_RejectSuggestionDialog> {

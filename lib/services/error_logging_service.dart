@@ -251,8 +251,7 @@ class ErrorLoggingService {
       }
 
       await batch.commit();
-      developer
-          .log('Flushed ${logsToSend.length} performance logs to Firestore');
+      developer.log('Flushed ${logsToSend.length} performance logs to Firestore');
     } catch (e) {
       // Возвращаем логи в кэш при ошибке
       _performanceLogCache.insertAll(0, logsToSend);

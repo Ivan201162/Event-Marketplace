@@ -41,9 +41,7 @@ class ManagedUser {
       permissions: List<String>.from(data['permissions'] ?? []),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      lastLoginAt: data['lastLoginAt'] != null
-          ? (data['lastLoginAt'] as Timestamp).toDate()
-          : null,
+      lastLoginAt: data['lastLoginAt'] != null ? (data['lastLoginAt'] as Timestamp).toDate() : null,
       createdBy: data['createdBy'] as String?,
       lastModifiedBy: data['lastModifiedBy'] as String?,
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
@@ -68,9 +66,8 @@ class ManagedUser {
         permissions: List<String>.from(data['permissions'] ?? []),
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-        lastLoginAt: data['lastLoginAt'] != null
-            ? (data['lastLoginAt'] as Timestamp).toDate()
-            : null,
+        lastLoginAt:
+            data['lastLoginAt'] != null ? (data['lastLoginAt'] as Timestamp).toDate() : null,
         createdBy: data['createdBy'] as String?,
         lastModifiedBy: data['lastModifiedBy'] as String?,
         metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
@@ -101,8 +98,7 @@ class ManagedUser {
         'permissions': permissions,
         'createdAt': Timestamp.fromDate(createdAt),
         'updatedAt': Timestamp.fromDate(updatedAt),
-        'lastLoginAt':
-            lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
+        'lastLoginAt': lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
         'createdBy': createdBy,
         'lastModifiedBy': lastModifiedBy,
         'metadata': metadata,
@@ -209,8 +205,7 @@ class ManagedUser {
       );
 
   @override
-  String toString() =>
-      'ManagedUser(id: $id, email: $email, role: $role, status: $status)';
+  String toString() => 'ManagedUser(id: $id, email: $email, role: $role, status: $status)';
 }
 
 /// Модель роли пользователя
@@ -242,8 +237,7 @@ class UserRoleDefinition {
   }
 
   /// Создать из Map
-  factory UserRoleDefinition.fromMap(Map<String, dynamic> data) =>
-      UserRoleDefinition(
+  factory UserRoleDefinition.fromMap(Map<String, dynamic> data) => UserRoleDefinition(
         id: data['id'] ?? '',
         name: data['name'] ?? '',
         description: data['description'] ?? '',

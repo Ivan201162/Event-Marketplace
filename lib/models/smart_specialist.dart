@@ -124,8 +124,7 @@ class SmartSpecialist {
                 )
                 .toList() ??
             [],
-        subcategories:
-            (data['subcategories'] as List<dynamic>?)?.cast<String>() ?? [],
+        subcategories: (data['subcategories'] as List<dynamic>?)?.cast<String>() ?? [],
         experienceLevel: ExperienceLevel.values.firstWhere(
           (e) => e.name == data['experienceLevel'],
           orElse: () => ExperienceLevel.beginner,
@@ -156,10 +155,8 @@ class SmartSpecialist {
         city: data['city'] as String?,
         isAvailable: data['isAvailable'] as bool? ?? true,
         isVerified: data['isVerified'] as bool? ?? false,
-        portfolioImages:
-            List<String>.from(data['portfolioImages'] as List<dynamic>? ?? []),
-        portfolioVideos:
-            List<String>.from(data['portfolioVideos'] as List<dynamic>? ?? []),
+        portfolioImages: List<String>.from(data['portfolioImages'] as List<dynamic>? ?? []),
+        portfolioVideos: List<String>.from(data['portfolioVideos'] as List<dynamic>? ?? []),
         portfolioItems: (data['portfolioItems'] as List<dynamic>?)
                 ?.map((e) => Map<String, dynamic>.from(e))
                 .toList() ??
@@ -218,9 +215,7 @@ class SmartSpecialist {
             : null,
         busyDates: (data['busyDates'] as List<dynamic>?)
                 ?.map(
-                  (e) => e is Timestamp
-                      ? e.toDate()
-                      : DateTime.tryParse(e.toString()),
+                  (e) => e is Timestamp ? e.toDate() : DateTime.tryParse(e.toString()),
                 )
                 .where((e) => e != null)
                 .cast<DateTime>()
@@ -238,9 +233,7 @@ class SmartSpecialist {
         priceRange: data['priceRange'] != null
             ? PriceRange.fromMap(Map<String, dynamic>.from(data['priceRange']))
             : null,
-        contacts: data['contacts'] != null
-            ? Map<String, String>.from(data['contacts'])
-            : const {},
+        contacts: data['contacts'] != null ? Map<String, String>.from(data['contacts']) : const {},
         servicesWithPrices: data['servicesWithPrices'] != null
             ? Map<String, double>.from(data['servicesWithPrices'])
             : const {},
@@ -248,21 +241,16 @@ class SmartSpecialist {
         styles: List<String>.from(data['styles'] ?? []),
         keywords: List<String>.from(data['keywords'] ?? []),
         reputationScore: data['reputationScore'] as int? ?? 0,
-        compatibilityScore:
-            (data['compatibilityScore'] as num?)?.toDouble() ?? 0.0,
+        compatibilityScore: (data['compatibilityScore'] as num?)?.toDouble() ?? 0.0,
         searchTags: List<String>.from(data['searchTags'] ?? []),
         eventTypes: List<String>.from(data['eventTypes'] ?? []),
         specializations: List<String>.from(data['specializations'] ?? []),
         workingStyle: Map<String, dynamic>.from(data['workingStyle'] ?? {}),
         personalityTraits: List<String>.from(data['personalityTraits'] ?? []),
-        availabilityPattern:
-            Map<String, dynamic>.from(data['availabilityPattern'] ?? {}),
-        clientPreferences:
-            Map<String, dynamic>.from(data['clientPreferences'] ?? {}),
-        performanceMetrics:
-            Map<String, dynamic>.from(data['performanceMetrics'] ?? {}),
-        recommendationFactors:
-            Map<String, dynamic>.from(data['recommendationFactors'] ?? {}),
+        availabilityPattern: Map<String, dynamic>.from(data['availabilityPattern'] ?? {}),
+        clientPreferences: Map<String, dynamic>.from(data['clientPreferences'] ?? {}),
+        performanceMetrics: Map<String, dynamic>.from(data['performanceMetrics'] ?? {}),
+        recommendationFactors: Map<String, dynamic>.from(data['recommendationFactors'] ?? {}),
       );
 
   /// Создать из документа Firestore
@@ -275,8 +263,7 @@ class SmartSpecialist {
   }
 
   /// Создать из обычного Specialist
-  factory SmartSpecialist.fromSpecialist(Specialist specialist) =>
-      SmartSpecialist(
+  factory SmartSpecialist.fromSpecialist(Specialist specialist) => SmartSpecialist(
         id: specialist.id,
         userId: specialist.userId,
         name: specialist.name,
@@ -489,12 +476,10 @@ class SmartSpecialist {
         'imageUrl': imageUrl,
         'photoUrl': photoUrl,
         'experience': experience,
-        'availableDates':
-            availableDates.map((date) => date.toIso8601String()).toList(),
+        'availableDates': availableDates.map((date) => date.toIso8601String()).toList(),
         'createdAt': Timestamp.fromDate(createdAt),
         'updatedAt': Timestamp.fromDate(updatedAt),
-        'lastActiveAt':
-            lastActiveAt != null ? Timestamp.fromDate(lastActiveAt!) : null,
+        'lastActiveAt': lastActiveAt != null ? Timestamp.fromDate(lastActiveAt!) : null,
         'metadata': metadata,
         'avatarUrl': avatarUrl,
         'avatar': avatar,
@@ -739,12 +724,10 @@ class SmartSpecialist {
         eventTypes.addAll(['свадьба', 'корпоратив', 'день рождения', 'юбилей']);
         break;
       case SpecialistCategory.photographer:
-        eventTypes
-            .addAll(['свадьба', 'фотосессия', 'корпоратив', 'день рождения']);
+        eventTypes.addAll(['свадьба', 'фотосессия', 'корпоратив', 'день рождения']);
         break;
       case SpecialistCategory.dj:
-        eventTypes
-            .addAll(['свадьба', 'корпоратив', 'день рождения', 'вечеринка']);
+        eventTypes.addAll(['свадьба', 'корпоратив', 'день рождения', 'вечеринка']);
         break;
       default:
         eventTypes.add('мероприятие');
@@ -772,8 +755,7 @@ class SmartSpecialist {
         'communication': specialist.rating > 4.5 ? 'отличная' : 'хорошая',
         'punctuality': specialist.completionRate ?? 0.9,
         'flexibility': specialist.yearsOfExperience > 3 ? 'высокая' : 'средняя',
-        'creativity':
-            specialist.portfolioImages.isNotEmpty ? 'высокая' : 'средняя',
+        'creativity': specialist.portfolioImages.isNotEmpty ? 'высокая' : 'средняя',
       };
 
   /// Генерация черт характера
@@ -817,8 +799,7 @@ class SmartSpecialist {
             : specialist.price < 50000
                 ? 'средний'
                 : 'премиум',
-        'eventSize':
-            specialist.yearsOfExperience > 5 ? 'любой' : 'малый-средний',
+        'eventSize': specialist.yearsOfExperience > 5 ? 'любой' : 'малый-средний',
         'style': specialist.rating > 4.5 ? 'премиум' : 'стандартный',
       };
 

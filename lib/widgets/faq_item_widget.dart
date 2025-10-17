@@ -70,9 +70,7 @@ class FAQItemWidget extends StatelessWidget {
                             children: [
                               Icon(
                                 faqItem.isPublished ? Icons.lock : Icons.public,
-                                color: faqItem.isPublished
-                                    ? Colors.grey
-                                    : Colors.green,
+                                color: faqItem.isPublished ? Colors.grey : Colors.green,
                               ),
                               const SizedBox(width: 8),
                               Text(

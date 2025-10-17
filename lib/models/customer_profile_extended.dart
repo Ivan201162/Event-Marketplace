@@ -42,8 +42,7 @@ class CustomerProfileExtended {
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       inspirationPhotos: (data['inspirationPhotos'] as List?)
               ?.map(
-                (photo) =>
-                    InspirationPhoto.fromMap(photo as Map<String, dynamic>),
+                (photo) => InspirationPhoto.fromMap(photo as Map<String, dynamic>),
               )
               .toList() ??
           [],
@@ -53,8 +52,7 @@ class CustomerProfileExtended {
               )
               .toList() ??
           [],
-      favoriteSpecialists:
-          List<String>.from(data['favoriteSpecialists'] as List? ?? []),
+      favoriteSpecialists: List<String>.from(data['favoriteSpecialists'] as List? ?? []),
       savedEvents: List<String>.from(data['savedEvents'] as List? ?? []),
       extendedPreferences: data['extendedPreferences'] != null
           ? CustomerPreferences.fromMap(
@@ -96,8 +94,7 @@ class CustomerProfileExtended {
         'preferences': preferences,
         'createdAt': Timestamp.fromDate(createdAt),
         'updatedAt': Timestamp.fromDate(updatedAt),
-        'inspirationPhotos':
-            inspirationPhotos.map((photo) => photo.toMap()).toList(),
+        'inspirationPhotos': inspirationPhotos.map((photo) => photo.toMap()).toList(),
         'notes': notes.map((note) => note.toMap()).toList(),
         'favoriteSpecialists': favoriteSpecialists,
         'savedEvents': savedEvents,
@@ -158,8 +155,7 @@ class InspirationPhoto {
   });
 
   /// Создаёт фото из Map
-  factory InspirationPhoto.fromMap(Map<String, dynamic> map) =>
-      InspirationPhoto(
+  factory InspirationPhoto.fromMap(Map<String, dynamic> map) => InspirationPhoto(
         id: map['id'] as String,
         url: map['url'] as String,
         caption: map['caption'] as String?,
@@ -292,12 +288,9 @@ class CustomerPreferences {
   });
 
   /// Создаёт предпочтения из Map
-  factory CustomerPreferences.fromMap(Map<String, dynamic> map) =>
-      CustomerPreferences(
-        preferredCategories:
-            List<String>.from(map['preferredCategories'] as List? ?? []),
-        preferredLocations:
-            List<String>.from(map['preferredLocations'] as List? ?? []),
+  factory CustomerPreferences.fromMap(Map<String, dynamic> map) => CustomerPreferences(
+        preferredCategories: List<String>.from(map['preferredCategories'] as List? ?? []),
+        preferredLocations: List<String>.from(map['preferredLocations'] as List? ?? []),
         preferredTimeStart: map['preferredTimeStart'] != null
             ? TimeOfDay.fromMap(
                 map['preferredTimeStart'] as Map<String, dynamic>,
@@ -395,8 +388,7 @@ class TimeOfDay {
 /// Расширения для работы с расширенным профилем
 extension CustomerProfileExtendedExtension on CustomerProfileExtended {
   /// Получает закреплённые заметки
-  List<CustomerNote> get pinnedNotes =>
-      notes.where((note) => note.isPinned).toList();
+  List<CustomerNote> get pinnedNotes => notes.where((note) => note.isPinned).toList();
 
   /// Получает публичные фото
   List<InspirationPhoto> get publicPhotos =>
@@ -414,8 +406,7 @@ extension CustomerProfileExtendedExtension on CustomerProfileExtended {
   Set<String> get allNoteTags => notes.expand((note) => note.tags).toSet();
 
   /// Получает все теги из фото
-  Set<String> get allPhotoTags =>
-      inspirationPhotos.expand((photo) => photo.tags).toSet();
+  Set<String> get allPhotoTags => inspirationPhotos.expand((photo) => photo.tags).toSet();
 
   /// Получает все теги
   Set<String> get allTags => {...allNoteTags, ...allPhotoTags};

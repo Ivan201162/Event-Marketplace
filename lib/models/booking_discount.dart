@@ -24,18 +24,12 @@ class BookingDiscount {
       percent: (data['percent'] as num?)?.toDouble(),
       oldPrice: (data['oldPrice'] as num?)?.toDouble(),
       newPrice: (data['newPrice'] as num?)?.toDouble(),
-      offeredAt: data['offeredAt'] != null
-          ? (data['offeredAt'] as Timestamp).toDate()
-          : null,
-      expiresAt: data['expiresAt'] != null
-          ? (data['expiresAt'] as Timestamp).toDate()
-          : null,
+      offeredAt: data['offeredAt'] != null ? (data['offeredAt'] as Timestamp).toDate() : null,
+      expiresAt: data['expiresAt'] != null ? (data['expiresAt'] as Timestamp).toDate() : null,
       offeredBy: data['offeredBy'] as String? ?? 'specialist',
       reason: data['reason'] as String?,
       isAccepted: data['isAccepted'] as bool? ?? false,
-      acceptedAt: data['acceptedAt'] != null
-          ? (data['acceptedAt'] as Timestamp).toDate()
-          : null,
+      acceptedAt: data['acceptedAt'] != null ? (data['acceptedAt'] as Timestamp).toDate() : null,
       acceptedBy: data['acceptedBy'] as String?,
     );
   }
@@ -46,18 +40,12 @@ class BookingDiscount {
         percent: (data['percent'] as num?)?.toDouble(),
         oldPrice: (data['oldPrice'] as num?)?.toDouble(),
         newPrice: (data['newPrice'] as num?)?.toDouble(),
-        offeredAt: data['offeredAt'] != null
-            ? (data['offeredAt'] as Timestamp).toDate()
-            : null,
-        expiresAt: data['expiresAt'] != null
-            ? (data['expiresAt'] as Timestamp).toDate()
-            : null,
+        offeredAt: data['offeredAt'] != null ? (data['offeredAt'] as Timestamp).toDate() : null,
+        expiresAt: data['expiresAt'] != null ? (data['expiresAt'] as Timestamp).toDate() : null,
         offeredBy: data['offeredBy'] as String? ?? 'specialist',
         reason: data['reason'] as String?,
         isAccepted: data['isAccepted'] as bool? ?? false,
-        acceptedAt: data['acceptedAt'] != null
-            ? (data['acceptedAt'] as Timestamp).toDate()
-            : null,
+        acceptedAt: data['acceptedAt'] != null ? (data['acceptedAt'] as Timestamp).toDate() : null,
         acceptedBy: data['acceptedBy'] as String?,
       );
   final bool isOffered;
@@ -83,8 +71,7 @@ class BookingDiscount {
         'offeredBy': offeredBy,
         'reason': reason,
         'isAccepted': isAccepted,
-        'acceptedAt':
-            acceptedAt != null ? Timestamp.fromDate(acceptedAt!) : null,
+        'acceptedAt': acceptedAt != null ? Timestamp.fromDate(acceptedAt!) : null,
         'acceptedBy': acceptedBy,
       };
 
@@ -191,8 +178,7 @@ class BookingDiscount {
       );
 
   @override
-  String toString() =>
-      'BookingDiscount(isOffered: $isOffered, percent: $percent, status: $status)';
+  String toString() => 'BookingDiscount(isOffered: $isOffered, percent: $percent, status: $status)';
 }
 
 /// Статус скидки

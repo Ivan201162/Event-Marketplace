@@ -390,8 +390,7 @@ extension BadgeListExtension on List<Badge> {
       where((badge) => badge.type.info.category == category).toList();
 
   /// Получает последние бейджи
-  List<Badge> get recent =>
-      toList()..sort((a, b) => b.earnedAt.compareTo(a.earnedAt));
+  List<Badge> get recent => toList()..sort((a, b) => b.earnedAt.compareTo(a.earnedAt));
 
   /// Получает видимые бейджи
   List<Badge> get visible => where((badge) => badge.isVisible).toList();

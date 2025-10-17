@@ -71,7 +71,5 @@ class AuthErrorNotifier extends Notifier<String?> {
   }
 }
 
-final authLoadingProvider =
-    NotifierProvider<AuthLoadingNotifier, bool>(AuthLoadingNotifier.new);
-final authErrorProvider =
-    NotifierProvider<AuthErrorNotifier, String?>(AuthErrorNotifier.new);
+final authLoadingProvider = NotifierProvider<AuthLoadingNotifier, bool>(AuthLoadingNotifier.new);
+final authErrorProvider = NotifierProvider<AuthErrorNotifier, String?>(AuthErrorNotifier.new);

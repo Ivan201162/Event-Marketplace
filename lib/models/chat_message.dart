@@ -66,9 +66,7 @@ class ChatMessage {
       fileName: data['fileName'] as String?,
       fileSize: data['fileSize'] as int?,
       duration: data['duration'] as int?,
-      location: data['location'] != null
-          ? Map<String, double>.from(data['location'])
-          : null,
+      location: data['location'] != null ? Map<String, double>.from(data['location']) : null,
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
   }

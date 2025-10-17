@@ -19,9 +19,7 @@ class SavedIdea {
       id: doc.id,
       userId: data['userId'] ?? '',
       ideaId: data['ideaId'] ?? '',
-      savedAt: data['savedAt'] != null
-          ? (data['savedAt'] as Timestamp).toDate()
-          : DateTime.now(),
+      savedAt: data['savedAt'] != null ? (data['savedAt'] as Timestamp).toDate() : DateTime.now(),
       notes: data['notes'] as String?,
       isFavorite: data['isFavorite'] as bool? ?? false,
       tags: List<String>.from(data['tags'] ?? []),
@@ -33,9 +31,7 @@ class SavedIdea {
         id: map['id'] ?? '',
         userId: map['userId'] ?? '',
         ideaId: map['ideaId'] ?? '',
-        savedAt: map['savedAt'] != null
-            ? (map['savedAt'] as Timestamp).toDate()
-            : DateTime.now(),
+        savedAt: map['savedAt'] != null ? (map['savedAt'] as Timestamp).toDate() : DateTime.now(),
         notes: map['notes'] as String?,
         isFavorite: map['isFavorite'] ?? false,
         tags: List<String>.from(map['tags'] ?? []),

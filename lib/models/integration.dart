@@ -38,8 +38,7 @@ class Integration {
       config: Map<String, dynamic>.from(
         (data['config'] as Map<dynamic, dynamic>?) ?? {},
       ),
-      permissions:
-          List<String>.from((data['permissions'] as List<dynamic>?) ?? []),
+      permissions: List<String>.from((data['permissions'] as List<dynamic>?) ?? []),
       iconUrl: data['iconUrl'] as String?,
       websiteUrl: data['websiteUrl'] as String?,
       documentationUrl: data['documentationUrl'] as String?,
@@ -387,8 +386,7 @@ class LocationData {
         accuracy: (map['accuracy'] as num?)?.toDouble(),
         altitude: (map['altitude'] as num?)?.toDouble(),
         speed: (map['speed'] as num?)?.toDouble(),
-        timestamp:
-            DateTime.fromMillisecondsSinceEpoch(map['timestamp'] as int? ?? 0),
+        timestamp: DateTime.fromMillisecondsSinceEpoch(map['timestamp'] as int? ?? 0),
       );
   final double latitude;
   final double longitude;

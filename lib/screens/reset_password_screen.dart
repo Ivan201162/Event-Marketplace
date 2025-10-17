@@ -9,8 +9,7 @@ class ResetPasswordScreen extends ConsumerStatefulWidget {
   const ResetPasswordScreen({super.key});
 
   @override
-  ConsumerState<ResetPasswordScreen> createState() =>
-      _ResetPasswordScreenState();
+  ConsumerState<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
 class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
@@ -98,10 +97,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
             Text(
               'Введите ваш email адрес, и мы отправим вам ссылку для сброса пароля',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.7),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
               textAlign: TextAlign.center,
             ),
@@ -119,8 +115,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                 if (value == null || value.isEmpty) {
                   return 'Пожалуйста, введите email';
                 }
-                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                    .hasMatch(value)) {
+                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
                   return 'Пожалуйста, введите корректный email';
                 }
                 return null;
@@ -171,10 +166,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
           Text(
             'Мы отправили ссылку для сброса пароля на адрес:\n${_emailController.text}',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.7),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
             textAlign: TextAlign.center,
           ),

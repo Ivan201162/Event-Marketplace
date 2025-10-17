@@ -19,12 +19,10 @@ class InspirationPhotosScreen extends ConsumerStatefulWidget {
   final String userId;
 
   @override
-  ConsumerState<InspirationPhotosScreen> createState() =>
-      _InspirationPhotosScreenState();
+  ConsumerState<InspirationPhotosScreen> createState() => _InspirationPhotosScreenState();
 }
 
-class _InspirationPhotosScreenState
-    extends ConsumerState<InspirationPhotosScreen>
+class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   // final ImagePicker _imagePicker = ImagePicker();
@@ -135,8 +133,7 @@ class _InspirationPhotosScreenState
         ],
       );
 
-  Widget _buildAllPhotosTab(AsyncValue<List<InspirationPhoto>> photosAsync) =>
-      photosAsync.when(
+  Widget _buildAllPhotosTab(AsyncValue<List<InspirationPhoto>> photosAsync) => photosAsync.when(
         data: (photos) {
           if (photos.isEmpty) {
             return _buildEmptyState(
@@ -210,8 +207,7 @@ class _InspirationPhotosScreenState
   }
 
   Widget _buildTagCard(String tag) {
-    final photosByTagAsync =
-        ref.watch(photosByTagProvider((widget.userId, tag)));
+    final photosByTagAsync = ref.watch(photosByTagProvider((widget.userId, tag)));
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -229,8 +225,7 @@ class _InspirationPhotosScreenState
     );
   }
 
-  Widget _buildEmptyState(String title, String subtitle, IconData icon) =>
-      Center(
+  Widget _buildEmptyState(String title, String subtitle, IconData icon) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -259,8 +254,7 @@ class _InspirationPhotosScreenState
             Text('Ошибка: $error'),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () =>
-                  ref.refresh(inspirationPhotosProvider(widget.userId)),
+              onPressed: () => ref.refresh(inspirationPhotosProvider(widget.userId)),
               child: const Text('Повторить'),
             ),
           ],
@@ -387,8 +381,7 @@ class _InspirationPhotosScreenState
                       const Spacer(),
                       Text(
                         _formatDate(photo.uploadedAt),
-                        style:
-                            const TextStyle(color: Colors.grey, fontSize: 12),
+                        style: const TextStyle(color: Colors.grey, fontSize: 12),
                       ),
                     ],
                   ),

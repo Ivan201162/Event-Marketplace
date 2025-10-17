@@ -6,8 +6,7 @@ import '../services/story_service.dart';
 final storyServiceProvider = Provider<StoryService>((ref) => StoryService());
 
 /// Провайдер сторис пользователя
-final userStoriesProvider =
-    FutureProvider.family<List<Story>, String>((ref, userId) async {
+final userStoriesProvider = FutureProvider.family<List<Story>, String>((ref, userId) async {
   final storyService = ref.read(storyServiceProvider);
   return storyService.getUserStories(userId);
 });
@@ -19,22 +18,19 @@ final allStoriesProvider = FutureProvider<List<Story>>((ref) async {
 });
 
 /// Провайдер сторис по ID
-final storyByIdProvider =
-    FutureProvider.family<Story?, String>((ref, storyId) async {
+final storyByIdProvider = FutureProvider.family<Story?, String>((ref, storyId) async {
   final storyService = ref.read(storyServiceProvider);
   return await storyService.getStoryById(storyId);
 });
 
 /// Провайдер просмотров сторис
-final storyViewsProvider =
-    FutureProvider.family<List<StoryView>, String>((ref, storyId) async {
+final storyViewsProvider = FutureProvider.family<List<StoryView>, String>((ref, storyId) async {
   final storyService = ref.read(storyServiceProvider);
   return await storyService.getStoryViews(storyId);
 });
 
 /// Провайдер для создания сторис
-final createStoryProvider =
-    FutureProvider.family<String, CreateStory>((ref, createStory) async {
+final createStoryProvider = FutureProvider.family<String, CreateStory>((ref, createStory) async {
   final storyService = ref.read(storyServiceProvider);
   return storyService.createStory(
     specialistId: createStory.specialistId,

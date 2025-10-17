@@ -142,8 +142,7 @@ class AnimatedPageRoute<T> extends PageRouteBuilder<T> {
           pageBuilder: (context, animation, secondaryAnimation) => page,
           transitionDuration: duration,
           reverseTransitionDuration: reverseDuration,
-          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-              _buildTransition(
+          transitionsBuilder: (context, animation, secondaryAnimation, child) => _buildTransition(
             context,
             animation,
             secondaryAnimation,
@@ -291,8 +290,7 @@ class AnimatedListItem extends StatefulWidget {
   State<AnimatedListItem> createState() => _AnimatedListItemState();
 }
 
-class _AnimatedListItemState extends State<AnimatedListItem>
-    with SingleTickerProviderStateMixin {
+class _AnimatedListItemState extends State<AnimatedListItem> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 

@@ -15,16 +15,13 @@ class BudgetRecommendationsWidget extends StatefulWidget {
   final double currentBudget;
   final List<String> selectedSpecialistIds;
   final String userId;
-  final void Function(double additionalBudget, SpecialistCategory category)?
-      onBudgetIncrease;
+  final void Function(double additionalBudget, SpecialistCategory category)? onBudgetIncrease;
 
   @override
-  State<BudgetRecommendationsWidget> createState() =>
-      _BudgetRecommendationsWidgetState();
+  State<BudgetRecommendationsWidget> createState() => _BudgetRecommendationsWidgetState();
 }
 
-class _BudgetRecommendationsWidgetState
-    extends State<BudgetRecommendationsWidget> {
+class _BudgetRecommendationsWidgetState extends State<BudgetRecommendationsWidget> {
   final BudgetRecommendationService _service = BudgetRecommendationService();
   List<BudgetRecommendation> _recommendations = [];
   bool _isLoading = false;
@@ -183,8 +180,7 @@ class _BudgetRecommendationsList extends StatelessWidget {
   });
 
   final List<BudgetRecommendation> recommendations;
-  final void Function(double additionalBudget, SpecialistCategory category)?
-      onBudgetIncrease;
+  final void Function(double additionalBudget, SpecialistCategory category)? onBudgetIncrease;
   final void Function(String)? onRecommendationShown;
 
   @override

@@ -88,8 +88,7 @@ class SpecialistTestData {
         id: 'photographer_2',
         userId: 'user_2',
         name: 'Михаил Соколов',
-        description:
-            'Фотограф-документалист, работаю в жанре репортажной и событийной фотографии.',
+        description: 'Фотограф-документалист, работаю в жанре репортажной и событийной фотографии.',
         category: SpecialistCategory.photographer,
         experienceLevel: ExperienceLevel.advanced,
         yearsOfExperience: 5,
@@ -134,8 +133,7 @@ class SpecialistTestData {
         id: 'videographer_1',
         userId: 'user_3',
         name: 'Елена Волкова',
-        description:
-            'Видеограф и монтажер. Создаю качественные видеоролики для любых мероприятий.',
+        description: 'Видеограф и монтажер. Создаю качественные видеоролики для любых мероприятий.',
         category: SpecialistCategory.videographer,
         experienceLevel: ExperienceLevel.expert,
         yearsOfExperience: 10,
@@ -254,8 +252,7 @@ class SpecialistTestData {
         id: 'decorator_1',
         userId: 'user_6',
         name: 'Мария Иванова',
-        description:
-            'Декоратор и флорист. Создаю уникальные декорации для любых мероприятий.',
+        description: 'Декоратор и флорист. Создаю уникальные декорации для любых мероприятий.',
         category: SpecialistCategory.decorator,
         experienceLevel: ExperienceLevel.expert,
         yearsOfExperience: 9,
@@ -324,8 +321,7 @@ class SpecialistTestData {
         id: 'caterer_1',
         userId: 'user_8',
         name: 'ООО "Вкусные решения"',
-        description:
-            'Кейтеринговая компания. Организуем питание для любых мероприятий.',
+        description: 'Кейтеринговая компания. Организуем питание для любых мероприятий.',
         category: SpecialistCategory.caterer,
         experienceLevel: ExperienceLevel.expert,
         yearsOfExperience: 15,
@@ -460,8 +456,7 @@ class SpecialistTestData {
         id: 'dj_2',
         userId: 'user_12',
         name: 'Максим Петров',
-        description:
-            'DJ и звукорежиссер. Работаю в различных жанрах электронной музыки.',
+        description: 'DJ и звукорежиссер. Работаю в различных жанрах электронной музыки.',
         category: SpecialistCategory.dj,
         experienceLevel: ExperienceLevel.intermediate,
         yearsOfExperience: 4,
@@ -492,8 +487,7 @@ class SpecialistTestData {
         id: 'host_2',
         userId: 'user_13',
         name: 'Наталья Козлова',
-        description:
-            'Ведущая мероприятий и тамада. Создаю незабываемые праздники.',
+        description: 'Ведущая мероприятий и тамада. Создаю незабываемые праздники.',
         category: SpecialistCategory.host,
         experienceLevel: ExperienceLevel.advanced,
         yearsOfExperience: 8,
@@ -563,8 +557,7 @@ class SpecialistTestData {
         for (final specialist in specialists) {
           // Категории
           final category = specialist.category.displayName;
-          stats['categories'][category] =
-              (stats['categories'][category] ?? 0) + 1;
+          stats['categories'][category] = (stats['categories'][category] ?? 0) + 1;
 
           // Города
           final city = specialist.city ?? 'Не указан';

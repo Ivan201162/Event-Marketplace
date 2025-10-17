@@ -103,8 +103,7 @@ class DocumentationManagementService {
   Stream<Documentation> get documentStream => _documentStreamController.stream;
 
   /// Поток шаблонов
-  Stream<DocumentTemplate> get templateStream =>
-      _templateStreamController.stream;
+  Stream<DocumentTemplate> get templateStream => _templateStreamController.stream;
 
   /// Поток комментариев
   Stream<DocumentComment> get commentStream => _commentStreamController.stream;
@@ -160,10 +159,7 @@ class DocumentationManagementService {
         updatedBy: user.uid,
       );
 
-      await _firestore
-          .collection(_documentsCollection)
-          .doc(document.id)
-          .set(document.toMap());
+      await _firestore.collection(_documentsCollection).doc(document.id).set(document.toMap());
 
       _documentCache[document.id] = document;
       _documentStreamController.add(document);
@@ -216,10 +212,7 @@ class DocumentationManagementService {
         updatedBy: user.uid,
       );
 
-      await _firestore
-          .collection(_documentsCollection)
-          .doc(id)
-          .update(updatedDocument.toMap());
+      await _firestore.collection(_documentsCollection).doc(id).update(updatedDocument.toMap());
 
       _documentCache[id] = updatedDocument;
       _documentStreamController.add(updatedDocument);
@@ -323,10 +316,7 @@ class DocumentationManagementService {
         updatedBy: user.uid,
       );
 
-      await _firestore
-          .collection(_templatesCollection)
-          .doc(template.id)
-          .set(template.toMap());
+      await _firestore.collection(_templatesCollection).doc(template.id).set(template.toMap());
 
       _templateCache[template.id] = template;
       _templateStreamController.add(template);
@@ -370,10 +360,7 @@ class DocumentationManagementService {
         updatedBy: user.uid,
       );
 
-      await _firestore
-          .collection(_templatesCollection)
-          .doc(id)
-          .update(updatedTemplate.toMap());
+      await _firestore.collection(_templatesCollection).doc(id).update(updatedTemplate.toMap());
 
       _templateCache[id] = updatedTemplate;
       _templateStreamController.add(updatedTemplate);
@@ -445,10 +432,7 @@ class DocumentationManagementService {
         updatedAt: now,
       );
 
-      await _firestore
-          .collection(_commentsCollection)
-          .doc(comment.id)
-          .set(comment.toMap());
+      await _firestore.collection(_commentsCollection).doc(comment.id).set(comment.toMap());
 
       _commentCache[comment.id] = comment;
       _commentStreamController.add(comment);
@@ -479,10 +463,7 @@ class DocumentationManagementService {
         updatedAt: DateTime.now(),
       );
 
-      await _firestore
-          .collection(_commentsCollection)
-          .doc(id)
-          .update(updatedComment.toMap());
+      await _firestore.collection(_commentsCollection).doc(id).update(updatedComment.toMap());
 
       _commentCache[id] = updatedComment;
       _commentStreamController.add(updatedComment);
@@ -496,9 +477,7 @@ class DocumentationManagementService {
 
   /// Получение комментариев к документу
   List<DocumentComment> getDocumentComments(String documentId) =>
-      _commentCache.values
-          .where((comment) => comment.documentId == documentId)
-          .toList();
+      _commentCache.values.where((comment) => comment.documentId == documentId).toList();
 
   /// Получение всех комментариев
   List<DocumentComment> getAllComments() => _commentCache.values.toList();
@@ -559,15 +538,13 @@ class DocumentationManagementService {
           'byType': _groupTemplatesByType(templates),
           'byCategory': _groupTemplatesByCategory(templates),
           'public': templates.where((t) => t.isPublic).length,
-          'totalUsage':
-              templates.fold(0, (sum, template) => sum + template.usageCount),
+          'totalUsage': templates.fold(0, (sum, template) => sum + template.usageCount),
         },
         'comments': {
           'total': comments.length,
           'resolved': comments.where((c) => c.isResolved).length,
           'unresolved': comments.where((c) => !c.isResolved).length,
-          'totalLikes':
-              comments.fold(0, (sum, comment) => sum + comment.likes.length),
+          'totalLikes': comments.fold(0, (sum, comment) => sum + comment.likes.length),
         },
       };
     } catch (e) {
@@ -616,8 +593,7 @@ class DocumentationManagementService {
   Map<String, int> _groupTemplatesByCategory(List<DocumentTemplate> templates) {
     final groups = <String, int>{};
     for (final template in templates) {
-      groups[template.category.value] =
-          (groups[template.category.value] ?? 0) + 1;
+      groups[template.category.value] = (groups[template.category.value] ?? 0) + 1;
     }
     return groups;
   }
@@ -669,9 +645,7 @@ class DocumentationManagementService {
   /// Генерация уникального ID
   String _generateId() =>
       DateTime.now().millisecondsSinceEpoch.toString() +
-      (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000))
-          .round()
-          .toString();
+      (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000)).round().toString();
 
   /// Закрытие сервиса
   Future<void> dispose() async {

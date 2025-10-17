@@ -137,8 +137,7 @@ class PerformanceOptimizations {
         pageBuilder: (context, animation, secondaryAnimation) => child,
         transitionDuration: duration,
         reverseTransitionDuration: duration,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-            FadeTransition(
+        transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(
           opacity: animation,
           child: child,
         ),
@@ -155,16 +154,15 @@ class PerformanceOptimizations {
       );
 
   /// Оптимизация состояния
-  static StateNotifierProvider<T, U>
-      optimizeStateNotifier<T extends StateNotifier<U>, U>({
+  static StateNotifierProvider<T, U> optimizeStateNotifier<T extends StateNotifier<U>, U>({
     required T Function() create,
     required U initial,
     String? name,
   }) =>
-          StateNotifierProvider<T, U>(
-            (ref) => create(),
-            name: name,
-          );
+      StateNotifierProvider<T, U>(
+        (ref) => create(),
+        name: name,
+      );
 
   /// Оптимизация кэширования
   static Widget optimizeCache({

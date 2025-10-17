@@ -64,18 +64,14 @@ class Guest {
   String? get guestPhone => phone;
   String? get guestPhotoUrl => avatar;
   int get greetingsCount => metadata['greetingsCount'] as int? ?? 0;
-  DateTime? get registeredAt => metadata['registeredAt'] != null
-      ? DateTime.parse(metadata['registeredAt'] as String)
-      : null;
-  DateTime? get confirmedAt => metadata['confirmedAt'] != null
-      ? DateTime.parse(metadata['confirmedAt'] as String)
-      : null;
-  DateTime? get checkedInAt => metadata['checkedInAt'] != null
-      ? DateTime.parse(metadata['checkedInAt'] as String)
-      : null;
-  DateTime? get checkedOutAt => metadata['checkedOutAt'] != null
-      ? DateTime.parse(metadata['checkedOutAt'] as String)
-      : null;
+  DateTime? get registeredAt =>
+      metadata['registeredAt'] != null ? DateTime.parse(metadata['registeredAt'] as String) : null;
+  DateTime? get confirmedAt =>
+      metadata['confirmedAt'] != null ? DateTime.parse(metadata['confirmedAt'] as String) : null;
+  DateTime? get checkedInAt =>
+      metadata['checkedInAt'] != null ? DateTime.parse(metadata['checkedInAt'] as String) : null;
+  DateTime? get checkedOutAt =>
+      metadata['checkedOutAt'] != null ? DateTime.parse(metadata['checkedOutAt'] as String) : null;
 
   /// Цвет статуса
   String get statusColor {
@@ -306,8 +302,7 @@ class GuestEventAccess {
   });
 
   /// Создать из Map
-  factory GuestEventAccess.fromMap(Map<String, dynamic> data) =>
-      GuestEventAccess(
+  factory GuestEventAccess.fromMap(Map<String, dynamic> data) => GuestEventAccess(
         id: data['id'] as String? ?? '',
         eventId: data['eventId'] as String? ?? '',
         accessCode: data['accessCode'] as String? ?? '',

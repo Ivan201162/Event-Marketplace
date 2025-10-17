@@ -7,8 +7,7 @@ import '../services/event_service.dart';
 final eventServiceProvider = Provider<EventService>((ref) => EventService());
 
 /// Провайдер для формы создания события
-final createEventProvider =
-    NotifierProvider<CreateEventNotifier, CreateEventState>(
+final createEventProvider = NotifierProvider<CreateEventNotifier, CreateEventState>(
   CreateEventNotifier.new,
 );
 
@@ -56,15 +55,13 @@ final eventsProvider = FutureProvider<List<Event>>((ref) async {
 });
 
 /// Провайдер событий пользователя
-final userEventsProvider =
-    FutureProvider.family<List<Event>, String>((ref, userId) async {
+final userEventsProvider = FutureProvider.family<List<Event>, String>((ref, userId) async {
   final eventService = ref.read(eventServiceProvider);
   return eventService.getUserEvents(userId).first;
 });
 
 /// Провайдер события по ID
-final eventProvider =
-    FutureProvider.family<Event?, String>((ref, eventId) async {
+final eventProvider = FutureProvider.family<Event?, String>((ref, eventId) async {
   final eventService = ref.read(eventServiceProvider);
   return eventService.getEvent(eventId);
 });

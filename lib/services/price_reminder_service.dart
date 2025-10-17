@@ -31,8 +31,7 @@ class PriceReminderService {
   Future<void> sendPriceUpdateReminder(String specialistId) async {
     try {
       // Получаем FCM токены специалиста
-      final specialistDoc =
-          await _firestore.collection('specialists').doc(specialistId).get();
+      final specialistDoc = await _firestore.collection('specialists').doc(specialistId).get();
 
       if (!specialistDoc.exists) return;
 
@@ -44,8 +43,7 @@ class PriceReminderService {
       // Создаем уведомление
       final notification = {
         'title': 'Обновите цены на услуги',
-        'body':
-            'Ваши цены не обновлялись более 30 дней. Обновите их для привлечения клиентов.',
+        'body': 'Ваши цены не обновлялись более 30 дней. Обновите их для привлечения клиентов.',
         'data': {
           'type': 'price_update_reminder',
           'specialistId': specialistId,
@@ -119,8 +117,7 @@ class PriceReminderService {
       return {
         'needReminder': needReminderSnapshot.docs.length,
         'reminded': remindedSnapshot.docs.length,
-        'total':
-            needReminderSnapshot.docs.length + remindedSnapshot.docs.length,
+        'total': needReminderSnapshot.docs.length + remindedSnapshot.docs.length,
       };
     } catch (e) {
       throw Exception('Ошибка получения статистики напоминаний: $e');
@@ -163,9 +160,8 @@ class PriceReminderService {
           'email': data['email'] ?? '',
           'lastPriceUpdateAt': data['lastPriceUpdateAt'],
           'lastPriceReminderAt': data['lastPriceReminderAt'],
-          'daysSinceUpdate': DateTime.now()
-              .difference((data['lastPriceUpdateAt'] as Timestamp).toDate())
-              .inDays,
+          'daysSinceUpdate':
+              DateTime.now().difference((data['lastPriceUpdateAt'] as Timestamp).toDate()).inDays,
         };
       }).toList();
     } catch (e) {

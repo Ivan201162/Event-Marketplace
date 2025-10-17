@@ -34,8 +34,7 @@ class StoriesListWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildStoryGroup(BuildContext context, SpecialistStoryGroup group) =>
-      GestureDetector(
+  Widget _buildStoryGroup(BuildContext context, SpecialistStoryGroup group) => GestureDetector(
         onTap: () => _openStories(context, group),
         child: Container(
           width: 80,
@@ -60,10 +59,7 @@ class StoriesListWidget extends ConsumerWidget {
                     ),
                     child: CircleAvatar(
                       radius: 28,
-                      backgroundColor: Theme.of(context)
-                          .colorScheme
-                          .primary
-                          .withValues(alpha: 0.1),
+                      backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                       backgroundImage: group.specialistAvatar != null
                           ? NetworkImage(group.specialistAvatar!)
                           : null,
@@ -154,8 +150,7 @@ class SpecialistStoriesWidget extends ConsumerWidget {
   final bool isOwner;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) =>
-      StreamBuilder<List<SpecialistStory>>(
+  Widget build(BuildContext context, WidgetRef ref) => StreamBuilder<List<SpecialistStory>>(
         stream: _getStoriesStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -189,9 +184,7 @@ class SpecialistStoriesWidget extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              isOwner
-                  ? 'У вас пока нет сторис'
-                  : 'У специалиста пока нет сторис',
+              isOwner ? 'У вас пока нет сторис' : 'У специалиста пока нет сторис',
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
@@ -262,8 +255,7 @@ class SpecialistStoriesWidget extends ConsumerWidget {
         ],
       );
 
-  Widget _buildStoryThumbnail(BuildContext context, SpecialistStory story) =>
-      GestureDetector(
+  Widget _buildStoryThumbnail(BuildContext context, SpecialistStory story) => GestureDetector(
         onTap: () => _openStory(context, story),
         child: Container(
           decoration: BoxDecoration(
@@ -383,8 +375,7 @@ class SpecialistStoriesWidget extends ConsumerWidget {
       '/create-story',
       arguments: {
         'specialistId': specialistId,
-        'specialistName':
-            'Имя специалиста', // TODO(developer): Получить из контекста
+        'specialistName': 'Имя специалиста', // TODO(developer): Получить из контекста
         'specialistAvatar': null,
       },
     );

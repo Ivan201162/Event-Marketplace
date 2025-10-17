@@ -36,14 +36,8 @@ class ReviewExtended {
       bookingId: data['bookingId'] as String? ?? '',
       rating: data['rating'] as int? ?? 0,
       comment: data['comment'] as String? ?? '',
-      media: (data['media'] as List<dynamic>?)
-              ?.map((e) => ReviewMedia.fromMap(e))
-              .toList() ??
-          [],
-      likes: (data['likes'] as List<dynamic>?)
-              ?.map((e) => ReviewLike.fromMap(e))
-              .toList() ??
-          [],
+      media: (data['media'] as List<dynamic>?)?.map((e) => ReviewMedia.fromMap(e)).toList() ?? [],
+      likes: (data['likes'] as List<dynamic>?)?.map((e) => ReviewLike.fromMap(e)).toList() ?? [],
       tags: List<String>.from(data['tags'] as List<dynamic>? ?? []),
       stats: ReviewStats.fromMap(data['stats'] as Map<String, dynamic>? ?? {}),
       isVerified: data['isVerified'] as bool? ?? false,
@@ -150,12 +144,10 @@ class ReviewExtended {
   int get mediaCount => media.length;
 
   /// Получить фото
-  List<ReviewMedia> get photos =>
-      media.where((m) => m.type == MediaType.photo).toList();
+  List<ReviewMedia> get photos => media.where((m) => m.type == MediaType.photo).toList();
 
   /// Получить видео
-  List<ReviewMedia> get videos =>
-      media.where((m) => m.type == MediaType.video).toList();
+  List<ReviewMedia> get videos => media.where((m) => m.type == MediaType.video).toList();
 }
 
 /// Медиа файл в отзыве
@@ -181,9 +173,7 @@ class ReviewMedia {
         ),
         fileName: map['fileName'] ?? '',
         fileSize: map['fileSize'] ?? 0,
-        duration: map['duration'] != null
-            ? Duration(milliseconds: map['duration'])
-            : null,
+        duration: map['duration'] != null ? Duration(milliseconds: map['duration']) : null,
         metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
       );
   final String id;
@@ -443,8 +433,7 @@ class SpecialistReviewStats {
         categoryRatings: {},
       );
 
-  factory SpecialistReviewStats.fromMap(Map<String, dynamic> map) =>
-      SpecialistReviewStats(
+  factory SpecialistReviewStats.fromMap(Map<String, dynamic> map) => SpecialistReviewStats(
         averageRating: (map['averageRating'] ?? 0.0).toDouble(),
         totalReviews: map['totalReviews'] ?? 0,
         ratingDistribution: Map<int, int>.from(map['ratingDistribution'] ?? {}),

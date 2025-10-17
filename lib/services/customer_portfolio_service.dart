@@ -14,10 +14,7 @@ class CustomerPortfolioService {
   /// Получить портфолио заказчика
   Future<CustomerPortfolio?> getCustomerPortfolio(String customerId) async {
     try {
-      final doc = await _firestore
-          .collection(_customersCollection)
-          .doc(customerId)
-          .get();
+      final doc = await _firestore.collection(_customersCollection).doc(customerId).get();
 
       if (!doc.exists) return null;
       return CustomerPortfolio.fromDocument(doc);
@@ -260,8 +257,7 @@ class CustomerPortfolioService {
         throw Exception('Портфолио заказчика не найдено');
       }
 
-      final updatedPortfolio =
-          portfolio.copyWith(anniversaryRemindersEnabled: enabled);
+      final updatedPortfolio = portfolio.copyWith(anniversaryRemindersEnabled: enabled);
       await createOrUpdatePortfolio(updatedPortfolio);
     } on Exception catch (e) {
       throw Exception('Ошибка настройки напоминаний: $e');
@@ -325,20 +321,16 @@ class CustomerPortfolioService {
       }
 
       final orderHistory = await getOrderHistory(customerId);
-      final totalSpent =
-          orderHistory.fold(0, (sum, order) => sum + order.price);
-      final completedOrders =
-          orderHistory.where((order) => order.status == 'completed').length;
+      final totalSpent = orderHistory.fold(0, (sum, order) => sum + order.price);
+      final completedOrders = orderHistory.where((order) => order.status == 'completed').length;
 
       return {
         ...portfolio.portfolioStats,
         'totalOrders': orderHistory.length,
         'completedOrders': completedOrders,
         'totalSpent': totalSpent,
-        'averageOrderValue':
-            orderHistory.isNotEmpty ? totalSpent / orderHistory.length : 0.0,
-        'lastOrderDate':
-            orderHistory.isNotEmpty ? orderHistory.first.date : null,
+        'averageOrderValue': orderHistory.isNotEmpty ? totalSpent / orderHistory.length : 0.0,
+        'lastOrderDate': orderHistory.isNotEmpty ? orderHistory.first.date : null,
       };
     } on Exception catch (e) {
       throw Exception('Ошибка получения статистики: $e');
@@ -393,8 +385,7 @@ class CustomerPortfolioService {
 
       // Рекомендации на основе избранного
       if (favoriteSpecialists.isNotEmpty) {
-        recommendations
-            .add('У вас ${favoriteSpecialists.length} избранных специалистов');
+        recommendations.add('У вас ${favoriteSpecialists.length} избранных специалистов');
       }
 
       // Рекомендации на основе годовщин

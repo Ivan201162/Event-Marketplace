@@ -35,9 +35,7 @@ class BudgetSuggestionService {
         },
       );
 
-      final docRef = await _firestore
-          .collection('budgetSuggestions')
-          .add(suggestion.toMap());
+      final docRef = await _firestore.collection('budgetSuggestions').add(suggestion.toMap());
 
       // Отправляем уведомление клиенту
       await _sendBudgetSuggestionNotification(customerId, suggestion);
@@ -60,19 +58,14 @@ class BudgetSuggestionService {
       final now = DateTime.now();
 
       // Обновляем статус предложения
-      await _firestore
-          .collection('budgetSuggestions')
-          .doc(suggestionId)
-          .update({
+      await _firestore.collection('budgetSuggestions').doc(suggestionId).update({
         'status': BudgetSuggestionStatus.accepted.name,
         'respondedAt': Timestamp.fromDate(now),
       });
 
       // Получаем данные предложения
-      final suggestionDoc = await _firestore
-          .collection('budgetSuggestions')
-          .doc(suggestionId)
-          .get();
+      final suggestionDoc =
+          await _firestore.collection('budgetSuggestions').doc(suggestionId).get();
       if (!suggestionDoc.exists) throw Exception('Предложение не найдено');
 
       final suggestion = BudgetSuggestion.fromDocument(suggestionDoc);
@@ -107,20 +100,15 @@ class BudgetSuggestionService {
       final now = DateTime.now();
 
       // Обновляем статус предложения
-      await _firestore
-          .collection('budgetSuggestions')
-          .doc(suggestionId)
-          .update({
+      await _firestore.collection('budgetSuggestions').doc(suggestionId).update({
         'status': BudgetSuggestionStatus.rejected.name,
         'respondedAt': Timestamp.fromDate(now),
         'metadata.rejectionReason': reason,
       });
 
       // Получаем данные предложения
-      final suggestionDoc = await _firestore
-          .collection('budgetSuggestions')
-          .doc(suggestionId)
-          .get();
+      final suggestionDoc =
+          await _firestore.collection('budgetSuggestions').doc(suggestionId).get();
       if (!suggestionDoc.exists) throw Exception('Предложение не найдено');
 
       final suggestion = BudgetSuggestion.fromDocument(suggestionDoc);
@@ -142,10 +130,7 @@ class BudgetSuggestionService {
   /// Отметить предложение как просмотренное
   Future<void> markAsViewed(String suggestionId) async {
     try {
-      await _firestore
-          .collection('budgetSuggestions')
-          .doc(suggestionId)
-          .update({
+      await _firestore.collection('budgetSuggestions').doc(suggestionId).update({
         'status': BudgetSuggestionStatus.viewed.name,
         'viewedAt': Timestamp.fromDate(DateTime.now()),
       });
@@ -193,10 +178,7 @@ class BudgetSuggestionService {
   /// Получить предложение по бюджету по ID
   Future<BudgetSuggestion?> getSuggestion(String suggestionId) async {
     try {
-      final doc = await _firestore
-          .collection('budgetSuggestions')
-          .doc(suggestionId)
-          .get();
+      final doc = await _firestore.collection('budgetSuggestions').doc(suggestionId).get();
       if (doc.exists) {
         return BudgetSuggestion.fromDocument(doc);
       }
@@ -214,8 +196,7 @@ class BudgetSuggestionService {
   }) async {
     try {
       // Получаем данные бронирования
-      final bookingDoc =
-          await _firestore.collection('bookings').doc(bookingId).get();
+      final bookingDoc = await _firestore.collection('bookings').doc(bookingId).get();
       if (!bookingDoc.exists) throw Exception('Бронирование не найдено');
 
       final booking = Booking.fromDocument(bookingDoc);
@@ -285,12 +266,9 @@ class BudgetSuggestionService {
         'acceptedSuggestions': acceptedSuggestions,
         'rejectedSuggestions': rejectedSuggestions,
         'viewedSuggestions': viewedSuggestions,
-        'acceptanceRate': totalSuggestions > 0
-            ? (acceptedSuggestions / totalSuggestions) * 100
-            : 0,
+        'acceptanceRate': totalSuggestions > 0 ? (acceptedSuggestions / totalSuggestions) * 100 : 0,
         'totalRevenue': totalRevenue,
-        'averageSuggestionValue':
-            acceptedSuggestions > 0 ? totalRevenue / acceptedSuggestions : 0,
+        'averageSuggestionValue': acceptedSuggestions > 0 ? totalRevenue / acceptedSuggestions : 0,
       };
     } catch (e) {
       throw Exception('Ошибка получения статистики предложений по бюджету: $e');
@@ -336,8 +314,7 @@ class BudgetSuggestionService {
   ) async {
     try {
       // Получаем FCM токены клиента
-      final customerDoc =
-          await _firestore.collection('users').doc(customerId).get();
+      final customerDoc = await _firestore.collection('users').doc(customerId).get();
       if (!customerDoc.exists) return;
 
       final customerData = customerDoc.data();
@@ -347,8 +324,7 @@ class BudgetSuggestionService {
 
       final notification = {
         'title': 'Рекомендуем увеличить бюджет',
-        'body':
-            'Добавьте ${suggestion.suggestionCount} услуг для полного комплекта мероприятия',
+        'body': 'Добавьте ${suggestion.suggestionCount} услуг для полного комплекта мероприятия',
         'data': {
           'type': 'budget_suggestion',
           'suggestionId': suggestion.id,
@@ -383,8 +359,7 @@ class BudgetSuggestionService {
   ) async {
     try {
       // Получаем FCM токены специалиста
-      final specialistDoc =
-          await _firestore.collection('users').doc(specialistId).get();
+      final specialistDoc = await _firestore.collection('users').doc(specialistId).get();
       if (!specialistDoc.exists) return;
 
       final specialistData = specialistDoc.data();
@@ -432,8 +407,7 @@ class BudgetSuggestionService {
   ) async {
     try {
       // Получаем FCM токены специалиста
-      final specialistDoc =
-          await _firestore.collection('users').doc(specialistId).get();
+      final specialistDoc = await _firestore.collection('users').doc(specialistId).get();
       if (!specialistDoc.exists) return;
 
       final specialistData = specialistDoc.data();
@@ -585,8 +559,7 @@ class BudgetSuggestionService {
       'dj': 'DJ обеспечит музыкальное сопровождение',
     };
 
-    return reasons[categoryId] ??
-        'Дополнительная услуга для улучшения мероприятия';
+    return reasons[categoryId] ?? 'Дополнительная услуга для улучшения мероприятия';
   }
 
   /// Создать предложение для категории
@@ -597,14 +570,11 @@ class BudgetSuggestionService {
   }) async {
     try {
       // Получаем название категории
-      final categoryDoc =
-          await _firestore.collection('categories').doc(categoryId).get();
-      final categoryName =
-          categoryDoc.data()?['name'] ?? 'Неизвестная категория';
+      final categoryDoc = await _firestore.collection('categories').doc(categoryId).get();
+      final categoryName = categoryDoc.data()?['name'] ?? 'Неизвестная категория';
 
       // Получаем рекомендуемого специалиста
-      final specialist =
-          await _getRecommendedSpecialist(categoryId, booking.location);
+      final specialist = await _getRecommendedSpecialist(categoryId, booking.location);
 
       return BudgetSuggestionItem(
         id: categoryId,
@@ -613,8 +583,7 @@ class BudgetSuggestionService {
         specialistId: specialist?.id,
         specialistName: specialist?.name,
         description: reason,
-        estimatedPrice:
-            specialist?.hourlyRate ?? specialist?.pricePerHour ?? 0.0,
+        estimatedPrice: specialist?.hourlyRate ?? specialist?.pricePerHour ?? 0.0,
         reason: reason,
       );
     } catch (e) {
@@ -637,8 +606,7 @@ class BudgetSuggestionService {
         query = query.where('location', isEqualTo: location);
       }
 
-      final snapshot =
-          await query.orderBy('rating', descending: true).limit(1).get();
+      final snapshot = await query.orderBy('rating', descending: true).limit(1).get();
 
       if (snapshot.docs.isNotEmpty) {
         return Specialist.fromDocument(snapshot.docs.first);

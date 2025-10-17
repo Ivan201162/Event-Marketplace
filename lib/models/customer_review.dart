@@ -31,9 +31,7 @@ class CustomerReview {
         isVerified: map['isVerified'] as bool? ?? false,
         metadata: map['metadata'] as Map<String, dynamic>?,
         response: map['response'] as String?,
-        responseDate: map['responseDate'] != null
-            ? _parseTimestamp(map['responseDate'])
-            : null,
+        responseDate: map['responseDate'] != null ? _parseTimestamp(map['responseDate']) : null,
       );
 
   factory CustomerReview.fromDoc(DocumentSnapshot doc) {
@@ -67,8 +65,7 @@ class CustomerReview {
         'isVerified': isVerified,
         if (metadata != null) 'metadata': metadata,
         if (response != null) 'response': response,
-        if (responseDate != null)
-          'responseDate': Timestamp.fromDate(responseDate!),
+        if (responseDate != null) 'responseDate': Timestamp.fromDate(responseDate!),
       };
 
   CustomerReview copyWith({
@@ -136,8 +133,7 @@ class CustomerReviewStats {
     required this.lastUpdated,
   });
 
-  factory CustomerReviewStats.fromMap(Map<String, dynamic> map) =>
-      CustomerReviewStats(
+  factory CustomerReviewStats.fromMap(Map<String, dynamic> map) => CustomerReviewStats(
         specialistId: map['specialistId'] as String,
         averageRating: (map['averageRating'] as num).toDouble(),
         totalReviews: map['totalReviews'] as int,
@@ -269,7 +265,6 @@ class DetailedRating {
   /// Получить средний рейтинг по всем критериям
   double get averageRating {
     if (criteriaRatings.isEmpty) return 0;
-    return criteriaRatings.values.reduce((a, b) => a + b) /
-        criteriaRatings.length;
+    return criteriaRatings.values.reduce((a, b) => a + b) / criteriaRatings.length;
   }
 }

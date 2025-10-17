@@ -141,8 +141,7 @@ class AppUpdateSettingsWidget extends ConsumerWidget {
               ),
               IconButton(
                 icon: const Icon(Icons.refresh),
-                onPressed: () =>
-                    ref.read(appUpdateProvider.notifier).forceCheckForUpdates(),
+                onPressed: () => ref.read(appUpdateProvider.notifier).forceCheckForUpdates(),
               ),
             ],
           ),
@@ -202,9 +201,7 @@ class AppUpdateSettingsWidget extends ConsumerWidget {
                 child: ElevatedButton.icon(
                   onPressed: updateState.isChecking
                       ? null
-                      : () => ref
-                          .read(appUpdateProvider.notifier)
-                          .forceCheckForUpdates(),
+                      : () => ref.read(appUpdateProvider.notifier).forceCheckForUpdates(),
                   icon: updateState.isChecking
                       ? const SizedBox(
                           width: 16,
@@ -213,9 +210,7 @@ class AppUpdateSettingsWidget extends ConsumerWidget {
                         )
                       : const Icon(Icons.refresh),
                   label: Text(
-                    updateState.isChecking
-                        ? 'Проверка...'
-                        : 'Проверить обновления',
+                    updateState.isChecking ? 'Проверка...' : 'Проверить обновления',
                   ),
                 ),
               ),
@@ -223,9 +218,7 @@ class AppUpdateSettingsWidget extends ConsumerWidget {
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: updateState.updateInfo?.downloadUrl != null
-                      ? () => ref
-                          .read(appUpdateProvider.notifier)
-                          .openDownloadPage()
+                      ? () => ref.read(appUpdateProvider.notifier).openDownloadPage()
                       : null,
                   icon: const Icon(Icons.download),
                   label: const Text('Скачать'),
@@ -377,8 +370,7 @@ class VersionInfoWidget extends ConsumerWidget {
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
-              onPressed: () =>
-                  ref.read(appUpdateProvider.notifier).forceCheckForUpdates(),
+              onPressed: () => ref.read(appUpdateProvider.notifier).forceCheckForUpdates(),
               icon: const Icon(Icons.refresh),
               label: const Text('Проверить обновления'),
             ),

@@ -8,12 +8,10 @@ class ConnectionSettingsScreen extends ConsumerStatefulWidget {
   const ConnectionSettingsScreen({super.key});
 
   @override
-  ConsumerState<ConnectionSettingsScreen> createState() =>
-      _ConnectionSettingsScreenState();
+  ConsumerState<ConnectionSettingsScreen> createState() => _ConnectionSettingsScreenState();
 }
 
-class _ConnectionSettingsScreenState
-    extends ConsumerState<ConnectionSettingsScreen> {
+class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScreen> {
   final IntegrationService _integrationService = IntegrationService();
 
   @override
@@ -70,8 +68,7 @@ class _ConnectionSettingsScreenState
               const SizedBox(height: 16),
               Consumer(
                 builder: (context, ref, child) {
-                  final connectivityAsync =
-                      ref.watch(connectivityStatusProvider);
+                  final connectivityAsync = ref.watch(connectivityStatusProvider);
 
                   return connectivityAsync.when(
                     data: (isConnected) => Row(
@@ -93,8 +90,7 @@ class _ConnectionSettingsScreenState
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
-                                  color:
-                                      isConnected ? Colors.green : Colors.red,
+                                  color: isConnected ? Colors.green : Colors.red,
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -386,8 +382,7 @@ class _ConnectionSettingsScreenState
               ListTile(
                 leading: const Icon(Icons.refresh, color: Colors.orange),
                 title: const Text('Сброс сетевых настроек'),
-                subtitle:
-                    const Text('Сбросить настройки сети и переподключиться'),
+                subtitle: const Text('Сбросить настройки сети и переподключиться'),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: _resetNetworkSettings,
               ),

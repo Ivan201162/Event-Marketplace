@@ -57,8 +57,7 @@ class _VisibilityDetectorState extends State<VisibilityDetector> {
   final GlobalKey _key = GlobalKey();
 
   @override
-  Widget build(BuildContext context) =>
-      NotificationListener<ScrollNotification>(
+  Widget build(BuildContext context) => NotificationListener<ScrollNotification>(
         onNotification: (notification) {
           _checkVisibility();
           return false;
@@ -80,9 +79,8 @@ class _VisibilityDetectorState extends State<VisibilityDetector> {
       final visibleBottom = position.dy + size.height > 0;
 
       if (visibleTop && visibleBottom) {
-        final visibleHeight =
-            (position.dy + size.height).clamp(0.0, screenSize.height) -
-                position.dy.clamp(0.0, screenSize.height);
+        final visibleHeight = (position.dy + size.height).clamp(0.0, screenSize.height) -
+            position.dy.clamp(0.0, screenSize.height);
         final visibleFraction = visibleHeight / size.height;
 
         widget.onVisibilityChanged(
@@ -280,8 +278,7 @@ class _PaginatedListState extends State<PaginatedList> {
     return NotificationListener<ScrollNotification>(
       onNotification: (notification) {
         if (notification is ScrollEndNotification &&
-            notification.metrics.pixels >=
-                notification.metrics.maxScrollExtent - 200) {
+            notification.metrics.pixels >= notification.metrics.maxScrollExtent - 200) {
           _loadMore();
         }
         return false;

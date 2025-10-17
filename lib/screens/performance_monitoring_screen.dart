@@ -9,14 +9,11 @@ class PerformanceMonitoringScreen extends ConsumerStatefulWidget {
   const PerformanceMonitoringScreen({super.key});
 
   @override
-  ConsumerState<PerformanceMonitoringScreen> createState() =>
-      _PerformanceMonitoringScreenState();
+  ConsumerState<PerformanceMonitoringScreen> createState() => _PerformanceMonitoringScreenState();
 }
 
-class _PerformanceMonitoringScreenState
-    extends ConsumerState<PerformanceMonitoringScreen> {
-  final PerformanceMonitoringService _performanceService =
-      PerformanceMonitoringService();
+class _PerformanceMonitoringScreenState extends ConsumerState<PerformanceMonitoringScreen> {
+  final PerformanceMonitoringService _performanceService = PerformanceMonitoringService();
   List<PerformanceMetric> _metrics = [];
   List<PerformanceAlert> _alerts = [];
   Map<String, double> _currentMetrics = {};
@@ -67,8 +64,7 @@ class _PerformanceMonitoringScreenState
               child: _buildTabButton('alerts', 'Алерты', Icons.warning),
             ),
             Expanded(
-              child:
-                  _buildTabButton('statistics', 'Статистика', Icons.bar_chart),
+              child: _buildTabButton('statistics', 'Статистика', Icons.bar_chart),
             ),
           ],
         ),
@@ -88,13 +84,10 @@ class _PerformanceMonitoringScreenState
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.blue.withValues(alpha: 0.1)
-              : Colors.transparent,
+          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color:
-                isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
+            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -141,8 +134,7 @@ class _PerformanceMonitoringScreenState
                       childAspectRatio: 2.5,
                       children: _currentMetrics.entries
                           .map(
-                            (entry) =>
-                                _buildCurrentMetricCard(entry.key, entry.value),
+                            (entry) => _buildCurrentMetricCard(entry.key, entry.value),
                           )
                           .toList(),
                     ),

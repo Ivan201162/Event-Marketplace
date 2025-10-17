@@ -11,12 +11,10 @@ class SpecialistIncomeReportScreen extends ConsumerStatefulWidget {
   const SpecialistIncomeReportScreen({super.key});
 
   @override
-  ConsumerState<SpecialistIncomeReportScreen> createState() =>
-      _SpecialistIncomeReportScreenState();
+  ConsumerState<SpecialistIncomeReportScreen> createState() => _SpecialistIncomeReportScreenState();
 }
 
-class _SpecialistIncomeReportScreenState
-    extends ConsumerState<SpecialistIncomeReportScreen>
+class _SpecialistIncomeReportScreenState extends ConsumerState<SpecialistIncomeReportScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   final FinancialReportService _reportService = FinancialReportService();
@@ -303,8 +301,7 @@ class _SpecialistIncomeReportScreenState
           ),
           const SizedBox(height: 16),
           ...report.monthlyBreakdown.entries.map((entry) {
-            final maxAmount =
-                report.monthlyBreakdown.values.reduce((a, b) => a > b ? a : b);
+            final maxAmount = report.monthlyBreakdown.values.reduce((a, b) => a > b ? a : b);
             final percentage = entry.value / maxAmount;
 
             return Card(
@@ -337,8 +334,7 @@ class _SpecialistIncomeReportScreenState
                     LinearProgressIndicator(
                       value: percentage,
                       backgroundColor: Colors.grey[300],
-                      valueColor:
-                          const AlwaysStoppedAnimation<Color>(Colors.green),
+                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
                     ),
                   ],
                 ),
@@ -448,8 +444,7 @@ class _SpecialistIncomeReportScreenState
           ),
           const SizedBox(height: 16),
           ...report.paymentMethodStats.entries.map((entry) {
-            final total =
-                report.paymentMethodStats.values.fold(0, (a, b) => a + b);
+            final total = report.paymentMethodStats.values.fold(0, (a, b) => a + b);
             final percentage = entry.value / total * 100;
 
             return Card(

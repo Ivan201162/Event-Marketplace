@@ -161,9 +161,8 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
   Widget _buildStatistics() {
     final completedPayments = _payments.where((p) => p.isCompleted).length;
     final pendingPayments = _payments.where((p) => p.isActive).length;
-    final totalAmount = _payments
-        .where((p) => p.isCompleted)
-        .fold<double>(0, (sum, p) => sum + p.amount);
+    final totalAmount =
+        _payments.where((p) => p.isCompleted).fold<double>(0, (sum, p) => sum + p.amount);
 
     return Card(
       child: Padding(
@@ -347,9 +346,8 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
     }
 
     final payment = _payments.first;
-    final newStatus = payment.status == PaymentStatus.pending
-        ? PaymentStatus.completed
-        : PaymentStatus.pending;
+    final newStatus =
+        payment.status == PaymentStatus.pending ? PaymentStatus.completed : PaymentStatus.pending;
 
     try {
       await _paymentService.updatePaymentStatus(
@@ -440,11 +438,9 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
               Text('Статус: ${payment.statusName}'),
               Text('Метод: ${payment.methodName}'),
               Text('Описание: ${payment.description}'),
-              if (payment.transactionId != null)
-                Text('Транзакция: ${payment.transactionId}'),
+              if (payment.transactionId != null) Text('Транзакция: ${payment.transactionId}'),
               Text('Создан: ${_formatDate(payment.createdAt)}'),
-              if (payment.dueDate != null)
-                Text('Срок: ${_formatDate(payment.dueDate!)}'),
+              if (payment.dueDate != null) Text('Срок: ${_formatDate(payment.dueDate!)}'),
             ],
           ),
         ),

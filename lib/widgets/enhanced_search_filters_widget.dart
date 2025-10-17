@@ -14,12 +14,10 @@ class EnhancedSearchFiltersWidget extends StatefulWidget {
   final SearchFilters? initialFilters;
 
   @override
-  State<EnhancedSearchFiltersWidget> createState() =>
-      _EnhancedSearchFiltersWidgetState();
+  State<EnhancedSearchFiltersWidget> createState() => _EnhancedSearchFiltersWidgetState();
 }
 
-class _EnhancedSearchFiltersWidgetState
-    extends State<EnhancedSearchFiltersWidget> {
+class _EnhancedSearchFiltersWidgetState extends State<EnhancedSearchFiltersWidget> {
   late SearchFilters _filters;
 
   @override
@@ -148,9 +146,7 @@ class _EnhancedSearchFiltersWidgetState
             children: [
               Expanded(
                 child: TextFormField(
-                  initialValue: _filters.minPrice > 0
-                      ? _filters.minPrice.toInt().toString()
-                      : '',
+                  initialValue: _filters.minPrice > 0 ? _filters.minPrice.toInt().toString() : '',
                   decoration: const InputDecoration(
                     labelText: 'От',
                     border: OutlineInputBorder(),
@@ -169,9 +165,8 @@ class _EnhancedSearchFiltersWidgetState
               const SizedBox(width: 16),
               Expanded(
                 child: TextFormField(
-                  initialValue: _filters.maxPrice < 10000
-                      ? _filters.maxPrice.toInt().toString()
-                      : '',
+                  initialValue:
+                      _filters.maxPrice < 10000 ? _filters.maxPrice.toInt().toString() : '',
                   decoration: const InputDecoration(
                     labelText: 'До',
                     border: OutlineInputBorder(),
@@ -206,9 +201,7 @@ class _EnhancedSearchFiltersWidgetState
               (index) => IconButton(
                 icon: Icon(
                   Icons.star,
-                  color: index < _filters.minRating
-                      ? Colors.amber
-                      : Colors.grey[300],
+                  color: index < _filters.minRating ? Colors.amber : Colors.grey[300],
                 ),
                 onPressed: () {
                   setState(() {
@@ -269,8 +262,7 @@ class _EnhancedSearchFiltersWidgetState
             ),
             onChanged: (value) {
               setState(() {
-                _filters =
-                    _filters.copyWith(location: value.isEmpty ? null : value);
+                _filters = _filters.copyWith(location: value.isEmpty ? null : value);
               });
               widget.onFiltersChanged(_filters);
             },

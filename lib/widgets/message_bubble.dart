@@ -22,9 +22,7 @@ class MessageBubble extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 4),
           child: Row(
-            mainAxisAlignment: isFromCurrentUser
-                ? MainAxisAlignment.end
-                : MainAxisAlignment.start,
+            mainAxisAlignment: isFromCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               if (!isFromCurrentUser) ...[
@@ -50,9 +48,7 @@ class MessageBubble extends StatelessWidget {
                     vertical: 10,
                   ),
                   decoration: BoxDecoration(
-                    color: isFromCurrentUser
-                        ? Theme.of(context).primaryColor
-                        : Colors.grey[200],
+                    color: isFromCurrentUser ? Theme.of(context).primaryColor : Colors.grey[200],
                     borderRadius: BorderRadius.only(
                       topLeft: const Radius.circular(20),
                       topRight: const Radius.circular(20),
@@ -264,9 +260,7 @@ class MessageBubble extends StatelessWidget {
                     Text(
                       message.formattedFileSize,
                       style: TextStyle(
-                        color: isFromCurrentUser
-                            ? Colors.white70
-                            : Colors.grey[600],
+                        color: isFromCurrentUser ? Colors.white70 : Colors.grey[600],
                         fontSize: 12,
                       ),
                     ),

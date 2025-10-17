@@ -187,9 +187,7 @@ class _UploadMediaDialogState extends ConsumerState<UploadMediaDialog> {
               child: Row(
                 children: [
                   Icon(
-                    _selectedType == GalleryItemType.image
-                        ? Icons.image
-                        : Icons.video_library,
+                    _selectedType == GalleryItemType.image ? Icons.image : Icons.video_library,
                     color: Colors.grey[600],
                   ),
                   const SizedBox(width: 8),

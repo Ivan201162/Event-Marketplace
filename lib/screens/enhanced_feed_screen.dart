@@ -141,9 +141,7 @@ class _FeedPostCard extends ConsumerWidget {
                   backgroundImage: post.authorAvatar != null
                       ? CachedNetworkImageProvider(post.authorAvatar!)
                       : null,
-                  child: post.authorAvatar == null
-                      ? const Icon(Icons.person)
-                      : null,
+                  child: post.authorAvatar == null ? const Icon(Icons.person) : null,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -217,9 +215,7 @@ class _FeedPostCard extends ConsumerWidget {
                     .map(
                       (tag) => Chip(
                         label: Text('#$tag'),
-                        backgroundColor: Theme.of(context)
-                            .primaryColor
-                            .withValues(alpha: 0.1),
+                        backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                         labelStyle: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontSize: 12,

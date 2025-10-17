@@ -38,8 +38,7 @@ class _PasswordStrengthWidgetState extends State<PasswordStrengthWidget> {
   }
 
   Future<void> _updateStrength() async {
-    final result =
-        await _securityService.checkPasswordStrength(widget.password);
+    final result = await _securityService.checkPasswordStrength(widget.password);
     setState(() {
       _strength = SecurityPasswordStrength.fromMap(result);
     });
@@ -228,8 +227,7 @@ class PasswordGeneratorWidget extends StatefulWidget {
   final String? initialPassword;
 
   @override
-  State<PasswordGeneratorWidget> createState() =>
-      _PasswordGeneratorWidgetState();
+  State<PasswordGeneratorWidget> createState() => _PasswordGeneratorWidgetState();
 }
 
 class _PasswordGeneratorWidgetState extends State<PasswordGeneratorWidget> {

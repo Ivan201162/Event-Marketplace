@@ -204,10 +204,8 @@ class EventService {
   /// Получить статистику событий пользователя
   Future<Map<String, int>> getUserEventStats(String userId) async {
     try {
-      final snapshot = await _firestore
-          .collection('events')
-          .where('organizerId', isEqualTo: userId)
-          .get();
+      final snapshot =
+          await _firestore.collection('events').where('organizerId', isEqualTo: userId).get();
 
       var total = 0;
       var active = 0;

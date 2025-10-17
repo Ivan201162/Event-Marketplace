@@ -23,8 +23,7 @@ class FadeInWidget extends StatefulWidget {
   State<FadeInWidget> createState() => _FadeInWidgetState();
 }
 
-class _FadeInWidgetState extends State<FadeInWidget>
-    with SingleTickerProviderStateMixin {
+class _FadeInWidgetState extends State<FadeInWidget> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -92,8 +91,7 @@ class ScaleInWidget extends StatefulWidget {
   State<ScaleInWidget> createState() => _ScaleInWidgetState();
 }
 
-class _ScaleInWidgetState extends State<ScaleInWidget>
-    with SingleTickerProviderStateMixin {
+class _ScaleInWidgetState extends State<ScaleInWidget> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -161,8 +159,7 @@ class SlideInWidget extends StatefulWidget {
   State<SlideInWidget> createState() => _SlideInWidgetState();
 }
 
-class _SlideInWidgetState extends State<SlideInWidget>
-    with SingleTickerProviderStateMixin {
+class _SlideInWidgetState extends State<SlideInWidget> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _animation;
 
@@ -482,8 +479,7 @@ class AnimatedButton extends StatefulWidget {
   State<AnimatedButton> createState() => _AnimatedButtonState();
 }
 
-class _AnimatedButtonState extends State<AnimatedButton>
-    with SingleTickerProviderStateMixin {
+class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -558,8 +554,7 @@ class StaggeredAnimationWidget extends StatefulWidget {
   final double slideOffset;
 
   @override
-  State<StaggeredAnimationWidget> createState() =>
-      _StaggeredAnimationWidgetState();
+  State<StaggeredAnimationWidget> createState() => _StaggeredAnimationWidgetState();
 }
 
 class _StaggeredAnimationWidgetState extends State<StaggeredAnimationWidget> {

@@ -18,8 +18,7 @@ final userNotificationsProvider = StreamProvider<List<AppNotification>>((ref) {
 });
 
 /// Провайдер для получения непрочитанных уведомлений
-final unreadNotificationsProvider =
-    StreamProvider<List<AppNotification>>((ref) {
+final unreadNotificationsProvider = StreamProvider<List<AppNotification>>((ref) {
   final currentUser = ref.watch(currentUserProvider).value;
   if (currentUser == null) {
     return Stream.value([]);
@@ -77,23 +76,20 @@ final markNotificationAsReadProvider =
 });
 
 /// Провайдер для отметки всех уведомлений как прочитанных
-final markAllNotificationsAsReadProvider =
-    FutureProvider.family<void, String>((ref, userId) async {
+final markAllNotificationsAsReadProvider = FutureProvider.family<void, String>((ref, userId) async {
   final notificationService = ref.read(notificationServiceProvider);
   await notificationService.markAllAsRead(userId);
 });
 
 /// Провайдер для удаления уведомления
-final deleteNotificationProvider =
-    FutureProvider.family<void, String>((ref, notificationId) async {
+final deleteNotificationProvider = FutureProvider.family<void, String>((ref, notificationId) async {
   final notificationService = ref.read(notificationServiceProvider);
   await notificationService.deleteNotification(notificationId);
 });
 
 /// Провайдер для отправки уведомления о новой заявке
 final sendNewBookingNotificationProvider =
-    FutureProvider.family<void, NewBookingNotificationParams>(
-        (ref, params) async {
+    FutureProvider.family<void, NewBookingNotificationParams>((ref, params) async {
   final notificationService = ref.read(notificationServiceProvider);
   await notificationService.sendNewBookingNotification(
     params.specialistId,
@@ -118,8 +114,7 @@ class NewBookingNotificationParams {
 
 /// Провайдер для отправки уведомления о принятии заявки
 final sendBookingAcceptedNotificationProvider =
-    FutureProvider.family<void, BookingAcceptedNotificationParams>(
-        (ref, params) async {
+    FutureProvider.family<void, BookingAcceptedNotificationParams>((ref, params) async {
   final notificationService = ref.read(notificationServiceProvider);
   await notificationService.sendBookingAcceptedNotification(
     customerId: params.customerId,
@@ -146,8 +141,7 @@ class BookingAcceptedNotificationParams {
 
 /// Провайдер для отправки уведомления об отклонении заявки
 final sendBookingRejectedNotificationProvider =
-    FutureProvider.family<void, BookingRejectedNotificationParams>(
-        (ref, params) async {
+    FutureProvider.family<void, BookingRejectedNotificationParams>((ref, params) async {
   final notificationService = ref.read(notificationServiceProvider);
   await notificationService.sendBookingRejectedNotification(
     params.customerId,
@@ -174,8 +168,7 @@ class BookingRejectedNotificationParams {
 
 /// Провайдер для отправки уведомления о новом отзыве
 final sendNewReviewNotificationProvider =
-    FutureProvider.family<void, NewReviewNotificationParams>(
-        (ref, params) async {
+    FutureProvider.family<void, NewReviewNotificationParams>((ref, params) async {
   final notificationService = ref.read(notificationServiceProvider);
   await notificationService.sendNewReviewNotification(
     specialistId: params.specialistId,
@@ -202,8 +195,7 @@ class NewReviewNotificationParams {
 
 /// Провайдер для отправки уведомления о получении платежа
 final sendPaymentReceivedNotificationProvider =
-    FutureProvider.family<void, PaymentReceivedNotificationParams>(
-        (ref, params) async {
+    FutureProvider.family<void, PaymentReceivedNotificationParams>((ref, params) async {
   final notificationService = ref.read(notificationServiceProvider);
   await notificationService.sendPaymentReceivedNotification(
     specialistId: params.specialistId,

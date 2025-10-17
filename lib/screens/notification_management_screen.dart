@@ -9,12 +9,10 @@ class NotificationManagementScreen extends ConsumerStatefulWidget {
   const NotificationManagementScreen({super.key});
 
   @override
-  ConsumerState<NotificationManagementScreen> createState() =>
-      _NotificationManagementScreenState();
+  ConsumerState<NotificationManagementScreen> createState() => _NotificationManagementScreenState();
 }
 
-class _NotificationManagementScreenState
-    extends ConsumerState<NotificationManagementScreen> {
+class _NotificationManagementScreenState extends ConsumerState<NotificationManagementScreen> {
   final NotificationService _notificationService = NotificationService();
   List<NotificationTemplate> _templates = [];
   List<SentNotification> _notifications = [];
@@ -61,8 +59,7 @@ class _NotificationManagementScreenState
               ),
             ),
             Expanded(
-              child:
-                  _buildTabButton('statistics', 'Статистика', Icons.analytics),
+              child: _buildTabButton('statistics', 'Статистика', Icons.analytics),
             ),
           ],
         ),
@@ -82,13 +79,10 @@ class _NotificationManagementScreenState
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.blue.withValues(alpha: 0.1)
-              : Colors.transparent,
+          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color:
-                isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
+            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -322,8 +316,7 @@ class _NotificationManagementScreenState
         ],
       );
 
-  Widget _buildNotificationCard(SentNotification notification) =>
-      ResponsiveCard(
+  Widget _buildNotificationCard(SentNotification notification) => ResponsiveCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -523,8 +516,7 @@ class _NotificationManagementScreenState
     }
   }
 
-  IconData _getNotificationIcon(NotificationType type) =>
-      _getTemplateIcon(type);
+  IconData _getNotificationIcon(NotificationType type) => _getTemplateIcon(type);
 
   Color _getNotificationColor(NotificationType type) => _getTemplateColor(type);
 
@@ -582,8 +574,7 @@ class _NotificationManagementScreenState
   Future<void> _loadNotifications() async {
     try {
       // TODO(developer): Получить ID текущего пользователя
-      final notifications =
-          _notificationService.getUserNotifications('current_user_id');
+      final notifications = _notificationService.getUserNotifications('current_user_id');
       setState(() {
         _notifications = notifications;
       });

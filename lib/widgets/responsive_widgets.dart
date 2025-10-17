@@ -69,16 +69,13 @@ class ResponsiveUtils {
   }
 
   /// Проверить, является ли экран мобильным
-  static bool isMobile(BuildContext context) =>
-      getScreenType(context) == ScreenType.mobile;
+  static bool isMobile(BuildContext context) => getScreenType(context) == ScreenType.mobile;
 
   /// Проверить, является ли экран планшетом
-  static bool isTablet(BuildContext context) =>
-      getScreenType(context) == ScreenType.tablet;
+  static bool isTablet(BuildContext context) => getScreenType(context) == ScreenType.tablet;
 
   /// Проверить, является ли экран десктопом
-  static bool isDesktop(BuildContext context) =>
-      getScreenType(context) == ScreenType.desktop;
+  static bool isDesktop(BuildContext context) => getScreenType(context) == ScreenType.desktop;
 }
 
 /// Типы экранов
@@ -461,9 +458,7 @@ class ResponsiveCard extends StatelessWidget {
     return Card(
       elevation: elevation,
       margin: margin,
-      shape: borderRadius != null
-          ? RoundedRectangleBorder(borderRadius: borderRadius)
-          : null,
+      shape: borderRadius != null ? RoundedRectangleBorder(borderRadius: borderRadius) : null,
       child: Padding(
         padding: padding ?? EdgeInsets.zero,
         child: child,

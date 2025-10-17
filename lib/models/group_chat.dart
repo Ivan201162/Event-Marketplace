@@ -22,8 +22,7 @@ class GroupChatParticipant {
   });
 
   /// Создать из Map
-  factory GroupChatParticipant.fromMap(Map<String, dynamic> data) =>
-      GroupChatParticipant(
+  factory GroupChatParticipant.fromMap(Map<String, dynamic> data) => GroupChatParticipant(
         userId: data['userId'] as String? ?? '',
         userName: data['userName'] as String? ?? '',
         userPhoto: data['userPhoto'] as String?,
@@ -112,8 +111,7 @@ class GroupChatMessage {
   });
 
   /// Создать из Map
-  factory GroupChatMessage.fromMap(Map<String, dynamic> data) =>
-      GroupChatMessage(
+  factory GroupChatMessage.fromMap(Map<String, dynamic> data) => GroupChatMessage(
         id: data['id'] as String? ?? '',
         chatId: data['chatId'] as String? ?? '',
         senderId: data['senderId'] as String? ?? '',
@@ -125,9 +123,7 @@ class GroupChatMessage {
           orElse: () => GroupChatMessageType.text,
         ),
         createdAt: (data['createdAt'] as Timestamp).toDate(),
-        editedAt: data['editedAt'] != null
-            ? (data['editedAt'] as Timestamp).toDate()
-            : null,
+        editedAt: data['editedAt'] != null ? (data['editedAt'] as Timestamp).toDate() : null,
         isEdited: data['isEdited'] as bool? ?? false,
         replyToMessageId: data['replyToMessageId'] as String?,
         metadata: data['metadata'] as Map<String, dynamic>?,
@@ -231,8 +227,7 @@ class GroupChat {
         organizerName: data['organizerName'] as String? ?? '',
         participants: (data['participants'] as List<dynamic>?)
                 ?.map(
-                  (p) =>
-                      GroupChatParticipant.fromMap(p as Map<String, dynamic>),
+                  (p) => GroupChatParticipant.fromMap(p as Map<String, dynamic>),
                 )
                 .toList() ??
             [],
@@ -329,8 +324,7 @@ class GroupChat {
       participants.where((p) => p.isActive).toList();
 
   /// Проверить, является ли пользователь участником
-  bool isParticipant(String userId) =>
-      participants.any((p) => p.userId == userId && p.isActive);
+  bool isParticipant(String userId) => participants.any((p) => p.userId == userId && p.isActive);
 
   /// Получить тип участника
   GroupChatParticipantType? getParticipantType(String userId) {

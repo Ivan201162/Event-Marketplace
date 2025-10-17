@@ -9,12 +9,10 @@ class BackupManagementScreen extends ConsumerStatefulWidget {
   const BackupManagementScreen({super.key});
 
   @override
-  ConsumerState<BackupManagementScreen> createState() =>
-      _BackupManagementScreenState();
+  ConsumerState<BackupManagementScreen> createState() => _BackupManagementScreenState();
 }
 
-class _BackupManagementScreenState
-    extends ConsumerState<BackupManagementScreen> {
+class _BackupManagementScreenState extends ConsumerState<BackupManagementScreen> {
   final BackupService _backupService = BackupService();
   List<Backup> _backups = [];
   List<Restore> _restores = [];
@@ -56,12 +54,10 @@ class _BackupManagementScreenState
               child: _buildTabButton('backups', 'Бэкапы', Icons.backup),
             ),
             Expanded(
-              child:
-                  _buildTabButton('restores', 'Восстановления', Icons.restore),
+              child: _buildTabButton('restores', 'Восстановления', Icons.restore),
             ),
             Expanded(
-              child:
-                  _buildTabButton('statistics', 'Статистика', Icons.analytics),
+              child: _buildTabButton('statistics', 'Статистика', Icons.analytics),
             ),
             Expanded(
               child: _buildTabButton('create', 'Создать', Icons.add),
@@ -86,13 +82,10 @@ class _BackupManagementScreenState
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.blue.withValues(alpha: 0.1)
-              : Colors.transparent,
+          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color:
-                isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
+            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -530,9 +523,8 @@ class _BackupManagementScreenState
                       ),
                       const SizedBox(height: 16),
                       ...stats.backupsByType.entries.map((entry) {
-                        final percentage = stats.totalBackups > 0
-                            ? (entry.value / stats.totalBackups) * 100
-                            : 0.0;
+                        final percentage =
+                            stats.totalBackups > 0 ? (entry.value / stats.totalBackups) * 100 : 0.0;
 
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 8),
@@ -540,8 +532,7 @@ class _BackupManagementScreenState
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(entry.key),
                                   Text(
@@ -552,8 +543,7 @@ class _BackupManagementScreenState
                               const SizedBox(height: 4),
                               LinearProgressIndicator(
                                 value: percentage / 100,
-                                backgroundColor:
-                                    Colors.grey.withValues(alpha: 0.3),
+                                backgroundColor: Colors.grey.withValues(alpha: 0.3),
                                 valueColor: AlwaysStoppedAnimation<Color>(
                                   _getBackupTypeColor(entry.key),
                                 ),
@@ -876,8 +866,7 @@ class _BackupManagementScreenState
     // TODO(developer): Реализовать восстановление из бэкапа
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:
-            Text('Восстановление из бэкапа "${backup.name}" будет реализовано'),
+        content: Text('Восстановление из бэкапа "${backup.name}" будет реализовано'),
       ),
     );
   }

@@ -39,9 +39,7 @@ class SpecialistCardWidget extends StatelessWidget {
                           : null,
                       child: specialist.imageUrlValue == null
                           ? Text(
-                              specialist.name.isNotEmpty
-                                  ? specialist.name[0].toUpperCase()
-                                  : 'С',
+                              specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : 'С',
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -118,8 +116,7 @@ class SpecialistCardWidget extends StatelessWidget {
                 const SizedBox(height: 12),
 
                 // Описание
-                if (specialist.description != null &&
-                    specialist.description!.isNotEmpty)
+                if (specialist.description != null && specialist.description!.isNotEmpty)
                   Text(
                     specialist.description!,
                     style: const TextStyle(fontSize: 14),
@@ -133,8 +130,7 @@ class SpecialistCardWidget extends StatelessWidget {
                 Row(
                   children: [
                     // Местоположение
-                    if (specialist.location != null &&
-                        specialist.location!.isNotEmpty) ...[
+                    if (specialist.location != null && specialist.location!.isNotEmpty) ...[
                       Icon(
                         Icons.location_on,
                         size: 14,

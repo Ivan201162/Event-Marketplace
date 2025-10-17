@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../widgets/swipe_back_wrapper.dart';
 import 'enhanced_chats_screen.dart';
@@ -61,8 +60,7 @@ class _EnhancedMainScreenState extends ConsumerState<EnhancedMainScreen>
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _currentIndex);
-    _tabController =
-        TabController(length: _navigationItems.length, vsync: this);
+    _tabController = TabController(length: _navigationItems.length, vsync: this);
 
     // Слушаем изменения в TabController
     _tabController.addListener(() {
@@ -170,15 +168,12 @@ class _EnhancedMainScreenState extends ConsumerState<EnhancedMainScreen>
             controller: _tabController,
             indicatorColor: Theme.of(context).colorScheme.primary,
             labelColor: Theme.of(context).colorScheme.primary,
-            unselectedLabelColor:
-                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-            labelStyle:
-                const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+            labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
             unselectedLabelStyle: const TextStyle(fontSize: 12),
             onTap: _animateToTab,
             tabs: _navigationItems.map((item) {
-              final isSelected =
-                  _navigationItems.indexOf(item) == _currentIndex;
+              final isSelected = _navigationItems.indexOf(item) == _currentIndex;
               return Tab(
                 icon: Icon(
                   isSelected ? item.selectedIcon : item.icon,
@@ -209,9 +204,7 @@ class _EnhancedMainScreenState extends ConsumerState<EnhancedMainScreen>
 
   /// Анимированное переключение на вкладку
   void _animateToTab(int index) {
-    if (index >= 0 &&
-        index < _navigationItems.length &&
-        index != _currentIndex) {
+    if (index >= 0 && index < _navigationItems.length && index != _currentIndex) {
       setState(() {
         _currentIndex = index;
       });

@@ -12,8 +12,7 @@ class PaymentScreen extends ConsumerStatefulWidget {
   ConsumerState<PaymentScreen> createState() => _PaymentScreenState();
 }
 
-class _PaymentScreenState extends ConsumerState<PaymentScreen>
-    with SingleTickerProviderStateMixin {
+class _PaymentScreenState extends ConsumerState<PaymentScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final PaymentService _paymentService = PaymentService();
 
@@ -80,9 +79,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
           final payments = snapshot.data ?? [];
           final pendingPayments = payments
               .where(
-                (p) =>
-                    p.status == PaymentStatus.pending ||
-                    p.status == PaymentStatus.processing,
+                (p) => p.status == PaymentStatus.pending || p.status == PaymentStatus.processing,
               )
               .toList();
 
@@ -294,8 +291,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
         },
       );
 
-  Widget _buildPaymentCard(Payment payment, {required bool showActions}) =>
-      Card(
+  Widget _buildPaymentCard(Payment payment, {required bool showActions}) => Card(
         margin: const EdgeInsets.only(bottom: 16),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -327,14 +323,11 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
                     ),
                   ),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: _getStatusColor(payment.status)
-                          .withValues(alpha: 0.1),
+                      color: _getStatusColor(payment.status).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
-                      border:
-                          Border.all(color: _getStatusColor(payment.status)),
+                      border: Border.all(color: _getStatusColor(payment.status)),
                     ),
                     child: Text(
                       _getStatusText(payment.status),
@@ -350,8 +343,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
               const SizedBox(height: 12),
               Text(
                 'Сумма: ${payment.amount.toStringAsFixed(2)} ${payment.currency}',
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 8),
               Text(

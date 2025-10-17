@@ -23,8 +23,7 @@ class SupabaseConfig {
   static const bool isDevelopment = true;
 
   // URL для редиректов (для веб-версии)
-  static const String redirectUrl =
-      'io.supabase.eventmarketplace://login-callback/';
+  static const String redirectUrl = 'io.supabase.eventmarketplace://login-callback/';
 
   // Настройки Storage
   static const String avatarsBucket = 'avatars';
@@ -61,8 +60,7 @@ class SupabaseConfigValidator {
 
   static void validate() {
     if (!isConfigured) {
-      throw Exception(
-          'Supabase не настроен! Отсутствуют: ${missingConfigs.join(', ')}. '
+      throw Exception('Supabase не настроен! Отсутствуют: ${missingConfigs.join(', ')}. '
           'См. SUPABASE_SETUP_GUIDE.md для инструкций по настройке.');
     }
   }

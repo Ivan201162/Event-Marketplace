@@ -114,8 +114,7 @@ class AnimatedTypingIndicator extends StatefulWidget {
   final String? currentUserId;
 
   @override
-  State<AnimatedTypingIndicator> createState() =>
-      _AnimatedTypingIndicatorState();
+  State<AnimatedTypingIndicator> createState() => _AnimatedTypingIndicatorState();
 }
 
 class _AnimatedTypingIndicatorState extends State<AnimatedTypingIndicator>
@@ -184,9 +183,7 @@ class _AnimatedTypingIndicatorState extends State<AnimatedTypingIndicator>
   Widget _buildAnimatedDot(int index) {
     final delay = index * 0.2;
     final animationValue = (_animation.value + delay) % 1.0;
-    final opacity = (animationValue < 0.5)
-        ? animationValue * 2
-        : (1.0 - animationValue) * 2;
+    final opacity = (animationValue < 0.5) ? animationValue * 2 : (1.0 - animationValue) * 2;
 
     return Container(
       width: 4,

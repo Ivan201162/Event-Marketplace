@@ -123,9 +123,7 @@ class IncomeExpenseStats {
 
     if (previousMonth.income == 0) return 0;
 
-    return ((currentMonth.income - previousMonth.income) /
-            previousMonth.income) *
-        100;
+    return ((currentMonth.income - previousMonth.income) / previousMonth.income) * 100;
   }
 
   /// Получить процент роста расходов
@@ -137,9 +135,7 @@ class IncomeExpenseStats {
 
     if (previousMonth.expense == 0) return 0;
 
-    return ((currentMonth.expense - previousMonth.expense) /
-            previousMonth.expense) *
-        100;
+    return ((currentMonth.expense - previousMonth.expense) / previousMonth.expense) * 100;
   }
 }
 
@@ -345,8 +341,7 @@ class BudgetGoal {
       name: data['name'] as String? ?? '',
       targetAmount: (data['targetAmount'] as num?)?.toDouble() ?? 0.0,
       currentAmount: (data['currentAmount'] as num?)?.toDouble() ?? 0.0,
-      targetDate:
-          (data['targetDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      targetDate: (data['targetDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
       type: BudgetType.values.firstWhere(
         (t) => t.name == data['type'],
         orElse: () => BudgetType.income,
@@ -421,8 +416,7 @@ class AnalyticsReport {
           (p) => p.name == map['period'],
           orElse: () => AnalyticsPeriod.month,
         ),
-        generatedAt:
-            (map['generatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        generatedAt: (map['generatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
         stats: IncomeExpenseStatsSerializer.fromMap(
           map['stats'] as Map<String, dynamic>? ?? {},
         ),
@@ -472,19 +466,15 @@ extension IncomeExpenseStatsExtension on IncomeExpenseStats {
 
 // Статические методы для десериализации
 class IncomeExpenseStatsSerializer {
-  static IncomeExpenseStats fromMap(Map<String, dynamic> map) =>
-      IncomeExpenseStats(
+  static IncomeExpenseStats fromMap(Map<String, dynamic> map) => IncomeExpenseStats(
         totalIncome: (map['totalIncome'] as num?)?.toDouble() ?? 0.0,
         totalExpense: (map['totalExpense'] as num?)?.toDouble() ?? 0.0,
         netIncome: (map['netIncome'] as num?)?.toDouble() ?? 0.0,
         transactionCount: map['transactionCount'] as int? ?? 0,
-        periodStart:
-            (map['periodStart'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        periodStart: (map['periodStart'] as Timestamp?)?.toDate() ?? DateTime.now(),
         periodEnd: (map['periodEnd'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        incomeByCategory:
-            Map<String, double>.from(map['incomeByCategory'] as Map? ?? {}),
-        expenseByCategory:
-            Map<String, double>.from(map['expenseByCategory'] as Map? ?? {}),
+        incomeByCategory: Map<String, double>.from(map['incomeByCategory'] as Map? ?? {}),
+        expenseByCategory: Map<String, double>.from(map['expenseByCategory'] as Map? ?? {}),
         monthlyData: (map['monthlyData'] as List<dynamic>?)
                 ?.map((e) => MonthlyData.fromMap(e as Map<String, dynamic>))
                 .toList() ??

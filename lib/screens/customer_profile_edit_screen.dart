@@ -9,12 +9,10 @@ class CustomerProfileEditScreen extends ConsumerStatefulWidget {
   const CustomerProfileEditScreen({super.key});
 
   @override
-  ConsumerState<CustomerProfileEditScreen> createState() =>
-      _CustomerProfileEditScreenState();
+  ConsumerState<CustomerProfileEditScreen> createState() => _CustomerProfileEditScreenState();
 }
 
-class _CustomerProfileEditScreenState
-    extends ConsumerState<CustomerProfileEditScreen> {
+class _CustomerProfileEditScreenState extends ConsumerState<CustomerProfileEditScreen> {
   final _formKey = GlobalKey<FormState>();
   final _bioController = TextEditingController();
   final _phoneController = TextEditingController();
@@ -43,9 +41,7 @@ class _CustomerProfileEditScreenState
   void _loadProfile() {
     final currentUser = ref.read(currentUserProvider).value;
     if (currentUser != null) {
-      ref
-          .read(customerProfileEditProvider.notifier)
-          .loadProfile(currentUser.id);
+      ref.read(customerProfileEditProvider.notifier).loadProfile(currentUser.id);
     }
   }
 
@@ -76,9 +72,7 @@ class _CustomerProfileEditScreenState
               onPressed: editState.isLoading
                   ? null
                   : () {
-                      ref
-                          .read(customerProfileEditProvider.notifier)
-                          .saveProfile();
+                      ref.read(customerProfileEditProvider.notifier).saveProfile();
                     },
               child: editState.isLoading
                   ? const SizedBox(
@@ -124,8 +118,7 @@ class _CustomerProfileEditScreenState
                     const SizedBox(height: 24),
 
                     // Ошибка
-                    if (editState.errorMessage != null)
-                      _buildErrorMessage(editState.errorMessage!),
+                    if (editState.errorMessage != null) _buildErrorMessage(editState.errorMessage!),
                   ],
                 ),
               ),
@@ -138,8 +131,7 @@ class _CustomerProfileEditScreenState
           children: [
             CircleAvatar(
               radius: 60,
-              backgroundColor:
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+              backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
               child: const Icon(
                 Icons.person,
                 size: 60,
@@ -195,9 +187,7 @@ class _CustomerProfileEditScreenState
                 ),
                 maxLines: 3,
                 onChanged: (value) {
-                  ref
-                      .read(customerProfileEditProvider.notifier)
-                      .updateField(bio: value);
+                  ref.read(customerProfileEditProvider.notifier).updateField(bio: value);
                 },
               ),
               const SizedBox(height: 16),
@@ -213,9 +203,7 @@ class _CustomerProfileEditScreenState
                 ),
                 keyboardType: TextInputType.phone,
                 onChanged: (value) {
-                  ref
-                      .read(customerProfileEditProvider.notifier)
-                      .updateField(phoneNumber: value);
+                  ref.read(customerProfileEditProvider.notifier).updateField(phoneNumber: value);
                 },
               ),
               const SizedBox(height: 16),
@@ -230,9 +218,7 @@ class _CustomerProfileEditScreenState
                   prefixIcon: Icon(Icons.location_on),
                 ),
                 onChanged: (value) {
-                  ref
-                      .read(customerProfileEditProvider.notifier)
-                      .updateField(location: value);
+                  ref.read(customerProfileEditProvider.notifier).updateField(location: value);
                 },
               ),
             ],
@@ -264,9 +250,7 @@ class _CustomerProfileEditScreenState
                           setState(() {
                             _selectedMaritalStatus = selected ? status : null;
                           });
-                          ref
-                              .read(customerProfileEditProvider.notifier)
-                              .updateField(
+                          ref.read(customerProfileEditProvider.notifier).updateField(
                                 maritalStatus: _selectedMaritalStatus,
                               );
                         },
@@ -308,8 +292,7 @@ class _CustomerProfileEditScreenState
                     context: context,
                     initialDate: _weddingDate ?? DateTime.now(),
                     firstDate: DateTime(1900),
-                    lastDate:
-                        DateTime.now().add(const Duration(days: 365 * 10)),
+                    lastDate: DateTime.now().add(const Duration(days: 365 * 10)),
                   );
                   if (date != null) {
                     setState(() {
@@ -337,8 +320,7 @@ class _CustomerProfileEditScreenState
                     context: context,
                     initialDate: _anniversaryDate ?? DateTime.now(),
                     firstDate: DateTime(1900),
-                    lastDate:
-                        DateTime.now().add(const Duration(days: 365 * 10)),
+                    lastDate: DateTime.now().add(const Duration(days: 365 * 10)),
                   );
                   if (date != null) {
                     setState(() {
@@ -441,10 +423,7 @@ class _CustomerProfileEditScreenState
             Text(
               'Какие мероприятия вы планируете?',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.6),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
             ),
             const SizedBox(height: 16),

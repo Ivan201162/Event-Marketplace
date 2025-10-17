@@ -152,8 +152,7 @@ class IdeaCategoriesScreen extends ConsumerStatefulWidget {
   final String? userId;
 
   @override
-  ConsumerState<IdeaCategoriesScreen> createState() =>
-      _IdeaCategoriesScreenState();
+  ConsumerState<IdeaCategoriesScreen> createState() => _IdeaCategoriesScreenState();
 }
 
 class _IdeaCategoriesScreenState extends ConsumerState<IdeaCategoriesScreen> {

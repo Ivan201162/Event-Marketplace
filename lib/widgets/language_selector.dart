@@ -50,8 +50,7 @@ class LanguageSelector extends ConsumerWidget {
           const SizedBox(height: 8),
         ],
         Container(
-          padding: padding ??
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
             color: backgroundColor ?? Theme.of(context).cardColor,
             borderRadius: borderRadius ?? BorderRadius.circular(12),
@@ -95,8 +94,7 @@ class LanguageSelector extends ConsumerWidget {
                           showEnglishName,
                           showCode,
                         ),
-                        style:
-                            textStyle ?? Theme.of(context).textTheme.bodyMedium,
+                        style: textStyle ?? Theme.of(context).textTheme.bodyMedium,
                       ),
                       const SizedBox(width: 4),
                       Icon(

@@ -71,8 +71,7 @@ class AppReviewService {
       // Проверяем время последнего запроса
       final lastRequest = await _getLastReviewRequest();
       if (lastRequest != null) {
-        final daysSinceLastRequest =
-            DateTime.now().difference(lastRequest).inDays;
+        final daysSinceLastRequest = DateTime.now().difference(lastRequest).inDays;
         if (daysSinceLastRequest < _minDaysBetweenReviews) return false;
       }
 
@@ -148,14 +147,12 @@ class AppReviewService {
       return ReviewStats(
         appLaunchCount: launchCount,
         reviewRequestCount: reviewCount,
-        lastReviewRequest: lastRequest != null
-            ? DateTime.fromMillisecondsSinceEpoch(lastRequest)
-            : null,
+        lastReviewRequest:
+            lastRequest != null ? DateTime.fromMillisecondsSinceEpoch(lastRequest) : null,
         isDismissed: isDismissed,
         lastFeatureUsed: lastFeatureUsed,
-        lastFeatureUsedTime: lastFeatureTime != null
-            ? DateTime.fromMillisecondsSinceEpoch(lastFeatureTime)
-            : null,
+        lastFeatureUsedTime:
+            lastFeatureTime != null ? DateTime.fromMillisecondsSinceEpoch(lastFeatureTime) : null,
       );
     } catch (e) {
       debugPrint('Ошибка получения статистики отзывов: $e');
@@ -172,9 +169,7 @@ class AppReviewService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final timestamp = prefs.getInt(_lastReviewRequestKey);
-      return timestamp != null
-          ? DateTime.fromMillisecondsSinceEpoch(timestamp)
-          : null;
+      return timestamp != null ? DateTime.fromMillisecondsSinceEpoch(timestamp) : null;
     } catch (e) {
       debugPrint('Ошибка получения времени последнего запроса: $e');
       return null;
@@ -243,8 +238,7 @@ class AppReviewService {
     try {
       String url;
       if (Platform.isAndroid) {
-        url =
-            'https://play.google.com/store/apps/details?id=com.example.event_marketplace_app';
+        url = 'https://play.google.com/store/apps/details?id=com.example.event_marketplace_app';
       } else if (Platform.isIOS) {
         url = 'https://apps.apple.com/app/id1234567890';
       } else {
@@ -273,11 +267,9 @@ class AppReviewService {
       if (launchCount >= _minLaunchesBeforeReview &&
           reviewCount < _maxReviewRequests &&
           (lastRequest == null ||
-              DateTime.now().difference(lastRequest).inDays >=
-                  _minDaysBetweenReviews)) {
+              DateTime.now().difference(lastRequest).inDays >= _minDaysBetweenReviews)) {
         // Проверяем, использовалась ли недавно функция
-        if (lastFeatureTime != null &&
-            DateTime.now().difference(lastFeatureTime).inMinutes < 5) {
+        if (lastFeatureTime != null && DateTime.now().difference(lastFeatureTime).inMinutes < 5) {
           return ReviewTiming.now;
         }
 

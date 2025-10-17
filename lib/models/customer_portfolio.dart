@@ -30,8 +30,7 @@ class CustomerPortfolio {
   }
 
   /// Создать из Map
-  factory CustomerPortfolio.fromMap(Map<String, dynamic> data, [String? id]) =>
-      CustomerPortfolio(
+  factory CustomerPortfolio.fromMap(Map<String, dynamic> data, [String? id]) => CustomerPortfolio(
         id: id ?? data['id'] ?? '',
         name: data['name'] ?? '',
         email: data['email'] ?? '',
@@ -49,19 +48,15 @@ class CustomerPortfolio {
                 : DateTime.parse(data['weddingDate'].toString()))
             : null,
         partnerName: data['partnerName'],
-        favoriteSpecialists:
-            List<String>.from(data['favoriteSpecialists'] ?? []),
+        favoriteSpecialists: List<String>.from(data['favoriteSpecialists'] ?? []),
         anniversaries: (data['anniversaries'] as List<dynamic>?)
                 ?.map(
-                  (e) => e is Timestamp
-                      ? e.toDate()
-                      : DateTime.parse(e.toString()),
+                  (e) => e is Timestamp ? e.toDate() : DateTime.parse(e.toString()),
                 )
                 .toList() ??
             [],
         notes: data['notes'],
-        anniversaryRemindersEnabled:
-            data['anniversaryRemindersEnabled'] as bool? ?? false,
+        anniversaryRemindersEnabled: data['anniversaryRemindersEnabled'] as bool? ?? false,
         createdAt: data['createdAt'] != null
             ? (data['createdAt'] is Timestamp
                 ? (data['createdAt'] as Timestamp).toDate()
@@ -76,8 +71,7 @@ class CustomerPortfolio {
       );
 
   /// Создать из Customer
-  factory CustomerPortfolio.fromCustomer(Customer customer) =>
-      CustomerPortfolio(
+  factory CustomerPortfolio.fromCustomer(Customer customer) => CustomerPortfolio(
         id: customer.id,
         name: customer.name,
         email: customer.email,
@@ -87,8 +81,7 @@ class CustomerPortfolio {
         weddingDate: customer.weddingDate,
         partnerName: customer.partnerName,
         favoriteSpecialists: customer.favoriteSpecialists,
-        anniversaries:
-            customer.weddingDate != null ? [customer.weddingDate!] : [],
+        anniversaries: customer.weddingDate != null ? [customer.weddingDate!] : [],
         anniversaryRemindersEnabled: customer.anniversaryRemindersEnabled,
         createdAt: customer.createdAt,
         lastLoginAt: customer.lastLoginAt,
@@ -117,16 +110,14 @@ class CustomerPortfolio {
         'avatarUrl': avatarUrl,
         'phoneNumber': phoneNumber,
         'maritalStatus': maritalStatus.name,
-        'weddingDate':
-            weddingDate != null ? Timestamp.fromDate(weddingDate!) : null,
+        'weddingDate': weddingDate != null ? Timestamp.fromDate(weddingDate!) : null,
         'partnerName': partnerName,
         'favoriteSpecialists': favoriteSpecialists,
         'anniversaries': anniversaries.map(Timestamp.fromDate).toList(),
         'notes': notes,
         'anniversaryRemindersEnabled': anniversaryRemindersEnabled,
         'createdAt': Timestamp.fromDate(createdAt),
-        'lastLoginAt':
-            lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
+        'lastLoginAt': lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
         'additionalData': additionalData,
       };
 
@@ -195,8 +186,7 @@ class CustomerPortfolio {
   }
 
   /// Проверить, является ли специалист в избранном
-  bool isFavoriteSpecialist(String specialistId) =>
-      favoriteSpecialists.contains(specialistId);
+  bool isFavoriteSpecialist(String specialistId) => favoriteSpecialists.contains(specialistId);
 
   /// Добавить годовщину
   CustomerPortfolio addAnniversary(DateTime anniversary) {
@@ -213,8 +203,7 @@ class CustomerPortfolio {
   CustomerPortfolio removeAnniversary(DateTime anniversary) {
     final newAnniversaries = anniversaries
         .where(
-          (date) =>
-              !(date.month == anniversary.month && date.day == anniversary.day),
+          (date) => !(date.month == anniversary.month && date.day == anniversary.day),
         )
         .toList();
     return copyWith(anniversaries: newAnniversaries);
@@ -223,15 +212,13 @@ class CustomerPortfolio {
   /// Добавить специалиста в избранное
   CustomerPortfolio addFavoriteSpecialist(String specialistId) {
     if (favoriteSpecialists.contains(specialistId)) return this;
-    final newFavorites = List<String>.from(favoriteSpecialists)
-      ..add(specialistId);
+    final newFavorites = List<String>.from(favoriteSpecialists)..add(specialistId);
     return copyWith(favoriteSpecialists: newFavorites);
   }
 
   /// Удалить специалиста из избранного
   CustomerPortfolio removeFavoriteSpecialist(String specialistId) {
-    final newFavorites =
-        favoriteSpecialists.where((id) => id != specialistId).toList();
+    final newFavorites = favoriteSpecialists.where((id) => id != specialistId).toList();
     return copyWith(favoriteSpecialists: newFavorites);
   }
 
@@ -242,8 +229,7 @@ class CustomerPortfolio {
 
     for (final anniversary in anniversaries) {
       final thisYear = DateTime(now.year, anniversary.month, anniversary.day);
-      final nextYear =
-          DateTime(now.year + 1, anniversary.month, anniversary.day);
+      final nextYear = DateTime(now.year + 1, anniversary.month, anniversary.day);
 
       if (thisYear.isAfter(now) && thisYear.difference(now).inDays <= 30) {
         upcoming.add(thisYear);
@@ -261,8 +247,7 @@ class CustomerPortfolio {
     final now = DateTime.now();
     return anniversaries
         .where(
-          (anniversary) =>
-              anniversary.month == now.month && anniversary.day == now.day,
+          (anniversary) => anniversary.month == now.month && anniversary.day == now.day,
         )
         .toList();
   }

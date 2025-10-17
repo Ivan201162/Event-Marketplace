@@ -202,8 +202,7 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
   Widget _buildUploadButton() => SizedBox(
         width: double.infinity,
         child: ElevatedButton.icon(
-          onPressed:
-              _selectedFiles.isEmpty || _isUploading ? null : _uploadFiles,
+          onPressed: _selectedFiles.isEmpty || _isUploading ? null : _uploadFiles,
           icon: _isUploading
               ? const SizedBox(
                   width: 16,
@@ -328,9 +327,8 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
         bookingId: widget.bookingId,
         specialistId: widget.specialistId,
         files: _selectedFiles,
-        description: _descriptionController.text.trim().isEmpty
-            ? null
-            : _descriptionController.text.trim(),
+        description:
+            _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
       );
 
       setState(() {

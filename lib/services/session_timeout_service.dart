@@ -8,8 +8,7 @@ import 'storage_service.dart';
 class SessionTimeoutService {
   factory SessionTimeoutService() => _instance;
   SessionTimeoutService._internal();
-  static final SessionTimeoutService _instance =
-      SessionTimeoutService._internal();
+  static final SessionTimeoutService _instance = SessionTimeoutService._internal();
 
   final AuthService _authService = AuthService();
   final StorageService _storageService = StorageService();

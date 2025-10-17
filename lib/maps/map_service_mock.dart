@@ -186,8 +186,7 @@ class MapServiceMock implements MapService {
 
     final latDiff = start.latitude - end.latitude;
     final lngDiff = start.longitude - end.longitude;
-    final distance = (latDiff * latDiff + lngDiff * lngDiff).abs() *
-        111000; // Примерно в метрах
+    final distance = (latDiff * latDiff + lngDiff * lngDiff).abs() * 111000; // Примерно в метрах
 
     return distance;
   }
@@ -252,8 +251,7 @@ class MapServiceMock implements MapService {
       );
 
   @override
-  MapMarker createUserMarker(MapCoordinates coordinates, String title) =>
-      MapMarker(
+  MapMarker createUserMarker(MapCoordinates coordinates, String title) => MapMarker(
         id: 'user_${coordinates.latitude}_${coordinates.longitude}',
         coordinates: coordinates,
         title: title,
@@ -398,8 +396,7 @@ class MapServiceMock implements MapService {
             // Маркеры
             ...markers.map(
               (marker) => Positioned(
-                left: 50 +
-                    (marker.coordinates.longitude - center.longitude) * 100,
+                left: 50 + (marker.coordinates.longitude - center.longitude) * 100,
                 top: 50 + (marker.coordinates.latitude - center.latitude) * 100,
                 child: GestureDetector(
                   onTap: () => onMarkerTap?.call(marker),

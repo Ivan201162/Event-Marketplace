@@ -13,12 +13,10 @@ class SpecialistAveragePriceWidget extends StatefulWidget {
   final bool showHistory;
 
   @override
-  State<SpecialistAveragePriceWidget> createState() =>
-      _SpecialistAveragePriceWidgetState();
+  State<SpecialistAveragePriceWidget> createState() => _SpecialistAveragePriceWidgetState();
 }
 
-class _SpecialistAveragePriceWidgetState
-    extends State<SpecialistAveragePriceWidget> {
+class _SpecialistAveragePriceWidgetState extends State<SpecialistAveragePriceWidget> {
   final SpecialistPricingService _service = SpecialistPricingService();
   SpecialistPricingStats? _stats;
   List<PriceHistoryEntry> _history = [];
@@ -38,8 +36,7 @@ class _SpecialistAveragePriceWidgetState
     });
 
     try {
-      final stats =
-          await _service.getSpecialistPricingStats(widget.specialistId);
+      final stats = await _service.getSpecialistPricingStats(widget.specialistId);
 
       var history = <PriceHistoryEntry>[];
       if (widget.showHistory) {
@@ -347,9 +344,7 @@ class _PricingStatItem extends StatelessWidget {
             ),
             const SizedBox(height: 2),
             Text(
-              isCount
-                  ? value.toInt().toString()
-                  : '${value.toStringAsFixed(0)} ₽',
+              isCount ? value.toInt().toString() : '${value.toStringAsFixed(0)} ₽',
               style: TextStyle(
                 fontSize: isMain ? 16 : 12,
                 color: color,
@@ -385,9 +380,7 @@ class _PricingHistoryWidget extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                ...history
-                    .take(6)
-                    .map((entry) => _HistoryEntryWidget(entry: entry)),
+                ...history.take(6).map((entry) => _HistoryEntryWidget(entry: entry)),
               ],
             ),
           ),

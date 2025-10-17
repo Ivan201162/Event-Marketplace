@@ -2,8 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Провайдер для заявок с тестовыми данными
-final bookingsProvider =
-    StreamProvider<List<Map<String, dynamic>>>((ref) async* {
+final bookingsProvider = StreamProvider<List<Map<String, dynamic>>>((ref) async* {
   // Сначала пытаемся загрузить из Firestore
   try {
     await for (final snapshot in FirebaseFirestore.instance
@@ -42,8 +41,7 @@ List<Map<String, dynamic>> _getTestBookings() => [
         'specialistName': 'Андрей Ведущий',
         'specialistId': 'specialist_1',
         'eventType': 'Свадьба',
-        'eventDate':
-            DateTime.now().add(const Duration(days: 30)).toIso8601String(),
+        'eventDate': DateTime.now().add(const Duration(days: 30)).toIso8601String(),
         'eventTime': '18:00',
         'duration': 4,
         'location': 'Ресторан "Солнце"',
@@ -52,10 +50,8 @@ List<Map<String, dynamic>> _getTestBookings() => [
         'totalPrice': 50000.0,
         'description':
             'Юбилей на 30 человек в ресторане "Солнце". Нужен ведущий для проведения торжества.',
-        'createdAt':
-            DateTime.now().subtract(const Duration(days: 5)).toIso8601String(),
-        'updatedAt':
-            DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
+        'createdAt': DateTime.now().subtract(const Duration(days: 5)).toIso8601String(),
+        'updatedAt': DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
       },
       {
         'id': 'booking_2',
@@ -65,20 +61,16 @@ List<Map<String, dynamic>> _getTestBookings() => [
         'specialistName': 'Елена Фотограф',
         'specialistId': 'specialist_2',
         'eventType': 'Корпоратив',
-        'eventDate':
-            DateTime.now().add(const Duration(days: 15)).toIso8601String(),
+        'eventDate': DateTime.now().add(const Duration(days: 15)).toIso8601String(),
         'eventTime': '19:00',
         'duration': 3,
         'location': 'Офис компании',
         'guestsCount': 50,
         'status': 'В обработке',
         'totalPrice': 30000.0,
-        'description':
-            'Корпоративное мероприятие для сотрудников. Нужна фотосъемка.',
-        'createdAt':
-            DateTime.now().subtract(const Duration(days: 3)).toIso8601String(),
-        'updatedAt':
-            DateTime.now().subtract(const Duration(hours: 2)).toIso8601String(),
+        'description': 'Корпоративное мероприятие для сотрудников. Нужна фотосъемка.',
+        'createdAt': DateTime.now().subtract(const Duration(days: 3)).toIso8601String(),
+        'updatedAt': DateTime.now().subtract(const Duration(hours: 2)).toIso8601String(),
       },
       {
         'id': 'booking_3',
@@ -88,20 +80,16 @@ List<Map<String, dynamic>> _getTestBookings() => [
         'specialistName': 'Дмитрий Диджей',
         'specialistId': 'specialist_3',
         'eventType': 'День рождения',
-        'eventDate':
-            DateTime.now().add(const Duration(days: 7)).toIso8601String(),
+        'eventDate': DateTime.now().add(const Duration(days: 7)).toIso8601String(),
         'eventTime': '20:00',
         'duration': 5,
         'location': 'Дом клиента',
         'guestsCount': 20,
         'status': 'Завершено',
         'totalPrice': 25000.0,
-        'description':
-            'День рождения на 20 человек. Нужен диджей для музыкального сопровождения.',
-        'createdAt':
-            DateTime.now().subtract(const Duration(days: 10)).toIso8601String(),
-        'updatedAt':
-            DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
+        'description': 'День рождения на 20 человек. Нужен диджей для музыкального сопровождения.',
+        'createdAt': DateTime.now().subtract(const Duration(days: 10)).toIso8601String(),
+        'updatedAt': DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
       },
       {
         'id': 'booking_4',
@@ -111,20 +99,16 @@ List<Map<String, dynamic>> _getTestBookings() => [
         'specialistName': 'Сергей Декоратор',
         'specialistId': 'specialist_4',
         'eventType': 'Выпускной',
-        'eventDate':
-            DateTime.now().add(const Duration(days: 45)).toIso8601String(),
+        'eventDate': DateTime.now().add(const Duration(days: 45)).toIso8601String(),
         'eventTime': '17:00',
         'duration': 6,
         'location': 'Школа №123',
         'guestsCount': 100,
         'status': 'Отклонено',
         'totalPrice': 75000.0,
-        'description':
-            'Выпускной вечер для 11 класса. Нужно украсить актовый зал.',
-        'createdAt':
-            DateTime.now().subtract(const Duration(days: 7)).toIso8601String(),
-        'updatedAt':
-            DateTime.now().subtract(const Duration(days: 2)).toIso8601String(),
+        'description': 'Выпускной вечер для 11 класса. Нужно украсить актовый зал.',
+        'createdAt': DateTime.now().subtract(const Duration(days: 7)).toIso8601String(),
+        'updatedAt': DateTime.now().subtract(const Duration(days: 2)).toIso8601String(),
       },
       {
         'id': 'booking_5',
@@ -134,19 +118,15 @@ List<Map<String, dynamic>> _getTestBookings() => [
         'specialistName': 'Анна Кейтеринг',
         'specialistId': 'specialist_5',
         'eventType': 'Семейный праздник',
-        'eventDate':
-            DateTime.now().add(const Duration(days: 20)).toIso8601String(),
+        'eventDate': DateTime.now().add(const Duration(days: 20)).toIso8601String(),
         'eventTime': '16:00',
         'duration': 4,
         'location': 'Дача клиента',
         'guestsCount': 15,
         'status': 'Подтверждено',
         'totalPrice': 40000.0,
-        'description':
-            'Семейный праздник на даче. Нужно организовать кейтеринг.',
-        'createdAt':
-            DateTime.now().subtract(const Duration(days: 2)).toIso8601String(),
-        'updatedAt':
-            DateTime.now().subtract(const Duration(hours: 5)).toIso8601String(),
+        'description': 'Семейный праздник на даче. Нужно организовать кейтеринг.',
+        'createdAt': DateTime.now().subtract(const Duration(days: 2)).toIso8601String(),
+        'updatedAt': DateTime.now().subtract(const Duration(hours: 5)).toIso8601String(),
       },
     ];

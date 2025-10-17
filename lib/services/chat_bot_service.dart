@@ -90,8 +90,7 @@ class ChatBotService {
     // Ключевые слова для определения намерений
     if (lowerMessage.contains('помощь') || lowerMessage.contains('help')) {
       return 'help';
-    } else if (lowerMessage.contains('вопрос') ||
-        lowerMessage.contains('faq')) {
+    } else if (lowerMessage.contains('вопрос') || lowerMessage.contains('faq')) {
       return 'faq';
     } else if (lowerMessage.contains('проблема') ||
         lowerMessage.contains('ошибка') ||
@@ -101,14 +100,11 @@ class ChatBotService {
         lowerMessage.contains('человек') ||
         lowerMessage.contains('поддержка')) {
       return 'human';
-    } else if (lowerMessage.contains('бронирование') ||
-        lowerMessage.contains('заказ')) {
+    } else if (lowerMessage.contains('бронирование') || lowerMessage.contains('заказ')) {
       return 'booking';
-    } else if (lowerMessage.contains('оплата') ||
-        lowerMessage.contains('платеж')) {
+    } else if (lowerMessage.contains('оплата') || lowerMessage.contains('платеж')) {
       return 'payment';
-    } else if (lowerMessage.contains('отмена') ||
-        lowerMessage.contains('возврат')) {
+    } else if (lowerMessage.contains('отмена') || lowerMessage.contains('возврат')) {
       return 'cancellation';
     } else {
       return 'general';
@@ -195,8 +191,7 @@ class ChatBotService {
         return ChatBotMessage(
           id: messageId,
           chatId: conversation.chatId,
-          message:
-              'Расскажите подробнее о проблеме. Это поможет мне лучше понять ситуацию.',
+          message: 'Расскажите подробнее о проблеме. Это поможет мне лучше понять ситуацию.',
           type: BotMessageType.text,
           quickReplies: [
             BotQuickReply(
@@ -349,10 +344,7 @@ class ChatBotService {
   /// Сохранить сообщение бота
   Future<void> _saveBotMessage(ChatBotMessage message) async {
     try {
-      await _firestore
-          .collection('chat_messages')
-          .doc(message.id)
-          .set(message.toMap());
+      await _firestore.collection('chat_messages').doc(message.id).set(message.toMap());
     } catch (e, stackTrace) {
       AppLogger.logE(
         'Ошибка сохранения сообщения бота',
@@ -370,10 +362,7 @@ class ChatBotService {
     String userMessage,
   ) async {
     try {
-      await _firestore
-          .collection('bot_conversations')
-          .doc(conversationId)
-          .update({
+      await _firestore.collection('bot_conversations').doc(conversationId).update({
         'context.lastIntent': intent,
         'context.lastMessage': userMessage,
         'context.messageCount': FieldValue.increment(1),

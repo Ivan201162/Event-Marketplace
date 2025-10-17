@@ -25,12 +25,10 @@ class EnvironmentConfig {
     required this.updatedBy,
   });
 
-  factory EnvironmentConfig.fromMap(Map<String, dynamic> map) =>
-      EnvironmentConfig(
+  factory EnvironmentConfig.fromMap(Map<String, dynamic> map) => EnvironmentConfig(
         id: map['id'] as String? ?? '',
         name: map['name'] as String? ?? '',
-        type:
-            EnvironmentType.fromString(map['type'] as String? ?? 'development'),
+        type: EnvironmentType.fromString(map['type'] as String? ?? 'development'),
         config: Map<String, dynamic>.from(
           map['config'] as Map<dynamic, dynamic>? ?? {},
         ),
@@ -159,8 +157,7 @@ class EnvironmentConfig {
       );
 
   @override
-  String toString() =>
-      'EnvironmentConfig(id: $id, name: $name, type: $type, isActive: $isActive)';
+  String toString() => 'EnvironmentConfig(id: $id, name: $name, type: $type, isActive: $isActive)';
 
   @override
   bool operator ==(Object other) {
@@ -185,8 +182,7 @@ enum EnvironmentType {
   final String value;
   final String displayName;
 
-  static EnvironmentType fromString(String value) =>
-      EnvironmentType.values.firstWhere(
+  static EnvironmentType fromString(String value) => EnvironmentType.values.firstWhere(
         (type) => type.value == value,
         orElse: () => EnvironmentType.development,
       );
@@ -242,8 +238,7 @@ class EnvironmentVariable {
     required this.updatedBy,
   });
 
-  factory EnvironmentVariable.fromMap(Map<String, dynamic> map) =>
-      EnvironmentVariable(
+  factory EnvironmentVariable.fromMap(Map<String, dynamic> map) => EnvironmentVariable(
         id: map['id'] as String? ?? '',
         key: map['key'] as String? ?? '',
         value: map['value'] as String? ?? '',
@@ -254,8 +249,7 @@ class EnvironmentVariable {
         description: map['description'] as String?,
         defaultValue: map['defaultValue'] as String?,
         isRequired: map['isRequired'] as bool? ?? false,
-        allowedValues:
-            List<String>.from((map['allowedValues'] as List<dynamic>?) ?? []),
+        allowedValues: List<String>.from((map['allowedValues'] as List<dynamic>?) ?? []),
         validationPattern: map['validationPattern'] as String?,
         metadata: Map<String, dynamic>.from(
           (map['metadata'] as Map<dynamic, dynamic>?) ?? {},
@@ -335,8 +329,7 @@ class EnvironmentVariable {
       );
 
   @override
-  String toString() =>
-      'EnvironmentVariable(id: $id, key: $key, type: $type, isSecret: $isSecret)';
+  String toString() => 'EnvironmentVariable(id: $id, key: $key, type: $type, isSecret: $isSecret)';
 
   @override
   bool operator ==(Object other) {
@@ -418,23 +411,19 @@ class DeploymentConfig {
     required this.updatedBy,
   });
 
-  factory DeploymentConfig.fromMap(Map<String, dynamic> map) =>
-      DeploymentConfig(
+  factory DeploymentConfig.fromMap(Map<String, dynamic> map) => DeploymentConfig(
         id: map['id'] as String? ?? '',
         environmentId: map['environmentId'] as String? ?? '',
         version: map['version'] as String? ?? '',
-        status:
-            DeploymentStatus.fromString(map['status'] as String? ?? 'draft'),
+        status: DeploymentStatus.fromString(map['status'] as String? ?? 'draft'),
         config: Map<String, dynamic>.from(
           (map['config'] as Map<dynamic, dynamic>?) ?? {},
         ),
         secrets: Map<String, dynamic>.from(
           (map['secrets'] as Map<dynamic, dynamic>?) ?? {},
         ),
-        dependencies:
-            List<String>.from((map['dependencies'] as List<dynamic>?) ?? []),
-        healthChecks:
-            List<String>.from((map['healthChecks'] as List<dynamic>?) ?? []),
+        dependencies: List<String>.from((map['dependencies'] as List<dynamic>?) ?? []),
+        healthChecks: List<String>.from((map['healthChecks'] as List<dynamic>?) ?? []),
         scalingConfig: Map<String, dynamic>.from(
           (map['scalingConfig'] as Map<dynamic, dynamic>?) ?? {},
         ),
@@ -566,8 +555,7 @@ enum DeploymentStatus {
   final String value;
   final String displayName;
 
-  static DeploymentStatus fromString(String value) =>
-      DeploymentStatus.values.firstWhere(
+  static DeploymentStatus fromString(String value) => DeploymentStatus.values.firstWhere(
         (status) => status.value == value,
         orElse: () => DeploymentStatus.draft,
       );

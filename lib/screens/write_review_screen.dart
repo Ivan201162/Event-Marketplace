@@ -277,8 +277,7 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
             controller: _commentController,
             maxLines: 5,
             decoration: InputDecoration(
-              hintText:
-                  'Расскажите о своем опыте работы с этим специалистом...',
+              hintText: 'Расскажите о своем опыте работы с этим специалистом...',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -331,8 +330,7 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
                     }
                   });
                 },
-                selectedColor:
-                    Theme.of(context).primaryColor.withValues(alpha: 0.2),
+                selectedColor: Theme.of(context).primaryColor.withValues(alpha: 0.2),
                 checkmarkColor: Theme.of(context).primaryColor,
               );
             }).toList(),
@@ -358,8 +356,7 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
             ? const CircularProgressIndicator(color: Colors.white)
             : Text(
                 isEditing ? 'Обновить отзыв' : 'Оставить отзыв',
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
       ),
     );

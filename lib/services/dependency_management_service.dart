@@ -12,8 +12,7 @@ import '../models/dependency_management.dart';
 class DependencyManagementService {
   factory DependencyManagementService() => _instance;
   DependencyManagementService._internal();
-  static final DependencyManagementService _instance =
-      DependencyManagementService._internal();
+  static final DependencyManagementService _instance = DependencyManagementService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -54,8 +53,7 @@ class DependencyManagementService {
   /// Загрузка конфигурации
   Future<void> _loadConfig() async {
     try {
-      final doc =
-          await _firestore.collection(_configCollection).doc('default').get();
+      final doc = await _firestore.collection(_configCollection).doc('default').get();
 
       if (doc.exists) {
         _config = DependencyConfig.fromMap(doc.data()!);
@@ -89,17 +87,13 @@ class DependencyManagementService {
 
   /// Сохранение конфигурации
   Future<void> _saveConfig(DependencyConfig config) async {
-    await _firestore
-        .collection(_configCollection)
-        .doc(config.id)
-        .set(config.toMap());
+    await _firestore.collection(_configCollection).doc(config.id).set(config.toMap());
   }
 
   /// Загрузка зависимостей
   Future<void> _loadDependencies() async {
     try {
-      final snapshot =
-          await _firestore.collection(_dependenciesCollection).get();
+      final snapshot = await _firestore.collection(_dependenciesCollection).get();
 
       for (final doc in snapshot.docs) {
         final dependency = Dependency.fromMap(doc.data());
@@ -107,8 +101,7 @@ class DependencyManagementService {
       }
 
       // Загружаем обновления
-      final updatesSnapshot =
-          await _firestore.collection(_updatesCollection).get();
+      final updatesSnapshot = await _firestore.collection(_updatesCollection).get();
 
       for (final doc in updatesSnapshot.docs) {
         final update = DependencyUpdate.fromMap(doc.data());
@@ -250,15 +243,11 @@ class DependencyManagementService {
 
   /// Получение зависимостей по типу
   List<Dependency> getDependenciesByType(DependencyType type) =>
-      _dependencyCache.values
-          .where((dependency) => dependency.type == type)
-          .toList();
+      _dependencyCache.values.where((dependency) => dependency.type == type).toList();
 
   /// Получение зависимостей по статусу
   List<Dependency> getDependenciesByStatus(DependencyStatus status) =>
-      _dependencyCache.values
-          .where((dependency) => dependency.status == status)
-          .toList();
+      _dependencyCache.values.where((dependency) => dependency.status == status).toList();
 
   /// Проверка обновлений
   Future<List<DependencyUpdate>> checkForUpdates() async {
@@ -266,8 +255,7 @@ class DependencyManagementService {
       final updates = <DependencyUpdate>[];
 
       for (final dependency in _dependencyCache.values) {
-        if (dependency.latestVersion != null &&
-            dependency.latestVersion != dependency.version) {
+        if (dependency.latestVersion != null && dependency.latestVersion != dependency.version) {
           final update = DependencyUpdate(
             id: _generateId(),
             dependencyId: dependency.id,
@@ -290,10 +278,7 @@ class DependencyManagementService {
             updatedBy: _auth.currentUser?.uid ?? '',
           );
 
-          await _firestore
-              .collection(_updatesCollection)
-              .doc(update.id)
-              .set(update.toMap());
+          await _firestore.collection(_updatesCollection).doc(update.id).set(update.toMap());
 
           _updateCache[update.id] = update;
           updates.add(update);
@@ -389,9 +374,7 @@ class DependencyManagementService {
 
   /// Получение обновлений по приоритету
   List<DependencyUpdate> getUpdatesByPriority(UpdatePriority priority) =>
-      _updateCache.values
-          .where((update) => update.priority == priority)
-          .toList();
+      _updateCache.values.where((update) => update.priority == priority).toList();
 
   /// Получение обновлений по типу
   List<DependencyUpdate> getUpdatesByType(UpdateType type) =>
@@ -426,22 +409,13 @@ class DependencyManagementService {
         'total': dependencies.length,
         'byType': _groupDependenciesByType(dependencies),
         'byStatus': _groupDependenciesByStatus(dependencies),
-        'outdated': dependencies
-            .where((d) => d.status == DependencyStatus.outdated)
-            .length,
-        'vulnerable': dependencies
-            .where((d) => d.status == DependencyStatus.vulnerable)
-            .length,
-        'deprecated': dependencies
-            .where((d) => d.status == DependencyStatus.deprecated)
-            .length,
+        'outdated': dependencies.where((d) => d.status == DependencyStatus.outdated).length,
+        'vulnerable': dependencies.where((d) => d.status == DependencyStatus.vulnerable).length,
+        'deprecated': dependencies.where((d) => d.status == DependencyStatus.deprecated).length,
         'updatesAvailable': updates.length,
-        'criticalUpdates':
-            updates.where((u) => u.priority == UpdatePriority.critical).length,
-        'securityUpdates':
-            updates.where((u) => u.securityFixes.isNotEmpty).length,
-        'breakingChanges':
-            updates.where((u) => u.breakingChanges.isNotEmpty).length,
+        'criticalUpdates': updates.where((u) => u.priority == UpdatePriority.critical).length,
+        'securityUpdates': updates.where((u) => u.securityFixes.isNotEmpty).length,
+        'breakingChanges': updates.where((u) => u.breakingChanges.isNotEmpty).length,
       };
     } catch (e) {
       await _crashlytics.recordError(e, null);
@@ -462,8 +436,7 @@ class DependencyManagementService {
   Map<String, int> _groupDependenciesByStatus(List<Dependency> dependencies) {
     final groups = <String, int>{};
     for (final dependency in dependencies) {
-      groups[dependency.status.value] =
-          (groups[dependency.status.value] ?? 0) + 1;
+      groups[dependency.status.value] = (groups[dependency.status.value] ?? 0) + 1;
     }
     return groups;
   }
@@ -507,8 +480,7 @@ class DependencyManagementService {
         throw ArgumentError('Unsupported format: $format');
       }
 
-      final dependenciesData =
-          importData['dependencies'] as List<dynamic>? ?? [];
+      final dependenciesData = importData['dependencies'] as List<dynamic>? ?? [];
       final updatesData = importData['updates'] as List<dynamic>? ?? [];
       final configData = importData['config'] as Map<String, dynamic>?;
 
@@ -520,8 +492,7 @@ class DependencyManagementService {
           version: dependencyData['version'] ?? '',
           latestVersion: dependencyData['latestVersion'],
           type: DependencyType.fromString(dependencyData['type'] ?? 'package'),
-          status:
-              DependencyStatus.fromString(dependencyData['status'] ?? 'active'),
+          status: DependencyStatus.fromString(dependencyData['status'] ?? 'active'),
           description: dependencyData['description'],
           repositoryUrl: dependencyData['repositoryUrl'],
           documentationUrl: dependencyData['documentationUrl'],
@@ -552,11 +523,9 @@ class DependencyManagementService {
           currentVersion: updateData['currentVersion'] ?? '',
           newVersion: updateData['newVersion'] ?? '',
           type: UpdateType.fromString(updateData['type'] ?? 'minor'),
-          priority:
-              UpdatePriority.fromString(updateData['priority'] ?? 'medium'),
+          priority: UpdatePriority.fromString(updateData['priority'] ?? 'medium'),
           changelog: updateData['changelog'],
-          breakingChanges:
-              List<String>.from(updateData['breakingChanges'] ?? []),
+          breakingChanges: List<String>.from(updateData['breakingChanges'] ?? []),
           securityFixes: List<String>.from(updateData['securityFixes'] ?? []),
           bugFixes: List<String>.from(updateData['bugFixes'] ?? []),
           newFeatures: List<String>.from(updateData['newFeatures'] ?? []),
@@ -568,10 +537,7 @@ class DependencyManagementService {
           updatedBy: user.uid,
         );
 
-        await _firestore
-            .collection(_updatesCollection)
-            .doc(update.id)
-            .set(update.toMap());
+        await _firestore.collection(_updatesCollection).doc(update.id).set(update.toMap());
 
         _updateCache[update.id] = update;
       }
@@ -607,9 +573,7 @@ class DependencyManagementService {
   /// Генерация уникального ID
   String _generateId() =>
       DateTime.now().millisecondsSinceEpoch.toString() +
-      (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000))
-          .round()
-          .toString();
+      (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000)).round().toString();
 
   /// Закрытие сервиса
   Future<void> dispose() async {

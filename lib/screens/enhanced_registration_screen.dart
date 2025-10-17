@@ -10,12 +10,10 @@ class EnhancedRegistrationScreen extends ConsumerStatefulWidget {
   const EnhancedRegistrationScreen({super.key});
 
   @override
-  ConsumerState<EnhancedRegistrationScreen> createState() =>
-      _EnhancedRegistrationScreenState();
+  ConsumerState<EnhancedRegistrationScreen> createState() => _EnhancedRegistrationScreenState();
 }
 
-class _EnhancedRegistrationScreenState
-    extends ConsumerState<EnhancedRegistrationScreen> {
+class _EnhancedRegistrationScreenState extends ConsumerState<EnhancedRegistrationScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
   final int _totalPages = 5;
@@ -308,15 +306,12 @@ class _EnhancedRegistrationScreenState
               return ListTile(
                 leading: CircleAvatar(
                   radius: 12,
-                  backgroundColor: index <= _currentPage
-                      ? Theme.of(context).primaryColor
-                      : Colors.grey[300],
+                  backgroundColor:
+                      index <= _currentPage ? Theme.of(context).primaryColor : Colors.grey[300],
                   child: Text(
                     '${index + 1}',
                     style: TextStyle(
-                      color: index <= _currentPage
-                          ? Colors.white
-                          : Colors.grey[600],
+                      color: index <= _currentPage ? Colors.white : Colors.grey[600],
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),
@@ -325,11 +320,8 @@ class _EnhancedRegistrationScreenState
                 title: ResponsiveText(
                   pageNames[index],
                   style: TextStyle(
-                    color:
-                        index <= _currentPage ? Colors.black : Colors.grey[600],
-                    fontWeight: index == _currentPage
-                        ? FontWeight.bold
-                        : FontWeight.normal,
+                    color: index <= _currentPage ? Colors.black : Colors.grey[600],
+                    fontWeight: index == _currentPage ? FontWeight.bold : FontWeight.normal,
                   ),
                 ),
                 onTap: () {
@@ -402,8 +394,7 @@ class _EnhancedRegistrationScreenState
                 if (value == null || value.isEmpty) {
                   return 'Введите email';
                 }
-                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                    .hasMatch(value)) {
+                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
                   return 'Введите корректный email';
                 }
                 return null;
@@ -575,8 +566,7 @@ class _EnhancedRegistrationScreenState
               onTap: () async {
                 final date = await showDatePicker(
                   context: context,
-                  initialDate:
-                      DateTime.now().subtract(const Duration(days: 365 * 25)),
+                  initialDate: DateTime.now().subtract(const Duration(days: 365 * 25)),
                   firstDate: DateTime(1900),
                   lastDate: DateTime.now(),
                 );
@@ -688,8 +678,7 @@ class _EnhancedRegistrationScreenState
               keyboardType: TextInputType.number,
             ),
 
-          if (_selectedUserType == UserType.organization)
-            const SizedBox(height: 16),
+          if (_selectedUserType == UserType.organization) const SizedBox(height: 16),
 
           // Юридический адрес
           TextFormField(
@@ -766,8 +755,7 @@ class _EnhancedRegistrationScreenState
             spacing: 8,
             runSpacing: 8,
             children: _getSpecializationOptions().map((specialization) {
-              final isSelected =
-                  _selectedSpecializations.contains(specialization);
+              final isSelected = _selectedSpecializations.contains(specialization);
               return FilterChip(
                 label: Text(specialization),
                 selected: isSelected,

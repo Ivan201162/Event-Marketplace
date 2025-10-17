@@ -52,8 +52,7 @@ class PromotedPost {
 
   bool get isExpired => DateTime.now().isAfter(endDate);
 
-  bool get isCurrentlyActive =>
-      isActive && !isExpired && DateTime.now().isAfter(startDate);
+  bool get isCurrentlyActive => isActive && !isExpired && DateTime.now().isAfter(startDate);
 
   PromotedPost copyWith({
     String? postId,
@@ -80,4 +79,3 @@ class PromotedPost {
         createdAt: createdAt ?? this.createdAt,
       );
 }
-

@@ -14,8 +14,7 @@ class BookingConfirmationTimer extends StatefulWidget {
   final BookingService bookingService;
 
   @override
-  State<BookingConfirmationTimer> createState() =>
-      _BookingConfirmationTimerState();
+  State<BookingConfirmationTimer> createState() => _BookingConfirmationTimerState();
 }
 
 class _BookingConfirmationTimerState extends State<BookingConfirmationTimer> {
@@ -46,8 +45,7 @@ class _BookingConfirmationTimerState extends State<BookingConfirmationTimer> {
   }
 
   void _updateTimeRemaining() {
-    final timeRemaining =
-        widget.bookingService.getTimeUntilExpiry(widget.booking);
+    final timeRemaining = widget.bookingService.getTimeUntilExpiry(widget.booking);
     if (mounted) {
       setState(() {
         _timeRemaining = timeRemaining;
@@ -57,8 +55,7 @@ class _BookingConfirmationTimerState extends State<BookingConfirmationTimer> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.booking.status != BookingStatus.pending ||
-        _timeRemaining == null) {
+    if (widget.booking.status != BookingStatus.pending || _timeRemaining == null) {
       return const SizedBox.shrink();
     }
 

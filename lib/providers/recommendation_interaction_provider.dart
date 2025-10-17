@@ -2,14 +2,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/recommendation_interaction.dart';
 
 /// Провайдер для управления взаимодействиями с рекомендациями
-final recommendationInteractionProvider = StateNotifierProvider<
-    RecommendationInteractionNotifier, List<RecommendationInteraction>>(
+final recommendationInteractionProvider =
+    StateNotifierProvider<RecommendationInteractionNotifier, List<RecommendationInteraction>>(
   (ref) => RecommendationInteractionNotifier(),
 );
 
 /// Нотификатор для взаимодействий с рекомендациями
-class RecommendationInteractionNotifier
-    extends StateNotifier<List<RecommendationInteraction>> {
+class RecommendationInteractionNotifier extends StateNotifier<List<RecommendationInteraction>> {
   RecommendationInteractionNotifier() : super([]);
 
   /// Записать взаимодействие
@@ -31,9 +30,7 @@ class RecommendationInteractionNotifier
   List<RecommendationInteraction> getInteractionsForSpecialist(
     String specialistId,
   ) =>
-      state
-          .where((interaction) => interaction.specialistId == specialistId)
-          .toList();
+      state.where((interaction) => interaction.specialistId == specialistId).toList();
 
   /// Очистить все взаимодействия
   void clearInteractions() {

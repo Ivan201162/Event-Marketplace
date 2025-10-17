@@ -9,8 +9,7 @@ class AppLocalizations {
       Localizations.of<AppLocalizations>(context, AppLocalizations) ??
       const AppLocalizations(Locale('en'));
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = [
     delegate,
@@ -86,10 +85,8 @@ class AppLocalizations {
   @override
   dynamic noSuchMethod(Invocation invocation) {
     if (invocation.isGetter) {
-      final key = invocation.memberName
-          .toString()
-          .replaceFirst('Symbol("', '')
-          .replaceFirst('")', '');
+      final key =
+          invocation.memberName.toString().replaceFirst('Symbol("', '').replaceFirst('")', '');
       return t(key);
     }
     return super.noSuchMethod(invocation);
@@ -123,19 +120,16 @@ class AppLocalizations {
   String get close => t('close');
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
   bool isSupported(Locale locale) => AppLocalizations.supportedLocales.any(
-        (supportedLocale) =>
-            supportedLocale.languageCode == locale.languageCode,
+        (supportedLocale) => supportedLocale.languageCode == locale.languageCode,
       );
 
   @override
-  Future<AppLocalizations> load(Locale locale) async =>
-      AppLocalizations(locale);
+  Future<AppLocalizations> load(Locale locale) async => AppLocalizations(locale);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;

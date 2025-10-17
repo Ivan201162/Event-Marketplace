@@ -12,8 +12,7 @@ class EnhancedFiltersDialog extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<EnhancedFiltersDialog> createState() =>
-      _EnhancedFiltersDialogState();
+  ConsumerState<EnhancedFiltersDialog> createState() => _EnhancedFiltersDialogState();
 }
 
 class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
@@ -88,8 +87,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(20)),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
               ),
               child: Row(
                 children: [
@@ -144,8 +142,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Colors.grey[50],
-                borderRadius:
-                    const BorderRadius.vertical(bottom: Radius.circular(20)),
+                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
                 border: Border(
                   top: BorderSide(color: Colors.grey[200]!),
                 ),
@@ -254,7 +251,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
-          value: _selectedCategory,
+          initialValue: _selectedCategory,
           decoration: InputDecoration(
             hintText: 'Выберите категорию',
             prefixIcon: const Icon(Icons.category),
@@ -353,7 +350,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
-          value: _selectedSpecialistType,
+          initialValue: _selectedSpecialistType,
           decoration: InputDecoration(
             hintText: 'Выберите тип',
             prefixIcon: const Icon(Icons.business),

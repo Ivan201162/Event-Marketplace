@@ -102,8 +102,7 @@ class OfflineSettingsScreen extends ConsumerWidget {
         ),
       );
 
-  Widget _buildLargeDesktopLayout(BuildContext context, WidgetRef ref) =>
-      Scaffold(
+  Widget _buildLargeDesktopLayout(BuildContext context, WidgetRef ref) => Scaffold(
         appBar: AppBar(
           title: const Text('Офлайн-режим'),
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -172,19 +171,15 @@ class OfflineSettingsScreen extends ConsumerWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
-              onPressed: () =>
-                  ref.read(offlineModeProvider.notifier).toggleOfflineMode(),
+              onPressed: () => ref.read(offlineModeProvider.notifier).toggleOfflineMode(),
               icon: Icon(
                 offlineState.isOfflineMode ? Icons.wifi : Icons.wifi_off,
               ),
               label: Text(
-                offlineState.isOfflineMode
-                    ? 'Включить онлайн'
-                    : 'Включить офлайн',
+                offlineState.isOfflineMode ? 'Включить онлайн' : 'Включить офлайн',
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    offlineState.isOfflineMode ? Colors.green : Colors.orange,
+                backgroundColor: offlineState.isOfflineMode ? Colors.green : Colors.orange,
                 foregroundColor: Colors.white,
               ),
             ),
@@ -196,9 +191,8 @@ class OfflineSettingsScreen extends ConsumerWidget {
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
-              onPressed: syncState.isSyncing
-                  ? null
-                  : () => ref.read(syncProvider.notifier).startSync(),
+              onPressed:
+                  syncState.isSyncing ? null : () => ref.read(syncProvider.notifier).startSync(),
               icon: syncState.isSyncing
                   ? const SizedBox(
                       width: 16,
@@ -232,8 +226,7 @@ class OfflineSettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildQuickSettings(BuildContext context, WidgetRef ref) =>
-      ResponsiveCard(
+  Widget _buildQuickSettings(BuildContext context, WidgetRef ref) => ResponsiveCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -246,8 +239,7 @@ class OfflineSettingsScreen extends ConsumerWidget {
             // Автоматическая синхронизация
             SwitchListTile(
               title: const Text('Автосинхронизация'),
-              subtitle:
-                  const Text('Автоматическая синхронизация при подключении'),
+              subtitle: const Text('Автоматическая синхронизация при подключении'),
               value: true, // TODO(developer): Получить из настроек
               onChanged: (value) {
                 // TODO(developer): Сохранить настройку

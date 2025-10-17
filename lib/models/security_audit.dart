@@ -38,9 +38,7 @@ class SecurityAudit {
       ),
       timestamp: (data['timestamp'] as Timestamp).toDate(),
       resolvedBy: data['resolvedBy'] as String?,
-      resolvedAt: data['resolvedAt'] != null
-          ? (data['resolvedAt'] as Timestamp).toDate()
-          : null,
+      resolvedAt: data['resolvedAt'] != null ? (data['resolvedAt'] as Timestamp).toDate() : null,
       isResolved: data['isResolved'] as bool? ?? false,
     );
   }
@@ -61,9 +59,7 @@ class SecurityAudit {
         metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
         timestamp: (data['timestamp'] as Timestamp).toDate(),
         resolvedBy: data['resolvedBy'],
-        resolvedAt: data['resolvedAt'] != null
-            ? (data['resolvedAt'] as Timestamp).toDate()
-            : null,
+        resolvedAt: data['resolvedAt'] != null ? (data['resolvedAt'] as Timestamp).toDate() : null,
         isResolved: data['isResolved'] as bool? ?? false,
       );
   final String id;
@@ -92,8 +88,7 @@ class SecurityAudit {
         'metadata': metadata,
         'timestamp': Timestamp.fromDate(timestamp),
         'resolvedBy': resolvedBy,
-        'resolvedAt':
-            resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
+        'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
         'isResolved': isResolved,
       };
 
@@ -133,8 +128,7 @@ class SecurityAudit {
   bool get isCritical => level == SecurityLevel.critical;
 
   /// Проверить, требует ли внимания
-  bool get requiresAttention =>
-      level == SecurityLevel.critical || level == SecurityLevel.high;
+  bool get requiresAttention => level == SecurityLevel.critical || level == SecurityLevel.high;
 
   /// Получить время до разрешения
   Duration? get timeToResolution {
@@ -179,8 +173,7 @@ class SecurityAudit {
       );
 
   @override
-  String toString() =>
-      'SecurityAudit(id: $id, eventType: $eventType, level: $level)';
+  String toString() => 'SecurityAudit(id: $id, eventType: $eventType, level: $level)';
 }
 
 /// Модель политики безопасности
@@ -356,9 +349,7 @@ class EncryptionKey {
       algorithm: data['algorithm'] ?? '',
       keyType: data['keyType'] ?? '',
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      expiresAt: data['expiresAt'] != null
-          ? (data['expiresAt'] as Timestamp).toDate()
-          : null,
+      expiresAt: data['expiresAt'] != null ? (data['expiresAt'] as Timestamp).toDate() : null,
       isActive: data['isActive'] as bool? ?? true,
       description: data['description'],
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
@@ -372,9 +363,7 @@ class EncryptionKey {
         algorithm: data['algorithm'] ?? '',
         keyType: data['keyType'] ?? '',
         createdAt: (data['createdAt'] as Timestamp).toDate(),
-        expiresAt: data['expiresAt'] != null
-            ? (data['expiresAt'] as Timestamp).toDate()
-            : null,
+        expiresAt: data['expiresAt'] != null ? (data['expiresAt'] as Timestamp).toDate() : null,
         isActive: data['isActive'] as bool? ?? true,
         description: data['description'],
         metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
@@ -469,8 +458,7 @@ class EncryptionKey {
       );
 
   @override
-  String toString() =>
-      'EncryptionKey(id: $id, name: $name, algorithm: $algorithm)';
+  String toString() => 'EncryptionKey(id: $id, name: $name, algorithm: $algorithm)';
 }
 
 /// Уровни безопасности

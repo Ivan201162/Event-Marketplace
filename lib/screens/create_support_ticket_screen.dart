@@ -13,12 +13,10 @@ class CreateSupportTicketScreen extends ConsumerStatefulWidget {
   const CreateSupportTicketScreen({super.key});
 
   @override
-  ConsumerState<CreateSupportTicketScreen> createState() =>
-      _CreateSupportTicketScreenState();
+  ConsumerState<CreateSupportTicketScreen> createState() => _CreateSupportTicketScreenState();
 }
 
-class _CreateSupportTicketScreenState
-    extends ConsumerState<CreateSupportTicketScreen> {
+class _CreateSupportTicketScreenState extends ConsumerState<CreateSupportTicketScreen> {
   final _formKey = GlobalKey<FormState>();
   final _subjectController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -396,10 +394,6 @@ class _CreateSupportTicketScreenState
 
     try {
       final currentUser = ref.read(authServiceProvider).currentUser;
-      if (currentUser == null) {
-        _showErrorSnackBar('Пользователь не авторизован');
-        return;
-      }
 
       final ticketId = await _supportService.createTicket(
         userId: currentUser.uid,

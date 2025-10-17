@@ -64,16 +64,12 @@ class ReviewCard extends StatelessWidget {
           // Аватар пользователя
           CircleAvatar(
             radius: compact ? 16 : 20,
-            backgroundColor:
-                Theme.of(context).primaryColor.withValues(alpha: 0.1),
-            backgroundImage: review.customerAvatar != null
-                ? NetworkImage(review.customerAvatar!)
-                : null,
+            backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+            backgroundImage:
+                review.customerAvatar != null ? NetworkImage(review.customerAvatar!) : null,
             child: review.customerAvatar == null
                 ? Text(
-                    review.customerName.isNotEmpty
-                        ? review.customerName[0].toUpperCase()
-                        : '?',
+                    review.customerName.isNotEmpty ? review.customerName[0].toUpperCase() : '?',
                     style: TextStyle(
                       fontSize: compact ? 12 : 14,
                       fontWeight: FontWeight.bold,

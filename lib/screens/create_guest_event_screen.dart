@@ -11,12 +11,10 @@ class CreateGuestEventScreen extends ConsumerStatefulWidget {
   final String organizerId;
 
   @override
-  ConsumerState<CreateGuestEventScreen> createState() =>
-      _CreateGuestEventScreenState();
+  ConsumerState<CreateGuestEventScreen> createState() => _CreateGuestEventScreenState();
 }
 
-class _CreateGuestEventScreenState
-    extends ConsumerState<CreateGuestEventScreen> {
+class _CreateGuestEventScreenState extends ConsumerState<CreateGuestEventScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -237,8 +235,7 @@ class _CreateGuestEventScreenState
               // Разрешить поздравления
               SwitchListTile(
                 title: const Text('Разрешить поздравления'),
-                subtitle:
-                    const Text('Гости смогут загружать поздравления и фото'),
+                subtitle: const Text('Гости смогут загружать поздравления и фото'),
                 value: _allowGreetings,
                 onChanged: (value) {
                   setState(() {
@@ -367,8 +364,7 @@ class _CreateGuestEventScreenState
         startDate: _startTime,
         endDate: _endTime,
         location: _locationController.text.trim(),
-        organizerName:
-            'Демо Организатор', // TODO(developer): Получить из контекста
+        organizerName: 'Демо Организатор', // TODO(developer): Получить из контекста
       );
 
       Navigator.pop(context, true);

@@ -16,8 +16,7 @@ class EnhancedOrderScreen extends ConsumerStatefulWidget {
   final String orderId;
 
   @override
-  ConsumerState<EnhancedOrderScreen> createState() =>
-      _EnhancedOrderScreenState();
+  ConsumerState<EnhancedOrderScreen> createState() => _EnhancedOrderScreenState();
 }
 
 class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
@@ -178,8 +177,7 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
                   value: 'cancel',
                   child: ListTile(
                     leading: Icon(Icons.cancel, color: Colors.red),
-                    title:
-                        Text('Отменить', style: TextStyle(color: Colors.red)),
+                    title: Text('Отменить', style: TextStyle(color: Colors.red)),
                   ),
                 ),
             ],
@@ -336,9 +334,7 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
                 Expanded(
                   child: _buildInfoCard(
                     'Бюджет',
-                    _order!.budget != null
-                        ? '${_order!.budget!.toInt()}₽'
-                        : 'Не указан',
+                    _order!.budget != null ? '${_order!.budget!.toInt()}₽' : 'Не указан',
                     Icons.attach_money,
                     Colors.green,
                   ),
@@ -547,16 +543,13 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
         ),
       );
 
-  Widget _buildStatusCard(String title, String value, String color) =>
-      Container(
+  Widget _buildStatusCard(String title, String value, String color) => Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Color(int.parse(color.replaceFirst('#', '0xFF')))
-              .withOpacity(0.1),
+          color: Color(int.parse(color.replaceFirst('#', '0xFF'))).withOpacity(0.1),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: Color(int.parse(color.replaceFirst('#', '0xFF')))
-                .withOpacity(0.3),
+            color: Color(int.parse(color.replaceFirst('#', '0xFF'))).withOpacity(0.3),
           ),
         ),
         child: Column(

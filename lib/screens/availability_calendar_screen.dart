@@ -13,12 +13,10 @@ class AvailabilityCalendarScreen extends ConsumerStatefulWidget {
   final String specialistId;
 
   @override
-  ConsumerState<AvailabilityCalendarScreen> createState() =>
-      _AvailabilityCalendarScreenState();
+  ConsumerState<AvailabilityCalendarScreen> createState() => _AvailabilityCalendarScreenState();
 }
 
-class _AvailabilityCalendarScreenState
-    extends ConsumerState<AvailabilityCalendarScreen> {
+class _AvailabilityCalendarScreenState extends ConsumerState<AvailabilityCalendarScreen> {
   final AvailabilityService _availabilityService = AvailabilityService();
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
@@ -187,9 +185,7 @@ class _AvailabilityCalendarScreenState
                     return Container(
                       margin: const EdgeInsets.all(2),
                       decoration: BoxDecoration(
-                        color: availability.isAvailable
-                            ? Colors.green
-                            : Colors.red,
+                        color: availability.isAvailable ? Colors.green : Colors.red,
                         shape: BoxShape.circle,
                       ),
                       width: 8,
@@ -219,10 +215,7 @@ class _AvailabilityCalendarScreenState
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            if (availability == null)
-              _buildAvailableDay()
-            else
-              _buildBusyDay(availability),
+            if (availability == null) _buildAvailableDay() else _buildBusyDay(availability),
           ],
         ),
       ),

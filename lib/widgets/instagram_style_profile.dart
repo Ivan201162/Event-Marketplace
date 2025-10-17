@@ -15,8 +15,7 @@ class InstagramStyleProfile extends ConsumerStatefulWidget {
   final String specialistId;
 
   @override
-  ConsumerState<InstagramStyleProfile> createState() =>
-      _InstagramStyleProfileState();
+  ConsumerState<InstagramStyleProfile> createState() => _InstagramStyleProfileState();
 }
 
 class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
@@ -152,9 +151,7 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
                         : null,
                     child: _specialist!.imageUrlValue == null
                         ? Text(
-                            _specialist!.name.isNotEmpty
-                                ? _specialist!.name[0].toUpperCase()
-                                : 'С',
+                            _specialist!.name.isNotEmpty ? _specialist!.name[0].toUpperCase() : 'С',
                             style: const TextStyle(
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
@@ -225,11 +222,8 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: _isFollowing
-                          ? Colors.grey.shade200
-                          : BrandColors.primary,
-                      foregroundColor:
-                          _isFollowing ? Colors.black : Colors.white,
+                      backgroundColor: _isFollowing ? Colors.grey.shade200 : BrandColors.primary,
+                      foregroundColor: _isFollowing ? Colors.black : Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -306,9 +300,7 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: index == 0
-                          ? Colors.grey.shade300
-                          : BrandColors.primary,
+                      color: index == 0 ? Colors.grey.shade300 : BrandColors.primary,
                       width: 2,
                     ),
                   ),
@@ -376,8 +368,7 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
                 ),
                 const Spacer(),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: BrandColors.primaryLight,
                     borderRadius: BorderRadius.circular(8),

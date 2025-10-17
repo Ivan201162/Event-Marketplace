@@ -36,8 +36,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
           _showProfileCard = false;
         });
       }
-    } else if (currentOffset < _lastScrollOffset ||
-        currentOffset <= threshold) {
+    } else if (currentOffset < _lastScrollOffset || currentOffset <= threshold) {
       // Скролл вверх - показываем плашку профиля
       if (!_showProfileCard) {
         setState(() {
@@ -64,9 +63,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
                 height: _showProfileCard ? null : 0,
-                child: _showProfileCard
-                    ? _buildProfileCard(theme)
-                    : const SizedBox.shrink(),
+                child: _showProfileCard ? _buildProfileCard(theme) : const SizedBox.shrink(),
               ),
             ),
 
@@ -77,14 +74,12 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
 
             // Лучшие специалисты недели
             SliverToBoxAdapter(
-              child: _buildTopSpecialistsSection(
-                  theme, 'Лучшие специалисты недели по России'),
+              child: _buildTopSpecialistsSection(theme, 'Лучшие специалисты недели по России'),
             ),
 
             // Лучшие специалисты по городу
             SliverToBoxAdapter(
-              child: _buildTopSpecialistsSection(
-                  theme, 'Лучшие специалисты по вашему городу'),
+              child: _buildTopSpecialistsSection(theme, 'Лучшие специалисты по вашему городу'),
             ),
 
             // Дополнительный контент
@@ -158,8 +153,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
                 ),
                 const SizedBox(height: 4),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     color: Colors.green.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -262,7 +256,6 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
       onSelected: (selected) {
         // Обработка выбора фильтра
       },
-      selected: false,
       backgroundColor: theme.scaffoldBackgroundColor,
       selectedColor: theme.primaryColor.withValues(alpha: 0.2),
       checkmarkColor: theme.primaryColor,
@@ -315,36 +308,11 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
 
   Widget _buildSpecialistCard(ThemeData theme, int index) {
     final specialists = [
-      {
-        'name': 'Анна Петрова',
-        'specialty': 'Фотограф',
-        'rating': 4.9,
-        'price': '5000₽'
-      },
-      {
-        'name': 'Михаил Сидоров',
-        'specialty': 'Видеограф',
-        'rating': 4.8,
-        'price': '8000₽'
-      },
-      {
-        'name': 'Елена Козлова',
-        'specialty': 'Организатор',
-        'rating': 4.9,
-        'price': '12000₽'
-      },
-      {
-        'name': 'Дмитрий Волков',
-        'specialty': 'Диджей',
-        'rating': 4.7,
-        'price': '15000₽'
-      },
-      {
-        'name': 'Ольга Морозова',
-        'specialty': 'Декоратор',
-        'rating': 4.8,
-        'price': '6000₽'
-      },
+      {'name': 'Анна Петрова', 'specialty': 'Фотограф', 'rating': 4.9, 'price': '5000₽'},
+      {'name': 'Михаил Сидоров', 'specialty': 'Видеограф', 'rating': 4.8, 'price': '8000₽'},
+      {'name': 'Елена Козлова', 'specialty': 'Организатор', 'rating': 4.9, 'price': '12000₽'},
+      {'name': 'Дмитрий Волков', 'specialty': 'Диджей', 'rating': 4.7, 'price': '15000₽'},
+      {'name': 'Ольга Морозова', 'specialty': 'Декоратор', 'rating': 4.8, 'price': '6000₽'},
     ];
 
     final specialist = specialists[index];
@@ -405,7 +373,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.star,
                       size: 14,
                       color: Colors.amber,

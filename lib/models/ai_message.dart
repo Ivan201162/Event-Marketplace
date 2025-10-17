@@ -34,9 +34,8 @@ class AIMessage {
           orElse: () => AIMessageType.user,
         ),
         content: data['content'] as String? ?? '',
-        timestamp: data['timestamp'] != null
-            ? (data['timestamp'] as Timestamp).toDate()
-            : DateTime.now(),
+        timestamp:
+            data['timestamp'] != null ? (data['timestamp'] as Timestamp).toDate() : DateTime.now(),
         specialistId: data['specialistId'] as String?,
         specialistName: data['specialistName'] as String?,
         specialistCategory: data['specialistCategory'] as String?,
@@ -58,9 +57,8 @@ class AIMessage {
         orElse: () => AIMessageType.user,
       ),
       content: data['content'] as String? ?? '',
-      timestamp: data['timestamp'] != null
-          ? (data['timestamp'] as Timestamp).toDate()
-          : DateTime.now(),
+      timestamp:
+          data['timestamp'] != null ? (data['timestamp'] as Timestamp).toDate() : DateTime.now(),
       specialistId: data['specialistId'] as String?,
       specialistName: data['specialistName'] as String?,
       specialistCategory: data['specialistCategory'] as String?,
@@ -140,8 +138,7 @@ class AIMessage {
   String get formattedTime {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final messageDate =
-        DateTime(timestamp.year, timestamp.month, timestamp.day);
+    final messageDate = DateTime(timestamp.year, timestamp.month, timestamp.day);
 
     if (messageDate == today) {
       return '${timestamp.hour.toString().padLeft(2, '0')}:${timestamp.minute.toString().padLeft(2, '0')}';

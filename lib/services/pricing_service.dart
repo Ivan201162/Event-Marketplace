@@ -54,8 +54,7 @@ class PricingService {
       final averagePrices = <String, double>{};
       pricesByCategory.forEach((category, prices) {
         if (prices.isNotEmpty) {
-          averagePrices[category] =
-              prices.reduce((a, b) => a + b) / prices.length;
+          averagePrices[category] = prices.reduce((a, b) => a + b) / prices.length;
         }
       });
 
@@ -261,16 +260,14 @@ class PricingService {
         'pricing_service',
       );
 
-      final specialistsSnapshot =
-          await _firestore.collection('specialists').get();
+      final specialistsSnapshot = await _firestore.collection('specialists').get();
 
       final batch = _firestore.batch();
       var updatedCount = 0;
 
       for (final doc in specialistsSnapshot.docs) {
         final specialistId = doc.id;
-        final averagePrices =
-            await calculateAveragePricesByService(specialistId);
+        final averagePrices = await calculateAveragePricesByService(specialistId);
 
         if (averagePrices.isNotEmpty) {
           batch.update(doc.reference, {

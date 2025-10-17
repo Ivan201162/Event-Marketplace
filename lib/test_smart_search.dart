@@ -10,8 +10,7 @@ import 'services/smart_specialist_data_generator.dart';
 class SmartSearchTester {
   final SmartSearchService _smartSearchService = SmartSearchService();
   final AIAssistantService _aiAssistantService = AIAssistantService();
-  final SmartSpecialistDataGenerator _dataGenerator =
-      SmartSpecialistDataGenerator();
+  final SmartSpecialistDataGenerator _dataGenerator = SmartSpecialistDataGenerator();
 
   /// Запустить все тесты
   Future<void> runAllTests() async {
@@ -125,8 +124,7 @@ class SmartSearchTester {
       debugPrint('✅ Предпочтения сохранены: $saved');
 
       // Получаем рекомендации
-      final recommendations =
-          await _smartSearchService.getPersonalRecommendations(
+      final recommendations = await _smartSearchService.getPersonalRecommendations(
         testUserId,
         limit: 5,
       );
@@ -214,8 +212,7 @@ class SmartSearchTester {
       debugPrint('✅ Предпочтения созданы и сохранены');
 
       // Загружаем
-      final loadedPreferences =
-          await _smartSearchService.getUserPreferences(testUserId);
+      final loadedPreferences = await _smartSearchService.getUserPreferences(testUserId);
       debugPrint(
         '✅ Предпочтения загружены: ${loadedPreferences?.likedStyles.length} стилей',
       );
@@ -284,8 +281,7 @@ class SmartSearchTester {
       await _smartSearchService.saveUserPreferences(preferences);
 
       // Получаем специалистов по совместимости
-      final compatibleSpecialists =
-          await _smartSearchService.getSpecialistsByCompatibility(
+      final compatibleSpecialists = await _smartSearchService.getSpecialistsByCompatibility(
         testUserId,
         limit: 5,
       );

@@ -35,8 +35,7 @@ class SpecialistPriceStats {
   }
 
   /// Создать из Map
-  factory SpecialistPriceStats.fromMap(Map<String, dynamic> data) =>
-      SpecialistPriceStats(
+  factory SpecialistPriceStats.fromMap(Map<String, dynamic> data) => SpecialistPriceStats(
         specialistId: data['specialistId'] ?? '',
         categoryId: data['categoryId'] ?? '',
         categoryName: data['categoryName'] ?? '',
@@ -110,8 +109,7 @@ class SpecialistPriceStats {
   }
 
   /// Получить средний чек
-  double get averageCheck =>
-      completedBookings > 0 ? totalRevenue / completedBookings : 0;
+  double get averageCheck => completedBookings > 0 ? totalRevenue / completedBookings : 0;
 
   /// Получить коэффициент вариации цен
   double get priceVariation {
@@ -176,8 +174,7 @@ class SpecialistPriceAggregate {
   final DateTime lastUpdated;
 
   /// Получить статистику по категории
-  SpecialistPriceStats? getCategoryStats(String categoryId) =>
-      categoryStats[categoryId];
+  SpecialistPriceStats? getCategoryStats(String categoryId) => categoryStats[categoryId];
 
   /// Получить все категории
   List<String> get categories => categoryStats.keys.toList();
@@ -192,8 +189,7 @@ class SpecialistPriceAggregate {
 
     return categoryStats.entries
         .reduce(
-          (a, b) =>
-              a.value.completedBookings > b.value.completedBookings ? a : b,
+          (a, b) => a.value.completedBookings > b.value.completedBookings ? a : b,
         )
         .key;
   }

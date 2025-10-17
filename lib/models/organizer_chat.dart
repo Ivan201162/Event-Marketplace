@@ -64,9 +64,8 @@ class OrganizerChat {
           [],
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      lastMessageAt: data['lastMessageAt'] != null
-          ? (data['lastMessageAt'] as Timestamp).toDate()
-          : null,
+      lastMessageAt:
+          data['lastMessageAt'] != null ? (data['lastMessageAt'] as Timestamp).toDate() : null,
       lastMessageText: data['lastMessageText'],
       hasUnreadMessages: data['hasUnreadMessages'] as bool? ?? false,
       unreadCount: data['unreadCount'] as int? ?? 0,
@@ -102,8 +101,7 @@ class OrganizerChat {
         'messages': messages.map((msg) => msg.toMap()).toList(),
         'createdAt': Timestamp.fromDate(createdAt),
         'updatedAt': Timestamp.fromDate(updatedAt),
-        'lastMessageAt':
-            lastMessageAt != null ? Timestamp.fromDate(lastMessageAt!) : null,
+        'lastMessageAt': lastMessageAt != null ? Timestamp.fromDate(lastMessageAt!) : null,
         'lastMessageText': lastMessageText,
         'hasUnreadMessages': hasUnreadMessages,
         'unreadCount': unreadCount,
@@ -188,8 +186,7 @@ class OrganizerMessage {
   });
 
   /// Создать из Map
-  factory OrganizerMessage.fromMap(Map<String, dynamic> map) =>
-      OrganizerMessage(
+  factory OrganizerMessage.fromMap(Map<String, dynamic> map) => OrganizerMessage(
         id: map['id'] ?? '',
         chatId: map['chatId'] ?? '',
         senderId: map['senderId'] ?? '',
@@ -203,9 +200,7 @@ class OrganizerMessage {
         metadata: map['metadata'],
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         isRead: map['isRead'] ?? false,
-        readAt: map['readAt'] != null
-            ? (map['readAt'] as Timestamp).toDate()
-            : null,
+        readAt: map['readAt'] != null ? (map['readAt'] as Timestamp).toDate() : null,
       );
   final String id;
   final String chatId;
@@ -315,8 +310,7 @@ class SpecialistProposal {
   });
 
   /// Создать из Map
-  factory SpecialistProposal.fromMap(Map<String, dynamic> map) =>
-      SpecialistProposal(
+  factory SpecialistProposal.fromMap(Map<String, dynamic> map) => SpecialistProposal(
         specialistId: map['specialistId'] ?? '',
         specialistName: map['specialistName'] ?? '',
         specialistCategory: map['specialistCategory'] ?? '',

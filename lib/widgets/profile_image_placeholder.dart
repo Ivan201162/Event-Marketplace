@@ -25,12 +25,9 @@ class ProfileImagePlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final effectiveBackgroundColor =
-        backgroundColor ?? theme.colorScheme.primaryContainer;
-    final effectiveTextColor =
-        textColor ?? theme.colorScheme.onPrimaryContainer;
-    final effectiveBorderRadius =
-        borderRadius ?? BorderRadius.circular(size / 2);
+    final effectiveBackgroundColor = backgroundColor ?? theme.colorScheme.primaryContainer;
+    final effectiveTextColor = textColor ?? theme.colorScheme.onPrimaryContainer;
+    final effectiveBorderRadius = borderRadius ?? BorderRadius.circular(size / 2);
 
     // Получаем инициалы из имени
     final initials = _getInitials(name);
@@ -116,8 +113,7 @@ class ProfileAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final effectiveBorderRadius =
-        borderRadius ?? BorderRadius.circular(size / 2);
+    final effectiveBorderRadius = borderRadius ?? BorderRadius.circular(size / 2);
 
     Widget avatarWidget;
 

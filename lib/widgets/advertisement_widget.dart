@@ -23,7 +23,6 @@ class AdvertisementWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: Colors.blue.withOpacity(0.3),
-            width: 1,
           ),
         ),
         child: Column(
@@ -85,10 +84,9 @@ class AdvertisementWidget extends StatelessWidget {
                     if (advertisement.title != null) ...[
                       Text(
                         advertisement.title!,
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       const SizedBox(height: 8),
                     ],
@@ -239,7 +237,6 @@ class AdvertisementBannerWidget extends StatelessWidget {
               ),
               border: Border.all(
                 color: Colors.blue.withOpacity(0.3),
-                width: 1,
               ),
             ),
             child: Stack(
@@ -273,10 +270,7 @@ class AdvertisementBannerWidget extends StatelessWidget {
                           children: [
                             Text(
                               advertisement.title ?? 'Реклама',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall
-                                  ?.copyWith(
+                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                               maxLines: 1,
@@ -286,10 +280,7 @@ class AdvertisementBannerWidget extends StatelessWidget {
                               const SizedBox(height: 2),
                               Text(
                                 advertisement.description!,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                       color: Colors.grey[600],
                                     ),
                                 maxLines: 2,
@@ -362,8 +353,7 @@ class AdvertisementListWidget extends StatefulWidget {
   });
 
   @override
-  State<AdvertisementListWidget> createState() =>
-      _AdvertisementListWidgetState();
+  State<AdvertisementListWidget> createState() => _AdvertisementListWidgetState();
 }
 
 class _AdvertisementListWidgetState extends State<AdvertisementListWidget> {

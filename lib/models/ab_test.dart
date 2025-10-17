@@ -42,9 +42,7 @@ class ABTest {
         (data['metrics'] as Map<String, dynamic>?) ?? {},
       ),
       startDate: (data['startDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      endDate: data['endDate'] != null
-          ? (data['endDate'] as Timestamp?)?.toDate()
-          : null,
+      endDate: data['endDate'] != null ? (data['endDate'] as Timestamp?)?.toDate() : null,
       createdBy: data['createdBy'] as String?,
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
@@ -73,16 +71,11 @@ class ABTest {
         metrics: ABTestMetrics.fromMap(
           (data['metrics'] as Map<String, dynamic>?) ?? {},
         ),
-        startDate:
-            (data['startDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        endDate: data['endDate'] != null
-            ? (data['endDate'] as Timestamp?)?.toDate()
-            : null,
+        startDate: (data['startDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        endDate: data['endDate'] != null ? (data['endDate'] as Timestamp?)?.toDate() : null,
         createdBy: data['createdBy'] as String?,
-        createdAt:
-            (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        updatedAt:
-            (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
         metadata: Map<String, dynamic>.from(
           (data['metadata'] as Map<dynamic, dynamic>?) ?? {},
         ),
@@ -230,13 +223,10 @@ class ABTestVariant {
         id: data['id'] as String? ?? '',
         name: data['name'] as String? ?? '',
         description: data['description'] as String? ?? '',
-        trafficPercentage:
-            (data['trafficPercentage'] as num?)?.toDouble() ?? 0.0,
-        configuration:
-            Map<String, dynamic>.from(data['configuration'] as Map? ?? {}),
+        trafficPercentage: (data['trafficPercentage'] as num?)?.toDouble() ?? 0.0,
+        configuration: Map<String, dynamic>.from(data['configuration'] as Map? ?? {}),
         isControl: data['isControl'] as bool? ?? false,
-        createdAt:
-            (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       );
   final String id;
   final String name;
@@ -326,16 +316,10 @@ class ABTestTargeting {
         userSegments: List<String>.from(data['userSegments'] as List? ?? []),
         platforms: List<String>.from(data['platforms'] as List? ?? []),
         appVersions: List<String>.from(data['appVersions'] as List? ?? []),
-        customFilters:
-            Map<String, dynamic>.from(data['customFilters'] as Map? ?? {}),
-        trafficPercentage:
-            (data['trafficPercentage'] as num?)?.toDouble() ?? 100.0,
-        startTime: data['startTime'] != null
-            ? (data['startTime'] as Timestamp?)?.toDate()
-            : null,
-        endTime: data['endTime'] != null
-            ? (data['endTime'] as Timestamp?)?.toDate()
-            : null,
+        customFilters: Map<String, dynamic>.from(data['customFilters'] as Map? ?? {}),
+        trafficPercentage: (data['trafficPercentage'] as num?)?.toDouble() ?? 100.0,
+        startTime: data['startTime'] != null ? (data['startTime'] as Timestamp?)?.toDate() : null,
+        endTime: data['endTime'] != null ? (data['endTime'] as Timestamp?)?.toDate() : null,
       );
   final List<String> userIds;
   final List<String> userSegments;
@@ -427,16 +411,12 @@ class ABTestMetrics {
   /// Создать из Map
   factory ABTestMetrics.fromMap(Map<String, dynamic> data) => ABTestMetrics(
         primaryMetric: data['primaryMetric'] as String? ?? '',
-        secondaryMetrics:
-            List<String>.from(data['secondaryMetrics'] as List? ?? []),
-        minimumDetectableEffect:
-            (data['minimumDetectableEffect'] as num?)?.toDouble() ?? 0.05,
-        significanceLevel:
-            (data['significanceLevel'] as num?)?.toDouble() ?? 0.05,
+        secondaryMetrics: List<String>.from(data['secondaryMetrics'] as List? ?? []),
+        minimumDetectableEffect: (data['minimumDetectableEffect'] as num?)?.toDouble() ?? 0.05,
+        significanceLevel: (data['significanceLevel'] as num?)?.toDouble() ?? 0.05,
         power: (data['power'] as num?)?.toDouble() ?? 0.8,
         minimumSampleSize: data['minimumSampleSize'] as int? ?? 1000,
-        customMetrics:
-            Map<String, dynamic>.from(data['customMetrics'] as Map? ?? {}),
+        customMetrics: Map<String, dynamic>.from(data['customMetrics'] as Map? ?? {}),
       );
   final String primaryMetric;
   final List<String> secondaryMetrics;
@@ -470,8 +450,7 @@ class ABTestMetrics {
       ABTestMetrics(
         primaryMetric: primaryMetric ?? this.primaryMetric,
         secondaryMetrics: secondaryMetrics ?? this.secondaryMetrics,
-        minimumDetectableEffect:
-            minimumDetectableEffect ?? this.minimumDetectableEffect,
+        minimumDetectableEffect: minimumDetectableEffect ?? this.minimumDetectableEffect,
         significanceLevel: significanceLevel ?? this.significanceLevel,
         power: power ?? this.power,
         minimumSampleSize: minimumSampleSize ?? this.minimumSampleSize,
@@ -529,28 +508,23 @@ class ABTestParticipation {
       testId: data['testId'] as String? ?? '',
       userId: data['userId'] as String? ?? '',
       variantId: data['variantId'] as String? ?? '',
-      assignedAt:
-          (data['assignedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      convertedAt: data['convertedAt'] != null
-          ? (data['convertedAt'] as Timestamp?)?.toDate()
-          : null,
+      assignedAt: (data['assignedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      convertedAt:
+          data['convertedAt'] != null ? (data['convertedAt'] as Timestamp?)?.toDate() : null,
       events: Map<String, dynamic>.from(data['events'] as Map? ?? {}),
       metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
     );
   }
 
   /// Создать из Map
-  factory ABTestParticipation.fromMap(Map<String, dynamic> data) =>
-      ABTestParticipation(
+  factory ABTestParticipation.fromMap(Map<String, dynamic> data) => ABTestParticipation(
         id: data['id'] as String? ?? '',
         testId: data['testId'] as String? ?? '',
         userId: data['userId'] as String? ?? '',
         variantId: data['variantId'] as String? ?? '',
-        assignedAt:
-            (data['assignedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        convertedAt: data['convertedAt'] != null
-            ? (data['convertedAt'] as Timestamp?)?.toDate()
-            : null,
+        assignedAt: (data['assignedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        convertedAt:
+            data['convertedAt'] != null ? (data['convertedAt'] as Timestamp?)?.toDate() : null,
         events: Map<String, dynamic>.from(data['events'] as Map? ?? {}),
         metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
       );
@@ -569,8 +543,7 @@ class ABTestParticipation {
         'userId': userId,
         'variantId': variantId,
         'assignedAt': Timestamp.fromDate(assignedAt),
-        'convertedAt':
-            convertedAt != null ? Timestamp.fromDate(convertedAt!) : null,
+        'convertedAt': convertedAt != null ? Timestamp.fromDate(convertedAt!) : null,
         'events': events,
         'metadata': metadata,
       };
@@ -633,8 +606,7 @@ class ABTestParticipation {
       );
 
   @override
-  String toString() =>
-      'ABTestParticipation(id: $id, testId: $testId, variantId: $variantId)';
+  String toString() => 'ABTestParticipation(id: $id, testId: $testId, variantId: $variantId)';
 }
 
 /// Статусы A/B тестов

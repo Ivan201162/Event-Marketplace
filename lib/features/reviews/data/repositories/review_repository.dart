@@ -20,8 +20,7 @@ class ReviewRepository {
       }
 
       // Проверяем, что заказ завершен
-      final bookingDoc =
-          await _db.collection('bookings').doc(review.bookingId).get();
+      final bookingDoc = await _db.collection('bookings').doc(review.bookingId).get();
       if (!bookingDoc.exists) {
         throw Exception('Заказ не найден');
       }
@@ -154,17 +153,13 @@ class ReviewRepository {
       }
 
       final bookingData = bookingDoc.data()!;
-      if (bookingData['status'] != 'completed' ||
-          bookingData['customerId'] != customerId) {
+      if (bookingData['status'] != 'completed' || bookingData['customerId'] != customerId) {
         return false;
       }
 
       // Проверяем, что отзыв еще не существует
-      final existingReview = await _db
-          .collection('reviews')
-          .where('bookingId', isEqualTo: bookingId)
-          .limit(1)
-          .get();
+      final existingReview =
+          await _db.collection('reviews').where('bookingId', isEqualTo: bookingId).limit(1).get();
 
       return existingReview.docs.isEmpty;
     } catch (e) {
@@ -175,11 +170,8 @@ class ReviewRepository {
   /// Получить отзыв по ID заказа
   Future<Review?> getReviewByBookingId(String bookingId) async {
     try {
-      final querySnapshot = await _db
-          .collection('reviews')
-          .where('bookingId', isEqualTo: bookingId)
-          .limit(1)
-          .get();
+      final querySnapshot =
+          await _db.collection('reviews').where('bookingId', isEqualTo: bookingId).limit(1).get();
 
       if (querySnapshot.docs.isEmpty) {
         return null;
@@ -225,8 +217,7 @@ class ReviewRepository {
 
       final reviews = querySnapshot.docs.map(Review.fromDocument).toList();
 
-      final totalRating =
-          reviews.fold<double>(0, (sum, review) => sum + review.rating);
+      final totalRating = reviews.fold<double>(0, (sum, review) => sum + review.rating);
       final avgRating = totalRating / reviews.length;
 
       final ratingDistribution = <int, int>{1: 0, 2: 0, 3: 0, 4: 0, 5: 0};

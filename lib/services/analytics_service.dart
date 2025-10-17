@@ -1,10 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/transaction.dart' as transaction_model;
-import '../models/subscription_plan.dart';
-import '../models/promotion_boost.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/material.dart';
+
 import '../models/advertisement.dart';
+import '../models/promotion_boost.dart';
+import '../models/subscription_plan.dart';
+import '../models/transaction.dart' as transaction_model;
 
 class AnalyticsService {
   static final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
@@ -76,11 +77,9 @@ class AnalyticsService {
         },
       );
 
-      debugPrint(
-          'INFO: [AnalyticsService] Subscription purchase tracked: ${plan.name}');
+      debugPrint('INFO: [AnalyticsService] Subscription purchase tracked: ${plan.name}');
     } catch (e) {
-      debugPrint(
-          'ERROR: [AnalyticsService] Failed to track subscription purchase: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to track subscription purchase: $e');
     }
   }
 
@@ -99,8 +98,7 @@ class AnalyticsService {
           'promotion_id': promotion.id,
           'target_type': promotion.type.toString(),
           'priority_level': promotion.priorityLevel,
-          'duration_days':
-              promotion.endDate.difference(promotion.startDate).inDays,
+          'duration_days': promotion.endDate.difference(promotion.startDate).inDays,
           'amount': transaction.amount,
           'currency': transaction.currency,
           'payment_method': transaction.paymentMethod,
@@ -117,8 +115,7 @@ class AnalyticsService {
           'promotion_id': promotion.id,
           'target_type': promotion.type.toString(),
           'priority_level': promotion.priorityLevel,
-          'duration_days':
-              promotion.endDate.difference(promotion.startDate).inDays,
+          'duration_days': promotion.endDate.difference(promotion.startDate).inDays,
           'amount': transaction.amount,
           'currency': transaction.currency,
           'payment_method': transaction.paymentMethod,
@@ -127,11 +124,9 @@ class AnalyticsService {
         },
       );
 
-      debugPrint(
-          'INFO: [AnalyticsService] Promotion purchase tracked: ${promotion.type}');
+      debugPrint('INFO: [AnalyticsService] Promotion purchase tracked: ${promotion.type}');
     } catch (e) {
-      debugPrint(
-          'ERROR: [AnalyticsService] Failed to track promotion purchase: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to track promotion purchase: $e');
     }
   }
 
@@ -149,8 +144,7 @@ class AnalyticsService {
           'advertisement_id': advertisement.id,
           'advertisement_type': advertisement.type.toString(),
           'title': advertisement.title,
-          'duration_days':
-              advertisement.endDate.difference(advertisement.startDate).inDays,
+          'duration_days': advertisement.endDate.difference(advertisement.startDate).inDays,
           'target_audience': advertisement.targetAudience?.toString() ?? 'none',
         },
       );
@@ -163,17 +157,14 @@ class AnalyticsService {
           'advertisement_id': advertisement.id,
           'advertisement_type': advertisement.type.toString(),
           'title': advertisement.title,
-          'duration_days':
-              advertisement.endDate.difference(advertisement.startDate).inDays,
+          'duration_days': advertisement.endDate.difference(advertisement.startDate).inDays,
           'target_audience': advertisement.targetAudience,
         },
       );
 
-      debugPrint(
-          'INFO: [AnalyticsService] Advertisement created tracked: ${advertisement.type}');
+      debugPrint('INFO: [AnalyticsService] Advertisement created tracked: ${advertisement.type}');
     } catch (e) {
-      debugPrint(
-          'ERROR: [AnalyticsService] Failed to track advertisement created: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to track advertisement created: $e');
     }
   }
 
@@ -211,11 +202,9 @@ class AnalyticsService {
         },
       );
 
-      debugPrint(
-          'INFO: [AnalyticsService] Payment success tracked: ${transaction.type}');
+      debugPrint('INFO: [AnalyticsService] Payment success tracked: ${transaction.type}');
     } catch (e) {
-      debugPrint(
-          'ERROR: [AnalyticsService] Failed to track payment success: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to track payment success: $e');
     }
   }
 
@@ -256,11 +245,9 @@ class AnalyticsService {
         },
       );
 
-      debugPrint(
-          'INFO: [AnalyticsService] Payment failed tracked: ${transaction.type}');
+      debugPrint('INFO: [AnalyticsService] Payment failed tracked: ${transaction.type}');
     } catch (e) {
-      debugPrint(
-          'ERROR: [AnalyticsService] Failed to track payment failed: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to track payment failed: $e');
     }
   }
 
@@ -282,19 +269,14 @@ class AnalyticsService {
       );
 
       // Увеличиваем счетчик показов в Firestore
-      await _firestore
-          .collection('advertisements')
-          .doc(advertisementId)
-          .update({
+      await _firestore.collection('advertisements').doc(advertisementId).update({
         'impressions': FieldValue.increment(1),
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugPrint(
-          'INFO: [AnalyticsService] Advertisement view tracked: $advertisementId');
+      debugPrint('INFO: [AnalyticsService] Advertisement view tracked: $advertisementId');
     } catch (e) {
-      debugPrint(
-          'ERROR: [AnalyticsService] Failed to track advertisement view: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to track advertisement view: $e');
     }
   }
 
@@ -316,19 +298,14 @@ class AnalyticsService {
       );
 
       // Увеличиваем счетчик кликов в Firestore
-      await _firestore
-          .collection('advertisements')
-          .doc(advertisementId)
-          .update({
+      await _firestore.collection('advertisements').doc(advertisementId).update({
         'clicks': FieldValue.increment(1),
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugPrint(
-          'INFO: [AnalyticsService] Advertisement click tracked: $advertisementId');
+      debugPrint('INFO: [AnalyticsService] Advertisement click tracked: $advertisementId');
     } catch (e) {
-      debugPrint(
-          'ERROR: [AnalyticsService] Failed to track advertisement click: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to track advertisement click: $e');
     }
   }
 
@@ -346,8 +323,7 @@ class AnalyticsService {
 
       debugPrint('INFO: [AnalyticsService] Monetization hub view tracked');
     } catch (e) {
-      debugPrint(
-          'ERROR: [AnalyticsService] Failed to track monetization hub view: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to track monetization hub view: $e');
     }
   }
 
@@ -365,8 +341,7 @@ class AnalyticsService {
 
       debugPrint('INFO: [AnalyticsService] Subscription plans view tracked');
     } catch (e) {
-      debugPrint(
-          'ERROR: [AnalyticsService] Failed to track subscription plans view: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to track subscription plans view: $e');
     }
   }
 
@@ -384,8 +359,7 @@ class AnalyticsService {
 
       debugPrint('INFO: [AnalyticsService] Promotion packages view tracked');
     } catch (e) {
-      debugPrint(
-          'ERROR: [AnalyticsService] Failed to track promotion packages view: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to track promotion packages view: $e');
     }
   }
 
@@ -401,11 +375,9 @@ class AnalyticsService {
         },
       );
 
-      debugPrint(
-          'INFO: [AnalyticsService] Advertisement campaigns view tracked');
+      debugPrint('INFO: [AnalyticsService] Advertisement campaigns view tracked');
     } catch (e) {
-      debugPrint(
-          'ERROR: [AnalyticsService] Failed to track advertisement campaigns view: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to track advertisement campaigns view: $e');
     }
   }
 
@@ -424,18 +396,15 @@ class AnalyticsService {
         'platform': 'mobile',
       });
     } catch (e) {
-      debugPrint(
-          'ERROR: [AnalyticsService] Failed to save analytics event: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to save analytics event: $e');
     }
   }
 
   /// Получение статистики пользователя
   static Future<Map<String, dynamic>> getUserAnalytics(String userId) async {
     try {
-      final QuerySnapshot snapshot = await _firestore
-          .collection('analytics_events')
-          .where('userId', isEqualTo: userId)
-          .get();
+      final QuerySnapshot snapshot =
+          await _firestore.collection('analytics_events').where('userId', isEqualTo: userId).get();
 
       final Map<String, int> eventCounts = {};
       double totalSpent = 0.0;
@@ -450,8 +419,7 @@ class AnalyticsService {
 
         eventCounts[eventType] = (eventCounts[eventType] ?? 0) + 1;
 
-        if (eventType == 'subscription_purchased' ||
-            eventType == 'promotion_purchased') {
+        if (eventType == 'subscription_purchased' || eventType == 'promotion_purchased') {
           totalSpent += (eventData['amount'] as num).toDouble();
         }
 
@@ -477,12 +445,11 @@ class AnalyticsService {
   /// Получение общей статистики платформы
   static Future<Map<String, dynamic>> getPlatformAnalytics() async {
     try {
-      final QuerySnapshot snapshot =
-          await _firestore.collection('analytics_events').get();
+      final QuerySnapshot snapshot = await _firestore.collection('analytics_events').get();
 
       final Map<String, int> eventCounts = {};
       double totalRevenue = 0.0;
-      int totalUsers = 0;
+      final int totalUsers = 0;
       final Set<String> uniqueUsers = {};
 
       for (final doc in snapshot.docs) {
@@ -494,8 +461,7 @@ class AnalyticsService {
         uniqueUsers.add(userId);
         eventCounts[eventType] = (eventCounts[eventType] ?? 0) + 1;
 
-        if (eventType == 'subscription_purchased' ||
-            eventType == 'promotion_purchased') {
+        if (eventType == 'subscription_purchased' || eventType == 'promotion_purchased') {
           totalRevenue += (eventData['amount'] as num).toDouble();
         }
       }
@@ -507,8 +473,7 @@ class AnalyticsService {
         'totalRevenue': totalRevenue,
       };
     } catch (e) {
-      debugPrint(
-          'ERROR: [AnalyticsService] Failed to get platform analytics: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to get platform analytics: $e');
       return {};
     }
   }

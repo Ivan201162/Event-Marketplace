@@ -179,8 +179,7 @@ class AnalyticsChartWidget extends StatelessWidget {
                     toY: entry.value.value,
                     color: entry.value.color ?? Theme.of(context).primaryColor,
                     width: 20,
-                    borderRadius:
-                        const BorderRadius.vertical(top: Radius.circular(4)),
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
                   ),
                 ],
               ),
@@ -407,9 +406,7 @@ class AnalyticsStatsWidget extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              isCount
-                  ? value.toInt().toString()
-                  : '${value.toStringAsFixed(0)} ₽',
+              isCount ? value.toInt().toString() : '${value.toStringAsFixed(0)} ₽',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -533,8 +530,7 @@ class BudgetGoalsWidget extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: _getGoalTypeColor(goal.type).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -583,9 +579,7 @@ class BudgetGoalsWidget extends StatelessWidget {
                         value: goal.progressPercentage / 100,
                         backgroundColor: Colors.grey[300],
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          goal.isAchieved
-                              ? Colors.green
-                              : Theme.of(context).primaryColor,
+                          goal.isAchieved ? Colors.green : Theme.of(context).primaryColor,
                         ),
                       ),
                     ],

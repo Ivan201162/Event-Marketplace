@@ -56,10 +56,8 @@ class KPIMetricsService {
   /// Загрузка метрик
   Future<void> _loadMetrics() async {
     try {
-      final snapshot = await _firestore
-          .collection(_metricsCollection)
-          .where('isActive', isEqualTo: true)
-          .get();
+      final snapshot =
+          await _firestore.collection(_metricsCollection).where('isActive', isEqualTo: true).get();
 
       for (final doc in snapshot.docs) {
         final metric = KPIMetric.fromMap(doc.data());
@@ -149,10 +147,7 @@ class KPIMetricsService {
         updatedBy: user.uid,
       );
 
-      await _firestore
-          .collection(_metricsCollection)
-          .doc(metric.id)
-          .set(metric.toMap());
+      await _firestore.collection(_metricsCollection).doc(metric.id).set(metric.toMap());
 
       _metricCache[metric.id] = metric;
       _metricStreamController.add(metric);
@@ -195,11 +190,8 @@ class KPIMetricsService {
         unit: unit,
         value: value,
         target: target,
-        previousValue:
-            value != null ? existingMetric.value : existingMetric.previousValue,
-        change: value != null
-            ? value - existingMetric.value
-            : existingMetric.change,
+        previousValue: value != null ? existingMetric.value : existingMetric.previousValue,
+        change: value != null ? value - existingMetric.value : existingMetric.change,
         changePercentage: value != null && existingMetric.value != 0
             ? ((value - existingMetric.value) / existingMetric.value) * 100
             : existingMetric.changePercentage,
@@ -214,10 +206,7 @@ class KPIMetricsService {
         updatedBy: user.uid,
       );
 
-      await _firestore
-          .collection(_metricsCollection)
-          .doc(id)
-          .update(updatedMetric.toMap());
+      await _firestore.collection(_metricsCollection).doc(id).update(updatedMetric.toMap());
 
       _metricCache[id] = updatedMetric;
       _metricStreamController.add(updatedMetric);
@@ -237,9 +226,7 @@ class KPIMetricsService {
 
   /// Получение метрик по категории
   List<KPIMetric> getMetricsByCategory(MetricCategory category) =>
-      _metricCache.values
-          .where((metric) => metric.category == category)
-          .toList();
+      _metricCache.values.where((metric) => metric.category == category).toList();
 
   /// Получение метрик по типу
   List<KPIMetric> getMetricsByType(MetricType type) =>
@@ -281,10 +268,7 @@ class KPIMetricsService {
         updatedBy: user.uid,
       );
 
-      await _firestore
-          .collection(_dashboardsCollection)
-          .doc(dashboard.id)
-          .set(dashboard.toMap());
+      await _firestore.collection(_dashboardsCollection).doc(dashboard.id).set(dashboard.toMap());
 
       _dashboardCache[dashboard.id] = dashboard;
       _dashboardStreamController.add(dashboard);
@@ -328,10 +312,7 @@ class KPIMetricsService {
         updatedBy: user.uid,
       );
 
-      await _firestore
-          .collection(_dashboardsCollection)
-          .doc(id)
-          .update(updatedDashboard.toMap());
+      await _firestore.collection(_dashboardsCollection).doc(id).update(updatedDashboard.toMap());
 
       _dashboardCache[id] = updatedDashboard;
       _dashboardStreamController.add(updatedDashboard);
@@ -354,9 +335,8 @@ class KPIMetricsService {
       _dashboardCache.values.where((dashboard) => dashboard.isPublic).toList();
 
   /// Получение дашборда по умолчанию
-  KPIDashboard? getDefaultDashboard() => _dashboardCache.values
-      .where((dashboard) => dashboard.isDefault)
-      .firstOrNull;
+  KPIDashboard? getDefaultDashboard() =>
+      _dashboardCache.values.where((dashboard) => dashboard.isDefault).firstOrNull;
 
   /// Создание отчета
   Future<KPIReport> createReport({
@@ -395,10 +375,7 @@ class KPIMetricsService {
         updatedBy: user.uid,
       );
 
-      await _firestore
-          .collection(_reportsCollection)
-          .doc(report.id)
-          .set(report.toMap());
+      await _firestore.collection(_reportsCollection).doc(report.id).set(report.toMap());
 
       _reportCache[report.id] = report;
       _reportStreamController.add(report);
@@ -442,10 +419,7 @@ class KPIMetricsService {
         updatedBy: _auth.currentUser?.uid ?? '',
       );
 
-      await _firestore
-          .collection(_reportsCollection)
-          .doc(reportId)
-          .update(readyReport.toMap());
+      await _firestore.collection(_reportsCollection).doc(reportId).update(readyReport.toMap());
 
       _reportCache[reportId] = readyReport;
       _reportStreamController.add(readyReport);
@@ -481,12 +455,9 @@ class KPIMetricsService {
           'byType': _groupMetricsByType(metrics),
           'byStatus': _groupMetricsByStatus(metrics),
           'averageValue': metrics.isNotEmpty
-              ? metrics.map((m) => m.value).reduce((a, b) => a + b) /
-                  metrics.length
+              ? metrics.map((m) => m.value).reduce((a, b) => a + b) / metrics.length
               : 0.0,
-          'targetsMet': metrics
-              .where((m) => m.target != null && m.value >= m.target!)
-              .length,
+          'targetsMet': metrics.where((m) => m.target != null && m.value >= m.target!).length,
         },
         'dashboards': {
           'total': dashboards.length,
@@ -609,9 +580,7 @@ class KPIMetricsService {
   /// Генерация уникального ID
   String _generateId() =>
       DateTime.now().millisecondsSinceEpoch.toString() +
-      (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000))
-          .round()
-          .toString();
+      (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000)).round().toString();
 
   /// Закрытие сервиса
   Future<void> dispose() async {

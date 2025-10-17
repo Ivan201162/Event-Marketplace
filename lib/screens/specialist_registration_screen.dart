@@ -12,12 +12,10 @@ class SpecialistRegistrationScreen extends ConsumerStatefulWidget {
   const SpecialistRegistrationScreen({super.key});
 
   @override
-  ConsumerState<SpecialistRegistrationScreen> createState() =>
-      _SpecialistRegistrationScreenState();
+  ConsumerState<SpecialistRegistrationScreen> createState() => _SpecialistRegistrationScreenState();
 }
 
-class _SpecialistRegistrationScreenState
-    extends ConsumerState<SpecialistRegistrationScreen> {
+class _SpecialistRegistrationScreenState extends ConsumerState<SpecialistRegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -191,8 +189,7 @@ class _SpecialistRegistrationScreenState
                   if (value == null || value.trim().isEmpty) {
                     return 'Пожалуйста, введите email';
                   }
-                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                      .hasMatch(value)) {
+                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
                     return 'Пожалуйста, введите корректный email';
                   }
                   return null;

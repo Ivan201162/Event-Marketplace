@@ -360,8 +360,7 @@ class _CreateIdeaDialogState extends ConsumerState<CreateIdeaDialog> {
 
   Future<void> _pickImages() async {
     try {
-      final images =
-          await _ideaService.pickImages(maxImages: 5 - _selectedImages.length);
+      final images = await _ideaService.pickImages(maxImages: 5 - _selectedImages.length);
       setState(() {
         _selectedImages.addAll(images);
         _error = null;
@@ -451,9 +450,7 @@ class _CreateIdeaDialogState extends ConsumerState<CreateIdeaDialog> {
         budget: budget,
         duration: duration,
         guests: guests,
-        location: _locationController.text.trim().isEmpty
-            ? null
-            : _locationController.text.trim(),
+        location: _locationController.text.trim().isEmpty ? null : _locationController.text.trim(),
       );
 
       await _ideaService.createIdea(createIdea);

@@ -64,8 +64,7 @@ class BookingCardWidget extends StatelessWidget {
                 const SizedBox(height: 8),
 
                 // Информация о специалисте
-                if (booking.specialistName != null &&
-                    booking.specialistName!.isNotEmpty)
+                if (booking.specialistName != null && booking.specialistName!.isNotEmpty)
                   Row(
                     children: [
                       const Icon(Icons.person, size: 16, color: Colors.grey),
@@ -101,8 +100,7 @@ class BookingCardWidget extends StatelessWidget {
                   ],
                 ),
 
-                if (booking.startTime != null &&
-                    booking.startTime!.isNotEmpty) ...[
+                if (booking.startTime != null && booking.startTime!.isNotEmpty) ...[
                   const SizedBox(height: 4),
                   Row(
                     children: [
@@ -124,8 +122,7 @@ class BookingCardWidget extends StatelessWidget {
                 ],
 
                 // Местоположение
-                if (booking.location != null &&
-                    booking.location!.isNotEmpty) ...[
+                if (booking.location != null && booking.location!.isNotEmpty) ...[
                   const SizedBox(height: 4),
                   Row(
                     children: [
@@ -198,11 +195,9 @@ class BookingCardWidget extends StatelessWidget {
                           child: const Text('Отменить'),
                         ),
                       ),
-                    if (booking.canBeCancelled &&
-                        booking.status == BookingStatus.completed)
+                    if (booking.canBeCancelled && booking.status == BookingStatus.completed)
                       const SizedBox(width: 8),
-                    if (booking.status == BookingStatus.completed &&
-                        onReview != null)
+                    if (booking.status == BookingStatus.completed && onReview != null)
                       Expanded(
                         child: ElevatedButton(
                           onPressed: onReview,

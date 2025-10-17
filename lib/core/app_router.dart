@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import '../features/feed/ui/create_post_screen.dart';
 import '../features/profile/presentation/edit_customer_profile_screen.dart';
 import '../providers/auth_providers.dart';
-import '../providers/theme_provider.dart' as theme_provider;
 import '../screens/add_idea_screen.dart';
 import '../screens/analytics_screen.dart';
 import '../screens/booking_screen.dart';
@@ -144,13 +143,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'chat',
         builder: (context, state) {
           final chatId = state.uri.queryParameters['chatId'] ?? '';
-          final otherParticipantId =
-              state.uri.queryParameters['otherParticipantId'] ?? '';
+          final otherParticipantId = state.uri.queryParameters['otherParticipantId'] ?? '';
           final otherParticipantName =
-              state.uri.queryParameters['otherParticipantName'] ??
-                  'Пользователь';
-          final otherParticipantAvatar =
-              state.uri.queryParameters['otherParticipantAvatar'];
+              state.uri.queryParameters['otherParticipantName'] ?? 'Пользователь';
+          final otherParticipantAvatar = state.uri.queryParameters['otherParticipantAvatar'];
           return ChatScreen(
             chatId: chatId,
           );
@@ -162,8 +158,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/profile',
         name: 'profile',
         builder: (context, state) {
-          final userId =
-              state.uri.queryParameters['userId'] ?? 'current_user_id';
+          final userId = state.uri.queryParameters['userId'] ?? 'current_user_id';
           final isOwnProfile = userId == 'current_user_id';
           return FixedProfileScreen(
             userId: userId,

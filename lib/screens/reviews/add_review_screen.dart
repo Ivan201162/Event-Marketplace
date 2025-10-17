@@ -136,9 +136,7 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text(
-            widget.existingReview != null
-                ? 'Редактировать отзыв'
-                : 'Добавить отзыв',
+            widget.existingReview != null ? 'Редактировать отзыв' : 'Добавить отзыв',
           ),
           actions: [
             if (widget.existingReview != null)
@@ -255,8 +253,7 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
                   controller: _textController,
                   maxLines: 5,
                   decoration: const InputDecoration(
-                    hintText:
-                        'Расскажите о своем опыте работы с этим специалистом...',
+                    hintText: 'Расскажите о своем опыте работы с этим специалистом...',
                     border: OutlineInputBorder(),
                   ),
                   validator: (value) {
@@ -296,8 +293,7 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
                                 width: 100,
                                 height: 100,
                                 fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    Container(
+                                errorBuilder: (context, error, stackTrace) => Container(
                                   width: 100,
                                   height: 100,
                                   color: Colors.grey.shade300,
@@ -354,9 +350,7 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
                     child: _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
                         : Text(
-                            widget.existingReview != null
-                                ? 'Обновить отзыв'
-                                : 'Отправить отзыв',
+                            widget.existingReview != null ? 'Обновить отзыв' : 'Отправить отзыв',
                           ),
                   ),
                 ),

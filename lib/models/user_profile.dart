@@ -61,8 +61,7 @@ class ServicePrice extends Equatable {
       );
 
   @override
-  List<Object?> get props =>
-      [id, name, description, price, currency, duration, isActive];
+  List<Object?> get props => [id, name, description, price, currency, duration, isActive];
 }
 
 /// Модель поста пользователя
@@ -376,8 +375,7 @@ class UserProfile extends Equatable {
   }
 
   /// Создать профиль из Map
-  factory UserProfile.fromMap(Map<String, dynamic> data, [String? id]) =>
-      UserProfile(
+  factory UserProfile.fromMap(Map<String, dynamic> data, [String? id]) => UserProfile(
         id: id ?? data['id'] as String? ?? '',
         name: data['name'] as String? ?? '',
         role: _parseUserRole(data['role']),
@@ -390,8 +388,7 @@ class UserProfile extends Equatable {
         stories: List<String>.from(data['stories'] ?? []),
         services: (data['services'] as List<dynamic>?)
                 ?.map(
-                  (service) =>
-                      ServicePrice.fromMap(service as Map<String, dynamic>),
+                  (service) => ServicePrice.fromMap(service as Map<String, dynamic>),
                 )
                 .toList() ??
             [],
@@ -400,8 +397,7 @@ class UserProfile extends Equatable {
         following: data['following'] as int? ?? 0,
         phone: data['phone'] ?? '',
         email: data['email'] ?? '',
-        favoriteSpecialists:
-            List<String>.from(data['favoriteSpecialists'] ?? []),
+        favoriteSpecialists: List<String>.from(data['favoriteSpecialists'] ?? []),
         recentBookings: List<String>.from(data['recentBookings'] ?? []),
         isVerified: data['isVerified'] as bool? ?? false,
         isPrivate: data['isPrivate'] as bool? ?? false,

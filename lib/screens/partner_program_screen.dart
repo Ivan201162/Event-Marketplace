@@ -11,8 +11,7 @@ class PartnerProgramScreen extends ConsumerStatefulWidget {
   const PartnerProgramScreen({super.key});
 
   @override
-  ConsumerState<PartnerProgramScreen> createState() =>
-      _PartnerProgramScreenState();
+  ConsumerState<PartnerProgramScreen> createState() => _PartnerProgramScreenState();
 }
 
 class _PartnerProgramScreenState extends ConsumerState<PartnerProgramScreen>
@@ -61,8 +60,7 @@ class _PartnerProgramScreenState extends ConsumerState<PartnerProgramScreen>
       // Получаем или создаем партнёрскую программу
       _partnerProgram = await _referralService.getPartnerProgram(userId);
       if (_partnerProgram == null) {
-        final referralCode =
-            await _referralService.createPartnerProgram(userId);
+        final referralCode = await _referralService.createPartnerProgram(userId);
         if (referralCode != null) {
           _partnerProgram = await _referralService.getPartnerProgram(userId);
         }
@@ -480,14 +478,11 @@ class _PartnerProgramScreenState extends ConsumerState<PartnerProgramScreen>
           margin: const EdgeInsets.only(bottom: 12),
           child: ListTile(
             leading: CircleAvatar(
-              backgroundColor: referral.isCompleted
-                  ? Colors.green.shade100
-                  : Colors.orange.shade100,
+              backgroundColor:
+                  referral.isCompleted ? Colors.green.shade100 : Colors.orange.shade100,
               child: Icon(
                 referral.isCompleted ? Icons.check : Icons.pending,
-                color: referral.isCompleted
-                    ? Colors.green.shade600
-                    : Colors.orange.shade600,
+                color: referral.isCompleted ? Colors.green.shade600 : Colors.orange.shade600,
               ),
             ),
             title: Text(
@@ -573,12 +568,10 @@ class _PartnerProgramScreenState extends ConsumerState<PartnerProgramScreen>
           margin: const EdgeInsets.only(bottom: 12),
           child: ListTile(
             leading: CircleAvatar(
-              backgroundColor:
-                  bonus.isUsed ? Colors.grey.shade100 : Colors.green.shade100,
+              backgroundColor: bonus.isUsed ? Colors.grey.shade100 : Colors.green.shade100,
               child: Icon(
                 bonus.isUsed ? Icons.check_circle : Icons.card_giftcard,
-                color:
-                    bonus.isUsed ? Colors.grey.shade600 : Colors.green.shade600,
+                color: bonus.isUsed ? Colors.grey.shade600 : Colors.green.shade600,
               ),
             ),
             title: Text(
@@ -601,8 +594,7 @@ class _PartnerProgramScreenState extends ConsumerState<PartnerProgramScreen>
             trailing: Text(
               '+${bonus.amount}',
               style: TextStyle(
-                color:
-                    bonus.isUsed ? Colors.grey.shade600 : Colors.green.shade600,
+                color: bonus.isUsed ? Colors.grey.shade600 : Colors.green.shade600,
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),

@@ -27,11 +27,8 @@ class PaymentStatusWidget extends ConsumerWidget {
           return _buildNoPayments(context);
         }
 
-        final prepayment =
-            payments.where((p) => p.type == PaymentType.prepayment).firstOrNull;
-        final finalPayment = payments
-            .where((p) => p.type == PaymentType.finalPayment)
-            .firstOrNull;
+        final prepayment = payments.where((p) => p.type == PaymentType.prepayment).firstOrNull;
+        final finalPayment = payments.where((p) => p.type == PaymentType.finalPayment).firstOrNull;
 
         if (compact) {
           return _buildCompactStatus(context, prepayment, finalPayment);
@@ -410,14 +407,12 @@ class PaymentStatusWidget extends ConsumerWidget {
   }
 
   Widget _buildPaymentSummary(BuildContext context, List<Payment> payments) {
-    final totalAmount =
-        payments.fold<double>(0, (sum, payment) => sum + payment.amount);
+    final totalAmount = payments.fold<double>(0, (sum, payment) => sum + payment.amount);
     final completedAmount = payments
         .where((p) => p.isCompleted)
         .fold<double>(0, (sum, payment) => sum + payment.amount);
-    final pendingAmount = payments
-        .where((p) => p.isPending)
-        .fold<double>(0, (sum, payment) => sum + payment.amount);
+    final pendingAmount =
+        payments.where((p) => p.isPending).fold<double>(0, (sum, payment) => sum + payment.amount);
 
     return Container(
       padding: const EdgeInsets.all(12),
@@ -456,8 +451,7 @@ class PaymentStatusWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildSummaryRow(String label, String value, [Color? valueColor]) =>
-      Padding(
+  Widget _buildSummaryRow(String label, String value, [Color? valueColor]) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 2),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -518,17 +512,14 @@ class PaymentButtonWidget extends ConsumerWidget {
 
     return paymentsAsync.when(
       data: (payments) {
-        final pendingPayment = payments
-            .where((p) => p.status == PaymentStatus.pending)
-            .firstOrNull;
+        final pendingPayment = payments.where((p) => p.status == PaymentStatus.pending).firstOrNull;
 
         if (pendingPayment == null) {
           return const SizedBox.shrink();
         }
 
         return ElevatedButton.icon(
-          onPressed:
-              onPaymentPressed ?? () => _handlePayment(context, pendingPayment),
+          onPressed: onPaymentPressed ?? () => _handlePayment(context, pendingPayment),
           icon: const Icon(Icons.payment, size: 18),
           label: Text('Оплатить ${pendingPayment.amount.toStringAsFixed(0)} ₽'),
           style: ElevatedButton.styleFrom(
@@ -549,8 +540,7 @@ class PaymentButtonWidget extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Оплата'),
-        content:
-            Text('Переход к оплате ${payment.amount.toStringAsFixed(0)} ₽'),
+        content: Text('Переход к оплате ${payment.amount.toStringAsFixed(0)} ₽'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

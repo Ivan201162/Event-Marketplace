@@ -28,8 +28,7 @@ class SpecialistProfileRepository {
     String specialistId,
   ) async {
     try {
-      final doc =
-          await _firestore.collection('specialists').doc(specialistId).get();
+      final doc = await _firestore.collection('specialists').doc(specialistId).get();
 
       if (doc.exists && doc.data() != null) {
         return SpecialistProfileForm.fromMap(doc.data()!);
@@ -47,8 +46,7 @@ class SpecialistProfileRepository {
     String type,
   ) async {
     try {
-      final fileName =
-          '${specialistId}_${type}_${DateTime.now().millisecondsSinceEpoch}';
+      final fileName = '${specialistId}_${type}_${DateTime.now().millisecondsSinceEpoch}';
       final ref = _storage.ref().child('specialists/$specialistId/$fileName');
 
       final uploadTask = await ref.putFile(imageFile);
@@ -99,8 +97,7 @@ class SpecialistProfileRepository {
   /// Проверка существования профиля специалиста
   Future<bool> profileExists(String specialistId) async {
     try {
-      final doc =
-          await _firestore.collection('specialists').doc(specialistId).get();
+      final doc = await _firestore.collection('specialists').doc(specialistId).get();
       return doc.exists;
     } catch (e) {
       throw Exception('Ошибка проверки существования профиля: $e');
@@ -112,9 +109,7 @@ class SpecialistProfileRepository {
     try {
       final querySnapshot = await _firestore.collection('specialists').get();
 
-      return querySnapshot.docs
-          .map((doc) => SpecialistProfileForm.fromMap(doc.data()))
-          .toList();
+      return querySnapshot.docs.map((doc) => SpecialistProfileForm.fromMap(doc.data())).toList();
     } catch (e) {
       throw Exception('Ошибка получения списка специалистов: $e');
     }

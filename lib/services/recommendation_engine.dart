@@ -54,30 +54,22 @@ class RecommendationEngine {
   /// Получить историю пользователя
   Future<UserHistory> _getUserHistory(String userId) async {
     // Получаем бронирования пользователя
-    final bookingsSnapshot = await _firestore
-        .collection('bookings')
-        .where('customerId', isEqualTo: userId)
-        .get();
+    final bookingsSnapshot =
+        await _firestore.collection('bookings').where('customerId', isEqualTo: userId).get();
 
     final bookings = bookingsSnapshot.docs.map(Booking.fromDocument).toList();
 
     // Получаем отзывы пользователя
-    final reviewsSnapshot = await _firestore
-        .collection('reviews')
-        .where('userId', isEqualTo: userId)
-        .get();
+    final reviewsSnapshot =
+        await _firestore.collection('reviews').where('userId', isEqualTo: userId).get();
 
     final reviews = reviewsSnapshot.docs.map(Review.fromDocument).toList();
 
     // Получаем просмотренные события
-    final viewedEventsSnapshot = await _firestore
-        .collection('user_activity')
-        .doc(userId)
-        .collection('viewed_events')
-        .get();
+    final viewedEventsSnapshot =
+        await _firestore.collection('user_activity').doc(userId).collection('viewed_events').get();
 
-    final viewedEventIds =
-        viewedEventsSnapshot.docs.map((doc) => doc.id).toList();
+    final viewedEventIds = viewedEventsSnapshot.docs.map((doc) => doc.id).toList();
 
     return UserHistory(
       bookings: bookings,
@@ -113,8 +105,7 @@ class RecommendationEngine {
     final preferredCategories = categoryCount.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
-    final topCategories =
-        preferredCategories.take(3).map((e) => e.key).toList();
+    final topCategories = preferredCategories.take(3).map((e) => e.key).toList();
 
     // Определяем предпочтительные услуги
     final preferredServices = serviceCount.entries.toList()
@@ -129,9 +120,8 @@ class RecommendationEngine {
     final topLocations = preferredLocations.take(3).map((e) => e.key).toList();
 
     // Вычисляем средний бюджет
-    final avgBudget = priceRange.isNotEmpty
-        ? priceRange.reduce((a, b) => a + b) / priceRange.length
-        : 50000;
+    final avgBudget =
+        priceRange.isNotEmpty ? priceRange.reduce((a, b) => a + b) / priceRange.length : 50000;
 
     // Вычисляем предпочтительный рейтинг
     final avgRating = ratingPreferences.isNotEmpty
@@ -188,8 +178,7 @@ class RecommendationEngine {
 
     // Сортировка по рейтингу
     query = query.orderBy('rating', descending: true);
-    query = query
-        .limit(limit * 2); // Берем больше, чтобы исключить уже забронированных
+    query = query.limit(limit * 2); // Берем больше, чтобы исключить уже забронированных
 
     final snapshot = await query.get();
     final specialists = <Specialist>[];
@@ -219,9 +208,7 @@ class RecommendationEngine {
           .limit(limit)
           .get();
 
-      return snapshot.docs
-          .map((doc) => Specialist.fromMap(doc.data()))
-          .toList();
+      return snapshot.docs.map((doc) => Specialist.fromMap(doc.data())).toList();
     } catch (e) {
       throw Exception('Ошибка получения популярных специалистов: $e');
     }
@@ -237,12 +224,9 @@ class RecommendationEngine {
     try {
       // TODO(developer): Реализовать геопространственный поиск
       // Пока возвращаем всех специалистов
-      final snapshot =
-          await _firestore.collection('specialists').limit(limit).get();
+      final snapshot = await _firestore.collection('specialists').limit(limit).get();
 
-      return snapshot.docs
-          .map((doc) => Specialist.fromMap(doc.data()))
-          .toList();
+      return snapshot.docs.map((doc) => Specialist.fromMap(doc.data())).toList();
     } catch (e) {
       throw Exception('Ошибка получения ближайших специалистов: $e');
     }

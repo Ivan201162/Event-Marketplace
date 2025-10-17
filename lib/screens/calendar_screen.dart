@@ -46,8 +46,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
       if (user == null) return;
 
       // Проверяем, является ли пользователь специалистом
-      final specialistDoc =
-          await _firestore.collection('specialists').doc(user.uid).get();
+      final specialistDoc = await _firestore.collection('specialists').doc(user.uid).get();
 
       _isSpecialist = specialistDoc.exists;
 
@@ -93,16 +92,13 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         .toList();
 
     // Загружаем доступные даты
-    final availabilityDoc = await _firestore
-        .collection('specialist_availability')
-        .doc(specialistId)
-        .get();
+    final availabilityDoc =
+        await _firestore.collection('specialist_availability').doc(specialistId).get();
 
     if (availabilityDoc.exists) {
       final data = availabilityDoc.data()!;
       final availableDates = data['availableDates'] as List<dynamic>? ?? [];
-      _availableDates =
-          availableDates.map((date) => (date as Timestamp).toDate()).toList();
+      _availableDates = availableDates.map((date) => (date as Timestamp).toDate()).toList();
     }
   }
 
@@ -156,8 +152,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   Widget build(BuildContext context) => BackButtonHandler(
         child: Scaffold(
           appBar: AppBar(
-            title:
-                Text(_isSpecialist ? 'Календарь специалиста' : 'Мой календарь'),
+            title: Text(_isSpecialist ? 'Календарь специалиста' : 'Мой календарь'),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () => context.pop(),
@@ -332,8 +327,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   Widget _buildSelectedDateEvents() {
     final selectedBookings = _getBookingsForDate(_selectedDate);
     final isBooked = _bookedDates.any((date) => isSameDay(date, _selectedDate));
-    final isAvailable =
-        _availableDates.any((date) => isSameDay(date, _selectedDate));
+    final isAvailable = _availableDates.any((date) => isSameDay(date, _selectedDate));
 
     return Container(
       height: 200,

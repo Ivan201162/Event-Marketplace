@@ -25,9 +25,7 @@ class AdvertisementWidget extends ConsumerWidget {
         child: InkWell(
           onTap: () {
             // Зафиксировать клик
-            ref
-                .read(advertisingStateProvider.notifier)
-                .recordClick(advertisement.id);
+            ref.read(advertisingStateProvider.notifier).recordClick(advertisement.id);
 
             // Выполнить действие
             onTap?.call();
@@ -153,9 +151,7 @@ class AdvertisementBannerWidget extends ConsumerWidget {
         child: InkWell(
           onTap: () {
             // Зафиксировать клик
-            ref
-                .read(advertisingStateProvider.notifier)
-                .recordClick(advertisement.id);
+            ref.read(advertisingStateProvider.notifier).recordClick(advertisement.id);
           },
           child: Container(
             height: 100,
@@ -276,12 +272,10 @@ class CreateAdvertisementWidget extends ConsumerStatefulWidget {
   final VoidCallback? onCreated;
 
   @override
-  ConsumerState<CreateAdvertisementWidget> createState() =>
-      _CreateAdvertisementWidgetState();
+  ConsumerState<CreateAdvertisementWidget> createState() => _CreateAdvertisementWidgetState();
 }
 
-class _CreateAdvertisementWidgetState
-    extends ConsumerState<CreateAdvertisementWidget> {
+class _CreateAdvertisementWidgetState extends ConsumerState<CreateAdvertisementWidget> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -478,8 +472,7 @@ class _CreateAdvertisementWidgetState
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed:
-                  advertisingState.isLoading ? null : _createAdvertisement,
+              onPressed: advertisingState.isLoading ? null : _createAdvertisement,
               child: advertisingState.isLoading
                   ? const CircularProgressIndicator()
                   : const Text('Создать рекламу'),
@@ -537,9 +530,8 @@ class _CreateAdvertisementWidgetState
           startDate: _startDate,
           endDate: _endDate,
           targetAudience: _targetAudience,
-          videoUrl: _videoUrlController.text.trim().isNotEmpty
-              ? _videoUrlController.text.trim()
-              : null,
+          videoUrl:
+              _videoUrlController.text.trim().isNotEmpty ? _videoUrlController.text.trim() : null,
         );
 
     widget.onCreated?.call();

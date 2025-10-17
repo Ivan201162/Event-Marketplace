@@ -38,8 +38,7 @@ class AdvancedSearchService {
 
       // Фильтр по рейтингу
       if (filters.minRating > 0) {
-        query =
-            query.where('rating', isGreaterThanOrEqualTo: filters.minRating);
+        query = query.where('rating', isGreaterThanOrEqualTo: filters.minRating);
       }
       if (filters.maxRating < 5.0) {
         query = query.where('rating', isLessThanOrEqualTo: filters.maxRating);
@@ -47,8 +46,7 @@ class AdvancedSearchService {
 
       // Фильтр по цене
       if (filters.minPrice > 0) {
-        query =
-            query.where('priceFrom', isGreaterThanOrEqualTo: filters.minPrice);
+        query = query.where('priceFrom', isGreaterThanOrEqualTo: filters.minPrice);
       }
       if (filters.maxPrice < 100000) {
         query = query.where('priceFrom', isLessThanOrEqualTo: filters.maxPrice);
@@ -112,8 +110,7 @@ class AdvancedSearchService {
         if (filters.searchQuery.isNotEmpty) {
           final query = filters.searchQuery.toLowerCase();
           final matchesName = specialist.name.toLowerCase().contains(query);
-          final matchesDescription =
-              specialist.description?.toLowerCase().contains(query) ?? false;
+          final matchesDescription = specialist.description?.toLowerCase().contains(query) ?? false;
           final matchesCategories = specialist.categories.any(
             (category) => category.name.toLowerCase().contains(query),
           );

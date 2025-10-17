@@ -10,12 +10,10 @@ class SpecialistCalendarScreen extends ConsumerStatefulWidget {
   const SpecialistCalendarScreen({super.key});
 
   @override
-  ConsumerState<SpecialistCalendarScreen> createState() =>
-      _SpecialistCalendarScreenState();
+  ConsumerState<SpecialistCalendarScreen> createState() => _SpecialistCalendarScreenState();
 }
 
-class _SpecialistCalendarScreenState
-    extends ConsumerState<SpecialistCalendarScreen> {
+class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScreen> {
   @override
   void initState() {
     super.initState();
@@ -23,9 +21,7 @@ class _SpecialistCalendarScreenState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final currentUser = ref.read(currentUserProvider).value;
       if (currentUser != null && currentUser.isSpecialist) {
-        ref
-            .read(calendarStateProvider.notifier)
-            .selectSpecialist(currentUser.id);
+        ref.read(calendarStateProvider.notifier).selectSpecialist(currentUser.id);
       }
     });
   }
@@ -136,18 +132,13 @@ class _SpecialistCalendarScreenState
             scheduleAsync.when(
               data: (schedule) {
                 final totalEvents = schedule?.events.length ?? 0;
-                final bookingEvents = schedule?.events
-                        .where((e) => e.type == ScheduleEventType.booking)
-                        .length ??
-                    0;
-                final unavailableEvents = schedule?.events
-                        .where((e) => e.type == ScheduleEventType.unavailable)
-                        .length ??
-                    0;
-                final vacationEvents = schedule?.events
-                        .where((e) => e.type == ScheduleEventType.vacation)
-                        .length ??
-                    0;
+                final bookingEvents =
+                    schedule?.events.where((e) => e.type == ScheduleEventType.booking).length ?? 0;
+                final unavailableEvents =
+                    schedule?.events.where((e) => e.type == ScheduleEventType.unavailable).length ??
+                        0;
+                final vacationEvents =
+                    schedule?.events.where((e) => e.type == ScheduleEventType.vacation).length ?? 0;
 
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -217,10 +208,7 @@ class _SpecialistCalendarScreenState
             label,
             style: TextStyle(
               fontSize: 12,
-              color: Theme.of(context)
-                  .colorScheme
-                  .onSurface
-                  .withValues(alpha: 0.7),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
             ),
             textAlign: TextAlign.center,
           ),
@@ -228,8 +216,7 @@ class _SpecialistCalendarScreenState
       );
 
   /// Карточка быстрых действий
-  Widget _buildQuickActionsCard(BuildContext context, String specialistId) =>
-      Card(
+  Widget _buildQuickActionsCard(BuildContext context, String specialistId) => Card(
         elevation: 4,
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -247,8 +234,7 @@ class _SpecialistCalendarScreenState
                 children: [
                   Expanded(
                     child: ElevatedButton.icon(
-                      onPressed: () =>
-                          _showAddUnavailableDialog(context, specialistId),
+                      onPressed: () => _showAddUnavailableDialog(context, specialistId),
                       icon: const Icon(Icons.block),
                       label: const Text('Недоступность'),
                       style: ElevatedButton.styleFrom(
@@ -260,8 +246,7 @@ class _SpecialistCalendarScreenState
                   const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton.icon(
-                      onPressed: () =>
-                          _showAddVacationDialog(context, specialistId),
+                      onPressed: () => _showAddVacationDialog(context, specialistId),
                       icon: const Icon(Icons.beach_access),
                       label: const Text('Отпуск'),
                       style: ElevatedButton.styleFrom(
@@ -390,9 +375,7 @@ class _SpecialistCalendarScreenState
             ),
             ElevatedButton(
               onPressed: () async {
-                if (titleController.text.isEmpty ||
-                    startDate == null ||
-                    endDate == null) {
+                if (titleController.text.isEmpty || startDate == null || endDate == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Заполните все обязательные поля'),
@@ -402,15 +385,11 @@ class _SpecialistCalendarScreenState
                 }
 
                 try {
-                  await ref
-                      .read(calendarServiceProvider)
-                      .createUnavailableEvent(
+                  await ref.read(calendarServiceProvider).createUnavailableEvent(
                         specialistId: specialistId,
                         startDate: startDate!,
                         endDate: endDate!,
-                        reason: titleController.text.isEmpty
-                            ? null
-                            : titleController.text,
+                        reason: titleController.text.isEmpty ? null : titleController.text,
                       );
 
                   if (context.mounted) {
@@ -515,9 +494,7 @@ class _SpecialistCalendarScreenState
             ),
             ElevatedButton(
               onPressed: () async {
-                if (titleController.text.isEmpty ||
-                    startDate == null ||
-                    endDate == null) {
+                if (titleController.text.isEmpty || startDate == null || endDate == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Заполните все обязательные поля'),
@@ -531,9 +508,7 @@ class _SpecialistCalendarScreenState
                         specialistId: specialistId,
                         startDate: startDate!,
                         endDate: endDate!,
-                        reason: titleController.text.isEmpty
-                            ? null
-                            : titleController.text,
+                        reason: titleController.text.isEmpty ? null : titleController.text,
                       );
 
                   if (context.mounted) {
@@ -564,8 +539,7 @@ class _SpecialistCalendarScreenState
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Тестовые данные'),
-        content:
-            const Text('Добавить тестовые данные календаря для разработки?'),
+        content: const Text('Добавить тестовые данные календаря для разработки?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -574,9 +548,7 @@ class _SpecialistCalendarScreenState
           ElevatedButton(
             onPressed: () async {
               try {
-                await ref
-                    .read(calendarServiceProvider)
-                    .addTestData('current_specialist');
+                await ref.read(calendarServiceProvider).addTestData('current_specialist');
                 if (context.mounted) {
                   Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(

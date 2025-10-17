@@ -48,8 +48,7 @@ class BuildOptimizations {
   static void _optimizeMemory() {
     // Настройка кэша изображений
     PaintingBinding.instance.imageCache.maximumSize = 50;
-    PaintingBinding.instance.imageCache.maximumSizeBytes =
-        25 * 1024 * 1024; // 25MB
+    PaintingBinding.instance.imageCache.maximumSizeBytes = 25 * 1024 * 1024; // 25MB
 
     // Очистка кэша при нехватке памяти
     PaintingBinding.instance.imageCache.clearLiveImages();
@@ -66,8 +65,7 @@ class BuildOptimizations {
 
   /// Оптимизация для разных платформ
   static void initializePlatformOptimizations() {
-    final platform = WidgetsBinding.instance.platformDispatcher.defaultRouteName
-            .contains('android')
+    final platform = WidgetsBinding.instance.platformDispatcher.defaultRouteName.contains('android')
         ? TargetPlatform.android
         : TargetPlatform.iOS;
 
@@ -128,17 +126,14 @@ class BuildOptimizations {
 
   /// Получение информации о производительности
   static Map<String, dynamic> getPerformanceInfo() {
-    final platform = WidgetsBinding.instance.platformDispatcher.defaultRouteName
-            .contains('android')
+    final platform = WidgetsBinding.instance.platformDispatcher.defaultRouteName.contains('android')
         ? TargetPlatform.android
         : TargetPlatform.iOS;
     return {
       'imageCacheSize': PaintingBinding.instance.imageCache.currentSize,
-      'imageCacheSizeBytes':
-          PaintingBinding.instance.imageCache.currentSizeBytes,
+      'imageCacheSizeBytes': PaintingBinding.instance.imageCache.currentSizeBytes,
       'imageCacheMaxSize': PaintingBinding.instance.imageCache.maximumSize,
-      'imageCacheMaxSizeBytes':
-          PaintingBinding.instance.imageCache.maximumSizeBytes,
+      'imageCacheMaxSizeBytes': PaintingBinding.instance.imageCache.maximumSizeBytes,
       'platform': platform.toString(),
     };
   }
@@ -207,8 +202,7 @@ class OptimizedListView extends StatelessWidget {
         padding: padding,
         cacheExtent: cacheExtent,
         itemCount: itemCount,
-        separatorBuilder:
-            separatorBuilder ?? (context, index) => const SizedBox.shrink(),
+        separatorBuilder: separatorBuilder ?? (context, index) => const SizedBox.shrink(),
         itemBuilder: itemBuilder,
       );
 }

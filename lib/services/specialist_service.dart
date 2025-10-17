@@ -175,11 +175,8 @@ class SpecialistService {
         specialists = specialists.where((specialist) {
           final searchQuery = query.toLowerCase();
           return specialist.name.toLowerCase().contains(searchQuery) ||
-              (specialist.description?.toLowerCase().contains(searchQuery) ??
-                  false) ||
-              specialist.category.displayName
-                  .toLowerCase()
-                  .contains(searchQuery);
+              (specialist.description?.toLowerCase().contains(searchQuery) ?? false) ||
+              specialist.category.displayName.toLowerCase().contains(searchQuery);
         }).toList();
       }
 
@@ -187,8 +184,8 @@ class SpecialistService {
       if (availableDates != null && availableDates.isNotEmpty) {
         specialists = specialists
             .where(
-              (specialist) => availableDates
-                  .any((date) => specialist.availableDates.contains(date)),
+              (specialist) =>
+                  availableDates.any((date) => specialist.availableDates.contains(date)),
             )
             .toList();
       }
@@ -236,8 +233,7 @@ class SpecialistService {
   /// Создать нового специалиста
   Future<String?> createSpecialist(Specialist specialist) async {
     try {
-      final docRef =
-          await _firestore.collection(_collection).add(specialist.toMap());
+      final docRef = await _firestore.collection(_collection).add(specialist.toMap());
       return docRef.id;
     } on Exception catch (e) {
       debugPrint('Ошибка создания специалиста: $e');
@@ -341,12 +337,10 @@ class SpecialistService {
 
       final totalCount = specialists.length;
       final averageRating = specialists.isNotEmpty
-          ? specialists.map((s) => s.rating).reduce((a, b) => a + b) /
-              specialists.length
+          ? specialists.map((s) => s.rating).reduce((a, b) => a + b) / specialists.length
           : 0.0;
       final averagePrice = specialists.isNotEmpty
-          ? specialists.map((s) => s.price).reduce((a, b) => a + b) /
-              specialists.length
+          ? specialists.map((s) => s.price).reduce((a, b) => a + b) / specialists.length
           : 0.0;
 
       final categoryStats = <String, int>{};
@@ -368,8 +362,7 @@ class SpecialistService {
   }
 
   /// Получить ленту специалиста (посты, активности)
-  Stream<List<Map<String, dynamic>>> getSpecialistFeed(
-      String specialistId) async* {
+  Stream<List<Map<String, dynamic>>> getSpecialistFeed(String specialistId) async* {
     try {
       // TODO(developer): Implement specialist feed logic
       // Пока возвращаем пустой список
@@ -449,8 +442,7 @@ class SpecialistService {
   }
 
   /// Поиск специалистов с фильтрами (поток)
-  Stream<List<Specialist>> searchSpecialistsStream(
-      Map<String, dynamic> filters) async* {
+  Stream<List<Specialist>> searchSpecialistsStream(Map<String, dynamic> filters) async* {
     try {
       Query query = _firestore.collection(_collection);
 
@@ -462,12 +454,10 @@ class SpecialistService {
         query = query.where('city', isEqualTo: filters['city']);
       }
       if (filters['minRating'] != null) {
-        query =
-            query.where('rating', isGreaterThanOrEqualTo: filters['minRating']);
+        query = query.where('rating', isGreaterThanOrEqualTo: filters['minRating']);
       }
       if (filters['maxPrice'] != null) {
-        query = query.where('pricePerHour',
-            isLessThanOrEqualTo: filters['maxPrice']);
+        query = query.where('pricePerHour', isLessThanOrEqualTo: filters['maxPrice']);
       }
 
       // Сортировка
@@ -485,8 +475,7 @@ class SpecialistService {
   }
 
   /// Проверить доступность специалиста на дату
-  Future<bool> isSpecialistAvailableOnDate(
-      String specialistId, DateTime date) async {
+  Future<bool> isSpecialistAvailableOnDate(String specialistId, DateTime date) async {
     try {
       // TODO(developer): Implement availability check logic
       // Пока возвращаем true для всех дат

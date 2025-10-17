@@ -225,9 +225,7 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
               child: Row(
                 children: [
                   Icon(
-                    _selectedType == StoryContentType.image
-                        ? Icons.image
-                        : Icons.video_library,
+                    _selectedType == StoryContentType.image ? Icons.image : Icons.video_library,
                     color: Colors.grey[600],
                   ),
                   const SizedBox(width: 8),
@@ -309,9 +307,7 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
                               color: color,
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: _backgroundColor == color
-                                    ? Colors.blue
-                                    : Colors.grey,
+                                color: _backgroundColor == color ? Colors.blue : Colors.grey,
                                 width: 2,
                               ),
                             ),
@@ -355,9 +351,7 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
                               color: color,
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: _textColor == color
-                                    ? Colors.blue
-                                    : Colors.grey,
+                                color: _textColor == color ? Colors.blue : Colors.grey,
                                 width: 2,
                               ),
                             ),
@@ -479,9 +473,7 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
         authorId: currentUser.uid,
         contentType: _selectedType,
         content: content,
-        text: _selectedType == StoryContentType.text
-            ? _textController.text.trim()
-            : null,
+        text: _selectedType == StoryContentType.text ? _textController.text.trim() : null,
         backgroundColor: _selectedType == StoryContentType.text
             ? '#${_backgroundColor.value.toRadixString(16).substring(2)}'
             : null,

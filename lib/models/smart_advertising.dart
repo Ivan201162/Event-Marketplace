@@ -105,8 +105,7 @@ class SmartAdvertisement {
     this.metadata,
   });
 
-  factory SmartAdvertisement.fromMap(Map<String, dynamic> map) =>
-      SmartAdvertisement(
+  factory SmartAdvertisement.fromMap(Map<String, dynamic> map) => SmartAdvertisement(
         id: map['id'] ?? '',
         userId: map['userId'] ?? '',
         title: map['title'] ?? '',
@@ -146,8 +145,7 @@ class SmartAdvertisement {
         maxBid: (map['maxBid'] ?? 0.0).toDouble(),
         dailyBudget: (map['dailyBudget'] ?? 0.0).toDouble(),
         isAutoOptimized: map['isAutoOptimized'] ?? false,
-        optimizationSettings:
-            Map<String, dynamic>.from(map['optimizationSettings'] ?? {}),
+        optimizationSettings: Map<String, dynamic>.from(map['optimizationSettings'] ?? {}),
         metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
       );
 
@@ -187,8 +185,7 @@ class SmartAdvertisement {
   final Map<String, dynamic>? optimizationSettings;
   final Map<String, dynamic>? metadata;
 
-  bool get isActive =>
-      status == 'active' && DateTime.now().isBetween(startDate, endDate);
+  bool get isActive => status == 'active' && DateTime.now().isBetween(startDate, endDate);
   bool get isExpired => DateTime.now().isAfter(endDate);
   bool get isPending => status == 'pending';
   bool get isPaused => status == 'paused';
@@ -238,43 +235,31 @@ class SmartAdvertisement {
       case AdTargetingType.time:
         return _calculateTimeMatch(target.criteria);
       case AdTargetingType.custom:
-        return _calculateCustomMatch(
-            target.criteria, userProfile, userBehavior);
+        return _calculateCustomMatch(target.criteria, userProfile, userBehavior);
     }
   }
 
-  double _calculateInterestMatch(
-      Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
-    final List<String> adInterests =
-        List<String>.from(criteria['interests'] ?? []);
-    final List<String> userInterests =
-        List<String>.from(userProfile['interests'] ?? []);
+  double _calculateInterestMatch(Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
+    final List<String> adInterests = List<String>.from(criteria['interests'] ?? []);
+    final List<String> userInterests = List<String>.from(userProfile['interests'] ?? []);
 
     if (adInterests.isEmpty || userInterests.isEmpty) return 0.0;
 
-    final int matches = adInterests
-        .where((interest) => userInterests.contains(interest))
-        .length;
+    final int matches = adInterests.where((interest) => userInterests.contains(interest)).length;
     return matches / adInterests.length;
   }
 
-  double _calculateBehaviorMatch(
-      Map<String, dynamic> criteria, Map<String, dynamic> userBehavior) {
-    final List<String> adBehaviors =
-        List<String>.from(criteria['behaviors'] ?? []);
-    final List<String> userBehaviors =
-        List<String>.from(userBehavior['recent_actions'] ?? []);
+  double _calculateBehaviorMatch(Map<String, dynamic> criteria, Map<String, dynamic> userBehavior) {
+    final List<String> adBehaviors = List<String>.from(criteria['behaviors'] ?? []);
+    final List<String> userBehaviors = List<String>.from(userBehavior['recent_actions'] ?? []);
 
     if (adBehaviors.isEmpty || userBehaviors.isEmpty) return 0.0;
 
-    final int matches = adBehaviors
-        .where((behavior) => userBehaviors.contains(behavior))
-        .length;
+    final int matches = adBehaviors.where((behavior) => userBehaviors.contains(behavior)).length;
     return matches / adBehaviors.length;
   }
 
-  double _calculateLocationMatch(
-      Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
+  double _calculateLocationMatch(Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
     final String adRegion = criteria['region'] ?? '';
     final String userRegion = userProfile['region'] ?? '';
 
@@ -312,8 +297,7 @@ class SmartAdvertisement {
     return factors > 0 ? score / factors : 0.0;
   }
 
-  double _calculateDeviceMatch(
-      Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
+  double _calculateDeviceMatch(Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
     final String adDevice = criteria['device'] ?? '';
     final String userDevice = userProfile['device_type'] ?? '';
 

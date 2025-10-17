@@ -19,8 +19,7 @@ class SpecialistSelectionScreen extends StatefulWidget {
   final String? message;
 
   @override
-  State<SpecialistSelectionScreen> createState() =>
-      _SpecialistSelectionScreenState();
+  State<SpecialistSelectionScreen> createState() => _SpecialistSelectionScreenState();
 }
 
 class _SpecialistSelectionScreenState extends State<SpecialistSelectionScreen> {
@@ -125,13 +124,11 @@ class _SpecialistSelectionScreenState extends State<SpecialistSelectionScreen> {
                         height: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       )
                     : const Icon(Icons.send),
-                label:
-                    Text(_isLoading ? 'Отправка...' : 'Отправить предложение'),
+                label: Text(_isLoading ? 'Отправка...' : 'Отправить предложение'),
                 backgroundColor: Colors.blue,
               )
             : null,
@@ -192,8 +189,7 @@ class _SpecialistSelectionScreenState extends State<SpecialistSelectionScreen> {
                   title: Text(
                     specialist.name,
                     style: TextStyle(
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
                   subtitle: Column(
@@ -215,14 +211,11 @@ class _SpecialistSelectionScreenState extends State<SpecialistSelectionScreen> {
                     ],
                   ),
                   secondary: CircleAvatar(
-                    backgroundImage: specialist.photoUrl != null
-                        ? NetworkImage(specialist.photoUrl!)
-                        : null,
+                    backgroundImage:
+                        specialist.photoUrl != null ? NetworkImage(specialist.photoUrl!) : null,
                     child: specialist.photoUrl == null
                         ? Text(
-                            specialist.name.isNotEmpty
-                                ? specialist.name[0]
-                                : '?',
+                            specialist.name.isNotEmpty ? specialist.name[0] : '?',
                           )
                         : null,
                   ),
@@ -254,9 +247,7 @@ class _SpecialistSelectionScreenState extends State<SpecialistSelectionScreen> {
         customerId: widget.customerId,
         eventId: widget.eventId,
         specialistIds: _selectedSpecialistIds,
-        message: _messageController.text.trim().isNotEmpty
-            ? _messageController.text.trim()
-            : null,
+        message: _messageController.text.trim().isNotEmpty ? _messageController.text.trim() : null,
         metadata: {
           'organizerName': FirebaseAuth.instance.currentUser?.displayName,
           'createdAt': DateTime.now().toIso8601String(),

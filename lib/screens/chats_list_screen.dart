@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../services/supabase_service.dart';
 import '../models/social_models.dart';
+import '../services/supabase_service.dart';
 
 /// Экран списка чатов
 class ChatsListScreen extends ConsumerStatefulWidget {
@@ -162,9 +162,8 @@ class _ChatsListScreenState extends ConsumerState<ChatsListScreen> {
       leading: CircleAvatar(
         radius: 24,
         backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
-        backgroundImage: chat.otherUser.avatarUrl != null
-            ? NetworkImage(chat.otherUser.avatarUrl!)
-            : null,
+        backgroundImage:
+            chat.otherUser.avatarUrl != null ? NetworkImage(chat.otherUser.avatarUrl!) : null,
         child: chat.otherUser.avatarUrl == null
             ? Icon(
                 Icons.person,

@@ -127,12 +127,10 @@ class CalendarEventWidget extends StatelessWidget {
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: _getStatusColor(event.status)
-                                  .withValues(alpha: 0.1),
+                              color: _getStatusColor(event.status).withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
-                                color: _getStatusColor(event.status)
-                                    .withValues(alpha: 0.3),
+                                color: _getStatusColor(event.status).withValues(alpha: 0.3),
                               ),
                             ),
                             child: Text(

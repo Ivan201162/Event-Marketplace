@@ -9,7 +9,6 @@ import 'config/supabase_config.dart';
 import 'core/enhanced_router.dart';
 import 'firebase_options.dart';
 import 'providers/theme_provider.dart';
-import 'providers/monetization_provider.dart';
 // import 'services/firestore_test_data_service.dart';
 // import 'services/notification_service.dart';
 // import 'services/analytics_service.dart';
@@ -18,14 +17,14 @@ import 'theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Настройка обработки ошибок
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.presentError(details);
     debugPrint("🔥 Flutter error: ${details.exception}");
     debugPrint("Stack: ${details.stack}");
   };
-  
+
   PlatformDispatcher.instance.onError = (error, stack) {
     debugPrint("🔥 Uncaught error: $error");
     debugPrint("Stack: $stack");
@@ -88,11 +87,10 @@ void main() async {
 
     debugPrint('🚀 Starting EventMarketplaceApp...');
     runApp(const ProviderScope(child: EventMarketplaceApp()));
-    
   } catch (e, stack) {
     debugPrint('🚨 Startup error: $e');
     debugPrint('Stack: $stack');
-    
+
     // Запускаем приложение даже при ошибках инициализации
     runApp(const ProviderScope(child: EventMarketplaceApp()));
   }

@@ -151,8 +151,7 @@ class Transaction {
         adId: adId ?? this.adId,
         paymentMethod: paymentMethod ?? this.paymentMethod,
         paymentProvider: paymentProvider ?? this.paymentProvider,
-        externalTransactionId:
-            externalTransactionId ?? this.externalTransactionId,
+        externalTransactionId: externalTransactionId ?? this.externalTransactionId,
         refundAmount: refundAmount ?? this.refundAmount,
         refundReason: refundReason ?? this.refundReason,
         metadata: metadata ?? this.metadata,

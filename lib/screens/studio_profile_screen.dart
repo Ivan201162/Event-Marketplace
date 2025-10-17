@@ -15,8 +15,7 @@ class StudioProfileScreen extends ConsumerStatefulWidget {
   final String studioId;
 
   @override
-  ConsumerState<StudioProfileScreen> createState() =>
-      _StudioProfileScreenState();
+  ConsumerState<StudioProfileScreen> createState() => _StudioProfileScreenState();
 }
 
 class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
@@ -159,8 +158,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
                 Image.network(
                   _photoStudio!.coverImageUrl!,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      _buildPlaceholderImage(),
+                  errorBuilder: (context, error, stackTrace) => _buildPlaceholderImage(),
                 )
               else
                 _buildPlaceholderImage(),
@@ -225,8 +223,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
               ),
               if (_photoStudio!.isVerified)
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.blue.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -266,16 +263,14 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
                 Text(
                   '(${_photoStudio!.reviewCount} отзывов)',
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.textTheme.bodyMedium?.color
-                        ?.withValues(alpha: 0.7),
+                    color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
                   ),
                 ),
               ] else ...[
                 Text(
                   'Нет отзывов',
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.textTheme.bodyMedium?.color
-                        ?.withValues(alpha: 0.7),
+                    color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
                   ),
                 ),
               ],
@@ -599,8 +594,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
                   Text(
                     'От',
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.textTheme.bodySmall?.color
-                          ?.withValues(alpha: 0.7),
+                      color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                     ),
                   ),
                   Text(
@@ -622,8 +616,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.colorScheme.primary,
                 foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),

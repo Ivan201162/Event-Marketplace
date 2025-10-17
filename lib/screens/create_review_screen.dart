@@ -137,8 +137,7 @@ class _CreateReviewScreenState extends ConsumerState<CreateReviewScreen> {
                             width: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                             ),
                           )
                         : const Text(
@@ -305,8 +304,7 @@ class _CreateReviewScreenState extends ConsumerState<CreateReviewScreen> {
             controller: _commentController,
             maxLines: 4,
             decoration: InputDecoration(
-              hintText:
-                  'Поделитесь своими впечатлениями о работе специалиста...',
+              hintText: 'Поделитесь своими впечатлениями о работе специалиста...',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),

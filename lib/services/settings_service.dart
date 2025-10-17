@@ -175,25 +175,20 @@ class SettingsService {
   /// Получить настройки по категории
   Future<List<AppSettings>> getSettingsByCategory(String category) async {
     try {
-      final settings = _settingsCache.values
-          .where((setting) => setting.category == category)
-          .toList();
+      final settings =
+          _settingsCache.values.where((setting) => setting.category == category).toList();
 
       if (settings.isEmpty) {
         // Загружаем из Firestore
-        final snapshot = await _firestore
-            .collection('appSettings')
-            .where('category', isEqualTo: category)
-            .get();
+        final snapshot =
+            await _firestore.collection('appSettings').where('category', isEqualTo: category).get();
 
         for (final doc in snapshot.docs) {
           final setting = AppSettings.fromDocument(doc);
           _settingsCache[setting.key] = setting;
         }
 
-        return _settingsCache.values
-            .where((setting) => setting.category == category)
-            .toList();
+        return _settingsCache.values.where((setting) => setting.category == category).toList();
       }
 
       return settings;
@@ -208,24 +203,19 @@ class SettingsService {
   /// Получить публичные настройки
   Future<List<AppSettings>> getPublicSettings() async {
     try {
-      final settings =
-          _settingsCache.values.where((setting) => setting.isPublic).toList();
+      final settings = _settingsCache.values.where((setting) => setting.isPublic).toList();
 
       if (settings.isEmpty) {
         // Загружаем из Firestore
-        final snapshot = await _firestore
-            .collection('appSettings')
-            .where('isPublic', isEqualTo: true)
-            .get();
+        final snapshot =
+            await _firestore.collection('appSettings').where('isPublic', isEqualTo: true).get();
 
         for (final doc in snapshot.docs) {
           final setting = AppSettings.fromDocument(doc);
           _settingsCache[setting.key] = setting;
         }
 
-        return _settingsCache.values
-            .where((setting) => setting.isPublic)
-            .toList();
+        return _settingsCache.values.where((setting) => setting.isPublic).toList();
       }
 
       return settings;
@@ -262,10 +252,7 @@ class SettingsService {
         updatedAt: now,
       );
 
-      await _firestore
-          .collection('appConfigurations')
-          .doc(configId)
-          .set(configuration.toMap());
+      await _firestore.collection('appConfigurations').doc(configId).set(configuration.toMap());
       _configurationsCache[configId] = configuration;
 
       if (kDebugMode) {
@@ -338,16 +325,13 @@ class SettingsService {
   }
 
   /// Получить активную конфигурацию по типу
-  AppConfiguration? getActiveConfiguration(ConfigurationType type) =>
-      _configurationsCache.values
-          .where((config) => config.type == type && config.isActive)
-          .firstOrNull;
+  AppConfiguration? getActiveConfiguration(ConfigurationType type) => _configurationsCache.values
+      .where((config) => config.type == type && config.isActive)
+      .firstOrNull;
 
   /// Получить конфигурации по типу
   List<AppConfiguration> getConfigurationsByType(ConfigurationType type) =>
-      _configurationsCache.values
-          .where((config) => config.type == type)
-          .toList();
+      _configurationsCache.values.where((config) => config.type == type).toList();
 
   /// Получить историю изменений настроек
   Future<List<SettingsHistory>> getSettingsHistory(
@@ -374,9 +358,8 @@ class SettingsService {
   /// Экспортировать настройки
   Future<Map<String, dynamic>> exportSettings({String? category}) async {
     try {
-      final settings = category != null
-          ? await getSettingsByCategory(category)
-          : _settingsCache.values.toList();
+      final settings =
+          category != null ? await getSettingsByCategory(category) : _settingsCache.values.toList();
 
       final export = <String, dynamic>{};
       for (final setting in settings) {
@@ -586,10 +569,7 @@ class SettingsService {
         changedAt: DateTime.now(),
       );
 
-      await _firestore
-          .collection('settingsHistory')
-          .doc(historyId)
-          .set(history.toMap());
+      await _firestore.collection('settingsHistory').doc(historyId).set(history.toMap());
     } catch (e) {
       if (kDebugMode) {
         print('Ошибка логирования изменения настройки: $e');
@@ -600,8 +580,7 @@ class SettingsService {
   /// Загрузить кэш настроек
   Future<void> _loadSettingsCache() async {
     try {
-      final snapshot =
-          await _firestore.collection('appSettings').limit(1000).get();
+      final snapshot = await _firestore.collection('appSettings').limit(1000).get();
 
       for (final doc in snapshot.docs) {
         final setting = AppSettings.fromDocument(doc);
@@ -642,8 +621,7 @@ class SettingsService {
   List<AppSettings> getAllSettings() => _settingsCache.values.toList();
 
   /// Получить все конфигурации
-  List<AppConfiguration> getAllConfigurations() =>
-      _configurationsCache.values.toList();
+  List<AppConfiguration> getAllConfigurations() => _configurationsCache.values.toList();
 
   /// Закрыть сервис
   void dispose() {

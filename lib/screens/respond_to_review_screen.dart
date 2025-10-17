@@ -130,17 +130,15 @@ class _RespondToReviewScreenState extends State<RespondToReviewScreen> {
                       children: [
                         Text(
                           widget.review.customerName,
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
                         Text(
                           widget.review.formattedCreatedAt,
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Colors.grey[600],
-                                  ),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Colors.grey[600],
+                              ),
                         ),
                       ],
                     ),
@@ -151,9 +149,7 @@ class _RespondToReviewScreenState extends State<RespondToReviewScreen> {
                     children: List.generate(
                       5,
                       (index) => Icon(
-                        index < widget.review.rating
-                            ? Icons.star
-                            : Icons.star_border,
+                        index < widget.review.rating ? Icons.star : Icons.star_border,
                         color: Colors.amber,
                         size: 16,
                       ),
@@ -256,8 +252,7 @@ class _RespondToReviewScreenState extends State<RespondToReviewScreen> {
             ? const CircularProgressIndicator(color: Colors.white)
             : Text(
                 isEditing ? 'Обновить ответ' : 'Отправить ответ',
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
       ),
     );

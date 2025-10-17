@@ -15,8 +15,7 @@ class EnhancedHomeScreenV2 extends ConsumerStatefulWidget {
   const EnhancedHomeScreenV2({super.key});
 
   @override
-  ConsumerState<EnhancedHomeScreenV2> createState() =>
-      _EnhancedHomeScreenV2State();
+  ConsumerState<EnhancedHomeScreenV2> createState() => _EnhancedHomeScreenV2State();
 }
 
 class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
@@ -86,7 +85,6 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
           SliverAppBar(
             floating: true,
             snap: true,
-            pinned: false,
             expandedHeight: 0,
             toolbarHeight: 0,
             backgroundColor: Colors.transparent,
@@ -100,18 +98,14 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
                     color: Theme.of(context).scaffoldBackgroundColor,
                     child: SafeArea(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             // Логотип/название
                             Text(
                               'Event',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineSmall
-                                  ?.copyWith(
+                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: Theme.of(context).primaryColor,
                                   ),
@@ -120,10 +114,8 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
                             Row(
                               children: [
                                 IconButton(
-                                  icon:
-                                      const Icon(Icons.notifications_outlined),
-                                  onPressed: () =>
-                                      context.push('/notifications'),
+                                  icon: const Icon(Icons.notifications_outlined),
+                                  onPressed: () => context.push('/notifications'),
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.settings_outlined),
@@ -168,19 +160,18 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
           SliverToBoxAdapter(
             child: AnimatedCategories(
               onCategorySelected: (category) {
-                context
-                    .push('/search?category=${Uri.encodeComponent(category)}');
+                context.push('/search?category=${Uri.encodeComponent(category)}');
               },
             ),
           ),
 
           // Карусель лучших специалистов недели
-          SliverToBoxAdapter(
+          const SliverToBoxAdapter(
             child: AnimatedSpecialistsCarousel(),
           ),
 
           // Блок "Интересное"
-          SliverToBoxAdapter(
+          const SliverToBoxAdapter(
             child: AnimatedInterestingSection(),
           ),
 
@@ -261,9 +252,8 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
       searchParams['type'] = _currentFilters['specialistType'];
     }
 
-    final queryString = searchParams.entries
-        .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
-        .join('&');
+    final queryString =
+        searchParams.entries.map((e) => '${e.key}=${Uri.encodeComponent(e.value)}').join('&');
 
     context.push('/search?$queryString');
   }

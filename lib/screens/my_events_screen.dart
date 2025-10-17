@@ -101,8 +101,7 @@ class MyEventsScreen extends ConsumerWidget {
                   ],
                 ),
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, stack) =>
-                    Text('Ошибка загрузки статистики: $error'),
+                error: (error, stack) => Text('Ошибка загрузки статистики: $error'),
               ),
             ),
           ),
@@ -142,8 +141,7 @@ class MyEventsScreen extends ConsumerWidget {
                       margin: const EdgeInsets.only(bottom: 12),
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
+                          backgroundColor: Theme.of(context).colorScheme.primary,
                           child: Icon(event.categoryIcon, color: Colors.white),
                         ),
                         title: Text(event.title),
@@ -166,8 +164,7 @@ class MyEventsScreen extends ConsumerWidget {
                                     vertical: 2,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: event.statusColor
-                                        .withValues(alpha: 0.1),
+                                    color: event.statusColor.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
@@ -200,8 +197,7 @@ class MyEventsScreen extends ConsumerWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute<void>(
-                              builder: (context) =>
-                                  EventDetailScreen(event: event),
+                              builder: (context) => EventDetailScreen(event: event),
                             ),
                           );
                         },
@@ -268,8 +264,7 @@ class MyEventsScreen extends ConsumerWidget {
                   ],
                 ),
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, stack) =>
-                    Text('Ошибка загрузки статистики: $error'),
+                error: (error, stack) => Text('Ошибка загрузки статистики: $error'),
               ),
             ),
           ),
@@ -309,8 +304,7 @@ class MyEventsScreen extends ConsumerWidget {
                       margin: const EdgeInsets.only(bottom: 12),
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
+                          backgroundColor: Theme.of(context).colorScheme.primary,
                           child: Icon(event.categoryIcon, color: Colors.white),
                         ),
                         title: Text(event.title),
@@ -333,8 +327,7 @@ class MyEventsScreen extends ConsumerWidget {
                                     vertical: 2,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: event.statusColor
-                                        .withValues(alpha: 0.1),
+                                    color: event.statusColor.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
@@ -367,8 +360,7 @@ class MyEventsScreen extends ConsumerWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute<void>(
-                              builder: (context) =>
-                                  EventDetailScreen(event: event),
+                              builder: (context) => EventDetailScreen(event: event),
                             ),
                           );
                         },
@@ -462,8 +454,7 @@ class MyEventsScreen extends ConsumerWidget {
           if (event.status == EventStatus.active)
             ListTile(
               leading: const Icon(Icons.cancel, color: Colors.red),
-              title:
-                  const Text('Отменить', style: TextStyle(color: Colors.red)),
+              title: const Text('Отменить', style: TextStyle(color: Colors.red)),
               onTap: () {
                 Navigator.pop(context);
                 _cancelEvent(context, ref, event);
@@ -488,8 +479,7 @@ class MyEventsScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Завершить мероприятие'),
-        content:
-            const Text('Вы уверены, что хотите завершить это мероприятие?'),
+        content: const Text('Вы уверены, что хотите завершить это мероприятие?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

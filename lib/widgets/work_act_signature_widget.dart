@@ -235,8 +235,7 @@ class _WorkActSignatureWidgetState extends State<WorkActSignatureWidget> {
             child: OutlinedButton.icon(
               onPressed: _isLoading ? null : _rejectAct,
               icon: const Icon(Icons.close, color: Colors.red),
-              label:
-                  const Text('Отклонить', style: TextStyle(color: Colors.red)),
+              label: const Text('Отклонить', style: TextStyle(color: Colors.red)),
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: Colors.red),
               ),
@@ -282,9 +281,8 @@ class _WorkActSignatureWidgetState extends State<WorkActSignatureWidget> {
 
     try {
       final signatureData = await _signatureController.toPngBytes();
-      final signature = signatureData != null
-          ? 'data:image/png;base64,${signatureData.toString()}'
-          : '';
+      final signature =
+          signatureData != null ? 'data:image/png;base64,${signatureData.toString()}' : '';
 
       await _workActService.signWorkAct(
         workActId: widget.workAct.id,

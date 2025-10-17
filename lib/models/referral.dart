@@ -27,9 +27,7 @@ class Referral {
       isCompleted: data['isCompleted'] ?? false,
       invitedUserName: data['invitedUserName'],
       invitedUserEmail: data['invitedUserEmail'],
-      completedAt: data['completedAt'] != null
-          ? (data['completedAt'] as Timestamp).toDate()
-          : null,
+      completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
     );
   }
   final String id;
@@ -51,8 +49,7 @@ class Referral {
         'isCompleted': isCompleted,
         'invitedUserName': invitedUserName,
         'invitedUserEmail': invitedUserEmail,
-        'completedAt':
-            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+        'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
       };
 
   /// Копирование с изменениями
@@ -144,8 +141,7 @@ class PartnerProgram {
       };
 
   /// Получить реферальную ссылку
-  String get referralLink =>
-      'https://eventmarketplace.app/invite/$referralCode';
+  String get referralLink => 'https://eventmarketplace.app/invite/$referralCode';
 
   /// Проверить, можно ли получить следующий статус
   bool get canUpgrade {
@@ -278,9 +274,7 @@ class Bonus {
       description: data['description'] ?? '',
       earnedAt: (data['earnedAt'] as Timestamp).toDate(),
       isUsed: data['isUsed'] ?? false,
-      usedAt: data['usedAt'] != null
-          ? (data['usedAt'] as Timestamp).toDate()
-          : null,
+      usedAt: data['usedAt'] != null ? (data['usedAt'] as Timestamp).toDate() : null,
       usedFor: data['usedFor'],
     );
   }

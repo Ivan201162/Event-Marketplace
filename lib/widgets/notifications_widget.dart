@@ -35,8 +35,7 @@ class NotificationsWidget extends ConsumerWidget {
                     onPressed: () async {
                       try {
                         await ref.read(
-                          markAllNotificationsAsReadProvider(currentUser.id)
-                              .future,
+                          markAllNotificationsAsReadProvider(currentUser.id).future,
                         );
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -82,8 +81,7 @@ class NotificationsWidget extends ConsumerWidget {
               return NotificationItem(
                 notification: notification,
                 onTap: () => _handleNotificationTap(context, ref, notification),
-                onDelete: () =>
-                    _handleNotificationDelete(context, ref, notification),
+                onDelete: () => _handleNotificationDelete(context, ref, notification),
               );
             },
           );
@@ -221,8 +219,7 @@ class NotificationsWidget extends ConsumerWidget {
               Navigator.pop(context);
               try {
                 await ref.read(
-                  deleteNotificationProvider(notification['id'].toString())
-                      .future,
+                  deleteNotificationProvider(notification['id'].toString()).future,
                 );
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -357,9 +354,7 @@ class NotificationItem extends StatelessWidget {
           title: Text(
             notification.title.toString(),
             style: TextStyle(
-              fontWeight: notification.isRead == true
-                  ? FontWeight.normal
-                  : FontWeight.bold,
+              fontWeight: notification.isRead == true ? FontWeight.normal : FontWeight.bold,
             ),
           ),
           subtitle: Column(
@@ -397,9 +392,7 @@ class NotificationItem extends StatelessWidget {
             },
           ),
           onTap: onTap,
-          tileColor: notification.isRead == true
-              ? null
-              : Colors.blue.withValues(alpha: 0.05),
+          tileColor: notification.isRead == true ? null : Colors.blue.withValues(alpha: 0.05),
         ),
       );
 

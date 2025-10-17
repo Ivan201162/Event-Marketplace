@@ -49,9 +49,8 @@ class SubscriptionPlansWidget extends ConsumerWidget {
                     width: isCurrentPlan || isPopular ? 2 : 1,
                   ),
                   borderRadius: BorderRadius.circular(12),
-                  color: isCurrentPlan
-                      ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
-                      : null,
+                  color:
+                      isCurrentPlan ? Theme.of(context).primaryColor.withValues(alpha: 0.1) : null,
                 ),
                 child: Column(
                   children: [
@@ -147,16 +146,12 @@ class SubscriptionPlansWidget extends ConsumerWidget {
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: isCurrentPlan
-                                  ? null
-                                  : () => onPlanSelected(plan),
+                              onPressed: isCurrentPlan ? null : () => onPlanSelected(plan),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: isCurrentPlan
-                                    ? Colors.grey
-                                    : Theme.of(context).primaryColor,
+                                backgroundColor:
+                                    isCurrentPlan ? Colors.grey : Theme.of(context).primaryColor,
                                 foregroundColor: Colors.white,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12),
+                                padding: const EdgeInsets.symmetric(vertical: 12),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
@@ -302,10 +297,8 @@ class CurrentSubscriptionWidget extends ConsumerWidget {
                     const SizedBox(width: 8),
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: subscription.status ==
-                                SubscriptionStatus.active
-                            ? () =>
-                                _showCancelDialog(context, ref, subscription.id)
+                        onPressed: subscription.status == SubscriptionStatus.active
+                            ? () => _showCancelDialog(context, ref, subscription.id)
                             : null,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,
@@ -384,9 +377,7 @@ class CurrentSubscriptionWidget extends ConsumerWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              ref
-                  .read(subscriptionStateProvider.notifier)
-                  .cancelSubscription(subscriptionId);
+              ref.read(subscriptionStateProvider.notifier).cancelSubscription(subscriptionId);
               Navigator.of(context).pop();
             },
             style: ElevatedButton.styleFrom(
@@ -411,8 +402,7 @@ class PaymentHistoryWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final paymentHistoryAsync =
-        ref.watch(paymentHistoryProvider(subscriptionId));
+    final paymentHistoryAsync = ref.watch(paymentHistoryProvider(subscriptionId));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

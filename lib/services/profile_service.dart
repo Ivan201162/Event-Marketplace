@@ -14,8 +14,7 @@ class ProfileService {
   /// Получить профиль заказчика
   Future<CustomerProfile?> getCustomerProfile(String userId) async {
     try {
-      final doc =
-          await _firestore.collection('customer_profiles').doc(userId).get();
+      final doc = await _firestore.collection('customer_profiles').doc(userId).get();
 
       if (doc.exists) {
         return CustomerProfile.fromDocument(doc);
@@ -30,10 +29,7 @@ class ProfileService {
   /// Создать или обновить профиль заказчика
   Future<void> createOrUpdateCustomerProfile(CustomerProfile profile) async {
     try {
-      await _firestore
-          .collection('customer_profiles')
-          .doc(profile.userId)
-          .set(profile.toMap());
+      await _firestore.collection('customer_profiles').doc(profile.userId).set(profile.toMap());
     } on Exception catch (e) {
       debugPrint('Ошибка сохранения профиля заказчика: $e');
       throw Exception('Ошибка сохранения профиля: $e');
@@ -43,8 +39,7 @@ class ProfileService {
   /// Получить профиль специалиста
   Future<SpecialistProfile?> getSpecialistProfile(String userId) async {
     try {
-      final doc =
-          await _firestore.collection('specialist_profiles').doc(userId).get();
+      final doc = await _firestore.collection('specialist_profiles').doc(userId).get();
 
       if (doc.exists) {
         return SpecialistProfile.fromDocument(doc);
@@ -170,8 +165,7 @@ class ProfileService {
         query = query.where('isVerified', isEqualTo: true);
       }
 
-      final querySnapshot =
-          await query.orderBy('rating', descending: true).limit(limit).get();
+      final querySnapshot = await query.orderBy('rating', descending: true).limit(limit).get();
 
       return querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
     } on Exception catch (e) {
@@ -201,8 +195,7 @@ class ProfileService {
         query = query.where('isVerified', isEqualTo: true);
       }
 
-      final querySnapshot =
-          await query.orderBy('rating', descending: true).limit(limit).get();
+      final querySnapshot = await query.orderBy('rating', descending: true).limit(limit).get();
 
       return querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
     } on Exception catch (e) {
@@ -266,8 +259,7 @@ class ProfileService {
     DateTime? availableDate,
   }) async {
     try {
-      Query<Map<String, dynamic>> queryRef =
-          _firestore.collection('specialist_profiles');
+      Query<Map<String, dynamic>> queryRef = _firestore.collection('specialist_profiles');
 
       // Фильтр по доступности
       if (isAvailable != null) {
@@ -294,8 +286,7 @@ class ProfileService {
 
       // Фильтр по цене
       if (maxHourlyRate != null) {
-        queryRef =
-            queryRef.where('hourlyRate', isLessThanOrEqualTo: maxHourlyRate);
+        queryRef = queryRef.where('hourlyRate', isLessThanOrEqualTo: maxHourlyRate);
       }
 
       // Фильтр по опыту
@@ -327,11 +318,9 @@ class ProfileService {
         queryRef = queryRef.where('equipment', arrayContainsAny: equipment);
       }
 
-      final querySnapshot =
-          await queryRef.orderBy('rating', descending: true).limit(50).get();
+      final querySnapshot = await queryRef.orderBy('rating', descending: true).limit(50).get();
 
-      var specialists =
-          querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
+      var specialists = querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
 
       // Фильтр по текстовому запросу (если указан)
       if (query != null && query.isNotEmpty) {
@@ -346,8 +335,7 @@ class ProfileService {
                         (service) => service.toLowerCase().contains(lowerQuery),
                       ) ||
                       specialist.categoryDisplayNames.any(
-                        (category) =>
-                            category.toLowerCase().contains(lowerQuery),
+                        (category) => category.toLowerCase().contains(lowerQuery),
                       ) ||
                       specialist.languages.any(
                         (lang) => lang.toLowerCase().contains(lowerQuery),
@@ -408,10 +396,7 @@ class ProfileService {
           await _firestore.collection('customer_profiles').doc(userId).delete();
           break;
         case UserRole.specialist:
-          await _firestore
-              .collection('specialist_profiles')
-              .doc(userId)
-              .delete();
+          await _firestore.collection('specialist_profiles').doc(userId).delete();
           break;
         case UserRole.organizer:
           await _firestore.collection('customer_profiles').doc(userId).delete();
@@ -439,21 +424,16 @@ class ProfileService {
 
       if (role == UserRole.specialist) {
         // Статистика для специалиста
-        final bookingsQuery = await _firestore
-            .collection('bookings')
-            .where('specialistId', isEqualTo: userId)
-            .get();
+        final bookingsQuery =
+            await _firestore.collection('bookings').where('specialistId', isEqualTo: userId).get();
 
-        final reviewsQuery = await _firestore
-            .collection('reviews')
-            .where('specialistId', isEqualTo: userId)
-            .get();
+        final reviewsQuery =
+            await _firestore.collection('reviews').where('specialistId', isEqualTo: userId).get();
 
         stats = {
           'totalBookings': bookingsQuery.docs.length,
-          'completedBookings': bookingsQuery.docs
-              .where((doc) => doc.data()['status'] == 'completed')
-              .length,
+          'completedBookings':
+              bookingsQuery.docs.where((doc) => doc.data()['status'] == 'completed').length,
           'totalReviews': reviewsQuery.docs.length,
           'averageRating': reviewsQuery.docs.isNotEmpty
               ? reviewsQuery.docs
@@ -464,16 +444,13 @@ class ProfileService {
         };
       } else if (role == UserRole.customer) {
         // Статистика для заказчика
-        final bookingsQuery = await _firestore
-            .collection('bookings')
-            .where('customerId', isEqualTo: userId)
-            .get();
+        final bookingsQuery =
+            await _firestore.collection('bookings').where('customerId', isEqualTo: userId).get();
 
         stats = {
           'totalBookings': bookingsQuery.docs.length,
-          'completedBookings': bookingsQuery.docs
-              .where((doc) => doc.data()['status'] == 'completed')
-              .length,
+          'completedBookings':
+              bookingsQuery.docs.where((doc) => doc.data()['status'] == 'completed').length,
         };
       }
 

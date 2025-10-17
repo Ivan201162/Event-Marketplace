@@ -90,8 +90,7 @@ class FeatureRequest {
           orElse: () => FeatureStatus.submitted,
         ),
         tags: List<String>.from((data['tags'] as List<dynamic>?) ?? []),
-        attachments:
-            List<String>.from((data['attachments'] as List<dynamic>?) ?? []),
+        attachments: List<String>.from((data['attachments'] as List<dynamic>?) ?? []),
         metadata: Map<String, dynamic>.from(
           (data['metadata'] as Map<dynamic, dynamic>?) ?? {},
         ),
@@ -145,9 +144,8 @@ class FeatureRequest {
         'voters': voters,
         'adminComment': adminComment,
         'assignedTo': assignedTo,
-        'estimatedCompletion': estimatedCompletion != null
-            ? Timestamp.fromDate(estimatedCompletion!)
-            : null,
+        'estimatedCompletion':
+            estimatedCompletion != null ? Timestamp.fromDate(estimatedCompletion!) : null,
         'createdAt': Timestamp.fromDate(createdAt),
         'updatedAt': Timestamp.fromDate(updatedAt),
       };
@@ -294,8 +292,7 @@ class FeatureRequest {
   bool canVote(String userId) => !voters.contains(userId);
 
   /// Проверить, может ли пользователь редактировать
-  bool canEdit(String userId) =>
-      this.userId == userId && status == FeatureStatus.submitted;
+  bool canEdit(String userId) => this.userId == userId && status == FeatureStatus.submitted;
 
   /// Проверить, может ли пользователь удалить
   bool canDelete(String userId) =>
@@ -321,8 +318,7 @@ class FeatureRequestStats {
   });
 
   /// Создать из Map
-  factory FeatureRequestStats.fromMap(Map<String, dynamic> data) =>
-      FeatureRequestStats(
+  factory FeatureRequestStats.fromMap(Map<String, dynamic> data) => FeatureRequestStats(
         totalRequests: data['totalRequests'] as int? ?? 0,
         submittedRequests: data['submittedRequests'] as int? ?? 0,
         underReviewRequests: data['underReviewRequests'] as int? ?? 0,
@@ -367,8 +363,7 @@ class FeatureRequestStats {
               {},
         ),
         totalVotes: data['totalVotes'] as int? ?? 0,
-        averageVotesPerRequest:
-            (data['averageVotesPerRequest'] as num? ?? 0.0).toDouble(),
+        averageVotesPerRequest: (data['averageVotesPerRequest'] as num? ?? 0.0).toDouble(),
       );
   final int totalRequests;
   final int submittedRequests;

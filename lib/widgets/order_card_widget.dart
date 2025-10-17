@@ -72,9 +72,7 @@ class OrderCardWidget extends StatelessWidget {
                     const SizedBox(width: 8),
                     _buildDetailChip(
                       icon: Icons.schedule,
-                      text: order.deadline != null
-                          ? _formatDate(order.deadline!)
-                          : 'Не указан',
+                      text: order.deadline != null ? _formatDate(order.deadline!) : 'Не указан',
                       color: Colors.blue,
                     ),
                     const SizedBox(width: 8),
@@ -257,8 +255,7 @@ class OrderCardWidget extends StatelessWidget {
               label: const Text('Редактировать'),
               style: TextButton.styleFrom(
                 foregroundColor: Colors.blue,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               ),
             ),
             const SizedBox(width: 8),
@@ -268,8 +265,7 @@ class OrderCardWidget extends StatelessWidget {
               label: const Text('Отменить'),
               style: TextButton.styleFrom(
                 foregroundColor: Colors.red,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               ),
             ),
           ],
@@ -280,8 +276,7 @@ class OrderCardWidget extends StatelessWidget {
               label: const Text('Завершить'),
               style: TextButton.styleFrom(
                 foregroundColor: Colors.green,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               ),
             ),
           ],
@@ -289,8 +284,7 @@ class OrderCardWidget extends StatelessWidget {
       );
 
   bool _shouldShowActions() =>
-      order.status == OrderStatus.pending ||
-      order.status == OrderStatus.inProgress;
+      order.status == OrderStatus.pending || order.status == OrderStatus.inProgress;
 
   String _formatDate(DateTime date) => DateFormat('dd.MM.yyyy').format(date);
 

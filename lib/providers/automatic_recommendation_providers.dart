@@ -3,14 +3,13 @@ import '../models/specialist.dart';
 import '../services/automatic_recommendation_service.dart';
 
 /// Провайдер сервиса автоматических рекомендаций
-final automaticRecommendationServiceProvider =
-    Provider<AutomaticRecommendationService>(
+final automaticRecommendationServiceProvider = Provider<AutomaticRecommendationService>(
   (ref) => AutomaticRecommendationService(),
 );
 
 /// Провайдер состояния автоматических рекомендаций
-final automaticRecommendationsProvider = StateNotifierProvider<
-    AutomaticRecommendationsNotifier, AutomaticRecommendationsState>((ref) {
+final automaticRecommendationsProvider =
+    StateNotifierProvider<AutomaticRecommendationsNotifier, AutomaticRecommendationsState>((ref) {
   final service = ref.watch(automaticRecommendationServiceProvider);
   return AutomaticRecommendationsNotifier(service);
 });
@@ -44,10 +43,8 @@ class AutomaticRecommendationsState {
 }
 
 /// StateNotifier для управления автоматическими рекомендациями
-class AutomaticRecommendationsNotifier
-    extends StateNotifier<AutomaticRecommendationsState> {
-  AutomaticRecommendationsNotifier(this._service)
-      : super(const AutomaticRecommendationsState());
+class AutomaticRecommendationsNotifier extends StateNotifier<AutomaticRecommendationsState> {
+  AutomaticRecommendationsNotifier(this._service) : super(const AutomaticRecommendationsState());
 
   final AutomaticRecommendationService _service;
 
@@ -67,8 +64,7 @@ class AutomaticRecommendationsNotifier
     state = state.copyWith(isLoading: true);
 
     try {
-      final recommendations =
-          await _service.getRecommendationsForSelectedSpecialists(
+      final recommendations = await _service.getRecommendationsForSelectedSpecialists(
         selectedSpecialistIds: selectedSpecialistIds,
         userId: userId,
       );
@@ -188,9 +184,9 @@ class AutomaticRecommendationsNotifier
 }
 
 /// Провайдер для получения рекомендаций по выбранным специалистам
-final selectedSpecialistsRecommendationsProvider = FutureProvider.family<
-    List<SpecialistRecommendation>,
-    SelectedSpecialistsParams>((ref, params) async {
+final selectedSpecialistsRecommendationsProvider =
+    FutureProvider.family<List<SpecialistRecommendation>, SelectedSpecialistsParams>(
+        (ref, params) async {
   final service = ref.watch(automaticRecommendationServiceProvider);
 
   if (params.selectedSpecialistIds.isEmpty) {
@@ -226,9 +222,9 @@ class SelectedSpecialistsParams {
 }
 
 /// Провайдер для получения рекомендаций по категории
-final categoryRecommendationsProvider = FutureProvider.family<
-    List<SpecialistRecommendation>,
-    CategoryRecommendationsParams>((ref, params) async {
+final categoryRecommendationsProvider =
+    FutureProvider.family<List<SpecialistRecommendation>, CategoryRecommendationsParams>(
+        (ref, params) async {
   final service = ref.watch(automaticRecommendationServiceProvider);
 
   return service.getRecommendationsForCategory(

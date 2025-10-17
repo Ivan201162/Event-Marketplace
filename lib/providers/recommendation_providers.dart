@@ -8,48 +8,35 @@ final recommendationServiceProvider =
     Provider<RecommendationService>((ref) => RecommendationService());
 
 /// Провайдер для получения рекомендаций пользователя
-final userRecommendationsProvider =
-    FutureProvider.family<List<Recommendation>, String>(
-  (ref, userId) => ref
-      .watch(recommendationServiceProvider)
-      .getRecommendationsForUser(userId),
+final userRecommendationsProvider = FutureProvider.family<List<Recommendation>, String>(
+  (ref, userId) => ref.watch(recommendationServiceProvider).getRecommendationsForUser(userId),
 );
 
 /// Провайдер для получения популярных специалистов
-final popularSpecialistsProvider =
-    FutureProvider.family<List<Recommendation>, String?>(
-  (ref, userId) => ref
-      .watch(recommendationServiceProvider)
-      .getPopularSpecialists(userId: userId),
+final popularSpecialistsProvider = FutureProvider.family<List<Recommendation>, String?>(
+  (ref, userId) => ref.watch(recommendationServiceProvider).getPopularSpecialists(userId: userId),
 );
 
 /// Провайдер для получения рекомендаций на основе истории
-final historyBasedRecommendationsProvider =
-    FutureProvider.family<List<Recommendation>, String>(
-  (ref, userId) => ref
-      .watch(recommendationServiceProvider)
-      .getRecommendationsBasedOnHistory(userId),
+final historyBasedRecommendationsProvider = FutureProvider.family<List<Recommendation>, String>(
+  (ref, userId) =>
+      ref.watch(recommendationServiceProvider).getRecommendationsBasedOnHistory(userId),
 );
 
 /// Провайдер для получения статистики рекомендаций
-final recommendationStatsProvider =
-    FutureProvider.family<RecommendationStats, String>(
-  (ref, userId) =>
-      ref.watch(recommendationServiceProvider).getRecommendationStats(userId),
+final recommendationStatsProvider = FutureProvider.family<RecommendationStats, String>(
+  (ref, userId) => ref.watch(recommendationServiceProvider).getRecommendationStats(userId),
 );
 
 /// Провайдер для группированных рекомендаций
 final groupedRecommendationsProvider =
-    FutureProvider.family<List<RecommendationGroup>, String>(
-        (ref, userId) async {
+    FutureProvider.family<List<RecommendationGroup>, String>((ref, userId) async {
   final service = ref.watch(recommendationServiceProvider);
 
   // Получаем все типы рекомендаций
   final userRecommendations = await service.getRecommendationsForUser(userId);
-  final popularRecommendations =
-      await service.getPopularSpecialists(userId: userId);
-  final historyRecommendations =
-      await service.getRecommendationsBasedOnHistory(userId);
+  final popularRecommendations = await service.getPopularSpecialists(userId: userId);
+  final historyRecommendations = await service.getRecommendationsBasedOnHistory(userId);
 
   // Группируем по типам
   final groups = <RecommendationGroup>[];
@@ -85,8 +72,7 @@ final groupedRecommendationsProvider =
     final otherRecommendations = userRecommendations
         .where(
           (r) =>
-              r.type != RecommendationType.basedOnHistory &&
-              r.type != RecommendationType.popular,
+              r.type != RecommendationType.basedOnHistory && r.type != RecommendationType.popular,
         )
         .take(6)
         .toList();
@@ -109,8 +95,7 @@ final groupedRecommendationsProvider =
 
 /// Провайдер для получения рекомендаций по категориям
 final categoryRecommendationsProvider =
-    FutureProvider.family<List<Recommendation>, Map<String, dynamic>>(
-        (ref, params) {
+    FutureProvider.family<List<Recommendation>, Map<String, dynamic>>((ref, params) {
   final userId = params['userId'] as String;
   final categoryPreferences = params['categoryPreferences'] as Map<String, int>;
 
@@ -122,8 +107,7 @@ final categoryRecommendationsProvider =
 /// Провайдер для управления состоянием рекомендаций
 final recommendationStateProvider =
     StateNotifierProvider<RecommendationStateNotifier, RecommendationState>(
-  (ref) =>
-      RecommendationStateNotifier(ref.watch(recommendationServiceProvider)),
+  (ref) => RecommendationStateNotifier(ref.watch(recommendationServiceProvider)),
 );
 
 /// Состояние рекомендаций
@@ -152,8 +136,7 @@ class RecommendationState {
 
 /// StateNotifier для управления состоянием рекомендаций
 class RecommendationStateNotifier extends StateNotifier<RecommendationState> {
-  RecommendationStateNotifier(this._service)
-      : super(const RecommendationState());
+  RecommendationStateNotifier(this._service) : super(const RecommendationState());
 
   final RecommendationService _service;
 

@@ -14,8 +14,7 @@ class ModernNavigationBar extends ConsumerStatefulWidget {
   final ValueChanged<int>? onTap;
 
   @override
-  ConsumerState<ModernNavigationBar> createState() =>
-      _ModernNavigationBarState();
+  ConsumerState<ModernNavigationBar> createState() => _ModernNavigationBarState();
 }
 
 class _ModernNavigationBarState extends ConsumerState<ModernNavigationBar>
@@ -132,8 +131,7 @@ class _ModernNavigationBarState extends ConsumerState<ModernNavigationBar>
                           color: isSelected
                               ? Theme.of(context).primaryColor
                               : Theme.of(context).textTheme.bodyMedium?.color,
-                          fontWeight:
-                              isSelected ? FontWeight.w600 : FontWeight.w500,
+                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                         ),
                     child: Text(label),
                   ),
@@ -164,8 +162,7 @@ class ModernFAB extends StatefulWidget {
   State<ModernFAB> createState() => _ModernFABState();
 }
 
-class _ModernFABState extends State<ModernFAB>
-    with SingleTickerProviderStateMixin {
+class _ModernFABState extends State<ModernFAB> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   late Animation<double> _rotationAnimation;

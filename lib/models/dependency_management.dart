@@ -29,8 +29,7 @@ class Dependency {
         version: map['version'] as String? ?? '',
         latestVersion: map['latestVersion'] as String?,
         type: DependencyType.fromString(map['type'] as String? ?? 'package'),
-        status:
-            DependencyStatus.fromString(map['status'] as String? ?? 'active'),
+        status: DependencyStatus.fromString(map['status'] as String? ?? 'active'),
         description: map['description'] as String?,
         repositoryUrl: map['repositoryUrl'] as String?,
         documentationUrl: map['documentationUrl'] as String?,
@@ -39,10 +38,8 @@ class Dependency {
         metadata: Map<String, dynamic>.from(
           map['metadata'] as Map<dynamic, dynamic>? ?? {},
         ),
-        dependencies:
-            List<String>.from(map['dependencies'] as List<dynamic>? ?? []),
-        dependents:
-            List<String>.from(map['dependents'] as List<dynamic>? ?? []),
+        dependencies: List<String>.from(map['dependencies'] as List<dynamic>? ?? []),
+        dependents: List<String>.from(map['dependents'] as List<dynamic>? ?? []),
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         updatedAt: (map['updatedAt'] as Timestamp).toDate(),
         createdBy: map['createdBy'] as String? ?? '',
@@ -161,8 +158,7 @@ enum DependencyType {
   final String value;
   final String displayName;
 
-  static DependencyType fromString(String value) =>
-      DependencyType.values.firstWhere(
+  static DependencyType fromString(String value) => DependencyType.values.firstWhere(
         (type) => type.value == value,
         orElse: () => DependencyType.package,
       );
@@ -233,8 +229,7 @@ enum DependencyStatus {
   final String value;
   final String displayName;
 
-  static DependencyStatus fromString(String value) =>
-      DependencyStatus.values.firstWhere(
+  static DependencyStatus fromString(String value) => DependencyStatus.values.firstWhere(
         (status) => status.value == value,
         orElse: () => DependencyStatus.active,
       );
@@ -300,23 +295,18 @@ class DependencyUpdate {
     required this.updatedBy,
   });
 
-  factory DependencyUpdate.fromMap(Map<String, dynamic> map) =>
-      DependencyUpdate(
+  factory DependencyUpdate.fromMap(Map<String, dynamic> map) => DependencyUpdate(
         id: map['id'] as String? ?? '',
         dependencyId: map['dependencyId'] as String? ?? '',
         currentVersion: map['currentVersion'] as String? ?? '',
         newVersion: map['newVersion'] as String? ?? '',
         type: UpdateType.fromString(map['type'] as String? ?? 'minor'),
-        priority:
-            UpdatePriority.fromString(map['priority'] as String? ?? 'medium'),
+        priority: UpdatePriority.fromString(map['priority'] as String? ?? 'medium'),
         changelog: map['changelog'] as String?,
-        breakingChanges:
-            List<String>.from(map['breakingChanges'] as List<dynamic>? ?? []),
-        securityFixes:
-            List<String>.from(map['securityFixes'] as List<dynamic>? ?? []),
+        breakingChanges: List<String>.from(map['breakingChanges'] as List<dynamic>? ?? []),
+        securityFixes: List<String>.from(map['securityFixes'] as List<dynamic>? ?? []),
         bugFixes: List<String>.from(map['bugFixes'] as List<dynamic>? ?? []),
-        newFeatures:
-            List<String>.from(map['newFeatures'] as List<dynamic>? ?? []),
+        newFeatures: List<String>.from(map['newFeatures'] as List<dynamic>? ?? []),
         metadata: Map<String, dynamic>.from(
           map['metadata'] as Map<dynamic, dynamic>? ?? {},
         ),
@@ -473,8 +463,7 @@ enum UpdatePriority {
   final String value;
   final String displayName;
 
-  static UpdatePriority fromString(String value) =>
-      UpdatePriority.values.firstWhere(
+  static UpdatePriority fromString(String value) => UpdatePriority.values.firstWhere(
         (priority) => priority.value == value,
         orElse: () => UpdatePriority.medium,
       );
@@ -528,8 +517,7 @@ class DependencyConfig {
     required this.updatedBy,
   });
 
-  factory DependencyConfig.fromMap(Map<String, dynamic> map) =>
-      DependencyConfig(
+  factory DependencyConfig.fromMap(Map<String, dynamic> map) => DependencyConfig(
         id: map['id'] as String? ?? '',
         enableAutoUpdates: map['enableAutoUpdates'] as bool? ?? false,
         enableSecurityUpdates: map['enableSecurityUpdates'] as bool? ?? true,
@@ -545,8 +533,7 @@ class DependencyConfig {
             UpdatePriority.values,
         maxConcurrentUpdates: map['maxConcurrentUpdates'] as int? ?? 3,
         updateRetryAttempts: map['updateRetryAttempts'] as int? ?? 3,
-        updateTimeout:
-            Duration(seconds: map['updateTimeoutSeconds'] as int? ?? 300),
+        updateTimeout: Duration(seconds: map['updateTimeoutSeconds'] as int? ?? 300),
         excludedDependencies: List<String>.from(
           (map['excludedDependencies'] as List<dynamic>?) ?? [],
         ),
@@ -624,10 +611,9 @@ class DependencyConfig {
       DependencyConfig(
         id: id ?? this.id,
         enableAutoUpdates: enableAutoUpdates ?? this.enableAutoUpdates,
-        enableSecurityUpdates:
-            enableSecurityUpdates ?? this.enableSecurityUpdates,
-        enableBreakingChangeNotifications: enableBreakingChangeNotifications ??
-            this.enableBreakingChangeNotifications,
+        enableSecurityUpdates: enableSecurityUpdates ?? this.enableSecurityUpdates,
+        enableBreakingChangeNotifications:
+            enableBreakingChangeNotifications ?? this.enableBreakingChangeNotifications,
         allowedUpdateTypes: allowedUpdateTypes ?? this.allowedUpdateTypes,
         allowedPriorities: allowedPriorities ?? this.allowedPriorities,
         maxConcurrentUpdates: maxConcurrentUpdates ?? this.maxConcurrentUpdates,

@@ -47,10 +47,9 @@ class _CreateReviewDialogState extends ConsumerState<CreateReviewDialog> {
                   Expanded(
                     child: Text(
                       'Оставить отзыв',
-                      style:
-                          Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                   ),
                   IconButton(
@@ -99,8 +98,7 @@ class _CreateReviewDialogState extends ConsumerState<CreateReviewDialog> {
                 controller: _textController,
                 maxLines: 4,
                 decoration: InputDecoration(
-                  hintText:
-                      'Расскажите о своем опыте работы с этим специалистом...',
+                  hintText: 'Расскажите о своем опыте работы с этим специалистом...',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -118,9 +116,7 @@ class _CreateReviewDialogState extends ConsumerState<CreateReviewDialog> {
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: _isSubmitting
-                          ? null
-                          : () => Navigator.of(context).pop(),
+                      onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
                       child: const Text('Отмена'),
                     ),
                   ),
@@ -138,8 +134,7 @@ class _CreateReviewDialogState extends ConsumerState<CreateReviewDialog> {
                               width: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             )
                           : const Text('Отправить'),
@@ -207,16 +202,14 @@ class _CreateReviewDialogState extends ConsumerState<CreateReviewDialog> {
         customerId: currentUser.id,
         text: _textController.text.trim(),
         rating: _rating,
-        customerName: currentUser.displayName ??
-            '${currentUser.firstName} ${currentUser.lastName}',
+        customerName: currentUser.displayName ?? '${currentUser.firstName} ${currentUser.lastName}',
         customerAvatar: currentUser.photoURL,
       );
 
       await _reviewService.addReview(createReview);
 
       if (mounted) {
-        Navigator.of(context)
-            .pop(true); // Возвращаем true для обновления списка отзывов
+        Navigator.of(context).pop(true); // Возвращаем true для обновления списка отзывов
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Отзыв успешно добавлен'),

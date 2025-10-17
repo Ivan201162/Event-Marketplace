@@ -25,23 +25,20 @@ class SearchFiltersNotifier extends Notifier<AdvancedSearchFilters> {
 }
 
 /// Провайдер для фильтров поиска
-final searchFiltersProvider =
-    NotifierProvider<SearchFiltersNotifier, AdvancedSearchFilters>(
+final searchFiltersProvider = NotifierProvider<SearchFiltersNotifier, AdvancedSearchFilters>(
   SearchFiltersNotifier.new,
 );
 
 /// Провайдер для статистики поиска
 final searchStatsProvider =
-    FutureProvider.family<Map<String, dynamic>, AdvancedSearchFilters>(
-        (ref, filters) async {
+    FutureProvider.family<Map<String, dynamic>, AdvancedSearchFilters>((ref, filters) async {
   final service = ref.read(advancedSearchServiceProvider);
   return service.getSearchStats(filters: filters);
 });
 
 /// Провайдер для популярных категорий в регионе
 final popularCategoriesProvider =
-    FutureProvider.family<List<SpecialistCategory>, Map<String, dynamic>>(
-        (ref, params) async {
+    FutureProvider.family<List<SpecialistCategory>, Map<String, dynamic>>((ref, params) async {
   final service = ref.read(advancedSearchServiceProvider);
   return service.getPopularCategoriesInRegion(
     regionName: params['regionName'] as String?,
@@ -274,22 +271,20 @@ class AdvancedSearchNotifier extends Notifier<AsyncValue<AdvancedSearchState>> {
 
 /// Провайдер для потока поиска
 final searchStreamProvider =
-    StreamProvider.family<List<AdvancedSearchResult>, AdvancedSearchFilters>(
-        (ref, filters) {
+    StreamProvider.family<List<AdvancedSearchResult>, AdvancedSearchFilters>((ref, filters) {
   final service = ref.read(advancedSearchServiceProvider);
   return service.searchSpecialistsStream(filters: filters);
 });
 
 /// Провайдер для быстрого поиска (без фильтров)
-final quickSearchProvider = StateNotifierProvider<QuickSearchNotifier,
-    AsyncValue<List<AdvancedSearchResult>>>((ref) {
+final quickSearchProvider =
+    StateNotifierProvider<QuickSearchNotifier, AsyncValue<List<AdvancedSearchResult>>>((ref) {
   final service = ref.read(advancedSearchServiceProvider);
   return QuickSearchNotifier(service);
 });
 
 /// Нотификатор для быстрого поиска
-class QuickSearchNotifier
-    extends StateNotifier<AsyncValue<List<AdvancedSearchResult>>> {
+class QuickSearchNotifier extends StateNotifier<AsyncValue<List<AdvancedSearchResult>>> {
   QuickSearchNotifier(this._service) : super(const AsyncValue.data([]));
 
   final AdvancedSpecialistSearchService _service;
@@ -328,8 +323,7 @@ class QuickSearchNotifier
 
 /// Провайдер для рекомендуемых специалистов
 final recommendedSpecialistsProvider =
-    FutureProvider.family<List<AdvancedSearchResult>, Map<String, dynamic>>(
-        (ref, params) async {
+    FutureProvider.family<List<AdvancedSearchResult>, Map<String, dynamic>>((ref, params) async {
   final service = ref.read(advancedSearchServiceProvider);
 
   final filters = AdvancedSearchFilters(
@@ -348,8 +342,7 @@ final recommendedSpecialistsProvider =
 
 /// Провайдер для похожих специалистов
 final similarSpecialistsProvider =
-    FutureProvider.family<List<AdvancedSearchResult>, Map<String, dynamic>>(
-        (ref, params) async {
+    FutureProvider.family<List<AdvancedSearchResult>, Map<String, dynamic>>((ref, params) async {
   final service = ref.read(advancedSearchServiceProvider);
 
   final specialist = params['specialist'] as Specialist;
@@ -368,15 +361,12 @@ final similarSpecialistsProvider =
   );
 
   // Исключаем самого специалиста из результатов
-  return results
-      .where((result) => result.specialist.id != specialist.id)
-      .toList();
+  return results.where((result) => result.specialist.id != specialist.id).toList();
 });
 
 /// Провайдер для статистики по категориям
 final categoryStatsProvider =
-    FutureProvider.family<Map<String, dynamic>, Map<String, dynamic>>(
-        (ref, params) async {
+    FutureProvider.family<Map<String, dynamic>, Map<String, dynamic>>((ref, params) async {
   final service = ref.read(advancedSearchServiceProvider);
 
   final category = params['category'] as SpecialistCategory;

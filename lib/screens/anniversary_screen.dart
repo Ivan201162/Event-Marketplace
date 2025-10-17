@@ -173,8 +173,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
                     ),
                   ),
                   PopupMenuButton<String>(
-                    onSelected: (value) =>
-                        _handleAnniversaryAction(value, anniversary),
+                    onSelected: (value) => _handleAnniversaryAction(value, anniversary),
                     itemBuilder: (context) => [
                       const PopupMenuItem(
                         value: 'edit',
@@ -273,8 +272,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
         ],
       );
 
-  Widget _buildUpcomingAnniversariesTab() =>
-      StreamBuilder<List<WeddingAnniversary>>(
+  Widget _buildUpcomingAnniversariesTab() => StreamBuilder<List<WeddingAnniversary>>(
         stream: _anniversaryService.getUpcomingAnniversaries('current_user'),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -323,8 +321,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
       );
 
   Widget _buildUpcomingAnniversaryCard(WeddingAnniversary anniversary) {
-    final daysUntil =
-        anniversary.nextAnniversary.difference(DateTime.now()).inDays;
+    final daysUntil = anniversary.nextAnniversary.difference(DateTime.now()).inDays;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
@@ -367,18 +364,15 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
                   ),
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color:
-                        daysUntil <= 7 ? Colors.red[100] : Colors.orange[100],
+                    color: daysUntil <= 7 ? Colors.red[100] : Colors.orange[100],
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     daysUntil == 0 ? 'Сегодня!' : '$daysUntil дн.',
                     style: TextStyle(
-                      color:
-                          daysUntil <= 7 ? Colors.red[600] : Colors.orange[600],
+                      color: daysUntil <= 7 ? Colors.red[600] : Colors.orange[600],
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
                     ),
@@ -490,10 +484,8 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
       return const SizedBox.shrink();
     }
 
-    final yearsMarried =
-        WeddingAnniversary.calculateYearsMarried(_selectedWeddingDate!);
-    final nextAnniversary =
-        WeddingAnniversary.calculateNextAnniversary(_selectedWeddingDate!);
+    final yearsMarried = WeddingAnniversary.calculateYearsMarried(_selectedWeddingDate!);
+    final nextAnniversary = WeddingAnniversary.calculateNextAnniversary(_selectedWeddingDate!);
     final daysUntil = nextAnniversary.difference(DateTime.now()).inDays;
 
     return Card(
@@ -573,8 +565,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
   Future<void> _selectWeddingDate() async {
     final date = await showDatePicker(
       context: context,
-      initialDate: _selectedWeddingDate ??
-          DateTime.now().subtract(const Duration(days: 365)),
+      initialDate: _selectedWeddingDate ?? DateTime.now().subtract(const Duration(days: 365)),
       firstDate: DateTime(1950),
       lastDate: DateTime.now(),
     );
@@ -593,8 +584,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
     try {
       await _anniversaryService.addWeddingAnniversary(
         customerId: 'current_user_id', // TODO(developer): Получить реальный ID
-        spouseName:
-            'Текущий пользователь', // TODO(developer): Получить реальное имя
+        spouseName: 'Текущий пользователь', // TODO(developer): Получить реальное имя
         weddingDate: _selectedWeddingDate!,
       );
 
@@ -704,13 +694,11 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
                   controller: scrollController,
                   itemCount: anniversary.anniversaryRecommendations.length,
                   itemBuilder: (context, index) {
-                    final recommendation =
-                        anniversary.anniversaryRecommendations[index];
+                    final recommendation = anniversary.anniversaryRecommendations[index];
                     return Card(
                       margin: const EdgeInsets.only(bottom: 8),
                       child: ListTile(
-                        leading:
-                            Icon(Icons.lightbulb, color: Colors.amber[600]),
+                        leading: Icon(Icons.lightbulb, color: Colors.amber[600]),
                         title: Text(recommendation),
                       ),
                     );

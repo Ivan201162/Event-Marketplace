@@ -9,8 +9,7 @@ import '../services/chat_service.dart';
 final chatServiceProvider = Provider<ChatService>((ref) => ChatService());
 
 /// Провайдер для списка чатов пользователя
-final userChatsProvider =
-    FutureProvider.family<List<Chat>, UserChatsParams>((ref, params) async {
+final userChatsProvider = FutureProvider.family<List<Chat>, UserChatsParams>((ref, params) async {
   final chatService = ref.read(chatServiceProvider);
   return chatService.getUserChats(params.userId);
 });
@@ -23,8 +22,7 @@ class UserChatsParams {
 
 /// Провайдер для сообщений чата
 final chatMessagesProvider =
-    StreamProvider.family<List<chat_message.ChatMessage>, String>(
-        (ref, chatId) {
+    StreamProvider.family<List<chat_message.ChatMessage>, String>((ref, chatId) {
   final chatService = ref.read(chatServiceProvider);
   return chatService.getChatMessages(chatId);
 });
@@ -36,8 +34,7 @@ final chatProvider = StreamProvider.family<Chat?, String>((ref, chatId) {
 });
 
 /// Провайдер для состояния формы сообщения
-final messageFormProvider =
-    NotifierProvider<MessageFormNotifier, MessageFormState>(
+final messageFormProvider = NotifierProvider<MessageFormNotifier, MessageFormState>(
   MessageFormNotifier.new,
 );
 
@@ -83,8 +80,7 @@ class MessageFormNotifier extends Notifier<MessageFormState> {
   }
 
   void removeAttachment(String attachment) {
-    final updatedAttachments =
-        state.attachments.where((a) => a != attachment).toList();
+    final updatedAttachments = state.attachments.where((a) => a != attachment).toList();
     state = state.copyWith(attachments: updatedAttachments);
   }
 
@@ -102,8 +98,7 @@ class MessageFormNotifier extends Notifier<MessageFormState> {
 }
 
 /// Провайдер для состояния чата
-final chatStateProvider =
-    NotifierProvider<ChatStateNotifier, ChatState>(ChatStateNotifier.new);
+final chatStateProvider = NotifierProvider<ChatStateNotifier, ChatState>(ChatStateNotifier.new);
 
 /// Состояние чата
 class ChatState {
@@ -142,8 +137,7 @@ class ChatStateNotifier extends Notifier<ChatState> {
   }
 
   void setMessages(String chatId, List<chat_message.ChatMessage> messages) {
-    final updatedMessages =
-        Map<String, List<chat_message.ChatMessage>>.from(state.messages);
+    final updatedMessages = Map<String, List<chat_message.ChatMessage>>.from(state.messages);
     updatedMessages[chatId] = messages;
     state = state.copyWith(messages: updatedMessages);
   }

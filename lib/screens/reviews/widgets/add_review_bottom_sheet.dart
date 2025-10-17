@@ -203,9 +203,7 @@ class _AddReviewBottomSheetState extends State<AddReviewBottomSheet> {
           Text(
             'Минимум 20 символов (${_textController.text.length})',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: _textController.text.length < 20
-                      ? Colors.red
-                      : Colors.grey,
+                  color: _textController.text.length < 20 ? Colors.red : Colors.grey,
                 ),
           ),
         ],
@@ -308,10 +306,7 @@ class _AddReviewBottomSheetState extends State<AddReviewBottomSheet> {
       if (images.isNotEmpty) {
         setState(() {
           final remainingSlots = 3 - _selectedImages.length;
-          final imagesToAdd = images
-              .take(remainingSlots)
-              .map((xFile) => File(xFile.path))
-              .toList();
+          final imagesToAdd = images.take(remainingSlots).map((xFile) => File(xFile.path)).toList();
           _selectedImages.addAll(imagesToAdd);
         });
       }

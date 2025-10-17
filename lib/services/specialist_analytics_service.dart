@@ -20,13 +20,11 @@ class SpecialistIncomeStats {
   });
 
   /// Создать из Map
-  factory SpecialistIncomeStats.fromMap(Map<String, dynamic> data) =>
-      SpecialistIncomeStats(
+  factory SpecialistIncomeStats.fromMap(Map<String, dynamic> data) => SpecialistIncomeStats(
         totalIncome: (data['totalIncome'] as num?)?.toDouble() ?? 0.0,
         monthlyIncome: (data['monthlyIncome'] as num?)?.toDouble() ?? 0.0,
         weeklyIncome: (data['weeklyIncome'] as num?)?.toDouble() ?? 0.0,
-        averageBookingValue:
-            (data['averageBookingValue'] as num?)?.toDouble() ?? 0.0,
+        averageBookingValue: (data['averageBookingValue'] as num?)?.toDouble() ?? 0.0,
         totalBookings: (data['totalBookings'] as int?) ?? 0,
         completedBookings: (data['completedBookings'] as int?) ?? 0,
         cancelledBookings: (data['cancelledBookings'] as int?) ?? 0,
@@ -80,8 +78,7 @@ class SpecialistReviewStats {
   });
 
   /// Создать из Map
-  factory SpecialistReviewStats.fromMap(Map<String, dynamic> data) =>
-      SpecialistReviewStats(
+  factory SpecialistReviewStats.fromMap(Map<String, dynamic> data) => SpecialistReviewStats(
         averageRating: (data['averageRating'] as num?)?.toDouble() ?? 0.0,
         totalReviews: (data['totalReviews'] as int?) ?? 0,
         fiveStarReviews: (data['fiveStarReviews'] as int?) ?? 0,
@@ -92,8 +89,7 @@ class SpecialistReviewStats {
         reviewsByMonth: Map<String, int>.from(
           data['reviewsByMonth'] as Map<String, dynamic>? ?? {},
         ),
-        commonTags:
-            List<String>.from(data['commonTags'] as List<dynamic>? ?? []),
+        commonTags: List<String>.from(data['commonTags'] as List<dynamic>? ?? []),
         responseRate: (data['responseRate'] as num?)?.toDouble() ?? 0.0,
       );
   final double averageRating;
@@ -133,8 +129,7 @@ class SpecialistAnalytics {
   });
 
   /// Создать из Map
-  factory SpecialistAnalytics.fromMap(Map<String, dynamic> data) =>
-      SpecialistAnalytics(
+  factory SpecialistAnalytics.fromMap(Map<String, dynamic> data) => SpecialistAnalytics(
         specialistId: (data['specialistId'] as String?) ?? '',
         incomeStats: SpecialistIncomeStats.fromMap(
           data['incomeStats'] as Map<String, dynamic>? ?? {},
@@ -142,8 +137,7 @@ class SpecialistAnalytics {
         reviewStats: SpecialistReviewStats.fromMap(
           data['reviewStats'] as Map<String, dynamic>? ?? {},
         ),
-        lastUpdated:
-            (data['lastUpdated'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        lastUpdated: (data['lastUpdated'] as Timestamp?)?.toDate() ?? DateTime.now(),
         additionalMetrics: Map<String, dynamic>.from(
           data['additionalMetrics'] as Map<String, dynamic>? ?? {},
         ),
@@ -173,10 +167,7 @@ class SpecialistAnalyticsService {
     String specialistId,
   ) async {
     try {
-      final doc = await _firestore
-          .collection('specialist_analytics')
-          .doc(specialistId)
-          .get();
+      final doc = await _firestore.collection('specialist_analytics').doc(specialistId).get();
 
       if (!doc.exists) {
         // Создаем аналитику, если её нет
@@ -202,10 +193,8 @@ class SpecialistAnalyticsService {
           .where('specialistId', isEqualTo: specialistId)
           .get();
 
-      final bookings = bookingsQuery.docs
-          .map((doc) => Booking.fromMap(doc.data()))
-          .toList()
-          .cast<Booking>();
+      final bookings =
+          bookingsQuery.docs.map((doc) => Booking.fromMap(doc.data())).toList().cast<Booking>();
 
       // Получаем все платежи специалиста
       final paymentsQuery = await _firestore
@@ -213,10 +202,8 @@ class SpecialistAnalyticsService {
           .where('specialistId', isEqualTo: specialistId)
           .get();
 
-      final payments = paymentsQuery.docs
-          .map((doc) => Payment.fromMap(doc.data()))
-          .toList()
-          .cast<Payment>();
+      final payments =
+          paymentsQuery.docs.map((doc) => Payment.fromMap(doc.data())).toList().cast<Payment>();
 
       // Получаем все отзывы специалиста
       final reviewsQuery = await _firestore
@@ -225,10 +212,8 @@ class SpecialistAnalyticsService {
           .where('type', isEqualTo: 'specialist')
           .get();
 
-      final reviews = reviewsQuery.docs
-          .map((doc) => Review.fromMap(doc.data()))
-          .toList()
-          .cast<Review>();
+      final reviews =
+          reviewsQuery.docs.map((doc) => Review.fromMap(doc.data())).toList().cast<Review>();
 
       // Генерируем статистику доходов
       final incomeStats = _generateIncomeStats(bookings, payments);
@@ -244,10 +229,7 @@ class SpecialistAnalyticsService {
       );
 
       // Сохраняем аналитику
-      await _firestore
-          .collection('specialist_analytics')
-          .doc(specialistId)
-          .set(analytics.toMap());
+      await _firestore.collection('specialist_analytics').doc(specialistId).set(analytics.toMap());
 
       return analytics;
     } on Exception catch (e) {
@@ -272,32 +254,24 @@ class SpecialistAnalyticsService {
 
     final monthlyIncome = payments
         .where(
-          (p) =>
-              p.status == PaymentStatus.completed &&
-              p.createdAt.isAfter(thisMonth),
+          (p) => p.status == PaymentStatus.completed && p.createdAt.isAfter(thisMonth),
         )
         .fold(0, (sum, p) => sum + p.amount);
 
     final weeklyIncome = payments
         .where(
-          (p) =>
-              p.status == PaymentStatus.completed &&
-              p.createdAt.isAfter(lastWeek),
+          (p) => p.status == PaymentStatus.completed && p.createdAt.isAfter(lastWeek),
         )
         .fold(0, (sum, p) => sum + p.amount);
 
-    final completedBookings =
-        bookings.where((b) => b.status == BookingStatus.completed).length;
+    final completedBookings = bookings.where((b) => b.status == BookingStatus.completed).length;
 
-    final cancelledBookings =
-        bookings.where((b) => b.status == BookingStatus.cancelled).length;
+    final cancelledBookings = bookings.where((b) => b.status == BookingStatus.cancelled).length;
 
     final totalBookings = bookings.length;
-    final completionRate =
-        totalBookings > 0 ? completedBookings / totalBookings : 0.0;
+    final completionRate = totalBookings > 0 ? completedBookings / totalBookings : 0.0;
 
-    final averageBookingValue =
-        completedBookings > 0 ? totalIncome / completedBookings : 0.0;
+    final averageBookingValue = completedBookings > 0 ? totalIncome / completedBookings : 0.0;
 
     // Доходы по месяцам
     final incomeByMonth = <String, double>{};
@@ -305,8 +279,7 @@ class SpecialistAnalyticsService {
 
     for (var i = 11; i >= 0; i--) {
       final month = DateTime(now.year, now.month - i);
-      final monthKey =
-          '${month.year}-${month.month.toString().padLeft(2, '0')}';
+      final monthKey = '${month.year}-${month.month.toString().padLeft(2, '0')}';
 
       final monthIncome = payments
           .where(
@@ -319,9 +292,7 @@ class SpecialistAnalyticsService {
 
       final monthBookings = bookings
           .where(
-            (b) =>
-                b.createdAt.year == month.year &&
-                b.createdAt.month == month.month,
+            (b) => b.createdAt.year == month.year && b.createdAt.month == month.month,
           )
           .length;
 
@@ -375,14 +346,11 @@ class SpecialistAnalyticsService {
 
     for (var i = 11; i >= 0; i--) {
       final month = DateTime(now.year, now.month - i);
-      final monthKey =
-          '${month.year}-${month.month.toString().padLeft(2, '0')}';
+      final monthKey = '${month.year}-${month.month.toString().padLeft(2, '0')}';
 
       final monthReviews = reviews
           .where(
-            (r) =>
-                r.createdAt.year == month.year &&
-                r.createdAt.month == month.month,
+            (r) => r.createdAt.year == month.year && r.createdAt.month == month.month,
           )
           .length;
 
@@ -397,8 +365,7 @@ class SpecialistAnalyticsService {
       }
     }
 
-    final commonTags = tagCounts.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
+    final commonTags = tagCounts.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
 
     // Процент ответов (заглушка)
     const responseRate = 0.85; // TODO(developer): Реальная логика
@@ -421,10 +388,7 @@ class SpecialistAnalyticsService {
   Future<void> updateSpecialistAnalytics(String specialistId) async {
     try {
       final analytics = await _generateAnalytics(specialistId);
-      await _firestore
-          .collection('specialist_analytics')
-          .doc(specialistId)
-          .set(analytics.toMap());
+      await _firestore.collection('specialist_analytics').doc(specialistId).set(analytics.toMap());
 
       debugPrint('Updated analytics for specialist $specialistId');
     } on Exception catch (e) {
@@ -529,12 +493,10 @@ class SpecialistAnalyticsService {
         'incomePercentile': incomePercentile,
         'ratingPercentile': ratingPercentile,
         'totalSpecialists': topSpecialists.length,
-        'averageIncome': incomes.isNotEmpty
-            ? incomes.reduce((a, b) => a + b) / incomes.length
-            : 0.0,
-        'averageRating': ratings.isNotEmpty
-            ? ratings.reduce((a, b) => a + b) / ratings.length
-            : 0.0,
+        'averageIncome':
+            incomes.isNotEmpty ? incomes.reduce((a, b) => a + b) / incomes.length : 0.0,
+        'averageRating':
+            ratings.isNotEmpty ? ratings.reduce((a, b) => a + b) / ratings.length : 0.0,
       };
     } on Exception catch (e) {
       debugPrint('Error getting comparative analytics: $e');
@@ -580,8 +542,7 @@ class SpecialistAnalyticsService {
         final payment = Payment.fromDocument(doc);
         final monthKey =
             '${payment.createdAt.year}-${payment.createdAt.month.toString().padLeft(2, '0')}';
-        monthlyIncome[monthKey] =
-            (monthlyIncome[monthKey] ?? 0.0) + payment.amount;
+        monthlyIncome[monthKey] = (monthlyIncome[monthKey] ?? 0.0) + payment.amount;
       }
 
       return monthlyIncome;
@@ -657,8 +618,7 @@ class SpecialistAnalyticsService {
       final monthlyAverageRating = <String, double>{};
       monthlyRatings.forEach((month, ratings) {
         if (ratings.isNotEmpty) {
-          monthlyAverageRating[month] =
-              ratings.reduce((a, b) => a + b) / ratings.length;
+          monthlyAverageRating[month] = ratings.reduce((a, b) => a + b) / ratings.length;
         }
       });
 

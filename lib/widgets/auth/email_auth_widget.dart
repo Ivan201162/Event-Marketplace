@@ -48,9 +48,7 @@ class _EmailAuthWidgetState extends ConsumerState<EmailAuthWidget> {
         await authService.signUpWithEmail(
           _emailController.text.trim(),
           _passwordController.text,
-          displayName: _nameController.text.trim().isNotEmpty
-              ? _nameController.text.trim()
-              : null,
+          displayName: _nameController.text.trim().isNotEmpty ? _nameController.text.trim() : null,
         );
       } else {
         // Вход
@@ -89,8 +87,7 @@ class _EmailAuthWidgetState extends ConsumerState<EmailAuthWidget> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text(
-                'Письмо для восстановления пароля отправлено на ваш email'),
+            content: Text('Письмо для восстановления пароля отправлено на ваш email'),
           ),
         );
       }
@@ -125,17 +122,14 @@ class _EmailAuthWidgetState extends ConsumerState<EmailAuthWidget> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         decoration: BoxDecoration(
-                          color: !_isSignUp
-                              ? theme.primaryColor
-                              : Colors.transparent,
+                          color: !_isSignUp ? theme.primaryColor : Colors.transparent,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
                           'Вход',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color:
-                                !_isSignUp ? Colors.white : theme.primaryColor,
+                            color: !_isSignUp ? Colors.white : theme.primaryColor,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -148,17 +142,14 @@ class _EmailAuthWidgetState extends ConsumerState<EmailAuthWidget> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         decoration: BoxDecoration(
-                          color: _isSignUp
-                              ? theme.primaryColor
-                              : Colors.transparent,
+                          color: _isSignUp ? theme.primaryColor : Colors.transparent,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
                           'Регистрация',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color:
-                                _isSignUp ? Colors.white : theme.primaryColor,
+                            color: _isSignUp ? Colors.white : theme.primaryColor,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -203,8 +194,7 @@ class _EmailAuthWidgetState extends ConsumerState<EmailAuthWidget> {
                 if (value == null || value.trim().isEmpty) {
                   return 'Введите email';
                 }
-                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                    .hasMatch(value.trim())) {
+                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value.trim())) {
                   return 'Введите корректный email';
                 }
                 return null;
@@ -224,15 +214,13 @@ class _EmailAuthWidgetState extends ConsumerState<EmailAuthWidget> {
                   icon: Icon(
                     _obscurePassword ? Icons.visibility : Icons.visibility_off,
                   ),
-                  onPressed: () =>
-                      setState(() => _obscurePassword = !_obscurePassword),
+                  onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              textInputAction:
-                  _isSignUp ? TextInputAction.next : TextInputAction.done,
+              textInputAction: _isSignUp ? TextInputAction.next : TextInputAction.done,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Введите пароль';
@@ -256,12 +244,10 @@ class _EmailAuthWidgetState extends ConsumerState<EmailAuthWidget> {
                   prefixIcon: const Icon(Icons.lock_outline),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _obscureConfirmPassword
-                          ? Icons.visibility
-                          : Icons.visibility_off,
+                      _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
                     ),
-                    onPressed: () => setState(() =>
-                        _obscureConfirmPassword = !_obscureConfirmPassword),
+                    onPressed: () =>
+                        setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),

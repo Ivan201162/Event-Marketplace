@@ -50,8 +50,7 @@ class ChatWithProposalButton extends StatelessWidget {
 }
 
 /// Пример интеграции бейджа уведомлений в AppBar
-class ChatAppBarWithNotifications extends StatelessWidget
-    implements PreferredSizeWidget {
+class ChatAppBarWithNotifications extends StatelessWidget implements PreferredSizeWidget {
   const ChatAppBarWithNotifications({
     super.key,
     required this.title,

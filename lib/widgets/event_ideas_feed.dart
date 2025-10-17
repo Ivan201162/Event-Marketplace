@@ -49,8 +49,7 @@ class _EventIdeasFeedState extends ConsumerState<EventIdeasFeed> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
       _loadMoreIdeas();
     }
   }

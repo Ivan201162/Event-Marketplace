@@ -49,9 +49,7 @@ class FeatureRequestService {
         updatedAt: now,
       );
 
-      final docRef = await _firestore
-          .collection('feature_requests')
-          .add(featureRequest.toMap());
+      final docRef = await _firestore.collection('feature_requests').add(featureRequest.toMap());
 
       return docRef.id;
     } on Exception catch (e) {
@@ -73,8 +71,7 @@ class FeatureRequestService {
       return Stream.value([]);
     }
 
-    Query<Map<String, dynamic>> query =
-        _firestore.collection('feature_requests');
+    Query<Map<String, dynamic>> query = _firestore.collection('feature_requests');
 
     // Применяем фильтры
     if (status != null) {
@@ -150,8 +147,7 @@ class FeatureRequestService {
     }
 
     try {
-      final doc =
-          await _firestore.collection('feature_requests').doc(requestId).get();
+      final doc = await _firestore.collection('feature_requests').doc(requestId).get();
 
       if (!doc.exists) {
         return null;
@@ -302,14 +298,10 @@ class FeatureRequestService {
         updates['assignedTo'] = assignedTo;
       }
       if (estimatedCompletion != null) {
-        updates['estimatedCompletion'] =
-            Timestamp.fromDate(estimatedCompletion);
+        updates['estimatedCompletion'] = Timestamp.fromDate(estimatedCompletion);
       }
 
-      await _firestore
-          .collection('feature_requests')
-          .doc(requestId)
-          .update(updates);
+      await _firestore.collection('feature_requests').doc(requestId).update(updates);
     } on Exception catch (e) {
       debugPrint('Error updating feature request status: $e');
       throw Exception('Ошибка обновления статуса: $e');
@@ -427,23 +419,19 @@ class FeatureRequestService {
       }
 
       // Статистика по категориям
-      categoryStats[request.category] =
-          (categoryStats[request.category] ?? 0) + 1;
+      categoryStats[request.category] = (categoryStats[request.category] ?? 0) + 1;
 
       // Статистика по приоритетам
-      priorityStats[request.priority] =
-          (priorityStats[request.priority] ?? 0) + 1;
+      priorityStats[request.priority] = (priorityStats[request.priority] ?? 0) + 1;
 
       // Статистика по типам пользователей
-      userTypeStats[request.userType] =
-          (userTypeStats[request.userType] ?? 0) + 1;
+      userTypeStats[request.userType] = (userTypeStats[request.userType] ?? 0) + 1;
 
       // Общее количество голосов
       totalVotes += request.votes;
     }
 
-    final averageVotesPerRequest =
-        totalRequests > 0 ? totalVotes / totalRequests : 0.0;
+    final averageVotesPerRequest = totalRequests > 0 ? totalVotes / totalRequests : 0.0;
 
     return FeatureRequestStats(
       totalRequests: totalRequests,

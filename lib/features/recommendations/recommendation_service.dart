@@ -54,8 +54,7 @@ class RecommendationService {
   }) async {
     try {
       // Получаем данные специалиста
-      final specialistDoc =
-          await _db.collection('specialists').doc(specialistId).get();
+      final specialistDoc = await _db.collection('specialists').doc(specialistId).get();
       if (!specialistDoc.exists) {
         return [];
       }
@@ -180,8 +179,7 @@ class RecommendationService {
 
       for (final booking in bookings) {
         // Получаем данные специалиста
-        final specialistDoc =
-            await _db.collection('specialists').doc(booking.specialistId).get();
+        final specialistDoc = await _db.collection('specialists').doc(booking.specialistId).get();
         if (specialistDoc.exists) {
           final specialist = Specialist.fromDocument(specialistDoc);
 
@@ -191,30 +189,25 @@ class RecommendationService {
           }
 
           // Категория
-          categories[specialist.category] =
-              (categories[specialist.category] ?? 0) + 1;
+          categories[specialist.category] = (categories[specialist.category] ?? 0) + 1;
 
           // Цены
           prices.add(booking.totalPrice);
 
           // Специалисты
-          specialistIds[booking.specialistId] =
-              (specialistIds[booking.specialistId] ?? 0) + 1;
+          specialistIds[booking.specialistId] = (specialistIds[booking.specialistId] ?? 0) + 1;
         }
       }
 
       // Определяем наиболее предпочитаемые
-      final preferredCity = cities.isNotEmpty
-          ? cities.entries.reduce((a, b) => a.value > b.value ? a : b).key
-          : null;
+      final preferredCity =
+          cities.isNotEmpty ? cities.entries.reduce((a, b) => a.value > b.value ? a : b).key : null;
 
       final preferredCategory = categories.isNotEmpty
           ? categories.entries.reduce((a, b) => a.value > b.value ? a : b).key
           : null;
 
-      final avgPrice = prices.isNotEmpty
-          ? prices.reduce((a, b) => a + b) / prices.length
-          : 0.0;
+      final avgPrice = prices.isNotEmpty ? prices.reduce((a, b) => a + b) / prices.length : 0.0;
 
       final preferredSpecialists = specialistIds.entries
           .where(
@@ -270,9 +263,7 @@ class RecommendationService {
     }
 
     // Сортируем по рейтингу и количеству отзывов
-    query = query
-        .orderBy('avgRating', descending: true)
-        .orderBy('reviewsCount', descending: true);
+    query = query.orderBy('avgRating', descending: true).orderBy('reviewsCount', descending: true);
 
     final snapshot = await query.limit(limit).get();
 
@@ -306,8 +297,8 @@ class RecommendationService {
   ) =>
       specialists.where((specialist) {
         // Проверяем соответствие предпочтениям
-        final matchesCity = userPreferences['city'] == null ||
-            specialist.city == userPreferences['city'];
+        final matchesCity =
+            userPreferences['city'] == null || specialist.city == userPreferences['city'];
 
         final matchesCategory = userPreferences['category'] == null ||
             specialist.category == userPreferences['category'];
@@ -407,9 +398,7 @@ class RecommendationService {
       }
 
       // Возвращаем топ-5 похожих пользователей
-      return userSimilarities.entries
-          .where((entry) => entry.value >= 2)
-          .toList()
+      return userSimilarities.entries.where((entry) => entry.value >= 2).toList()
         ..sort((a, b) => b.value.compareTo(a.value))
         ..take(5).map((entry) => entry.key).toList();
     } catch (e) {

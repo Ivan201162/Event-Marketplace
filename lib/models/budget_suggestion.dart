@@ -27,8 +27,7 @@ class BudgetSuggestion {
       specialistId: data['specialistId'] as String? ?? '',
       suggestions: (data['suggestions'] as List<dynamic>?)
               ?.map(
-                (item) =>
-                    BudgetSuggestionItem.fromMap(item as Map<String, dynamic>),
+                (item) => BudgetSuggestionItem.fromMap(item as Map<String, dynamic>),
               )
               .toList() ??
           [],
@@ -38,12 +37,8 @@ class BudgetSuggestion {
       ),
       message: data['message'] as String?,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      viewedAt: data['viewedAt'] != null
-          ? (data['viewedAt'] as Timestamp).toDate()
-          : null,
-      respondedAt: data['respondedAt'] != null
-          ? (data['respondedAt'] as Timestamp).toDate()
-          : null,
+      viewedAt: data['viewedAt'] != null ? (data['viewedAt'] as Timestamp).toDate() : null,
+      respondedAt: data['respondedAt'] != null ? (data['respondedAt'] as Timestamp).toDate() : null,
       metadata: data['metadata'] != null
           ? Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>)
           : null,
@@ -51,8 +46,7 @@ class BudgetSuggestion {
   }
 
   /// Создать из Map
-  factory BudgetSuggestion.fromMap(Map<String, dynamic> data) =>
-      BudgetSuggestion(
+  factory BudgetSuggestion.fromMap(Map<String, dynamic> data) => BudgetSuggestion(
         id: data['id'] as String? ?? '',
         bookingId: data['bookingId'] as String? ?? '',
         customerId: data['customerId'] as String? ?? '',
@@ -71,12 +65,9 @@ class BudgetSuggestion {
         ),
         message: data['message'] as String?,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
-        viewedAt: data['viewedAt'] != null
-            ? (data['viewedAt'] as Timestamp).toDate()
-            : null,
-        respondedAt: data['respondedAt'] != null
-            ? (data['respondedAt'] as Timestamp).toDate()
-            : null,
+        viewedAt: data['viewedAt'] != null ? (data['viewedAt'] as Timestamp).toDate() : null,
+        respondedAt:
+            data['respondedAt'] != null ? (data['respondedAt'] as Timestamp).toDate() : null,
         metadata: data['metadata'] != null
             ? Map<String, dynamic>.from(
                 data['metadata'] as Map<dynamic, dynamic>,
@@ -105,8 +96,7 @@ class BudgetSuggestion {
         'message': message,
         'createdAt': Timestamp.fromDate(createdAt),
         'viewedAt': viewedAt != null ? Timestamp.fromDate(viewedAt!) : null,
-        'respondedAt':
-            respondedAt != null ? Timestamp.fromDate(respondedAt!) : null,
+        'respondedAt': respondedAt != null ? Timestamp.fromDate(respondedAt!) : null,
         'metadata': metadata,
       };
 
@@ -159,17 +149,13 @@ class BudgetSuggestion {
   /// Получить минимальную стоимость
   double get minCost {
     if (suggestions.isEmpty) return 0;
-    return suggestions
-        .map((s) => s.estimatedPrice ?? 0)
-        .reduce((a, b) => a < b ? a : b);
+    return suggestions.map((s) => s.estimatedPrice ?? 0).reduce((a, b) => a < b ? a : b);
   }
 
   /// Получить максимальную стоимость
   double get maxCost {
     if (suggestions.isEmpty) return 0;
-    return suggestions
-        .map((s) => s.estimatedPrice ?? 0)
-        .reduce((a, b) => a > b ? a : b);
+    return suggestions.map((s) => s.estimatedPrice ?? 0).reduce((a, b) => a > b ? a : b);
   }
 
   @override
@@ -222,8 +208,7 @@ class BudgetSuggestionItem {
   });
 
   /// Создать из Map
-  factory BudgetSuggestionItem.fromMap(Map<String, dynamic> data) =>
-      BudgetSuggestionItem(
+  factory BudgetSuggestionItem.fromMap(Map<String, dynamic> data) => BudgetSuggestionItem(
         id: data['id'] as String? ?? '',
         categoryId: data['categoryId'] as String? ?? '',
         categoryName: data['categoryName'] as String? ?? '',

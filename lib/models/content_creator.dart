@@ -51,8 +51,7 @@ class ContentCreator {
         id: data['id'] as String? ?? '',
         name: data['name'] as String? ?? '',
         description: data['description'] as String? ?? '',
-        categories:
-            List<String>.from(data['categories'] as List<dynamic>? ?? []),
+        categories: List<String>.from(data['categories'] as List<dynamic>? ?? []),
         formats: (data['formats'] as List<dynamic>?)
                 ?.map((f) => ContentFormat.fromMap(f as Map<String, dynamic>))
                 .toList() ??
@@ -193,8 +192,7 @@ class ContentCreator {
       );
 
   @override
-  String toString() =>
-      'ContentCreator(id: $id, name: $name, formats: ${supportedFormats.length})';
+  String toString() => 'ContentCreator(id: $id, name: $name, formats: ${supportedFormats.length})';
 }
 
 /// Формат контента

@@ -110,6 +110,5 @@ class OrderTimelineWidget extends StatelessWidget {
     }
   }
 
-  String _formatDate(DateTime date) =>
-      DateFormat('dd.MM.yyyy HH:mm').format(date);
+  String _formatDate(DateTime date) => DateFormat('dd.MM.yyyy HH:mm').format(date);
 }

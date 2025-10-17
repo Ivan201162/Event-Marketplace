@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../services/supabase_service.dart';
 import '../models/social_models.dart';
+import '../services/supabase_service.dart';
 
 /// Экран ленты идей/постов
 class IdeasFeedScreen extends ConsumerStatefulWidget {
@@ -36,8 +36,7 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
       _loadMoreIdeas();
     }
   }
@@ -230,9 +229,8 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
           ListTile(
             leading: CircleAvatar(
               backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
-              backgroundImage: idea.author?.avatarUrl != null
-                  ? NetworkImage(idea.author!.avatarUrl!)
-                  : null,
+              backgroundImage:
+                  idea.author?.avatarUrl != null ? NetworkImage(idea.author!.avatarUrl!) : null,
               child: idea.author?.avatarUrl == null
                   ? Icon(
                       Icons.person,

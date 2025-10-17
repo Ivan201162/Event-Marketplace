@@ -44,16 +44,14 @@ enum SpecialistSortOption {
   /// Получить опцию по значению
   static SpecialistSortOption? fromValue(String value) {
     try {
-      return SpecialistSortOption.values
-          .firstWhere((option) => option.value == value);
+      return SpecialistSortOption.values.firstWhere((option) => option.value == value);
     } catch (e) {
       return null;
     }
   }
 
   /// Получить все опции сортировки
-  static List<SpecialistSortOption> get allOptions =>
-      SpecialistSortOption.values;
+  static List<SpecialistSortOption> get allOptions => SpecialistSortOption.values;
 
   /// Получить популярные опции сортировки
   static List<SpecialistSortOption> get popularOptions => [
@@ -112,8 +110,7 @@ class SpecialistSorting {
   int get hashCode => Object.hash(sortOption, isAscending);
 
   @override
-  String toString() =>
-      'SpecialistSorting(sortOption: $sortOption, isAscending: $isAscending)';
+  String toString() => 'SpecialistSorting(sortOption: $sortOption, isAscending: $isAscending)';
 }
 
 /// Утилиты для сортировки специалистов
@@ -249,9 +246,8 @@ class SpecialistSortingUtils {
 
     return SortStats(
       totalCount: specialists.length,
-      priceRange: minPrice != double.infinity
-          ? PriceRange(minPrice: minPrice, maxPrice: maxPrice)
-          : null,
+      priceRange:
+          minPrice != double.infinity ? PriceRange(minPrice: minPrice, maxPrice: maxPrice) : null,
       averageRating: totalRating / specialists.length,
       averageReviews: totalReviews / specialists.length,
     );

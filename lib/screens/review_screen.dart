@@ -55,8 +55,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                       children: [
                         CircleAvatar(
                           radius: 30,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
+                          backgroundColor: Theme.of(context).colorScheme.primary,
                           child: Text(
                             widget.specialistName.isNotEmpty
                                 ? widget.specialistName[0].toUpperCase()
@@ -75,20 +74,14 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                             children: [
                               Text(
                                 widget.specialistName,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge
-                                    ?.copyWith(
+                                style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                       fontWeight: FontWeight.bold,
                                     ),
                               ),
                               const SizedBox(height: 4),
                               Text(
                                 'Специалист',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.copyWith(
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                       color: Colors.grey[600],
                                     ),
                               ),
@@ -111,10 +104,9 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                       children: [
                         Text(
                           'Оцените качество работы',
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
                         const SizedBox(height: 16),
                         Row(
@@ -128,12 +120,9 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                                 });
                               },
                               child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4),
+                                padding: const EdgeInsets.symmetric(horizontal: 4),
                                 child: Icon(
-                                  index < _rating
-                                      ? Icons.star
-                                      : Icons.star_border,
+                                  index < _rating ? Icons.star : Icons.star_border,
                                   color: Colors.amber,
                                   size: 48,
                                 ),
@@ -181,8 +170,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                   controller: _commentController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText:
-                        'Расскажите о вашем опыте работы со специалистом...',
+                    hintText: 'Расскажите о вашем опыте работы со специалистом...',
                     helperText: 'Ваш отзыв поможет другим пользователям',
                   ),
                   maxLines: 5,

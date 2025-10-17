@@ -53,9 +53,7 @@ class MediaFile {
           orElse: () => MediaStatus.pending,
         ),
         fileSize: data['fileSize'] as int? ?? 0,
-        duration: data['duration'] != null
-            ? Duration(milliseconds: data['duration'] as int)
-            : null,
+        duration: data['duration'] != null ? Duration(milliseconds: data['duration'] as int) : null,
         mimeType: data['mimeType'] as String?,
         metadata: Map<String, dynamic>.from(
           (data['metadata'] as Map<dynamic, dynamic>?) ?? {},
@@ -192,8 +190,7 @@ class DJPlaylist {
         name: data['name'] as String? ?? '',
         description: data['description'] as String?,
         coverImagePath: data['coverImagePath'] as String?,
-        mediaFileIds:
-            List<String>.from((data['mediaFileIds'] as List<dynamic>?) ?? []),
+        mediaFileIds: List<String>.from((data['mediaFileIds'] as List<dynamic>?) ?? []),
         mediaFiles: [], // Будет заполнено отдельно
         settings: Map<String, dynamic>.from(
           (data['settings'] as Map<dynamic, dynamic>?) ?? {},
@@ -283,8 +280,7 @@ class DJPlaylist {
       );
 
   /// Получить общий размер плейлиста
-  int get totalSize =>
-      mediaFiles.fold(0, (total, file) => total + file.fileSize);
+  int get totalSize => mediaFiles.fold(0, (total, file) => total + file.fileSize);
 
   /// Получить количество треков
   int get trackCount => mediaFiles.length;
@@ -426,8 +422,7 @@ class VKTrack {
         'album': albumTitle != null
             ? {
                 'title': albumTitle,
-                'thumb':
-                    albumCoverUrl != null ? {'photo_300': albumCoverUrl} : null,
+                'thumb': albumCoverUrl != null ? {'photo_300': albumCoverUrl} : null,
               }
             : null,
       };

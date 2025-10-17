@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../models/advertisement.dart';
-import '../../services/advertisement_service.dart';
 import '../../providers/auth_provider.dart';
+import '../../services/advertisement_service.dart';
 
 class CreateAdvertisementScreen extends StatefulWidget {
   const CreateAdvertisementScreen({super.key});
 
   @override
-  State<CreateAdvertisementScreen> createState() =>
-      _CreateAdvertisementScreenState();
+  State<CreateAdvertisementScreen> createState() => _CreateAdvertisementScreenState();
 }
 
 class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
@@ -36,31 +36,10 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
   bool _isLoading = false;
 
   // Списки для выбора
-  final List<String> _regions = [
-    'Москва',
-    'Санкт-Петербург',
-    'Новосибирск',
-    'Екатеринбург'
-  ];
-  final List<String> _cities = [
-    'Москва',
-    'Санкт-Петербург',
-    'Новосибирск',
-    'Екатеринбург'
-  ];
-  final List<String> _categories = [
-    'Фотографы',
-    'Видеографы',
-    'Организаторы',
-    'Диджеи'
-  ];
-  final List<String> _targetAudiences = [
-    'Все',
-    '18-25 лет',
-    '26-35 лет',
-    '36-45 лет',
-    '45+ лет'
-  ];
+  final List<String> _regions = ['Москва', 'Санкт-Петербург', 'Новосибирск', 'Екатеринбург'];
+  final List<String> _cities = ['Москва', 'Санкт-Петербург', 'Новосибирск', 'Екатеринбург'];
+  final List<String> _categories = ['Фотографы', 'Видеографы', 'Организаторы', 'Диджеи'];
+  final List<String> _targetAudiences = ['Все', '18-25 лет', '26-35 лет', '36-45 лет', '45+ лет'];
 
   @override
   void dispose() {
@@ -132,7 +111,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
               const SizedBox(height: 16),
 
               DropdownButtonFormField<AdType>(
-                value: _selectedType,
+                initialValue: _selectedType,
                 decoration: const InputDecoration(
                   labelText: 'Тип рекламы',
                   border: OutlineInputBorder(),
@@ -152,7 +131,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
               const SizedBox(height: 16),
 
               DropdownButtonFormField<AdPlacement>(
-                value: _selectedPlacement,
+                initialValue: _selectedPlacement,
                 decoration: const InputDecoration(
                   labelText: 'Размещение',
                   border: OutlineInputBorder(),
@@ -237,7 +216,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
               const SizedBox(height: 16),
 
               DropdownButtonFormField<String>(
-                value: _selectedRegion,
+                initialValue: _selectedRegion,
                 decoration: const InputDecoration(
                   labelText: 'Регион',
                   border: OutlineInputBorder(),
@@ -257,7 +236,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
               const SizedBox(height: 16),
 
               DropdownButtonFormField<String>(
-                value: _selectedCity,
+                initialValue: _selectedCity,
                 decoration: const InputDecoration(
                   labelText: 'Город',
                   border: OutlineInputBorder(),
@@ -277,7 +256,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
               const SizedBox(height: 16),
 
               DropdownButtonFormField<String>(
-                value: _selectedCategory,
+                initialValue: _selectedCategory,
                 decoration: const InputDecoration(
                   labelText: 'Категория',
                   border: OutlineInputBorder(),
@@ -297,7 +276,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
               const SizedBox(height: 16),
 
               DropdownButtonFormField<String>(
-                value: _selectedTargetAudience,
+                initialValue: _selectedTargetAudience,
                 decoration: const InputDecoration(
                   labelText: 'Целевая аудитория',
                   border: OutlineInputBorder(),
@@ -451,9 +430,8 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
       }
 
       final price = double.parse(_priceController.text);
-      final budget = _budgetController.text.isNotEmpty
-          ? double.parse(_budgetController.text)
-          : null;
+      final budget =
+          _budgetController.text.isNotEmpty ? double.parse(_budgetController.text) : null;
 
       final adId = await _advertisementService.createAdvertisement(
         userId: userId,

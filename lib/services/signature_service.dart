@@ -9,8 +9,7 @@ class SignatureService {
   /// Создать подпись из виджета
   static Future<String> captureSignature(GlobalKey key) async {
     try {
-      final boundary =
-          key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+      final boundary = key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
       final image = await boundary.toImage(pixelRatio: 3);
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       final pngBytes = byteData!.buffer.asUint8List();
@@ -26,8 +25,7 @@ class SignatureService {
     required String userId,
     required String documentId,
     required String timestamp,
-    required String
-        privateKey, // В реальном приложении это должен быть настоящий приватный ключ
+    required String privateKey, // В реальном приложении это должен быть настоящий приватный ключ
   }) {
     // В реальном приложении здесь должна быть криптографическая подпись
     // Пока что создаем простую хеш-подпись
@@ -43,8 +41,7 @@ class SignatureService {
     required String userId,
     required String documentId,
     required String timestamp,
-    required String
-        publicKey, // В реальном приложении это должен быть настоящий публичный ключ
+    required String publicKey, // В реальном приложении это должен быть настоящий публичный ключ
   }) {
     try {
       // В реальном приложении здесь должна быть проверка криптографической подписи
@@ -52,8 +49,7 @@ class SignatureService {
         userId: userId,
         documentId: documentId,
         timestamp: timestamp,
-        privateKey:
-            publicKey, // В реальном приложении это должно быть по-другому
+        privateKey: publicKey, // В реальном приложении это должно быть по-другому
       );
 
       return signature == expectedSignature;

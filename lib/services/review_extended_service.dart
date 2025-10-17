@@ -9,8 +9,7 @@ import '../models/review_extended.dart';
 class ReviewExtendedService {
   factory ReviewExtendedService() => _instance;
   ReviewExtendedService._internal();
-  static final ReviewExtendedService _instance =
-      ReviewExtendedService._internal();
+  static final ReviewExtendedService _instance = ReviewExtendedService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -129,9 +128,7 @@ class ReviewExtendedService {
       if (filter.hasMedia != null) {
         reviews = reviews
             .where(
-              (review) => filter.hasMedia!
-                  ? review.media.isNotEmpty
-                  : review.media.isEmpty,
+              (review) => filter.hasMedia! ? review.media.isNotEmpty : review.media.isEmpty,
             )
             .toList();
       }
@@ -151,8 +148,7 @@ class ReviewExtendedService {
   /// Получить отзыв по ID
   Future<ReviewExtended?> getReview(String reviewId) async {
     try {
-      final doc =
-          await _firestore.collection('reviews_extended').doc(reviewId).get();
+      final doc = await _firestore.collection('reviews_extended').doc(reviewId).get();
       if (doc.exists) {
         return ReviewExtended.fromDocument(doc);
       }
@@ -166,10 +162,7 @@ class ReviewExtendedService {
   /// Обновить отзыв
   Future<bool> updateReview(ReviewExtended review) async {
     try {
-      await _firestore
-          .collection('reviews_extended')
-          .doc(review.id)
-          .update(review.toMap());
+      await _firestore.collection('reviews_extended').doc(review.id).update(review.toMap());
       return true;
     } catch (e) {
       print('Ошибка обновления отзыва: $e');
@@ -213,8 +206,7 @@ class ReviewExtendedService {
       );
 
       final updatedLikes = [...review.likes, like];
-      final updatedStats =
-          review.stats.copyWith(likesCount: updatedLikes.length);
+      final updatedStats = review.stats.copyWith(likesCount: updatedLikes.length);
 
       final updatedReview = review.copyWith(
         likes: updatedLikes,
@@ -235,10 +227,8 @@ class ReviewExtendedService {
       final review = await getReview(reviewId);
       if (review == null) return false;
 
-      final updatedLikes =
-          review.likes.where((like) => like.userId != userId).toList();
-      final updatedStats =
-          review.stats.copyWith(likesCount: updatedLikes.length);
+      final updatedLikes = review.likes.where((like) => like.userId != userId).toList();
+      final updatedStats = review.stats.copyWith(likesCount: updatedLikes.length);
 
       final updatedReview = review.copyWith(
         likes: updatedLikes,
@@ -297,8 +287,7 @@ class ReviewExtendedService {
   /// Загрузить фото
   Future<ReviewMedia?> uploadPhoto(XFile imageFile) async {
     try {
-      final fileName =
-          'review_photo_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final fileName = 'review_photo_${DateTime.now().millisecondsSinceEpoch}.jpg';
       final ref = _storage.ref().child('review_photos/$fileName');
 
       final uploadTask = ref.putFile(File(imageFile.path));
@@ -322,8 +311,7 @@ class ReviewExtendedService {
   /// Загрузить видео
   Future<ReviewMedia?> uploadVideo(XFile videoFile) async {
     try {
-      final fileName =
-          'review_video_${DateTime.now().millisecondsSinceEpoch}.mp4';
+      final fileName = 'review_video_${DateTime.now().millisecondsSinceEpoch}.mp4';
       final ref = _storage.ref().child('review_videos/$fileName');
 
       final uploadTask = ref.putFile(File(videoFile.path));
@@ -341,9 +329,7 @@ class ReviewExtendedService {
 
       String? thumbnailUrl;
       if (thumbnailPath != null) {
-        final thumbnailRef = _storage
-            .ref()
-            .child('review_videos/thumbnails/${fileName}_thumb.jpg');
+        final thumbnailRef = _storage.ref().child('review_videos/thumbnails/${fileName}_thumb.jpg');
         final thumbnailUploadTask = thumbnailRef.putFile(File(thumbnailPath));
         final thumbnailSnapshot = await thumbnailUploadTask;
         thumbnailUrl = await thumbnailSnapshot.ref.getDownloadURL();
@@ -460,8 +446,7 @@ class ReviewExtendedService {
 
       for (final review in reviews) {
         totalRating += review.rating;
-        ratingDistribution[review.rating] =
-            (ratingDistribution[review.rating] ?? 0) + 1;
+        ratingDistribution[review.rating] = (ratingDistribution[review.rating] ?? 0) + 1;
         totalLikes += review.likesCount;
         totalViews += review.stats.viewsCount;
         totalHelpfulness += review.stats.helpfulnessScore;
@@ -477,18 +462,15 @@ class ReviewExtendedService {
             ..add(review.stats.quality);
         }
         if (review.stats.communication > 0) {
-          categoryRatings['communication'] =
-              (categoryRatings['communication'] ?? [])
-                ..add(review.stats.communication);
+          categoryRatings['communication'] = (categoryRatings['communication'] ?? [])
+            ..add(review.stats.communication);
         }
         if (review.stats.punctuality > 0) {
-          categoryRatings['punctuality'] = (categoryRatings['punctuality'] ??
-              [])
+          categoryRatings['punctuality'] = (categoryRatings['punctuality'] ?? [])
             ..add(review.stats.punctuality);
         }
         if (review.stats.value > 0) {
-          categoryRatings['value'] = (categoryRatings['value'] ?? [])
-            ..add(review.stats.value);
+          categoryRatings['value'] = (categoryRatings['value'] ?? [])..add(review.stats.value);
         }
       }
 
@@ -496,15 +478,13 @@ class ReviewExtendedService {
       final averageHelpfulness = totalHelpfulness / totalReviews;
 
       // Топ теги
-      final sortedTags = tagCounts.entries.toList()
-        ..sort((a, b) => b.value.compareTo(a.value));
+      final sortedTags = tagCounts.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
       final topTags = sortedTags.take(5).map((e) => e.key).toList();
 
       // Средние рейтинги по категориям
       final averageCategoryRatings = <String, double>{};
       for (final entry in categoryRatings.entries) {
-        final average =
-            entry.value.reduce((a, b) => a + b) / entry.value.length;
+        final average = entry.value.reduce((a, b) => a + b) / entry.value.length;
         averageCategoryRatings[entry.key] = average;
       }
 

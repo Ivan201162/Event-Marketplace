@@ -13,15 +13,13 @@ final publicIdeasProvider = FutureProvider<List<EventIdea>>((ref) {
 });
 
 /// Провайдер для получения идей по автору
-final ideasByAuthorProvider =
-    FutureProvider.family<List<EventIdea>, String>((ref, authorId) {
+final ideasByAuthorProvider = FutureProvider.family<List<EventIdea>, String>((ref, authorId) {
   final ideasService = ref.watch(ideasServiceProvider);
   return ideasService.getIdeasByAuthor(authorId);
 });
 
 /// Провайдер для получения сохраненных идей пользователя
-final savedIdeasProvider =
-    FutureProvider.family<List<EventIdea>, String>((ref, userId) {
+final savedIdeasProvider = FutureProvider.family<List<EventIdea>, String>((ref, userId) {
   final ideasService = ref.watch(ideasServiceProvider);
   return ideasService.getSavedIdeas(userId);
 });
@@ -39,15 +37,13 @@ final recentIdeasProvider = FutureProvider<List<EventIdea>>((ref) {
 });
 
 /// Провайдер для проверки лайка идеи
-final isIdeaLikedProvider =
-    FutureProvider.family<bool, IdeaLikeParams>((ref, params) {
+final isIdeaLikedProvider = FutureProvider.family<bool, IdeaLikeParams>((ref, params) {
   final ideasService = ref.watch(ideasServiceProvider);
   return ideasService.isIdeaLiked(params.ideaId, params.userId);
 });
 
 /// Провайдер для проверки сохранения идеи
-final isIdeaSavedProvider =
-    FutureProvider.family<bool, IdeaSaveParams>((ref, params) {
+final isIdeaSavedProvider = FutureProvider.family<bool, IdeaSaveParams>((ref, params) {
   final ideasService = ref.watch(ideasServiceProvider);
   return ideasService.isIdeaSaved(params.ideaId, params.userId);
 });
@@ -64,9 +60,7 @@ class IdeaLikeParams {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is IdeaLikeParams &&
-        other.ideaId == ideaId &&
-        other.userId == userId;
+    return other is IdeaLikeParams && other.ideaId == ideaId && other.userId == userId;
   }
 
   @override
@@ -85,9 +79,7 @@ class IdeaSaveParams {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is IdeaSaveParams &&
-        other.ideaId == ideaId &&
-        other.userId == userId;
+    return other is IdeaSaveParams && other.ideaId == ideaId && other.userId == userId;
   }
 
   @override

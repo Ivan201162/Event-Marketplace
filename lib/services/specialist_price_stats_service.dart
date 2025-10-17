@@ -67,8 +67,7 @@ class SpecialistPriceStatsService {
         }
       }
 
-      final overallAveragePrice =
-          totalBookings > 0 ? totalRevenue / totalBookings : 0;
+      final overallAveragePrice = totalBookings > 0 ? totalRevenue / totalBookings : 0;
 
       return SpecialistPriceAggregate(
         specialistId: specialistId,
@@ -126,8 +125,7 @@ class SpecialistPriceStatsService {
   /// Получить статистику по всем категориям
   Future<Map<String, Map<String, dynamic>>> getCategoryPriceStats() async {
     try {
-      final snapshot =
-          await _firestore.collection('specialistPriceStats').get();
+      final snapshot = await _firestore.collection('specialistPriceStats').get();
 
       final categoryStats = <String, Map<String, dynamic>>{};
 
@@ -147,16 +145,12 @@ class SpecialistPriceStatsService {
         }
 
         final current = categoryStats[categoryId]!;
-        current['minPrice'] = (current['minPrice'] as double) < stats.minPrice
-            ? current['minPrice']
-            : stats.minPrice;
-        current['maxPrice'] = (current['maxPrice'] as double) > stats.maxPrice
-            ? current['maxPrice']
-            : stats.maxPrice;
-        current['totalRevenue'] =
-            (current['totalRevenue'] as double) + stats.totalRevenue;
-        current['totalBookings'] =
-            (current['totalBookings'] as int) + stats.completedBookings;
+        current['minPrice'] =
+            (current['minPrice'] as double) < stats.minPrice ? current['minPrice'] : stats.minPrice;
+        current['maxPrice'] =
+            (current['maxPrice'] as double) > stats.maxPrice ? current['maxPrice'] : stats.maxPrice;
+        current['totalRevenue'] = (current['totalRevenue'] as double) + stats.totalRevenue;
+        current['totalBookings'] = (current['totalBookings'] as int) + stats.completedBookings;
         current['specialistCount'] = (current['specialistCount'] as int) + 1;
       }
 
@@ -164,9 +158,8 @@ class SpecialistPriceStatsService {
       for (final entry in categoryStats.entries) {
         final stats = entry.value;
         final totalBookings = stats['totalBookings'] as int;
-        stats['averagePrice'] = totalBookings > 0
-            ? (stats['totalRevenue'] as double) / totalBookings
-            : 0.0;
+        stats['averagePrice'] =
+            totalBookings > 0 ? (stats['totalRevenue'] as double) / totalBookings : 0.0;
       }
 
       return categoryStats;
@@ -200,17 +193,12 @@ class SpecialistPriceStatsService {
       if (bookings.isEmpty) return;
 
       // Получаем название категории
-      final categoryDoc =
-          await _firestore.collection('categories').doc(categoryId).get();
-      final categoryName =
-          categoryDoc.data()?['name'] ?? 'Неизвестная категория';
+      final categoryDoc = await _firestore.collection('categories').doc(categoryId).get();
+      final categoryName = categoryDoc.data()?['name'] ?? 'Неизвестная категория';
 
       // Вычисляем статистику
-      final prices = bookings
-          .map((b) => b.totalPrice)
-          .where((p) => p != null)
-          .cast<double>()
-          .toList();
+      final prices =
+          bookings.map((b) => b.totalPrice).where((p) => p != null).cast<double>().toList();
 
       if (prices.isEmpty) return;
 
@@ -231,15 +219,13 @@ class SpecialistPriceStatsService {
         lastUpdated: DateTime.now(),
         additionalStats: {
           'priceDistribution': _calculatePriceDistribution(prices),
-          'monthlyTrend':
-              await _calculateMonthlyTrend(specialistId, categoryId),
+          'monthlyTrend': await _calculateMonthlyTrend(specialistId, categoryId),
         },
       );
 
       // Сохраняем или обновляем статистику
-      final docRef = _firestore
-          .collection('specialistPriceStats')
-          .doc('${specialistId}_$categoryId');
+      final docRef =
+          _firestore.collection('specialistPriceStats').doc('${specialistId}_$categoryId');
 
       await docRef.set(stats.toMap(), SetOptions(merge: true));
     } catch (e) {
@@ -341,8 +327,7 @@ class SpecialistPriceStatsService {
       for (final doc in snapshot.docs) {
         final data = doc.data();
         final completedAt = (data['completedAt'] as Timestamp).toDate();
-        final monthKey =
-            '${completedAt.year}-${completedAt.month.toString().padLeft(2, '0')}';
+        final monthKey = '${completedAt.year}-${completedAt.month.toString().padLeft(2, '0')}';
         final price = (data['totalPrice'] as num?)?.toDouble() ?? 0;
 
         monthlyRevenue[monthKey] = (monthlyRevenue[monthKey] ?? 0) + price;

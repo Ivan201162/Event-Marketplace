@@ -260,8 +260,7 @@ class IntegrationListTile extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: integration.statusColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
@@ -277,8 +276,7 @@ class IntegrationListTile extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: integration.typeColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),

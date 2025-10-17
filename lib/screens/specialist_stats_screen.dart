@@ -11,8 +11,7 @@ class SpecialistStatsScreen extends ConsumerStatefulWidget {
   const SpecialistStatsScreen({super.key});
 
   @override
-  ConsumerState<SpecialistStatsScreen> createState() =>
-      _SpecialistStatsScreenState();
+  ConsumerState<SpecialistStatsScreen> createState() => _SpecialistStatsScreenState();
 }
 
 class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
@@ -531,8 +530,7 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
         ),
       );
 
-  Widget _buildAnalyticsItem(String title, String value, IconData icon) =>
-      Padding(
+  Widget _buildAnalyticsItem(String title, String value, IconData icon) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
           children: [
@@ -647,8 +645,7 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
   String _formatDate(date) {
     if (date == null) return 'Никогда';
     try {
-      final dateTime =
-          date is Timestamp ? date.toDate() : DateTime.parse(date.toString());
+      final dateTime = date is Timestamp ? date.toDate() : DateTime.parse(date.toString());
       return '${dateTime.day}.${dateTime.month}.${dateTime.year}';
     } on Exception {
       return 'Неизвестно';

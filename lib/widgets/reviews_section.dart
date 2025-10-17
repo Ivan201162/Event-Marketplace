@@ -49,8 +49,7 @@ class _ReviewsSectionState extends ConsumerState<ReviewsSection> {
         limit: widget.showAllReviews ? 50 : 5,
       );
 
-      final stats =
-          await _reviewService.getSpecialistReviewStats(widget.specialistId);
+      final stats = await _reviewService.getSpecialistReviewStats(widget.specialistId);
 
       setState(() {
         _reviews = reviews;
@@ -165,9 +164,7 @@ class _ReviewsSectionState extends ConsumerState<ReviewsSection> {
               ),
 
               // Кнопка "Показать все отзывы"
-              if (!widget.showAllReviews &&
-                  _stats != null &&
-                  _stats!.totalReviews > 5)
+              if (!widget.showAllReviews && _stats != null && _stats!.totalReviews > 5)
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
                   child: SizedBox(
@@ -271,8 +268,7 @@ class _AllReviewsScreenState extends ConsumerState<AllReviewsScreen> {
         limit: 100,
       );
 
-      final stats =
-          await _reviewService.getSpecialistReviewStats(widget.specialistId);
+      final stats = await _reviewService.getSpecialistReviewStats(widget.specialistId);
 
       setState(() {
         _reviews = reviews;
@@ -313,10 +309,9 @@ class _AllReviewsScreenState extends ConsumerState<AllReviewsScreen> {
                         const SizedBox(height: 8),
                         Text(
                           _error!,
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Colors.grey[600],
-                                  ),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Colors.grey[600],
+                              ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 16),

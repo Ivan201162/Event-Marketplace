@@ -127,9 +127,7 @@ class SecurityDevice {
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       osVersion: data['osVersion'],
       appVersion: data['appVersion'],
-      firstSeen: data['firstSeen'] != null
-          ? (data['firstSeen'] as Timestamp).toDate()
-          : null,
+      firstSeen: data['firstSeen'] != null ? (data['firstSeen'] as Timestamp).toDate() : null,
       lastIpAddress: data['lastIpAddress'],
       isBlocked: data['isBlocked'] as bool? ?? false,
     );

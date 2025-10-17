@@ -36,11 +36,11 @@ class RevenueChart extends StatelessWidget {
             horizontalInterval: 1,
             verticalInterval: 1,
             getDrawingHorizontalLine: (value) => FlLine(
-              color: Colors.grey.withValues(alpha:0.2,
+              color: Colors.grey.withValues(alpha: 0.2),
               strokeWidth: 1,
             ),
             getDrawingVerticalLine: (value) => FlLine(
-              color: Colors.grey.withValues(alpha:0.2,
+              color: Colors.grey.withValues(alpha: 0.2),
               strokeWidth: 1,
             ),
           ),
@@ -78,7 +78,7 @@ class RevenueChart extends StatelessWidget {
           ),
           borderData: FlBorderData(
             show: true,
-            border: Border.all(color: Colors.grey.withValues(alpha:0.2),
+            border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
           ),
           minX: 0,
           maxX: chartData.length - 1.toDouble(),
@@ -122,6 +122,7 @@ class RevenueChart extends StatelessWidget {
         ),
       ),
     );
+  }
 
   List<double> prepareChartData() {
     // For demo purposes, generate sample data
@@ -201,3 +202,4 @@ class RevenueChart extends StatelessWidget {
     final max = data.reduce((a, b) => a > b ? a : b);
     return (max * 1.2).ceilToDouble();
   }
+}

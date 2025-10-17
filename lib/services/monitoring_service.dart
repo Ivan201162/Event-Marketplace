@@ -43,10 +43,8 @@ class MonitoringService {
   final Map<String, MonitoringAlert> _alertsCache = {};
   final Map<String, MonitoringDashboard> _dashboardsCache = {};
 
-  final StreamController<MonitoringMetric> _metricsController =
-      StreamController.broadcast();
-  final StreamController<MonitoringAlert> _alertsController =
-      StreamController.broadcast();
+  final StreamController<MonitoringMetric> _metricsController = StreamController.broadcast();
+  final StreamController<MonitoringAlert> _alertsController = StreamController.broadcast();
 
   Timer? _metricsTimer;
   Timer? _alertsTimer;
@@ -349,10 +347,7 @@ class MonitoringService {
         metadata: metadata ?? {},
       );
 
-      await _firestore
-          .collection('monitoringMetrics')
-          .doc(metricId)
-          .set(metric.toMap());
+      await _firestore.collection('monitoringMetrics').doc(metricId).set(metric.toMap());
       _metricsCache[metricId] = metric;
 
       // Отправляем в поток
@@ -389,8 +384,7 @@ class MonitoringService {
 
   /// Получить последнюю метрику по имени
   MonitoringMetric? _getLatestMetric(String metricName) {
-    final metrics =
-        _metricsCache.values.where((m) => m.name == metricName).toList();
+    final metrics = _metricsCache.values.where((m) => m.name == metricName).toList();
 
     if (metrics.isEmpty) return null;
 
@@ -524,10 +518,7 @@ class MonitoringService {
         createdAt: now,
       );
 
-      await _firestore
-          .collection('monitoringAlerts')
-          .doc(alertId)
-          .set(alert.toMap());
+      await _firestore.collection('monitoringAlerts').doc(alertId).set(alert.toMap());
       _alertsCache[alertId] = alert;
 
       if (kDebugMode) {
@@ -572,10 +563,7 @@ class MonitoringService {
         updatedAt: now,
       );
 
-      await _firestore
-          .collection('monitoringDashboards')
-          .doc(dashboardId)
-          .set(dashboard.toMap());
+      await _firestore.collection('monitoringDashboards').doc(dashboardId).set(dashboard.toMap());
       _dashboardsCache[dashboardId] = dashboard;
 
       if (kDebugMode) {
@@ -593,9 +581,7 @@ class MonitoringService {
 
   /// Получить метрики по категории
   List<MonitoringMetric> getMetricsByCategory(String category) =>
-      _metricsCache.values
-          .where((metric) => metric.category == category)
-          .toList()
+      _metricsCache.values.where((metric) => metric.category == category).toList()
         ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
   /// Получить алерты по серьезности
@@ -604,29 +590,26 @@ class MonitoringService {
         ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
   /// Получить активные алерты
-  List<MonitoringAlert> getActiveAlerts() => _alertsCache.values
-      .where((alert) => alert.status == AlertStatus.active)
-      .toList()
-    ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  List<MonitoringAlert> getActiveAlerts() =>
+      _alertsCache.values.where((alert) => alert.status == AlertStatus.active).toList()
+        ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
   /// Получить сработавшие алерты
-  List<MonitoringAlert> getTriggeredAlerts() => _alertsCache.values
-      .where((alert) => alert.status == AlertStatus.triggered)
-      .toList()
-    ..sort((a, b) => b.triggeredAt!.compareTo(a.triggeredAt!));
+  List<MonitoringAlert> getTriggeredAlerts() =>
+      _alertsCache.values.where((alert) => alert.status == AlertStatus.triggered).toList()
+        ..sort((a, b) => b.triggeredAt!.compareTo(a.triggeredAt!));
 
   /// Получить все метрики
-  List<MonitoringMetric> getAllMetrics() => _metricsCache.values.toList()
-    ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+  List<MonitoringMetric> getAllMetrics() =>
+      _metricsCache.values.toList()..sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
   /// Получить все алерты
-  List<MonitoringAlert> getAllAlerts() => _alertsCache.values.toList()
-    ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  List<MonitoringAlert> getAllAlerts() =>
+      _alertsCache.values.toList()..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
   /// Получить все дашборды
   List<MonitoringDashboard> getAllDashboards() =>
-      _dashboardsCache.values.toList()
-        ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+      _dashboardsCache.values.toList()..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
 
   /// Получить поток метрик
   Stream<MonitoringMetric> get metricsStream => _metricsController.stream;
@@ -681,8 +664,7 @@ class MonitoringService {
   /// Загрузить кэш дашбордов
   Future<void> _loadDashboardsCache() async {
     try {
-      final snapshot =
-          await _firestore.collection('monitoringDashboards').get();
+      final snapshot = await _firestore.collection('monitoringDashboards').get();
 
       for (final doc in snapshot.docs) {
         final dashboard = MonitoringDashboard.fromDocument(doc);
@@ -875,9 +857,8 @@ class MonitoringService {
         'totalErrors': Random().nextInt(100),
         'criticalErrors': Random().nextInt(10),
         'warnings': Random().nextInt(50),
-        'lastError': DateTime.now()
-            .subtract(Duration(minutes: Random().nextInt(60)))
-            .toIso8601String(),
+        'lastError':
+            DateTime.now().subtract(Duration(minutes: Random().nextInt(60))).toIso8601String(),
         'timestamp': DateTime.now().toIso8601String(),
       };
     } catch (e) {
@@ -931,9 +912,8 @@ class MonitoringService {
         'totalErrors': Random().nextInt(100),
         'criticalErrors': Random().nextInt(10),
         'warnings': Random().nextInt(50),
-        'lastError': DateTime.now()
-            .subtract(Duration(minutes: Random().nextInt(60)))
-            .toIso8601String(),
+        'lastError':
+            DateTime.now().subtract(Duration(minutes: Random().nextInt(60))).toIso8601String(),
         'timestamp': DateTime.now().toIso8601String(),
       };
     } catch (e) {

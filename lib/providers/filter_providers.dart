@@ -11,8 +11,7 @@ final specialistFiltersProvider =
 );
 
 /// Провайдер для отфильтрованных специалистов
-final filteredSpecialistsProvider =
-    FutureProvider.family<List<Specialist>, FilterParams>(
+final filteredSpecialistsProvider = FutureProvider.family<List<Specialist>, FilterParams>(
   (ref, params) async => MockDataService.getFilteredSpecialists(
     categoryId: params.categoryId,
     filters: params.filters,
@@ -31,9 +30,7 @@ class FilterParams {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is FilterParams &&
-        other.categoryId == categoryId &&
-        other.filters == filters;
+    return other is FilterParams && other.categoryId == categoryId && other.filters == filters;
   }
 
   @override
@@ -139,18 +136,15 @@ class SpecialistFiltersNotifier extends StateNotifier<SpecialistFilters> {
 /// Провайдер для получения уникальных городов из всех специалистов
 final allCitiesProvider = FutureProvider<List<String>>((ref) async {
   final allSpecialists = MockDataService.getAllSpecialists();
-  final cities =
-      allSpecialists.map((specialist) => specialist.city).toSet().toList();
+  final cities = allSpecialists.map((specialist) => specialist.city).toSet().toList();
   cities.sort();
   return cities;
 });
 
 /// Провайдер для получения уникальных городов по категории
-final categoryCitiesProvider =
-    FutureProvider.family<List<String>, String>((ref, categoryId) async {
+final categoryCitiesProvider = FutureProvider.family<List<String>, String>((ref, categoryId) async {
   final specialists = MockDataService.getSpecialistsByCategory(categoryId);
-  final cities =
-      specialists.map((specialist) => specialist.city).toSet().toList();
+  final cities = specialists.map((specialist) => specialist.city).toSet().toList();
   cities.sort();
   return cities;
 });
@@ -212,19 +206,16 @@ final categorySubcategoriesProvider =
 });
 
 /// Провайдер для статистики фильтров
-final filterStatsProvider =
-    Provider.family<FilterStats, FilterParams>((ref, params) {
+final filterStatsProvider = Provider.family<FilterStats, FilterParams>((ref, params) {
   final specialists = ref.watch(filteredSpecialistsProvider(params));
 
   return specialists.when(
     data: (specialists) => FilterStats(
       totalCount: specialists.length,
       averageRating: specialists.isNotEmpty
-          ? specialists.map((s) => s.rating).reduce((a, b) => a + b) /
-              specialists.length
+          ? specialists.map((s) => s.rating).reduce((a, b) => a + b) / specialists.length
           : 0,
-      priceRange:
-          specialists.isNotEmpty ? _calculatePriceRange(specialists) : null,
+      priceRange: specialists.isNotEmpty ? _calculatePriceRange(specialists) : null,
       cities: specialists.map((s) => s.city).toSet().toList(),
     ),
     loading: () => const FilterStats(

@@ -63,8 +63,7 @@ class ResponsiveScaffold extends StatelessWidget {
     final screenType = context.screenType;
 
     // Для десктопа используем другой layout
-    if (screenType == ScreenType.desktop ||
-        screenType == ScreenType.largeDesktop) {
+    if (screenType == ScreenType.desktop || screenType == ScreenType.largeDesktop) {
       return _buildDesktopLayout(context);
     }
 
@@ -133,8 +132,7 @@ class ResponsiveNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenType = context.screenType;
 
-    if (screenType == ScreenType.desktop ||
-        screenType == ScreenType.largeDesktop) {
+    if (screenType == ScreenType.desktop || screenType == ScreenType.largeDesktop) {
       return _buildNavigationRail(context);
     } else {
       return _buildBottomNavigationBar(context);
@@ -282,10 +280,8 @@ class ResponsiveList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final screenType = context.screenType;
-    final effectiveSpacing =
-        spacing ?? ResponsiveUtils.getItemSpacing(context.screenWidth);
-    final effectivePadding =
-        padding ?? ResponsiveUtils.getScreenPadding(context.screenWidth);
+    final effectiveSpacing = spacing ?? ResponsiveUtils.getItemSpacing(context.screenWidth);
+    final effectivePadding = padding ?? ResponsiveUtils.getScreenPadding(context.screenWidth);
 
     return Padding(
       padding: effectivePadding,
@@ -326,23 +322,19 @@ class ResponsiveButton extends StatelessWidget {
 
     switch (screenType) {
       case ScreenType.mobile:
-        effectivePadding =
-            padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12);
+        effectivePadding = padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12);
         fontSize = 14;
         break;
       case ScreenType.tablet:
-        effectivePadding =
-            padding ?? const EdgeInsets.symmetric(horizontal: 20, vertical: 14);
+        effectivePadding = padding ?? const EdgeInsets.symmetric(horizontal: 20, vertical: 14);
         fontSize = 16;
         break;
       case ScreenType.desktop:
-        effectivePadding =
-            padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 16);
+        effectivePadding = padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 16);
         fontSize = 16;
         break;
       case ScreenType.largeDesktop:
-        effectivePadding =
-            padding ?? const EdgeInsets.symmetric(horizontal: 28, vertical: 18);
+        effectivePadding = padding ?? const EdgeInsets.symmetric(horizontal: 28, vertical: 18);
         fontSize = 18;
         break;
     }

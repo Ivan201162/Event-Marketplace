@@ -9,8 +9,7 @@ class CreateBookingScreen extends ConsumerStatefulWidget {
   const CreateBookingScreen({super.key});
 
   @override
-  ConsumerState<CreateBookingScreen> createState() =>
-      _CreateBookingScreenState();
+  ConsumerState<CreateBookingScreen> createState() => _CreateBookingScreenState();
 }
 
 class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
@@ -90,9 +89,7 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
 
   Future<void> _createBooking() async {
     if (!_formKey.currentState!.validate()) return;
-    if (_selectedDate == null ||
-        _selectedTime == null ||
-        _selectedSpecialistId == null) {
+    if (_selectedDate == null || _selectedTime == null || _selectedSpecialistId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Пожалуйста, заполните все обязательные поля'),
@@ -313,10 +310,7 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
                               Text(specialist['name']!),
                               Text(
                                 specialist['category']!,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                       color: Colors.grey[600],
                                     ),
                               ),

@@ -294,17 +294,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           decoration: BoxDecoration(
-                            color: _isLoginMode
-                                ? theme.primaryColor
-                                : Colors.transparent,
+                            color: _isLoginMode ? theme.primaryColor : Colors.transparent,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
                             'Вход',
                             style: TextStyle(
-                              color: _isLoginMode
-                                  ? Colors.white
-                                  : Colors.grey[600],
+                              color: _isLoginMode ? Colors.white : Colors.grey[600],
                               fontWeight: FontWeight.w600,
                             ),
                             textAlign: TextAlign.center,
@@ -318,17 +314,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           decoration: BoxDecoration(
-                            color: !_isLoginMode
-                                ? theme.primaryColor
-                                : Colors.transparent,
+                            color: !_isLoginMode ? theme.primaryColor : Colors.transparent,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
                             'Регистрация',
                             style: TextStyle(
-                              color: !_isLoginMode
-                                  ? Colors.white
-                                  : Colors.grey[600],
+                              color: !_isLoginMode ? Colors.white : Colors.grey[600],
                               fontWeight: FontWeight.w600,
                             ),
                             textAlign: TextAlign.center,

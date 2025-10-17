@@ -8,29 +8,25 @@ import '../services/media_service.dart';
 final mediaServiceProvider = Provider<MediaService>((ref) => MediaService());
 
 /// Провайдер медиафайлов пользователя
-final userMediaProvider =
-    FutureProvider.family<List<MediaItem>, String>((ref, userId) async {
+final userMediaProvider = FutureProvider.family<List<MediaItem>, String>((ref, userId) async {
   final mediaService = ref.read(mediaServiceProvider);
   return mediaService.getMediaForUser(userId);
 });
 
 /// Провайдер фото пользователя
-final userPhotosProvider =
-    FutureProvider.family<List<MediaItem>, String>((ref, userId) async {
+final userPhotosProvider = FutureProvider.family<List<MediaItem>, String>((ref, userId) async {
   final mediaService = ref.read(mediaServiceProvider);
   return mediaService.getMediaByType(userId, MediaType.photo);
 });
 
 /// Провайдер видео пользователя
-final userVideosProvider =
-    FutureProvider.family<List<MediaItem>, String>((ref, userId) async {
+final userVideosProvider = FutureProvider.family<List<MediaItem>, String>((ref, userId) async {
   final mediaService = ref.read(mediaServiceProvider);
   return mediaService.getMediaByType(userId, MediaType.video);
 });
 
 /// Провайдер статистики медиафайлов пользователя
-final userMediaStatsProvider =
-    FutureProvider.family<Map<String, int>, String>((ref, userId) async {
+final userMediaStatsProvider = FutureProvider.family<Map<String, int>, String>((ref, userId) async {
   final mediaService = ref.read(mediaServiceProvider);
   return mediaService.getMediaStats(userId);
 });
@@ -63,8 +59,7 @@ class MediaUploadState {
 }
 
 /// Провайдер состояния загрузки медиафайлов
-final mediaUploadStateProvider =
-    StateNotifierProvider<MediaUploadNotifier, MediaUploadState>(
+final mediaUploadStateProvider = StateNotifierProvider<MediaUploadNotifier, MediaUploadState>(
   (ref) => MediaUploadNotifier(ref.read(mediaServiceProvider)),
 );
 

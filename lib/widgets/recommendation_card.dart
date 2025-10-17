@@ -121,14 +121,10 @@ class RecommendationCard extends StatelessWidget {
 
   Widget _buildAvatar(Specialist specialist) => CircleAvatar(
         radius: 24,
-        backgroundImage: specialist.avatarUrl != null
-            ? NetworkImage(specialist.avatarUrl!)
-            : null,
+        backgroundImage: specialist.avatarUrl != null ? NetworkImage(specialist.avatarUrl!) : null,
         child: specialist.avatarUrl == null
             ? Text(
-                specialist.name.isNotEmpty
-                    ? specialist.name[0].toUpperCase()
-                    : '?',
+                specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : '?',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -139,14 +135,10 @@ class RecommendationCard extends StatelessWidget {
 
   Widget _buildCompactAvatar(Specialist specialist) => CircleAvatar(
         radius: 20,
-        backgroundImage: specialist.avatarUrl != null
-            ? NetworkImage(specialist.avatarUrl!)
-            : null,
+        backgroundImage: specialist.avatarUrl != null ? NetworkImage(specialist.avatarUrl!) : null,
         child: specialist.avatarUrl == null
             ? Text(
-                specialist.name.isNotEmpty
-                    ? specialist.name[0].toUpperCase()
-                    : '?',
+                specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : '?',
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -212,8 +204,7 @@ class RecommendationCard extends StatelessWidget {
         ),
       );
 
-  Widget _buildSpecialistInfo(BuildContext context, Specialist specialist) =>
-      Column(
+  Widget _buildSpecialistInfo(BuildContext context, Specialist specialist) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -353,10 +344,7 @@ class RecommendationCard extends StatelessWidget {
   Widget _buildReason(BuildContext context) => Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Theme.of(context)
-              .colorScheme
-              .surfaceContainerHighest
-              .withValues(alpha: 0.3),
+          color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(

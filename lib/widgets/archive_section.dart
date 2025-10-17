@@ -47,16 +47,12 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
       if (source == null) return;
 
       if (source == ImageSource.gallery) {
-        await ref
-            .read(archiveUploadStateProvider.notifier)
-            .uploadArchiveFromGallery(
+        await ref.read(archiveUploadStateProvider.notifier).uploadArchiveFromGallery(
               bookingId: widget.bookingId,
               uploadedBy: widget.currentUserId,
             );
       } else if (source == ImageSource.camera) {
-        await ref
-            .read(archiveUploadStateProvider.notifier)
-            .uploadArchiveFromCamera(
+        await ref.read(archiveUploadStateProvider.notifier).uploadArchiveFromCamera(
               bookingId: widget.bookingId,
               uploadedBy: widget.currentUserId,
             );
@@ -112,9 +108,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
       final confirmed = await _showDeleteConfirmation(archive);
       if (!confirmed) return;
 
-      await ref
-          .read(archiveUploadStateProvider.notifier)
-          .deleteArchive(archive.id);
+      await ref.read(archiveUploadStateProvider.notifier).deleteArchive(archive.id);
 
       // Обновляем список архивов
       ref.refresh(bookingArchivesProvider(widget.bookingId));
@@ -282,8 +276,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () =>
-                  ref.refresh(bookingArchivesProvider(widget.bookingId)),
+              onPressed: () => ref.refresh(bookingArchivesProvider(widget.bookingId)),
               child: const Text('Повторить'),
             ),
           ],
@@ -310,8 +303,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(archive.formattedFileSize),
-              if (archive.description != null &&
-                  archive.description!.isNotEmpty)
+              if (archive.description != null && archive.description!.isNotEmpty)
                 Text(
                   archive.description!,
                   style: TextStyle(
@@ -382,9 +374,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
               : null,
           color: !archive.isImage ? Colors.grey.shade200 : null,
         ),
-        child: !archive.isImage
-            ? const Icon(Icons.image, color: Colors.grey)
-            : null,
+        child: !archive.isImage ? const Icon(Icons.image, color: Colors.grey) : null,
       );
     } else if (archive.isVideo) {
       return Container(
@@ -465,8 +455,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
                       ? Image.network(
                           archive.fileUrl,
                           fit: BoxFit.contain,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Center(
+                          errorBuilder: (context, error, stackTrace) => const Center(
                             child: Icon(Icons.error, size: 50),
                           ),
                         )

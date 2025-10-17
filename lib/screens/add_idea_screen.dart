@@ -429,15 +429,11 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen> {
         mediaFile: _selectedFile!,
         isVideo: _isVideo,
         tags: tags,
-        location: _locationController.text.trim().isEmpty
-            ? null
-            : _locationController.text.trim(),
+        location: _locationController.text.trim().isEmpty ? null : _locationController.text.trim(),
         price: _priceController.text.trim().isEmpty
             ? null
             : double.tryParse(_priceController.text.trim()),
-        priceCurrency: _priceController.text.trim().isEmpty
-            ? null
-            : _selectedPriceCurrency,
+        priceCurrency: _priceController.text.trim().isEmpty ? null : _selectedPriceCurrency,
         duration: _durationController.text.trim().isEmpty
             ? null
             : int.tryParse(_durationController.text.trim()),

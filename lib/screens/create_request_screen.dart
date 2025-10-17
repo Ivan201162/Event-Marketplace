@@ -9,8 +9,7 @@ class CreateRequestScreen extends ConsumerStatefulWidget {
   const CreateRequestScreen({super.key});
 
   @override
-  ConsumerState<CreateRequestScreen> createState() =>
-      _CreateRequestScreenState();
+  ConsumerState<CreateRequestScreen> createState() => _CreateRequestScreenState();
 }
 
 class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
@@ -49,8 +48,7 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
   Future<void> _selectDeadline() async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate:
-          _selectedDeadline ?? DateTime.now().add(const Duration(days: 7)),
+      initialDate: _selectedDeadline ?? DateTime.now().add(const Duration(days: 7)),
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
@@ -76,15 +74,12 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
 
       final request = await SupabaseService.createRequest(
         title: _titleController.text.trim(),
-        description: _descriptionController.text.trim().isEmpty
-            ? null
-            : _descriptionController.text.trim(),
+        description:
+            _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
         category: _selectedCategory,
         budget: budget,
         deadline: _selectedDeadline,
-        location: _locationController.text.trim().isEmpty
-            ? null
-            : _locationController.text.trim(),
+        location: _locationController.text.trim().isEmpty ? null : _locationController.text.trim(),
       );
 
       if (request != null && mounted) {
@@ -185,7 +180,7 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
 
               // Категория
               DropdownButtonFormField<String>(
-                value: _selectedCategory,
+                initialValue: _selectedCategory,
                 decoration: const InputDecoration(
                   labelText: 'Категория *',
                   border: OutlineInputBorder(),
@@ -261,9 +256,7 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
                         ? '${_selectedDeadline!.day}.${_selectedDeadline!.month}.${_selectedDeadline!.year}'
                         : 'Выберите дату',
                     style: TextStyle(
-                      color: _selectedDeadline != null
-                          ? Colors.black87
-                          : Colors.grey[600],
+                      color: _selectedDeadline != null ? Colors.black87 : Colors.grey[600],
                     ),
                   ),
                 ),

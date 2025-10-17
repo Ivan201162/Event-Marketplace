@@ -53,8 +53,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
     try {
       setState(() => _isLoading = true);
 
-      final guestAccess =
-          await _guestAccessService.getGuestAccessByCode(widget.accessCode);
+      final guestAccess = await _guestAccessService.getGuestAccessByCode(widget.accessCode);
 
       if (guestAccess == null) {
         if (mounted) {

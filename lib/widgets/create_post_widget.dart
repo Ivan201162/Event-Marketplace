@@ -98,8 +98,7 @@ class _CreatePostWidgetState extends ConsumerState<CreatePostWidget> {
                   });
                 },
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                     color: isSelected ? Colors.blue : Colors.grey[200],
                     borderRadius: BorderRadius.circular(20),
@@ -113,8 +112,7 @@ class _CreatePostWidgetState extends ConsumerState<CreatePostWidget> {
                         type.displayName,
                         style: TextStyle(
                           color: isSelected ? Colors.white : Colors.black,
-                          fontWeight:
-                              isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
                     ],
@@ -247,8 +245,7 @@ class _CreatePostWidgetState extends ConsumerState<CreatePostWidget> {
           TextField(
             controller: _tagsController,
             decoration: const InputDecoration(
-              hintText:
-                  'Введите теги через пробел (например: #событие #праздник)',
+              hintText: 'Введите теги через пробел (например: #событие #праздник)',
               border: OutlineInputBorder(),
             ),
           ),
@@ -312,9 +309,7 @@ class _CreatePostWidgetState extends ConsumerState<CreatePostWidget> {
                     CircleAvatar(
                       radius: 16,
                       child: Text(
-                        widget.authorId.isNotEmpty
-                            ? widget.authorId[0].toUpperCase()
-                            : 'U',
+                        widget.authorId.isNotEmpty ? widget.authorId[0].toUpperCase() : 'U',
                       ),
                     ),
                     const SizedBox(width: 8),

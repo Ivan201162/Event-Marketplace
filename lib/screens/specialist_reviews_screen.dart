@@ -16,8 +16,7 @@ class SpecialistReviewsScreen extends StatefulWidget {
   final Specialist specialist;
 
   @override
-  State<SpecialistReviewsScreen> createState() =>
-      _SpecialistReviewsScreenState();
+  State<SpecialistReviewsScreen> createState() => _SpecialistReviewsScreenState();
 }
 
 class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
@@ -56,8 +55,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
 
   Future<void> _loadStats() async {
     try {
-      final stats =
-          await _reviewService.getSpecialistReviewStats(widget.specialist.id);
+      final stats = await _reviewService.getSpecialistReviewStats(widget.specialist.id);
       setState(() => _stats = stats);
     } on Exception catch (e) {
       debugPrint('Ошибка загрузки статистики: $e');
@@ -136,12 +134,8 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
                                 return ReviewCard(
                                   review: review,
                                   showSpecialistInfo: false,
-                                  onEdit: review.canEdit
-                                      ? () => _editReview(review)
-                                      : null,
-                                  onDelete: review.canDelete
-                                      ? () => _deleteReview(review)
-                                      : null,
+                                  onEdit: review.canEdit ? () => _editReview(review) : null,
+                                  onDelete: review.canDelete ? () => _deleteReview(review) : null,
                                 );
                               },
                             ),

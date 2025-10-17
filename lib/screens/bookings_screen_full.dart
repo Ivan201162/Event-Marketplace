@@ -136,8 +136,7 @@ class _MyBookingsTab extends ConsumerWidget {
       context,
       MaterialPageRoute<void>(
         builder: (context) => ChatScreen(
-          chatId:
-              '${booking['customerId'] ?? ''}_${booking['specialistId'] ?? ''}',
+          chatId: '${booking['customerId'] ?? ''}_${booking['specialistId'] ?? ''}',
           otherParticipantId: booking['specialistId'] ?? '',
           otherParticipantName: booking['specialistName'] ?? 'Специалист',
         ),
@@ -225,8 +224,7 @@ class _IncomingBookingsTab extends ConsumerWidget {
       context,
       MaterialPageRoute<void>(
         builder: (context) => ChatScreen(
-          chatId:
-              '${booking['customerId'] ?? ''}_${booking['specialistId'] ?? ''}',
+          chatId: '${booking['customerId'] ?? ''}_${booking['specialistId'] ?? ''}',
           otherParticipantId: booking['customerId'] ?? '',
           otherParticipantName: booking['customerName'] ?? 'Заказчик',
         ),

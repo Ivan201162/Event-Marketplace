@@ -372,8 +372,7 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
               child: Row(
                 children: [
                   CircleAvatar(
-                    backgroundImage:
-                        NetworkImage(widget.story.specialistPhotoUrl),
+                    backgroundImage: NetworkImage(widget.story.specialistPhotoUrl),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -434,9 +433,7 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
                   IconButton(
                     onPressed: _likeStory,
                     icon: Icon(
-                      widget.story.likes > 0
-                          ? Icons.favorite
-                          : Icons.favorite_border,
+                      widget.story.likes > 0 ? Icons.favorite : Icons.favorite_border,
                       color: Colors.white,
                       size: 32,
                     ),

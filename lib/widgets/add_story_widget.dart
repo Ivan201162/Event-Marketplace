@@ -277,8 +277,7 @@ class UserStoriesWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildStoryCircle(BuildContext context, Story story) =>
-      GestureDetector(
+  Widget _buildStoryCircle(BuildContext context, Story story) => GestureDetector(
         onTap: () => _openStory(context, story),
         child: Container(
           width: 70,

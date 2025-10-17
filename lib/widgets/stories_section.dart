@@ -134,8 +134,7 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
       );
 
   Widget _buildStoryCircle(String userId, List<Story> stories) {
-    final hasUnviewedStories =
-        stories.any((story) => !story.isViewedBy(userId));
+    final hasUnviewedStories = stories.any((story) => !story.isViewedBy(userId));
 
     return GestureDetector(
       onTap: () => _openStoriesView(userId, stories),
@@ -151,16 +150,13 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: hasUnviewedStories
-                      ? Theme.of(context).primaryColor
-                      : Colors.grey.shade300,
+                  color: hasUnviewedStories ? Theme.of(context).primaryColor : Colors.grey.shade300,
                   width: 3,
                 ),
               ),
               child: CircleAvatar(
                 radius: 27,
-                backgroundColor:
-                    Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                 child: Icon(
                   Icons.person,
                   color: Theme.of(context).primaryColor,
@@ -344,10 +340,9 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
   Widget _buildStoryContent(Story story) => SizedBox(
         width: double.infinity,
         height: double.infinity,
-        child:
-            (story.mediaUrl.contains('mp4') || story.mediaUrl.contains('mov'))
-                ? _buildVideoContent(story)
-                : _buildImageContent(story),
+        child: (story.mediaUrl.contains('mp4') || story.mediaUrl.contains('mov'))
+            ? _buildVideoContent(story)
+            : _buildImageContent(story),
       );
 
   Widget _buildImageContent(Story story) => Image.network(

@@ -21,12 +21,10 @@ class EditCustomerProfileScreen extends ConsumerStatefulWidget {
   final bool isCreating;
 
   @override
-  ConsumerState<EditCustomerProfileScreen> createState() =>
-      _EditCustomerProfileScreenState();
+  ConsumerState<EditCustomerProfileScreen> createState() => _EditCustomerProfileScreenState();
 }
 
-class _EditCustomerProfileScreenState
-    extends ConsumerState<EditCustomerProfileScreen> {
+class _EditCustomerProfileScreenState extends ConsumerState<EditCustomerProfileScreen> {
   final _formKey = GlobalKey<FormState>();
 
   // Контроллеры
@@ -134,21 +132,14 @@ class _EditCustomerProfileScreenState
         id: widget.customerId,
         name: _nameController.text.trim(),
         email: _emailController.text.trim(),
-        phone: _phoneController.text.trim().isNotEmpty
-            ? _phoneController.text.trim()
-            : null,
-        bio: _bioController.text.trim().isNotEmpty
-            ? _bioController.text.trim()
-            : null,
-        location: _locationController.text.trim().isNotEmpty
-            ? _locationController.text.trim()
-            : null,
+        phone: _phoneController.text.trim().isNotEmpty ? _phoneController.text.trim() : null,
+        bio: _bioController.text.trim().isNotEmpty ? _bioController.text.trim() : null,
+        location:
+            _locationController.text.trim().isNotEmpty ? _locationController.text.trim() : null,
         companyName: _companyNameController.text.trim().isNotEmpty
             ? _companyNameController.text.trim()
             : null,
-        website: _websiteController.text.trim().isNotEmpty
-            ? _websiteController.text.trim()
-            : null,
+        website: _websiteController.text.trim().isNotEmpty ? _websiteController.text.trim() : null,
         avatarUrl: _imageUrl,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
@@ -229,13 +220,11 @@ class _EditCustomerProfileScreenState
                                 radius: 60,
                                 backgroundImage: _selectedImage != null
                                     ? FileImage(_selectedImage!)
-                                    : (_imageUrl != null
-                                        ? NetworkImage(_imageUrl!)
-                                        : null) as ImageProvider?,
-                                child:
-                                    _selectedImage == null && _imageUrl == null
-                                        ? const Icon(Icons.person, size: 60)
-                                        : null,
+                                    : (_imageUrl != null ? NetworkImage(_imageUrl!) : null)
+                                        as ImageProvider?,
+                                child: _selectedImage == null && _imageUrl == null
+                                    ? const Icon(Icons.person, size: 60)
+                                    : null,
                               ),
                               Positioned(
                                 bottom: 0,

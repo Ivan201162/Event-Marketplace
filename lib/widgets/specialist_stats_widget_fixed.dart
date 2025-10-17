@@ -20,8 +20,7 @@ class SpecialistStatsWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final statsAsync = ref.watch(specialistStatsProvider(specialistId));
-    final reviewsStatsAsync =
-        ref.watch(specialistReviewStatsProvider(specialistId));
+    final reviewsStatsAsync = ref.watch(specialistReviewStatsProvider(specialistId));
 
     return Card(
       margin: const EdgeInsets.all(16),
@@ -353,9 +352,7 @@ class SpecialistStatsWidget extends ConsumerWidget {
   /// Рассчитать процент завершения
   String _calculateCompletionRate(SpecialistStats stats) {
     if (stats.totalBookings == 0) return '0';
-    return ((stats.completedBookings / stats.totalBookings) * 100)
-        .round()
-        .toString();
+    return ((stats.completedBookings / stats.totalBookings) * 100).round().toString();
   }
 
   /// Получить цвет рейтинга
@@ -403,24 +400,16 @@ class SpecialistStats {
 }
 
 /// Провайдер для статистики специалиста
-final specialistStatsProvider =
-    StreamProvider.family<SpecialistStats, String>((ref, specialistId) {
+final specialistStatsProvider = StreamProvider.family<SpecialistStats, String>((ref, specialistId) {
   final firestoreService = ref.watch(firestoreServiceProvider);
 
-  return firestoreService
-      .bookingsBySpecialistStream(specialistId)
-      .map((bookings) {
+  return firestoreService.bookingsBySpecialistStream(specialistId).map((bookings) {
     final totalBookings = bookings.length;
-    final completedBookings =
-        bookings.where((b) => b.status == BookingStatus.completed).length;
-    final pendingBookings =
-        bookings.where((b) => b.status == BookingStatus.pending).length;
-    final confirmedBookings =
-        bookings.where((b) => b.status == BookingStatus.confirmed).length;
-    final cancelledBookings =
-        bookings.where((b) => b.status == BookingStatus.cancelled).length;
-    final rejectedBookings =
-        bookings.where((b) => b.status == BookingStatus.rejected).length;
+    final completedBookings = bookings.where((b) => b.status == BookingStatus.completed).length;
+    final pendingBookings = bookings.where((b) => b.status == BookingStatus.pending).length;
+    final confirmedBookings = bookings.where((b) => b.status == BookingStatus.confirmed).length;
+    final cancelledBookings = bookings.where((b) => b.status == BookingStatus.cancelled).length;
+    final rejectedBookings = bookings.where((b) => b.status == BookingStatus.rejected).length;
 
     final totalEarnings = bookings
         .where((b) => b.status == BookingStatus.completed)
@@ -441,8 +430,7 @@ final specialistStatsProvider =
 });
 
 /// Провайдер для сервиса Firestore
-final firestoreServiceProvider =
-    Provider<FirestoreService>((ref) => FirestoreService());
+final firestoreServiceProvider = Provider<FirestoreService>((ref) => FirestoreService());
 
 /// Провайдер для статистики отзывов специалиста
 final specialistReviewStatsProvider =

@@ -9,31 +9,27 @@ final badgeServiceProvider =
     Provider<badge_service.BadgeService>((ref) => badge_service.BadgeService());
 
 /// Провайдер для бейджей пользователя
-final userBadgesProvider =
-    StreamProvider.family<List<badge_model.Badge>, String>((ref, userId) {
+final userBadgesProvider = StreamProvider.family<List<badge_model.Badge>, String>((ref, userId) {
   final service = ref.read(badgeServiceProvider);
   return Stream.fromFuture(service.getUserBadges(userId));
 });
 
 /// Провайдер для статистики бейджей пользователя
-final userBadgeStatsProvider =
-    FutureProvider.family<badge_model.BadgeStats, String>((ref, userId) {
+final userBadgeStatsProvider = FutureProvider.family<badge_model.BadgeStats, String>((ref, userId) {
   final service = ref.read(badgeServiceProvider);
   return service.getBadgeStats(userId);
 });
 
 /// Провайдер для таблицы лидеров по бейджам
 final badgeLeaderboardProvider =
-    FutureProvider.family<List<badge_model.BadgeLeaderboardEntry>, int>(
-        (ref, limit) {
+    FutureProvider.family<List<badge_model.BadgeLeaderboardEntry>, int>((ref, limit) {
   final service = ref.read(badgeServiceProvider);
   return service.getBadgeLeaderboard(limit: limit);
 });
 
 /// Провайдер для бейджей по категориям
-final userBadgesByCategoryProvider = Provider.family<
-    Map<badge_model.BadgeCategory, List<badge_model.Badge>>,
-    String>((ref, userId) {
+final userBadgesByCategoryProvider =
+    Provider.family<Map<badge_model.BadgeCategory, List<badge_model.Badge>>, String>((ref, userId) {
   final badgesAsync = ref.watch(userBadgesProvider(userId));
 
   return badgesAsync.when(
@@ -44,8 +40,7 @@ final userBadgesByCategoryProvider = Provider.family<
 });
 
 /// Провайдер для видимых бейджей пользователя
-final visibleUserBadgesProvider =
-    Provider.family<List<badge_model.Badge>, String>((ref, userId) {
+final visibleUserBadgesProvider = Provider.family<List<badge_model.Badge>, String>((ref, userId) {
   final badgesAsync = ref.watch(userBadgesProvider(userId));
 
   return badgesAsync.when(
@@ -56,8 +51,7 @@ final visibleUserBadgesProvider =
 });
 
 /// Провайдер для последних бейджей пользователя
-final recentUserBadgesProvider =
-    Provider.family<List<badge_model.Badge>, String>((ref, userId) {
+final recentUserBadgesProvider = Provider.family<List<badge_model.Badge>, String>((ref, userId) {
   final badgesAsync = ref.watch(userBadgesProvider(userId));
 
   return badgesAsync.when(
@@ -154,8 +148,7 @@ class NewBadgeChecker extends Notifier<NewBadgeState> {
         // Проверяем новые бейджи
         final newBadges = currentBadges
             .where(
-              (badge) =>
-                  !_lastBadges.any((lastBadge) => lastBadge.id == badge.id),
+              (badge) => !_lastBadges.any((lastBadge) => lastBadge.id == badge.id),
             )
             .toList();
 
@@ -191,8 +184,7 @@ class NewBadgeChecker extends Notifier<NewBadgeState> {
 }
 
 /// Провайдер для достижений пользователя
-final userAchievementsProvider =
-    Provider.family<UserAchievements, String>((ref, userId) {
+final userAchievementsProvider = Provider.family<UserAchievements, String>((ref, userId) {
   final badgesAsync = ref.watch(userBadgesProvider(userId));
   final statsAsync = ref.watch(userBadgeStatsProvider(userId));
 
@@ -234,8 +226,7 @@ class UserAchievements {
 
   /// Получить уровень пользователя
   int get userLevel {
-    return (stats.totalBadges / 5).floor() +
-        1; // Каждые 5 бейджей = новый уровень
+    return (stats.totalBadges / 5).floor() + 1; // Каждые 5 бейджей = новый уровень
   }
 
   /// Получить прогресс до следующего уровня

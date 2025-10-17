@@ -16,8 +16,7 @@ class ReviewsExtendedScreen extends ConsumerStatefulWidget {
   final String? currentUserId;
 
   @override
-  ConsumerState<ReviewsExtendedScreen> createState() =>
-      _ReviewsExtendedScreenState();
+  ConsumerState<ReviewsExtendedScreen> createState() => _ReviewsExtendedScreenState();
 }
 
 class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
@@ -211,8 +210,7 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
                       ),
                       const SizedBox(height: 8),
                       ...stats.ratingDistribution.entries.map((entry) {
-                        final percentage =
-                            (entry.value / stats.totalReviews) * 100;
+                        final percentage = (entry.value / stats.totalReviews) * 100;
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 4),
                           child: Row(
@@ -254,9 +252,8 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
                             .map(
                               (tag) => Chip(
                                 label: Text(tag),
-                                backgroundColor: Theme.of(context)
-                                    .primaryColor
-                                    .withValues(alpha: 0.1),
+                                backgroundColor:
+                                    Theme.of(context).primaryColor.withValues(alpha: 0.1),
                               ),
                             )
                             .toList(),
@@ -361,8 +358,7 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
       MaterialPageRoute<bool>(
         builder: (context) => CreateReviewExtendedScreen(
           specialistId: widget.specialistId,
-          bookingId:
-              'demo_booking_id', // TODO(developer): Получить из контекста
+          bookingId: 'demo_booking_id', // TODO(developer): Получить из контекста
         ),
       ),
     )

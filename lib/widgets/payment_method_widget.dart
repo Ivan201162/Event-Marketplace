@@ -46,9 +46,7 @@ class PaymentMethodWidget extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 8),
         decoration: BoxDecoration(
           border: Border.all(
-            color: isSelected
-                ? Theme.of(context).primaryColor
-                : Colors.grey.shade300,
+            color: isSelected ? Theme.of(context).primaryColor : Colors.grey.shade300,
             width: isSelected ? 2 : 1,
           ),
           borderRadius: BorderRadius.circular(8),
@@ -59,9 +57,7 @@ class PaymentMethodWidget extends StatelessWidget {
         child: ListTile(
           leading: Icon(
             method.icon,
-            color: isSelected
-                ? Theme.of(context).primaryColor
-                : Colors.grey.shade600,
+            color: isSelected ? Theme.of(context).primaryColor : Colors.grey.shade600,
           ),
           title: Text(
             method.displayName,

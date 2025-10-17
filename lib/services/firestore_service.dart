@@ -95,9 +95,7 @@ class FirestoreService {
         .where('specialistId', isEqualTo: specialistId)
         .where('status', isEqualTo: 'confirmed')
         .get();
-    return qs.docs
-        .map((d) => (d.data()['eventDate'] as Timestamp).toDate())
-        .toList();
+    return qs.docs.map((d) => (d.data()['eventDate'] as Timestamp).toDate()).toList();
   }
 
   // Получить занятые даты с временными интервалами
@@ -116,9 +114,7 @@ class FirestoreService {
         'bookingId': d.id,
         'startTime': (data['eventDate'] as Timestamp).toDate(),
         'endTime': (data['endDate'] as Timestamp?)?.toDate() ??
-            (data['eventDate'] as Timestamp)
-                .toDate()
-                .add(const Duration(hours: 2)),
+            (data['eventDate'] as Timestamp).toDate().add(const Duration(hours: 2)),
         'customerId': data['customerId'],
         'title': data['title'] ?? 'Бронирование',
       };
@@ -143,8 +139,8 @@ class FirestoreService {
 
       final data = doc.data();
       final existingStart = (data['eventDate'] as Timestamp).toDate();
-      final existingEnd = (data['endDate'] as Timestamp?)?.toDate() ??
-          existingStart.add(const Duration(hours: 2));
+      final existingEnd =
+          (data['endDate'] as Timestamp?)?.toDate() ?? existingStart.add(const Duration(hours: 2));
 
       // Проверяем пересечение временных интервалов
       if (startTime.isBefore(existingEnd) && endTime.isAfter(existingStart)) {
@@ -242,16 +238,14 @@ class FirestoreService {
   Future<void> addOrUpdateBookingWithCalendar(Booking booking) async {
     try {
       // Определяем время окончания события
-      final endTime =
-          booking.endDate ?? booking.eventDate.add(const Duration(hours: 2));
+      final endTime = booking.endDate ?? booking.eventDate.add(const Duration(hours: 2));
 
       // Проверяем конфликты бронирования
       final hasConflict = await hasBookingConflict(
         booking.specialistId ?? '',
         booking.eventDate,
         endTime,
-        excludeBookingId:
-            booking.id, // Исключаем текущее бронирование при обновлении
+        excludeBookingId: booking.id, // Исключаем текущее бронирование при обновлении
       );
 
       if (hasConflict) {
@@ -394,8 +388,7 @@ class FirestoreService {
     String specialistId,
     DateTime date,
   ) async {
-    final calendarEvents =
-        await _calendarService.getEventsForDate(specialistId, date);
+    final calendarEvents = await _calendarService.getEventsForDate(specialistId, date);
     return calendarEvents
         .map(
           (event) => ScheduleEvent(
@@ -629,9 +622,7 @@ class FirestoreService {
 
           if (searchQuery != null && searchQuery.isNotEmpty) {
             // Простой поиск по названию события
-            query = query
-                .where('eventName', isGreaterThanOrEqualTo: searchQuery)
-                .where(
+            query = query.where('eventName', isGreaterThanOrEqualTo: searchQuery).where(
                   'eventName',
                   isLessThanOrEqualTo: '$searchQuery\uf8ff',
                 );
@@ -677,8 +668,7 @@ class FirestoreService {
       }
 
       final snapshot = await query.get();
-      final notifications =
-          snapshot.docs.map(model.AppNotification.fromDocument).toList();
+      final notifications = snapshot.docs.map(model.AppNotification.fromDocument).toList();
 
       SafeLog.debug(
         'Получено ${notifications.length} уведомлений с пагинацией',
@@ -846,21 +836,16 @@ class FirestoreService {
   /// Получить статистику платежей пользователя
   Future<PaymentStats> getUserPaymentStats(String userId) async {
     try {
-      final querySnapshot = await _db
-          .collection('payments')
-          .where('customerId', isEqualTo: userId)
-          .get();
+      final querySnapshot =
+          await _db.collection('payments').where('customerId', isEqualTo: userId).get();
 
       final payments = querySnapshot.docs.map(Payment.fromDocument).toList();
 
-      final totalAmount =
-          payments.fold(0, (sum, payment) => sum + payment.amount);
+      final totalAmount = payments.fold(0, (sum, payment) => sum + payment.amount);
       final completedPayments = payments.where((p) => p.isCompleted).toList();
-      final completedAmount =
-          completedPayments.fold(0, (sum, payment) => sum + payment.amount);
+      final completedAmount = completedPayments.fold(0, (sum, payment) => sum + payment.amount);
       final pendingPayments = payments.where((p) => p.isPending).toList();
-      final pendingAmount =
-          pendingPayments.fold(0, (sum, payment) => sum + payment.amount);
+      final pendingAmount = pendingPayments.fold(0, (sum, payment) => sum + payment.amount);
 
       return PaymentStats(
         totalPayments: payments.length,
@@ -869,8 +854,7 @@ class FirestoreService {
         totalAmount: totalAmount,
         completedAmount: completedAmount,
         pendingAmount: pendingAmount,
-        averagePayment:
-            payments.isNotEmpty ? totalAmount / payments.length : 0.0,
+        averagePayment: payments.isNotEmpty ? totalAmount / payments.length : 0.0,
       );
     } on Exception catch (e) {
       print('Ошибка получения статистики платежей: $e');
@@ -881,23 +865,19 @@ class FirestoreService {
   /// Получить статистику платежей специалиста
   Future<PaymentStats> getSpecialistPaymentStats(String specialistId) async {
     try {
-      final querySnapshot = await _db
-          .collection('payments')
-          .where('specialistId', isEqualTo: specialistId)
-          .get();
+      final querySnapshot =
+          await _db.collection('payments').where('specialistId', isEqualTo: specialistId).get();
 
       final payments = querySnapshot.docs.map(Payment.fromDocument).toList();
 
-      final totalAmount =
-          payments.fold(0, (sum, payment) => sum + payment.amount);
+      final totalAmount = payments.fold(0, (sum, payment) => sum + payment.amount);
       final completedPayments = payments.where((p) => p.isCompleted).toList();
       final completedAmount = completedPayments.fold(
         0,
         (sum, payment) => sum + payment.calculatedNetAmount,
       );
       final pendingPayments = payments.where((p) => p.isPending).toList();
-      final pendingAmount =
-          pendingPayments.fold(0, (sum, payment) => sum + payment.amount);
+      final pendingAmount = pendingPayments.fold(0, (sum, payment) => sum + payment.amount);
 
       return PaymentStats(
         totalPayments: payments.length,
@@ -906,8 +886,7 @@ class FirestoreService {
         totalAmount: totalAmount,
         completedAmount: completedAmount,
         pendingAmount: pendingAmount,
-        averagePayment:
-            payments.isNotEmpty ? totalAmount / payments.length : 0.0,
+        averagePayment: payments.isNotEmpty ? totalAmount / payments.length : 0.0,
       );
     } on Exception catch (e) {
       print('Ошибка получения статистики платежей специалиста: $e');

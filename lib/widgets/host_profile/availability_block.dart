@@ -57,10 +57,7 @@ class AvailabilityBlock extends StatelessWidget {
           const SizedBox(height: 16),
 
           // Список дат
-          if (availableDates.isEmpty)
-            _buildEmptyDates(context)
-          else
-            _buildDatesGrid(context),
+          if (availableDates.isEmpty) _buildEmptyDates(context) else _buildDatesGrid(context),
         ],
       ),
     );
@@ -123,8 +120,7 @@ class AvailabilityBlock extends StatelessWidget {
       itemCount: availableDates.length,
       itemBuilder: (context, index) {
         final date = availableDates[index];
-        final isSelected =
-            selectedDate != null && _isSameDay(selectedDate!, date);
+        final isSelected = selectedDate != null && _isSameDay(selectedDate!, date);
 
         return GestureDetector(
           onTap: () => onDateSelected?.call(date),
@@ -132,8 +128,7 @@ class AvailabilityBlock extends StatelessWidget {
             duration: const Duration(milliseconds: 200),
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color:
-                  isSelected ? theme.primaryColor : theme.colorScheme.surface,
+              color: isSelected ? theme.primaryColor : theme.colorScheme.surface,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isSelected
@@ -169,8 +164,7 @@ class AvailabilityBlock extends StatelessWidget {
                 Text(
                   date.day.toString(),
                   style: theme.textTheme.titleLarge?.copyWith(
-                    color:
-                        isSelected ? Colors.white : theme.colorScheme.onSurface,
+                    color: isSelected ? Colors.white : theme.colorScheme.onSurface,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -216,7 +210,5 @@ class AvailabilityBlock extends StatelessWidget {
   }
 
   bool _isSameDay(DateTime date1, DateTime date2) =>
-      date1.year == date2.year &&
-      date1.month == date2.month &&
-      date1.day == date2.day;
+      date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
 }

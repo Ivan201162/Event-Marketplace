@@ -305,13 +305,9 @@ class CommentCard extends StatelessWidget {
                   // Аватар
                   CircleAvatar(
                     radius: 16,
-                    backgroundColor: Theme.of(context)
-                        .colorScheme
-                        .primary
-                        .withValues(alpha: 0.1),
-                    backgroundImage: comment.authorAvatar != null
-                        ? NetworkImage(comment.authorAvatar!)
-                        : null,
+                    backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                    backgroundImage:
+                        comment.authorAvatar != null ? NetworkImage(comment.authorAvatar!) : null,
                     child: comment.authorAvatar == null
                         ? Text(
                             (comment.authorName ?? 'П').isNotEmpty
@@ -334,17 +330,15 @@ class CommentCard extends StatelessWidget {
                       children: [
                         Text(
                           comment.authorName ?? 'Пользователь',
-                          style:
-                              Theme.of(context).textTheme.titleSmall?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
                         ),
                         Text(
                           comment.timeAgo,
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Colors.grey[600],
-                                  ),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Colors.grey[600],
+                              ),
                         ),
                       ],
                     ),

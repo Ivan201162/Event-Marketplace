@@ -76,8 +76,7 @@ class MediaStorageService {
       );
 
       // Сохраняем информацию о файле в Firestore
-      final docRef =
-          await _firestore.collection('media_files').add(mediaFile.toMap());
+      final docRef = await _firestore.collection('media_files').add(mediaFile.toMap());
 
       return mediaFile.copyWith(id: docRef.id);
     } catch (e) {
@@ -151,8 +150,7 @@ class MediaStorageService {
   Future<void> deleteMediaFile(String mediaFileId) async {
     try {
       // Получаем информацию о файле
-      final doc =
-          await _firestore.collection('media_files').doc(mediaFileId).get();
+      final doc = await _firestore.collection('media_files').doc(mediaFileId).get();
 
       if (!doc.exists) return;
 
@@ -181,10 +179,8 @@ class MediaStorageService {
 
       final totalFiles = files.length;
       final totalSize = files.fold<int>(0, (sum, file) => sum + file.fileSize);
-      final photoCount =
-          files.where((f) => f.mimeType.startsWith('image/')).length;
-      final videoCount =
-          files.where((f) => f.mimeType.startsWith('video/')).length;
+      final photoCount = files.where((f) => f.mimeType.startsWith('image/')).length;
+      final videoCount = files.where((f) => f.mimeType.startsWith('video/')).length;
 
       return MediaStats(
         specialistId: specialistId,
@@ -203,8 +199,7 @@ class MediaStorageService {
   /// Создать ссылку для скачивания
   Future<String> createDownloadLink(String mediaFileId) async {
     try {
-      final doc =
-          await _firestore.collection('media_files').doc(mediaFileId).get();
+      final doc = await _firestore.collection('media_files').doc(mediaFileId).get();
 
       if (!doc.exists) {
         throw Exception('Файл не найден');
@@ -287,9 +282,8 @@ class MediaFile {
       fileSize: data['fileSize'] as int? ?? 0,
       mimeType: data['mimeType'] as String? ?? '',
       description: data['description'] as String?,
-      uploadedAt: data['uploadedAt'] != null
-          ? (data['uploadedAt'] as Timestamp).toDate()
-          : DateTime.now(),
+      uploadedAt:
+          data['uploadedAt'] != null ? (data['uploadedAt'] as Timestamp).toDate() : DateTime.now(),
     );
   }
 

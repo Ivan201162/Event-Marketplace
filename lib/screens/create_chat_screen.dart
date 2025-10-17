@@ -185,8 +185,7 @@ class _CreateChatScreenState extends ConsumerState<CreateChatScreen> {
         'updatedAt': FieldValue.serverTimestamp(),
       };
 
-      final chatDoc =
-          await FirebaseFirestore.instance.collection('chats').add(chatData);
+      final chatDoc = await FirebaseFirestore.instance.collection('chats').add(chatData);
 
       // Добавляем первое сообщение
       await chatDoc.collection('messages').add({
@@ -282,10 +281,7 @@ class _CreateChatScreenState extends ConsumerState<CreateChatScreen> {
                                 _searchQuery.isEmpty
                                     ? 'Нет пользователей'
                                     : 'Пользователи не найдены',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.copyWith(
+                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                       color: Colors.grey,
                                     ),
                               ),
@@ -293,10 +289,7 @@ class _CreateChatScreenState extends ConsumerState<CreateChatScreen> {
                                 const SizedBox(height: 8),
                                 Text(
                                   'Попробуйте изменить поисковый запрос',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                         color: Colors.grey,
                                       ),
                                 ),

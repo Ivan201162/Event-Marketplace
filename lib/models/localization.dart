@@ -75,14 +75,12 @@ class LocalizationSettings {
     required this.lastUpdated,
   });
 
-  factory LocalizationSettings.fromMap(Map<String, dynamic> map) =>
-      LocalizationSettings(
+  factory LocalizationSettings.fromMap(Map<String, dynamic> map) => LocalizationSettings(
         currentLanguage: map['currentLanguage'] ?? 'ru',
         autoDetectLanguage: map['autoDetectLanguage'] ?? true,
         showNativeNames: map['showNativeNames'] ?? false,
         preferredLanguages: List<String>.from(map['preferredLanguages'] ?? []),
-        lastUpdated:
-            DateTime.fromMillisecondsSinceEpoch(map['lastUpdated'] ?? 0),
+        lastUpdated: DateTime.fromMillisecondsSinceEpoch(map['lastUpdated'] ?? 0),
       );
   final String currentLanguage;
   final bool autoDetectLanguage;
@@ -135,9 +133,8 @@ class Translation {
         context: map['context'],
         description: map['description'],
         isPlural: map['isPlural'] ?? false,
-        pluralForms: map['pluralForms'] != null
-            ? Map<String, String>.from(map['pluralForms'])
-            : null,
+        pluralForms:
+            map['pluralForms'] != null ? Map<String, String>.from(map['pluralForms']) : null,
         createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] ?? 0),
         updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] ?? 0),
       );
@@ -198,15 +195,13 @@ class LocalizationStats {
     required this.lastUpdated,
   });
 
-  factory LocalizationStats.fromMap(Map<String, dynamic> map) =>
-      LocalizationStats(
+  factory LocalizationStats.fromMap(Map<String, dynamic> map) => LocalizationStats(
         language: map['language'] ?? '',
         totalKeys: map['totalKeys'] ?? 0,
         translatedKeys: map['translatedKeys'] ?? 0,
         missingKeys: map['missingKeys'] ?? 0,
         completionPercentage: map['completionPercentage']?.toDouble() ?? 0.0,
-        lastUpdated:
-            DateTime.fromMillisecondsSinceEpoch(map['lastUpdated'] ?? 0),
+        lastUpdated: DateTime.fromMillisecondsSinceEpoch(map['lastUpdated'] ?? 0),
       );
   final String language;
   final int totalKeys;
@@ -234,8 +229,7 @@ class TranslationContext {
     this.category,
   });
 
-  factory TranslationContext.fromMap(Map<String, dynamic> map) =>
-      TranslationContext(
+  factory TranslationContext.fromMap(Map<String, dynamic> map) => TranslationContext(
         name: map['name'] ?? '',
         description: map['description'] ?? '',
         keys: List<String>.from(map['keys'] ?? []),

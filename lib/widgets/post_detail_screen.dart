@@ -121,9 +121,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
             Center(
               child: IconButton(
                 icon: Icon(
-                  _videoController!.value.isPlaying
-                      ? Icons.pause
-                      : Icons.play_arrow,
+                  _videoController!.value.isPlaying ? Icons.pause : Icons.play_arrow,
                   color: Colors.white,
                   size: 64,
                 ),
@@ -196,9 +194,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                 ) // TODO(developer): Получить ID текущего пользователя
                     ? Icons.favorite
                     : Icons.favorite_border,
-                color: widget.post.likedBy.contains('current_user_id')
-                    ? Colors.red
-                    : Colors.black,
+                color: widget.post.likedBy.contains('current_user_id') ? Colors.red : Colors.black,
               ),
               onPressed: _toggleLike,
             ),

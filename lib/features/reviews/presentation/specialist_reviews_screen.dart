@@ -21,8 +21,7 @@ class SpecialistReviewsScreen extends StatefulWidget {
   final int reviewsCount;
 
   @override
-  State<SpecialistReviewsScreen> createState() =>
-      _SpecialistReviewsScreenState();
+  State<SpecialistReviewsScreen> createState() => _SpecialistReviewsScreenState();
 }
 
 class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
@@ -32,8 +31,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
   @override
   void initState() {
     super.initState();
-    _reviewsStream =
-        _reviewRepository.getReviewsBySpecialistStream(widget.specialistId);
+    _reviewsStream = _reviewRepository.getReviewsBySpecialistStream(widget.specialistId);
   }
 
   @override
@@ -76,10 +74,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
                           const SizedBox(height: 8),
                           Text(
                             snapshot.error.toString(),
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                   color: Colors.grey[600],
                                 ),
                             textAlign: TextAlign.center,
@@ -109,10 +104,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
                           const SizedBox(height: 8),
                           Text(
                             'Станьте первым, кто оставит отзыв об этом специалисте',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                   color: Colors.grey[600],
                                 ),
                             textAlign: TextAlign.center,
@@ -125,15 +117,14 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
                   return RefreshIndicator(
                     onRefresh: () async {
                       setState(() {
-                        _reviewsStream = _reviewRepository
-                            .getReviewsBySpecialistStream(widget.specialistId);
+                        _reviewsStream =
+                            _reviewRepository.getReviewsBySpecialistStream(widget.specialistId);
                       });
                     },
                     child: ListView.builder(
                       padding: const EdgeInsets.all(16),
                       itemCount: reviews.length,
-                      itemBuilder: (context, index) =>
-                          _buildReviewCard(reviews[index]),
+                      itemBuilder: (context, index) => _buildReviewCard(reviews[index]),
                     ),
                   );
                 },
@@ -245,8 +236,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
                   // Аватар заказчика
                   CircleAvatar(
                     radius: 20,
-                    backgroundColor:
-                        Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                    backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                     child: Text(
                       review.customerId.substring(0, 1).toUpperCase(),
                       style: TextStyle(
@@ -265,17 +255,15 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
                       children: [
                         Text(
                           'Заказчик',
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
                         Text(
                           _formatDate(review.createdAt),
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Colors.grey[600],
-                                  ),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Colors.grey[600],
+                              ),
                         ),
                       ],
                     ),
@@ -286,10 +274,9 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
                     children: [
                       Text(
                         review.rating.toStringAsFixed(1),
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       const SizedBox(width: 4),
                       const Icon(
@@ -357,8 +344,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
     ).then((_) {
       // Обновляем список отзывов после добавления
       setState(() {
-        _reviewsStream =
-            _reviewRepository.getReviewsBySpecialistStream(widget.specialistId);
+        _reviewsStream = _reviewRepository.getReviewsBySpecialistStream(widget.specialistId);
       });
     });
   }
@@ -385,8 +371,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
   String _getReviewsCountText(int count) {
     if (count % 10 == 1 && count % 100 != 11) {
       return 'отзыв';
-    } else if ([2, 3, 4].contains(count % 10) &&
-        ![12, 13, 14].contains(count % 100)) {
+    } else if ([2, 3, 4].contains(count % 10) && ![12, 13, 14].contains(count % 100)) {
       return 'отзыва';
     } else {
       return 'отзывов';

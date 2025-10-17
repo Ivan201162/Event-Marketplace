@@ -6,19 +6,16 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 class FeedNotificationService {
   factory FeedNotificationService() => _instance;
   FeedNotificationService._internal();
-  static final FeedNotificationService _instance =
-      FeedNotificationService._internal();
+  static final FeedNotificationService _instance = FeedNotificationService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _localNotifications =
-      FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
 
   /// Инициализация сервиса уведомлений
   Future<void> initialize() async {
     // Инициализация локальных уведомлений
-    const androidSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosSettings = DarwinInitializationSettings();
 
     const initSettings = InitializationSettings(
@@ -42,14 +39,12 @@ class FeedNotificationService {
   Future<void> _requestPermissions() async {
     // Android
     await _localNotifications
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
         ?.requestNotificationsPermission();
 
     // iOS
     await _localNotifications
-        .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
           alert: true,
           badge: true,
@@ -61,8 +56,7 @@ class FeedNotificationService {
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       debugPrint('Пользователь предоставил разрешение на уведомления');
-    } else if (settings.authorizationStatus ==
-        AuthorizationStatus.provisional) {
+    } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
       debugPrint(
         'Пользователь предоставил временное разрешение на уведомления',
       );

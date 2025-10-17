@@ -12,8 +12,7 @@ import '../models/release_management.dart';
 class ReleaseManagementService {
   factory ReleaseManagementService() => _instance;
   ReleaseManagementService._internal();
-  static final ReleaseManagementService _instance =
-      ReleaseManagementService._internal();
+  static final ReleaseManagementService _instance = ReleaseManagementService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -25,8 +24,7 @@ class ReleaseManagementService {
   static const String _deploymentsCollection = 'deployments';
 
   // Потоки для real-time обновлений
-  final StreamController<Release> _releaseStreamController =
-      StreamController<Release>.broadcast();
+  final StreamController<Release> _releaseStreamController = StreamController<Release>.broadcast();
   final StreamController<ReleasePlan> _planStreamController =
       StreamController<ReleasePlan>.broadcast();
   final StreamController<Deployment> _deploymentStreamController =
@@ -88,8 +86,7 @@ class ReleaseManagementService {
   /// Загрузка деплоев
   Future<void> _loadDeployments() async {
     try {
-      final snapshot =
-          await _firestore.collection(_deploymentsCollection).get();
+      final snapshot = await _firestore.collection(_deploymentsCollection).get();
 
       for (final doc in snapshot.docs) {
         final deployment = Deployment.fromMap(doc.data());
@@ -162,10 +159,7 @@ class ReleaseManagementService {
         updatedBy: user.uid,
       );
 
-      await _firestore
-          .collection(_releasesCollection)
-          .doc(release.id)
-          .set(release.toMap());
+      await _firestore.collection(_releasesCollection).doc(release.id).set(release.toMap());
 
       _releaseCache[release.id] = release;
       _releaseStreamController.add(release);
@@ -234,10 +228,7 @@ class ReleaseManagementService {
         updatedBy: user.uid,
       );
 
-      await _firestore
-          .collection(_releasesCollection)
-          .doc(id)
-          .update(updatedRelease.toMap());
+      await _firestore.collection(_releasesCollection).doc(id).update(updatedRelease.toMap());
 
       _releaseCache[id] = updatedRelease;
       _releaseStreamController.add(updatedRelease);
@@ -261,21 +252,17 @@ class ReleaseManagementService {
 
   /// Получение релизов по статусу
   List<Release> getReleasesByStatus(ReleaseStatus status) =>
-      _releaseCache.values
-          .where((release) => release.status == status)
-          .toList();
+      _releaseCache.values.where((release) => release.status == status).toList();
 
   /// Получение последнего релиза
   Release? getLatestRelease() {
-    final releases = _releaseCache.values
-        .where((release) => release.status == ReleaseStatus.released)
-        .toList();
+    final releases =
+        _releaseCache.values.where((release) => release.status == ReleaseStatus.released).toList();
 
     if (releases.isEmpty) return null;
 
     releases.sort(
-      (a, b) =>
-          b.releasedDate?.compareTo(a.releasedDate ?? DateTime(1970)) ?? 0,
+      (a, b) => b.releasedDate?.compareTo(a.releasedDate ?? DateTime(1970)) ?? 0,
     );
     return releases.first;
   }
@@ -315,10 +302,7 @@ class ReleaseManagementService {
         updatedBy: user.uid,
       );
 
-      await _firestore
-          .collection(_plansCollection)
-          .doc(plan.id)
-          .set(plan.toMap());
+      await _firestore.collection(_plansCollection).doc(plan.id).set(plan.toMap());
 
       _planCache[plan.id] = plan;
       _planStreamController.add(plan);
@@ -368,10 +352,7 @@ class ReleaseManagementService {
         updatedBy: user.uid,
       );
 
-      await _firestore
-          .collection(_plansCollection)
-          .doc(id)
-          .update(updatedPlan.toMap());
+      await _firestore.collection(_plansCollection).doc(id).update(updatedPlan.toMap());
 
       _planCache[id] = updatedPlan;
       _planStreamController.add(updatedPlan);
@@ -464,10 +445,7 @@ class ReleaseManagementService {
         updatedBy: user.uid,
       );
 
-      await _firestore
-          .collection(_deploymentsCollection)
-          .doc(id)
-          .update(updatedDeployment.toMap());
+      await _firestore.collection(_deploymentsCollection).doc(id).update(updatedDeployment.toMap());
 
       _deploymentCache[id] = updatedDeployment;
       _deploymentStreamController.add(updatedDeployment);
@@ -487,21 +465,15 @@ class ReleaseManagementService {
 
   /// Получение деплоев по релизу
   List<Deployment> getDeploymentsByRelease(String releaseId) =>
-      _deploymentCache.values
-          .where((deployment) => deployment.releaseId == releaseId)
-          .toList();
+      _deploymentCache.values.where((deployment) => deployment.releaseId == releaseId).toList();
 
   /// Получение деплоев по окружению
   List<Deployment> getDeploymentsByEnvironment(String environment) =>
-      _deploymentCache.values
-          .where((deployment) => deployment.environment == environment)
-          .toList();
+      _deploymentCache.values.where((deployment) => deployment.environment == environment).toList();
 
   /// Получение деплоев по статусу
   List<Deployment> getDeploymentsByStatus(DeploymentStatus status) =>
-      _deploymentCache.values
-          .where((deployment) => deployment.status == status)
-          .toList();
+      _deploymentCache.values.where((deployment) => deployment.status == status).toList();
 
   /// Запуск деплоя
   Future<Deployment> startDeployment(String deploymentId) async {
@@ -517,10 +489,7 @@ class ReleaseManagementService {
         updatedBy: _auth.currentUser?.uid ?? '',
       );
 
-      await _firestore
-          .collection(_deploymentsCollection)
-          .doc(deploymentId)
-          .update({
+      await _firestore.collection(_deploymentsCollection).doc(deploymentId).update({
         'status': DeploymentStatus.inProgress.value,
         'startedAt': Timestamp.fromDate(now),
         'updatedAt': Timestamp.fromDate(now),
@@ -556,10 +525,7 @@ class ReleaseManagementService {
         updatedBy: _auth.currentUser?.uid ?? '',
       );
 
-      await _firestore
-          .collection(_deploymentsCollection)
-          .doc(deploymentId)
-          .update({
+      await _firestore.collection(_deploymentsCollection).doc(deploymentId).update({
         'status': DeploymentStatus.completed.value,
         'completedAt': Timestamp.fromDate(now),
         'updatedAt': Timestamp.fromDate(now),
@@ -585,30 +551,22 @@ class ReleaseManagementService {
           'total': releases.length,
           'byType': _groupReleasesByType(releases),
           'byStatus': _groupReleasesByStatus(releases),
-          'released':
-              releases.where((r) => r.status == ReleaseStatus.released).length,
-          'draft':
-              releases.where((r) => r.status == ReleaseStatus.draft).length,
-          'scheduled':
-              releases.where((r) => r.status == ReleaseStatus.scheduled).length,
+          'released': releases.where((r) => r.status == ReleaseStatus.released).length,
+          'draft': releases.where((r) => r.status == ReleaseStatus.draft).length,
+          'scheduled': releases.where((r) => r.status == ReleaseStatus.scheduled).length,
         },
         'plans': {
           'total': plans.length,
           'byStatus': _groupPlansByStatus(plans),
           'active': plans.where((p) => p.status == PlanStatus.active).length,
-          'completed':
-              plans.where((p) => p.status == PlanStatus.completed).length,
+          'completed': plans.where((p) => p.status == PlanStatus.completed).length,
         },
         'deployments': {
           'total': deployments.length,
           'byStatus': _groupDeploymentsByStatus(deployments),
           'byEnvironment': _groupDeploymentsByEnvironment(deployments),
-          'successful': deployments
-              .where((d) => d.status == DeploymentStatus.completed)
-              .length,
-          'failed': deployments
-              .where((d) => d.status == DeploymentStatus.failed)
-              .length,
+          'successful': deployments.where((d) => d.status == DeploymentStatus.completed).length,
+          'failed': deployments.where((d) => d.status == DeploymentStatus.failed).length,
         },
       };
     } catch (e) {
@@ -648,8 +606,7 @@ class ReleaseManagementService {
   Map<String, int> _groupDeploymentsByStatus(List<Deployment> deployments) {
     final groups = <String, int>{};
     for (final deployment in deployments) {
-      groups[deployment.status.value] =
-          (groups[deployment.status.value] ?? 0) + 1;
+      groups[deployment.status.value] = (groups[deployment.status.value] ?? 0) + 1;
     }
     return groups;
   }
@@ -660,8 +617,7 @@ class ReleaseManagementService {
   ) {
     final groups = <String, int>{};
     for (final deployment in deployments) {
-      groups[deployment.environment] =
-          (groups[deployment.environment] ?? 0) + 1;
+      groups[deployment.environment] = (groups[deployment.environment] ?? 0) + 1;
     }
     return groups;
   }
@@ -713,9 +669,7 @@ class ReleaseManagementService {
   /// Генерация уникального ID
   String _generateId() =>
       DateTime.now().millisecondsSinceEpoch.toString() +
-      (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000))
-          .round()
-          .toString();
+      (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000)).round().toString();
 
   /// Закрытие сервиса
   Future<void> dispose() async {

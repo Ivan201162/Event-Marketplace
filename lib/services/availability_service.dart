@@ -14,9 +14,8 @@ class AvailabilityService {
     DateTime? endDate,
   }) async {
     try {
-      var query = _firestore
-          .collection(_collectionName)
-          .where('specialistId', isEqualTo: specialistId);
+      var query =
+          _firestore.collection(_collectionName).where('specialistId', isEqualTo: specialistId);
 
       if (startDate != null) {
         query = query.where(
@@ -46,9 +45,8 @@ class AvailabilityService {
     DateTime? startDate,
     DateTime? endDate,
   }) {
-    var query = _firestore
-        .collection(_collectionName)
-        .where('specialistId', isEqualTo: specialistId);
+    var query =
+        _firestore.collection(_collectionName).where('specialistId', isEqualTo: specialistId);
 
     if (startDate != null) {
       query = query.where(
@@ -58,14 +56,11 @@ class AvailabilityService {
     }
 
     if (endDate != null) {
-      query =
-          query.where('date', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+      query = query.where('date', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
     }
 
     return query.orderBy('date').snapshots().map(
-          (querySnapshot) => querySnapshot.docs
-              .map(AvailabilityCalendar.fromDocument)
-              .toList(),
+          (querySnapshot) => querySnapshot.docs.map(AvailabilityCalendar.fromDocument).toList(),
         );
   }
 
@@ -76,8 +71,7 @@ class AvailabilityService {
     String? note,
   }) async {
     try {
-      final calendarId =
-          '${specialistId}_${date.toIso8601String().split('T')[0]}';
+      final calendarId = '${specialistId}_${date.toIso8601String().split('T')[0]}';
 
       await _firestore.collection(_collectionName).doc(calendarId).set({
         'specialistId': specialistId,
@@ -103,8 +97,7 @@ class AvailabilityService {
     TimeSlot timeSlot,
   ) async {
     try {
-      final calendarId =
-          '${specialistId}_${date.toIso8601String().split('T')[0]}';
+      final calendarId = '${specialistId}_${date.toIso8601String().split('T')[0]}';
 
       // Получить существующий календарь или создать новый
       final docRef = _firestore.collection(_collectionName).doc(calendarId);
@@ -146,8 +139,7 @@ class AvailabilityService {
     String bookingId,
   ) async {
     try {
-      final calendarId =
-          '${specialistId}_${date.toIso8601String().split('T')[0]}';
+      final calendarId = '${specialistId}_${date.toIso8601String().split('T')[0]}';
       final docRef = _firestore.collection(_collectionName).doc(calendarId);
       final doc = await docRef.get();
 
@@ -183,8 +175,7 @@ class AvailabilityService {
     String timeSlotId,
   ) async {
     try {
-      final calendarId =
-          '${specialistId}_${date.toIso8601String().split('T')[0]}';
+      final calendarId = '${specialistId}_${date.toIso8601String().split('T')[0]}';
       final docRef = _firestore.collection(_collectionName).doc(calendarId);
       final doc = await docRef.get();
 
@@ -215,8 +206,7 @@ class AvailabilityService {
   /// Удалить занятую дату
   Future<bool> removeBusyDate(String specialistId, DateTime date) async {
     try {
-      final calendarId =
-          '${specialistId}_${date.toIso8601String().split('T')[0]}';
+      final calendarId = '${specialistId}_${date.toIso8601String().split('T')[0]}';
       await _firestore.collection(_collectionName).doc(calendarId).delete();
       return true;
     } on Exception catch (e) {
@@ -232,10 +222,8 @@ class AvailabilityService {
   ) async {
     try {
       final date = DateTime(dateTime.year, dateTime.month, dateTime.day);
-      final calendarId =
-          '${specialistId}_${date.toIso8601String().split('T')[0]}';
-      final doc =
-          await _firestore.collection(_collectionName).doc(calendarId).get();
+      final calendarId = '${specialistId}_${date.toIso8601String().split('T')[0]}';
+      final doc = await _firestore.collection(_collectionName).doc(calendarId).get();
 
       if (!doc.exists) return true; // Если записи нет, специалист доступен
 
@@ -253,10 +241,8 @@ class AvailabilityService {
     DateTime date,
   ) async {
     try {
-      final calendarId =
-          '${specialistId}_${date.toIso8601String().split('T')[0]}';
-      final doc =
-          await _firestore.collection(_collectionName).doc(calendarId).get();
+      final calendarId = '${specialistId}_${date.toIso8601String().split('T')[0]}';
+      final doc = await _firestore.collection(_collectionName).doc(calendarId).get();
 
       if (!doc.exists) {
         // Если записи нет, возвращаем стандартные рабочие часы
@@ -302,8 +288,7 @@ class AvailabilityService {
       final batch = _firestore.batch();
 
       for (final date in dates) {
-        final calendarId =
-            '${specialistId}_${date.toIso8601String().split('T')[0]}';
+        final calendarId = '${specialistId}_${date.toIso8601String().split('T')[0]}';
         final docRef = _firestore.collection(_collectionName).doc(calendarId);
 
         batch.set(docRef, {

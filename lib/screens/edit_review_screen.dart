@@ -190,9 +190,7 @@ class _EditReviewScreenState extends ConsumerState<EditReviewScreen> {
                   children: [
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: _isSubmitting
-                            ? null
-                            : () => Navigator.of(context).pop(),
+                        onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
                         child: const Text('Отмена'),
                       ),
                     ),
@@ -380,8 +378,7 @@ class _EditReviewScreenState extends ConsumerState<EditReviewScreen> {
             controller: _commentController,
             maxLines: 4,
             decoration: InputDecoration(
-              hintText:
-                  'Поделитесь своими впечатлениями о работе специалиста...',
+              hintText: 'Поделитесь своими впечатлениями о работе специалиста...',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),

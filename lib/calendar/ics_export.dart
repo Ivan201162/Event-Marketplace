@@ -61,8 +61,7 @@ class IcsExportService {
       final icsContent = _generateBookingIcsContent(booking);
 
       // Сохраняем файл
-      final fileName =
-          '${_sanitizeFileName(booking.eventTitle ?? 'booking')}_booking.ics';
+      final fileName = '${_sanitizeFileName(booking.eventTitle ?? 'booking')}_booking.ics';
       final file = await _saveIcsFile(fileName, icsContent);
 
       SafeLog.info(
@@ -101,8 +100,7 @@ class IcsExportService {
       final icsContent = _generateMultipleEventsIcsContent(events);
 
       // Сохраняем файл
-      final fileName =
-          'events_export_${DateTime.now().millisecondsSinceEpoch}.ics';
+      final fileName = 'events_export_${DateTime.now().millisecondsSinceEpoch}.ics';
       final file = await _saveIcsFile(fileName, icsContent);
 
       SafeLog.info(
@@ -141,8 +139,7 @@ class IcsExportService {
       final icsContent = _generateMultipleBookingsIcsContent(bookings);
 
       // Сохраняем файл
-      final fileName =
-          'bookings_export_${DateTime.now().millisecondsSinceEpoch}.ics';
+      final fileName = 'bookings_export_${DateTime.now().millisecondsSinceEpoch}.ics';
       final file = await _saveIcsFile(fileName, icsContent);
 
       SafeLog.info(
@@ -307,8 +304,7 @@ class IcsExportService {
   static int get maxEventsPerExport => 100;
 
   /// Проверить, можно ли экспортировать указанное количество событий
-  static bool canExportEvents(int count) =>
-      isEnabled && count > 0 && count <= maxEventsPerExport;
+  static bool canExportEvents(int count) => isEnabled && count > 0 && count <= maxEventsPerExport;
 
   /// Генерировать содержимое .ics файла для события
   static String _generateIcsContent(Event event) {
@@ -325,7 +321,7 @@ class IcsExportService {
         'DTEND:${_formatDateTime(event.date.add(const Duration(hours: 2)))}',
       )
       ..writeln('SUMMARY:${event.title}');
-    buffer..writeln('DESCRIPTION:${event.description}');
+    buffer.writeln('DESCRIPTION:${event.description}');
     if (event.location.isNotEmpty) {
       buffer.writeln('LOCATION:${event.location}');
     }
@@ -467,6 +463,5 @@ extension BookingsIcsExport on List<Booking> {
   Future<String?> exportToIcs() => IcsExportService.exportBookingsToIcs(this);
 
   /// Экспортировать и поделиться бронированиями
-  Future<bool> exportAndShare() =>
-      IcsExportService.exportAndShareBookings(this);
+  Future<bool> exportAndShare() => IcsExportService.exportAndShareBookings(this);
 }

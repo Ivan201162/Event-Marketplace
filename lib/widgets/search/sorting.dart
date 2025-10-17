@@ -13,8 +13,7 @@ class SearchSortingWidget extends ConsumerStatefulWidget {
   final bool showTitle;
 
   @override
-  ConsumerState<SearchSortingWidget> createState() =>
-      _SearchSortingWidgetState();
+  ConsumerState<SearchSortingWidget> createState() => _SearchSortingWidgetState();
 }
 
 class _SearchSortingWidgetState extends ConsumerState<SearchSortingWidget> {
@@ -265,8 +264,7 @@ class _SortingDialogState extends ConsumerState<SortingDialog> {
               onChanged: (value) {
                 if (value != null) {
                   setState(() {
-                    _selectedSorting =
-                        _selectedSorting.copyWith(sortOption: value);
+                    _selectedSorting = _selectedSorting.copyWith(sortOption: value);
                   });
                 }
               },
@@ -289,9 +287,7 @@ class _SortingDialogState extends ConsumerState<SortingDialog> {
         ),
         ElevatedButton(
           onPressed: () {
-            ref
-                .read(searchSortingProvider.notifier)
-                .updateSorting(_selectedSorting);
+            ref.read(searchSortingProvider.notifier).updateSorting(_selectedSorting);
             Navigator.of(context).pop();
           },
           child: const Text('Применить'),

@@ -1,7 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uuid/uuid.dart';
-import 'package:flutter/material.dart';
 import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
+
 import '../models/referral_system.dart';
 
 class ReferralService {
@@ -32,20 +34,12 @@ class ReferralService {
         userId: userId,
         code: code,
         createdAt: DateTime.now(),
-        expiresAt:
-            DateTime.now().add(const Duration(days: 365)), // Год действия
-        isActive: true,
-        usageCount: 0,
-        maxUsage: 100,
+        expiresAt: DateTime.now().add(const Duration(days: 365)), // Год действия
       );
 
-      await _firestore
-          .collection('referral_codes')
-          .doc(id)
-          .set(referralCode.toMap());
+      await _firestore.collection('referral_codes').doc(id).set(referralCode.toMap());
 
-      debugPrint(
-          'INFO: [ReferralService] Created referral code: $code for user: $userId');
+      debugPrint('INFO: [ReferralService] Created referral code: $code for user: $userId');
       return referralCode;
     } catch (e) {
       debugPrint('ERROR: [ReferralService] Failed to create referral code: $e');
@@ -64,13 +58,11 @@ class ReferralService {
           .get();
 
       if (snapshot.docs.isNotEmpty) {
-        return ReferralCode.fromMap(
-            snapshot.docs.first.data() as Map<String, dynamic>);
+        return ReferralCode.fromMap(snapshot.docs.first.data() as Map<String, dynamic>);
       }
       return null;
     } catch (e) {
-      debugPrint(
-          'ERROR: [ReferralService] Failed to get user referral code: $e');
+      debugPrint('ERROR: [ReferralService] Failed to get user referral code: $e');
       return null;
     }
   }
@@ -90,12 +82,11 @@ class ReferralService {
         throw Exception('Реферальный код не найден или неактивен');
       }
 
-      final ReferralCode referralCode = ReferralCode.fromMap(
-          codeSnapshot.docs.first.data() as Map<String, dynamic>);
+      final ReferralCode referralCode =
+          ReferralCode.fromMap(codeSnapshot.docs.first.data() as Map<String, dynamic>);
 
       if (!referralCode.canBeUsed) {
-        throw Exception(
-            'Реферальный код истек или достиг лимита использований');
+        throw Exception('Реферальный код истек или достиг лимита использований');
       }
 
       // Проверяем, не использовал ли уже этот пользователь код
@@ -118,19 +109,12 @@ class ReferralService {
         referralCode: code.toUpperCase(),
         status: ReferralStatus.pending,
         createdAt: DateTime.now(),
-        bonusApplied: false,
       );
 
-      await _firestore
-          .collection('referrals')
-          .doc(referralId)
-          .set(referral.toMap());
+      await _firestore.collection('referrals').doc(referralId).set(referral.toMap());
 
       // Увеличиваем счетчик использований кода
-      await _firestore
-          .collection('referral_codes')
-          .doc(referralCode.id)
-          .update({
+      await _firestore.collection('referral_codes').doc(referralCode.id).update({
         'usageCount': FieldValue.increment(1),
       });
 
@@ -145,15 +129,13 @@ class ReferralService {
   /// Завершение реферала (когда новый пользователь совершает первое действие)
   Future<void> completeReferral(String referralId) async {
     try {
-      final DocumentSnapshot doc =
-          await _firestore.collection('referrals').doc(referralId).get();
+      final DocumentSnapshot doc = await _firestore.collection('referrals').doc(referralId).get();
 
       if (!doc.exists) {
         throw Exception('Реферал не найден');
       }
 
-      final Referral referral =
-          Referral.fromMap(doc.data() as Map<String, dynamic>);
+      final Referral referral = Referral.fromMap(doc.data() as Map<String, dynamic>);
 
       if (referral.isCompleted) {
         return; // Уже завершен
@@ -188,7 +170,6 @@ class ReferralService {
         description: 'Бонус за приглашение друга',
         createdAt: DateTime.now(),
         expiresAt: DateTime.now().add(const Duration(days: 30)),
-        isUsed: false,
       );
 
       // Бонус для приглашенного
@@ -201,7 +182,6 @@ class ReferralService {
         description: 'Приветственный бонус за регистрацию по приглашению',
         createdAt: DateTime.now(),
         expiresAt: DateTime.now().add(const Duration(days: 7)),
-        isUsed: false,
       );
 
       // Сохраняем бонусы
@@ -219,11 +199,9 @@ class ReferralService {
       await _updateReferralStats(referral.referrerId);
       await _updateReferralStats(referral.referredId);
 
-      debugPrint(
-          'INFO: [ReferralService] Bonuses applied for referral: ${referral.id}');
+      debugPrint('INFO: [ReferralService] Bonuses applied for referral: ${referral.id}');
     } catch (e) {
-      debugPrint(
-          'ERROR: [ReferralService] Failed to apply referral bonuses: $e');
+      debugPrint('ERROR: [ReferralService] Failed to apply referral bonuses: $e');
       rethrow;
     }
   }
@@ -232,30 +210,24 @@ class ReferralService {
   Future<void> _updateReferralStats(String userId) async {
     try {
       // Подсчитываем статистику
-      final QuerySnapshot referralsSnapshot = await _firestore
-          .collection('referrals')
-          .where('referrerId', isEqualTo: userId)
-          .get();
+      final QuerySnapshot referralsSnapshot =
+          await _firestore.collection('referrals').where('referrerId', isEqualTo: userId).get();
 
-      final QuerySnapshot rewardsSnapshot = await _firestore
-          .collection('referral_rewards')
-          .where('userId', isEqualTo: userId)
-          .get();
+      final QuerySnapshot rewardsSnapshot =
+          await _firestore.collection('referral_rewards').where('userId', isEqualTo: userId).get();
 
-      int totalReferrals = referralsSnapshot.docs.length;
-      int completedReferrals = referralsSnapshot.docs
-          .where((doc) =>
-              Referral.fromMap(doc.data() as Map<String, dynamic>).isCompleted)
+      final int totalReferrals = referralsSnapshot.docs.length;
+      final int completedReferrals = referralsSnapshot.docs
+          .where((doc) => Referral.fromMap(doc.data() as Map<String, dynamic>).isCompleted)
           .length;
-      int pendingReferrals = totalReferrals - completedReferrals;
+      final int pendingReferrals = totalReferrals - completedReferrals;
 
       double totalBonusesEarned = 0.0;
       int activeRewards = 0;
       int usedRewards = 0;
 
       for (final doc in rewardsSnapshot.docs) {
-        final ReferralReward reward =
-            ReferralReward.fromMap(doc.data() as Map<String, dynamic>);
+        final ReferralReward reward = ReferralReward.fromMap(doc.data() as Map<String, dynamic>);
         totalBonusesEarned += reward.value;
         if (reward.isUsed) {
           usedRewards++;
@@ -273,37 +245,29 @@ class ReferralService {
         activeRewards: activeRewards,
         usedRewards: usedRewards,
         lastReferralAt: referralsSnapshot.docs.isNotEmpty
-            ? Referral.fromMap(
-                    referralsSnapshot.docs.last.data() as Map<String, dynamic>)
-                .createdAt
+            ? Referral.fromMap(referralsSnapshot.docs.last.data() as Map<String, dynamic>).createdAt
             : null,
       );
 
-      await _firestore
-          .collection('referral_stats')
-          .doc(userId)
-          .set(stats.toMap());
+      await _firestore.collection('referral_stats').doc(userId).set(stats.toMap());
 
       debugPrint('INFO: [ReferralService] Stats updated for user: $userId');
     } catch (e) {
-      debugPrint(
-          'ERROR: [ReferralService] Failed to update referral stats: $e');
+      debugPrint('ERROR: [ReferralService] Failed to update referral stats: $e');
     }
   }
 
   /// Получение статистики рефералов пользователя
   Future<ReferralStats?> getUserReferralStats(String userId) async {
     try {
-      final DocumentSnapshot doc =
-          await _firestore.collection('referral_stats').doc(userId).get();
+      final DocumentSnapshot doc = await _firestore.collection('referral_stats').doc(userId).get();
 
       if (doc.exists) {
         return ReferralStats.fromMap(doc.data() as Map<String, dynamic>);
       }
       return null;
     } catch (e) {
-      debugPrint(
-          'ERROR: [ReferralService] Failed to get user referral stats: $e');
+      debugPrint('ERROR: [ReferralService] Failed to get user referral stats: $e');
       return null;
     }
   }
@@ -319,13 +283,11 @@ class ReferralService {
           .get();
 
       return snapshot.docs
-          .map((doc) =>
-              ReferralReward.fromMap(doc.data() as Map<String, dynamic>))
+          .map((doc) => ReferralReward.fromMap(doc.data() as Map<String, dynamic>))
           .where((reward) => reward.canBeUsed)
           .toList();
     } catch (e) {
-      debugPrint(
-          'ERROR: [ReferralService] Failed to get user active rewards: $e');
+      debugPrint('ERROR: [ReferralService] Failed to get user active rewards: $e');
       return [];
     }
   }
@@ -412,8 +374,7 @@ class ReferralService {
 
       return achievements;
     } catch (e) {
-      debugPrint(
-          'ERROR: [ReferralService] Failed to check referral levels: $e');
+      debugPrint('ERROR: [ReferralService] Failed to check referral levels: $e');
       return [];
     }
   }

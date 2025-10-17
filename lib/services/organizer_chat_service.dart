@@ -20,8 +20,7 @@ class OrganizerChatService {
     required DateTime eventDate,
   }) async {
     try {
-      final chatId =
-          '${customerId}_${organizerId}_${DateTime.now().millisecondsSinceEpoch}';
+      final chatId = '${customerId}_${organizerId}_${DateTime.now().millisecondsSinceEpoch}';
 
       final chat = OrganizerChat(
         id: chatId,
@@ -38,10 +37,7 @@ class OrganizerChatService {
         updatedAt: DateTime.now(),
       );
 
-      await _firestore
-          .collection(_chatsCollection)
-          .doc(chatId)
-          .set(chat.toMap());
+      await _firestore.collection(_chatsCollection).doc(chatId).set(chat.toMap());
 
       // Отправляем приветственное сообщение
       await sendMessage(
@@ -94,34 +90,29 @@ class OrganizerChatService {
   }
 
   /// Поток чатов заказчика
-  Stream<List<OrganizerChat>> getCustomerChatsStream(String customerId) =>
-      _firestore
-          .collection(_chatsCollection)
-          .where('customerId', isEqualTo: customerId)
-          .orderBy('lastMessageAt', descending: true)
-          .snapshots()
-          .map(
-            (snapshot) =>
-                snapshot.docs.map(OrganizerChat.fromDocument).toList(),
-          );
+  Stream<List<OrganizerChat>> getCustomerChatsStream(String customerId) => _firestore
+      .collection(_chatsCollection)
+      .where('customerId', isEqualTo: customerId)
+      .orderBy('lastMessageAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(OrganizerChat.fromDocument).toList(),
+      );
 
   /// Поток чатов организатора
-  Stream<List<OrganizerChat>> getOrganizerChatsStream(String organizerId) =>
-      _firestore
-          .collection(_chatsCollection)
-          .where('organizerId', isEqualTo: organizerId)
-          .orderBy('lastMessageAt', descending: true)
-          .snapshots()
-          .map(
-            (snapshot) =>
-                snapshot.docs.map(OrganizerChat.fromDocument).toList(),
-          );
+  Stream<List<OrganizerChat>> getOrganizerChatsStream(String organizerId) => _firestore
+      .collection(_chatsCollection)
+      .where('organizerId', isEqualTo: organizerId)
+      .orderBy('lastMessageAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(OrganizerChat.fromDocument).toList(),
+      );
 
   /// Получить чат по ID
   Future<OrganizerChat?> getChatById(String chatId) async {
     try {
-      final doc =
-          await _firestore.collection(_chatsCollection).doc(chatId).get();
+      final doc = await _firestore.collection(_chatsCollection).doc(chatId).get();
       if (doc.exists) {
         return OrganizerChat.fromDocument(doc);
       }
@@ -165,18 +156,14 @@ class OrganizerChatService {
       );
 
       // Добавляем сообщение в коллекцию сообщений
-      await _firestore
-          .collection(_messagesCollection)
-          .doc(messageId)
-          .set(message.toMap());
+      await _firestore.collection(_messagesCollection).doc(messageId).set(message.toMap());
 
       // Обновляем чат
       await _firestore.collection(_chatsCollection).doc(chatId).update({
         'lastMessageAt': Timestamp.fromDate(DateTime.now()),
         'lastMessageText': text,
         'updatedAt': Timestamp.fromDate(DateTime.now()),
-        'hasUnreadMessages':
-            senderType == 'customer', // Организатор не прочитал
+        'hasUnreadMessages': senderType == 'customer', // Организатор не прочитал
         'unreadCount': senderType == 'customer' ? FieldValue.increment(1) : 0,
       });
     } on Exception catch (e) {
@@ -213,8 +200,7 @@ class OrganizerChatService {
         senderName: organizerName,
         senderType: 'organizer',
         type: OrganizerMessageType.specialistProposal,
-        text:
-            message ?? 'Предлагаю вам этого специалиста для вашего мероприятия',
+        text: message ?? 'Предлагаю вам этого специалиста для вашего мероприятия',
         metadata: proposal.toMap(),
       );
     } on Exception catch (e) {
@@ -238,8 +224,7 @@ class OrganizerChatService {
         senderName: customerName,
         senderType: 'customer',
         type: OrganizerMessageType.specialistRejection,
-        text: reason ??
-            'Спасибо за предложение, но этот специалист мне не подходит',
+        text: reason ?? 'Спасибо за предложение, но этот специалист мне не подходит',
         metadata: {'specialistId': specialistId},
       );
     } on Exception catch (e) {
@@ -331,9 +316,7 @@ class OrganizerChatService {
           .orderBy('createdAt', descending: false)
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => OrganizerMessage.fromMap(doc.data()))
-          .toList();
+      return querySnapshot.docs.map((doc) => OrganizerMessage.fromMap(doc.data())).toList();
     } on Exception catch (e) {
       print('Ошибка получения сообщений чата: $e');
       return [];
@@ -341,26 +324,21 @@ class OrganizerChatService {
   }
 
   /// Поток сообщений чата
-  Stream<List<OrganizerMessage>> getChatMessagesStream(String chatId) =>
-      _firestore
-          .collection(_messagesCollection)
-          .where('chatId', isEqualTo: chatId)
-          .orderBy('createdAt', descending: false)
-          .snapshots()
-          .map(
-            (snapshot) => snapshot.docs
-                .map((doc) => OrganizerMessage.fromMap(doc.data()))
-                .toList(),
-          );
+  Stream<List<OrganizerMessage>> getChatMessagesStream(String chatId) => _firestore
+      .collection(_messagesCollection)
+      .where('chatId', isEqualTo: chatId)
+      .orderBy('createdAt', descending: false)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map((doc) => OrganizerMessage.fromMap(doc.data())).toList(),
+      );
 
   /// Удалить чат
   Future<void> deleteChat(String chatId) async {
     try {
       // Удаляем все сообщения чата
-      final messagesSnapshot = await _firestore
-          .collection(_messagesCollection)
-          .where('chatId', isEqualTo: chatId)
-          .get();
+      final messagesSnapshot =
+          await _firestore.collection(_messagesCollection).where('chatId', isEqualTo: chatId).get();
 
       final batch = _firestore.batch();
       for (final doc in messagesSnapshot.docs) {

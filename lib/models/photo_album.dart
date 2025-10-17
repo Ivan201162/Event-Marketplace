@@ -21,12 +21,8 @@ class PhotoAlbum {
         photoCount: map['photoCount'] as int,
         description: map['description'] as String?,
         isPrivate: map['isPrivate'] as bool? ?? false,
-        createdAt: map['createdAt'] != null
-            ? DateTime.parse(map['createdAt'] as String)
-            : null,
-        updatedAt: map['updatedAt'] != null
-            ? DateTime.parse(map['updatedAt'] as String)
-            : null,
+        createdAt: map['createdAt'] != null ? DateTime.parse(map['createdAt'] as String) : null,
+        updatedAt: map['updatedAt'] != null ? DateTime.parse(map['updatedAt'] as String) : null,
       );
 
   final String id;

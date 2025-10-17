@@ -37,9 +37,7 @@ class PriceRange {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is PriceRange &&
-        other.minPrice == minPrice &&
-        other.maxPrice == maxPrice;
+    return other is PriceRange && other.minPrice == minPrice && other.maxPrice == maxPrice;
   }
 
   @override

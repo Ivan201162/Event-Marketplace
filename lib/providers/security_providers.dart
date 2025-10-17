@@ -3,8 +3,7 @@ import '../models/security_settings.dart';
 import '../services/security_service.dart';
 
 /// Провайдер сервиса безопасности
-final securityServiceProvider =
-    Provider<SecurityService>((ref) => SecurityService());
+final securityServiceProvider = Provider<SecurityService>((ref) => SecurityService());
 
 /// Нотификатор для настроек безопасности
 class SecuritySettingsNotifier extends Notifier<SecuritySettings?> {
@@ -21,14 +20,12 @@ class SecuritySettingsNotifier extends Notifier<SecuritySettings?> {
 }
 
 /// Провайдер настроек безопасности
-final securitySettingsProvider =
-    NotifierProvider<SecuritySettingsNotifier, SecuritySettings?>(
+final securitySettingsProvider = NotifierProvider<SecuritySettingsNotifier, SecuritySettings?>(
   SecuritySettingsNotifier.new,
 );
 
 /// Провайдер аудита безопасности
-final securityAuditLogsProvider =
-    StreamProvider.family<List<SecurityAuditLog>, String>(
+final securityAuditLogsProvider = StreamProvider.family<List<SecurityAuditLog>, String>(
   (ref, userId) => ref.watch(securityServiceProvider).getSecurityAuditLogs(),
 );
 
@@ -79,13 +76,11 @@ final encryptDataProvider = FutureProvider.family<String, String>(
 
 /// Провайдер для расшифровки данных
 final decryptDataProvider = FutureProvider.family<String, String>(
-  (ref, encryptedData) =>
-      ref.watch(securityServiceProvider).decryptData(encryptedData),
+  (ref, encryptedData) => ref.watch(securityServiceProvider).decryptData(encryptedData),
 );
 
 /// Провайдер для безопасного сохранения
-final secureStoreProvider =
-    FutureProvider.family<void, Map<String, String>>((ref, data) {
+final secureStoreProvider = FutureProvider.family<void, Map<String, String>>((ref, data) {
   final service = ref.watch(securityServiceProvider);
   return Future.wait(
     data.entries.map((entry) => service.secureStore(entry.key, entry.value)),
@@ -103,35 +98,29 @@ final secureDeleteProvider = FutureProvider.family<void, String>(
 );
 
 /// Провайдер для получения настроек безопасности
-final getSecuritySettingsProvider =
-    FutureProvider.family<SecuritySettings?, String>(
+final getSecuritySettingsProvider = FutureProvider.family<SecuritySettings?, String>(
   (ref, userId) => ref.watch(securityServiceProvider).getSecuritySettings(),
 );
 
 /// Провайдер для обновления настроек безопасности
-final updateSecuritySettingsProvider =
-    FutureProvider.family<bool, SecuritySettings>(
-  (ref, settings) =>
-      ref.watch(securityServiceProvider).updateSecuritySettings(settings),
+final updateSecuritySettingsProvider = FutureProvider.family<bool, SecuritySettings>(
+  (ref, settings) => ref.watch(securityServiceProvider).updateSecuritySettings(settings),
 );
 
 /// Провайдер для блокировки устройства
-final blockDeviceProvider =
-    FutureProvider.family<bool, Map<String, String>>((ref, data) {
+final blockDeviceProvider = FutureProvider.family<bool, Map<String, String>>((ref, data) {
   final service = ref.watch(securityServiceProvider);
   return service.blockDevice(data['deviceId']!);
 });
 
 /// Провайдер для разблокировки устройства
-final unblockDeviceProvider =
-    FutureProvider.family<bool, Map<String, String>>((ref, data) {
+final unblockDeviceProvider = FutureProvider.family<bool, Map<String, String>>((ref, data) {
   final service = ref.watch(securityServiceProvider);
   return service.unblockDevice(data['deviceId']!);
 });
 
 /// Провайдер для доверия устройству
-final trustDeviceProvider =
-    FutureProvider.family<bool, Map<String, String>>((ref, data) {
+final trustDeviceProvider = FutureProvider.family<bool, Map<String, String>>((ref, data) {
   final service = ref.watch(securityServiceProvider);
   return service.trustDevice(data['deviceId']!);
 });
@@ -181,15 +170,13 @@ final securityStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
 });
 
 /// Провайдер для получения рекомендаций по безопасности
-final securityRecommendationsProvider =
-    FutureProvider<List<SecurityRecommendation>>((ref) async {
+final securityRecommendationsProvider = FutureProvider<List<SecurityRecommendation>>((ref) async {
   // TODO(developer): Реализовать получение рекомендаций по безопасности
   return [
     const SecurityRecommendation(
       id: '1',
       title: 'Включить биометрическую аутентификацию',
-      description:
-          'Используйте отпечаток пальца или Face ID для быстрого и безопасного входа',
+      description: 'Используйте отпечаток пальца или Face ID для быстрого и безопасного входа',
       priority: SecurityRecommendationPriority.high,
       action: 'Включить',
     ),
@@ -203,8 +190,7 @@ final securityRecommendationsProvider =
     const SecurityRecommendation(
       id: '3',
       title: 'Включить двухфакторную аутентификацию',
-      description:
-          'Защитите свой аккаунт с помощью двухфакторной аутентификации',
+      description: 'Защитите свой аккаунт с помощью двухфакторной аутентификации',
       priority: SecurityRecommendationPriority.high,
       action: 'Включить',
     ),
@@ -222,8 +208,7 @@ class SecurityRecommendation {
     this.isCompleted = false,
   });
 
-  factory SecurityRecommendation.fromMap(Map<String, dynamic> map) =>
-      SecurityRecommendation(
+  factory SecurityRecommendation.fromMap(Map<String, dynamic> map) => SecurityRecommendation(
         id: map['id'] ?? '',
         title: map['title'] ?? '',
         description: map['description'] ?? '',

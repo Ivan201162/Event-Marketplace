@@ -154,8 +154,7 @@ enum AuditLogLevel {
   final String value;
   final String displayName;
 
-  static AuditLogLevel fromString(String value) =>
-      AuditLogLevel.values.firstWhere(
+  static AuditLogLevel fromString(String value) => AuditLogLevel.values.firstWhere(
         (level) => level.value == value,
         orElse: () => AuditLogLevel.info,
       );
@@ -212,8 +211,7 @@ enum AuditLogCategory {
   final String value;
   final String displayName;
 
-  static AuditLogCategory fromString(String value) =>
-      AuditLogCategory.values.firstWhere(
+  static AuditLogCategory fromString(String value) => AuditLogCategory.values.firstWhere(
         (category) => category.value == value,
         orElse: () => AuditLogCategory.general,
       );
@@ -362,8 +360,7 @@ enum SystemLogLevel {
   final String value;
   final String displayName;
 
-  static SystemLogLevel fromString(String value) =>
-      SystemLogLevel.values.firstWhere(
+  static SystemLogLevel fromString(String value) => SystemLogLevel.values.firstWhere(
         (level) => level.value == value,
         orElse: () => SystemLogLevel.info,
       );
@@ -422,8 +419,7 @@ enum SystemLogCategory {
   final String value;
   final String displayName;
 
-  static SystemLogCategory fromString(String value) =>
-      SystemLogCategory.values.firstWhere(
+  static SystemLogCategory fromString(String value) => SystemLogCategory.values.firstWhere(
         (category) => category.value == value,
         orElse: () => SystemLogCategory.general,
       );
@@ -481,8 +477,7 @@ class LoggingConfig {
         id: map['id'] as String? ?? '',
         enableAuditLogging: map['enableAuditLogging'] as bool? ?? true,
         enableSystemLogging: map['enableSystemLogging'] as bool? ?? true,
-        enablePerformanceLogging:
-            map['enablePerformanceLogging'] as bool? ?? false,
+        enablePerformanceLogging: map['enablePerformanceLogging'] as bool? ?? false,
         enableSecurityLogging: map['enableSecurityLogging'] as bool? ?? true,
         auditLogLevels: (map['auditLogLevels'] as List<dynamic>?)
                 ?.map((e) => AuditLogLevel.fromString(e as String))
@@ -566,10 +561,8 @@ class LoggingConfig {
         id: id ?? this.id,
         enableAuditLogging: enableAuditLogging ?? this.enableAuditLogging,
         enableSystemLogging: enableSystemLogging ?? this.enableSystemLogging,
-        enablePerformanceLogging:
-            enablePerformanceLogging ?? this.enablePerformanceLogging,
-        enableSecurityLogging:
-            enableSecurityLogging ?? this.enableSecurityLogging,
+        enablePerformanceLogging: enablePerformanceLogging ?? this.enablePerformanceLogging,
+        enableSecurityLogging: enableSecurityLogging ?? this.enableSecurityLogging,
         auditLogLevels: auditLogLevels ?? this.auditLogLevels,
         systemLogLevels: systemLogLevels ?? this.systemLogLevels,
         auditLogCategories: auditLogCategories ?? this.auditLogCategories,

@@ -10,8 +10,7 @@ class IntegrationTestScreen extends ConsumerStatefulWidget {
   const IntegrationTestScreen({super.key});
 
   @override
-  ConsumerState<IntegrationTestScreen> createState() =>
-      _IntegrationTestScreenState();
+  ConsumerState<IntegrationTestScreen> createState() => _IntegrationTestScreenState();
 }
 
 class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
@@ -59,8 +58,7 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
               // Тест бронирования
               _buildTestCard(
                 title: 'Тест бронирования',
-                description:
-                    'Проверка создания бронирования с проверкой конфликтов',
+                description: 'Проверка создания бронирования с проверкой конфликтов',
                 onTest: _testBookingCreation,
               ),
 
@@ -155,9 +153,7 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
   /// Тест занятых дат
   Future<void> _testBusyDates() async {
     try {
-      final busyDates = await ref
-          .read(firestoreServiceProvider)
-          .getBusyDates(testSpecialistId);
+      final busyDates = await ref.read(firestoreServiceProvider).getBusyDates(testSpecialistId);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

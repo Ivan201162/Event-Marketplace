@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 import '../../models/promotion_boost.dart';
 import '../../services/promotion_service.dart';
-import '../../providers/auth_provider.dart';
 import 'payment_screen.dart';
 
 class PromotionPackagesScreen extends StatefulWidget {
   const PromotionPackagesScreen({super.key});
 
   @override
-  State<PromotionPackagesScreen> createState() =>
-      _PromotionPackagesScreenState();
+  State<PromotionPackagesScreen> createState() => _PromotionPackagesScreenState();
 }
 
 class _PromotionPackagesScreenState extends State<PromotionPackagesScreen> {
@@ -92,8 +90,7 @@ class _PromotionPackagesScreenState extends State<PromotionPackagesScreen> {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            border:
-                isPopular ? Border.all(color: Colors.green, width: 2) : null,
+            border: isPopular ? Border.all(color: Colors.green, width: 2) : null,
           ),
           child: Column(
             children: [
@@ -143,20 +140,14 @@ class _PromotionPackagesScreenState extends State<PromotionPackagesScreen> {
                             children: [
                               Text(
                                 package.name,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge
-                                    ?.copyWith(
+                                style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                       fontWeight: FontWeight.bold,
                                     ),
                               ),
                               if (package.description != null)
                                 Text(
                                   package.description!,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                         color: Colors.grey[600],
                                       ),
                                 ),
@@ -171,10 +162,7 @@ class _PromotionPackagesScreenState extends State<PromotionPackagesScreen> {
                       children: [
                         Text(
                           '${package.price.toInt()} ₽',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium
-                              ?.copyWith(
+                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                                 color: _getTypeColor(package.type),
                                 fontWeight: FontWeight.bold,
                               ),
@@ -182,20 +170,18 @@ class _PromotionPackagesScreenState extends State<PromotionPackagesScreen> {
                         const SizedBox(width: 4),
                         Text(
                           '/ ${package.durationDays} дн.',
-                          style:
-                              Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    color: Colors.grey[600],
-                                  ),
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                color: Colors.grey[600],
+                              ),
                         ),
                         const Spacer(),
                         if (package.hasDiscount) ...[
                           Text(
                             '${package.originalPrice!.toInt()} ₽',
-                            style:
-                                Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                      color: Colors.grey[500],
-                                      decoration: TextDecoration.lineThrough,
-                                    ),
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  color: Colors.grey[500],
+                                  decoration: TextDecoration.lineThrough,
+                                ),
                           ),
                           const SizedBox(width: 8),
                           Container(
@@ -250,8 +236,7 @@ class _PromotionPackagesScreenState extends State<PromotionPackagesScreen> {
                                 Expanded(
                                   child: Text(
                                     feature,
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
+                                    style: Theme.of(context).textTheme.bodyMedium,
                                   ),
                                 ),
                               ],

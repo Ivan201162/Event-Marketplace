@@ -39,8 +39,7 @@ class NotificationTemplate {
   }
 
   /// Создать из Map
-  factory NotificationTemplate.fromMap(Map<String, dynamic> data) =>
-      NotificationTemplate(
+  factory NotificationTemplate.fromMap(Map<String, dynamic> data) => NotificationTemplate(
         id: data['id'] ?? '',
         name: data['name'] ?? '',
         title: data['title'] ?? '',
@@ -157,8 +156,7 @@ class NotificationTemplate {
       );
 
   @override
-  String toString() =>
-      'NotificationTemplate(id: $id, name: $name, type: $type)';
+  String toString() => 'NotificationTemplate(id: $id, name: $name, type: $type)';
 }
 
 /// Типы уведомлений
@@ -224,19 +222,14 @@ class SentNotification {
         orElse: () => NotificationStatus.pending,
       ),
       sentAt: (data['sentAt'] as Timestamp).toDate(),
-      deliveredAt: data['deliveredAt'] != null
-          ? (data['deliveredAt'] as Timestamp).toDate()
-          : null,
-      readAt: data['readAt'] != null
-          ? (data['readAt'] as Timestamp).toDate()
-          : null,
+      deliveredAt: data['deliveredAt'] != null ? (data['deliveredAt'] as Timestamp).toDate() : null,
+      readAt: data['readAt'] != null ? (data['readAt'] as Timestamp).toDate() : null,
       errorMessage: data['errorMessage'],
     );
   }
 
   /// Создать из Map
-  factory SentNotification.fromMap(Map<String, dynamic> data) =>
-      SentNotification(
+  factory SentNotification.fromMap(Map<String, dynamic> data) => SentNotification(
         id: data['id'] ?? '',
         templateId: data['templateId'] ?? '',
         userId: data['userId'],
@@ -256,12 +249,9 @@ class SentNotification {
           orElse: () => NotificationStatus.pending,
         ),
         sentAt: (data['sentAt'] as Timestamp).toDate(),
-        deliveredAt: data['deliveredAt'] != null
-            ? (data['deliveredAt'] as Timestamp).toDate()
-            : null,
-        readAt: data['readAt'] != null
-            ? (data['readAt'] as Timestamp).toDate()
-            : null,
+        deliveredAt:
+            data['deliveredAt'] != null ? (data['deliveredAt'] as Timestamp).toDate() : null,
+        readAt: data['readAt'] != null ? (data['readAt'] as Timestamp).toDate() : null,
         errorMessage: data['errorMessage'],
       );
   final String id;
@@ -289,8 +279,7 @@ class SentNotification {
         'data': data,
         'status': status.toString().split('.').last,
         'sentAt': Timestamp.fromDate(sentAt),
-        'deliveredAt':
-            deliveredAt != null ? Timestamp.fromDate(deliveredAt!) : null,
+        'deliveredAt': deliveredAt != null ? Timestamp.fromDate(deliveredAt!) : null,
         'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
         'errorMessage': errorMessage,
       };
@@ -373,8 +362,7 @@ class SentNotification {
       );
 
   @override
-  String toString() =>
-      'SentNotification(id: $id, title: $title, status: $status)';
+  String toString() => 'SentNotification(id: $id, title: $title, status: $status)';
 }
 
 /// Статусы уведомлений

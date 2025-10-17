@@ -28,10 +28,8 @@ class DiscountNotificationService {
     }
 
     // Получить данные специалиста
-    final specialistDoc = await _firestore
-        .collection(_usersCollection)
-        .doc(data.specialistId)
-        .get();
+    final specialistDoc =
+        await _firestore.collection(_usersCollection).doc(data.specialistId).get();
 
     if (!specialistDoc.exists) {
       throw Exception('Специалист не найден');
@@ -41,10 +39,7 @@ class DiscountNotificationService {
     final specialist = AppUser.fromMap(specialistData);
 
     // Получить данные клиента
-    final customerDoc = await _firestore
-        .collection(_usersCollection)
-        .doc(data.customerId)
-        .get();
+    final customerDoc = await _firestore.collection(_usersCollection).doc(data.customerId).get();
 
     if (!customerDoc.exists) {
       throw Exception('Клиент не найден');
@@ -72,8 +67,7 @@ class DiscountNotificationService {
     );
 
     // Сохранить в Firestore
-    final docRef =
-        await _firestore.collection(_collection).add(notification.toMap());
+    final docRef = await _firestore.collection(_collection).add(notification.toMap());
 
     // Обновить ID
     final createdNotification = notification.copyWith(id: docRef.id);
@@ -118,8 +112,7 @@ class DiscountNotificationService {
 
   /// Получить уведомление по ID
   Future<DiscountNotification?> getNotification(String notificationId) async {
-    final doc =
-        await _firestore.collection(_collection).doc(notificationId).get();
+    final doc = await _firestore.collection(_collection).doc(notificationId).get();
     if (!doc.exists) return null;
     return DiscountNotification.fromDocument(doc);
   }
@@ -161,8 +154,7 @@ class DiscountNotificationService {
       );
     }
 
-    final unreadNotifications =
-        await getUnreadCustomerNotifications(customerId);
+    final unreadNotifications = await getUnreadCustomerNotifications(customerId);
 
     final batch = _firestore.batch();
     for (final notification in unreadNotifications) {
@@ -208,10 +200,8 @@ class DiscountNotificationService {
 
   /// Получить статистику уведомлений клиента
   Future<Map<String, int>> getCustomerStats(String customerId) async {
-    final snapshot = await _firestore
-        .collection(_collection)
-        .where('customerId', isEqualTo: customerId)
-        .get();
+    final snapshot =
+        await _firestore.collection(_collection).where('customerId', isEqualTo: customerId).get();
 
     var total = 0;
     var unread = 0;
@@ -248,8 +238,7 @@ class DiscountNotificationService {
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map(
-            (snapshot) =>
-                snapshot.docs.map(DiscountNotification.fromDocument).toList(),
+            (snapshot) => snapshot.docs.map(DiscountNotification.fromDocument).toList(),
           );
 
   /// Подписаться на непрочитанные уведомления клиента
@@ -263,8 +252,7 @@ class DiscountNotificationService {
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map(
-            (snapshot) =>
-                snapshot.docs.map(DiscountNotification.fromDocument).toList(),
+            (snapshot) => snapshot.docs.map(DiscountNotification.fromDocument).toList(),
           );
 
   /// Подписаться на количество непрочитанных уведомлений

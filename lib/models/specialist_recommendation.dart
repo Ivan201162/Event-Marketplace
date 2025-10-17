@@ -62,11 +62,7 @@ class SpecialistRecommendation {
 
   @override
   int get hashCode =>
-      id.hashCode ^
-      specialistId.hashCode ^
-      reason.hashCode ^
-      score.hashCode ^
-      timestamp.hashCode;
+      id.hashCode ^ specialistId.hashCode ^ reason.hashCode ^ score.hashCode ^ timestamp.hashCode;
 
   @override
   String toString() =>
@@ -74,9 +70,7 @@ class SpecialistRecommendation {
 }
 
 /// Расширение для фильтрации списка рекомендаций специалистов
-extension SpecialistRecommendationListExtension
-    on List<SpecialistRecommendation> {
+extension SpecialistRecommendationListExtension on List<SpecialistRecommendation> {
   List<SpecialistRecommendation> byType(RecommendationType type) =>
-      where((recommendation) => recommendation.recommendation.type == type)
-          .toList();
+      where((recommendation) => recommendation.recommendation.type == type).toList();
 }

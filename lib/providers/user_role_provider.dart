@@ -1,8 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/user.dart';
 
-final userRoleProvider =
-    NotifierProvider<UserRoleNotifier, UserRole>(UserRoleNotifier.new);
+final userRoleProvider = NotifierProvider<UserRoleNotifier, UserRole>(UserRoleNotifier.new);
 
 class UserRoleNotifier extends Notifier<UserRole> {
   @override

@@ -28,10 +28,7 @@ class SpecialistProposalService {
     }
 
     // Получить данные организатора
-    final organizerDoc = await _firestore
-        .collection(_usersCollection)
-        .doc(data.organizerId)
-        .get();
+    final organizerDoc = await _firestore.collection(_usersCollection).doc(data.organizerId).get();
 
     if (!organizerDoc.exists) {
       throw Exception('Организатор не найден');
@@ -41,10 +38,7 @@ class SpecialistProposalService {
     final organizer = AppUser.fromMap(organizerData);
 
     // Получить данные клиента
-    final customerDoc = await _firestore
-        .collection(_usersCollection)
-        .doc(data.customerId)
-        .get();
+    final customerDoc = await _firestore.collection(_usersCollection).doc(data.customerId).get();
 
     if (!customerDoc.exists) {
       throw Exception('Клиент не найден');
@@ -70,8 +64,7 @@ class SpecialistProposalService {
     );
 
     // Сохранить в Firestore
-    final docRef =
-        await _firestore.collection(_collection).add(proposal.toMap());
+    final docRef = await _firestore.collection(_collection).add(proposal.toMap());
 
     // Обновить ID
     final createdProposal = proposal.copyWith(id: docRef.id);
@@ -228,10 +221,8 @@ class SpecialistProposalService {
 
   /// Получить статистику предложений организатора
   Future<Map<String, int>> getOrganizerStats(String organizerId) async {
-    final snapshot = await _firestore
-        .collection(_collection)
-        .where('organizerId', isEqualTo: organizerId)
-        .get();
+    final snapshot =
+        await _firestore.collection(_collection).where('organizerId', isEqualTo: organizerId).get();
 
     var total = 0;
     var accepted = 0;
@@ -260,16 +251,14 @@ class SpecialistProposalService {
   }
 
   /// Подписаться на изменения предложений для клиента
-  Stream<List<SpecialistProposal>> watchCustomerProposals(String customerId) =>
-      _firestore
-          .collection(_collection)
-          .where('customerId', isEqualTo: customerId)
-          .orderBy('createdAt', descending: true)
-          .snapshots()
-          .map(
-            (snapshot) =>
-                snapshot.docs.map(SpecialistProposal.fromDocument).toList(),
-          );
+  Stream<List<SpecialistProposal>> watchCustomerProposals(String customerId) => _firestore
+      .collection(_collection)
+      .where('customerId', isEqualTo: customerId)
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(SpecialistProposal.fromDocument).toList(),
+      );
 
   /// Подписаться на изменения предложений организатора
   Stream<List<SpecialistProposal>> watchOrganizerProposals(
@@ -281,7 +270,6 @@ class SpecialistProposalService {
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map(
-            (snapshot) =>
-                snapshot.docs.map(SpecialistProposal.fromDocument).toList(),
+            (snapshot) => snapshot.docs.map(SpecialistProposal.fromDocument).toList(),
           );
 }

@@ -14,12 +14,10 @@ class IntegrationDetailScreen extends ConsumerStatefulWidget {
   final Integration integration;
 
   @override
-  ConsumerState<IntegrationDetailScreen> createState() =>
-      _IntegrationDetailScreenState();
+  ConsumerState<IntegrationDetailScreen> createState() => _IntegrationDetailScreenState();
 }
 
-class _IntegrationDetailScreenState
-    extends ConsumerState<IntegrationDetailScreen> {
+class _IntegrationDetailScreenState extends ConsumerState<IntegrationDetailScreen> {
   final IntegrationService _integrationService = IntegrationService();
 
   @override
@@ -78,8 +76,7 @@ class _IntegrationDetailScreenState
                     width: 64,
                     height: 64,
                     decoration: BoxDecoration(
-                      color:
-                          widget.integration.typeColor.withValues(alpha: 0.1),
+                      color: widget.integration.typeColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -110,12 +107,10 @@ class _IntegrationDetailScreenState
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: widget.integration.statusColor
-                                .withValues(alpha: 0.1),
+                            color: widget.integration.statusColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: widget.integration.statusColor
-                                  .withValues(alpha: 0.3),
+                              color: widget.integration.statusColor.withValues(alpha: 0.3),
                             ),
                           ),
                           child: Text(
@@ -337,10 +332,9 @@ class _IntegrationDetailScreenState
                         : 'Подключить',
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        widget.integration.status == IntegrationStatus.connected
-                            ? Colors.red
-                            : Colors.green,
+                    backgroundColor: widget.integration.status == IntegrationStatus.connected
+                        ? Colors.red
+                        : Colors.green,
                     foregroundColor: Colors.white,
                   ),
                 ),
@@ -415,12 +409,6 @@ class _IntegrationDetailScreenState
 
   Future<void> _toggleIntegration() async {
     final currentUser = ref.read(authServiceProvider).currentUser;
-    if (currentUser == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Пользователь не авторизован')),
-      );
-      return;
-    }
 
     try {
       if (widget.integration.status == IntegrationStatus.connected) {
@@ -456,12 +444,6 @@ class _IntegrationDetailScreenState
 
   Future<void> _syncIntegration() async {
     final currentUser = ref.read(authServiceProvider).currentUser;
-    if (currentUser == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Пользователь не авторизован')),
-      );
-      return;
-    }
 
     try {
       await _integrationService.syncIntegrationData(

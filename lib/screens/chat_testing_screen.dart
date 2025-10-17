@@ -175,8 +175,7 @@ class _ChatTestingScreenState extends ConsumerState<ChatTestingScreen> {
 
   void _addTestResult(String result) {
     setState(() {
-      _testResults
-          .add('${DateTime.now().toString().substring(11, 19)}: $result');
+      _testResults.add('${DateTime.now().toString().substring(11, 19)}: $result');
     });
   }
 
@@ -385,8 +384,7 @@ class _ChatTestingScreenState extends ConsumerState<ChatTestingScreen> {
       );
 
       // Получаем чаты по категориям
-      final ordersChats =
-          await _chatService.getChatsByCategory(_currentUserId!, 'orders');
+      final ordersChats = await _chatService.getChatsByCategory(_currentUserId!, 'orders');
       final specialistsChats =
           await _chatService.getChatsByCategory(_currentUserId!, 'specialists');
 

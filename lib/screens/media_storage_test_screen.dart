@@ -88,8 +88,7 @@ class _MediaStorageTestScreenState extends State<MediaStorageTestScreen> {
           children: [
             Expanded(
               child: ElevatedButton.icon(
-                onPressed: () =>
-                    setState(() => _showUploadWidget = !_showUploadWidget),
+                onPressed: () => setState(() => _showUploadWidget = !_showUploadWidget),
                 icon: Icon(
                   _showUploadWidget ? Icons.visibility_off : Icons.visibility,
                 ),
@@ -97,8 +96,7 @@ class _MediaStorageTestScreenState extends State<MediaStorageTestScreen> {
                   _showUploadWidget ? 'Скрыть загрузку' : 'Показать загрузку',
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      _showUploadWidget ? Colors.green : Colors.grey,
+                  backgroundColor: _showUploadWidget ? Colors.green : Colors.grey,
                   foregroundColor: Colors.white,
                 ),
               ),
@@ -106,8 +104,7 @@ class _MediaStorageTestScreenState extends State<MediaStorageTestScreen> {
             const SizedBox(width: 8),
             Expanded(
               child: ElevatedButton.icon(
-                onPressed: () =>
-                    setState(() => _showGalleryWidget = !_showGalleryWidget),
+                onPressed: () => setState(() => _showGalleryWidget = !_showGalleryWidget),
                 icon: Icon(
                   _showGalleryWidget ? Icons.visibility_off : Icons.visibility,
                 ),
@@ -115,8 +112,7 @@ class _MediaStorageTestScreenState extends State<MediaStorageTestScreen> {
                   _showGalleryWidget ? 'Скрыть галерею' : 'Показать галерею',
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      _showGalleryWidget ? Colors.green : Colors.grey,
+                  backgroundColor: _showGalleryWidget ? Colors.green : Colors.grey,
                   foregroundColor: Colors.white,
                 ),
               ),

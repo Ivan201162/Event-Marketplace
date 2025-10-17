@@ -4,12 +4,10 @@ import '../core/feature_flags.dart';
 import '../services/monitoring_service.dart';
 
 /// Провайдер сервиса мониторинга
-final monitoringServiceProvider =
-    Provider<MonitoringService>((ref) => MonitoringService());
+final monitoringServiceProvider = Provider<MonitoringService>((ref) => MonitoringService());
 
 /// Провайдер состояния мониторинга
-final monitoringStateProvider =
-    NotifierProvider<MonitoringStateNotifier, MonitoringState>(
+final monitoringStateProvider = NotifierProvider<MonitoringStateNotifier, MonitoringState>(
   MonitoringStateNotifier.new,
 );
 
@@ -124,8 +122,7 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
       final monitoringService = ref.read(monitoringServiceProvider);
       monitoringService.startTrace(traceName);
 
-      final updatedTraces = List<String>.from(state.activeTraces)
-        ..add(traceName);
+      final updatedTraces = List<String>.from(state.activeTraces)..add(traceName);
       state = state.copyWith(activeTraces: updatedTraces);
     } catch (e) {
       state = state.copyWith(
@@ -141,8 +138,7 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
       final monitoringService = ref.read(monitoringServiceProvider);
       monitoringService.stopTrace(traceName);
 
-      final updatedTraces = List<String>.from(state.activeTraces)
-        ..remove(traceName);
+      final updatedTraces = List<String>.from(state.activeTraces)..remove(traceName);
       state = state.copyWith(activeTraces: updatedTraces);
     } catch (e) {
       state = state.copyWith(
@@ -200,9 +196,7 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
 
 /// Провайдер для проверки доступности мониторинга
 final monitoringAvailableProvider = Provider<bool>(
-  (ref) =>
-      FeatureFlags.crashlyticsEnabled ||
-      FeatureFlags.performanceMonitoringEnabled,
+  (ref) => FeatureFlags.crashlyticsEnabled || FeatureFlags.performanceMonitoringEnabled,
 );
 
 /// Провайдер для получения метрик приложения

@@ -9,8 +9,7 @@ class OrganizersListScreen extends ConsumerStatefulWidget {
   const OrganizersListScreen({super.key});
 
   @override
-  ConsumerState<OrganizersListScreen> createState() =>
-      _OrganizersListScreenState();
+  ConsumerState<OrganizersListScreen> createState() => _OrganizersListScreenState();
 }
 
 class _OrganizersListScreenState extends ConsumerState<OrganizersListScreen> {
@@ -91,8 +90,7 @@ class _OrganizersListScreenState extends ConsumerState<OrganizersListScreen> {
         // Фильтр по поисковому запросу
         final searchMatch = searchQuery.isEmpty ||
             organizer.name.toLowerCase().contains(searchQuery) ||
-            (organizer.description?.toLowerCase().contains(searchQuery) ??
-                false) ||
+            (organizer.description?.toLowerCase().contains(searchQuery) ?? false) ||
             organizer.categories.any(
               (category) => category.toLowerCase().contains(searchQuery),
             );
@@ -297,12 +295,10 @@ class _OrganizersListScreenState extends ConsumerState<OrganizersListScreen> {
                     // Аватар
                     CircleAvatar(
                       radius: 30,
-                      backgroundImage: organizer.logoUrl != null
-                          ? NetworkImage(organizer.logoUrl!)
-                          : null,
-                      child: organizer.logoUrl == null
-                          ? const Icon(Icons.business, size: 30)
-                          : null,
+                      backgroundImage:
+                          organizer.logoUrl != null ? NetworkImage(organizer.logoUrl!) : null,
+                      child:
+                          organizer.logoUrl == null ? const Icon(Icons.business, size: 30) : null,
                     ),
                     const SizedBox(width: 16),
 

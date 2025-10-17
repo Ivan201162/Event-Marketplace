@@ -8,47 +8,37 @@ final localDataInitializedProvider = FutureProvider<bool>((ref) async {
 });
 
 /// Провайдер для получения локальных данных пользователя
-final localUserDataProvider =
-    FutureProvider<Map<String, dynamic>?>((ref) async {
+final localUserDataProvider = FutureProvider<Map<String, dynamic>?>((ref) async {
   final data = await LocalDataSeeder.loadLocalData();
   return data?['currentUser'] as Map<String, dynamic>?;
 });
 
 /// Провайдер для получения списка локальных специалистов
-final localSpecialistsProvider =
-    FutureProvider<List<Map<String, dynamic>>>((ref) async {
+final localSpecialistsProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
   final data = await LocalDataSeeder.loadLocalData();
-  return (data?['specialists'] as List<dynamic>?)
-          ?.cast<Map<String, dynamic>>() ??
-      [];
+  return (data?['specialists'] as List<dynamic>?)?.cast<Map<String, dynamic>>() ?? [];
 });
 
 /// Провайдер для получения списка локальных постов ленты
-final localFeedPostsProvider =
-    FutureProvider<List<Map<String, dynamic>>>((ref) async {
+final localFeedPostsProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
   final data = await LocalDataSeeder.loadLocalData();
-  return (data?['feedPosts'] as List<dynamic>?)?.cast<Map<String, dynamic>>() ??
-      [];
+  return (data?['feedPosts'] as List<dynamic>?)?.cast<Map<String, dynamic>>() ?? [];
 });
 
 /// Провайдер для получения списка локальных заявок
-final localRequestsProvider =
-    FutureProvider<List<Map<String, dynamic>>>((ref) async {
+final localRequestsProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
   final data = await LocalDataSeeder.loadLocalData();
-  return (data?['requests'] as List<dynamic>?)?.cast<Map<String, dynamic>>() ??
-      [];
+  return (data?['requests'] as List<dynamic>?)?.cast<Map<String, dynamic>>() ?? [];
 });
 
 /// Провайдер для получения списка локальных чатов
-final localChatsProvider =
-    FutureProvider<List<Map<String, dynamic>>>((ref) async {
+final localChatsProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
   final data = await LocalDataSeeder.loadLocalData();
   return (data?['chats'] as List<dynamic>?)?.cast<Map<String, dynamic>>() ?? [];
 });
 
 /// Провайдер для получения списка локальных идей
-final localIdeasProvider =
-    FutureProvider<List<Map<String, dynamic>>>((ref) async {
+final localIdeasProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
   final data = await LocalDataSeeder.loadLocalData();
   return (data?['ideas'] as List<dynamic>?)?.cast<Map<String, dynamic>>() ?? [];
 });

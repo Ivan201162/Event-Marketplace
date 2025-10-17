@@ -3,13 +3,11 @@ import '../models/event_idea.dart';
 import '../services/event_idea_service.dart';
 
 /// Провайдер сервиса идей мероприятий
-final eventIdeaServiceProvider =
-    Provider<EventIdeaService>((ref) => EventIdeaService());
+final eventIdeaServiceProvider = Provider<EventIdeaService>((ref) => EventIdeaService());
 
 /// Провайдер всех идей мероприятий
 final allEventIdeasProvider =
-    FutureProvider.family<List<EventIdea>, EventIdeasParams>(
-        (ref, params) async {
+    FutureProvider.family<List<EventIdea>, EventIdeasParams>((ref, params) async {
   final ideaService = ref.read(eventIdeaServiceProvider);
   return ideaService.getAllIdeas(
     limit: params.limit,
@@ -20,22 +18,19 @@ final allEventIdeasProvider =
 });
 
 /// Провайдер идей пользователя
-final userEventIdeasProvider =
-    FutureProvider.family<List<EventIdea>, String>((ref, userId) async {
+final userEventIdeasProvider = FutureProvider.family<List<EventIdea>, String>((ref, userId) async {
   final ideaService = ref.read(eventIdeaServiceProvider);
   return ideaService.getUserIdeas(userId);
 });
 
 /// Провайдер идеи по ID
-final eventIdeaByIdProvider =
-    FutureProvider.family<EventIdea?, String>((ref, ideaId) async {
+final eventIdeaByIdProvider = FutureProvider.family<EventIdea?, String>((ref, ideaId) async {
   final ideaService = ref.read(eventIdeaServiceProvider);
   return ideaService.getIdeaById(ideaId);
 });
 
 /// Провайдер комментариев к идее
-final ideaCommentsProvider =
-    FutureProvider.family<List<IdeaComment>, String>((ref, ideaId) async {
+final ideaCommentsProvider = FutureProvider.family<List<IdeaComment>, String>((ref, ideaId) async {
   final ideaService = ref.read(eventIdeaServiceProvider);
   return ideaService.getIdeaComments(ideaId);
 });
@@ -55,8 +50,7 @@ final createEventIdeaProvider =
 
 /// Провайдер для загрузки изображений идеи
 final uploadIdeaImagesProvider =
-    FutureProvider.family<List<String>, UploadIdeaImagesParams>(
-        (ref, params) async {
+    FutureProvider.family<List<String>, UploadIdeaImagesParams>((ref, params) async {
   final ideaService = ref.read(eventIdeaServiceProvider);
   return ideaService.uploadIdeaImages(
     authorId: params.authorId,
@@ -65,22 +59,19 @@ final uploadIdeaImagesProvider =
 });
 
 /// Провайдер для лайка идеи
-final likeIdeaProvider =
-    FutureProvider.family<void, String>((ref, ideaId) async {
+final likeIdeaProvider = FutureProvider.family<void, String>((ref, ideaId) async {
   final ideaService = ref.read(eventIdeaServiceProvider);
   return ideaService.likeIdea(ideaId);
 });
 
 /// Провайдер для удаления лайка идеи
-final unlikeIdeaProvider =
-    FutureProvider.family<void, String>((ref, ideaId) async {
+final unlikeIdeaProvider = FutureProvider.family<void, String>((ref, ideaId) async {
   final ideaService = ref.read(eventIdeaServiceProvider);
   return ideaService.unlikeIdea(ideaId);
 });
 
 /// Провайдер для добавления комментария
-final addCommentProvider =
-    FutureProvider.family<String, AddCommentParams>((ref, params) async {
+final addCommentProvider = FutureProvider.family<String, AddCommentParams>((ref, params) async {
   final ideaService = ref.read(eventIdeaServiceProvider);
   return ideaService.addComment(
     ideaId: params.ideaId,

@@ -62,8 +62,7 @@ class CalendarSyncService {
         title: booking.eventTitle,
         description: booking.notes ?? 'Бронирование мероприятия',
         date: booking.eventDate,
-        endDate:
-            booking.endDate ?? booking.eventDate.add(const Duration(hours: 2)),
+        endDate: booking.endDate ?? booking.eventDate.add(const Duration(hours: 2)),
         location: 'Место проведения мероприятия',
         maxParticipants: booking.participantsCount,
         currentParticipants: booking.participantsCount,
@@ -169,11 +168,8 @@ class CalendarSyncService {
   /// Получить статус синхронизации
   Future<Map<String, dynamic>> getSyncStatus() async => {
         'enabled': FeatureFlags.calendarSyncEnabled,
-        'googleConnected':
-            false, // TODO(developer): Проверить реальное подключение
-        'outlookConnected':
-            false, // TODO(developer): Проверить реальное подключение
-        'lastSync':
-            null, // TODO(developer): Получить время последней синхронизации
+        'googleConnected': false, // TODO(developer): Проверить реальное подключение
+        'outlookConnected': false, // TODO(developer): Проверить реальное подключение
+        'lastSync': null, // TODO(developer): Получить время последней синхронизации
       };
 }

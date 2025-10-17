@@ -86,10 +86,9 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
                     children: [
                       Text(
                         'Описание',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       const SizedBox(height: 8),
                       const Text(
@@ -115,10 +114,9 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
                     children: [
                       Text(
                         'Основные функции',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       const SizedBox(height: 12),
                       _buildFeatureItem(
@@ -167,10 +165,9 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
                     children: [
                       Text(
                         'Информация о разработчике',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       const SizedBox(height: 12),
                       _buildInfoRow(
@@ -285,8 +282,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
         ),
       );
 
-  Widget _buildInfoRow(BuildContext context, String label, String value) =>
-      Padding(
+  Widget _buildInfoRow(BuildContext context, String label, String value) => Padding(
         padding: const EdgeInsets.only(bottom: 8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,

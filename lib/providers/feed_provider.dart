@@ -174,10 +174,7 @@ class FeedNotifier extends StateNotifier<AsyncValue<List<FeedPost>>> {
   /// Сохранить/убрать из сохранённых
   Future<void> toggleSave(String postId, bool isSaved) async {
     try {
-      await FirebaseFirestore.instance
-          .collection('feed')
-          .doc(postId)
-          .update({'isSaved': !isSaved});
+      await FirebaseFirestore.instance.collection('feed').doc(postId).update({'isSaved': !isSaved});
     } on Exception catch (e) {
       debugPrint('Ошибка при изменении сохранения: $e');
     }
@@ -210,11 +207,7 @@ class FeedNotifier extends StateNotifier<AsyncValue<List<FeedPost>>> {
       });
 
       // Добавляем комментарий в подколлекцию
-      await FirebaseFirestore.instance
-          .collection('feed')
-          .doc(postId)
-          .collection('comments')
-          .add({
+      await FirebaseFirestore.instance.collection('feed').doc(postId).collection('comments').add({
         'text': comment,
         'createdAt': FieldValue.serverTimestamp(),
       });
@@ -224,7 +217,6 @@ class FeedNotifier extends StateNotifier<AsyncValue<List<FeedPost>>> {
   }
 }
 
-final feedNotifierProvider =
-    StateNotifierProvider<FeedNotifier, AsyncValue<List<FeedPost>>>(
+final feedNotifierProvider = StateNotifierProvider<FeedNotifier, AsyncValue<List<FeedPost>>>(
   (ref) => FeedNotifier(),
 );

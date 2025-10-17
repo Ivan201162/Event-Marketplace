@@ -105,8 +105,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
                 plan: SubscriptionPlan.standard,
                 price: PaymentConfig.subscriptionPlans['standard']!,
                 isSelected: _selectedPlan == SubscriptionPlan.standard,
-                isCurrentPlan:
-                    _currentSubscription?.plan == SubscriptionPlan.standard,
+                isCurrentPlan: _currentSubscription?.plan == SubscriptionPlan.standard,
                 onTap: () {
                   setState(() {
                     _selectedPlan = SubscriptionPlan.standard;
@@ -119,8 +118,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
                 plan: SubscriptionPlan.pro,
                 price: PaymentConfig.subscriptionPlans['pro']!,
                 isSelected: _selectedPlan == SubscriptionPlan.pro,
-                isCurrentPlan:
-                    _currentSubscription?.plan == SubscriptionPlan.pro,
+                isCurrentPlan: _currentSubscription?.plan == SubscriptionPlan.pro,
                 onTap: () {
                   setState(() {
                     _selectedPlan = SubscriptionPlan.pro;
@@ -133,8 +131,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
                 plan: SubscriptionPlan.elite,
                 price: PaymentConfig.subscriptionPlans['elite']!,
                 isSelected: _selectedPlan == SubscriptionPlan.elite,
-                isCurrentPlan:
-                    _currentSubscription?.plan == SubscriptionPlan.elite,
+                isCurrentPlan: _currentSubscription?.plan == SubscriptionPlan.elite,
                 onTap: () {
                   setState(() {
                     _selectedPlan = SubscriptionPlan.elite;
@@ -145,8 +142,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
               const SizedBox(height: 32),
 
               // Action Button
-              if (_selectedPlan != null &&
-                  _selectedPlan != _currentSubscription?.plan) ...[
+              if (_selectedPlan != null && _selectedPlan != _currentSubscription?.plan) ...[
                 SizedBox(
                   width: double.infinity,
                   height: 56,
@@ -225,9 +221,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isExpired
-            ? Colors.red.withOpacity(0.1)
-            : Colors.green.withOpacity(0.1),
+        color: isExpired ? Colors.red.withOpacity(0.1) : Colors.green.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isExpired ? Colors.red : Colors.green,
@@ -292,8 +286,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
 
   Future<void> _loadCurrentSubscription() async {
     try {
-      final subscription =
-          await _paymentService.getUserSubscription(widget.userId);
+      final subscription = await _paymentService.getUserSubscription(widget.userId);
       setState(() {
         _currentSubscription = subscription;
       });
@@ -310,8 +303,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
     });
 
     try {
-      final amount = PaymentConfig
-          .subscriptionPlans[_selectedPlan.toString().split('.').last]!;
+      final amount = PaymentConfig.subscriptionPlans[_selectedPlan.toString().split('.').last]!;
       final success = await _paymentService.processSubscription(
         userId: widget.userId,
         plan: _selectedPlan!,

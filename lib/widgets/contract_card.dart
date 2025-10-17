@@ -61,8 +61,7 @@ class ContractCard extends StatelessWidget {
                         Text(
                           'Бронирование: ${contract.bookingId.substring(0, 8)}...',
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.colorScheme.onSurface
-                                .withValues(alpha: 0.7),
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                           ),
                         ),
                       ],
@@ -83,8 +82,7 @@ class ContractCard extends StatelessWidget {
                       Text(
                         'Предоплата: ${contract.prepaymentAmount.toStringAsFixed(0)} ₽',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface
-                              .withValues(alpha: 0.6),
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -99,15 +97,12 @@ class ContractCard extends StatelessWidget {
                 children: [
                   // Status badge
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: _getStatusColor(contract.status)
-                          .withValues(alpha: 0.1),
+                      color: _getStatusColor(contract.status).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: _getStatusColor(contract.status)
-                            .withValues(alpha: 0.3),
+                        color: _getStatusColor(contract.status).withValues(alpha: 0.3),
                       ),
                     ),
                     child: Text(
@@ -137,8 +132,7 @@ class ContractCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHighest
-                      .withValues(alpha: 0.5),
+                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -175,16 +169,14 @@ class ContractCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: () =>
-                            onStatusUpdate?.call(ContractStatus.active),
+                        onPressed: () => onStatusUpdate?.call(ContractStatus.active),
                         child: const Text('Активировать'),
                       ),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: () =>
-                            onStatusUpdate?.call(ContractStatus.cancelled),
+                        onPressed: () => onStatusUpdate?.call(ContractStatus.cancelled),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: theme.colorScheme.error,
                         ),

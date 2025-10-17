@@ -41,8 +41,7 @@ class ProfileStatisticsWidget extends StatelessWidget {
                 const Spacer(),
                 // Индикатор онлайн статуса
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: statistics.onlineStatus ? Colors.green : Colors.grey,
                     borderRadius: BorderRadius.circular(12),

@@ -58,10 +58,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    final specialistDoc = await FirebaseFirestore.instance
-        .collection('specialists')
-        .doc(user.uid)
-        .get();
+    final specialistDoc =
+        await FirebaseFirestore.instance.collection('specialists').doc(user.uid).get();
 
     setState(() {
       _isSpecialist = specialistDoc.exists;
@@ -160,8 +158,7 @@ class _SpecialistAnalyticsTab extends ConsumerWidget {
           children: [
             _buildStatCard(
               'Общий доход',
-              NumberFormat.currency(locale: 'ru_RU', symbol: '₽')
-                  .format(totalIncome),
+              NumberFormat.currency(locale: 'ru_RU', symbol: '₽').format(totalIncome),
               Icons.attach_money,
               Colors.green,
             ),
@@ -277,9 +274,7 @@ class _SpecialistAnalyticsTab extends ConsumerWidget {
 
   Widget _buildSimpleBarChart(List<dynamic> data) {
     final maxValue = data.isNotEmpty
-        ? data
-            .map((e) => (e['amount'] ?? 0.0) as double)
-            .reduce((a, b) => a > b ? a : b)
+        ? data.map((e) => (e['amount'] ?? 0.0) as double).reduce((a, b) => a > b ? a : b)
         : 1.0;
 
     return SizedBox(
@@ -326,8 +321,7 @@ class _SpecialistAnalyticsTab extends ConsumerWidget {
   }
 
   Widget _buildBookingsChart(Map<String, dynamic> analytics) {
-    final bookingsByStatus =
-        analytics['bookingsByStatus'] as Map<String, dynamic>? ?? {};
+    final bookingsByStatus = analytics['bookingsByStatus'] as Map<String, dynamic>? ?? {};
 
     return Card(
       elevation: 2,
@@ -446,8 +440,7 @@ class _SpecialistAnalyticsTab extends ConsumerWidget {
   }
 
   Widget _buildRatingStats(Map<String, dynamic> analytics) {
-    final ratingDistribution =
-        analytics['ratingDistribution'] as Map<String, dynamic>? ?? {};
+    final ratingDistribution = analytics['ratingDistribution'] as Map<String, dynamic>? ?? {};
 
     return Card(
       elevation: 2,
@@ -477,9 +470,7 @@ class _SpecialistAnalyticsTab extends ConsumerWidget {
                       children: List.generate(
                         5,
                         (index) => Icon(
-                          index < int.parse(rating)
-                              ? Icons.star
-                              : Icons.star_border,
+                          index < int.parse(rating) ? Icons.star : Icons.star_border,
                           color: Colors.amber,
                           size: 16,
                         ),
@@ -570,8 +561,7 @@ class _CustomerAnalyticsTab extends ConsumerWidget {
     final totalSpent = analytics['totalSpent'] ?? 0.0;
     final totalBookings = analytics['totalBookings'] ?? 0;
     final averageRating = analytics['averageRating'] ?? 0.0;
-    final favoriteCategory =
-        analytics['favoriteCategory'] as String? ?? 'Не определено';
+    final favoriteCategory = analytics['favoriteCategory'] as String? ?? 'Не определено';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -594,8 +584,7 @@ class _CustomerAnalyticsTab extends ConsumerWidget {
           children: [
             _buildStatCard(
               'Потрачено всего',
-              NumberFormat.currency(locale: 'ru_RU', symbol: '₽')
-                  .format(totalSpent),
+              NumberFormat.currency(locale: 'ru_RU', symbol: '₽').format(totalSpent),
               Icons.money_off,
               Colors.red,
             ),
@@ -679,8 +668,7 @@ class _CustomerAnalyticsTab extends ConsumerWidget {
       );
 
   Widget _buildSpendingChart(Map<String, dynamic> analytics) {
-    final monthlySpending =
-        analytics['monthlySpending'] as List<dynamic>? ?? [];
+    final monthlySpending = analytics['monthlySpending'] as List<dynamic>? ?? [];
 
     return Card(
       elevation: 2,
@@ -715,9 +703,7 @@ class _CustomerAnalyticsTab extends ConsumerWidget {
 
   Widget _buildSimpleBarChart(List<dynamic> data, Color color) {
     final maxValue = data.isNotEmpty
-        ? data
-            .map((e) => (e['amount'] ?? 0.0) as double)
-            .reduce((a, b) => a > b ? a : b)
+        ? data.map((e) => (e['amount'] ?? 0.0) as double).reduce((a, b) => a > b ? a : b)
         : 1.0;
 
     return SizedBox(
@@ -764,8 +750,7 @@ class _CustomerAnalyticsTab extends ConsumerWidget {
   }
 
   Widget _buildBookingFrequency(Map<String, dynamic> analytics) {
-    final bookingFrequency =
-        analytics['bookingFrequency'] as Map<String, dynamic>? ?? {};
+    final bookingFrequency = analytics['bookingFrequency'] as Map<String, dynamic>? ?? {};
 
     return Card(
       elevation: 2,

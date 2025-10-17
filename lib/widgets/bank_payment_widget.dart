@@ -171,9 +171,7 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: _isLoading || _selectedBankId == null
-                  ? null
-                  : _initiatePayment,
+              onPressed: _isLoading || _selectedBankId == null ? null : _initiatePayment,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue[600],
                 foregroundColor: Colors.white,
@@ -191,8 +189,7 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         ),
                         SizedBox(width: 12),

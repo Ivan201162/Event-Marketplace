@@ -114,8 +114,7 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
 
                 // Экономия
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
                     color: Colors.green.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(20),
@@ -273,44 +272,41 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildPriceHistorySection(BuildContext context, WidgetRef ref) =>
-      Consumer(
-        builder: (context, ref, child) =>
-            ref.watch(priceHistoryProvider(bookingId)).when(
-                  data: (priceHistory) {
-                    if (priceHistory.isEmpty) {
-                      return const SizedBox.shrink();
-                    }
+  Widget _buildPriceHistorySection(BuildContext context, WidgetRef ref) => Consumer(
+        builder: (context, ref, child) => ref.watch(priceHistoryProvider(bookingId)).when(
+              data: (priceHistory) {
+                if (priceHistory.isEmpty) {
+                  return const SizedBox.shrink();
+                }
 
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            const Icon(Icons.history, size: 20),
-                            const SizedBox(width: 8),
-                            ResponsiveText(
-                              'История изменений цены',
-                              isTitle: true,
-                            ),
-                          ],
+                        const Icon(Icons.history, size: 20),
+                        const SizedBox(width: 8),
+                        ResponsiveText(
+                          'История изменений цены',
+                          isTitle: true,
                         ),
-                        const SizedBox(height: 8),
-                        ...priceHistory.take(3).map(_buildPriceHistoryItem),
-                        if (priceHistory.length > 3) ...[
-                          const SizedBox(height: 8),
-                          TextButton(
-                            onPressed: () =>
-                                _showFullPriceHistory(context, priceHistory),
-                            child: const Text('Показать всю историю'),
-                          ),
-                        ],
                       ],
-                    );
-                  },
-                  loading: () => const SizedBox.shrink(),
-                  error: (error, stack) => const SizedBox.shrink(),
-                ),
+                    ),
+                    const SizedBox(height: 8),
+                    ...priceHistory.take(3).map(_buildPriceHistoryItem),
+                    if (priceHistory.length > 3) ...[
+                      const SizedBox(height: 8),
+                      TextButton(
+                        onPressed: () => _showFullPriceHistory(context, priceHistory),
+                        child: const Text('Показать всю историю'),
+                      ),
+                    ],
+                  ],
+                );
+              },
+              loading: () => const SizedBox.shrink(),
+              error: (error, stack) => const SizedBox.shrink(),
+            ),
       );
 
   Widget _buildPriceHistoryItem(PriceHistory history) => Container(
@@ -558,9 +554,7 @@ class _RejectDiscountDialogState extends State<_RejectDiscountDialog> {
       await service.rejectDiscount(
         bookingId: widget.bookingId,
         customerId: 'current_user_id', // TODO(developer): Получить из контекста
-        reason: _reasonController.text.trim().isEmpty
-            ? null
-            : _reasonController.text.trim(),
+        reason: _reasonController.text.trim().isEmpty ? null : _reasonController.text.trim(),
       );
 
       Navigator.pop(context);
@@ -595,9 +589,7 @@ final priceHistoryProvider =
 });
 
 /// Провайдер для сервиса истории цен
-final priceHistoryServiceProvider =
-    Provider<PriceHistoryService>((ref) => PriceHistoryService());
+final priceHistoryServiceProvider = Provider<PriceHistoryService>((ref) => PriceHistoryService());
 
 /// Провайдер для сервиса скидок
-final discountServiceProvider =
-    Provider<DiscountService>((ref) => DiscountService());
+final discountServiceProvider = Provider<DiscountService>((ref) => DiscountService());

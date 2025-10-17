@@ -60,10 +60,8 @@ class BadgeService {
   /// Проверить бейджи заказчика после бронирования
   Future<void> _checkCustomerBookingBadges(String customerId) async {
     // Получаем количество бронирований заказчика
-    final bookingsSnapshot = await _db
-        .collection('bookings')
-        .where('customerId', isEqualTo: customerId)
-        .get();
+    final bookingsSnapshot =
+        await _db.collection('bookings').where('customerId', isEqualTo: customerId).get();
 
     final bookingCount = bookingsSnapshot.docs.length;
 
@@ -77,10 +75,8 @@ class BadgeService {
     }
 
     // Проверяем бейдж "Ранняя пташка" (бронирование за месяц)
-    final recentBookings =
-        bookingsSnapshot.docs.map(Booking.fromDocument).where((booking) {
-      final daysUntilEvent =
-          booking.eventDate.difference(DateTime.now()).inDays;
+    final recentBookings = bookingsSnapshot.docs.map(Booking.fromDocument).where((booking) {
+      final daysUntilEvent = booking.eventDate.difference(DateTime.now()).inDays;
       return daysUntilEvent >= 30;
     }).length;
 
@@ -112,10 +108,8 @@ class BadgeService {
     }
 
     // Проверяем бейдж "Популярный специалист"
-    final uniqueCustomers = bookingsSnapshot.docs
-        .map((doc) => doc.data()['customerId'] as String)
-        .toSet()
-        .length;
+    final uniqueCustomers =
+        bookingsSnapshot.docs.map((doc) => doc.data()['customerId'] as String).toSet().length;
 
     if (uniqueCustomers >= 20) {
       await _awardBadge(specialistId, BadgeType.popularSpecialist);
@@ -125,10 +119,8 @@ class BadgeService {
   /// Проверить бейджи заказчика после отзыва
   Future<void> _checkCustomerReviewBadges(String customerId) async {
     // Получаем количество отзывов заказчика
-    final reviewsSnapshot = await _db
-        .collection('reviews')
-        .where('customerId', isEqualTo: customerId)
-        .get();
+    final reviewsSnapshot =
+        await _db.collection('reviews').where('customerId', isEqualTo: customerId).get();
 
     final reviewCount = reviewsSnapshot.docs.length;
 
@@ -144,16 +136,13 @@ class BadgeService {
     int rating,
   ) async {
     // Получаем средний рейтинг специалиста
-    final reviewsSnapshot = await _db
-        .collection('reviews')
-        .where('specialistId', isEqualTo: specialistId)
-        .get();
+    final reviewsSnapshot =
+        await _db.collection('reviews').where('specialistId', isEqualTo: specialistId).get();
 
     if (reviewsSnapshot.docs.isEmpty) return;
 
-    final totalRating = reviewsSnapshot.docs
-        .map((doc) => doc.data()['rating'] as int)
-        .reduce((a, b) => a + b);
+    final totalRating =
+        reviewsSnapshot.docs.map((doc) => doc.data()['rating'] as int).reduce((a, b) => a + b);
 
     final averageRating = totalRating / reviewsSnapshot.docs.length;
 
@@ -163,8 +152,7 @@ class BadgeService {
     }
 
     // Проверяем бейдж "Мастер качества"
-    final excellentReviews =
-        reviewsSnapshot.docs.where((doc) => doc.data()['rating'] == 5).length;
+    final excellentReviews = reviewsSnapshot.docs.where((doc) => doc.data()['rating'] == 5).length;
 
     if (excellentReviews >= reviewsSnapshot.docs.length * 0.9 &&
         reviewsSnapshot.docs.length >= 20) {
@@ -180,10 +168,8 @@ class BadgeService {
 
   /// Получить количество повторных клиентов
   Future<int> _getRepeatCustomers(String specialistId) async {
-    final bookingsSnapshot = await _db
-        .collection('bookings')
-        .where('specialistId', isEqualTo: specialistId)
-        .get();
+    final bookingsSnapshot =
+        await _db.collection('bookings').where('specialistId', isEqualTo: specialistId).get();
 
     final customerBookings = <String, int>{};
 
@@ -192,9 +178,7 @@ class BadgeService {
       customerBookings[customerId] = (customerBookings[customerId] ?? 0) + 1;
     }
 
-    return customerBookings.values
-        .where((bookingCount) => bookingCount > 1)
-        .length;
+    return customerBookings.values.where((bookingCount) => bookingCount > 1).length;
   }
 
   /// Выдать бейдж пользователю
@@ -241,15 +225,11 @@ class BadgeService {
       return BadgeStats(
         totalBadges: badges.length,
         earnedBadges: badges.length,
-        availableBadges:
-            0, // await getAvailableBadges().then((available) => available.length),
+        availableBadges: 0, // await getAvailableBadges().then((available) => available.length),
         badgesByCategory: {
-          BadgeCategory.specialist:
-              badges.byCategory(BadgeCategory.specialist).length,
-          BadgeCategory.customer:
-              badges.byCategory(BadgeCategory.customer).length,
-          BadgeCategory.general:
-              badges.byCategory(BadgeCategory.general).length,
+          BadgeCategory.specialist: badges.byCategory(BadgeCategory.specialist).length,
+          BadgeCategory.customer: badges.byCategory(BadgeCategory.customer).length,
+          BadgeCategory.general: badges.byCategory(BadgeCategory.general).length,
         },
         specialistBadges: badges.byCategory(BadgeCategory.specialist).length,
         customerBadges: badges.byCategory(BadgeCategory.customer).length,

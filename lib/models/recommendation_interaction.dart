@@ -20,8 +20,7 @@ class RecommendationInteraction {
     required this.timestamp,
   });
 
-  factory RecommendationInteraction.fromMap(Map<String, dynamic> map) =>
-      RecommendationInteraction(
+  factory RecommendationInteraction.fromMap(Map<String, dynamic> map) => RecommendationInteraction(
         id: map['id'] as String,
         userId: map['userId'] as String,
         recommendationId: map['recommendationId'] as String,
@@ -62,10 +61,7 @@ class RecommendationInteraction {
 
   @override
   int get hashCode =>
-      recommendationId.hashCode ^
-      specialistId.hashCode ^
-      type.hashCode ^
-      timestamp.hashCode;
+      recommendationId.hashCode ^ specialistId.hashCode ^ type.hashCode ^ timestamp.hashCode;
 
   @override
   String toString() =>

@@ -8,18 +8,15 @@ import 'package:go_router/go_router.dart';
 
 /// Сервис для работы с Firebase Cloud Messaging
 class FCMService {
-  static final FirebaseMessaging _firebaseMessaging =
-      FirebaseMessaging.instance;
+  static final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   static final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
-  static final GlobalKey<NavigatorState> navigatorKey =
-      GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   /// Инициализация FCM
   static Future<void> initialize() async {
     // Настройка локальных уведомлений
-    const androidSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosSettings = DarwinInitializationSettings();
     const initSettings = InitializationSettings(
       android: androidSettings,
@@ -212,10 +209,7 @@ class FCMService {
     try {
       final token = await _getToken();
       if (token != null) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userId)
-            .update({
+        await FirebaseFirestore.instance.collection('users').doc(userId).update({
           'fcmToken': token,
           'lastTokenUpdate': FieldValue.serverTimestamp(),
         });
@@ -236,10 +230,7 @@ class FCMService {
   }) async {
     try {
       // Получаем токен пользователя
-      final userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .get();
+      final userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
       final userData = userDoc.data();
       final fcmToken = userData?['fcmToken'];

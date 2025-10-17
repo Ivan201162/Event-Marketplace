@@ -36,9 +36,8 @@ class PortfolioItem {
         url: data['url'] as String? ?? '',
         title: data['title'],
         description: data['description'],
-        createdAt: data['createdAt'] != null
-            ? (data['createdAt'] as Timestamp).toDate()
-            : DateTime.now(),
+        createdAt:
+            data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
       );
   final String id;
   final String type; // 'photo', 'video', 'document'
@@ -170,12 +169,10 @@ class SpecialistProfile {
       settings: Map<String, dynamic>.from(data['settings'] ?? {}),
       notifications: Map<String, dynamic>.from(data['notifications'] ?? {}),
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
-      updatedAt: data['updatedAt'] != null
-          ? (data['updatedAt'] as Timestamp).toDate()
-          : DateTime.now(),
+      createdAt:
+          data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
+      updatedAt:
+          data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : DateTime.now(),
     );
   }
 
@@ -183,8 +180,7 @@ class SpecialistProfile {
   String? get avatarUrl => photoURL;
 
   /// Геттер для специализации
-  String get specialization =>
-      categories.isNotEmpty ? categories.first.name : '';
+  String get specialization => categories.isNotEmpty ? categories.first.name : '';
 
   /// Геттер для id (совместимость)
   String get id => userId;
@@ -440,16 +436,13 @@ class SpecialistProfile {
   bool get hasPortfolio => portfolio.isNotEmpty;
 
   /// Получить фото из портфолио
-  List<PortfolioItem> get photos =>
-      portfolio.where((item) => item.type == 'photo').toList();
+  List<PortfolioItem> get photos => portfolio.where((item) => item.type == 'photo').toList();
 
   /// Получить видео из портфолио
-  List<PortfolioItem> get videos =>
-      portfolio.where((item) => item.type == 'video').toList();
+  List<PortfolioItem> get videos => portfolio.where((item) => item.type == 'video').toList();
 
   /// Получить документы из портфолио
-  List<PortfolioItem> get documents =>
-      portfolio.where((item) => item.type == 'document').toList();
+  List<PortfolioItem> get documents => portfolio.where((item) => item.type == 'document').toList();
 
   /// Получить отображаемое имя специалиста
   String get displayName => name ?? 'Специалист';
@@ -502,8 +495,7 @@ class SpecialistProfile {
   SpecialistProfile addBusyDate(DateTime date) {
     final newBusyDates = List<DateTime>.from(busyDates)..add(date);
     final newAvailability = Map<String, dynamic>.from(availability);
-    newAvailability['busyDates'] =
-        newBusyDates.map((d) => d.toIso8601String()).toList();
+    newAvailability['busyDates'] = newBusyDates.map((d) => d.toIso8601String()).toList();
 
     return copyWith(
       availability: newAvailability,
@@ -515,14 +507,11 @@ class SpecialistProfile {
   SpecialistProfile removeBusyDate(DateTime date) {
     final newBusyDates = busyDates
         .where(
-          (d) => !(d.year == date.year &&
-              d.month == date.month &&
-              d.day == date.day),
+          (d) => !(d.year == date.year && d.month == date.month && d.day == date.day),
         )
         .toList();
     final newAvailability = Map<String, dynamic>.from(availability);
-    newAvailability['busyDates'] =
-        newBusyDates.map((d) => d.toIso8601String()).toList();
+    newAvailability['busyDates'] = newBusyDates.map((d) => d.toIso8601String()).toList();
 
     return copyWith(
       availability: newAvailability,

@@ -4,8 +4,7 @@ import '../models/specialist_profile.dart';
 import '../services/portfolio_service.dart';
 
 /// Провайдер сервиса портфолио
-final portfolioServiceProvider =
-    Provider<PortfolioService>((ref) => PortfolioService());
+final portfolioServiceProvider = Provider<PortfolioService>((ref) => PortfolioService());
 
 /// Состояние загрузки портфолио
 class PortfolioUploadState {
@@ -43,8 +42,7 @@ final portfolioUploadStateProvider =
 
 /// Нотификатор для загрузки портфолио
 class PortfolioUploadNotifier extends StateNotifier<PortfolioUploadState> {
-  PortfolioUploadNotifier(this._portfolioService)
-      : super(const PortfolioUploadState());
+  PortfolioUploadNotifier(this._portfolioService) : super(const PortfolioUploadState());
 
   final PortfolioService _portfolioService;
 
@@ -76,8 +74,7 @@ class PortfolioUploadNotifier extends StateNotifier<PortfolioUploadState> {
       );
 
       if (portfolioItem != null) {
-        final newItems = List<PortfolioItem>.from(state.uploadedItems)
-          ..add(portfolioItem);
+        final newItems = List<PortfolioItem>.from(state.uploadedItems)..add(portfolioItem);
         state = state.copyWith(
           isUploading: false,
           uploadedItems: newItems,
@@ -121,8 +118,7 @@ class PortfolioUploadNotifier extends StateNotifier<PortfolioUploadState> {
       );
 
       if (portfolioItem != null) {
-        final newItems = List<PortfolioItem>.from(state.uploadedItems)
-          ..add(portfolioItem);
+        final newItems = List<PortfolioItem>.from(state.uploadedItems)..add(portfolioItem);
         state = state.copyWith(
           isUploading: false,
           uploadedItems: newItems,
@@ -166,8 +162,7 @@ class PortfolioUploadNotifier extends StateNotifier<PortfolioUploadState> {
       );
 
       if (portfolioItem != null) {
-        final newItems = List<PortfolioItem>.from(state.uploadedItems)
-          ..add(portfolioItem);
+        final newItems = List<PortfolioItem>.from(state.uploadedItems)..add(portfolioItem);
         state = state.copyWith(
           isUploading: false,
           uploadedItems: newItems,
@@ -189,8 +184,7 @@ class PortfolioUploadNotifier extends StateNotifier<PortfolioUploadState> {
       await _portfolioService.removePortfolioItem(userId, itemId);
 
       // Удаляем из локального списка
-      final newItems =
-          state.uploadedItems.where((item) => item.id != itemId).toList();
+      final newItems = state.uploadedItems.where((item) => item.id != itemId).toList();
       state = state.copyWith(uploadedItems: newItems);
     } on Exception catch (e) {
       state = state.copyWith(errorMessage: e.toString());

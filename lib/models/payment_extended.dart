@@ -127,8 +127,7 @@ class PaymentExtended {
     final now = DateTime.now();
     return installments.any(
       (installment) =>
-          installment.dueDate.isBefore(now) &&
-          installment.status != PaymentStatus.completed,
+          installment.dueDate.isBefore(now) && installment.status != PaymentStatus.completed,
     );
   }
 
@@ -138,8 +137,7 @@ class PaymentExtended {
     final pendingInstallments = installments
         .where(
           (installment) =>
-              installment.dueDate.isAfter(now) &&
-              installment.status == PaymentStatus.pending,
+              installment.dueDate.isAfter(now) && installment.status == PaymentStatus.pending,
         )
         .toList()
       ..sort((a, b) => a.dueDate.compareTo(b.dueDate));
@@ -148,8 +146,7 @@ class PaymentExtended {
   }
 
   /// Получить процент оплаты
-  double get paymentProgress =>
-      totalAmount > 0 ? (paidAmount / totalAmount) * 100 : 0;
+  double get paymentProgress => totalAmount > 0 ? (paidAmount / totalAmount) * 100 : 0;
 }
 
 /// Статус платежа
@@ -183,8 +180,7 @@ class PaymentInstallment {
     this.metadata = const {},
   });
 
-  factory PaymentInstallment.fromMap(Map<String, dynamic> map) =>
-      PaymentInstallment(
+  factory PaymentInstallment.fromMap(Map<String, dynamic> map) => PaymentInstallment(
         id: map['id'] ?? '',
         amount: (map['amount'] ?? 0.0).toDouble(),
         dueDate: (map['dueDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
@@ -239,8 +235,7 @@ class PaymentInstallment {
       );
 
   /// Проверить, просрочен ли платеж
-  bool get isOverdue =>
-      dueDate.isBefore(DateTime.now()) && status != PaymentStatus.completed;
+  bool get isOverdue => dueDate.isBefore(DateTime.now()) && status != PaymentStatus.completed;
 }
 
 /// Настройки предоплаты
@@ -254,8 +249,7 @@ class AdvancePaymentSettings {
     this.defaultInstallments = 3,
   });
 
-  factory AdvancePaymentSettings.fromMap(Map<String, dynamic> map) =>
-      AdvancePaymentSettings(
+  factory AdvancePaymentSettings.fromMap(Map<String, dynamic> map) => AdvancePaymentSettings(
         availablePercentages: List<double>.from(
           map['availablePercentages'] ?? [10.0, 30.0, 50.0],
         ),
@@ -376,10 +370,8 @@ class PaymentStats {
   final DateTime lastUpdated;
 
   /// Получить процент успешных платежей
-  double get successRate =>
-      totalPayments > 0 ? (completedPayments / totalPayments) * 100 : 0;
+  double get successRate => totalPayments > 0 ? (completedPayments / totalPayments) * 100 : 0;
 
   /// Получить процент оплаты
-  double get paymentRate =>
-      totalAmount > 0 ? (paidAmount / totalAmount) * 100 : 0;
+  double get paymentRate => totalAmount > 0 ? (paidAmount / totalAmount) * 100 : 0;
 }

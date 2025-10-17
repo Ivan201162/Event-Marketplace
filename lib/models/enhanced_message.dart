@@ -51,8 +51,7 @@ class EnhancedMessage {
             : null,
         reactions: Map<String, List<String>>.from(
           (map['reactions'] as Map?)?.map(
-                (key, value) =>
-                    MapEntry(key as String, List<String>.from(value as List)),
+                (key, value) => MapEntry(key as String, List<String>.from(value as List)),
               ) ??
               {},
         ),
@@ -121,8 +120,7 @@ class EnhancedMessage {
         'text': text,
         'type': type.value,
         'createdAt': createdAt.millisecondsSinceEpoch,
-        'attachments':
-            attachments.map((attachment) => attachment.toMap()).toList(),
+        'attachments': attachments.map((attachment) => attachment.toMap()).toList(),
         'replyTo': replyTo?.toMap(),
         'forwardedFrom': forwardedFrom?.toMap(),
         'status': status.value,
@@ -313,19 +311,15 @@ class MessageAttachment {
     this.metadata = const {},
   });
 
-  factory MessageAttachment.fromMap(Map<String, dynamic> map) =>
-      MessageAttachment(
+  factory MessageAttachment.fromMap(Map<String, dynamic> map) => MessageAttachment(
         id: map['id'] as String,
         name: map['name'] as String,
         url: map['url'] as String,
         type: MessageAttachmentType.fromString(map['type'] as String),
         size: map['size'] as int,
-        uploadedAt:
-            DateTime.fromMillisecondsSinceEpoch(map['uploadedAt'] as int),
+        uploadedAt: DateTime.fromMillisecondsSinceEpoch(map['uploadedAt'] as int),
         thumbnailUrl: map['thumbnailUrl'] as String?,
-        duration: map['duration'] != null
-            ? Duration(milliseconds: map['duration'] as int)
-            : null,
+        duration: map['duration'] != null ? Duration(milliseconds: map['duration'] as int) : null,
         width: map['width'] as int?,
         height: map['height'] as int?,
         metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
@@ -449,8 +443,7 @@ class MessageForward {
         originalMessageId: map['originalMessageId'] as String,
         originalChatId: map['originalChatId'] as String,
         originalSenderId: map['originalSenderId'] as String,
-        forwardedAt:
-            DateTime.fromMillisecondsSinceEpoch(map['forwardedAt'] as int),
+        forwardedAt: DateTime.fromMillisecondsSinceEpoch(map['forwardedAt'] as int),
       );
 
   final String originalMessageId;

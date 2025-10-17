@@ -104,15 +104,9 @@ class _IdeaFiltersWidgetState extends State<IdeaFiltersWidget> {
                   });
                 },
                 backgroundColor: isSelected
-                    ? Theme.of(context)
-                        .colorScheme
-                        .primary
-                        .withValues(alpha: 0.2)
+                    ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)
                     : null,
-                selectedColor: Theme.of(context)
-                    .colorScheme
-                    .primary
-                    .withValues(alpha: 0.2),
+                selectedColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                 checkmarkColor: Theme.of(context).colorScheme.primary,
               );
             }).toList(),
@@ -146,15 +140,9 @@ class _IdeaFiltersWidgetState extends State<IdeaFiltersWidget> {
                   });
                 },
                 backgroundColor: isSelected
-                    ? Theme.of(context)
-                        .colorScheme
-                        .secondary
-                        .withValues(alpha: 0.2)
+                    ? Theme.of(context).colorScheme.secondary.withValues(alpha: 0.2)
                     : null,
-                selectedColor: Theme.of(context)
-                    .colorScheme
-                    .secondary
-                    .withValues(alpha: 0.2),
+                selectedColor: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.2),
                 checkmarkColor: Theme.of(context).colorScheme.secondary,
               );
             }).toList(),
@@ -264,8 +252,7 @@ class ActiveFiltersWidget extends StatelessWidget {
           if (selectedCategory != null)
             _buildFilterChip(
               context,
-              label:
-                  '${selectedCategory!.emoji} ${selectedCategory!.displayName}',
+              label: '${selectedCategory!.emoji} ${selectedCategory!.displayName}',
               onRemove: () => onFiltersChanged(null, selectedTags),
             ),
           ...selectedTags.map(
@@ -295,8 +282,7 @@ class ActiveFiltersWidget extends StatelessWidget {
           label: Text(label),
           deleteIcon: const Icon(Icons.close, size: 18),
           onDeleted: onRemove,
-          backgroundColor:
-              Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+          backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
           labelStyle: TextStyle(
             color: Theme.of(context).colorScheme.primary,
           ),

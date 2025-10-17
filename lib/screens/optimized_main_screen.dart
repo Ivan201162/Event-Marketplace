@@ -8,6 +8,5 @@ class OptimizedMainScreen extends ConsumerWidget {
   const OptimizedMainScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) =>
-      const EnhancedMainScreen();
+  Widget build(BuildContext context, WidgetRef ref) => const EnhancedMainScreen();
 }

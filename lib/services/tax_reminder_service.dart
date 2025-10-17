@@ -113,8 +113,7 @@ class TaxReminderService {
           )
           .get();
 
-      final overdueTaxes =
-          querySnapshot.docs.map(TaxInfo.fromDocument).toList();
+      final overdueTaxes = querySnapshot.docs.map(TaxInfo.fromDocument).toList();
 
       SafeLog.info(
         'Найдено ${overdueTaxes.length} просроченных налогов',
@@ -239,8 +238,7 @@ class TaxReminderService {
           )
           .get();
 
-      final taxesNeedingReminder =
-          querySnapshot.docs.map(TaxInfo.fromDocument).toList();
+      final taxesNeedingReminder = querySnapshot.docs.map(TaxInfo.fromDocument).toList();
 
       SafeLog.info(
         'Найдено ${taxesNeedingReminder.length} налогов, требующих напоминания',

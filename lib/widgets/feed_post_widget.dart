@@ -52,9 +52,8 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
 
   void _initializeVideoPlayer() {
     if (widget.post.media.isNotEmpty) {
-      final firstVideo = widget.post.media
-          .where((media) => media.type == FeedPostMediaType.video)
-          .firstOrNull;
+      final firstVideo =
+          widget.post.media.where((media) => media.type == FeedPostMediaType.video).firstOrNull;
 
       if (firstVideo != null) {
         _videoController = VideoPlayerController.networkUrl(
@@ -96,9 +95,7 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
                         'https://ui-avatars.com/api/?name=${widget.post.authorId}&size=40',
                       )
                     : null,
-                child: widget.post.authorId.isEmpty
-                    ? const Icon(Icons.person)
-                    : null,
+                child: widget.post.authorId.isEmpty ? const Icon(Icons.person) : null,
               ),
             ),
             const SizedBox(width: 12),
@@ -123,10 +120,8 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
                 ],
               ),
             ),
-            if (widget.post.isPinned)
-              const Icon(Icons.push_pin, color: Colors.orange, size: 16),
-            if (widget.post.isSponsored)
-              const Icon(Icons.ads_click, color: Colors.blue, size: 16),
+            if (widget.post.isPinned) const Icon(Icons.push_pin, color: Colors.orange, size: 16),
+            if (widget.post.isSponsored) const Icon(Icons.ads_click, color: Colors.blue, size: 16),
             IconButton(
               onPressed: widget.onMore,
               icon: const Icon(Icons.more_vert),
@@ -176,8 +171,7 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
                     // TODO: Переход к поиску по тегу
                   },
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.blue[100],
                       borderRadius: BorderRadius.circular(12),
@@ -328,8 +322,7 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
                 });
               },
               itemCount: widget.post.media.length,
-              itemBuilder: (context, index) =>
-                  _buildSingleMedia(widget.post.media[index]),
+              itemBuilder: (context, index) => _buildSingleMedia(widget.post.media[index]),
             ),
           ),
           if (widget.post.media.length > 1)
@@ -345,9 +338,7 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
                     height: 8,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: _currentMediaIndex == index
-                          ? Colors.blue
-                          : Colors.grey[300],
+                      color: _currentMediaIndex == index ? Colors.blue : Colors.grey[300],
                     ),
                   ),
                 ),

@@ -70,8 +70,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
             .recordInteraction(
               RecommendationInteraction(
                 id: '${recommendation.id}_${DateTime.now().millisecondsSinceEpoch}',
-                userId:
-                    'current_user', // TODO(developer): Получить реальный ID пользователя
+                userId: 'current_user', // TODO(developer): Получить реальный ID пользователя
                 recommendationId: recommendation.id,
                 specialistId: specialist.id,
                 type: RecommendationInteractionType.viewed,
@@ -142,10 +141,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
               Text(
                 'Релевантность: ${(recommendation.score * 100).toInt()}%',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.6),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
               ),
             ],
@@ -156,17 +152,13 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
   }
 
   /// Информация о специалисте
-  Widget _buildSpecialistInfo(BuildContext context, Specialist specialist) =>
-      Row(
+  Widget _buildSpecialistInfo(BuildContext context, Specialist specialist) => Row(
         children: [
           CircleAvatar(
             radius: 24,
-            backgroundImage: specialist.avatarUrl != null
-                ? NetworkImage(specialist.avatarUrl!)
-                : null,
-            child: specialist.avatarUrl == null
-                ? Text(specialist.name[0].toUpperCase())
-                : null,
+            backgroundImage:
+                specialist.avatarUrl != null ? NetworkImage(specialist.avatarUrl!) : null,
+            child: specialist.avatarUrl == null ? Text(specialist.name[0].toUpperCase()) : null,
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -182,10 +174,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
                 Text(
                   specialist.categoryDisplayName,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.7),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                 ),
                 Row(
@@ -206,10 +195,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
                     Text(
                       '(${specialist.reviewCount} отзывов)',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withValues(alpha: 0.6),
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                           ),
                     ),
                   ],
@@ -229,8 +215,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
               ),
               if (specialist.isAvailable)
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     color: Colors.green.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -256,10 +241,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
       Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Theme.of(context)
-              .colorScheme
-              .surfaceContainerHighest
-              .withValues(alpha: 0.3),
+          color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
@@ -274,10 +256,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
               child: Text(
                 recommendation.reason,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.8),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
                     ),
               ),
             ),
@@ -298,8 +277,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
                     .recordInteraction(
                       RecommendationInteraction(
                         id: '${recommendation.id}_clicked_${DateTime.now().millisecondsSinceEpoch}',
-                        userId:
-                            'current_user_id', // TODO(developer): Get actual user ID
+                        userId: 'current_user_id', // TODO(developer): Get actual user ID
                         recommendationId: recommendation.id,
                         specialistId: recommendation.specialist!.id,
                         type: RecommendationInteractionType.clicked,
@@ -335,8 +313,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
                   .recordInteraction(
                     RecommendationInteraction(
                       id: '${recommendation.id}_saved_${DateTime.now().millisecondsSinceEpoch}',
-                      userId:
-                          'current_user_id', // TODO(developer): Get actual user ID
+                      userId: 'current_user_id', // TODO(developer): Get actual user ID
                       recommendationId: recommendation.id,
                       specialistId: recommendation.specialist!.id,
                       type: RecommendationInteractionType.saved,
@@ -357,8 +334,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
                   .recordInteraction(
                     RecommendationInteraction(
                       id: '${recommendation.id}_dismissed_${DateTime.now().millisecondsSinceEpoch}',
-                      userId:
-                          'current_user_id', // TODO(developer): Get actual user ID
+                      userId: 'current_user_id', // TODO(developer): Get actual user ID
                       recommendationId: recommendation.id,
                       specialistId: recommendation.specialist!.id,
                       type: RecommendationInteractionType.dismissed,
@@ -407,13 +383,11 @@ class RecommendationCollectionWidget extends ConsumerWidget {
         var filteredRecommendations = recommendations;
 
         if (type != null) {
-          filteredRecommendations =
-              filteredRecommendations.where((r) => r.type == type).toList();
+          filteredRecommendations = filteredRecommendations.where((r) => r.type == type).toList();
         }
 
         if (limit != null) {
-          filteredRecommendations =
-              filteredRecommendations.take(limit!).toList();
+          filteredRecommendations = filteredRecommendations.take(limit!).toList();
         }
 
         if (filteredRecommendations.isEmpty) {
@@ -468,29 +442,20 @@ class RecommendationCollectionWidget extends ConsumerWidget {
             Icon(
               Icons.recommend_outlined,
               size: 64,
-              color: Theme.of(context)
-                  .colorScheme
-                  .onSurface
-                  .withValues(alpha: 0.3),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
             ),
             const SizedBox(height: 16),
             Text(
               'Нет рекомендаций',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.5),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                   ),
             ),
             const SizedBox(height: 8),
             Text(
               'Мы подберём для вас подходящих специалистов!',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.5),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                   ),
               textAlign: TextAlign.center,
             ),
@@ -592,8 +557,7 @@ class SimilarSpecialistsWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final similarAsync =
-        ref.watch(similarSpecialistsRecommendationsProvider(specialistId));
+    final similarAsync = ref.watch(similarSpecialistsRecommendationsProvider(specialistId));
 
     return similarAsync.when(
       data: (similar) {

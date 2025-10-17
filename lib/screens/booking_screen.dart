@@ -62,8 +62,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
 
   Future<void> _loadSpecialist() async {
     try {
-      final specialist =
-          await _specialistService.getSpecialistById(widget.specialistId);
+      final specialist = await _specialistService.getSpecialistById(widget.specialistId);
       setState(() {
         _specialist = specialist;
         _isLoading = false;
@@ -274,14 +273,11 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
             children: [
               CircleAvatar(
                 radius: 30,
-                backgroundImage: _specialist!.imageUrl != null
-                    ? NetworkImage(_specialist!.imageUrl!)
-                    : null,
+                backgroundImage:
+                    _specialist!.imageUrl != null ? NetworkImage(_specialist!.imageUrl!) : null,
                 child: _specialist!.imageUrl == null
                     ? Text(
-                        _specialist!.name.isNotEmpty
-                            ? _specialist!.name[0].toUpperCase()
-                            : '?',
+                        _specialist!.name.isNotEmpty ? _specialist!.name[0].toUpperCase() : '?',
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 
 import '../models/social_models.dart';
 
@@ -50,8 +50,7 @@ class AnimatedProfileBanner extends StatelessWidget {
                     tag: 'profile_avatar_${profile.id}',
                     child: CircleAvatar(
                       radius: 32,
-                      backgroundColor:
-                          theme.primaryColor.withValues(alpha: 0.1),
+                      backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
                       backgroundImage: profile.avatarUrl != null
                           ? CachedNetworkImageProvider(profile.avatarUrl!)
                           : null,

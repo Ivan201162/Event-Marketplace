@@ -50,10 +50,7 @@ class EventIdea {
       authorId: data['authorId']?.toString() ?? '',
       title: data['title']?.toString() ?? '',
       description: data['description']?.toString() ?? '',
-      images: (data['images'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList() ??
-          [],
+      images: (data['images'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       authorName: data['authorName']?.toString(),
       authorAvatar: data['authorAvatar']?.toString(),
@@ -61,9 +58,7 @@ class EventIdea {
       comments: (data['comments'] as num?)?.toInt() ?? 0,
       shares: (data['shares'] as num?)?.toInt() ?? 0,
       views: (data['views'] as num?)?.toInt() ?? 0,
-      tags:
-          (data['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ??
-              [],
+      tags: (data['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
       category: data['category']?.toString(),
       budget: (data['budget'] as num?)?.toDouble(),
       duration: (data['duration'] as num?)?.toInt(),
@@ -76,9 +71,7 @@ class EventIdea {
       guestCount: (data['guestCount'] as num?)?.toInt(),
       season: data['season']?.toString(),
       style: data['style']?.toString(),
-      colorScheme: (data['colorScheme'] as List<dynamic>?)
-          ?.map((e) => e.toString())
-          .toList(),
+      colorScheme: (data['colorScheme'] as List<dynamic>?)?.map((e) => e.toString()).toList(),
       inspiration: data['inspiration']?.toString(),
       createdBy: data['createdBy']?.toString(),
       commentsCount: (data['commentsCount'] as num?)?.toInt(),
@@ -86,9 +79,7 @@ class EventIdea {
       isVideo: data['isVideo'] as bool?,
       price: (data['price'] as num?)?.toDouble(),
       priceCurrency: data['priceCurrency']?.toString(),
-      requiredSkills: (data['requiredSkills'] as List<dynamic>?)
-          ?.map((e) => e.toString())
-          .toList(),
+      requiredSkills: (data['requiredSkills'] as List<dynamic>?)?.map((e) => e.toString()).toList(),
       likesCount: (data['likesCount'] as num?)?.toInt(),
       savesCount: (data['savesCount'] as num?)?.toInt(),
       sharesCount: (data['sharesCount'] as num?)?.toInt(),
@@ -101,23 +92,16 @@ class EventIdea {
         authorId: data['authorId']?.toString() ?? '',
         title: data['title']?.toString() ?? '',
         description: data['description']?.toString() ?? '',
-        images: (data['images'] as List<dynamic>?)
-                ?.map((e) => e.toString())
-                .toList() ??
-            [],
-        createdAt: data['createdAt'] != null
-            ? (data['createdAt'] as Timestamp).toDate()
-            : DateTime.now(),
+        images: (data['images'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+        createdAt:
+            data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
         authorName: data['authorName']?.toString(),
         authorAvatar: data['authorAvatar']?.toString(),
         likes: (data['likes'] as num?)?.toInt() ?? 0,
         comments: (data['comments'] as num?)?.toInt() ?? 0,
         shares: (data['shares'] as num?)?.toInt() ?? 0,
         views: (data['views'] as num?)?.toInt() ?? 0,
-        tags: (data['tags'] as List<dynamic>?)
-                ?.map((e) => e.toString())
-                .toList() ??
-            [],
+        tags: (data['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
         category: data['category']?.toString(),
         budget: (data['budget'] as num?)?.toDouble(),
         duration: (data['duration'] as num?)?.toInt(),
@@ -130,9 +114,7 @@ class EventIdea {
         guestCount: (data['guestCount'] as num?)?.toInt(),
         season: data['season']?.toString(),
         style: data['style']?.toString(),
-        colorScheme: (data['colorScheme'] as List<dynamic>?)
-            ?.map((e) => e.toString())
-            .toList(),
+        colorScheme: (data['colorScheme'] as List<dynamic>?)?.map((e) => e.toString()).toList(),
         inspiration: data['inspiration']?.toString(),
         createdBy: data['createdBy']?.toString(),
         commentsCount: (data['commentsCount'] as num?)?.toInt(),
@@ -140,9 +122,8 @@ class EventIdea {
         isVideo: data['isVideo'] as bool?,
         price: (data['price'] as num?)?.toDouble(),
         priceCurrency: data['priceCurrency']?.toString(),
-        requiredSkills: (data['requiredSkills'] as List<dynamic>?)
-            ?.map((e) => e.toString())
-            .toList(),
+        requiredSkills:
+            (data['requiredSkills'] as List<dynamic>?)?.map((e) => e.toString()).toList(),
         likesCount: (data['likesCount'] as num?)?.toInt(),
         savesCount: (data['savesCount'] as num?)?.toInt(),
         sharesCount: (data['sharesCount'] as num?)?.toInt(),
@@ -381,8 +362,7 @@ class EventIdea {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() =>
-      'EventIdea(id: $id, title: $title, authorId: $authorId, likes: $likes)';
+  String toString() => 'EventIdea(id: $id, title: $title, authorId: $authorId, likes: $likes)';
 }
 
 /// Модель для создания идеи
@@ -417,8 +397,7 @@ class CreateEventIdea {
   final String? location;
   final Map<String, dynamic> metadata;
 
-  bool get isValid =>
-      authorId.isNotEmpty && title.isNotEmpty && description.isNotEmpty;
+  bool get isValid => authorId.isNotEmpty && title.isNotEmpty && description.isNotEmpty;
 
   List<String> get validationErrors {
     final errors = <String>[];

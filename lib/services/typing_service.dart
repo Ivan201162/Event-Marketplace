@@ -47,17 +47,11 @@ class TypingService {
   }
 
   /// Получить поток пользователей, которые печатают
-  Stream<List<TypingUser>> getTypingUsers(String chatId) => _firestore
-      .collection(_typingCollection)
-      .doc(chatId)
-      .collection('typing')
-      .snapshots()
-      .map(
-        (snapshot) => snapshot.docs
-            .map(TypingUser.fromDocument)
-            .where((user) => user.isTyping)
-            .toList(),
-      );
+  Stream<List<TypingUser>> getTypingUsers(String chatId) =>
+      _firestore.collection(_typingCollection).doc(chatId).collection('typing').snapshots().map(
+            (snapshot) =>
+                snapshot.docs.map(TypingUser.fromDocument).where((user) => user.isTyping).toList(),
+          );
 
   /// Обновить активность печатания (для поддержания индикации)
   Future<void> updateTypingActivity({

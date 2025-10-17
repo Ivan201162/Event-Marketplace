@@ -46,10 +46,7 @@ class DisputeService {
       );
 
       // Save dispute to Firestore
-      await _firestore
-          .collection('disputes')
-          .doc(disputeId)
-          .set(dispute.toMap());
+      await _firestore.collection('disputes').doc(disputeId).set(dispute.toMap());
 
       // Update payment status to disputed
       await _paymentService.updatePaymentStatus(
@@ -217,9 +214,7 @@ class DisputeService {
           .orderBy('createdAt', descending: false)
           .get();
 
-      return snapshot.docs
-          .map((doc) => DisputeComment.fromMap(doc.data()))
-          .toList();
+      return snapshot.docs.map((doc) => DisputeComment.fromMap(doc.data())).toList();
     } catch (e) {
       debugPrint('Error getting dispute comments: $e');
       return [];
@@ -251,8 +246,7 @@ class DisputeService {
     }
 
     // Check if payment is within dispute window (typically 60 days)
-    final daysSincePayment =
-        DateTime.now().difference(payment.completedAt!).inDays;
+    final daysSincePayment = DateTime.now().difference(payment.completedAt!).inDays;
     if (daysSincePayment > 60) {
       return false;
     }
@@ -283,8 +277,7 @@ class DisputeService {
       }
 
       final snapshot = await query.get();
-      final disputes =
-          snapshot.docs.map((doc) => Dispute.fromMap(doc.data())).toList();
+      final disputes = snapshot.docs.map((doc) => Dispute.fromMap(doc.data())).toList();
 
       var openCount = 0;
       var resolvedCount = 0;
@@ -340,8 +333,7 @@ class DisputeService {
     if (resolvedDisputes.isEmpty) return 0;
 
     final totalDays = resolvedDisputes.fold(0, (sum, dispute) {
-      final resolutionTime =
-          dispute.resolvedAt!.difference(dispute.createdAt).inDays;
+      final resolutionTime = dispute.resolvedAt!.difference(dispute.createdAt).inDays;
       return sum + resolutionTime;
     });
 
@@ -420,10 +412,8 @@ class Dispute {
         'escalatedBy': escalatedBy,
         'createdAt': Timestamp.fromDate(createdAt),
         'updatedAt': Timestamp.fromDate(updatedAt),
-        'resolvedAt':
-            resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
-        'escalatedAt':
-            escalatedAt != null ? Timestamp.fromDate(escalatedAt!) : null,
+        'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
+        'escalatedAt': escalatedAt != null ? Timestamp.fromDate(escalatedAt!) : null,
       };
 }
 

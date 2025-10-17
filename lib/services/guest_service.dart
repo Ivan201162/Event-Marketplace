@@ -131,8 +131,7 @@ class GuestService {
     try {
       final accessCode = _generateAccessCode();
       final qrCode = _generateQRCode(eventId, accessCode);
-      final expiresAt =
-          DateTime.now().add(expiresIn ?? const Duration(days: 7));
+      final expiresAt = DateTime.now().add(expiresIn ?? const Duration(days: 7));
 
       final guestAccess = GuestEventAccess(
         id: '', // Будет установлен Firestore
@@ -147,8 +146,7 @@ class GuestService {
         updatedAt: DateTime.now(),
       );
 
-      final docRef =
-          await _firestore.collection('guest_access').add(guestAccess.toMap());
+      final docRef = await _firestore.collection('guest_access').add(guestAccess.toMap());
 
       return guestAccess.copyWith(id: docRef.id);
     } catch (e) {
@@ -191,8 +189,7 @@ class GuestService {
       }
 
       // Получаем событие
-      final eventDoc =
-          await _firestore.collection('events').doc(access.eventId).get();
+      final eventDoc = await _firestore.collection('events').doc(access.eventId).get();
 
       if (!eventDoc.exists) {
         return null;
@@ -313,8 +310,7 @@ class GuestService {
         isPublic: true,
       );
 
-      final docRef =
-          await _firestore.collection('guest_greetings').add(greeting.toMap());
+      final docRef = await _firestore.collection('guest_greetings').add(greeting.toMap());
 
       return docRef.id;
     } catch (e) {
@@ -330,8 +326,7 @@ class GuestService {
     }
 
     try {
-      final greetingRef =
-          _firestore.collection('guest_greetings').doc(greetingId);
+      final greetingRef = _firestore.collection('guest_greetings').doc(greetingId);
 
       await _firestore.runTransaction((transaction) async {
         final greetingDoc = await transaction.get(greetingRef);
@@ -371,10 +366,8 @@ class GuestService {
     }
 
     try {
-      final guestsQuery = await _firestore
-          .collection('guests')
-          .where('eventId', isEqualTo: eventId)
-          .get();
+      final guestsQuery =
+          await _firestore.collection('guests').where('eventId', isEqualTo: eventId).get();
 
       final stats = <String, int>{
         'total': 0,

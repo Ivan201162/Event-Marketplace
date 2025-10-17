@@ -157,8 +157,7 @@ class ChatBotMessageWidget extends ConsumerWidget {
             const SizedBox(height: 8),
           ],
           // Карточки
-          if (message.cards != null)
-            ...message.cards!.map((card) => _buildCard(context, card)),
+          if (message.cards != null) ...message.cards!.map((card) => _buildCard(context, card)),
         ],
       );
 
@@ -252,8 +251,7 @@ class ChatBotMessageWidget extends ConsumerWidget {
             // Изображение карточки
             if (card.imageUrl != null)
               ClipRRect(
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(12)),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
                 child: Image.network(
                   card.imageUrl!,
                   height: 120,
@@ -292,8 +290,7 @@ class ChatBotMessageWidget extends ConsumerWidget {
                   // Кнопки карточки
                   if (card.buttons != null && card.buttons!.isNotEmpty) ...[
                     const SizedBox(height: 12),
-                    ...card.buttons!
-                        .map((button) => _buildButton(context, button)),
+                    ...card.buttons!.map((button) => _buildButton(context, button)),
                   ],
                 ],
               ),

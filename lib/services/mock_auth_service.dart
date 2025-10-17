@@ -138,8 +138,7 @@ class MockAuthService {
 
       // Проверяем тестовый код
       if (smsCode == '123456') {
-        _currentUser =
-            _users.firstWhere((user) => user.id == 'test-phone-user');
+        _currentUser = _users.firstWhere((user) => user.id == 'test-phone-user');
         debugPrint('INFO: [mock_auth_service] Успешный вход по телефону');
         return _currentUser;
       }
@@ -209,4 +208,3 @@ class MockAuthService {
     }
   }
 }
-

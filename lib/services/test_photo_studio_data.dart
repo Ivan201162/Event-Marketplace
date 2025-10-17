@@ -16,10 +16,8 @@ class TestPhotoStudioData {
           phone: '+7 (495) 123-45-67',
           email: 'info@svetiten.ru',
           ownerId: 'owner_1',
-          avatarUrl:
-              'https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=800',
-          coverImageUrl:
-              'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800',
+          avatarUrl: 'https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=800',
+          coverImageUrl: 'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800',
           images: [
             'https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=800',
             'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800',
@@ -63,10 +61,8 @@ class TestPhotoStudioData {
           phone: '+7 (495) 234-56-78',
           email: 'hello@artstudiopro.ru',
           ownerId: 'owner_2',
-          avatarUrl:
-              'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800',
-          coverImageUrl:
-              'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800',
+          avatarUrl: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800',
+          coverImageUrl: 'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800',
           images: [
             'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800',
             'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800',
@@ -109,10 +105,8 @@ class TestPhotoStudioData {
           phone: '+7 (495) 345-67-89',
           email: 'contact@moment-studio.ru',
           ownerId: 'owner_3',
-          avatarUrl:
-              'https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=800',
-          coverImageUrl:
-              'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800',
+          avatarUrl: 'https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=800',
+          coverImageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800',
           images: [
             'https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=800',
             'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800',
@@ -158,10 +152,8 @@ class TestPhotoStudioData {
           phone: '+7 (495) 456-78-90',
           email: 'vip@luxuryphoto.ru',
           ownerId: 'owner_4',
-          avatarUrl:
-              'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800',
-          coverImageUrl:
-              'https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=800',
+          avatarUrl: 'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800',
+          coverImageUrl: 'https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=800',
           images: [
             'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800',
             'https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=800',
@@ -206,10 +198,8 @@ class TestPhotoStudioData {
           phone: '+7 (495) 567-89-01',
           email: 'info@raduga-studio.ru',
           ownerId: 'owner_5',
-          avatarUrl:
-              'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800',
-          coverImageUrl:
-              'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800',
+          avatarUrl: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800',
+          coverImageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800',
           images: [
             'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800',
             'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800',
@@ -248,10 +238,8 @@ class TestPhotoStudioData {
           phone: '+7 (495) 678-90-12',
           email: 'studio@blackwhite.ru',
           ownerId: 'owner_6',
-          avatarUrl:
-              'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800',
-          coverImageUrl:
-              'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800',
+          avatarUrl: 'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800',
+          coverImageUrl: 'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800',
           images: [
             'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800',
           ],

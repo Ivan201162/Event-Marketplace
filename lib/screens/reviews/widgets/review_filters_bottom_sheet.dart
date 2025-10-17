@@ -11,8 +11,7 @@ class ReviewFiltersBottomSheet extends StatefulWidget {
   final Function(ReviewFilter) onFilterChanged;
 
   @override
-  State<ReviewFiltersBottomSheet> createState() =>
-      _ReviewFiltersBottomSheetState();
+  State<ReviewFiltersBottomSheet> createState() => _ReviewFiltersBottomSheetState();
 }
 
 class _ReviewFiltersBottomSheetState extends State<ReviewFiltersBottomSheet> {
@@ -132,8 +131,7 @@ class _ReviewFiltersBottomSheetState extends State<ReviewFiltersBottomSheet> {
           const SizedBox(height: 8),
           CheckboxListTile(
             title: const Text('Только с фото'),
-            subtitle:
-                const Text('Показать отзывы с прикрепленными фотографиями'),
+            subtitle: const Text('Показать отзывы с прикрепленными фотографиями'),
             value: _hasPhotos,
             onChanged: (value) {
               setState(() {

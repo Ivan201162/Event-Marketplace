@@ -53,11 +53,8 @@ class EventMediaService {
         'updatedAt': FieldValue.serverTimestamp(),
       };
 
-      final docRef = await _firestore
-          .collection('events')
-          .doc(eventId)
-          .collection('media')
-          .add(mediaData);
+      final docRef =
+          await _firestore.collection('events').doc(eventId).collection('media').add(mediaData);
 
       // Обновляем статус на "готов"
       await docRef.update({
@@ -157,34 +154,30 @@ class EventMediaService {
       );
 
   /// Получить медиафайлы пользователя в мероприятии
-  Stream<List<EventMedia>> getUserEventMedia(String eventId, String userId) =>
-      _firestore
-          .collection('events')
-          .doc(eventId)
-          .collection('media')
-          .where('uploadedBy', isEqualTo: userId)
-          .where('status', isEqualTo: MediaStatus.ready.name)
-          .orderBy('createdAt', descending: true)
-          .snapshots()
-          .map(
-            (snapshot) => snapshot.docs
-                .map(
-                  (doc) => EventMedia.fromMap({
-                    'id': doc.id,
-                    ...doc.data(),
-                  }),
-                )
-                .toList(),
-          );
+  Stream<List<EventMedia>> getUserEventMedia(String eventId, String userId) => _firestore
+      .collection('events')
+      .doc(eventId)
+      .collection('media')
+      .where('uploadedBy', isEqualTo: userId)
+      .where('status', isEqualTo: MediaStatus.ready.name)
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs
+            .map(
+              (doc) => EventMedia.fromMap({
+                'id': doc.id,
+                ...doc.data(),
+              }),
+            )
+            .toList(),
+      );
 
   /// Лайкнуть медиафайл
   Future<void> likeMedia(String eventId, String mediaId, String userId) async {
     try {
-      final mediaRef = _firestore
-          .collection('events')
-          .doc(eventId)
-          .collection('media')
-          .doc(mediaId);
+      final mediaRef =
+          _firestore.collection('events').doc(eventId).collection('media').doc(mediaId);
 
       await _firestore.runTransaction((transaction) async {
         final mediaDoc = await transaction.get(mediaRef);
@@ -228,12 +221,7 @@ class EventMediaService {
     List<String> tags,
   ) async {
     try {
-      await _firestore
-          .collection('events')
-          .doc(eventId)
-          .collection('media')
-          .doc(mediaId)
-          .update({
+      await _firestore.collection('events').doc(eventId).collection('media').doc(mediaId).update({
         'tags': FieldValue.arrayUnion(tags),
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -252,12 +240,7 @@ class EventMediaService {
     List<String> tags,
   ) async {
     try {
-      await _firestore
-          .collection('events')
-          .doc(eventId)
-          .collection('media')
-          .doc(mediaId)
-          .update({
+      await _firestore.collection('events').doc(eventId).collection('media').doc(mediaId).update({
         'tags': FieldValue.arrayRemove(tags),
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -276,12 +259,7 @@ class EventMediaService {
     bool isFeatured,
   ) async {
     try {
-      await _firestore
-          .collection('events')
-          .doc(eventId)
-          .collection('media')
-          .doc(mediaId)
-          .update({
+      await _firestore.collection('events').doc(eventId).collection('media').doc(mediaId).update({
         'isFeatured': isFeatured,
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -300,12 +278,7 @@ class EventMediaService {
     bool isPublic,
   ) async {
     try {
-      await _firestore
-          .collection('events')
-          .doc(eventId)
-          .collection('media')
-          .doc(mediaId)
-          .update({
+      await _firestore.collection('events').doc(eventId).collection('media').doc(mediaId).update({
         'isPublic': isPublic,
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -320,12 +293,7 @@ class EventMediaService {
   /// Удалить медиафайл
   Future<void> deleteMedia(String eventId, String mediaId) async {
     try {
-      await _firestore
-          .collection('events')
-          .doc(eventId)
-          .collection('media')
-          .doc(mediaId)
-          .update({
+      await _firestore.collection('events').doc(eventId).collection('media').doc(mediaId).update({
         'status': MediaStatus.deleted.name,
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -376,9 +344,7 @@ class EventMediaService {
         'totalSize': totalSize,
         'totalLikes': totalLikes,
         'lastUpdated': media.isNotEmpty
-            ? media
-                .map((m) => m.updatedAt)
-                .reduce((a, b) => a.isAfter(b) ? a : b)
+            ? media.map((m) => m.updatedAt).reduce((a, b) => a.isAfter(b) ? a : b)
             : null,
       };
     } catch (e) {
@@ -430,8 +396,7 @@ class EventMediaService {
         }
       }
 
-      final sortedTags = tagCounts.entries.toList()
-        ..sort((a, b) => b.value.compareTo(a.value));
+      final sortedTags = tagCounts.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
 
       return sortedTags.take(10).map((e) => e.key).toList();
     } catch (e) {

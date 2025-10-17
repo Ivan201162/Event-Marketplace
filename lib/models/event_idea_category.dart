@@ -10,8 +10,7 @@ class EventIdeaCategory {
   });
 
   /// Создать из Map
-  factory EventIdeaCategory.fromMap(Map<String, dynamic> data) =>
-      EventIdeaCategory(
+  factory EventIdeaCategory.fromMap(Map<String, dynamic> data) => EventIdeaCategory(
         id: data['id']?.toString() ?? '',
         name: data['name']?.toString() ?? '',
         emoji: data['emoji']?.toString() ?? '',

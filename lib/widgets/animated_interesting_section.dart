@@ -6,8 +6,7 @@ class AnimatedInterestingSection extends StatefulWidget {
   const AnimatedInterestingSection({super.key});
 
   @override
-  State<AnimatedInterestingSection> createState() =>
-      _AnimatedInterestingSectionState();
+  State<AnimatedInterestingSection> createState() => _AnimatedInterestingSectionState();
 }
 
 class _AnimatedInterestingSectionState extends State<AnimatedInterestingSection>
@@ -71,7 +70,7 @@ class _AnimatedInterestingSectionState extends State<AnimatedInterestingSection>
   @override
   void dispose() {
     _animationController.dispose();
-    for (var controller in _cardControllers) {
+    for (final controller in _cardControllers) {
       controller.dispose();
     }
     super.dispose();
@@ -176,8 +175,7 @@ class _InterestingCard extends StatefulWidget {
   State<_InterestingCard> createState() => _InterestingCardState();
 }
 
-class _InterestingCardState extends State<_InterestingCard>
-    with SingleTickerProviderStateMixin {
+class _InterestingCardState extends State<_InterestingCard> with SingleTickerProviderStateMixin {
   late AnimationController _hoverController;
   late Animation<double> _scaleAnimation;
   bool _isHovered = false;
@@ -261,8 +259,7 @@ class _InterestingCardState extends State<_InterestingCard>
                       widget.title,
                       style: TextStyle(
                         color: widget.color,
-                        fontWeight:
-                            _isHovered ? FontWeight.bold : FontWeight.w500,
+                        fontWeight: _isHovered ? FontWeight.bold : FontWeight.w500,
                         fontSize: 12,
                       ),
                       textAlign: TextAlign.center,

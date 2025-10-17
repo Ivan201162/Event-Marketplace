@@ -19,8 +19,7 @@ class CitySelectionScreen extends ConsumerStatefulWidget {
   final CityRegion? initialCity;
 
   @override
-  ConsumerState<CitySelectionScreen> createState() =>
-      _CitySelectionScreenState();
+  ConsumerState<CitySelectionScreen> createState() => _CitySelectionScreenState();
 }
 
 class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
@@ -162,8 +161,7 @@ class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
                       cities: cities,
                       onCitySelected: _onCitySelected,
                     ),
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
+                    loading: () => const Center(child: CircularProgressIndicator()),
                     error: (error, stack) => Center(
                       child: Text('Ошибка поиска: $error'),
                     ),
@@ -191,8 +189,7 @@ class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
                         ),
                       ],
                     ),
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
+                    loading: () => const Center(child: CircularProgressIndicator()),
                     error: (error, stack) => Center(
                       child: Text('Ошибка загрузки: $error'),
                     ),
@@ -234,8 +231,7 @@ class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
                     cities: cities,
                     onCitySelected: _onCitySelected,
                   ),
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
+                  loading: () => const Center(child: CircularProgressIndicator()),
                   error: (error, stack) => Center(
                     child: Text('Ошибка загрузки: $error'),
                   ),
@@ -273,9 +269,7 @@ class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
                         [],
                   ],
                   onChanged: (region) {
-                    ref
-                        .read(filteredCitiesProvider.notifier)
-                        .updateRegion(region);
+                    ref.read(filteredCitiesProvider.notifier).updateRegion(region);
                   },
                 );
               },

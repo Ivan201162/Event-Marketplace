@@ -10,15 +10,12 @@ class TestingMonitoringScreen extends ConsumerStatefulWidget {
   const TestingMonitoringScreen({super.key});
 
   @override
-  ConsumerState<TestingMonitoringScreen> createState() =>
-      _TestingMonitoringScreenState();
+  ConsumerState<TestingMonitoringScreen> createState() => _TestingMonitoringScreenState();
 }
 
-class _TestingMonitoringScreenState
-    extends ConsumerState<TestingMonitoringScreen> {
+class _TestingMonitoringScreenState extends ConsumerState<TestingMonitoringScreen> {
   final ErrorLoggingService _errorLogger = ErrorLoggingService();
-  final PerformanceTestingService _performanceTester =
-      PerformanceTestingService();
+  final PerformanceTestingService _performanceTester = PerformanceTestingService();
   final AppOptimizationService _optimizer = AppOptimizationService();
 
   bool _isRunningTests = false;
@@ -285,8 +282,7 @@ class _TestingMonitoringScreenState
             Row(
               children: [
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: priorityColor,
                     borderRadius: BorderRadius.circular(12),
@@ -325,8 +321,7 @@ class _TestingMonitoringScreenState
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () =>
-                    _applyRecommendation(recommendation['action'] as String),
+                onPressed: () => _applyRecommendation(recommendation['action'] as String),
                 child: const Text('Применить'),
               ),
             ),
@@ -366,11 +361,8 @@ class _TestingMonitoringScreenState
                     'Ошибки по экранам:',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  ...(_errorStats!['errorsByScreen'] as Map<String, dynamic>)
-                      .entries
-                      .map(
-                        (entry) =>
-                            _buildInfoRow('  ${entry.key}', '${entry.value}'),
+                  ...(_errorStats!['errorsByScreen'] as Map<String, dynamic>).entries.map(
+                        (entry) => _buildInfoRow('  ${entry.key}', '${entry.value}'),
                       ),
                 ],
               ] else
@@ -496,8 +488,7 @@ class _TestingMonitoringScreenState
               ),
             ],
           ),
-          if (result['totalTime'] != null)
-            _buildInfoRow('Время', '${result['totalTime']} мс'),
+          if (result['totalTime'] != null) _buildInfoRow('Время', '${result['totalTime']} мс'),
           if (result['error'] != null)
             Text(
               'Ошибка: ${result['error']}',

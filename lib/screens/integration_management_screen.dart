@@ -11,12 +11,10 @@ class IntegrationManagementScreen extends ConsumerStatefulWidget {
   const IntegrationManagementScreen({super.key});
 
   @override
-  ConsumerState<IntegrationManagementScreen> createState() =>
-      _IntegrationManagementScreenState();
+  ConsumerState<IntegrationManagementScreen> createState() => _IntegrationManagementScreenState();
 }
 
-class _IntegrationManagementScreenState
-    extends ConsumerState<IntegrationManagementScreen> {
+class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagementScreen> {
   final IntegrationService _integrationService = IntegrationService();
   List<ExternalIntegration> _integrations = [];
   bool _isLoading = true;
@@ -80,13 +78,10 @@ class _IntegrationManagementScreenState
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.blue.withValues(alpha: 0.1)
-              : Colors.transparent,
+          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color:
-                isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
+            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -190,8 +185,7 @@ class _IntegrationManagementScreenState
               ),
               _buildStatusChip(integration.status),
               PopupMenuButton<String>(
-                onSelected: (value) =>
-                    _handleIntegrationAction(value, integration),
+                onSelected: (value) => _handleIntegrationAction(value, integration),
                 itemBuilder: (context) => [
                   if (integration.isActive) ...[
                     const PopupMenuItem(
@@ -497,8 +491,7 @@ class _IntegrationManagementScreenState
         ],
       );
 
-  Widget _buildSyncHistoryCard(ExternalIntegration integration) =>
-      ResponsiveCard(
+  Widget _buildSyncHistoryCard(ExternalIntegration integration) => ResponsiveCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -527,8 +520,7 @@ class _IntegrationManagementScreenState
 
             // История синхронизации
             FutureBuilder<List<DataSync>>(
-              future:
-                  _integrationService.getSyncHistory(integration.id, limit: 5),
+              future: _integrationService.getSyncHistory(integration.id, limit: 5),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());

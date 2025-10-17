@@ -8,16 +8,14 @@ final reviewExtendedServiceProvider =
 
 /// Провайдер для отзывов специалиста
 final specialistReviewsProvider =
-    StreamProvider.family<List<ReviewExtended>, (String, ReviewFilter)>(
-        (ref, params) {
+    StreamProvider.family<List<ReviewExtended>, (String, ReviewFilter)>((ref, params) {
   final (specialistId, filter) = params;
   final service = ref.read(reviewExtendedServiceProvider);
   return service.getSpecialistReviews(specialistId, filter);
 });
 
 /// Провайдер для конкретного отзыва
-final reviewProvider =
-    FutureProvider.family<ReviewExtended?, String>((ref, reviewId) {
+final reviewProvider = FutureProvider.family<ReviewExtended?, String>((ref, reviewId) {
   final service = ref.read(reviewExtendedServiceProvider);
   return service.getReview(reviewId);
 });
@@ -44,8 +42,7 @@ class ReviewFilterNotifier extends Notifier<ReviewFilter> {
 }
 
 /// Провайдер для фильтра отзывов
-final reviewFilterProvider =
-    NotifierProvider<ReviewFilterNotifier, ReviewFilter>(
+final reviewFilterProvider = NotifierProvider<ReviewFilterNotifier, ReviewFilter>(
   ReviewFilterNotifier.new,
 );
 
@@ -76,8 +73,7 @@ final reviewsByRatingProvider =
 
 /// Провайдер для отзывов с тегами
 final reviewsWithTagsProvider =
-    StreamProvider.family<List<ReviewExtended>, (String, List<String>)>(
-        (ref, params) {
+    StreamProvider.family<List<ReviewExtended>, (String, List<String>)>((ref, params) {
   final (specialistId, tags) = params;
   final filter = ReviewFilter(tags: tags);
   final service = ref.read(reviewExtendedServiceProvider);
@@ -126,24 +122,17 @@ final lowRatedReviewsProvider =
 
 /// Провайдер для поиска отзывов
 final searchReviewsProvider =
-    StreamProvider.family<List<ReviewExtended>, (String, String)>(
-        (ref, params) {
+    StreamProvider.family<List<ReviewExtended>, (String, String)>((ref, params) {
   final (specialistId, query) = params;
-  return ref
-      .watch(specialistReviewsProvider((specialistId, const ReviewFilter())))
-      .when(
+  return ref.watch(specialistReviewsProvider((specialistId, const ReviewFilter()))).when(
         data: (reviews) {
           if (query.isEmpty) return Stream.value(reviews);
 
           final filtered = reviews
               .where(
                 (review) =>
-                    review.comment
-                        .toLowerCase()
-                        .contains(query.toLowerCase()) ||
-                    review.customerName
-                        .toLowerCase()
-                        .contains(query.toLowerCase()) ||
+                    review.comment.toLowerCase().contains(query.toLowerCase()) ||
+                    review.customerName.toLowerCase().contains(query.toLowerCase()) ||
                     review.tags.any(
                       (tag) => tag.toLowerCase().contains(query.toLowerCase()),
                     ),
@@ -159,8 +148,7 @@ final searchReviewsProvider =
 
 /// Провайдер для отзывов за период
 final reviewsForPeriodProvider =
-    StreamProvider.family<List<ReviewExtended>, (String, DateTime, DateTime)>(
-        (ref, params) {
+    StreamProvider.family<List<ReviewExtended>, (String, DateTime, DateTime)>((ref, params) {
   final (specialistId, startDate, endDate) = params;
   final filter = ReviewFilter(startDate: startDate, endDate: endDate);
   final service = ref.read(reviewExtendedServiceProvider);
@@ -189,139 +177,122 @@ final reviewsLastYearProvider =
 
 /// Провайдер для среднего рейтинга
 final averageRatingProvider = StreamProvider.family<double, String>(
-  (ref, specialistId) =>
-      ref.watch(specialistReviewStatsProvider(specialistId)).when(
-            data: (stats) => Stream.value(stats.averageRating),
-            loading: () => Stream.value(0),
-            error: (_, __) => Stream.value(0),
-          ),
+  (ref, specialistId) => ref.watch(specialistReviewStatsProvider(specialistId)).when(
+        data: (stats) => Stream.value(stats.averageRating),
+        loading: () => Stream.value(0),
+        error: (_, __) => Stream.value(0),
+      ),
 );
 
 /// Провайдер для общего количества отзывов
 final totalReviewsCountProvider = StreamProvider.family<int, String>(
-  (ref, specialistId) =>
-      ref.watch(specialistReviewStatsProvider(specialistId)).when(
-            data: (stats) => Stream.value(stats.totalReviews),
-            loading: () => Stream.value(0),
-            error: (_, __) => Stream.value(0),
-          ),
+  (ref, specialistId) => ref.watch(specialistReviewStatsProvider(specialistId)).when(
+        data: (stats) => Stream.value(stats.totalReviews),
+        loading: () => Stream.value(0),
+        error: (_, __) => Stream.value(0),
+      ),
 );
 
 /// Провайдер для общего количества лайков
 final totalLikesCountProvider = StreamProvider.family<int, String>(
-  (ref, specialistId) =>
-      ref.watch(specialistReviewStatsProvider(specialistId)).when(
-            data: (stats) => Stream.value(stats.totalLikes),
-            loading: () => Stream.value(0),
-            error: (_, __) => Stream.value(0),
-          ),
+  (ref, specialistId) => ref.watch(specialistReviewStatsProvider(specialistId)).when(
+        data: (stats) => Stream.value(stats.totalLikes),
+        loading: () => Stream.value(0),
+        error: (_, __) => Stream.value(0),
+      ),
 );
 
 /// Провайдер для распределения рейтингов
 final ratingDistributionProvider = StreamProvider.family<Map<int, int>, String>(
-  (ref, specialistId) =>
-      ref.watch(specialistReviewStatsProvider(specialistId)).when(
-            data: (stats) => Stream.value(stats.ratingDistribution),
-            loading: () => Stream.value({}),
-            error: (_, __) => Stream.value({}),
-          ),
+  (ref, specialistId) => ref.watch(specialistReviewStatsProvider(specialistId)).when(
+        data: (stats) => Stream.value(stats.ratingDistribution),
+        loading: () => Stream.value({}),
+        error: (_, __) => Stream.value({}),
+      ),
 );
 
 /// Провайдер для топ тегов
 final topTagsProvider = StreamProvider.family<List<String>, String>(
+  (ref, specialistId) => ref.watch(specialistReviewStatsProvider(specialistId)).when(
+        data: (stats) => Stream.value(stats.topTags),
+        loading: () => Stream.value([]),
+        error: (_, __) => Stream.value([]),
+      ),
+);
+
+/// Провайдер для рейтингов по категориям
+final categoryRatingsProvider = StreamProvider.family<Map<String, double>, String>(
+  (ref, specialistId) => ref.watch(specialistReviewStatsProvider(specialistId)).when(
+        data: (stats) => Stream.value(stats.categoryRatings),
+        loading: () => Stream.value({}),
+        error: (_, __) => Stream.value({}),
+      ),
+);
+
+/// Провайдер для отзывов с детальными оценками
+final reviewsWithDetailedRatingsProvider = StreamProvider.family<List<ReviewExtended>, String>(
   (ref, specialistId) =>
-      ref.watch(specialistReviewStatsProvider(specialistId)).when(
-            data: (stats) => Stream.value(stats.topTags),
+      ref.watch(specialistReviewsProvider((specialistId, const ReviewFilter()))).when(
+            data: (reviews) => Stream.value(
+              reviews
+                  .where(
+                    (review) =>
+                        review.stats.quality > 0 ||
+                        review.stats.communication > 0 ||
+                        review.stats.punctuality > 0 ||
+                        review.stats.value > 0,
+                  )
+                  .toList(),
+            ),
             loading: () => Stream.value([]),
             error: (_, __) => Stream.value([]),
           ),
 );
 
-/// Провайдер для рейтингов по категориям
-final categoryRatingsProvider =
-    StreamProvider.family<Map<String, double>, String>(
+/// Провайдер для отзывов с медиа
+final reviewsWithPhotosProvider = StreamProvider.family<List<ReviewExtended>, String>(
   (ref, specialistId) =>
-      ref.watch(specialistReviewStatsProvider(specialistId)).when(
-            data: (stats) => Stream.value(stats.categoryRatings),
-            loading: () => Stream.value({}),
-            error: (_, __) => Stream.value({}),
+      ref.watch(specialistReviewsProvider((specialistId, const ReviewFilter()))).when(
+            data: (reviews) => Stream.value(
+              reviews.where((review) => review.photos.isNotEmpty).toList(),
+            ),
+            loading: () => Stream.value([]),
+            error: (_, __) => Stream.value([]),
           ),
 );
 
-/// Провайдер для отзывов с детальными оценками
-final reviewsWithDetailedRatingsProvider =
-    StreamProvider.family<List<ReviewExtended>, String>(
-  (ref, specialistId) => ref
-      .watch(specialistReviewsProvider((specialistId, const ReviewFilter())))
-      .when(
-        data: (reviews) => Stream.value(
-          reviews
-              .where(
-                (review) =>
-                    review.stats.quality > 0 ||
-                    review.stats.communication > 0 ||
-                    review.stats.punctuality > 0 ||
-                    review.stats.value > 0,
-              )
-              .toList(),
-        ),
-        loading: () => Stream.value([]),
-        error: (_, __) => Stream.value([]),
-      ),
-);
-
-/// Провайдер для отзывов с медиа
-final reviewsWithPhotosProvider =
-    StreamProvider.family<List<ReviewExtended>, String>(
-  (ref, specialistId) => ref
-      .watch(specialistReviewsProvider((specialistId, const ReviewFilter())))
-      .when(
-        data: (reviews) => Stream.value(
-          reviews.where((review) => review.photos.isNotEmpty).toList(),
-        ),
-        loading: () => Stream.value([]),
-        error: (_, __) => Stream.value([]),
-      ),
-);
-
 /// Провайдер для отзывов с видео
-final reviewsWithVideosProvider =
-    StreamProvider.family<List<ReviewExtended>, String>(
-  (ref, specialistId) => ref
-      .watch(specialistReviewsProvider((specialistId, const ReviewFilter())))
-      .when(
-        data: (reviews) => Stream.value(
-          reviews.where((review) => review.videos.isNotEmpty).toList(),
-        ),
-        loading: () => Stream.value([]),
-        error: (_, __) => Stream.value([]),
-      ),
+final reviewsWithVideosProvider = StreamProvider.family<List<ReviewExtended>, String>(
+  (ref, specialistId) =>
+      ref.watch(specialistReviewsProvider((specialistId, const ReviewFilter()))).when(
+            data: (reviews) => Stream.value(
+              reviews.where((review) => review.videos.isNotEmpty).toList(),
+            ),
+            loading: () => Stream.value([]),
+            error: (_, __) => Stream.value([]),
+          ),
 );
 
 /// Провайдер для отзывов с лайками
-final reviewsWithLikesProvider =
-    StreamProvider.family<List<ReviewExtended>, String>(
-  (ref, specialistId) => ref
-      .watch(specialistReviewsProvider((specialistId, const ReviewFilter())))
-      .when(
-        data: (reviews) => Stream.value(
-          reviews.where((review) => review.likesCount > 0).toList(),
-        ),
-        loading: () => Stream.value([]),
-        error: (_, __) => Stream.value([]),
-      ),
+final reviewsWithLikesProvider = StreamProvider.family<List<ReviewExtended>, String>(
+  (ref, specialistId) =>
+      ref.watch(specialistReviewsProvider((specialistId, const ReviewFilter()))).when(
+            data: (reviews) => Stream.value(
+              reviews.where((review) => review.likesCount > 0).toList(),
+            ),
+            loading: () => Stream.value([]),
+            error: (_, __) => Stream.value([]),
+          ),
 );
 
 /// Провайдер для отзывов без лайков
-final reviewsWithoutLikesProvider =
-    StreamProvider.family<List<ReviewExtended>, String>(
-  (ref, specialistId) => ref
-      .watch(specialistReviewsProvider((specialistId, const ReviewFilter())))
-      .when(
-        data: (reviews) => Stream.value(
-          reviews.where((review) => review.likesCount == 0).toList(),
-        ),
-        loading: () => Stream.value([]),
-        error: (_, __) => Stream.value([]),
-      ),
+final reviewsWithoutLikesProvider = StreamProvider.family<List<ReviewExtended>, String>(
+  (ref, specialistId) =>
+      ref.watch(specialistReviewsProvider((specialistId, const ReviewFilter()))).when(
+            data: (reviews) => Stream.value(
+              reviews.where((review) => review.likesCount == 0).toList(),
+            ),
+            loading: () => Stream.value([]),
+            error: (_, __) => Stream.value([]),
+          ),
 );

@@ -300,11 +300,8 @@ class EnhancedChatsService {
       final now = DateTime.now();
 
       for (final messageId in messageIds) {
-        final messageRef = _firestore
-            .collection('chats')
-            .doc(chatId)
-            .collection('messages')
-            .doc(messageId);
+        final messageRef =
+            _firestore.collection('chats').doc(chatId).collection('messages').doc(messageId);
 
         batch.update(messageRef, {
           'readBy.$userId': now.millisecondsSinceEpoch,
@@ -498,10 +495,8 @@ class EnhancedChatsService {
   /// Поиск по чатам
   Future<List<EnhancedChat>> searchChats(String userId, String query) async {
     try {
-      final snapshot = await _firestore
-          .collection('chats')
-          .where('members', arrayContains: userId)
-          .get();
+      final snapshot =
+          await _firestore.collection('chats').where('members', arrayContains: userId).get();
 
       final chats = snapshot.docs
           .map(
@@ -514,12 +509,9 @@ class EnhancedChatsService {
 
       // Фильтрация по названию и последнему сообщению
       return chats.where((chat) {
-        final nameMatch =
-            chat.name?.toLowerCase().contains(query.toLowerCase()) ?? false;
-        final lastMessageMatch = chat.lastMessage?.text
-                .toLowerCase()
-                .contains(query.toLowerCase()) ??
-            false;
+        final nameMatch = chat.name?.toLowerCase().contains(query.toLowerCase()) ?? false;
+        final lastMessageMatch =
+            chat.lastMessage?.text.toLowerCase().contains(query.toLowerCase()) ?? false;
         return nameMatch || lastMessageMatch;
       }).toList();
     } on Exception catch (e) {

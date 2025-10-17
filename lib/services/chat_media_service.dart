@@ -104,11 +104,7 @@ class ChatMediaService {
       if (imageUrl == null) return false;
 
       // Сохраняем сообщение в Firestore
-      await _firestore
-          .collection('chats')
-          .doc(chatId)
-          .collection('messages')
-          .add({
+      await _firestore.collection('chats').doc(chatId).collection('messages').add({
         'senderId': senderId,
         'senderName': senderName,
         'content': '',
@@ -148,11 +144,7 @@ class ChatMediaService {
       final thumbnailUrl = await _generateVideoThumbnail(videoFile);
 
       // Сохраняем сообщение в Firestore
-      await _firestore
-          .collection('chats')
-          .doc(chatId)
-          .collection('messages')
-          .add({
+      await _firestore.collection('chats').doc(chatId).collection('messages').add({
         'senderId': senderId,
         'senderName': senderName,
         'content': '',

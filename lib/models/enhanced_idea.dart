@@ -56,8 +56,7 @@ class EnhancedIdea {
         likes: List<String>.from((map['likes'] as List?) ?? []),
         comments: (map['comments'] as List?)
                 ?.map(
-                  (comment) =>
-                      IdeaComment.fromMap(comment as Map<String, dynamic>),
+                  (comment) => IdeaComment.fromMap(comment as Map<String, dynamic>),
                 )
                 .toList() ??
             [],
@@ -414,9 +413,7 @@ class IdeaMedia {
         width: map['width'] as int,
         height: map['height'] as int,
         thumbnailUrl: map['thumbnailUrl'] as String?,
-        duration: map['duration'] != null
-            ? Duration(milliseconds: map['duration'] as int)
-            : null,
+        duration: map['duration'] != null ? Duration(milliseconds: map['duration'] as int) : null,
         caption: map['caption'] as String?,
         altText: map['altText'] as String?,
         metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),

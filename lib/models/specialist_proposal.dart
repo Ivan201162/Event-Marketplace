@@ -29,10 +29,8 @@ class SpecialistProposal {
       id: doc.id,
       organizerId: data['organizerId']?.toString() ?? '',
       customerId: data['customerId']?.toString() ?? '',
-      specialistIds: (data['specialistIds'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList() ??
-          [],
+      specialistIds:
+          (data['specialistIds'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
       title: data['title']?.toString() ?? '',
       description: data['description']?.toString() ?? '',
       createdAt: (data['createdAt'] as Timestamp).toDate(),
@@ -43,31 +41,23 @@ class SpecialistProposal {
       isAccepted: data['isAccepted'] == true,
       isRejected: data['isRejected'] == true,
       acceptedSpecialistId: data['acceptedSpecialistId']?.toString(),
-      rejectedAt: data['rejectedAt'] != null
-          ? (data['rejectedAt'] as Timestamp).toDate()
-          : null,
-      acceptedAt: data['acceptedAt'] != null
-          ? (data['acceptedAt'] as Timestamp).toDate()
-          : null,
+      rejectedAt: data['rejectedAt'] != null ? (data['rejectedAt'] as Timestamp).toDate() : null,
+      acceptedAt: data['acceptedAt'] != null ? (data['acceptedAt'] as Timestamp).toDate() : null,
       metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
     );
   }
 
   /// Создать из Map
-  factory SpecialistProposal.fromMap(Map<String, dynamic> data) =>
-      SpecialistProposal(
+  factory SpecialistProposal.fromMap(Map<String, dynamic> data) => SpecialistProposal(
         id: data['id']?.toString() ?? '',
         organizerId: data['organizerId']?.toString() ?? '',
         customerId: data['customerId']?.toString() ?? '',
-        specialistIds: (data['specialistIds'] as List<dynamic>?)
-                ?.map((e) => e.toString())
-                .toList() ??
-            [],
+        specialistIds:
+            (data['specialistIds'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
         title: data['title']?.toString() ?? '',
         description: data['description']?.toString() ?? '',
-        createdAt: data['createdAt'] != null
-            ? (data['createdAt'] as Timestamp).toDate()
-            : DateTime.now(),
+        createdAt:
+            data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
         organizerName: data['organizerName']?.toString(),
         organizerAvatar: data['organizerAvatar']?.toString(),
         customerName: data['customerName']?.toString(),
@@ -75,12 +65,8 @@ class SpecialistProposal {
         isAccepted: data['isAccepted'] == true,
         isRejected: data['isRejected'] == true,
         acceptedSpecialistId: data['acceptedSpecialistId']?.toString(),
-        rejectedAt: data['rejectedAt'] != null
-            ? (data['rejectedAt'] as Timestamp).toDate()
-            : null,
-        acceptedAt: data['acceptedAt'] != null
-            ? (data['acceptedAt'] as Timestamp).toDate()
-            : null,
+        rejectedAt: data['rejectedAt'] != null ? (data['rejectedAt'] as Timestamp).toDate() : null,
+        acceptedAt: data['acceptedAt'] != null ? (data['acceptedAt'] as Timestamp).toDate() : null,
         metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
       );
 
@@ -117,10 +103,8 @@ class SpecialistProposal {
         'isAccepted': isAccepted,
         'isRejected': isRejected,
         'acceptedSpecialistId': acceptedSpecialistId,
-        'rejectedAt':
-            rejectedAt != null ? Timestamp.fromDate(rejectedAt!) : null,
-        'acceptedAt':
-            acceptedAt != null ? Timestamp.fromDate(acceptedAt!) : null,
+        'rejectedAt': rejectedAt != null ? Timestamp.fromDate(rejectedAt!) : null,
+        'acceptedAt': acceptedAt != null ? Timestamp.fromDate(acceptedAt!) : null,
         'metadata': metadata,
       };
 

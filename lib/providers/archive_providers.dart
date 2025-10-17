@@ -4,19 +4,16 @@ import '../models/event_archive.dart';
 import '../services/archive_service.dart';
 
 /// Провайдер сервиса архивов
-final archiveServiceProvider =
-    Provider<ArchiveService>((ref) => ArchiveService());
+final archiveServiceProvider = Provider<ArchiveService>((ref) => ArchiveService());
 
 /// Провайдер архивов бронирования
-final bookingArchivesProvider =
-    StreamProvider.family<List<EventArchive>, String>((ref, bookingId) {
+final bookingArchivesProvider = StreamProvider.family<List<EventArchive>, String>((ref, bookingId) {
   final archiveService = ref.read(archiveServiceProvider);
   return archiveService.getArchivesByBookingStream(bookingId);
 });
 
 /// Провайдер статистики архивов
-final archiveStatsProvider =
-    FutureProvider.family<Map<String, int>, String>((ref, bookingId) {
+final archiveStatsProvider = FutureProvider.family<Map<String, int>, String>((ref, bookingId) {
   final archiveService = ref.read(archiveServiceProvider);
   return archiveService.getArchiveStats(bookingId);
 });
@@ -50,15 +47,13 @@ class ArchiveUploadState {
 }
 
 /// Провайдер состояния загрузки архива
-final archiveUploadStateProvider =
-    StateNotifierProvider<ArchiveUploadNotifier, ArchiveUploadState>(
+final archiveUploadStateProvider = StateNotifierProvider<ArchiveUploadNotifier, ArchiveUploadState>(
   (ref) => ArchiveUploadNotifier(ref.read(archiveServiceProvider)),
 );
 
 /// Нотификатор для управления загрузкой архивов
 class ArchiveUploadNotifier extends StateNotifier<ArchiveUploadState> {
-  ArchiveUploadNotifier(this._archiveService)
-      : super(const ArchiveUploadState());
+  ArchiveUploadNotifier(this._archiveService) : super(const ArchiveUploadState());
   final ArchiveService _archiveService;
 
   /// Загрузить архив из галереи

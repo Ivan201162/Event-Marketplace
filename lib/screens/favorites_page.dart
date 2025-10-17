@@ -83,8 +83,7 @@ class FavoritesPage extends ConsumerWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute<void>(
-                              builder: (context) =>
-                                  EventDetailScreen(event: event),
+                              builder: (context) => EventDetailScreen(event: event),
                             ),
                           );
                         },

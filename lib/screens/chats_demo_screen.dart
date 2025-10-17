@@ -29,8 +29,7 @@ class ChatsDemoScreen extends ConsumerWidget {
                   ),
                   child: SafeArea(
                     child: Padding(
-                      padding:
-                          const EdgeInsets.only(top: 40, left: 16, right: 16),
+                      padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -167,13 +166,11 @@ class ChatsDemoScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildChatItem(BuildContext context, Map<String, dynamic> chat) =>
-      Card(
+  Widget _buildChatItem(BuildContext context, Map<String, dynamic> chat) => Card(
         margin: const EdgeInsets.only(bottom: 8),
         child: ListTile(
           leading: CircleAvatar(
-            backgroundColor:
-                Theme.of(context).primaryColor.withValues(alpha: 0.1),
+            backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
             child: Text(
               chat['name'][0].toUpperCase(),
               style: TextStyle(
@@ -188,8 +185,7 @@ class ChatsDemoScreen extends ConsumerWidget {
           ),
           subtitle: Row(
             children: [
-              if (chat['isVoice'])
-                const Icon(Icons.mic, size: 16, color: Colors.grey),
+              if (chat['isVoice']) const Icon(Icons.mic, size: 16, color: Colors.grey),
               if (chat['isVoice']) const SizedBox(width: 4),
               Expanded(
                 child: Text(

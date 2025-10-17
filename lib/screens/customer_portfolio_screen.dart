@@ -10,8 +10,7 @@ class CustomerPortfolioScreen extends StatefulWidget {
   const CustomerPortfolioScreen({super.key});
 
   @override
-  State<CustomerPortfolioScreen> createState() =>
-      _CustomerPortfolioScreenState();
+  State<CustomerPortfolioScreen> createState() => _CustomerPortfolioScreenState();
 }
 
 class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
@@ -49,21 +48,15 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
       });
 
       final currentUser = _authService.currentUser;
-      if (currentUser == null) {
-        throw Exception('Пользователь не авторизован');
-      }
 
-      final portfolio =
-          await _portfolioService.getCustomerPortfolio(currentUser.uid);
+      final portfolio = await _portfolioService.getCustomerPortfolio(currentUser.uid);
       if (portfolio == null) {
         throw Exception('Портфолио не найдено');
       }
 
-      final orderHistory =
-          await _portfolioService.getOrderHistory(currentUser.uid);
+      final orderHistory = await _portfolioService.getOrderHistory(currentUser.uid);
       final stats = await _portfolioService.getPortfolioStats(currentUser.uid);
-      final recommendations =
-          await _portfolioService.getRecommendations(currentUser.uid);
+      final recommendations = await _portfolioService.getRecommendations(currentUser.uid);
 
       setState(() {
         _portfolio = portfolio;
@@ -166,14 +159,11 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
             children: [
               CircleAvatar(
                 radius: 40,
-                backgroundImage: _portfolio!.avatarUrl != null
-                    ? NetworkImage(_portfolio!.avatarUrl!)
-                    : null,
+                backgroundImage:
+                    _portfolio!.avatarUrl != null ? NetworkImage(_portfolio!.avatarUrl!) : null,
                 child: _portfolio!.avatarUrl == null
                     ? Text(
-                        _portfolio!.name.isNotEmpty
-                            ? _portfolio!.name[0].toUpperCase()
-                            : '?',
+                        _portfolio!.name.isNotEmpty ? _portfolio!.name[0].toUpperCase() : '?',
                         style: const TextStyle(fontSize: 24),
                       )
                     : null,
@@ -360,9 +350,7 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
               Text(
                 _portfolio?.notes ?? 'Заметок пока нет',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontStyle: _portfolio?.notes == null
-                          ? FontStyle.italic
-                          : FontStyle.normal,
+                      fontStyle: _portfolio?.notes == null ? FontStyle.italic : FontStyle.normal,
                       color: _portfolio?.notes == null ? Colors.grey : null,
                     ),
               ),
@@ -419,8 +407,7 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
                     ),
                   ),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: _getStatusColor(order.status),
                       borderRadius: BorderRadius.circular(12),
@@ -560,8 +547,7 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 12),
-            ...upcomingAnniversaries
-                .map((anniversary) => _buildAnniversaryCard(anniversary, true)),
+            ...upcomingAnniversaries.map((anniversary) => _buildAnniversaryCard(anniversary, true)),
             const SizedBox(height: 24),
           ],
           Text(
@@ -619,9 +605,7 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
             fontWeight: isUpcoming ? FontWeight.bold : FontWeight.normal,
           ),
         ),
-        subtitle: isUpcoming
-            ? Text('Через $daysUntil дней')
-            : Text('${anniversary.year}'),
+        subtitle: isUpcoming ? Text('Через $daysUntil дней') : Text('${anniversary.year}'),
         trailing: IconButton(
           onPressed: () => _removeAnniversary(anniversary),
           icon: const Icon(Icons.delete, color: Colors.red),
@@ -647,7 +631,6 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
 
   Future<void> _editNotes() async {
     final currentUser = _authService.currentUser;
-    if (currentUser == null) return;
 
     final controller = TextEditingController(text: _portfolio?.notes ?? '');
 
@@ -697,7 +680,6 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
 
   Future<void> _removeFromFavorites(String specialistId) async {
     final currentUser = _authService.currentUser;
-    if (currentUser == null) return;
 
     try {
       await _portfolioService.removeFromFavorites(
@@ -721,7 +703,6 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
 
   Future<void> _addAnniversary() async {
     final currentUser = _authService.currentUser;
-    if (currentUser == null) return;
 
     final date = await showDatePicker(
       context: context,
@@ -751,7 +732,6 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
 
   Future<void> _removeAnniversary(DateTime anniversary) async {
     final currentUser = _authService.currentUser;
-    if (currentUser == null) return;
 
     final confirmed = await showDialog<bool>(
       context: context,

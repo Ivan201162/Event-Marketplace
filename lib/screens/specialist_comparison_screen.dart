@@ -9,12 +9,10 @@ class SpecialistComparisonScreen extends ConsumerStatefulWidget {
   const SpecialistComparisonScreen({super.key});
 
   @override
-  ConsumerState<SpecialistComparisonScreen> createState() =>
-      _SpecialistComparisonScreenState();
+  ConsumerState<SpecialistComparisonScreen> createState() => _SpecialistComparisonScreenState();
 }
 
-class _SpecialistComparisonScreenState
-    extends ConsumerState<SpecialistComparisonScreen> {
+class _SpecialistComparisonScreenState extends ConsumerState<SpecialistComparisonScreen> {
   SpecialistComparison _comparison = SpecialistComparison.empty();
   ComparisonCriteria _sortCriteria = ComparisonCriteria.rating;
   bool _sortAscending = false;
@@ -134,9 +132,7 @@ class _SpecialistComparisonScreenState
                   const Spacer(),
                   IconButton(
                     icon: Icon(
-                      _sortAscending
-                          ? Icons.arrow_upward
-                          : Icons.arrow_downward,
+                      _sortAscending ? Icons.arrow_upward : Icons.arrow_downward,
                     ),
                     onPressed: () {
                       setState(() {
@@ -291,8 +287,7 @@ class _SpecialistComparisonScreenState
           comparison = a.reviewCount.compareTo(b.reviewCount);
           break;
         case ComparisonCriteria.availability:
-          comparison =
-              a.isAvailable.toString().compareTo(b.isAvailable.toString());
+          comparison = a.isAvailable.toString().compareTo(b.isAvailable.toString());
           break;
         case ComparisonCriteria.location:
           comparison = (a.location ?? '').compareTo(b.location ?? '');
@@ -309,24 +304,16 @@ class _SpecialistComparisonScreenState
     switch (_sortCriteria) {
       case ComparisonCriteria.rating:
         return specialist.rating ==
-            _comparison.specialists
-                .map((s) => s.rating)
-                .reduce((a, b) => a > b ? a : b);
+            _comparison.specialists.map((s) => s.rating).reduce((a, b) => a > b ? a : b);
       case ComparisonCriteria.price:
         return specialist.hourlyRate ==
-            _comparison.specialists
-                .map((s) => s.hourlyRate)
-                .reduce((a, b) => a < b ? a : b);
+            _comparison.specialists.map((s) => s.hourlyRate).reduce((a, b) => a < b ? a : b);
       case ComparisonCriteria.experience:
         return specialist.yearsOfExperience ==
-            _comparison.specialists
-                .map((s) => s.yearsOfExperience)
-                .reduce((a, b) => a > b ? a : b);
+            _comparison.specialists.map((s) => s.yearsOfExperience).reduce((a, b) => a > b ? a : b);
       case ComparisonCriteria.reviews:
         return specialist.reviewCount ==
-            _comparison.specialists
-                .map((s) => s.reviewCount)
-                .reduce((a, b) => a > b ? a : b);
+            _comparison.specialists.map((s) => s.reviewCount).reduce((a, b) => a > b ? a : b);
       case ComparisonCriteria.availability:
         return specialist.isAvailable;
       case ComparisonCriteria.location:

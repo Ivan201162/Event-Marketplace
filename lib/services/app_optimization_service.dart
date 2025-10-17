@@ -10,8 +10,7 @@ import 'error_logging_service.dart';
 class AppOptimizationService {
   factory AppOptimizationService() => _instance;
   AppOptimizationService._internal();
-  static final AppOptimizationService _instance =
-      AppOptimizationService._internal();
+  static final AppOptimizationService _instance = AppOptimizationService._internal();
 
   final ErrorLoggingService _errorLogger = ErrorLoggingService();
 
@@ -30,8 +29,7 @@ class AppOptimizationService {
         'totalSize': tempSize + docSize,
         'tempCacheSizeMB': (tempSize / (1024 * 1024)).toStringAsFixed(2),
         'documentsSizeMB': (docSize / (1024 * 1024)).toStringAsFixed(2),
-        'totalSizeMB':
-            ((tempSize + docSize) / (1024 * 1024)).toStringAsFixed(2),
+        'totalSizeMB': ((tempSize + docSize) / (1024 * 1024)).toStringAsFixed(2),
       };
     } catch (e, stackTrace) {
       await _errorLogger.logError(
@@ -61,8 +59,7 @@ class AppOptimizationService {
       final tempSizeAfter = await _getDirectorySize(tempDir);
       final docSizeAfter = await _getDirectorySize(appDocDir);
 
-      final freedSpace =
-          (tempSizeBefore + docSizeBefore) - (tempSizeAfter + docSizeAfter);
+      final freedSpace = (tempSizeBefore + docSizeBefore) - (tempSizeAfter + docSizeAfter);
 
       return {
         'success': true,
@@ -99,8 +96,7 @@ class AppOptimizationService {
       optimizations['cacheSettings'] = await _optimizeCacheSettings(prefs);
 
       // Оптимизация настроек уведомлений
-      optimizations['notificationSettings'] =
-          await _optimizeNotificationSettings(prefs);
+      optimizations['notificationSettings'] = await _optimizeNotificationSettings(prefs);
 
       // Оптимизация настроек синхронизации
       optimizations['syncSettings'] = await _optimizeSyncSettings(prefs);
@@ -173,24 +169,21 @@ class AppOptimizationService {
           'type': 'sync_settings',
           'priority': 'low',
           'title': 'Оптимизировать синхронизацию',
-          'description':
-              'Автоматическая синхронизация может расходовать трафик и батарею.',
+          'description': 'Автоматическая синхронизация может расходовать трафик и батарею.',
           'action': 'optimize_sync',
           'estimatedSavings': 'Экономия трафика и батареи',
         });
       }
 
       // Проверяем настройки уведомлений
-      final notificationFrequency =
-          prefs.getString('notification_frequency') ?? 'all';
+      final notificationFrequency = prefs.getString('notification_frequency') ?? 'all';
 
       if (notificationFrequency == 'all') {
         recommendations.add({
           'type': 'notifications',
           'priority': 'low',
           'title': 'Настроить уведомления',
-          'description':
-              'Слишком частые уведомления могут влиять на производительность.',
+          'description': 'Слишком частые уведомления могут влиять на производительность.',
           'action': 'optimize_notifications',
           'estimatedSavings': 'Улучшение производительности',
         });
@@ -404,8 +397,7 @@ class AppOptimizationService {
         'cacheSize': cacheSize,
         'imageQuality': prefs.getInt('image_quality') ?? 80,
         'autoSync': prefs.getBool('auto_sync') ?? true,
-        'notificationFrequency':
-            prefs.getString('notification_frequency') ?? 'all',
+        'notificationFrequency': prefs.getString('notification_frequency') ?? 'all',
         'lastOptimization': prefs.getString('last_optimization'),
         'optimizationCount': prefs.getInt('optimization_count') ?? 0,
       };

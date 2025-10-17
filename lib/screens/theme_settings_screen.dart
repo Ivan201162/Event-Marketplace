@@ -57,13 +57,10 @@ class ThemeSettingsScreen extends ConsumerWidget {
               children: [
                 _buildSwitchTile(
                   title: 'Использовать системную тему',
-                  subtitle:
-                      'Автоматически переключаться между светлой и темной темой',
+                  subtitle: 'Автоматически переключаться между светлой и темной темой',
                   value: themeSettings.useSystemTheme,
                   onChanged: (value) {
-                    ref
-                        .read(themeSettingsProvider.notifier)
-                        .setUseSystemTheme(value);
+                    ref.read(themeSettingsProvider.notifier).setUseSystemTheme(value);
                   },
                 ),
                 const SizedBox(height: 8),
@@ -72,9 +69,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
                   subtitle: 'Использовать новую версию Material Design',
                   value: themeSettings.useMaterial3,
                   onChanged: (value) {
-                    ref
-                        .read(themeSettingsProvider.notifier)
-                        .setUseMaterial3(value);
+                    ref.read(themeSettingsProvider.notifier).setUseMaterial3(value);
                   },
                 ),
               ],
@@ -176,8 +171,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
         leading: Icon(icon),
         title: Text(title),
         subtitle: Text(subtitle),
-        trailing:
-            isSelected ? const Icon(Icons.check, color: Colors.green) : null,
+        trailing: isSelected ? const Icon(Icons.check, color: Colors.green) : null,
         selected: isSelected,
         onTap: () {
           ref.read(themeProvider.notifier).update((state) => mode);
@@ -214,9 +208,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
                   final isSelected = color.value == currentColor.value;
                   return GestureDetector(
                     onTap: () {
-                      ref
-                          .read(themeSettingsProvider.notifier)
-                          .setPrimaryColor(color);
+                      ref.read(themeSettingsProvider.notifier).setPrimaryColor(color);
                     },
                     child: Container(
                       width: 48,
@@ -258,8 +250,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: currentColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
-                  border:
-                      Border.all(color: currentColor.withValues(alpha: 0.3)),
+                  border: Border.all(color: currentColor.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   children: [
@@ -346,10 +337,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
                   color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .outline
-                        .withValues(alpha: 0.2),
+                    color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
                   ),
                 ),
                 child: Column(
@@ -366,10 +354,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
                     Text(
                       'Описание карточки',
                       style: TextStyle(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.7),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -437,12 +422,8 @@ class ThemeSettingsScreen extends ConsumerWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              ref
-                  .read(themeProvider.notifier)
-                  .update((state) => ThemeMode.system);
-              ref
-                  .read(themeSettingsProvider.notifier)
-                  .setPrimaryColor(Colors.deepPurple);
+              ref.read(themeProvider.notifier).update((state) => ThemeMode.system);
+              ref.read(themeSettingsProvider.notifier).setPrimaryColor(Colors.deepPurple);
               ref.read(themeSettingsProvider.notifier).setUseSystemTheme(true);
               ref.read(themeSettingsProvider.notifier).setUseMaterial3(true);
               Navigator.pop(context);

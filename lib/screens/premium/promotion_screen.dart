@@ -137,9 +137,7 @@ class _PromotionScreenState extends ConsumerState<PromotionScreen> {
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: _selectedPlan != null && !_isLoading
-                      ? _processPayment
-                      : null,
+                  onPressed: _selectedPlan != null && !_isLoading ? _processPayment : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.purple,
                     foregroundColor: Colors.white,
@@ -176,8 +174,7 @@ class _PromotionScreenState extends ConsumerState<PromotionScreen> {
         ),
       );
 
-  Widget _buildBenefitItem(IconData icon, String title, String description) =>
-      Padding(
+  Widget _buildBenefitItem(IconData icon, String title, String description) => Padding(
         padding: const EdgeInsets.only(bottom: 16),
         child: Row(
           children: [
@@ -301,4 +298,3 @@ class _PromotionScreenState extends ConsumerState<PromotionScreen> {
     );
   }
 }
-

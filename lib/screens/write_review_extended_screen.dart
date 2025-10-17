@@ -21,8 +21,7 @@ class WriteReviewExtendedScreen extends StatefulWidget {
   final Review? existingReview;
 
   @override
-  State<WriteReviewExtendedScreen> createState() =>
-      _WriteReviewExtendedScreenState();
+  State<WriteReviewExtendedScreen> createState() => _WriteReviewExtendedScreenState();
 }
 
 class _WriteReviewExtendedScreenState extends State<WriteReviewExtendedScreen> {
@@ -119,9 +118,7 @@ class _WriteReviewExtendedScreenState extends State<WriteReviewExtendedScreen> {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text(
-            widget.existingReview != null
-                ? 'Редактировать отзыв'
-                : 'Оставить отзыв',
+            widget.existingReview != null ? 'Редактировать отзыв' : 'Оставить отзыв',
           ),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
@@ -389,8 +386,7 @@ class _WriteReviewExtendedScreenState extends State<WriteReviewExtendedScreen> {
                 ),
               ],
             ),
-            if (widget.booking!.location != null &&
-                widget.booking!.location!.isNotEmpty) ...[
+            if (widget.booking!.location != null && widget.booking!.location!.isNotEmpty) ...[
               const SizedBox(height: 8),
               Row(
                 children: [

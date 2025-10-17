@@ -42,8 +42,7 @@ class ThemeSwitch extends ConsumerWidget {
           const SizedBox(height: 8),
         ],
         Container(
-          padding: padding ??
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
             color: backgroundColor ?? Theme.of(context).cardColor,
             borderRadius: borderRadius ?? BorderRadius.circular(12),
@@ -82,8 +81,7 @@ class ThemeSwitch extends ConsumerWidget {
                       ],
                       Text(
                         _getThemeName(themeMode),
-                        style:
-                            textStyle ?? Theme.of(context).textTheme.bodyMedium,
+                        style: textStyle ?? Theme.of(context).textTheme.bodyMedium,
                       ),
                       const SizedBox(width: 4),
                       Icon(
@@ -504,9 +502,7 @@ class QuickThemeToggle extends ConsumerWidget {
         color: Theme.of(context).iconTheme.color,
       ),
       tooltip: showTooltip
-          ? (isDark
-              ? 'Переключить на светлую тему'
-              : 'Переключить на темную тему')
+          ? (isDark ? 'Переключить на светлую тему' : 'Переключить на темную тему')
           : null,
     );
   }

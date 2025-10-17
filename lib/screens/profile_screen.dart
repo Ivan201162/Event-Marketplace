@@ -26,8 +26,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final currentUser = ref.watch(currentUserProvider);
-    final isCurrentUser =
-        widget.userId == null || (currentUser.value?.id == widget.userId);
+    final isCurrentUser = widget.userId == null || (currentUser.value?.id == widget.userId);
 
     return Scaffold(
       appBar: AppBar(

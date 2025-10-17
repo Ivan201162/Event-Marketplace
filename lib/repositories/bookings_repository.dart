@@ -246,10 +246,8 @@ class BookingsRepository {
         'BookingsRepository.getBookingsByEventDate: eventDate=$eventDate',
       );
 
-      final startOfDay =
-          DateTime(eventDate.year, eventDate.month, eventDate.day);
-      final endOfDay =
-          DateTime(eventDate.year, eventDate.month, eventDate.day, 23, 59, 59);
+      final startOfDay = DateTime(eventDate.year, eventDate.month, eventDate.day);
+      final endOfDay = DateTime(eventDate.year, eventDate.month, eventDate.day, 23, 59, 59);
 
       return _firestore
           .collection('bookings')
@@ -281,4 +279,3 @@ class BookingsRepository {
     }
   }
 }
-

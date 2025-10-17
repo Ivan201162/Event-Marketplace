@@ -63,8 +63,7 @@ class Receipt {
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         paymentProvider: map['paymentProvider'] != null
             ? PaymentProvider.values.firstWhere(
-                (e) =>
-                    e.toString() == 'PaymentProvider.${map['paymentProvider']}',
+                (e) => e.toString() == 'PaymentProvider.${map['paymentProvider']}',
                 orElse: () => PaymentProvider.yookassa,
               )
             : null,
@@ -74,9 +73,7 @@ class Receipt {
         phone: map['phone'],
         fiscalData: Map<String, dynamic>.from(map['fiscalData'] ?? {}),
         qrCode: map['qrCode'],
-        sentAt: map['sentAt'] != null
-            ? (map['sentAt'] as Timestamp).toDate()
-            : null,
+        sentAt: map['sentAt'] != null ? (map['sentAt'] as Timestamp).toDate() : null,
         failedReason: map['failedReason'],
         metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
       );

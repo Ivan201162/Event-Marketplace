@@ -72,7 +72,6 @@ class PerformanceNotifier extends Notifier<PerformanceState> {
 }
 
 /// Провайдер производительности
-final performanceProvider =
-    NotifierProvider<PerformanceNotifier, PerformanceState>(
+final performanceProvider = NotifierProvider<PerformanceNotifier, PerformanceState>(
   (ref) => PerformanceNotifier(),
 );

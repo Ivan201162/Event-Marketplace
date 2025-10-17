@@ -16,8 +16,7 @@ class MyBookingsScreen extends ConsumerStatefulWidget {
   ConsumerState<MyBookingsScreen> createState() => _MyBookingsScreenState();
 }
 
-class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
-    with TickerProviderStateMixin {
+class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with TickerProviderStateMixin {
   final BookingService _bookingService = BookingService();
 
   List<Booking> _bookings = [];
@@ -122,8 +121,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
       await FirebaseFirestore.instance.collection('bookings').add({
         'customerId': uid,
         'specialistId': 'spec_test_1',
-        'eventDate':
-            Timestamp.fromDate(DateTime.now().add(const Duration(days: 7))),
+        'eventDate': Timestamp.fromDate(DateTime.now().add(const Duration(days: 7))),
         'status': 'pending',
         'details': 'Тестовая заявка на фотосессию',
         'totalPrice': 15000.0,
@@ -136,8 +134,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
       await FirebaseFirestore.instance.collection('bookings').add({
         'customerId': uid,
         'specialistId': 'spec_test_2',
-        'eventDate':
-            Timestamp.fromDate(DateTime.now().add(const Duration(days: 14))),
+        'eventDate': Timestamp.fromDate(DateTime.now().add(const Duration(days: 14))),
         'status': 'confirmed',
         'details': 'Тестовая заявка на видеосъемку',
         'totalPrice': 25000.0,
@@ -291,11 +288,9 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                         '${booking.totalPrice.toInt() ?? 0}₽',
                       ),
                       _buildDetailRow('Статус', _getStatusText(booking.status)),
-                      if (booking.description != null &&
-                          booking.description!.isNotEmpty)
+                      if (booking.description != null && booking.description!.isNotEmpty)
                         _buildDetailRow('Описание', booking.description!),
-                      if (booking.comment != null &&
-                          booking.comment!.isNotEmpty)
+                      if (booking.comment != null && booking.comment!.isNotEmpty)
                         _buildDetailRow('Комментарий', booking.comment!),
                       if (booking.advancePaid == true)
                         _buildDetailRow(

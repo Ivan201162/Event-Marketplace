@@ -23,8 +23,7 @@ class StudioSuggestionCard extends StatefulWidget {
 }
 
 class _StudioSuggestionCardState extends State<StudioSuggestionCard> {
-  final PhotographerStudioLinkService _linkService =
-      PhotographerStudioLinkService();
+  final PhotographerStudioLinkService _linkService = PhotographerStudioLinkService();
   bool _isLoading = false;
 
   @override
@@ -73,8 +72,7 @@ class _StudioSuggestionCardState extends State<StudioSuggestionCard> {
                       Text(
                         widget.suggestion.timeAgo,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.textTheme.bodySmall?.color
-                              ?.withValues(alpha: 0.7),
+                          color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                         ),
                       ),
                     ],
@@ -111,8 +109,7 @@ class _StudioSuggestionCardState extends State<StudioSuggestionCard> {
                       Text(
                         'предлагает фотостудию для вашего заказа',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.textTheme.bodySmall?.color
-                              ?.withValues(alpha: 0.7),
+                          color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                         ),
                       ),
                     ],
@@ -215,8 +212,7 @@ class _StudioSuggestionCardState extends State<StudioSuggestionCard> {
             const SizedBox(height: 16),
 
             // Сообщение
-            if (widget.suggestion.notes != null &&
-                widget.suggestion.notes!.isNotEmpty) ...[
+            if (widget.suggestion.notes != null && widget.suggestion.notes!.isNotEmpty) ...[
               Text(
                 'Сообщение от фотографа:',
                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -271,13 +267,11 @@ class _StudioSuggestionCardState extends State<StudioSuggestionCard> {
               ),
             ] else if (widget.suggestion.isAccepted) ...[
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: Colors.green.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
-                  border:
-                      Border.all(color: Colors.green.withValues(alpha: 0.3)),
+                  border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   children: [
@@ -301,8 +295,7 @@ class _StudioSuggestionCardState extends State<StudioSuggestionCard> {
               ),
             ] else if (widget.suggestion.isRejected) ...[
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: Colors.red.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),

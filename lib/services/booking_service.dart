@@ -185,10 +185,8 @@ class BookingService {
   }) async {
     try {
       final field = isSpecialist ? 'specialistId' : 'customerId';
-      final snapshot = await _firestore
-          .collection('bookings')
-          .where(field, isEqualTo: userId)
-          .get();
+      final snapshot =
+          await _firestore.collection('bookings').where(field, isEqualTo: userId).get();
 
       final stats = <String, int>{
         'total': 0,

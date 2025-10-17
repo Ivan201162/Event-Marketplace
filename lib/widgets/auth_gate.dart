@@ -33,10 +33,8 @@ class AuthGate extends ConsumerWidget {
     final userAsync = ref.watch(currentUserProvider);
 
     return userAsync.when(
-      loading: () =>
-          const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error: (e, _) =>
-          Scaffold(body: Center(child: Text('Ошибка авторизации: $e'))),
+      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (e, _) => Scaffold(body: Center(child: Text('Ошибка авторизации: $e'))),
       data: (user) {
         if (user == null) {
           return const ModernAuthScreen(); // <- всегда показываем вход

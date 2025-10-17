@@ -19,12 +19,10 @@ class EnhancedCreateReviewScreen extends ConsumerStatefulWidget {
   final Review? existingReview;
 
   @override
-  ConsumerState<EnhancedCreateReviewScreen> createState() =>
-      _EnhancedCreateReviewScreenState();
+  ConsumerState<EnhancedCreateReviewScreen> createState() => _EnhancedCreateReviewScreenState();
 }
 
-class _EnhancedCreateReviewScreenState
-    extends ConsumerState<EnhancedCreateReviewScreen> {
+class _EnhancedCreateReviewScreenState extends ConsumerState<EnhancedCreateReviewScreen> {
   final _formKey = GlobalKey<FormState>();
   final _commentController = TextEditingController();
 
@@ -65,9 +63,7 @@ class _EnhancedCreateReviewScreenState
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text(
-            widget.existingReview != null
-                ? 'Редактировать отзыв'
-                : 'Оставить отзыв',
+            widget.existingReview != null ? 'Редактировать отзыв' : 'Оставить отзыв',
           ),
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           actions: [
@@ -121,8 +117,7 @@ class _EnhancedCreateReviewScreenState
             children: [
               CircleAvatar(
                 radius: 30,
-                backgroundColor:
-                    Theme.of(context).primaryColor.withOpacity(0.1),
+                backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
                 child: Text(
                   widget.specialistName?.isNotEmpty ?? false
                       ? widget.specialistName![0].toUpperCase()
@@ -187,13 +182,9 @@ class _EnhancedCreateReviewScreenState
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4),
                     child: Icon(
-                      rating <= _selectedRating
-                          ? Icons.star
-                          : Icons.star_border,
+                      rating <= _selectedRating ? Icons.star : Icons.star_border,
                       size: 48,
-                      color: rating <= _selectedRating
-                          ? Colors.amber
-                          : Colors.grey[300],
+                      color: rating <= _selectedRating ? Colors.amber : Colors.grey[300],
                     ),
                   ),
                 );
@@ -250,9 +241,7 @@ class _EnhancedCreateReviewScreenState
             'Минимум 10 символов (${_commentController.text.length})',
             style: TextStyle(
               fontSize: 12,
-              color: _commentController.text.length < 10
-                  ? Colors.red
-                  : Colors.grey[600],
+              color: _commentController.text.length < 10 ? Colors.red : Colors.grey[600],
             ),
           ),
         ],
@@ -335,9 +324,7 @@ class _EnhancedCreateReviewScreenState
                   ),
                 )
               : Text(
-                  widget.existingReview != null
-                      ? 'Обновить отзыв'
-                      : 'Оставить отзыв',
+                  widget.existingReview != null ? 'Обновить отзыв' : 'Оставить отзыв',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -406,9 +393,7 @@ class _EnhancedCreateReviewScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              widget.existingReview != null
-                  ? 'Отзыв обновлен'
-                  : 'Отзыв добавлен',
+              widget.existingReview != null ? 'Отзыв обновлен' : 'Отзыв добавлен',
             ),
             backgroundColor: Colors.green,
           ),

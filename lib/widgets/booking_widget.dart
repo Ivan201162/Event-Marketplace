@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/booking.dart';
 import '../models/specialist.dart';
 import '../providers/firestore_providers.dart';
-import '../providers/specialist_providers.dart';
 import 'calendar_widget.dart';
 
 /// Виджет бронирования
@@ -106,9 +105,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
               radius: 24,
               backgroundColor: Theme.of(context).colorScheme.primary,
               child: Text(
-                widget.specialist.name.isNotEmpty
-                    ? widget.specialist.name[0].toUpperCase()
-                    : '?',
+                widget.specialist.name.isNotEmpty ? widget.specialist.name[0].toUpperCase() : '?',
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -181,9 +178,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
                           : 'Выберите дату',
                       style: TextStyle(
                         fontSize: 16,
-                        color: _selectedDate != null
-                            ? Colors.black
-                            : Colors.grey[600],
+                        color: _selectedDate != null ? Colors.black : Colors.grey[600],
                       ),
                     ),
                   ),
@@ -230,9 +225,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
                           : 'Выберите время',
                       style: TextStyle(
                         fontSize: 16,
-                        color: _selectedTime != null
-                            ? Colors.black
-                            : Colors.grey[600],
+                        color: _selectedTime != null ? Colors.black : Colors.grey[600],
                       ),
                     ),
                   ),
@@ -263,9 +256,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
           Row(
             children: [
               IconButton(
-                onPressed: _selectedHours > 1
-                    ? () => setState(() => _selectedHours--)
-                    : null,
+                onPressed: _selectedHours > 1 ? () => setState(() => _selectedHours--) : null,
                 icon: const Icon(Icons.remove),
               ),
               Expanded(
@@ -279,9 +270,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
                 ),
               ),
               IconButton(
-                onPressed: _selectedHours < 12
-                    ? () => setState(() => _selectedHours++)
-                    : null,
+                onPressed: _selectedHours < 12 ? () => setState(() => _selectedHours++) : null,
                 icon: const Icon(Icons.add),
               ),
             ],
@@ -489,12 +478,11 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
       final endTime = _selectedTime!.add(Duration(hours: _selectedHours));
 
       // Проверяем конфликты бронирования
-      final hasConflict =
-          await ref.read(firestoreServiceProvider).hasBookingConflict(
-                widget.specialist.id,
-                _selectedTime!,
-                endTime,
-              );
+      final hasConflict = await ref.read(firestoreServiceProvider).hasBookingConflict(
+            widget.specialist.id,
+            _selectedTime!,
+            endTime,
+          );
 
       if (hasConflict) {
         Navigator.of(context).pop(); // Закрываем индикатор загрузки
@@ -510,8 +498,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
       // Создаем бронирование
       final booking = Booking(
         id: 'booking_${DateTime.now().millisecondsSinceEpoch}',
-        customerId:
-            'current_user_id', // TODO(developer): Получить ID текущего пользователя
+        customerId: 'current_user_id', // TODO(developer): Получить ID текущего пользователя
         specialistId: widget.specialist.id,
         eventDate: _selectedTime!,
         totalPrice: widget.specialist.hourlyRate * _selectedHours,
@@ -532,9 +519,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
       );
 
       // Сохраняем бронирование с интеграцией календаря
-      await ref
-          .read(firestoreServiceProvider)
-          .addOrUpdateBookingWithCalendar(booking);
+      await ref.read(firestoreServiceProvider).addOrUpdateBookingWithCalendar(booking);
 
       Navigator.of(context).pop(); // Закрываем индикатор загрузки
       Navigator.of(context).pop(); // Закрываем диалог бронирования
@@ -626,12 +611,9 @@ class TimeSlotsWidget extends ConsumerWidget {
                 return GestureDetector(
                   onTap: () => onTimeSelected(timeSlot),
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: isSelected
-                          ? Theme.of(context).colorScheme.primary
-                          : Colors.grey[200],
+                      color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey[200],
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(

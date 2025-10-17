@@ -50,8 +50,7 @@ class ChatMessage {
   });
 
   /// Создать из Map
-  factory ChatMessage.fromMap(Map<String, dynamic> data, [String? id]) =>
-      ChatMessage(
+  factory ChatMessage.fromMap(Map<String, dynamic> data, [String? id]) => ChatMessage(
         id: id ?? data['id'] ?? '',
         chatId: data['chatId'] ?? '',
         senderId: data['senderId'] ?? '',
@@ -127,8 +126,7 @@ class ChatMessage {
           : null,
       metadata: safeData['metadata'] as Map<String, dynamic>?,
       replyToMessageId: safeData['replyToMessageId'] as String?,
-      attachments:
-          List<String>.from(safeData['attachments'] as List<dynamic>? ?? []),
+      attachments: List<String>.from(safeData['attachments'] as List<dynamic>? ?? []),
       senderName: safeData['senderName'] as String?,
       fileUrl: safeData['fileUrl'] as String?,
       timestamp: safeData['timestamp'] != null
@@ -361,8 +359,7 @@ class ChatMessage {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() =>
-      'ChatMessage(id: $id, type: $type, content: $content, status: $status)';
+  String toString() => 'ChatMessage(id: $id, type: $type, content: $content, status: $status)';
 }
 
 /// Модель чата
@@ -430,10 +427,8 @@ class Chat {
       title: safeData['title'] as String?,
       name: safeData['name'] as String?,
       participants: List<String>.from(safeData['participants'] ?? []),
-      participantNames:
-          Map<String, String>.from(safeData['participantNames'] ?? {}),
-      participantAvatars:
-          Map<String, String>.from(safeData['participantAvatars'] ?? {}),
+      participantNames: Map<String, String>.from(safeData['participantNames'] ?? {}),
+      participantAvatars: Map<String, String>.from(safeData['participantAvatars'] ?? {}),
       lastMessageContent: safeData['lastMessageContent'] as String?,
       lastMessageTime: safeData['lastMessageTime'] != null
           ? (safeData['lastMessageTime'] is Timestamp
@@ -477,9 +472,7 @@ class Chat {
         'participantNames': participantNames,
         'participantAvatars': participantAvatars,
         'lastMessageContent': lastMessageContent,
-        'lastMessageTime': lastMessageTime != null
-            ? Timestamp.fromDate(lastMessageTime!)
-            : null,
+        'lastMessageTime': lastMessageTime != null ? Timestamp.fromDate(lastMessageTime!) : null,
       };
 
   /// Копировать с изменениями
@@ -564,12 +557,10 @@ class Chat {
   }
 
   /// Получить время последнего сообщения
-  DateTime? get lastMessageTimeValue =>
-      lastMessageTime ?? lastMessage?.createdAt;
+  DateTime? get lastMessageTimeValue => lastMessageTime ?? lastMessage?.createdAt;
 
   /// Получить содержимое последнего сообщения
-  String? get lastMessageContentValue =>
-      lastMessageContent ?? lastMessage?.content;
+  String? get lastMessageContentValue => lastMessageContent ?? lastMessage?.content;
 
   /// Получить список участников
   List<String> get participantsList =>

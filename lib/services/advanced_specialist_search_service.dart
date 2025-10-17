@@ -24,8 +24,7 @@ class AdvancedSpecialistSearchService {
       final searchCities = await _getSearchCities(filters);
 
       // Строим базовый запрос
-      Query<Map<String, dynamic>> query =
-          _firestore.collection(_collectionName);
+      Query<Map<String, dynamic>> query = _firestore.collection(_collectionName);
 
       // Применяем фильтры
       query = _applyFilters(query, filters, searchCities);
@@ -44,8 +43,7 @@ class AdvancedSpecialistSearchService {
 
       for (final doc in querySnapshot.docs) {
         final specialist = Specialist.fromDocument(doc);
-        final result =
-            await _createSearchResult(specialist, filters, searchCities);
+        final result = await _createSearchResult(specialist, filters, searchCities);
         if (result != null) {
           results.add(result);
         }
@@ -80,8 +78,7 @@ class AdvancedSpecialistSearchService {
       final searchCities = await _getSearchCities(filters);
 
       // Строим базовый запрос
-      Query<Map<String, dynamic>> query =
-          _firestore.collection(_collectionName);
+      Query<Map<String, dynamic>> query = _firestore.collection(_collectionName);
 
       // Применяем фильтры
       query = _applyFilters(query, filters, searchCities);
@@ -98,8 +95,7 @@ class AdvancedSpecialistSearchService {
 
         for (final doc in snapshot.docs) {
           final specialist = Specialist.fromDocument(doc);
-          final result =
-              await _createSearchResult(specialist, filters, searchCities);
+          final result = await _createSearchResult(specialist, filters, searchCities);
           if (result != null) {
             results.add(result);
           }
@@ -164,8 +160,7 @@ class AdvancedSpecialistSearchService {
 
     // Фильтр по подкатегориям
     if (filters.subcategories.isNotEmpty) {
-      query =
-          query.where('subcategories', arrayContainsAny: filters.subcategories);
+      query = query.where('subcategories', arrayContainsAny: filters.subcategories);
     }
 
     // Фильтр по локации (города)
@@ -272,15 +267,13 @@ class AdvancedSpecialistSearchService {
         );
         break;
       case AdvancedSearchSortBy.reviewsCount:
-        query =
-            query.orderBy('reviewCount', descending: !filters.sortAscending);
+        query = query.orderBy('reviewCount', descending: !filters.sortAscending);
         break;
       case AdvancedSearchSortBy.newest:
         query = query.orderBy('createdAt', descending: !filters.sortAscending);
         break;
       case AdvancedSearchSortBy.availability:
-        query =
-            query.orderBy('lastActiveAt', descending: !filters.sortAscending);
+        query = query.orderBy('lastActiveAt', descending: !filters.sortAscending);
         break;
       default:
         // По умолчанию сортируем по рейтингу
@@ -308,13 +301,11 @@ class AdvancedSpecialistSearchService {
           (city) => city.cityName == specialist.location,
           orElse: () => filters.selectedCity!,
         );
-        distance = specialistCity.coordinates
-            .distanceTo(filters.selectedCity!.coordinates);
+        distance = specialistCity.coordinates.distanceTo(filters.selectedCity!.coordinates);
       }
 
       // Вычисляем баллы
-      final availabilityScore =
-          _calculateAvailabilityScore(specialist, filters);
+      final availabilityScore = _calculateAvailabilityScore(specialist, filters);
       final priceScore = _calculatePriceScore(specialist, filters);
       final ratingScore = _calculateRatingScore(specialist, filters);
       final experienceScore = _calculateExperienceScore(specialist, filters);
@@ -325,9 +316,8 @@ class AdvancedSpecialistSearchService {
           .map((cat) => cat.name)
           .toList();
 
-      final matchingServices = specialist.services
-          .where((service) => filters.services.contains(service))
-          .toList();
+      final matchingServices =
+          specialist.services.where((service) => filters.services.contains(service)).toList();
 
       return AdvancedSearchResult(
         specialist: specialist,
@@ -364,29 +354,25 @@ class AdvancedSpecialistSearchService {
       if (specialist.description?.toLowerCase().contains(query) ?? false) {
         score += 0.2;
       }
-      if (specialist.categories
-          .any((cat) => cat.displayName.toLowerCase().contains(query))) {
+      if (specialist.categories.any((cat) => cat.displayName.toLowerCase().contains(query))) {
         score += 0.2;
       }
-      if (specialist.services
-          .any((service) => service.toLowerCase().contains(query))) {
+      if (specialist.services.any((service) => service.toLowerCase().contains(query))) {
         score += 0.1;
       }
     }
 
     // Совпадение категорий
     if (filters.categories.isNotEmpty) {
-      final matchingCategories = specialist.categories
-          .where((cat) => filters.categories.contains(cat))
-          .length;
+      final matchingCategories =
+          specialist.categories.where((cat) => filters.categories.contains(cat)).length;
       score += (matchingCategories / filters.categories.length) * 0.2;
     }
 
     // Совпадение услуг
     if (filters.services.isNotEmpty) {
-      final matchingServices = specialist.services
-          .where((service) => filters.services.contains(service))
-          .length;
+      final matchingServices =
+          specialist.services.where((service) => filters.services.contains(service)).length;
       score += (matchingServices / filters.services.length) * 0.1;
     }
 
@@ -461,8 +447,7 @@ class AdvancedSpecialistSearchService {
     }
 
     final experience = specialist.yearsOfExperience;
-    if (experience >= filters.minExperience &&
-        experience <= filters.maxExperience) {
+    if (experience >= filters.minExperience && experience <= filters.maxExperience) {
       return (experience / 20.0).clamp(0.0, 1.0);
     } else {
       return 0;
@@ -530,8 +515,7 @@ class AdvancedSpecialistSearchService {
         break;
       case AdvancedSearchSortBy.popularity:
         results.sort(
-          (a, b) =>
-              b.specialist.reviewCount.compareTo(a.specialist.reviewCount),
+          (a, b) => b.specialist.reviewCount.compareTo(a.specialist.reviewCount),
         );
         break;
       default:
@@ -558,8 +542,7 @@ class AdvancedSpecialistSearchService {
       if (city != null) {
         searchCities = [city];
       } else if (regionName != null) {
-        searchCities =
-            await _cityService.getCitiesByRegion(regionName: regionName);
+        searchCities = await _cityService.getCitiesByRegion(regionName: regionName);
       } else {
         searchCities = await _cityService.getCities();
       }
@@ -606,14 +589,11 @@ class AdvancedSpecialistSearchService {
           .get();
 
       final totalSpecialists = query.docs.length;
-      final avgRating = query.docs
-              .map((doc) => Specialist.fromDocument(doc).rating)
-              .reduce((a, b) => a + b) /
-          totalSpecialists;
+      final avgRating =
+          query.docs.map((doc) => Specialist.fromDocument(doc).rating).reduce((a, b) => a + b) /
+              totalSpecialists;
 
-      final priceRange = query.docs
-          .map((doc) => Specialist.fromDocument(doc).price)
-          .toList()
+      final priceRange = query.docs.map((doc) => Specialist.fromDocument(doc).price).toList()
         ..sort();
 
       return {

@@ -120,15 +120,12 @@ class _OptimizedCachedImageState extends State<OptimizedCachedImage>
       useOldImageOnUrlChange: widget.useOldImageOnUrlChange,
       memCacheWidth: widget.memCacheWidth,
       memCacheHeight: widget.memCacheHeight,
-      maxWidthDiskCache:
-          widget.enableDiskCache ? widget.maxWidthDiskCache : null,
-      maxHeightDiskCache:
-          widget.enableDiskCache ? widget.maxHeightDiskCache : null,
+      maxWidthDiskCache: widget.enableDiskCache ? widget.maxWidthDiskCache : null,
+      maxHeightDiskCache: widget.enableDiskCache ? widget.maxHeightDiskCache : null,
       cacheKey: widget.cacheKey,
       placeholder: (context, url) => _buildPlaceholder(theme),
       errorWidget: (context, url, error) => _buildErrorWidget(theme),
-      imageBuilder: (context, imageProvider) =>
-          _buildImageBuilder(imageProvider),
+      imageBuilder: (context, imageProvider) => _buildImageBuilder(imageProvider),
     );
 
     if (widget.borderRadius != null) {
@@ -150,8 +147,7 @@ class _OptimizedCachedImageState extends State<OptimizedCachedImage>
       width: widget.width,
       height: widget.height,
       decoration: BoxDecoration(
-        color: widget.placeholderColor ??
-            theme.colorScheme.surfaceContainerHighest,
+        color: widget.placeholderColor ?? theme.colorScheme.surfaceContainerHighest,
         borderRadius: widget.borderRadius,
       ),
       child: Center(

@@ -1,11 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 
 import '../models/social_models.dart';
-import '../services/supabase_service.dart';
 import '../providers/auth_providers.dart';
 
 /// Экран редактирования профиля
@@ -43,7 +43,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       _nameController.text = widget.initialProfile!.name ?? '';
       _cityController.text = widget.initialProfile!.city ?? '';
       _bioController.text = widget.initialProfile!.bio ?? '';
-      _skillsController.text = widget.initialProfile!.skills?.join(', ') ?? '';
+      _skillsController.text = widget.initialProfile!.skills.join(', ') ?? '';
     } else {
       // Инициализируем поля данными из Firebase Auth
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -195,15 +195,13 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             children: [
               CircleAvatar(
                 radius: 60,
-                backgroundColor:
-                    Theme.of(context).primaryColor.withOpacity(0.1),
+                backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
                 backgroundImage: _selectedAvatar != null
                     ? FileImage(_selectedAvatar!)
                     : (widget.initialProfile?.avatarUrl != null
                         ? NetworkImage(widget.initialProfile!.avatarUrl!)
                         : null) as ImageProvider?,
-                child: _selectedAvatar == null &&
-                        widget.initialProfile?.avatarUrl == null
+                child: _selectedAvatar == null && widget.initialProfile?.avatarUrl == null
                     ? const Icon(
                         Icons.person,
                         size: 60,
@@ -286,7 +284,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       }
 
       // Загружаем аватар, если выбран новый
-      String? avatarUrl = widget.initialProfile?.avatarUrl;
+      final String? avatarUrl = widget.initialProfile?.avatarUrl;
       if (_selectedAvatar != null) {
         setState(() {
           _isUploading = true;
@@ -310,9 +308,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       // Создаем обновленный профиль
       final updatedProfile = Profile(
         id: currentUser.uid,
-        username: widget.initialProfile?.username ??
-            currentUser.email?.split('@').first ??
-            'user',
+        username: widget.initialProfile?.username ?? currentUser.email.split('@').first ?? 'user',
         name: _nameController.text.trim(),
         avatarUrl: avatarUrl,
         city: _cityController.text.trim(),

@@ -103,5 +103,5 @@ class EnhancedFeedNotifier extends ChangeNotifier {
 }
 
 /// Провайдер ленты
-final enhancedFeedProvider = ChangeNotifierProvider<EnhancedFeedNotifier>(
-    (ref) => EnhancedFeedNotifier());
+final enhancedFeedProvider =
+    ChangeNotifierProvider<EnhancedFeedNotifier>((ref) => EnhancedFeedNotifier());

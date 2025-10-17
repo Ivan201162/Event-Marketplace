@@ -16,9 +16,8 @@ class OAuthProfileService {
   Future<AppUser?> handleOAuthUser(User firebaseUser) async {
     try {
       final userId = firebaseUser.uid;
-      final userMetadata = firebaseUser.providerData.isNotEmpty
-          ? firebaseUser.providerData.first
-          : null;
+      final userMetadata =
+          firebaseUser.providerData.isNotEmpty ? firebaseUser.providerData.first : null;
 
       // Получаем данные из метаданных
       final name = _extractName(firebaseUser, userMetadata);
@@ -202,8 +201,7 @@ class OAuthProfileService {
   }
 
   /// Обновляет профиль пользователя
-  Future<void> updateProfile(
-      String userId, Map<String, dynamic> updates) async {
+  Future<void> updateProfile(String userId, Map<String, dynamic> updates) async {
     try {
       updates['updatedAt'] = FieldValue.serverTimestamp();
       await _firestore.collection('users').doc(userId).update(updates);

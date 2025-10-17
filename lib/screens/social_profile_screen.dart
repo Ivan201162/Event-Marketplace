@@ -1,11 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 import '../models/social_models.dart';
 import '../services/supabase_service.dart';
-import 'edit_profile_screen.dart';
 
 class SocialProfileScreen extends ConsumerStatefulWidget {
   final String username;
@@ -16,8 +15,7 @@ class SocialProfileScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<SocialProfileScreen> createState() =>
-      _SocialProfileScreenState();
+  ConsumerState<SocialProfileScreen> createState() => _SocialProfileScreenState();
 }
 
 class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
@@ -41,8 +39,7 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
         _error = null;
       });
 
-      final profile =
-          await SupabaseService.getProfileByUsername(widget.username);
+      final profile = await SupabaseService.getProfileByUsername(widget.username);
       if (profile == null) {
         setState(() {
           _error = 'Профиль не найден';
@@ -57,8 +54,7 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
       int followingCount = 0;
 
       if (currentUser != null) {
-        isFollowing =
-            await SupabaseService.isFollowing(currentUser.id, profile.id);
+        isFollowing = await SupabaseService.isFollowing(currentUser.id, profile.id);
         followersCount = await SupabaseService.getFollowersCount(profile.id);
         followingCount = await SupabaseService.getFollowingCount(profile.id);
       }
@@ -100,9 +96,8 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
         setState(() {
           _isFollowing = !_isFollowing;
           _followStats = FollowStats(
-            followersCount: _isFollowing
-                ? _followStats!.followersCount + 1
-                : _followStats!.followersCount - 1,
+            followersCount:
+                _isFollowing ? _followStats!.followersCount + 1 : _followStats!.followersCount - 1,
             followingCount: _followStats!.followingCount,
             isFollowing: _isFollowing,
           );
@@ -560,9 +555,7 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
 
   bool _isOwnProfile() {
     final currentUser = SupabaseService.currentUser;
-    return currentUser != null &&
-        _profile != null &&
-        currentUser.id == _profile!.id;
+    return currentUser != null && _profile != null && currentUser.id == _profile!.id;
   }
 
   void _editProfile() {

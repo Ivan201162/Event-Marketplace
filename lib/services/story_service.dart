@@ -49,8 +49,7 @@ class StoryService {
   /// Создать сторис
   Future<String> createStory(Story story) async {
     try {
-      final docRef =
-          await _firestore.collection(_collection).add(story.toMap());
+      final docRef = await _firestore.collection(_collection).add(story.toMap());
       return docRef.id;
     } on Exception catch (e) {
       throw Exception('Ошибка создания сторис: $e');
@@ -146,8 +145,7 @@ class StoryService {
         id: '1',
         specialistId: specialistId,
         title: 'За кулисами',
-        mediaUrl:
-            'https://placehold.co/400x600/FF6B6B/white?text=Behind+Scenes',
+        mediaUrl: 'https://placehold.co/400x600/FF6B6B/white?text=Behind+Scenes',
         thumbnailUrl: 'https://placehold.co/100x100/FF6B6B/white?text=S1',
         createdAt: now.subtract(const Duration(hours: 2)),
         expiresAt: now.add(const Duration(hours: 22)),

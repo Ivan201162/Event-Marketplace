@@ -21,12 +21,10 @@ class EditSpecialistProfileScreen extends ConsumerStatefulWidget {
   final bool isCreating;
 
   @override
-  ConsumerState<EditSpecialistProfileScreen> createState() =>
-      _EditSpecialistProfileScreenState();
+  ConsumerState<EditSpecialistProfileScreen> createState() => _EditSpecialistProfileScreenState();
 }
 
-class _EditSpecialistProfileScreenState
-    extends ConsumerState<EditSpecialistProfileScreen> {
+class _EditSpecialistProfileScreenState extends ConsumerState<EditSpecialistProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final _repository = SpecialistProfileRepository();
 
@@ -124,8 +122,7 @@ class _EditSpecialistProfileScreenState
     });
 
     try {
-      final profile =
-          await _repository.getSpecialistProfile(widget.specialistId);
+      final profile = await _repository.getSpecialistProfile(widget.specialistId);
       if (profile != null) {
         _profile = profile;
         _populateForm(profile);
@@ -244,9 +241,8 @@ class _EditSpecialistProfileScreenState
       await _repository.saveSpecialistProfile(updatedProfile);
 
       setState(() {
-        _successMessage = widget.isCreating
-            ? 'Профиль создан успешно!'
-            : 'Профиль сохранен успешно!';
+        _successMessage =
+            widget.isCreating ? 'Профиль создан успешно!' : 'Профиль сохранен успешно!';
       });
 
       // Возвращаемся назад через небольшую задержку
@@ -285,8 +281,7 @@ class _EditSpecialistProfileScreenState
   Widget build(BuildContext context) => Scaffold(
         appBar: BackUtils.buildAppBar(
           context,
-          title:
-              widget.isCreating ? 'Создание профиля' : 'Редактирование профиля',
+          title: widget.isCreating ? 'Создание профиля' : 'Редактирование профиля',
           actions: [
             if (_isSaving)
               const Padding(
@@ -378,13 +373,10 @@ class _EditSpecialistProfileScreenState
                               ? const SizedBox(
                                   height: 20,
                                   width: 20,
-                                  child:
-                                      CircularProgressIndicator(strokeWidth: 2),
+                                  child: CircularProgressIndicator(strokeWidth: 2),
                                 )
                               : Text(
-                                  widget.isCreating
-                                      ? 'Создать профиль'
-                                      : 'Сохранить изменения',
+                                  widget.isCreating ? 'Создать профиль' : 'Сохранить изменения',
                                 ),
                         ),
                       ),
@@ -574,8 +566,7 @@ class _EditSpecialistProfileScreenState
                 ],
               ),
               const SizedBox(height: 16),
-              ..._contacts.entries
-                  .map((entry) => _buildContactField(entry.key, entry.value)),
+              ..._contacts.entries.map((entry) => _buildContactField(entry.key, entry.value)),
             ],
           ),
         ),

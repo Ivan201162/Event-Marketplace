@@ -22,8 +22,7 @@ class NotificationCardWidget extends ConsumerStatefulWidget {
   final VoidCallback? onDelete;
 
   @override
-  ConsumerState<NotificationCardWidget> createState() =>
-      _NotificationCardWidgetState();
+  ConsumerState<NotificationCardWidget> createState() => _NotificationCardWidgetState();
 }
 
 class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
@@ -66,10 +65,7 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
             elevation: widget.notification.isRead ? 1 : 3,
             color: widget.notification.isRead
                 ? Theme.of(context).colorScheme.surface
-                : Theme.of(context)
-                    .colorScheme
-                    .primaryContainer
-                    .withOpacity(0.1),
+                : Theme.of(context).colorScheme.primaryContainer.withOpacity(0.1),
             child: InkWell(
               onTap: () {
                 _animationController.forward().then((_) {
@@ -108,9 +104,7 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
                   widget.notification.title,
                   style: TextStyle(
                     fontSize: 16,
-                    fontWeight: widget.notification.isRead
-                        ? FontWeight.normal
-                        : FontWeight.bold,
+                    fontWeight: widget.notification.isRead ? FontWeight.normal : FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 2),

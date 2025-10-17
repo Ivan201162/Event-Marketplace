@@ -27,21 +27,18 @@ final userStoriesProvider = StreamProvider.family<List<UserStory>, String>(
 );
 
 /// Провайдер для отзывов специалиста
-final specialistReviewsProvider =
-    StreamProvider.family<List<UserReview>, String>(
+final specialistReviewsProvider = StreamProvider.family<List<UserReview>, String>(
   (ref, specialistId) => UserProfileService.getSpecialistReviews(specialistId),
 );
 
 /// Провайдер для рекомендуемых специалистов
-final recommendedSpecialistsProvider =
-    FutureProvider<List<UserProfile>>((ref) async {
+final recommendedSpecialistsProvider = FutureProvider<List<UserProfile>>((ref) async {
   const userId = 'current_user_id'; // TODO(developer): Получить из AuthService
   return UserProfileService.getRecommendedSpecialists(userId);
 });
 
 /// Провайдер для поиска специалистов
-final searchSpecialistsProvider =
-    FutureProvider.family<List<UserProfile>, String>(
+final searchSpecialistsProvider = FutureProvider.family<List<UserProfile>, String>(
   (ref, query) async => UserProfileService.searchSpecialists(query),
 );
 
@@ -75,8 +72,7 @@ class UserProfileNotifier extends StateNotifier<AsyncValue<UserProfile?>> {
   /// Обновить аватар
   Future<void> updateAvatar(String userId, String imagePath) async {
     try {
-      final downloadUrl =
-          await UserProfileService.updateAvatar(userId, imagePath);
+      final downloadUrl = await UserProfileService.updateAvatar(userId, imagePath);
       if (downloadUrl != null && state.hasValue) {
         final updatedProfile = state.value!.copyWith(avatarUrl: downloadUrl);
         state = AsyncValue.data(updatedProfile);
@@ -89,8 +85,7 @@ class UserProfileNotifier extends StateNotifier<AsyncValue<UserProfile?>> {
   /// Обновить обложку
   Future<void> updateCover(String userId, String imagePath) async {
     try {
-      final downloadUrl =
-          await UserProfileService.updateCover(userId, imagePath);
+      final downloadUrl = await UserProfileService.updateCover(userId, imagePath);
       if (downloadUrl != null && state.hasValue) {
         final updatedProfile = state.value!.copyWith(coverUrl: downloadUrl);
         state = AsyncValue.data(updatedProfile);
@@ -151,8 +146,7 @@ class UserPostsNotifier extends StateNotifier<AsyncValue<List<UserPost>>> {
     try {
       final success = await UserProfileService.deletePost(postId);
       if (success && state.hasValue) {
-        final updatedPosts =
-            state.value!.where((post) => post.id != postId).toList();
+        final updatedPosts = state.value!.where((post) => post.id != postId).toList();
         state = AsyncValue.data(updatedPosts);
       }
     } catch (error, stackTrace) {
@@ -213,8 +207,7 @@ class UserStoriesNotifier extends StateNotifier<AsyncValue<List<UserStory>>> {
     try {
       final success = await UserProfileService.deleteStory(storyId);
       if (success && state.hasValue) {
-        final updatedStories =
-            state.value!.where((story) => story.id != storyId).toList();
+        final updatedStories = state.value!.where((story) => story.id != storyId).toList();
         state = AsyncValue.data(updatedStories);
       }
     } catch (error, stackTrace) {
@@ -225,8 +218,7 @@ class UserStoriesNotifier extends StateNotifier<AsyncValue<List<UserStory>>> {
   /// Отметить сторис как просмотренную
   Future<void> markAsViewed(String storyId, String userId) async {
     try {
-      final success =
-          await UserProfileService.markStoryAsViewed(storyId, userId);
+      final success = await UserProfileService.markStoryAsViewed(storyId, userId);
       if (success && state.hasValue) {
         final updatedStories = state.value!.map((story) {
           if (story.id == storyId && !story.viewedBy.contains(userId)) {

@@ -10,8 +10,7 @@ class DemoAuthService {
   static final DemoAuthService _instance = DemoAuthService._internal();
 
   User? _currentUser;
-  final StreamController<User?> _authStateController =
-      StreamController<User?>.broadcast();
+  final StreamController<User?> _authStateController = StreamController<User?>.broadcast();
 
   /// Текущий пользователь
   User? get currentUser => _currentUser;
@@ -61,8 +60,7 @@ class DemoAuthService {
   Future<UserCredential> signInWithGoogle() async {
     if (kIsWeb) {
       // Создаем демо-пользователя Google
-      final demoUser =
-          _createDemoUser('demo@gmail.com', displayName: 'Demo User');
+      final demoUser = _createDemoUser('demo@gmail.com', displayName: 'Demo User');
       _currentUser = demoUser;
       _authStateController.add(demoUser);
 
@@ -78,8 +76,7 @@ class DemoAuthService {
   Future<UserCredential> signInAnonymously() async {
     if (kIsWeb) {
       // Создаем демо-анонимного пользователя
-      final demoUser =
-          _createDemoUser('anonymous@demo.com', displayName: 'Гость');
+      final demoUser = _createDemoUser('anonymous@demo.com', displayName: 'Гость');
       _currentUser = demoUser;
       _authStateController.add(demoUser);
 

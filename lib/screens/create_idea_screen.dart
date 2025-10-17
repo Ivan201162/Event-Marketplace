@@ -1,8 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 
 import '../services/supabase_service.dart';
 
@@ -99,9 +100,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
 
       final idea = await SupabaseService.createIdea(
         type: _selectedType,
-        content: _contentController.text.trim().isEmpty
-            ? null
-            : _contentController.text.trim(),
+        content: _contentController.text.trim().isEmpty ? null : _contentController.text.trim(),
         mediaUrls: mediaUrls,
         category: _selectedCategory,
       );
@@ -248,7 +247,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
         ),
         const SizedBox(height: 12),
         DropdownButtonFormField<String>(
-          value: _selectedCategory,
+          initialValue: _selectedCategory,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
             hintText: 'Выберите категорию',
@@ -348,7 +347,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
           ),
         ),
         const SizedBox(height: 12),
-        Container(
+        SizedBox(
           height: 200,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,

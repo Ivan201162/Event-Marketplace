@@ -14,8 +14,7 @@ class SpecialistRequestsScreen extends StatefulWidget {
   final String specialistId;
 
   @override
-  State<SpecialistRequestsScreen> createState() =>
-      _SpecialistRequestsScreenState();
+  State<SpecialistRequestsScreen> createState() => _SpecialistRequestsScreenState();
 }
 
 class _SpecialistRequestsScreenState extends State<SpecialistRequestsScreen>
@@ -95,10 +94,8 @@ class _SpecialistRequestsScreenState extends State<SpecialistRequestsScreen>
         ),
       );
 
-  Widget _buildBookingsList(String statusFilter) =>
-      StreamBuilder<List<Booking>>(
-        stream:
-            _firestoreService.bookingsBySpecialistStream(widget.specialistId),
+  Widget _buildBookingsList(String statusFilter) => StreamBuilder<List<Booking>>(
+        stream: _firestoreService.bookingsBySpecialistStream(widget.specialistId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const LoadingWidget();
@@ -166,16 +163,13 @@ class _SpecialistRequestsScreenState extends State<SpecialistRequestsScreen>
                   booking: booking,
                   onTap: () => _showBookingDetails(booking),
                   onApprove: booking.status == BookingStatus.pending
-                      ? () =>
-                          _updateBookingStatus(booking, BookingStatus.confirmed)
+                      ? () => _updateBookingStatus(booking, BookingStatus.confirmed)
                       : null,
                   onReject: booking.status == BookingStatus.pending
-                      ? () =>
-                          _updateBookingStatus(booking, BookingStatus.rejected)
+                      ? () => _updateBookingStatus(booking, BookingStatus.rejected)
                       : null,
                   onComplete: booking.status == BookingStatus.confirmed
-                      ? () =>
-                          _updateBookingStatus(booking, BookingStatus.completed)
+                      ? () => _updateBookingStatus(booking, BookingStatus.completed)
                       : null,
                 );
               },
@@ -384,8 +378,7 @@ class _SpecialistRequestsScreenState extends State<SpecialistRequestsScreen>
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
-                    onPressed: () =>
-                        _updateBookingStatus(booking, BookingStatus.completed),
+                    onPressed: () => _updateBookingStatus(booking, BookingStatus.completed),
                     icon: const Icon(Icons.done),
                     label: const Text('Отметить как завершенное'),
                   ),

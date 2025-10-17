@@ -24,8 +24,7 @@ class SwipeableWidget extends StatefulWidget {
   State<SwipeableWidget> createState() => _SwipeableWidgetState();
 }
 
-class _SwipeableWidgetState extends State<SwipeableWidget>
-    with SingleTickerProviderStateMixin {
+class _SwipeableWidgetState extends State<SwipeableWidget> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _animation;
   double _dragExtent = 0;
@@ -178,8 +177,7 @@ class LongPressWidget extends StatefulWidget {
   State<LongPressWidget> createState() => _LongPressWidgetState();
 }
 
-class _LongPressWidgetState extends State<LongPressWidget>
-    with SingleTickerProviderStateMixin {
+class _LongPressWidgetState extends State<LongPressWidget> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   bool _isLongPressing = false;
@@ -296,11 +294,9 @@ class _PinchZoomWidgetState extends State<PinchZoomWidget> {
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
     setState(() {
-      _scale = (_previousScale * details.scale)
-          .clamp(widget.minScale, widget.maxScale);
+      _scale = (_previousScale * details.scale).clamp(widget.minScale, widget.maxScale);
 
-      final newOffset =
-          _previousOffset + details.focalPoint - details.localFocalPoint;
+      final newOffset = _previousOffset + details.focalPoint - details.localFocalPoint;
       _offset = newOffset;
     });
   }
@@ -412,9 +408,7 @@ class _DraggableWidgetState extends State<DraggableWidget> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        transform: _isDragging
-            ? (Matrix4.identity()..scale(1.05))
-            : Matrix4.identity(),
+        transform: _isDragging ? (Matrix4.identity()..scale(1.05)) : Matrix4.identity(),
         child: widget.child,
       ),
     );

@@ -212,14 +212,10 @@ class ResponsiveGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final responsiveCrossAxisCount =
-        crossAxisCount ?? context.responsive(2, 3, 4);
-    final responsiveCrossAxisSpacing =
-        crossAxisSpacing ?? context.responsive(8, 12, 16);
-    final responsiveMainAxisSpacing =
-        mainAxisSpacing ?? context.responsive(8, 12, 16);
-    final responsiveChildAspectRatio =
-        childAspectRatio ?? context.responsive(1, 1.2, 1.5);
+    final responsiveCrossAxisCount = crossAxisCount ?? context.responsive(2, 3, 4);
+    final responsiveCrossAxisSpacing = crossAxisSpacing ?? context.responsive(8, 12, 16);
+    final responsiveMainAxisSpacing = mainAxisSpacing ?? context.responsive(8, 12, 16);
+    final responsiveChildAspectRatio = childAspectRatio ?? context.responsive(1, 1.2, 1.5);
 
     return GridView.builder(
       shrinkWrap: true,

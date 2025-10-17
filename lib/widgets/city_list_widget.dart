@@ -82,8 +82,7 @@ class CityListWidget extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             _buildCityInfo(city, theme),
-            if (showDistance && userLocation != null)
-              _buildDistanceInfo(city, theme),
+            if (showDistance && userLocation != null) _buildDistanceInfo(city, theme),
           ],
         ),
         trailing: _buildTrailingInfo(city, theme),

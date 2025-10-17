@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../models/subscription_plan.dart';
-import '../../services/subscription_service.dart';
 import '../../providers/auth_provider.dart';
+import '../../services/subscription_service.dart';
 
 class MySubscriptionsScreen extends StatefulWidget {
   const MySubscriptionsScreen({super.key});
@@ -28,8 +29,7 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
       final userId = authProvider.currentUser?['id'];
 
       if (userId != null) {
-        final subscriptions =
-            await _subscriptionService.getUserSubscriptions(userId);
+        final subscriptions = await _subscriptionService.getUserSubscriptions(userId);
         setState(() {
           _subscriptions = subscriptions;
           _isLoading = false;
@@ -132,8 +132,7 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color:
-                        _getStatusColor(subscription.status).withOpacity(0.1),
+                    color: _getStatusColor(subscription.status).withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -149,10 +148,9 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
                     children: [
                       Text(
                         'Подписка #${subscription.id.substring(0, 8)}',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       Text(
                         _getStatusText(subscription.status),
@@ -172,8 +170,7 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
             // Детали подписки
             _buildDetailRow('Начало:', _formatDate(subscription.startDate)),
             _buildDetailRow('Окончание:', _formatDate(subscription.endDate)),
-            _buildDetailRow('Автопродление:',
-                subscription.autoRenew ? 'Включено' : 'Выключено'),
+            _buildDetailRow('Автопродление:', subscription.autoRenew ? 'Включено' : 'Выключено'),
 
             if (subscription.isActive) ...[
               const SizedBox(height: 12),
@@ -351,8 +348,7 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
       // TODO: Реализовать переключение автопродления
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text(
-              'Функция автопродления будет реализована в следующей версии'),
+          content: Text('Функция автопродления будет реализована в следующей версии'),
         ),
       );
     } catch (e) {
@@ -367,8 +363,8 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Отменить подписку'),
-        content: const Text(
-            'Вы уверены, что хотите отменить подписку? Это действие нельзя отменить.'),
+        content:
+            const Text('Вы уверены, что хотите отменить подписку? Это действие нельзя отменить.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -388,8 +384,7 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
 
     if (confirmed == true) {
       try {
-        final success =
-            await _subscriptionService.cancelSubscription(subscription.id);
+        final success = await _subscriptionService.cancelSubscription(subscription.id);
         if (success) {
           await _loadSubscriptions();
           ScaffoldMessenger.of(context).showSnackBar(
@@ -411,8 +406,7 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
 
   Future<void> _renewSubscription(UserSubscription subscription) async {
     try {
-      final success =
-          await _subscriptionService.renewSubscription(subscription.id);
+      final success = await _subscriptionService.renewSubscription(subscription.id);
       if (success) {
         await _loadSubscriptions();
         ScaffoldMessenger.of(context).showSnackBar(

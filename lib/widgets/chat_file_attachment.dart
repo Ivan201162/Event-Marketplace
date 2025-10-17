@@ -15,8 +15,7 @@ class ChatFileAttachment extends ConsumerStatefulWidget {
     required this.onFileSelected,
     this.onCancel,
   });
-  final Function(String fileUrl, String fileName, int fileSize, String fileType)
-      onFileSelected;
+  final Function(String fileUrl, String fileName, int fileSize, String fileType) onFileSelected;
   final Function()? onCancel;
 
   @override

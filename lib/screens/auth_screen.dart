@@ -14,8 +14,7 @@ class AuthScreen extends ConsumerStatefulWidget {
   ConsumerState<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends ConsumerState<AuthScreen>
-    with TickerProviderStateMixin {
+class _AuthScreenState extends ConsumerState<AuthScreen> with TickerProviderStateMixin {
   late TabController _tabController;
   int _currentTabIndex = 0;
 
@@ -59,8 +58,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                 children: [
                   // Логотип и заголовок
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 32, vertical: 24),
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -73,8 +71,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                             borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color:
-                                    theme.primaryColor.withValues(alpha: 0.3),
+                                color: theme.primaryColor.withValues(alpha: 0.3),
                                 blurRadius: 15,
                                 offset: const Offset(0, 8),
                               ),
@@ -102,8 +99,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                         Text(
                           'Найдите идеального специалиста для вашего события',
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.textTheme.bodyMedium?.color
-                                ?.withValues(alpha: 0.7),
+                            color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -130,12 +126,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                               margin: const EdgeInsets.all(16),
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: theme.colorScheme.error
-                                    .withValues(alpha: 0.1),
+                                color: theme.colorScheme.error.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
-                                  color: theme.colorScheme.error
-                                      .withValues(alpha: 0.3),
+                                  color: theme.colorScheme.error.withValues(alpha: 0.3),
                                 ),
                               ),
                               child: Row(
@@ -149,8 +143,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                                   Expanded(
                                     child: Text(
                                       authError,
-                                      style:
-                                          theme.textTheme.bodySmall?.copyWith(
+                                      style: theme.textTheme.bodySmall?.copyWith(
                                         color: theme.colorScheme.error,
                                       ),
                                     ),
@@ -162,9 +155,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                                       size: 16,
                                     ),
                                     onPressed: () {
-                                      ref
-                                          .read(authErrorProvider.notifier)
-                                          .clearError();
+                                      ref.read(authErrorProvider.notifier).clearError();
                                     },
                                   ),
                                 ],

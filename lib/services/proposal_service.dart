@@ -35,10 +35,7 @@ class ProposalService {
         metadata: metadata,
       );
 
-      await _firestore
-          .collection(_collection)
-          .doc(proposalId)
-          .set(proposal.toMap());
+      await _firestore.collection(_collection).doc(proposalId).set(proposal.toMap());
 
       // Отправляем уведомление заказчику
       await NotificationService.sendProposalNotification(
@@ -111,8 +108,7 @@ class ProposalService {
   // Получение предложения по ID
   static Future<SpecialistProposal?> getProposal(String proposalId) async {
     try {
-      final doc =
-          await _firestore.collection(_collection).doc(proposalId).get();
+      final doc = await _firestore.collection(_collection).doc(proposalId).get();
       if (doc.exists) {
         return SpecialistProposal.fromFirestore(doc);
       }
@@ -132,8 +128,7 @@ class ProposalService {
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map(
-            (snapshot) =>
-                snapshot.docs.map(SpecialistProposal.fromFirestore).toList(),
+            (snapshot) => snapshot.docs.map(SpecialistProposal.fromFirestore).toList(),
           );
 
   // Получение всех предложений от организатора
@@ -146,8 +141,7 @@ class ProposalService {
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map(
-            (snapshot) =>
-                snapshot.docs.map(SpecialistProposal.fromFirestore).toList(),
+            (snapshot) => snapshot.docs.map(SpecialistProposal.fromFirestore).toList(),
           );
 
   // Получение предложений по статусу
@@ -164,8 +158,7 @@ class ProposalService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map(
-          (snapshot) =>
-              snapshot.docs.map(SpecialistProposal.fromFirestore).toList(),
+          (snapshot) => snapshot.docs.map(SpecialistProposal.fromFirestore).toList(),
         );
   }
 
@@ -198,15 +191,11 @@ class ProposalService {
   // Получение статистики предложений
   static Future<Map<String, int>> getProposalStats(String userId) async {
     try {
-      final organizerProposals = await _firestore
-          .collection(_collection)
-          .where('organizerId', isEqualTo: userId)
-          .get();
+      final organizerProposals =
+          await _firestore.collection(_collection).where('organizerId', isEqualTo: userId).get();
 
-      final customerProposals = await _firestore
-          .collection(_collection)
-          .where('customerId', isEqualTo: userId)
-          .get();
+      final customerProposals =
+          await _firestore.collection(_collection).where('customerId', isEqualTo: userId).get();
 
       final stats = <String, int>{
         'totalSent': organizerProposals.docs.length,

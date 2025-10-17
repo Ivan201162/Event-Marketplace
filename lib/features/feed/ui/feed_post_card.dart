@@ -73,9 +73,7 @@ class FeedPostCard extends ConsumerWidget {
                 backgroundImage: post.authorAvatar.isNotEmpty
                     ? CachedNetworkImageProvider(post.authorAvatar)
                     : null,
-                child: post.authorAvatar.isEmpty
-                    ? const Icon(Icons.person, size: 20)
-                    : null,
+                child: post.authorAvatar.isEmpty ? const Icon(Icons.person, size: 20) : null,
               ),
             ),
 
@@ -181,15 +179,13 @@ class FeedPostCard extends ConsumerWidget {
   Widget _buildMediaContent(BuildContext context) => Container(
         margin: const EdgeInsets.only(top: 12),
         child: ClipRRect(
-          borderRadius:
-              const BorderRadius.vertical(bottom: Radius.circular(12)),
+          borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
           child: AspectRatio(
             aspectRatio: 16 / 9,
             child: post.type == PostType.video
                 ? FeedVideoPlayer(
                     videoUrl: post.mediaUrl,
-                    thumbnailUrl:
-                        post.mediaUrl, // TODO(developer): Добавить превью
+                    thumbnailUrl: post.mediaUrl, // TODO(developer): Добавить превью
                   )
                 : GestureDetector(
                     onTap: () => _showImageFullscreen(context),

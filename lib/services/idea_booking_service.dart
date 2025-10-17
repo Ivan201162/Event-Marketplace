@@ -35,10 +35,7 @@ class IdeaBookingService {
         'attachedAt': Timestamp.fromDate(now),
       };
 
-      await _firestore
-          .collection('idea_booking_attachments')
-          .doc(attachmentId)
-          .set(attachment);
+      await _firestore.collection('idea_booking_attachments').doc(attachmentId).set(attachment);
 
       // Обновляем заявку, добавляя ID прикрепленной идеи
       await _firestore.collection('bookings').doc(bookingId).update({
@@ -112,17 +109,14 @@ class IdeaBookingService {
         return [];
       }
 
-      final ideaIds =
-          snapshot.docs.map((doc) => doc.data()['ideaId'] as String).toList();
+      final ideaIds = snapshot.docs.map((doc) => doc.data()['ideaId'] as String).toList();
 
       final ideasSnapshot = await _firestore
           .collection('event_ideas')
           .where(FieldPath.documentId, whereIn: ideaIds)
           .get();
 
-      final ideas = ideasSnapshot.docs
-          .map((doc) => EventIdea.fromMap(doc.data()))
-          .toList();
+      final ideas = ideasSnapshot.docs.map((doc) => EventIdea.fromMap(doc.data())).toList();
 
       AppLogger.logI(
         'Получено идей для заявки $bookingId: ${ideas.length}',
@@ -147,9 +141,7 @@ class IdeaBookingService {
         return [];
       }
 
-      final bookingIds = snapshot.docs
-          .map((doc) => doc.data()['bookingId'] as String)
-          .toList();
+      final bookingIds = snapshot.docs.map((doc) => doc.data()['bookingId'] as String).toList();
 
       final bookingsSnapshot = await _firestore
           .collection('bookings')
@@ -231,8 +223,7 @@ class IdeaBookingService {
   /// Получить статистику использования идей в заявках
   Future<Map<String, int>> getIdeaUsageStats() async {
     try {
-      final snapshot =
-          await _firestore.collection('idea_booking_attachments').get();
+      final snapshot = await _firestore.collection('idea_booking_attachments').get();
 
       final stats = <String, int>{};
       for (final doc in snapshot.docs) {

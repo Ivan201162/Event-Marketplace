@@ -24,8 +24,7 @@ class ChatMessageExtended {
     this.metadata = const {},
   });
 
-  factory ChatMessageExtended.fromChatMessage(ChatMessageExtended message) =>
-      ChatMessageExtended(
+  factory ChatMessageExtended.fromChatMessage(ChatMessageExtended message) => ChatMessageExtended(
         id: message.id,
         chatId: message.chatId,
         senderId: message.senderId,
@@ -64,8 +63,7 @@ class ChatMessageExtended {
       isEdited: data['isEdited'] as bool? ?? false,
       editedAt: (data['editedAt'] as Timestamp?)?.toDate(),
       replyToMessageId: data['replyToMessageId'] as String?,
-      attachments:
-          List<String>.from(data['attachments'] as List<dynamic>? ?? []),
+      attachments: List<String>.from(data['attachments'] as List<dynamic>? ?? []),
       metadata: Map<String, dynamic>.from(
         data['metadata'] as Map<dynamic, dynamic>? ?? {},
       ),

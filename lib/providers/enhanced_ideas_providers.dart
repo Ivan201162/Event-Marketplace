@@ -89,5 +89,4 @@ class EnhancedIdeasNotifier extends ChangeNotifier {
   }
 }
 
-final enhancedIdeasProvider =
-    Provider<EnhancedIdeasNotifier>((ref) => EnhancedIdeasNotifier());
+final enhancedIdeasProvider = Provider<EnhancedIdeasNotifier>((ref) => EnhancedIdeasNotifier());

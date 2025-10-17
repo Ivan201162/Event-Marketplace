@@ -21,8 +21,7 @@ class AdvancePaymentWidget extends ConsumerStatefulWidget {
   final Function()? onPaymentCompleted;
 
   @override
-  ConsumerState<AdvancePaymentWidget> createState() =>
-      _AdvancePaymentWidgetState();
+  ConsumerState<AdvancePaymentWidget> createState() => _AdvancePaymentWidgetState();
 }
 
 class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
@@ -52,8 +51,7 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
       final summary = await _paymentService.getPaymentSummary(widget.bookingId);
       setState(() {
         _paymentSummary = summary;
-        _advanceAmount =
-            _paymentService.calculateRecommendedAdvance(widget.totalAmount);
+        _advanceAmount = _paymentService.calculateRecommendedAdvance(widget.totalAmount);
       });
     } catch (e) {
       _showError('Ошибка загрузки информации о платежах: $e');
@@ -362,10 +360,8 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
               currency: 'RUB',
               orderId: 'advance_${widget.bookingId}',
               description: 'Авансовый платеж за бронирование',
-              customerEmail:
-                  'customer@example.com', // TODO(developer): Получить из профиля
-              customerPhone:
-                  '+7XXXXXXXXXX', // TODO(developer): Получить из профиля
+              customerEmail: 'customer@example.com', // TODO(developer): Получить из профиля
+              customerPhone: '+7XXXXXXXXXX', // TODO(developer): Получить из профиля
               onPaymentInitiated: (result) {
                 _showSuccess('Авансовый платеж инициализирован');
                 _loadPaymentSummary();
@@ -414,10 +410,8 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
             currency: 'RUB',
             orderId: 'final_${widget.bookingId}',
             description: 'Финальный платеж за услугу',
-            customerEmail:
-                'customer@example.com', // TODO(developer): Получить из профиля
-            customerPhone:
-                '+7XXXXXXXXXX', // TODO(developer): Получить из профиля
+            customerEmail: 'customer@example.com', // TODO(developer): Получить из профиля
+            customerPhone: '+7XXXXXXXXXX', // TODO(developer): Получить из профиля
             onPaymentInitiated: (result) {
               _showSuccess('Финальный платеж инициализирован');
               _loadPaymentSummary();

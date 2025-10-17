@@ -28,8 +28,7 @@ class VideoGallery extends ConsumerWidget {
 
   Widget _buildVideoGrid(BuildContext context, List<UserPost> posts) {
     // Фильтруем только видео
-    final videos =
-        posts.where((post) => post.isVideo && post.videoUrl != null).toList();
+    final videos = posts.where((post) => post.isVideo && post.videoUrl != null).toList();
 
     if (videos.isEmpty) {
       return _buildEmptyState(context);
@@ -56,8 +55,7 @@ class VideoGallery extends ConsumerWidget {
     );
   }
 
-  Widget _buildVideoItem(BuildContext context, UserPost video) =>
-      GestureDetector(
+  Widget _buildVideoItem(BuildContext context, UserPost video) => GestureDetector(
         onTap: () => _openVideoPlayer(context, video),
         child: Container(
           decoration: BoxDecoration(
@@ -114,8 +112,7 @@ class VideoGallery extends ConsumerWidget {
                   bottom: 8,
                   right: 8,
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: Colors.black.withValues(alpha: 0.7),
                       borderRadius: BorderRadius.circular(4),
@@ -324,9 +321,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                           children: [
                             IconButton(
                               icon: Icon(
-                                _controller.value.isPlaying
-                                    ? Icons.pause
-                                    : Icons.play_arrow,
+                                _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
                                 color: Colors.white,
                                 size: 48,
                               ),

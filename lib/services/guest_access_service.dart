@@ -51,10 +51,7 @@ class GuestAccessService {
         },
       );
 
-      await _firestore
-          .collection('guest_access')
-          .doc(guestAccessId)
-          .set(guestAccess.toMap());
+      await _firestore.collection('guest_access').doc(guestAccessId).set(guestAccess.toMap());
 
       AppLogger.logI(
         'Гостевой доступ создан: $accessCode',
@@ -92,10 +89,7 @@ class GuestAccessService {
       // Проверяем, не истек ли доступ
       if (guestAccess.isExpired) {
         // Обновляем статус на истекший
-        await _firestore
-            .collection('guest_access')
-            .doc(doc.id)
-            .update({'status': 'expired'});
+        await _firestore.collection('guest_access').doc(doc.id).update({'status': 'expired'});
         return null;
       }
 
@@ -156,9 +150,7 @@ class GuestAccessService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => GuestAccess.fromMap(doc.data(), doc.id))
-          .toList();
+      return querySnapshot.docs.map((doc) => GuestAccess.fromMap(doc.data(), doc.id)).toList();
     } catch (e, stackTrace) {
       AppLogger.logE(
         'Ошибка получения гостевых доступов мероприятия',
@@ -181,9 +173,7 @@ class GuestAccessService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => GuestAccess.fromMap(doc.data(), doc.id))
-          .toList();
+      return querySnapshot.docs.map((doc) => GuestAccess.fromMap(doc.data(), doc.id)).toList();
     } catch (e, stackTrace) {
       AppLogger.logE(
         'Ошибка получения гостевых доступов организатора',
@@ -248,13 +238,11 @@ class GuestAccessService {
     Duration extension,
   ) async {
     try {
-      final doc =
-          await _firestore.collection('guest_access').doc(guestAccessId).get();
+      final doc = await _firestore.collection('guest_access').doc(guestAccessId).get();
       if (!doc.exists) return false;
 
       final guestAccess = GuestAccess.fromMap(doc.data()!, doc.id);
-      final newExpiresAt =
-          (guestAccess.expiresAt ?? DateTime.now()).add(extension);
+      final newExpiresAt = (guestAccess.expiresAt ?? DateTime.now()).add(extension);
 
       await _firestore.collection('guest_access').doc(guestAccessId).update({
         'expiresAt': Timestamp.fromDate(newExpiresAt),
@@ -308,8 +296,7 @@ class GuestAccessService {
   /// Получить статистику использования гостевого доступа
   Future<Map<String, dynamic>> getGuestAccessStats(String guestAccessId) async {
     try {
-      final doc =
-          await _firestore.collection('guest_access').doc(guestAccessId).get();
+      final doc = await _firestore.collection('guest_access').doc(guestAccessId).get();
       if (!doc.exists) return {};
 
       final guestAccess = GuestAccess.fromMap(doc.data()!, doc.id);
@@ -318,8 +305,7 @@ class GuestAccessService {
         'usageCount': guestAccess.usageCount,
         'lastUsedAt': guestAccess.lastUsedAt,
         'isActive': guestAccess.isActive,
-        'daysRemaining':
-            guestAccess.expiresAt?.difference(DateTime.now()).inDays,
+        'daysRemaining': guestAccess.expiresAt?.difference(DateTime.now()).inDays,
       };
     } catch (e, stackTrace) {
       AppLogger.logE(

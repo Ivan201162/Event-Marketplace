@@ -15,12 +15,10 @@ class SpecialistServicesScreen extends ConsumerStatefulWidget {
   final String specialistId;
 
   @override
-  ConsumerState<SpecialistServicesScreen> createState() =>
-      _SpecialistServicesScreenState();
+  ConsumerState<SpecialistServicesScreen> createState() => _SpecialistServicesScreenState();
 }
 
-class _SpecialistServicesScreenState
-    extends ConsumerState<SpecialistServicesScreen> {
+class _SpecialistServicesScreenState extends ConsumerState<SpecialistServicesScreen> {
   final ServiceTemplateService _templateService = ServiceTemplateService();
   final SpecialistServiceService _serviceService = SpecialistServiceService();
 
@@ -153,8 +151,7 @@ class _SpecialistServicesScreenState
           // Список услуг
           Expanded(
             child: FutureBuilder<List<SpecialistService>>(
-              future:
-                  _serviceService.getSpecialistServices(widget.specialistId),
+              future: _serviceService.getSpecialistServices(widget.specialistId),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -524,8 +521,7 @@ class _ServiceDialogState extends State<_ServiceDialog> {
                           return 'Цена должна быть больше 0';
                         }
 
-                        final minPrice =
-                            double.tryParse(_priceMinController.text);
+                        final minPrice = double.tryParse(_priceMinController.text);
                         if (minPrice != null && price < minPrice) {
                           return 'Максимальная цена не может быть меньше минимальной';
                         }

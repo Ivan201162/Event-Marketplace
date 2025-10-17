@@ -63,13 +63,11 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                     const SizedBox(height: 16),
 
                     // Информация о сторонах
-                    if (widget.contract.partiesInfo != null)
-                      _buildPartiesInfo(),
+                    if (widget.contract.partiesInfo != null) _buildPartiesInfo(),
                     const SizedBox(height: 16),
 
                     // Список услуг
-                    if (widget.contract.servicesList != null)
-                      _buildServicesList(),
+                    if (widget.contract.servicesList != null) _buildServicesList(),
                     const SizedBox(height: 16),
 
                     // Ошибка
@@ -287,10 +285,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                           children: [
                             Text(
                               service.name,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall
-                                  ?.copyWith(
+                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                             ),
@@ -304,10 +299,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                             const SizedBox(height: 4),
                             Text(
                               '${service.quantity} ${service.unit ?? 'шт.'} × ${service.price.toStringAsFixed(2)} ₽',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                     color: Colors.grey.shade600,
                                   ),
                             ),
@@ -480,8 +472,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
               label,
               style: TextStyle(
                 fontSize: 12,
-                color:
-                    isSigned ? Colors.green.shade700 : Colors.orange.shade700,
+                color: isSigned ? Colors.green.shade700 : Colors.orange.shade700,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -519,9 +510,8 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
     try {
       // Конвертируем подпись в base64
       final signatureData = await _signatureController.toPngBytes();
-      final signatureBase64 = signatureData != null
-          ? 'data:image/png;base64,${signatureData.toString()}'
-          : '';
+      final signatureBase64 =
+          signatureData != null ? 'data:image/png;base64,${signatureData.toString()}' : '';
 
       // Подписываем договор
       await _contractService.signContract(
@@ -561,8 +551,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
     });
 
     try {
-      final pdfPath =
-          await _contractService.generateContractPDF(widget.contract.id);
+      final pdfPath = await _contractService.generateContractPDF(widget.contract.id);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

@@ -10,12 +10,10 @@ class DeviceManagementScreen extends ConsumerStatefulWidget {
   const DeviceManagementScreen({super.key});
 
   @override
-  ConsumerState<DeviceManagementScreen> createState() =>
-      _DeviceManagementScreenState();
+  ConsumerState<DeviceManagementScreen> createState() => _DeviceManagementScreenState();
 }
 
-class _DeviceManagementScreenState
-    extends ConsumerState<DeviceManagementScreen> {
+class _DeviceManagementScreenState extends ConsumerState<DeviceManagementScreen> {
   final SecurityService _securityService = SecurityService();
 
   @override
@@ -32,12 +30,6 @@ class _DeviceManagementScreenState
         body: Consumer(
           builder: (context, ref, child) {
             final currentUser = ref.watch(authServiceProvider).currentUser;
-
-            if (currentUser == null) {
-              return const Center(
-                child: Text('Пользователь не авторизован'),
-              );
-            }
 
             return StreamBuilder<List<SecurityDevice>>(
               stream: _securityService.getUserDevices(currentUser.uid),
@@ -151,8 +143,7 @@ class _DeviceManagementScreenState
                     ),
                   ),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.green,
                       borderRadius: BorderRadius.circular(12),
@@ -525,8 +516,7 @@ class _DeviceManagementScreenState
 
     if (confirmed ?? false) {
       try {
-        final currentUser =
-            await ref.read(authServiceProvider).getCurrentUser();
+        final currentUser = await ref.read(authServiceProvider).getCurrentUser();
         if (currentUser != null) {
           await _securityService.blockDevice(device.id);
           ScaffoldMessenger.of(context).showSnackBar(

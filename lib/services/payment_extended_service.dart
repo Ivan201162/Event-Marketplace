@@ -8,8 +8,7 @@ import '../models/payment_extended.dart';
 class PaymentExtendedService {
   factory PaymentExtendedService() => _instance;
   PaymentExtendedService._internal();
-  static final PaymentExtendedService _instance =
-      PaymentExtendedService._internal();
+  static final PaymentExtendedService _instance = PaymentExtendedService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   // final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -134,10 +133,7 @@ class PaymentExtendedService {
   /// Обновить платеж
   Future<bool> updatePayment(PaymentExtended payment) async {
     try {
-      await _firestore
-          .collection('payments')
-          .doc(payment.id)
-          .update(payment.toMap());
+      await _firestore.collection('payments').doc(payment.id).update(payment.toMap());
       return true;
     } on Exception {
       // TODO(developer): Log error properly
@@ -171,8 +167,7 @@ class PaymentExtendedService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map(
-          (snapshot) =>
-              snapshot.docs.map(PaymentExtended.fromDocument).toList(),
+          (snapshot) => snapshot.docs.map(PaymentExtended.fromDocument).toList(),
         );
   }
 
@@ -204,9 +199,7 @@ class PaymentExtendedService {
           .fold(0, (total, i) => total + i.amount);
 
       final remainingAmount = payment.totalAmount - paidAmount;
-      final status = remainingAmount <= 0
-          ? PaymentStatus.completed
-          : PaymentStatus.processing;
+      final status = remainingAmount <= 0 ? PaymentStatus.completed : PaymentStatus.processing;
 
       // Обновляем платеж
       final updatedPayment = payment.copyWith(
@@ -290,8 +283,7 @@ class PaymentExtendedService {
 
       // Сохраняем PDF
       // final bytes = await pdf.save();
-      final fileName =
-          'receipt_${payment.id}_${DateTime.now().millisecondsSinceEpoch}.pdf';
+      final fileName = 'receipt_${payment.id}_${DateTime.now().millisecondsSinceEpoch}.pdf';
       // final ref = _storage.ref().child('receipts/$fileName');
 
       // final uploadTask = ref.putData(bytes);
@@ -383,8 +375,7 @@ class PaymentExtendedService {
 
       // Сохраняем PDF
       // final bytes = await pdf.save();
-      final fileName =
-          'invoice_${payment.id}_${DateTime.now().millisecondsSinceEpoch}.pdf';
+      final fileName = 'invoice_${payment.id}_${DateTime.now().millisecondsSinceEpoch}.pdf';
       // final ref = _storage.ref().child('invoices/$fileName');
 
       // final uploadTask = ref.putData(bytes);
@@ -413,34 +404,26 @@ class PaymentExtendedService {
   }) async {
     try {
       final field = isCustomer ? 'customerId' : 'specialistId';
-      final snapshot = await _firestore
-          .collection('payments')
-          .where(field, isEqualTo: userId)
-          .get();
+      final snapshot =
+          await _firestore.collection('payments').where(field, isEqualTo: userId).get();
 
       final payments = snapshot.docs.map(PaymentExtended.fromDocument).toList();
 
       final totalPayments = payments.length;
-      final completedPayments =
-          payments.where((p) => p.status == PaymentStatus.completed).length;
-      final pendingPayments =
-          payments.where((p) => p.status == PaymentStatus.pending).length;
-      final failedPayments =
-          payments.where((p) => p.status == PaymentStatus.failed).length;
+      final completedPayments = payments.where((p) => p.status == PaymentStatus.completed).length;
+      final pendingPayments = payments.where((p) => p.status == PaymentStatus.pending).length;
+      final failedPayments = payments.where((p) => p.status == PaymentStatus.failed).length;
 
       final totalAmount = payments.fold(0, (total, p) => total + p.totalAmount);
       final paidAmount = payments.fold(0, (total, p) => total + p.paidAmount);
-      final pendingAmount =
-          payments.fold(0, (total, p) => total + p.remainingAmount);
+      final pendingAmount = payments.fold(0, (total, p) => total + p.remainingAmount);
 
       final paymentsByType = <String, int>{};
       final paymentsByStatus = <String, int>{};
 
       for (final payment in payments) {
-        paymentsByType[payment.type.name] =
-            (paymentsByType[payment.type.name] ?? 0) + 1;
-        paymentsByStatus[payment.status.name] =
-            (paymentsByStatus[payment.status.name] ?? 0) + 1;
+        paymentsByType[payment.type.name] = (paymentsByType[payment.type.name] ?? 0) + 1;
+        paymentsByStatus[payment.status.name] = (paymentsByStatus[payment.status.name] ?? 0) + 1;
       }
 
       return PaymentStats(
@@ -464,8 +447,7 @@ class PaymentExtendedService {
   /// Получить настройки предоплаты
   Future<AdvancePaymentSettings> getAdvancePaymentSettings() async {
     try {
-      final doc =
-          await _firestore.collection('settings').doc('advance_payment').get();
+      final doc = await _firestore.collection('settings').doc('advance_payment').get();
       if (doc.exists) {
         return AdvancePaymentSettings.fromMap(doc.data()!);
       }
@@ -481,10 +463,7 @@ class PaymentExtendedService {
     AdvancePaymentSettings settings,
   ) async {
     try {
-      await _firestore
-          .collection('settings')
-          .doc('advance_payment')
-          .set(settings.toMap());
+      await _firestore.collection('settings').doc('advance_payment').set(settings.toMap());
       return true;
     } on Exception {
       // TODO(developer): Log error properly

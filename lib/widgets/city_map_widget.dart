@@ -187,8 +187,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
                 color: _getCityMarkerColor(city),
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color:
-                      city == widget.selectedCity ? Colors.amber : Colors.white,
+                  color: city == widget.selectedCity ? Colors.amber : Colors.white,
                   width: city == widget.selectedCity ? 3 : 2,
                 ),
                 boxShadow: [
@@ -213,8 +212,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
 
     // Добавляем маркер для выбранного города, если он не в списке ближайших
     if (widget.selectedCity != null &&
-        !widget.nearbyCities
-            .any((city) => city.id == widget.selectedCity!.id)) {
+        !widget.nearbyCities.any((city) => city.id == widget.selectedCity!.id)) {
       markers.add(
         Marker(
           point: LatLng(

@@ -12,8 +12,7 @@ class DebugScreen extends ConsumerStatefulWidget {
   ConsumerState<DebugScreen> createState() => _DebugScreenState();
 }
 
-class _DebugScreenState extends ConsumerState<DebugScreen>
-    with TickerProviderStateMixin {
+class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderStateMixin {
   late TabController _tabController;
   final MonitoringService _monitoring = MonitoringService();
   final LoggerService _logger = LoggerService();
@@ -52,9 +51,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
             IconButton(
               icon: Icon(_isMonitoring ? Icons.stop : Icons.play_arrow),
               onPressed: _toggleMonitoring,
-              tooltip: _isMonitoring
-                  ? 'Остановить мониторинг'
-                  : 'Запустить мониторинг',
+              tooltip: _isMonitoring ? 'Остановить мониторинг' : 'Запустить мониторинг',
             ),
             IconButton(
               icon: const Icon(Icons.refresh),
@@ -313,10 +310,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
                     Text(
                       subtitle,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withValues(alpha: 0.7),
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                           ),
                     ),
                 ],
@@ -413,8 +407,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
         ],
       );
 
-  Widget _buildLogTestButton(String label, LogLevel level, IconData icon) =>
-      Card(
+  Widget _buildLogTestButton(String label, LogLevel level, IconData icon) => Card(
         margin: const EdgeInsets.only(bottom: 8),
         child: ListTile(
           leading: Icon(icon),
@@ -458,8 +451,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
                     ),
                     SwitchListTile(
                       title: const Text('Мониторинг производительности'),
-                      subtitle:
-                          const Text('Отслеживать время выполнения операций'),
+                      subtitle: const Text('Отслеживать время выполнения операций'),
                       value: true,
                       onChanged: (value) {
                         // TODO(developer): Implement performance monitoring toggle
@@ -491,8 +483,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
                     ),
                     SwitchListTile(
                       title: const Text('Логирование в консоль'),
-                      subtitle:
-                          const Text('Выводить логи в консоль разработчика'),
+                      subtitle: const Text('Выводить логи в консоль разработчика'),
                       value: true,
                       onChanged: (value) {
                         // TODO(developer): Implement console logging toggle
@@ -718,8 +709,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute<void>(
-                              builder: (context) =>
-                                  const IntegrationTestScreen(),
+                              builder: (context) => const IntegrationTestScreen(),
                             ),
                           );
                         },

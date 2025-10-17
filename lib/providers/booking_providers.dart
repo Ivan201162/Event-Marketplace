@@ -3,12 +3,10 @@ import '../models/booking.dart';
 import '../services/booking_service.dart';
 
 /// Провайдер сервиса бронирований
-final bookingServiceProvider =
-    Provider<BookingService>((ref) => BookingService());
+final bookingServiceProvider = Provider<BookingService>((ref) => BookingService());
 
 /// Провайдер для формы бронирования
-final bookingFormProvider =
-    NotifierProvider<BookingFormNotifier, BookingFormState>(
+final bookingFormProvider = NotifierProvider<BookingFormNotifier, BookingFormState>(
   BookingFormNotifier.new,
 );
 
@@ -50,51 +48,44 @@ class BookingFormNotifier extends Notifier<BookingFormState> {
 }
 
 /// Провайдер бронирований пользователя
-final userBookingsProvider =
-    StreamProvider.family<List<Booking>, String>((ref, userId) {
+final userBookingsProvider = StreamProvider.family<List<Booking>, String>((ref, userId) {
   final bookingService = ref.watch(bookingServiceProvider);
   return bookingService.getUserBookings(userId);
 });
 
 /// Провайдер бронирований для события
-final eventBookingsProvider =
-    StreamProvider.family<List<Booking>, String>((ref, eventId) {
+final eventBookingsProvider = StreamProvider.family<List<Booking>, String>((ref, eventId) {
   final bookingService = ref.watch(bookingServiceProvider);
   return bookingService.getEventBookings(eventId);
 });
 
 /// Провайдер бронирования по ID
-final bookingByIdProvider =
-    FutureProvider.family<Booking?, String>((ref, bookingId) {
+final bookingByIdProvider = FutureProvider.family<Booking?, String>((ref, bookingId) {
   final bookingService = ref.watch(bookingServiceProvider);
   return bookingService.getBookingById(bookingId);
 });
 
 /// Провайдер проверки, забронировал ли пользователь событие
 final hasUserBookedEventProvider =
-    FutureProvider.family<bool, ({String userId, String eventId})>(
-        (ref, params) {
+    FutureProvider.family<bool, ({String userId, String eventId})>((ref, params) {
   final bookingService = ref.watch(bookingServiceProvider);
   return bookingService.hasUserBookedEvent(params.userId, params.eventId);
 });
 
 /// Провайдер статистики бронирований пользователя
-final userBookingStatsProvider =
-    FutureProvider.family<Map<String, int>, String>((ref, userId) {
+final userBookingStatsProvider = FutureProvider.family<Map<String, int>, String>((ref, userId) {
   final bookingService = ref.watch(bookingServiceProvider);
   return bookingService.getUserBookingStats(userId);
 });
 
 /// Провайдер статистики бронирований для события
-final eventBookingStatsProvider =
-    FutureProvider.family<Map<String, int>, String>((ref, eventId) {
+final eventBookingStatsProvider = FutureProvider.family<Map<String, int>, String>((ref, eventId) {
   final bookingService = ref.watch(bookingServiceProvider);
   return bookingService.getEventBookingStats(eventId);
 });
 
 /// Провайдер для управления состоянием создания бронирования
-final createBookingProvider =
-    NotifierProvider<CreateBookingNotifier, CreateBookingState>(
+final createBookingProvider = NotifierProvider<CreateBookingNotifier, CreateBookingState>(
   CreateBookingNotifier.new,
 );
 

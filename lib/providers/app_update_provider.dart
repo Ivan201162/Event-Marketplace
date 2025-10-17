@@ -85,8 +85,7 @@ class AppUpdateNotifier extends Notifier<AppUpdateState> {
 
       if (updateInfo != null) {
         // Проверяем, не была ли версия отклонена
-        final isDismissed =
-            await AppUpdateService.isVersionDismissed(updateInfo.latestVersion);
+        final isDismissed = await AppUpdateService.isVersionDismissed(updateInfo.latestVersion);
 
         state = state.copyWith(
           isChecking: false,
@@ -116,8 +115,7 @@ class AppUpdateNotifier extends Notifier<AppUpdateState> {
       final updateInfo = await AppUpdateService.forceCheckForUpdates();
 
       if (updateInfo != null) {
-        final isDismissed =
-            await AppUpdateService.isVersionDismissed(updateInfo.latestVersion);
+        final isDismissed = await AppUpdateService.isVersionDismissed(updateInfo.latestVersion);
 
         state = state.copyWith(
           isChecking: false,
@@ -229,8 +227,7 @@ class VersionDetails {
   final UpdateInfo? updateInfo;
 
   /// Получить полную информацию о версии
-  String get fullVersionInfo =>
-      '$appName v$currentVersion (build $buildNumber)';
+  String get fullVersionInfo => '$appName v$currentVersion (build $buildNumber)';
 
   /// Проверить, доступно ли обновление
   bool get hasUpdateAvailable => updateInfo?.isUpdateAvailable ?? false;

@@ -16,12 +16,10 @@ class AvailabilityCalendarWidget extends StatefulWidget {
   final bool isReadOnly;
 
   @override
-  State<AvailabilityCalendarWidget> createState() =>
-      _AvailabilityCalendarWidgetState();
+  State<AvailabilityCalendarWidget> createState() => _AvailabilityCalendarWidgetState();
 }
 
-class _AvailabilityCalendarWidgetState
-    extends State<AvailabilityCalendarWidget> {
+class _AvailabilityCalendarWidgetState extends State<AvailabilityCalendarWidget> {
   late final ValueNotifier<List<DateTime>> _selectedDates;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
@@ -65,8 +63,7 @@ class _AvailabilityCalendarWidgetState
               firstDay: DateTime.utc(2020),
               lastDay: DateTime.utc(2030, 12, 31),
               focusedDay: _focusedDay,
-              selectedDayPredicate: (day) =>
-                  _selectedDay != null && isSameDay(_selectedDay, day),
+              selectedDayPredicate: (day) => _selectedDay != null && isSameDay(_selectedDay, day),
               onDaySelected: (selectedDay, focusedDay) {
                 if (!widget.isReadOnly) {
                   setState(() {
@@ -101,12 +98,9 @@ class _AvailabilityCalendarWidgetState
                 titleCentered: true,
               ),
               calendarBuilders: CalendarBuilders(
-                defaultBuilder: (context, day, focusedDay) =>
-                    _buildDayCell(day),
-                todayBuilder: (context, day, focusedDay) =>
-                    _buildDayCell(day, isToday: true),
-                selectedBuilder: (context, day, focusedDay) =>
-                    _buildDayCell(day, isSelected: true),
+                defaultBuilder: (context, day, focusedDay) => _buildDayCell(day),
+                todayBuilder: (context, day, focusedDay) => _buildDayCell(day, isToday: true),
+                selectedBuilder: (context, day, focusedDay) => _buildDayCell(day, isSelected: true),
               ),
             ),
           ),
@@ -210,9 +204,8 @@ class _AvailabilityCalendarWidgetState
   }
 
   Widget _buildStatistics() {
-    final totalDays = DateTime.now()
-        .difference(DateTime.now().subtract(const Duration(days: 30)))
-        .inDays;
+    final totalDays =
+        DateTime.now().difference(DateTime.now().subtract(const Duration(days: 30))).inDays;
     final busyDays = widget.busyDates.length;
     final availableDays = widget.availableDates.length;
     final freeDays = totalDays - busyDays;
@@ -282,9 +275,7 @@ class _AvailabilityCalendarWidgetState
 
   bool _isDateBusy(DateTime date) => widget.busyDates.any(
         (busyDate) =>
-            busyDate.year == date.year &&
-            busyDate.month == date.month &&
-            busyDate.day == date.day,
+            busyDate.year == date.year && busyDate.month == date.month && busyDate.day == date.day,
       );
 
   bool _isDateAvailable(DateTime date) => widget.availableDates.any(

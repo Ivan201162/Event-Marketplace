@@ -49,12 +49,8 @@ class MediaContent {
         orElse: () => ContentStatus.uploaded,
       ),
       uploadedAt: (data['uploadedAt'] as Timestamp).toDate(),
-      processedAt: data['processedAt'] != null
-          ? (data['processedAt'] as Timestamp).toDate()
-          : null,
-      publishedAt: data['publishedAt'] != null
-          ? (data['publishedAt'] as Timestamp).toDate()
-          : null,
+      processedAt: data['processedAt'] != null ? (data['processedAt'] as Timestamp).toDate() : null,
+      publishedAt: data['publishedAt'] != null ? (data['publishedAt'] as Timestamp).toDate() : null,
       tags: List<String>.from(data['tags'] as List<dynamic>? ?? []),
       processingInfo: Map<String, dynamic>.from(
         data['processingInfo'] as Map<dynamic, dynamic>? ?? {},
@@ -86,12 +82,10 @@ class MediaContent {
           orElse: () => ContentStatus.uploaded,
         ),
         uploadedAt: (data['uploadedAt'] as Timestamp).toDate(),
-        processedAt: data['processedAt'] != null
-            ? (data['processedAt'] as Timestamp).toDate()
-            : null,
-        publishedAt: data['publishedAt'] != null
-            ? (data['publishedAt'] as Timestamp).toDate()
-            : null,
+        processedAt:
+            data['processedAt'] != null ? (data['processedAt'] as Timestamp).toDate() : null,
+        publishedAt:
+            data['publishedAt'] != null ? (data['publishedAt'] as Timestamp).toDate() : null,
         tags: List<String>.from(data['tags'] as List<dynamic>? ?? []),
         processingInfo: Map<String, dynamic>.from(
           data['processingInfo'] as Map<dynamic, dynamic>? ?? {},
@@ -131,10 +125,8 @@ class MediaContent {
         'eventId': eventId,
         'status': status.toString().split('.').last,
         'uploadedAt': Timestamp.fromDate(uploadedAt),
-        'processedAt':
-            processedAt != null ? Timestamp.fromDate(processedAt!) : null,
-        'publishedAt':
-            publishedAt != null ? Timestamp.fromDate(publishedAt!) : null,
+        'processedAt': processedAt != null ? Timestamp.fromDate(processedAt!) : null,
+        'publishedAt': publishedAt != null ? Timestamp.fromDate(publishedAt!) : null,
         'tags': tags,
         'processingInfo': processingInfo,
       };
@@ -255,8 +247,7 @@ class MediaContent {
       );
 
   @override
-  String toString() =>
-      'MediaContent(id: $id, title: $title, type: $type, status: $status)';
+  String toString() => 'MediaContent(id: $id, title: $title, type: $type, status: $status)';
 }
 
 /// Модель галереи контента
@@ -419,8 +410,7 @@ class ContentGallery {
       );
 
   @override
-  String toString() =>
-      'ContentGallery(id: $id, name: $name, type: $type, mediaCount: $mediaCount)';
+  String toString() => 'ContentGallery(id: $id, name: $name, type: $type, mediaCount: $mediaCount)';
 }
 
 /// Модель обработки медиа
@@ -458,9 +448,7 @@ class MediaProcessing {
       resultUrl: data['resultUrl'] as String?,
       errorMessage: data['errorMessage'] as String?,
       startedAt: (data['startedAt'] as Timestamp).toDate(),
-      completedAt: data['completedAt'] != null
-          ? (data['completedAt'] as Timestamp).toDate()
-          : null,
+      completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
       metadata: Map<String, dynamic>.from(
         data['metadata'] as Map<dynamic, dynamic>? ?? {},
       ),
@@ -485,9 +473,8 @@ class MediaProcessing {
         resultUrl: data['resultUrl'] as String?,
         errorMessage: data['errorMessage'] as String?,
         startedAt: (data['startedAt'] as Timestamp).toDate(),
-        completedAt: data['completedAt'] != null
-            ? (data['completedAt'] as Timestamp).toDate()
-            : null,
+        completedAt:
+            data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
         metadata: Map<String, dynamic>.from(
           data['metadata'] as Map<dynamic, dynamic>? ?? {},
         ),
@@ -512,8 +499,7 @@ class MediaProcessing {
         'resultUrl': resultUrl,
         'errorMessage': errorMessage,
         'startedAt': Timestamp.fromDate(startedAt),
-        'completedAt':
-            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+        'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
         'metadata': metadata,
       };
 
@@ -589,8 +575,7 @@ class MediaProcessing {
       );
 
   @override
-  String toString() =>
-      'MediaProcessing(id: $id, mediaId: $mediaId, type: $type, status: $status)';
+  String toString() => 'MediaProcessing(id: $id, mediaId: $mediaId, type: $type, status: $status)';
 }
 
 /// Типы медиа

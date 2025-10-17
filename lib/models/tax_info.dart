@@ -105,9 +105,7 @@ class TaxInfo {
       period: data['period'] as String,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      paidAt: data['paidAt'] != null
-          ? (data['paidAt'] as Timestamp).toDate()
-          : null,
+      paidAt: data['paidAt'] != null ? (data['paidAt'] as Timestamp).toDate() : null,
       paymentMethod: data['paymentMethod'] as String?,
       notes: data['notes'] as String?,
       isPaid: data['isPaid'] as bool? ?? false,
@@ -131,15 +129,11 @@ class TaxInfo {
         income: (data['income'] as num).toDouble(),
         taxAmount: (data['taxAmount'] as num).toDouble(),
         period: data['period'] as String,
-        createdAt: data['createdAt'] != null
-            ? (data['createdAt'] as Timestamp).toDate()
-            : DateTime.now(),
-        updatedAt: data['updatedAt'] != null
-            ? (data['updatedAt'] as Timestamp).toDate()
-            : DateTime.now(),
-        paidAt: data['paidAt'] != null
-            ? (data['paidAt'] as Timestamp).toDate()
-            : null,
+        createdAt:
+            data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
+        updatedAt:
+            data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : DateTime.now(),
+        paidAt: data['paidAt'] != null ? (data['paidAt'] as Timestamp).toDate() : null,
         paymentMethod: data['paymentMethod'] as String?,
         notes: data['notes'] as String?,
         isPaid: data['isPaid'] as bool? ?? false,
@@ -182,9 +176,7 @@ class TaxInfo {
         'notes': notes,
         'isPaid': isPaid,
         'reminderSent': reminderSent,
-        'nextReminderDate': nextReminderDate != null
-            ? Timestamp.fromDate(nextReminderDate!)
-            : null,
+        'nextReminderDate': nextReminderDate != null ? Timestamp.fromDate(nextReminderDate!) : null,
       };
 
   /// Копировать с изменениями
@@ -324,8 +316,7 @@ class TaxSummary {
   String get formattedTotalIncome => '${totalIncome.toStringAsFixed(0)} ₽';
 
   /// Получить отформатированную общую сумму налога
-  String get formattedTotalTaxAmount =>
-      '${totalTaxAmount.toStringAsFixed(0)} ₽';
+  String get formattedTotalTaxAmount => '${totalTaxAmount.toStringAsFixed(0)} ₽';
 
   /// Получить отформатированную оплаченную сумму
   String get formattedPaidAmount => '${paidAmount.toStringAsFixed(0)} ₽';
@@ -343,6 +334,5 @@ class TaxSummary {
   }
 
   /// Получить отформатированный процент оплаты
-  String get formattedPaymentPercentage =>
-      '${paymentPercentage.toStringAsFixed(1)}%';
+  String get formattedPaymentPercentage => '${paymentPercentage.toStringAsFixed(1)}%';
 }

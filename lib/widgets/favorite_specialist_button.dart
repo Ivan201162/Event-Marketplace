@@ -20,8 +20,7 @@ class FavoriteSpecialistButton extends StatefulWidget {
   final double? size;
 
   @override
-  State<FavoriteSpecialistButton> createState() =>
-      _FavoriteSpecialistButtonState();
+  State<FavoriteSpecialistButton> createState() => _FavoriteSpecialistButtonState();
 }
 
 class _FavoriteSpecialistButtonState extends State<FavoriteSpecialistButton> {
@@ -39,7 +38,6 @@ class _FavoriteSpecialistButtonState extends State<FavoriteSpecialistButton> {
 
   Future<void> _checkFavoriteStatus() async {
     final currentUser = _authService.currentUser;
-    if (currentUser == null) return;
 
     try {
       final isFavorite = await _portfolioService.isFavoriteSpecialist(
@@ -59,10 +57,6 @@ class _FavoriteSpecialistButtonState extends State<FavoriteSpecialistButton> {
 
   Future<void> _toggleFavorite() async {
     final currentUser = _authService.currentUser;
-    if (currentUser == null) {
-      _showAuthError();
-      return;
-    }
 
     setState(() {
       _isLoading = true;

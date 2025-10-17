@@ -76,8 +76,7 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
               Text('Ошибка загрузки: $error'),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () =>
-                    ref.invalidate(specialistProvider(widget.specialistId)),
+                onPressed: () => ref.invalidate(specialistProvider(widget.specialistId)),
                 child: const Text('Повторить'),
               ),
             ],
@@ -102,12 +101,10 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                     children: [
                       CircleAvatar(
                         radius: 30,
-                        backgroundImage: specialist.avatar != null
-                            ? NetworkImage(specialist.avatar!)
-                            : null,
-                        child: specialist.avatar == null
-                            ? const Icon(Icons.person, size: 30)
-                            : null,
+                        backgroundImage:
+                            specialist.avatar != null ? NetworkImage(specialist.avatar!) : null,
+                        child:
+                            specialist.avatar == null ? const Icon(Icons.person, size: 30) : null,
                       ),
                       const SizedBox(width: 16),
                       Expanded(
@@ -180,8 +177,7 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                       ),
                       RadioListTile<bool>(
                         title: const Text('Команда специалистов'),
-                        subtitle:
-                            const Text('Бронирование команды специалистов'),
+                        subtitle: const Text('Бронирование команды специалистов'),
                         value: true,
                         groupValue: _isTeamBooking,
                         onChanged: (value) {
@@ -612,15 +608,10 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
           eventId: 'event_${DateTime.now().millisecondsSinceEpoch}',
           eventTitle: _selectedService ?? 'Мероприятие',
           eventDate: eventDateTime,
-          teamName: teamNameController.text.trim().isEmpty
-              ? null
-              : teamNameController.text.trim(),
-          description: descriptionController.text.trim().isEmpty
-              ? null
-              : descriptionController.text.trim(),
-          notes: _notesController.text.trim().isEmpty
-              ? null
-              : _notesController.text.trim(),
+          teamName: teamNameController.text.trim().isEmpty ? null : teamNameController.text.trim(),
+          description:
+              descriptionController.text.trim().isEmpty ? null : descriptionController.text.trim(),
+          notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
         );
 
         setState(() {

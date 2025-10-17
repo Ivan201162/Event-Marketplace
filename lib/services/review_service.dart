@@ -35,8 +35,7 @@ class ReviewService {
     try {
       // Если есть bookingId, проверяем статус бронирования
       if (bookingId != null) {
-        final bookingDoc =
-            await _firestore.collection('bookings').doc(bookingId).get();
+        final bookingDoc = await _firestore.collection('bookings').doc(bookingId).get();
         if (!bookingDoc.exists) {
           throw Exception('Бронирование не найдено');
         }
@@ -182,8 +181,7 @@ class ReviewService {
       // Рассчитываем распределение рейтингов
       final ratingDistribution = <String, int>{};
       for (var i = 1; i <= 5; i++) {
-        ratingDistribution[i.toString()] =
-            reviews.where((r) => r.rating == i).length;
+        ratingDistribution[i.toString()] = reviews.where((r) => r.rating == i).length;
       }
 
       return ReviewStats(
@@ -227,8 +225,7 @@ class ReviewService {
   }) async {
     try {
       // Проверяем, что отзыв существует и не удален
-      final reviewDoc =
-          await _firestore.collection('reviews').doc(reviewId).get();
+      final reviewDoc = await _firestore.collection('reviews').doc(reviewId).get();
       if (!reviewDoc.exists) {
         throw Exception('Отзыв не найден');
       }
@@ -269,8 +266,7 @@ class ReviewService {
   Future<void> deleteReview(String reviewId) async {
     try {
       // Получаем отзыв перед удалением
-      final reviewDoc =
-          await _firestore.collection('reviews').doc(reviewId).get();
+      final reviewDoc = await _firestore.collection('reviews').doc(reviewId).get();
       if (!reviewDoc.exists) {
         throw Exception('Отзыв не найден');
       }
@@ -307,8 +303,7 @@ class ReviewService {
   Future<void> addResponseToReview(String reviewId, String response) async {
     try {
       // Проверяем, что отзыв существует и не удален
-      final reviewDoc =
-          await _firestore.collection('reviews').doc(reviewId).get();
+      final reviewDoc = await _firestore.collection('reviews').doc(reviewId).get();
       if (!reviewDoc.exists) {
         throw Exception('Отзыв не найден');
       }
@@ -369,8 +364,7 @@ class ReviewService {
   Future<bool> canUserReviewBooking(String bookingId, String userId) async {
     try {
       // Проверяем существование бронирования
-      final bookingDoc =
-          await _firestore.collection('bookings').doc(bookingId).get();
+      final bookingDoc = await _firestore.collection('bookings').doc(bookingId).get();
       if (!bookingDoc.exists) {
         return false;
       }

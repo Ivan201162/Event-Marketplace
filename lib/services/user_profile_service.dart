@@ -20,8 +20,7 @@ class UserProfileService {
   /// Получить профиль пользователя по ID
   static Future<UserProfile?> getUserProfile(String userId) async {
     try {
-      final doc =
-          await _firestore.collection(_profilesCollection).doc(userId).get();
+      final doc = await _firestore.collection(_profilesCollection).doc(userId).get();
 
       if (doc.exists) {
         return UserProfile.fromDocument(doc);
@@ -103,17 +102,13 @@ class UserProfileService {
       .orderBy('timestamp', descending: true)
       .snapshots()
       .map(
-        (snapshot) =>
-            snapshot.docs.map((doc) => UserPost.fromMap(doc.data())).toList(),
+        (snapshot) => snapshot.docs.map((doc) => UserPost.fromMap(doc.data())).toList(),
       );
 
   /// Создать пост
   static Future<bool> createPost(UserPost post) async {
     try {
-      await _firestore
-          .collection(_postsCollection)
-          .doc(post.id)
-          .set(post.toMap());
+      await _firestore.collection(_postsCollection).doc(post.id).set(post.toMap());
       return true;
     } on Exception {
       // Логирование:'Ошибка создания поста: $e');
@@ -124,10 +119,7 @@ class UserProfileService {
   /// Обновить пост
   static Future<bool> updatePost(UserPost post) async {
     try {
-      await _firestore
-          .collection(_postsCollection)
-          .doc(post.id)
-          .update(post.toMap());
+      await _firestore.collection(_postsCollection).doc(post.id).update(post.toMap());
       return true;
     } on Exception {
       // Логирование:'Ошибка обновления поста: $e');
@@ -187,17 +179,13 @@ class UserProfileService {
       .orderBy('timestamp', descending: true)
       .snapshots()
       .map(
-        (snapshot) =>
-            snapshot.docs.map((doc) => UserStory.fromMap(doc.data())).toList(),
+        (snapshot) => snapshot.docs.map((doc) => UserStory.fromMap(doc.data())).toList(),
       );
 
   /// Создать сторис
   static Future<bool> createStory(UserStory story) async {
     try {
-      await _firestore
-          .collection(_storiesCollection)
-          .doc(story.id)
-          .set(story.toMap());
+      await _firestore.collection(_storiesCollection).doc(story.id).set(story.toMap());
       return true;
     } on Exception {
       // Логирование:'Ошибка создания сторис: $e');
@@ -230,25 +218,19 @@ class UserProfileService {
   }
 
   /// Получить отзывы специалиста
-  static Stream<List<UserReview>> getSpecialistReviews(String specialistId) =>
-      _firestore
-          .collection(_reviewsCollection)
-          .where('specialistId', isEqualTo: specialistId)
-          .orderBy('timestamp', descending: true)
-          .snapshots()
-          .map(
-            (snapshot) => snapshot.docs
-                .map((doc) => UserReview.fromMap(doc.data()))
-                .toList(),
-          );
+  static Stream<List<UserReview>> getSpecialistReviews(String specialistId) => _firestore
+      .collection(_reviewsCollection)
+      .where('specialistId', isEqualTo: specialistId)
+      .orderBy('timestamp', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map((doc) => UserReview.fromMap(doc.data())).toList(),
+      );
 
   /// Создать отзыв
   static Future<bool> createReview(UserReview review) async {
     try {
-      await _firestore
-          .collection(_reviewsCollection)
-          .doc(review.id)
-          .set(review.toMap());
+      await _firestore.collection(_reviewsCollection).doc(review.id).set(review.toMap());
 
       // Обновляем рейтинг специалиста
       await _updateSpecialistRating(review.specialistId);
@@ -313,15 +295,13 @@ class UserProfileService {
       final batch = _firestore.batch();
 
       // Обновляем подписки подписчика
-      final followerRef =
-          _firestore.collection(_profilesCollection).doc(followerId);
+      final followerRef = _firestore.collection(_profilesCollection).doc(followerId);
       final followerDoc = await followerRef.get();
 
       if (followerDoc.exists) {
         final followerProfile = UserProfile.fromDocument(followerDoc);
-        final isFollowing = followerProfile.additionalData['following']
-                ?.contains(followingId) ??
-            false;
+        final isFollowing =
+            followerProfile.additionalData['following']?.contains(followingId) ?? false;
 
         if (isFollowing) {
           batch.update(followerRef, {
@@ -337,15 +317,13 @@ class UserProfileService {
       }
 
       // Обновляем подписчиков пользователя
-      final followingRef =
-          _firestore.collection(_profilesCollection).doc(followingId);
+      final followingRef = _firestore.collection(_profilesCollection).doc(followingId);
       final followingDoc = await followingRef.get();
 
       if (followingDoc.exists) {
         final followingProfile = UserProfile.fromDocument(followingDoc);
-        final hasFollower = followingProfile.additionalData['followers']
-                ?.contains(followerId) ??
-            false;
+        final hasFollower =
+            followingProfile.additionalData['followers']?.contains(followerId) ?? false;
 
         if (hasFollower) {
           batch.update(followingRef, {

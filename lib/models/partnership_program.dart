@@ -90,9 +90,8 @@ class Partner {
         minimumPayout: (map['minimumPayout'] ?? 1000.0).toDouble(),
         paymentSchedule: map['paymentSchedule'],
         contractNumber: map['contractNumber'],
-        contractDate: map['contractDate'] != null
-            ? (map['contractDate'] as Timestamp).toDate()
-            : null,
+        contractDate:
+            map['contractDate'] != null ? (map['contractDate'] as Timestamp).toDate() : null,
         notes: map['notes'],
         metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
       );
@@ -150,8 +149,7 @@ class Partner {
         'minimumPayout': minimumPayout,
         'paymentSchedule': paymentSchedule,
         'contractNumber': contractNumber,
-        'contractDate':
-            contractDate != null ? Timestamp.fromDate(contractDate!) : null,
+        'contractDate': contractDate != null ? Timestamp.fromDate(contractDate!) : null,
         'notes': notes,
         'metadata': metadata,
       };
@@ -231,8 +229,7 @@ class PartnerTransaction {
     this.metadata,
   });
 
-  factory PartnerTransaction.fromMap(Map<String, dynamic> map) =>
-      PartnerTransaction(
+  factory PartnerTransaction.fromMap(Map<String, dynamic> map) => PartnerTransaction(
         id: map['id'] ?? '',
         partnerId: map['partnerId'] ?? '',
         transactionId: map['transactionId'] ?? '',
@@ -251,9 +248,7 @@ class PartnerTransaction {
           orElse: () => PaymentStatus.pending,
         ),
         paymentId: map['paymentId'],
-        paidAt: map['paidAt'] != null
-            ? (map['paidAt'] as Timestamp).toDate()
-            : null,
+        paidAt: map['paidAt'] != null ? (map['paidAt'] as Timestamp).toDate() : null,
         description: map['description'],
         metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
       );
@@ -342,8 +337,7 @@ class PartnerStats {
   final Map<String, dynamic>? metadata;
 
   double get unpaidCommissions => totalCommissions - paidCommissions;
-  double get commissionRate =>
-      totalRevenue > 0 ? (totalCommissions / totalRevenue) * 100 : 0.0;
+  double get commissionRate => totalRevenue > 0 ? (totalCommissions / totalRevenue) * 100 : 0.0;
 
   Map<String, dynamic> toMap() => {
         'partnerId': partnerId,
@@ -394,12 +388,8 @@ class PartnerPayment {
         paymentMethod: map['paymentMethod'],
         paymentDetails: Map<String, dynamic>.from(map['paymentDetails'] ?? {}),
         transactionIds: List<String>.from(map['transactionIds'] ?? []),
-        processedAt: map['processedAt'] != null
-            ? (map['processedAt'] as Timestamp).toDate()
-            : null,
-        paidAt: map['paidAt'] != null
-            ? (map['paidAt'] as Timestamp).toDate()
-            : null,
+        processedAt: map['processedAt'] != null ? (map['processedAt'] as Timestamp).toDate() : null,
+        paidAt: map['paidAt'] != null ? (map['paidAt'] as Timestamp).toDate() : null,
         failedReason: map['failedReason'],
         receiptUrl: map['receiptUrl'],
         metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
@@ -437,8 +427,7 @@ class PartnerPayment {
         'paymentMethod': paymentMethod,
         'paymentDetails': paymentDetails,
         'transactionIds': transactionIds,
-        'processedAt':
-            processedAt != null ? Timestamp.fromDate(processedAt!) : null,
+        'processedAt': processedAt != null ? Timestamp.fromDate(processedAt!) : null,
         'paidAt': paidAt != null ? Timestamp.fromDate(paidAt!) : null,
         'failedReason': failedReason,
         'receiptUrl': receiptUrl,

@@ -75,9 +75,7 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
             .where(
               (studio) =>
                   studio.name.toLowerCase().contains(query.toLowerCase()) ||
-                  studio.description
-                      .toLowerCase()
-                      .contains(query.toLowerCase()) ||
+                  studio.description.toLowerCase().contains(query.toLowerCase()) ||
                   studio.address.toLowerCase().contains(query.toLowerCase()),
             )
             .toList();
@@ -174,9 +172,7 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              _searchQuery.isNotEmpty
-                  ? 'Фотостудии не найдены'
-                  : 'Нет доступных фотостудий',
+              _searchQuery.isNotEmpty ? 'Фотостудии не найдены' : 'Нет доступных фотостудий',
               style: const TextStyle(
                 fontSize: 18,
                 color: Colors.grey,
@@ -266,8 +262,7 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
                                 child: Image.network(
                                   photoStudio.images[index],
                                   fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Container(
+                                  errorBuilder: (context, error, stackTrace) => Container(
                                     color: Colors.grey[300],
                                     child: const Icon(Icons.image, size: 48),
                                   ),
@@ -306,8 +301,7 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
                             _showBookingDialog(photoStudio);
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primary,
+                            backgroundColor: Theme.of(context).colorScheme.primary,
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 16),
                           ),
@@ -398,8 +392,7 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
           children: photoStudio.amenities
               .map(
                 (amenity) => Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.surface,
                     borderRadius: BorderRadius.circular(16),

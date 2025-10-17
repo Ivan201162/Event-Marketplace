@@ -30,9 +30,7 @@ class IdeaComment {
         userAvatar: map['userAvatar'] as String?,
         content: map['content'] as String,
         createdAt: (map['createdAt'] as Timestamp).toDate(),
-        updatedAt: map['updatedAt'] != null
-            ? (map['updatedAt'] as Timestamp).toDate()
-            : null,
+        updatedAt: map['updatedAt'] != null ? (map['updatedAt'] as Timestamp).toDate() : null,
         likes: (map['likes'] ?? 0) as int,
         replies: List<String>.from((map['replies'] ?? <String>[]) as List),
         parentCommentId: map['parentCommentId'] as String?,

@@ -242,8 +242,7 @@ class LazyImage extends StatefulWidget {
   State<LazyImage> createState() => _LazyImageState();
 }
 
-class _LazyImageState extends State<LazyImage>
-    with SingleTickerProviderStateMixin {
+class _LazyImageState extends State<LazyImage> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   bool _isLoaded = false;
@@ -304,18 +303,14 @@ class _LazyImageState extends State<LazyImage>
                         children: [
                           Icon(
                             Icons.broken_image_outlined,
-                            color:
-                                Theme.of(context).colorScheme.onErrorContainer,
+                            color: Theme.of(context).colorScheme.onErrorContainer,
                           ),
                           const SizedBox(height: 4),
                           Text(
                             'Ошибка загрузки',
-                            style:
-                                Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onErrorContainer,
-                                    ),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: Theme.of(context).colorScheme.onErrorContainer,
+                                ),
                           ),
                         ],
                       ),
@@ -361,8 +356,7 @@ class _LazyImageState extends State<LazyImage>
                     });
                     return const SizedBox.shrink();
                   },
-                  frameBuilder:
-                      (context, child, frame, wasSynchronouslyLoaded) {
+                  frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
                     if (wasSynchronouslyLoaded) {
                       setState(() {
                         _isLoaded = true;

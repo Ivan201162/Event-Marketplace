@@ -14,8 +14,7 @@ class ModernAuthScreen extends ConsumerStatefulWidget {
   ConsumerState<ModernAuthScreen> createState() => _ModernAuthScreenState();
 }
 
-class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
-    with TickerProviderStateMixin {
+class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen> with TickerProviderStateMixin {
   late TabController _tabController;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -139,10 +138,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
                   Text(
                     'Найдите идеального специалиста для вашего мероприятия',
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withOpacity(0.7),
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                         ),
                     textAlign: TextAlign.center,
                   ),
@@ -161,8 +157,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
             controller: _tabController,
             indicatorColor: Theme.of(context).colorScheme.primary,
             labelColor: Theme.of(context).colorScheme.primary,
-            unselectedLabelColor:
-                Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+            unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
             tabs: const [
               Tab(text: 'Email'),
               Tab(text: 'Телефон'),
@@ -205,8 +200,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
                       if (value == null || value.isEmpty) {
                         return 'Введите email';
                       }
-                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                          .hasMatch(value)) {
+                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
                         return 'Введите корректный email';
                       }
                       return null;
@@ -221,9 +215,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
                       prefixIcon: const Icon(Icons.lock_outlined),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _isPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
+                          _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
                         ),
                         onPressed: () {
                           setState(() {
@@ -349,10 +341,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primary
-                          .withValues(alpha: 0.1),
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: Theme.of(context).colorScheme.primary,
@@ -371,12 +360,8 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
                             const SizedBox(width: 8),
                             Text(
                               'Тестовый режим',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall
-                                  ?.copyWith(
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
+                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    color: Theme.of(context).colorScheme.primary,
                                     fontWeight: FontWeight.bold,
                                   ),
                             ),
@@ -385,10 +370,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
                         const SizedBox(height: 8),
                         Text(
                           'Для тестирования используйте номер +79998887766 и код 1111',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall
-                              ?.copyWith(
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                 color: Theme.of(context).colorScheme.primary,
                               ),
                         ),
@@ -416,8 +398,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
                   color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color:
-                        Theme.of(context).colorScheme.surfaceContainerHighest,
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -443,10 +424,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
                     Text(
                       'Вы сможете просматривать каталог специалистов и создавать заявки без регистрации',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withOpacity(0.7),
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                           ),
                       textAlign: TextAlign.center,
                     ),
@@ -468,10 +446,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
               Text(
                 'Войдя в приложение, вы соглашаетесь с нашими условиями использования и политикой конфиденциальности',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withOpacity(0.5),
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                     ),
                 textAlign: TextAlign.center,
               ),
@@ -536,8 +511,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
     });
 
     try {
-      final credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
@@ -588,8 +562,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
         await FirebaseAuth.instance.verifyPhoneNumber(
           phoneNumber: _phoneController.text.trim(),
           verificationCompleted: (credential) async {
-            final userCredential =
-                await FirebaseAuth.instance.signInWithCredential(credential);
+            final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
             if (userCredential.user != null) {
               final user = UpUser.fromFirebaseUser(
                 userCredential.user!.uid,
@@ -626,13 +599,11 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
       } else {
         // Подтверждаем код
         final credential = PhoneAuthProvider.credential(
-          verificationId:
-              'test_verification_id', // В реальном приложении нужно сохранять
+          verificationId: 'test_verification_id', // В реальном приложении нужно сохранять
           smsCode: _smsCodeController.text.trim(),
         );
 
-        final userCredential =
-            await FirebaseAuth.instance.signInWithCredential(credential);
+        final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
         if (userCredential.user != null) {
           final user = UpUser.fromFirebaseUser(
             userCredential.user!.uid,
@@ -724,6 +695,5 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
       );
 
   @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
-      false;
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => false;
 }

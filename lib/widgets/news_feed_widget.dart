@@ -217,9 +217,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
             radius: 20,
             backgroundColor: Colors.blue.shade100,
             child: Text(
-              newsItem.authorName.isNotEmpty
-                  ? newsItem.authorName[0].toUpperCase()
-                  : '?',
+              newsItem.authorName.isNotEmpty ? newsItem.authorName[0].toUpperCase() : '?',
               style: TextStyle(
                 color: Colors.blue.shade700,
                 fontWeight: FontWeight.bold,
@@ -439,8 +437,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
       _loadMoreNews();
     }
   }

@@ -39,8 +39,7 @@ class AnalyticsEvent {
         eventName: data['eventName'] as String? ?? '',
         screen: data['screen'] as String? ?? '',
         parameters: Map<String, dynamic>.from(data['parameters'] as Map? ?? {}),
-        timestamp:
-            (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        timestamp: (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
         sessionId: data['sessionId'] as String? ?? '',
         deviceId: data['deviceId'] as String? ?? '',
         appVersion: data['appVersion'] as String? ?? '',
@@ -180,8 +179,7 @@ class AnalyticsEvent {
       );
 
   @override
-  String toString() =>
-      'AnalyticsEvent(id: $id, eventName: $eventName, screen: $screen)';
+  String toString() => 'AnalyticsEvent(id: $id, eventName: $eventName, screen: $screen)';
 }
 
 /// Категории событий
@@ -230,25 +228,19 @@ class AnalyticsStatistics {
   /// Получить самый популярный экран
   String? get mostPopularScreen {
     if (eventsByScreen.isEmpty) return null;
-    return eventsByScreen.entries
-        .reduce((a, b) => a.value > b.value ? a : b)
-        .key;
+    return eventsByScreen.entries.reduce((a, b) => a.value > b.value ? a : b).key;
   }
 
   /// Получить самую популярную категорию
   String? get mostPopularCategory {
     if (eventsByCategory.isEmpty) return null;
-    return eventsByCategory.entries
-        .reduce((a, b) => a.value > b.value ? a : b)
-        .key;
+    return eventsByCategory.entries.reduce((a, b) => a.value > b.value ? a : b).key;
   }
 
   /// Получить самую популярную платформу
   String? get mostPopularPlatform {
     if (eventsByPlatform.isEmpty) return null;
-    return eventsByPlatform.entries
-        .reduce((a, b) => a.value > b.value ? a : b)
-        .key;
+    return eventsByPlatform.entries.reduce((a, b) => a.value > b.value ? a : b).key;
   }
 
   /// Получить среднее количество событий на пользователя
@@ -291,16 +283,12 @@ class UserSession {
       userId: data['userId'] as String?,
       deviceId: data['deviceId'] as String? ?? '',
       startTime: (data['startTime'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      endTime: data['endTime'] != null
-          ? (data['endTime'] as Timestamp?)?.toDate()
-          : null,
+      endTime: data['endTime'] != null ? (data['endTime'] as Timestamp?)?.toDate() : null,
       platform: data['platform'] as String? ?? '',
       appVersion: data['appVersion'] as String? ?? '',
       screens: List<String>.from(data['screens'] as List? ?? []),
       eventCount: data['eventCount'] as int? ?? 0,
-      duration: data['duration'] != null
-          ? Duration(seconds: data['duration'] as int)
-          : null,
+      duration: data['duration'] != null ? Duration(seconds: data['duration'] as int) : null,
     );
   }
 
@@ -309,18 +297,13 @@ class UserSession {
         sessionId: data['sessionId'] as String? ?? '',
         userId: data['userId'] as String?,
         deviceId: data['deviceId'] as String? ?? '',
-        startTime:
-            (data['startTime'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        endTime: data['endTime'] != null
-            ? (data['endTime'] as Timestamp?)?.toDate()
-            : null,
+        startTime: (data['startTime'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        endTime: data['endTime'] != null ? (data['endTime'] as Timestamp?)?.toDate() : null,
         platform: data['platform'] as String? ?? '',
         appVersion: data['appVersion'] as String? ?? '',
         screens: List<String>.from(data['screens'] as List? ?? []),
         eventCount: data['eventCount'] as int? ?? 0,
-        duration: data['duration'] != null
-            ? Duration(seconds: data['duration'] as int)
-            : null,
+        duration: data['duration'] != null ? Duration(seconds: data['duration'] as int) : null,
       );
   final String sessionId;
   final String? userId;

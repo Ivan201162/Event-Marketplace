@@ -34,12 +34,10 @@ class SpecialistComparisonNotifier extends StateNotifier<SpecialistComparison> {
   }
 
   /// Проверить, можно ли добавить специалиста
-  bool canAddSpecialist(Specialist specialist) =>
-      state.canAddSpecialist(specialist);
+  bool canAddSpecialist(Specialist specialist) => state.canAddSpecialist(specialist);
 
   /// Проверить, добавлен ли специалист
-  bool isSpecialistAdded(String specialistId) =>
-      state.specialists.any((s) => s.id == specialistId);
+  bool isSpecialistAdded(String specialistId) => state.specialists.any((s) => s.id == specialistId);
 
   /// Получить количество специалистов
   int get specialistCount => state.count;
@@ -129,8 +127,7 @@ final averageRatingProvider = Provider<double>((ref) {
 });
 
 /// Провайдер для проверки, добавлен ли конкретный специалист
-final isSpecialistInComparisonProvider =
-    Provider.family<bool, String>((ref, specialistId) {
+final isSpecialistInComparisonProvider = Provider.family<bool, String>((ref, specialistId) {
   final comparison = ref.watch(specialistComparisonProvider);
   return comparison.specialists.any((s) => s.id == specialistId);
 });
@@ -142,8 +139,7 @@ final comparisonCountProvider = Provider<int>((ref) {
 });
 
 /// Провайдер для проверки, можно ли добавить специалиста
-final canAddSpecialistProvider =
-    Provider.family<bool, Specialist>((ref, specialist) {
+final canAddSpecialistProvider = Provider.family<bool, Specialist>((ref, specialist) {
   final comparison = ref.watch(specialistComparisonProvider);
   return comparison.canAddSpecialist(specialist);
 });
@@ -192,8 +188,7 @@ final comparisonResultsProvider = Provider<List<ComparisonResult>>((ref) {
         case ComparisonCriteria.reviews:
           winner = values.entries
               .reduce(
-                (a, b) =>
-                    (a.value as Comparable).compareTo(b.value) > 0 ? a : b,
+                (a, b) => (a.value as Comparable).compareTo(b.value) > 0 ? a : b,
               )
               .key;
           break;

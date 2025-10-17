@@ -5,8 +5,7 @@ import '../models/chat_message_extended.dart';
 class MessageReactionService {
   factory MessageReactionService() => _instance;
   MessageReactionService._internal();
-  static final MessageReactionService _instance =
-      MessageReactionService._internal();
+  static final MessageReactionService _instance = MessageReactionService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -147,8 +146,7 @@ class MessageReactionService {
   /// Получить все реакции сообщения
   Future<List<MessageReaction>> getMessageReactions(String messageId) async {
     try {
-      final messageDoc =
-          await _firestore.collection('chat_messages').doc(messageId).get();
+      final messageDoc = await _firestore.collection('chat_messages').doc(messageId).get();
       if (!messageDoc.exists) return [];
 
       final messageData = messageDoc.data();
@@ -167,10 +165,8 @@ class MessageReactionService {
   /// Получить статистику реакций для чата
   Future<Map<String, int>> getChatReactionStats(String chatId) async {
     try {
-      final messagesQuery = await _firestore
-          .collection('chat_messages')
-          .where('chatId', isEqualTo: chatId)
-          .get();
+      final messagesQuery =
+          await _firestore.collection('chat_messages').where('chatId', isEqualTo: chatId).get();
 
       final reactionStats = <String, int>{};
 
@@ -182,8 +178,7 @@ class MessageReactionService {
             [];
 
         for (final reaction in reactions) {
-          reactionStats[reaction.emoji] =
-              (reactionStats[reaction.emoji] ?? 0) + 1;
+          reactionStats[reaction.emoji] = (reactionStats[reaction.emoji] ?? 0) + 1;
         }
       }
 
@@ -210,8 +205,7 @@ class MessageReactionService {
 
         for (final reaction in reactions) {
           if (reaction.userId == userId) {
-            userReactionStats[reaction.emoji] =
-                (userReactionStats[reaction.emoji] ?? 0) + 1;
+            userReactionStats[reaction.emoji] = (userReactionStats[reaction.emoji] ?? 0) + 1;
           }
         }
       }

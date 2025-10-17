@@ -15,8 +15,7 @@ class IdeaDetailScreen extends ConsumerStatefulWidget {
   ConsumerState<IdeaDetailScreen> createState() => _IdeaDetailScreenState();
 }
 
-class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
-    with TickerProviderStateMixin {
+class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> with TickerProviderStateMixin {
   late TabController _tabController;
   final EventIdeasService _ideasService = EventIdeasService();
   final TextEditingController _commentController = TextEditingController();
@@ -95,8 +94,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
                         Image.network(
                           widget.idea.mediaUrl!,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              Container(
+                          errorBuilder: (context, error, stackTrace) => Container(
                             color: Colors.grey[800],
                             child: const Icon(
                               Icons.video_library,
@@ -149,9 +147,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
               Container(
                 color: Colors.grey[800],
                 child: Icon(
-                  widget.idea.isVideo ?? false
-                      ? Icons.video_library
-                      : Icons.image,
+                  widget.idea.isVideo ?? false ? Icons.video_library : Icons.image,
                   size: 80,
                   color: Colors.white,
                 ),
@@ -253,9 +249,8 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
                   backgroundImage: widget.idea.authorAvatar != null
                       ? NetworkImage(widget.idea.authorAvatar!)
                       : null,
-                  child: widget.idea.authorAvatar == null
-                      ? const Icon(Icons.person, size: 16)
-                      : null,
+                  child:
+                      widget.idea.authorAvatar == null ? const Icon(Icons.person, size: 16) : null,
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -386,11 +381,8 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
             children: [
               CircleAvatar(
                 radius: 16,
-                backgroundImage:
-                    user.avatar != null ? NetworkImage(user.avatar!) : null,
-                child: user.avatar == null
-                    ? const Icon(Icons.person, size: 16)
-                    : null,
+                backgroundImage: user.avatar != null ? NetworkImage(user.avatar!) : null,
+                child: user.avatar == null ? const Icon(Icons.person, size: 16) : null,
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -434,12 +426,9 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
           children: [
             CircleAvatar(
               radius: 16,
-              backgroundImage: comment.authorAvatar != null
-                  ? NetworkImage(comment.authorAvatar!)
-                  : null,
-              child: comment.authorAvatar == null
-                  ? const Icon(Icons.person, size: 16)
-                  : null,
+              backgroundImage:
+                  comment.authorAvatar != null ? NetworkImage(comment.authorAvatar!) : null,
+              child: comment.authorAvatar == null ? const Icon(Icons.person, size: 16) : null,
             ),
             const SizedBox(width: 12),
             Expanded(

@@ -337,8 +337,7 @@ class TaxService {
         }
       }
 
-      final paymentPercentage =
-          totalTaxAmount > 0 ? (paidAmount / totalTaxAmount) * 100 : 0.0;
+      final paymentPercentage = totalTaxAmount > 0 ? (paidAmount / totalTaxAmount) * 100 : 0.0;
 
       final statistics = {
         'totalIncome': totalIncome,
@@ -373,10 +372,7 @@ class TaxService {
         updatedAt: DateTime.now(),
       );
 
-      await _db
-          .collection('tax_info')
-          .doc(taxInfo.id)
-          .update(updatedTaxInfo.toMap());
+      await _db.collection('tax_info').doc(taxInfo.id).update(updatedTaxInfo.toMap());
 
       AppLogger.logI('Налоговая информация обновлена', 'tax_service');
     } on Exception catch (e) {

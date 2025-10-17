@@ -140,8 +140,7 @@ class PerformanceService {
     }
 
     _currentOperations++;
-    final name =
-        operationName ?? 'operation_${DateTime.now().millisecondsSinceEpoch}';
+    final name = operationName ?? 'operation_${DateTime.now().millisecondsSinceEpoch}';
 
     try {
       _monitoring.startOperation(name);
@@ -358,8 +357,7 @@ class PerformanceService {
   }
 
   void _processOperationQueue() {
-    if (_operationQueue.isEmpty ||
-        _currentOperations >= _maxConcurrentOperations) {
+    if (_operationQueue.isEmpty || _currentOperations >= _maxConcurrentOperations) {
       return;
     }
 
@@ -387,8 +385,7 @@ class PerformanceService {
 extension PerformanceFutureExtension<T> on Future<T> {
   /// Выполнить с ограничением количества одновременных операций
   Future<T> withConcurrencyLimit({String? operationName}) =>
-      PerformanceService()
-          .executeWithLimit(() => this, operationName: operationName);
+      PerformanceService().executeWithLimit(() => this, operationName: operationName);
 
   /// Выполнить в изоляте
   Future<T> inIsolate() async => this;
@@ -401,8 +398,7 @@ extension PerformanceFutureExtension<T> on Future<T> {
 /// Расширение для List с оптимизацией
 extension PerformanceListExtension<T> on List<T> {
   /// Оптимизировать список
-  List<T> optimized({int? maxItems}) =>
-      PerformanceService().optimizeList(this, maxItems: maxItems);
+  List<T> optimized({int? maxItems}) => PerformanceService().optimizeList(this, maxItems: maxItems);
 }
 
 /// Расширение для String с оптимизацией

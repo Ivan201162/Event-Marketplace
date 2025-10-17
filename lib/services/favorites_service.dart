@@ -14,10 +14,7 @@ class FavoritesService {
     required String specialistId,
   }) async {
     try {
-      await _firestore
-          .collection(_collectionName)
-          .doc('${userId}_$specialistId')
-          .set({
+      await _firestore.collection(_collectionName).doc('${userId}_$specialistId').set({
         'userId': userId,
         'specialistId': specialistId,
         'createdAt': FieldValue.serverTimestamp(),
@@ -34,10 +31,7 @@ class FavoritesService {
     required String specialistId,
   }) async {
     try {
-      await _firestore
-          .collection(_collectionName)
-          .doc('${userId}_$specialistId')
-          .delete();
+      await _firestore.collection(_collectionName).doc('${userId}_$specialistId').delete();
     } catch (e) {
       debugPrint('Ошибка удаления из избранного: $e');
       throw Exception('Не удалось удалить из избранного');
@@ -50,10 +44,7 @@ class FavoritesService {
     required String specialistId,
   }) async {
     try {
-      final doc = await _firestore
-          .collection(_collectionName)
-          .doc('${userId}_$specialistId')
-          .get();
+      final doc = await _firestore.collection(_collectionName).doc('${userId}_$specialistId').get();
       return doc.exists;
     } catch (e) {
       debugPrint('Ошибка проверки избранного: $e');
@@ -64,18 +55,15 @@ class FavoritesService {
   /// Получить список избранных специалистов
   Future<List<Specialist>> getFavoriteSpecialists(String userId) async {
     try {
-      final favoritesSnapshot = await _firestore
-          .collection(_collectionName)
-          .where('userId', isEqualTo: userId)
-          .get();
+      final favoritesSnapshot =
+          await _firestore.collection(_collectionName).where('userId', isEqualTo: userId).get();
 
       if (favoritesSnapshot.docs.isEmpty) {
         return [];
       }
 
-      final specialistIds = favoritesSnapshot.docs
-          .map((doc) => doc.data()['specialistId'] as String)
-          .toList();
+      final specialistIds =
+          favoritesSnapshot.docs.map((doc) => doc.data()['specialistId'] as String).toList();
 
       final specialistsSnapshot = await _firestore
           .collection('specialists')
@@ -90,8 +78,7 @@ class FavoritesService {
   }
 
   /// Получить поток избранных специалистов
-  Stream<List<Specialist>> getFavoriteSpecialistsStream(String userId) =>
-      _firestore
+  Stream<List<Specialist>> getFavoriteSpecialistsStream(String userId) => _firestore
           .collection(_collectionName)
           .where('userId', isEqualTo: userId)
           .snapshots()
@@ -100,9 +87,8 @@ class FavoritesService {
           return <Specialist>[];
         }
 
-        final specialistIds = favoritesSnapshot.docs
-            .map((doc) => doc.data()['specialistId'] as String)
-            .toList();
+        final specialistIds =
+            favoritesSnapshot.docs.map((doc) => doc.data()['specialistId'] as String).toList();
 
         final specialistsSnapshot = await _firestore
             .collection('specialists')
@@ -115,10 +101,8 @@ class FavoritesService {
   /// Получить количество избранных специалистов
   Future<int> getFavoritesCount(String userId) async {
     try {
-      final snapshot = await _firestore
-          .collection(_collectionName)
-          .where('userId', isEqualTo: userId)
-          .get();
+      final snapshot =
+          await _firestore.collection(_collectionName).where('userId', isEqualTo: userId).get();
       return snapshot.docs.length;
     } catch (e) {
       debugPrint('Ошибка получения количества избранных: $e');

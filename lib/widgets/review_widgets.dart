@@ -32,9 +32,7 @@ class ReviewCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        review.title.isNotEmpty
-                            ? review.title
-                            : 'Без заголовка',
+                        review.title.isNotEmpty ? review.title : 'Без заголовка',
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -53,10 +51,7 @@ class ReviewCard extends StatelessWidget {
                     review.text,
                     style: TextStyle(
                       fontSize: 14,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.8),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -67,9 +62,7 @@ class ReviewCard extends StatelessWidget {
                   Wrap(
                     spacing: 8,
                     runSpacing: 4,
-                    children: review.tags
-                        .map((tag) => _buildTagChip(context, tag))
-                        .toList(),
+                    children: review.tags.map((tag) => _buildTagChip(context, tag)).toList(),
                   ),
                   const SizedBox(height: 12),
                 ],
@@ -82,10 +75,7 @@ class ReviewCard extends StatelessWidget {
                       _formatDate(review.createdAt),
                       style: TextStyle(
                         fontSize: 12,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.6),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                     Row(
@@ -216,9 +206,7 @@ class ReviewStatsWidget extends StatelessWidget {
                 Wrap(
                   spacing: 8,
                   runSpacing: 4,
-                  children: statistics.tags
-                      .map((tag) => _buildTagChip(context, tag))
-                      .toList(),
+                  children: statistics.tags.map((tag) => _buildTagChip(context, tag)).toList(),
                 ),
                 const SizedBox(height: 16),
               ],
@@ -247,10 +235,7 @@ class ReviewStatsWidget extends StatelessWidget {
             _getRatingDescription(statistics.averageRating.round()),
             style: TextStyle(
               fontSize: 12,
-              color: Theme.of(context)
-                  .colorScheme
-                  .onSurface
-                  .withValues(alpha: 0.7),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
           const SizedBox(height: 4),
@@ -258,10 +243,7 @@ class ReviewStatsWidget extends StatelessWidget {
             '${statistics.totalReviews} отзывов',
             style: TextStyle(
               fontSize: 12,
-              color: Theme.of(context)
-                  .colorScheme
-                  .onSurface
-                  .withValues(alpha: 0.7),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -316,8 +298,7 @@ class ReviewStatsWidget extends StatelessWidget {
           color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color:
-                Theme.of(context).colorScheme.secondary.withValues(alpha: 0.3),
+            color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.3),
           ),
         ),
         child: Text(
@@ -374,10 +355,7 @@ class ReviewStatsWidget extends StatelessWidget {
             label,
             style: TextStyle(
               fontSize: 12,
-              color: Theme.of(context)
-                  .colorScheme
-                  .onSurface
-                  .withValues(alpha: 0.7),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -421,8 +399,8 @@ class ReviewStatsWidget extends StatelessWidget {
   double _getVerifiedPercentage() => 85; // TODO: Реализовать реальную логику
 
   /// Получить дату последнего отзыва
-  DateTime _getLastReviewDate() => DateTime.now()
-      .subtract(const Duration(days: 2)); // TODO: Реализовать реальную логику
+  DateTime _getLastReviewDate() =>
+      DateTime.now().subtract(const Duration(days: 2)); // TODO: Реализовать реальную логику
 }
 
 /// Виджет формы отзыва
@@ -475,9 +453,7 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
                 border: OutlineInputBorder(),
               ),
               onChanged: (value) {
-                ref
-                    .read<ReviewFormNotifier>(reviewFormProvider.notifier)
-                    .updateTitle(value);
+                ref.read<ReviewFormNotifier>(reviewFormProvider.notifier).updateTitle(value);
               },
             ),
             const SizedBox(height: 16),
@@ -491,9 +467,7 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
               ),
               maxLines: 4,
               onChanged: (value) {
-                ref
-                    .read<ReviewFormNotifier>(reviewFormProvider.notifier)
-                    .updateComment(value);
+                ref.read<ReviewFormNotifier>(reviewFormProvider.notifier).updateComment(value);
               },
             ),
             const SizedBox(height: 16),
@@ -558,8 +532,7 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
   }
 
   /// Построить секцию рейтинга
-  Widget _buildRatingSection(BuildContext context, ReviewFormState formState) =>
-      Column(
+  Widget _buildRatingSection(BuildContext context, ReviewFormState formState) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
@@ -572,9 +545,7 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
               final rating = index + 1;
               return GestureDetector(
                 onTap: () {
-                  ref
-                      .read<ReviewFormNotifier>(reviewFormProvider.notifier)
-                      .setRating(rating);
+                  ref.read<ReviewFormNotifier>(reviewFormProvider.notifier).setRating(rating);
                 },
                 child: Icon(
                   rating <= formState.rating ? Icons.star : Icons.star_border,
@@ -589,10 +560,7 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
             _getRatingDescription(formState.rating),
             style: TextStyle(
               fontSize: 14,
-              color: Theme.of(context)
-                  .colorScheme
-                  .onSurface
-                  .withValues(alpha: 0.7),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -620,13 +588,9 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
               selected: isSelected,
               onSelected: (selected) {
                 if (selected) {
-                  ref
-                      .read<ReviewFormNotifier>(reviewFormProvider.notifier)
-                      .addTag(tag);
+                  ref.read<ReviewFormNotifier>(reviewFormProvider.notifier).addTag(tag);
                 } else {
-                  ref
-                      .read<ReviewFormNotifier>(reviewFormProvider.notifier)
-                      .removeTag(tag);
+                  ref.read<ReviewFormNotifier>(reviewFormProvider.notifier).removeTag(tag);
                 }
               },
             );
@@ -648,9 +612,7 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
             subtitle: const Text('Отзыв будет виден другим пользователям'),
             value: formState.isPublic,
             onChanged: (value) {
-              ref
-                  .read<ReviewFormNotifier>(reviewFormProvider.notifier)
-                  .togglePublic();
+              ref.read<ReviewFormNotifier>(reviewFormProvider.notifier).togglePublic();
             },
           ),
         ],
@@ -666,25 +628,18 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
         specialistId: widget.specialistId,
         customerId: 'current_user_id',
         customerName: 'Current User',
-        rating:
-            (ref.read(reviewFormProvider) as ReviewFormState).rating.toDouble(),
+        rating: (ref.read(reviewFormProvider) as ReviewFormState).rating.toDouble(),
         text: (ref.read(reviewFormProvider) as ReviewFormState).comment,
         serviceTags: [],
         date: DateTime.now(),
       );
 
-      await ref
-          .read<ReviewStateNotifier>(reviewStateProvider.notifier)
-          .createReview(review);
+      await ref.read<ReviewStateNotifier>(reviewStateProvider.notifier).createReview(review);
 
-      ref
-          .read<ReviewFormNotifier>(reviewFormProvider.notifier)
-          .finishSubmitting();
+      ref.read<ReviewFormNotifier>(reviewFormProvider.notifier).finishSubmitting();
       widget.onSubmit?.call();
     } on Exception catch (e) {
-      ref
-          .read<ReviewFormNotifier>(reviewFormProvider.notifier)
-          .setError(e.toString());
+      ref.read<ReviewFormNotifier>(reviewFormProvider.notifier).setError(e.toString());
     }
   }
 

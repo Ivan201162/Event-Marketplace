@@ -54,9 +54,8 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
 
   void _initializeVideoPlayer() {
     if (widget.idea.media.isNotEmpty) {
-      final firstVideo = widget.idea.media
-          .where((media) => media.type == IdeaMediaType.video)
-          .firstOrNull;
+      final firstVideo =
+          widget.idea.media.where((media) => media.type == IdeaMediaType.video).firstOrNull;
 
       if (firstVideo != null) {
         _videoController = VideoPlayerController.networkUrl(
@@ -102,9 +101,7 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
                         'https://ui-avatars.com/api/?name=${widget.idea.authorId}&size=40',
                       )
                     : null,
-                child: widget.idea.authorId.isEmpty
-                    ? const Icon(Icons.person)
-                    : null,
+                child: widget.idea.authorId.isEmpty ? const Icon(Icons.person) : null,
               ),
             ),
             const SizedBox(width: 12),
@@ -146,8 +143,7 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
                 ],
               ),
             ),
-            if (widget.idea.isFeatured)
-              const Icon(Icons.star, color: Colors.amber, size: 16),
+            if (widget.idea.isFeatured) const Icon(Icons.star, color: Colors.amber, size: 16),
             IconButton(
               onPressed: widget.onMore,
               icon: const Icon(Icons.more_vert),
@@ -204,8 +200,7 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
                     // TODO: Переход к поиску по тегу
                   },
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.blue[100],
                       borderRadius: BorderRadius.circular(12),
@@ -395,8 +390,7 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
                 });
               },
               itemCount: widget.idea.media.length,
-              itemBuilder: (context, index) =>
-                  _buildSingleMedia(widget.idea.media[index]),
+              itemBuilder: (context, index) => _buildSingleMedia(widget.idea.media[index]),
             ),
           ),
           if (widget.idea.media.length > 1)
@@ -412,9 +406,7 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
                     height: 8,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: _currentMediaIndex == index
-                          ? Colors.blue
-                          : Colors.grey[300],
+                      color: _currentMediaIndex == index ? Colors.blue : Colors.grey[300],
                     ),
                   ),
                 ),

@@ -22,23 +22,18 @@ class MediaMessageWidget extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       child: Row(
-        mainAxisAlignment:
-            isOwnMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: isOwnMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           if (!isOwnMessage) ...[
             CircleAvatar(
               radius: 16,
               backgroundImage: (message as dynamic).senderAvatar != null
-                  ? CachedNetworkImageProvider(
-                      (message as dynamic).senderAvatar as String)
+                  ? CachedNetworkImageProvider((message as dynamic).senderAvatar as String)
                   : null,
               child: ((message as dynamic).senderAvatar as String?) == null
                   ? Text(
-                      (((message as dynamic).senderName as String?)
-                                  ?.isNotEmpty ??
-                              false)
-                          ? ((message as dynamic).senderName as String)[0]
-                              .toUpperCase()
+                      (((message as dynamic).senderName as String?)?.isNotEmpty ?? false)
+                          ? ((message as dynamic).senderName as String)[0].toUpperCase()
                           : '?',
                       style: const TextStyle(fontSize: 12),
                     )
@@ -52,17 +47,14 @@ class MediaMessageWidget extends StatelessWidget {
                 maxWidth: MediaQuery.of(context).size.width * 0.7,
               ),
               child: Column(
-                crossAxisAlignment: isOwnMessage
-                    ? CrossAxisAlignment.end
-                    : CrossAxisAlignment.start,
+                crossAxisAlignment:
+                    isOwnMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                 children: [
                   if (!isOwnMessage) ...[
                     Text(
-                      ((message as dynamic).senderName as String?) ??
-                          'Неизвестный',
+                      ((message as dynamic).senderName as String?) ?? 'Неизвестный',
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color:
-                            theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -97,11 +89,9 @@ class MediaMessageWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        _formatTime(DateTime.parse(
-                            (message as dynamic).timestamp as String)),
+                        _formatTime(DateTime.parse((message as dynamic).timestamp as String)),
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface
-                              .withValues(alpha: 0.5),
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                           fontSize: 11,
                         ),
                       ),
@@ -118,16 +108,12 @@ class MediaMessageWidget extends StatelessWidget {
             CircleAvatar(
               radius: 16,
               backgroundImage: (message as dynamic).senderAvatar != null
-                  ? CachedNetworkImageProvider(
-                      (message as dynamic).senderAvatar as String)
+                  ? CachedNetworkImageProvider((message as dynamic).senderAvatar as String)
                   : null,
               child: ((message as dynamic).senderAvatar as String?) == null
                   ? Text(
-                      (((message as dynamic).senderName as String?)
-                                  ?.isNotEmpty ??
-                              false)
-                          ? ((message as dynamic).senderName as String)[0]
-                              .toUpperCase()
+                      (((message as dynamic).senderName as String?)?.isNotEmpty ?? false)
+                          ? ((message as dynamic).senderName as String)[0].toUpperCase()
                           : '?',
                       style: const TextStyle(fontSize: 12),
                     )
@@ -197,16 +183,14 @@ class MediaMessageWidget extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.broken_image,
-                    color: theme.colorScheme.onSurfaceVariant
-                        .withValues(alpha: 0.6),
+                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                     size: 48,
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Ошибка загрузки',
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant
-                          .withValues(alpha: 0.6),
+                      color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                     ),
                   ),
                 ],

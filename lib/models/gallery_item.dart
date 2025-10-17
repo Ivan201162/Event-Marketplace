@@ -44,12 +44,8 @@ class GalleryItem {
       title: data['title']?.toString() ?? '',
       description: data['description']?.toString(),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: data['updatedAt'] != null
-          ? (data['updatedAt'] as Timestamp).toDate()
-          : null,
-      tags:
-          (data['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ??
-              [],
+      updatedAt: data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : null,
+      tags: (data['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
       isPublic: data['isPublic'] != false,
       isFeatured: data['isFeatured'] == true,
       viewCount: (data['viewCount'] as num?)?.toInt() ?? 0,
@@ -73,16 +69,10 @@ class GalleryItem {
         thumbnailUrl: data['thumbnailUrl']?.toString() ?? '',
         title: data['title']?.toString() ?? '',
         description: data['description']?.toString(),
-        createdAt: data['createdAt'] != null
-            ? (data['createdAt'] as Timestamp).toDate()
-            : DateTime.now(),
-        updatedAt: data['updatedAt'] != null
-            ? (data['updatedAt'] as Timestamp).toDate()
-            : null,
-        tags: (data['tags'] as List<dynamic>?)
-                ?.map((e) => e.toString())
-                .toList() ??
-            [],
+        createdAt:
+            data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
+        updatedAt: data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : null,
+        tags: (data['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
         isPublic: data['isPublic'] != false,
         isFeatured: data['isFeatured'] == true,
         viewCount: (data['viewCount'] as num?)?.toInt() ?? 0,

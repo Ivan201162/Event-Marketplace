@@ -86,11 +86,10 @@ class SpecialistRatingWidget extends ConsumerWidget {
                   children: [
                     Text(
                       stats.averageRating.toStringAsFixed(1),
-                      style:
-                          Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.amber[700],
-                              ),
+                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.amber[700],
+                          ),
                     ),
                     Text(
                       '${stats.totalReviews} отзывов',
@@ -161,8 +160,7 @@ class SpecialistRatingWidget extends ConsumerWidget {
           ...List.generate(5, (index) {
             final starCount = 5 - index;
             final count = stats.ratingDistribution[starCount] ?? 0;
-            final percentage =
-                stats.totalReviews > 0 ? count / stats.totalReviews : 0.0;
+            final percentage = stats.totalReviews > 0 ? count / stats.totalReviews : 0.0;
 
             return Padding(
               padding: const EdgeInsets.only(bottom: 4),
@@ -304,8 +302,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
             const SizedBox(height: 16),
 
             // Список отзывов
-            ...displayReviews
-                .map((review) => _buildReviewItem(context, review)),
+            ...displayReviews.map((review) => _buildReviewItem(context, review)),
           ],
         ),
       ),
@@ -331,9 +328,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                   radius: 16,
                   backgroundColor: Colors.grey[300],
                   child: Text(
-                    review.customerName.isNotEmpty
-                        ? review.customerName[0].toUpperCase()
-                        : '?',
+                    review.customerName.isNotEmpty ? review.customerName[0].toUpperCase() : '?',
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
@@ -359,9 +354,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                           ...List.generate(
                             5,
                             (index) => Icon(
-                              index < review.rating
-                                  ? Icons.star
-                                  : Icons.star_border,
+                              index < review.rating ? Icons.star : Icons.star_border,
                               color: Colors.amber,
                               size: 14,
                             ),
@@ -405,10 +398,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withValues(alpha: 0.1),
+                          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -533,8 +523,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
               Expanded(
                 child: Consumer(
                   builder: (context, ref, child) {
-                    final reviews =
-                        ref.watch(specialistReviewsProvider(specialistId));
+                    final reviews = ref.watch(specialistReviewsProvider(specialistId));
                     return reviews.when(
                       data: (reviewsList) => ListView.builder(
                         controller: scrollController,
@@ -542,8 +531,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                         itemBuilder: (context, index) =>
                             _buildReviewItem(context, reviewsList[index]),
                       ),
-                      loading: () =>
-                          const Center(child: CircularProgressIndicator()),
+                      loading: () => const Center(child: CircularProgressIndicator()),
                       error: (error, stack) => Center(
                         child: Text('Ошибка загрузки отзывов: $error'),
                       ),

@@ -69,9 +69,8 @@ class FavoriteSpecialists extends ConsumerWidget {
                   backgroundImage: specialist['avatarUrl'] != null
                       ? CachedNetworkImageProvider(specialist['avatarUrl'])
                       : null,
-                  child: specialist['avatarUrl'] == null
-                      ? const Icon(Icons.person, size: 30)
-                      : null,
+                  child:
+                      specialist['avatarUrl'] == null ? const Icon(Icons.person, size: 30) : null,
                 ),
                 if (specialist['isVerified'])
                   Positioned(
@@ -105,16 +104,14 @@ class FavoriteSpecialists extends ConsumerWidget {
                       Expanded(
                         child: Text(
                           specialist['name'],
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
                       ),
                       IconButton(
                         icon: const Icon(Icons.favorite, color: Colors.red),
-                        onPressed: () =>
-                            _removeFromFavorites(context, specialist['id']),
+                        onPressed: () => _removeFromFavorites(context, specialist['id']),
                       ),
                     ],
                   ),
@@ -157,10 +154,9 @@ class FavoriteSpecialists extends ConsumerWidget {
                       Expanded(
                         child: Text(
                           specialist['city'],
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Colors.grey[600],
-                                  ),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Colors.grey[600],
+                              ),
                         ),
                       ),
                     ],
@@ -182,9 +178,7 @@ class FavoriteSpecialists extends ConsumerWidget {
                         child: Text(
                           specialist['isAvailable'] ? 'Доступен' : 'Занят',
                           style: TextStyle(
-                            color: specialist['isAvailable']
-                                ? Colors.green
-                                : Colors.red,
+                            color: specialist['isAvailable'] ? Colors.green : Colors.red,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),

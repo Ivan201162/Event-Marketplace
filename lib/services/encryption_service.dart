@@ -151,8 +151,7 @@ class EncryptionService {
   }
 
   /// Хешировать данные с солью
-  static String hashDataWithSalt(String data, String salt) =>
-      hashData(data + salt);
+  static String hashDataWithSalt(String data, String salt) => hashData(data + salt);
 
   /// Проверить хеш
   static bool verifyHash(String data, String hash) => hashData(data) == hash;
@@ -163,8 +162,7 @@ class EncryptionService {
 
   /// Генерировать безопасный токен
   static String generateSecureToken(int length) {
-    const chars =
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     final random = Random.secure();
     return String.fromCharCodes(
       Iterable.generate(

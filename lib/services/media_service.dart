@@ -200,10 +200,7 @@ class MediaService {
         },
       );
 
-      await _firestore
-          .collection(_collection)
-          .doc(mediaItem.id)
-          .set(mediaItem.toMap());
+      await _firestore.collection(_collection).doc(mediaItem.id).set(mediaItem.toMap());
 
       SafeLog.info(
         'MediaService: Media uploaded successfully: ${mediaItem.id}',
@@ -241,8 +238,7 @@ class MediaService {
       // Удаляем превью видео, если есть
       if (mediaItem.thumbnailUrl != null) {
         try {
-          final thumbnailPath =
-              _extractStoragePathFromUrl(mediaItem.thumbnailUrl!);
+          final thumbnailPath = _extractStoragePathFromUrl(mediaItem.thumbnailUrl!);
           if (thumbnailPath != null) {
             await _storage.ref().child(thumbnailPath).delete();
           }
@@ -272,8 +268,7 @@ class MediaService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      final mediaItems =
-          querySnapshot.docs.map(MediaItem.fromDocument).toList();
+      final mediaItems = querySnapshot.docs.map(MediaItem.fromDocument).toList();
 
       SafeLog.info('MediaService: Found ${mediaItems.length} media items');
       return mediaItems;
@@ -295,8 +290,7 @@ class MediaService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      final mediaItems =
-          querySnapshot.docs.map(MediaItem.fromDocument).toList();
+      final mediaItems = querySnapshot.docs.map(MediaItem.fromDocument).toList();
 
       SafeLog.info('MediaService: Found ${mediaItems.length} $type items');
       return mediaItems;
@@ -320,10 +314,7 @@ class MediaService {
       if (description != null) updateData['description'] = description;
 
       if (updateData.isNotEmpty) {
-        await _firestore
-            .collection(_collection)
-            .doc(mediaId)
-            .update(updateData);
+        await _firestore.collection(_collection).doc(mediaId).update(updateData);
       }
 
       SafeLog.info('MediaService: Media updated successfully: $mediaId');
@@ -383,10 +374,8 @@ class MediaService {
     try {
       SafeLog.info('MediaService: Getting media stats for user: $userId');
 
-      final querySnapshot = await _firestore
-          .collection(_collection)
-          .where('userId', isEqualTo: userId)
-          .get();
+      final querySnapshot =
+          await _firestore.collection(_collection).where('userId', isEqualTo: userId).get();
 
       var photoCount = 0;
       var videoCount = 0;

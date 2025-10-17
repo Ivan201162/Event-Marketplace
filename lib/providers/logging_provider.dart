@@ -2,16 +2,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/logging_service.dart';
 
 /// Провайдер для сервиса логирования
-final loggingServiceProvider =
-    Provider<LoggingService>((ref) => LoggingService());
+final loggingServiceProvider = Provider<LoggingService>((ref) => LoggingService());
 
 /// Провайдер для уровня логирования
-final logLevelProvider =
-    NotifierProvider<LogLevelNotifier, LogLevel>(LogLevelNotifier.new);
+final logLevelProvider = NotifierProvider<LogLevelNotifier, LogLevel>(LogLevelNotifier.new);
 
 /// Провайдер для настроек логирования
-final loggingSettingsProvider =
-    NotifierProvider<LoggingSettingsNotifier, LoggingSettings>(
+final loggingSettingsProvider = NotifierProvider<LoggingSettingsNotifier, LoggingSettings>(
   LoggingSettingsNotifier.new,
 );
 
@@ -139,9 +136,7 @@ final logLevelColorProvider = Provider<int>((ref) {
 /// Провайдер для проверки, включено ли логирование
 final isLoggingEnabledProvider = Provider<bool>((ref) {
   final settings = ref.watch(loggingSettingsProvider);
-  return settings.enableConsoleLogging ||
-      settings.enableFileLogging ||
-      settings.enableCrashlytics;
+  return settings.enableConsoleLogging || settings.enableFileLogging || settings.enableCrashlytics;
 });
 
 /// Провайдер для получения статистики логирования

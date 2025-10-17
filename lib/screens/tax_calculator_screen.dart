@@ -15,8 +15,7 @@ class TaxCalculatorScreen extends ConsumerStatefulWidget {
   final AppUser user;
 
   @override
-  ConsumerState<TaxCalculatorScreen> createState() =>
-      _TaxCalculatorScreenState();
+  ConsumerState<TaxCalculatorScreen> createState() => _TaxCalculatorScreenState();
 }
 
 class _TaxCalculatorScreenState extends ConsumerState<TaxCalculatorScreen> {
@@ -359,8 +358,7 @@ class _TaxCalculatorScreenState extends ConsumerState<TaxCalculatorScreen> {
 
       final taxInfo = await TaxService().calculateTaxFromEarnings(
         userId: widget.user.id,
-        specialistId:
-            widget.user.id, // Для упрощения используем userId как specialistId
+        specialistId: widget.user.id, // Для упрощения используем userId как specialistId
         taxType: _selectedTaxType,
         period: period,
         earnings: income,

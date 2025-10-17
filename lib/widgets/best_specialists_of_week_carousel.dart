@@ -92,8 +92,7 @@ class BestSpecialistsOfWeekCarousel extends ConsumerWidget {
           children: [
             // Фото специалиста
             ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(12)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
               child: Container(
                 height: 100,
                 width: double.infinity,
@@ -102,8 +101,7 @@ class BestSpecialistsOfWeekCarousel extends ConsumerWidget {
                     ? Image.network(
                         specialist['avatar'] as String,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) =>
-                            const Icon(
+                        errorBuilder: (context, error, stackTrace) => const Icon(
                           Icons.person,
                           size: 40,
                           color: Colors.grey,
@@ -135,10 +133,7 @@ class BestSpecialistsOfWeekCarousel extends ConsumerWidget {
                   Text(
                     specialist['category'] as String? ?? 'Категория',
                     style: TextStyle(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withOpacity(0.7),
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                       fontSize: 12,
                     ),
                     maxLines: 1,
@@ -154,8 +149,7 @@ class BestSpecialistsOfWeekCarousel extends ConsumerWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        (specialist['rating'] as double? ?? 0.0)
-                            .toStringAsFixed(1),
+                        (specialist['rating'] as double? ?? 0.0).toStringAsFixed(1),
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,

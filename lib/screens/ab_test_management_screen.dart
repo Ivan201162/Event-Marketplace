@@ -11,12 +11,10 @@ class ABTestManagementScreen extends ConsumerStatefulWidget {
   const ABTestManagementScreen({super.key});
 
   @override
-  ConsumerState<ABTestManagementScreen> createState() =>
-      _ABTestManagementScreenState();
+  ConsumerState<ABTestManagementScreen> createState() => _ABTestManagementScreenState();
 }
 
-class _ABTestManagementScreenState
-    extends ConsumerState<ABTestManagementScreen> {
+class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen> {
   final ABTestService _abTestService = ABTestService();
   List<ABTest> _tests = [];
   bool _isLoading = true;
@@ -60,8 +58,7 @@ class _ABTestManagementScreenState
               child: _buildTabButton('create', 'Создать', Icons.add),
             ),
             Expanded(
-              child:
-                  _buildTabButton('statistics', 'Статистика', Icons.analytics),
+              child: _buildTabButton('statistics', 'Статистика', Icons.analytics),
             ),
           ],
         ),
@@ -81,13 +78,10 @@ class _ABTestManagementScreenState
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.blue.withValues(alpha: 0.1)
-              : Colors.transparent,
+          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color:
-                isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
+            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -537,20 +531,14 @@ class _ABTestManagementScreenState
                     : Colors.orange.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: stats.isStatisticallySignificant
-                      ? Colors.green
-                      : Colors.orange,
+                  color: stats.isStatisticallySignificant ? Colors.green : Colors.orange,
                 ),
               ),
               child: Row(
                 children: [
                   Icon(
-                    stats.isStatisticallySignificant
-                        ? Icons.check_circle
-                        : Icons.warning,
-                    color: stats.isStatisticallySignificant
-                        ? Colors.green
-                        : Colors.orange,
+                    stats.isStatisticallySignificant ? Icons.check_circle : Icons.warning,
+                    color: stats.isStatisticallySignificant ? Colors.green : Colors.orange,
                   ),
                   const SizedBox(width: 8),
                   Expanded(
@@ -560,9 +548,7 @@ class _ABTestManagementScreenState
                           : 'Результаты не статистически значимы',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: stats.isStatisticallySignificant
-                            ? Colors.green
-                            : Colors.orange,
+                        color: stats.isStatisticallySignificant ? Colors.green : Colors.orange,
                       ),
                     ),
                   ),
@@ -712,8 +698,7 @@ class _ABTestManagementScreenState
 
   Future<List<ABTestStatistics>> _loadAllStatistics() async {
     try {
-      final activeTests =
-          _tests.where((test) => test.isActive || test.isCompleted).toList();
+      final activeTests = _tests.where((test) => test.isActive || test.isCompleted).toList();
       final statistics = <ABTestStatistics>[];
 
       for (final test in activeTests) {

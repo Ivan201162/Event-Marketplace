@@ -1,14 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class GrowthNotificationsService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Uuid _uuid = const Uuid();
 
   /// Отправка уведомления о реферале
-  Future<void> sendReferralNotification(
-      String userId, Map<String, dynamic> referral) async {
+  Future<void> sendReferralNotification(String userId, Map<String, dynamic> referral) async {
     try {
       final Map<String, dynamic> notification = {
         'id': _uuid.v4(),
@@ -27,16 +26,11 @@ class GrowthNotificationsService {
         },
       };
 
-      await _firestore
-          .collection('growth_notifications')
-          .doc(notification['id'])
-          .set(notification);
+      await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
-      debugPrint(
-          'INFO: [GrowthNotificationsService] Referral notification sent to user $userId');
+      debugPrint('INFO: [GrowthNotificationsService] Referral notification sent to user $userId');
     } catch (e) {
-      debugPrint(
-          'ERROR: [GrowthNotificationsService] Failed to send referral notification: $e');
+      debugPrint('ERROR: [GrowthNotificationsService] Failed to send referral notification: $e');
     }
   }
 
@@ -44,7 +38,7 @@ class GrowthNotificationsService {
   Future<void> sendReferralBonusNotification(
       String userId, String bonusType, Map<String, dynamic> bonusData) async {
     try {
-      String title = 'Бонус получен!';
+      final String title = 'Бонус получен!';
       String message = '';
 
       switch (bonusType) {
@@ -86,10 +80,7 @@ class GrowthNotificationsService {
         },
       };
 
-      await _firestore
-          .collection('growth_notifications')
-          .doc(notification['id'])
-          .set(notification);
+      await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
       debugPrint(
           'INFO: [GrowthNotificationsService] Referral bonus notification sent to user $userId');
@@ -101,14 +92,10 @@ class GrowthNotificationsService {
 
   /// Отправка уведомления об изменении цены
   Future<void> sendPriceChangeNotification(
-      String userId,
-      Map<String, dynamic> pricingRule,
-      double oldPrice,
-      double newPrice) async {
+      String userId, Map<String, dynamic> pricingRule, double oldPrice, double newPrice) async {
     try {
       final double changePercent = ((newPrice - oldPrice) / oldPrice * 100);
-      final String changeText =
-          changePercent > 0 ? 'увеличилась' : 'уменьшилась';
+      final String changeText = changePercent > 0 ? 'увеличилась' : 'уменьшилась';
       final String changeValue = changePercent.abs().toStringAsFixed(1);
 
       final Map<String, dynamic> notification = {
@@ -116,8 +103,7 @@ class GrowthNotificationsService {
         'userId': userId,
         'type': 'pricing',
         'title': 'Изменение цены',
-        'message':
-            'Цена на ${pricingRule['serviceType']} $changeText на $changeValue%',
+        'message': 'Цена на ${pricingRule['serviceType']} $changeText на $changeValue%',
         'isRead': false,
         'createdAt': DateTime.now(),
         'actionUrl': '/monetization',
@@ -130,10 +116,7 @@ class GrowthNotificationsService {
         },
       };
 
-      await _firestore
-          .collection('growth_notifications')
-          .doc(notification['id'])
-          .set(notification);
+      await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
       debugPrint(
           'INFO: [GrowthNotificationsService] Price change notification sent to user $userId');
@@ -152,8 +135,7 @@ class GrowthNotificationsService {
         'userId': userId,
         'type': 'partnership',
         'title': 'Партнерская комиссия',
-        'message':
-            'Вы получили комиссию ${partnerTransaction['commissionAmount']} руб.',
+        'message': 'Вы получили комиссию ${partnerTransaction['commissionAmount']} руб.',
         'isRead': false,
         'createdAt': DateTime.now(),
         'actionUrl': '/partnership',
@@ -165,10 +147,7 @@ class GrowthNotificationsService {
         },
       };
 
-      await _firestore
-          .collection('growth_notifications')
-          .doc(notification['id'])
-          .set(notification);
+      await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
       debugPrint(
           'INFO: [GrowthNotificationsService] Partner commission notification sent to user $userId');
@@ -179,8 +158,7 @@ class GrowthNotificationsService {
   }
 
   /// Отправка уведомления о новом рекламном предложении
-  Future<void> sendNewAdOfferNotification(
-      String userId, Map<String, dynamic> adOffer) async {
+  Future<void> sendNewAdOfferNotification(String userId, Map<String, dynamic> adOffer) async {
     try {
       final Map<String, dynamic> notification = {
         'id': _uuid.v4(),
@@ -197,10 +175,7 @@ class GrowthNotificationsService {
         },
       };
 
-      await _firestore
-          .collection('growth_notifications')
-          .doc(notification['id'])
-          .set(notification);
+      await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
       debugPrint(
           'INFO: [GrowthNotificationsService] New ad offer notification sent to user $userId');
@@ -211,8 +186,7 @@ class GrowthNotificationsService {
   }
 
   /// Отправка уведомления о промо-кампании
-  Future<void> sendPromotionNotification(
-      String userId, Map<String, dynamic> promotion) async {
+  Future<void> sendPromotionNotification(String userId, Map<String, dynamic> promotion) async {
     try {
       final Map<String, dynamic> notification = {
         'id': _uuid.v4(),
@@ -231,22 +205,16 @@ class GrowthNotificationsService {
         },
       };
 
-      await _firestore
-          .collection('growth_notifications')
-          .doc(notification['id'])
-          .set(notification);
+      await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
-      debugPrint(
-          'INFO: [GrowthNotificationsService] Promotion notification sent to user $userId');
+      debugPrint('INFO: [GrowthNotificationsService] Promotion notification sent to user $userId');
     } catch (e) {
-      debugPrint(
-          'ERROR: [GrowthNotificationsService] Failed to send promotion notification: $e');
+      debugPrint('ERROR: [GrowthNotificationsService] Failed to send promotion notification: $e');
     }
   }
 
   /// Отправка уведомления о чеке
-  Future<void> sendReceiptNotification(
-      String userId, Map<String, dynamic> receipt) async {
+  Future<void> sendReceiptNotification(String userId, Map<String, dynamic> receipt) async {
     try {
       final Map<String, dynamic> notification = {
         'id': _uuid.v4(),
@@ -267,22 +235,16 @@ class GrowthNotificationsService {
         },
       };
 
-      await _firestore
-          .collection('growth_notifications')
-          .doc(notification['id'])
-          .set(notification);
+      await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
-      debugPrint(
-          'INFO: [GrowthNotificationsService] Receipt notification sent to user $userId');
+      debugPrint('INFO: [GrowthNotificationsService] Receipt notification sent to user $userId');
     } catch (e) {
-      debugPrint(
-          'ERROR: [GrowthNotificationsService] Failed to send receipt notification: $e');
+      debugPrint('ERROR: [GrowthNotificationsService] Failed to send receipt notification: $e');
     }
   }
 
   /// Отправка уведомления о новом челлендже
-  Future<void> sendNewChallengeNotification(
-      String userId, Map<String, dynamic> challenge) async {
+  Future<void> sendNewChallengeNotification(String userId, Map<String, dynamic> challenge) async {
     try {
       final Map<String, dynamic> notification = {
         'id': _uuid.v4(),
@@ -302,10 +264,7 @@ class GrowthNotificationsService {
         },
       };
 
-      await _firestore
-          .collection('growth_notifications')
-          .doc(notification['id'])
-          .set(notification);
+      await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
       debugPrint(
           'INFO: [GrowthNotificationsService] New challenge notification sent to user $userId');
@@ -316,16 +275,15 @@ class GrowthNotificationsService {
   }
 
   /// Отправка уведомления о прогрессе челленджа
-  Future<void> sendChallengeProgressNotification(String userId,
-      Map<String, dynamic> challenge, Map<String, dynamic> progress) async {
+  Future<void> sendChallengeProgressNotification(
+      String userId, Map<String, dynamic> challenge, Map<String, dynamic> progress) async {
     try {
       final Map<String, dynamic> notification = {
         'id': _uuid.v4(),
         'userId': userId,
         'type': 'challenge',
         'title': 'Прогресс в челлендже',
-        'message':
-            'Отличная работа! Вы приближаетесь к завершению "${challenge['name']}"',
+        'message': 'Отличная работа! Вы приближаетесь к завершению "${challenge['name']}"',
         'isRead': false,
         'createdAt': DateTime.now(),
         'actionUrl': '/challenges/${challenge['id']}',
@@ -337,10 +295,7 @@ class GrowthNotificationsService {
         },
       };
 
-      await _firestore
-          .collection('growth_notifications')
-          .doc(notification['id'])
-          .set(notification);
+      await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
       debugPrint(
           'INFO: [GrowthNotificationsService] Challenge progress notification sent to user $userId');
@@ -359,8 +314,7 @@ class GrowthNotificationsService {
         'userId': userId,
         'type': 'achievement',
         'title': 'Новое достижение!',
-        'message':
-            'Поздравляем! Вы получили достижение "${achievement['name']}"',
+        'message': 'Поздравляем! Вы получили достижение "${achievement['name']}"',
         'isRead': false,
         'createdAt': DateTime.now(),
         'actionUrl': '/achievements',
@@ -373,10 +327,7 @@ class GrowthNotificationsService {
         },
       };
 
-      await _firestore
-          .collection('growth_notifications')
-          .doc(notification['id'])
-          .set(notification);
+      await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
       debugPrint(
           'INFO: [GrowthNotificationsService] New achievement notification sent to user $userId');
@@ -387,8 +338,7 @@ class GrowthNotificationsService {
   }
 
   /// Отправка уведомления о новом значке
-  Future<void> sendNewBadgeNotification(
-      String userId, Map<String, dynamic> badge) async {
+  Future<void> sendNewBadgeNotification(String userId, Map<String, dynamic> badge) async {
     try {
       final Map<String, dynamic> notification = {
         'id': _uuid.v4(),
@@ -408,22 +358,17 @@ class GrowthNotificationsService {
         },
       };
 
-      await _firestore
-          .collection('growth_notifications')
-          .doc(notification['id'])
-          .set(notification);
+      await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
-      debugPrint(
-          'INFO: [GrowthNotificationsService] New badge notification sent to user $userId');
+      debugPrint('INFO: [GrowthNotificationsService] New badge notification sent to user $userId');
     } catch (e) {
-      debugPrint(
-          'ERROR: [GrowthNotificationsService] Failed to send new badge notification: $e');
+      debugPrint('ERROR: [GrowthNotificationsService] Failed to send new badge notification: $e');
     }
   }
 
   /// Отправка уведомления о A/B тесте
-  Future<void> sendABTestNotification(String userId, String testName,
-      String variant, Map<String, dynamic> testData) async {
+  Future<void> sendABTestNotification(
+      String userId, String testName, String variant, Map<String, dynamic> testData) async {
     try {
       final Map<String, dynamic> notification = {
         'id': _uuid.v4(),
@@ -442,16 +387,11 @@ class GrowthNotificationsService {
         },
       };
 
-      await _firestore
-          .collection('growth_notifications')
-          .doc(notification['id'])
-          .set(notification);
+      await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
-      debugPrint(
-          'INFO: [GrowthNotificationsService] AB test notification sent to user $userId');
+      debugPrint('INFO: [GrowthNotificationsService] AB test notification sent to user $userId');
     } catch (e) {
-      debugPrint(
-          'ERROR: [GrowthNotificationsService] Failed to send AB test notification: $e');
+      debugPrint('ERROR: [GrowthNotificationsService] Failed to send AB test notification: $e');
     }
   }
 
@@ -475,10 +415,7 @@ class GrowthNotificationsService {
         },
       };
 
-      await _firestore
-          .collection('growth_notifications')
-          .doc(notification['id'])
-          .set(notification);
+      await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
       debugPrint(
           'INFO: [GrowthNotificationsService] Seasonal promotion notification sent to user $userId');
@@ -508,10 +445,7 @@ class GrowthNotificationsService {
         },
       };
 
-      await _firestore
-          .collection('growth_notifications')
-          .doc(notification['id'])
-          .set(notification);
+      await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
       debugPrint(
           'INFO: [GrowthNotificationsService] Holiday promotion notification sent to user $userId');
@@ -536,19 +470,14 @@ class GrowthNotificationsService {
   /// Отметка уведомления как прочитанного
   Future<void> markNotificationAsRead(String notificationId) async {
     try {
-      await _firestore
-          .collection('growth_notifications')
-          .doc(notificationId)
-          .update({
+      await _firestore.collection('growth_notifications').doc(notificationId).update({
         'isRead': true,
         'readAt': FieldValue.serverTimestamp(),
       });
 
-      debugPrint(
-          'INFO: [GrowthNotificationsService] Notification $notificationId marked as read');
+      debugPrint('INFO: [GrowthNotificationsService] Notification $notificationId marked as read');
     } catch (e) {
-      debugPrint(
-          'ERROR: [GrowthNotificationsService] Failed to mark notification as read: $e');
+      debugPrint('ERROR: [GrowthNotificationsService] Failed to mark notification as read: $e');
     }
   }
 
@@ -581,15 +510,10 @@ class GrowthNotificationsService {
   /// Удаление уведомления
   Future<void> deleteNotification(String notificationId) async {
     try {
-      await _firestore
-          .collection('growth_notifications')
-          .doc(notificationId)
-          .delete();
-      debugPrint(
-          'INFO: [GrowthNotificationsService] Notification $notificationId deleted');
+      await _firestore.collection('growth_notifications').doc(notificationId).delete();
+      debugPrint('INFO: [GrowthNotificationsService] Notification $notificationId deleted');
     } catch (e) {
-      debugPrint(
-          'ERROR: [GrowthNotificationsService] Failed to delete notification: $e');
+      debugPrint('ERROR: [GrowthNotificationsService] Failed to delete notification: $e');
     }
   }
 

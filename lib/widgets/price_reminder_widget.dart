@@ -124,12 +124,11 @@ class PriceReminderAdminWidget extends ConsumerWidget {
 
             // Статистика
             Consumer(
-              builder: (context, ref, child) =>
-                  ref.watch(priceReminderStatsProvider).when(
-                        data: _buildStatsWidget,
-                        loading: () => const CircularProgressIndicator(),
-                        error: (error, stack) => Text('Ошибка: $error'),
-                      ),
+              builder: (context, ref, child) => ref.watch(priceReminderStatsProvider).when(
+                    data: _buildStatsWidget,
+                    loading: () => const CircularProgressIndicator(),
+                    error: (error, stack) => Text('Ошибка: $error'),
+                  ),
             ),
 
             const SizedBox(height: 16),
@@ -230,32 +229,30 @@ class PriceReminderAdminWidget extends ConsumerWidget {
           width: double.maxFinite,
           height: 400,
           child: Consumer(
-            builder: (context, ref, child) =>
-                ref.watch(specialistsWithOutdatedPricesProvider).when(
-                      data: (specialists) => ListView.builder(
-                        itemCount: specialists.length,
-                        itemBuilder: (context, index) {
-                          final specialist = specialists[index];
-                          return ListTile(
-                            title: Text(specialist['name'] as String? ?? ''),
-                            subtitle: Text(
-                              '${specialist['daysSinceUpdate']} дней назад',
-                            ),
-                            trailing: ElevatedButton(
-                              onPressed: () => _sendReminderToSpecialist(
-                                context,
-                                ref,
-                                specialist['id'] as String,
-                              ),
-                              child: const Text('Напомнить'),
-                            ),
-                          );
-                        },
-                      ),
-                      loading: () =>
-                          const Center(child: CircularProgressIndicator()),
-                      error: (error, stack) => Text('Ошибка: $error'),
-                    ),
+            builder: (context, ref, child) => ref.watch(specialistsWithOutdatedPricesProvider).when(
+                  data: (specialists) => ListView.builder(
+                    itemCount: specialists.length,
+                    itemBuilder: (context, index) {
+                      final specialist = specialists[index];
+                      return ListTile(
+                        title: Text(specialist['name'] as String? ?? ''),
+                        subtitle: Text(
+                          '${specialist['daysSinceUpdate']} дней назад',
+                        ),
+                        trailing: ElevatedButton(
+                          onPressed: () => _sendReminderToSpecialist(
+                            context,
+                            ref,
+                            specialist['id'] as String,
+                          ),
+                          child: const Text('Напомнить'),
+                        ),
+                      );
+                    },
+                  ),
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (error, stack) => Text('Ошибка: $error'),
+                ),
           ),
         ),
         actions: [

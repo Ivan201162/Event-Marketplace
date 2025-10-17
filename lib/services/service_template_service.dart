@@ -42,8 +42,7 @@ class ServiceTemplateService {
   /// Получить шаблон услуги по ID
   Future<ServiceTemplate?> getServiceTemplate(String templateId) async {
     try {
-      final doc =
-          await _firestore.collection('serviceTemplates').doc(templateId).get();
+      final doc = await _firestore.collection('serviceTemplates').doc(templateId).get();
       if (doc.exists) {
         return ServiceTemplate.fromDocument(doc);
       }
@@ -56,8 +55,7 @@ class ServiceTemplateService {
   /// Создать шаблон услуги
   Future<String> createServiceTemplate(ServiceTemplate template) async {
     try {
-      final docRef =
-          await _firestore.collection('serviceTemplates').add(template.toMap());
+      final docRef = await _firestore.collection('serviceTemplates').add(template.toMap());
       return docRef.id;
     } catch (e) {
       throw Exception('Ошибка создания шаблона услуги: $e');
@@ -70,10 +68,7 @@ class ServiceTemplateService {
     ServiceTemplate template,
   ) async {
     try {
-      await _firestore
-          .collection('serviceTemplates')
-          .doc(templateId)
-          .update(template.toMap());
+      await _firestore.collection('serviceTemplates').doc(templateId).update(template.toMap());
     } catch (e) {
       throw Exception('Ошибка обновления шаблона услуги: $e');
     }

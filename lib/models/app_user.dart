@@ -161,6 +161,5 @@ class AppUser {
   int get hashCode => uid.hashCode;
 
   @override
-  String toString() =>
-      'AppUser{uid: $uid, name: $name, email: $email, role: $role}';
+  String toString() => 'AppUser{uid: $uid, name: $name, email: $email, role: $role}';
 }

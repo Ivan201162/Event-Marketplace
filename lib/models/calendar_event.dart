@@ -365,8 +365,7 @@ class CalendarSync {
         providerId: map['providerId'] as String? ?? '',
         accessToken: map['accessToken'] as String? ?? '',
         refreshToken: map['refreshToken'] as String? ?? '',
-        tokenExpiry:
-            (map['tokenExpiry'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        tokenExpiry: (map['tokenExpiry'] as Timestamp?)?.toDate() ?? DateTime.now(),
         isActive: map['isActive'] as bool? ?? false,
         lastSync: (map['lastSync'] as Timestamp?)?.toDate() ?? DateTime.now(),
         settings: Map<String, dynamic>.from(

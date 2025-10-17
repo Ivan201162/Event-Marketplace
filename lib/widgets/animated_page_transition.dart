@@ -15,8 +15,7 @@ class AnimatedPageTransitions {
           const begin = Offset(1, 0);
           const end = Offset.zero;
           const curve = Curves.easeInOut;
-          final tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
           return SlideTransition(
             position: animation.drive(tween),
             child: child,
@@ -38,8 +37,7 @@ class AnimatedPageTransitions {
           const begin = Offset(-1, 0);
           const end = Offset.zero;
           const curve = Curves.easeInOut;
-          final tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
           return SlideTransition(
             position: animation.drive(tween),
             child: child,
@@ -61,8 +59,7 @@ class AnimatedPageTransitions {
           const begin = Offset(0, 1);
           const end = Offset.zero;
           const curve = Curves.easeInOut;
-          final tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
           return SlideTransition(
             position: animation.drive(tween),
             child: child,
@@ -84,8 +81,7 @@ class AnimatedPageTransitions {
           const begin = 0.0;
           const end = 1.0;
           const curve = Curves.easeInOut;
-          final tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
           return ScaleTransition(
             scale: animation.drive(tween),
             child: child,
@@ -107,8 +103,7 @@ class AnimatedPageTransitions {
           const begin = 0.0;
           const end = 1.0;
           const curve = Curves.easeInOut;
-          final tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
           return RotationTransition(
             turns: animation.drive(tween),
             child: child,
@@ -130,8 +125,7 @@ class AnimatedPageTransitions {
           const begin = 0.0;
           const end = 1.0;
           const curve = Curves.easeInOut;
-          final tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
           return FadeTransition(
             opacity: animation.drive(tween),
             child: child,
@@ -196,8 +190,7 @@ class AnimatedButton extends StatefulWidget {
   State<AnimatedButton> createState() => _AnimatedButtonState();
 }
 
-class _AnimatedButtonState extends State<AnimatedButton>
-    with SingleTickerProviderStateMixin {
+class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
@@ -267,8 +260,7 @@ class AnimatedCard extends StatefulWidget {
   State<AnimatedCard> createState() => _AnimatedCardState();
 }
 
-class _AnimatedCardState extends State<AnimatedCard>
-    with SingleTickerProviderStateMixin {
+class _AnimatedCardState extends State<AnimatedCard> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _elevationAnimation;
 

@@ -6,8 +6,7 @@ class TransliterateDemoScreen extends StatefulWidget {
   const TransliterateDemoScreen({super.key});
 
   @override
-  State<TransliterateDemoScreen> createState() =>
-      _TransliterateDemoScreenState();
+  State<TransliterateDemoScreen> createState() => _TransliterateDemoScreenState();
 }
 
 class _TransliterateDemoScreenState extends State<TransliterateDemoScreen> {
@@ -36,8 +35,7 @@ class _TransliterateDemoScreenState extends State<TransliterateDemoScreen> {
     final name = _nameController.text.trim();
     if (name.isNotEmpty) {
       setState(() {
-        _generatedUsername =
-            TransliterateUtils.transliterateNameToUsername(name);
+        _generatedUsername = TransliterateUtils.transliterateNameToUsername(name);
       });
     }
   }
@@ -45,8 +43,7 @@ class _TransliterateDemoScreenState extends State<TransliterateDemoScreen> {
   void _generateFromExample(String example) {
     _nameController.text = example;
     setState(() {
-      _generatedUsername =
-          TransliterateUtils.transliterateNameToUsername(example);
+      _generatedUsername = TransliterateUtils.transliterateNameToUsername(example);
     });
   }
 
@@ -97,8 +94,7 @@ class _TransliterateDemoScreenState extends State<TransliterateDemoScreen> {
                           width: double.infinity,
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).colorScheme.primaryContainer,
+                            color: Theme.of(context).colorScheme.primaryContainer,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Column(
@@ -111,13 +107,8 @@ class _TransliterateDemoScreenState extends State<TransliterateDemoScreen> {
                               const SizedBox(height: 4),
                               Text(
                                 '@$_generatedUsername',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineSmall
-                                    ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimaryContainer,
+                                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                      color: Theme.of(context).colorScheme.onPrimaryContainer,
                                       fontWeight: FontWeight.bold,
                                     ),
                               ),
@@ -140,8 +131,7 @@ class _TransliterateDemoScreenState extends State<TransliterateDemoScreen> {
                   margin: const EdgeInsets.only(bottom: 8),
                   child: ListTile(
                     title: Text(example),
-                    subtitle: Text(
-                        '@${TransliterateUtils.transliterateNameToUsername(example)}'),
+                    subtitle: Text('@${TransliterateUtils.transliterateNameToUsername(example)}'),
                     trailing: const Icon(Icons.copy),
                     onTap: () => _generateFromExample(example),
                   ),

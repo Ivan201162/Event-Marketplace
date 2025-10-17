@@ -28,23 +28,18 @@ class CustomerProfile {
       photoURL: data['photoURL'] as String?,
       bio: data['bio'] as String?,
       maritalStatus: _parseMaritalStatus(data['maritalStatus']),
-      weddingDate: data['weddingDate'] != null
-          ? (data['weddingDate'] as Timestamp).toDate()
-          : null,
-      anniversaryDate: data['anniversaryDate'] != null
-          ? (data['anniversaryDate'] as Timestamp).toDate()
-          : null,
+      weddingDate: data['weddingDate'] != null ? (data['weddingDate'] as Timestamp).toDate() : null,
+      anniversaryDate:
+          data['anniversaryDate'] != null ? (data['anniversaryDate'] as Timestamp).toDate() : null,
       phoneNumber: data['phoneNumber'] as String?,
       location: data['location'] as String?,
       interests: List<String>.from(data['interests'] as List<dynamic>? ?? []),
       eventTypes: List<String>.from(data['eventTypes'] as List<dynamic>? ?? []),
       preferences: data['preferences'] as Map<String, dynamic>?,
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
-      updatedAt: data['updatedAt'] != null
-          ? (data['updatedAt'] as Timestamp).toDate()
-          : DateTime.now(),
+      createdAt:
+          data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
+      updatedAt:
+          data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : DateTime.now(),
     );
   }
   final String userId;
@@ -66,11 +61,8 @@ class CustomerProfile {
         'photoURL': photoURL,
         'bio': bio,
         'maritalStatus': maritalStatus?.name,
-        'weddingDate':
-            weddingDate != null ? Timestamp.fromDate(weddingDate!) : null,
-        'anniversaryDate': anniversaryDate != null
-            ? Timestamp.fromDate(anniversaryDate!)
-            : null,
+        'weddingDate': weddingDate != null ? Timestamp.fromDate(weddingDate!) : null,
+        'anniversaryDate': anniversaryDate != null ? Timestamp.fromDate(anniversaryDate!) : null,
         'phoneNumber': phoneNumber,
         'location': location,
         'interests': interests,
@@ -141,13 +133,11 @@ class CustomerProfile {
     DateTime? nextDate;
 
     if (weddingDate != null) {
-      final weddingThisYear =
-          DateTime(currentYear, weddingDate!.month, weddingDate!.day);
+      final weddingThisYear = DateTime(currentYear, weddingDate!.month, weddingDate!.day);
       if (weddingThisYear.isAfter(now)) {
         nextDate = weddingThisYear;
       } else {
-        nextDate =
-            DateTime(currentYear + 1, weddingDate!.month, weddingDate!.day);
+        nextDate = DateTime(currentYear + 1, weddingDate!.month, weddingDate!.day);
       }
     }
 

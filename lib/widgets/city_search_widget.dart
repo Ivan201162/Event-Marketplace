@@ -137,8 +137,7 @@ class _CitySearchWidgetState extends ConsumerState<CitySearchWidget> {
                     child: Text(
                       'Популярные города',
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                     ),
                   ),
@@ -167,8 +166,7 @@ class _CitySearchWidgetState extends ConsumerState<CitySearchWidget> {
         padding: const EdgeInsets.all(16),
         child: Text(
           'Город не найден',
-          style:
-              TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
         ),
       );
     }

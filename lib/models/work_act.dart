@@ -48,16 +48,11 @@ class WorkAct {
       totalAmount: (data['totalAmount'] as num?)?.toDouble() ?? 0.0,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      completedAt: data['completedAt'] != null
-          ? (data['completedAt'] as Timestamp).toDate()
-          : null,
+      completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
       workDescription: data['workDescription'] as String?,
-      workStartDate: data['workStartDate'] != null
-          ? (data['workStartDate'] as Timestamp).toDate()
-          : null,
-      workEndDate: data['workEndDate'] != null
-          ? (data['workEndDate'] as Timestamp).toDate()
-          : null,
+      workStartDate:
+          data['workStartDate'] != null ? (data['workStartDate'] as Timestamp).toDate() : null,
+      workEndDate: data['workEndDate'] != null ? (data['workEndDate'] as Timestamp).toDate() : null,
       customerSignature: data['customerSignature'] as String?,
       specialistSignature: data['specialistSignature'] as String?,
       metadata: Map<String, dynamic>.from(
@@ -97,13 +92,10 @@ class WorkAct {
         'totalAmount': totalAmount,
         'createdAt': Timestamp.fromDate(createdAt),
         'updatedAt': Timestamp.fromDate(updatedAt),
-        'completedAt':
-            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+        'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
         'workDescription': workDescription,
-        'workStartDate':
-            workStartDate != null ? Timestamp.fromDate(workStartDate!) : null,
-        'workEndDate':
-            workEndDate != null ? Timestamp.fromDate(workEndDate!) : null,
+        'workStartDate': workStartDate != null ? Timestamp.fromDate(workStartDate!) : null,
+        'workEndDate': workEndDate != null ? Timestamp.fromDate(workEndDate!) : null,
         'customerSignature': customerSignature,
         'specialistSignature': specialistSignature,
         'metadata': metadata,
@@ -153,8 +145,7 @@ class WorkAct {
       );
 
   /// Проверить, подписан ли акт обеими сторонами
-  bool get isFullySigned =>
-      customerSignature != null && specialistSignature != null;
+  bool get isFullySigned => customerSignature != null && specialistSignature != null;
 
   /// Проверить, может ли пользователь подписать акт
   bool canSignBy(String userId) {

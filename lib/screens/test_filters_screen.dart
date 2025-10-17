@@ -52,37 +52,30 @@ class _TestFiltersScreenState extends ConsumerState<TestFiltersScreen> {
   ) {
     final filtered = specialists.where((specialist) {
       // Фильтр по цене
-      if (filterFilters.minPrice != null &&
-          specialist.hourlyRate < filterFilters.minPrice!) {
+      if (filterFilters.minPrice != null && specialist.hourlyRate < filterFilters.minPrice!) {
         return false;
       }
-      if (filterFilters.maxPrice != null &&
-          specialist.hourlyRate > filterFilters.maxPrice!) {
+      if (filterFilters.maxPrice != null && specialist.hourlyRate > filterFilters.maxPrice!) {
         return false;
       }
 
       // Фильтр по рейтингу
-      if (filterFilters.minRating != null &&
-          specialist.rating < filterFilters.minRating!) {
+      if (filterFilters.minRating != null && specialist.rating < filterFilters.minRating!) {
         return false;
       }
-      if (filterFilters.maxRating != null &&
-          specialist.rating > filterFilters.maxRating!) {
+      if (filterFilters.maxRating != null && specialist.rating > filterFilters.maxRating!) {
         return false;
       }
 
       // Фильтр по городу
       if (filterFilters.city != null &&
           filterFilters.city!.isNotEmpty &&
-          !specialist.location
-              .toLowerCase()
-              .contains(filterFilters.city!.toLowerCase())) {
+          !specialist.location.toLowerCase().contains(filterFilters.city!.toLowerCase())) {
         return false;
       }
 
       // Фильтр по верификации
-      if (filterFilters.isVerified != null &&
-          specialist.isVerified != filterFilters.isVerified) {
+      if (filterFilters.isVerified != null && specialist.isVerified != filterFilters.isVerified) {
         return false;
       }
 
@@ -93,13 +86,11 @@ class _TestFiltersScreenState extends ConsumerState<TestFiltersScreen> {
       }
 
       // Фильтр по поисковому запросу
-      if (filterFilters.searchQuery != null &&
-          filterFilters.searchQuery!.isNotEmpty) {
+      if (filterFilters.searchQuery != null && filterFilters.searchQuery!.isNotEmpty) {
         final query = filterFilters.searchQuery!.toLowerCase();
         if (!specialist.name.toLowerCase().contains(query) &&
             !specialist.description.toLowerCase().contains(query) &&
-            !specialist.services
-                .any((service) => service.toLowerCase().contains(query))) {
+            !specialist.services.any((service) => service.toLowerCase().contains(query))) {
           return false;
         }
       }
@@ -198,8 +189,7 @@ class _TestFiltersScreenState extends ConsumerState<TestFiltersScreen> {
         children: [
           _buildFilterChip(
             label: 'Цена: 5-10k',
-            isSelected: _currentFilters.minPrice == 5000 &&
-                _currentFilters.maxPrice == 10000,
+            isSelected: _currentFilters.minPrice == 5000 && _currentFilters.maxPrice == 10000,
             onTap: () => _applyFilters(
               const filters.SpecialistFilters(
                 minPrice: 5000,
@@ -245,9 +235,8 @@ class _TestFiltersScreenState extends ConsumerState<TestFiltersScreen> {
           ),
           _buildFilterChip(
             label: 'По цене ↑',
-            isSelected:
-                _currentFilters.sortBy == filters.SpecialistSortOption.price &&
-                    _currentFilters.sortAscending,
+            isSelected: _currentFilters.sortBy == filters.SpecialistSortOption.price &&
+                _currentFilters.sortAscending,
             onTap: () => _applyFilters(
               const filters.SpecialistFilters(
                 sortBy: filters.SpecialistSortOption.price,
@@ -257,9 +246,8 @@ class _TestFiltersScreenState extends ConsumerState<TestFiltersScreen> {
           ),
           _buildFilterChip(
             label: 'По рейтингу ↓',
-            isSelected:
-                _currentFilters.sortBy == filters.SpecialistSortOption.rating &&
-                    !_currentFilters.sortAscending,
+            isSelected: _currentFilters.sortBy == filters.SpecialistSortOption.rating &&
+                !_currentFilters.sortAscending,
             onTap: () => _applyFilters(
               const filters.SpecialistFilters(
                 sortBy: filters.SpecialistSortOption.rating,
@@ -283,8 +271,7 @@ class _TestFiltersScreenState extends ConsumerState<TestFiltersScreen> {
         label: Text(label),
         selected: isSelected,
         onSelected: (_) => onTap(),
-        selectedColor:
-            Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+        selectedColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
         checkmarkColor: Theme.of(context).colorScheme.primary,
       );
 
@@ -423,9 +410,7 @@ class _TestFiltersScreenState extends ConsumerState<TestFiltersScreen> {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: specialist.isAvailable
-                              ? Colors.green
-                              : Colors.red,
+                          color: specialist.isAvailable ? Colors.green : Colors.red,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(

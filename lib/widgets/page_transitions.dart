@@ -332,23 +332,22 @@ extension CustomNavigator on NavigatorState {
       );
 
   /// Замена с кастомной анимацией
-  Future<T?>
-      pushReplacementWithTransition<T extends Object?, TO extends Object?>(
+  Future<T?> pushReplacementWithTransition<T extends Object?, TO extends Object?>(
     Widget page, {
     PageTransitionType transitionType = PageTransitionType.slide,
     Duration duration = const Duration(milliseconds: 300),
     Curve curve = Curves.easeInOutCubic,
     TO? result,
   }) =>
-          pushReplacement<T, TO>(
-            CustomPageRoute<T>(
-              child: page,
-              transitionType: transitionType,
-              duration: duration,
-              curve: curve,
-            ),
-            result: result,
-          );
+      pushReplacement<T, TO>(
+        CustomPageRoute<T>(
+          child: page,
+          transitionType: transitionType,
+          duration: duration,
+          curve: curve,
+        ),
+        result: result,
+      );
 
   /// Переход с очисткой стека и кастомной анимацией
   Future<T?> pushAndRemoveUntilWithTransition<T extends Object?>(
@@ -390,8 +389,7 @@ class AnimatedContent extends StatefulWidget {
   State<AnimatedContent> createState() => _AnimatedContentState();
 }
 
-class _AnimatedContentState extends State<AnimatedContent>
-    with SingleTickerProviderStateMixin {
+class _AnimatedContentState extends State<AnimatedContent> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 

@@ -15,8 +15,7 @@ class SpecialistTipsWidget extends ConsumerStatefulWidget {
   final VoidCallback? onTipTap;
 
   @override
-  ConsumerState<SpecialistTipsWidget> createState() =>
-      _SpecialistTipsWidgetState();
+  ConsumerState<SpecialistTipsWidget> createState() => _SpecialistTipsWidgetState();
 }
 
 class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
@@ -178,18 +177,16 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
                       children: [
                         Text(
                           'Отличная работа!',
-                          style:
-                              Theme.of(context).textTheme.titleSmall?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.green.shade800,
-                                  ),
+                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.green.shade800,
+                              ),
                         ),
                         Text(
                           'Ваш профиль полностью заполнен и оптимизирован',
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Colors.green.shade700,
-                                  ),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Colors.green.shade700,
+                              ),
                         ),
                       ],
                     ),
@@ -222,8 +219,8 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: _getProgressColor(_profileStats!.completionPercentage)
-                    .withValues(alpha: 0.1),
+                color:
+                    _getProgressColor(_profileStats!.completionPercentage).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
@@ -243,8 +240,7 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
         margin: const EdgeInsets.only(bottom: 12),
         child: Card(
           elevation: 2,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: InkWell(
             onTap: () {
               widget.onTipTap?.call();
@@ -281,11 +277,10 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
                       Expanded(
                         child: Text(
                           tip.title,
-                          style:
-                              Theme.of(context).textTheme.titleSmall?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: tip.priority.color,
-                                  ),
+                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: tip.priority.color,
+                              ),
                         ),
                       ),
                       Container(
@@ -386,8 +381,7 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content:
-                  Text('Рекомендация "${tip.title}" отмечена как выполненная'),
+              content: Text('Рекомендация "${tip.title}" отмечена как выполненная'),
               backgroundColor: Colors.green.shade600,
             ),
           );

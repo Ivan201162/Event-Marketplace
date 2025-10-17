@@ -13,8 +13,7 @@ class PromotionsScreen extends ConsumerStatefulWidget {
   ConsumerState<PromotionsScreen> createState() => _PromotionsScreenState();
 }
 
-class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
-    with TickerProviderStateMixin {
+class _PromotionsScreenState extends ConsumerState<PromotionsScreen> with TickerProviderStateMixin {
   final PromotionService _promotionService = PromotionService();
   late TabController _tabController;
   late AnimationController _animationController;
@@ -75,10 +74,8 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
   void _applyFilters() {
     setState(() {
       _filteredPromotions = _allPromotions.where((promotion) {
-        final categoryMatch = _selectedCategory == 'all' ||
-            promotion.category == _selectedCategory;
-        final cityMatch =
-            _selectedCity.isEmpty || promotion.city == _selectedCity;
+        final categoryMatch = _selectedCategory == 'all' || promotion.category == _selectedCategory;
+        final cityMatch = _selectedCity.isEmpty || promotion.city == _selectedCity;
         return categoryMatch && cityMatch;
       }).toList();
     });
@@ -125,16 +122,14 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
       );
 
   Widget _buildDiscountsTab() {
-    final discounts = _filteredPromotions
-        .where((p) => p.category != 'seasonal' && p.category != 'gift')
-        .toList();
+    final discounts =
+        _filteredPromotions.where((p) => p.category != 'seasonal' && p.category != 'gift').toList();
 
     return _buildPromotionsList(discounts, 'Скидки от специалистов');
   }
 
   Widget _buildSeasonalTab() {
-    final seasonal =
-        _filteredPromotions.where((p) => p.category == 'seasonal').toList();
+    final seasonal = _filteredPromotions.where((p) => p.category == 'seasonal').toList();
 
     return _buildPromotionsList(seasonal, 'Сезонные предложения');
   }
@@ -198,8 +193,7 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
           child: ListView.builder(
             padding: const EdgeInsets.all(16),
             itemCount: promotions.length,
-            itemBuilder: (context, index) =>
-                _buildPromotionCard(promotions[index]),
+            itemBuilder: (context, index) => _buildPromotionCard(promotions[index]),
           ),
         ),
       ],
@@ -238,11 +232,10 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
                     Expanded(
                       child: Text(
                         promotion.title,
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.orange.shade800,
-                                ),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.orange.shade800,
+                            ),
                       ),
                     ),
                     Container(

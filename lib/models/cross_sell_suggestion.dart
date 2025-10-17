@@ -37,12 +37,8 @@ class CrossSellSuggestion {
       ),
       message: data['message'] as String?,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      viewedAt: data['viewedAt'] != null
-          ? (data['viewedAt'] as Timestamp).toDate()
-          : null,
-      respondedAt: data['respondedAt'] != null
-          ? (data['respondedAt'] as Timestamp).toDate()
-          : null,
+      viewedAt: data['viewedAt'] != null ? (data['viewedAt'] as Timestamp).toDate() : null,
+      respondedAt: data['respondedAt'] != null ? (data['respondedAt'] as Timestamp).toDate() : null,
       metadata: data['metadata'] != null
           ? Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>)
           : null,
@@ -50,8 +46,7 @@ class CrossSellSuggestion {
   }
 
   /// Создать из Map
-  factory CrossSellSuggestion.fromMap(Map<String, dynamic> data) =>
-      CrossSellSuggestion(
+  factory CrossSellSuggestion.fromMap(Map<String, dynamic> data) => CrossSellSuggestion(
         id: data['id'] as String? ?? '',
         bookingId: data['bookingId'] as String? ?? '',
         customerId: data['customerId'] as String? ?? '',
@@ -68,12 +63,9 @@ class CrossSellSuggestion {
         ),
         message: data['message'] as String?,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
-        viewedAt: data['viewedAt'] != null
-            ? (data['viewedAt'] as Timestamp).toDate()
-            : null,
-        respondedAt: data['respondedAt'] != null
-            ? (data['respondedAt'] as Timestamp).toDate()
-            : null,
+        viewedAt: data['viewedAt'] != null ? (data['viewedAt'] as Timestamp).toDate() : null,
+        respondedAt:
+            data['respondedAt'] != null ? (data['respondedAt'] as Timestamp).toDate() : null,
         metadata: data['metadata'] != null
             ? Map<String, dynamic>.from(
                 data['metadata'] as Map<dynamic, dynamic>,
@@ -102,8 +94,7 @@ class CrossSellSuggestion {
         'message': message,
         'createdAt': Timestamp.fromDate(createdAt),
         'viewedAt': viewedAt != null ? Timestamp.fromDate(viewedAt!) : null,
-        'respondedAt':
-            respondedAt != null ? Timestamp.fromDate(respondedAt!) : null,
+        'respondedAt': respondedAt != null ? Timestamp.fromDate(respondedAt!) : null,
         'metadata': metadata,
       };
 

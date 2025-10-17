@@ -40,12 +40,9 @@ class SpecialistComparisonCard extends StatelessWidget {
                           // Аватар
                           CircleAvatar(
                             radius: 24,
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primary,
+                            backgroundColor: Theme.of(context).colorScheme.primary,
                             child: Text(
-                              specialist.name.isNotEmpty
-                                  ? specialist.name[0].toUpperCase()
-                                  : '?',
+                              specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : '?',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -69,8 +66,7 @@ class SpecialistComparisonCard extends StatelessWidget {
                                 Text(
                                   specialist.category.displayName,
                                   style: TextStyle(
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
+                                    color: Theme.of(context).colorScheme.primary,
                                     fontSize: 14,
                                   ),
                                 ),
@@ -128,8 +124,7 @@ class SpecialistComparisonCard extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 // Описание
-                if (specialist.description != null &&
-                    specialist.description!.isNotEmpty)
+                if (specialist.description != null && specialist.description!.isNotEmpty)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -170,18 +165,15 @@ class SpecialistComparisonCard extends StatelessWidget {
                                   vertical: 2,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .primary
-                                      .withValues(alpha: 0.1),
+                                  color:
+                                      Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Text(
                                   service,
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
+                                    color: Theme.of(context).colorScheme.primary,
                                   ),
                                 ),
                               ),
@@ -315,8 +307,7 @@ class DetailedComparisonWidget extends StatelessWidget {
             children: [
               Text(
                 'Сравнение по ${criteria.label.toLowerCase()}',
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
 

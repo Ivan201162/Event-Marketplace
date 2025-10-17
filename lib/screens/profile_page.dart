@@ -27,8 +27,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         ),
       );
 
-  Widget _buildProfileContent(BuildContext context, AppUser appUser) =>
-      Scaffold(
+  Widget _buildProfileContent(BuildContext context, AppUser appUser) => Scaffold(
         body: CustomScrollView(
           slivers: [
             // Современный AppBar с градиентом
@@ -49,8 +48,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   ),
                   child: SafeArea(
                     child: Padding(
-                      padding:
-                          const EdgeInsets.only(top: 40, left: 16, right: 16),
+                      padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -92,9 +90,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     CircleAvatar(
                       radius: 60,
                       backgroundColor: Theme.of(context).primaryColor,
-                      backgroundImage: appUser.photoURL != null
-                          ? NetworkImage(appUser.photoURL!)
-                          : null,
+                      backgroundImage:
+                          appUser.photoURL != null ? NetworkImage(appUser.photoURL!) : null,
                       child: appUser.photoURL == null
                           ? Text(
                               (appUser.displayName?.isNotEmpty ?? false)
@@ -116,10 +113,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     // Имя пользователя
                     Text(
                       appUser.displayNameOrEmail,
-                      style:
-                          Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
 
                     const SizedBox(height: 8),
@@ -141,12 +137,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color:
-                            _getRoleColor(appUser.role).withValues(alpha: 0.1),
+                        color: _getRoleColor(appUser.role).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: _getRoleColor(appUser.role)
-                              .withValues(alpha: 0.3),
+                          color: _getRoleColor(appUser.role).withValues(alpha: 0.3),
                         ),
                       ),
                       child: Text(
@@ -184,10 +178,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           children: [
                             Text(
                               'Информация о профиле',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.copyWith(
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                             ),

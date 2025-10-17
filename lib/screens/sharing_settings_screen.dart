@@ -7,8 +7,7 @@ class SharingSettingsScreen extends ConsumerStatefulWidget {
   const SharingSettingsScreen({super.key});
 
   @override
-  ConsumerState<SharingSettingsScreen> createState() =>
-      _SharingSettingsScreenState();
+  ConsumerState<SharingSettingsScreen> createState() => _SharingSettingsScreenState();
 }
 
 class _SharingSettingsScreenState extends ConsumerState<SharingSettingsScreen> {
@@ -395,8 +394,7 @@ https://eventmarketplace.com
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Редактировать шаблон для $type'),
-        content:
-            const Text('Функция редактирования шаблонов пока не реализована'),
+        content: const Text('Функция редактирования шаблонов пока не реализована'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

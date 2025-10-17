@@ -6,50 +6,43 @@ import '../models/user.dart' as user_model;
 import '../services/profile_service.dart';
 
 /// Провайдер сервиса профилей
-final profileServiceProvider =
-    Provider<ProfileService>((ref) => ProfileService());
+final profileServiceProvider = Provider<ProfileService>((ref) => ProfileService());
 
 /// Провайдер профиля заказчика
-final customerProfileProvider =
-    FutureProvider.family<CustomerProfile?, String>((ref, userId) {
+final customerProfileProvider = FutureProvider.family<CustomerProfile?, String>((ref, userId) {
   final profileService = ref.watch(profileServiceProvider);
   return profileService.getCustomerProfile(userId);
 });
 
 /// Провайдер профиля специалиста
-final specialistProfileProvider =
-    FutureProvider.family<SpecialistProfile?, String>((ref, userId) {
+final specialistProfileProvider = FutureProvider.family<SpecialistProfile?, String>((ref, userId) {
   final profileService = ref.watch(profileServiceProvider);
   return profileService.getSpecialistProfile(userId);
 });
 
 /// Провайдер профиля текущего пользователя
 final currentUserProfileProvider =
-    FutureProvider.family<dynamic, (String, user_model.UserRole)>(
-        (ref, params) {
+    FutureProvider.family<dynamic, (String, user_model.UserRole)>((ref, params) {
   final profileService = ref.watch(profileServiceProvider);
   return profileService.getUserProfile(params.$1, params.$2);
 });
 
 /// Провайдер специалистов по категории
 final specialistsByCategoryProvider =
-    FutureProvider.family<List<SpecialistProfile>, SpecialistCategory>(
-        (ref, category) {
+    FutureProvider.family<List<SpecialistProfile>, SpecialistCategory>((ref, category) {
   final profileService = ref.watch(profileServiceProvider);
   return profileService.getSpecialistsByCategory(category);
 });
 
 /// Провайдер топ специалистов
-final topSpecialistsProvider =
-    FutureProvider.family<List<SpecialistProfile>, int>((ref, limit) {
+final topSpecialistsProvider = FutureProvider.family<List<SpecialistProfile>, int>((ref, limit) {
   final profileService = ref.watch(profileServiceProvider);
   return profileService.getTopSpecialists(limit: limit);
 });
 
 /// Провайдер поиска специалистов
 final searchSpecialistsProvider =
-    FutureProvider.family<List<SpecialistProfile>, SearchSpecialistsParams>(
-        (ref, params) {
+    FutureProvider.family<List<SpecialistProfile>, SearchSpecialistsParams>((ref, params) {
   final profileService = ref.watch(profileServiceProvider);
   return profileService.searchSpecialists(
     query: params.query,
@@ -62,8 +55,7 @@ final searchSpecialistsProvider =
 
 /// Провайдер статистики профиля
 final profileStatsProvider =
-    FutureProvider.family<Map<String, dynamic>, (String, user_model.UserRole)>(
-        (ref, params) {
+    FutureProvider.family<Map<String, dynamic>, (String, user_model.UserRole)>((ref, params) {
   final profileService = ref.watch(profileServiceProvider);
   return profileService.getProfileStats(params.$1, params.$2);
 });
@@ -95,8 +87,7 @@ class SearchSpecialistsParams {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(query, categories, minRating, maxHourlyRate, location);
+  int get hashCode => Object.hash(query, categories, minRating, maxHourlyRate, location);
 }
 
 /// Провайдер для управления состоянием редактирования профиля заказчика
@@ -254,8 +245,7 @@ class SpecialistProfileEditState {
 }
 
 /// Нотификатор для редактирования профиля специалиста
-class SpecialistProfileEditNotifier
-    extends Notifier<SpecialistProfileEditState> {
+class SpecialistProfileEditNotifier extends Notifier<SpecialistProfileEditState> {
   late final ProfileService _profileService;
 
   @override
@@ -358,8 +348,7 @@ class SpecialistProfileEditNotifier
   void addPortfolioItem(PortfolioItem item) {
     if (state.profile == null) return;
 
-    final updatedPortfolio = List<PortfolioItem>.from(state.profile!.portfolio)
-      ..add(item);
+    final updatedPortfolio = List<PortfolioItem>.from(state.profile!.portfolio)..add(item);
     final updatedProfile = state.profile!.copyWith(
       portfolio: updatedPortfolio,
       updatedAt: DateTime.now(),
@@ -375,8 +364,7 @@ class SpecialistProfileEditNotifier
   void removePortfolioItem(String itemId) {
     if (state.profile == null) return;
 
-    final updatedPortfolio =
-        state.profile!.portfolio.where((item) => item.id != itemId).toList();
+    final updatedPortfolio = state.profile!.portfolio.where((item) => item.id != itemId).toList();
     final updatedProfile = state.profile!.copyWith(
       portfolio: updatedPortfolio,
       updatedAt: DateTime.now(),

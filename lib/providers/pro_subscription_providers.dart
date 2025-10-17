@@ -28,15 +28,13 @@ final paymentHistoryProvider =
 });
 
 /// Провайдер статистики подписок
-final subscriptionStatsProvider =
-    FutureProvider<Map<String, dynamic>>((ref) async {
+final subscriptionStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
   final service = ref.read(proSubscriptionServiceProvider);
   return service.getSubscriptionStats();
 });
 
 /// Провайдер проверки доступности функции
-final featureAccessProvider =
-    FutureProvider.family<bool, FeatureAccessParams>((ref, params) async {
+final featureAccessProvider = FutureProvider.family<bool, FeatureAccessParams>((ref, params) async {
   final service = ref.read(proSubscriptionServiceProvider);
   return service.hasFeature(
     userId: params.userId,
@@ -57,9 +55,7 @@ class FeatureAccessParams {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is FeatureAccessParams &&
-        other.userId == userId &&
-        other.feature == feature;
+    return other is FeatureAccessParams && other.userId == userId && other.feature == feature;
   }
 
   @override
@@ -259,7 +255,6 @@ class SubscriptionNotifier extends Notifier<SubscriptionState> {
 }
 
 /// Провайдер состояния подписки (мигрирован с StateNotifierProvider)
-final subscriptionStateProvider =
-    NotifierProvider<SubscriptionNotifier, SubscriptionState>(
+final subscriptionStateProvider = NotifierProvider<SubscriptionNotifier, SubscriptionState>(
   SubscriptionNotifier.new,
 );

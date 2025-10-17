@@ -129,9 +129,7 @@ class _InstagramPostViewerState extends State<InstagramPostViewer> {
               backgroundImage: widget.specialist.imageUrl != null
                   ? NetworkImage(widget.specialist.imageUrl!)
                   : null,
-              child: widget.specialist.imageUrl == null
-                  ? const Icon(Icons.person)
-                  : null,
+              child: widget.specialist.imageUrl == null ? const Icon(Icons.person) : null,
             ),
             const SizedBox(width: 12),
             Expanded(

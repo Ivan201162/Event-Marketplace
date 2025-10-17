@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-import '../../services/marketing_admin_service.dart';
+
 import '../../models/advertisement.dart';
-import '../../models/admin_models.dart';
+import '../../services/marketing_admin_service.dart';
 
 class AdminAdvertisementManagementScreen extends StatefulWidget {
   const AdminAdvertisementManagementScreen({super.key});
@@ -13,8 +13,7 @@ class AdminAdvertisementManagementScreen extends StatefulWidget {
       _AdminAdvertisementManagementScreenState();
 }
 
-class _AdminAdvertisementManagementScreenState
-    extends State<AdminAdvertisementManagementScreen> {
+class _AdminAdvertisementManagementScreenState extends State<AdminAdvertisementManagementScreen> {
   final MarketingAdminService _marketingService = MarketingAdminService();
   final Uuid _uuid = const Uuid();
   final TextEditingController _titleController = TextEditingController();
@@ -100,8 +99,7 @@ class _AdminAdvertisementManagementScreenState
                       Text('Бюджет: ${ad.budget}₽'),
                       Text('Показы: ${ad.impressions}'),
                       Text('Клики: ${ad.clicks}'),
-                      if (ad.ctr > 0)
-                        Text('CTR: ${ad.ctr.toStringAsFixed(2)}%'),
+                      if (ad.ctr > 0) Text('CTR: ${ad.ctr.toStringAsFixed(2)}%'),
                     ],
                   ),
                   trailing: PopupMenuButton<String>(
@@ -119,8 +117,7 @@ class _AdminAdvertisementManagementScreenState
                         value: 'approve',
                         child: ListTile(
                           leading: Icon(Icons.check, color: Colors.green),
-                          title: Text('Одобрить',
-                              style: TextStyle(color: Colors.green)),
+                          title: Text('Одобрить', style: TextStyle(color: Colors.green)),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -128,8 +125,7 @@ class _AdminAdvertisementManagementScreenState
                         value: 'reject',
                         child: ListTile(
                           leading: Icon(Icons.close, color: Colors.red),
-                          title: Text('Отклонить',
-                              style: TextStyle(color: Colors.red)),
+                          title: Text('Отклонить', style: TextStyle(color: Colors.red)),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -137,8 +133,7 @@ class _AdminAdvertisementManagementScreenState
                         value: 'pause',
                         child: ListTile(
                           leading: Icon(Icons.pause, color: Colors.orange),
-                          title: Text('Приостановить',
-                              style: TextStyle(color: Colors.orange)),
+                          title: Text('Приостановить', style: TextStyle(color: Colors.orange)),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -146,8 +141,7 @@ class _AdminAdvertisementManagementScreenState
                         value: 'delete',
                         child: ListTile(
                           leading: Icon(Icons.delete, color: Colors.red),
-                          title: Text('Удалить',
-                              style: TextStyle(color: Colors.red)),
+                          title: Text('Удалить', style: TextStyle(color: Colors.red)),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -215,7 +209,7 @@ class _AdminAdvertisementManagementScreenState
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<AdvertisementType>(
-                value: _selectedType,
+                initialValue: _selectedType,
                 decoration: const InputDecoration(
                   labelText: 'Тип объявления',
                   border: OutlineInputBorder(),
@@ -234,7 +228,7 @@ class _AdminAdvertisementManagementScreenState
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<AdvertisementStatus>(
-                value: _selectedStatus,
+                initialValue: _selectedStatus,
                 decoration: const InputDecoration(
                   labelText: 'Статус',
                   border: OutlineInputBorder(),
@@ -254,15 +248,13 @@ class _AdminAdvertisementManagementScreenState
               const SizedBox(height: 16),
               ListTile(
                 title: const Text('Дата начала'),
-                subtitle: Text(
-                    '${_startDate.day}.${_startDate.month}.${_startDate.year}'),
+                subtitle: Text('${_startDate.day}.${_startDate.month}.${_startDate.year}'),
                 trailing: const Icon(Icons.calendar_today),
                 onTap: () => _selectDate(true),
               ),
               ListTile(
                 title: const Text('Дата окончания'),
-                subtitle:
-                    Text('${_endDate.day}.${_endDate.month}.${_endDate.year}'),
+                subtitle: Text('${_endDate.day}.${_endDate.month}.${_endDate.year}'),
                 trailing: const Icon(Icons.calendar_today),
                 onTap: () => _selectDate(false),
               ),
@@ -328,10 +320,7 @@ class _AdminAdvertisementManagementScreenState
         updatedAt: DateTime.now(),
       );
 
-      await FirebaseFirestore.instance
-          .collection('advertisements')
-          .doc(ad.id)
-          .set(ad.toMap());
+      await FirebaseFirestore.instance.collection('advertisements').doc(ad.id).set(ad.toMap());
 
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -417,7 +406,7 @@ class _AdminAdvertisementManagementScreenState
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<AdvertisementType>(
-                value: _selectedType,
+                initialValue: _selectedType,
                 decoration: const InputDecoration(
                   labelText: 'Тип объявления',
                   border: OutlineInputBorder(),
@@ -436,7 +425,7 @@ class _AdminAdvertisementManagementScreenState
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<AdvertisementStatus>(
-                value: _selectedStatus,
+                initialValue: _selectedStatus,
                 decoration: const InputDecoration(
                   labelText: 'Статус',
                   border: OutlineInputBorder(),
@@ -456,15 +445,13 @@ class _AdminAdvertisementManagementScreenState
               const SizedBox(height: 16),
               ListTile(
                 title: const Text('Дата начала'),
-                subtitle: Text(
-                    '${_startDate.day}.${_startDate.month}.${_startDate.year}'),
+                subtitle: Text('${_startDate.day}.${_startDate.month}.${_startDate.year}'),
                 trailing: const Icon(Icons.calendar_today),
                 onTap: () => _selectDate(true),
               ),
               ListTile(
                 title: const Text('Дата окончания'),
-                subtitle:
-                    Text('${_endDate.day}.${_endDate.month}.${_endDate.year}'),
+                subtitle: Text('${_endDate.day}.${_endDate.month}.${_endDate.year}'),
                 trailing: const Icon(Icons.calendar_today),
                 onTap: () => _selectDate(false),
               ),
@@ -499,10 +486,7 @@ class _AdminAdvertisementManagementScreenState
         'updatedAt': DateTime.now(),
       };
 
-      await FirebaseFirestore.instance
-          .collection('advertisements')
-          .doc(ad.id)
-          .update(updates);
+      await FirebaseFirestore.instance.collection('advertisements').doc(ad.id).update(updates);
 
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -515,21 +499,15 @@ class _AdminAdvertisementManagementScreenState
     }
   }
 
-  Future<void> _updateAdStatus(
-      Advertisement ad, AdvertisementStatus newStatus) async {
+  Future<void> _updateAdStatus(Advertisement ad, AdvertisementStatus newStatus) async {
     try {
-      await FirebaseFirestore.instance
-          .collection('advertisements')
-          .doc(ad.id)
-          .update({
+      await FirebaseFirestore.instance.collection('advertisements').doc(ad.id).update({
         'status': newStatus.name,
         'updatedAt': DateTime.now(),
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(
-                'Статус объявления изменен на ${_getAdStatusName(newStatus)}')),
+        SnackBar(content: Text('Статус объявления изменен на ${_getAdStatusName(newStatus)}')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -543,8 +521,7 @@ class _AdminAdvertisementManagementScreenState
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить рекламное объявление'),
-        content:
-            Text('Вы уверены, что хотите удалить объявление "${ad.title}"?'),
+        content: Text('Вы уверены, что хотите удалить объявление "${ad.title}"?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -561,10 +538,7 @@ class _AdminAdvertisementManagementScreenState
 
     if (confirmed == true) {
       try {
-        await FirebaseFirestore.instance
-            .collection('advertisements')
-            .doc(ad.id)
-            .delete();
+        await FirebaseFirestore.instance.collection('advertisements').doc(ad.id).delete();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Рекламное объявление удалено')),
         );

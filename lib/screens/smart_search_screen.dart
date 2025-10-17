@@ -72,8 +72,7 @@ class _SmartSearchScreenState extends ConsumerState<SmartSearchScreen> {
 
     try {
       // Загружаем популярных специалистов
-      final popularSpecialists =
-          await _smartSearchService.getPopularSpecialists(limit: 20);
+      final popularSpecialists = await _smartSearchService.getPopularSpecialists(limit: 20);
       setState(() {
         _specialists = popularSpecialists;
         _isLoading = false;
@@ -81,8 +80,7 @@ class _SmartSearchScreenState extends ConsumerState<SmartSearchScreen> {
 
       // Загружаем персональные рекомендации если есть userId
       if (_currentUserId != null) {
-        final recommendations =
-            await _smartSearchService.getPersonalRecommendations(
+        final recommendations = await _smartSearchService.getPersonalRecommendations(
           _currentUserId!,
         );
         setState(() => _recommendations = recommendations);
@@ -95,8 +93,7 @@ class _SmartSearchScreenState extends ConsumerState<SmartSearchScreen> {
 
   /// Обработка скролла
   void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent * 0.8) {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.8) {
       _loadMoreSpecialists();
     }
   }
@@ -109,8 +106,7 @@ class _SmartSearchScreenState extends ConsumerState<SmartSearchScreen> {
 
     try {
       final moreSpecialists = await _smartSearchService.smartSearch(
-        query:
-            _searchController.text.isNotEmpty ? _searchController.text : null,
+        query: _searchController.text.isNotEmpty ? _searchController.text : null,
         category: _selectedCategory,
         city: _selectedCity,
         minPrice: _minPrice > 0 ? _minPrice : null,
@@ -139,8 +135,7 @@ class _SmartSearchScreenState extends ConsumerState<SmartSearchScreen> {
 
     try {
       final specialists = await _smartSearchService.smartSearch(
-        query:
-            _searchController.text.isNotEmpty ? _searchController.text : null,
+        query: _searchController.text.isNotEmpty ? _searchController.text : null,
         category: _selectedCategory,
         city: _selectedCity,
         minPrice: _minPrice > 0 ? _minPrice : null,
@@ -163,8 +158,7 @@ class _SmartSearchScreenState extends ConsumerState<SmartSearchScreen> {
 
   /// Открыть AI-помощника
   Future<void> _openAIAssistant() async {
-    final conversation =
-        await _aiAssistantService.startConversation(userId: _currentUserId);
+    final conversation = await _aiAssistantService.startConversation(userId: _currentUserId);
     setState(() => _aiConversation = conversation);
 
     if (mounted) {
@@ -333,8 +327,7 @@ class _SmartSearchScreenState extends ConsumerState<SmartSearchScreen> {
                               SizedBox(height: 16),
                               Text(
                                 'Специалисты не найдены',
-                                style:
-                                    TextStyle(fontSize: 18, color: Colors.grey),
+                                style: TextStyle(fontSize: 18, color: Colors.grey),
                               ),
                               SizedBox(height: 8),
                               Text(
@@ -349,8 +342,7 @@ class _SmartSearchScreenState extends ConsumerState<SmartSearchScreen> {
                           child: ListView.builder(
                             controller: _scrollController,
                             padding: const EdgeInsets.all(16),
-                            itemCount:
-                                _specialists.length + (_isLoading ? 1 : 0),
+                            itemCount: _specialists.length + (_isLoading ? 1 : 0),
                             itemBuilder: (context, index) {
                               if (index == _specialists.length) {
                                 return const Center(

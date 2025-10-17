@@ -87,9 +87,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.event != null
-              ? 'Редактировать мероприятие'
-              : 'Создать мероприятие',
+          widget.event != null ? 'Редактировать мероприятие' : 'Создать мероприятие',
         ),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
@@ -159,9 +157,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                           ],
                         )
                       : Text(
-                          widget.event != null
-                              ? 'Обновить мероприятие'
-                              : 'Создать мероприятие',
+                          widget.event != null ? 'Обновить мероприятие' : 'Создать мероприятие',
                         ),
                 ),
               ),
@@ -173,8 +169,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                   decoration: BoxDecoration(
                     color: Colors.red.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
-                    border:
-                        Border.all(color: Colors.red.withValues(alpha: 0.3)),
+                    border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
                   ),
                   child: Row(
                     children: [
@@ -614,8 +609,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
       } else {
         // Создание нового события
         // TODO(developer): Implement event creation
-        const eventId =
-            'stub-event-id'; // await createEventNotifier.createEvent(
+        const eventId = 'stub-event-id'; // await createEventNotifier.createEvent(
         final event = Event(
           id: '',
           title: _titleController.text.trim(),

@@ -71,11 +71,9 @@ class AppError {
         stackTrace: data['stackTrace'] as String?,
         errorType: data['errorType'] as String? ?? 'unknown',
         resolved: data['resolved'] as bool? ?? false,
-        timestamp:
-            (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        metadata: data['metadata'] != null
-            ? Map<String, dynamic>.from(data['metadata'] as Map)
-            : null,
+        timestamp: (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        metadata:
+            data['metadata'] != null ? Map<String, dynamic>.from(data['metadata'] as Map) : null,
       );
   final String id;
   final String? userId;
@@ -194,8 +192,7 @@ class AppError {
       );
 
   @override
-  String toString() =>
-      'AppError(id: $id, errorType: $errorType, resolved: $resolved)';
+  String toString() => 'AppError(id: $id, errorType: $errorType, resolved: $resolved)';
 }
 
 /// Уровень критичности ошибки
@@ -298,9 +295,7 @@ class ErrorStatistics {
     if (errorsByScreen.isEmpty) {
       return null;
     }
-    return errorsByScreen.entries
-        .reduce((a, b) => a.value > b.value ? a : b)
-        .key;
+    return errorsByScreen.entries.reduce((a, b) => a.value > b.value ? a : b).key;
   }
 
   /// Получить самый проблемный тип ошибки

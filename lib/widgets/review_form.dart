@@ -121,8 +121,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
             controller: _commentController,
             maxLines: 4,
             decoration: InputDecoration(
-              hintText:
-                  'Расскажите о вашем опыте работы с этим специалистом...',
+              hintText: 'Расскажите о вашем опыте работы с этим специалистом...',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -149,8 +148,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
             children: [
               Expanded(
                 child: OutlinedButton(
-                  onPressed:
-                      _isLoading ? null : () => Navigator.of(context).pop(),
+                  onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
                   child: const Text('Отмена'),
                 ),
               ),
@@ -249,9 +247,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              widget.initialReview != null
-                  ? 'Отзыв обновлен'
-                  : 'Отзыв добавлен',
+              widget.initialReview != null ? 'Отзыв обновлен' : 'Отзыв добавлен',
             ),
             backgroundColor: Colors.green,
           ),

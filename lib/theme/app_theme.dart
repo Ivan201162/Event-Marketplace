@@ -17,8 +17,7 @@ class AppColors {
   static const Color darkCard = Color(0xFF2A2A2A); // тёмно-серый
   static const Color darkSecondary = Color(0xFF3A3A3A); // вторичный графит
   static const Color darkText = Color(0xFFFFFFFF); // белый текст
-  static const Color darkSecondaryText =
-      Color(0xFFB0B0B0); // светло-серый текст
+  static const Color darkSecondaryText = Color(0xFFB0B0B0); // светло-серый текст
   static const Color darkBorder = Color(0xFF404040); // тёмные границы
 
   // Акцентные цвета (премиальные)
@@ -232,8 +231,7 @@ class AppTheme {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide:
-                const BorderSide(color: AppColors.primaryAccent, width: 2),
+            borderSide: const BorderSide(color: AppColors.primaryAccent, width: 2),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
@@ -241,11 +239,9 @@ class AppTheme {
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide:
-                const BorderSide(color: AppColors.errorAccent, width: 2),
+            borderSide: const BorderSide(color: AppColors.errorAccent, width: 2),
           ),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           hintStyle: const TextStyle(
             color: AppColors.lightSecondaryText,
             fontSize: 14,
@@ -509,8 +505,7 @@ class AppTheme {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide:
-                const BorderSide(color: AppColors.primaryAccent, width: 2),
+            borderSide: const BorderSide(color: AppColors.primaryAccent, width: 2),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
@@ -518,11 +513,9 @@ class AppTheme {
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide:
-                const BorderSide(color: AppColors.errorAccent, width: 2),
+            borderSide: const BorderSide(color: AppColors.errorAccent, width: 2),
           ),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           hintStyle: const TextStyle(
             color: AppColors.darkSecondaryText,
             fontSize: 14,

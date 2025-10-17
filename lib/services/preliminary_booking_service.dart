@@ -51,17 +51,15 @@ class PreliminaryBookingService {
         eventLocation: eventLocation,
         specialRequests: specialRequests,
         status: PreliminaryBookingStatus.pending,
-        expiresAt: DateTime.now()
-            .add(const Duration(hours: 24)), // 24 часа на подтверждение
+        expiresAt: DateTime.now().add(const Duration(hours: 24)), // 24 часа на подтверждение
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
         metadata: metadata ?? {},
       );
 
       // Сохраняем в Firestore
-      final docRef = await _firestore
-          .collection('preliminary_bookings')
-          .add(preliminaryBooking.toMap());
+      final docRef =
+          await _firestore.collection('preliminary_bookings').add(preliminaryBooking.toMap());
 
       // Отправляем уведомление специалисту
       await _notifySpecialist(docRef.id, specialistId, customerId);
@@ -81,8 +79,7 @@ class PreliminaryBookingService {
     String? notes,
   }) async {
     try {
-      final preliminaryBooking =
-          await _getPreliminaryBooking(preliminaryBookingId);
+      final preliminaryBooking = await _getPreliminaryBooking(preliminaryBookingId);
       if (preliminaryBooking == null) {
         throw Exception('Предварительное бронирование не найдено');
       }
@@ -135,14 +132,10 @@ class PreliminaryBookingService {
       );
 
       // Сохраняем бронирование
-      final bookingDocRef =
-          await _firestore.collection('bookings').add(booking.toMap());
+      final bookingDocRef = await _firestore.collection('bookings').add(booking.toMap());
 
       // Обновляем статус предварительного бронирования
-      await _firestore
-          .collection('preliminary_bookings')
-          .doc(preliminaryBookingId)
-          .update({
+      await _firestore.collection('preliminary_bookings').doc(preliminaryBookingId).update({
         'status': PreliminaryBookingStatus.confirmed.name,
         'confirmedAt': Timestamp.fromDate(DateTime.now()),
         'bookingId': bookingDocRef.id,
@@ -177,8 +170,7 @@ class PreliminaryBookingService {
     required String reason,
   }) async {
     try {
-      final preliminaryBooking =
-          await _getPreliminaryBooking(preliminaryBookingId);
+      final preliminaryBooking = await _getPreliminaryBooking(preliminaryBookingId);
       if (preliminaryBooking == null) {
         throw Exception('Предварительное бронирование не найдено');
       }
@@ -187,10 +179,7 @@ class PreliminaryBookingService {
         throw Exception('Недостаточно прав для отклонения бронирования');
       }
 
-      await _firestore
-          .collection('preliminary_bookings')
-          .doc(preliminaryBookingId)
-          .update({
+      await _firestore.collection('preliminary_bookings').doc(preliminaryBookingId).update({
         'status': PreliminaryBookingStatus.rejected.name,
         'rejectedAt': Timestamp.fromDate(DateTime.now()),
         'rejectionReason': reason,
@@ -215,8 +204,7 @@ class PreliminaryBookingService {
     String? reason,
   }) async {
     try {
-      final preliminaryBooking =
-          await _getPreliminaryBooking(preliminaryBookingId);
+      final preliminaryBooking = await _getPreliminaryBooking(preliminaryBookingId);
       if (preliminaryBooking == null) {
         throw Exception('Предварительное бронирование не найдено');
       }
@@ -229,10 +217,7 @@ class PreliminaryBookingService {
         throw Exception('Бронирование уже обработано');
       }
 
-      await _firestore
-          .collection('preliminary_bookings')
-          .doc(preliminaryBookingId)
-          .update({
+      await _firestore.collection('preliminary_bookings').doc(preliminaryBookingId).update({
         'status': PreliminaryBookingStatus.cancelled.name,
         'cancelledAt': Timestamp.fromDate(DateTime.now()),
         'cancellationReason': reason,
@@ -296,10 +281,8 @@ class PreliminaryBookingService {
     String preliminaryBookingId,
   ) async {
     try {
-      final doc = await _firestore
-          .collection('preliminary_bookings')
-          .doc(preliminaryBookingId)
-          .get();
+      final doc =
+          await _firestore.collection('preliminary_bookings').doc(preliminaryBookingId).get();
       if (doc.exists) {
         return PreliminaryBooking.fromDocument(doc);
       }
@@ -406,8 +389,7 @@ class PreliminaryBooking {
       specialistId: data['specialistId'] ?? '',
       customerId: data['customerId'] ?? '',
       eventDate: (data['eventDate'] as Timestamp).toDate(),
-      duration:
-          Duration(seconds: data['duration'] ?? 7200), // 2 часа по умолчанию
+      duration: Duration(seconds: data['duration'] ?? 7200), // 2 часа по умолчанию
       eventTitle: data['eventTitle'] ?? '',
       eventDescription: data['eventDescription'] ?? '',
       participantsCount: data['participantsCount'] ?? 1,
@@ -420,12 +402,8 @@ class PreliminaryBooking {
       expiresAt: (data['expiresAt'] as Timestamp).toDate(),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      confirmedAt: data['confirmedAt'] != null
-          ? (data['confirmedAt'] as Timestamp).toDate()
-          : null,
-      cancelledAt: data['cancelledAt'] != null
-          ? (data['cancelledAt'] as Timestamp).toDate()
-          : null,
+      confirmedAt: data['confirmedAt'] != null ? (data['confirmedAt'] as Timestamp).toDate() : null,
+      cancelledAt: data['cancelledAt'] != null ? (data['cancelledAt'] as Timestamp).toDate() : null,
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
   }
@@ -462,10 +440,8 @@ class PreliminaryBooking {
         'expiresAt': Timestamp.fromDate(expiresAt),
         'createdAt': Timestamp.fromDate(createdAt),
         'updatedAt': Timestamp.fromDate(updatedAt),
-        'confirmedAt':
-            confirmedAt != null ? Timestamp.fromDate(confirmedAt!) : null,
-        'cancelledAt':
-            cancelledAt != null ? Timestamp.fromDate(cancelledAt!) : null,
+        'confirmedAt': confirmedAt != null ? Timestamp.fromDate(confirmedAt!) : null,
+        'cancelledAt': cancelledAt != null ? Timestamp.fromDate(cancelledAt!) : null,
         'metadata': metadata,
       };
 

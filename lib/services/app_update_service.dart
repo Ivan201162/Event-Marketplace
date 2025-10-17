@@ -37,9 +37,8 @@ class AppUpdateService {
         final data = jsonDecode(response.body);
         final latestVersion = data['tag_name']?.replaceAll('v', '') ?? '';
         final releaseNotes = data['body'] ?? '';
-        final downloadUrl = data['assets']?.isNotEmpty == true
-            ? data['assets'][0]['browser_download_url']
-            : null;
+        final downloadUrl =
+            data['assets']?.isNotEmpty == true ? data['assets'][0]['browser_download_url'] : null;
 
         final updateInfo = UpdateInfo(
           currentVersion: currentVersion,
@@ -78,9 +77,8 @@ class AppUpdateService {
         final data = jsonDecode(response.body);
         final latestVersion = data['tag_name']?.replaceAll('v', '') ?? '';
         final releaseNotes = data['body'] ?? '';
-        final downloadUrl = data['assets']?.isNotEmpty == true
-            ? data['assets'][0]['browser_download_url']
-            : null;
+        final downloadUrl =
+            data['assets']?.isNotEmpty == true ? data['assets'][0]['browser_download_url'] : null;
 
         final updateInfo = UpdateInfo(
           currentVersion: currentVersion,
@@ -129,9 +127,7 @@ class AppUpdateService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final timestamp = prefs.getInt(_lastCheckKey);
-      return timestamp != null
-          ? DateTime.fromMillisecondsSinceEpoch(timestamp)
-          : null;
+      return timestamp != null ? DateTime.fromMillisecondsSinceEpoch(timestamp) : null;
     } catch (e) {
       debugPrint('Ошибка получения времени последней проверки: $e');
       return null;
@@ -208,8 +204,7 @@ class AppUpdateService {
   }
 
   /// Получить информацию о текущей версии
-  static Future<PackageInfo> getCurrentVersionInfo() async =>
-      PackageInfo.fromPlatform();
+  static Future<PackageInfo> getCurrentVersionInfo() async => PackageInfo.fromPlatform();
 
   /// Открыть страницу загрузки
   static Future<void> openDownloadPage(String? downloadUrl) async {
@@ -272,8 +267,7 @@ class UpdateInfo {
       };
 
   /// Получить тип обновления
-  UpdateType get updateType =>
-      AppUpdateService.getUpdateType(currentVersion, latestVersion);
+  UpdateType get updateType => AppUpdateService.getUpdateType(currentVersion, latestVersion);
 
   /// Получить описание типа обновления
   String get updateTypeDescription {

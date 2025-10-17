@@ -20,10 +20,9 @@ class AvailabilityCalendar {
       id: doc.id,
       specialistId: data['specialistId'] ?? '',
       date: (data['date'] as Timestamp).toDate(),
-      timeSlots: (data['timeSlots'] as List<dynamic>?)
-              ?.map((slot) => TimeSlot.fromMap(slot))
-              .toList() ??
-          [],
+      timeSlots:
+          (data['timeSlots'] as List<dynamic>?)?.map((slot) => TimeSlot.fromMap(slot)).toList() ??
+              [],
       isAvailable: data['isAvailable'] as bool? ?? true,
       note: data['note'],
       createdAt: (data['createdAt'] as Timestamp).toDate(),
@@ -87,8 +86,7 @@ class AvailabilityCalendar {
   /// Получить доступные временные слоты на дату
   List<TimeSlot> getAvailableSlots(DateTime date) {
     final targetDate = DateTime(date.year, date.month, date.day);
-    final calendarDate =
-        DateTime(this.date.year, this.date.month, this.date.day);
+    final calendarDate = DateTime(this.date.year, this.date.month, this.date.day);
 
     if (!targetDate.isAtSameMomentAs(calendarDate) || !isAvailable) {
       return [];
@@ -136,12 +134,10 @@ class TimeSlot {
       };
 
   /// Проверить, находится ли время в этом слоте
-  bool isTimeInSlot(DateTime dateTime) =>
-      dateTime.isAfter(startTime) && dateTime.isBefore(endTime);
+  bool isTimeInSlot(DateTime dateTime) => dateTime.isAfter(startTime) && dateTime.isBefore(endTime);
 
   /// Получить продолжительность слота в часах
-  double get durationInHours =>
-      endTime.difference(startTime).inHours.toDouble();
+  double get durationInHours => endTime.difference(startTime).inHours.toDouble();
 
   /// Создать копию с изменениями
   TimeSlot copyWith({
@@ -178,22 +174,19 @@ class WorkingHours {
     this.minBookingHours = 1,
     this.maxBookingHours = 8,
   });
-  final Map<int, List<TimeSlot>>
-      weeklySchedule; // 1-7 (понедельник-воскресенье)
+  final Map<int, List<TimeSlot>> weeklySchedule; // 1-7 (понедельник-воскресенье)
   final List<DateTime> holidays; // Праздничные дни
   final int minBookingHours;
   final int maxBookingHours;
 
   /// Получить рабочие часы для дня недели
-  List<TimeSlot> getWorkingHoursForDay(int dayOfWeek) =>
-      weeklySchedule[dayOfWeek] ?? [];
+  List<TimeSlot> getWorkingHoursForDay(int dayOfWeek) => weeklySchedule[dayOfWeek] ?? [];
 
   /// Проверить, является ли день праздничным
   bool isHoliday(DateTime date) {
     final dateOnly = DateTime(date.year, date.month, date.day);
     return holidays.any(
-      (holiday) => DateTime(holiday.year, holiday.month, holiday.day)
-          .isAtSameMomentAs(dateOnly),
+      (holiday) => DateTime(holiday.year, holiday.month, holiday.day).isAtSameMomentAs(dateOnly),
     );
   }
 
@@ -201,7 +194,6 @@ class WorkingHours {
   bool isWorkingDay(DateTime date) {
     if (isHoliday(date)) return false;
     final dayOfWeek = date.weekday;
-    return weeklySchedule.containsKey(dayOfWeek) &&
-        weeklySchedule[dayOfWeek]!.isNotEmpty;
+    return weeklySchedule.containsKey(dayOfWeek) && weeklySchedule[dayOfWeek]!.isNotEmpty;
   }
 }

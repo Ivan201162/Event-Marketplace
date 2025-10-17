@@ -18,13 +18,11 @@ class DJPlaylistScreen extends ConsumerStatefulWidget {
   ConsumerState<DJPlaylistScreen> createState() => _DJPlaylistScreenState();
 }
 
-class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
-    with TickerProviderStateMixin {
+class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen> with TickerProviderStateMixin {
   late TabController _tabController;
   final DJPlaylistService _playlistService = DJPlaylistService();
   final TextEditingController _playlistNameController = TextEditingController();
-  final TextEditingController _playlistDescriptionController =
-      TextEditingController();
+  final TextEditingController _playlistDescriptionController = TextEditingController();
   final TextEditingController _vkUrlController = TextEditingController();
   bool _isPublic = false;
 
@@ -236,8 +234,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
                     ),
                   ),
                   PopupMenuButton<String>(
-                    onSelected: (value) =>
-                        _handlePlaylistAction(value, playlist),
+                    onSelected: (value) => _handlePlaylistAction(value, playlist),
                     itemBuilder: (context) => [
                       const PopupMenuItem(
                         value: 'edit',
@@ -254,15 +251,11 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
                         child: Row(
                           children: [
                             Icon(
-                              playlist.isPublic
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
+                              playlist.isPublic ? Icons.visibility_off : Icons.visibility,
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              playlist.isPublic
-                                  ? 'Сделать приватным'
-                                  : 'Сделать публичным',
+                              playlist.isPublic ? 'Сделать приватным' : 'Сделать публичным',
                             ),
                           ],
                         ),
@@ -320,8 +313,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
                     const SizedBox(width: 8),
                   ],
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.blue[100],
                       borderRadius: BorderRadius.circular(12),
@@ -675,8 +667,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
         ),
       );
 
-  Widget _buildHelpItem(IconData icon, String title, String description) =>
-      Padding(
+  Widget _buildHelpItem(IconData icon, String title, String description) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -910,9 +901,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            playlist.isPublic
-                ? 'Плейлист сделан приватным'
-                : 'Плейлист сделан публичным',
+            playlist.isPublic ? 'Плейлист сделан приватным' : 'Плейлист сделан публичным',
           ),
           backgroundColor: Colors.green,
         ),
