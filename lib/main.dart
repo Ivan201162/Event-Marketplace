@@ -3,129 +3,105 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 void main() async {
-  print("🚀 main() запущен успешно - ШАГ 1");
-  
   WidgetsFlutterBinding.ensureInitialized();
-  print("🚀 WidgetsFlutterBinding.ensureInitialized() - ШАГ 2");
 
   // Настройка обработки ошибок
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.presentError(details);
-    print("🔥 Flutter error: ${details.exception}");
-    print("Stack: ${details.stack}");
+    debugPrint("🔥 Flutter error: ${details.exception}");
+    debugPrint("Stack: ${details.stack}");
   };
-  print("🚀 FlutterError.onError настроен - ШАГ 3");
 
   PlatformDispatcher.instance.onError = (error, stack) {
-    print("🔥 Uncaught error: $error");
-    print(stack);
+    debugPrint("🔥 Uncaught error: $error");
+    debugPrint("Stack: $stack");
     return true;
   };
-  print("🚀 PlatformDispatcher.onError настроен - ШАГ 4");
 
-  print("🚀 Запуск runApp() - ШАГ 5");
-  
-  runApp(const MyApp());
-  
-  print("🚀 runApp() выполнен - ШАГ 6");
+  debugPrint('🚀 Starting EventMarketplaceApp...');
+  runApp(const EventMarketplaceApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class EventMarketplaceApp extends StatelessWidget {
+  const EventMarketplaceApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    print("🚀 MyApp.build() вызван - ШАГ 7");
-    
     return MaterialApp(
+      title: 'Event Marketplace',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        useMaterial3: true,
+      ),
+      home: const MainScreen(),
       debugShowCheckedModeBanner: false,
-      home: const DiagnosticScreen(),
     );
   }
 }
 
-class DiagnosticScreen extends StatefulWidget {
-  const DiagnosticScreen({super.key});
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
 
   @override
-  State<DiagnosticScreen> createState() => _DiagnosticScreenState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
-class _DiagnosticScreenState extends State<DiagnosticScreen> {
-  @override
-  void initState() {
-    super.initState();
-    print("🚀 DiagnosticScreen.initState() - ШАГ 8");
-    
-    // Автоматический переход к основному UI через 3 секунды
-    Future.delayed(const Duration(seconds: 3), () {
-      print("🚀 Переход к основному UI - ШАГ 9");
-      if (mounted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const MainApp()),
-        );
-      }
-    });
-  }
+class _MainScreenState extends State<MainScreen> {
+  int _currentIndex = 0;
+
+  final List<Widget> _screens = [
+    const HomeTab(),
+    const FeedTab(),
+    const BookingsTab(),
+    const ChatsTab(),
+    const IdeasTab(),
+    const MonetizationTab(),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    print("🚀 DiagnosticScreen.build() - ШАГ 10");
-    
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.rocket_launch,
-              color: Colors.green,
-              size: 64,
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              '🚀 Приложение запущено',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Время: ${DateTime.now().toString()}',
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 14,
-              ),
-            ),
-            const SizedBox(height: 16),
-            const CircularProgressIndicator(
-              color: Colors.green,
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Переход к основному UI...',
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 12,
-              ),
-            ),
-          ],
-        ),
+      body: _screens[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _currentIndex,
+        onTap: (index) => setState(() => _currentIndex = index),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Главная',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.newspaper),
+            label: 'Лента',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.assignment),
+            label: 'Заявки',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: 'Чаты',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.lightbulb),
+            label: 'Идеи',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.monetization_on),
+            label: 'Монетизация',
+          ),
+        ],
       ),
     );
   }
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class HomeTab extends StatelessWidget {
+  const HomeTab({super.key});
 
   @override
   Widget build(BuildContext context) {
-    print("🚀 MainApp.build() - ШАГ 11");
-    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Event Marketplace'),
@@ -143,7 +119,7 @@ class MainApp extends StatelessWidget {
             ),
             SizedBox(height: 16),
             Text(
-              '🏠 Основной экран',
+              '🏠 Главная',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -151,7 +127,222 @@ class MainApp extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text(
-              'Навигация работает!',
+              'Добро пожаловать в Event Marketplace!',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class FeedTab extends StatelessWidget {
+  const FeedTab({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Лента'),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+      ),
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.newspaper,
+              size: 64,
+              color: Colors.blue,
+            ),
+            SizedBox(height: 16),
+            Text(
+              '📰 Социальная лента',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Посты, фото, видео, рилсы',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class BookingsTab extends StatelessWidget {
+  const BookingsTab({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Заявки'),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+      ),
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.assignment,
+              size: 64,
+              color: Colors.blue,
+            ),
+            SizedBox(height: 16),
+            Text(
+              '📋 Заявки',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Мои заявки и заявки мне',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ChatsTab extends StatelessWidget {
+  const ChatsTab({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Чаты'),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+      ),
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.chat,
+              size: 64,
+              color: Colors.blue,
+            ),
+            SizedBox(height: 16),
+            Text(
+              '💬 Чаты',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Общение с клиентами и специалистами',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class IdeasTab extends StatelessWidget {
+  const IdeasTab({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Идеи'),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+      ),
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.lightbulb,
+              size: 64,
+              color: Colors.blue,
+            ),
+            SizedBox(height: 16),
+            Text(
+              '💡 Идеи',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Креативные идеи для мероприятий',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MonetizationTab extends StatelessWidget {
+  const MonetizationTab({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Монетизация'),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+      ),
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.monetization_on,
+              size: 64,
+              color: Colors.blue,
+            ),
+            SizedBox(height: 16),
+            Text(
+              '💰 Монетизация',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Подписки и реклама',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey,

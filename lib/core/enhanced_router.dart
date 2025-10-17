@@ -10,6 +10,8 @@ import '../screens/chats_list_screen.dart';
 import '../screens/enhanced_settings_screen.dart';
 import '../screens/enhanced_social_home_screen.dart';
 import '../screens/ideas_feed_screen.dart';
+import '../screens/main_navigation_screen.dart';
+import '../screens/profile_screen.dart' as profile_screen;
 import '../screens/monetization/advertisement_campaigns_screen.dart';
 import '../screens/monetization/create_advertisement_screen.dart';
 import '../screens/monetization/monetization_hub_screen.dart';
@@ -194,7 +196,7 @@ final routerProvider = Provider<GoRouter>(
       GoRoute(
         path: '/profile/me',
         name: 'profile-me',
-        builder: (context, state) => const ProfileScreen(),
+        builder: (context, state) => const profile_screen.ProfileScreen(),
       ),
 
       GoRoute(
@@ -202,7 +204,7 @@ final routerProvider = Provider<GoRouter>(
         name: 'profile-user',
         builder: (context, state) {
           final userId = state.pathParameters['userId']!;
-          return ProfileScreen(userId: userId);
+          return profile_screen.ProfileScreen(userId: userId);
         },
       ),
 
@@ -321,49 +323,6 @@ final routerProvider = Provider<GoRouter>(
   ),
 );
 
-/// Главный экран навигации
-class MainNavigationScreen extends StatelessWidget {
-  const MainNavigationScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Event Marketplace'),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-      ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.home,
-              size: 64,
-              color: Colors.blue,
-            ),
-            SizedBox(height: 16),
-            Text(
-              '🏠 Главный экран',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Навигация работает!',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 // Заглушки для экранов, которые будут реализованы позже
 
