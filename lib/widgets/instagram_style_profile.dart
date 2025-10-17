@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../core/app_theme.dart';
+import '../theme/app_theme.dart';
 import '../models/specialist.dart';
 import '../services/test_data_service.dart';
 

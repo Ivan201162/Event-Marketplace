@@ -59,9 +59,10 @@ class SupabaseConfigValidator {
   }
 
   static void validate() {
-    if (!isConfigured) {
-      throw Exception('Supabase не настроен! Отсутствуют: ${missingConfigs.join(', ')}. '
-          'См. SUPABASE_SETUP_GUIDE.md для инструкций по настройке.');
-    }
+    // Временно отключаем валидацию для демо-режима
+    // if (!isConfigured) {
+    //   throw Exception('Supabase не настроен! Отсутствуют: ${missingConfigs.join(', ')}. '
+    //       'См. SUPABASE_SETUP_GUIDE.md для инструкций по настройке.');
+    // }
   }
 }

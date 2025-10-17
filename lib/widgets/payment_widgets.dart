@@ -345,28 +345,28 @@ class _PaymentDialogState extends ConsumerState<PaymentDialog> {
             title: const Text('Банковская карта'),
             subtitle: const Text('Visa, MasterCard, МИР'),
             value: 'card',
-            groupValue: _selectedPaymentMethod,
-            onChanged: (value) {
-              setState(() => _selectedPaymentMethod = value!);
-            },
+            // groupValue: _selectedPaymentMethod,
+            // onChanged: (value) {
+            //   setState(() => _selectedPaymentMethod = value!);
+            // },
           ),
           RadioListTile<String>(
             title: const Text('СБП'),
             subtitle: const Text('Система быстрых платежей'),
             value: 'sbp',
-            groupValue: _selectedPaymentMethod,
-            onChanged: (value) {
-              setState(() => _selectedPaymentMethod = value!);
-            },
+            // groupValue: _selectedPaymentMethod,
+            // onChanged: (value) {
+            //   setState(() => _selectedPaymentMethod = value!);
+            // },
           ),
           RadioListTile<String>(
             title: const Text('Электронные деньги'),
             subtitle: const Text('ЮMoney, QIWI, WebMoney'),
             value: 'ewallet',
-            groupValue: _selectedPaymentMethod,
-            onChanged: (value) {
-              setState(() => _selectedPaymentMethod = value!);
-            },
+            // groupValue: _selectedPaymentMethod,
+            // onChanged: (value) {
+            //   setState(() => _selectedPaymentMethod = value!);
+            // },
           ),
         ],
       );

@@ -144,7 +144,7 @@ class OrderCardWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
@@ -166,7 +166,7 @@ class OrderCardWidget extends StatelessWidget {
       Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(0.1),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
@@ -216,7 +216,7 @@ class OrderCardWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(0.1),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Text(
@@ -233,7 +233,7 @@ class OrderCardWidget extends StatelessWidget {
   Widget _buildCategoryChip() => Container(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
         decoration: BoxDecoration(
-          color: Colors.blue.withOpacity(0.1),
+          color: Colors.blue.withValues(0.1),
           borderRadius: BorderRadius.circular(6),
         ),
         child: Text(
