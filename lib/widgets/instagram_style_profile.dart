@@ -145,7 +145,7 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
                   ),
                   child: CircleAvatar(
                     radius: 50,
-                    backgroundColor: BrandColors.primary.withOpacity(0.1),
+                    backgroundColor: BrandColors.primary.withValues(alpha: 0.1),
                     backgroundImage: _specialist!.imageUrlValue != null
                         ? NetworkImage(_specialist!.imageUrlValue!)
                         : null,
@@ -306,7 +306,7 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
                   ),
                   child: CircleAvatar(
                     radius: 28,
-                    backgroundColor: BrandColors.primary.withOpacity(0.1),
+                    backgroundColor: BrandColors.primary.withValues(alpha: 0.1),
                     child: index == 0
                         ? const Icon(Icons.add, color: BrandColors.primary)
                         : Text(
@@ -434,7 +434,7 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
         ),
         itemCount: 12,
         itemBuilder: (context, index) => Container(
-          color: BrandColors.primary.withOpacity(0.1),
+          color: BrandColors.primary.withValues(alpha: 0.1),
           child: Center(
             child: Text(
               '${index + 1}',
@@ -457,7 +457,7 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
         ),
         itemCount: 6,
         itemBuilder: (context, index) => Container(
-          color: BrandColors.secondary.withOpacity(0.1),
+          color: BrandColors.secondary.withValues(alpha: 0.1),
           child: const Center(
             child: Icon(
               Icons.play_circle_outline,
@@ -477,7 +477,7 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
         ),
         itemCount: 4,
         itemBuilder: (context, index) => Container(
-          color: BrandColors.accent.withOpacity(0.1),
+          color: BrandColors.accent.withValues(alpha: 0.1),
           child: Center(
             child: Text(
               'T${index + 1}',

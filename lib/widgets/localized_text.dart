@@ -37,7 +37,7 @@ class LocalizedText extends StatelessWidget {
       textDirection: textDirection,
       locale: locale,
       softWrap: softWrap,
-      textScaleFactor: textScaleFactor,
+      textScaler: TextScaler.linear(textScaleFactor ?? 1.0),
     );
   }
 }
@@ -78,7 +78,7 @@ class LocalizedTextWithParams extends StatelessWidget {
       textDirection: textDirection,
       locale: locale,
       softWrap: softWrap,
-      textScaleFactor: textScaleFactor,
+      textScaler: TextScaler.linear(textScaleFactor ?? 1.0),
     );
   }
 }
@@ -166,7 +166,7 @@ class LocalizedDirectionalText extends StatelessWidget {
       overflow: overflow,
       textDirection: textDirection,
       softWrap: softWrap,
-      textScaleFactor: textScaleFactor,
+      textScaler: TextScaler.linear(textScaleFactor ?? 1.0),
     );
   }
 
@@ -221,7 +221,7 @@ class LocalizedPluralText extends StatelessWidget {
       textDirection: textDirection,
       locale: locale,
       softWrap: softWrap,
-      textScaleFactor: textScaleFactor,
+      textScaler: TextScaler.linear(textScaleFactor ?? 1.0),
     );
   }
 }
@@ -264,7 +264,7 @@ class LocalizedDateText extends StatelessWidget {
       textDirection: textDirection,
       locale: locale,
       softWrap: softWrap,
-      textScaleFactor: textScaleFactor,
+      textScaler: TextScaler.linear(textScaleFactor ?? 1.0),
     );
   }
 }
@@ -307,7 +307,7 @@ class LocalizedNumberText extends StatelessWidget {
       textDirection: textDirection,
       locale: locale,
       softWrap: softWrap,
-      textScaleFactor: textScaleFactor,
+      textScaler: TextScaler.linear(textScaleFactor ?? 1.0),
     );
   }
 }
