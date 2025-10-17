@@ -129,3 +129,4 @@ final availableLocalesProvider = Provider<List<Locale>>((ref) {
   final localeNotifier = ref.watch(localeProvider.notifier);
   return localeNotifier.availableLocales;
 });
+

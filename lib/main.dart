@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,60 +18,84 @@ import 'theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Настройка обработки ошибок
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.presentError(details);
+    debugPrint("🔥 Flutter error: ${details.exception}");
+    debugPrint("Stack: ${details.stack}");
+  };
+  
+  PlatformDispatcher.instance.onError = (error, stack) {
+    debugPrint("🔥 Uncaught error: $error");
+    debugPrint("Stack: $stack");
+    return true;
+  };
 
-  // Инициализация Firebase
   try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  } on Exception catch (e) {
-    debugPrint('Firebase initialization error: $e');
+    // Инициализация Firebase
+    try {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      debugPrint('✅ Firebase initialized successfully');
+    } on Exception catch (e) {
+      debugPrint('❌ Firebase initialization error: $e');
+    }
+
+    // Инициализация Supabase
+    try {
+      // Проверяем конфигурацию
+      SupabaseConfigValidator.validate();
+
+      await Supabase.initialize(
+        url: SupabaseConfig.url,
+        anonKey: SupabaseConfig.anonKey,
+        debug: SupabaseConfig.isDevelopment,
+      );
+
+      debugPrint('✅ Supabase initialized successfully');
+    } on Exception catch (e) {
+      debugPrint('❌ Supabase initialization error: $e');
+      // Приложение может работать без Supabase (только Firebase функции)
+    }
+
+    // Инициализация тестовых данных (только в режиме разработки)
+    // try {
+    //   await FirestoreTestDataService.initializeTestData();
+    //   debugPrint('✅ Test data initialized successfully');
+    // } on Exception catch (e) {
+    //   debugPrint('❌ Test data initialization error: $e');
+    // }
+
+    // Инициализация сервисов
+    // try {
+    //   await NotificationService.initialize();
+    //   await AnalyticsService.initialize();
+    //   debugPrint('✅ Services initialized successfully');
+    // } on Exception catch (e) {
+    //   debugPrint('❌ Services initialization error: $e');
+    // }
+
+    // Инициализация Growth Pack
+    // try {
+    //   final growthPackService = GrowthPackIntegrationService();
+    //   await growthPackService.initializeGrowthPack();
+    //   debugPrint('✅ Growth Pack initialized successfully');
+    // } on Exception catch (e) {
+    //   debugPrint('❌ Growth Pack initialization error: $e');
+    // }
+
+    debugPrint('🚀 Starting EventMarketplaceApp...');
+    runApp(const ProviderScope(child: EventMarketplaceApp()));
+    
+  } catch (e, stack) {
+    debugPrint('🚨 Startup error: $e');
+    debugPrint('Stack: $stack');
+    
+    // Запускаем приложение даже при ошибках инициализации
+    runApp(const ProviderScope(child: EventMarketplaceApp()));
   }
-
-  // Инициализация Supabase
-  try {
-    // Проверяем конфигурацию
-    SupabaseConfigValidator.validate();
-
-    await Supabase.initialize(
-      url: SupabaseConfig.url,
-      anonKey: SupabaseConfig.anonKey,
-      debug: SupabaseConfig.isDevelopment,
-    );
-
-    debugPrint('✅ Supabase initialized successfully');
-  } on Exception catch (e) {
-    debugPrint('❌ Supabase initialization error: $e');
-    // Приложение может работать без Supabase (только Firebase функции)
-  }
-
-  // Инициализация тестовых данных (только в режиме разработки)
-  // try {
-  //   await FirestoreTestDataService.initializeTestData();
-  //   debugPrint('✅ Test data initialized successfully');
-  // } on Exception catch (e) {
-  //   debugPrint('❌ Test data initialization error: $e');
-  // }
-
-  // Инициализация сервисов
-  // try {
-  //   await NotificationService.initialize();
-  //   await AnalyticsService.initialize();
-  //   debugPrint('✅ Services initialized successfully');
-  // } on Exception catch (e) {
-  //   debugPrint('❌ Services initialization error: $e');
-  // }
-
-  // Инициализация Growth Pack
-  // try {
-  //   final growthPackService = GrowthPackIntegrationService();
-  //   await growthPackService.initializeGrowthPack();
-  //   debugPrint('✅ Growth Pack initialized successfully');
-  // } on Exception catch (e) {
-  //   debugPrint('❌ Growth Pack initialization error: $e');
-  // }
-
-  runApp(const ProviderScope(child: EventMarketplaceApp()));
 }
 
 class EventMarketplaceApp extends ConsumerWidget {

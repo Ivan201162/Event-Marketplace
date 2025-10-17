@@ -62,3 +62,4 @@ class PremiumProfile {
         isActive: isActive ?? this.isActive,
       );
 }
+

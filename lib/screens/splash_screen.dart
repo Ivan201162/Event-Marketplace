@@ -98,26 +98,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   Future<void> _initializeApp() async {
     try {
-      // Инициализация Firebase
+      // Упрощенная инициализация для диагностики
       setState(() {
-        _statusText = 'Инициализация Firebase...';
-      });
-      await _updateProgress(0.1);
-
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
-      await _updateProgress(0.2);
-
-      // Инициализация кэша
-      setState(() {
-        _statusText = 'Инициализация кэша...';
+        _statusText = 'Загрузка приложения...';
       });
       await _updateProgress(0.3);
-
-      final cacheService = CacheService();
-      await cacheService.initialize();
-      await _updateProgress(0.5);
 
       // Проверка авторизации
       setState(() {
@@ -129,17 +114,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       final user = FirebaseAuth.instance.currentUser;
       await _updateProgress(0.9);
 
-      // Предзагрузка данных
-      setState(() {
-        _statusText = 'Предзагрузка данных...';
-      });
-      await _preloadData();
-      await _updateProgress(1);
-
       // Завершение
       setState(() {
         _statusText = 'Готово!';
       });
+      await _updateProgress(1);
 
       await Future.delayed(const Duration(milliseconds: 500));
 
@@ -147,6 +126,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         _navigateBasedOnAuth(user);
       }
     } on Exception catch (e) {
+      debugPrint('🚨 SplashScreen error: $e');
       setState(() {
         _statusText = 'Ошибка инициализации: $e';
       });
@@ -205,175 +185,70 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: theme.primaryColor,
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              theme.primaryColor,
-              theme.primaryColor.withValues(alpha: 0.8),
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Spacer(flex: 2),
-
-              // Логотип с анимацией
-              AnimatedBuilder(
-                animation: _logoController,
-                builder: (context, child) => Transform.scale(
-                  scale: _logoScaleAnimation.value,
-                  child: Opacity(
-                    opacity: _logoFadeAnimation.value,
-                    child: Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(24),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.2),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
-                      ),
-                      child: Icon(
-                        Icons.event,
-                        size: 60,
-                        color: theme.primaryColor,
-                      ),
-                    ),
+      backgroundColor: Colors.blue,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Диагностический текст
+            const Text(
+              '✅ App started successfully',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Status: $_statusText',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Progress: ${(_progress * 100).toInt()}%',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 20),
+            // Простой прогресс-бар
+            Container(
+              width: 200,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(2),
+              ),
+              child: FractionallySizedBox(
+                alignment: Alignment.centerLeft,
+                widthFactor: _progress,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(2),
                   ),
                 ),
               ),
-
-              const SizedBox(height: 32),
-
-              // Название приложения
-              AnimatedBuilder(
-                animation: _logoFadeAnimation,
-                builder: (context, child) => Opacity(
-                  opacity: _logoFadeAnimation.value,
-                  child: Text(
-                    'Event Marketplace',
-                    style: theme.textTheme.headlineMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+            ),
+            const SizedBox(height: 20),
+            // Кнопка для принудительного перехода
+            ElevatedButton(
+              onPressed: () {
+                debugPrint('🚀 Manual navigation to auth screen');
+                _navigateToAuthScreen();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.blue,
               ),
-
-              const SizedBox(height: 8),
-
-              // Подзаголовок
-              AnimatedBuilder(
-                animation: _logoFadeAnimation,
-                builder: (context, child) => Opacity(
-                  opacity: _logoFadeAnimation.value * 0.8,
-                  child: Text(
-                    'Найдите идеального специалиста для вашего события',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Colors.white.withValues(alpha: 0.9),
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-
-              const Spacer(flex: 2),
-
-              // Прогресс-бар
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 32),
-                child: Column(
-                  children: [
-                    // Статус
-                    AnimatedBuilder(
-                      animation: _progressAnimation,
-                      builder: (context, child) => Opacity(
-                        opacity: _progressAnimation.value,
-                        child: Text(
-                          _statusText,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: Colors.white.withValues(alpha: 0.8),
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    // Прогресс-бар
-                    AnimatedBuilder(
-                      animation: _progressAnimation,
-                      builder: (context, child) => Opacity(
-                        opacity: _progressAnimation.value,
-                        child: LinearProgressIndicator(
-                          value: _progress,
-                          backgroundColor: Colors.white.withValues(alpha: 0.3),
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.white.withValues(alpha: 0.9),
-                          ),
-                          minHeight: 4,
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    // Процент
-                    AnimatedBuilder(
-                      animation: _progressAnimation,
-                      builder: (context, child) => Opacity(
-                        opacity: _progressAnimation.value,
-                        child: Text(
-                          '${(_progress * 100).toInt()}%',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: Colors.white.withValues(alpha: 0.8),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    // Кнопка "Повторить" (показывается при таймауте)
-                    if (_showRetryButton) ...[
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _showRetryButton = false;
-                            _progress = 0;
-                            _statusText = 'Инициализация...';
-                          });
-                          _initializeAppWithTimeout();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: theme.primaryColor,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 12,
-                          ),
-                        ),
-                        child: const Text('Повторить'),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 32),
-            ],
-          ),
+              child: const Text('Перейти к авторизации'),
+            ),
+          ],
         ),
       ),
     );
