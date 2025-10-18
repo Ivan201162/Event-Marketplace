@@ -36,8 +36,8 @@ class IdeaCommentWidget extends StatelessWidget {
                         comment.authorAvatar != null ? NetworkImage(comment.authorAvatar!) : null,
                     child: comment.authorAvatar == null
                         ? Text(
-                            comment.authorName.isNotEmpty
-                                ? comment.authorName[0].toUpperCase()
+                            comment.authorName?.isNotEmpty == true
+                                ? comment.authorName![0].toUpperCase()
                                 : '?',
                           )
                         : null,
@@ -48,7 +48,7 @@ class IdeaCommentWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          comment.authorName,
+                          comment.authorName ?? 'Unknown',
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                 fontWeight: FontWeight.w500,
                               ),
@@ -91,7 +91,7 @@ class IdeaCommentWidget extends StatelessWidget {
                         Icon(
                           Icons.thumb_up_outlined,
                           size: 16,
-                          color: comment.likesCount > 0
+                          color: (comment.likesCount ?? 0) > 0
                               ? Theme.of(context).colorScheme.primary
                               : Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
@@ -99,7 +99,7 @@ class IdeaCommentWidget extends StatelessWidget {
                         Text(
                           comment.likesCount.toString(),
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: comment.likesCount > 0
+                                color: (comment.likesCount ?? 0) > 0
                                     ? Theme.of(context).colorScheme.primary
                                     : Theme.of(context).colorScheme.onSurfaceVariant,
                               ),

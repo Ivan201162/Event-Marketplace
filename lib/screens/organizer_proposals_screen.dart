@@ -1,12 +1,20 @@
-import 'package:firebase_auth/firebase_auth.dart';
+﻿import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/specialist.dart';
+import 'package:flutter/foundation.dart';
 import '../models/specialist_proposal.dart';
+import 'package:flutter/foundation.dart';
 import '../services/proposal_service.dart';
+import 'package:flutter/foundation.dart';
 import '../services/specialist_service.dart';
+import 'package:flutter/foundation.dart';
 import '../widgets/error_widget.dart';
+import 'package:flutter/foundation.dart';
 import '../widgets/loading_widget.dart';
+import 'package:flutter/foundation.dart';
 
 class OrganizerProposalsScreen extends StatefulWidget {
   const OrganizerProposalsScreen({super.key});
@@ -39,20 +47,20 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
     if (_currentUserId == null) {
       return const Scaffold(
         body: Center(
-          child: Text('Пользователь не авторизован'),
+          child: Text('РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ Р°РІС‚РѕСЂРёР·РѕРІР°РЅ'),
         ),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Мои предложения'),
+        title: const Text('РњРѕРё РїСЂРµРґР»РѕР¶РµРЅРёСЏ'),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: 'Ожидают ответа', icon: Icon(Icons.pending)),
-            Tab(text: 'Принятые', icon: Icon(Icons.check_circle)),
-            Tab(text: 'Отклоненные', icon: Icon(Icons.cancel)),
+            Tab(text: 'РћР¶РёРґР°СЋС‚ РѕС‚РІРµС‚Р°', icon: Icon(Icons.pending)),
+            Tab(text: 'РџСЂРёРЅСЏС‚С‹Рµ', icon: Icon(Icons.check_circle)),
+            Tab(text: 'РћС‚РєР»РѕРЅРµРЅРЅС‹Рµ', icon: Icon(Icons.cancel)),
           ],
         ),
       ),
@@ -105,19 +113,19 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
 
     switch (status) {
       case 'pending':
-        message = 'Нет предложений, ожидающих ответа';
+        message = 'РќРµС‚ РїСЂРµРґР»РѕР¶РµРЅРёР№, РѕР¶РёРґР°СЋС‰РёС… РѕС‚РІРµС‚Р°';
         icon = Icons.pending_actions;
         break;
       case 'accepted':
-        message = 'Нет принятых предложений';
+        message = 'РќРµС‚ РїСЂРёРЅСЏС‚С‹С… РїСЂРµРґР»РѕР¶РµРЅРёР№';
         icon = Icons.check_circle_outline;
         break;
       case 'rejected':
-        message = 'Нет отклоненных предложений';
+        message = 'РќРµС‚ РѕС‚РєР»РѕРЅРµРЅРЅС‹С… РїСЂРµРґР»РѕР¶РµРЅРёР№';
         icon = Icons.cancel_outlined;
         break;
       default:
-        message = 'Нет предложений';
+        message = 'РќРµС‚ РїСЂРµРґР»РѕР¶РµРЅРёР№';
         icon = Icons.inbox;
     }
 
@@ -161,20 +169,20 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Предложение для заказчика',
+                          'РџСЂРµРґР»РѕР¶РµРЅРёРµ РґР»СЏ Р·Р°РєР°Р·С‡РёРєР°',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         Text(
-                          'Событие: ${proposal.eventId}',
+                          'РЎРѕР±С‹С‚РёРµ: ${proposal.eventId}',
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         Text(
-                          'Создано: ${_formatDate(proposal.createdAt)}',
+                          'РЎРѕР·РґР°РЅРѕ: ${_formatDate(proposal.createdAt)}',
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         if (proposal.updatedAt != null)
                           Text(
-                            'Обновлено: ${_formatDate(proposal.updatedAt!)}',
+                            'РћР±РЅРѕРІР»РµРЅРѕ: ${_formatDate(proposal.updatedAt!)}',
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                       ],
@@ -202,7 +210,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
               ],
               const SizedBox(height: 12),
               Text(
-                'Специалисты (${proposal.specialistIds.length}):',
+                'РЎРїРµС†РёР°Р»РёСЃС‚С‹ (${proposal.specialistIds.length}):',
                 style: Theme.of(context).textTheme.titleSmall,
               ),
               const SizedBox(height: 8),
@@ -214,7 +222,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
                     child: OutlinedButton.icon(
                       onPressed: () => _viewProposalDetails(proposal),
                       icon: const Icon(Icons.visibility),
-                      label: const Text('Подробнее'),
+                      label: const Text('РџРѕРґСЂРѕР±РЅРµРµ'),
                     ),
                   ),
                   if (proposal.isPending) ...[
@@ -223,7 +231,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
                       child: OutlinedButton.icon(
                         onPressed: () => _editProposal(proposal),
                         icon: const Icon(Icons.edit),
-                        label: const Text('Изменить'),
+                        label: const Text('РР·РјРµРЅРёС‚СЊ'),
                       ),
                     ),
                   ],
@@ -246,7 +254,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
 
           if (snapshot.hasError) {
             return Text(
-              'Ошибка загрузки специалистов: ${snapshot.error}',
+              'РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ: ${snapshot.error}',
               style: TextStyle(color: Colors.red[600]),
             );
           }
@@ -286,7 +294,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
           specialists.add(specialist);
         }
       } on Exception catch (e) {
-        debugPrint('Ошибка загрузки специалиста $id: $e');
+        debugPrint('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё СЃРїРµС†РёР°Р»РёСЃС‚Р° $id: $e');
       }
     }
     return specialists;
@@ -325,34 +333,34 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Детали предложения'),
+        title: const Text('Р”РµС‚Р°Р»Рё РїСЂРµРґР»РѕР¶РµРЅРёСЏ'),
         content: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildDetailRow('ID', proposal.id),
-              _buildDetailRow('Заказчик', proposal.customerId),
-              _buildDetailRow('Событие', proposal.eventId),
-              _buildDetailRow('Статус', proposal.statusDisplayName),
-              _buildDetailRow('Создано', _formatDate(proposal.createdAt)),
+              _buildDetailRow('Р—Р°РєР°Р·С‡РёРє', proposal.customerId),
+              _buildDetailRow('РЎРѕР±С‹С‚РёРµ', proposal.eventId),
+              _buildDetailRow('РЎС‚Р°С‚СѓСЃ', proposal.statusDisplayName),
+              _buildDetailRow('РЎРѕР·РґР°РЅРѕ', _formatDate(proposal.createdAt)),
               if (proposal.updatedAt != null)
-                _buildDetailRow('Обновлено', _formatDate(proposal.updatedAt!)),
-              if (proposal.message != null) _buildDetailRow('Сообщение', proposal.message!),
+                _buildDetailRow('РћР±РЅРѕРІР»РµРЅРѕ', _formatDate(proposal.updatedAt!)),
+              if (proposal.message != null) _buildDetailRow('РЎРѕРѕР±С‰РµРЅРёРµ', proposal.message!),
               const SizedBox(height: 8),
               Text(
-                'Специалисты:',
+                'РЎРїРµС†РёР°Р»РёСЃС‚С‹:',
                 style: Theme.of(context).textTheme.titleSmall,
               ),
               const SizedBox(height: 4),
-              ...proposal.specialistIds.map((id) => Text('• $id')),
+              ...proposal.specialistIds.map((id) => Text('вЂў $id')),
             ],
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Закрыть'),
+            child: const Text('Р—Р°РєСЂС‹С‚СЊ'),
           ),
         ],
       ),
@@ -379,7 +387,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
       );
 
   void _editProposal(SpecialistProposal proposal) {
-    // Навигация к экрану редактирования предложения
+    // РќР°РІРёРіР°С†РёСЏ Рє СЌРєСЂР°РЅСѓ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РїСЂРµРґР»РѕР¶РµРЅРёСЏ
     Navigator.pushNamed(
       context,
       '/edit-proposal',
@@ -387,3 +395,4 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
     );
   }
 }
+

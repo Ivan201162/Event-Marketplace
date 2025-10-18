@@ -175,7 +175,7 @@ class IcsExportService {
 
       await SharePlus.instance.share(
         ShareParams(
-          files: [filePath],
+          files: [XFile(filePath)],
           subject: subject ?? 'Календарное событие',
           text: 'Экспорт календарного события',
         ),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import '../data/feed_model.dart';
-import '../providers/feed_providers.dart';
+// import '../providers/feed_providers.dart'; // Удален
 
 /// Экран создания нового поста
 class CreatePostScreen extends ConsumerStatefulWidget {
@@ -453,14 +453,16 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     });
 
     try {
-      await ref.read(
-        createPostProvider({
-          'description': _descriptionController.text.trim(),
-          'taggedCategories': <String>[], // TODO(developer): Получить выбранные категории
-          'type': _selectedType,
-          'mediaFile': _selectedFile,
-        }).future,
-      );
+      // await ref.read(
+      //   createPostProvider({
+      //     'description': _descriptionController.text.trim(),
+      //     'taggedCategories': <String>[], // TODO(developer): Получить выбранные категории
+      //     'type': _selectedType,
+      //     'mediaFile': _selectedFile,
+      //   }).future,
+      // );
+      // Заглушка - создание поста
+      await Future.delayed(const Duration(seconds: 1));
 
       if (mounted) {
         Navigator.of(context).pop();

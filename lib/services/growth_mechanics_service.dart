@@ -1,12 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/foundation.dart';
 
 class GrowthMechanicsService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Uuid _uuid = const Uuid();
 
-  /// Добавление опыта пользователю
+  /// Р”РѕР±Р°РІР»РµРЅРёРµ РѕРїС‹С‚Р° РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ
   Future<void> addExperience(String userId, int experience, String reason) async {
     try {
       final DocumentSnapshot userLevelDoc =
@@ -26,11 +29,11 @@ class GrowthMechanicsService {
         };
       }
 
-      // Добавляем опыт
+      // Р”РѕР±Р°РІР»СЏРµРј РѕРїС‹С‚
       int newExperience = (userLevel['experience'] ?? 0) + experience;
       final int newTotalExperience = (userLevel['totalExperience'] ?? 0) + experience;
 
-      // Проверяем повышение уровня
+      // РџСЂРѕРІРµСЂСЏРµРј РїРѕРІС‹С€РµРЅРёРµ СѓСЂРѕРІРЅСЏ
       int newLevel = userLevel['level'] ?? 1;
       int newNextLevelExperience = userLevel['nextLevelExperience'] ?? 1000;
       bool levelUp = false;
@@ -55,7 +58,7 @@ class GrowthMechanicsService {
 
       await _firestore.collection('user_levels').doc(userId).set(updatedLevel);
 
-      // Отправляем уведомление о повышении уровня
+      // РћС‚РїСЂР°РІР»СЏРµРј СѓРІРµРґРѕРјР»РµРЅРёРµ Рѕ РїРѕРІС‹С€РµРЅРёРё СѓСЂРѕРІРЅСЏ
       if (levelUp) {
         await _sendLevelUpNotification(userId, newLevel, newTotalExperience);
       }
@@ -66,25 +69,25 @@ class GrowthMechanicsService {
     }
   }
 
-  /// Расчет опыта для следующего уровня
+  /// Р Р°СЃС‡РµС‚ РѕРїС‹С‚Р° РґР»СЏ СЃР»РµРґСѓСЋС‰РµРіРѕ СѓСЂРѕРІРЅСЏ
   int _calculateNextLevelExperience(int level) {
-    // Экспоненциальная формула: base * (level ^ 1.5)
+    // Р­РєСЃРїРѕРЅРµРЅС†РёР°Р»СЊРЅР°СЏ С„РѕСЂРјСѓР»Р°: base * (level ^ 1.5)
     const int baseExperience = 1000;
     return (baseExperience * (level * level * 0.5)).round();
   }
 
-  /// Получение титула уровня
+  /// РџРѕР»СѓС‡РµРЅРёРµ С‚РёС‚СѓР»Р° СѓСЂРѕРІРЅСЏ
   String _getLevelTitle(int level) {
-    if (level >= 50) return 'Легенда';
-    if (level >= 40) return 'Мастер';
-    if (level >= 30) return 'Эксперт';
-    if (level >= 20) return 'Профессионал';
-    if (level >= 10) return 'Опытный';
-    if (level >= 5) return 'Продвинутый';
-    return 'Новичок';
+    if (level >= 50) return 'Р›РµРіРµРЅРґР°';
+    if (level >= 40) return 'РњР°СЃС‚РµСЂ';
+    if (level >= 30) return 'Р­РєСЃРїРµСЂС‚';
+    if (level >= 20) return 'РџСЂРѕС„РµСЃСЃРёРѕРЅР°Р»';
+    if (level >= 10) return 'РћРїС‹С‚РЅС‹Р№';
+    if (level >= 5) return 'РџСЂРѕРґРІРёРЅСѓС‚С‹Р№';
+    return 'РќРѕРІРёС‡РѕРє';
   }
 
-  /// Получение преимуществ уровня
+  /// РџРѕР»СѓС‡РµРЅРёРµ РїСЂРµРёРјСѓС‰РµСЃС‚РІ СѓСЂРѕРІРЅСЏ
   Map<String, dynamic> _getLevelBenefits(int level) {
     return {
       'discount': _calculateLevelDiscount(level),
@@ -94,7 +97,7 @@ class GrowthMechanicsService {
     };
   }
 
-  /// Расчет скидки по уровню
+  /// Р Р°СЃС‡РµС‚ СЃРєРёРґРєРё РїРѕ СѓСЂРѕРІРЅСЋ
   double _calculateLevelDiscount(int level) {
     if (level >= 30) return 0.20; // 20%
     if (level >= 20) return 0.15; // 15%
@@ -103,19 +106,19 @@ class GrowthMechanicsService {
     return 0.0;
   }
 
-  /// Отправка уведомления о повышении уровня
+  /// РћС‚РїСЂР°РІРєР° СѓРІРµРґРѕРјР»РµРЅРёСЏ Рѕ РїРѕРІС‹С€РµРЅРёРё СѓСЂРѕРІРЅСЏ
   Future<void> _sendLevelUpNotification(String userId, int newLevel, int totalExperience) async {
     try {
       final Map<String, dynamic> notification = {
         'id': _uuid.v4(),
         'userId': userId,
         'type': 'milestone',
-        'title': 'Поздравляем! Новый уровень!',
-        'message': 'Вы достигли $newLevel уровня! Общий опыт: $totalExperience',
+        'title': 'РџРѕР·РґСЂР°РІР»СЏРµРј! РќРѕРІС‹Р№ СѓСЂРѕРІРµРЅСЊ!',
+        'message': 'Р’С‹ РґРѕСЃС‚РёРіР»Рё $newLevel СѓСЂРѕРІРЅСЏ! РћР±С‰РёР№ РѕРїС‹С‚: $totalExperience',
         'isRead': false,
         'createdAt': DateTime.now(),
         'actionUrl': '/profile/level',
-        'actionText': 'Посмотреть профиль',
+        'actionText': 'РџРѕСЃРјРѕС‚СЂРµС‚СЊ РїСЂРѕС„РёР»СЊ',
         'data': {
           'level': newLevel,
           'totalExperience': totalExperience,
@@ -130,22 +133,22 @@ class GrowthMechanicsService {
     }
   }
 
-  /// Проверка и выдача достижений
+  /// РџСЂРѕРІРµСЂРєР° Рё РІС‹РґР°С‡Р° РґРѕСЃС‚РёР¶РµРЅРёР№
   Future<void> checkAndAwardAchievements(
       String userId, String action, Map<String, dynamic> context) async {
     try {
-      // Получаем все активные достижения
+      // РџРѕР»СѓС‡Р°РµРј РІСЃРµ Р°РєС‚РёРІРЅС‹Рµ РґРѕСЃС‚РёР¶РµРЅРёСЏ
       final QuerySnapshot achievementsSnapshot =
           await _firestore.collection('achievements').where('isActive', isEqualTo: true).get();
 
       for (final doc in achievementsSnapshot.docs) {
         final Map<String, dynamic> achievement = doc.data() as Map<String, dynamic>;
 
-        // Проверяем, не получено ли уже это достижение
+        // РџСЂРѕРІРµСЂСЏРµРј, РЅРµ РїРѕР»СѓС‡РµРЅРѕ Р»Рё СѓР¶Рµ СЌС‚Рѕ РґРѕСЃС‚РёР¶РµРЅРёРµ
         final bool alreadyEarned = await _isAchievementEarned(userId, achievement['id']);
         if (alreadyEarned) continue;
 
-        // Проверяем условие достижения
+        // РџСЂРѕРІРµСЂСЏРµРј СѓСЃР»РѕРІРёРµ РґРѕСЃС‚РёР¶РµРЅРёСЏ
         final bool conditionMet = await _checkAchievementCondition(
           userId,
           achievement,
@@ -162,7 +165,7 @@ class GrowthMechanicsService {
     }
   }
 
-  /// Проверка условия достижения
+  /// РџСЂРѕРІРµСЂРєР° СѓСЃР»РѕРІРёСЏ РґРѕСЃС‚РёР¶РµРЅРёСЏ
   Future<bool> _checkAchievementCondition(
     String userId,
     Map<String, dynamic> achievement,
@@ -217,7 +220,7 @@ class GrowthMechanicsService {
     }
   }
 
-  /// Выдача достижения
+  /// Р’С‹РґР°С‡Р° РґРѕСЃС‚РёР¶РµРЅРёСЏ
   Future<void> _awardAchievement(String userId, Map<String, dynamic> achievement) async {
     try {
       final Map<String, dynamic> userAchievement = {
@@ -236,15 +239,15 @@ class GrowthMechanicsService {
           .doc(userAchievement['id'])
           .set(userAchievement);
 
-      // Добавляем опыт за достижение
+      // Р”РѕР±Р°РІР»СЏРµРј РѕРїС‹С‚ Р·Р° РґРѕСЃС‚РёР¶РµРЅРёРµ
       if (achievement['points'] != null) {
         await addExperience(userId, achievement['points'], 'Achievement: ${achievement['name']}');
       }
 
-      // Выдаем награду
+      // Р’С‹РґР°РµРј РЅР°РіСЂР°РґСѓ
       await _giveAchievementReward(userId, achievement);
 
-      // Отправляем уведомление
+      // РћС‚РїСЂР°РІР»СЏРµРј СѓРІРµРґРѕРјР»РµРЅРёРµ
       await _sendAchievementNotification(userId, achievement);
 
       debugPrint(
@@ -254,7 +257,7 @@ class GrowthMechanicsService {
     }
   }
 
-  /// Выдача награды за достижение
+  /// Р’С‹РґР°С‡Р° РЅР°РіСЂР°РґС‹ Р·Р° РґРѕСЃС‚РёР¶РµРЅРёРµ
   Future<void> _giveAchievementReward(String userId, Map<String, dynamic> achievement) async {
     try {
       final Map<String, dynamic> reward = achievement['reward'] ?? {};
@@ -283,19 +286,19 @@ class GrowthMechanicsService {
     }
   }
 
-  /// Отправка уведомления о достижении
+  /// РћС‚РїСЂР°РІРєР° СѓРІРµРґРѕРјР»РµРЅРёСЏ Рѕ РґРѕСЃС‚РёР¶РµРЅРёРё
   Future<void> _sendAchievementNotification(String userId, Map<String, dynamic> achievement) async {
     try {
       final Map<String, dynamic> notification = {
         'id': _uuid.v4(),
         'userId': userId,
         'type': 'achievement',
-        'title': 'Достижение получено!',
-        'message': 'Поздравляем! Вы получили достижение "${achievement['name']}"',
+        'title': 'Р”РѕСЃС‚РёР¶РµРЅРёРµ РїРѕР»СѓС‡РµРЅРѕ!',
+        'message': 'РџРѕР·РґСЂР°РІР»СЏРµРј! Р’С‹ РїРѕР»СѓС‡РёР»Рё РґРѕСЃС‚РёР¶РµРЅРёРµ "${achievement['name']}"',
         'isRead': false,
         'createdAt': DateTime.now(),
         'actionUrl': '/achievements',
-        'actionText': 'Посмотреть достижения',
+        'actionText': 'РџРѕСЃРјРѕС‚СЂРµС‚СЊ РґРѕСЃС‚РёР¶РµРЅРёСЏ',
         'data': {
           'achievementId': achievement['id'],
           'achievementName': achievement['name'],
@@ -309,7 +312,7 @@ class GrowthMechanicsService {
     }
   }
 
-  /// Создание челленджа
+  /// РЎРѕР·РґР°РЅРёРµ С‡РµР»Р»РµРЅРґР¶Р°
   Future<String> createChallenge({
     required String name,
     required String description,
@@ -349,10 +352,10 @@ class GrowthMechanicsService {
     }
   }
 
-  /// Участие в челлендже
+  /// РЈС‡Р°СЃС‚РёРµ РІ С‡РµР»Р»РµРЅРґР¶Рµ
   Future<void> joinChallenge(String userId, String challengeId) async {
     try {
-      // Проверяем, не участвует ли уже пользователь
+      // РџСЂРѕРІРµСЂСЏРµРј, РЅРµ СѓС‡Р°СЃС‚РІСѓРµС‚ Р»Рё СѓР¶Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ
       final bool alreadyJoined = await _isUserInChallenge(userId, challengeId);
       if (alreadyJoined) return;
 
@@ -382,7 +385,7 @@ class GrowthMechanicsService {
 
       await _firestore.collection('user_challenges').doc(userChallenge['id']).set(userChallenge);
 
-      // Увеличиваем количество участников
+      // РЈРІРµР»РёС‡РёРІР°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ СѓС‡Р°СЃС‚РЅРёРєРѕРІ
       await _firestore.collection('challenges').doc(challengeId).update({
         'participants': FieldValue.increment(1),
       });
@@ -394,7 +397,7 @@ class GrowthMechanicsService {
     }
   }
 
-  /// Обновление прогресса челленджа
+  /// РћР±РЅРѕРІР»РµРЅРёРµ РїСЂРѕРіСЂРµСЃСЃР° С‡РµР»Р»РµРЅРґР¶Р°
   Future<void> updateChallengeProgress(
       String userId, String challengeId, Map<String, dynamic> progress) async {
     try {
@@ -414,7 +417,7 @@ class GrowthMechanicsService {
         'progress': progress,
       });
 
-      // Проверяем, выполнен ли челлендж
+      // РџСЂРѕРІРµСЂСЏРµРј, РІС‹РїРѕР»РЅРµРЅ Р»Рё С‡РµР»Р»РµРЅРґР¶
       await _checkChallengeCompletion(userId, challengeId);
 
       debugPrint('INFO: [GrowthMechanicsService] Challenge progress updated for user $userId');
@@ -423,7 +426,7 @@ class GrowthMechanicsService {
     }
   }
 
-  /// Проверка выполнения челленджа
+  /// РџСЂРѕРІРµСЂРєР° РІС‹РїРѕР»РЅРµРЅРёСЏ С‡РµР»Р»РµРЅРґР¶Р°
   Future<void> _checkChallengeCompletion(String userId, String challengeId) async {
     try {
       final DocumentSnapshot challengeDoc =
@@ -445,7 +448,7 @@ class GrowthMechanicsService {
       final Map<String, dynamic> userChallenge =
           userChallengeSnapshot.docs.first.data() as Map<String, dynamic>;
 
-      // Проверяем условия выполнения
+      // РџСЂРѕРІРµСЂСЏРµРј СѓСЃР»РѕРІРёСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ
       final bool isCompleted = await _checkChallengeConditions(challenge, userChallenge);
 
       if (isCompleted) {
@@ -456,7 +459,7 @@ class GrowthMechanicsService {
     }
   }
 
-  /// Проверка условий челленджа
+  /// РџСЂРѕРІРµСЂРєР° СѓСЃР»РѕРІРёР№ С‡РµР»Р»РµРЅРґР¶Р°
   Future<bool> _checkChallengeConditions(
       Map<String, dynamic> challenge, Map<String, dynamic> userChallenge) async {
     try {
@@ -480,7 +483,7 @@ class GrowthMechanicsService {
     }
   }
 
-  /// Завершение челленджа
+  /// Р—Р°РІРµСЂС€РµРЅРёРµ С‡РµР»Р»РµРЅРґР¶Р°
   Future<void> _completeChallenge(
     String userId,
     String challengeId,
@@ -488,21 +491,21 @@ class GrowthMechanicsService {
     Map<String, dynamic> userChallenge,
   ) async {
     try {
-      // Обновляем статус пользовательского челленджа
+      // РћР±РЅРѕРІР»СЏРµРј СЃС‚Р°С‚СѓСЃ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРіРѕ С‡РµР»Р»РµРЅРґР¶Р°
       await _firestore.collection('user_challenges').doc(userChallenge['id']).update({
         'status': 'completed',
         'completedAt': FieldValue.serverTimestamp(),
       });
 
-      // Увеличиваем количество завершенных челленджей
+      // РЈРІРµР»РёС‡РёРІР°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РІРµСЂС€РµРЅРЅС‹С… С‡РµР»Р»РµРЅРґР¶РµР№
       await _firestore.collection('challenges').doc(challengeId).update({
         'completedCount': FieldValue.increment(1),
       });
 
-      // Выдаем награду
+      // Р’С‹РґР°РµРј РЅР°РіСЂР°РґСѓ
       await _giveChallengeReward(userId, challenge);
 
-      // Отправляем уведомление
+      // РћС‚РїСЂР°РІР»СЏРµРј СѓРІРµРґРѕРјР»РµРЅРёРµ
       await _sendChallengeCompletionNotification(userId, challenge);
 
       debugPrint(
@@ -512,7 +515,7 @@ class GrowthMechanicsService {
     }
   }
 
-  /// Выдача награды за челлендж
+  /// Р’С‹РґР°С‡Р° РЅР°РіСЂР°РґС‹ Р·Р° С‡РµР»Р»РµРЅРґР¶
   Future<void> _giveChallengeReward(String userId, Map<String, dynamic> challenge) async {
     try {
       final Map<String, dynamic> rewards = challenge['rewards'] ?? {};
@@ -541,7 +544,7 @@ class GrowthMechanicsService {
     }
   }
 
-  /// Отправка уведомления о завершении челленджа
+  /// РћС‚РїСЂР°РІРєР° СѓРІРµРґРѕРјР»РµРЅРёСЏ Рѕ Р·Р°РІРµСЂС€РµРЅРёРё С‡РµР»Р»РµРЅРґР¶Р°
   Future<void> _sendChallengeCompletionNotification(
       String userId, Map<String, dynamic> challenge) async {
     try {
@@ -549,12 +552,12 @@ class GrowthMechanicsService {
         'id': _uuid.v4(),
         'userId': userId,
         'type': 'challenge',
-        'title': 'Челлендж выполнен!',
-        'message': 'Поздравляем! Вы выполнили челлендж "${challenge['name']}"',
+        'title': 'Р§РµР»Р»РµРЅРґР¶ РІС‹РїРѕР»РЅРµРЅ!',
+        'message': 'РџРѕР·РґСЂР°РІР»СЏРµРј! Р’С‹ РІС‹РїРѕР»РЅРёР»Рё С‡РµР»Р»РµРЅРґР¶ "${challenge['name']}"',
         'isRead': false,
         'createdAt': DateTime.now(),
         'actionUrl': '/challenges',
-        'actionText': 'Посмотреть челленджи',
+        'actionText': 'РџРѕСЃРјРѕС‚СЂРµС‚СЊ С‡РµР»Р»РµРЅРґР¶Рё',
         'data': {
           'challengeId': challenge['id'],
           'challengeName': challenge['name'],
@@ -569,7 +572,7 @@ class GrowthMechanicsService {
     }
   }
 
-  /// Вспомогательные методы для проверки условий
+  /// Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹ РґР»СЏ РїСЂРѕРІРµСЂРєРё СѓСЃР»РѕРІРёР№
   Future<bool> _isAchievementEarned(String userId, String achievementId) async {
     final QuerySnapshot snapshot = await _firestore
         .collection('user_achievements')
@@ -614,7 +617,7 @@ class GrowthMechanicsService {
   }
 
   Future<int> _getUserConsecutiveDays(String userId) async {
-    // Упрощенная логика - в реальном приложении нужна более сложная система
+    // РЈРїСЂРѕС‰РµРЅРЅР°СЏ Р»РѕРіРёРєР° - РІ СЂРµР°Р»СЊРЅРѕРј РїСЂРёР»РѕР¶РµРЅРёРё РЅСѓР¶РЅР° Р±РѕР»РµРµ СЃР»РѕР¶РЅР°СЏ СЃРёСЃС‚РµРјР°
     return 1;
   }
 
@@ -629,7 +632,7 @@ class GrowthMechanicsService {
   }
 
   Future<int> _getUserActionCount(String userId, String action) async {
-    // Упрощенная логика - в реальном приложении нужна система отслеживания действий
+    // РЈРїСЂРѕС‰РµРЅРЅР°СЏ Р»РѕРіРёРєР° - РІ СЂРµР°Р»СЊРЅРѕРј РїСЂРёР»РѕР¶РµРЅРёРё РЅСѓР¶РЅР° СЃРёСЃС‚РµРјР° РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ РґРµР№СЃС‚РІРёР№
     return 1;
   }
 
@@ -643,14 +646,14 @@ class GrowthMechanicsService {
     return snapshot.docs.isNotEmpty;
   }
 
-  /// Вспомогательные методы для наград
+  /// Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹ РґР»СЏ РЅР°РіСЂР°Рґ
   Future<void> _addPremiumDays(String userId, int days) async {
-    // Логика добавления премиум дней
+    // Р›РѕРіРёРєР° РґРѕР±Р°РІР»РµРЅРёСЏ РїСЂРµРјРёСѓРј РґРЅРµР№
     debugPrint('INFO: [GrowthMechanicsService] Added $days premium days to user $userId');
   }
 
   Future<void> _addDiscount(String userId, double discount) async {
-    // Логика добавления скидки
+    // Р›РѕРіРёРєР° РґРѕР±Р°РІР»РµРЅРёСЏ СЃРєРёРґРєРё
     debugPrint('INFO: [GrowthMechanicsService] Added $discount discount to user $userId');
   }
 
@@ -681,3 +684,4 @@ class GrowthMechanicsService {
     }
   }
 }
+

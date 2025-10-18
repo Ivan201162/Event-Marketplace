@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/feed_model.dart';
-import '../providers/feed_providers.dart';
+// import '../providers/feed_providers.dart'; // Удален
 
 /// Панель фильтров для ленты
 class FeedFiltersBar extends ConsumerWidget {
@@ -9,8 +9,10 @@ class FeedFiltersBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentFilter = ref.watch(feedFilterProvider);
-    final selectedCategory = ref.watch(selectedCategoryProvider);
+    // final currentFilter = ref.watch(feedFilterProvider);
+    // final selectedCategory = ref.watch(selectedCategoryProvider);
+    final currentFilter = FeedFilter.all; // Заглушка
+    final selectedCategory = null; // Заглушка
 
     return Container(
       height: 60,
@@ -40,11 +42,11 @@ class FeedFiltersBar extends ConsumerWidget {
                       selected: isSelected,
                       onSelected: (selected) {
                         if (selected) {
-                          ref.read(feedFilterProvider.notifier).state = filter;
+                          // ref.read(feedFilterProvider.notifier).state = filter;
 
                           // Сбрасываем категорию при смене фильтра
                           if (filter != FeedFilter.categories) {
-                            ref.read(selectedCategoryProvider.notifier).state = null;
+                            // ref.read(selectedCategoryProvider.notifier).state = null;
                           }
                         }
                       },
@@ -105,7 +107,7 @@ class FeedFiltersBar extends ConsumerWidget {
                   title: const Text('Все категории'),
                   leading: const Icon(Icons.all_inclusive),
                   onTap: () {
-                    ref.read(selectedCategoryProvider.notifier).state = null;
+                    // ref.read(selectedCategoryProvider.notifier).state = null;
                     Navigator.of(context).pop();
                   },
                 );
@@ -115,7 +117,7 @@ class FeedFiltersBar extends ConsumerWidget {
               return ListTile(
                 title: Text(category),
                 onTap: () {
-                  ref.read(selectedCategoryProvider.notifier).state = category;
+                  // ref.read(selectedCategoryProvider.notifier).state = category;
                   Navigator.of(context).pop();
                 },
               );

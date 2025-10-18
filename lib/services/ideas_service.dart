@@ -1,13 +1,20 @@
-import 'dart:io';
+﻿import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/idea.dart';
+import 'package:flutter/foundation.dart';
 import '../repositories/ideas_repository.dart';
+import 'package:flutter/foundation.dart';
 
-/// Сервис для работы с идеями
+/// РЎРµСЂРІРёСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РёРґРµСЏРјРё
 class IdeasService {
   factory IdeasService() => _instance;
   IdeasService._internal();
@@ -18,7 +25,7 @@ class IdeasService {
   final ImagePicker _imagePicker = ImagePicker();
   final IdeasRepository _repository = IdeasRepository();
 
-  /// Получение всех идей с фильтрацией
+  /// РџРѕР»СѓС‡РµРЅРёРµ РІСЃРµС… РёРґРµР№ СЃ С„РёР»СЊС‚СЂР°С†РёРµР№
   Stream<List<Idea>> getIdeas({
     String? category,
     String? searchQuery,
@@ -32,16 +39,16 @@ class IdeasService {
         startAfter: startAfter,
       );
 
-  /// Получение идей пользователя
+  /// РџРѕР»СѓС‡РµРЅРёРµ РёРґРµР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Stream<List<Idea>> getUserIdeas(String userId) => _repository.getUserIdeas(userId);
 
-  /// Получение сохраненных идей пользователя
+  /// РџРѕР»СѓС‡РµРЅРёРµ СЃРѕС…СЂР°РЅРµРЅРЅС‹С… РёРґРµР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Stream<List<Idea>> getSavedIdeas(String userId) => _repository.getSavedIdeas(userId);
 
-  /// Получение конкретной идеи
+  /// РџРѕР»СѓС‡РµРЅРёРµ РєРѕРЅРєСЂРµС‚РЅРѕР№ РёРґРµРё
   Future<Idea?> getIdea(String ideaId) async => _repository.getById(ideaId);
 
-  /// Создание новой идеи
+  /// РЎРѕР·РґР°РЅРёРµ РЅРѕРІРѕР№ РёРґРµРё
   Future<String?> createIdea({
     required String title,
     required String description,
@@ -59,13 +66,13 @@ class IdeasService {
     List<String> requiredSkills = const [],
   }) async {
     try {
-      // Загрузка медиа файла
+      // Р—Р°РіСЂСѓР·РєР° РјРµРґРёР° С„Р°Р№Р»Р°
       final mediaUrl = await _uploadMediaFile(mediaFile, isVideo);
       if (mediaUrl == null) {
-        throw Exception('Ошибка загрузки медиа файла');
+        throw Exception('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё РјРµРґРёР° С„Р°Р№Р»Р°');
       }
 
-      // Создание документа идеи
+      // РЎРѕР·РґР°РЅРёРµ РґРѕРєСѓРјРµРЅС‚Р° РёРґРµРё
       final ideaData = {
         'title': title,
         'description': description,
@@ -96,35 +103,35 @@ class IdeasService {
       final docRef = await _firestore.collection('ideas').add(ideaData);
       return docRef.id;
     } on Exception catch (e) {
-      debugPrint('Ошибка создания идеи: $e');
+      debugPrint('РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ РёРґРµРё: $e');
       return null;
     }
   }
 
-  /// Обновление идеи
+  /// РћР±РЅРѕРІР»РµРЅРёРµ РёРґРµРё
   Future<bool> updateIdea(String ideaId, Map<String, dynamic> updates) async {
     try {
       updates['updatedAt'] = FieldValue.serverTimestamp();
       await _firestore.collection('ideas').doc(ideaId).update(updates);
       return true;
     } on Exception catch (e) {
-      debugPrint('Ошибка обновления идеи: $e');
+      debugPrint('РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ РёРґРµРё: $e');
       return false;
     }
   }
 
-  /// Удаление идеи
+  /// РЈРґР°Р»РµРЅРёРµ РёРґРµРё
   Future<bool> deleteIdea(String ideaId) async {
     try {
       await _firestore.collection('ideas').doc(ideaId).delete();
       return true;
     } on Exception catch (e) {
-      debugPrint('Ошибка удаления идеи: $e');
+      debugPrint('РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ РёРґРµРё: $e');
       return false;
     }
   }
 
-  /// Лайк/анлайк идеи
+  /// Р›Р°Р№Рє/Р°РЅР»Р°Р№Рє РёРґРµРё
   Future<bool> toggleLike(String ideaId, String userId) async {
     try {
       final docRef = _firestore.collection('ideas').doc(ideaId);
@@ -152,12 +159,12 @@ class IdeasService {
         return true;
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка лайка идеи: $e');
+      debugPrint('РћС€РёР±РєР° Р»Р°Р№РєР° РёРґРµРё: $e');
       return false;
     }
   }
 
-  /// Сохранение/удаление из сохраненных
+  /// РЎРѕС…СЂР°РЅРµРЅРёРµ/СѓРґР°Р»РµРЅРёРµ РёР· СЃРѕС…СЂР°РЅРµРЅРЅС‹С…
   Future<bool> toggleSave(String ideaId, String userId) async {
     try {
       final docRef = _firestore.collection('ideas').doc(ideaId);
@@ -185,12 +192,12 @@ class IdeasService {
         return true;
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка сохранения идеи: $e');
+      debugPrint('РћС€РёР±РєР° СЃРѕС…СЂР°РЅРµРЅРёСЏ РёРґРµРё: $e');
       return false;
     }
   }
 
-  /// Поделиться идеей
+  /// РџРѕРґРµР»РёС‚СЊСЃСЏ РёРґРµРµР№
   Future<bool> shareIdea(String ideaId, String userId) async {
     try {
       final docRef = _firestore.collection('ideas').doc(ideaId);
@@ -215,21 +222,21 @@ class IdeasService {
         return true;
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка репоста идеи: $e');
+      debugPrint('РћС€РёР±РєР° СЂРµРїРѕСЃС‚Р° РёРґРµРё: $e');
       return false;
     }
   }
 
-  /// Получение комментариев к идее
+  /// РџРѕР»СѓС‡РµРЅРёРµ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ Рє РёРґРµРµ
   Stream<List<Map<String, dynamic>>> getIdeaComments(String ideaId) => _firestore
       .collection('idea_comments')
       .where('ideaId', isEqualTo: ideaId)
-      .where('parentCommentId', isNull: true) // только основные комментарии
+      .where('parentCommentId', isNull: true) // С‚РѕР»СЊРєРѕ РѕСЃРЅРѕРІРЅС‹Рµ РєРѕРјРјРµРЅС‚Р°СЂРёРё
       .orderBy('createdAt', descending: false)
       .snapshots()
       .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
 
-  /// Добавление комментария
+  /// Р”РѕР±Р°РІР»РµРЅРёРµ РєРѕРјРјРµРЅС‚Р°СЂРёСЏ
   Future<String?> addComment({
     required String ideaId,
     required String authorId,
@@ -255,7 +262,7 @@ class IdeasService {
 
       final docRef = await _firestore.collection('idea_comments').add(commentData);
 
-      // Обновляем счетчик комментариев в идее
+      // РћР±РЅРѕРІР»СЏРµРј СЃС‡РµС‚С‡РёРє РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ РІ РёРґРµРµ
       await _firestore.collection('ideas').doc(ideaId).update({
         'commentsCount': FieldValue.increment(1),
         'updatedAt': FieldValue.serverTimestamp(),
@@ -263,12 +270,12 @@ class IdeasService {
 
       return docRef.id;
     } on Exception catch (e) {
-      debugPrint('Ошибка добавления комментария: $e');
+      debugPrint('РћС€РёР±РєР° РґРѕР±Р°РІР»РµРЅРёСЏ РєРѕРјРјРµРЅС‚Р°СЂРёСЏ: $e');
       return null;
     }
   }
 
-  /// Лайк комментария
+  /// Р›Р°Р№Рє РєРѕРјРјРµРЅС‚Р°СЂРёСЏ
   Future<bool> toggleCommentLike(String commentId, String userId) async {
     try {
       final docRef = _firestore.collection('idea_comments').doc(commentId);
@@ -296,12 +303,12 @@ class IdeasService {
         return true;
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка лайка комментария: $e');
+      debugPrint('РћС€РёР±РєР° Р»Р°Р№РєР° РєРѕРјРјРµРЅС‚Р°СЂРёСЏ: $e');
       return false;
     }
   }
 
-  /// Выбор медиа файла
+  /// Р’С‹Р±РѕСЂ РјРµРґРёР° С„Р°Р№Р»Р°
   Future<File?> pickMediaFile({required bool isVideo}) async {
     try {
       final file = await _imagePicker.pickMedia();
@@ -311,12 +318,12 @@ class IdeasService {
       }
       return null;
     } on Exception catch (e) {
-      debugPrint('Ошибка выбора медиа файла: $e');
+      debugPrint('РћС€РёР±РєР° РІС‹Р±РѕСЂР° РјРµРґРёР° С„Р°Р№Р»Р°: $e');
       return null;
     }
   }
 
-  /// Загрузка медиа файла в Firebase Storage
+  /// Р—Р°РіСЂСѓР·РєР° РјРµРґРёР° С„Р°Р№Р»Р° РІ Firebase Storage
   Future<String?> _uploadMediaFile(File file, bool isVideo) async {
     try {
       final fileName = '${DateTime.now().millisecondsSinceEpoch}_${file.path.split('/').last}';
@@ -330,12 +337,12 @@ class IdeasService {
 
       return downloadUrl;
     } on Exception catch (e) {
-      debugPrint('Ошибка загрузки медиа файла: $e');
+      debugPrint('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё РјРµРґРёР° С„Р°Р№Р»Р°: $e');
       return null;
     }
   }
 
-  /// Генерация превью для видео
+  /// Р“РµРЅРµСЂР°С†РёСЏ РїСЂРµРІСЊСЋ РґР»СЏ РІРёРґРµРѕ
   Future<String?> generateVideoThumbnail(String videoPath) async {
     try {
       final thumbnailPath = await VideoThumbnail.thumbnailFile(
@@ -353,12 +360,12 @@ class IdeasService {
 
       return null;
     } on Exception catch (e) {
-      debugPrint('Ошибка генерации превью видео: $e');
+      debugPrint('РћС€РёР±РєР° РіРµРЅРµСЂР°С†РёРё РїСЂРµРІСЊСЋ РІРёРґРµРѕ: $e');
       return null;
     }
   }
 
-  /// Получение трендовых идей
+  /// РџРѕР»СѓС‡РµРЅРёРµ С‚СЂРµРЅРґРѕРІС‹С… РёРґРµР№
   Stream<List<Idea>> getTrendingIdeas({int limit = 10}) => _firestore
       .collection('ideas')
       .where('isPublic', isEqualTo: true)
@@ -368,7 +375,7 @@ class IdeasService {
       .snapshots()
       .map((snapshot) => snapshot.docs.map(Idea.fromFirestore).toList());
 
-  /// Поиск идей по тегам
+  /// РџРѕРёСЃРє РёРґРµР№ РїРѕ С‚РµРіР°Рј
   Stream<List<Idea>> searchIdeasByTags(List<String> tags, {int limit = 20}) => _firestore
       .collection('ideas')
       .where('isPublic', isEqualTo: true)
@@ -378,3 +385,4 @@ class IdeasService {
       .snapshots()
       .map((snapshot) => snapshot.docs.map(Idea.fromFirestore).toList());
 }
+

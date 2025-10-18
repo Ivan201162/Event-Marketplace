@@ -1,12 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../models/enhanced_order.dart';
+import 'package:flutter/foundation.dart';
 
-/// Сервис для работы с улучшенными заявками
+/// РЎРµСЂРІРёСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ СѓР»СѓС‡С€РµРЅРЅС‹РјРё Р·Р°СЏРІРєР°РјРё
 class EnhancedOrdersService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// Получить заявки пользователя
+  /// РџРѕР»СѓС‡РёС‚СЊ Р·Р°СЏРІРєРё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<List<EnhancedOrder>> getUserOrders(
     String userId, {
     OrderStatus? status,
@@ -29,12 +32,12 @@ class EnhancedOrdersService {
           )
           .toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения заявок пользователя: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ Р·Р°СЏРІРѕРє РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ: $e');
       return [];
     }
   }
 
-  /// Получить заявки специалиста
+  /// РџРѕР»СѓС‡РёС‚СЊ Р·Р°СЏРІРєРё СЃРїРµС†РёР°Р»РёСЃС‚Р°
   Future<List<EnhancedOrder>> getSpecialistOrders(
     String specialistId, {
     OrderStatus? status,
@@ -57,24 +60,24 @@ class EnhancedOrdersService {
           )
           .toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения заявок специалиста: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ Р·Р°СЏРІРѕРє СЃРїРµС†РёР°Р»РёСЃС‚Р°: $e');
       return [];
     }
   }
 
-  /// Создать новую заявку
+  /// РЎРѕР·РґР°С‚СЊ РЅРѕРІСѓСЋ Р·Р°СЏРІРєСѓ
   Future<String> createOrder(EnhancedOrder order) async {
     try {
       final docRef = await _firestore.collection('orders').add(order.toMap());
 
-      // Добавить событие в таймлайн
+      // Р”РѕР±Р°РІРёС‚СЊ СЃРѕР±С‹С‚РёРµ РІ С‚Р°Р№РјР»Р°Р№РЅ
       await _addTimelineEvent(
         docRef.id,
         OrderTimelineEvent(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           type: OrderTimelineEventType.created,
-          title: 'Заявка создана',
-          description: 'Заявка "${order.title}" была создана',
+          title: 'Р—Р°СЏРІРєР° СЃРѕР·РґР°РЅР°',
+          description: 'Р—Р°СЏРІРєР° "${order.title}" Р±С‹Р»Р° СЃРѕР·РґР°РЅР°',
           createdAt: DateTime.now(),
           authorId: order.customerId,
         ),
@@ -82,12 +85,12 @@ class EnhancedOrdersService {
 
       return docRef.id;
     } on Exception catch (e) {
-      debugPrint('Ошибка создания заявки: $e');
+      debugPrint('РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ Р·Р°СЏРІРєРё: $e');
       rethrow;
     }
   }
 
-  /// Обновить заявку
+  /// РћР±РЅРѕРІРёС‚СЊ Р·Р°СЏРІРєСѓ
   Future<void> updateOrder(String orderId, Map<String, dynamic> updates) async {
     try {
       await _firestore.collection('orders').doc(orderId).update({
@@ -95,12 +98,12 @@ class EnhancedOrdersService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка обновления заявки: $e');
+      debugPrint('РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ Р·Р°СЏРІРєРё: $e');
       rethrow;
     }
   }
 
-  /// Принять заявку
+  /// РџСЂРёРЅСЏС‚СЊ Р·Р°СЏРІРєСѓ
   Future<void> acceptOrder(String orderId, String specialistId) async {
     try {
       await _firestore.collection('orders').doc(orderId).update({
@@ -108,25 +111,25 @@ class EnhancedOrdersService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      // Добавить событие в таймлайн
+      // Р”РѕР±Р°РІРёС‚СЊ СЃРѕР±С‹С‚РёРµ РІ С‚Р°Р№РјР»Р°Р№РЅ
       await _addTimelineEvent(
         orderId,
         OrderTimelineEvent(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           type: OrderTimelineEventType.accepted,
-          title: 'Заявка принята',
-          description: 'Специалист принял заявку к выполнению',
+          title: 'Р—Р°СЏРІРєР° РїСЂРёРЅСЏС‚Р°',
+          description: 'РЎРїРµС†РёР°Р»РёСЃС‚ РїСЂРёРЅСЏР» Р·Р°СЏРІРєСѓ Рє РІС‹РїРѕР»РЅРµРЅРёСЋ',
           createdAt: DateTime.now(),
           authorId: specialistId,
         ),
       );
     } on Exception catch (e) {
-      debugPrint('Ошибка принятия заявки: $e');
+      debugPrint('РћС€РёР±РєР° РїСЂРёРЅСЏС‚РёСЏ Р·Р°СЏРІРєРё: $e');
       rethrow;
     }
   }
 
-  /// Начать работу над заявкой
+  /// РќР°С‡Р°С‚СЊ СЂР°Р±РѕС‚Сѓ РЅР°Рґ Р·Р°СЏРІРєРѕР№
   Future<void> startOrder(String orderId, String specialistId) async {
     try {
       await _firestore.collection('orders').doc(orderId).update({
@@ -134,25 +137,25 @@ class EnhancedOrdersService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      // Добавить событие в таймлайн
+      // Р”РѕР±Р°РІРёС‚СЊ СЃРѕР±С‹С‚РёРµ РІ С‚Р°Р№РјР»Р°Р№РЅ
       await _addTimelineEvent(
         orderId,
         OrderTimelineEvent(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           type: OrderTimelineEventType.started,
-          title: 'Работа начата',
-          description: 'Специалист начал работу над заявкой',
+          title: 'Р Р°Р±РѕС‚Р° РЅР°С‡Р°С‚Р°',
+          description: 'РЎРїРµС†РёР°Р»РёСЃС‚ РЅР°С‡Р°Р» СЂР°Р±РѕС‚Сѓ РЅР°Рґ Р·Р°СЏРІРєРѕР№',
           createdAt: DateTime.now(),
           authorId: specialistId,
         ),
       );
     } on Exception catch (e) {
-      debugPrint('Ошибка начала работы над заявкой: $e');
+      debugPrint('РћС€РёР±РєР° РЅР°С‡Р°Р»Р° СЂР°Р±РѕС‚С‹ РЅР°Рґ Р·Р°СЏРІРєРѕР№: $e');
       rethrow;
     }
   }
 
-  /// Завершить заявку
+  /// Р—Р°РІРµСЂС€РёС‚СЊ Р·Р°СЏРІРєСѓ
   Future<void> completeOrder(String orderId, String specialistId) async {
     try {
       await _firestore.collection('orders').doc(orderId).update({
@@ -161,25 +164,25 @@ class EnhancedOrdersService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      // Добавить событие в таймлайн
+      // Р”РѕР±Р°РІРёС‚СЊ СЃРѕР±С‹С‚РёРµ РІ С‚Р°Р№РјР»Р°Р№РЅ
       await _addTimelineEvent(
         orderId,
         OrderTimelineEvent(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           type: OrderTimelineEventType.completed,
-          title: 'Заявка завершена',
-          description: 'Работа по заявке успешно завершена',
+          title: 'Р—Р°СЏРІРєР° Р·Р°РІРµСЂС€РµРЅР°',
+          description: 'Р Р°Р±РѕС‚Р° РїРѕ Р·Р°СЏРІРєРµ СѓСЃРїРµС€РЅРѕ Р·Р°РІРµСЂС€РµРЅР°',
           createdAt: DateTime.now(),
           authorId: specialistId,
         ),
       );
     } on Exception catch (e) {
-      debugPrint('Ошибка завершения заявки: $e');
+      debugPrint('РћС€РёР±РєР° Р·Р°РІРµСЂС€РµРЅРёСЏ Р·Р°СЏРІРєРё: $e');
       rethrow;
     }
   }
 
-  /// Отменить заявку
+  /// РћС‚РјРµРЅРёС‚СЊ Р·Р°СЏРІРєСѓ
   Future<void> cancelOrder(String orderId, String userId, String reason) async {
     try {
       await _firestore.collection('orders').doc(orderId).update({
@@ -189,25 +192,25 @@ class EnhancedOrdersService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      // Добавить событие в таймлайн
+      // Р”РѕР±Р°РІРёС‚СЊ СЃРѕР±С‹С‚РёРµ РІ С‚Р°Р№РјР»Р°Р№РЅ
       await _addTimelineEvent(
         orderId,
         OrderTimelineEvent(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           type: OrderTimelineEventType.cancelled,
-          title: 'Заявка отменена',
-          description: 'Заявка была отменена. Причина: $reason',
+          title: 'Р—Р°СЏРІРєР° РѕС‚РјРµРЅРµРЅР°',
+          description: 'Р—Р°СЏРІРєР° Р±С‹Р»Р° РѕС‚РјРµРЅРµРЅР°. РџСЂРёС‡РёРЅР°: $reason',
           createdAt: DateTime.now(),
           authorId: userId,
         ),
       );
     } on Exception catch (e) {
-      debugPrint('Ошибка отмены заявки: $e');
+      debugPrint('РћС€РёР±РєР° РѕС‚РјРµРЅС‹ Р·Р°СЏРІРєРё: $e');
       rethrow;
     }
   }
 
-  /// Добавить комментарий к заявке
+  /// Р”РѕР±Р°РІРёС‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёР№ Рє Р·Р°СЏРІРєРµ
   Future<void> addComment(String orderId, OrderComment comment) async {
     try {
       await _firestore.collection('orders').doc(orderId).update({
@@ -215,13 +218,13 @@ class EnhancedOrdersService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      // Добавить событие в таймлайн
+      // Р”РѕР±Р°РІРёС‚СЊ СЃРѕР±С‹С‚РёРµ РІ С‚Р°Р№РјР»Р°Р№РЅ
       await _addTimelineEvent(
         orderId,
         OrderTimelineEvent(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           type: OrderTimelineEventType.comment,
-          title: 'Добавлен комментарий',
+          title: 'Р”РѕР±Р°РІР»РµРЅ РєРѕРјРјРµРЅС‚Р°СЂРёР№',
           description:
               comment.text.length > 50 ? '${comment.text.substring(0, 50)}...' : comment.text,
           createdAt: DateTime.now(),
@@ -229,12 +232,12 @@ class EnhancedOrdersService {
         ),
       );
     } on Exception catch (e) {
-      debugPrint('Ошибка добавления комментария: $e');
+      debugPrint('РћС€РёР±РєР° РґРѕР±Р°РІР»РµРЅРёСЏ РєРѕРјРјРµРЅС‚Р°СЂРёСЏ: $e');
       rethrow;
     }
   }
 
-  /// Добавить вложение к заявке
+  /// Р”РѕР±Р°РІРёС‚СЊ РІР»РѕР¶РµРЅРёРµ Рє Р·Р°СЏРІРєРµ
   Future<void> addAttachment(String orderId, OrderAttachment attachment) async {
     try {
       await _firestore.collection('orders').doc(orderId).update({
@@ -242,12 +245,12 @@ class EnhancedOrdersService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка добавления вложения: $e');
+      debugPrint('РћС€РёР±РєР° РґРѕР±Р°РІР»РµРЅРёСЏ РІР»РѕР¶РµРЅРёСЏ: $e');
       rethrow;
     }
   }
 
-  /// Добавить событие в таймлайн
+  /// Р”РѕР±Р°РІРёС‚СЊ СЃРѕР±С‹С‚РёРµ РІ С‚Р°Р№РјР»Р°Р№РЅ
   Future<void> _addTimelineEvent(
     String orderId,
     OrderTimelineEvent event,
@@ -257,11 +260,11 @@ class EnhancedOrdersService {
         'timeline': FieldValue.arrayUnion([event.toMap()]),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка добавления события в таймлайн: $e');
+      debugPrint('РћС€РёР±РєР° РґРѕР±Р°РІР»РµРЅРёСЏ СЃРѕР±С‹С‚РёСЏ РІ С‚Р°Р№РјР»Р°Р№РЅ: $e');
     }
   }
 
-  /// Получить шаблоны заявок
+  /// РџРѕР»СѓС‡РёС‚СЊ С€Р°Р±Р»РѕРЅС‹ Р·Р°СЏРІРѕРє
   Future<List<Map<String, dynamic>>> getOrderTemplates() async {
     try {
       final snapshot = await _firestore.collection('orderTemplates').get();
@@ -275,12 +278,12 @@ class EnhancedOrdersService {
           )
           .toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения шаблонов заявок: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ С€Р°Р±Р»РѕРЅРѕРІ Р·Р°СЏРІРѕРє: $e');
       return [];
     }
   }
 
-  /// Создать заявку из шаблона
+  /// РЎРѕР·РґР°С‚СЊ Р·Р°СЏРІРєСѓ РёР· С€Р°Р±Р»РѕРЅР°
   Future<String> createOrderFromTemplate(
     String templateId,
     String customerId,
@@ -291,13 +294,13 @@ class EnhancedOrdersService {
       final templateDoc = await _firestore.collection('orderTemplates').doc(templateId).get();
 
       if (!templateDoc.exists) {
-        throw Exception('Шаблон не найден');
+        throw Exception('РЁР°Р±Р»РѕРЅ РЅРµ РЅР°Р№РґРµРЅ');
       }
 
       final template = templateDoc.data()!;
 
       final order = EnhancedOrder(
-        id: '', // Будет установлен при создании
+        id: '', // Р‘СѓРґРµС‚ СѓСЃС‚Р°РЅРѕРІР»РµРЅ РїСЂРё СЃРѕР·РґР°РЅРёРё
         customerId: customerId,
         specialistId: specialistId,
         title: (customizations['title'] as String?) ?? (template['title'] as String),
@@ -320,15 +323,15 @@ class EnhancedOrdersService {
 
       return await createOrder(order);
     } on Exception catch (e) {
-      debugPrint('Ошибка создания заявки из шаблона: $e');
+      debugPrint('РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ Р·Р°СЏРІРєРё РёР· С€Р°Р±Р»РѕРЅР°: $e');
       rethrow;
     }
   }
 
-  /// Подготовить к интеграции оплаты
+  /// РџРѕРґРіРѕС‚РѕРІРёС‚СЊ Рє РёРЅС‚РµРіСЂР°С†РёРё РѕРїР»Р°С‚С‹
   Future<Map<String, dynamic>> preparePayment(String orderId) async {
     try {
-      // TODO(developer): Интеграция с платёжными системами
+      // TODO(developer): РРЅС‚РµРіСЂР°С†РёСЏ СЃ РїР»Р°С‚С‘Р¶РЅС‹РјРё СЃРёСЃС‚РµРјР°РјРё
       return {
         'paymentUrl': 'https://payment.example.com/order/$orderId',
         'amount': 0.0,
@@ -336,8 +339,9 @@ class EnhancedOrdersService {
         'status': 'pending',
       };
     } on Exception catch (e) {
-      debugPrint('Ошибка подготовки оплаты: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕРґРіРѕС‚РѕРІРєРё РѕРїР»Р°С‚С‹: $e');
       rethrow;
     }
   }
 }
+

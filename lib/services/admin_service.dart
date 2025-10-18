@@ -1,14 +1,18 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/admin_models.dart';
+import 'package:flutter/foundation.dart';
 
 class AdminService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Uuid _uuid = const Uuid();
 
-  /// Проверка прав администратора
+  /// РџСЂРѕРІРµСЂРєР° РїСЂР°РІ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°
   Future<bool> isUserAdmin(String userId) async {
     try {
       final doc = await _firestore.collection('users').doc(userId).get();
@@ -23,7 +27,7 @@ class AdminService {
     }
   }
 
-  /// Получение роли пользователя
+  /// РџРѕР»СѓС‡РµРЅРёРµ СЂРѕР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<UserRole> getUserRole(String userId) async {
     try {
       final doc = await _firestore.collection('users').doc(userId).get();
@@ -39,7 +43,7 @@ class AdminService {
     }
   }
 
-  /// Логирование действия администратора
+  /// Р›РѕРіРёСЂРѕРІР°РЅРёРµ РґРµР№СЃС‚РІРёСЏ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°
   Future<void> logAdminAction({
     required String adminId,
     required String adminEmail,
@@ -73,7 +77,7 @@ class AdminService {
     }
   }
 
-  /// Получение логов администратора
+  /// РџРѕР»СѓС‡РµРЅРёРµ Р»РѕРіРѕРІ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°
   Stream<List<AdminLog>> getAdminLogsStream({
     String? adminId,
     AdminAction? action,
@@ -100,7 +104,7 @@ class AdminService {
         snapshot.docs.map((doc) => AdminLog.fromMap(doc.data() as Map<String, dynamic>)).toList());
   }
 
-  /// Получение статистики действий администратора
+  /// РџРѕР»СѓС‡РµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРєРё РґРµР№СЃС‚РІРёР№ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°
   Future<Map<String, dynamic>> getAdminStats(String adminId,
       {DateTime? startDate, DateTime? endDate}) async {
     try {
@@ -126,11 +130,11 @@ class AdminService {
       };
 
       for (final log in logs) {
-        // Подсчет по типам действий
+        // РџРѕРґСЃС‡РµС‚ РїРѕ С‚РёРїР°Рј РґРµР№СЃС‚РІРёР№
         final actionType = log.action.name;
         stats['actionsByType'][actionType] = (stats['actionsByType'][actionType] ?? 0) + 1;
 
-        // Подсчет по целям
+        // РџРѕРґСЃС‡РµС‚ РїРѕ С†РµР»СЏРј
         final target = log.target;
         stats['actionsByTarget'][target] = (stats['actionsByTarget'][target] ?? 0) + 1;
       }
@@ -142,7 +146,7 @@ class AdminService {
     }
   }
 
-  /// Получение списка всех администраторов
+  /// РџРѕР»СѓС‡РµРЅРёРµ СЃРїРёСЃРєР° РІСЃРµС… Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂРѕРІ
   Future<List<Map<String, dynamic>>> getAllAdmins() async {
     try {
       final snapshot = await _firestore.collection('users').where('isAdmin', isEqualTo: true).get();
@@ -154,7 +158,7 @@ class AdminService {
     }
   }
 
-  /// Назначение прав администратора
+  /// РќР°Р·РЅР°С‡РµРЅРёРµ РїСЂР°РІ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°
   Future<bool> grantAdminRights(String userId, String adminId, String adminEmail) async {
     try {
       await _firestore.collection('users').doc(userId).update({
@@ -191,7 +195,7 @@ class AdminService {
     }
   }
 
-  /// Отзыв прав администратора
+  /// РћС‚Р·С‹РІ РїСЂР°РІ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°
   Future<bool> revokeAdminRights(String userId, String adminId, String adminEmail) async {
     try {
       await _firestore.collection('users').doc(userId).update({
@@ -228,16 +232,16 @@ class AdminService {
     }
   }
 
-  /// Получение системной статистики
+  /// РџРѕР»СѓС‡РµРЅРёРµ СЃРёСЃС‚РµРјРЅРѕР№ СЃС‚Р°С‚РёСЃС‚РёРєРё
   Future<Map<String, dynamic>> getSystemStats() async {
     try {
       final stats = <String, dynamic>{};
 
-      // Общее количество пользователей
+      // РћР±С‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
       final usersSnapshot = await _firestore.collection('users').get();
       stats['totalUsers'] = usersSnapshot.docs.length;
 
-      // Активные пользователи (за последние 30 дней)
+      // РђРєС‚РёРІРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё (Р·Р° РїРѕСЃР»РµРґРЅРёРµ 30 РґРЅРµР№)
       final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
       final activeUsersSnapshot = await _firestore
           .collection('users')
@@ -245,11 +249,11 @@ class AdminService {
           .get();
       stats['activeUsers'] = activeUsersSnapshot.docs.length;
 
-      // Общее количество транзакций
+      // РћР±С‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ С‚СЂР°РЅР·Р°РєС†РёР№
       final transactionsSnapshot = await _firestore.collection('transactions').get();
       stats['totalTransactions'] = transactionsSnapshot.docs.length;
 
-      // Общая выручка
+      // РћР±С‰Р°СЏ РІС‹СЂСѓС‡РєР°
       double totalRevenue = 0.0;
       for (final doc in transactionsSnapshot.docs) {
         final data = doc.data();
@@ -259,11 +263,11 @@ class AdminService {
       }
       stats['totalRevenue'] = totalRevenue;
 
-      // Количество подписок
+      // РљРѕР»РёС‡РµСЃС‚РІРѕ РїРѕРґРїРёСЃРѕРє
       final subscriptionsSnapshot = await _firestore.collection('user_subscriptions').get();
       stats['totalSubscriptions'] = subscriptionsSnapshot.docs.length;
 
-      // Количество активных подписок
+      // РљРѕР»РёС‡РµСЃС‚РІРѕ Р°РєС‚РёРІРЅС‹С… РїРѕРґРїРёСЃРѕРє
       final activeSubscriptionsSnapshot = await _firestore
           .collection('user_subscriptions')
           .where('status', isEqualTo: 'active')
@@ -277,7 +281,7 @@ class AdminService {
     }
   }
 
-  /// Экспорт данных в CSV
+  /// Р­РєСЃРїРѕСЂС‚ РґР°РЅРЅС‹С… РІ CSV
   Future<String> exportDataToCSV({
     required String collection,
     DateTime? startDate,
@@ -307,12 +311,12 @@ class AdminService {
         return '';
       }
 
-      // Создание CSV заголовков
+      // РЎРѕР·РґР°РЅРёРµ CSV Р·Р°РіРѕР»РѕРІРєРѕРІ
       final headers = (docs.first.data() as Map<String, dynamic>).keys.toList();
       final csv = StringBuffer();
       csv.writeln(headers.join(','));
 
-      // Добавление данных
+      // Р”РѕР±Р°РІР»РµРЅРёРµ РґР°РЅРЅС‹С…
       for (final doc in docs) {
         final data = doc.data();
         final row = headers
@@ -328,3 +332,4 @@ class AdminService {
     }
   }
 }
+

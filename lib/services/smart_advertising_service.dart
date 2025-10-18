@@ -1,17 +1,22 @@
-import 'dart:math';
+﻿import 'dart:math';
+import 'package:flutter/foundation.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/smart_advertising.dart';
+import 'package:flutter/foundation.dart';
 
 class SmartAdvertisingService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Uuid _uuid = const Uuid();
   final Random _random = Random();
 
-  /// Получение релевантной рекламы для пользователя
+  /// РџРѕР»СѓС‡РµРЅРёРµ СЂРµР»РµРІР°РЅС‚РЅРѕР№ СЂРµРєР»Р°РјС‹ РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<List<SmartAdvertisement>> getRelevantAds({
     required String userId,
     required String placement,
@@ -20,7 +25,7 @@ class SmartAdvertisingService {
     int limit = 5,
   }) async {
     try {
-      // Получаем активную рекламу для данного размещения
+      // РџРѕР»СѓС‡Р°РµРј Р°РєС‚РёРІРЅСѓСЋ СЂРµРєР»Р°РјСѓ РґР»СЏ РґР°РЅРЅРѕРіРѕ СЂР°Р·РјРµС‰РµРЅРёСЏ
       final QuerySnapshot snapshot = await _firestore
           .collection('smart_advertisements')
           .where('status', isEqualTo: 'active')
@@ -33,12 +38,12 @@ class SmartAdvertisingService {
         return [];
       }
 
-      // Преобразуем в объекты и рассчитываем релевантность
+      // РџСЂРµРѕР±СЂР°Р·СѓРµРј РІ РѕР±СЉРµРєС‚С‹ Рё СЂР°СЃСЃС‡РёС‚С‹РІР°РµРј СЂРµР»РµРІР°РЅС‚РЅРѕСЃС‚СЊ
       final List<SmartAdvertisement> ads = snapshot.docs
           .map((doc) => SmartAdvertisement.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
 
-      // Рассчитываем релевантность для каждого объявления
+      // Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј СЂРµР»РµРІР°РЅС‚РЅРѕСЃС‚СЊ РґР»СЏ РєР°Р¶РґРѕРіРѕ РѕР±СЉСЏРІР»РµРЅРёСЏ
       final List<MapEntry<SmartAdvertisement, double>> adsWithRelevance = ads
           .map((ad) => MapEntry(
                 ad,
@@ -50,17 +55,17 @@ class SmartAdvertisingService {
               ))
           .toList();
 
-      // Сортируем по релевантности
+      // РЎРѕСЂС‚РёСЂСѓРµРј РїРѕ СЂРµР»РµРІР°РЅС‚РЅРѕСЃС‚Рё
       adsWithRelevance.sort((a, b) => b.value.compareTo(a.value));
 
-      // Фильтруем по минимальной релевантности и ограничиваем количество
+      // Р¤РёР»СЊС‚СЂСѓРµРј РїРѕ РјРёРЅРёРјР°Р»СЊРЅРѕР№ СЂРµР»РµРІР°РЅС‚РЅРѕСЃС‚Рё Рё РѕРіСЂР°РЅРёС‡РёРІР°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ
       final List<SmartAdvertisement> relevantAds = adsWithRelevance
-          .where((entry) => entry.value >= 0.3) // Минимальная релевантность 30%
+          .where((entry) => entry.value >= 0.3) // РњРёРЅРёРјР°Р»СЊРЅР°СЏ СЂРµР»РµРІР°РЅС‚РЅРѕСЃС‚СЊ 30%
           .take(limit)
           .map((entry) => entry.key)
           .toList();
 
-      // Записываем показы
+      // Р—Р°РїРёСЃС‹РІР°РµРј РїРѕРєР°Р·С‹
       for (final ad in relevantAds) {
         await _recordImpression(
           adId: ad.id,
@@ -83,7 +88,7 @@ class SmartAdvertisingService {
     }
   }
 
-  /// Запись показа рекламы
+  /// Р—Р°РїРёСЃСЊ РїРѕРєР°Р·Р° СЂРµРєР»Р°РјС‹
   Future<void> _recordImpression({
     required String adId,
     required String userId,
@@ -104,7 +109,7 @@ class SmartAdvertisingService {
 
       await _firestore.collection('ad_impressions').doc(impression.id).set(impression.toMap());
 
-      // Обновляем счетчики в объявлении
+      // РћР±РЅРѕРІР»СЏРµРј СЃС‡РµС‚С‡РёРєРё РІ РѕР±СЉСЏРІР»РµРЅРёРё
       await _firestore.collection('smart_advertisements').doc(adId).update({
         'impressions': FieldValue.increment(1),
         'updatedAt': FieldValue.serverTimestamp(),
@@ -116,14 +121,14 @@ class SmartAdvertisingService {
     }
   }
 
-  /// Запись клика по рекламе
+  /// Р—Р°РїРёСЃСЊ РєР»РёРєР° РїРѕ СЂРµРєР»Р°РјРµ
   Future<void> recordClick({
     required String adId,
     required String userId,
     required String placement,
   }) async {
     try {
-      // Находим последний показ этого объявления пользователю
+      // РќР°С…РѕРґРёРј РїРѕСЃР»РµРґРЅРёР№ РїРѕРєР°Р· СЌС‚РѕРіРѕ РѕР±СЉСЏРІР»РµРЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ
       final QuerySnapshot impressionSnapshot = await _firestore
           .collection('ad_impressions')
           .where('adId', isEqualTo: adId)
@@ -140,13 +145,13 @@ class SmartAdvertisingService {
         });
       }
 
-      // Обновляем счетчики в объявлении
+      // РћР±РЅРѕРІР»СЏРµРј СЃС‡РµС‚С‡РёРєРё РІ РѕР±СЉСЏРІР»РµРЅРёРё
       await _firestore.collection('smart_advertisements').doc(adId).update({
         'clicks': FieldValue.increment(1),
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      // Пересчитываем CTR
+      // РџРµСЂРµСЃС‡РёС‚С‹РІР°РµРј CTR
       await _updateAdMetrics(adId);
 
       debugPrint('INFO: [SmartAdvertisingService] Click recorded for ad $adId');
@@ -155,7 +160,7 @@ class SmartAdvertisingService {
     }
   }
 
-  /// Запись конверсии
+  /// Р—Р°РїРёСЃСЊ РєРѕРЅРІРµСЂСЃРёРё
   Future<void> recordConversion({
     required String adId,
     required String userId,
@@ -163,7 +168,7 @@ class SmartAdvertisingService {
     required double conversionValue,
   }) async {
     try {
-      // Находим последний клик по этому объявлению
+      // РќР°С…РѕРґРёРј РїРѕСЃР»РµРґРЅРёР№ РєР»РёРє РїРѕ СЌС‚РѕРјСѓ РѕР±СЉСЏРІР»РµРЅРёСЋ
       final QuerySnapshot clickSnapshot = await _firestore
           .collection('ad_impressions')
           .where('adId', isEqualTo: adId)
@@ -180,14 +185,14 @@ class SmartAdvertisingService {
         });
       }
 
-      // Обновляем счетчики в объявлении
+      // РћР±РЅРѕРІР»СЏРµРј СЃС‡РµС‚С‡РёРєРё РІ РѕР±СЉСЏРІР»РµРЅРёРё
       await _firestore.collection('smart_advertisements').doc(adId).update({
         'conversions': FieldValue.increment(1),
         'spentAmount': FieldValue.increment(conversionValue),
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      // Пересчитываем метрики
+      // РџРµСЂРµСЃС‡РёС‚С‹РІР°РµРј РјРµС‚СЂРёРєРё
       await _updateAdMetrics(adId);
 
       debugPrint('INFO: [SmartAdvertisingService] Conversion recorded for ad $adId');
@@ -196,7 +201,7 @@ class SmartAdvertisingService {
     }
   }
 
-  /// Обновление метрик объявления
+  /// РћР±РЅРѕРІР»РµРЅРёРµ РјРµС‚СЂРёРє РѕР±СЉСЏРІР»РµРЅРёСЏ
   Future<void> _updateAdMetrics(String adId) async {
     try {
       final DocumentSnapshot adDoc =
@@ -207,16 +212,16 @@ class SmartAdvertisingService {
       final SmartAdvertisement ad =
           SmartAdvertisement.fromMap(adDoc.data() as Map<String, dynamic>);
 
-      // Рассчитываем CTR
+      // Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј CTR
       final double ctr = ad.impressions > 0 ? (ad.clicks / ad.impressions) * 100 : 0.0;
 
-      // Рассчитываем CPC
+      // Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј CPC
       final double cpc = ad.clicks > 0 ? ad.spentAmount / ad.clicks : 0.0;
 
-      // Рассчитываем CPM
+      // Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј CPM
       final double cpm = ad.impressions > 0 ? (ad.spentAmount / ad.impressions) * 1000 : 0.0;
 
-      // Обновляем метрики
+      // РћР±РЅРѕРІР»СЏРµРј РјРµС‚СЂРёРєРё
       await _firestore.collection('smart_advertisements').doc(adId).update({
         'ctr': ctr,
         'cpc': cpc,
@@ -230,7 +235,7 @@ class SmartAdvertisingService {
     }
   }
 
-  /// Создание умного объявления
+  /// РЎРѕР·РґР°РЅРёРµ СѓРјРЅРѕРіРѕ РѕР±СЉСЏРІР»РµРЅРёСЏ
   Future<String> createSmartAd(SmartAdvertisement ad) async {
     try {
       final String adId = _uuid.v4();
@@ -273,7 +278,7 @@ class SmartAdvertisingService {
     }
   }
 
-  /// Автоматическая оптимизация объявления
+  /// РђРІС‚РѕРјР°С‚РёС‡РµСЃРєР°СЏ РѕРїС‚РёРјРёР·Р°С†РёСЏ РѕР±СЉСЏРІР»РµРЅРёСЏ
   Future<void> optimizeAd(String adId) async {
     try {
       final DocumentSnapshot adDoc =
@@ -286,13 +291,13 @@ class SmartAdvertisingService {
 
       if (!ad.isAutoOptimized) return;
 
-      // Анализируем производительность
+      // РђРЅР°Р»РёР·РёСЂСѓРµРј РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚СЊ
       final Map<String, dynamic> performance = await _analyzeAdPerformance(adId);
 
-      // Применяем оптимизации
+      // РџСЂРёРјРµРЅСЏРµРј РѕРїС‚РёРјРёР·Р°С†РёРё
       final Map<String, dynamic> optimizations = await _applyOptimizations(ad, performance);
 
-      // Сохраняем результаты оптимизации
+      // РЎРѕС…СЂР°РЅСЏРµРј СЂРµР·СѓР»СЊС‚Р°С‚С‹ РѕРїС‚РёРјРёР·Р°С†РёРё
       final AdOptimization optimization = AdOptimization(
         id: _uuid.v4(),
         adId: adId,
@@ -307,7 +312,7 @@ class SmartAdvertisingService {
           .doc(optimization.id)
           .set(optimization.toMap());
 
-      // Применяем изменения к объявлению
+      // РџСЂРёРјРµРЅСЏРµРј РёР·РјРµРЅРµРЅРёСЏ Рє РѕР±СЉСЏРІР»РµРЅРёСЋ
       await _firestore.collection('smart_advertisements').doc(adId).update({
         'optimizationSettings': optimizations,
         'updatedAt': FieldValue.serverTimestamp(),
@@ -319,7 +324,7 @@ class SmartAdvertisingService {
     }
   }
 
-  /// Анализ производительности объявления
+  /// РђРЅР°Р»РёР· РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚Рё РѕР±СЉСЏРІР»РµРЅРёСЏ
   Future<Map<String, dynamic>> _analyzeAdPerformance(String adId) async {
     try {
       final QuerySnapshot impressionsSnapshot =
@@ -340,7 +345,7 @@ class SmartAdvertisingService {
       final double ctr = totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0.0;
       final double conversionRate = totalClicks > 0 ? (totalConversions / totalClicks) * 100 : 0.0;
 
-      // Анализ по размещениям
+      // РђРЅР°Р»РёР· РїРѕ СЂР°Р·РјРµС‰РµРЅРёСЏРј
       final Map<String, int> placementImpressions = {};
       final Map<String, int> placementClicks = {};
 
@@ -374,7 +379,7 @@ class SmartAdvertisingService {
     }
   }
 
-  /// Применение оптимизаций
+  /// РџСЂРёРјРµРЅРµРЅРёРµ РѕРїС‚РёРјРёР·Р°С†РёР№
   Future<Map<String, dynamic>> _applyOptimizations(
     SmartAdvertisement ad,
     Map<String, dynamic> performance,
@@ -388,16 +393,16 @@ class SmartAdvertisingService {
     final double ctr = performance['ctr'] ?? 0.0;
     final double conversionRate = performance['conversionRate'] ?? 0.0;
 
-    // Оптимизация ставки
+    // РћРїС‚РёРјРёР·Р°С†РёСЏ СЃС‚Р°РІРєРё
     if (ctr < 1.0) {
-      // Низкий CTR - снижаем ставку
-      optimizations['bidAdjustment'] = -0.1; // Снижаем на 10%
+      // РќРёР·РєРёР№ CTR - СЃРЅРёР¶Р°РµРј СЃС‚Р°РІРєСѓ
+      optimizations['bidAdjustment'] = -0.1; // РЎРЅРёР¶Р°РµРј РЅР° 10%
     } else if (ctr > 3.0) {
-      // Высокий CTR - повышаем ставку
-      optimizations['bidAdjustment'] = 0.1; // Повышаем на 10%
+      // Р’С‹СЃРѕРєРёР№ CTR - РїРѕРІС‹С€Р°РµРј СЃС‚Р°РІРєСѓ
+      optimizations['bidAdjustment'] = 0.1; // РџРѕРІС‹С€Р°РµРј РЅР° 10%
     }
 
-    // Оптимизация размещений
+    // РћРїС‚РёРјРёР·Р°С†РёСЏ СЂР°Р·РјРµС‰РµРЅРёР№
     final Map<String, dynamic> placementPerformance = performance['placementPerformance'] ?? {};
 
     final List<String> bestPlacements = [];
@@ -422,7 +427,7 @@ class SmartAdvertisingService {
       optimizations['excludePlacements'] = worstPlacements;
     }
 
-    // Оптимизация таргетинга
+    // РћРїС‚РёРјРёР·Р°С†РёСЏ С‚Р°СЂРіРµС‚РёРЅРіР°
     if (conversionRate < 5.0) {
       optimizations['targetingAdjustment'] = 'broaden';
     } else if (conversionRate > 15.0) {
@@ -432,7 +437,7 @@ class SmartAdvertisingService {
     return optimizations;
   }
 
-  /// Получение статистики объявления
+  /// РџРѕР»СѓС‡РµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРєРё РѕР±СЉСЏРІР»РµРЅРёСЏ
   Future<Map<String, dynamic>> getAdStats(String adId) async {
     try {
       final DocumentSnapshot adDoc =
@@ -445,7 +450,7 @@ class SmartAdvertisingService {
       final SmartAdvertisement ad =
           SmartAdvertisement.fromMap(adDoc.data() as Map<String, dynamic>);
 
-      // Получаем дополнительные метрики
+      // РџРѕР»СѓС‡Р°РµРј РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РјРµС‚СЂРёРєРё
       final QuerySnapshot impressionsSnapshot =
           await _firestore.collection('ad_impressions').where('adId', isEqualTo: adId).get();
 
@@ -453,7 +458,7 @@ class SmartAdvertisingService {
           .map((doc) => AdImpression.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
 
-      // Рассчитываем дополнительные метрики
+      // Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РјРµС‚СЂРёРєРё
       final double averageRelevance = impressions.isNotEmpty
           ? impressions.map((i) => i.relevanceScore).reduce((a, b) => a + b) / impressions.length
           : 0.0;
@@ -487,7 +492,7 @@ class SmartAdvertisingService {
     }
   }
 
-  /// Получение объявлений пользователя
+  /// РџРѕР»СѓС‡РµРЅРёРµ РѕР±СЉСЏРІР»РµРЅРёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<List<SmartAdvertisement>> getUserAds(String userId) async {
     try {
       final QuerySnapshot snapshot = await _firestore
@@ -505,3 +510,4 @@ class SmartAdvertisingService {
     }
   }
 }
+

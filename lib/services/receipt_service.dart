@@ -1,14 +1,18 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/receipt_system.dart';
+import 'package:flutter/foundation.dart';
 
 class ReceiptService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Uuid _uuid = const Uuid();
 
-  /// Автоматическое создание чека после успешного платежа
+  /// РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРѕРµ СЃРѕР·РґР°РЅРёРµ С‡РµРєР° РїРѕСЃР»Рµ СѓСЃРїРµС€РЅРѕРіРѕ РїР»Р°С‚РµР¶Р°
   Future<String> createReceipt({
     required String userId,
     required String transactionId,
@@ -21,7 +25,7 @@ class ReceiptService {
     Map<String, dynamic>? metadata,
   }) async {
     try {
-      // Получаем настройки пользователя
+      // РџРѕР»СѓС‡Р°РµРј РЅР°СЃС‚СЂРѕР№РєРё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
       final ReceiptSettings? settings = await _getUserReceiptSettings(userId);
 
       if (settings != null && !settings.autoGenerate) {
@@ -29,7 +33,7 @@ class ReceiptService {
         return '';
       }
 
-      // Создаем чек
+      // РЎРѕР·РґР°РµРј С‡РµРє
       final Receipt receipt = Receipt(
         id: _uuid.v4(),
         userId: userId,
@@ -47,7 +51,7 @@ class ReceiptService {
 
       await _firestore.collection('receipts').doc(receipt.id).set(receipt.toMap());
 
-      // Генерируем чек
+      // Р“РµРЅРµСЂРёСЂСѓРµРј С‡РµРє
       await _generateReceipt(receipt);
 
       debugPrint('INFO: [ReceiptService] Receipt created: ${receipt.id}');
@@ -58,10 +62,10 @@ class ReceiptService {
     }
   }
 
-  /// Генерация чека
+  /// Р“РµРЅРµСЂР°С†РёСЏ С‡РµРєР°
   Future<void> _generateReceipt(Receipt receipt) async {
     try {
-      // Получаем шаблон чека
+      // РџРѕР»СѓС‡Р°РµРј С€Р°Р±Р»РѕРЅ С‡РµРєР°
       final ReceiptTemplate? template = await _getReceiptTemplate(receipt.type);
 
       if (template == null) {
@@ -69,13 +73,13 @@ class ReceiptService {
         return;
       }
 
-      // Генерируем данные чека
+      // Р“РµРЅРµСЂРёСЂСѓРµРј РґР°РЅРЅС‹Рµ С‡РµРєР°
       final Map<String, dynamic> receiptData = await _generateReceiptData(receipt, template);
 
-      // Создаем фискальный чек (если требуется)
+      // РЎРѕР·РґР°РµРј С„РёСЃРєР°Р»СЊРЅС‹Р№ С‡РµРє (РµСЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ)
       final FiscalReceipt? fiscalReceipt = await _createFiscalReceipt(receipt, receiptData);
 
-      // Обновляем чек
+      // РћР±РЅРѕРІР»СЏРµРј С‡РµРє
       await _firestore.collection('receipts').doc(receipt.id).update({
         'status': ReceiptStatus.generated.toString().split('.').last,
         'receiptData': receiptData,
@@ -84,7 +88,7 @@ class ReceiptService {
         'receiptUrl': await _generateReceiptUrl(receipt.id),
       });
 
-      // Отправляем чек пользователю
+      // РћС‚РїСЂР°РІР»СЏРµРј С‡РµРє РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ
       await _sendReceipt(receipt);
 
       debugPrint('INFO: [ReceiptService] Receipt generated: ${receipt.id}');
@@ -94,7 +98,7 @@ class ReceiptService {
     }
   }
 
-  /// Получение настроек пользователя
+  /// РџРѕР»СѓС‡РµРЅРёРµ РЅР°СЃС‚СЂРѕРµРє РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<ReceiptSettings?> _getUserReceiptSettings(String userId) async {
     try {
       final DocumentSnapshot doc =
@@ -110,7 +114,7 @@ class ReceiptService {
     }
   }
 
-  /// Получение шаблона чека
+  /// РџРѕР»СѓС‡РµРЅРёРµ С€Р°Р±Р»РѕРЅР° С‡РµРєР°
   Future<ReceiptTemplate?> _getReceiptTemplate(ReceiptType type) async {
     try {
       final QuerySnapshot snapshot = await _firestore
@@ -130,19 +134,19 @@ class ReceiptService {
     }
   }
 
-  /// Генерация данных чека
+  /// Р“РµРЅРµСЂР°С†РёСЏ РґР°РЅРЅС‹С… С‡РµРєР°
   Future<Map<String, dynamic>> _generateReceiptData(
     Receipt receipt,
     ReceiptTemplate template,
   ) async {
     try {
-      // Получаем данные транзакции
+      // РџРѕР»СѓС‡Р°РµРј РґР°РЅРЅС‹Рµ С‚СЂР°РЅР·Р°РєС†РёРё
       final Map<String, dynamic> transactionData = await _getTransactionData(receipt.transactionId);
 
-      // Получаем данные пользователя
+      // РџРѕР»СѓС‡Р°РµРј РґР°РЅРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
       final Map<String, dynamic> userData = await _getUserData(receipt.userId);
 
-      // Заполняем шаблон
+      // Р—Р°РїРѕР»РЅСЏРµРј С€Р°Р±Р»РѕРЅ
       final Map<String, dynamic> receiptData = {
         'receiptId': receipt.id,
         'transactionId': receipt.transactionId,
@@ -150,10 +154,10 @@ class ReceiptService {
         'currency': receipt.currency,
         'type': receipt.type.toString().split('.').last,
         'date': receipt.createdAt.toIso8601String(),
-        'userName': userData['name'] ?? 'Пользователь',
+        'userName': userData['name'] ?? 'РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ',
         'userEmail': receipt.email ?? userData['email'],
         'userPhone': receipt.phone ?? userData['phone'],
-        'paymentMethod': transactionData['paymentMethod'] ?? 'Банковская карта',
+        'paymentMethod': transactionData['paymentMethod'] ?? 'Р‘Р°РЅРєРѕРІСЃРєР°СЏ РєР°СЂС‚Р°',
         'paymentProvider': receipt.paymentProvider?.toString().split('.').last ?? 'yookassa',
         'description': _getReceiptDescription(receipt.type, transactionData),
         'items': _getReceiptItems(receipt.type, transactionData),
@@ -169,7 +173,7 @@ class ReceiptService {
     }
   }
 
-  /// Получение данных транзакции
+  /// РџРѕР»СѓС‡РµРЅРёРµ РґР°РЅРЅС‹С… С‚СЂР°РЅР·Р°РєС†РёРё
   Future<Map<String, dynamic>> _getTransactionData(String transactionId) async {
     try {
       final DocumentSnapshot doc =
@@ -185,7 +189,7 @@ class ReceiptService {
     }
   }
 
-  /// Получение данных пользователя
+  /// РџРѕР»СѓС‡РµРЅРёРµ РґР°РЅРЅС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<Map<String, dynamic>> _getUserData(String userId) async {
     try {
       final DocumentSnapshot doc = await _firestore.collection('users').doc(userId).get();
@@ -200,23 +204,23 @@ class ReceiptService {
     }
   }
 
-  /// Получение описания чека
+  /// РџРѕР»СѓС‡РµРЅРёРµ РѕРїРёСЃР°РЅРёСЏ С‡РµРєР°
   String _getReceiptDescription(ReceiptType type, Map<String, dynamic> transactionData) {
     switch (type) {
       case ReceiptType.payment:
-        return 'Оплата услуг';
+        return 'РћРїР»Р°С‚Р° СѓСЃР»СѓРі';
       case ReceiptType.subscription:
-        return 'Подписка на сервис';
+        return 'РџРѕРґРїРёСЃРєР° РЅР° СЃРµСЂРІРёСЃ';
       case ReceiptType.promotion:
-        return 'Продвижение профиля';
+        return 'РџСЂРѕРґРІРёР¶РµРЅРёРµ РїСЂРѕС„РёР»СЏ';
       case ReceiptType.advertisement:
-        return 'Рекламная кампания';
+        return 'Р РµРєР»Р°РјРЅР°СЏ РєР°РјРїР°РЅРёСЏ';
       case ReceiptType.refund:
-        return 'Возврат средств';
+        return 'Р’РѕР·РІСЂР°С‚ СЃСЂРµРґСЃС‚РІ';
     }
   }
 
-  /// Получение позиций чека
+  /// РџРѕР»СѓС‡РµРЅРёРµ РїРѕР·РёС†РёР№ С‡РµРєР°
   List<Map<String, dynamic>> _getReceiptItems(
     ReceiptType type,
     Map<String, dynamic> transactionData,
@@ -225,7 +229,7 @@ class ReceiptService {
       case ReceiptType.payment:
         return [
           {
-            'name': 'Оплата услуг',
+            'name': 'РћРїР»Р°С‚Р° СѓСЃР»СѓРі',
             'quantity': 1,
             'price': transactionData['amount'] ?? 0.0,
             'total': transactionData['amount'] ?? 0.0,
@@ -234,7 +238,7 @@ class ReceiptService {
       case ReceiptType.subscription:
         return [
           {
-            'name': 'Подписка ${transactionData['planName'] ?? 'Premium'}',
+            'name': 'РџРѕРґРїРёСЃРєР° ${transactionData['planName'] ?? 'Premium'}',
             'quantity': 1,
             'price': transactionData['amount'] ?? 0.0,
             'total': transactionData['amount'] ?? 0.0,
@@ -243,7 +247,7 @@ class ReceiptService {
       case ReceiptType.promotion:
         return [
           {
-            'name': 'Продвижение профиля',
+            'name': 'РџСЂРѕРґРІРёР¶РµРЅРёРµ РїСЂРѕС„РёР»СЏ',
             'quantity': 1,
             'price': transactionData['amount'] ?? 0.0,
             'total': transactionData['amount'] ?? 0.0,
@@ -252,7 +256,7 @@ class ReceiptService {
       case ReceiptType.advertisement:
         return [
           {
-            'name': 'Рекламная кампания',
+            'name': 'Р РµРєР»Р°РјРЅР°СЏ РєР°РјРїР°РЅРёСЏ',
             'quantity': 1,
             'price': transactionData['amount'] ?? 0.0,
             'total': transactionData['amount'] ?? 0.0,
@@ -261,7 +265,7 @@ class ReceiptService {
       case ReceiptType.refund:
         return [
           {
-            'name': 'Возврат средств',
+            'name': 'Р’РѕР·РІСЂР°С‚ СЃСЂРµРґСЃС‚РІ',
             'quantity': 1,
             'price': -(transactionData['amount'] ?? 0.0),
             'total': -(transactionData['amount'] ?? 0.0),
@@ -270,9 +274,9 @@ class ReceiptService {
     }
   }
 
-  /// Расчет налогов
+  /// Р Р°СЃС‡РµС‚ РЅР°Р»РѕРіРѕРІ
   Map<String, dynamic> _calculateTaxes(double amount) {
-    // Упрощенный расчет НДС (20%)
+    // РЈРїСЂРѕС‰РµРЅРЅС‹Р№ СЂР°СЃС‡РµС‚ РќР”РЎ (20%)
     final double vatRate = 0.20;
     final double vatAmount = amount * vatRate;
     final double amountWithoutVat = amount - vatAmount;
@@ -284,14 +288,14 @@ class ReceiptService {
     };
   }
 
-  /// Создание фискального чека
+  /// РЎРѕР·РґР°РЅРёРµ С„РёСЃРєР°Р»СЊРЅРѕРіРѕ С‡РµРєР°
   Future<FiscalReceipt?> _createFiscalReceipt(
     Receipt receipt,
     Map<String, dynamic> receiptData,
   ) async {
     try {
-      // Интеграция с 54-ФЗ (онлайн-касса)
-      // В реальном приложении здесь будет вызов API фискального оператора
+      // РРЅС‚РµРіСЂР°С†РёСЏ СЃ 54-Р¤Р— (РѕРЅР»Р°Р№РЅ-РєР°СЃСЃР°)
+      // Р’ СЂРµР°Р»СЊРЅРѕРј РїСЂРёР»РѕР¶РµРЅРёРё Р·РґРµСЃСЊ Р±СѓРґРµС‚ РІС‹Р·РѕРІ API С„РёСЃРєР°Р»СЊРЅРѕРіРѕ РѕРїРµСЂР°С‚РѕСЂР°
 
       final FiscalReceipt fiscalReceipt = FiscalReceipt(
         id: _uuid.v4(),
@@ -302,8 +306,8 @@ class ReceiptService {
         fiscalDocumentId: _generateFiscalDocumentId(),
         fiscalTimestamp: DateTime.now(),
         operator: 'Event Marketplace',
-        inn: '1234567890', // ИНН организации
-        kktRegNumber: '0000000000000000', // Регистрационный номер ККТ
+        inn: '1234567890', // РРќРќ РѕСЂРіР°РЅРёР·Р°С†РёРё
+        kktRegNumber: '0000000000000000', // Р РµРіРёСЃС‚СЂР°С†РёРѕРЅРЅС‹Р№ РЅРѕРјРµСЂ РљРљРў
         createdAt: DateTime.now(),
         fiscalData: receiptData,
         qrCode: _generateQRCode(receipt.id),
@@ -323,33 +327,33 @@ class ReceiptService {
     }
   }
 
-  /// Генерация номера фискального документа
+  /// Р“РµРЅРµСЂР°С†РёСЏ РЅРѕРјРµСЂР° С„РёСЃРєР°Р»СЊРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°
   String _generateFiscalDocumentNumber() {
     return DateTime.now().millisecondsSinceEpoch.toString();
   }
 
-  /// Генерация фискального признака
+  /// Р“РµРЅРµСЂР°С†РёСЏ С„РёСЃРєР°Р»СЊРЅРѕРіРѕ РїСЂРёР·РЅР°РєР°
   String _generateFiscalSign() {
     return DateTime.now().millisecondsSinceEpoch.toRadixString(16).toUpperCase();
   }
 
-  /// Генерация ID фискального документа
+  /// Р“РµРЅРµСЂР°С†РёСЏ ID С„РёСЃРєР°Р»СЊРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°
   String _generateFiscalDocumentId() {
     return DateTime.now().millisecondsSinceEpoch.toString();
   }
 
-  /// Генерация QR-кода
+  /// Р“РµРЅРµСЂР°С†РёСЏ QR-РєРѕРґР°
   String _generateQRCode(String receiptId) {
     return 't=20240101T120000&s=1000.00&fn=1234567890&i=1&fp=1234567890&n=1';
   }
 
-  /// Генерация URL чека
+  /// Р“РµРЅРµСЂР°С†РёСЏ URL С‡РµРєР°
   Future<String> _generateReceiptUrl(String receiptId) async {
-    // В реальном приложении здесь будет генерация URL для просмотра чека
+    // Р’ СЂРµР°Р»СЊРЅРѕРј РїСЂРёР»РѕР¶РµРЅРёРё Р·РґРµСЃСЊ Р±СѓРґРµС‚ РіРµРЅРµСЂР°С†РёСЏ URL РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР° С‡РµРєР°
     return 'https://eventmarketplace.app/receipts/$receiptId';
   }
 
-  /// Отправка чека пользователю
+  /// РћС‚РїСЂР°РІРєР° С‡РµРєР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ
   Future<void> _sendReceipt(Receipt receipt) async {
     try {
       final ReceiptSettings? settings = await _getUserReceiptSettings(receipt.userId);
@@ -358,13 +362,13 @@ class ReceiptService {
 
       bool sent = false;
 
-      // Отправка по email
+      // РћС‚РїСЂР°РІРєР° РїРѕ email
       if (settings.sendByEmail && receipt.email != null) {
         await _sendReceiptByEmail(receipt);
         sent = true;
       }
 
-      // Отправка по SMS
+      // РћС‚РїСЂР°РІРєР° РїРѕ SMS
       if (settings.sendBySms && receipt.phone != null) {
         await _sendReceiptBySms(receipt);
         sent = true;
@@ -381,11 +385,11 @@ class ReceiptService {
     }
   }
 
-  /// Отправка чека по email
+  /// РћС‚РїСЂР°РІРєР° С‡РµРєР° РїРѕ email
   Future<void> _sendReceiptByEmail(Receipt receipt) async {
     try {
-      // Интеграция с email сервисом
-      // В реальном приложении здесь будет вызов API email сервиса
+      // РРЅС‚РµРіСЂР°С†РёСЏ СЃ email СЃРµСЂРІРёСЃРѕРј
+      // Р’ СЂРµР°Р»СЊРЅРѕРј РїСЂРёР»РѕР¶РµРЅРёРё Р·РґРµСЃСЊ Р±СѓРґРµС‚ РІС‹Р·РѕРІ API email СЃРµСЂРІРёСЃР°
 
       debugPrint('INFO: [ReceiptService] Receipt sent by email to ${receipt.email}');
     } catch (e) {
@@ -394,11 +398,11 @@ class ReceiptService {
     }
   }
 
-  /// Отправка чека по SMS
+  /// РћС‚РїСЂР°РІРєР° С‡РµРєР° РїРѕ SMS
   Future<void> _sendReceiptBySms(Receipt receipt) async {
     try {
-      // Интеграция с SMS сервисом
-      // В реальном приложении здесь будет вызов API SMS сервиса
+      // РРЅС‚РµРіСЂР°С†РёСЏ СЃ SMS СЃРµСЂРІРёСЃРѕРј
+      // Р’ СЂРµР°Р»СЊРЅРѕРј РїСЂРёР»РѕР¶РµРЅРёРё Р·РґРµСЃСЊ Р±СѓРґРµС‚ РІС‹Р·РѕРІ API SMS СЃРµСЂРІРёСЃР°
 
       debugPrint('INFO: [ReceiptService] Receipt sent by SMS to ${receipt.phone}');
     } catch (e) {
@@ -407,7 +411,7 @@ class ReceiptService {
     }
   }
 
-  /// Обновление статуса чека
+  /// РћР±РЅРѕРІР»РµРЅРёРµ СЃС‚Р°С‚СѓСЃР° С‡РµРєР°
   Future<void> _updateReceiptStatus(
     String receiptId,
     ReceiptStatus status, [
@@ -433,7 +437,7 @@ class ReceiptService {
     }
   }
 
-  /// Получение чеков пользователя
+  /// РџРѕР»СѓС‡РµРЅРёРµ С‡РµРєРѕРІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<List<Receipt>> getUserReceipts(String userId) async {
     try {
       final QuerySnapshot snapshot = await _firestore
@@ -451,7 +455,7 @@ class ReceiptService {
     }
   }
 
-  /// Получение чека по ID
+  /// РџРѕР»СѓС‡РµРЅРёРµ С‡РµРєР° РїРѕ ID
   Future<Receipt?> getReceipt(String receiptId) async {
     try {
       final DocumentSnapshot doc = await _firestore.collection('receipts').doc(receiptId).get();
@@ -466,7 +470,7 @@ class ReceiptService {
     }
   }
 
-  /// Обновление настроек чеков пользователя
+  /// РћР±РЅРѕРІР»РµРЅРёРµ РЅР°СЃС‚СЂРѕРµРє С‡РµРєРѕРІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<void> updateReceiptSettings(ReceiptSettings settings) async {
     try {
       await _firestore.collection('receipt_settings').doc(settings.userId).set(settings.toMap());
@@ -478,7 +482,7 @@ class ReceiptService {
     }
   }
 
-  /// Создание шаблона чека
+  /// РЎРѕР·РґР°РЅРёРµ С€Р°Р±Р»РѕРЅР° С‡РµРєР°
   Future<String> createReceiptTemplate(ReceiptTemplate template) async {
     try {
       final String templateId = _uuid.v4();
@@ -505,7 +509,7 @@ class ReceiptService {
     }
   }
 
-  /// Повторная отправка чека
+  /// РџРѕРІС‚РѕСЂРЅР°СЏ РѕС‚РїСЂР°РІРєР° С‡РµРєР°
   Future<void> resendReceipt(String receiptId) async {
     try {
       final Receipt? receipt = await getReceipt(receiptId);
@@ -521,3 +525,4 @@ class ReceiptService {
     }
   }
 }
+

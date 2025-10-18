@@ -1,14 +1,18 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/dynamic_pricing.dart';
+import 'package:flutter/foundation.dart';
 
 class DynamicPricingService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Uuid _uuid = const Uuid();
 
-  /// Получение актуальной цены для услуги
+  /// РџРѕР»СѓС‡РµРЅРёРµ Р°РєС‚СѓР°Р»СЊРЅРѕР№ С†РµРЅС‹ РґР»СЏ СѓСЃР»СѓРіРё
   Future<double> getCurrentPrice({
     required ServiceType serviceType,
     required String region,
@@ -16,20 +20,20 @@ class DynamicPricingService {
     Map<String, dynamic>? additionalFactors,
   }) async {
     try {
-      // Получаем правила ценообразования
+      // РџРѕР»СѓС‡Р°РµРј РїСЂР°РІРёР»Р° С†РµРЅРѕРѕР±СЂР°Р·РѕРІР°РЅРёСЏ
       final PricingRule? rule = await _getPricingRule(serviceType);
       if (rule == null) {
         debugPrint('WARNING: [DynamicPricingService] No pricing rule found for $serviceType');
         return 0.0;
       }
 
-      // Получаем метрики спроса
+      // РџРѕР»СѓС‡Р°РµРј РјРµС‚СЂРёРєРё СЃРїСЂРѕСЃР°
       final DemandMetrics? demandMetrics = await _getDemandMetrics(serviceType, region);
 
-      // Получаем региональные настройки
+      // РџРѕР»СѓС‡Р°РµРј СЂРµРіРёРѕРЅР°Р»СЊРЅС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё
       final RegionalPricing? regionalPricing = await _getRegionalPricing(region);
 
-      // Рассчитываем факторы
+      // Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј С„Р°РєС‚РѕСЂС‹
       final Map<String, dynamic> factors = await _calculateFactors(
         serviceType: serviceType,
         region: region,
@@ -39,7 +43,7 @@ class DynamicPricingService {
         additionalFactors: additionalFactors,
       );
 
-      // Создаем обновленное правило с актуальными факторами
+      // РЎРѕР·РґР°РµРј РѕР±РЅРѕРІР»РµРЅРЅРѕРµ РїСЂР°РІРёР»Рѕ СЃ Р°РєС‚СѓР°Р»СЊРЅС‹РјРё С„Р°РєС‚РѕСЂР°РјРё
       final PricingRule updatedRule = rule.copyWith(
         demandFactor: factors['demandFactor'] ?? rule.demandFactor,
         timeFactor: factors['timeFactor'] ?? rule.timeFactor,
@@ -49,14 +53,14 @@ class DynamicPricingService {
         competitionFactor: factors['competitionFactor'] ?? rule.competitionFactor,
       );
 
-      // Рассчитываем финальную цену
+      // Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј С„РёРЅР°Р»СЊРЅСѓСЋ С†РµРЅСѓ
       final double finalPrice = updatedRule.calculateFinalPrice(
         region: region,
         userTier: userTier,
         additionalFactors: factors,
       );
 
-      // Сохраняем историю ценообразования
+      // РЎРѕС…СЂР°РЅСЏРµРј РёСЃС‚РѕСЂРёСЋ С†РµРЅРѕРѕР±СЂР°Р·РѕРІР°РЅРёСЏ
       await _savePricingHistory(
         serviceType: serviceType,
         region: region,
@@ -75,7 +79,7 @@ class DynamicPricingService {
     }
   }
 
-  /// Получение правила ценообразования
+  /// РџРѕР»СѓС‡РµРЅРёРµ РїСЂР°РІРёР»Р° С†РµРЅРѕРѕР±СЂР°Р·РѕРІР°РЅРёСЏ
   Future<PricingRule?> _getPricingRule(ServiceType serviceType) async {
     try {
       final QuerySnapshot snapshot = await _firestore
@@ -95,7 +99,7 @@ class DynamicPricingService {
     }
   }
 
-  /// Получение метрик спроса
+  /// РџРѕР»СѓС‡РµРЅРёРµ РјРµС‚СЂРёРє СЃРїСЂРѕСЃР°
   Future<DemandMetrics?> _getDemandMetrics(ServiceType serviceType, String region) async {
     try {
       final QuerySnapshot snapshot = await _firestore
@@ -116,7 +120,7 @@ class DynamicPricingService {
     }
   }
 
-  /// Получение региональных настроек
+  /// РџРѕР»СѓС‡РµРЅРёРµ СЂРµРіРёРѕРЅР°Р»СЊРЅС‹С… РЅР°СЃС‚СЂРѕРµРє
   Future<RegionalPricing?> _getRegionalPricing(String region) async {
     try {
       final QuerySnapshot snapshot = await _firestore
@@ -136,7 +140,7 @@ class DynamicPricingService {
     }
   }
 
-  /// Расчет факторов ценообразования
+  /// Р Р°СЃС‡РµС‚ С„Р°РєС‚РѕСЂРѕРІ С†РµРЅРѕРѕР±СЂР°Р·РѕРІР°РЅРёСЏ
   Future<Map<String, dynamic>> _calculateFactors({
     required ServiceType serviceType,
     required String region,
@@ -147,33 +151,33 @@ class DynamicPricingService {
   }) async {
     final Map<String, dynamic> factors = {};
 
-    // Фактор спроса
+    // Р¤Р°РєС‚РѕСЂ СЃРїСЂРѕСЃР°
     if (demandMetrics != null) {
       factors['demandFactor'] = demandMetrics.calculatedDemandLevel;
     } else {
-      factors['demandFactor'] = 1.0; // Средний спрос по умолчанию
+      factors['demandFactor'] = 1.0; // РЎСЂРµРґРЅРёР№ СЃРїСЂРѕСЃ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
     }
 
-    // Временной фактор
+    // Р’СЂРµРјРµРЅРЅРѕР№ С„Р°РєС‚РѕСЂ
     factors['timeFactor'] = _calculateTimeFactor();
 
-    // Региональный фактор
+    // Р РµРіРёРѕРЅР°Р»СЊРЅС‹Р№ С„Р°РєС‚РѕСЂ
     if (regionalPricing != null) {
       factors['regionFactor'] = regionalPricing.economicFactor;
     } else {
-      factors['regionFactor'] = 1.0; // Базовый регион
+      factors['regionFactor'] = 1.0; // Р‘Р°Р·РѕРІС‹Р№ СЂРµРіРёРѕРЅ
     }
 
-    // Сезонный фактор
+    // РЎРµР·РѕРЅРЅС‹Р№ С„Р°РєС‚РѕСЂ
     factors['seasonFactor'] = _calculateSeasonFactor();
 
-    // Фактор пользователя
+    // Р¤Р°РєС‚РѕСЂ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
     factors['userTierFactor'] = _calculateUserTierFactor(userTier);
 
-    // Фактор конкуренции
+    // Р¤Р°РєС‚РѕСЂ РєРѕРЅРєСѓСЂРµРЅС†РёРё
     factors['competitionFactor'] = _calculateCompetitionFactor(serviceType, region);
 
-    // Дополнительные факторы
+    // Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ С„Р°РєС‚РѕСЂС‹
     if (additionalFactors != null) {
       factors.addAll(additionalFactors);
     }
@@ -181,83 +185,83 @@ class DynamicPricingService {
     return factors;
   }
 
-  /// Расчет временного фактора
+  /// Р Р°СЃС‡РµС‚ РІСЂРµРјРµРЅРЅРѕРіРѕ С„Р°РєС‚РѕСЂР°
   double _calculateTimeFactor() {
     final DateTime now = DateTime.now();
     final int hour = now.hour;
     final int dayOfWeek = now.weekday;
 
-    // Пиковые часы (18:00-22:00) - +20%
+    // РџРёРєРѕРІС‹Рµ С‡Р°СЃС‹ (18:00-22:00) - +20%
     if (hour >= 18 && hour <= 22) {
       return 1.2;
     }
 
-    // Выходные дни - +15%
+    // Р’С‹С…РѕРґРЅС‹Рµ РґРЅРё - +15%
     if (dayOfWeek == DateTime.saturday || dayOfWeek == DateTime.sunday) {
       return 1.15;
     }
 
-    // Ночные часы (00:00-06:00) - -10%
+    // РќРѕС‡РЅС‹Рµ С‡Р°СЃС‹ (00:00-06:00) - -10%
     if (hour >= 0 && hour <= 6) {
       return 0.9;
     }
 
-    return 1.0; // Стандартное время
+    return 1.0; // РЎС‚Р°РЅРґР°СЂС‚РЅРѕРµ РІСЂРµРјСЏ
   }
 
-  /// Расчет сезонного фактора
+  /// Р Р°СЃС‡РµС‚ СЃРµР·РѕРЅРЅРѕРіРѕ С„Р°РєС‚РѕСЂР°
   double _calculateSeasonFactor() {
     final DateTime now = DateTime.now();
     final int month = now.month;
 
-    // Летние месяцы (июнь-август) - +25%
+    // Р›РµС‚РЅРёРµ РјРµСЃСЏС†С‹ (РёСЋРЅСЊ-Р°РІРіСѓСЃС‚) - +25%
     if (month >= 6 && month <= 8) {
       return 1.25;
     }
 
-    // Зимние праздники (декабрь-январь) - +30%
+    // Р—РёРјРЅРёРµ РїСЂР°Р·РґРЅРёРєРё (РґРµРєР°Р±СЂСЊ-СЏРЅРІР°СЂСЊ) - +30%
     if (month == 12 || month == 1) {
       return 1.3;
     }
 
-    // Весенние месяцы (март-май) - +10%
+    // Р’РµСЃРµРЅРЅРёРµ РјРµСЃСЏС†С‹ (РјР°СЂС‚-РјР°Р№) - +10%
     if (month >= 3 && month <= 5) {
       return 1.1;
     }
 
-    return 1.0; // Осень
+    return 1.0; // РћСЃРµРЅСЊ
   }
 
-  /// Расчет фактора пользователя
+  /// Р Р°СЃС‡РµС‚ С„Р°РєС‚РѕСЂР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   double _calculateUserTierFactor(String userTier) {
     switch (userTier.toLowerCase()) {
       case 'free':
-        return 1.0; // Базовая цена
+        return 1.0; // Р‘Р°Р·РѕРІР°СЏ С†РµРЅР°
       case 'premium':
-        return 0.9; // Скидка 10% для премиум
+        return 0.9; // РЎРєРёРґРєР° 10% РґР»СЏ РїСЂРµРјРёСѓРј
       case 'pro':
-        return 0.8; // Скидка 20% для PRO
+        return 0.8; // РЎРєРёРґРєР° 20% РґР»СЏ PRO
       default:
         return 1.0;
     }
   }
 
-  /// Расчет фактора конкуренции
+  /// Р Р°СЃС‡РµС‚ С„Р°РєС‚РѕСЂР° РєРѕРЅРєСѓСЂРµРЅС†РёРё
   double _calculateCompetitionFactor(ServiceType serviceType, String region) {
-    // Упрощенная логика - в реальном приложении нужно анализировать конкурентов
+    // РЈРїСЂРѕС‰РµРЅРЅР°СЏ Р»РѕРіРёРєР° - РІ СЂРµР°Р»СЊРЅРѕРј РїСЂРёР»РѕР¶РµРЅРёРё РЅСѓР¶РЅРѕ Р°РЅР°Р»РёР·РёСЂРѕРІР°С‚СЊ РєРѕРЅРєСѓСЂРµРЅС‚РѕРІ
     switch (serviceType) {
       case ServiceType.subscription:
-        return 1.0; // Стабильная конкуренция
+        return 1.0; // РЎС‚Р°Р±РёР»СЊРЅР°СЏ РєРѕРЅРєСѓСЂРµРЅС†РёСЏ
       case ServiceType.promotion:
-        return 1.1; // Высокая конкуренция
+        return 1.1; // Р’С‹СЃРѕРєР°СЏ РєРѕРЅРєСѓСЂРµРЅС†РёСЏ
       case ServiceType.advertisement:
-        return 0.9; // Низкая конкуренция
+        return 0.9; // РќРёР·РєР°СЏ РєРѕРЅРєСѓСЂРµРЅС†РёСЏ
       case ServiceType.premiumFeature:
         return 1.0;
     }
   }
 
-  /// Сохранение истории ценообразования
+  /// РЎРѕС…СЂР°РЅРµРЅРёРµ РёСЃС‚РѕСЂРёРё С†РµРЅРѕРѕР±СЂР°Р·РѕРІР°РЅРёСЏ
   Future<void> _savePricingHistory({
     required ServiceType serviceType,
     required String region,
@@ -284,7 +288,7 @@ class DynamicPricingService {
     }
   }
 
-  /// Обновление метрик спроса
+  /// РћР±РЅРѕРІР»РµРЅРёРµ РјРµС‚СЂРёРє СЃРїСЂРѕСЃР°
   Future<void> updateDemandMetrics({
     required ServiceType serviceType,
     required String region,
@@ -312,7 +316,7 @@ class DynamicPricingService {
     }
   }
 
-  /// Создание правила ценообразования
+  /// РЎРѕР·РґР°РЅРёРµ РїСЂР°РІРёР»Р° С†РµРЅРѕРѕР±СЂР°Р·РѕРІР°РЅРёСЏ
   Future<void> createPricingRule(PricingRule rule) async {
     try {
       await _firestore.collection('pricing_rules').doc(rule.id).set(rule.toMap());
@@ -324,7 +328,7 @@ class DynamicPricingService {
     }
   }
 
-  /// Получение истории ценообразования
+  /// РџРѕР»СѓС‡РµРЅРёРµ РёСЃС‚РѕСЂРёРё С†РµРЅРѕРѕР±СЂР°Р·РѕРІР°РЅРёСЏ
   Future<List<PricingHistory>> getPricingHistory({
     required ServiceType serviceType,
     required String region,
@@ -357,7 +361,7 @@ class DynamicPricingService {
     }
   }
 
-  /// Получение статистики ценообразования
+  /// РџРѕР»СѓС‡РµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРєРё С†РµРЅРѕРѕР±СЂР°Р·РѕРІР°РЅРёСЏ
   Future<Map<String, dynamic>> getPricingStats({
     required ServiceType serviceType,
     required String region,
@@ -387,7 +391,7 @@ class DynamicPricingService {
       final double minPrice = prices.reduce((a, b) => a < b ? a : b);
       final double maxPrice = prices.reduce((a, b) => a > b ? a : b);
 
-      // Расчет волатильности (стандартное отклонение)
+      // Р Р°СЃС‡РµС‚ РІРѕР»Р°С‚РёР»СЊРЅРѕСЃС‚Рё (СЃС‚Р°РЅРґР°СЂС‚РЅРѕРµ РѕС‚РєР»РѕРЅРµРЅРёРµ)
       final double variance = prices
               .map((price) => (price - averagePrice) * (price - averagePrice))
               .reduce((a, b) => a + b) /
@@ -408,3 +412,4 @@ class DynamicPricingService {
     }
   }
 }
+

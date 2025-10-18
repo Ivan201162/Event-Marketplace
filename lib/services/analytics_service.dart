@@ -1,17 +1,23 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/advertisement.dart';
+import 'package:flutter/foundation.dart';
 import '../models/promotion_boost.dart';
+import 'package:flutter/foundation.dart';
 import '../models/subscription_plan.dart';
+import 'package:flutter/foundation.dart';
 import '../models/transaction.dart' as transaction_model;
 
 class AnalyticsService {
   static final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// Инициализация сервиса аналитики
+  /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃРµСЂРІРёСЃР° Р°РЅР°Р»РёС‚РёРєРё
   static Future<void> initialize() async {
     try {
       await _analytics.setAnalyticsCollectionEnabled(true);
@@ -21,7 +27,7 @@ class AnalyticsService {
     }
   }
 
-  /// Отслеживание события покупки подписки
+  /// РћС‚СЃР»РµР¶РёРІР°РЅРёРµ СЃРѕР±С‹С‚РёСЏ РїРѕРєСѓРїРєРё РїРѕРґРїРёСЃРєРё
   static Future<void> trackSubscriptionPurchase({
     required String userId,
     required SubscriptionPlan plan,
@@ -60,7 +66,7 @@ class AnalyticsService {
         },
       );
 
-      // Сохранение в Firestore для детальной аналитики
+      // РЎРѕС…СЂР°РЅРµРЅРёРµ РІ Firestore РґР»СЏ РґРµС‚Р°Р»СЊРЅРѕР№ Р°РЅР°Р»РёС‚РёРєРё
       await _saveAnalyticsEvent(
         userId: userId,
         eventType: 'subscription_purchased',
@@ -83,7 +89,7 @@ class AnalyticsService {
     }
   }
 
-  /// Отслеживание события покупки продвижения
+  /// РћС‚СЃР»РµР¶РёРІР°РЅРёРµ СЃРѕР±С‹С‚РёСЏ РїРѕРєСѓРїРєРё РїСЂРѕРґРІРёР¶РµРЅРёСЏ
   static Future<void> trackPromotionPurchase({
     required String userId,
     required PromotionBoost promotion,
@@ -107,7 +113,7 @@ class AnalyticsService {
         },
       );
 
-      // Сохранение в Firestore
+      // РЎРѕС…СЂР°РЅРµРЅРёРµ РІ Firestore
       await _saveAnalyticsEvent(
         userId: userId,
         eventType: 'promotion_purchased',
@@ -130,7 +136,7 @@ class AnalyticsService {
     }
   }
 
-  /// Отслеживание события создания рекламы
+  /// РћС‚СЃР»РµР¶РёРІР°РЅРёРµ СЃРѕР±С‹С‚РёСЏ СЃРѕР·РґР°РЅРёСЏ СЂРµРєР»Р°РјС‹
   static Future<void> trackAdvertisementCreated({
     required String userId,
     required Advertisement advertisement,
@@ -149,7 +155,7 @@ class AnalyticsService {
         },
       );
 
-      // Сохранение в Firestore
+      // РЎРѕС…СЂР°РЅРµРЅРёРµ РІ Firestore
       await _saveAnalyticsEvent(
         userId: userId,
         eventType: 'advertisement_created',
@@ -168,7 +174,7 @@ class AnalyticsService {
     }
   }
 
-  /// Отслеживание события успешной оплаты
+  /// РћС‚СЃР»РµР¶РёРІР°РЅРёРµ СЃРѕР±С‹С‚РёСЏ СѓСЃРїРµС€РЅРѕР№ РѕРїР»Р°С‚С‹
   static Future<void> trackPaymentSuccess({
     required String userId,
     required transaction_model.Transaction transaction,
@@ -188,7 +194,7 @@ class AnalyticsService {
         },
       );
 
-      // Сохранение в Firestore
+      // РЎРѕС…СЂР°РЅРµРЅРёРµ РІ Firestore
       await _saveAnalyticsEvent(
         userId: userId,
         eventType: 'payment_success',
@@ -208,7 +214,7 @@ class AnalyticsService {
     }
   }
 
-  /// Отслеживание события неудачной оплаты
+  /// РћС‚СЃР»РµР¶РёРІР°РЅРёРµ СЃРѕР±С‹С‚РёСЏ РЅРµСѓРґР°С‡РЅРѕР№ РѕРїР»Р°С‚С‹
   static Future<void> trackPaymentFailed({
     required String userId,
     required transaction_model.Transaction transaction,
@@ -230,7 +236,7 @@ class AnalyticsService {
         },
       );
 
-      // Сохранение в Firestore
+      // РЎРѕС…СЂР°РЅРµРЅРёРµ РІ Firestore
       await _saveAnalyticsEvent(
         userId: userId,
         eventType: 'payment_failed',
@@ -251,7 +257,7 @@ class AnalyticsService {
     }
   }
 
-  /// Отслеживание просмотра рекламы
+  /// РћС‚СЃР»РµР¶РёРІР°РЅРёРµ РїСЂРѕСЃРјРѕС‚СЂР° СЂРµРєР»Р°РјС‹
   static Future<void> trackAdvertisementView({
     required String userId,
     required String advertisementId,
@@ -268,7 +274,7 @@ class AnalyticsService {
         },
       );
 
-      // Увеличиваем счетчик показов в Firestore
+      // РЈРІРµР»РёС‡РёРІР°РµРј СЃС‡РµС‚С‡РёРє РїРѕРєР°Р·РѕРІ РІ Firestore
       await _firestore.collection('advertisements').doc(advertisementId).update({
         'impressions': FieldValue.increment(1),
         'updatedAt': FieldValue.serverTimestamp(),
@@ -280,7 +286,7 @@ class AnalyticsService {
     }
   }
 
-  /// Отслеживание клика по рекламе
+  /// РћС‚СЃР»РµР¶РёРІР°РЅРёРµ РєР»РёРєР° РїРѕ СЂРµРєР»Р°РјРµ
   static Future<void> trackAdvertisementClick({
     required String userId,
     required String advertisementId,
@@ -297,7 +303,7 @@ class AnalyticsService {
         },
       );
 
-      // Увеличиваем счетчик кликов в Firestore
+      // РЈРІРµР»РёС‡РёРІР°РµРј СЃС‡РµС‚С‡РёРє РєР»РёРєРѕРІ РІ Firestore
       await _firestore.collection('advertisements').doc(advertisementId).update({
         'clicks': FieldValue.increment(1),
         'updatedAt': FieldValue.serverTimestamp(),
@@ -309,7 +315,7 @@ class AnalyticsService {
     }
   }
 
-  /// Отслеживание входа в раздел монетизации
+  /// РћС‚СЃР»РµР¶РёРІР°РЅРёРµ РІС…РѕРґР° РІ СЂР°Р·РґРµР» РјРѕРЅРµС‚РёР·Р°С†РёРё
   static Future<void> trackMonetizationHubView({
     required String userId,
   }) async {
@@ -327,7 +333,7 @@ class AnalyticsService {
     }
   }
 
-  /// Отслеживание просмотра планов подписки
+  /// РћС‚СЃР»РµР¶РёРІР°РЅРёРµ РїСЂРѕСЃРјРѕС‚СЂР° РїР»Р°РЅРѕРІ РїРѕРґРїРёСЃРєРё
   static Future<void> trackSubscriptionPlansView({
     required String userId,
   }) async {
@@ -345,7 +351,7 @@ class AnalyticsService {
     }
   }
 
-  /// Отслеживание просмотра пакетов продвижения
+  /// РћС‚СЃР»РµР¶РёРІР°РЅРёРµ РїСЂРѕСЃРјРѕС‚СЂР° РїР°РєРµС‚РѕРІ РїСЂРѕРґРІРёР¶РµРЅРёСЏ
   static Future<void> trackPromotionPackagesView({
     required String userId,
   }) async {
@@ -363,7 +369,7 @@ class AnalyticsService {
     }
   }
 
-  /// Отслеживание просмотра рекламных кампаний
+  /// РћС‚СЃР»РµР¶РёРІР°РЅРёРµ РїСЂРѕСЃРјРѕС‚СЂР° СЂРµРєР»Р°РјРЅС‹С… РєР°РјРїР°РЅРёР№
   static Future<void> trackAdvertisementCampaignsView({
     required String userId,
   }) async {
@@ -381,7 +387,7 @@ class AnalyticsService {
     }
   }
 
-  /// Сохранение события аналитики в Firestore
+  /// РЎРѕС…СЂР°РЅРµРЅРёРµ СЃРѕР±С‹С‚РёСЏ Р°РЅР°Р»РёС‚РёРєРё РІ Firestore
   static Future<void> _saveAnalyticsEvent({
     required String userId,
     required String eventType,
@@ -400,7 +406,7 @@ class AnalyticsService {
     }
   }
 
-  /// Получение статистики пользователя
+  /// РџРѕР»СѓС‡РµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРєРё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   static Future<Map<String, dynamic>> getUserAnalytics(String userId) async {
     try {
       final QuerySnapshot snapshot =
@@ -442,7 +448,7 @@ class AnalyticsService {
     }
   }
 
-  /// Получение общей статистики платформы
+  /// РџРѕР»СѓС‡РµРЅРёРµ РѕР±С‰РµР№ СЃС‚Р°С‚РёСЃС‚РёРєРё РїР»Р°С‚С„РѕСЂРјС‹
   static Future<Map<String, dynamic>> getPlatformAnalytics() async {
     try {
       final QuerySnapshot snapshot = await _firestore.collection('analytics_events').get();
@@ -478,7 +484,7 @@ class AnalyticsService {
     }
   }
 
-  /// Логирование изменения темы
+  /// Р›РѕРіРёСЂРѕРІР°РЅРёРµ РёР·РјРµРЅРµРЅРёСЏ С‚РµРјС‹
   static Future<void> logChangeTheme(String themeName) async {
     try {
       await _analytics.logEvent(
@@ -494,3 +500,4 @@ class AnalyticsService {
     }
   }
 }
+

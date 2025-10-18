@@ -15,8 +15,8 @@ class EnhancedFeedScreen extends ConsumerStatefulWidget {
 class _EnhancedFeedScreenState extends ConsumerState<EnhancedFeedScreen> {
   @override
   Widget build(BuildContext context) {
-    final feedNotifier = ref.watch(enhancedFeedProvider);
-    final feedState = feedNotifier.state;
+    final feedState = ref.watch(enhancedFeedProvider);
+    final feedNotifier = ref.read(enhancedFeedProvider.notifier);
 
     return Scaffold(
       body: SafeArea(
@@ -56,7 +56,7 @@ class _EnhancedFeedScreenState extends ConsumerState<EnhancedFeedScreen> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () => ref.read(enhancedFeedProvider).refreshFeed(),
+              onPressed: () => ref.read(enhancedFeedProvider.notifier).refreshFeed(),
               child: const Text('Повторить'),
             ),
           ],
@@ -149,7 +149,7 @@ class _FeedPostCard extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        post.authorName,
+                        post.authorName ?? 'Неизвестный автор',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -232,7 +232,7 @@ class _FeedPostCard extends ConsumerWidget {
             child: Row(
               children: [
                 IconButton(
-                  onPressed: () => feedNotifier.toggleLike(post.id),
+                  onPressed: () => ref.read(enhancedFeedProvider.notifier).toggleLike(post.id),
                   icon: Icon(
                     post.isLiked ? Icons.favorite : Icons.favorite_border,
                     color: post.isLiked ? Colors.red : null,
@@ -257,7 +257,7 @@ class _FeedPostCard extends ConsumerWidget {
                 Text('${post.shares}'),
                 const Spacer(),
                 IconButton(
-                  onPressed: () => feedNotifier.toggleSave(post.id),
+                  onPressed: () => ref.read(enhancedFeedProvider.notifier).toggleSave(post.id),
                   icon: Icon(
                     post.isSaved ? Icons.bookmark : Icons.bookmark_border,
                     color: post.isSaved ? Colors.amber : null,
@@ -329,7 +329,7 @@ class _FeedPostCard extends ConsumerWidget {
           height: 200,
           color: Colors.grey[300],
           child: const Center(
-            child: Icon(Icons.media),
+            child: Icon(Icons.perm_media),
           ),
         );
     }

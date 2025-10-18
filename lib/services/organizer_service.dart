@@ -1,21 +1,23 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import '../models/organizer_profile.dart';
+import 'package:flutter/foundation.dart';
 
-/// Сервис для управления профилями организаторов
+/// РЎРµСЂРІРёСЃ РґР»СЏ СѓРїСЂР°РІР»РµРЅРёСЏ РїСЂРѕС„РёР»СЏРјРё РѕСЂРіР°РЅРёР·Р°С‚РѕСЂРѕРІ
 class OrganizerService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// Создать профиль организатора
+  /// РЎРѕР·РґР°С‚СЊ РїСЂРѕС„РёР»СЊ РѕСЂРіР°РЅРёР·Р°С‚РѕСЂР°
   Future<void> createOrganizerProfile(OrganizerProfile profile) async {
     try {
       await _firestore.collection('organizer_profiles').doc(profile.id).set(profile.toMap());
     } on Exception catch (e) {
-      debugPrint('Ошибка создания профиля организатора: $e');
-      throw Exception('Ошибка создания профиля организатора: $e');
+      debugPrint('РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ РїСЂРѕС„РёР»СЏ РѕСЂРіР°РЅРёР·Р°С‚РѕСЂР°: $e');
+      throw Exception('РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ РїСЂРѕС„РёР»СЏ РѕСЂРіР°РЅРёР·Р°С‚РѕСЂР°: $e');
     }
   }
 
-  /// Получить профиль организатора по ID
+  /// РџРѕР»СѓС‡РёС‚СЊ РїСЂРѕС„РёР»СЊ РѕСЂРіР°РЅРёР·Р°С‚РѕСЂР° РїРѕ ID
   Future<OrganizerProfile?> getOrganizerProfile(String organizerId) async {
     try {
       final doc = await _firestore.collection('organizer_profiles').doc(organizerId).get();
@@ -25,12 +27,12 @@ class OrganizerService {
       }
       return null;
     } on Exception catch (e) {
-      debugPrint('Ошибка получения профиля организатора: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РїСЂРѕС„РёР»СЏ РѕСЂРіР°РЅРёР·Р°С‚РѕСЂР°: $e');
       return null;
     }
   }
 
-  /// Получить профиль организатора по ID пользователя
+  /// РџРѕР»СѓС‡РёС‚СЊ РїСЂРѕС„РёР»СЊ РѕСЂРіР°РЅРёР·Р°С‚РѕСЂР° РїРѕ ID РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<OrganizerProfile?> getOrganizerProfileByUserId(String userId) async {
     try {
       final querySnapshot = await _firestore
@@ -44,12 +46,12 @@ class OrganizerService {
       }
       return null;
     } on Exception catch (e) {
-      debugPrint('Ошибка получения профиля организатора по userId: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РїСЂРѕС„РёР»СЏ РѕСЂРіР°РЅРёР·Р°С‚РѕСЂР° РїРѕ userId: $e');
       return null;
     }
   }
 
-  /// Обновить профиль организатора
+  /// РћР±РЅРѕРІРёС‚СЊ РїСЂРѕС„РёР»СЊ РѕСЂРіР°РЅРёР·Р°С‚РѕСЂР°
   Future<void> updateOrganizerProfile(OrganizerProfile profile) async {
     try {
       final updatedProfile = profile.copyWith(updatedAt: DateTime.now());
@@ -58,22 +60,22 @@ class OrganizerService {
           .doc(profile.id)
           .update(updatedProfile.toMap());
     } on Exception catch (e) {
-      debugPrint('Ошибка обновления профиля организатора: $e');
-      throw Exception('Ошибка обновления профиля организатора: $e');
+      debugPrint('РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ РїСЂРѕС„РёР»СЏ РѕСЂРіР°РЅРёР·Р°С‚РѕСЂР°: $e');
+      throw Exception('РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ РїСЂРѕС„РёР»СЏ РѕСЂРіР°РЅРёР·Р°С‚РѕСЂР°: $e');
     }
   }
 
-  /// Удалить профиль организатора
+  /// РЈРґР°Р»РёС‚СЊ РїСЂРѕС„РёР»СЊ РѕСЂРіР°РЅРёР·Р°С‚РѕСЂР°
   Future<void> deleteOrganizerProfile(String organizerId) async {
     try {
       await _firestore.collection('organizer_profiles').doc(organizerId).delete();
     } on Exception catch (e) {
-      debugPrint('Ошибка удаления профиля организатора: $e');
-      throw Exception('Ошибка удаления профиля организатора: $e');
+      debugPrint('РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ РїСЂРѕС„РёР»СЏ РѕСЂРіР°РЅРёР·Р°С‚РѕСЂР°: $e');
+      throw Exception('РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ РїСЂРѕС„РёР»СЏ РѕСЂРіР°РЅРёР·Р°С‚РѕСЂР°: $e');
     }
   }
 
-  /// Получить список всех активных организаторов
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РІСЃРµС… Р°РєС‚РёРІРЅС‹С… РѕСЂРіР°РЅРёР·Р°С‚РѕСЂРѕРІ
   Future<List<OrganizerProfile>> getAllActiveOrganizers({
     int limit = 20,
     DocumentSnapshot? startAfter,
@@ -92,12 +94,12 @@ class OrganizerService {
       final querySnapshot = await query.get();
       return querySnapshot.docs.map(OrganizerProfile.fromDocument).toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения списка организаторов: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЃРїРёСЃРєР° РѕСЂРіР°РЅРёР·Р°С‚РѕСЂРѕРІ: $e');
       return [];
     }
   }
 
-  /// Получить организаторов по категории
+  /// РџРѕР»СѓС‡РёС‚СЊ РѕСЂРіР°РЅРёР·Р°С‚РѕСЂРѕРІ РїРѕ РєР°С‚РµРіРѕСЂРёРё
   Future<List<OrganizerProfile>> getOrganizersByCategory(
     String category, {
     int limit = 20,
@@ -118,18 +120,18 @@ class OrganizerService {
       final querySnapshot = await query.get();
       return querySnapshot.docs.map(OrganizerProfile.fromDocument).toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения организаторов по категории: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РѕСЂРіР°РЅРёР·Р°С‚РѕСЂРѕРІ РїРѕ РєР°С‚РµРіРѕСЂРёРё: $e');
       return [];
     }
   }
 
-  /// Поиск организаторов по названию
+  /// РџРѕРёСЃРє РѕСЂРіР°РЅРёР·Р°С‚РѕСЂРѕРІ РїРѕ РЅР°Р·РІР°РЅРёСЋ
   Future<List<OrganizerProfile>> searchOrganizers(
     String searchQuery, {
     int limit = 20,
   }) async {
     try {
-      // Firestore не поддерживает полнотекстовый поиск, поэтому используем простой фильтр
+      // Firestore РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚ РїРѕР»РЅРѕС‚РµРєСЃС‚РѕРІС‹Р№ РїРѕРёСЃРє, РїРѕСЌС‚РѕРјСѓ РёСЃРїРѕР»СЊР·СѓРµРј РїСЂРѕСЃС‚РѕР№ С„РёР»СЊС‚СЂ
       final querySnapshot = await _firestore
           .collection('organizer_profiles')
           .where('isActive', isEqualTo: true)
@@ -139,7 +141,7 @@ class OrganizerService {
 
       final allOrganizers = querySnapshot.docs.map(OrganizerProfile.fromDocument).toList();
 
-      // Фильтруем результаты на клиенте
+      // Р¤РёР»СЊС‚СЂСѓРµРј СЂРµР·СѓР»СЊС‚Р°С‚С‹ РЅР° РєР»РёРµРЅС‚Рµ
       final searchLower = searchQuery.toLowerCase();
       return allOrganizers
           .where(
@@ -152,12 +154,12 @@ class OrganizerService {
           )
           .toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка поиска организаторов: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕРёСЃРєР° РѕСЂРіР°РЅРёР·Р°С‚РѕСЂРѕРІ: $e');
       return [];
     }
   }
 
-  /// Получить топ организаторов по рейтингу
+  /// РџРѕР»СѓС‡РёС‚СЊ С‚РѕРї РѕСЂРіР°РЅРёР·Р°С‚РѕСЂРѕРІ РїРѕ СЂРµР№С‚РёРЅРіСѓ
   Future<List<OrganizerProfile>> getTopOrganizers({
     int limit = 10,
   }) async {
@@ -173,12 +175,12 @@ class OrganizerService {
 
       return querySnapshot.docs.map(OrganizerProfile.fromDocument).toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения топ организаторов: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ С‚РѕРї РѕСЂРіР°РЅРёР·Р°С‚РѕСЂРѕРІ: $e');
       return [];
     }
   }
 
-  /// Получить организаторов рядом с локацией
+  /// РџРѕР»СѓС‡РёС‚СЊ РѕСЂРіР°РЅРёР·Р°С‚РѕСЂРѕРІ СЂСЏРґРѕРј СЃ Р»РѕРєР°С†РёРµР№
   Future<List<OrganizerProfile>> getOrganizersNearLocation(
     String location, {
     int limit = 20,
@@ -194,12 +196,12 @@ class OrganizerService {
 
       return querySnapshot.docs.map(OrganizerProfile.fromDocument).toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения организаторов по локации: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РѕСЂРіР°РЅРёР·Р°С‚РѕСЂРѕРІ РїРѕ Р»РѕРєР°С†РёРё: $e');
       return [];
     }
   }
 
-  /// Обновить рейтинг организатора
+  /// РћР±РЅРѕРІРёС‚СЊ СЂРµР№С‚РёРЅРі РѕСЂРіР°РЅРёР·Р°С‚РѕСЂР°
   Future<void> updateOrganizerRating(
     String organizerId,
     double newRating,
@@ -212,12 +214,12 @@ class OrganizerService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка обновления рейтинга организатора: $e');
-      throw Exception('Ошибка обновления рейтинга: $e');
+      debugPrint('РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ СЂРµР№С‚РёРЅРіР° РѕСЂРіР°РЅРёР·Р°С‚РѕСЂР°: $e');
+      throw Exception('РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ СЂРµР№С‚РёРЅРіР°: $e');
     }
   }
 
-  /// Добавить событие в портфолио
+  /// Р”РѕР±Р°РІРёС‚СЊ СЃРѕР±С‹С‚РёРµ РІ РїРѕСЂС‚С„РѕР»РёРѕ
   Future<void> addEventToPortfolio(
     String organizerId,
     String eventId,
@@ -228,12 +230,12 @@ class OrganizerService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка добавления события в портфолио: $e');
-      throw Exception('Ошибка добавления события: $e');
+      debugPrint('РћС€РёР±РєР° РґРѕР±Р°РІР»РµРЅРёСЏ СЃРѕР±С‹С‚РёСЏ РІ РїРѕСЂС‚С„РѕР»РёРѕ: $e');
+      throw Exception('РћС€РёР±РєР° РґРѕР±Р°РІР»РµРЅРёСЏ СЃРѕР±С‹С‚РёСЏ: $e');
     }
   }
 
-  /// Добавить изображение в портфолио
+  /// Р”РѕР±Р°РІРёС‚СЊ РёР·РѕР±СЂР°Р¶РµРЅРёРµ РІ РїРѕСЂС‚С„РѕР»РёРѕ
   Future<void> addPortfolioImage(
     String organizerId,
     String imageUrl,
@@ -244,12 +246,12 @@ class OrganizerService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка добавления изображения в портфолио: $e');
-      throw Exception('Ошибка добавления изображения: $e');
+      debugPrint('РћС€РёР±РєР° РґРѕР±Р°РІР»РµРЅРёСЏ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РІ РїРѕСЂС‚С„РѕР»РёРѕ: $e');
+      throw Exception('РћС€РёР±РєР° РґРѕР±Р°РІР»РµРЅРёСЏ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ: $e');
     }
   }
 
-  /// Добавить видео в портфолио
+  /// Р”РѕР±Р°РІРёС‚СЊ РІРёРґРµРѕ РІ РїРѕСЂС‚С„РѕР»РёРѕ
   Future<void> addPortfolioVideo(
     String organizerId,
     String videoUrl,
@@ -260,12 +262,12 @@ class OrganizerService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка добавления видео в портфолио: $e');
-      throw Exception('Ошибка добавления видео: $e');
+      debugPrint('РћС€РёР±РєР° РґРѕР±Р°РІР»РµРЅРёСЏ РІРёРґРµРѕ РІ РїРѕСЂС‚С„РѕР»РёРѕ: $e');
+      throw Exception('РћС€РёР±РєР° РґРѕР±Р°РІР»РµРЅРёСЏ РІРёРґРµРѕ: $e');
     }
   }
 
-  /// Добавить члена команды
+  /// Р”РѕР±Р°РІРёС‚СЊ С‡Р»РµРЅР° РєРѕРјР°РЅРґС‹
   Future<void> addTeamMember(
     String organizerId,
     String specialistId,
@@ -276,12 +278,12 @@ class OrganizerService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка добавления члена команды: $e');
-      throw Exception('Ошибка добавления члена команды: $e');
+      debugPrint('РћС€РёР±РєР° РґРѕР±Р°РІР»РµРЅРёСЏ С‡Р»РµРЅР° РєРѕРјР°РЅРґС‹: $e');
+      throw Exception('РћС€РёР±РєР° РґРѕР±Р°РІР»РµРЅРёСЏ С‡Р»РµРЅР° РєРѕРјР°РЅРґС‹: $e');
     }
   }
 
-  /// Удалить члена команды
+  /// РЈРґР°Р»РёС‚СЊ С‡Р»РµРЅР° РєРѕРјР°РЅРґС‹
   Future<void> removeTeamMember(
     String organizerId,
     String specialistId,
@@ -292,12 +294,12 @@ class OrganizerService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка удаления члена команды: $e');
-      throw Exception('Ошибка удаления члена команды: $e');
+      debugPrint('РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ С‡Р»РµРЅР° РєРѕРјР°РЅРґС‹: $e');
+      throw Exception('РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ С‡Р»РµРЅР° РєРѕРјР°РЅРґС‹: $e');
     }
   }
 
-  /// Получить статистику организатора
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃС‚Р°С‚РёСЃС‚РёРєСѓ РѕСЂРіР°РЅРёР·Р°С‚РѕСЂР°
   Future<Map<String, dynamic>> getOrganizerStats(String organizerId) async {
     try {
       final organizer = await getOrganizerProfile(organizerId);
@@ -305,14 +307,14 @@ class OrganizerService {
         return {};
       }
 
-      // Получаем количество завершенных проектов
+      // РџРѕР»СѓС‡Р°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РІРµСЂС€РµРЅРЅС‹С… РїСЂРѕРµРєС‚РѕРІ
       final completedProjectsQuery = await _firestore
           .collection('bookings')
           .where('organizerId', isEqualTo: organizerId)
           .where('status', isEqualTo: 'completed')
           .get();
 
-      // Получаем количество активных проектов
+      // РџРѕР»СѓС‡Р°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ Р°РєС‚РёРІРЅС‹С… РїСЂРѕРµРєС‚РѕРІ
       final activeProjectsQuery = await _firestore
           .collection('bookings')
           .where('organizerId', isEqualTo: organizerId)
@@ -331,19 +333,20 @@ class OrganizerService {
         'experienceYears': organizer.experienceYears,
       };
     } on Exception catch (e) {
-      debugPrint('Ошибка получения статистики организатора: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЃС‚Р°С‚РёСЃС‚РёРєРё РѕСЂРіР°РЅРёР·Р°С‚РѕСЂР°: $e');
       return {};
     }
   }
 
-  /// Проверить, существует ли профиль организатора для пользователя
+  /// РџСЂРѕРІРµСЂРёС‚СЊ, СЃСѓС‰РµСЃС‚РІСѓРµС‚ Р»Рё РїСЂРѕС„РёР»СЊ РѕСЂРіР°РЅРёР·Р°С‚РѕСЂР° РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<bool> hasOrganizerProfile(String userId) async {
     try {
       final profile = await getOrganizerProfileByUserId(userId);
       return profile != null;
     } on Exception catch (e) {
-      debugPrint('Ошибка проверки профиля организатора: $e');
+      debugPrint('РћС€РёР±РєР° РїСЂРѕРІРµСЂРєРё РїСЂРѕС„РёР»СЏ РѕСЂРіР°РЅРёР·Р°С‚РѕСЂР°: $e');
       return false;
     }
   }
 }
+

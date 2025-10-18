@@ -68,6 +68,9 @@ class LocaleNotifier extends Notifier<Locale> {
         Locale('kk'),
       ];
 
+  /// Поддерживаемые локали (алиас для availableLocales)
+  List<Locale> get supportedLocales => availableLocales;
+
   /// Получить название языка по коду
   String getLanguageName(String languageCode) {
     switch (languageCode) {
@@ -80,6 +83,32 @@ class LocaleNotifier extends Notifier<Locale> {
       default:
         return 'Русский';
     }
+  }
+
+  /// Получить флаг локали
+  String getLocaleFlag(Locale locale) {
+    switch (locale.languageCode) {
+      case 'ru':
+        return '🇷🇺';
+      case 'en':
+        return '🇺🇸';
+      case 'kk':
+        return '🇰🇿';
+      default:
+        return '🌐';
+    }
+  }
+
+  /// Получить название локали
+  String getLocaleName(Locale locale) {
+    return getLanguageName(locale.languageCode);
+  }
+
+  /// Переключить локаль
+  Future<void> toggleLocale() async {
+    final currentIndex = supportedLocales.indexWhere((locale) => locale.languageCode == state.languageCode);
+    final nextIndex = (currentIndex + 1) % supportedLocales.length;
+    await setLocale(supportedLocales[nextIndex]);
   }
 
   /// Проверить, является ли текущий язык русским

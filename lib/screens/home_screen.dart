@@ -1,9 +1,14 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter/foundation.dart';
 
 import '../providers/auth_providers.dart';
+import 'package:flutter/foundation.dart';
 import '../providers/local_data_providers.dart';
+import 'package:flutter/foundation.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -16,6 +21,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   final _searchController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    debugPrint('рџ•ђ [${DateTime.now()}] HomeScreen.initState() called');
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
@@ -23,23 +34,70 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUserAsync = ref.watch(currentUserProvider);
-    final localDataInitialized = ref.watch(localDataInitializedProvider);
+    debugPrint('рџ•ђ [${DateTime.now()}] HomeScreen.build() called');
+    
+    try {
+      final currentUserAsync = ref.watch(currentUserProvider);
+      final localDataInitialized = ref.watch(localDataInitializedProvider);
 
-    return localDataInitialized.when(
-      data: (initialized) {
-        if (!initialized) {
-          return _buildLoadingState();
-        }
+      return localDataInitialized.when(
+        data: (initialized) {
+          if (!initialized) {
+            return _buildLoadingState();
+          }
 
-        return currentUserAsync.when(
-          data: _buildHomeContent,
-          loading: _buildLoadingState,
-          error: (error, stack) => _buildErrorState(error.toString()),
-        );
-      },
-      loading: _buildLoadingState,
-      error: (error, stack) => _buildErrorState(error.toString()),
+          return currentUserAsync.when(
+            data: _buildHomeContent,
+            loading: _buildLoadingState,
+            error: (error, stack) => _buildErrorState(error.toString()),
+          );
+        },
+        loading: _buildLoadingState,
+        error: (error, stack) => _buildErrorState(error.toString()),
+      );
+    } catch (e, stack) {
+      debugPrint('рџљЁ [${DateTime.now()}] HomeScreen error: $e');
+      debugPrint('Stack: $stack');
+      
+      // Fallback UI РїСЂРё РѕС€РёР±РєРµ
+      return _buildFallbackHomeScreen();
+    }
+  }
+
+  /// РџСЂРѕСЃС‚РѕР№ fallback СЌРєСЂР°РЅ РїСЂРё РѕС€РёР±РєР°С…
+  Widget _buildFallbackHomeScreen() {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('рџЏ  Р“Р»Р°РІРЅР°СЏ'),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.home, size: 64, color: Colors.blue),
+            const SizedBox(height: 16),
+            const Text(
+              'рџЏ  Р“Р»Р°РІРЅС‹Р№ СЌРєСЂР°РЅ',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'РџСЂРёР»РѕР¶РµРЅРёРµ СЂР°Р±РѕС‚Р°РµС‚!',
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                debugPrint('рџ”„ [${DateTime.now()}] Retry HomeScreen');
+                setState(() {}); // РџРµСЂРµР·Р°РіСЂСѓР¶Р°РµРј СЌРєСЂР°РЅ
+              },
+              child: const Text('РћР±РЅРѕРІРёС‚СЊ'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -110,7 +168,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    user?.displayName ?? 'Добро пожаловать!',
+                    user?.displayName ?? 'Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ!',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -119,7 +177,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    user?.email ?? 'Войдите в аккаунт',
+                    user?.email ?? 'Р’РѕР№РґРёС‚Рµ РІ Р°РєРєР°СѓРЅС‚',
                     style: const TextStyle(
                       color: Colors.white70,
                       fontSize: 14,
@@ -135,7 +193,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        user?.city?.trim().isNotEmpty == true ? user!.city! : 'Город не указан',
+                        user?.city?.trim().isNotEmpty == true ? user!.city! : 'Р“РѕСЂРѕРґ РЅРµ СѓРєР°Р·Р°РЅ',
                         style: const TextStyle(
                           color: Colors.white70,
                           fontSize: 12,
@@ -164,14 +222,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Найти специалиста',
+              'РќР°Р№С‚Рё СЃРїРµС†РёР°Р»РёСЃС‚Р°',
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 12),
             TextField(
               controller: _searchController,
               decoration: const InputDecoration(
-                hintText: 'Поиск по имени, категории, городу...',
+                hintText: 'РџРѕРёСЃРє РїРѕ РёРјРµРЅРё, РєР°С‚РµРіРѕСЂРёРё, РіРѕСЂРѕРґСѓ...',
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(),
               ),
@@ -187,12 +245,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget _buildCategoriesSection() {
     final categories = [
-      {'name': 'Ведущие', 'icon': '🎤', 'color': Colors.blue},
-      {'name': 'DJ', 'icon': '🎵', 'color': Colors.purple},
-      {'name': 'Фотографы', 'icon': '📸', 'color': Colors.orange},
-      {'name': 'Видеографы', 'icon': '🎬', 'color': Colors.red},
-      {'name': 'Декораторы', 'icon': '🎨', 'color': Colors.green},
-      {'name': 'Аниматоры', 'icon': '🎭', 'color': Colors.teal},
+      {'name': 'Р’РµРґСѓС‰РёРµ', 'icon': 'рџЋ¤', 'color': Colors.blue},
+      {'name': 'DJ', 'icon': 'рџЋµ', 'color': Colors.purple},
+      {'name': 'Р¤РѕС‚РѕРіСЂР°С„С‹', 'icon': 'рџ“ё', 'color': Colors.orange},
+      {'name': 'Р’РёРґРµРѕРіСЂР°С„С‹', 'icon': 'рџЋ¬', 'color': Colors.red},
+      {'name': 'Р”РµРєРѕСЂР°С‚РѕСЂС‹', 'icon': 'рџЋЁ', 'color': Colors.green},
+      {'name': 'РђРЅРёРјР°С‚РѕСЂС‹', 'icon': 'рџЋ­', 'color': Colors.teal},
     ];
 
     return Container(
@@ -201,7 +259,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Категории',
+            'РљР°С‚РµРіРѕСЂРёРё',
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 12),
@@ -262,7 +320,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Быстрые действия',
+              'Р‘С‹СЃС‚СЂС‹Рµ РґРµР№СЃС‚РІРёСЏ',
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 12),
@@ -270,7 +328,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               children: [
                 Expanded(
                   child: _buildQuickActionCard(
-                    title: 'Создать заявку',
+                    title: 'РЎРѕР·РґР°С‚СЊ Р·Р°СЏРІРєСѓ',
                     icon: Icons.add_circle_outline,
                     color: Colors.blue,
                     onTap: () => context.push('/create-request'),
@@ -279,7 +337,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildQuickActionCard(
-                    title: 'Мои заявки',
+                    title: 'РњРѕРё Р·Р°СЏРІРєРё',
                     icon: Icons.assignment,
                     color: Colors.green,
                     onTap: () => context.push('/requests'),
@@ -338,7 +396,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Ошибка загрузки',
+              'РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё',
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 8),
@@ -352,9 +410,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               onPressed: () {
                 ref.invalidate(currentUserProvider);
               },
-              child: const Text('Повторить'),
+              child: const Text('РџРѕРІС‚РѕСЂРёС‚СЊ'),
             ),
           ],
         ),
       );
 }
+

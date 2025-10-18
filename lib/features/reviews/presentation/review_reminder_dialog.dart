@@ -21,7 +21,7 @@ class ReviewReminderDialog extends StatefulWidget {
 }
 
 class _ReviewReminderDialogState extends State<ReviewReminderDialog> {
-  final ReviewRepository _reviewRepository = ReviewRepository();
+  final dynamic _reviewRepository = dynamic();
   final bool _isLoading = false;
 
   @override
@@ -330,7 +330,7 @@ class ReviewStatusWidget extends StatefulWidget {
 }
 
 class _ReviewStatusWidgetState extends State<ReviewStatusWidget> {
-  final ReviewRepository _reviewRepository = ReviewRepository();
+  final dynamic _reviewRepository = dynamic();
   bool _hasReview = false;
   bool _isLoading = true;
 

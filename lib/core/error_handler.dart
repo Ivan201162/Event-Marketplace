@@ -10,7 +10,7 @@ class ErrorHandler {
   static final ErrorHandler _instance = ErrorHandler._internal();
 
   /// Обработка различных типов ошибок
-  static String handleError(error, {String? context}) {
+  static String handleError(dynamic error, {String? context}) {
     try {
       if (error is FirebaseAuthException) {
         return _handleFirebaseAuthError(error, context);
@@ -274,7 +274,7 @@ class ErrorHandler {
   }
 
   /// Обработка неизвестных ошибок
-  static String _handleUnknownError(error, String? context) {
+  static String _handleUnknownError(dynamic error, String? context) {
     final message = 'Неизвестная ошибка: ${error.toString()}';
     const type = 'UNKNOWN';
 
@@ -284,7 +284,7 @@ class ErrorHandler {
 
   /// Логирование ошибки
   static void _logError(
-    error,
+    dynamic error,
     String? context,
     String type,
     String code,
@@ -320,20 +320,20 @@ class ErrorHandler {
   }
 
   /// Проверка типа ошибки
-  static bool isNetworkError(error) =>
+  static bool isNetworkError(dynamic error) =>
       error is SocketException ||
       error is HttpException ||
       (error is FirebaseException && error.code == 'network-request-failed');
 
   /// Проверка ошибки аутентификации
-  static bool isAuthError(error) => error is FirebaseAuthException;
+  static bool isAuthError(dynamic error) => error is FirebaseAuthException;
 
   /// Проверка ошибки разрешений
-  static bool isPermissionError(error) =>
+  static bool isPermissionError(dynamic error) =>
       error is FirebaseException && error.code == 'permission-denied';
 
   /// Получение пользовательского сообщения об ошибке
-  static String getUserFriendlyMessage(error) {
+  static String getUserFriendlyMessage(dynamic error) {
     final message = handleError(error);
 
     // Дополнительная обработка для пользовательского интерфейса
@@ -350,7 +350,7 @@ class ErrorHandler {
 
   /// Создание отчета об ошибке
   static Map<String, dynamic> createErrorReport(
-    error, {
+    dynamic error, {
     String? context,
   }) {
     final timestamp = DateTime.now().toIso8601String();

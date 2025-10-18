@@ -1,17 +1,23 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/customer_profile.dart';
+import 'package:flutter/foundation.dart';
 import '../models/organizer_profile.dart';
+import 'package:flutter/foundation.dart';
 import '../models/specialist_profile.dart';
+import 'package:flutter/foundation.dart';
 import '../models/user.dart';
+import 'package:flutter/foundation.dart';
 import 'organizer_service.dart';
+import 'package:flutter/foundation.dart';
 
-/// Сервис для управления профилями пользователей
+/// РЎРµСЂРІРёСЃ РґР»СЏ СѓРїСЂР°РІР»РµРЅРёСЏ РїСЂРѕС„РёР»СЏРјРё РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
 class ProfileService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final OrganizerService _organizerService = OrganizerService();
 
-  /// Получить профиль заказчика
+  /// РџРѕР»СѓС‡РёС‚СЊ РїСЂРѕС„РёР»СЊ Р·Р°РєР°Р·С‡РёРєР°
   Future<CustomerProfile?> getCustomerProfile(String userId) async {
     try {
       final doc = await _firestore.collection('customer_profiles').doc(userId).get();
@@ -21,22 +27,22 @@ class ProfileService {
       }
       return null;
     } on Exception catch (e) {
-      debugPrint('Ошибка получения профиля заказчика: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РїСЂРѕС„РёР»СЏ Р·Р°РєР°Р·С‡РёРєР°: $e');
       return null;
     }
   }
 
-  /// Создать или обновить профиль заказчика
+  /// РЎРѕР·РґР°С‚СЊ РёР»Рё РѕР±РЅРѕРІРёС‚СЊ РїСЂРѕС„РёР»СЊ Р·Р°РєР°Р·С‡РёРєР°
   Future<void> createOrUpdateCustomerProfile(CustomerProfile profile) async {
     try {
       await _firestore.collection('customer_profiles').doc(profile.userId).set(profile.toMap());
     } on Exception catch (e) {
-      debugPrint('Ошибка сохранения профиля заказчика: $e');
-      throw Exception('Ошибка сохранения профиля: $e');
+      debugPrint('РћС€РёР±РєР° СЃРѕС…СЂР°РЅРµРЅРёСЏ РїСЂРѕС„РёР»СЏ Р·Р°РєР°Р·С‡РёРєР°: $e');
+      throw Exception('РћС€РёР±РєР° СЃРѕС…СЂР°РЅРµРЅРёСЏ РїСЂРѕС„РёР»СЏ: $e');
     }
   }
 
-  /// Получить профиль специалиста
+  /// РџРѕР»СѓС‡РёС‚СЊ РїСЂРѕС„РёР»СЊ СЃРїРµС†РёР°Р»РёСЃС‚Р°
   Future<SpecialistProfile?> getSpecialistProfile(String userId) async {
     try {
       final doc = await _firestore.collection('specialist_profiles').doc(userId).get();
@@ -46,17 +52,17 @@ class ProfileService {
       }
       return null;
     } on Exception catch (e) {
-      debugPrint('Ошибка получения профиля специалиста: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РїСЂРѕС„РёР»СЏ СЃРїРµС†РёР°Р»РёСЃС‚Р°: $e');
       return null;
     }
   }
 
-  /// Создать или обновить профиль специалиста
+  /// РЎРѕР·РґР°С‚СЊ РёР»Рё РѕР±РЅРѕРІРёС‚СЊ РїСЂРѕС„РёР»СЊ СЃРїРµС†РёР°Р»РёСЃС‚Р°
   Future<void> createOrUpdateSpecialistProfile(
     SpecialistProfile profile,
   ) async {
     try {
-      // Обновляем время последнего изменения
+      // РћР±РЅРѕРІР»СЏРµРј РІСЂРµРјСЏ РїРѕСЃР»РµРґРЅРµРіРѕ РёР·РјРµРЅРµРЅРёСЏ
       final updatedProfile = profile.copyWith(
         updatedAt: DateTime.now(),
       );
@@ -66,12 +72,12 @@ class ProfileService {
           .doc(profile.userId)
           .set(updatedProfile.toMap(), SetOptions(merge: true));
     } on Exception catch (e) {
-      debugPrint('Ошибка сохранения профиля специалиста: $e');
-      throw Exception('Ошибка сохранения профиля: $e');
+      debugPrint('РћС€РёР±РєР° СЃРѕС…СЂР°РЅРµРЅРёСЏ РїСЂРѕС„РёР»СЏ СЃРїРµС†РёР°Р»РёСЃС‚Р°: $e');
+      throw Exception('РћС€РёР±РєР° СЃРѕС…СЂР°РЅРµРЅРёСЏ РїСЂРѕС„РёР»СЏ: $e');
     }
   }
 
-  /// Получить профиль пользователя (автоматически определяет тип)
+  /// РџРѕР»СѓС‡РёС‚СЊ РїСЂРѕС„РёР»СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ (Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РѕРїСЂРµРґРµР»СЏРµС‚ С‚РёРї)
   Future<dynamic> getUserProfile(String userId, UserRole role) async {
     switch (role) {
       case UserRole.customer:
@@ -89,7 +95,7 @@ class ProfileService {
     }
   }
 
-  /// Создать или обновить профиль пользователя
+  /// РЎРѕР·РґР°С‚СЊ РёР»Рё РѕР±РЅРѕРІРёС‚СЊ РїСЂРѕС„РёР»СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<void> createOrUpdateUserProfile(profile, UserRole role) async {
     switch (role) {
       case UserRole.customer:
@@ -108,44 +114,44 @@ class ProfileService {
         }
         break;
       case UserRole.moderator:
-        // Модераторы не имеют специального профиля
+        // РњРѕРґРµСЂР°С‚РѕСЂС‹ РЅРµ РёРјРµСЋС‚ СЃРїРµС†РёР°Р»СЊРЅРѕРіРѕ РїСЂРѕС„РёР»СЏ
         break;
       case UserRole.guest:
-        throw Exception('Гости не могут иметь профили');
+        throw Exception('Р“РѕСЃС‚Рё РЅРµ РјРѕРіСѓС‚ РёРјРµС‚СЊ РїСЂРѕС„РёР»Рё');
       case UserRole.admin:
-        throw Exception('Админы не могут иметь профили');
+        throw Exception('РђРґРјРёРЅС‹ РЅРµ РјРѕРіСѓС‚ РёРјРµС‚СЊ РїСЂРѕС„РёР»Рё');
     }
   }
 
-  /// Загрузить фото профиля
+  /// Р—Р°РіСЂСѓР·РёС‚СЊ С„РѕС‚Рѕ РїСЂРѕС„РёР»СЏ
   Future<String?> uploadProfilePhoto(String userId, String filePath) async {
     try {
-      // В реальном приложении здесь была бы загрузка в Firebase Storage
-      // Для демонстрации возвращаем фиктивный URL
+      // Р’ СЂРµР°Р»СЊРЅРѕРј РїСЂРёР»РѕР¶РµРЅРёРё Р·РґРµСЃСЊ Р±С‹Р»Р° Р±С‹ Р·Р°РіСЂСѓР·РєР° РІ Firebase Storage
+      // Р”Р»СЏ РґРµРјРѕРЅСЃС‚СЂР°С†РёРё РІРѕР·РІСЂР°С‰Р°РµРј С„РёРєС‚РёРІРЅС‹Р№ URL
       return 'https://example.com/profile_photos/$userId.jpg';
     } on Exception catch (e) {
-      debugPrint('Ошибка загрузки фото: $e');
+      debugPrint('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё С„РѕС‚Рѕ: $e');
       return null;
     }
   }
 
-  /// Загрузить элемент портфолио
+  /// Р—Р°РіСЂСѓР·РёС‚СЊ СЌР»РµРјРµРЅС‚ РїРѕСЂС‚С„РѕР»РёРѕ
   Future<String?> uploadPortfolioItem(
     String userId,
     String filePath,
     String type,
   ) async {
     try {
-      // В реальном приложении здесь была бы загрузка в Firebase Storage
-      // Для демонстрации возвращаем фиктивный URL
+      // Р’ СЂРµР°Р»СЊРЅРѕРј РїСЂРёР»РѕР¶РµРЅРёРё Р·РґРµСЃСЊ Р±С‹Р»Р° Р±С‹ Р·Р°РіСЂСѓР·РєР° РІ Firebase Storage
+      // Р”Р»СЏ РґРµРјРѕРЅСЃС‚СЂР°С†РёРё РІРѕР·РІСЂР°С‰Р°РµРј С„РёРєС‚РёРІРЅС‹Р№ URL
       return 'https://example.com/portfolio/$userId/${DateTime.now().millisecondsSinceEpoch}.$type';
     } on Exception catch (e) {
-      debugPrint('Ошибка загрузки портфолио: $e');
+      debugPrint('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё РїРѕСЂС‚С„РѕР»РёРѕ: $e');
       return null;
     }
   }
 
-  /// Получить всех специалистов по категории
+  /// РџРѕР»СѓС‡РёС‚СЊ РІСЃРµС… СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ РїРѕ РєР°С‚РµРіРѕСЂРёРё
   Future<List<SpecialistProfile>> getSpecialistsByCategory(
     SpecialistCategory category, {
     int limit = 20,
@@ -169,12 +175,12 @@ class ProfileService {
 
       return querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения специалистов по категории: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ РїРѕ РєР°С‚РµРіРѕСЂРёРё: $e');
       return [];
     }
   }
 
-  /// Получить специалистов по нескольким категориям
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ РїРѕ РЅРµСЃРєРѕР»СЊРєРёРј РєР°С‚РµРіРѕСЂРёСЏРј
   Future<List<SpecialistProfile>> getSpecialistsByCategories(
     List<SpecialistCategory> categories, {
     int limit = 20,
@@ -199,12 +205,12 @@ class ProfileService {
 
       return querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения специалистов по категориям: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ РїРѕ РєР°С‚РµРіРѕСЂРёСЏРј: $e');
       return [];
     }
   }
 
-  /// Получить популярные категории специалистов
+  /// РџРѕР»СѓС‡РёС‚СЊ РїРѕРїСѓР»СЏСЂРЅС‹Рµ РєР°С‚РµРіРѕСЂРёРё СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ
   Future<List<Map<String, dynamic>>> getPopularCategories({
     int limit = 10,
   }) async {
@@ -238,12 +244,12 @@ class ProfileService {
           )
           .toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения популярных категорий: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РїРѕРїСѓР»СЏСЂРЅС‹С… РєР°С‚РµРіРѕСЂРёР№: $e');
       return [];
     }
   }
 
-  /// Поиск специалистов
+  /// РџРѕРёСЃРє СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ
   Future<List<SpecialistProfile>> searchSpecialists({
     String? query,
     List<SpecialistCategory>? categories,
@@ -261,17 +267,17 @@ class ProfileService {
     try {
       Query<Map<String, dynamic>> queryRef = _firestore.collection('specialist_profiles');
 
-      // Фильтр по доступности
+      // Р¤РёР»СЊС‚СЂ РїРѕ РґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё
       if (isAvailable != null) {
         queryRef = queryRef.where('isAvailable', isEqualTo: isAvailable);
       }
 
-      // Фильтр по верификации
+      // Р¤РёР»СЊС‚СЂ РїРѕ РІРµСЂРёС„РёРєР°С†РёРё
       if (isVerified != null) {
         queryRef = queryRef.where('isVerified', isEqualTo: isVerified);
       }
 
-      // Фильтр по категориям
+      // Р¤РёР»СЊС‚СЂ РїРѕ РєР°С‚РµРіРѕСЂРёСЏРј
       if (categories != null && categories.isNotEmpty) {
         queryRef = queryRef.where(
           'categories',
@@ -279,17 +285,17 @@ class ProfileService {
         );
       }
 
-      // Фильтр по рейтингу
+      // Р¤РёР»СЊС‚СЂ РїРѕ СЂРµР№С‚РёРЅРіСѓ
       if (minRating != null) {
         queryRef = queryRef.where('rating', isGreaterThanOrEqualTo: minRating);
       }
 
-      // Фильтр по цене
+      // Р¤РёР»СЊС‚СЂ РїРѕ С†РµРЅРµ
       if (maxHourlyRate != null) {
         queryRef = queryRef.where('hourlyRate', isLessThanOrEqualTo: maxHourlyRate);
       }
 
-      // Фильтр по опыту
+      // Р¤РёР»СЊС‚СЂ РїРѕ РѕРїС‹С‚Сѓ
       if (minExperienceYears != null) {
         queryRef = queryRef.where(
           'experienceYears',
@@ -303,17 +309,17 @@ class ProfileService {
         );
       }
 
-      // Фильтр по локации
+      // Р¤РёР»СЊС‚СЂ РїРѕ Р»РѕРєР°С†РёРё
       if (location != null && location.isNotEmpty) {
         queryRef = queryRef.where('location', isEqualTo: location);
       }
 
-      // Фильтр по языкам
+      // Р¤РёР»СЊС‚СЂ РїРѕ СЏР·С‹РєР°Рј
       if (languages != null && languages.isNotEmpty) {
         queryRef = queryRef.where('languages', arrayContainsAny: languages);
       }
 
-      // Фильтр по оборудованию
+      // Р¤РёР»СЊС‚СЂ РїРѕ РѕР±РѕСЂСѓРґРѕРІР°РЅРёСЋ
       if (equipment != null && equipment.isNotEmpty) {
         queryRef = queryRef.where('equipment', arrayContainsAny: equipment);
       }
@@ -322,7 +328,7 @@ class ProfileService {
 
       var specialists = querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
 
-      // Фильтр по текстовому запросу (если указан)
+      // Р¤РёР»СЊС‚СЂ РїРѕ С‚РµРєСЃС‚РѕРІРѕРјСѓ Р·Р°РїСЂРѕСЃСѓ (РµСЃР»Рё СѓРєР°Р·Р°РЅ)
       if (query != null && query.isNotEmpty) {
         final lowerQuery = query.toLowerCase();
         specialists = specialists
@@ -347,7 +353,7 @@ class ProfileService {
             .toList();
       }
 
-      // Фильтр по доступности на дату
+      // Р¤РёР»СЊС‚СЂ РїРѕ РґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё РЅР° РґР°С‚Сѓ
       if (availableDate != null) {
         specialists = specialists
             .where(
@@ -365,12 +371,12 @@ class ProfileService {
 
       return specialists;
     } on Exception catch (e) {
-      debugPrint('Ошибка поиска специалистов: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕРёСЃРєР° СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ: $e');
       return [];
     }
   }
 
-  /// Получить топ специалистов
+  /// РџРѕР»СѓС‡РёС‚СЊ С‚РѕРї СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ
   Future<List<SpecialistProfile>> getTopSpecialists({int limit = 10}) async {
     try {
       final querySnapshot = await _firestore
@@ -383,12 +389,12 @@ class ProfileService {
 
       return querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения топ специалистов: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ С‚РѕРї СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ: $e');
       return [];
     }
   }
 
-  /// Удалить профиль
+  /// РЈРґР°Р»РёС‚СЊ РїСЂРѕС„РёР»СЊ
   Future<void> deleteProfile(String userId, UserRole role) async {
     try {
       switch (role) {
@@ -402,19 +408,19 @@ class ProfileService {
           await _firestore.collection('customer_profiles').doc(userId).delete();
           break;
         case UserRole.moderator:
-          throw Exception('Модераторы не могут иметь профили');
+          throw Exception('РњРѕРґРµСЂР°С‚РѕСЂС‹ РЅРµ РјРѕРіСѓС‚ РёРјРµС‚СЊ РїСЂРѕС„РёР»Рё');
         case UserRole.guest:
-          throw Exception('Гости не могут иметь профили');
+          throw Exception('Р“РѕСЃС‚Рё РЅРµ РјРѕРіСѓС‚ РёРјРµС‚СЊ РїСЂРѕС„РёР»Рё');
         case UserRole.admin:
-          throw Exception('Админы не могут иметь профили');
+          throw Exception('РђРґРјРёРЅС‹ РЅРµ РјРѕРіСѓС‚ РёРјРµС‚СЊ РїСЂРѕС„РёР»Рё');
       }
     } on Exception catch (e) {
-      debugPrint('Ошибка удаления профиля: $e');
-      throw Exception('Ошибка удаления профиля: $e');
+      debugPrint('РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ РїСЂРѕС„РёР»СЏ: $e');
+      throw Exception('РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ РїСЂРѕС„РёР»СЏ: $e');
     }
   }
 
-  /// Получить статистику профиля
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃС‚Р°С‚РёСЃС‚РёРєСѓ РїСЂРѕС„РёР»СЏ
   Future<Map<String, dynamic>> getProfileStats(
     String userId,
     UserRole role,
@@ -423,7 +429,7 @@ class ProfileService {
       var stats = <String, dynamic>{};
 
       if (role == UserRole.specialist) {
-        // Статистика для специалиста
+        // РЎС‚Р°С‚РёСЃС‚РёРєР° РґР»СЏ СЃРїРµС†РёР°Р»РёСЃС‚Р°
         final bookingsQuery =
             await _firestore.collection('bookings').where('specialistId', isEqualTo: userId).get();
 
@@ -443,7 +449,7 @@ class ProfileService {
               : 0.0,
         };
       } else if (role == UserRole.customer) {
-        // Статистика для заказчика
+        // РЎС‚Р°С‚РёСЃС‚РёРєР° РґР»СЏ Р·Р°РєР°Р·С‡РёРєР°
         final bookingsQuery =
             await _firestore.collection('bookings').where('customerId', isEqualTo: userId).get();
 
@@ -456,12 +462,12 @@ class ProfileService {
 
       return stats;
     } on Exception catch (e) {
-      debugPrint('Ошибка получения статистики профиля: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЃС‚Р°С‚РёСЃС‚РёРєРё РїСЂРѕС„РёР»СЏ: $e');
       return {};
     }
   }
 
-  /// Обновить доступность специалиста
+  /// РћР±РЅРѕРІРёС‚СЊ РґРѕСЃС‚СѓРїРЅРѕСЃС‚СЊ СЃРїРµС†РёР°Р»РёСЃС‚Р°
   Future<void> updateSpecialistAvailability(
     String userId,
     Map<String, dynamic> availability,
@@ -472,12 +478,12 @@ class ProfileService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка обновления доступности: $e');
-      throw Exception('Не удалось обновить доступность');
+      debugPrint('РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ РґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё: $e');
+      throw Exception('РќРµ СѓРґР°Р»РѕСЃСЊ РѕР±РЅРѕРІРёС‚СЊ РґРѕСЃС‚СѓРїРЅРѕСЃС‚СЊ');
     }
   }
 
-  /// Добавить занятую дату
+  /// Р”РѕР±Р°РІРёС‚СЊ Р·Р°РЅСЏС‚СѓСЋ РґР°С‚Сѓ
   Future<void> addBusyDate(String userId, DateTime date) async {
     try {
       final profile = await getSpecialistProfile(userId);
@@ -486,12 +492,12 @@ class ProfileService {
         await createOrUpdateSpecialistProfile(updatedProfile);
       }
     } on Exception catch (e) {
-      debugPrint('Ошибка добавления занятой даты: $e');
-      throw Exception('Не удалось добавить занятую дату');
+      debugPrint('РћС€РёР±РєР° РґРѕР±Р°РІР»РµРЅРёСЏ Р·Р°РЅСЏС‚РѕР№ РґР°С‚С‹: $e');
+      throw Exception('РќРµ СѓРґР°Р»РѕСЃСЊ РґРѕР±Р°РІРёС‚СЊ Р·Р°РЅСЏС‚СѓСЋ РґР°С‚Сѓ');
     }
   }
 
-  /// Удалить занятую дату
+  /// РЈРґР°Р»РёС‚СЊ Р·Р°РЅСЏС‚СѓСЋ РґР°С‚Сѓ
   Future<void> removeBusyDate(String userId, DateTime date) async {
     try {
       final profile = await getSpecialistProfile(userId);
@@ -500,23 +506,23 @@ class ProfileService {
         await createOrUpdateSpecialistProfile(updatedProfile);
       }
     } on Exception catch (e) {
-      debugPrint('Ошибка удаления занятой даты: $e');
-      throw Exception('Не удалось удалить занятую дату');
+      debugPrint('РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ Р·Р°РЅСЏС‚РѕР№ РґР°С‚С‹: $e');
+      throw Exception('РќРµ СѓРґР°Р»РѕСЃСЊ СѓРґР°Р»РёС‚СЊ Р·Р°РЅСЏС‚СѓСЋ РґР°С‚Сѓ');
     }
   }
 
-  /// Получить занятые даты специалиста
+  /// РџРѕР»СѓС‡РёС‚СЊ Р·Р°РЅСЏС‚С‹Рµ РґР°С‚С‹ СЃРїРµС†РёР°Р»РёСЃС‚Р°
   Future<List<DateTime>> getSpecialistBusyDates(String userId) async {
     try {
       final profile = await getSpecialistProfile(userId);
       return profile?.busyDates ?? [];
     } on Exception catch (e) {
-      debugPrint('Ошибка получения занятых дат: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ Р·Р°РЅСЏС‚С‹С… РґР°С‚: $e');
       return [];
     }
   }
 
-  /// Проверить доступность специалиста на дату
+  /// РџСЂРѕРІРµСЂРёС‚СЊ РґРѕСЃС‚СѓРїРЅРѕСЃС‚СЊ СЃРїРµС†РёР°Р»РёСЃС‚Р° РЅР° РґР°С‚Сѓ
   Future<bool> isSpecialistAvailable(String userId, DateTime date) async {
     try {
       final profile = await getSpecialistProfile(userId);
@@ -530,8 +536,9 @@ class ProfileService {
                 busyDate.day == date.day,
           );
     } on Exception catch (e) {
-      debugPrint('Ошибка проверки доступности: $e');
+      debugPrint('РћС€РёР±РєР° РїСЂРѕРІРµСЂРєРё РґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё: $e');
       return false;
     }
   }
 }
+

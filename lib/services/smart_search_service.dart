@@ -1,14 +1,17 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter/foundation.dart';
 
-/// Сервис умного поиска с подсказками и автозаполнением
+/// РЎРµСЂРІРёСЃ СѓРјРЅРѕРіРѕ РїРѕРёСЃРєР° СЃ РїРѕРґСЃРєР°Р·РєР°РјРё Рё Р°РІС‚РѕР·Р°РїРѕР»РЅРµРЅРёРµРј
 class SmartSearchService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Position? _currentPosition;
   String? _currentCity;
 
-  /// Получить подсказки для поиска
+  /// РџРѕР»СѓС‡РёС‚СЊ РїРѕРґСЃРєР°Р·РєРё РґР»СЏ РїРѕРёСЃРєР°
   Future<List<SearchSuggestion>> getSearchSuggestions(String query) async {
     if (query.isEmpty) {
       return _getPopularSuggestions();
@@ -17,7 +20,7 @@ class SmartSearchService {
     final suggestions = <SearchSuggestion>[];
 
     try {
-      // Поиск по специалистам
+      // РџРѕРёСЃРє РїРѕ СЃРїРµС†РёР°Р»РёСЃС‚Р°Рј
       final specialistsQuery = await _firestore
           .collection('specialists')
           .where('name', isGreaterThanOrEqualTo: query)
@@ -38,20 +41,20 @@ class SmartSearchService {
         );
       }
 
-      // Поиск по категориям
+      // РџРѕРёСЃРє РїРѕ РєР°С‚РµРіРѕСЂРёСЏРј
       final categories = [
-        'Ведущие',
+        'Р’РµРґСѓС‰РёРµ',
         'DJ',
-        'Фотографы',
-        'Видеографы',
-        'Декораторы',
-        'Аниматоры',
-        'Музыканты',
-        'Танцоры',
-        'Клоуны',
-        'Фокусники',
-        'Певцы',
-        'Гитаристы',
+        'Р¤РѕС‚РѕРіСЂР°С„С‹',
+        'Р’РёРґРµРѕРіСЂР°С„С‹',
+        'Р”РµРєРѕСЂР°С‚РѕСЂС‹',
+        'РђРЅРёРјР°С‚РѕСЂС‹',
+        'РњСѓР·С‹РєР°РЅС‚С‹',
+        'РўР°РЅС†РѕСЂС‹',
+        'РљР»РѕСѓРЅС‹',
+        'Р¤РѕРєСѓСЃРЅРёРєРё',
+        'РџРµРІС†С‹',
+        'Р“РёС‚Р°СЂРёСЃС‚С‹',
       ];
 
       for (final category in categories) {
@@ -61,30 +64,30 @@ class SmartSearchService {
               text: category,
               type: SuggestionType.category,
               icon: Icons.category,
-              subtitle: 'Категория специалистов',
+              subtitle: 'РљР°С‚РµРіРѕСЂРёСЏ СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ',
               data: {'category': category},
             ),
           );
         }
       }
 
-      // Поиск по городам
+      // РџРѕРёСЃРє РїРѕ РіРѕСЂРѕРґР°Рј
       final cities = [
-        'Москва',
-        'Санкт-Петербург',
-        'Казань',
-        'Екатеринбург',
-        'Новосибирск',
-        'Нижний Новгород',
-        'Челябинск',
-        'Самара',
-        'Омск',
-        'Ростов-на-Дону',
-        'Уфа',
-        'Красноярск',
-        'Воронеж',
-        'Пермь',
-        'Волгоград',
+        'РњРѕСЃРєРІР°',
+        'РЎР°РЅРєС‚-РџРµС‚РµСЂР±СѓСЂРі',
+        'РљР°Р·Р°РЅСЊ',
+        'Р•РєР°С‚РµСЂРёРЅР±СѓСЂРі',
+        'РќРѕРІРѕСЃРёР±РёСЂСЃРє',
+        'РќРёР¶РЅРёР№ РќРѕРІРіРѕСЂРѕРґ',
+        'Р§РµР»СЏР±РёРЅСЃРє',
+        'РЎР°РјР°СЂР°',
+        'РћРјСЃРє',
+        'Р РѕСЃС‚РѕРІ-РЅР°-Р”РѕРЅСѓ',
+        'РЈС„Р°',
+        'РљСЂР°СЃРЅРѕСЏСЂСЃРє',
+        'Р’РѕСЂРѕРЅРµР¶',
+        'РџРµСЂРјСЊ',
+        'Р’РѕР»РіРѕРіСЂР°Рґ',
       ];
 
       for (final city in cities) {
@@ -94,25 +97,25 @@ class SmartSearchService {
               text: city,
               type: SuggestionType.location,
               icon: Icons.location_on,
-              subtitle: 'Город',
+              subtitle: 'Р“РѕСЂРѕРґ',
               data: {'city': city},
             ),
           );
         }
       }
 
-      // Поиск по услугам
+      // РџРѕРёСЃРє РїРѕ СѓСЃР»СѓРіР°Рј
       final services = [
-        'Свадьба',
-        'Корпоратив',
-        'День рождения',
-        'Выпускной',
-        'Юбилей',
-        'Фотосессия',
-        'Видеосъемка',
-        'Ведущий',
+        'РЎРІР°РґСЊР±Р°',
+        'РљРѕСЂРїРѕСЂР°С‚РёРІ',
+        'Р”РµРЅСЊ СЂРѕР¶РґРµРЅРёСЏ',
+        'Р’С‹РїСѓСЃРєРЅРѕР№',
+        'Р®Р±РёР»РµР№',
+        'Р¤РѕС‚РѕСЃРµСЃСЃРёСЏ',
+        'Р’РёРґРµРѕСЃСЉРµРјРєР°',
+        'Р’РµРґСѓС‰РёР№',
         'DJ',
-        'Аниматор',
+        'РђРЅРёРјР°С‚РѕСЂ',
       ];
 
       for (final service in services) {
@@ -122,52 +125,52 @@ class SmartSearchService {
               text: service,
               type: SuggestionType.service,
               icon: Icons.event,
-              subtitle: 'Услуга',
+              subtitle: 'РЈСЃР»СѓРіР°',
               data: {'service': service},
             ),
           );
         }
       }
     } on Exception catch (e) {
-      debugPrint('Ошибка получения подсказок: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РїРѕРґСЃРєР°Р·РѕРє: $e');
     }
 
     return suggestions.take(10).toList();
   }
 
-  /// Получить популярные подсказки
+  /// РџРѕР»СѓС‡РёС‚СЊ РїРѕРїСѓР»СЏСЂРЅС‹Рµ РїРѕРґСЃРєР°Р·РєРё
   List<SearchSuggestion> _getPopularSuggestions() => [
         SearchSuggestion(
-          text: 'Ведущие',
+          text: 'Р’РµРґСѓС‰РёРµ',
           type: SuggestionType.category,
           icon: Icons.category,
-          subtitle: 'Популярная категория',
-          data: {'category': 'Ведущие'},
+          subtitle: 'РџРѕРїСѓР»СЏСЂРЅР°СЏ РєР°С‚РµРіРѕСЂРёСЏ',
+          data: {'category': 'Р’РµРґСѓС‰РёРµ'},
         ),
         SearchSuggestion(
-          text: 'Фотографы',
+          text: 'Р¤РѕС‚РѕРіСЂР°С„С‹',
           type: SuggestionType.category,
           icon: Icons.category,
-          subtitle: 'Популярная категория',
-          data: {'category': 'Фотографы'},
+          subtitle: 'РџРѕРїСѓР»СЏСЂРЅР°СЏ РєР°С‚РµРіРѕСЂРёСЏ',
+          data: {'category': 'Р¤РѕС‚РѕРіСЂР°С„С‹'},
         ),
         SearchSuggestion(
-          text: 'Москва',
+          text: 'РњРѕСЃРєРІР°',
           type: SuggestionType.location,
           icon: Icons.location_on,
-          subtitle: 'Популярный город',
-          data: {'city': 'Москва'},
+          subtitle: 'РџРѕРїСѓР»СЏСЂРЅС‹Р№ РіРѕСЂРѕРґ',
+          data: {'city': 'РњРѕСЃРєРІР°'},
         ),
         SearchSuggestion(
-          text: 'Свадьба',
+          text: 'РЎРІР°РґСЊР±Р°',
           type: SuggestionType.service,
           icon: Icons.event,
-          subtitle: 'Популярная услуга',
-          data: {'service': 'Свадьба'},
+          subtitle: 'РџРѕРїСѓР»СЏСЂРЅР°СЏ СѓСЃР»СѓРіР°',
+          data: {'service': 'РЎРІР°РґСЊР±Р°'},
         ),
       ];
 
-  /// Получить специалистов с фильтрами
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ СЃ С„РёР»СЊС‚СЂР°РјРё
   Future<List<Map<String, dynamic>>> searchSpecialists({
     String? query,
     String? category,
@@ -181,17 +184,17 @@ class SmartSearchService {
     try {
       Query queryBuilder = _firestore.collection('specialists');
 
-      // Фильтр по категории
+      // Р¤РёР»СЊС‚СЂ РїРѕ РєР°С‚РµРіРѕСЂРёРё
       if (category != null && category.isNotEmpty) {
         queryBuilder = queryBuilder.where('category', isEqualTo: category);
       }
 
-      // Фильтр по городу
+      // Р¤РёР»СЊС‚СЂ РїРѕ РіРѕСЂРѕРґСѓ
       if (city != null && city.isNotEmpty) {
         queryBuilder = queryBuilder.where('city', isEqualTo: city);
       }
 
-      // Фильтр по цене
+      // Р¤РёР»СЊС‚СЂ РїРѕ С†РµРЅРµ
       if (minPrice != null) {
         queryBuilder = queryBuilder.where('price', isGreaterThanOrEqualTo: minPrice);
       }
@@ -199,12 +202,12 @@ class SmartSearchService {
         queryBuilder = queryBuilder.where('price', isLessThanOrEqualTo: maxPrice);
       }
 
-      // Фильтр по рейтингу
+      // Р¤РёР»СЊС‚СЂ РїРѕ СЂРµР№С‚РёРЅРіСѓ
       if (minRating != null) {
         queryBuilder = queryBuilder.where('rating', isGreaterThanOrEqualTo: minRating);
       }
 
-      // Сортировка
+      // РЎРѕСЂС‚РёСЂРѕРІРєР°
       switch (sortBy) {
         case SpecialistSortOption.rating:
           queryBuilder = queryBuilder.orderBy('rating', descending: true);
@@ -216,7 +219,7 @@ class SmartSearchService {
           queryBuilder = queryBuilder.orderBy('views', descending: true);
           break;
         case SpecialistSortOption.distance:
-          // TODO(developer): Реализовать сортировку по расстоянию
+          // TODO(developer): Р РµР°Р»РёР·РѕРІР°С‚СЊ СЃРѕСЂС‚РёСЂРѕРІРєСѓ РїРѕ СЂР°СЃСЃС‚РѕСЏРЅРёСЋ
           queryBuilder = queryBuilder.orderBy('rating', descending: true);
           break;
         default:
@@ -230,7 +233,7 @@ class SmartSearchService {
         final data = doc.data()! as Map<String, dynamic>;
         data['id'] = doc.id;
 
-        // Фильтр по поисковому запросу
+        // Р¤РёР»СЊС‚СЂ РїРѕ РїРѕРёСЃРєРѕРІРѕРјСѓ Р·Р°РїСЂРѕСЃСѓ
         if (query != null && query.isNotEmpty) {
           final searchLower = query.toLowerCase();
           final name = ((data['name'] as String?) ?? '').toLowerCase();
@@ -249,12 +252,12 @@ class SmartSearchService {
 
       return specialists;
     } on Exception catch (e) {
-      debugPrint('Ошибка поиска специалистов: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕРёСЃРєР° СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ: $e');
       return [];
     }
   }
 
-  /// Получить популярных специалистов недели
+  /// РџРѕР»СѓС‡РёС‚СЊ РїРѕРїСѓР»СЏСЂРЅС‹С… СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ РЅРµРґРµР»Рё
   Future<List<Map<String, dynamic>>> getPopularSpecialists() async {
     try {
       final snapshot = await _firestore
@@ -269,36 +272,36 @@ class SmartSearchService {
         return data;
       }).toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения популярных специалистов: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РїРѕРїСѓР»СЏСЂРЅС‹С… СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ: $e');
       return [];
     }
   }
 
-  /// Сохранить фильтры поиска
+  /// РЎРѕС…СЂР°РЅРёС‚СЊ С„РёР»СЊС‚СЂС‹ РїРѕРёСЃРєР°
   Future<void> saveSearchFilters(Map<String, dynamic> filters) async {
     try {
-      // TODO(developer): Реализовать сохранение фильтров в SharedPreferences
-      debugPrint('Сохранение фильтров: $filters');
+      // TODO(developer): Р РµР°Р»РёР·РѕРІР°С‚СЊ СЃРѕС…СЂР°РЅРµРЅРёРµ С„РёР»СЊС‚СЂРѕРІ РІ SharedPreferences
+      debugPrint('РЎРѕС…СЂР°РЅРµРЅРёРµ С„РёР»СЊС‚СЂРѕРІ: $filters');
     } on Exception catch (e) {
-      debugPrint('Ошибка сохранения фильтров: $e');
+      debugPrint('РћС€РёР±РєР° СЃРѕС…СЂР°РЅРµРЅРёСЏ С„РёР»СЊС‚СЂРѕРІ: $e');
     }
   }
 
-  /// Загрузить сохранённые фильтры
+  /// Р—Р°РіСЂСѓР·РёС‚СЊ СЃРѕС…СЂР°РЅС‘РЅРЅС‹Рµ С„РёР»СЊС‚СЂС‹
   Future<Map<String, dynamic>> loadSearchFilters() async {
     try {
-      // TODO(developer): Реализовать загрузку фильтров из SharedPreferences
+      // TODO(developer): Р РµР°Р»РёР·РѕРІР°С‚СЊ Р·Р°РіСЂСѓР·РєСѓ С„РёР»СЊС‚СЂРѕРІ РёР· SharedPreferences
       return {};
     } on Exception catch (e) {
-      debugPrint('Ошибка загрузки фильтров: $e');
+      debugPrint('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё С„РёР»СЊС‚СЂРѕРІ: $e');
       return {};
     }
   }
 
-  /// Получить текущую геолокацию пользователя
+  /// РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСѓС‰СѓСЋ РіРµРѕР»РѕРєР°С†РёСЋ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<Position?> getCurrentLocation() async {
     try {
-      // Проверяем разрешения
+      // РџСЂРѕРІРµСЂСЏРµРј СЂР°Р·СЂРµС€РµРЅРёСЏ
       var permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
@@ -311,33 +314,33 @@ class SmartSearchService {
         return null;
       }
 
-      // Получаем текущую позицию
+      // РџРѕР»СѓС‡Р°РµРј С‚РµРєСѓС‰СѓСЋ РїРѕР·РёС†РёСЋ
       _currentPosition = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
 
       return _currentPosition;
     } catch (e) {
-      debugPrint('Ошибка получения геолокации: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РіРµРѕР»РѕРєР°С†РёРё: $e');
       return null;
     }
   }
 
-  /// Получить город по координатам
+  /// РџРѕР»СѓС‡РёС‚СЊ РіРѕСЂРѕРґ РїРѕ РєРѕРѕСЂРґРёРЅР°С‚Р°Рј
   Future<String?> getCityFromCoordinates(double lat, double lng) async {
     try {
-      // Простая реализация - в реальном приложении используйте Geocoding API
+      // РџСЂРѕСЃС‚Р°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ - РІ СЂРµР°Р»СЊРЅРѕРј РїСЂРёР»РѕР¶РµРЅРёРё РёСЃРїРѕР»СЊР·СѓР№С‚Рµ Geocoding API
       final cities = {
-        'Москва': {'lat': 55.7558, 'lng': 37.6176},
-        'Санкт-Петербург': {'lat': 59.9311, 'lng': 30.3609},
-        'Новосибирск': {'lat': 55.0084, 'lng': 82.9357},
-        'Екатеринбург': {'lat': 56.8431, 'lng': 60.6454},
-        'Казань': {'lat': 55.8304, 'lng': 49.0661},
-        'Нижний Новгород': {'lat': 56.2965, 'lng': 43.9361},
-        'Челябинск': {'lat': 55.1644, 'lng': 61.4368},
-        'Самара': {'lat': 53.2001, 'lng': 50.1500},
-        'Омск': {'lat': 54.9885, 'lng': 73.3242},
-        'Ростов-на-Дону': {'lat': 47.2357, 'lng': 39.7015},
+        'РњРѕСЃРєРІР°': {'lat': 55.7558, 'lng': 37.6176},
+        'РЎР°РЅРєС‚-РџРµС‚РµСЂР±СѓСЂРі': {'lat': 59.9311, 'lng': 30.3609},
+        'РќРѕРІРѕСЃРёР±РёСЂСЃРє': {'lat': 55.0084, 'lng': 82.9357},
+        'Р•РєР°С‚РµСЂРёРЅР±СѓСЂРі': {'lat': 56.8431, 'lng': 60.6454},
+        'РљР°Р·Р°РЅСЊ': {'lat': 55.8304, 'lng': 49.0661},
+        'РќРёР¶РЅРёР№ РќРѕРІРіРѕСЂРѕРґ': {'lat': 56.2965, 'lng': 43.9361},
+        'Р§РµР»СЏР±РёРЅСЃРє': {'lat': 55.1644, 'lng': 61.4368},
+        'РЎР°РјР°СЂР°': {'lat': 53.2001, 'lng': 50.1500},
+        'РћРјСЃРє': {'lat': 54.9885, 'lng': 73.3242},
+        'Р РѕСЃС‚РѕРІ-РЅР°-Р”РѕРЅСѓ': {'lat': 47.2357, 'lng': 39.7015},
       };
 
       String? closestCity;
@@ -361,12 +364,12 @@ class SmartSearchService {
       _currentCity = closestCity;
       return closestCity;
     } catch (e) {
-      debugPrint('Ошибка определения города: $e');
+      debugPrint('РћС€РёР±РєР° РѕРїСЂРµРґРµР»РµРЅРёСЏ РіРѕСЂРѕРґР°: $e');
       return null;
     }
   }
 
-  /// Вычислить расстояние между двумя точками
+  /// Р’С‹С‡РёСЃР»РёС‚СЊ СЂР°СЃСЃС‚РѕСЏРЅРёРµ РјРµР¶РґСѓ РґРІСѓРјСЏ С‚РѕС‡РєР°РјРё
   double _calculateDistance(
     double lat1,
     double lng1,
@@ -375,7 +378,7 @@ class SmartSearchService {
   ) =>
       Geolocator.distanceBetween(lat1, lng1, lat2, lng2);
 
-  /// Получить популярные города для автозаполнения
+  /// РџРѕР»СѓС‡РёС‚СЊ РїРѕРїСѓР»СЏСЂРЅС‹Рµ РіРѕСЂРѕРґР° РґР»СЏ Р°РІС‚РѕР·Р°РїРѕР»РЅРµРЅРёСЏ
   Future<List<String>> getPopularCities() async {
     try {
       final query = await _firestore.collection('specialists').limit(100).get();
@@ -390,23 +393,23 @@ class SmartSearchService {
 
       return cities.toList()..sort();
     } catch (e) {
-      debugPrint('Ошибка получения городов: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РіРѕСЂРѕРґРѕРІ: $e');
       return [
-        'Москва',
-        'Санкт-Петербург',
-        'Новосибирск',
-        'Екатеринбург',
-        'Казань',
-        'Нижний Новгород',
-        'Челябинск',
-        'Самара',
-        'Омск',
-        'Ростов-на-Дону',
+        'РњРѕСЃРєРІР°',
+        'РЎР°РЅРєС‚-РџРµС‚РµСЂР±СѓСЂРі',
+        'РќРѕРІРѕСЃРёР±РёСЂСЃРє',
+        'Р•РєР°С‚РµСЂРёРЅР±СѓСЂРі',
+        'РљР°Р·Р°РЅСЊ',
+        'РќРёР¶РЅРёР№ РќРѕРІРіРѕСЂРѕРґ',
+        'Р§РµР»СЏР±РёРЅСЃРє',
+        'РЎР°РјР°СЂР°',
+        'РћРјСЃРє',
+        'Р РѕСЃС‚РѕРІ-РЅР°-Р”РѕРЅСѓ',
       ];
     }
   }
 
-  /// Получить популярные категории для автозаполнения
+  /// РџРѕР»СѓС‡РёС‚СЊ РїРѕРїСѓР»СЏСЂРЅС‹Рµ РєР°С‚РµРіРѕСЂРёРё РґР»СЏ Р°РІС‚РѕР·Р°РїРѕР»РЅРµРЅРёСЏ
   Future<List<String>> getPopularCategories() async {
     try {
       final query = await _firestore.collection('specialists').limit(100).get();
@@ -421,31 +424,31 @@ class SmartSearchService {
 
       return categories.toList()..sort();
     } catch (e) {
-      debugPrint('Ошибка получения категорий: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РєР°С‚РµРіРѕСЂРёР№: $e');
       return [
-        'Ведущие',
+        'Р’РµРґСѓС‰РёРµ',
         'DJ',
-        'Фотографы',
-        'Видеографы',
-        'Декораторы',
-        'Аниматоры',
-        'Музыканты',
-        'Танцоры',
-        'Клоуны',
-        'Фокусники',
-        'Певцы',
-        'Организаторы',
+        'Р¤РѕС‚РѕРіСЂР°С„С‹',
+        'Р’РёРґРµРѕРіСЂР°С„С‹',
+        'Р”РµРєРѕСЂР°С‚РѕСЂС‹',
+        'РђРЅРёРјР°С‚РѕСЂС‹',
+        'РњСѓР·С‹РєР°РЅС‚С‹',
+        'РўР°РЅС†РѕСЂС‹',
+        'РљР»РѕСѓРЅС‹',
+        'Р¤РѕРєСѓСЃРЅРёРєРё',
+        'РџРµРІС†С‹',
+        'РћСЂРіР°РЅРёР·Р°С‚РѕСЂС‹',
       ];
     }
   }
 
-  /// Получить текущий город пользователя
+  /// РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСѓС‰РёР№ РіРѕСЂРѕРґ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   String? get currentCity => _currentCity;
 
-  /// Получить текущую позицию пользователя
+  /// РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСѓС‰СѓСЋ РїРѕР·РёС†РёСЋ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Position? get currentPosition => _currentPosition;
 
-  /// Получить популярных специалистов недели
+  /// РџРѕР»СѓС‡РёС‚СЊ РїРѕРїСѓР»СЏСЂРЅС‹С… СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ РЅРµРґРµР»Рё
   Future<List<Map<String, dynamic>>> getWeeklyPopularSpecialists() async {
     try {
       final weekAgo = DateTime.now().subtract(const Duration(days: 7));
@@ -463,7 +466,7 @@ class SmartSearchService {
       for (final doc in query.docs) {
         final data = doc.data();
 
-        // Добавляем дополнительные поля для бейджей
+        // Р”РѕР±Р°РІР»СЏРµРј РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РїРѕР»СЏ РґР»СЏ Р±РµР№РґР¶РµР№
         final specialistData = <String, dynamic>{
           ...data,
           'id': doc.id,
@@ -478,27 +481,27 @@ class SmartSearchService {
         specialists.add(specialistData);
       }
 
-      // Если нет данных в Firestore, возвращаем тестовые данные
+      // Р•СЃР»Рё РЅРµС‚ РґР°РЅРЅС‹С… РІ Firestore, РІРѕР·РІСЂР°С‰Р°РµРј С‚РµСЃС‚РѕРІС‹Рµ РґР°РЅРЅС‹Рµ
       if (specialists.isEmpty) {
         return _getTestWeeklyPopularSpecialists();
       }
 
       return specialists;
     } catch (e) {
-      debugPrint('Ошибка получения популярных специалистов: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РїРѕРїСѓР»СЏСЂРЅС‹С… СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ: $e');
       return _getTestWeeklyPopularSpecialists();
     }
   }
 
-  /// Тестовые данные для популярных специалистов недели
+  /// РўРµСЃС‚РѕРІС‹Рµ РґР°РЅРЅС‹Рµ РґР»СЏ РїРѕРїСѓР»СЏСЂРЅС‹С… СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ РЅРµРґРµР»Рё
   List<Map<String, dynamic>> _getTestWeeklyPopularSpecialists() => [
         {
           'id': 'specialist_1',
-          'name': 'Анна Петрова',
-          'category': 'Фотограф',
+          'name': 'РђРЅРЅР° РџРµС‚СЂРѕРІР°',
+          'category': 'Р¤РѕС‚РѕРіСЂР°С„',
           'rating': 4.9,
           'price': 15000,
-          'city': 'Москва',
+          'city': 'РњРѕСЃРєРІР°',
           'avatarUrl': 'https://picsum.photos/200/200?random=1',
           'reviewsCount': 127,
           'isVerified': true,
@@ -510,11 +513,11 @@ class SmartSearchService {
         },
         {
           'id': 'specialist_2',
-          'name': 'Дмитрий Смирнов',
+          'name': 'Р”РјРёС‚СЂРёР№ РЎРјРёСЂРЅРѕРІ',
           'category': 'DJ',
           'rating': 4.8,
           'price': 25000,
-          'city': 'Санкт-Петербург',
+          'city': 'РЎР°РЅРєС‚-РџРµС‚РµСЂР±СѓСЂРі',
           'avatarUrl': 'https://picsum.photos/200/200?random=2',
           'reviewsCount': 89,
           'isVerified': true,
@@ -526,11 +529,11 @@ class SmartSearchService {
         },
         {
           'id': 'specialist_3',
-          'name': 'Елена Козлова',
-          'category': 'Ведущая',
+          'name': 'Р•Р»РµРЅР° РљРѕР·Р»РѕРІР°',
+          'category': 'Р’РµРґСѓС‰Р°СЏ',
           'rating': 4.7,
           'price': 20000,
-          'city': 'Москва',
+          'city': 'РњРѕСЃРєРІР°',
           'avatarUrl': 'https://picsum.photos/200/200?random=3',
           'reviewsCount': 156,
           'isVerified': true,
@@ -542,11 +545,11 @@ class SmartSearchService {
         },
         {
           'id': 'specialist_4',
-          'name': 'Михаил Волков',
-          'category': 'Видеограф',
+          'name': 'РњРёС…Р°РёР» Р’РѕР»РєРѕРІ',
+          'category': 'Р’РёРґРµРѕРіСЂР°С„',
           'rating': 4.6,
           'price': 30000,
-          'city': 'Новосибирск',
+          'city': 'РќРѕРІРѕСЃРёР±РёСЂСЃРє',
           'avatarUrl': 'https://picsum.photos/200/200?random=4',
           'reviewsCount': 67,
           'isVerified': false,
@@ -558,11 +561,11 @@ class SmartSearchService {
         },
         {
           'id': 'specialist_5',
-          'name': 'Ольга Морозова',
-          'category': 'Декоратор',
+          'name': 'РћР»СЊРіР° РњРѕСЂРѕР·РѕРІР°',
+          'category': 'Р”РµРєРѕСЂР°С‚РѕСЂ',
           'rating': 4.5,
           'price': 18000,
-          'city': 'Екатеринбург',
+          'city': 'Р•РєР°С‚РµСЂРёРЅР±СѓСЂРі',
           'avatarUrl': 'https://picsum.photos/200/200?random=5',
           'reviewsCount': 43,
           'isVerified': true,
@@ -575,7 +578,7 @@ class SmartSearchService {
       ];
 }
 
-/// Подсказка для поиска
+/// РџРѕРґСЃРєР°Р·РєР° РґР»СЏ РїРѕРёСЃРєР°
 class SearchSuggestion {
   SearchSuggestion({
     required this.text,
@@ -591,7 +594,7 @@ class SearchSuggestion {
   final Map<String, dynamic> data;
 }
 
-/// Тип подсказки
+/// РўРёРї РїРѕРґСЃРєР°Р·РєРё
 enum SuggestionType {
   specialist,
   category,
@@ -599,10 +602,11 @@ enum SuggestionType {
   service,
 }
 
-/// Опции сортировки специалистов
+/// РћРїС†РёРё СЃРѕСЂС‚РёСЂРѕРІРєРё СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ
 enum SpecialistSortOption {
   rating,
   price,
   popularity,
   distance,
 }
+

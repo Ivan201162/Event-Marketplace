@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../auth/providers/auth_provider.dart';
-import '../../specialists/data/models/specialist.dart';
-import '../../specialists/presentation/specialist_card.dart';
+// import '../../auth/providers/auth_provider.dart'; // Не существует
+// import '../../specialists/data/models/specialist.dart'; // Не существует
+// import '../../specialists/presentation/specialist_card.dart'; // Не существует
 import '../recommendation_service.dart';
 
 /// Виджет рекомендаций специалистов
@@ -26,7 +26,7 @@ class RecommendationsWidget extends StatefulWidget {
 
 class _RecommendationsWidgetState extends State<RecommendationsWidget> {
   final RecommendationService _recommendationService = RecommendationService();
-  List<Specialist> _recommendations = [];
+  List<dynamic> _recommendations = []; // Заглушка
   bool _isLoading = true;
   String? _error;
 
@@ -305,7 +305,7 @@ class _RecommendationsWidgetState extends State<RecommendationsWidget> {
   }
 
   /// Переход к профилю специалиста
-  void _navigateToSpecialist(Specialist specialist) {
+  void _navigateToSpecialist(dynamic specialist) {
     // Здесь должна быть навигация к профилю специалиста
     // Navigator.push(context, MaterialPageRoute<void>(...));
   }
@@ -327,7 +327,7 @@ class SimilarSpecialistsWidget extends StatefulWidget {
 
 class _SimilarSpecialistsWidgetState extends State<SimilarSpecialistsWidget> {
   final RecommendationService _recommendationService = RecommendationService();
-  List<Specialist> _similarSpecialists = [];
+  List<dynamic> _similarSpecialists = []; // Заглушка
   bool _isLoading = true;
   String? _error;
 
@@ -413,10 +413,15 @@ class _SimilarSpecialistsWidgetState extends State<SimilarSpecialistsWidget> {
               return Container(
                 width: 160,
                 margin: const EdgeInsets.only(right: 16),
-                child: SpecialistCard(
-                  specialist: specialist,
-                  compact: true,
-                  onTap: () => _navigateToSpecialist(specialist),
+                child: Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Center(
+                    child: Text('Specialist Card\n(Заглушка)'),
+                  ),
                 ),
               );
             },
@@ -435,7 +440,7 @@ class _SimilarSpecialistsWidgetState extends State<SimilarSpecialistsWidget> {
       );
 
   /// Переход к профилю специалиста
-  void _navigateToSpecialist(Specialist specialist) {
+  void _navigateToSpecialist(dynamic specialist) {
     // Здесь должна быть навигация к профилю специалиста
     // Navigator.push(context, MaterialPageRoute<void>(...));
   }

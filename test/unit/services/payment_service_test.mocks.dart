@@ -5,7 +5,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i4;
 
-import 'package:event_marketplace_app/models/payment_models.dart' as _i3;
+import 'package:event_marketplace_app/models/payment.dart' as _i3;
 import 'package:event_marketplace_app/services/russian_bank_service.dart'
     as _i2;
 import 'package:event_marketplace_app/services/tax_calculation_service.dart'

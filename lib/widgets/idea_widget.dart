@@ -30,7 +30,7 @@ class IdeaWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Изображения
-              if (idea.images ?? []?.isNotEmpty == true) _buildImages(),
+              if (idea.images.isNotEmpty) _buildImages(),
 
               // Основная информация
               Padding(
@@ -59,12 +59,12 @@ class IdeaWidget extends StatelessWidget {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: ColorUtils.getCategoryColor(idea.categoryColor ?? Colors.grey)
+                            color: ColorUtils.getCategoryColor(idea.category)
                                 .withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: ColorUtils.getCategoryColor(
-                                idea.categoryColor ?? Colors.grey,
+                                idea.category,
                               ).withValues(alpha: 0.3),
                             ),
                           ),
@@ -75,7 +75,7 @@ class IdeaWidget extends StatelessWidget {
                                 ColorUtils.getCategoryIcon(idea.category),
                                 size: 14,
                                 color: ColorUtils.getCategoryColor(
-                                  idea.categoryColor ?? Colors.grey,
+                                  idea.category,
                                 ),
                               ),
                               const SizedBox(width: 4),
@@ -84,7 +84,7 @@ class IdeaWidget extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: ColorUtils.getCategoryColor(
-                                    idea.categoryColor ?? Colors.grey,
+                                    idea.category,
                                   ),
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -146,13 +146,13 @@ class IdeaWidget extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 12,
-                          backgroundImage: idea.authorPhotoUrl ?? '' != null
-                              ? CachedNetworkImageProvider(idea.authorPhotoUrl ?? ''!)
+                          backgroundImage: idea.authorPhotoUrl != null
+                              ? CachedNetworkImageProvider(idea.authorPhotoUrl!)
                               : null,
-                          child: idea.authorPhotoUrl ?? '' == null
+                          child: idea.authorPhotoUrl == null
                               ? Text(
-                                  idea.authorName.isNotEmpty
-                                      ? idea.authorName[0].toUpperCase()
+                                  idea.authorName?.isNotEmpty == true
+                                      ? idea.authorName![0].toUpperCase()
                                       : '?',
                                   style: const TextStyle(fontSize: 10),
                                 )
@@ -161,7 +161,7 @@ class IdeaWidget extends StatelessWidget {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            idea.authorName,
+                            idea.authorName ?? 'Неизвестный',
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -191,14 +191,14 @@ class IdeaWidget extends StatelessWidget {
       );
 
   Widget _buildImages() {
-    if (idea.images ?? [].isEmpty) return const SizedBox.shrink();
+    if ((idea.images ?? []).isEmpty) return const SizedBox.shrink();
 
     return SizedBox(
       height: 200,
       child: PageView.builder(
-        itemCount: idea.images ?? [].length,
+        itemCount: (idea.images ?? []).length,
         itemBuilder: (context, index) {
-          final image = idea.images ?? [][index];
+          final image = (idea.images ?? [])[index];
           return CachedNetworkImage(
             imageUrl: image,
             fit: BoxFit.cover,
@@ -254,7 +254,7 @@ class IdeaWidget extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               Text(
-                idea.viewsCount ?? 0.toString(),
+                (idea.viewsCount ?? 0).toString(),
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
@@ -299,7 +299,7 @@ class IdeaWidget extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               Text(
-                idea.commentsCount ?? 0.toString(),
+                (idea.commentsCount ?? 0).toString(),
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
@@ -356,11 +356,11 @@ class IdeaListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-        leading: idea.images ?? [].isNotEmpty
+        leading: (idea.images ?? []).isNotEmpty
             ? ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: CachedNetworkImage(
-                  imageUrl: idea.images ?? [].first,
+                  imageUrl: (idea.images ?? []).first,
                   width: 60,
                   height: 60,
                   fit: BoxFit.cover,
@@ -384,12 +384,12 @@ class IdeaListTile extends StatelessWidget {
                 width: 60,
                 height: 60,
                 decoration: BoxDecoration(
-                  color: ColorUtils.getCategoryColor(idea.categoryColor ?? Colors.grey).withValues(alpha: 0.1),
+                  color: ColorUtils.getCategoryColor(idea.category).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
                   ColorUtils.getCategoryIcon(idea.category),
-                  color: ColorUtils.getCategoryColor(idea.categoryColor ?? Colors.grey),
+                  color: ColorUtils.getCategoryColor(idea.category),
                   size: 24,
                 ),
               ),
@@ -413,14 +413,14 @@ class IdeaListTile extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: ColorUtils.getCategoryColor(idea.categoryColor ?? Colors.grey).withValues(alpha: 0.1),
+                    color: ColorUtils.getCategoryColor(idea.category).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     idea.category,
                     style: TextStyle(
                       fontSize: 10,
-                      color: ColorUtils.getCategoryColor(idea.categoryColor ?? Colors.grey),
+                      color: ColorUtils.getCategoryColor(idea.category),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -525,9 +525,9 @@ class IdeaGridTile extends StatelessWidget {
               // Изображение
               Expanded(
                 flex: 3,
-                child: idea.images ?? [].isNotEmpty
+                child: (idea.images ?? []).isNotEmpty
                     ? CachedNetworkImage(
-                        imageUrl: idea.images ?? [].first,
+                        imageUrl: (idea.images ?? []).first,
                         fit: BoxFit.cover,
                         placeholder: (context, url) => Container(
                           color: Colors.grey[200],
@@ -542,14 +542,14 @@ class IdeaGridTile extends StatelessWidget {
                       )
                     : Container(
                         color:
-                            ColorUtils.getCategoryColor(idea.categoryColor ?? Colors.grey).withValues(alpha: 0.1),
+                            ColorUtils.getCategoryColor(idea.category).withValues(alpha: 0.1),
                         child: Center(
                           child: Text(
-                            idea.categoryIcon ?? Icons.category,
+                            ColorUtils.getCategoryIcon(idea.category),
                             style: TextStyle(
                               fontSize: 32,
                               color: ColorUtils.getCategoryColor(
-                                idea.categoryColor ?? Colors.grey,
+                                idea.category,
                               ),
                             ),
                           ),
@@ -585,7 +585,7 @@ class IdeaGridTile extends StatelessWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: ColorUtils.getCategoryColor(idea.categoryColor ?? Colors.grey)
+                          color: ColorUtils.getCategoryColor(idea.category ?? Colors.grey)
                               .withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -593,7 +593,7 @@ class IdeaGridTile extends StatelessWidget {
                           idea.category,
                           style: TextStyle(
                             fontSize: 10,
-                            color: ColorUtils.getCategoryColor(idea.categoryColor ?? Colors.grey),
+                            color: ColorUtils.getCategoryColor(idea.category),
                             fontWeight: FontWeight.w500,
                           ),
                         ),

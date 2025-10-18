@@ -1,14 +1,21 @@
-import 'dart:io';
+﻿import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/foundation.dart';
 
 import '../core/stubs/stubs.dart';
+import 'package:flutter/foundation.dart';
 import '../models/calendar_event.dart';
+import 'package:flutter/foundation.dart';
 import '../models/specialist_schedule.dart';
+import 'package:flutter/foundation.dart';
 
-/// Сервис для работы с календарем
+/// РЎРµСЂРІРёСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РєР°Р»РµРЅРґР°СЂРµРј
 class CalendarService {
   factory CalendarService() => _instance;
   CalendarService._internal();
@@ -16,7 +23,7 @@ class CalendarService {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// Создать календарное событие
+  /// РЎРѕР·РґР°С‚СЊ РєР°Р»РµРЅРґР°СЂРЅРѕРµ СЃРѕР±С‹С‚РёРµ
   Future<String?> createEvent(CalendarEvent event) async {
     try {
       final eventRef = _firestore.collection('calendar_events').doc();
@@ -25,22 +32,22 @@ class CalendarService {
       await eventRef.set(eventWithId.toMap());
       return eventRef.id;
     } on Exception catch (e) {
-      debugPrint('Ошибка создания события: $e');
+      debugPrint('РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ СЃРѕР±С‹С‚РёСЏ: $e');
       return null;
     }
   }
 
-  /// Получить события пользователя
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃРѕР±С‹С‚РёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Stream<List<CalendarEvent>> getUserEvents(
     String userId,
     CalendarFilter filter,
   ) {
     Query<Map<String, dynamic>> query = _firestore.collection('calendar_events');
 
-    // Фильтр по пользователю
+    // Р¤РёР»СЊС‚СЂ РїРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ
     query = query.where('customerId', isEqualTo: userId);
 
-    // Применяем фильтры
+    // РџСЂРёРјРµРЅСЏРµРј С„РёР»СЊС‚СЂС‹
     if (filter.startDate != null) {
       query = query.where(
         'startTime',
@@ -77,16 +84,16 @@ class CalendarService {
       query = query.where('isAllDay', isEqualTo: filter.isAllDay);
     }
 
-    // Сортировка по времени начала
+    // РЎРѕСЂС‚РёСЂРѕРІРєР° РїРѕ РІСЂРµРјРµРЅРё РЅР°С‡Р°Р»Р°
     query = query.orderBy('startTime', descending: false);
 
-    // Добавляем лимит для оптимизации
+    // Р”РѕР±Р°РІР»СЏРµРј Р»РёРјРёС‚ РґР»СЏ РѕРїС‚РёРјРёР·Р°С†РёРё
     query = query.limit(50);
 
     return query.snapshots().map((snapshot) {
       var events = snapshot.docs.map(CalendarEvent.fromDocument).toList();
 
-      // Применяем фильтры, которые нельзя применить в Firestore
+      // РџСЂРёРјРµРЅСЏРµРј С„РёР»СЊС‚СЂС‹, РєРѕС‚РѕСЂС‹Рµ РЅРµР»СЊР·СЏ РїСЂРёРјРµРЅРёС‚СЊ РІ Firestore
       if (filter.searchQuery != null && filter.searchQuery!.isNotEmpty) {
         final query = filter.searchQuery!.toLowerCase();
         events = events
@@ -103,17 +110,17 @@ class CalendarService {
     });
   }
 
-  /// Получить события специалиста
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃРѕР±С‹С‚РёСЏ СЃРїРµС†РёР°Р»РёСЃС‚Р°
   Stream<List<CalendarEvent>> getSpecialistEvents(
     String specialistId,
     CalendarFilter filter,
   ) {
     Query<Map<String, dynamic>> query = _firestore.collection('calendar_events');
 
-    // Фильтр по специалисту
+    // Р¤РёР»СЊС‚СЂ РїРѕ СЃРїРµС†РёР°Р»РёСЃС‚Сѓ
     query = query.where('specialistId', isEqualTo: specialistId);
 
-    // Применяем остальные фильтры аналогично getUserEvents
+    // РџСЂРёРјРµРЅСЏРµРј РѕСЃС‚Р°Р»СЊРЅС‹Рµ С„РёР»СЊС‚СЂС‹ Р°РЅР°Р»РѕРіРёС‡РЅРѕ getUserEvents
     if (filter.startDate != null) {
       query = query.where(
         'startTime',
@@ -171,33 +178,33 @@ class CalendarService {
     });
   }
 
-  /// Обновить событие
+  /// РћР±РЅРѕРІРёС‚СЊ СЃРѕР±С‹С‚РёРµ
   Future<bool> updateEvent(CalendarEvent event) async {
     try {
       await _firestore.collection('calendar_events').doc(event.id).update(event.toMap());
       return true;
     } on Exception catch (e) {
-      debugPrint('Ошибка обновления события: $e');
+      debugPrint('РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ СЃРѕР±С‹С‚РёСЏ: $e');
       return false;
     }
   }
 
-  /// Удалить событие
+  /// РЈРґР°Р»РёС‚СЊ СЃРѕР±С‹С‚РёРµ
   Future<bool> deleteEvent(String eventId) async {
     try {
       await _firestore.collection('calendar_events').doc(eventId).delete();
       return true;
     } on Exception catch (e) {
-      debugPrint('Ошибка удаления события: $e');
+      debugPrint('РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ СЃРѕР±С‹С‚РёСЏ: $e');
       return false;
     }
   }
 
-  /// Экспортировать события в ICS файл
+  /// Р­РєСЃРїРѕСЂС‚РёСЂРѕРІР°С‚СЊ СЃРѕР±С‹С‚РёСЏ РІ ICS С„Р°Р№Р»
   Future<String?> exportToICS(List<CalendarEvent> events) async {
     try {
       // TODO(developer): Implement proper calendar export
-      // Временная заглушка - возвращаем пустую строку
+      // Р’СЂРµРјРµРЅРЅР°СЏ Р·Р°РіР»СѓС€РєР° - РІРѕР·РІСЂР°С‰Р°РµРј РїСѓСЃС‚СѓСЋ СЃС‚СЂРѕРєСѓ
       return '';
       // final calendar = ical.ICalendar(
       //   headData: ical.ICalendarHeadData(
@@ -207,7 +214,7 @@ class CalendarService {
       // );
 
       // TODO(developer): Implement event export
-      // Временная заглушка - возвращаем пустую строку
+      // Р’СЂРµРјРµРЅРЅР°СЏ Р·Р°РіР»СѓС€РєР° - РІРѕР·РІСЂР°С‰Р°РµРј РїСѓСЃС‚СѓСЋ СЃС‚СЂРѕРєСѓ
       return '';
       // for (final event in events) {
       //   final icsEvent = ical.IEventData(
@@ -223,33 +230,33 @@ class CalendarService {
       // TODO(developer): Return proper ICS content
       return 'BEGIN:VCALENDAR\nVERSION:2.0\nEND:VCALENDAR';
     } on Exception catch (e) {
-      debugPrint('Ошибка экспорта в ICS: $e');
+      debugPrint('РћС€РёР±РєР° СЌРєСЃРїРѕСЂС‚Р° РІ ICS: $e');
       return null;
     }
   }
 
-  /// Поделиться событиями
+  /// РџРѕРґРµР»РёС‚СЊСЃСЏ СЃРѕР±С‹С‚РёСЏРјРё
   Future<void> shareEvents(List<CalendarEvent> events) async {
     try {
       final icsContent = await exportToICS(events);
       if (icsContent != null) {
-        // Создаем временный файл
+        // РЎРѕР·РґР°РµРј РІСЂРµРјРµРЅРЅС‹Р№ С„Р°Р№Р»
         final tempDir = Directory.systemTemp;
         final file = File('${tempDir.path}/events.ics');
         await file.writeAsString(icsContent);
 
-        // Делимся файлом
+        // Р”РµР»РёРјСЃСЏ С„Р°Р№Р»РѕРј
         await Share.shareXFiles(
           [XFile(file.path)],
-          text: 'Календарные события',
+          text: 'РљР°Р»РµРЅРґР°СЂРЅС‹Рµ СЃРѕР±С‹С‚РёСЏ',
         );
       }
     } on Exception catch (e) {
-      debugPrint('Ошибка шаринга событий: $e');
+      debugPrint('РћС€РёР±РєР° С€Р°СЂРёРЅРіР° СЃРѕР±С‹С‚РёР№: $e');
     }
   }
 
-  /// Открыть в Google Calendar
+  /// РћС‚РєСЂС‹С‚СЊ РІ Google Calendar
   Future<void> openInGoogleCalendar(CalendarEvent event) async {
     try {
       final startTime =
@@ -267,11 +274,11 @@ class CalendarService {
         await launchUrl(url, mode: LaunchMode.externalApplication);
       }
     } on Exception catch (e) {
-      debugPrint('Ошибка открытия в Google Calendar: $e');
+      debugPrint('РћС€РёР±РєР° РѕС‚РєСЂС‹С‚РёСЏ РІ Google Calendar: $e');
     }
   }
 
-  /// Открыть в Outlook Calendar
+  /// РћС‚РєСЂС‹С‚СЊ РІ Outlook Calendar
   Future<void> openInOutlookCalendar(CalendarEvent event) async {
     try {
       final startTime = event.startTime.toUtc().toIso8601String();
@@ -288,38 +295,38 @@ class CalendarService {
         await launchUrl(url, mode: LaunchMode.externalApplication);
       }
     } on Exception catch (e) {
-      debugPrint('Ошибка открытия в Outlook Calendar: $e');
+      debugPrint('РћС€РёР±РєР° РѕС‚РєСЂС‹С‚РёСЏ РІ Outlook Calendar: $e');
     }
   }
 
-  /// Синхронизировать с Google Calendar
+  /// РЎРёРЅС…СЂРѕРЅРёР·РёСЂРѕРІР°С‚СЊ СЃ Google Calendar
   Future<bool> syncWithGoogleCalendar(String userId, String accessToken) async {
     try {
-      // TODO(developer): Реализовать синхронизацию с Google Calendar API
-      debugPrint('Синхронизация с Google Calendar для пользователя: $userId');
+      // TODO(developer): Р РµР°Р»РёР·РѕРІР°С‚СЊ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЋ СЃ Google Calendar API
+      debugPrint('РЎРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ СЃ Google Calendar РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ: $userId');
       return true;
     } on Exception catch (e) {
-      debugPrint('Ошибка синхронизации с Google Calendar: $e');
+      debugPrint('РћС€РёР±РєР° СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРё СЃ Google Calendar: $e');
       return false;
     }
   }
 
-  /// Синхронизировать с Outlook Calendar
+  /// РЎРёРЅС…СЂРѕРЅРёР·РёСЂРѕРІР°С‚СЊ СЃ Outlook Calendar
   Future<bool> syncWithOutlookCalendar(
     String userId,
     String accessToken,
   ) async {
     try {
-      // TODO(developer): Реализовать синхронизацию с Outlook Calendar API
-      debugPrint('Синхронизация с Outlook Calendar для пользователя: $userId');
+      // TODO(developer): Р РµР°Р»РёР·РѕРІР°С‚СЊ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЋ СЃ Outlook Calendar API
+      debugPrint('РЎРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ СЃ Outlook Calendar РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ: $userId');
       return true;
     } on Exception catch (e) {
-      debugPrint('Ошибка синхронизации с Outlook Calendar: $e');
+      debugPrint('РћС€РёР±РєР° СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРё СЃ Outlook Calendar: $e');
       return false;
     }
   }
 
-  /// Получить статистику календаря
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃС‚Р°С‚РёСЃС‚РёРєСѓ РєР°Р»РµРЅРґР°СЂСЏ
   Future<CalendarStats> getCalendarStats(String userId) async {
     try {
       final snapshot = await _firestore
@@ -331,12 +338,12 @@ class CalendarService {
 
       return _calculateStats(events);
     } on Exception catch (e) {
-      debugPrint('Ошибка получения статистики календаря: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЃС‚Р°С‚РёСЃС‚РёРєРё РєР°Р»РµРЅРґР°СЂСЏ: $e');
       return CalendarStats.empty();
     }
   }
 
-  /// Создать событие из бронирования
+  /// РЎРѕР·РґР°С‚СЊ СЃРѕР±С‹С‚РёРµ РёР· Р±СЂРѕРЅРёСЂРѕРІР°РЅРёСЏ
   Future<String?> createEventFromBooking({
     required String bookingId,
     required String specialistId,
@@ -370,12 +377,12 @@ class CalendarService {
 
       return await createEvent(event);
     } on Exception catch (e) {
-      debugPrint('Ошибка создания события из бронирования: $e');
+      debugPrint('РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ СЃРѕР±С‹С‚РёСЏ РёР· Р±СЂРѕРЅРёСЂРѕРІР°РЅРёСЏ: $e');
       return null;
     }
   }
 
-  /// Обновить статус события
+  /// РћР±РЅРѕРІРёС‚СЊ СЃС‚Р°С‚СѓСЃ СЃРѕР±С‹С‚РёСЏ
   Future<bool> updateEventStatus(String eventId, EventStatus status) async {
     try {
       await _firestore.collection('calendar_events').doc(eventId).update({
@@ -384,12 +391,12 @@ class CalendarService {
       });
       return true;
     } on Exception catch (e) {
-      debugPrint('Ошибка обновления статуса события: $e');
+      debugPrint('РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ СЃС‚Р°С‚СѓСЃР° СЃРѕР±С‹С‚РёСЏ: $e');
       return false;
     }
   }
 
-  /// Получить события на сегодня
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃРѕР±С‹С‚РёСЏ РЅР° СЃРµРіРѕРґРЅСЏ
   Stream<List<CalendarEvent>> getTodayEvents(String userId) {
     final now = DateTime.now();
     final startOfDay = DateTime(now.year, now.month, now.day);
@@ -403,7 +410,7 @@ class CalendarService {
     return getUserEvents(userId, filter);
   }
 
-  /// Получить события на завтра
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃРѕР±С‹С‚РёСЏ РЅР° Р·Р°РІС‚СЂР°
   Stream<List<CalendarEvent>> getTomorrowEvents(String userId) {
     final tomorrow = DateTime.now().add(const Duration(days: 1));
     final startOfDay = DateTime(tomorrow.year, tomorrow.month, tomorrow.day);
@@ -417,7 +424,7 @@ class CalendarService {
     return getUserEvents(userId, filter);
   }
 
-  /// Получить события на неделю
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃРѕР±С‹С‚РёСЏ РЅР° РЅРµРґРµР»СЋ
   Stream<List<CalendarEvent>> getWeekEvents(String userId) {
     final now = DateTime.now();
     final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
@@ -431,7 +438,7 @@ class CalendarService {
     return getUserEvents(userId, filter);
   }
 
-  /// Получить события на месяц
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃРѕР±С‹С‚РёСЏ РЅР° РјРµСЃСЏС†
   Stream<List<CalendarEvent>> getMonthEvents(String userId) {
     final now = DateTime.now();
     final startOfMonth = DateTime(now.year, now.month);
@@ -502,7 +509,7 @@ class CalendarService {
     );
   }
 
-  /// Проверить доступность даты
+  /// РџСЂРѕРІРµСЂРёС‚СЊ РґРѕСЃС‚СѓРїРЅРѕСЃС‚СЊ РґР°С‚С‹
   Future<bool> isDateAvailable(String specialistId, DateTime date) async {
     try {
       final startOfDay = DateTime(date.year, date.month, date.day);
@@ -520,12 +527,12 @@ class CalendarService {
 
       return querySnapshot.docs.isEmpty;
     } on Exception catch (e) {
-      debugPrint('Ошибка проверки доступности даты: $e');
+      debugPrint('РћС€РёР±РєР° РїСЂРѕРІРµСЂРєРё РґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё РґР°С‚С‹: $e');
       return false;
     }
   }
 
-  /// Проверить доступность даты и времени
+  /// РџСЂРѕРІРµСЂРёС‚СЊ РґРѕСЃС‚СѓРїРЅРѕСЃС‚СЊ РґР°С‚С‹ Рё РІСЂРµРјРµРЅРё
   Future<bool> isDateTimeAvailable(
     String specialistId,
     DateTime dateTime,
@@ -546,7 +553,7 @@ class CalendarService {
 
       final events = querySnapshot.docs.map(CalendarEvent.fromDocument).toList();
 
-      // Проверяем, есть ли конфликтующие события
+      // РџСЂРѕРІРµСЂСЏРµРј, РµСЃС‚СЊ Р»Рё РєРѕРЅС„Р»РёРєС‚СѓСЋС‰РёРµ СЃРѕР±С‹С‚РёСЏ
       for (final event in events) {
         if (dateTime.isAfter(event.startTime) && dateTime.isBefore(event.endTime)) {
           return false;
@@ -554,12 +561,12 @@ class CalendarService {
       }
       return true;
     } on Exception catch (e) {
-      debugPrint('Ошибка проверки доступности даты и времени: $e');
+      debugPrint('РћС€РёР±РєР° РїСЂРѕРІРµСЂРєРё РґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё РґР°С‚С‹ Рё РІСЂРµРјРµРЅРё: $e');
       return false;
     }
   }
 
-  /// Получить доступные временные слоты
+  /// РџРѕР»СѓС‡РёС‚СЊ РґРѕСЃС‚СѓРїРЅС‹Рµ РІСЂРµРјРµРЅРЅС‹Рµ СЃР»РѕС‚С‹
   Future<List<DateTime>> getAvailableTimeSlots(
     String specialistId,
     DateTime date,
@@ -583,7 +590,7 @@ class CalendarService {
 
       final availableSlots = <DateTime>[];
 
-      // Генерируем слоты с 9:00 до 18:00
+      // Р“РµРЅРµСЂРёСЂСѓРµРј СЃР»РѕС‚С‹ СЃ 9:00 РґРѕ 18:00
       const startHour = 9;
       const endHour = 18;
 
@@ -591,7 +598,7 @@ class CalendarService {
         for (var minute = 0; minute < 60; minute += slotDuration.inMinutes) {
           final slotTime = DateTime(date.year, date.month, date.day, hour, minute);
 
-          // Проверяем, не конфликтует ли слот с существующими событиями
+          // РџСЂРѕРІРµСЂСЏРµРј, РЅРµ РєРѕРЅС„Р»РёРєС‚СѓРµС‚ Р»Рё СЃР»РѕС‚ СЃ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёРјРё СЃРѕР±С‹С‚РёСЏРјРё
           var isAvailable = true;
           for (final event in events) {
             if (slotTime.isAfter(event.startTime) && slotTime.isBefore(event.endTime)) {
@@ -608,12 +615,12 @@ class CalendarService {
 
       return availableSlots;
     } on Exception catch (e) {
-      debugPrint('Ошибка получения доступных слотов: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РґРѕСЃС‚СѓРїРЅС‹С… СЃР»РѕС‚РѕРІ: $e');
       return [];
     }
   }
 
-  /// Получить доступные даты
+  /// РџРѕР»СѓС‡РёС‚СЊ РґРѕСЃС‚СѓРїРЅС‹Рµ РґР°С‚С‹
   Future<List<DateTime>> getAvailableDates(
     String specialistId,
     int daysAhead,
@@ -632,22 +639,22 @@ class CalendarService {
 
       return availableDates;
     } on Exception catch (e) {
-      debugPrint('Ошибка получения доступных дат: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РґРѕСЃС‚СѓРїРЅС‹С… РґР°С‚: $e');
       return [];
     }
   }
 
-  /// Добавить событие
+  /// Р”РѕР±Р°РІРёС‚СЊ СЃРѕР±С‹С‚РёРµ
   Future<void> addEvent(String specialistId, CalendarEvent event) async {
     await createEvent(event);
   }
 
-  /// Удалить событие
+  /// РЈРґР°Р»РёС‚СЊ СЃРѕР±С‹С‚РёРµ
   Future<void> removeEvent(String specialistId, String eventId) async {
     await deleteEvent(eventId);
   }
 
-  /// Получить события на дату
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃРѕР±С‹С‚РёСЏ РЅР° РґР°С‚Сѓ
   Future<List<CalendarEvent>> getEventsForDate(
     String specialistId,
     DateTime date,
@@ -668,34 +675,34 @@ class CalendarService {
 
       return events.docs.map(CalendarEvent.fromDocument).toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения событий на дату: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЃРѕР±С‹С‚РёР№ РЅР° РґР°С‚Сѓ: $e');
       return [];
     }
   }
 
-  /// Создать событие бронирования
+  /// РЎРѕР·РґР°С‚СЊ СЃРѕР±С‹С‚РёРµ Р±СЂРѕРЅРёСЂРѕРІР°РЅРёСЏ
   Future<String?> createBookingEvent(CalendarEvent event) async => createEvent(event);
 
-  /// Удалить событие бронирования
+  /// РЈРґР°Р»РёС‚СЊ СЃРѕР±С‹С‚РёРµ Р±СЂРѕРЅРёСЂРѕРІР°РЅРёСЏ
   Future<void> removeBookingEvent(String eventId) async {
     await deleteEvent(eventId);
   }
 
-  /// Получить расписание специалиста
+  /// РџРѕР»СѓС‡РёС‚СЊ СЂР°СЃРїРёСЃР°РЅРёРµ СЃРїРµС†РёР°Р»РёСЃС‚Р°
   Stream<SpecialistSchedule?> getSpecialistSchedule(String specialistId) =>
       _firestore.collection('specialist_schedules').doc(specialistId).snapshots().map((doc) {
         if (!doc.exists) return null;
         return SpecialistSchedule.fromMap(doc.data()!);
       });
 
-  /// Получить все расписания
+  /// РџРѕР»СѓС‡РёС‚СЊ РІСЃРµ СЂР°СЃРїРёСЃР°РЅРёСЏ
   Stream<List<SpecialistSchedule>> getAllSchedules() =>
       _firestore.collection('specialist_schedules').snapshots().map(
             (snapshot) =>
                 snapshot.docs.map((doc) => SpecialistSchedule.fromMap(doc.data())).toList(),
           );
 
-  /// Создать событие недоступности
+  /// РЎРѕР·РґР°С‚СЊ СЃРѕР±С‹С‚РёРµ РЅРµРґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё
   Future<String?> createUnavailableEvent({
     required String specialistId,
     required DateTime startDate,
@@ -709,7 +716,7 @@ class CalendarService {
         'specialistId': specialistId,
         'startDate': Timestamp.fromDate(startDate),
         'endDate': Timestamp.fromDate(endDate),
-        'reason': reason ?? 'Недоступен',
+        'reason': reason ?? 'РќРµРґРѕСЃС‚СѓРїРµРЅ',
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
       };
@@ -717,12 +724,12 @@ class CalendarService {
       await eventRef.set(eventData);
       return eventRef.id;
     } on Exception catch (e) {
-      debugPrint('Ошибка создания события недоступности: $e');
+      debugPrint('РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ СЃРѕР±С‹С‚РёСЏ РЅРµРґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё: $e');
       return null;
     }
   }
 
-  /// Создать событие отпуска
+  /// РЎРѕР·РґР°С‚СЊ СЃРѕР±С‹С‚РёРµ РѕС‚РїСѓСЃРєР°
   Future<String?> createVacationEvent({
     required String specialistId,
     required DateTime startDate,
@@ -736,7 +743,7 @@ class CalendarService {
         'specialistId': specialistId,
         'startDate': Timestamp.fromDate(startDate),
         'endDate': Timestamp.fromDate(endDate),
-        'reason': reason ?? 'Отпуск',
+        'reason': reason ?? 'РћС‚РїСѓСЃРє',
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
       };
@@ -744,20 +751,20 @@ class CalendarService {
       await eventRef.set(eventData);
       return eventRef.id;
     } on Exception catch (e) {
-      debugPrint('Ошибка создания события отпуска: $e');
+      debugPrint('РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ СЃРѕР±С‹С‚РёСЏ РѕС‚РїСѓСЃРєР°: $e');
       return null;
     }
   }
 
-  /// Добавить тестовые данные
+  /// Р”РѕР±Р°РІРёС‚СЊ С‚РµСЃС‚РѕРІС‹Рµ РґР°РЅРЅС‹Рµ
   Future<void> addTestData(String specialistId) async {
     try {
-      // Добавляем тестовые события
+      // Р”РѕР±Р°РІР»СЏРµРј С‚РµСЃС‚РѕРІС‹Рµ СЃРѕР±С‹С‚РёСЏ
       final now = DateTime.now();
       final testEvents = [
         {
           'specialistId': specialistId,
-          'title': 'Тестовое событие 1',
+          'title': 'РўРµСЃС‚РѕРІРѕРµ СЃРѕР±С‹С‚РёРµ 1',
           'startDate': Timestamp.fromDate(now.add(const Duration(days: 1))),
           'endDate': Timestamp.fromDate(now.add(const Duration(days: 1, hours: 2))),
           'type': 'booking',
@@ -765,7 +772,7 @@ class CalendarService {
         },
         {
           'specialistId': specialistId,
-          'title': 'Тестовое событие 2',
+          'title': 'РўРµСЃС‚РѕРІРѕРµ СЃРѕР±С‹С‚РёРµ 2',
           'startDate': Timestamp.fromDate(now.add(const Duration(days: 2))),
           'endDate': Timestamp.fromDate(now.add(const Duration(days: 2, hours: 1))),
           'type': 'unavailable',
@@ -777,20 +784,20 @@ class CalendarService {
         await _firestore.collection('calendar_events').add(eventData);
       }
     } on Exception catch (e) {
-      debugPrint('Ошибка добавления тестовых данных: $e');
+      debugPrint('РћС€РёР±РєР° РґРѕР±Р°РІР»РµРЅРёСЏ С‚РµСЃС‚РѕРІС‹С… РґР°РЅРЅС‹С…: $e');
     }
   }
 
-  /// Пометить дату как занятую
+  /// РџРѕРјРµС‚РёС‚СЊ РґР°С‚Сѓ РєР°Рє Р·Р°РЅСЏС‚СѓСЋ
   Future<bool> markDateBusy(String specialistId, DateTime date) async {
     try {
       final specialistRef = _firestore.collection('specialists').doc(specialistId);
       final normalizedDate = DateTime(date.year, date.month, date.day);
 
-      // Получаем текущие занятые даты
+      // РџРѕР»СѓС‡Р°РµРј С‚РµРєСѓС‰РёРµ Р·Р°РЅСЏС‚С‹Рµ РґР°С‚С‹
       final doc = await specialistRef.get();
       if (!doc.exists) {
-        throw Exception('Специалист не найден');
+        throw Exception('РЎРїРµС†РёР°Р»РёСЃС‚ РЅРµ РЅР°Р№РґРµРЅ');
       }
 
       final data = doc.data()!;
@@ -798,7 +805,7 @@ class CalendarService {
           (data['busyDates'] as List<dynamic>?)?.map((e) => (e as Timestamp).toDate()).toList() ??
               [];
 
-      // Проверяем, не занята ли уже эта дата
+      // РџСЂРѕРІРµСЂСЏРµРј, РЅРµ Р·Р°РЅСЏС‚Р° Р»Рё СѓР¶Рµ СЌС‚Р° РґР°С‚Р°
       final isAlreadyBusy = busyDates.any(
         (busyDate) =>
             busyDate.year == normalizedDate.year &&
@@ -816,21 +823,21 @@ class CalendarService {
 
       return true;
     } on Exception catch (e) {
-      debugPrint('Ошибка пометки даты как занятой: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕРјРµС‚РєРё РґР°С‚С‹ РєР°Рє Р·Р°РЅСЏС‚РѕР№: $e');
       return false;
     }
   }
 
-  /// Пометить дату как свободную
+  /// РџРѕРјРµС‚РёС‚СЊ РґР°С‚Сѓ РєР°Рє СЃРІРѕР±РѕРґРЅСѓСЋ
   Future<bool> markDateFree(String specialistId, DateTime date) async {
     try {
       final specialistRef = _firestore.collection('specialists').doc(specialistId);
       final normalizedDate = DateTime(date.year, date.month, date.day);
 
-      // Получаем текущие занятые даты
+      // РџРѕР»СѓС‡Р°РµРј С‚РµРєСѓС‰РёРµ Р·Р°РЅСЏС‚С‹Рµ РґР°С‚С‹
       final doc = await specialistRef.get();
       if (!doc.exists) {
-        throw Exception('Специалист не найден');
+        throw Exception('РЎРїРµС†РёР°Р»РёСЃС‚ РЅРµ РЅР°Р№РґРµРЅ');
       }
 
       final data = doc.data()!;
@@ -838,7 +845,7 @@ class CalendarService {
           (data['busyDates'] as List<dynamic>?)?.map((e) => (e as Timestamp).toDate()).toList() ??
               [];
 
-      // Удаляем дату из списка занятых
+      // РЈРґР°Р»СЏРµРј РґР°С‚Сѓ РёР· СЃРїРёСЃРєР° Р·Р°РЅСЏС‚С‹С…
       busyDates.removeWhere(
         (busyDate) =>
             busyDate.year == normalizedDate.year &&
@@ -853,12 +860,12 @@ class CalendarService {
 
       return true;
     } on Exception catch (e) {
-      debugPrint('Ошибка пометки даты как свободной: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕРјРµС‚РєРё РґР°С‚С‹ РєР°Рє СЃРІРѕР±РѕРґРЅРѕР№: $e');
       return false;
     }
   }
 
-  /// Получить занятые даты специалиста
+  /// РџРѕР»СѓС‡РёС‚СЊ Р·Р°РЅСЏС‚С‹Рµ РґР°С‚С‹ СЃРїРµС†РёР°Р»РёСЃС‚Р°
   Future<List<DateTime>> getBusyDates(String specialistId) async {
     try {
       final doc = await _firestore.collection('specialists').doc(specialistId).get();
@@ -873,12 +880,12 @@ class CalendarService {
 
       return busyDates;
     } on Exception catch (e) {
-      debugPrint('Ошибка получения занятых дат: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ Р·Р°РЅСЏС‚С‹С… РґР°С‚: $e');
       return [];
     }
   }
 
-  /// Получить свободные даты специалиста в диапазоне
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃРІРѕР±РѕРґРЅС‹Рµ РґР°С‚С‹ СЃРїРµС†РёР°Р»РёСЃС‚Р° РІ РґРёР°РїР°Р·РѕРЅРµ
   Future<List<DateTime>> getAvailableDatesInRange(
     String specialistId,
     DateTime startDate,
@@ -908,15 +915,15 @@ class CalendarService {
 
       return availableDates;
     } on Exception catch (e) {
-      debugPrint('Ошибка получения свободных дат: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЃРІРѕР±РѕРґРЅС‹С… РґР°С‚: $e');
       return [];
     }
   }
 
-  /// Синхронизировать занятые даты с бронированиями
+  /// РЎРёРЅС…СЂРѕРЅРёР·РёСЂРѕРІР°С‚СЊ Р·Р°РЅСЏС‚С‹Рµ РґР°С‚С‹ СЃ Р±СЂРѕРЅРёСЂРѕРІР°РЅРёСЏРјРё
   Future<void> syncBusyDatesWithBookings(String specialistId) async {
     try {
-      // Получаем все подтвержденные бронирования специалиста
+      // РџРѕР»СѓС‡Р°РµРј РІСЃРµ РїРѕРґС‚РІРµСЂР¶РґРµРЅРЅС‹Рµ Р±СЂРѕРЅРёСЂРѕРІР°РЅРёСЏ СЃРїРµС†РёР°Р»РёСЃС‚Р°
       final bookingsSnapshot = await _firestore
           .collection('bookings')
           .where('specialistId', isEqualTo: specialistId)
@@ -940,13 +947,14 @@ class CalendarService {
         }
       }
 
-      // Обновляем занятые даты в профиле специалиста
+      // РћР±РЅРѕРІР»СЏРµРј Р·Р°РЅСЏС‚С‹Рµ РґР°С‚С‹ РІ РїСЂРѕС„РёР»Рµ СЃРїРµС†РёР°Р»РёСЃС‚Р°
       await _firestore.collection('specialists').doc(specialistId).update({
         'busyDates': busyDates.map(Timestamp.fromDate).toList(),
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка синхронизации занятых дат: $e');
+      debugPrint('РћС€РёР±РєР° СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРё Р·Р°РЅСЏС‚С‹С… РґР°С‚: $e');
     }
   }
 }
+

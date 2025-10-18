@@ -1,17 +1,28 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart';
 
 import '../providers/auth_providers.dart';
+import 'package:flutter/foundation.dart';
 import '../widgets/modern_navigation_bar.dart';
+import 'package:flutter/foundation.dart';
 import 'bookings_screen_full.dart';
+import 'package:flutter/foundation.dart';
 import 'chat_list_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'customer_profile_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'enhanced_feed_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'enhanced_ideas_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'home_screen.dart';
+import 'package:flutter/foundation.dart';
 
-/// Главный экран с навигацией
+/// Р“Р»Р°РІРЅС‹Р№ СЌРєСЂР°РЅ СЃ РЅР°РІРёРіР°С†РёРµР№
 class MainNavigationScreen extends ConsumerStatefulWidget {
   const MainNavigationScreen({super.key});
 
@@ -30,31 +41,31 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
     const NavigationItem(
       icon: Icons.home_outlined,
       activeIcon: Icons.home,
-      label: 'Главная',
+      label: 'Р“Р»Р°РІРЅР°СЏ',
       screen: HomeScreen(),
     ),
     const NavigationItem(
       icon: Icons.newspaper_outlined,
       activeIcon: Icons.newspaper,
-      label: 'Лента',
+      label: 'Р›РµРЅС‚Р°',
       screen: EnhancedFeedScreen(),
     ),
     const NavigationItem(
       icon: Icons.assignment_outlined,
       activeIcon: Icons.assignment,
-      label: 'Заявки',
+      label: 'Р—Р°СЏРІРєРё',
       screen: BookingsScreenFull(),
     ),
     const NavigationItem(
       icon: Icons.chat_bubble_outline,
       activeIcon: Icons.chat_bubble,
-      label: 'Чаты',
+      label: 'Р§Р°С‚С‹',
       screen: ChatListScreen(),
     ),
     const NavigationItem(
       icon: Icons.lightbulb_outline,
       activeIcon: Icons.lightbulb,
-      label: 'Идеи',
+      label: 'РРґРµРё',
       screen: EnhancedIdeasScreen(),
     ),
   ];
@@ -62,6 +73,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
   @override
   void initState() {
     super.initState();
+    debugPrint('рџ•ђ [${DateTime.now()}] MainNavigationScreen.initState() called');
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
@@ -87,14 +99,22 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
   void _onNavigationTap(int index) {
     if (index == _currentIndex) return;
 
-    setState(() {
-      _currentIndex = index;
-    });
+    try {
+      setState(() {
+        _currentIndex = index;
+      });
+    } catch (e) {
+      debugPrint('Ошибка переключения вкладки: $e');
+      // Fallback: устанавливаем безопасное состояние
+      setState(() {
+        _currentIndex = 0;
+      });
+    }
   }
 
-  /// Обработка кнопки "Назад" с правильной логикой
+  /// РћР±СЂР°Р±РѕС‚РєР° РєРЅРѕРїРєРё "РќР°Р·Р°Рґ" СЃ РїСЂР°РІРёР»СЊРЅРѕР№ Р»РѕРіРёРєРѕР№
   Future<void> _handleBackPress(BuildContext context) async {
-    // Если не на главной вкладке (индекс 0), переходим на главную
+    // Р•СЃР»Рё РЅРµ РЅР° РіР»Р°РІРЅРѕР№ РІРєР»Р°РґРєРµ (РёРЅРґРµРєСЃ 0), РїРµСЂРµС…РѕРґРёРј РЅР° РіР»Р°РІРЅСѓСЋ
     if (_currentIndex > 0) {
       setState(() {
         _currentIndex = 0;
@@ -102,26 +122,28 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
       return;
     }
 
-    // Если на главной вкладке, используем "двойное нажатие для выхода"
+    // Р•СЃР»Рё РЅР° РіР»Р°РІРЅРѕР№ РІРєР»Р°РґРєРµ, РёСЃРїРѕР»СЊР·СѓРµРј "РґРІРѕР№РЅРѕРµ РЅР°Р¶Р°С‚РёРµ РґР»СЏ РІС‹С…РѕРґР°"
     final now = DateTime.now();
     if (_lastBackPressTime == null ||
         now.difference(_lastBackPressTime!) > const Duration(seconds: 2)) {
       _lastBackPressTime = now;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Нажмите «Назад» ещё раз, чтобы выйти'),
+          content: Text('РќР°Р¶РјРёС‚Рµ В«РќР°Р·Р°РґВ» РµС‰С‘ СЂР°Р·, С‡С‚РѕР±С‹ РІС‹Р№С‚Рё'),
           duration: Duration(seconds: 2),
           behavior: SnackBarBehavior.floating,
         ),
       );
     } else {
-      // Второе нажатие - выходим из приложения
+      // Р’С‚РѕСЂРѕРµ РЅР°Р¶Р°С‚РёРµ - РІС‹С…РѕРґРёРј РёР· РїСЂРёР»РѕР¶РµРЅРёСЏ
       await SystemNavigator.pop();
     }
   }
 
   @override
-  Widget build(BuildContext context) => PopScope(
+  Widget build(BuildContext context) {
+    debugPrint('рџ•ђ [${DateTime.now()}] MainNavigationScreen.build() called, currentIndex: $_currentIndex');
+    return PopScope(
         canPop: false,
         onPopInvokedWithResult: (didPop, result) async {
           if (!didPop) {
@@ -141,53 +163,54 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
           ),
         ),
       );
+  }
 
   Widget? _buildFAB() {
     switch (_currentIndex) {
-      case 0: // Главная - убираем FAB, так как поиск встроен
+      case 0: // Р“Р»Р°РІРЅР°СЏ - СѓР±РёСЂР°РµРј FAB, С‚Р°Рє РєР°Рє РїРѕРёСЃРє РІСЃС‚СЂРѕРµРЅ
         return null;
-      case 1: // Лента
+      case 1: // Р›РµРЅС‚Р°
         return ModernFAB(
-          tooltip: 'Создать пост',
+          tooltip: 'РЎРѕР·РґР°С‚СЊ РїРѕСЃС‚',
           onPressed: () {
             Navigator.pushNamed(context, '/create-post');
           },
         );
-      case 2: // Заявки
+      case 2: // Р—Р°СЏРІРєРё
         return ModernFAB(
           icon: Icons.add_task,
-          tooltip: 'Создать заявку',
+          tooltip: 'РЎРѕР·РґР°С‚СЊ Р·Р°СЏРІРєСѓ',
           onPressed: () {
-            // TODO: Реализовать создание заявки
+            // TODO: Р РµР°Р»РёР·РѕРІР°С‚СЊ СЃРѕР·РґР°РЅРёРµ Р·Р°СЏРІРєРё
           },
         );
-      case 3: // Чаты
+      case 3: // Р§Р°С‚С‹
         return ModernFAB(
           icon: Icons.chat,
-          tooltip: 'Новый чат',
+          tooltip: 'РќРѕРІС‹Р№ С‡Р°С‚',
           onPressed: () {
-            // TODO: Реализовать новый чат
+            // TODO: Р РµР°Р»РёР·РѕРІР°С‚СЊ РЅРѕРІС‹Р№ С‡Р°С‚
           },
         );
-      case 4: // Идеи
+      case 4: // РРґРµРё
         return ModernFAB(
-          tooltip: 'Добавить идею',
+          tooltip: 'Р”РѕР±Р°РІРёС‚СЊ РёРґРµСЋ',
           onPressed: () {
             Navigator.pushNamed(context, '/add-idea');
           },
         );
       default:
         return ModernFAB(
-          tooltip: 'Действие',
+          tooltip: 'Р”РµР№СЃС‚РІРёРµ',
           onPressed: () {
-            // TODO: Реализовать действие по умолчанию
+            // TODO: Р РµР°Р»РёР·РѕРІР°С‚СЊ РґРµР№СЃС‚РІРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
           },
         );
     }
   }
 }
 
-/// Модель элемента навигации
+/// РњРѕРґРµР»СЊ СЌР»РµРјРµРЅС‚Р° РЅР°РІРёРіР°С†РёРё
 class NavigationItem {
   const NavigationItem({
     required this.icon,
@@ -202,7 +225,7 @@ class NavigationItem {
   final Widget screen;
 }
 
-/// Заглушки для экранов
+/// Р—Р°РіР»СѓС€РєРё РґР»СЏ СЌРєСЂР°РЅРѕРІ
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -210,8 +233,8 @@ class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: const Text('Поиск'),
-          automaticallyImplyLeading: false, // Не показываем стрелку в табах
+          title: const Text('РџРѕРёСЃРє'),
+          automaticallyImplyLeading: false, // РќРµ РїРѕРєР°Р·С‹РІР°РµРј СЃС‚СЂРµР»РєСѓ РІ С‚Р°Р±Р°С…
         ),
         body: const Center(
           child: Column(
@@ -220,7 +243,7 @@ class SearchScreen extends StatelessWidget {
               Icon(Icons.search, size: 100, color: Colors.green),
               SizedBox(height: 20),
               Text(
-                'Поиск специалистов и услуг',
+                'РџРѕРёСЃРє СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ Рё СѓСЃР»СѓРі',
                 style: TextStyle(fontSize: 18),
               ),
             ],
@@ -241,7 +264,7 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Получаем текущего пользователя
+    // РџРѕР»СѓС‡Р°РµРј С‚РµРєСѓС‰РµРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
     final currentUserAsync = ref.watch(currentUserProvider);
 
     return currentUserAsync.when(
@@ -249,7 +272,7 @@ class ProfileScreen extends ConsumerWidget {
         if (user == null) {
           return const Scaffold(
             body: Center(
-              child: Text('Пользователь не авторизован'),
+              child: Text('РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ Р°РІС‚РѕСЂРёР·РѕРІР°РЅ'),
             ),
           );
         }
@@ -266,9 +289,10 @@ class ProfileScreen extends ConsumerWidget {
       ),
       error: (error, stack) => Scaffold(
         body: Center(
-          child: Text('Ошибка загрузки профиля: $error'),
+          child: Text('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё РїСЂРѕС„РёР»СЏ: $error'),
         ),
       ),
     );
   }
 }
+

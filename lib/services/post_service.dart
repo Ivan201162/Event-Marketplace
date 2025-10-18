@@ -98,6 +98,11 @@ class PostService {
     }
   }
 
+  /// Переключить лайк поста (алиас для likePost)
+  Future<void> toggleLike(String postId, String userId) async {
+    return likePost(postId, userId);
+  }
+
   /// Тестовые данные
   List<Post> _getTestPosts(String specialistId) => [
         Post(

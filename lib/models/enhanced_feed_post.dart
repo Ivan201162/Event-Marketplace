@@ -16,6 +16,8 @@ class EnhancedFeedPost {
     this.comments = const [],
     this.shares = const [],
     this.saves = const [],
+    this.likedBy = const [],
+    this.savedBy = const [],
     this.tags = const [],
     this.location,
     this.category,
@@ -24,6 +26,10 @@ class EnhancedFeedPost {
     this.isArchived = false,
     this.updatedAt,
     this.metadata = const {},
+    this.authorName,
+    this.authorAvatar,
+    this.isLiked = false,
+    this.isSaved = false,
   });
 
   /// Создать из Map
@@ -58,6 +64,8 @@ class EnhancedFeedPost {
                 .toList() ??
             [],
         saves: List<String>.from((map['saves'] as List?) ?? []),
+        likedBy: List<String>.from((map['likedBy'] as List?) ?? []),
+        savedBy: List<String>.from((map['savedBy'] as List?) ?? []),
         tags: List<String>.from((map['tags'] as List?) ?? []),
         location: map['location'] as String?,
         category: map['category'] as String?,
@@ -68,6 +76,10 @@ class EnhancedFeedPost {
             ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int)
             : null,
         metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
+        authorName: map['authorName'] as String?,
+        authorAvatar: map['authorAvatar'] as String?,
+        isLiked: (map['isLiked'] as bool?) ?? false,
+        isSaved: (map['isSaved'] as bool?) ?? false,
       );
 
   /// Уникальный идентификатор
@@ -115,6 +127,12 @@ class EnhancedFeedPost {
   /// Сохранения
   final List<String> saves;
 
+  /// Кто лайкнул
+  final List<String> likedBy;
+
+  /// Кто сохранил
+  final List<String> savedBy;
+
   /// Теги
   final List<String> tags;
 
@@ -139,6 +157,18 @@ class EnhancedFeedPost {
   /// Дополнительные данные
   final Map<String, dynamic> metadata;
 
+  /// Имя автора
+  final String? authorName;
+
+  /// Аватар автора
+  final String? authorAvatar;
+
+  /// Лайкнут ли пост текущим пользователем
+  final bool isLiked;
+
+  /// Сохранён ли пост текущим пользователем
+  final bool isSaved;
+
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
         'id': id,
@@ -156,6 +186,8 @@ class EnhancedFeedPost {
         'comments': comments.map((comment) => comment.toMap()).toList(),
         'shares': shares.map((share) => share.toMap()).toList(),
         'saves': saves,
+        'likedBy': likedBy,
+        'savedBy': savedBy,
         'tags': tags,
         'location': location,
         'category': category,
@@ -164,7 +196,94 @@ class EnhancedFeedPost {
         'isArchived': isArchived,
         'updatedAt': updatedAt?.millisecondsSinceEpoch,
         'metadata': metadata,
+        'authorName': authorName,
+        'authorAvatar': authorAvatar,
+        'isLiked': isLiked,
+        'isSaved': isSaved,
       };
+
+  /// Преобразовать в Map для JSON сериализации
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'authorId': authorId,
+        'content': content,
+        'type': type.value,
+        'createdAt': createdAt.toIso8601String(),
+        'media': media.map((media) => media.toMap()).toList(),
+        'likesCount': likesCount,
+        'commentsCount': commentsCount,
+        'sharesCount': sharesCount,
+        'savesCount': savesCount,
+        'viewsCount': viewsCount,
+        'likes': likes,
+        'comments': comments.map((comment) => comment.toMap()).toList(),
+        'shares': shares.map((share) => share.toMap()).toList(),
+        'saves': saves,
+        'likedBy': likedBy,
+        'savedBy': savedBy,
+        'tags': tags,
+        'location': location,
+        'category': category,
+        'isSponsored': isSponsored,
+        'isPinned': isPinned,
+        'isArchived': isArchived,
+        'updatedAt': updatedAt?.toIso8601String(),
+        'metadata': metadata,
+        'authorName': authorName,
+        'authorAvatar': authorAvatar,
+        'isLiked': isLiked,
+        'isSaved': isSaved,
+      };
+
+  /// Создать из JSON
+  factory EnhancedFeedPost.fromJson(Map<String, dynamic> json) => EnhancedFeedPost(
+        id: json['id'] as String,
+        authorId: json['authorId'] as String,
+        content: json['content'] as String,
+        type: FeedPostType.fromString(json['type'] as String),
+        createdAt: DateTime.parse(json['createdAt'] as String),
+        media: (json['media'] as List?)
+                ?.map(
+                  (media) => FeedPostMedia.fromMap(media as Map<String, dynamic>),
+                )
+                .toList() ??
+            [],
+        likesCount: (json['likesCount'] as int?) ?? 0,
+        commentsCount: (json['commentsCount'] as int?) ?? 0,
+        sharesCount: (json['sharesCount'] as int?) ?? 0,
+        savesCount: (json['savesCount'] as int?) ?? 0,
+        viewsCount: (json['viewsCount'] as int?) ?? 0,
+        likes: List<String>.from((json['likes'] as List?) ?? []),
+        comments: (json['comments'] as List?)
+                ?.map(
+                  (comment) => FeedPostComment.fromMap(comment as Map<String, dynamic>),
+                )
+                .toList() ??
+            [],
+        shares: (json['shares'] as List?)
+                ?.map(
+                  (share) => FeedPostShare.fromMap(share as Map<String, dynamic>),
+                )
+                .toList() ??
+            [],
+        saves: List<String>.from((json['saves'] as List?) ?? []),
+        likedBy: List<String>.from((json['likedBy'] as List?) ?? []),
+        savedBy: List<String>.from((json['savedBy'] as List?) ?? []),
+        tags: List<String>.from((json['tags'] as List?) ?? []),
+        location: json['location'] as String?,
+        category: json['category'] as String?,
+        isSponsored: (json['isSponsored'] as bool?) ?? false,
+        isPinned: (json['isPinned'] as bool?) ?? false,
+        isArchived: (json['isArchived'] as bool?) ?? false,
+        updatedAt: json['updatedAt'] != null
+            ? DateTime.parse(json['updatedAt'] as String)
+            : null,
+        metadata: Map<String, dynamic>.from((json['metadata'] as Map?) ?? {}),
+        authorName: json['authorName'] as String?,
+        authorAvatar: json['authorAvatar'] as String?,
+        isLiked: (json['isLiked'] as bool?) ?? false,
+        isSaved: (json['isSaved'] as bool?) ?? false,
+      );
 
   /// Создать копию с изменениями
   EnhancedFeedPost copyWith({
@@ -183,6 +302,8 @@ class EnhancedFeedPost {
     List<FeedPostComment>? comments,
     List<FeedPostShare>? shares,
     List<String>? saves,
+    List<String>? likedBy,
+    List<String>? savedBy,
     List<String>? tags,
     String? location,
     String? category,
@@ -191,6 +312,10 @@ class EnhancedFeedPost {
     bool? isArchived,
     DateTime? updatedAt,
     Map<String, dynamic>? metadata,
+    String? authorName,
+    String? authorAvatar,
+    bool? isLiked,
+    bool? isSaved,
   }) =>
       EnhancedFeedPost(
         id: id ?? this.id,
@@ -208,6 +333,8 @@ class EnhancedFeedPost {
         comments: comments ?? this.comments,
         shares: shares ?? this.shares,
         saves: saves ?? this.saves,
+        likedBy: likedBy ?? this.likedBy,
+        savedBy: savedBy ?? this.savedBy,
         tags: tags ?? this.tags,
         location: location ?? this.location,
         category: category ?? this.category,
@@ -216,6 +343,10 @@ class EnhancedFeedPost {
         isArchived: isArchived ?? this.isArchived,
         updatedAt: updatedAt ?? this.updatedAt,
         metadata: metadata ?? this.metadata,
+        authorName: authorName ?? this.authorName,
+        authorAvatar: authorAvatar ?? this.authorAvatar,
+        isLiked: isLiked ?? this.isLiked,
+        isSaved: isSaved ?? this.isSaved,
       );
 }
 
@@ -330,6 +461,9 @@ class FeedPostMedia {
   final String? caption;
   final String? altText;
   final Map<String, dynamic> metadata;
+
+  /// Алиас для thumbnailUrl
+  String? get thumbnail => thumbnailUrl;
 
   Map<String, dynamic> toMap() => {
         'id': id,

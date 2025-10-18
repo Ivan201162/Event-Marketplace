@@ -1,12 +1,19 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart';
 import '../models/enhanced_chat.dart';
+import 'package:flutter/foundation.dart';
 import '../models/enhanced_message.dart';
+import 'package:flutter/foundation.dart';
 import '../services/enhanced_chats_service.dart';
+import 'package:flutter/foundation.dart';
 import '../widgets/message_bubble_widget.dart';
+import 'package:flutter/foundation.dart';
 import '../widgets/message_input_widget.dart';
+import 'package:flutter/foundation.dart';
 
-/// Расширенный экран чата
+/// Р Р°СЃС€РёСЂРµРЅРЅС‹Р№ СЌРєСЂР°РЅ С‡Р°С‚Р°
 class EnhancedChatScreen extends ConsumerStatefulWidget {
   const EnhancedChatScreen({
     super.key,
@@ -45,8 +52,8 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
 
   Future<void> _loadChat() async {
     try {
-      // TODO: Реализовать получение чата по ID
-      // Пока что создаём заглушку
+      // TODO: Р РµР°Р»РёР·РѕРІР°С‚СЊ РїРѕР»СѓС‡РµРЅРёРµ С‡Р°С‚Р° РїРѕ ID
+      // РџРѕРєР° С‡С‚Рѕ СЃРѕР·РґР°С‘Рј Р·Р°РіР»СѓС€РєСѓ
       setState(() {
         _chat = _createMockChat();
       });
@@ -61,8 +68,8 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
     setState(() => _isLoading = true);
 
     try {
-      // TODO: Реализовать получение сообщений
-      // Пока что создаём заглушку
+      // TODO: Р РµР°Р»РёР·РѕРІР°С‚СЊ РїРѕР»СѓС‡РµРЅРёРµ СЃРѕРѕР±С‰РµРЅРёР№
+      // РџРѕРєР° С‡С‚Рѕ СЃРѕР·РґР°С‘Рј Р·Р°РіР»СѓС€РєСѓ
       setState(() {
         _messages = [];
         _isLoading = false;
@@ -93,11 +100,11 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
           ),
         ],
         createdAt: DateTime.now().subtract(const Duration(days: 1)),
-        name: 'Тестовый чат',
+        name: 'РўРµСЃС‚РѕРІС‹Р№ С‡Р°С‚',
         lastMessage: ChatLastMessage(
           id: '1',
           senderId: 'user_1',
-          text: 'Привет! Как дела?',
+          text: 'РџСЂРёРІРµС‚! РљР°Рє РґРµР»Р°?',
           type: MessageType.text,
           createdAt: DateTime.now().subtract(const Duration(minutes: 5)),
         ),
@@ -113,21 +120,21 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
 
     if (_error != null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Ошибка')),
+        appBar: AppBar(title: const Text('РћС€РёР±РєР°')),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(Icons.error, size: 64, color: Colors.red),
               const SizedBox(height: 16),
-              Text('Ошибка: $_error'),
+              Text('РћС€РёР±РєР°: $_error'),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
                   _loadChat();
                   _loadMessages();
                 },
-                child: const Text('Повторить'),
+                child: const Text('РџРѕРІС‚РѕСЂРёС‚СЊ'),
               ),
             ],
           ),
@@ -137,8 +144,8 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
 
     if (_chat == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Чат не найден')),
-        body: const Center(child: Text('Чат не найден')),
+        appBar: AppBar(title: const Text('Р§Р°С‚ РЅРµ РЅР°Р№РґРµРЅ')),
+        body: const Center(child: Text('Р§Р°С‚ РЅРµ РЅР°Р№РґРµРЅ')),
       );
     }
 
@@ -146,15 +153,15 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
       appBar: _buildAppBar(),
       body: Column(
         children: [
-          // Список сообщений
+          // РЎРїРёСЃРѕРє СЃРѕРѕР±С‰РµРЅРёР№
           Expanded(
             child: _buildMessagesList(),
           ),
 
-          // Индикатор печати
+          // РРЅРґРёРєР°С‚РѕСЂ РїРµС‡Р°С‚Рё
           if (_isTyping) _buildTypingIndicator(),
 
-          // Поле ввода сообщений
+          // РџРѕР»Рµ РІРІРѕРґР° СЃРѕРѕР±С‰РµРЅРёР№
           MessageInputWidget(
             onSendMessage: _sendTextMessage,
             onSendMedia: _sendMediaMessage,
@@ -184,7 +191,7 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _chat!.name ?? 'Чат',
+                    _chat!.name ?? 'Р§Р°С‚',
                     style: const TextStyle(fontSize: 16),
                   ),
                   if (_chat!.type == ChatType.direct) ...[
@@ -205,12 +212,12 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
           IconButton(
             icon: const Icon(Icons.videocam),
             onPressed: _startVideoCall,
-            tooltip: 'Видеозвонок',
+            tooltip: 'Р’РёРґРµРѕР·РІРѕРЅРѕРє',
           ),
           IconButton(
             icon: const Icon(Icons.phone),
             onPressed: _startVoiceCall,
-            tooltip: 'Голосовой звонок',
+            tooltip: 'Р“РѕР»РѕСЃРѕРІРѕР№ Р·РІРѕРЅРѕРє',
           ),
           PopupMenuButton<String>(
             onSelected: _handleMenuAction,
@@ -219,35 +226,35 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
                 value: 'search',
                 child: ListTile(
                   leading: Icon(Icons.search),
-                  title: Text('Поиск'),
+                  title: Text('РџРѕРёСЃРє'),
                 ),
               ),
               const PopupMenuItem(
                 value: 'media',
                 child: ListTile(
                   leading: Icon(Icons.photo_library),
-                  title: Text('Медиафайлы'),
+                  title: Text('РњРµРґРёР°С„Р°Р№Р»С‹'),
                 ),
               ),
               const PopupMenuItem(
                 value: 'settings',
                 child: ListTile(
                   leading: Icon(Icons.settings),
-                  title: Text('Настройки'),
+                  title: Text('РќР°СЃС‚СЂРѕР№РєРё'),
                 ),
               ),
               const PopupMenuItem(
                 value: 'pin',
                 child: ListTile(
                   leading: Icon(Icons.push_pin),
-                  title: Text('Закрепить'),
+                  title: Text('Р—Р°РєСЂРµРїРёС‚СЊ'),
                 ),
               ),
               const PopupMenuItem(
                 value: 'mute',
                 child: ListTile(
                   leading: Icon(Icons.volume_off),
-                  title: Text('Заглушить'),
+                  title: Text('Р—Р°РіР»СѓС€РёС‚СЊ'),
                 ),
               ),
             ],
@@ -264,7 +271,7 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
             Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text(
-              'Начните общение',
+              'РќР°С‡РЅРёС‚Рµ РѕР±С‰РµРЅРёРµ',
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.grey,
@@ -272,7 +279,7 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
             ),
             SizedBox(height: 8),
             Text(
-              'Отправьте первое сообщение',
+              'РћС‚РїСЂР°РІСЊС‚Рµ РїРµСЂРІРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ',
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.grey,
@@ -290,7 +297,7 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
       itemCount: _messages.length,
       itemBuilder: (context, index) {
         final message = _messages[index];
-        final isCurrentUser = message.senderId == 'current_user'; // TODO: Получить из провайдера
+        final isCurrentUser = message.senderId == 'current_user'; // TODO: РџРѕР»СѓС‡РёС‚СЊ РёР· РїСЂРѕРІР°Р№РґРµСЂР°
         final showAvatar =
             index == _messages.length - 1 || _messages[index + 1].senderId != message.senderId;
 
@@ -314,7 +321,7 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
           children: [
-            const SizedBox(width: 40), // Отступ для выравнивания с сообщениями
+            const SizedBox(width: 40), // РћС‚СЃС‚СѓРї РґР»СЏ РІС‹СЂР°РІРЅРёРІР°РЅРёСЏ СЃ СЃРѕРѕР±С‰РµРЅРёСЏРјРё
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
@@ -325,7 +332,7 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Печатает',
+                    'РџРµС‡Р°С‚Р°РµС‚',
                     style: TextStyle(
                       color: Colors.grey[600],
                       fontSize: 12,
@@ -349,25 +356,25 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
 
   String _getOnlineStatus() {
     final otherMember = _chat!.members.firstWhere(
-      (member) => member.userId != 'current_user', // TODO: Получить из провайдера
+      (member) => member.userId != 'current_user', // TODO: РџРѕР»СѓС‡РёС‚СЊ РёР· РїСЂРѕРІР°Р№РґРµСЂР°
       orElse: () => _chat!.members.first,
     );
 
     if (otherMember.isOnline) {
-      return 'В сети';
+      return 'Р’ СЃРµС‚Рё';
     } else if (otherMember.lastSeen != null) {
       final now = DateTime.now();
       final difference = now.difference(otherMember.lastSeen!);
 
       if (difference.inMinutes < 60) {
-        return 'Был(а) в сети ${difference.inMinutes} мин назад';
+        return 'Р‘С‹Р»(Р°) РІ СЃРµС‚Рё ${difference.inMinutes} РјРёРЅ РЅР°Р·Р°Рґ';
       } else if (difference.inHours < 24) {
-        return 'Был(а) в сети ${difference.inHours} ч назад';
+        return 'Р‘С‹Р»(Р°) РІ СЃРµС‚Рё ${difference.inHours} С‡ РЅР°Р·Р°Рґ';
       } else {
-        return 'Был(а) в сети ${difference.inDays} дн назад';
+        return 'Р‘С‹Р»(Р°) РІ СЃРµС‚Рё ${difference.inDays} РґРЅ РЅР°Р·Р°Рґ';
       }
     } else {
-      return 'Не в сети';
+      return 'РќРµ РІ СЃРµС‚Рё';
     }
   }
 
@@ -392,7 +399,7 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
   }
 
   void _onMessageTap(EnhancedMessage message) {
-    // TODO: Реализовать обработку нажатия на сообщение
+    // TODO: Р РµР°Р»РёР·РѕРІР°С‚СЊ РѕР±СЂР°Р±РѕС‚РєСѓ РЅР°Р¶Р°С‚РёСЏ РЅР° СЃРѕРѕР±С‰РµРЅРёРµ
   }
 
   void _onMessageLongPress(EnhancedMessage message) {
@@ -409,7 +416,7 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
           children: [
             ListTile(
               leading: const Icon(Icons.reply),
-              title: const Text('Ответить'),
+              title: const Text('РћС‚РІРµС‚РёС‚СЊ'),
               onTap: () {
                 Navigator.pop(context);
                 _replyToMessage(message);
@@ -417,17 +424,17 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.forward),
-              title: const Text('Переслать'),
+              title: const Text('РџРµСЂРµСЃР»Р°С‚СЊ'),
               onTap: () {
                 Navigator.pop(context);
                 _forwardMessage(message);
               },
             ),
             if (message.senderId == 'current_user') ...[
-              // TODO: Получить из провайдера
+              // TODO: РџРѕР»СѓС‡РёС‚СЊ РёР· РїСЂРѕРІР°Р№РґРµСЂР°
               ListTile(
                 leading: const Icon(Icons.edit),
-                title: const Text('Редактировать'),
+                title: const Text('Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ'),
                 onTap: () {
                   Navigator.pop(context);
                   _editMessage(message);
@@ -435,7 +442,7 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
               ),
               ListTile(
                 leading: const Icon(Icons.delete, color: Colors.red),
-                title: const Text('Удалить', style: TextStyle(color: Colors.red)),
+                title: const Text('РЈРґР°Р»РёС‚СЊ', style: TextStyle(color: Colors.red)),
                 onTap: () {
                   Navigator.pop(context);
                   _deleteMessage(message);
@@ -444,7 +451,7 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
             ],
             ListTile(
               leading: const Icon(Icons.copy),
-              title: const Text('Копировать'),
+              title: const Text('РљРѕРїРёСЂРѕРІР°С‚СЊ'),
               onTap: () {
                 Navigator.pop(context);
                 _copyMessage(message);
@@ -455,26 +462,26 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
       );
 
   void _sendTextMessage(String text) {
-    // TODO: Реализовать отправку текстового сообщения
-    debugPrint('Отправка текстового сообщения: $text');
+    // TODO: Р РµР°Р»РёР·РѕРІР°С‚СЊ РѕС‚РїСЂР°РІРєСѓ С‚РµРєСЃС‚РѕРІРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёСЏ
+    debugPrint('РћС‚РїСЂР°РІРєР° С‚РµРєСЃС‚РѕРІРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёСЏ: $text');
   }
 
   void _sendMediaMessage(
     List<MessageAttachment> attachments, {
     String? caption,
   }) {
-    // TODO: Реализовать отправку медиа сообщения
-    debugPrint('Отправка медиа сообщения: ${attachments.length} файлов');
+    // TODO: Р РµР°Р»РёР·РѕРІР°С‚СЊ РѕС‚РїСЂР°РІРєСѓ РјРµРґРёР° СЃРѕРѕР±С‰РµРЅРёСЏ
+    debugPrint('РћС‚РїСЂР°РІРєР° РјРµРґРёР° СЃРѕРѕР±С‰РµРЅРёСЏ: ${attachments.length} С„Р°Р№Р»РѕРІ');
   }
 
   void _sendVoiceMessage(MessageAttachment voiceAttachment) {
-    // TODO: Реализовать отправку голосового сообщения
-    debugPrint('Отправка голосового сообщения');
+    // TODO: Р РµР°Р»РёР·РѕРІР°С‚СЊ РѕС‚РїСЂР°РІРєСѓ РіРѕР»РѕСЃРѕРІРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёСЏ
+    debugPrint('РћС‚РїСЂР°РІРєР° РіРѕР»РѕСЃРѕРІРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёСЏ');
   }
 
   void _sendDocumentMessage(List<MessageAttachment> documents) {
-    // TODO: Реализовать отправку документов
-    debugPrint('Отправка документов: ${documents.length} файлов');
+    // TODO: Р РµР°Р»РёР·РѕРІР°С‚СЊ РѕС‚РїСЂР°РІРєСѓ РґРѕРєСѓРјРµРЅС‚РѕРІ
+    debugPrint('РћС‚РїСЂР°РІРєР° РґРѕРєСѓРјРµРЅС‚РѕРІ: ${documents.length} С„Р°Р№Р»РѕРІ');
   }
 
   void _replyToMessage(EnhancedMessage message) {
@@ -495,32 +502,32 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
   }
 
   void _forwardMessage(EnhancedMessage message) {
-    // TODO: Реализовать пересылку сообщения
-    debugPrint('Пересылка сообщения: ${message.id}');
+    // TODO: Р РµР°Р»РёР·РѕРІР°С‚СЊ РїРµСЂРµСЃС‹Р»РєСѓ СЃРѕРѕР±С‰РµРЅРёСЏ
+    debugPrint('РџРµСЂРµСЃС‹Р»РєР° СЃРѕРѕР±С‰РµРЅРёСЏ: ${message.id}');
   }
 
   void _editMessage(EnhancedMessage message) {
-    // TODO: Реализовать редактирование сообщения
-    debugPrint('Редактирование сообщения: ${message.id}');
+    // TODO: Р РµР°Р»РёР·РѕРІР°С‚СЊ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ СЃРѕРѕР±С‰РµРЅРёСЏ
+    debugPrint('Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ СЃРѕРѕР±С‰РµРЅРёСЏ: ${message.id}');
   }
 
   void _deleteMessage(EnhancedMessage message) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Удалить сообщение'),
-        content: const Text('Вы уверены, что хотите удалить это сообщение?'),
+        title: const Text('РЈРґР°Р»РёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ'),
+        content: const Text('Р’С‹ СѓРІРµСЂРµРЅС‹, С‡С‚Рѕ С…РѕС‚РёС‚Рµ СѓРґР°Р»РёС‚СЊ СЌС‚Рѕ СЃРѕРѕР±С‰РµРЅРёРµ?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
+            child: const Text('РћС‚РјРµРЅР°'),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              // TODO: Реализовать удаление сообщения
+              // TODO: Р РµР°Р»РёР·РѕРІР°С‚СЊ СѓРґР°Р»РµРЅРёРµ СЃРѕРѕР±С‰РµРЅРёСЏ
             },
-            child: const Text('Удалить'),
+            child: const Text('РЈРґР°Р»РёС‚СЊ'),
           ),
         ],
       ),
@@ -528,13 +535,13 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
   }
 
   void _reactToMessage(EnhancedMessage message, String emoji) {
-    // TODO: Реализовать реакцию на сообщение
-    debugPrint('Реакция на сообщение: $emoji');
+    // TODO: Р РµР°Р»РёР·РѕРІР°С‚СЊ СЂРµР°РєС†РёСЋ РЅР° СЃРѕРѕР±С‰РµРЅРёРµ
+    debugPrint('Р РµР°РєС†РёСЏ РЅР° СЃРѕРѕР±С‰РµРЅРёРµ: $emoji');
   }
 
   void _copyMessage(EnhancedMessage message) {
-    // TODO: Реализовать копирование сообщения
-    debugPrint('Копирование сообщения');
+    // TODO: Р РµР°Р»РёР·РѕРІР°С‚СЊ РєРѕРїРёСЂРѕРІР°РЅРёРµ СЃРѕРѕР±С‰РµРЅРёСЏ
+    debugPrint('РљРѕРїРёСЂРѕРІР°РЅРёРµ СЃРѕРѕР±С‰РµРЅРёСЏ');
   }
 
   void _onTypingChanged(bool isTyping) {
@@ -544,37 +551,38 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
   }
 
   void _startVideoCall() {
-    // TODO: Реализовать видеозвонок
-    debugPrint('Начало видеозвонка');
+    // TODO: Р РµР°Р»РёР·РѕРІР°С‚СЊ РІРёРґРµРѕР·РІРѕРЅРѕРє
+    debugPrint('РќР°С‡Р°Р»Рѕ РІРёРґРµРѕР·РІРѕРЅРєР°');
   }
 
   void _startVoiceCall() {
-    // TODO: Реализовать голосовой звонок
-    debugPrint('Начало голосового звонка');
+    // TODO: Р РµР°Р»РёР·РѕРІР°С‚СЊ РіРѕР»РѕСЃРѕРІРѕР№ Р·РІРѕРЅРѕРє
+    debugPrint('РќР°С‡Р°Р»Рѕ РіРѕР»РѕСЃРѕРІРѕРіРѕ Р·РІРѕРЅРєР°');
   }
 
   void _searchMessages() {
-    // TODO: Реализовать поиск по сообщениям
-    debugPrint('Поиск по сообщениям');
+    // TODO: Р РµР°Р»РёР·РѕРІР°С‚СЊ РїРѕРёСЃРє РїРѕ СЃРѕРѕР±С‰РµРЅРёСЏРј
+    debugPrint('РџРѕРёСЃРє РїРѕ СЃРѕРѕР±С‰РµРЅРёСЏРј');
   }
 
   void _showMediaFiles() {
-    // TODO: Реализовать показ медиафайлов
-    debugPrint('Показ медиафайлов');
+    // TODO: Р РµР°Р»РёР·РѕРІР°С‚СЊ РїРѕРєР°Р· РјРµРґРёР°С„Р°Р№Р»РѕРІ
+    debugPrint('РџРѕРєР°Р· РјРµРґРёР°С„Р°Р№Р»РѕРІ');
   }
 
   void _showChatSettings() {
-    // TODO: Реализовать настройки чата
-    debugPrint('Настройки чата');
+    // TODO: Р РµР°Р»РёР·РѕРІР°С‚СЊ РЅР°СЃС‚СЂРѕР№РєРё С‡Р°С‚Р°
+    debugPrint('РќР°СЃС‚СЂРѕР№РєРё С‡Р°С‚Р°');
   }
 
   void _pinChat() {
-    // TODO: Реализовать закрепление чата
-    debugPrint('Закрепление чата');
+    // TODO: Р РµР°Р»РёР·РѕРІР°С‚СЊ Р·Р°РєСЂРµРїР»РµРЅРёРµ С‡Р°С‚Р°
+    debugPrint('Р—Р°РєСЂРµРїР»РµРЅРёРµ С‡Р°С‚Р°');
   }
 
   void _muteChat() {
-    // TODO: Реализовать заглушение чата
-    debugPrint('Заглушение чата');
+    // TODO: Р РµР°Р»РёР·РѕРІР°С‚СЊ Р·Р°РіР»СѓС€РµРЅРёРµ С‡Р°С‚Р°
+    debugPrint('Р—Р°РіР»СѓС€РµРЅРёРµ С‡Р°С‚Р°');
   }
 }
+

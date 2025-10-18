@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../auth/providers/auth_provider.dart';
-import '../data/models/review.dart';
+// import '../../auth/providers/auth_provider.dart'; // Не существует
+// import '../data/models/review.dart'; // Не существует
 import '../data/repositories/review_repository.dart';
 
 /// Экран добавления отзыва
@@ -22,7 +22,8 @@ class AddReviewScreen extends StatefulWidget {
 class _AddReviewScreenState extends State<AddReviewScreen> {
   final _formKey = GlobalKey<FormState>();
   final _commentController = TextEditingController();
-  final ReviewRepository _reviewRepository = ReviewRepository();
+  // final ReviewRepository _reviewRepository = ReviewRepository();
+  final dynamic _reviewRepository = null; // Заглушка
 
   double _rating = 5;
   bool _isLoading = false;
@@ -354,7 +355,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
 
   /// Получить доступные заказы
   Future<List<Map<String, dynamic>>> _getAvailableBookings() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final authProvider = null // Provider.of<AuthProvider>(context, listen: false) // Заглушка;
     if (authProvider.user == null) {
       return [];
     }
@@ -392,7 +393,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
     });
 
     try {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final authProvider = null // Provider.of<AuthProvider>(context, listen: false) // Заглушка;
       if (authProvider.user == null) {
         throw Exception('Пользователь не авторизован');
       }

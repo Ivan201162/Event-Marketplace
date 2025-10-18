@@ -1,11 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import '../models/specialist_profile.dart';
+import 'package:flutter/foundation.dart';
 
-/// Сервис для генерации отчетов по специалистам
+/// РЎРµСЂРІРёСЃ РґР»СЏ РіРµРЅРµСЂР°С†РёРё РѕС‚С‡РµС‚РѕРІ РїРѕ СЃРїРµС†РёР°Р»РёСЃС‚Р°Рј
 class SpecialistReportService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// Получить общую статистику по специалистам
+  /// РџРѕР»СѓС‡РёС‚СЊ РѕР±С‰СѓСЋ СЃС‚Р°С‚РёСЃС‚РёРєСѓ РїРѕ СЃРїРµС†РёР°Р»РёСЃС‚Р°Рј
   Future<SpecialistReport> generateSpecialistReport() async {
     try {
       final querySnapshot = await _firestore.collection('specialist_profiles').get();
@@ -14,12 +16,12 @@ class SpecialistReportService {
 
       return SpecialistReport.fromSpecialists(specialists);
     } on Exception catch (e) {
-      debugPrint('Ошибка генерации отчета по специалистам: $e');
-      throw Exception('Не удалось сгенерировать отчет');
+      debugPrint('РћС€РёР±РєР° РіРµРЅРµСЂР°С†РёРё РѕС‚С‡РµС‚Р° РїРѕ СЃРїРµС†РёР°Р»РёСЃС‚Р°Рј: $e');
+      throw Exception('РќРµ СѓРґР°Р»РѕСЃСЊ СЃРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РѕС‚С‡РµС‚');
     }
   }
 
-  /// Получить отчет по категориям специалистов
+  /// РџРѕР»СѓС‡РёС‚СЊ РѕС‚С‡РµС‚ РїРѕ РєР°С‚РµРіРѕСЂРёСЏРј СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ
   Future<CategoryReport> generateCategoryReport() async {
     try {
       final querySnapshot = await _firestore.collection('specialist_profiles').get();
@@ -28,12 +30,12 @@ class SpecialistReportService {
 
       return CategoryReport.fromSpecialists(specialists);
     } on Exception catch (e) {
-      debugPrint('Ошибка генерации отчета по категориям: $e');
-      throw Exception('Не удалось сгенерировать отчет по категориям');
+      debugPrint('РћС€РёР±РєР° РіРµРЅРµСЂР°С†РёРё РѕС‚С‡РµС‚Р° РїРѕ РєР°С‚РµРіРѕСЂРёСЏРј: $e');
+      throw Exception('РќРµ СѓРґР°Р»РѕСЃСЊ СЃРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РѕС‚С‡РµС‚ РїРѕ РєР°С‚РµРіРѕСЂРёСЏРј');
     }
   }
 
-  /// Получить отчет по рейтингам специалистов
+  /// РџРѕР»СѓС‡РёС‚СЊ РѕС‚С‡РµС‚ РїРѕ СЂРµР№С‚РёРЅРіР°Рј СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ
   Future<RatingReport> generateRatingReport() async {
     try {
       final querySnapshot = await _firestore
@@ -45,12 +47,12 @@ class SpecialistReportService {
 
       return RatingReport.fromSpecialists(specialists);
     } on Exception catch (e) {
-      debugPrint('Ошибка генерации отчета по рейтингам: $e');
-      throw Exception('Не удалось сгенерировать отчет по рейтингам');
+      debugPrint('РћС€РёР±РєР° РіРµРЅРµСЂР°С†РёРё РѕС‚С‡РµС‚Р° РїРѕ СЂРµР№С‚РёРЅРіР°Рј: $e');
+      throw Exception('РќРµ СѓРґР°Р»РѕСЃСЊ СЃРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РѕС‚С‡РµС‚ РїРѕ СЂРµР№С‚РёРЅРіР°Рј');
     }
   }
 
-  /// Получить отчет по доходам специалистов
+  /// РџРѕР»СѓС‡РёС‚СЊ РѕС‚С‡РµС‚ РїРѕ РґРѕС…РѕРґР°Рј СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ
   Future<EarningsReport> generateEarningsReport() async {
     try {
       final querySnapshot = await _firestore.collection('specialist_profiles').get();
@@ -59,12 +61,12 @@ class SpecialistReportService {
 
       return EarningsReport.fromSpecialists(specialists);
     } on Exception catch (e) {
-      debugPrint('Ошибка генерации отчета по доходам: $e');
-      throw Exception('Не удалось сгенерировать отчет по доходам');
+      debugPrint('РћС€РёР±РєР° РіРµРЅРµСЂР°С†РёРё РѕС‚С‡РµС‚Р° РїРѕ РґРѕС…РѕРґР°Рј: $e');
+      throw Exception('РќРµ СѓРґР°Р»РѕСЃСЊ СЃРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РѕС‚С‡РµС‚ РїРѕ РґРѕС…РѕРґР°Рј');
     }
   }
 
-  /// Получить отчет по активности специалистов
+  /// РџРѕР»СѓС‡РёС‚СЊ РѕС‚С‡РµС‚ РїРѕ Р°РєС‚РёРІРЅРѕСЃС‚Рё СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ
   Future<ActivityReport> generateActivityReport() async {
     try {
       final querySnapshot = await _firestore.collection('specialist_profiles').get();
@@ -73,12 +75,12 @@ class SpecialistReportService {
 
       return ActivityReport.fromSpecialists(specialists);
     } on Exception catch (e) {
-      debugPrint('Ошибка генерации отчета по активности: $e');
-      throw Exception('Не удалось сгенерировать отчет по активности');
+      debugPrint('РћС€РёР±РєР° РіРµРЅРµСЂР°С†РёРё РѕС‚С‡РµС‚Р° РїРѕ Р°РєС‚РёРІРЅРѕСЃС‚Рё: $e');
+      throw Exception('РќРµ СѓРґР°Р»РѕСЃСЊ СЃРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РѕС‚С‡РµС‚ РїРѕ Р°РєС‚РёРІРЅРѕСЃС‚Рё');
     }
   }
 
-  /// Получить детальный отчет по конкретному специалисту
+  /// РџРѕР»СѓС‡РёС‚СЊ РґРµС‚Р°Р»СЊРЅС‹Р№ РѕС‚С‡РµС‚ РїРѕ РєРѕРЅРєСЂРµС‚РЅРѕРјСѓ СЃРїРµС†РёР°Р»РёСЃС‚Сѓ
   Future<SpecialistDetailReport> generateSpecialistDetailReport(
     String specialistId,
   ) async {
@@ -87,12 +89,12 @@ class SpecialistReportService {
           await _firestore.collection('specialist_profiles').doc(specialistId).get();
 
       if (!specialistDoc.exists) {
-        throw Exception('Специалист не найден');
+        throw Exception('РЎРїРµС†РёР°Р»РёСЃС‚ РЅРµ РЅР°Р№РґРµРЅ');
       }
 
       final specialist = SpecialistProfile.fromDocument(specialistDoc);
 
-      // Получаем дополнительные данные
+      // РџРѕР»СѓС‡Р°РµРј РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РґР°РЅРЅС‹Рµ
       final reviewsSnapshot = await _firestore
           .collection('reviews')
           .where('specialistId', isEqualTo: specialistId)
@@ -114,13 +116,13 @@ class SpecialistReportService {
         generatedAt: DateTime.now(),
       );
     } on Exception catch (e) {
-      debugPrint('Ошибка генерации детального отчета: $e');
-      throw Exception('Не удалось сгенерировать детальный отчет');
+      debugPrint('РћС€РёР±РєР° РіРµРЅРµСЂР°С†РёРё РґРµС‚Р°Р»СЊРЅРѕРіРѕ РѕС‚С‡РµС‚Р°: $e');
+      throw Exception('РќРµ СѓРґР°Р»РѕСЃСЊ СЃРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РґРµС‚Р°Р»СЊРЅС‹Р№ РѕС‚С‡РµС‚');
     }
   }
 }
 
-/// Общий отчет по специалистам
+/// РћР±С‰РёР№ РѕС‚С‡РµС‚ РїРѕ СЃРїРµС†РёР°Р»РёСЃС‚Р°Рј
 class SpecialistReport {
   const SpecialistReport({
     required this.totalSpecialists,
@@ -148,7 +150,7 @@ class SpecialistReport {
         ? specialists.map((s) => s.hourlyRate).reduce((a, b) => a + b) / specialists.length
         : 0.0;
 
-    // Подсчитываем категории
+    // РџРѕРґСЃС‡РёС‚С‹РІР°РµРј РєР°С‚РµРіРѕСЂРёРё
     final categoryCounts = <String, int>{};
     for (final specialist in specialists) {
       for (final category in specialist.categories) {
@@ -182,7 +184,7 @@ class SpecialistReport {
   final DateTime generatedAt;
 }
 
-/// Отчет по категориям
+/// РћС‚С‡РµС‚ РїРѕ РєР°С‚РµРіРѕСЂРёСЏРј
 class CategoryReport {
   const CategoryReport({
     required this.categoryStats,
@@ -215,7 +217,7 @@ class CategoryReport {
       }
     }
 
-    // Вычисляем средние значения
+    // Р’С‹С‡РёСЃР»СЏРµРј СЃСЂРµРґРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ
     for (final entry in categoryStats.entries) {
       final stats = entry.value;
       categoryStats[entry.key] = CategoryStats(
@@ -237,7 +239,7 @@ class CategoryReport {
   final DateTime generatedAt;
 }
 
-/// Статистика по категории
+/// РЎС‚Р°С‚РёСЃС‚РёРєР° РїРѕ РєР°С‚РµРіРѕСЂРёРё
 class CategoryStats {
   const CategoryStats({
     required this.categoryName,
@@ -254,7 +256,7 @@ class CategoryStats {
   final int totalReviews;
 }
 
-/// Отчет по рейтингам
+/// РћС‚С‡РµС‚ РїРѕ СЂРµР№С‚РёРЅРіР°Рј
 class RatingReport {
   const RatingReport({
     required this.ratingDistribution,
@@ -290,7 +292,7 @@ class RatingReport {
   final DateTime generatedAt;
 }
 
-/// Отчет по доходам
+/// РћС‚С‡РµС‚ РїРѕ РґРѕС…РѕРґР°Рј
 class EarningsReport {
   const EarningsReport({
     required this.totalEarnings,
@@ -328,7 +330,7 @@ class EarningsReport {
   final DateTime generatedAt;
 }
 
-/// Отчет по активности
+/// РћС‚С‡РµС‚ РїРѕ Р°РєС‚РёРІРЅРѕСЃС‚Рё
 class ActivityReport {
   const ActivityReport({
     required this.activeSpecialists,
@@ -359,7 +361,7 @@ class ActivityReport {
   final DateTime generatedAt;
 }
 
-/// Детальный отчет по специалисту
+/// Р”РµС‚Р°Р»СЊРЅС‹Р№ РѕС‚С‡РµС‚ РїРѕ СЃРїРµС†РёР°Р»РёСЃС‚Сѓ
 class SpecialistDetailReport {
   const SpecialistDetailReport({
     required this.specialist,
@@ -373,3 +375,4 @@ class SpecialistDetailReport {
   final List<Map<String, dynamic>> bookings;
   final DateTime generatedAt;
 }
+

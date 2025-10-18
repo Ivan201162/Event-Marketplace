@@ -155,19 +155,19 @@ class _AddStoryWidgetState extends ConsumerState<AddStoryWidget> {
       final caption = _captionController.text.trim();
 
       Story? story;
-      if (source == ImageSource.gallery) {
-        story = await _storyService.createStory(
-          userId: widget.userId,
-          caption: caption.isNotEmpty ? caption : null,
-          mediaUrl: '', // TODO(developer): Add media URL
-        );
-      } else {
-        story = await _storyService.createStory(
-          userId: widget.userId,
-          caption: caption.isNotEmpty ? caption : null,
-          mediaUrl: '', // TODO(developer): Add media URL
-        );
-      }
+      final storyData = Story(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        specialistId: widget.userId,
+        mediaUrl: '', // TODO(developer): Add media URL
+        text: caption.isNotEmpty ? caption : null,
+        createdAt: DateTime.now(),
+        expiresAt: DateTime.now().add(const Duration(hours: 24)),
+        viewsCount: 0,
+        likesCount: 0,
+        commentsCount: 0,
+        isActive: true,
+      );
+      story = await _storyService.createStory(storyData);
 
       if (mounted) {
         _captionController.clear();

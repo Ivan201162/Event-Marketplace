@@ -1,17 +1,23 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/admin_models.dart';
+import 'package:flutter/foundation.dart';
 import '../models/subscription_plan.dart';
+import 'package:flutter/foundation.dart';
 import 'admin_service.dart';
+import 'package:flutter/foundation.dart';
 
 class MarketingAdminService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Uuid _uuid = const Uuid();
   final AdminService _adminService = AdminService();
 
-  /// Управление тарифными планами
+  /// РЈРїСЂР°РІР»РµРЅРёРµ С‚Р°СЂРёС„РЅС‹РјРё РїР»Р°РЅР°РјРё
   Future<bool> createSubscriptionPlan({
     required SubscriptionPlan plan,
     required String adminId,
@@ -78,7 +84,7 @@ class MarketingAdminService {
     }
   }
 
-  /// Управление рекламными кампаниями
+  /// РЈРїСЂР°РІР»РµРЅРёРµ СЂРµРєР»Р°РјРЅС‹РјРё РєР°РјРїР°РЅРёСЏРјРё
   Future<bool> createMarketingCampaign({
     required MarketingCampaign campaign,
     required String adminId,
@@ -135,7 +141,7 @@ class MarketingAdminService {
     }
   }
 
-  /// Управление рассылками
+  /// РЈРїСЂР°РІР»РµРЅРёРµ СЂР°СЃСЃС‹Р»РєР°РјРё
   Future<bool> createNewsletter({
     required MarketingNewsletter newsletter,
     required String adminId,
@@ -194,21 +200,21 @@ class MarketingAdminService {
     }
   }
 
-  /// Получение статистики рефералов
+  /// РџРѕР»СѓС‡РµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРєРё СЂРµС„РµСЂР°Р»РѕРІ
   Future<Map<String, dynamic>> getReferralStats() async {
     try {
       final stats = <String, dynamic>{};
 
-      // Общее количество рефералов
+      // РћР±С‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЂРµС„РµСЂР°Р»РѕРІ
       final referralsSnapshot = await _firestore.collection('referrals').get();
       stats['totalReferrals'] = referralsSnapshot.docs.length;
 
-      // Активные рефералы
+      // РђРєС‚РёРІРЅС‹Рµ СЂРµС„РµСЂР°Р»С‹
       final activeReferralsSnapshot =
           await _firestore.collection('referrals').where('status', isEqualTo: 'completed').get();
       stats['activeReferrals'] = activeReferralsSnapshot.docs.length;
 
-      // Статистика по месяцам
+      // РЎС‚Р°С‚РёСЃС‚РёРєР° РїРѕ РјРµСЃСЏС†Р°Рј
       final now = DateTime.now();
       final thisMonth = DateTime(now.year, now.month);
       final thisMonthReferrals = await _firestore
@@ -217,7 +223,7 @@ class MarketingAdminService {
           .get();
       stats['thisMonthReferrals'] = thisMonthReferrals.docs.length;
 
-      // Топ рефереры
+      // РўРѕРї СЂРµС„РµСЂРµСЂС‹
       final referralStatsSnapshot = await _firestore
           .collection('referral_program_stats')
           .orderBy('invitedUsersCount', descending: true)
@@ -242,21 +248,21 @@ class MarketingAdminService {
     }
   }
 
-  /// Получение статистики партнёров
+  /// РџРѕР»СѓС‡РµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРєРё РїР°СЂС‚РЅС‘СЂРѕРІ
   Future<Map<String, dynamic>> getPartnerStats() async {
     try {
       final stats = <String, dynamic>{};
 
-      // Общее количество партнёров
+      // РћР±С‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РїР°СЂС‚РЅС‘СЂРѕРІ
       final partnersSnapshot = await _firestore.collection('partners').get();
       stats['totalPartners'] = partnersSnapshot.docs.length;
 
-      // Активные партнёры
+      // РђРєС‚РёРІРЅС‹Рµ РїР°СЂС‚РЅС‘СЂС‹
       final activePartnersSnapshot =
           await _firestore.collection('partners').where('isActive', isEqualTo: true).get();
       stats['activePartners'] = activePartnersSnapshot.docs.length;
 
-      // Общая сумма комиссий
+      // РћР±С‰Р°СЏ СЃСѓРјРјР° РєРѕРјРёСЃСЃРёР№
       final partnerTransactionsSnapshot = await _firestore.collection('partner_transactions').get();
       double totalCommissions = 0.0;
       for (final doc in partnerTransactionsSnapshot.docs) {
@@ -264,7 +270,7 @@ class MarketingAdminService {
       }
       stats['totalCommissions'] = totalCommissions;
 
-      // Топ партнёры по доходам
+      // РўРѕРї РїР°СЂС‚РЅС‘СЂС‹ РїРѕ РґРѕС…РѕРґР°Рј
       final partnerEarnings = <String, double>{};
       for (final doc in partnerTransactionsSnapshot.docs) {
         final data = doc.data();
@@ -291,7 +297,7 @@ class MarketingAdminService {
     }
   }
 
-  /// Получение финансовой аналитики
+  /// РџРѕР»СѓС‡РµРЅРёРµ С„РёРЅР°РЅСЃРѕРІРѕР№ Р°РЅР°Р»РёС‚РёРєРё
   Future<List<FinancialAnalytics>> getFinancialAnalytics({
     required String period, // daily, weekly, monthly
     DateTime? startDate,
@@ -319,14 +325,14 @@ class MarketingAdminService {
     }
   }
 
-  /// Создание сегмента пользователей
+  /// РЎРѕР·РґР°РЅРёРµ СЃРµРіРјРµРЅС‚Р° РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
   Future<bool> createUserSegment({
     required UserSegment segment,
     required String adminId,
     required String adminEmail,
   }) async {
     try {
-      // Подсчет пользователей в сегменте
+      // РџРѕРґСЃС‡РµС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ РІ СЃРµРіРјРµРЅС‚Рµ
       final userCount = await _countUsersInSegment(segment.criteria);
       final segmentWithCount = UserSegment(
         id: segment.id,
@@ -359,7 +365,7 @@ class MarketingAdminService {
     }
   }
 
-  /// Подсчет пользователей в сегменте
+  /// РџРѕРґСЃС‡РµС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ РІ СЃРµРіРјРµРЅС‚Рµ
   Future<int> _countUsersInSegment(Map<String, dynamic> criteria) async {
     try {
       Query query = _firestore.collection('users');
@@ -387,7 +393,7 @@ class MarketingAdminService {
     }
   }
 
-  /// Получение всех маркетинговых кампаний
+  /// РџРѕР»СѓС‡РµРЅРёРµ РІСЃРµС… РјР°СЂРєРµС‚РёРЅРіРѕРІС‹С… РєР°РјРїР°РЅРёР№
   Stream<List<MarketingCampaign>> getMarketingCampaignsStream() {
     return _firestore
         .collection('marketing_campaigns')
@@ -397,7 +403,7 @@ class MarketingAdminService {
             snapshot.docs.map((doc) => MarketingCampaign.fromMap(doc.data())).toList());
   }
 
-  /// Получение всех рассылок
+  /// РџРѕР»СѓС‡РµРЅРёРµ РІСЃРµС… СЂР°СЃСЃС‹Р»РѕРє
   Stream<List<MarketingNewsletter>> getNewslettersStream() {
     return _firestore
         .collection('marketing_newsletters')
@@ -407,7 +413,7 @@ class MarketingAdminService {
             snapshot.docs.map((doc) => MarketingNewsletter.fromMap(doc.data())).toList());
   }
 
-  /// Получение всех сегментов пользователей
+  /// РџРѕР»СѓС‡РµРЅРёРµ РІСЃРµС… СЃРµРіРјРµРЅС‚РѕРІ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
   Stream<List<UserSegment>> getUserSegmentsStream() {
     return _firestore
         .collection('user_segments')
@@ -416,7 +422,7 @@ class MarketingAdminService {
         .map((snapshot) => snapshot.docs.map((doc) => UserSegment.fromMap(doc.data())).toList());
   }
 
-  /// Активация/деактивация кампании
+  /// РђРєС‚РёРІР°С†РёСЏ/РґРµР°РєС‚РёРІР°С†РёСЏ РєР°РјРїР°РЅРёРё
   Future<bool> toggleCampaignStatus({
     required String campaignId,
     required MarketingCampaignStatus newStatus,
@@ -449,3 +455,4 @@ class MarketingAdminService {
     }
   }
 }
+

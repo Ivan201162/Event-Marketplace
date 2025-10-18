@@ -483,12 +483,20 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
         fontSize: _selectedType == StoryContentType.text ? _fontSize : null,
       );
 
-      await _storyService.createStory(
+      final story = Story(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
         specialistId: createStory.specialistId,
         mediaUrl: createStory.mediaUrl,
         text: createStory.text,
         metadata: createStory.metadata,
+        createdAt: DateTime.now(),
+        expiresAt: DateTime.now().add(const Duration(hours: 24)),
+        viewsCount: 0,
+        likesCount: 0,
+        commentsCount: 0,
+        isActive: true,
       );
+      await _storyService.createStory(story);
 
       if (mounted) {
         Navigator.of(context).pop(true);

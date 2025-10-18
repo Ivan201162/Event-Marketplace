@@ -1,19 +1,24 @@
-import 'dart:math';
+﻿import 'dart:math';
+import 'package:flutter/foundation.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/referral_system.dart';
+import 'package:flutter/foundation.dart';
 
 class ReferralService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Uuid _uuid = const Uuid();
 
-  /// Создание реферального кода для пользователя
+  /// РЎРѕР·РґР°РЅРёРµ СЂРµС„РµСЂР°Р»СЊРЅРѕРіРѕ РєРѕРґР° РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<ReferralCode> createReferralCode(String userId) async {
     try {
-      // Проверяем, есть ли уже активный код
+      // РџСЂРѕРІРµСЂСЏРµРј, РµСЃС‚СЊ Р»Рё СѓР¶Рµ Р°РєС‚РёРІРЅС‹Р№ РєРѕРґ
       final existingCode = await _firestore
           .collection('referral_codes')
           .where('userId', isEqualTo: userId)
@@ -25,7 +30,7 @@ class ReferralService {
         return ReferralCode.fromMap(existingCode.docs.first.data());
       }
 
-      // Создаем новый код
+      // РЎРѕР·РґР°РµРј РЅРѕРІС‹Р№ РєРѕРґ
       final String code = _generateReferralCode();
       final String id = _uuid.v4();
 
@@ -34,7 +39,7 @@ class ReferralService {
         userId: userId,
         code: code,
         createdAt: DateTime.now(),
-        expiresAt: DateTime.now().add(const Duration(days: 365)), // Год действия
+        expiresAt: DateTime.now().add(const Duration(days: 365)), // Р“РѕРґ РґРµР№СЃС‚РІРёСЏ
       );
 
       await _firestore.collection('referral_codes').doc(id).set(referralCode.toMap());
@@ -47,7 +52,7 @@ class ReferralService {
     }
   }
 
-  /// Получение реферального кода пользователя
+  /// РџРѕР»СѓС‡РµРЅРёРµ СЂРµС„РµСЂР°Р»СЊРЅРѕРіРѕ РєРѕРґР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<ReferralCode?> getUserReferralCode(String userId) async {
     try {
       final QuerySnapshot snapshot = await _firestore
@@ -67,10 +72,10 @@ class ReferralService {
     }
   }
 
-  /// Проверка и использование реферального кода
+  /// РџСЂРѕРІРµСЂРєР° Рё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ СЂРµС„РµСЂР°Р»СЊРЅРѕРіРѕ РєРѕРґР°
   Future<Referral?> useReferralCode(String code, String referredUserId) async {
     try {
-      // Находим код
+      // РќР°С…РѕРґРёРј РєРѕРґ
       final QuerySnapshot codeSnapshot = await _firestore
           .collection('referral_codes')
           .where('code', isEqualTo: code.toUpperCase())
@@ -79,17 +84,17 @@ class ReferralService {
           .get();
 
       if (codeSnapshot.docs.isEmpty) {
-        throw Exception('Реферальный код не найден или неактивен');
+        throw Exception('Р РµС„РµСЂР°Р»СЊРЅС‹Р№ РєРѕРґ РЅРµ РЅР°Р№РґРµРЅ РёР»Рё РЅРµР°РєС‚РёРІРµРЅ');
       }
 
       final ReferralCode referralCode =
           ReferralCode.fromMap(codeSnapshot.docs.first.data() as Map<String, dynamic>);
 
       if (!referralCode.canBeUsed) {
-        throw Exception('Реферальный код истек или достиг лимита использований');
+        throw Exception('Р РµС„РµСЂР°Р»СЊРЅС‹Р№ РєРѕРґ РёСЃС‚РµРє РёР»Рё РґРѕСЃС‚РёРі Р»РёРјРёС‚Р° РёСЃРїРѕР»СЊР·РѕРІР°РЅРёР№');
       }
 
-      // Проверяем, не использовал ли уже этот пользователь код
+      // РџСЂРѕРІРµСЂСЏРµРј, РЅРµ РёСЃРїРѕР»СЊР·РѕРІР°Р» Р»Рё СѓР¶Рµ СЌС‚РѕС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РєРѕРґ
       final existingReferral = await _firestore
           .collection('referrals')
           .where('referredId', isEqualTo: referredUserId)
@@ -97,10 +102,10 @@ class ReferralService {
           .get();
 
       if (existingReferral.docs.isNotEmpty) {
-        throw Exception('Вы уже использовали реферальный код');
+        throw Exception('Р’С‹ СѓР¶Рµ РёСЃРїРѕР»СЊР·РѕРІР°Р»Рё СЂРµС„РµСЂР°Р»СЊРЅС‹Р№ РєРѕРґ');
       }
 
-      // Создаем реферальную запись
+      // РЎРѕР·РґР°РµРј СЂРµС„РµСЂР°Р»СЊРЅСѓСЋ Р·Р°РїРёСЃСЊ
       final String referralId = _uuid.v4();
       final Referral referral = Referral(
         id: referralId,
@@ -113,7 +118,7 @@ class ReferralService {
 
       await _firestore.collection('referrals').doc(referralId).set(referral.toMap());
 
-      // Увеличиваем счетчик использований кода
+      // РЈРІРµР»РёС‡РёРІР°РµРј СЃС‡РµС‚С‡РёРє РёСЃРїРѕР»СЊР·РѕРІР°РЅРёР№ РєРѕРґР°
       await _firestore.collection('referral_codes').doc(referralCode.id).update({
         'usageCount': FieldValue.increment(1),
       });
@@ -126,28 +131,28 @@ class ReferralService {
     }
   }
 
-  /// Завершение реферала (когда новый пользователь совершает первое действие)
+  /// Р—Р°РІРµСЂС€РµРЅРёРµ СЂРµС„РµСЂР°Р»Р° (РєРѕРіРґР° РЅРѕРІС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃРѕРІРµСЂС€Р°РµС‚ РїРµСЂРІРѕРµ РґРµР№СЃС‚РІРёРµ)
   Future<void> completeReferral(String referralId) async {
     try {
       final DocumentSnapshot doc = await _firestore.collection('referrals').doc(referralId).get();
 
       if (!doc.exists) {
-        throw Exception('Реферал не найден');
+        throw Exception('Р РµС„РµСЂР°Р» РЅРµ РЅР°Р№РґРµРЅ');
       }
 
       final Referral referral = Referral.fromMap(doc.data() as Map<String, dynamic>);
 
       if (referral.isCompleted) {
-        return; // Уже завершен
+        return; // РЈР¶Рµ Р·Р°РІРµСЂС€РµРЅ
       }
 
-      // Обновляем статус реферала
+      // РћР±РЅРѕРІР»СЏРµРј СЃС‚Р°С‚СѓСЃ СЂРµС„РµСЂР°Р»Р°
       await _firestore.collection('referrals').doc(referralId).update({
         'status': ReferralStatus.completed.toString().split('.').last,
         'completedAt': FieldValue.serverTimestamp(),
       });
 
-      // Начисляем бонусы
+      // РќР°С‡РёСЃР»СЏРµРј Р±РѕРЅСѓСЃС‹
       await _applyReferralBonuses(referral);
 
       debugPrint('INFO: [ReferralService] Referral completed: $referralId');
@@ -157,34 +162,34 @@ class ReferralService {
     }
   }
 
-  /// Применение бонусов за реферал
+  /// РџСЂРёРјРµРЅРµРЅРёРµ Р±РѕРЅСѓСЃРѕРІ Р·Р° СЂРµС„РµСЂР°Р»
   Future<void> _applyReferralBonuses(Referral referral) async {
     try {
-      // Бонус для пригласившего
+      // Р‘РѕРЅСѓСЃ РґР»СЏ РїСЂРёРіР»Р°СЃРёРІС€РµРіРѕ
       final ReferralReward referrerReward = ReferralReward(
         id: _uuid.v4(),
         userId: referral.referrerId,
         referralId: referral.id,
         type: ReferralBonusType.freePromotion,
-        value: 1.0, // 1 бесплатное продвижение
-        description: 'Бонус за приглашение друга',
+        value: 1.0, // 1 Р±РµСЃРїР»Р°С‚РЅРѕРµ РїСЂРѕРґРІРёР¶РµРЅРёРµ
+        description: 'Р‘РѕРЅСѓСЃ Р·Р° РїСЂРёРіР»Р°С€РµРЅРёРµ РґСЂСѓРіР°',
         createdAt: DateTime.now(),
         expiresAt: DateTime.now().add(const Duration(days: 30)),
       );
 
-      // Бонус для приглашенного
+      // Р‘РѕРЅСѓСЃ РґР»СЏ РїСЂРёРіР»Р°С€РµРЅРЅРѕРіРѕ
       final ReferralReward referredReward = ReferralReward(
         id: _uuid.v4(),
         userId: referral.referredId,
         referralId: referral.id,
         type: ReferralBonusType.premiumTrial,
-        value: 7.0, // 7 дней премиум
-        description: 'Приветственный бонус за регистрацию по приглашению',
+        value: 7.0, // 7 РґРЅРµР№ РїСЂРµРјРёСѓРј
+        description: 'РџСЂРёРІРµС‚СЃС‚РІРµРЅРЅС‹Р№ Р±РѕРЅСѓСЃ Р·Р° СЂРµРіРёСЃС‚СЂР°С†РёСЋ РїРѕ РїСЂРёРіР»Р°С€РµРЅРёСЋ',
         createdAt: DateTime.now(),
         expiresAt: DateTime.now().add(const Duration(days: 7)),
       );
 
-      // Сохраняем бонусы
+      // РЎРѕС…СЂР°РЅСЏРµРј Р±РѕРЅСѓСЃС‹
       await _firestore
           .collection('referral_rewards')
           .doc(referrerReward.id)
@@ -195,7 +200,7 @@ class ReferralService {
           .doc(referredReward.id)
           .set(referredReward.toMap());
 
-      // Обновляем статистику
+      // РћР±РЅРѕРІР»СЏРµРј СЃС‚Р°С‚РёСЃС‚РёРєСѓ
       await _updateReferralStats(referral.referrerId);
       await _updateReferralStats(referral.referredId);
 
@@ -206,10 +211,10 @@ class ReferralService {
     }
   }
 
-  /// Обновление статистики рефералов
+  /// РћР±РЅРѕРІР»РµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРєРё СЂРµС„РµСЂР°Р»РѕРІ
   Future<void> _updateReferralStats(String userId) async {
     try {
-      // Подсчитываем статистику
+      // РџРѕРґСЃС‡РёС‚С‹РІР°РµРј СЃС‚Р°С‚РёСЃС‚РёРєСѓ
       final QuerySnapshot referralsSnapshot =
           await _firestore.collection('referrals').where('referrerId', isEqualTo: userId).get();
 
@@ -257,7 +262,7 @@ class ReferralService {
     }
   }
 
-  /// Получение статистики рефералов пользователя
+  /// РџРѕР»СѓС‡РµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРєРё СЂРµС„РµСЂР°Р»РѕРІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<ReferralStats?> getUserReferralStats(String userId) async {
     try {
       final DocumentSnapshot doc = await _firestore.collection('referral_stats').doc(userId).get();
@@ -272,7 +277,7 @@ class ReferralService {
     }
   }
 
-  /// Получение активных наград пользователя
+  /// РџРѕР»СѓС‡РµРЅРёРµ Р°РєС‚РёРІРЅС‹С… РЅР°РіСЂР°Рґ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<List<ReferralReward>> getUserActiveRewards(String userId) async {
     try {
       final QuerySnapshot snapshot = await _firestore
@@ -292,7 +297,7 @@ class ReferralService {
     }
   }
 
-  /// Использование награды
+  /// РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ РЅР°РіСЂР°РґС‹
   Future<void> useReward(String rewardId) async {
     try {
       await _firestore.collection('referral_rewards').doc(rewardId).update({
@@ -307,7 +312,7 @@ class ReferralService {
     }
   }
 
-  /// Получение рефералов пользователя
+  /// РџРѕР»СѓС‡РµРЅРёРµ СЂРµС„РµСЂР°Р»РѕРІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<List<Referral>> getUserReferrals(String userId) async {
     try {
       final QuerySnapshot snapshot = await _firestore
@@ -325,7 +330,7 @@ class ReferralService {
     }
   }
 
-  /// Генерация уникального реферального кода
+  /// Р“РµРЅРµСЂР°С†РёСЏ СѓРЅРёРєР°Р»СЊРЅРѕРіРѕ СЂРµС„РµСЂР°Р»СЊРЅРѕРіРѕ РєРѕРґР°
   String _generateReferralCode() {
     const String chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     final random = Random();
@@ -339,19 +344,19 @@ class ReferralService {
         code += chars[random.nextInt(chars.length)];
       }
 
-      // Проверяем уникальность (упрощенная проверка)
-      isUnique = true; // В реальном приложении нужно проверить в БД
+      // РџСЂРѕРІРµСЂСЏРµРј СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚СЊ (СѓРїСЂРѕС‰РµРЅРЅР°СЏ РїСЂРѕРІРµСЂРєР°)
+      isUnique = true; // Р’ СЂРµР°Р»СЊРЅРѕРј РїСЂРёР»РѕР¶РµРЅРёРё РЅСѓР¶РЅРѕ РїСЂРѕРІРµСЂРёС‚СЊ РІ Р‘Р”
     } while (!isUnique);
 
     return code;
   }
 
-  /// Создание реферальной ссылки
+  /// РЎРѕР·РґР°РЅРёРµ СЂРµС„РµСЂР°Р»СЊРЅРѕР№ СЃСЃС‹Р»РєРё
   String createReferralLink(String code) {
     return 'https://eventmarketplace.app/invite/$code';
   }
 
-  /// Проверка достижения уровней реферальной программы
+  /// РџСЂРѕРІРµСЂРєР° РґРѕСЃС‚РёР¶РµРЅРёСЏ СѓСЂРѕРІРЅРµР№ СЂРµС„РµСЂР°Р»СЊРЅРѕР№ РїСЂРѕРіСЂР°РјРјС‹
   Future<List<String>> checkReferralLevels(String userId) async {
     try {
       final ReferralStats? stats = await getUserReferralStats(userId);
@@ -379,3 +384,4 @@ class ReferralService {
     }
   }
 }
+

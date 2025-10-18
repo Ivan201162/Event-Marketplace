@@ -9,6 +9,80 @@ class EventIdeaCategory {
     this.isActive = true,
   });
 
+  // Статические значения категорий
+  static const List<EventIdeaCategory> values = [
+    EventIdeaCategory(
+      id: 'wedding',
+      name: 'Свадьба',
+      emoji: '💒',
+      description: 'Свадебные мероприятия',
+      color: '#FF69B4',
+    ),
+    EventIdeaCategory(
+      id: 'corporate',
+      name: 'Корпоратив',
+      emoji: '🏢',
+      description: 'Корпоративные мероприятия',
+      color: '#4169E1',
+    ),
+    EventIdeaCategory(
+      id: 'birthday',
+      name: 'День рождения',
+      emoji: '🎂',
+      description: 'Дни рождения',
+      color: '#FFD700',
+    ),
+    EventIdeaCategory(
+      id: 'anniversary',
+      name: 'Юбилей',
+      emoji: '🎉',
+      description: 'Юбилейные мероприятия',
+      color: '#FF6347',
+    ),
+    EventIdeaCategory(
+      id: 'graduation',
+      name: 'Выпускной',
+      emoji: '🎓',
+      description: 'Выпускные мероприятия',
+      color: '#32CD32',
+    ),
+    EventIdeaCategory(
+      id: 'conference',
+      name: 'Конференция',
+      emoji: '📊',
+      description: 'Конференции и семинары',
+      color: '#9370DB',
+    ),
+    EventIdeaCategory(
+      id: 'exhibition',
+      name: 'Выставка',
+      emoji: '🎨',
+      description: 'Выставки и экспозиции',
+      color: '#FF8C00',
+    ),
+    EventIdeaCategory(
+      id: 'festival',
+      name: 'Фестиваль',
+      emoji: '🎪',
+      description: 'Фестивали и праздники',
+      color: '#FF1493',
+    ),
+    EventIdeaCategory(
+      id: 'sports',
+      name: 'Спорт',
+      emoji: '⚽',
+      description: 'Спортивные мероприятия',
+      color: '#00CED1',
+    ),
+    EventIdeaCategory(
+      id: 'charity',
+      name: 'Благотворительность',
+      emoji: '❤️',
+      description: 'Благотворительные мероприятия',
+      color: '#DC143C',
+    ),
+  ];
+
   /// Создать из Map
   factory EventIdeaCategory.fromMap(Map<String, dynamic> data) => EventIdeaCategory(
         id: data['id']?.toString() ?? '',

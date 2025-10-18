@@ -32,12 +32,20 @@ final storyViewsProvider = FutureProvider.family<List<StoryView>, String>((ref, 
 /// Провайдер для создания сторис
 final createStoryProvider = FutureProvider.family<String, CreateStory>((ref, createStory) async {
   final storyService = ref.read(storyServiceProvider);
-  return storyService.createStory(
+  final story = Story(
+    id: DateTime.now().millisecondsSinceEpoch.toString(),
     specialistId: createStory.specialistId,
     mediaUrl: createStory.mediaUrl,
     text: createStory.text,
     metadata: createStory.metadata,
+    createdAt: DateTime.now(),
+    expiresAt: DateTime.now().add(const Duration(hours: 24)),
+    viewsCount: 0,
+    likesCount: 0,
+    commentsCount: 0,
+    isActive: true,
   );
+  return storyService.createStory(story);
 });
 
 /// Провайдер для загрузки изображения сторис

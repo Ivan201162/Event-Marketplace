@@ -1,14 +1,18 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/automated_promotions.dart';
+import 'package:flutter/foundation.dart';
 
 class AutomatedPromotionsService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Uuid _uuid = const Uuid();
 
-  /// Создание автоматической промо-кампании
+  /// РЎРѕР·РґР°РЅРёРµ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРѕР№ РїСЂРѕРјРѕ-РєР°РјРїР°РЅРёРё
   Future<String> createAutomatedPromotion({
     required String name,
     required String description,
@@ -47,7 +51,7 @@ class AutomatedPromotionsService {
     }
   }
 
-  /// Активация автоматической промо-кампании
+  /// РђРєС‚РёРІР°С†РёСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРѕР№ РїСЂРѕРјРѕ-РєР°РјРїР°РЅРёРё
   Future<void> activatePromotion(String promotionId) async {
     try {
       await _firestore.collection('automated_promotions').doc(promotionId).update({
@@ -62,7 +66,7 @@ class AutomatedPromotionsService {
     }
   }
 
-  /// Деактивация автоматической промо-кампании
+  /// Р”РµР°РєС‚РёРІР°С†РёСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРѕР№ РїСЂРѕРјРѕ-РєР°РјРїР°РЅРёРё
   Future<void> deactivatePromotion(String promotionId) async {
     try {
       await _firestore.collection('automated_promotions').doc(promotionId).update({
@@ -78,11 +82,11 @@ class AutomatedPromotionsService {
     }
   }
 
-  /// Проверка и выполнение автоматических промо-кампаний
+  /// РџСЂРѕРІРµСЂРєР° Рё РІС‹РїРѕР»РЅРµРЅРёРµ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРёС… РїСЂРѕРјРѕ-РєР°РјРїР°РЅРёР№
   Future<void> checkAndExecutePromotions(
       String userId, String eventType, Map<String, dynamic> eventData) async {
     try {
-      // Получаем все активные автоматические промо-кампании
+      // РџРѕР»СѓС‡Р°РµРј РІСЃРµ Р°РєС‚РёРІРЅС‹Рµ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРёРµ РїСЂРѕРјРѕ-РєР°РјРїР°РЅРёРё
       final QuerySnapshot promotionsSnapshot = await _firestore
           .collection('automated_promotions')
           .where('isActive', isEqualTo: true)
@@ -94,11 +98,11 @@ class AutomatedPromotionsService {
         final AutomatedPromotion promotion =
             AutomatedPromotion.fromMap(doc.data() as Map<String, dynamic>);
 
-        // Проверяем, соответствует ли событие триггеру
+        // РџСЂРѕРІРµСЂСЏРµРј, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ Р»Рё СЃРѕР±С‹С‚РёРµ С‚СЂРёРіРіРµСЂСѓ
         if (_matchesTrigger(promotion.trigger, eventType, eventData)) {
-          // Проверяем условия
+          // РџСЂРѕРІРµСЂСЏРµРј СѓСЃР»РѕРІРёСЏ
           if (await _checkConditions(userId, promotion.conditions)) {
-            // Проверяем, не была ли уже применена эта промо-кампания к пользователю
+            // РџСЂРѕРІРµСЂСЏРµРј, РЅРµ Р±С‹Р»Р° Р»Рё СѓР¶Рµ РїСЂРёРјРµРЅРµРЅР° СЌС‚Р° РїСЂРѕРјРѕ-РєР°РјРїР°РЅРёСЏ Рє РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ
             if (!await _isPromotionAppliedToUser(userId, promotion.id)) {
               await _executePromotion(userId, promotion);
             }
@@ -110,7 +114,7 @@ class AutomatedPromotionsService {
     }
   }
 
-  /// Проверка соответствия события триггеру
+  /// РџСЂРѕРІРµСЂРєР° СЃРѕРѕС‚РІРµС‚СЃС‚РІРёСЏ СЃРѕР±С‹С‚РёСЏ С‚СЂРёРіРіРµСЂСѓ
   bool _matchesTrigger(PromotionTrigger trigger, String eventType, Map<String, dynamic> eventData) {
     switch (trigger) {
       case PromotionTrigger.userRegistration:
@@ -134,7 +138,7 @@ class AutomatedPromotionsService {
     }
   }
 
-  /// Проверка условий промо-кампании
+  /// РџСЂРѕРІРµСЂРєР° СѓСЃР»РѕРІРёР№ РїСЂРѕРјРѕ-РєР°РјРїР°РЅРёРё
   Future<bool> _checkConditions(String userId, Map<String, dynamic> conditions) async {
     try {
       for (final condition in conditions.entries) {
@@ -187,10 +191,10 @@ class AutomatedPromotionsService {
     }
   }
 
-  /// Выполнение промо-кампании
+  /// Р’С‹РїРѕР»РЅРµРЅРёРµ РїСЂРѕРјРѕ-РєР°РјРїР°РЅРёРё
   Future<void> _executePromotion(String userId, AutomatedPromotion promotion) async {
     try {
-      // Выполняем действия промо-кампании
+      // Р’С‹РїРѕР»РЅСЏРµРј РґРµР№СЃС‚РІРёСЏ РїСЂРѕРјРѕ-РєР°РјРїР°РЅРёРё
       for (final action in promotion.actions.entries) {
         final String actionType = action.key;
         final dynamic actionValue = action.value;
@@ -222,7 +226,7 @@ class AutomatedPromotionsService {
         }
       }
 
-      // Записываем, что промо-кампания была применена к пользователю
+      // Р—Р°РїРёСЃС‹РІР°РµРј, С‡С‚Рѕ РїСЂРѕРјРѕ-РєР°РјРїР°РЅРёСЏ Р±С‹Р»Р° РїСЂРёРјРµРЅРµРЅР° Рє РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ
       await _recordPromotionApplication(userId, promotion.id);
 
       debugPrint(
@@ -232,19 +236,19 @@ class AutomatedPromotionsService {
     }
   }
 
-  /// Создание предустановленных автоматических промо-кампаний
+  /// РЎРѕР·РґР°РЅРёРµ РїСЂРµРґСѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹С… Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРёС… РїСЂРѕРјРѕ-РєР°РјРїР°РЅРёР№
   Future<void> createDefaultPromotions() async {
     try {
-      // Промо-кампания для новых пользователей
+      // РџСЂРѕРјРѕ-РєР°РјРїР°РЅРёСЏ РґР»СЏ РЅРѕРІС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
       await createAutomatedPromotion(
-        name: 'Добро пожаловать!',
-        description: 'Приветственный бонус для новых пользователей',
+        name: 'Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ!',
+        description: 'РџСЂРёРІРµС‚СЃС‚РІРµРЅРЅС‹Р№ Р±РѕРЅСѓСЃ РґР»СЏ РЅРѕРІС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№',
         trigger: PromotionTrigger.userRegistration,
         conditions: {},
         actions: {
           'send_notification': {
-            'title': 'Добро пожаловать в Event Marketplace!',
-            'message': 'Получите 3 дня Premium бесплатно!',
+            'title': 'Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ РІ Event Marketplace!',
+            'message': 'РџРѕР»СѓС‡РёС‚Рµ 3 РґРЅСЏ Premium Р±РµСЃРїР»Р°С‚РЅРѕ!',
           },
           'add_premium_days': 3,
         },
@@ -253,18 +257,18 @@ class AutomatedPromotionsService {
         targetAudience: 'new_users',
       );
 
-      // Промо-кампания для неактивных пользователей
+      // РџСЂРѕРјРѕ-РєР°РјРїР°РЅРёСЏ РґР»СЏ РЅРµР°РєС‚РёРІРЅС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
       await createAutomatedPromotion(
-        name: 'Вернись к нам!',
-        description: 'Специальное предложение для неактивных пользователей',
+        name: 'Р’РµСЂРЅРёСЃСЊ Рє РЅР°Рј!',
+        description: 'РЎРїРµС†РёР°Р»СЊРЅРѕРµ РїСЂРµРґР»РѕР¶РµРЅРёРµ РґР»СЏ РЅРµР°РєС‚РёРІРЅС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№',
         trigger: PromotionTrigger.inactivity,
         conditions: {
           'inactivity_days': 7,
         },
         actions: {
           'send_notification': {
-            'title': 'Мы скучаем!',
-            'message': 'Вернись и получи скидку 50% на Premium!',
+            'title': 'РњС‹ СЃРєСѓС‡Р°РµРј!',
+            'message': 'Р’РµСЂРЅРёСЃСЊ Рё РїРѕР»СѓС‡Рё СЃРєРёРґРєСѓ 50% РЅР° Premium!',
           },
           'apply_discount': {
             'type': 'percentage',
@@ -277,18 +281,18 @@ class AutomatedPromotionsService {
         targetAudience: 'inactive_users',
       );
 
-      // Промо-кампания для истекающих подписок
+      // РџСЂРѕРјРѕ-РєР°РјРїР°РЅРёСЏ РґР»СЏ РёСЃС‚РµРєР°СЋС‰РёС… РїРѕРґРїРёСЃРѕРє
       await createAutomatedPromotion(
-        name: 'Продли подписку!',
-        description: 'Специальное предложение перед истечением подписки',
+        name: 'РџСЂРѕРґР»Рё РїРѕРґРїРёСЃРєСѓ!',
+        description: 'РЎРїРµС†РёР°Р»СЊРЅРѕРµ РїСЂРµРґР»РѕР¶РµРЅРёРµ РїРµСЂРµРґ РёСЃС‚РµС‡РµРЅРёРµРј РїРѕРґРїРёСЃРєРё',
         trigger: PromotionTrigger.subscriptionExpiry,
         conditions: {
           'subscription_type': 'premium',
         },
         actions: {
           'send_notification': {
-            'title': 'Подписка истекает!',
-            'message': 'Продли Premium со скидкой 30%!',
+            'title': 'РџРѕРґРїРёСЃРєР° РёСЃС‚РµРєР°РµС‚!',
+            'message': 'РџСЂРѕРґР»Рё Premium СЃРѕ СЃРєРёРґРєРѕР№ 30%!',
           },
           'apply_discount': {
             'type': 'percentage',
@@ -301,16 +305,16 @@ class AutomatedPromotionsService {
         targetAudience: 'premium_users',
       );
 
-      // Промо-кампания для праздников
+      // РџСЂРѕРјРѕ-РєР°РјРїР°РЅРёСЏ РґР»СЏ РїСЂР°Р·РґРЅРёРєРѕРІ
       await createAutomatedPromotion(
-        name: 'Праздничная скидка',
-        description: 'Специальные предложения на праздники',
+        name: 'РџСЂР°Р·РґРЅРёС‡РЅР°СЏ СЃРєРёРґРєР°',
+        description: 'РЎРїРµС†РёР°Р»СЊРЅС‹Рµ РїСЂРµРґР»РѕР¶РµРЅРёСЏ РЅР° РїСЂР°Р·РґРЅРёРєРё',
         trigger: PromotionTrigger.holiday,
         conditions: {},
         actions: {
           'send_notification': {
-            'title': 'Праздничная скидка!',
-            'message': 'Получите скидку 25% на все тарифы!',
+            'title': 'РџСЂР°Р·РґРЅРёС‡РЅР°СЏ СЃРєРёРґРєР°!',
+            'message': 'РџРѕР»СѓС‡РёС‚Рµ СЃРєРёРґРєСѓ 25% РЅР° РІСЃРµ С‚Р°СЂРёС„С‹!',
           },
           'apply_discount': {
             'type': 'percentage',
@@ -323,18 +327,18 @@ class AutomatedPromotionsService {
         targetAudience: 'all_users',
       );
 
-      // Промо-кампания для достижения 10 рефералов
+      // РџСЂРѕРјРѕ-РєР°РјРїР°РЅРёСЏ РґР»СЏ РґРѕСЃС‚РёР¶РµРЅРёСЏ 10 СЂРµС„РµСЂР°Р»РѕРІ
       await createAutomatedPromotion(
-        name: 'Мастер рефералов',
-        description: 'Бонус за приглашение 10 друзей',
+        name: 'РњР°СЃС‚РµСЂ СЂРµС„РµСЂР°Р»РѕРІ',
+        description: 'Р‘РѕРЅСѓСЃ Р·Р° РїСЂРёРіР»Р°С€РµРЅРёРµ 10 РґСЂСѓР·РµР№',
         trigger: PromotionTrigger.milestone,
         conditions: {
           'referral_count': 10,
         },
         actions: {
           'send_notification': {
-            'title': 'Поздравляем!',
-            'message': 'Вы пригласили 10 друзей! Получите месяц PRO бесплатно!',
+            'title': 'РџРѕР·РґСЂР°РІР»СЏРµРј!',
+            'message': 'Р’С‹ РїСЂРёРіР»Р°СЃРёР»Рё 10 РґСЂСѓР·РµР№! РџРѕР»СѓС‡РёС‚Рµ РјРµСЃСЏС† PRO Р±РµСЃРїР»Р°С‚РЅРѕ!',
           },
           'add_premium_days': 30,
           'unlock_feature': 'pro_features',
@@ -350,7 +354,7 @@ class AutomatedPromotionsService {
     }
   }
 
-  /// Вспомогательные методы для проверки условий
+  /// Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹ РґР»СЏ РїСЂРѕРІРµСЂРєРё СѓСЃР»РѕРІРёР№
   Future<int> _getUserLevel(String userId) async {
     final DocumentSnapshot doc = await _firestore.collection('user_levels').doc(userId).get();
 
@@ -434,54 +438,54 @@ class AutomatedPromotionsService {
     return 0;
   }
 
-  /// Вспомогательные методы для выполнения действий
+  /// Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹ РґР»СЏ РІС‹РїРѕР»РЅРµРЅРёСЏ РґРµР№СЃС‚РІРёР№
   Future<void> _sendPromotionNotification(
       String userId, AutomatedPromotion promotion, Map<String, dynamic> notificationData) async {
-    // Логика отправки уведомления
+    // Р›РѕРіРёРєР° РѕС‚РїСЂР°РІРєРё СѓРІРµРґРѕРјР»РµРЅРёСЏ
     debugPrint('INFO: [AutomatedPromotionsService] Sending promotion notification to user $userId');
   }
 
   Future<void> _applyDiscount(String userId, Map<String, dynamic> discountData) async {
-    // Логика применения скидки
+    // Р›РѕРіРёРєР° РїСЂРёРјРµРЅРµРЅРёСЏ СЃРєРёРґРєРё
     debugPrint('INFO: [AutomatedPromotionsService] Applying discount to user $userId');
   }
 
   Future<void> _addPremiumDays(String userId, int days) async {
-    // Логика добавления премиум дней
+    // Р›РѕРіРёРєР° РґРѕР±Р°РІР»РµРЅРёСЏ РїСЂРµРјРёСѓРј РґРЅРµР№
     debugPrint('INFO: [AutomatedPromotionsService] Adding $days premium days to user $userId');
   }
 
   Future<void> _giveBonus(String userId, Map<String, dynamic> bonusData) async {
-    // Логика выдачи бонуса
+    // Р›РѕРіРёРєР° РІС‹РґР°С‡Рё Р±РѕРЅСѓСЃР°
     debugPrint('INFO: [AutomatedPromotionsService] Giving bonus to user $userId');
   }
 
   Future<void> _unlockFeature(String userId, String feature) async {
-    // Логика разблокировки функции
+    // Р›РѕРіРёРєР° СЂР°Р·Р±Р»РѕРєРёСЂРѕРІРєРё С„СѓРЅРєС†РёРё
     debugPrint('INFO: [AutomatedPromotionsService] Unlocking feature $feature for user $userId');
   }
 
   Future<void> _sendPromotionEmail(
       String userId, AutomatedPromotion promotion, Map<String, dynamic> emailData) async {
-    // Логика отправки email
+    // Р›РѕРіРёРєР° РѕС‚РїСЂР°РІРєРё email
     debugPrint('INFO: [AutomatedPromotionsService] Sending promotion email to user $userId');
   }
 
-  /// Вспомогательные методы для проверки дат и событий
+  /// Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹ РґР»СЏ РїСЂРѕРІРµСЂРєРё РґР°С‚ Рё СЃРѕР±С‹С‚РёР№
   bool _isHoliday(DateTime date) {
-    // Упрощенная логика проверки праздников
-    // В реальном приложении нужна более сложная система
+    // РЈРїСЂРѕС‰РµРЅРЅР°СЏ Р»РѕРіРёРєР° РїСЂРѕРІРµСЂРєРё РїСЂР°Р·РґРЅРёРєРѕРІ
+    // Р’ СЂРµР°Р»СЊРЅРѕРј РїСЂРёР»РѕР¶РµРЅРёРё РЅСѓР¶РЅР° Р±РѕР»РµРµ СЃР»РѕР¶РЅР°СЏ СЃРёСЃС‚РµРјР°
     return false;
   }
 
   bool _isSeasonalPeriod(DateTime date) {
-    // Проверка сезонных периодов (например, лето, зима)
+    // РџСЂРѕРІРµСЂРєР° СЃРµР·РѕРЅРЅС‹С… РїРµСЂРёРѕРґРѕРІ (РЅР°РїСЂРёРјРµСЂ, Р»РµС‚Рѕ, Р·РёРјР°)
     final month = date.month;
-    return month >= 6 && month <= 8; // Лето
+    return month >= 6 && month <= 8; // Р›РµС‚Рѕ
   }
 
   bool _matchesMilestone(Map<String, dynamic> eventData) {
-    // Проверка соответствия достижению
+    // РџСЂРѕРІРµСЂРєР° СЃРѕРѕС‚РІРµС‚СЃС‚РІРёСЏ РґРѕСЃС‚РёР¶РµРЅРёСЋ
     return eventData['milestone_type'] == 'referral_count' && eventData['count'] >= 10;
   }
 
@@ -503,3 +507,4 @@ class AutomatedPromotionsService {
     });
   }
 }
+

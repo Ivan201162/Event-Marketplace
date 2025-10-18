@@ -1,13 +1,22 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/booking.dart';
+import 'package:flutter/foundation.dart';
 import '../services/booking_service.dart';
+import 'package:flutter/foundation.dart';
 import '../widgets/auth_gate.dart';
+import 'package:flutter/foundation.dart';
 import '../widgets/back_button_handler.dart';
+import 'package:flutter/foundation.dart';
 import '../widgets/booking_card.dart';
+import 'package:flutter/foundation.dart';
 
 class MyBookingsScreen extends ConsumerStatefulWidget {
   const MyBookingsScreen({super.key});
@@ -21,16 +30,16 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
 
   List<Booking> _bookings = [];
   bool _isLoading = true;
-  String _selectedFilter = 'Все';
+  String _selectedFilter = 'Р’СЃРµ';
 
   late TabController _tabController;
 
   final List<String> _filters = [
-    'Все',
-    'Ожидают подтверждения',
-    'Подтверждены',
-    'Выполнены',
-    'Отменены',
+    'Р’СЃРµ',
+    'РћР¶РёРґР°СЋС‚ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёСЏ',
+    'РџРѕРґС‚РІРµСЂР¶РґРµРЅС‹',
+    'Р’С‹РїРѕР»РЅРµРЅС‹',
+    'РћС‚РјРµРЅРµРЅС‹',
   ];
 
   @override
@@ -52,7 +61,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
     });
 
     try {
-      // Получаем текущего пользователя
+      // РџРѕР»СѓС‡Р°РµРј С‚РµРєСѓС‰РµРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
       final currentUserAsync = ref.read(currentUserProvider);
       final currentUser = currentUserAsync.value;
 
@@ -63,7 +72,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
         return;
       }
 
-      // Загружаем заявки из Firestore
+      // Р—Р°РіСЂСѓР¶Р°РµРј Р·Р°СЏРІРєРё РёР· Firestore
       final querySnapshot = await FirebaseFirestore.instance
           .collection('bookings')
           .where('customerId', isEqualTo: currentUser.uid)
@@ -75,10 +84,10 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
         return Booking.fromMap({...data, 'id': doc.id});
       }).toList();
 
-      // Если заявок нет, создаем тестовые данные
+      // Р•СЃР»Рё Р·Р°СЏРІРѕРє РЅРµС‚, СЃРѕР·РґР°РµРј С‚РµСЃС‚РѕРІС‹Рµ РґР°РЅРЅС‹Рµ
       if (bookings.isEmpty) {
         await _createTestBookings(currentUser.uid);
-        // Перезагружаем после создания тестовых данных
+        // РџРµСЂРµР·Р°РіСЂСѓР¶Р°РµРј РїРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ С‚РµСЃС‚РѕРІС‹С… РґР°РЅРЅС‹С…
         final newQuerySnapshot = await FirebaseFirestore.instance
             .collection('bookings')
             .where('customerId', isEqualTo: currentUser.uid)
@@ -107,7 +116,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Ошибка загрузки заявок: $e'),
+            content: Text('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё Р·Р°СЏРІРѕРє: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -117,17 +126,17 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
 
   Future<void> _createTestBookings(String uid) async {
     try {
-      // Создаем тестовые заявки
+      // РЎРѕР·РґР°РµРј С‚РµСЃС‚РѕРІС‹Рµ Р·Р°СЏРІРєРё
       await FirebaseFirestore.instance.collection('bookings').add({
         'customerId': uid,
         'specialistId': 'spec_test_1',
         'eventDate': Timestamp.fromDate(DateTime.now().add(const Duration(days: 7))),
         'status': 'pending',
-        'details': 'Тестовая заявка на фотосессию',
+        'details': 'РўРµСЃС‚РѕРІР°СЏ Р·Р°СЏРІРєР° РЅР° С„РѕС‚РѕСЃРµСЃСЃРёСЋ',
         'totalPrice': 15000.0,
         'createdAt': Timestamp.now(),
-        'eventTitle': 'Фотосессия на природе',
-        'customerName': 'Тестовый клиент',
+        'eventTitle': 'Р¤РѕС‚РѕСЃРµСЃСЃРёСЏ РЅР° РїСЂРёСЂРѕРґРµ',
+        'customerName': 'РўРµСЃС‚РѕРІС‹Р№ РєР»РёРµРЅС‚',
         'customerPhone': '+7 (999) 123-45-67',
       });
 
@@ -136,11 +145,11 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
         'specialistId': 'spec_test_2',
         'eventDate': Timestamp.fromDate(DateTime.now().add(const Duration(days: 14))),
         'status': 'confirmed',
-        'details': 'Тестовая заявка на видеосъемку',
+        'details': 'РўРµСЃС‚РѕРІР°СЏ Р·Р°СЏРІРєР° РЅР° РІРёРґРµРѕСЃСЉРµРјРєСѓ',
         'totalPrice': 25000.0,
         'createdAt': Timestamp.now(),
-        'eventTitle': 'Видеосъемка свадьбы',
-        'customerName': 'Тестовый клиент',
+        'eventTitle': 'Р’РёРґРµРѕСЃСЉРµРјРєР° СЃРІР°РґСЊР±С‹',
+        'customerName': 'РўРµСЃС‚РѕРІС‹Р№ РєР»РёРµРЅС‚',
         'customerPhone': '+7 (999) 123-45-67',
       });
 
@@ -151,37 +160,37 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
           DateTime.now().subtract(const Duration(days: 7)),
         ),
         'status': 'completed',
-        'details': 'Завершенная тестовая заявка',
+        'details': 'Р—Р°РІРµСЂС€РµРЅРЅР°СЏ С‚РµСЃС‚РѕРІР°СЏ Р·Р°СЏРІРєР°',
         'totalPrice': 10000.0,
         'createdAt': Timestamp.fromDate(
           DateTime.now().subtract(const Duration(days: 10)),
         ),
-        'eventTitle': 'Фотосессия в студии',
-        'customerName': 'Тестовый клиент',
+        'eventTitle': 'Р¤РѕС‚РѕСЃРµСЃСЃРёСЏ РІ СЃС‚СѓРґРёРё',
+        'customerName': 'РўРµСЃС‚РѕРІС‹Р№ РєР»РёРµРЅС‚',
         'customerPhone': '+7 (999) 123-45-67',
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка создания тестовых заявок: $e');
+      debugPrint('РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ С‚РµСЃС‚РѕРІС‹С… Р·Р°СЏРІРѕРє: $e');
     }
   }
 
   List<Booking> get _filteredBookings {
-    if (_selectedFilter == 'Все') {
+    if (_selectedFilter == 'Р’СЃРµ') {
       return _bookings;
     }
 
     BookingStatus? status;
     switch (_selectedFilter) {
-      case 'Ожидают подтверждения':
+      case 'РћР¶РёРґР°СЋС‚ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёСЏ':
         status = BookingStatus.pending;
         break;
-      case 'Подтверждены':
+      case 'РџРѕРґС‚РІРµСЂР¶РґРµРЅС‹':
         status = BookingStatus.confirmed;
         break;
-      case 'Выполнены':
+      case 'Р’С‹РїРѕР»РЅРµРЅС‹':
         status = BookingStatus.completed;
         break;
-      case 'Отменены':
+      case 'РћС‚РјРµРЅРµРЅС‹':
         status = BookingStatus.cancelled;
         break;
     }
@@ -193,16 +202,16 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
     final result = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Отменить заявку'),
-        content: const Text('Вы уверены, что хотите отменить эту заявку?'),
+        title: const Text('РћС‚РјРµРЅРёС‚СЊ Р·Р°СЏРІРєСѓ'),
+        content: const Text('Р’С‹ СѓРІРµСЂРµРЅС‹, С‡С‚Рѕ С…РѕС‚РёС‚Рµ РѕС‚РјРµРЅРёС‚СЊ СЌС‚Сѓ Р·Р°СЏРІРєСѓ?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Нет'),
+            child: const Text('РќРµС‚'),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Да, отменить'),
+            child: const Text('Р”Р°, РѕС‚РјРµРЅРёС‚СЊ'),
           ),
         ],
       ),
@@ -215,7 +224,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Заявка отменена'),
+              content: Text('Р—Р°СЏРІРєР° РѕС‚РјРµРЅРµРЅР°'),
               backgroundColor: Colors.green,
             ),
           );
@@ -224,7 +233,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Ошибка отмены заявки: $e'),
+              content: Text('РћС€РёР±РєР° РѕС‚РјРµРЅС‹ Р·Р°СЏРІРєРё: $e'),
               backgroundColor: Colors.red,
             ),
           );
@@ -246,11 +255,11 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Заголовок
+              // Р—Р°РіРѕР»РѕРІРѕРє
               Row(
                 children: [
                   const Text(
-                    'Детали заявки',
+                    'Р”РµС‚Р°Р»Рё Р·Р°СЏРІРєРё',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -265,7 +274,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
               ),
               const SizedBox(height: 16),
 
-              // Содержимое
+              // РЎРѕРґРµСЂР¶РёРјРѕРµ
               Expanded(
                 child: SingleChildScrollView(
                   controller: scrollController,
@@ -273,36 +282,36 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildDetailRow(
-                        'Название',
-                        booking.eventTitle ?? 'Не указано',
+                        'РќР°Р·РІР°РЅРёРµ',
+                        booking.eventTitle ?? 'РќРµ СѓРєР°Р·Р°РЅРѕ',
                       ),
-                      _buildDetailRow('Дата', _formatDate(booking.eventDate)),
-                      _buildDetailRow('Время', _formatTime(booking.eventDate)),
-                      _buildDetailRow('Адрес', booking.address ?? 'Не указан'),
+                      _buildDetailRow('Р”Р°С‚Р°', _formatDate(booking.eventDate)),
+                      _buildDetailRow('Р’СЂРµРјСЏ', _formatTime(booking.eventDate)),
+                      _buildDetailRow('РђРґСЂРµСЃ', booking.address ?? 'РќРµ СѓРєР°Р·Р°РЅ'),
                       _buildDetailRow(
-                        'Участники',
-                        '${booking.participantsCount} чел.',
+                        'РЈС‡Р°СЃС‚РЅРёРєРё',
+                        '${booking.participantsCount} С‡РµР».',
                       ),
                       _buildDetailRow(
-                        'Стоимость',
-                        '${booking.totalPrice.toInt() ?? 0}₽',
+                        'РЎС‚РѕРёРјРѕСЃС‚СЊ',
+                        '${booking.totalPrice.toInt() ?? 0}в‚Ѕ',
                       ),
-                      _buildDetailRow('Статус', _getStatusText(booking.status)),
+                      _buildDetailRow('РЎС‚Р°С‚СѓСЃ', _getStatusText(booking.status)),
                       if (booking.description != null && booking.description!.isNotEmpty)
-                        _buildDetailRow('Описание', booking.description!),
+                        _buildDetailRow('РћРїРёСЃР°РЅРёРµ', booking.description!),
                       if (booking.comment != null && booking.comment!.isNotEmpty)
-                        _buildDetailRow('Комментарий', booking.comment!),
+                        _buildDetailRow('РљРѕРјРјРµРЅС‚Р°СЂРёР№', booking.comment!),
                       if (booking.advancePaid == true)
                         _buildDetailRow(
-                          'Аванс',
-                          '${booking.advanceAmount?.toInt() ?? 0}₽',
+                          'РђРІР°РЅСЃ',
+                          '${booking.advanceAmount?.toInt() ?? 0}в‚Ѕ',
                         ),
                     ],
                   ),
                 ),
               ),
 
-              // Кнопки действий
+              // РљРЅРѕРїРєРё РґРµР№СЃС‚РІРёР№
               if (booking.status == BookingStatus.pending ||
                   booking.status == BookingStatus.confirmed)
                 Row(
@@ -310,7 +319,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
                     Expanded(
                       child: OutlinedButton(
                         onPressed: () => _cancelBooking(booking),
-                        child: const Text('Отменить'),
+                        child: const Text('РћС‚РјРµРЅРёС‚СЊ'),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -318,16 +327,16 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.of(context).pop();
-                          // TODO(developer): Реализовать чат с специалистом
+                          // TODO(developer): Р РµР°Р»РёР·РѕРІР°С‚СЊ С‡Р°С‚ СЃ СЃРїРµС†РёР°Р»РёСЃС‚РѕРј
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text(
-                                'Чат будет доступен после реализации',
+                                'Р§Р°С‚ Р±СѓРґРµС‚ РґРѕСЃС‚СѓРїРµРЅ РїРѕСЃР»Рµ СЂРµР°Р»РёР·Р°С†РёРё',
                               ),
                             ),
                           );
                         },
-                        child: const Text('Написать'),
+                        child: const Text('РќР°РїРёСЃР°С‚СЊ'),
                       ),
                     ),
                   ],
@@ -357,27 +366,27 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
       );
 
   String _formatDate(DateTime? date) {
-    if (date == null) return 'Не указана';
+    if (date == null) return 'РќРµ СѓРєР°Р·Р°РЅР°';
     return '${date.day}.${date.month}.${date.year}';
   }
 
   String _formatTime(DateTime? date) {
-    if (date == null) return 'Не указано';
+    if (date == null) return 'РќРµ СѓРєР°Р·Р°РЅРѕ';
     return '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
   }
 
   String _getStatusText(BookingStatus status) {
     switch (status) {
       case BookingStatus.pending:
-        return 'Ожидает подтверждения';
+        return 'РћР¶РёРґР°РµС‚ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёСЏ';
       case BookingStatus.confirmed:
-        return 'Подтверждена';
+        return 'РџРѕРґС‚РІРµСЂР¶РґРµРЅР°';
       case BookingStatus.completed:
-        return 'Выполнена';
+        return 'Р’С‹РїРѕР»РЅРµРЅР°';
       case BookingStatus.cancelled:
-        return 'Отменена';
+        return 'РћС‚РјРµРЅРµРЅР°';
       case BookingStatus.rejected:
-        return 'Отклонена';
+        return 'РћС‚РєР»РѕРЅРµРЅР°';
     }
   }
 
@@ -385,7 +394,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
   Widget build(BuildContext context) => BackButtonHandler(
         child: Scaffold(
           appBar: AppBar(
-            title: const Text('Мои заявки'),
+            title: const Text('РњРѕРё Р·Р°СЏРІРєРё'),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () => context.pop(),
@@ -393,14 +402,14 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
             bottom: TabBar(
               controller: _tabController,
               tabs: const [
-                Tab(text: 'Активные'),
-                Tab(text: 'Завершенные'),
+                Tab(text: 'РђРєС‚РёРІРЅС‹Рµ'),
+                Tab(text: 'Р—Р°РІРµСЂС€РµРЅРЅС‹Рµ'),
               ],
             ),
           ),
           body: Column(
             children: [
-              // Фильтры
+              // Р¤РёР»СЊС‚СЂС‹
               Container(
                 padding: const EdgeInsets.all(16),
                 child: SingleChildScrollView(
@@ -426,7 +435,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
                 ),
               ),
 
-              // Список заявок
+              // РЎРїРёСЃРѕРє Р·Р°СЏРІРѕРє
               Expanded(
                 child: TabBarView(
                   controller: _tabController,
@@ -477,18 +486,18 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
             const Icon(Icons.event_busy, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
             const Text(
-              'Заявки не найдены',
+              'Р—Р°СЏРІРєРё РЅРµ РЅР°Р№РґРµРЅС‹',
               style: TextStyle(fontSize: 18, color: Colors.grey),
             ),
             const SizedBox(height: 8),
             const Text(
-              'Создайте новую заявку, найдя специалиста',
+              'РЎРѕР·РґР°Р№С‚Рµ РЅРѕРІСѓСЋ Р·Р°СЏРІРєСѓ, РЅР°Р№РґСЏ СЃРїРµС†РёР°Р»РёСЃС‚Р°',
               style: TextStyle(color: Colors.grey),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () => context.go('/search'),
-              child: const Text('Найти специалиста'),
+              child: const Text('РќР°Р№С‚Рё СЃРїРµС†РёР°Р»РёСЃС‚Р°'),
             ),
           ],
         ),
@@ -518,3 +527,4 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
     );
   }
 }
+

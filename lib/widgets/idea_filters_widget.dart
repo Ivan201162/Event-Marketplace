@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../models/idea.dart';
+import '../models/event_idea_category.dart';
+
+// Алиас для совместимости
+typedef IdeaCategory = EventIdeaCategory;
 
 class IdeaFiltersWidget extends StatefulWidget {
   const IdeaFiltersWidget({

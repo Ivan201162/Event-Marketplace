@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../data/feed_model.dart';
-import '../providers/feed_providers.dart';
+// import '../providers/feed_providers.dart'; // Удален
 import 'create_post_screen.dart';
 import 'feed_filters_bar.dart';
 import 'feed_post_card.dart';
@@ -35,8 +35,10 @@ class _FeedScreenState extends ConsumerState<FeedScreen> with TickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    final feedPosts = ref.watch(feedPostsProvider);
-    final feedError = ref.watch(feedErrorProvider);
+    // final feedPosts = ref.watch(feedPostsProvider);
+    // final feedError = ref.watch(feedErrorProvider);
+    final feedPosts = AsyncValue.data(<FeedPost>[]); // Заглушка
+    final feedError = null; // Заглушка
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -107,7 +109,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> with TickerProviderStat
           return RefreshIndicator(
             onRefresh: () async {
               // Обновляем данные
-              ref.invalidate(feedPostsProvider);
+              // ref.invalidate(feedPostsProvider);
             },
             child: ListView.builder(
               controller: _scrollController,
@@ -154,7 +156,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> with TickerProviderStat
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  ref.invalidate(feedPostsProvider);
+                  // ref.invalidate(feedPostsProvider);
                 },
                 child: const Text('Повторить'),
               ),
@@ -240,7 +242,8 @@ class _FeedScreenState extends ConsumerState<FeedScreen> with TickerProviderStat
   }
 
   void _handleLike(String postId) {
-    ref.read(likePostProvider(postId).future);
+    // ref.read(likePostProvider(postId).future);
+    // Заглушка - лайк поста
   }
 
   void _handleComment(FeedPost post) {

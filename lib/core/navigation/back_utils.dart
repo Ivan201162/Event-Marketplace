@@ -109,7 +109,7 @@ class CustomBackHandler extends StatelessWidget {
   @override
   Widget build(BuildContext context) => PopScope(
         canPop: false,
-        onPopInvoked: (didPop) async {
+        onPopInvokedWithResult: (didPop, result) async {
           if (!didPop) {
             if (onWillPop != null) {
               final shouldPop = await onWillPop!();

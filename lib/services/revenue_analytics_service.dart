@@ -1,14 +1,18 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/revenue_analytics.dart';
+import 'package:flutter/foundation.dart';
 
 class RevenueAnalyticsService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Uuid _uuid = const Uuid();
 
-  /// Запись статистики дохода
+  /// Р—Р°РїРёСЃСЊ СЃС‚Р°С‚РёСЃС‚РёРєРё РґРѕС…РѕРґР°
   Future<void> recordRevenue({
     required RevenueSource sourceType,
     required double amount,
@@ -35,7 +39,7 @@ class RevenueAnalyticsService {
 
       await _firestore.collection('revenue_stats').doc(stats.id).set(stats.toMap());
 
-      // Обновляем агрегированную статистику
+      // РћР±РЅРѕРІР»СЏРµРј Р°РіСЂРµРіРёСЂРѕРІР°РЅРЅСѓСЋ СЃС‚Р°С‚РёСЃС‚РёРєСѓ
       await _updateAggregatedStats(stats);
 
       debugPrint(
@@ -45,12 +49,12 @@ class RevenueAnalyticsService {
     }
   }
 
-  /// Обновление агрегированной статистики
+  /// РћР±РЅРѕРІР»РµРЅРёРµ Р°РіСЂРµРіРёСЂРѕРІР°РЅРЅРѕР№ СЃС‚Р°С‚РёСЃС‚РёРєРё
   Future<void> _updateAggregatedStats(RevenueStats stats) async {
     try {
       final String dateKey = _getDateKey(stats.date);
 
-      // Обновляем дневную статистику
+      // РћР±РЅРѕРІР»СЏРµРј РґРЅРµРІРЅСѓСЋ СЃС‚Р°С‚РёСЃС‚РёРєСѓ
       await _firestore.collection('revenue_aggregates').doc('daily_$dateKey').set({
         'date': dateKey,
         'totalRevenue': FieldValue.increment(stats.amount),
@@ -58,7 +62,7 @@ class RevenueAnalyticsService {
         'lastUpdated': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
 
-      // Обновляем статистику по источникам
+      // РћР±РЅРѕРІР»СЏРµРј СЃС‚Р°С‚РёСЃС‚РёРєСѓ РїРѕ РёСЃС‚РѕС‡РЅРёРєР°Рј
       await _firestore
           .collection('revenue_aggregates')
           .doc('source_${stats.sourceType.toString().split('.').last}')
@@ -69,7 +73,7 @@ class RevenueAnalyticsService {
         'lastUpdated': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
 
-      // Обновляем статистику по регионам
+      // РћР±РЅРѕРІР»СЏРµРј СЃС‚Р°С‚РёСЃС‚РёРєСѓ РїРѕ СЂРµРіРёРѕРЅР°Рј
       await _firestore.collection('revenue_aggregates').doc('region_${stats.region}').set({
         'region': stats.region,
         'totalRevenue': FieldValue.increment(stats.amount),
@@ -81,7 +85,7 @@ class RevenueAnalyticsService {
     }
   }
 
-  /// Получение дашборда доходов
+  /// РџРѕР»СѓС‡РµРЅРёРµ РґР°С€Р±РѕСЂРґР° РґРѕС…РѕРґРѕРІ
   Future<RevenueDashboard> getRevenueDashboard({
     required RevenuePeriod period,
     DateTime? startDate,
@@ -92,14 +96,14 @@ class RevenueAnalyticsService {
       final DateTime periodStart = startDate ?? _getPeriodStart(now, period);
       final DateTime periodEnd = endDate ?? now;
 
-      // Получаем статистику доходов за период
+      // РџРѕР»СѓС‡Р°РµРј СЃС‚Р°С‚РёСЃС‚РёРєСѓ РґРѕС…РѕРґРѕРІ Р·Р° РїРµСЂРёРѕРґ
       final QuerySnapshot revenueSnapshot = await _firestore
           .collection('revenue_stats')
           .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(periodStart))
           .where('date', isLessThanOrEqualTo: Timestamp.fromDate(periodEnd))
           .get();
 
-      // Получаем статистику за предыдущий период для расчета роста
+      // РџРѕР»СѓС‡Р°РµРј СЃС‚Р°С‚РёСЃС‚РёРєСѓ Р·Р° РїСЂРµРґС‹РґСѓС‰РёР№ РїРµСЂРёРѕРґ РґР»СЏ СЂР°СЃС‡РµС‚Р° СЂРѕСЃС‚Р°
       final DateTime prevPeriodStart =
           _getPeriodStart(periodStart.subtract(const Duration(days: 1)), period);
       final DateTime prevPeriodEnd = periodStart.subtract(const Duration(days: 1));
@@ -110,7 +114,7 @@ class RevenueAnalyticsService {
           .where('date', isLessThanOrEqualTo: Timestamp.fromDate(prevPeriodEnd))
           .get();
 
-      // Рассчитываем метрики
+      // Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј РјРµС‚СЂРёРєРё
       final Map<String, double> revenueBySource = {};
       final Map<String, double> revenueByRegion = {};
       double totalRevenue = 0.0;
@@ -122,15 +126,15 @@ class RevenueAnalyticsService {
         totalRevenue += stats.amount;
         totalTransactions++;
 
-        // По источникам
+        // РџРѕ РёСЃС‚РѕС‡РЅРёРєР°Рј
         final String sourceKey = stats.sourceType.toString().split('.').last;
         revenueBySource[sourceKey] = (revenueBySource[sourceKey] ?? 0.0) + stats.amount;
 
-        // По регионам
+        // РџРѕ СЂРµРіРёРѕРЅР°Рј
         revenueByRegion[stats.region] = (revenueByRegion[stats.region] ?? 0.0) + stats.amount;
       }
 
-      // Рассчитываем рост
+      // Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј СЂРѕСЃС‚
       double prevTotalRevenue = 0.0;
       for (final doc in prevRevenueSnapshot.docs) {
         final RevenueStats stats = RevenueStats.fromMap(doc.data() as Map<String, dynamic>);
@@ -140,24 +144,24 @@ class RevenueAnalyticsService {
       final double growthRate =
           prevTotalRevenue > 0 ? ((totalRevenue - prevTotalRevenue) / prevTotalRevenue) * 100 : 0.0;
 
-      // Рассчитываем средний чек
+      // Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј СЃСЂРµРґРЅРёР№ С‡РµРє
       final double averageOrderValue =
           totalTransactions > 0 ? totalRevenue / totalTransactions : 0.0;
 
-      // Получаем дневную статистику
+      // РџРѕР»СѓС‡Р°РµРј РґРЅРµРІРЅСѓСЋ СЃС‚Р°С‚РёСЃС‚РёРєСѓ
       final List<Map<String, dynamic>> dailyRevenue =
           await _getDailyRevenue(periodStart, periodEnd);
 
-      // Получаем месячную статистику
+      // РџРѕР»СѓС‡Р°РµРј РјРµСЃСЏС‡РЅСѓСЋ СЃС‚Р°С‚РёСЃС‚РёРєСѓ
       final List<Map<String, dynamic>> monthlyRevenue =
           await _getMonthlyRevenue(periodStart, periodEnd);
 
-      // Рассчитываем LTV и CAC
+      // Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј LTV Рё CAC
       final double ltv = await _calculateLTV();
       final double cac = await _calculateCAC();
       final double roi = cac > 0 ? (ltv / cac) * 100 : 0.0;
 
-      // Рассчитываем конверсию
+      // Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј РєРѕРЅРІРµСЂСЃРёСЋ
       final double conversionRate = await _calculateConversionRate(periodStart, periodEnd);
 
       final RevenueDashboard dashboard = RevenueDashboard(
@@ -181,7 +185,7 @@ class RevenueAnalyticsService {
         },
       );
 
-      // Сохраняем дашборд
+      // РЎРѕС…СЂР°РЅСЏРµРј РґР°С€Р±РѕСЂРґ
       await _firestore
           .collection('revenue_dashboards')
           .doc('${period.toString().split('.').last}_${_getDateKey(now)}')
@@ -195,7 +199,7 @@ class RevenueAnalyticsService {
     }
   }
 
-  /// Получение дневной статистики доходов
+  /// РџРѕР»СѓС‡РµРЅРёРµ РґРЅРµРІРЅРѕР№ СЃС‚Р°С‚РёСЃС‚РёРєРё РґРѕС…РѕРґРѕРІ
   Future<List<Map<String, dynamic>>> _getDailyRevenue(DateTime startDate, DateTime endDate) async {
     try {
       final List<Map<String, dynamic>> dailyRevenue = [];
@@ -232,7 +236,7 @@ class RevenueAnalyticsService {
     }
   }
 
-  /// Получение месячной статистики доходов
+  /// РџРѕР»СѓС‡РµРЅРёРµ РјРµСЃСЏС‡РЅРѕР№ СЃС‚Р°С‚РёСЃС‚РёРєРё РґРѕС…РѕРґРѕРІ
   Future<List<Map<String, dynamic>>> _getMonthlyRevenue(
       DateTime startDate, DateTime endDate) async {
     try {
@@ -271,10 +275,10 @@ class RevenueAnalyticsService {
     }
   }
 
-  /// Расчет LTV (Lifetime Value)
+  /// Р Р°СЃС‡РµС‚ LTV (Lifetime Value)
   Future<double> _calculateLTV() async {
     try {
-      // Получаем всех пользователей с покупками
+      // РџРѕР»СѓС‡Р°РµРј РІСЃРµС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ СЃ РїРѕРєСѓРїРєР°РјРё
       final QuerySnapshot usersSnapshot = await _firestore.collection('user_lifetime_values').get();
 
       if (usersSnapshot.docs.isEmpty) return 0.0;
@@ -292,10 +296,10 @@ class RevenueAnalyticsService {
     }
   }
 
-  /// Расчет CAC (Customer Acquisition Cost)
+  /// Р Р°СЃС‡РµС‚ CAC (Customer Acquisition Cost)
   Future<double> _calculateCAC() async {
     try {
-      // Получаем статистику по рефералам и партнерским программам
+      // РџРѕР»СѓС‡Р°РµРј СЃС‚Р°С‚РёСЃС‚РёРєСѓ РїРѕ СЂРµС„РµСЂР°Р»Р°Рј Рё РїР°СЂС‚РЅРµСЂСЃРєРёРј РїСЂРѕРіСЂР°РјРјР°Рј
       final QuerySnapshot referralsSnapshot = await _firestore.collection('referral_rewards').get();
 
       final QuerySnapshot partnershipsSnapshot =
@@ -304,14 +308,14 @@ class RevenueAnalyticsService {
       double totalAcquisitionCost = 0.0;
       int totalAcquisitions = 0;
 
-      // Стоимость рефералов
+      // РЎС‚РѕРёРјРѕСЃС‚СЊ СЂРµС„РµСЂР°Р»РѕРІ
       for (final doc in referralsSnapshot.docs) {
         final Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         totalAcquisitionCost += (data['value'] ?? 0.0).toDouble();
         totalAcquisitions++;
       }
 
-      // Стоимость партнерских программ
+      // РЎС‚РѕРёРјРѕСЃС‚СЊ РїР°СЂС‚РЅРµСЂСЃРєРёС… РїСЂРѕРіСЂР°РјРј
       for (final doc in partnershipsSnapshot.docs) {
         final Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         totalAcquisitionCost += (data['commission_amount'] ?? 0.0).toDouble();
@@ -325,17 +329,17 @@ class RevenueAnalyticsService {
     }
   }
 
-  /// Расчет конверсии
+  /// Р Р°СЃС‡РµС‚ РєРѕРЅРІРµСЂСЃРёРё
   Future<double> _calculateConversionRate(DateTime startDate, DateTime endDate) async {
     try {
-      // Получаем количество пользователей за период
+      // РџРѕР»СѓС‡Р°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ Р·Р° РїРµСЂРёРѕРґ
       final QuerySnapshot usersSnapshot = await _firestore
           .collection('users')
           .where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
           .where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
           .get();
 
-      // Получаем количество пользователей с покупками
+      // РџРѕР»СѓС‡Р°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ СЃ РїРѕРєСѓРїРєР°РјРё
       final QuerySnapshot purchasesSnapshot = await _firestore
           .collection('revenue_stats')
           .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
@@ -360,10 +364,10 @@ class RevenueAnalyticsService {
     }
   }
 
-  /// Обновление LTV пользователя
+  /// РћР±РЅРѕРІР»РµРЅРёРµ LTV РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<void> updateUserLTV(String userId) async {
     try {
-      // Получаем все транзакции пользователя
+      // РџРѕР»СѓС‡Р°РµРј РІСЃРµ С‚СЂР°РЅР·Р°РєС†РёРё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
       final QuerySnapshot transactionsSnapshot = await _firestore
           .collection('revenue_stats')
           .where('userId', isEqualTo: userId)
@@ -382,15 +386,15 @@ class RevenueAnalyticsService {
       final DateTime lastPurchaseDate = transactions.last.date;
       final double averageOrderValue = totalSpent / totalTransactions;
 
-      // Рассчитываем частоту покупок (покупок в месяц)
+      // Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј С‡Р°СЃС‚РѕС‚Сѓ РїРѕРєСѓРїРѕРє (РїРѕРєСѓРїРѕРє РІ РјРµСЃСЏС†)
       final int daysSinceFirst = DateTime.now().difference(firstPurchaseDate).inDays;
       final double purchaseFrequency =
           daysSinceFirst > 0 ? (totalTransactions / daysSinceFirst) * 30 : 0.0;
 
-      // Рассчитываем retention rate (упрощенно)
+      // Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј retention rate (СѓРїСЂРѕС‰РµРЅРЅРѕ)
       final double retentionRate = _calculateRetentionRate(userId);
 
-      // Предсказываем LTV
+      // РџСЂРµРґСЃРєР°Р·С‹РІР°РµРј LTV
       final double predictedLtv = _predictLTV(
         totalSpent: totalSpent,
         purchaseFrequency: purchaseFrequency,
@@ -420,26 +424,26 @@ class RevenueAnalyticsService {
     }
   }
 
-  /// Расчет retention rate
+  /// Р Р°СЃС‡РµС‚ retention rate
   double _calculateRetentionRate(String userId) {
-    // Упрощенный расчет - в реальном приложении нужна более сложная логика
-    return 0.7; // 70% по умолчанию
+    // РЈРїСЂРѕС‰РµРЅРЅС‹Р№ СЂР°СЃС‡РµС‚ - РІ СЂРµР°Р»СЊРЅРѕРј РїСЂРёР»РѕР¶РµРЅРёРё РЅСѓР¶РЅР° Р±РѕР»РµРµ СЃР»РѕР¶РЅР°СЏ Р»РѕРіРёРєР°
+    return 0.7; // 70% РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
   }
 
-  /// Предсказание LTV
+  /// РџСЂРµРґСЃРєР°Р·Р°РЅРёРµ LTV
   double _predictLTV({
     required double totalSpent,
     required double purchaseFrequency,
     required double retentionRate,
     required int daysSinceFirst,
   }) {
-    // Упрощенная модель предсказания LTV
+    // РЈРїСЂРѕС‰РµРЅРЅР°СЏ РјРѕРґРµР»СЊ РїСЂРµРґСЃРєР°Р·Р°РЅРёСЏ LTV
     final double monthlyValue = (totalSpent / daysSinceFirst) * 30;
-    final double predictedMonths = 12 * retentionRate; // Предсказываем на год с учетом retention
+    final double predictedMonths = 12 * retentionRate; // РџСЂРµРґСЃРєР°Р·С‹РІР°РµРј РЅР° РіРѕРґ СЃ СѓС‡РµС‚РѕРј retention
     return monthlyValue * predictedMonths;
   }
 
-  /// Определение сегмента пользователя
+  /// РћРїСЂРµРґРµР»РµРЅРёРµ СЃРµРіРјРµРЅС‚Р° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   String _determineUserSegment(double totalSpent, double purchaseFrequency) {
     if (totalSpent >= 10000 && purchaseFrequency >= 2) return 'vip';
     if (totalSpent >= 5000 && purchaseFrequency >= 1) return 'premium';
@@ -448,7 +452,7 @@ class RevenueAnalyticsService {
     return 'new';
   }
 
-  /// Получение начала периода
+  /// РџРѕР»СѓС‡РµРЅРёРµ РЅР°С‡Р°Р»Р° РїРµСЂРёРѕРґР°
   DateTime _getPeriodStart(DateTime date, RevenuePeriod period) {
     switch (period) {
       case RevenuePeriod.daily:
@@ -466,12 +470,12 @@ class RevenueAnalyticsService {
     }
   }
 
-  /// Получение ключа даты
+  /// РџРѕР»СѓС‡РµРЅРёРµ РєР»СЋС‡Р° РґР°С‚С‹
   String _getDateKey(DateTime date) {
     return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
 
-  /// Создание воронки конверсии
+  /// РЎРѕР·РґР°РЅРёРµ РІРѕСЂРѕРЅРєРё РєРѕРЅРІРµСЂСЃРёРё
   Future<String> createConversionFunnel({
     required String name,
     required List<String> steps,
@@ -499,7 +503,7 @@ class RevenueAnalyticsService {
     }
   }
 
-  /// Создание прогноза доходов
+  /// РЎРѕР·РґР°РЅРёРµ РїСЂРѕРіРЅРѕР·Р° РґРѕС…РѕРґРѕРІ
   Future<String> createRevenueForecast({
     required RevenuePeriod period,
     required DateTime forecastDate,
@@ -528,3 +532,4 @@ class RevenueAnalyticsService {
     }
   }
 }
+

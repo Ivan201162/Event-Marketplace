@@ -23,6 +23,16 @@ class ColorUtils {
 
   /// Преобразовать строку цвета в Color для категорий
   static Color getCategoryColor(String colorName) {
+    // Если это hex-цвет
+    if (colorName.startsWith('#')) {
+      try {
+        return Color(int.parse(colorName.substring(1), radix: 16) + 0xFF000000);
+      } catch (e) {
+        return Colors.grey;
+      }
+    }
+    
+    // Если это название цвета
     switch (colorName.toLowerCase()) {
       case 'pink':
         return Colors.pink;

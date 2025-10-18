@@ -1,15 +1,20 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/portfolio_item.dart';
+import 'package:flutter/foundation.dart';
 import '../models/profile_statistics.dart';
+import 'package:flutter/foundation.dart';
 import '../models/social_link.dart';
+import 'package:flutter/foundation.dart';
 
-/// Сервис для управления профилем специалиста
+/// РЎРµСЂРІРёСЃ РґР»СЏ СѓРїСЂР°РІР»РµРЅРёСЏ РїСЂРѕС„РёР»РµРј СЃРїРµС†РёР°Р»РёСЃС‚Р°
 class SpecialistProfileService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// Получить статистику профиля
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃС‚Р°С‚РёСЃС‚РёРєСѓ РїСЂРѕС„РёР»СЏ
   Future<ProfileStatistics> getProfileStatistics(String specialistId) async {
     try {
       final doc = await _firestore.collection('specialists').doc(specialistId).get();
@@ -37,12 +42,12 @@ class SpecialistProfileService {
         pinnedPosts: (data['pinnedPosts'] as int?) ?? 0,
       );
     } catch (e) {
-      debugPrint('Ошибка получения статистики профиля: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЃС‚Р°С‚РёСЃС‚РёРєРё РїСЂРѕС„РёР»СЏ: $e');
       return _getDefaultStatistics();
     }
   }
 
-  /// Получить портфолио специалиста
+  /// РџРѕР»СѓС‡РёС‚СЊ РїРѕСЂС‚С„РѕР»РёРѕ СЃРїРµС†РёР°Р»РёСЃС‚Р°
   Future<List<PortfolioItem>> getPortfolio(String specialistId) async {
     try {
       final query = await _firestore
@@ -60,12 +65,12 @@ class SpecialistProfileService {
         });
       }).toList();
     } catch (e) {
-      debugPrint('Ошибка получения портфолио: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РїРѕСЂС‚С„РѕР»РёРѕ: $e');
       return _getTestPortfolio();
     }
   }
 
-  /// Добавить элемент в портфолио
+  /// Р”РѕР±Р°РІРёС‚СЊ СЌР»РµРјРµРЅС‚ РІ РїРѕСЂС‚С„РѕР»РёРѕ
   Future<void> addPortfolioItem(String specialistId, PortfolioItem item) async {
     try {
       await _firestore
@@ -74,12 +79,12 @@ class SpecialistProfileService {
           .collection('portfolio')
           .add(item.toMap());
     } catch (e) {
-      debugPrint('Ошибка добавления элемента портфолио: $e');
+      debugPrint('РћС€РёР±РєР° РґРѕР±Р°РІР»РµРЅРёСЏ СЌР»РµРјРµРЅС‚Р° РїРѕСЂС‚С„РѕР»РёРѕ: $e');
       rethrow;
     }
   }
 
-  /// Обновить элемент портфолио
+  /// РћР±РЅРѕРІРёС‚СЊ СЌР»РµРјРµРЅС‚ РїРѕСЂС‚С„РѕР»РёРѕ
   Future<void> updatePortfolioItem(
     String specialistId,
     String itemId,
@@ -93,12 +98,12 @@ class SpecialistProfileService {
           .doc(itemId)
           .update(item.toMap());
     } catch (e) {
-      debugPrint('Ошибка обновления элемента портфолио: $e');
+      debugPrint('РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ СЌР»РµРјРµРЅС‚Р° РїРѕСЂС‚С„РѕР»РёРѕ: $e');
       rethrow;
     }
   }
 
-  /// Удалить элемент портфолио
+  /// РЈРґР°Р»РёС‚СЊ СЌР»РµРјРµРЅС‚ РїРѕСЂС‚С„РѕР»РёРѕ
   Future<void> deletePortfolioItem(String specialistId, String itemId) async {
     try {
       await _firestore
@@ -108,12 +113,12 @@ class SpecialistProfileService {
           .doc(itemId)
           .delete();
     } catch (e) {
-      debugPrint('Ошибка удаления элемента портфолио: $e');
+      debugPrint('РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ СЌР»РµРјРµРЅС‚Р° РїРѕСЂС‚С„РѕР»РёРѕ: $e');
       rethrow;
     }
   }
 
-  /// Получить социальные ссылки
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃРѕС†РёР°Р»СЊРЅС‹Рµ СЃСЃС‹Р»РєРё
   Future<List<SocialLink>> getSocialLinks(String specialistId) async {
     try {
       final query = await _firestore
@@ -130,12 +135,12 @@ class SpecialistProfileService {
         });
       }).toList();
     } catch (e) {
-      debugPrint('Ошибка получения социальных ссылок: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЃРѕС†РёР°Р»СЊРЅС‹С… СЃСЃС‹Р»РѕРє: $e');
       return _getTestSocialLinks();
     }
   }
 
-  /// Добавить социальную ссылку
+  /// Р”РѕР±Р°РІРёС‚СЊ СЃРѕС†РёР°Р»СЊРЅСѓСЋ СЃСЃС‹Р»РєСѓ
   Future<void> addSocialLink(String specialistId, SocialLink link) async {
     try {
       await _firestore
@@ -144,12 +149,12 @@ class SpecialistProfileService {
           .collection('socialLinks')
           .add(link.toMap());
     } catch (e) {
-      debugPrint('Ошибка добавления социальной ссылки: $e');
+      debugPrint('РћС€РёР±РєР° РґРѕР±Р°РІР»РµРЅРёСЏ СЃРѕС†РёР°Р»СЊРЅРѕР№ СЃСЃС‹Р»РєРё: $e');
       rethrow;
     }
   }
 
-  /// Обновить социальную ссылку
+  /// РћР±РЅРѕРІРёС‚СЊ СЃРѕС†РёР°Р»СЊРЅСѓСЋ СЃСЃС‹Р»РєСѓ
   Future<void> updateSocialLink(
     String specialistId,
     String linkId,
@@ -163,12 +168,12 @@ class SpecialistProfileService {
           .doc(linkId)
           .update(link.toMap());
     } catch (e) {
-      debugPrint('Ошибка обновления социальной ссылки: $e');
+      debugPrint('РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ СЃРѕС†РёР°Р»СЊРЅРѕР№ СЃСЃС‹Р»РєРё: $e');
       rethrow;
     }
   }
 
-  /// Удалить социальную ссылку
+  /// РЈРґР°Р»РёС‚СЊ СЃРѕС†РёР°Р»СЊРЅСѓСЋ СЃСЃС‹Р»РєСѓ
   Future<void> deleteSocialLink(String specialistId, String linkId) async {
     try {
       await _firestore
@@ -178,12 +183,12 @@ class SpecialistProfileService {
           .doc(linkId)
           .delete();
     } catch (e) {
-      debugPrint('Ошибка удаления социальной ссылки: $e');
+      debugPrint('РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ СЃРѕС†РёР°Р»СЊРЅРѕР№ СЃСЃС‹Р»РєРё: $e');
       rethrow;
     }
   }
 
-  /// Обновить онлайн статус
+  /// РћР±РЅРѕРІРёС‚СЊ РѕРЅР»Р°Р№РЅ СЃС‚Р°С‚СѓСЃ
   Future<void> updateOnlineStatus(String specialistId, bool isOnline) async {
     try {
       await _firestore.collection('specialists').doc(specialistId).update({
@@ -191,12 +196,12 @@ class SpecialistProfileService {
         'lastActive': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      debugPrint('Ошибка обновления онлайн статуса: $e');
+      debugPrint('РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ РѕРЅР»Р°Р№РЅ СЃС‚Р°С‚СѓСЃР°: $e');
       rethrow;
     }
   }
 
-  /// Получить закреплённые посты
+  /// РџРѕР»СѓС‡РёС‚СЊ Р·Р°РєСЂРµРїР»С‘РЅРЅС‹Рµ РїРѕСЃС‚С‹
   Future<List<Map<String, dynamic>>> getPinnedPosts(String specialistId) async {
     try {
       final query = await _firestore
@@ -215,12 +220,12 @@ class SpecialistProfileService {
           )
           .toList();
     } catch (e) {
-      debugPrint('Ошибка получения закреплённых постов: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ Р·Р°РєСЂРµРїР»С‘РЅРЅС‹С… РїРѕСЃС‚РѕРІ: $e');
       return [];
     }
   }
 
-  /// Закрепить пост
+  /// Р—Р°РєСЂРµРїРёС‚СЊ РїРѕСЃС‚
   Future<void> pinPost(String specialistId, String postId) async {
     try {
       await _firestore.collection('specialists').doc(specialistId).collection('pinnedPosts').add({
@@ -228,12 +233,12 @@ class SpecialistProfileService {
         'pinnedAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      debugPrint('Ошибка закрепления поста: $e');
+      debugPrint('РћС€РёР±РєР° Р·Р°РєСЂРµРїР»РµРЅРёСЏ РїРѕСЃС‚Р°: $e');
       rethrow;
     }
   }
 
-  /// Открепить пост
+  /// РћС‚РєСЂРµРїРёС‚СЊ РїРѕСЃС‚
   Future<void> unpinPost(String specialistId, String postId) async {
     try {
       final query = await _firestore
@@ -247,12 +252,12 @@ class SpecialistProfileService {
         await doc.reference.delete();
       }
     } catch (e) {
-      debugPrint('Ошибка открепления поста: $e');
+      debugPrint('РћС€РёР±РєР° РѕС‚РєСЂРµРїР»РµРЅРёСЏ РїРѕСЃС‚Р°: $e');
       rethrow;
     }
   }
 
-  /// Получить календарь занятости
+  /// РџРѕР»СѓС‡РёС‚СЊ РєР°Р»РµРЅРґР°СЂСЊ Р·Р°РЅСЏС‚РѕСЃС‚Рё
   Future<List<Map<String, dynamic>>> getAvailabilityCalendar(
     String specialistId,
     DateTime startDate,
@@ -276,12 +281,12 @@ class SpecialistProfileService {
           )
           .toList();
     } catch (e) {
-      debugPrint('Ошибка получения календаря занятости: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РєР°Р»РµРЅРґР°СЂСЏ Р·Р°РЅСЏС‚РѕСЃС‚Рё: $e');
       return [];
     }
   }
 
-  /// Обновить доступность
+  /// РћР±РЅРѕРІРёС‚СЊ РґРѕСЃС‚СѓРїРЅРѕСЃС‚СЊ
   Future<void> updateAvailability(
     String specialistId,
     DateTime date,
@@ -301,12 +306,12 @@ class SpecialistProfileService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      debugPrint('Ошибка обновления доступности: $e');
+      debugPrint('РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ РґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё: $e');
       rethrow;
     }
   }
 
-  /// Тестовые данные для статистики
+  /// РўРµСЃС‚РѕРІС‹Рµ РґР°РЅРЅС‹Рµ РґР»СЏ СЃС‚Р°С‚РёСЃС‚РёРєРё
   ProfileStatistics _getDefaultStatistics() => const ProfileStatistics(
         views: 0,
         likes: 0,
@@ -321,59 +326,59 @@ class SpecialistProfileService {
         pinnedPosts: 0,
       );
 
-  /// Тестовые данные для портфолио
+  /// РўРµСЃС‚РѕРІС‹Рµ РґР°РЅРЅС‹Рµ РґР»СЏ РїРѕСЂС‚С„РѕР»РёРѕ
   List<PortfolioItem> _getTestPortfolio() => [
         PortfolioItem(
           id: '1',
           specialistId: 'test',
-          title: 'Свадебная фотосессия в парке',
-          description: 'Романтическая свадебная съёмка в парке с красивыми кадрами',
+          title: 'РЎРІР°РґРµР±РЅР°СЏ С„РѕС‚РѕСЃРµСЃСЃРёСЏ РІ РїР°СЂРєРµ',
+          description: 'Р РѕРјР°РЅС‚РёС‡РµСЃРєР°СЏ СЃРІР°РґРµР±РЅР°СЏ СЃСЉС‘РјРєР° РІ РїР°СЂРєРµ СЃ РєСЂР°СЃРёРІС‹РјРё РєР°РґСЂР°РјРё',
           mediaUrl: 'https://picsum.photos/400/300?random=1',
           mediaType: PortfolioMediaType.image,
-          category: 'Свадебная съёмка',
+          category: 'РЎРІР°РґРµР±РЅР°СЏ СЃСЉС‘РјРєР°',
           createdAt: DateTime.now().subtract(const Duration(days: 1)),
           views: 45,
           likes: 12,
-          tags: ['свадьба', 'фото', 'парк'],
-          location: 'Москва',
+          tags: ['СЃРІР°РґСЊР±Р°', 'С„РѕС‚Рѕ', 'РїР°СЂРє'],
+          location: 'РњРѕСЃРєРІР°',
           eventDate: DateTime.now().subtract(const Duration(days: 1)),
-          clientName: 'Анна и Дмитрий',
+          clientName: 'РђРЅРЅР° Рё Р”РјРёС‚СЂРёР№',
         ),
         PortfolioItem(
           id: '2',
           specialistId: 'test',
-          title: 'Портретная съёмка в студии',
-          description: 'Профессиональная портретная съёмка в студии',
+          title: 'РџРѕСЂС‚СЂРµС‚РЅР°СЏ СЃСЉС‘РјРєР° РІ СЃС‚СѓРґРёРё',
+          description: 'РџСЂРѕС„РµСЃСЃРёРѕРЅР°Р»СЊРЅР°СЏ РїРѕСЂС‚СЂРµС‚РЅР°СЏ СЃСЉС‘РјРєР° РІ СЃС‚СѓРґРёРё',
           mediaUrl: 'https://picsum.photos/400/300?random=2',
           mediaType: PortfolioMediaType.image,
-          category: 'Портретная съёмка',
+          category: 'РџРѕСЂС‚СЂРµС‚РЅР°СЏ СЃСЉС‘РјРєР°',
           createdAt: DateTime.now().subtract(const Duration(days: 3)),
           views: 32,
           likes: 8,
-          tags: ['портрет', 'студия', 'профессиональная'],
-          location: 'Студия в Москве',
+          tags: ['РїРѕСЂС‚СЂРµС‚', 'СЃС‚СѓРґРёСЏ', 'РїСЂРѕС„РµСЃСЃРёРѕРЅР°Р»СЊРЅР°СЏ'],
+          location: 'РЎС‚СѓРґРёСЏ РІ РњРѕСЃРєРІРµ',
           eventDate: DateTime.now().subtract(const Duration(days: 3)),
-          clientName: 'Елена К.',
+          clientName: 'Р•Р»РµРЅР° Рљ.',
         ),
         PortfolioItem(
           id: '3',
           specialistId: 'test',
-          title: 'Корпоративное мероприятие',
-          description: 'Видеосъёмка корпоративного мероприятия',
+          title: 'РљРѕСЂРїРѕСЂР°С‚РёРІРЅРѕРµ РјРµСЂРѕРїСЂРёСЏС‚РёРµ',
+          description: 'Р’РёРґРµРѕСЃСЉС‘РјРєР° РєРѕСЂРїРѕСЂР°С‚РёРІРЅРѕРіРѕ РјРµСЂРѕРїСЂРёСЏС‚РёСЏ',
           mediaUrl: 'https://picsum.photos/400/300?random=3',
           mediaType: PortfolioMediaType.video,
-          category: 'Корпоративное мероприятие',
+          category: 'РљРѕСЂРїРѕСЂР°С‚РёРІРЅРѕРµ РјРµСЂРѕРїСЂРёСЏС‚РёРµ',
           createdAt: DateTime.now().subtract(const Duration(days: 7)),
           views: 78,
           likes: 15,
-          tags: ['корпоратив', 'видео', 'мероприятие'],
-          location: 'Офис компании',
+          tags: ['РєРѕСЂРїРѕСЂР°С‚РёРІ', 'РІРёРґРµРѕ', 'РјРµСЂРѕРїСЂРёСЏС‚РёРµ'],
+          location: 'РћС„РёСЃ РєРѕРјРїР°РЅРёРё',
           eventDate: DateTime.now().subtract(const Duration(days: 7)),
-          clientName: 'ООО "Технологии"',
+          clientName: 'РћРћРћ "РўРµС…РЅРѕР»РѕРіРёРё"',
         ),
       ];
 
-  /// Тестовые данные для социальных ссылок
+  /// РўРµСЃС‚РѕРІС‹Рµ РґР°РЅРЅС‹Рµ РґР»СЏ СЃРѕС†РёР°Р»СЊРЅС‹С… СЃСЃС‹Р»РѕРє
   List<SocialLink> _getTestSocialLinks() => [
         SocialLink(
           id: '1',
@@ -410,3 +415,4 @@ class SpecialistProfileService {
         ),
       ];
 }
+

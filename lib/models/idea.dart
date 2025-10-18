@@ -17,6 +17,8 @@ class Idea {
     this.savesCount = 0,
     this.sharesCount = 0,
     this.commentCount = 0,
+    this.viewsCount = 0,
+    this.commentsCount = 0,
     this.likedBy = const [],
     this.savedBy = const [],
     this.tags = const [],
@@ -52,6 +54,8 @@ class Idea {
         savesCount: data['savesCount'] as int? ?? 0,
         sharesCount: data['sharesCount'] as int? ?? 0,
         commentCount: data['commentCount'] as int? ?? 0,
+        viewsCount: data['viewsCount'] as int? ?? 0,
+        commentsCount: data['commentsCount'] as int? ?? 0,
         likedBy: List<String>.from(data['likedBy'] ?? []),
         savedBy: List<String>.from(data['savedBy'] ?? []),
         tags: List<String>.from(data['tags'] ?? []),
@@ -72,10 +76,72 @@ class Idea {
   final int savesCount;
   final int sharesCount;
   final int commentCount;
+  final int viewsCount;
+  final int commentsCount;
   final List<String> likedBy;
   final List<String> savedBy;
   final List<String> tags;
   final Map<String, dynamic>? metadata;
+
+  // Геттеры для совместимости
+  List<String> get images => imageUrl != null ? [imageUrl!] : [];
+  String? get authorPhotoUrl => authorAvatar;
+  String get categoryColor => _getCategoryColor(category);
+  String get categoryIcon => _getCategoryIcon(category);
+
+  String _getCategoryColor(String category) {
+    switch (category.toLowerCase()) {
+      case 'wedding':
+        return '#FF69B4';
+      case 'corporate':
+        return '#4169E1';
+      case 'birthday':
+        return '#FFD700';
+      case 'anniversary':
+        return '#FF6347';
+      case 'graduation':
+        return '#32CD32';
+      case 'conference':
+        return '#9370DB';
+      case 'exhibition':
+        return '#FF8C00';
+      case 'festival':
+        return '#FF1493';
+      case 'sports':
+        return '#00CED1';
+      case 'charity':
+        return '#DC143C';
+      default:
+        return '#666666';
+    }
+  }
+
+  String _getCategoryIcon(String category) {
+    switch (category.toLowerCase()) {
+      case 'wedding':
+        return '💒';
+      case 'corporate':
+        return '🏢';
+      case 'birthday':
+        return '🎂';
+      case 'anniversary':
+        return '🎉';
+      case 'graduation':
+        return '🎓';
+      case 'conference':
+        return '📊';
+      case 'exhibition':
+        return '🎨';
+      case 'festival':
+        return '🎪';
+      case 'sports':
+        return '⚽';
+      case 'charity':
+        return '❤️';
+      default:
+        return '📝';
+    }
+  }
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -92,6 +158,8 @@ class Idea {
         'savesCount': savesCount,
         'sharesCount': sharesCount,
         'commentCount': commentCount,
+        'viewsCount': viewsCount,
+        'commentsCount': commentsCount,
         'likedBy': likedBy,
         'savedBy': savedBy,
         'tags': tags,
@@ -114,6 +182,8 @@ class Idea {
     int? savesCount,
     int? sharesCount,
     int? commentCount,
+    int? viewsCount,
+    int? commentsCount,
     List<String>? likedBy,
     List<String>? savedBy,
     List<String>? tags,
@@ -134,6 +204,8 @@ class Idea {
         savesCount: savesCount ?? this.savesCount,
         sharesCount: sharesCount ?? this.sharesCount,
         commentCount: commentCount ?? this.commentCount,
+        viewsCount: viewsCount ?? this.viewsCount,
+        commentsCount: commentsCount ?? this.commentsCount,
         likedBy: likedBy ?? this.likedBy,
         savedBy: savedBy ?? this.savedBy,
         tags: tags ?? this.tags,

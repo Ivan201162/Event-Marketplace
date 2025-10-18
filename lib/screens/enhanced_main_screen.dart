@@ -171,7 +171,17 @@ class _EnhancedMainScreenState extends ConsumerState<EnhancedMainScreen>
             unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
             labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
             unselectedLabelStyle: const TextStyle(fontSize: 12),
-            onTap: _animateToTab,
+            onTap: (index) {
+              try {
+                _animateToTab(index);
+              } catch (e) {
+                debugPrint('Ошибка переключения вкладки: $e');
+                // Fallback: устанавливаем безопасное состояние
+                setState(() {
+                  _currentIndex = 0;
+                });
+              }
+            },
             tabs: _navigationItems.map((item) {
               final isSelected = _navigationItems.indexOf(item) == _currentIndex;
               return Tab(
@@ -204,11 +214,21 @@ class _EnhancedMainScreenState extends ConsumerState<EnhancedMainScreen>
 
   /// Анимированное переключение на вкладку
   void _animateToTab(int index) {
-    if (index >= 0 && index < _navigationItems.length && index != _currentIndex) {
-      setState(() {
-        _currentIndex = index;
-      });
-      _tabController.animateTo(index);
+    try {
+      if (index >= 0 && index < _navigationItems.length && index != _currentIndex) {
+        setState(() {
+          _currentIndex = index;
+        });
+        _tabController.animateTo(index);
+      }
+    } catch (e) {
+      debugPrint('Ошибка анимации переключения вкладки: $e');
+      // Fallback: просто устанавливаем индекс без анимации
+      if (index >= 0 && index < _navigationItems.length) {
+        setState(() {
+          _currentIndex = index;
+        });
+      }
     }
   }
 

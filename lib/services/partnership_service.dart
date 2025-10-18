@@ -1,16 +1,21 @@
-import 'dart:math';
+﻿import 'dart:math';
+import 'package:flutter/foundation.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/partnership_program.dart';
+import 'package:flutter/foundation.dart';
 
 class PartnershipService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Uuid _uuid = const Uuid();
 
-  /// Создание нового партнёра
+  /// РЎРѕР·РґР°РЅРёРµ РЅРѕРІРѕРіРѕ РїР°СЂС‚РЅС‘СЂР°
   Future<String> createPartner({
     required String name,
     required String email,
@@ -61,7 +66,7 @@ class PartnershipService {
 
       await _firestore.collection('partners').doc(partnerId).set(partner.toMap());
 
-      // Создаем начальную статистику
+      // РЎРѕР·РґР°РµРј РЅР°С‡Р°Р»СЊРЅСѓСЋ СЃС‚Р°С‚РёСЃС‚РёРєСѓ
       await _createPartnerStats(partnerId);
 
       debugPrint('INFO: [PartnershipService] Partner created: $partnerId');
@@ -72,7 +77,7 @@ class PartnershipService {
     }
   }
 
-  /// Генерация уникального кода партнёра
+  /// Р“РµРЅРµСЂР°С†РёСЏ СѓРЅРёРєР°Р»СЊРЅРѕРіРѕ РєРѕРґР° РїР°СЂС‚РЅС‘СЂР°
   String _generatePartnerCode() {
     const String chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     final random = Random();
@@ -86,14 +91,14 @@ class PartnershipService {
         code += chars[random.nextInt(chars.length)];
       }
 
-      // Проверяем уникальность (упрощенная проверка)
-      isUnique = true; // В реальном приложении нужно проверить в БД
+      // РџСЂРѕРІРµСЂСЏРµРј СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚СЊ (СѓРїСЂРѕС‰РµРЅРЅР°СЏ РїСЂРѕРІРµСЂРєР°)
+      isUnique = true; // Р’ СЂРµР°Р»СЊРЅРѕРј РїСЂРёР»РѕР¶РµРЅРёРё РЅСѓР¶РЅРѕ РїСЂРѕРІРµСЂРёС‚СЊ РІ Р‘Р”
     } while (!isUnique);
 
     return code;
   }
 
-  /// Создание начальной статистики партнёра
+  /// РЎРѕР·РґР°РЅРёРµ РЅР°С‡Р°Р»СЊРЅРѕР№ СЃС‚Р°С‚РёСЃС‚РёРєРё РїР°СЂС‚РЅС‘СЂР°
   Future<void> _createPartnerStats(String partnerId) async {
     try {
       final PartnerStats stats = PartnerStats(
@@ -119,13 +124,13 @@ class PartnershipService {
     }
   }
 
-  /// Получение текущего периода
+  /// РџРѕР»СѓС‡РµРЅРёРµ С‚РµРєСѓС‰РµРіРѕ РїРµСЂРёРѕРґР°
   String _getCurrentPeriod() {
     final DateTime now = DateTime.now();
     return '${now.year}-${now.month.toString().padLeft(2, '0')}';
   }
 
-  /// Активация партнёра
+  /// РђРєС‚РёРІР°С†РёСЏ РїР°СЂС‚РЅС‘СЂР°
   Future<void> activatePartner(String partnerId) async {
     try {
       await _firestore.collection('partners').doc(partnerId).update({
@@ -140,7 +145,7 @@ class PartnershipService {
     }
   }
 
-  /// Приостановка партнёра
+  /// РџСЂРёРѕСЃС‚Р°РЅРѕРІРєР° РїР°СЂС‚РЅС‘СЂР°
   Future<void> suspendPartner(String partnerId, String reason) async {
     try {
       await _firestore.collection('partners').doc(partnerId).update({
@@ -156,7 +161,7 @@ class PartnershipService {
     }
   }
 
-  /// Регистрация пользователя по партнёрской ссылке
+  /// Р РµРіРёСЃС‚СЂР°С†РёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РїРѕ РїР°СЂС‚РЅС‘СЂСЃРєРѕР№ СЃСЃС‹Р»РєРµ
   Future<void> registerUserViaPartner({
     required String userId,
     required String partnerCode,
@@ -165,7 +170,7 @@ class PartnershipService {
     required String currency,
   }) async {
     try {
-      // Находим партнёра по коду
+      // РќР°С…РѕРґРёРј РїР°СЂС‚РЅС‘СЂР° РїРѕ РєРѕРґСѓ
       final QuerySnapshot partnerSnapshot = await _firestore
           .collection('partners')
           .where('partnerCode', isEqualTo: partnerCode)
@@ -181,14 +186,14 @@ class PartnershipService {
       final Partner partner =
           Partner.fromMap(partnerSnapshot.docs.first.data() as Map<String, dynamic>);
 
-      // Рассчитываем комиссию
+      // Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј РєРѕРјРёСЃСЃРёСЋ
       final double commissionAmount = _calculateCommission(
         amount: amount,
         commissionRate: partner.commissionRate,
         commissionType: partner.commissionType,
       );
 
-      // Создаем партнёрскую транзакцию
+      // РЎРѕР·РґР°РµРј РїР°СЂС‚РЅС‘СЂСЃРєСѓСЋ С‚СЂР°РЅР·Р°РєС†РёСЋ
       final PartnerTransaction partnerTransaction = PartnerTransaction(
         id: _uuid.v4(),
         partnerId: partner.id,
@@ -200,7 +205,7 @@ class PartnershipService {
         commissionRate: partner.commissionRate,
         commissionType: partner.commissionType,
         createdAt: DateTime.now(),
-        description: 'Регистрация пользователя по партнёрской ссылке',
+        description: 'Р РµРіРёСЃС‚СЂР°С†РёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РїРѕ РїР°СЂС‚РЅС‘СЂСЃРєРѕР№ СЃСЃС‹Р»РєРµ',
       );
 
       await _firestore
@@ -208,7 +213,7 @@ class PartnershipService {
           .doc(partnerTransaction.id)
           .set(partnerTransaction.toMap());
 
-      // Обновляем статистику партнёра
+      // РћР±РЅРѕРІР»СЏРµРј СЃС‚Р°С‚РёСЃС‚РёРєСѓ РїР°СЂС‚РЅС‘СЂР°
       await _updatePartnerStats(partner.id, amount, commissionAmount);
 
       debugPrint(
@@ -218,7 +223,7 @@ class PartnershipService {
     }
   }
 
-  /// Рассчет комиссии
+  /// Р Р°СЃСЃС‡РµС‚ РєРѕРјРёСЃСЃРёРё
   double _calculateCommission({
     required double amount,
     required double commissionRate,
@@ -230,18 +235,18 @@ class PartnershipService {
       case CommissionType.fixed:
         return commissionRate;
       case CommissionType.tiered:
-        // Упрощенная логика для многоуровневой комиссии
+        // РЈРїСЂРѕС‰РµРЅРЅР°СЏ Р»РѕРіРёРєР° РґР»СЏ РјРЅРѕРіРѕСѓСЂРѕРІРЅРµРІРѕР№ РєРѕРјРёСЃСЃРёРё
         if (amount >= 10000) {
-          return amount * 0.15; // 15% для крупных заказов
+          return amount * 0.15; // 15% РґР»СЏ РєСЂСѓРїРЅС‹С… Р·Р°РєР°Р·РѕРІ
         } else if (amount >= 5000) {
-          return amount * 0.10; // 10% для средних заказов
+          return amount * 0.10; // 10% РґР»СЏ СЃСЂРµРґРЅРёС… Р·Р°РєР°Р·РѕРІ
         } else {
-          return amount * 0.05; // 5% для мелких заказов
+          return amount * 0.05; // 5% РґР»СЏ РјРµР»РєРёС… Р·Р°РєР°Р·РѕРІ
         }
     }
   }
 
-  /// Обновление статистики партнёра
+  /// РћР±РЅРѕРІР»РµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРєРё РїР°СЂС‚РЅС‘СЂР°
   Future<void> _updatePartnerStats(String partnerId, double amount, double commission) async {
     try {
       final String period = _getCurrentPeriod();
@@ -263,7 +268,7 @@ class PartnershipService {
     }
   }
 
-  /// Получение партнёра по коду
+  /// РџРѕР»СѓС‡РµРЅРёРµ РїР°СЂС‚РЅС‘СЂР° РїРѕ РєРѕРґСѓ
   Future<Partner?> getPartnerByCode(String partnerCode) async {
     try {
       final QuerySnapshot snapshot = await _firestore
@@ -283,7 +288,7 @@ class PartnershipService {
     }
   }
 
-  /// Получение статистики партнёра
+  /// РџРѕР»СѓС‡РµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРєРё РїР°СЂС‚РЅС‘СЂР°
   Future<PartnerStats?> getPartnerStats(String partnerId, {String? period}) async {
     try {
       final String statsPeriod = period ?? _getCurrentPeriod();
@@ -301,7 +306,7 @@ class PartnershipService {
     }
   }
 
-  /// Получение транзакций партнёра
+  /// РџРѕР»СѓС‡РµРЅРёРµ С‚СЂР°РЅР·Р°РєС†РёР№ РїР°СЂС‚РЅС‘СЂР°
   Future<List<PartnerTransaction>> getPartnerTransactions(
     String partnerId, {
     DateTime? startDate,
@@ -332,7 +337,7 @@ class PartnershipService {
     }
   }
 
-  /// Создание выплаты партнёру
+  /// РЎРѕР·РґР°РЅРёРµ РІС‹РїР»Р°С‚С‹ РїР°СЂС‚РЅС‘СЂСѓ
   Future<String> createPartnerPayment({
     required String partnerId,
     required double amount,
@@ -357,7 +362,7 @@ class PartnershipService {
 
       await _firestore.collection('partner_payments').doc(payment.id).set(payment.toMap());
 
-      // Обновляем статус транзакций
+      // РћР±РЅРѕРІР»СЏРµРј СЃС‚Р°С‚СѓСЃ С‚СЂР°РЅР·Р°РєС†РёР№
       if (transactionIds != null) {
         for (final transactionId in transactionIds) {
           await _firestore.collection('partner_transactions').doc(transactionId).update({
@@ -367,7 +372,7 @@ class PartnershipService {
         }
       }
 
-      // Обновляем статистику
+      // РћР±РЅРѕРІР»СЏРµРј СЃС‚Р°С‚РёСЃС‚РёРєСѓ
       await _firestore
           .collection('partner_stats')
           .doc('${partnerId}_${_getCurrentPeriod()}')
@@ -385,7 +390,7 @@ class PartnershipService {
     }
   }
 
-  /// Подтверждение выплаты
+  /// РџРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ РІС‹РїР»Р°С‚С‹
   Future<void> confirmPartnerPayment(String paymentId) async {
     try {
       await _firestore.collection('partner_payments').doc(paymentId).update({
@@ -401,7 +406,7 @@ class PartnershipService {
     }
   }
 
-  /// Получение выплат партнёра
+  /// РџРѕР»СѓС‡РµРЅРёРµ РІС‹РїР»Р°С‚ РїР°СЂС‚РЅС‘СЂР°
   Future<List<PartnerPayment>> getPartnerPayments(
     String partnerId, {
     DateTime? startDate,
@@ -432,7 +437,7 @@ class PartnershipService {
     }
   }
 
-  /// Получение всех партнёров
+  /// РџРѕР»СѓС‡РµРЅРёРµ РІСЃРµС… РїР°СЂС‚РЅС‘СЂРѕРІ
   Future<List<Partner>> getAllPartners({
     PartnershipStatus? status,
     PartnershipType? type,
@@ -459,7 +464,7 @@ class PartnershipService {
     }
   }
 
-  /// Обновление партнёра
+  /// РћР±РЅРѕРІР»РµРЅРёРµ РїР°СЂС‚РЅС‘СЂР°
   Future<void> updatePartner(Partner partner) async {
     try {
       final Partner updatedPartner = partner.copyWith(
@@ -475,12 +480,12 @@ class PartnershipService {
     }
   }
 
-  /// Создание партнёрской ссылки
+  /// РЎРѕР·РґР°РЅРёРµ РїР°СЂС‚РЅС‘СЂСЃРєРѕР№ СЃСЃС‹Р»РєРё
   String createPartnerLink(String partnerCode) {
     return 'https://eventmarketplace.app/partner/$partnerCode';
   }
 
-  /// Получение общей статистики партнёрской программы
+  /// РџРѕР»СѓС‡РµРЅРёРµ РѕР±С‰РµР№ СЃС‚Р°С‚РёСЃС‚РёРєРё РїР°СЂС‚РЅС‘СЂСЃРєРѕР№ РїСЂРѕРіСЂР°РјРјС‹
   Future<Map<String, dynamic>> getPartnershipProgramStats() async {
     try {
       final QuerySnapshot partnersSnapshot = await _firestore.collection('partners').get();
@@ -528,3 +533,4 @@ class PartnershipService {
     }
   }
 }
+

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../models/app_notification.dart';
 import '../services/notification_service.dart';
 
 /// Виджет для отображения списка уведомлений
@@ -19,7 +20,7 @@ class NotificationsListWidget extends StatefulWidget {
 
 class _NotificationsListWidgetState extends State<NotificationsListWidget> {
   @override
-  Widget build(BuildContext context) => StreamBuilder<List<Map<String, dynamic>>>(
+  Widget build(BuildContext context) => StreamBuilder<List<AppNotification>>(
         stream: NotificationService.getUserNotifications(widget.userId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -50,7 +51,7 @@ class _NotificationsListWidgetState extends State<NotificationsListWidget> {
 
   Future<void> _markAsRead(String notificationId) async {
     try {
-      await NotificationService.markAsRead(widget.userId, notificationId);
+      await NotificationService.markAsRead(notificationId);
     } on Exception catch (e) {
       _showErrorSnackBar('Ошибка отметки уведомления: $e');
     }
@@ -186,8 +187,8 @@ class _NotificationsList extends StatelessWidget {
     required this.onMarkAllAsRead,
   });
 
-  final List<Map<String, dynamic>> notifications;
-  final void Function(Map<String, dynamic>)? onNotificationTap;
+  final List<AppNotification> notifications;
+  final void Function(AppNotification)? onNotificationTap;
   final void Function(String) onMarkAsRead;
   final VoidCallback onMarkAllAsRead;
 
@@ -203,8 +204,8 @@ class _NotificationsList extends StatelessWidget {
                 return _NotificationCard(
                   notification: notification,
                   onTap: () {
-                    if (!(notification['isRead'] as bool? ?? false)) {
-                      onMarkAsRead(notification['id'] as String? ?? '');
+                    if (!notification.isRead) {
+                      onMarkAsRead(notification.id);
                     }
                     onNotificationTap?.call(notification);
                   },
@@ -243,14 +244,14 @@ class _NotificationCard extends StatelessWidget {
     required this.onTap,
   });
 
-  final Map<String, dynamic> notification;
+  final AppNotification notification;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) => Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         child: Card(
-          elevation: (notification['isRead'] as bool? ?? false) ? 1 : 2,
+          elevation: notification.isRead ? 1 : 2,
           child: InkWell(
             onTap: onTap,
             borderRadius: BorderRadius.circular(8),
@@ -265,17 +266,17 @@ class _NotificationCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          notification['title'] as String? ?? 'Уведомление',
+                          notification.title,
                           style: TextStyle(
                             fontSize: 16,
-                            fontWeight: (notification['isRead'] as bool? ?? false)
+                            fontWeight: notification.isRead
                                 ? FontWeight.normal
                                 : FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          notification['body'] as String? ?? '',
+                          notification.body,
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.grey,
@@ -285,7 +286,7 @@ class _NotificationCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          _formatDate(notification['createdAt']),
+                          _formatDate(notification.createdAt),
                           style: const TextStyle(
                             fontSize: 12,
                             color: Colors.grey,
@@ -294,7 +295,7 @@ class _NotificationCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if (!(notification['isRead'] as bool? ?? false))
+                  if (!notification.isRead)
                     Container(
                       width: 8,
                       height: 8,
@@ -314,7 +315,7 @@ class _NotificationCard extends StatelessWidget {
     IconData iconData;
     Color iconColor;
 
-    switch (notification['type']) {
+    switch (notification.type) {
       case 'new_booking':
         iconData = Icons.event;
         iconColor = Colors.green;
@@ -348,9 +349,9 @@ class _NotificationCard extends StatelessWidget {
 }
 
 /// Форматирование даты
-String _formatDate(date) {
+String _formatDate(DateTime date) {
   final now = DateTime.now();
-  final difference = now.difference(date as DateTime);
+  final difference = now.difference(date);
 
   if (difference.inDays > 0) {
     return '${difference.inDays} дн. назад';

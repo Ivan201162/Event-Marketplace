@@ -403,7 +403,8 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
     });
 
     try {
-      await _storyService.createStory(
+      final story = Story(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
         specialistId: widget.specialistId,
         specialistName: widget.specialistName,
         specialistAvatar: widget.specialistAvatar,
@@ -412,6 +413,8 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
         text: _textController.text.isEmpty ? null : _textController.text,
         caption: _captionController.text.isEmpty ? null : _captionController.text,
       );
+
+      await _storyService.createStory(story);
 
       if (mounted) {
         Navigator.pop(context);

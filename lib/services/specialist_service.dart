@@ -1,11 +1,17 @@
-import 'dart:async';
+﻿import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../models/specialist.dart';
+import 'package:flutter/foundation.dart';
 import 'cache_service.dart';
+import 'package:flutter/foundation.dart';
 import 'debounce_service.dart';
+import 'package:flutter/foundation.dart';
 
-/// Сервис для работы с специалистами
+/// РЎРµСЂРІРёСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ СЃРїРµС†РёР°Р»РёСЃС‚Р°РјРё
 class SpecialistService {
   factory SpecialistService() => _instance;
   SpecialistService._internal();
@@ -16,10 +22,10 @@ class SpecialistService {
   final CacheService _cacheService = CacheService();
   final DebounceService _debounceService = DebounceService();
 
-  /// Получить всех специалистов с кэшированием
+  /// РџРѕР»СѓС‡РёС‚СЊ РІСЃРµС… СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ СЃ РєСЌС€РёСЂРѕРІР°РЅРёРµРј
   Future<List<Specialist>> getAllSpecialists({bool useCache = true}) async {
     try {
-      // Проверяем кэш, если он актуален
+      // РџСЂРѕРІРµСЂСЏРµРј РєСЌС€, РµСЃР»Рё РѕРЅ Р°РєС‚СѓР°Р»РµРЅ
       if (useCache && _cacheService.isSpecialistsCacheValid()) {
         final cachedData = _cacheService.getCachedSpecialists();
         if (cachedData != null) {
@@ -27,11 +33,11 @@ class SpecialistService {
         }
       }
 
-      // Загружаем из Firestore
+      // Р—Р°РіСЂСѓР¶Р°РµРј РёР· Firestore
       final snapshot = await _firestore.collection(_collection).get();
       final specialists = snapshot.docs.map(Specialist.fromDocument).toList();
 
-      // Кэшируем результат
+      // РљСЌС€РёСЂСѓРµРј СЂРµР·СѓР»СЊС‚Р°С‚
       if (useCache) {
         final dataToCache = specialists.map((s) => s.toMap()).toList();
         await _cacheService.cacheSpecialists(dataToCache);
@@ -39,9 +45,9 @@ class SpecialistService {
 
       return specialists;
     } on Exception catch (e) {
-      debugPrint('Ошибка получения специалистов: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ: $e');
 
-      // Пытаемся получить из кэша в случае ошибки
+      // РџС‹С‚Р°РµРјСЃСЏ РїРѕР»СѓС‡РёС‚СЊ РёР· РєСЌС€Р° РІ СЃР»СѓС‡Р°Рµ РѕС€РёР±РєРё
       if (useCache) {
         final cachedData = _cacheService.getCachedSpecialists();
         if (cachedData != null) {
@@ -53,13 +59,13 @@ class SpecialistService {
     }
   }
 
-  /// Получить поток всех специалистов
+  /// РџРѕР»СѓС‡РёС‚СЊ РїРѕС‚РѕРє РІСЃРµС… СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ
   Stream<List<Specialist>> getAllSpecialistsStream() => _firestore
       .collection(_collection)
       .snapshots()
       .map((snapshot) => snapshot.docs.map(Specialist.fromDocument).toList());
 
-  /// Получить список городов из специалистов
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РіРѕСЂРѕРґРѕРІ РёР· СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ
   Future<List<String>> getCities() async {
     try {
       final snapshot = await _firestore.collection(_collection).get();
@@ -75,12 +81,12 @@ class SpecialistService {
 
       return cities.toList()..sort();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения городов: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РіРѕСЂРѕРґРѕРІ: $e');
       return [];
     }
   }
 
-  /// Получить специалиста по ID
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃРїРµС†РёР°Р»РёСЃС‚Р° РїРѕ ID
   Future<Specialist?> getSpecialistById(String id) async {
     try {
       final doc = await _firestore.collection(_collection).doc(id).get();
@@ -89,12 +95,12 @@ class SpecialistService {
       }
       return null;
     } on Exception catch (e) {
-      debugPrint('Ошибка получения специалиста: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЃРїРµС†РёР°Р»РёСЃС‚Р°: $e');
       return null;
     }
   }
 
-  /// Поиск специалистов с фильтрами и debounce
+  /// РџРѕРёСЃРє СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ СЃ С„РёР»СЊС‚СЂР°РјРё Рё debounce
   Future<List<Specialist>> searchSpecialists({
     String? query,
     SpecialistCategory? category,
@@ -131,7 +137,7 @@ class SpecialistService {
     );
   }
 
-  /// Выполнение поиска специалистов
+  /// Р’С‹РїРѕР»РЅРµРЅРёРµ РїРѕРёСЃРєР° СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ
   Future<List<Specialist>> _performSearch({
     String? query,
     SpecialistCategory? category,
@@ -144,12 +150,12 @@ class SpecialistService {
     try {
       Query queryRef = _firestore.collection(_collection);
 
-      // Фильтр по категории
+      // Р¤РёР»СЊС‚СЂ РїРѕ РєР°С‚РµРіРѕСЂРёРё
       if (category != null) {
         queryRef = queryRef.where('category', isEqualTo: category.name);
       }
 
-      // Фильтр по цене
+      // Р¤РёР»СЊС‚СЂ РїРѕ С†РµРЅРµ
       if (minPrice != null) {
         queryRef = queryRef.where('price', isGreaterThanOrEqualTo: minPrice);
       }
@@ -157,12 +163,12 @@ class SpecialistService {
         queryRef = queryRef.where('price', isLessThanOrEqualTo: maxPrice);
       }
 
-      // Фильтр по рейтингу
+      // Р¤РёР»СЊС‚СЂ РїРѕ СЂРµР№С‚РёРЅРіСѓ
       if (minRating != null) {
         queryRef = queryRef.where('rating', isGreaterThanOrEqualTo: minRating);
       }
 
-      // Фильтр по локации
+      // Р¤РёР»СЊС‚СЂ РїРѕ Р»РѕРєР°С†РёРё
       if (location != null && location.isNotEmpty) {
         queryRef = queryRef.where('location', isEqualTo: location);
       }
@@ -170,7 +176,7 @@ class SpecialistService {
       final snapshot = await queryRef.get();
       var specialists = snapshot.docs.map(Specialist.fromDocument).toList();
 
-      // Фильтр по текстовому запросу
+      // Р¤РёР»СЊС‚СЂ РїРѕ С‚РµРєСЃС‚РѕРІРѕРјСѓ Р·Р°РїСЂРѕСЃСѓ
       if (query != null && query.isNotEmpty) {
         specialists = specialists.where((specialist) {
           final searchQuery = query.toLowerCase();
@@ -180,7 +186,7 @@ class SpecialistService {
         }).toList();
       }
 
-      // Фильтр по доступным датам
+      // Р¤РёР»СЊС‚СЂ РїРѕ РґРѕСЃС‚СѓРїРЅС‹Рј РґР°С‚Р°Рј
       if (availableDates != null && availableDates.isNotEmpty) {
         specialists = specialists
             .where(
@@ -192,12 +198,12 @@ class SpecialistService {
 
       return specialists;
     } on Exception catch (e) {
-      debugPrint('Ошибка поиска специалистов: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕРёСЃРєР° СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ: $e');
       return [];
     }
   }
 
-  /// Получить специалистов по категории
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ РїРѕ РєР°С‚РµРіРѕСЂРёРё
   Future<List<Specialist>> getSpecialistsByCategory(
     SpecialistCategory category,
   ) async {
@@ -208,15 +214,15 @@ class SpecialistService {
           .get();
       return snapshot.docs.map(Specialist.fromDocument).toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения специалистов по категории: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ РїРѕ РєР°С‚РµРіРѕСЂРёРё: $e');
       return [];
     }
   }
 
-  /// Получить рекомендуемых специалистов
+  /// РџРѕР»СѓС‡РёС‚СЊ СЂРµРєРѕРјРµРЅРґСѓРµРјС‹С… СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ
   Future<List<Specialist>> getRecommendedSpecialists(String userId) async {
     try {
-      // Получаем специалистов с высоким рейтингом
+      // РџРѕР»СѓС‡Р°РµРј СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ СЃ РІС‹СЃРѕРєРёРј СЂРµР№С‚РёРЅРіРѕРј
       final snapshot = await _firestore
           .collection(_collection)
           .where('rating', isGreaterThanOrEqualTo: 4.5)
@@ -225,45 +231,45 @@ class SpecialistService {
           .get();
       return snapshot.docs.map(Specialist.fromDocument).toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения рекомендуемых специалистов: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЂРµРєРѕРјРµРЅРґСѓРµРјС‹С… СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ: $e');
       return [];
     }
   }
 
-  /// Создать нового специалиста
+  /// РЎРѕР·РґР°С‚СЊ РЅРѕРІРѕРіРѕ СЃРїРµС†РёР°Р»РёСЃС‚Р°
   Future<String?> createSpecialist(Specialist specialist) async {
     try {
       final docRef = await _firestore.collection(_collection).add(specialist.toMap());
       return docRef.id;
     } on Exception catch (e) {
-      debugPrint('Ошибка создания специалиста: $e');
+      debugPrint('РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ СЃРїРµС†РёР°Р»РёСЃС‚Р°: $e');
       return null;
     }
   }
 
-  /// Обновить специалиста
+  /// РћР±РЅРѕРІРёС‚СЊ СЃРїРµС†РёР°Р»РёСЃС‚Р°
   Future<bool> updateSpecialist(String id, Map<String, dynamic> updates) async {
     try {
       await _firestore.collection(_collection).doc(id).update(updates);
       return true;
     } on Exception catch (e) {
-      debugPrint('Ошибка обновления специалиста: $e');
+      debugPrint('РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ СЃРїРµС†РёР°Р»РёСЃС‚Р°: $e');
       return false;
     }
   }
 
-  /// Удалить специалиста
+  /// РЈРґР°Р»РёС‚СЊ СЃРїРµС†РёР°Р»РёСЃС‚Р°
   Future<bool> deleteSpecialist(String id) async {
     try {
       await _firestore.collection(_collection).doc(id).delete();
       return true;
     } on Exception catch (e) {
-      debugPrint('Ошибка удаления специалиста: $e');
+      debugPrint('РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ СЃРїРµС†РёР°Р»РёСЃС‚Р°: $e');
       return false;
     }
   }
 
-  /// Получить специалистов с пагинацией
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ СЃ РїР°РіРёРЅР°С†РёРµР№
   Future<List<Specialist>> getSpecialistsPaginated({
     int limit = 20,
     DocumentSnapshot? lastDocument,
@@ -285,12 +291,12 @@ class SpecialistService {
       final snapshot = await queryRef.get();
       return snapshot.docs.map(Specialist.fromDocument).toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения специалистов с пагинацией: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ СЃ РїР°РіРёРЅР°С†РёРµР№: $e');
       return [];
     }
   }
 
-  /// Фильтрация специалистов по различным критериям
+  /// Р¤РёР»СЊС‚СЂР°С†РёСЏ СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ РїРѕ СЂР°Р·Р»РёС‡РЅС‹Рј РєСЂРёС‚РµСЂРёСЏРј
   Future<List<Specialist>> filterSpecialists({
     double? minPrice,
     double? maxPrice,
@@ -298,24 +304,24 @@ class SpecialistService {
     DateTime? date,
   }) async {
     try {
-      // Получаем всех специалистов
+      // РџРѕР»СѓС‡Р°РµРј РІСЃРµС… СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ
       final allSpecialists = await getAllSpecialists();
 
-      // Применяем фильтры
+      // РџСЂРёРјРµРЅСЏРµРј С„РёР»СЊС‚СЂС‹
       final filteredSpecialists = allSpecialists.where((specialist) {
-        // Фильтр по цене
+        // Р¤РёР»СЊС‚СЂ РїРѕ С†РµРЅРµ
         if (minPrice != null && specialist.price < minPrice) return false;
         if (maxPrice != null && specialist.price > maxPrice) return false;
 
-        // Фильтр по рейтингу
+        // Р¤РёР»СЊС‚СЂ РїРѕ СЂРµР№С‚РёРЅРіСѓ
         if (minRating != null && specialist.rating < minRating) return false;
 
-        // Фильтр по дате доступности
+        // Р¤РёР»СЊС‚СЂ РїРѕ РґР°С‚Рµ РґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё
         if (date != null) {
-          // Проверяем, что дата не занята
+          // РџСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ РґР°С‚Р° РЅРµ Р·Р°РЅСЏС‚Р°
           if (specialist.isDateBusy(date)) return false;
 
-          // Проверяем, что специалист доступен в эту дату
+          // РџСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ СЃРїРµС†РёР°Р»РёСЃС‚ РґРѕСЃС‚СѓРїРµРЅ РІ СЌС‚Сѓ РґР°С‚Сѓ
           if (!specialist.isAvailableOnDate(date)) return false;
         }
 
@@ -324,12 +330,12 @@ class SpecialistService {
 
       return filteredSpecialists;
     } on Exception catch (e) {
-      debugPrint('Ошибка фильтрации специалистов: $e');
+      debugPrint('РћС€РёР±РєР° С„РёР»СЊС‚СЂР°С†РёРё СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ: $e');
       return [];
     }
   }
 
-  /// Получить статистику специалистов
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃС‚Р°С‚РёСЃС‚РёРєСѓ СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ
   Future<Map<String, dynamic>> getSpecialistsStats() async {
     try {
       final snapshot = await _firestore.collection(_collection).get();
@@ -356,35 +362,35 @@ class SpecialistService {
         'categoryStats': categoryStats,
       };
     } on Exception catch (e) {
-      debugPrint('Ошибка получения статистики специалистов: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЃС‚Р°С‚РёСЃС‚РёРєРё СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ: $e');
       return {};
     }
   }
 
-  /// Получить ленту специалиста (посты, активности)
+  /// РџРѕР»СѓС‡РёС‚СЊ Р»РµРЅС‚Сѓ СЃРїРµС†РёР°Р»РёСЃС‚Р° (РїРѕСЃС‚С‹, Р°РєС‚РёРІРЅРѕСЃС‚Рё)
   Stream<List<Map<String, dynamic>>> getSpecialistFeed(String specialistId) async* {
     try {
       // TODO(developer): Implement specialist feed logic
-      // Пока возвращаем пустой список
+      // РџРѕРєР° РІРѕР·РІСЂР°С‰Р°РµРј РїСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє
       yield <Map<String, dynamic>>[];
     } on Exception catch (e) {
-      debugPrint('Ошибка получения ленты специалиста: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ Р»РµРЅС‚С‹ СЃРїРµС†РёР°Р»РёСЃС‚Р°: $e');
       yield <Map<String, dynamic>>[];
     }
   }
 
-  /// Получить поток специалиста по ID
+  /// РџРѕР»СѓС‡РёС‚СЊ РїРѕС‚РѕРє СЃРїРµС†РёР°Р»РёСЃС‚Р° РїРѕ ID
   Stream<Specialist?> getSpecialistStream(String specialistId) async* {
     try {
       final specialist = await getSpecialistById(specialistId);
       yield specialist;
     } on Exception catch (e) {
-      debugPrint('Ошибка получения потока специалиста: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РїРѕС‚РѕРєР° СЃРїРµС†РёР°Р»РёСЃС‚Р°: $e');
       yield null;
     }
   }
 
-  /// Получить поток специалиста по ID пользователя
+  /// РџРѕР»СѓС‡РёС‚СЊ РїРѕС‚РѕРє СЃРїРµС†РёР°Р»РёСЃС‚Р° РїРѕ ID РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Stream<Specialist?> getSpecialistByUserIdStream(String userId) async* {
     try {
       final snapshot = await _firestore
@@ -399,12 +405,12 @@ class SpecialistService {
         yield null;
       }
     } on Exception catch (e) {
-      debugPrint('Ошибка получения специалиста по userId: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЃРїРµС†РёР°Р»РёСЃС‚Р° РїРѕ userId: $e');
       yield null;
     }
   }
 
-  /// Получить топ специалистов
+  /// РџРѕР»СѓС‡РёС‚СЊ С‚РѕРї СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ
   Future<List<Specialist>> getTopSpecialists({int limit = 10}) async {
     try {
       final snapshot = await _firestore
@@ -416,15 +422,15 @@ class SpecialistService {
 
       return snapshot.docs.map(Specialist.fromDocument).toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения топ специалистов: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ С‚РѕРї СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ: $e');
       return <Specialist>[];
     }
   }
 
-  /// Получить лидеров недели
+  /// РџРѕР»СѓС‡РёС‚СЊ Р»РёРґРµСЂРѕРІ РЅРµРґРµР»Рё
   Future<List<Specialist>> getWeeklyLeaders({int limit = 10}) async {
     try {
-      // Получаем специалистов с высоким рейтингом и активностью за последнюю неделю
+      // РџРѕР»СѓС‡Р°РµРј СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ СЃ РІС‹СЃРѕРєРёРј СЂРµР№С‚РёРЅРіРѕРј Рё Р°РєС‚РёРІРЅРѕСЃС‚СЊСЋ Р·Р° РїРѕСЃР»РµРґРЅСЋСЋ РЅРµРґРµР»СЋ
       final weekAgo = DateTime.now().subtract(const Duration(days: 7));
       final snapshot = await _firestore
           .collection(_collection)
@@ -436,17 +442,17 @@ class SpecialistService {
 
       return snapshot.docs.map(Specialist.fromDocument).toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения лидеров недели: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ Р»РёРґРµСЂРѕРІ РЅРµРґРµР»Рё: $e');
       return <Specialist>[];
     }
   }
 
-  /// Поиск специалистов с фильтрами (поток)
+  /// РџРѕРёСЃРє СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ СЃ С„РёР»СЊС‚СЂР°РјРё (РїРѕС‚РѕРє)
   Stream<List<Specialist>> searchSpecialistsStream(Map<String, dynamic> filters) async* {
     try {
       Query query = _firestore.collection(_collection);
 
-      // Применяем фильтры
+      // РџСЂРёРјРµРЅСЏРµРј С„РёР»СЊС‚СЂС‹
       if (filters['category'] != null) {
         query = query.where('category', isEqualTo: filters['category']);
       }
@@ -460,7 +466,7 @@ class SpecialistService {
         query = query.where('pricePerHour', isLessThanOrEqualTo: filters['maxPrice']);
       }
 
-      // Сортировка
+      // РЎРѕСЂС‚РёСЂРѕРІРєР°
       final sortBy = filters['sortBy'] ?? 'rating';
       final descending = filters['descending'] ?? true;
       query = query.orderBy(sortBy, descending: descending);
@@ -469,31 +475,31 @@ class SpecialistService {
       final specialists = snapshot.docs.map(Specialist.fromDocument).toList();
       yield specialists;
     } on Exception catch (e) {
-      debugPrint('Ошибка поиска специалистов: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕРёСЃРєР° СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ: $e');
       yield <Specialist>[];
     }
   }
 
-  /// Проверить доступность специалиста на дату
+  /// РџСЂРѕРІРµСЂРёС‚СЊ РґРѕСЃС‚СѓРїРЅРѕСЃС‚СЊ СЃРїРµС†РёР°Р»РёСЃС‚Р° РЅР° РґР°С‚Сѓ
   Future<bool> isSpecialistAvailableOnDate(String specialistId, DateTime date) async {
     try {
       // TODO(developer): Implement availability check logic
-      // Пока возвращаем true для всех дат
+      // РџРѕРєР° РІРѕР·РІСЂР°С‰Р°РµРј true РґР»СЏ РІСЃРµС… РґР°С‚
       return true;
     } on Exception catch (e) {
-      debugPrint('Ошибка проверки доступности специалиста: $e');
+      debugPrint('РћС€РёР±РєР° РїСЂРѕРІРµСЂРєРё РґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё СЃРїРµС†РёР°Р»РёСЃС‚Р°: $e');
       return false;
     }
   }
 
-  /// Получить доступные временные слоты
+  /// РџРѕР»СѓС‡РёС‚СЊ РґРѕСЃС‚СѓРїРЅС‹Рµ РІСЂРµРјРµРЅРЅС‹Рµ СЃР»РѕС‚С‹
   Future<List<Map<String, dynamic>>> getAvailableTimeSlots(
     String specialistId,
     DateTime date,
   ) async {
     try {
       // TODO(developer): Implement time slots logic
-      // Пока возвращаем базовые слоты
+      // РџРѕРєР° РІРѕР·РІСЂР°С‰Р°РµРј Р±Р°Р·РѕРІС‹Рµ СЃР»РѕС‚С‹
       return [
         {'time': '09:00', 'available': true},
         {'time': '10:00', 'available': true},
@@ -507,8 +513,9 @@ class SpecialistService {
         {'time': '18:00', 'available': true},
       ];
     } on Exception catch (e) {
-      debugPrint('Ошибка получения временных слотов: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РІСЂРµРјРµРЅРЅС‹С… СЃР»РѕС‚РѕРІ: $e');
       return <Map<String, dynamic>>[];
     }
   }
 }
+

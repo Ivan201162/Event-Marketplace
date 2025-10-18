@@ -11,7 +11,6 @@ import '../screens/enhanced_settings_screen.dart';
 import '../screens/enhanced_social_home_screen.dart';
 import '../screens/ideas_feed_screen.dart';
 import '../screens/main_navigation_screen.dart';
-import '../screens/profile_screen.dart' as profile_screen;
 import '../screens/monetization/advertisement_campaigns_screen.dart';
 import '../screens/monetization/create_advertisement_screen.dart';
 import '../screens/monetization/monetization_hub_screen.dart';
@@ -22,7 +21,7 @@ import '../screens/monetization/payment_screen.dart';
 import '../screens/monetization/promotion_packages_screen.dart';
 import '../screens/monetization/subscription_plans_screen.dart';
 import '../screens/profile_edit_screen.dart';
-import '../screens/profile_screen.dart';
+import '../screens/profile_screen.dart' as profile_screen;
 import '../screens/social_chat_screen.dart';
 import '../screens/social_chats_list_screen.dart';
 import '../screens/social_followers_screen.dart';
@@ -33,11 +32,96 @@ import '../screens/specialists_screen.dart';
 import '../screens/splash_screen.dart';
 import '../screens/transliterate_demo_screen.dart';
 
+/// Observer для логирования навигации
+class NavigationObserver extends NavigatorObserver {
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    debugPrint('➡️ [${DateTime.now()}] Navigation: PUSH to ${route.settings.name}');
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    debugPrint('⬅️ [${DateTime.now()}] Navigation: POP from ${route.settings.name}');
+  }
+
+  @override
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
+    debugPrint('🔄 [${DateTime.now()}] Navigation: REPLACE ${oldRoute?.settings.name} -> ${newRoute?.settings.name}');
+  }
+}
+
 /// Провайдер роутера приложения
 final routerProvider = Provider<GoRouter>(
   (ref) => GoRouter(
-    initialLocation: '/',
+    initialLocation: '/home', // Прямо на главный экран
+    observers: [NavigationObserver()], // Добавляем observer
+    // Redirect логика для обработки пустых и несуществующих маршрутов
+    redirect: (context, state) {
+      debugPrint('🕐 [${DateTime.now()}] Router redirect called for: ${state.uri.path}');
+      
+      // Если путь пустой или корневой - перенаправляем на главную
+      if (state.uri.path == '/' || state.uri.path.isEmpty) {
+        debugPrint('⚠️ [${DateTime.now()}] Empty path - redirecting to /home');
+        return '/home';
+      }
+      
+      // Список валидных маршрутов
+      final validRoutes = [
+        '/home', '/main', '/auth', '/splash',
+        '/feed', '/requests', '/chats', '/ideas', '/monetization',
+        '/profile', '/settings', '/notifications'
+      ];
+      
+      // Если маршрут не существует - fallback на главную
+      if (!validRoutes.contains(state.uri.path)) {
+        debugPrint('⚠️ [${DateTime.now()}] Invalid route ${state.uri.path} - redirecting to /home');
+        return '/home';
+      }
+      
+      return null; // Маршрут валиден
+    },
+    // Обработчик ошибок роутера
+    errorBuilder: (context, state) {
+      debugPrint('🚨 [${DateTime.now()}] Router error for path: ${state.uri.path}');
+      debugPrint('Error: ${state.error}');
+      
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error, size: 64, color: Colors.red),
+              const SizedBox(height: 16),
+              const Text(
+                '⚠️ Ошибка навигации',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Путь: ${state.uri.path}',
+                style: const TextStyle(fontSize: 14),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  debugPrint('🔄 [${DateTime.now()}] Fallback navigation to /home');
+                  context.go('/home');
+                },
+                child: const Text('Перейти на главную'),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
     routes: [
+      // Главный экран (fallback)
+      GoRoute(
+        path: '/home',
+        name: 'home',
+        builder: (context, state) => const MainNavigationScreen(),
+      ),
+
       // Splash screen
       GoRoute(
         path: '/',

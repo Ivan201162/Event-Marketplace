@@ -1,19 +1,23 @@
-import 'dart:math';
+﻿import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import '../models/smart_specialist.dart';
+import 'package:flutter/foundation.dart';
 import '../models/specialist.dart';
+import 'package:flutter/foundation.dart';
 
-/// Генератор тестовых данных для умного поиска
+/// Р“РµРЅРµСЂР°С‚РѕСЂ С‚РµСЃС‚РѕРІС‹С… РґР°РЅРЅС‹С… РґР»СЏ СѓРјРЅРѕРіРѕ РїРѕРёСЃРєР°
 class SmartSpecialistDataGenerator {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Random _random = Random();
 
-  /// Сгенерировать и сохранить тестовых специалистов
+  /// РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ Рё СЃРѕС…СЂР°РЅРёС‚СЊ С‚РµСЃС‚РѕРІС‹С… СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ
   Future<void> generateTestSpecialists({int count = 20}) async {
     try {
       final specialists = <SmartSpecialist>[];
 
-      // Категории для генерации
+      // РљР°С‚РµРіРѕСЂРёРё РґР»СЏ РіРµРЅРµСЂР°С†РёРё
       final categories = [
         SpecialistCategory.host,
         SpecialistCategory.photographer,
@@ -27,79 +31,79 @@ class SmartSpecialistDataGenerator {
         SpecialistCategory.caterer,
       ];
 
-      // Города
+      // Р“РѕСЂРѕРґР°
       final cities = [
-        'Москва',
-        'Санкт-Петербург',
-        'Екатеринбург',
-        'Новосибирск',
-        'Казань',
-        'Нижний Новгород',
-        'Челябинск',
-        'Самара',
-        'Омск',
-        'Ростов-на-Дону',
+        'РњРѕСЃРєРІР°',
+        'РЎР°РЅРєС‚-РџРµС‚РµСЂР±СѓСЂРі',
+        'Р•РєР°С‚РµСЂРёРЅР±СѓСЂРі',
+        'РќРѕРІРѕСЃРёР±РёСЂСЃРє',
+        'РљР°Р·Р°РЅСЊ',
+        'РќРёР¶РЅРёР№ РќРѕРІРіРѕСЂРѕРґ',
+        'Р§РµР»СЏР±РёРЅСЃРє',
+        'РЎР°РјР°СЂР°',
+        'РћРјСЃРє',
+        'Р РѕСЃС‚РѕРІ-РЅР°-Р”РѕРЅСѓ',
       ];
 
-      // Стили
+      // РЎС‚РёР»Рё
       final allStyles = [
-        'классика',
-        'современный',
-        'юмор',
-        'интерактив',
-        'романтичный',
-        'официальный',
-        'креативный',
-        'элегантный',
-        'веселый',
-        'стильный',
+        'РєР»Р°СЃСЃРёРєР°',
+        'СЃРѕРІСЂРµРјРµРЅРЅС‹Р№',
+        'СЋРјРѕСЂ',
+        'РёРЅС‚РµСЂР°РєС‚РёРІ',
+        'СЂРѕРјР°РЅС‚РёС‡РЅС‹Р№',
+        'РѕС„РёС†РёР°Р»СЊРЅС‹Р№',
+        'РєСЂРµР°С‚РёРІРЅС‹Р№',
+        'СЌР»РµРіР°РЅС‚РЅС‹Р№',
+        'РІРµСЃРµР»С‹Р№',
+        'СЃС‚РёР»СЊРЅС‹Р№',
       ];
 
-      // Имена
+      // РРјРµРЅР°
       final firstNames = [
-        'Андрей',
-        'Александр',
-        'Дмитрий',
-        'Максим',
-        'Сергей',
-        'Анна',
-        'Елена',
-        'Ольга',
-        'Татьяна',
-        'Наталья',
-        'Иван',
-        'Михаил',
-        'Владимир',
-        'Алексей',
-        'Николай',
-        'Мария',
-        'Светлана',
-        'Юлия',
-        'Ирина',
-        'Екатерина',
+        'РђРЅРґСЂРµР№',
+        'РђР»РµРєСЃР°РЅРґСЂ',
+        'Р”РјРёС‚СЂРёР№',
+        'РњР°РєСЃРёРј',
+        'РЎРµСЂРіРµР№',
+        'РђРЅРЅР°',
+        'Р•Р»РµРЅР°',
+        'РћР»СЊРіР°',
+        'РўР°С‚СЊСЏРЅР°',
+        'РќР°С‚Р°Р»СЊСЏ',
+        'РРІР°РЅ',
+        'РњРёС…Р°РёР»',
+        'Р’Р»Р°РґРёРјРёСЂ',
+        'РђР»РµРєСЃРµР№',
+        'РќРёРєРѕР»Р°Р№',
+        'РњР°СЂРёСЏ',
+        'РЎРІРµС‚Р»Р°РЅР°',
+        'Р®Р»РёСЏ',
+        'РСЂРёРЅР°',
+        'Р•РєР°С‚РµСЂРёРЅР°',
       ];
 
       final lastNames = [
-        'Иванов',
-        'Петров',
-        'Сидоров',
-        'Козлов',
-        'Новиков',
-        'Морозов',
-        'Петухов',
-        'Волков',
-        'Соловьев',
-        'Васильев',
-        'Зайцев',
-        'Павлов',
-        'Семенов',
-        'Голубев',
-        'Виноградов',
-        'Богданов',
-        'Воробьев',
-        'Федоров',
-        'Михайлов',
-        'Белов',
+        'РРІР°РЅРѕРІ',
+        'РџРµС‚СЂРѕРІ',
+        'РЎРёРґРѕСЂРѕРІ',
+        'РљРѕР·Р»РѕРІ',
+        'РќРѕРІРёРєРѕРІ',
+        'РњРѕСЂРѕР·РѕРІ',
+        'РџРµС‚СѓС…РѕРІ',
+        'Р’РѕР»РєРѕРІ',
+        'РЎРѕР»РѕРІСЊРµРІ',
+        'Р’Р°СЃРёР»СЊРµРІ',
+        'Р—Р°Р№С†РµРІ',
+        'РџР°РІР»РѕРІ',
+        'РЎРµРјРµРЅРѕРІ',
+        'Р“РѕР»СѓР±РµРІ',
+        'Р’РёРЅРѕРіСЂР°РґРѕРІ',
+        'Р‘РѕРіРґР°РЅРѕРІ',
+        'Р’РѕСЂРѕР±СЊРµРІ',
+        'Р¤РµРґРѕСЂРѕРІ',
+        'РњРёС…Р°Р№Р»РѕРІ',
+        'Р‘РµР»РѕРІ',
       ];
 
       for (var i = 0; i < count; i++) {
@@ -108,9 +112,9 @@ class SmartSpecialistDataGenerator {
         final lastName = lastNames[_random.nextInt(lastNames.length)];
         final city = cities[_random.nextInt(cities.length)];
 
-        // Генерируем стили для специалиста
+        // Р“РµРЅРµСЂРёСЂСѓРµРј СЃС‚РёР»Рё РґР»СЏ СЃРїРµС†РёР°Р»РёСЃС‚Р°
         final specialistStyles = <String>[];
-        final numStyles = _random.nextInt(3) + 1; // 1-3 стиля
+        final numStyles = _random.nextInt(3) + 1; // 1-3 СЃС‚РёР»СЏ
         for (var j = 0; j < numStyles; j++) {
           final style = allStyles[_random.nextInt(allStyles.length)];
           if (!specialistStyles.contains(style)) {
@@ -118,21 +122,21 @@ class SmartSpecialistDataGenerator {
           }
         }
 
-        // Генерируем цены в зависимости от категории
+        // Р“РµРЅРµСЂРёСЂСѓРµРј С†РµРЅС‹ РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ РєР°С‚РµРіРѕСЂРёРё
         final priceRange = _getPriceRangeForCategory(category);
         final price =
             priceRange['min'] + _random.nextDouble() * (priceRange['max'] - priceRange['min']);
 
-        // Генерируем рейтинг
+        // Р“РµРЅРµСЂРёСЂСѓРµРј СЂРµР№С‚РёРЅРі
         final rating = 3.0 + _random.nextDouble() * 2.0; // 3.0-5.0
 
-        // Генерируем опыт
-        final experienceYears = _random.nextInt(15) + 1; // 1-15 лет
+        // Р“РµРЅРµСЂРёСЂСѓРµРј РѕРїС‹С‚
+        final experienceYears = _random.nextInt(15) + 1; // 1-15 Р»РµС‚
 
-        // Генерируем количество отзывов
-        final reviewCount = _random.nextInt(100) + 1; // 1-100 отзывов
+        // Р“РµРЅРµСЂРёСЂСѓРµРј РєРѕР»РёС‡РµСЃС‚РІРѕ РѕС‚Р·С‹РІРѕРІ
+        final reviewCount = _random.nextInt(100) + 1; // 1-100 РѕС‚Р·С‹РІРѕРІ
 
-        // Генерируем доступные даты
+        // Р“РµРЅРµСЂРёСЂСѓРµРј РґРѕСЃС‚СѓРїРЅС‹Рµ РґР°С‚С‹
         final availableDates = <DateTime>[];
         final today = DateTime.now();
         for (var j = 0; j < 10; j++) {
@@ -140,7 +144,7 @@ class SmartSpecialistDataGenerator {
           availableDates.add(date);
         }
 
-        // Генерируем занятые даты
+        // Р“РµРЅРµСЂРёСЂСѓРµРј Р·Р°РЅСЏС‚С‹Рµ РґР°С‚С‹
         final busyDates = <DateTime>[];
         for (var j = 0; j < _random.nextInt(5); j++) {
           final date = today.add(Duration(days: _random.nextInt(30) + 1));
@@ -158,7 +162,7 @@ class SmartSpecialistDataGenerator {
           subcategories: _generateSubcategories(category),
           experienceLevel: _getExperienceLevel(experienceYears),
           yearsOfExperience: experienceYears,
-          hourlyRate: price / 8, // Предполагаем 8-часовой рабочий день
+          hourlyRate: price / 8, // РџСЂРµРґРїРѕР»Р°РіР°РµРј 8-С‡Р°СЃРѕРІРѕР№ СЂР°Р±РѕС‡РёР№ РґРµРЅСЊ
           price: price,
           priceFrom: price * 0.8,
           priceTo: price * 1.2,
@@ -167,7 +171,7 @@ class SmartSpecialistDataGenerator {
           city: city,
           location: city,
           isAvailable: _random.nextBool(),
-          isVerified: _random.nextDouble() > 0.3, // 70% верифицированы
+          isVerified: _random.nextDouble() > 0.3, // 70% РІРµСЂРёС„РёС†РёСЂРѕРІР°РЅС‹
           portfolioImages: _generatePortfolioImages(category),
           portfolioVideos: _generatePortfolioVideos(category),
           services: _generateServices(category),
@@ -179,7 +183,7 @@ class SmartSpecialistDataGenerator {
           createdAt: DateTime.now().subtract(Duration(days: _random.nextInt(365))),
           updatedAt: DateTime.now(),
           lastActiveAt: DateTime.now().subtract(Duration(hours: _random.nextInt(24))),
-          // Новые поля для интеллектуального поиска
+          // РќРѕРІС‹Рµ РїРѕР»СЏ РґР»СЏ РёРЅС‚РµР»Р»РµРєС‚СѓР°Р»СЊРЅРѕРіРѕ РїРѕРёСЃРєР°
           styles: specialistStyles,
           keywords: _generateKeywords(category, city, specialistStyles),
           reputationScore: _calculateReputationScore(rating, reviewCount, experienceYears),
@@ -201,7 +205,7 @@ class SmartSpecialistDataGenerator {
         specialists.add(specialist);
       }
 
-      // Сохраняем в Firestore
+      // РЎРѕС…СЂР°РЅСЏРµРј РІ Firestore
       final batch = _firestore.batch();
       for (final specialist in specialists) {
         final docRef = _firestore.collection('specialists').doc(specialist.id);
@@ -211,14 +215,14 @@ class SmartSpecialistDataGenerator {
       await batch.commit();
 
       debugPrint(
-        '✅ Сгенерировано и сохранено ${specialists.length} тестовых специалистов',
+        'вњ… РЎРіРµРЅРµСЂРёСЂРѕРІР°РЅРѕ Рё СЃРѕС…СЂР°РЅРµРЅРѕ ${specialists.length} С‚РµСЃС‚РѕРІС‹С… СЃРїРµС†РёР°Р»РёСЃС‚РѕРІ',
       );
     } catch (e) {
-      debugPrint('❌ Ошибка генерации тестовых данных: $e');
+      debugPrint('вќЊ РћС€РёР±РєР° РіРµРЅРµСЂР°С†РёРё С‚РµСЃС‚РѕРІС‹С… РґР°РЅРЅС‹С…: $e');
     }
   }
 
-  /// Получить диапазон цен для категории
+  /// РџРѕР»СѓС‡РёС‚СЊ РґРёР°РїР°Р·РѕРЅ С†РµРЅ РґР»СЏ РєР°С‚РµРіРѕСЂРёРё
   Map<String, double> _getPriceRangeForCategory(SpecialistCategory category) {
     switch (category) {
       case SpecialistCategory.host:
@@ -246,7 +250,7 @@ class SmartSpecialistDataGenerator {
     }
   }
 
-  /// Получить уровень опыта
+  /// РџРѕР»СѓС‡РёС‚СЊ СѓСЂРѕРІРµРЅСЊ РѕРїС‹С‚Р°
   ExperienceLevel _getExperienceLevel(int years) {
     if (years < 2) return ExperienceLevel.beginner;
     if (years < 5) return ExperienceLevel.intermediate;
@@ -254,66 +258,66 @@ class SmartSpecialistDataGenerator {
     return ExperienceLevel.expert;
   }
 
-  /// Сгенерировать описание
+  /// РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РѕРїРёСЃР°РЅРёРµ
   String _generateDescription(SpecialistCategory category, String firstName) {
     final descriptions = {
       SpecialistCategory.host: [
-        'Опытный ведущий с отличным чувством юмора',
-        'Профессиональный ведущий мероприятий',
-        'Креативный ведущий с индивидуальным подходом',
-        'Ведущий с многолетним опытом работы',
+        'РћРїС‹С‚РЅС‹Р№ РІРµРґСѓС‰РёР№ СЃ РѕС‚Р»РёС‡РЅС‹Рј С‡СѓРІСЃС‚РІРѕРј СЋРјРѕСЂР°',
+        'РџСЂРѕС„РµСЃСЃРёРѕРЅР°Р»СЊРЅС‹Р№ РІРµРґСѓС‰РёР№ РјРµСЂРѕРїСЂРёСЏС‚РёР№',
+        'РљСЂРµР°С‚РёРІРЅС‹Р№ РІРµРґСѓС‰РёР№ СЃ РёРЅРґРёРІРёРґСѓР°Р»СЊРЅС‹Рј РїРѕРґС…РѕРґРѕРј',
+        'Р’РµРґСѓС‰РёР№ СЃ РјРЅРѕРіРѕР»РµС‚РЅРёРј РѕРїС‹С‚РѕРј СЂР°Р±РѕС‚С‹',
       ],
       SpecialistCategory.photographer: [
-        'Фотограф с художественным видением',
-        'Профессиональный фотограф с современным стилем',
-        'Креативный фотограф с индивидуальным подходом',
-        'Фотограф с многолетним опытом',
+        'Р¤РѕС‚РѕРіСЂР°С„ СЃ С…СѓРґРѕР¶РµСЃС‚РІРµРЅРЅС‹Рј РІРёРґРµРЅРёРµРј',
+        'РџСЂРѕС„РµСЃСЃРёРѕРЅР°Р»СЊРЅС‹Р№ С„РѕС‚РѕРіСЂР°С„ СЃ СЃРѕРІСЂРµРјРµРЅРЅС‹Рј СЃС‚РёР»РµРј',
+        'РљСЂРµР°С‚РёРІРЅС‹Р№ С„РѕС‚РѕРіСЂР°С„ СЃ РёРЅРґРёРІРёРґСѓР°Р»СЊРЅС‹Рј РїРѕРґС…РѕРґРѕРј',
+        'Р¤РѕС‚РѕРіСЂР°С„ СЃ РјРЅРѕРіРѕР»РµС‚РЅРёРј РѕРїС‹С‚РѕРј',
       ],
       SpecialistCategory.dj: [
-        'DJ с отличным музыкальным вкусом',
-        'Профессиональный диджей с современным звуком',
-        'DJ с многолетним опытом работы',
-        'Креативный диджей с индивидуальным стилем',
+        'DJ СЃ РѕС‚Р»РёС‡РЅС‹Рј РјСѓР·С‹РєР°Р»СЊРЅС‹Рј РІРєСѓСЃРѕРј',
+        'РџСЂРѕС„РµСЃСЃРёРѕРЅР°Р»СЊРЅС‹Р№ РґРёРґР¶РµР№ СЃ СЃРѕРІСЂРµРјРµРЅРЅС‹Рј Р·РІСѓРєРѕРј',
+        'DJ СЃ РјРЅРѕРіРѕР»РµС‚РЅРёРј РѕРїС‹С‚РѕРј СЂР°Р±РѕС‚С‹',
+        'РљСЂРµР°С‚РёРІРЅС‹Р№ РґРёРґР¶РµР№ СЃ РёРЅРґРёРІРёРґСѓР°Р»СЊРЅС‹Рј СЃС‚РёР»РµРј',
       ],
     };
 
-    final categoryDescriptions = descriptions[category] ?? ['Профессиональный специалист'];
+    final categoryDescriptions = descriptions[category] ?? ['РџСЂРѕС„РµСЃСЃРёРѕРЅР°Р»СЊРЅС‹Р№ СЃРїРµС†РёР°Р»РёСЃС‚'];
     return categoryDescriptions[_random.nextInt(categoryDescriptions.length)];
   }
 
-  /// Сгенерировать биографию
+  /// РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ Р±РёРѕРіСЂР°С„РёСЋ
   String _generateBio(
     SpecialistCategory category,
     String firstName,
     int experienceYears,
   ) =>
-      'Привет! Меня зовут $firstName, и я работаю в сфере ${category.displayName.toLowerCase()} уже $experienceYears лет. '
-      'Люблю создавать незабываемые моменты для моих клиентов. '
-      'Имею опыт работы с различными типами мероприятий и всегда нахожу индивидуальный подход к каждому клиенту.';
+      'РџСЂРёРІРµС‚! РњРµРЅСЏ Р·РѕРІСѓС‚ $firstName, Рё СЏ СЂР°Р±РѕС‚Р°СЋ РІ СЃС„РµСЂРµ ${category.displayName.toLowerCase()} СѓР¶Рµ $experienceYears Р»РµС‚. '
+      'Р›СЋР±Р»СЋ СЃРѕР·РґР°РІР°С‚СЊ РЅРµР·Р°Р±С‹РІР°РµРјС‹Рµ РјРѕРјРµРЅС‚С‹ РґР»СЏ РјРѕРёС… РєР»РёРµРЅС‚РѕРІ. '
+      'РРјРµСЋ РѕРїС‹С‚ СЂР°Р±РѕС‚С‹ СЃ СЂР°Р·Р»РёС‡РЅС‹РјРё С‚РёРїР°РјРё РјРµСЂРѕРїСЂРёСЏС‚РёР№ Рё РІСЃРµРіРґР° РЅР°С…РѕР¶Сѓ РёРЅРґРёРІРёРґСѓР°Р»СЊРЅС‹Р№ РїРѕРґС…РѕРґ Рє РєР°Р¶РґРѕРјСѓ РєР»РёРµРЅС‚Сѓ.';
 
-  /// Сгенерировать подкатегории
+  /// РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РїРѕРґРєР°С‚РµРіРѕСЂРёРё
   List<String> _generateSubcategories(SpecialistCategory category) {
     final subcategories = {
-      SpecialistCategory.host: ['свадьбы', 'корпоративы', 'дни рождения'],
+      SpecialistCategory.host: ['СЃРІР°РґСЊР±С‹', 'РєРѕСЂРїРѕСЂР°С‚РёРІС‹', 'РґРЅРё СЂРѕР¶РґРµРЅРёСЏ'],
       SpecialistCategory.photographer: [
-        'свадебная съемка',
-        'портретная съемка',
-        'репортажная съемка',
+        'СЃРІР°РґРµР±РЅР°СЏ СЃСЉРµРјРєР°',
+        'РїРѕСЂС‚СЂРµС‚РЅР°СЏ СЃСЉРµРјРєР°',
+        'СЂРµРїРѕСЂС‚Р°Р¶РЅР°СЏ СЃСЉРµРјРєР°',
       ],
-      SpecialistCategory.dj: ['электронная музыка', 'поп-музыка', 'рок-музыка'],
+      SpecialistCategory.dj: ['СЌР»РµРєС‚СЂРѕРЅРЅР°СЏ РјСѓР·С‹РєР°', 'РїРѕРї-РјСѓР·С‹РєР°', 'СЂРѕРє-РјСѓР·С‹РєР°'],
       SpecialistCategory.musician: [
-        'живая музыка',
-        'каверы',
-        'авторские композиции',
+        'Р¶РёРІР°СЏ РјСѓР·С‹РєР°',
+        'РєР°РІРµСЂС‹',
+        'Р°РІС‚РѕСЂСЃРєРёРµ РєРѕРјРїРѕР·РёС†РёРё',
       ],
     };
 
-    return subcategories[category] ?? ['услуги'];
+    return subcategories[category] ?? ['СѓСЃР»СѓРіРё'];
   }
 
-  /// Сгенерировать изображения портфолио
+  /// РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РїРѕСЂС‚С„РѕР»РёРѕ
   List<String> _generatePortfolioImages(SpecialistCategory category) {
-    final count = _random.nextInt(5) + 3; // 3-7 изображений
+    final count = _random.nextInt(5) + 3; // 3-7 РёР·РѕР±СЂР°Р¶РµРЅРёР№
     final images = <String>[];
 
     for (var i = 0; i < count; i++) {
@@ -323,7 +327,7 @@ class SmartSpecialistDataGenerator {
     return images;
   }
 
-  /// Сгенерировать видео портфолио
+  /// РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РІРёРґРµРѕ РїРѕСЂС‚С„РѕР»РёРѕ
   List<String> _generatePortfolioVideos(SpecialistCategory category) {
     if (_random.nextBool()) {
       return [
@@ -334,68 +338,68 @@ class SmartSpecialistDataGenerator {
     return [];
   }
 
-  /// Сгенерировать услуги
+  /// РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ СѓСЃР»СѓРіРё
   List<String> _generateServices(SpecialistCategory category) {
     final services = {
       SpecialistCategory.host: [
-        'ведущий мероприятия',
-        'развлекательная программа',
-        'игры и конкурсы',
+        'РІРµРґСѓС‰РёР№ РјРµСЂРѕРїСЂРёСЏС‚РёСЏ',
+        'СЂР°Р·РІР»РµРєР°С‚РµР»СЊРЅР°СЏ РїСЂРѕРіСЂР°РјРјР°',
+        'РёРіСЂС‹ Рё РєРѕРЅРєСѓСЂСЃС‹',
       ],
       SpecialistCategory.photographer: [
-        'фотосъемка',
-        'обработка фото',
-        'печать фотографий',
+        'С„РѕС‚РѕСЃСЉРµРјРєР°',
+        'РѕР±СЂР°Р±РѕС‚РєР° С„РѕС‚Рѕ',
+        'РїРµС‡Р°С‚СЊ С„РѕС‚РѕРіСЂР°С„РёР№',
       ],
       SpecialistCategory.dj: [
-        'музыкальное сопровождение',
-        'звуковое оборудование',
-        'световое шоу',
+        'РјСѓР·С‹РєР°Р»СЊРЅРѕРµ СЃРѕРїСЂРѕРІРѕР¶РґРµРЅРёРµ',
+        'Р·РІСѓРєРѕРІРѕРµ РѕР±РѕСЂСѓРґРѕРІР°РЅРёРµ',
+        'СЃРІРµС‚РѕРІРѕРµ С€РѕСѓ',
       ],
       SpecialistCategory.musician: [
-        'живое выступление',
-        'музыкальное сопровождение',
-        'интерактив с гостями',
+        'Р¶РёРІРѕРµ РІС‹СЃС‚СѓРїР»РµРЅРёРµ',
+        'РјСѓР·С‹РєР°Р»СЊРЅРѕРµ СЃРѕРїСЂРѕРІРѕР¶РґРµРЅРёРµ',
+        'РёРЅС‚РµСЂР°РєС‚РёРІ СЃ РіРѕСЃС‚СЏРјРё',
       ],
     };
 
-    return services[category] ?? ['услуги'];
+    return services[category] ?? ['СѓСЃР»СѓРіРё'];
   }
 
-  /// Сгенерировать оборудование
+  /// РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РѕР±РѕСЂСѓРґРѕРІР°РЅРёРµ
   List<String> _generateEquipment(SpecialistCategory category) {
     final equipment = {
       SpecialistCategory.host: [
-        'микрофон',
-        'колонки',
-        'музыкальное оборудование',
+        'РјРёРєСЂРѕС„РѕРЅ',
+        'РєРѕР»РѕРЅРєРё',
+        'РјСѓР·С‹РєР°Р»СЊРЅРѕРµ РѕР±РѕСЂСѓРґРѕРІР°РЅРёРµ',
       ],
       SpecialistCategory.photographer: [
-        'профессиональная камера',
-        'объективы',
-        'освещение',
+        'РїСЂРѕС„РµСЃСЃРёРѕРЅР°Р»СЊРЅР°СЏ РєР°РјРµСЂР°',
+        'РѕР±СЉРµРєС‚РёРІС‹',
+        'РѕСЃРІРµС‰РµРЅРёРµ',
       ],
-      SpecialistCategory.dj: ['DJ-пульт', 'колонки', 'микрофоны'],
+      SpecialistCategory.dj: ['DJ-РїСѓР»СЊС‚', 'РєРѕР»РѕРЅРєРё', 'РјРёРєСЂРѕС„РѕРЅС‹'],
       SpecialistCategory.musician: [
-        'музыкальные инструменты',
-        'усилители',
-        'микрофоны',
+        'РјСѓР·С‹РєР°Р»СЊРЅС‹Рµ РёРЅСЃС‚СЂСѓРјРµРЅС‚С‹',
+        'СѓСЃРёР»РёС‚РµР»Рё',
+        'РјРёРєСЂРѕС„РѕРЅС‹',
       ],
     };
 
-    return equipment[category] ?? ['оборудование'];
+    return equipment[category] ?? ['РѕР±РѕСЂСѓРґРѕРІР°РЅРёРµ'];
   }
 
-  /// Сгенерировать языки
+  /// РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ СЏР·С‹РєРё
   List<String> _generateLanguages() {
-    final languages = ['Русский', 'Английский'];
+    final languages = ['Р СѓСЃСЃРєРёР№', 'РђРЅРіР»РёР№СЃРєРёР№'];
     if (_random.nextBool()) {
-      languages.add('Немецкий');
+      languages.add('РќРµРјРµС†РєРёР№');
     }
     return languages;
   }
 
-  /// Сгенерировать рабочие часы
+  /// РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ СЂР°Р±РѕС‡РёРµ С‡Р°СЃС‹
   Map<String, String> _generateWorkingHours() => {
         'monday': '09:00-18:00',
         'tuesday': '09:00-18:00',
@@ -403,10 +407,10 @@ class SmartSpecialistDataGenerator {
         'thursday': '09:00-18:00',
         'friday': '09:00-18:00',
         'saturday': '10:00-16:00',
-        'sunday': 'Выходной',
+        'sunday': 'Р’С‹С…РѕРґРЅРѕР№',
       };
 
-  /// Сгенерировать ключевые слова
+  /// РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РєР»СЋС‡РµРІС‹Рµ СЃР»РѕРІР°
   List<String> _generateKeywords(
     SpecialistCategory category,
     String city,
@@ -418,19 +422,19 @@ class SmartSpecialistDataGenerator {
     keywords.add(city.toLowerCase());
     keywords.addAll(styles);
 
-    // Добавляем дополнительные ключевые слова
+    // Р”РѕР±Р°РІР»СЏРµРј РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РєР»СЋС‡РµРІС‹Рµ СЃР»РѕРІР°
     final additionalKeywords = [
-      'профессиональный',
-      'опытный',
-      'качественный',
-      'надежный',
+      'РїСЂРѕС„РµСЃСЃРёРѕРЅР°Р»СЊРЅС‹Р№',
+      'РѕРїС‹С‚РЅС‹Р№',
+      'РєР°С‡РµСЃС‚РІРµРЅРЅС‹Р№',
+      'РЅР°РґРµР¶РЅС‹Р№',
     ];
     keywords.addAll(additionalKeywords);
 
     return keywords;
   }
 
-  /// Вычислить балл репутации
+  /// Р’С‹С‡РёСЃР»РёС‚СЊ Р±Р°Р»Р» СЂРµРїСѓС‚Р°С†РёРё
   int _calculateReputationScore(
     double rating,
     int reviewCount,
@@ -438,22 +442,22 @@ class SmartSpecialistDataGenerator {
   ) {
     var score = 0;
 
-    // Базовый балл за рейтинг
+    // Р‘Р°Р·РѕРІС‹Р№ Р±Р°Р»Р» Р·Р° СЂРµР№С‚РёРЅРі
     score += (rating * 10).round();
 
-    // Бонус за количество отзывов
+    // Р‘РѕРЅСѓСЃ Р·Р° РєРѕР»РёС‡РµСЃС‚РІРѕ РѕС‚Р·С‹РІРѕРІ
     if (reviewCount > 10) score += 10;
     if (reviewCount > 50) score += 10;
     if (reviewCount > 100) score += 10;
 
-    // Бонус за опыт
+    // Р‘РѕРЅСѓСЃ Р·Р° РѕРїС‹С‚
     if (experienceYears > 5) score += 10;
     if (experienceYears > 10) score += 10;
 
     return score.clamp(0, 100);
   }
 
-  /// Сгенерировать теги для поиска
+  /// РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ С‚РµРіРё РґР»СЏ РїРѕРёСЃРєР°
   List<String> _generateSearchTags(
     SpecialistCategory category,
     String city,
@@ -468,80 +472,80 @@ class SmartSpecialistDataGenerator {
     return tags;
   }
 
-  /// Сгенерировать типы мероприятий
+  /// РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ С‚РёРїС‹ РјРµСЂРѕРїСЂРёСЏС‚РёР№
   List<String> _generateEventTypes(SpecialistCategory category) {
     final eventTypes = {
       SpecialistCategory.host: [
-        'свадьба',
-        'корпоратив',
-        'день рождения',
-        'юбилей',
+        'СЃРІР°РґСЊР±Р°',
+        'РєРѕСЂРїРѕСЂР°С‚РёРІ',
+        'РґРµРЅСЊ СЂРѕР¶РґРµРЅРёСЏ',
+        'СЋР±РёР»РµР№',
       ],
       SpecialistCategory.photographer: [
-        'свадьба',
-        'фотосессия',
-        'корпоратив',
-        'день рождения',
+        'СЃРІР°РґСЊР±Р°',
+        'С„РѕС‚РѕСЃРµСЃСЃРёСЏ',
+        'РєРѕСЂРїРѕСЂР°С‚РёРІ',
+        'РґРµРЅСЊ СЂРѕР¶РґРµРЅРёСЏ',
       ],
       SpecialistCategory.dj: [
-        'свадьба',
-        'корпоратив',
-        'день рождения',
-        'вечеринка',
+        'СЃРІР°РґСЊР±Р°',
+        'РєРѕСЂРїРѕСЂР°С‚РёРІ',
+        'РґРµРЅСЊ СЂРѕР¶РґРµРЅРёСЏ',
+        'РІРµС‡РµСЂРёРЅРєР°',
       ],
       SpecialistCategory.musician: [
-        'свадьба',
-        'корпоратив',
-        'день рождения',
-        'концерт',
+        'СЃРІР°РґСЊР±Р°',
+        'РєРѕСЂРїРѕСЂР°С‚РёРІ',
+        'РґРµРЅСЊ СЂРѕР¶РґРµРЅРёСЏ',
+        'РєРѕРЅС†РµСЂС‚',
       ],
     };
 
-    return eventTypes[category] ?? ['мероприятие'];
+    return eventTypes[category] ?? ['РјРµСЂРѕРїСЂРёСЏС‚РёРµ'];
   }
 
-  /// Сгенерировать специализации
+  /// РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ СЃРїРµС†РёР°Р»РёР·Р°С†РёРё
   List<String> _generateSpecializations(SpecialistCategory category) {
     final specializations = <String>[];
 
     specializations.add(category.displayName);
 
     if (_random.nextBool()) {
-      specializations.add('опытный');
+      specializations.add('РѕРїС‹С‚РЅС‹Р№');
     }
 
     return specializations;
   }
 
-  /// Сгенерировать стиль работы
+  /// РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ СЃС‚РёР»СЊ СЂР°Р±РѕС‚С‹
   Map<String, dynamic> _generateWorkingStyle(SpecialistCategory category) => {
-        'communication': _random.nextBool() ? 'отличная' : 'хорошая',
+        'communication': _random.nextBool() ? 'РѕС‚Р»РёС‡РЅР°СЏ' : 'С…РѕСЂРѕС€Р°СЏ',
         'punctuality': 0.8 + _random.nextDouble() * 0.2,
-        'flexibility': _random.nextBool() ? 'высокая' : 'средняя',
-        'creativity': _random.nextBool() ? 'высокая' : 'средняя',
+        'flexibility': _random.nextBool() ? 'РІС‹СЃРѕРєР°СЏ' : 'СЃСЂРµРґРЅСЏСЏ',
+        'creativity': _random.nextBool() ? 'РІС‹СЃРѕРєР°СЏ' : 'СЃСЂРµРґРЅСЏСЏ',
       };
 
-  /// Сгенерировать черты характера
+  /// РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ С‡РµСЂС‚С‹ С…Р°СЂР°РєС‚РµСЂР°
   List<String> _generatePersonalityTraits(double rating, int experienceYears) {
     final traits = <String>[];
 
     if (rating > 4.5) {
-      traits.add('профессиональный');
+      traits.add('РїСЂРѕС„РµСЃСЃРёРѕРЅР°Р»СЊРЅС‹Р№');
     }
     if (experienceYears > 5) {
-      traits.add('опытный');
+      traits.add('РѕРїС‹С‚РЅС‹Р№');
     }
     if (_random.nextBool()) {
-      traits.add('креативный');
+      traits.add('РєСЂРµР°С‚РёРІРЅС‹Р№');
     }
     if (_random.nextBool()) {
-      traits.add('надежный');
+      traits.add('РЅР°РґРµР¶РЅС‹Р№');
     }
 
     return traits;
   }
 
-  /// Сгенерировать паттерн доступности
+  /// РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РїР°С‚С‚РµСЂРЅ РґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё
   Map<String, dynamic> _generateAvailabilityPattern() => {
         'weekdays': true,
         'weekends': _random.nextBool(),
@@ -549,37 +553,37 @@ class SmartSpecialistDataGenerator {
         'flexible': _random.nextBool(),
       };
 
-  /// Сгенерировать предпочтения клиентов
+  /// РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РїСЂРµРґРїРѕС‡С‚РµРЅРёСЏ РєР»РёРµРЅС‚РѕРІ
   Map<String, dynamic> _generateClientPreferences(double price) {
     String budgetRange;
     if (price < 15000) {
-      budgetRange = 'бюджетный';
+      budgetRange = 'Р±СЋРґР¶РµС‚РЅС‹Р№';
     } else if (price < 30000) {
-      budgetRange = 'средний';
+      budgetRange = 'СЃСЂРµРґРЅРёР№';
     } else {
-      budgetRange = 'премиум';
+      budgetRange = 'РїСЂРµРјРёСѓРј';
     }
 
     return {
       'budgetRange': budgetRange,
-      'eventSize': _random.nextBool() ? 'любой' : 'малый-средний',
-      'style': _random.nextBool() ? 'премиум' : 'стандартный',
+      'eventSize': _random.nextBool() ? 'Р»СЋР±РѕР№' : 'РјР°Р»С‹Р№-СЃСЂРµРґРЅРёР№',
+      'style': _random.nextBool() ? 'РїСЂРµРјРёСѓРј' : 'СЃС‚Р°РЅРґР°СЂС‚РЅС‹Р№',
     };
   }
 
-  /// Сгенерировать метрики производительности
+  /// РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РјРµС‚СЂРёРєРё РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚Рё
   Map<String, dynamic> _generatePerformanceMetrics(
     double rating,
     int reviewCount,
   ) =>
       {
-        'responseTime': _random.nextBool() ? 'быстрый' : 'средний',
+        'responseTime': _random.nextBool() ? 'Р±С‹СЃС‚СЂС‹Р№' : 'СЃСЂРµРґРЅРёР№',
         'completionRate': 0.9 + _random.nextDouble() * 0.1,
         'cancellationRate': _random.nextDouble() * 0.1,
         'clientSatisfaction': rating,
       };
 
-  /// Сгенерировать факторы рекомендаций
+  /// РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ С„Р°РєС‚РѕСЂС‹ СЂРµРєРѕРјРµРЅРґР°С†РёР№
   Map<String, dynamic> _generateRecommendationFactors(
     double rating,
     int reviewCount,
@@ -593,3 +597,4 @@ class SmartSpecialistDataGenerator {
         'verification': _random.nextBool(),
       };
 }
+

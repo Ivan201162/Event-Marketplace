@@ -52,7 +52,7 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen> with Ticker
     });
 
     try {
-      final promotions = await _promotionService.getActivePromotions();
+      final promotions = await _promotionService.getActivePromotions('current_user_id');
       setState(() {
         _allPromotions = promotions;
         _filteredPromotions = promotions;

@@ -1,10 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 // import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:pdf/pdf.dart';
+import 'package:flutter/foundation.dart';
 import 'package:pdf/widgets.dart' as pw;
 import '../models/payment_extended.dart';
+import 'package:flutter/foundation.dart';
 
-/// Сервис для работы с расширенными платежами
+/// РЎРµСЂРІРёСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ СЂР°СЃС€РёСЂРµРЅРЅС‹РјРё РїР»Р°С‚РµР¶Р°РјРё
 class PaymentExtendedService {
   factory PaymentExtendedService() => _instance;
   PaymentExtendedService._internal();
@@ -13,7 +17,7 @@ class PaymentExtendedService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   // final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  /// Создать новый платеж
+  /// РЎРѕР·РґР°С‚СЊ РЅРѕРІС‹Р№ РїР»Р°С‚РµР¶
   Future<String?> createPayment({
     required String bookingId,
     required String customerId,
@@ -30,10 +34,10 @@ class PaymentExtendedService {
       const paidAmount = 0;
       final remainingAmount = totalAmount;
 
-      // Создаем рассрочку в зависимости от типа платежа
+      // РЎРѕР·РґР°РµРј СЂР°СЃСЃСЂРѕС‡РєСѓ РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ С‚РёРїР° РїР»Р°С‚РµР¶Р°
       switch (type) {
         case PaymentType.full:
-          // Полная оплата - один платеж
+          // РџРѕР»РЅР°СЏ РѕРїР»Р°С‚Р° - РѕРґРёРЅ РїР»Р°С‚РµР¶
           installments = [
             PaymentInstallment(
               id: '${paymentRef.id}_1',
@@ -45,7 +49,7 @@ class PaymentExtendedService {
           break;
 
         case PaymentType.advance:
-          // Предоплата
+          // РџСЂРµРґРѕРїР»Р°С‚Р°
           final advanceAmount = totalAmount * (advancePercentage ?? 0.3);
           final remainingAfterAdvance = totalAmount - advanceAmount;
 
@@ -71,7 +75,7 @@ class PaymentExtendedService {
           break;
 
         case PaymentType.installment:
-          // Рассрочка
+          // Р Р°СЃСЃСЂРѕС‡РєР°
           final count = installmentsCount ?? 3;
           final installmentAmount = totalAmount / count;
 
@@ -88,7 +92,7 @@ class PaymentExtendedService {
           break;
 
         case PaymentType.partial:
-          // Частичная оплата
+          // Р§Р°СЃС‚РёС‡РЅР°СЏ РѕРїР»Р°С‚Р°
           final partialAmount = totalAmount * 0.5;
           installments = [
             PaymentInstallment(
@@ -130,7 +134,7 @@ class PaymentExtendedService {
     }
   }
 
-  /// Обновить платеж
+  /// РћР±РЅРѕРІРёС‚СЊ РїР»Р°С‚РµР¶
   Future<bool> updatePayment(PaymentExtended payment) async {
     try {
       await _firestore.collection('payments').doc(payment.id).update(payment.toMap());
@@ -141,7 +145,7 @@ class PaymentExtendedService {
     }
   }
 
-  /// Получить платеж по ID
+  /// РџРѕР»СѓС‡РёС‚СЊ РїР»Р°С‚РµР¶ РїРѕ ID
   Future<PaymentExtended?> getPayment(String paymentId) async {
     try {
       final doc = await _firestore.collection('payments').doc(paymentId).get();
@@ -155,7 +159,7 @@ class PaymentExtendedService {
     }
   }
 
-  /// Получить платежи пользователя
+  /// РџРѕР»СѓС‡РёС‚СЊ РїР»Р°С‚РµР¶Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Stream<List<PaymentExtended>> getUserPayments(
     String userId, {
     bool isCustomer = true,
@@ -171,7 +175,7 @@ class PaymentExtendedService {
         );
   }
 
-  /// Оплатить взнос
+  /// РћРїР»Р°С‚РёС‚СЊ РІР·РЅРѕСЃ
   Future<bool> payInstallment({
     required String paymentId,
     required String installmentId,
@@ -181,7 +185,7 @@ class PaymentExtendedService {
       final payment = await getPayment(paymentId);
       if (payment == null) return false;
 
-      // Обновляем взнос
+      // РћР±РЅРѕРІР»СЏРµРј РІР·РЅРѕСЃ
       final updatedInstallments = payment.installments.map((installment) {
         if (installment.id == installmentId) {
           return installment.copyWith(
@@ -193,7 +197,7 @@ class PaymentExtendedService {
         return installment;
       }).toList();
 
-      // Пересчитываем суммы
+      // РџРµСЂРµСЃС‡РёС‚С‹РІР°РµРј СЃСѓРјРјС‹
       final paidAmount = updatedInstallments
           .where((i) => i.status == PaymentStatus.completed)
           .fold(0, (total, i) => total + i.amount);
@@ -201,7 +205,7 @@ class PaymentExtendedService {
       final remainingAmount = payment.totalAmount - paidAmount;
       final status = remainingAmount <= 0 ? PaymentStatus.completed : PaymentStatus.processing;
 
-      // Обновляем платеж
+      // РћР±РЅРѕРІР»СЏРµРј РїР»Р°С‚РµР¶
       final updatedPayment = payment.copyWith(
         installments: updatedInstallments,
         paidAmount: paidAmount.toDouble(),
@@ -217,7 +221,7 @@ class PaymentExtendedService {
     }
   }
 
-  /// Создать PDF квитанцию
+  /// РЎРѕР·РґР°С‚СЊ PDF РєРІРёС‚Р°РЅС†РёСЋ
   Future<String?> generateReceiptPdf(PaymentExtended payment) async {
     try {
       final pdf = pw.Document();
@@ -228,10 +232,10 @@ class PaymentExtendedService {
           build: (context) => pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              // Заголовок
+              // Р—Р°РіРѕР»РѕРІРѕРє
               pw.Center(
                 child: pw.Text(
-                  'КВИТАНЦИЯ ОБ ОПЛАТЕ',
+                  'РљР’РРўРђРќР¦РРЇ РћР‘ РћРџР›РђРўР•',
                   style: pw.TextStyle(
                     fontSize: 20,
                     fontWeight: pw.FontWeight.bold,
@@ -240,25 +244,25 @@ class PaymentExtendedService {
               ),
               pw.SizedBox(height: 20),
 
-              // Информация о платеже
-              pw.Text('Номер платежа: ${payment.id}'),
-              pw.Text('Дата создания: ${_formatDate(payment.createdAt)}'),
-              pw.Text('Статус: ${_getStatusText(payment.status)}'),
+              // РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РїР»Р°С‚РµР¶Рµ
+              pw.Text('РќРѕРјРµСЂ РїР»Р°С‚РµР¶Р°: ${payment.id}'),
+              pw.Text('Р”Р°С‚Р° СЃРѕР·РґР°РЅРёСЏ: ${_formatDate(payment.createdAt)}'),
+              pw.Text('РЎС‚Р°С‚СѓСЃ: ${_getStatusText(payment.status)}'),
               pw.SizedBox(height: 10),
 
-              // Суммы
+              // РЎСѓРјРјС‹
               pw.Text(
-                'Общая сумма: ${payment.totalAmount.toStringAsFixed(2)} ₽',
+                'РћР±С‰Р°СЏ СЃСѓРјРјР°: ${payment.totalAmount.toStringAsFixed(2)} в‚Ѕ',
               ),
-              pw.Text('Оплачено: ${payment.paidAmount.toStringAsFixed(2)} ₽'),
+              pw.Text('РћРїР»Р°С‡РµРЅРѕ: ${payment.paidAmount.toStringAsFixed(2)} в‚Ѕ'),
               pw.Text(
-                'Остаток: ${payment.remainingAmount.toStringAsFixed(2)} ₽',
+                'РћСЃС‚Р°С‚РѕРє: ${payment.remainingAmount.toStringAsFixed(2)} в‚Ѕ',
               ),
               pw.SizedBox(height: 20),
 
-              // Взносы
+              // Р’Р·РЅРѕСЃС‹
               pw.Text(
-                'Взносы:',
+                'Р’Р·РЅРѕСЃС‹:',
                 style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
               ),
               pw.SizedBox(height: 10),
@@ -270,7 +274,7 @@ class PaymentExtendedService {
                     mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                     children: [
                       pw.Text(_formatDate(installment.dueDate)),
-                      pw.Text('${installment.amount.toStringAsFixed(2)} ₽'),
+                      pw.Text('${installment.amount.toStringAsFixed(2)} в‚Ѕ'),
                       pw.Text(_getStatusText(installment.status)),
                     ],
                   ),
@@ -281,7 +285,7 @@ class PaymentExtendedService {
         ),
       );
 
-      // Сохраняем PDF
+      // РЎРѕС…СЂР°РЅСЏРµРј PDF
       // final bytes = await pdf.save();
       final fileName = 'receipt_${payment.id}_${DateTime.now().millisecondsSinceEpoch}.pdf';
       // final ref = _storage.ref().child('receipts/$fileName');
@@ -291,7 +295,7 @@ class PaymentExtendedService {
       // final downloadUrl = await snapshot.ref.getDownloadURL();
       final downloadUrl = await _uploadReceipt(File(receiptPath));
 
-      // Обновляем платеж с URL квитанции
+      // РћР±РЅРѕРІР»СЏРµРј РїР»Р°С‚РµР¶ СЃ URL РєРІРёС‚Р°РЅС†РёРё
       final updatedPayment = payment.copyWith(
         receiptPdfUrl: downloadUrl,
         updatedAt: DateTime.now(),
@@ -305,7 +309,7 @@ class PaymentExtendedService {
     }
   }
 
-  /// Создать PDF счёт
+  /// РЎРѕР·РґР°С‚СЊ PDF СЃС‡С‘С‚
   Future<String?> generateInvoicePdf(PaymentExtended payment) async {
     try {
       final pdf = pw.Document();
@@ -316,10 +320,10 @@ class PaymentExtendedService {
           build: (context) => pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              // Заголовок
+              // Р—Р°РіРѕР»РѕРІРѕРє
               pw.Center(
                 child: pw.Text(
-                  'СЧЁТ НА ОПЛАТУ',
+                  'РЎР§РЃРў РќРђ РћРџР›РђРўРЈ',
                   style: pw.TextStyle(
                     fontSize: 20,
                     fontWeight: pw.FontWeight.bold,
@@ -328,15 +332,15 @@ class PaymentExtendedService {
               ),
               pw.SizedBox(height: 20),
 
-              // Информация о счёте
-              pw.Text('Номер счёта: ${payment.id}'),
-              pw.Text('Дата создания: ${_formatDate(payment.createdAt)}'),
+              // РРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЃС‡С‘С‚Рµ
+              pw.Text('РќРѕРјРµСЂ СЃС‡С‘С‚Р°: ${payment.id}'),
+              pw.Text('Р”Р°С‚Р° СЃРѕР·РґР°РЅРёСЏ: ${_formatDate(payment.createdAt)}'),
               pw.Text(
-                'Срок оплаты: ${_formatDate(DateTime.now().add(const Duration(days: 7)))}',
+                'РЎСЂРѕРє РѕРїР»Р°С‚С‹: ${_formatDate(DateTime.now().add(const Duration(days: 7)))}',
               ),
               pw.SizedBox(height: 10),
 
-              // Сумма к оплате
+              // РЎСѓРјРјР° Рє РѕРїР»Р°С‚Рµ
               pw.Container(
                 padding: const pw.EdgeInsets.all(16),
                 decoration: pw.BoxDecoration(
@@ -344,7 +348,7 @@ class PaymentExtendedService {
                 ),
                 child: pw.Center(
                   child: pw.Text(
-                    'К ОПЛАТЕ: ${payment.remainingAmount.toStringAsFixed(2)} ₽',
+                    'Рљ РћРџР›РђРўР•: ${payment.remainingAmount.toStringAsFixed(2)} в‚Ѕ',
                     style: pw.TextStyle(
                       fontSize: 18,
                       fontWeight: pw.FontWeight.bold,
@@ -354,26 +358,26 @@ class PaymentExtendedService {
               ),
               pw.SizedBox(height: 20),
 
-              // Детали платежа
+              // Р”РµС‚Р°Р»Рё РїР»Р°С‚РµР¶Р°
               pw.Text(
-                'Детали платежа:',
+                'Р”РµС‚Р°Р»Рё РїР»Р°С‚РµР¶Р°:',
                 style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
               ),
               pw.SizedBox(height: 10),
 
               pw.Text(
-                'Общая сумма: ${payment.totalAmount.toStringAsFixed(2)} ₽',
+                'РћР±С‰Р°СЏ СЃСѓРјРјР°: ${payment.totalAmount.toStringAsFixed(2)} в‚Ѕ',
               ),
-              pw.Text('Оплачено: ${payment.paidAmount.toStringAsFixed(2)} ₽'),
+              pw.Text('РћРїР»Р°С‡РµРЅРѕ: ${payment.paidAmount.toStringAsFixed(2)} в‚Ѕ'),
               pw.Text(
-                'Остаток: ${payment.remainingAmount.toStringAsFixed(2)} ₽',
+                'РћСЃС‚Р°С‚РѕРє: ${payment.remainingAmount.toStringAsFixed(2)} в‚Ѕ',
               ),
             ],
           ),
         ),
       );
 
-      // Сохраняем PDF
+      // РЎРѕС…СЂР°РЅСЏРµРј PDF
       // final bytes = await pdf.save();
       final fileName = 'invoice_${payment.id}_${DateTime.now().millisecondsSinceEpoch}.pdf';
       // final ref = _storage.ref().child('invoices/$fileName');
@@ -383,7 +387,7 @@ class PaymentExtendedService {
       // final downloadUrl = await snapshot.ref.getDownloadURL();
       final downloadUrl = await _uploadInvoice(File(invoicePath));
 
-      // Обновляем платеж с URL счёта
+      // РћР±РЅРѕРІР»СЏРµРј РїР»Р°С‚РµР¶ СЃ URL СЃС‡С‘С‚Р°
       final updatedPayment = payment.copyWith(
         invoicePdfUrl: downloadUrl,
         updatedAt: DateTime.now(),
@@ -397,7 +401,7 @@ class PaymentExtendedService {
     }
   }
 
-  /// Получить статистику платежей
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃС‚Р°С‚РёСЃС‚РёРєСѓ РїР»Р°С‚РµР¶РµР№
   Future<PaymentStats> getPaymentStats(
     String userId, {
     bool isCustomer = true,
@@ -444,7 +448,7 @@ class PaymentExtendedService {
     }
   }
 
-  /// Получить настройки предоплаты
+  /// РџРѕР»СѓС‡РёС‚СЊ РЅР°СЃС‚СЂРѕР№РєРё РїСЂРµРґРѕРїР»Р°С‚С‹
   Future<AdvancePaymentSettings> getAdvancePaymentSettings() async {
     try {
       final doc = await _firestore.collection('settings').doc('advance_payment').get();
@@ -458,7 +462,7 @@ class PaymentExtendedService {
     }
   }
 
-  /// Обновить настройки предоплаты
+  /// РћР±РЅРѕРІРёС‚СЊ РЅР°СЃС‚СЂРѕР№РєРё РїСЂРµРґРѕРїР»Р°С‚С‹
   Future<bool> updateAdvancePaymentSettings(
     AdvancePaymentSettings settings,
   ) async {
@@ -477,21 +481,21 @@ class PaymentExtendedService {
   String _getStatusText(PaymentStatus status) {
     switch (status) {
       case PaymentStatus.pending:
-        return 'Ожидает оплаты';
+        return 'РћР¶РёРґР°РµС‚ РѕРїР»Р°С‚С‹';
       case PaymentStatus.processing:
-        return 'В обработке';
+        return 'Р’ РѕР±СЂР°Р±РѕС‚РєРµ';
       case PaymentStatus.completed:
-        return 'Оплачено';
+        return 'РћРїР»Р°С‡РµРЅРѕ';
       case PaymentStatus.failed:
-        return 'Ошибка';
+        return 'РћС€РёР±РєР°';
       case PaymentStatus.cancelled:
-        return 'Отменено';
+        return 'РћС‚РјРµРЅРµРЅРѕ';
       case PaymentStatus.refunded:
-        return 'Возвращено';
+        return 'Р’РѕР·РІСЂР°С‰РµРЅРѕ';
     }
   }
 
-  /// Загрузить квитанцию в Firebase Storage
+  /// Р—Р°РіСЂСѓР·РёС‚СЊ РєРІРёС‚Р°РЅС†РёСЋ РІ Firebase Storage
   Future<String> _uploadReceipt(File receiptFile) async {
     try {
       // TODO(developer): Implement actual Firebase Storage upload
@@ -501,15 +505,15 @@ class PaymentExtendedService {
       // final downloadUrl = await snapshot.ref.getDownloadURL();
       // return downloadUrl;
 
-      // Временная заглушка
+      // Р’СЂРµРјРµРЅРЅР°СЏ Р·Р°РіР»СѓС€РєР°
       return 'https://example.com/receipts/${DateTime.now().millisecondsSinceEpoch}.pdf';
     } on Exception catch (e) {
-      debugPrint('Ошибка загрузки квитанции: $e');
+      debugPrint('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё РєРІРёС‚Р°РЅС†РёРё: $e');
       rethrow;
     }
   }
 
-  /// Загрузить счёт в Firebase Storage
+  /// Р—Р°РіСЂСѓР·РёС‚СЊ СЃС‡С‘С‚ РІ Firebase Storage
   Future<String> _uploadInvoice(File invoiceFile) async {
     try {
       // TODO(developer): Implement actual Firebase Storage upload
@@ -519,11 +523,12 @@ class PaymentExtendedService {
       // final downloadUrl = await snapshot.ref.getDownloadURL();
       // return downloadUrl;
 
-      // Временная заглушка
+      // Р’СЂРµРјРµРЅРЅР°СЏ Р·Р°РіР»СѓС€РєР°
       return 'https://example.com/invoices/${DateTime.now().millisecondsSinceEpoch}.pdf';
     } on Exception catch (e) {
-      debugPrint('Ошибка загрузки счёта: $e');
+      debugPrint('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё СЃС‡С‘С‚Р°: $e');
       rethrow;
     }
   }
 }
+

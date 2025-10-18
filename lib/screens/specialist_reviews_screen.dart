@@ -1,13 +1,20 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/review.dart';
+import 'package:flutter/foundation.dart';
 import '../models/specialist.dart';
+import 'package:flutter/foundation.dart';
 import '../services/review_service.dart';
+import 'package:flutter/foundation.dart';
 import '../widgets/rating_summary_widget.dart';
+import 'package:flutter/foundation.dart';
 import '../widgets/review_card.dart';
+import 'package:flutter/foundation.dart';
 
-/// Экран отзывов специалиста
+/// Р­РєСЂР°РЅ РѕС‚Р·С‹РІРѕРІ СЃРїРµС†РёР°Р»РёСЃС‚Р°
 class SpecialistReviewsScreen extends StatefulWidget {
   const SpecialistReviewsScreen({
     super.key,
@@ -49,7 +56,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
       });
     } on Exception catch (e) {
       setState(() => _isLoading = false);
-      _showErrorSnackBar('Ошибка загрузки отзывов: $e');
+      _showErrorSnackBar('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё РѕС‚Р·С‹РІРѕРІ: $e');
     }
   }
 
@@ -58,7 +65,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
       final stats = await _reviewService.getSpecialistReviewStats(widget.specialist.id);
       setState(() => _stats = stats);
     } on Exception catch (e) {
-      debugPrint('Ошибка загрузки статистики: $e');
+      debugPrint('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё СЃС‚Р°С‚РёСЃС‚РёРєРё: $e');
     }
   }
 
@@ -80,7 +87,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
       });
     } on Exception catch (e) {
       setState(() => _isLoading = false);
-      _showErrorSnackBar('Ошибка загрузки отзывов: $e');
+      _showErrorSnackBar('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё РѕС‚Р·С‹РІРѕРІ: $e');
     }
   }
 
@@ -96,7 +103,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text('Отзывы ${widget.specialist.name}'),
+          title: Text('РћС‚Р·С‹РІС‹ ${widget.specialist.name}'),
           backgroundColor: Colors.white,
           foregroundColor: Colors.black,
           elevation: 1,
@@ -105,7 +112,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
             ? const Center(child: CircularProgressIndicator())
             : Column(
                 children: [
-                  // Сводка по рейтингу
+                  // РЎРІРѕРґРєР° РїРѕ СЂРµР№С‚РёРЅРіСѓ
                   if (_stats.isNotEmpty)
                     RatingSummaryWidget(
                       averageRating: _stats['averageRating']?.toDouble() ?? 0.0,
@@ -115,7 +122,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
                       ),
                     ),
 
-                  // Список отзывов
+                  // РЎРїРёСЃРѕРє РѕС‚Р·С‹РІРѕРІ
                   Expanded(
                     child: _reviews.isEmpty
                         ? _buildEmptyState()
@@ -126,7 +133,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
                               itemCount: _reviews.length + (_hasMore ? 1 : 0),
                               itemBuilder: (context, index) {
                                 if (index == _reviews.length) {
-                                  // Кнопка "Загрузить еще"
+                                  // РљРЅРѕРїРєР° "Р—Р°РіСЂСѓР·РёС‚СЊ РµС‰Рµ"
                                   return _buildLoadMoreButton();
                                 }
 
@@ -156,14 +163,14 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Пока нет отзывов',
+              'РџРѕРєР° РЅРµС‚ РѕС‚Р·С‹РІРѕРІ',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     color: Colors.grey[600],
                   ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Станьте первым, кто оставит отзыв об этом специалисте',
+              'РЎС‚Р°РЅСЊС‚Рµ РїРµСЂРІС‹Рј, РєС‚Рѕ РѕСЃС‚Р°РІРёС‚ РѕС‚Р·С‹РІ РѕР± СЌС‚РѕРј СЃРїРµС†РёР°Р»РёСЃС‚Рµ',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Colors.grey[500],
                   ),
@@ -180,13 +187,13 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
               ? const CircularProgressIndicator()
               : ElevatedButton(
                   onPressed: _loadMoreReviews,
-                  child: const Text('Загрузить еще'),
+                  child: const Text('Р—Р°РіСЂСѓР·РёС‚СЊ РµС‰Рµ'),
                 ),
         ),
       );
 
   void _editReview(Review review) {
-    // TODO(developer): Переход к экрану редактирования отзыва
+    // TODO(developer): РџРµСЂРµС…РѕРґ Рє СЌРєСЂР°РЅСѓ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РѕС‚Р·С‹РІР°
     context.push('/edit-review', extra: review);
   }
 
@@ -194,12 +201,12 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Удалить отзыв'),
-        content: const Text('Вы уверены, что хотите удалить этот отзыв?'),
+        title: const Text('РЈРґР°Р»РёС‚СЊ РѕС‚Р·С‹РІ'),
+        content: const Text('Р’С‹ СѓРІРµСЂРµРЅС‹, С‡С‚Рѕ С…РѕС‚РёС‚Рµ СѓРґР°Р»РёС‚СЊ СЌС‚РѕС‚ РѕС‚Р·С‹РІ?'),
         actions: [
           TextButton(
             onPressed: () => context.pop(),
-            child: const Text('Отмена'),
+            child: const Text('РћС‚РјРµРЅР°'),
           ),
           TextButton(
             onPressed: () async {
@@ -209,16 +216,17 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
                 _loadReviews();
                 _loadStats();
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Отзыв удален')),
+                  const SnackBar(content: Text('РћС‚Р·С‹РІ СѓРґР°Р»РµРЅ')),
                 );
               } on Exception catch (e) {
-                _showErrorSnackBar('Ошибка удаления отзыва: $e');
+                _showErrorSnackBar('РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ РѕС‚Р·С‹РІР°: $e');
               }
             },
-            child: const Text('Удалить', style: TextStyle(color: Colors.red)),
+            child: const Text('РЈРґР°Р»РёС‚СЊ', style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
     );
   }
 }
+

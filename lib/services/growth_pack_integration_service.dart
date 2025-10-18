@@ -1,21 +1,33 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import 'ab_testing_service.dart';
+import 'package:flutter/foundation.dart';
 import 'automated_promotions_service.dart';
+import 'package:flutter/foundation.dart';
 import 'dynamic_pricing_service.dart';
+import 'package:flutter/foundation.dart';
 import 'growth_mechanics_service.dart';
+import 'package:flutter/foundation.dart';
 import 'growth_notifications_service.dart';
+import 'package:flutter/foundation.dart';
 import 'partnership_service.dart';
+import 'package:flutter/foundation.dart';
 import 'receipt_service.dart';
+import 'package:flutter/foundation.dart';
 import 'referral_service.dart';
+import 'package:flutter/foundation.dart';
 import 'revenue_analytics_service.dart';
+import 'package:flutter/foundation.dart';
 import 'smart_advertising_service.dart';
+import 'package:flutter/foundation.dart';
 
 class GrowthPackIntegrationService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Сервисы Growth Pack
+  // РЎРµСЂРІРёСЃС‹ Growth Pack
   final ReferralService _referralService = ReferralService();
   final DynamicPricingService _dynamicPricingService = DynamicPricingService();
   final SmartAdvertisingService _smartAdvertisingService = SmartAdvertisingService();
@@ -27,18 +39,18 @@ class GrowthPackIntegrationService {
   final AutomatedPromotionsService _automatedPromotionsService = AutomatedPromotionsService();
   final GrowthNotificationsService _growthNotificationsService = GrowthNotificationsService();
 
-  /// Инициализация всех сервисов Growth Pack
+  /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РІСЃРµС… СЃРµСЂРІРёСЃРѕРІ Growth Pack
   Future<void> initializeGrowthPack() async {
     try {
       debugPrint('INFO: [GrowthPackIntegrationService] Initializing Growth Pack...');
 
-      // Создаем предустановленные данные
+      // РЎРѕР·РґР°РµРј РїСЂРµРґСѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹Рµ РґР°РЅРЅС‹Рµ
       await _createDefaultData();
 
-      // Создаем предустановленные A/B тесты
+      // РЎРѕР·РґР°РµРј РїСЂРµРґСѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹Рµ A/B С‚РµСЃС‚С‹
       await _abTestingService.createMonetizationABTests();
 
-      // Создаем автоматические промо-кампании
+      // РЎРѕР·РґР°РµРј Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРёРµ РїСЂРѕРјРѕ-РєР°РјРїР°РЅРёРё
       await _automatedPromotionsService.createDefaultPromotions();
 
       debugPrint('INFO: [GrowthPackIntegrationService] Growth Pack initialized successfully');
@@ -47,22 +59,22 @@ class GrowthPackIntegrationService {
     }
   }
 
-  /// Создание предустановленных данных
+  /// РЎРѕР·РґР°РЅРёРµ РїСЂРµРґСѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹С… РґР°РЅРЅС‹С…
   Future<void> _createDefaultData() async {
     try {
-      // Создаем достижения
+      // РЎРѕР·РґР°РµРј РґРѕСЃС‚РёР¶РµРЅРёСЏ
       await _createDefaultAchievements();
 
-      // Создаем значки
+      // РЎРѕР·РґР°РµРј Р·РЅР°С‡РєРё
       await _createDefaultBadges();
 
-      // Создаем челленджи
+      // РЎРѕР·РґР°РµРј С‡РµР»Р»РµРЅРґР¶Рё
       await _createDefaultChallenges();
 
-      // Создаем правила динамического ценообразования
+      // РЎРѕР·РґР°РµРј РїСЂР°РІРёР»Р° РґРёРЅР°РјРёС‡РµСЃРєРѕРіРѕ С†РµРЅРѕРѕР±СЂР°Р·РѕРІР°РЅРёСЏ
       await _createDefaultPricingRules();
 
-      // Создаем правила умной рекламы
+      // РЎРѕР·РґР°РµРј РїСЂР°РІРёР»Р° СѓРјРЅРѕР№ СЂРµРєР»Р°РјС‹
       await _createDefaultSmartAdRules();
 
       debugPrint('INFO: [GrowthPackIntegrationService] Default data created');
@@ -71,14 +83,14 @@ class GrowthPackIntegrationService {
     }
   }
 
-  /// Создание предустановленных достижений
+  /// РЎРѕР·РґР°РЅРёРµ РїСЂРµРґСѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹С… РґРѕСЃС‚РёР¶РµРЅРёР№
   Future<void> _createDefaultAchievements() async {
     try {
       final List<Map<String, dynamic>> achievements = [
         {
           'id': 'first_referral',
-          'name': 'Первый реферал',
-          'description': 'Пригласите первого друга',
+          'name': 'РџРµСЂРІС‹Р№ СЂРµС„РµСЂР°Р»',
+          'description': 'РџСЂРёРіР»Р°СЃРёС‚Рµ РїРµСЂРІРѕРіРѕ РґСЂСѓРіР°',
           'type': 'referral',
           'condition': {'type': 'referral_count', 'count': 1},
           'reward': {'type': 'premium_days', 'days': 3},
@@ -88,8 +100,8 @@ class GrowthPackIntegrationService {
         },
         {
           'id': 'referral_master',
-          'name': 'Мастер рефералов',
-          'description': 'Пригласите 10 друзей',
+          'name': 'РњР°СЃС‚РµСЂ СЂРµС„РµСЂР°Р»РѕРІ',
+          'description': 'РџСЂРёРіР»Р°СЃРёС‚Рµ 10 РґСЂСѓР·РµР№',
           'type': 'referral',
           'condition': {'type': 'referral_count', 'count': 10},
           'reward': {'type': 'premium_days', 'days': 30},
@@ -99,8 +111,8 @@ class GrowthPackIntegrationService {
         },
         {
           'id': 'first_purchase',
-          'name': 'Первый покупатель',
-          'description': 'Совершите первую покупку',
+          'name': 'РџРµСЂРІС‹Р№ РїРѕРєСѓРїР°С‚РµР»СЊ',
+          'description': 'РЎРѕРІРµСЂС€РёС‚Рµ РїРµСЂРІСѓСЋ РїРѕРєСѓРїРєСѓ',
           'type': 'purchase',
           'condition': {'type': 'purchase_count', 'count': 1},
           'reward': {'type': 'badge', 'badgeId': 'first_buyer'},
@@ -110,8 +122,8 @@ class GrowthPackIntegrationService {
         },
         {
           'id': 'big_spender',
-          'name': 'Большой тратчик',
-          'description': 'Потратьте 10,000 рублей',
+          'name': 'Р‘РѕР»СЊС€РѕР№ С‚СЂР°С‚С‡РёРє',
+          'description': 'РџРѕС‚СЂР°С‚СЊС‚Рµ 10,000 СЂСѓР±Р»РµР№',
           'type': 'purchase',
           'condition': {'type': 'total_spent', 'amount': 10000.0},
           'reward': {'type': 'discount', 'value': 0.15},
@@ -121,8 +133,8 @@ class GrowthPackIntegrationService {
         },
         {
           'id': 'level_10',
-          'name': 'Уровень 10',
-          'description': 'Достигните 10 уровня',
+          'name': 'РЈСЂРѕРІРµРЅСЊ 10',
+          'description': 'Р”РѕСЃС‚РёРіРЅРёС‚Рµ 10 СѓСЂРѕРІРЅСЏ',
           'type': 'level',
           'condition': {'type': 'level_reached', 'level': 10},
           'reward': {'type': 'premium_days', 'days': 7},
@@ -142,14 +154,14 @@ class GrowthPackIntegrationService {
     }
   }
 
-  /// Создание предустановленных значков
+  /// РЎРѕР·РґР°РЅРёРµ РїСЂРµРґСѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹С… Р·РЅР°С‡РєРѕРІ
   Future<void> _createDefaultBadges() async {
     try {
       final List<Map<String, dynamic>> badges = [
         {
           'id': 'first_buyer',
-          'name': 'Первый покупатель',
-          'description': 'Совершил первую покупку',
+          'name': 'РџРµСЂРІС‹Р№ РїРѕРєСѓРїР°С‚РµР»СЊ',
+          'description': 'РЎРѕРІРµСЂС€РёР» РїРµСЂРІСѓСЋ РїРѕРєСѓРїРєСѓ',
           'type': 'purchase',
           'category': 'monetization',
           'icon': 'shopping_cart',
@@ -159,8 +171,8 @@ class GrowthPackIntegrationService {
         },
         {
           'id': 'referral_champion',
-          'name': 'Чемпион рефералов',
-          'description': 'Пригласил 10+ друзей',
+          'name': 'Р§РµРјРїРёРѕРЅ СЂРµС„РµСЂР°Р»РѕРІ',
+          'description': 'РџСЂРёРіР»Р°СЃРёР» 10+ РґСЂСѓР·РµР№',
           'type': 'referral',
           'category': 'social',
           'icon': 'people',
@@ -170,8 +182,8 @@ class GrowthPackIntegrationService {
         },
         {
           'id': 'level_master',
-          'name': 'Мастер уровней',
-          'description': 'Достиг высокого уровня',
+          'name': 'РњР°СЃС‚РµСЂ СѓСЂРѕРІРЅРµР№',
+          'description': 'Р”РѕСЃС‚РёРі РІС‹СЃРѕРєРѕРіРѕ СѓСЂРѕРІРЅСЏ',
           'type': 'level',
           'category': 'progress',
           'icon': 'star',
@@ -181,8 +193,8 @@ class GrowthPackIntegrationService {
         },
         {
           'id': 'challenge_completer',
-          'name': 'Завершитель челленджей',
-          'description': 'Завершил 5+ челленджей',
+          'name': 'Р—Р°РІРµСЂС€РёС‚РµР»СЊ С‡РµР»Р»РµРЅРґР¶РµР№',
+          'description': 'Р—Р°РІРµСЂС€РёР» 5+ С‡РµР»Р»РµРЅРґР¶РµР№',
           'type': 'challenge',
           'category': 'achievement',
           'icon': 'emoji_events',
@@ -202,13 +214,13 @@ class GrowthPackIntegrationService {
     }
   }
 
-  /// Создание предустановленных челленджей
+  /// РЎРѕР·РґР°РЅРёРµ РїСЂРµРґСѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹С… С‡РµР»Р»РµРЅРґР¶РµР№
   Future<void> _createDefaultChallenges() async {
     try {
-      // Челлендж "Пригласи 5 друзей"
+      // Р§РµР»Р»РµРЅРґР¶ "РџСЂРёРіР»Р°СЃРё 5 РґСЂСѓР·РµР№"
       await _growthMechanicsService.createChallenge(
-        name: 'Пригласи 5 друзей',
-        description: 'Пригласите 5 друзей и получите месяц Premium бесплатно!',
+        name: 'РџСЂРёРіР»Р°СЃРё 5 РґСЂСѓР·РµР№',
+        description: 'РџСЂРёРіР»Р°СЃРёС‚Рµ 5 РґСЂСѓР·РµР№ Рё РїРѕР»СѓС‡РёС‚Рµ РјРµСЃСЏС† Premium Р±РµСЃРїР»Р°С‚РЅРѕ!',
         type: 'referral',
         startDate: DateTime.now(),
         endDate: DateTime.now().add(const Duration(days: 30)),
@@ -224,10 +236,10 @@ class GrowthPackIntegrationService {
         category: 'social',
       );
 
-      // Челлендж "Потрать 5,000 рублей"
+      // Р§РµР»Р»РµРЅРґР¶ "РџРѕС‚СЂР°С‚СЊ 5,000 СЂСѓР±Р»РµР№"
       await _growthMechanicsService.createChallenge(
-        name: 'Потрать 5,000 рублей',
-        description: 'Потратьте 5,000 рублей и получите скидку 20%!',
+        name: 'РџРѕС‚СЂР°С‚СЊ 5,000 СЂСѓР±Р»РµР№',
+        description: 'РџРѕС‚СЂР°С‚СЊС‚Рµ 5,000 СЂСѓР±Р»РµР№ Рё РїРѕР»СѓС‡РёС‚Рµ СЃРєРёРґРєСѓ 20%!',
         type: 'purchase',
         startDate: DateTime.now(),
         endDate: DateTime.now().add(const Duration(days: 60)),
@@ -242,10 +254,10 @@ class GrowthPackIntegrationService {
         category: 'monetization',
       );
 
-      // Челлендж "Достигни 5 уровня"
+      // Р§РµР»Р»РµРЅРґР¶ "Р”РѕСЃС‚РёРіРЅРё 5 СѓСЂРѕРІРЅСЏ"
       await _growthMechanicsService.createChallenge(
-        name: 'Достигни 5 уровня',
-        description: 'Достигните 5 уровня и получите эксклюзивный значок!',
+        name: 'Р”РѕСЃС‚РёРіРЅРё 5 СѓСЂРѕРІРЅСЏ',
+        description: 'Р”РѕСЃС‚РёРіРЅРёС‚Рµ 5 СѓСЂРѕРІРЅСЏ Рё РїРѕР»СѓС‡РёС‚Рµ СЌРєСЃРєР»СЋР·РёРІРЅС‹Р№ Р·РЅР°С‡РѕРє!',
         type: 'level',
         startDate: DateTime.now(),
         endDate: DateTime.now().add(const Duration(days: 90)),
@@ -266,10 +278,10 @@ class GrowthPackIntegrationService {
     }
   }
 
-  /// Создание правил динамического ценообразования
+  /// РЎРѕР·РґР°РЅРёРµ РїСЂР°РІРёР» РґРёРЅР°РјРёС‡РµСЃРєРѕРіРѕ С†РµРЅРѕРѕР±СЂР°Р·РѕРІР°РЅРёСЏ
   Future<void> _createDefaultPricingRules() async {
     try {
-      // Правило для подписок
+      // РџСЂР°РІРёР»Рѕ РґР»СЏ РїРѕРґРїРёСЃРѕРє
       await _firestore.collection('pricing_rules').doc('subscription_pricing').set({
         'id': 'subscription_pricing',
         'serviceType': 'subscription',
@@ -292,7 +304,7 @@ class GrowthPackIntegrationService {
         },
       });
 
-      // Правило для продвижений
+      // РџСЂР°РІРёР»Рѕ РґР»СЏ РїСЂРѕРґРІРёР¶РµРЅРёР№
       await _firestore.collection('pricing_rules').doc('promotion_pricing').set({
         'id': 'promotion_pricing',
         'serviceType': 'promotion',
@@ -318,10 +330,10 @@ class GrowthPackIntegrationService {
     }
   }
 
-  /// Создание правил умной рекламы
+  /// РЎРѕР·РґР°РЅРёРµ РїСЂР°РІРёР» СѓРјРЅРѕР№ СЂРµРєР»Р°РјС‹
   Future<void> _createDefaultSmartAdRules() async {
     try {
-      // Правило для показа рекламы по интересам
+      // РџСЂР°РІРёР»Рѕ РґР»СЏ РїРѕРєР°Р·Р° СЂРµРєР»Р°РјС‹ РїРѕ РёРЅС‚РµСЂРµСЃР°Рј
       await _firestore.collection('smart_ad_rules').doc('interest_based_ads').set({
         'id': 'interest_based_ads',
         'placementType': 'banner',
@@ -337,7 +349,7 @@ class GrowthPackIntegrationService {
         },
       });
 
-      // Правило для показа рекламы по истории просмотров
+      // РџСЂР°РІРёР»Рѕ РґР»СЏ РїРѕРєР°Р·Р° СЂРµРєР»Р°РјС‹ РїРѕ РёСЃС‚РѕСЂРёРё РїСЂРѕСЃРјРѕС‚СЂРѕРІ
       await _firestore.collection('smart_ad_rules').doc('history_based_ads').set({
         'id': 'history_based_ads',
         'placementType': 'profileRecommendation',
@@ -353,7 +365,7 @@ class GrowthPackIntegrationService {
         },
       });
 
-      // Правило для показа рекламы по локации
+      // РџСЂР°РІРёР»Рѕ РґР»СЏ РїРѕРєР°Р·Р° СЂРµРєР»Р°РјС‹ РїРѕ Р»РѕРєР°С†РёРё
       await _firestore.collection('smart_ad_rules').doc('location_based_ads').set({
         'id': 'location_based_ads',
         'placementType': 'feedInsertion',
@@ -376,23 +388,23 @@ class GrowthPackIntegrationService {
     }
   }
 
-  /// Обработка события пользователя (интеграция всех сервисов)
+  /// РћР±СЂР°Р±РѕС‚РєР° СЃРѕР±С‹С‚РёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ (РёРЅС‚РµРіСЂР°С†РёСЏ РІСЃРµС… СЃРµСЂРІРёСЃРѕРІ)
   Future<void> handleUserEvent(
       String userId, String eventType, Map<String, dynamic> eventData) async {
     try {
       debugPrint(
           'INFO: [GrowthPackIntegrationService] Handling user event: $eventType for user $userId');
 
-      // Обработка в сервисе геймификации
+      // РћР±СЂР°Р±РѕС‚РєР° РІ СЃРµСЂРІРёСЃРµ РіРµР№РјРёС„РёРєР°С†РёРё
       await _growthMechanicsService.checkAndAwardAchievements(userId, eventType, eventData);
 
-      // Обработка в сервисе автоматических промо-кампаний
+      // РћР±СЂР°Р±РѕС‚РєР° РІ СЃРµСЂРІРёСЃРµ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРёС… РїСЂРѕРјРѕ-РєР°РјРїР°РЅРёР№
       await _automatedPromotionsService.checkAndExecutePromotions(userId, eventType, eventData);
 
-      // Обработка в сервисе A/B тестирования
+      // РћР±СЂР°Р±РѕС‚РєР° РІ СЃРµСЂРІРёСЃРµ A/B С‚РµСЃС‚РёСЂРѕРІР°РЅРёСЏ
       await _abTestingService.logEvent(userId, 'general_test', eventType, eventData);
 
-      // Добавление опыта за активность
+      // Р”РѕР±Р°РІР»РµРЅРёРµ РѕРїС‹С‚Р° Р·Р° Р°РєС‚РёРІРЅРѕСЃС‚СЊ
       await _addExperienceForEvent(userId, eventType, eventData);
 
       debugPrint('INFO: [GrowthPackIntegrationService] User event handled successfully');
@@ -401,7 +413,7 @@ class GrowthPackIntegrationService {
     }
   }
 
-  /// Добавление опыта за событие
+  /// Р”РѕР±Р°РІР»РµРЅРёРµ РѕРїС‹С‚Р° Р·Р° СЃРѕР±С‹С‚РёРµ
   Future<void> _addExperienceForEvent(
       String userId, String eventType, Map<String, dynamic> eventData) async {
     try {
@@ -411,43 +423,43 @@ class GrowthPackIntegrationService {
       switch (eventType) {
         case 'user_registration':
           experience = 100;
-          reason = 'Регистрация';
+          reason = 'Р РµРіРёСЃС‚СЂР°С†РёСЏ';
           break;
         case 'first_purchase':
           experience = 200;
-          reason = 'Первая покупка';
+          reason = 'РџРµСЂРІР°СЏ РїРѕРєСѓРїРєР°';
           break;
         case 'referral_completed':
           experience = 150;
-          reason = 'Реферал зарегистрирован';
+          reason = 'Р РµС„РµСЂР°Р» Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅ';
           break;
         case 'challenge_completed':
           experience = 300;
-          reason = 'Челлендж завершен';
+          reason = 'Р§РµР»Р»РµРЅРґР¶ Р·Р°РІРµСЂС€РµРЅ';
           break;
         case 'achievement_earned':
           experience = 100;
-          reason = 'Достижение получено';
+          reason = 'Р”РѕСЃС‚РёР¶РµРЅРёРµ РїРѕР»СѓС‡РµРЅРѕ';
           break;
         case 'daily_login':
           experience = 10;
-          reason = 'Ежедневный вход';
+          reason = 'Р•Р¶РµРґРЅРµРІРЅС‹Р№ РІС…РѕРґ';
           break;
         case 'profile_view':
           experience = 5;
-          reason = 'Просмотр профиля';
+          reason = 'РџСЂРѕСЃРјРѕС‚СЂ РїСЂРѕС„РёР»СЏ';
           break;
         case 'message_sent':
           experience = 3;
-          reason = 'Отправлено сообщение';
+          reason = 'РћС‚РїСЂР°РІР»РµРЅРѕ СЃРѕРѕР±С‰РµРЅРёРµ';
           break;
         case 'idea_created':
           experience = 20;
-          reason = 'Создана идея';
+          reason = 'РЎРѕР·РґР°РЅР° РёРґРµСЏ';
           break;
         case 'request_created':
           experience = 15;
-          reason = 'Создан запрос';
+          reason = 'РЎРѕР·РґР°РЅ Р·Р°РїСЂРѕСЃ';
           break;
       }
 
@@ -459,26 +471,26 @@ class GrowthPackIntegrationService {
     }
   }
 
-  /// Получение статистики Growth Pack для пользователя
+  /// РџРѕР»СѓС‡РµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРєРё Growth Pack РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<Map<String, dynamic>> getUserGrowthStats(String userId) async {
     try {
-      // Получаем уровень пользователя
+      // РџРѕР»СѓС‡Р°РµРј СѓСЂРѕРІРµРЅСЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
       final DocumentSnapshot levelDoc =
           await _firestore.collection('user_levels').doc(userId).get();
 
-      // Получаем достижения
+      // РџРѕР»СѓС‡Р°РµРј РґРѕСЃС‚РёР¶РµРЅРёСЏ
       final QuerySnapshot achievementsSnapshot =
           await _firestore.collection('user_achievements').where('userId', isEqualTo: userId).get();
 
-      // Получаем значки
+      // РџРѕР»СѓС‡Р°РµРј Р·РЅР°С‡РєРё
       final QuerySnapshot badgesSnapshot =
           await _firestore.collection('user_badges').where('userId', isEqualTo: userId).get();
 
-      // Получаем челленджи
+      // РџРѕР»СѓС‡Р°РµРј С‡РµР»Р»РµРЅРґР¶Рё
       final QuerySnapshot challengesSnapshot =
           await _firestore.collection('user_challenges').where('userId', isEqualTo: userId).get();
 
-      // Получаем рефералов
+      // РџРѕР»СѓС‡Р°РµРј СЂРµС„РµСЂР°Р»РѕРІ
       final QuerySnapshot referralsSnapshot =
           await _firestore.collection('referrals').where('referrerId', isEqualTo: userId).get();
 
@@ -508,23 +520,23 @@ class GrowthPackIntegrationService {
     }
   }
 
-  /// Получение статистики Growth Pack для администратора
+  /// РџРѕР»СѓС‡РµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРєРё Growth Pack РґР»СЏ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°
   Future<Map<String, dynamic>> getAdminGrowthStats() async {
     try {
-      // Получаем общую статистику пользователей
+      // РџРѕР»СѓС‡Р°РµРј РѕР±С‰СѓСЋ СЃС‚Р°С‚РёСЃС‚РёРєСѓ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
       final QuerySnapshot usersSnapshot = await _firestore.collection('users').get();
 
-      // Получаем статистику рефералов
+      // РџРѕР»СѓС‡Р°РµРј СЃС‚Р°С‚РёСЃС‚РёРєСѓ СЂРµС„РµСЂР°Р»РѕРІ
       final QuerySnapshot referralsSnapshot = await _firestore.collection('referrals').get();
 
-      // Получаем статистику транзакций
+      // РџРѕР»СѓС‡Р°РµРј СЃС‚Р°С‚РёСЃС‚РёРєСѓ С‚СЂР°РЅР·Р°РєС†РёР№
       final QuerySnapshot transactionsSnapshot = await _firestore.collection('transactions').get();
 
-      // Получаем статистику достижений
+      // РџРѕР»СѓС‡Р°РµРј СЃС‚Р°С‚РёСЃС‚РёРєСѓ РґРѕСЃС‚РёР¶РµРЅРёР№
       final QuerySnapshot achievementsSnapshot =
           await _firestore.collection('user_achievements').get();
 
-      // Получаем статистику челленджей
+      // РџРѕР»СѓС‡Р°РµРј СЃС‚Р°С‚РёСЃС‚РёРєСѓ С‡РµР»Р»РµРЅРґР¶РµР№
       final QuerySnapshot challengesSnapshot = await _firestore.collection('user_challenges').get();
 
       return {
@@ -558,3 +570,4 @@ class GrowthPackIntegrationService {
     }
   }
 }
+

@@ -266,9 +266,6 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
       MaterialPageRoute(
         builder: (context) => ChatScreen(
           chatId: chat.id,
-          otherParticipantId: otherParticipantId,
-          otherParticipantName: otherParticipantName,
-          otherParticipantAvatar: otherParticipantAvatar,
         ),
       ),
     );

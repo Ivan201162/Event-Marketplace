@@ -356,6 +356,69 @@ class AppUser {
     return map;
   }
 
+  /// Конвертировать в Map для JSON сериализации (без Timestamp)
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{
+      'id': id,
+      'email': email,
+      'displayName': displayName,
+      'photoURL': photoURL,
+      'role': role.name,
+      'createdAt': createdAt.toIso8601String(),
+      'lastLoginAt': lastLoginAt?.toIso8601String(),
+      'isActive': isActive,
+      'socialProvider': socialProvider,
+      'socialId': socialId,
+      'additionalData': additionalData,
+      'maritalStatus': maritalStatus?.name,
+      'weddingDate': weddingDate?.toIso8601String(),
+      'partnerName': partnerName,
+      'anniversaryRemindersEnabled': anniversaryRemindersEnabled,
+      'city': city,
+      'region': region,
+      'avatarUrl': avatarUrl,
+      'updatedAt': updatedAt?.toIso8601String(),
+    };
+
+    return map;
+  }
+
+  /// Создать пользователя из JSON
+  factory AppUser.fromJson(Map<String, dynamic> json) => AppUser(
+        id: json['id'] as String? ?? '',
+        email: json['email'] as String? ?? '',
+        displayName: json['displayName'] as String?,
+        photoURL: json['photoURL'] as String?,
+        role: _parseUserRole(json['role']),
+        createdAt: json['createdAt'] != null 
+            ? DateTime.parse(json['createdAt'] as String)
+            : DateTime.now(),
+        lastLoginAt: json['lastLoginAt'] != null 
+            ? DateTime.parse(json['lastLoginAt'] as String)
+            : null,
+        isActive: json['isActive'] as bool? ?? true,
+        socialProvider: json['socialProvider'] as String?,
+        socialId: json['socialId'] as String?,
+        additionalData: json['additionalData'] as Map<String, dynamic>?,
+        maritalStatus: json['maritalStatus'] != null
+            ? MaritalStatus.values.firstWhere(
+                (e) => e.name == json['maritalStatus'],
+                orElse: () => MaritalStatus.single,
+              )
+            : null,
+        weddingDate: json['weddingDate'] != null 
+            ? DateTime.parse(json['weddingDate'] as String)
+            : null,
+        partnerName: json['partnerName'] as String?,
+        anniversaryRemindersEnabled: json['anniversaryRemindersEnabled'] as bool? ?? false,
+        city: json['city'] as String?,
+        region: json['region'] as String?,
+        avatarUrl: json['avatarUrl'] as String?,
+        updatedAt: json['updatedAt'] != null 
+            ? DateTime.parse(json['updatedAt'] as String)
+            : null,
+      );
+
   /// Парсинг временных полей
   static DateTime _parseTs(v) {
     if (v is Timestamp) return v.toDate();

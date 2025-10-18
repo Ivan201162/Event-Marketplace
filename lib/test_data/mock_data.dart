@@ -28,7 +28,7 @@ class MockData {
           description:
               'Профессиональный фотограф с 5-летним опытом. Специализируюсь на свадебной и портретной фотографии.',
           location: 'Москва',
-          specialties: ['Свадьбы', 'Портреты', 'Семейные фотосессии'],
+          categories: [SpecialistCategory.photographer],
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
@@ -52,7 +52,7 @@ class MockData {
           description:
               'Опытный видеограф для создания незабываемых моментов. Снимаю свадьбы, корпоративы, рекламные ролики.',
           location: 'Санкт-Петербург',
-          specialties: ['Свадебные фильмы', 'Корпоративы', 'Промо-ролики'],
+          categories: [SpecialistCategory.videographer],
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
@@ -76,7 +76,7 @@ class MockData {
           description:
               'Профессиональная ведущая мероприятий любого формата. Создаю атмосферу праздника и веселья.',
           location: 'Алматы',
-          specialties: ['Свадьбы', 'Дни рождения', 'Корпоративы'],
+          categories: [SpecialistCategory.dj],
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
@@ -100,7 +100,7 @@ class MockData {
           description:
               'Опытный DJ с большим выбором музыки для любого мероприятия. Создам идеальный плейлист для вашего праздника.',
           location: 'Астана',
-          specialties: ['Свадьбы', 'Корпоративы', 'Клубы'],
+          categories: [SpecialistCategory.host],
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
@@ -124,11 +124,7 @@ class MockData {
           description:
               'Креативный декоратор для создания уникальной атмосферы. Оформление свадеб, юбилеев, детских праздников.',
           location: 'Караганда',
-          specialties: [
-            'Свадебный декор',
-            'Оформление мероприятий',
-            'Флористика',
-          ],
+          categories: [SpecialistCategory.decorator],
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
@@ -187,7 +183,7 @@ class MockData {
           price: 700000,
           organizerId: 'org4',
           organizerName: 'ТОО "SchoolEvent"',
-          category: EventCategory.graduation,
+          category: EventCategory.conference,
           status: EventStatus.active,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
@@ -201,7 +197,7 @@ class MockData {
           price: 2000000,
           organizerId: 'org5',
           organizerName: 'ТОО "GrandCelebration"',
-          category: EventCategory.anniversary,
+          category: EventCategory.corporate,
           status: EventStatus.active,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
@@ -219,8 +215,6 @@ class MockData {
           text: 'Отличный фотограф! Снимки получились просто потрясающие. Рекомендую всем!',
           date: DateTime.now().subtract(const Duration(days: 5)),
           serviceTags: ['Фотосъемка', 'Свадьба'],
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
         ),
         Review(
           id: 'rev2',
@@ -231,8 +225,6 @@ class MockData {
           text: 'Качественная работа, но немного задержался с монтажом. В целом доволен.',
           date: DateTime.now().subtract(const Duration(days: 10)),
           serviceTags: ['Видеосъемка', 'Корпоратив'],
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
         ),
         Review(
           id: 'rev3',
@@ -243,8 +235,6 @@ class MockData {
           text: 'Отличный DJ! Музыка была на высоте, все гости танцевали до утра.',
           date: DateTime.now().subtract(const Duration(days: 7)),
           serviceTags: ['Ведущий', 'День рождения'],
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
         ),
         Review(
           id: 'rev4',
@@ -255,8 +245,6 @@ class MockData {
           text: 'Профессиональный ведущий, хорошо организовал мероприятие.',
           date: DateTime.now().subtract(const Duration(days: 12)),
           serviceTags: ['DJ', 'Клуб'],
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
         ),
         Review(
           id: 'rev5',
@@ -267,14 +255,12 @@ class MockData {
           text: 'Потрясающее оформление! Все было именно так, как мы хотели.',
           date: DateTime.now().subtract(const Duration(days: 3)),
           serviceTags: ['Декоратор', 'Юбилей'],
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
         ),
       ];
 
   /// Тестовые посты ленты
   static List<EnhancedFeedPost> get feedPosts => [
-        const EnhancedFeedPost(
+        EnhancedFeedPost(
           id: 'post1',
           authorId: 'user1',
           authorName: 'Анна Петрова',
@@ -283,25 +269,29 @@ class MockData {
           media: [
             FeedPostMedia(
               id: 'media1_1',
-              type: 'image',
+              type: FeedPostMediaType.image,
               url: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
+              width: 400,
+              height: 300,
             ),
             FeedPostMedia(
               id: 'media1_2',
-              type: 'image',
+              type: FeedPostMediaType.image,
               url: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
+              width: 400,
+              height: 300,
             ),
           ],
-          likes: 150,
-          comments: 25,
-          shares: 10,
+          likesCount: 150,
+          commentsCount: 25,
+          sharesCount: 10,
           isLiked: false,
           isSaved: false,
           createdAt: DateTime.now().subtract(Duration(hours: 2)),
           tags: ['свадьба', 'фотограф', 'любовь'],
-          type: 'image',
+          type: FeedPostType.image,
         ),
-        const EnhancedFeedPost(
+        EnhancedFeedPost(
           id: 'post2',
           authorId: 'user2',
           authorName: 'Иван Смирнов',
@@ -310,21 +300,23 @@ class MockData {
           media: [
             FeedPostMedia(
               id: 'media2_1',
-              type: 'video',
+              type: FeedPostMediaType.video,
               url: 'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
-              thumbnail: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400',
+              width: 1920,
+              height: 1080,
+              thumbnailUrl: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400',
             ),
           ],
-          likes: 200,
-          comments: 40,
-          shares: 15,
+          likesCount: 200,
+          commentsCount: 40,
+          sharesCount: 15,
           isLiked: true,
           isSaved: false,
           createdAt: DateTime.now().subtract(Duration(hours: 5)),
           tags: ['видео', 'промо', 'технологии'],
-          type: 'video',
+          type: FeedPostType.video,
         ),
-        const EnhancedFeedPost(
+        EnhancedFeedPost(
           id: 'post3',
           authorId: 'user3',
           authorName: 'Елена Козлова',
@@ -333,25 +325,29 @@ class MockData {
           media: [
             FeedPostMedia(
               id: 'media3_1',
-              type: 'image',
+              type: FeedPostMediaType.image,
               url: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400',
+              width: 400,
+              height: 300,
             ),
             FeedPostMedia(
               id: 'media3_2',
-              type: 'image',
+              type: FeedPostMediaType.image,
               url: 'https://images.unsplash.com/photo-1519167758481-83f1426e0b3b?w=400',
+              width: 400,
+              height: 300,
             ),
           ],
-          likes: 180,
-          comments: 30,
-          shares: 8,
+          likesCount: 180,
+          commentsCount: 30,
+          sharesCount: 8,
           isLiked: false,
           isSaved: true,
           createdAt: DateTime.now().subtract(Duration(days: 1)),
           tags: ['юбилей', 'ведущая', 'праздник'],
-          type: 'image',
+          type: FeedPostType.image,
         ),
-        const EnhancedFeedPost(
+        EnhancedFeedPost(
           id: 'post4',
           authorId: 'user4',
           authorName: 'Дмитрий Соколов',
@@ -360,20 +356,22 @@ class MockData {
           media: [
             FeedPostMedia(
               id: 'media4_1',
-              type: 'audio',
+              type: FeedPostMediaType.audio,
               url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+              width: 400,
+              height: 300,
             ),
           ],
-          likes: 250,
-          comments: 50,
-          shares: 20,
+          likesCount: 250,
+          commentsCount: 50,
+          sharesCount: 20,
           isLiked: true,
           isSaved: true,
           createdAt: DateTime.now().subtract(Duration(days: 2)),
           tags: ['музыка', 'dj', 'вечеринка'],
-          type: 'audio',
+          type: FeedPostType.video,
         ),
-        const EnhancedFeedPost(
+        EnhancedFeedPost(
           id: 'post5',
           authorId: 'user5',
           authorName: 'Ольга Морозова',
@@ -383,29 +381,33 @@ class MockData {
           media: [
             FeedPostMedia(
               id: 'media5_1',
-              type: 'image',
+              type: FeedPostMediaType.image,
               url: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
+              width: 400,
+              height: 300,
             ),
             FeedPostMedia(
               id: 'media5_2',
-              type: 'image',
+              type: FeedPostMediaType.image,
               url: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
+              width: 400,
+              height: 300,
             ),
           ],
-          likes: 190,
-          comments: 35,
-          shares: 12,
+          likesCount: 190,
+          commentsCount: 35,
+          sharesCount: 12,
           isLiked: false,
           isSaved: false,
           createdAt: DateTime.now().subtract(Duration(days: 3)),
           tags: ['декор', 'детский праздник', 'оформление'],
-          type: 'image',
+          type: FeedPostType.image,
         ),
       ];
 
   /// Тестовые идеи
   static List<EnhancedIdea> get ideas => [
-        const EnhancedIdea(
+        EnhancedIdea(
           id: 'idea1',
           title: 'Идея для свадебной фотосессии',
           description:
@@ -416,25 +418,29 @@ class MockData {
           media: [
             IdeaMedia(
               id: 'idea_media1_1',
-              type: 'image',
+              type: IdeaMediaType.image,
               url: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
+              width: 400,
+              height: 300,
             ),
             IdeaMedia(
               id: 'idea_media1_2',
-              type: 'image',
+              type: IdeaMediaType.image,
               url: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
+              width: 400,
+              height: 300,
             ),
           ],
-          likes: 120,
-          comments: 15,
-          shares: 5,
+          likesCount: 120,
+          commentsCount: 15,
+          sharesCount: 5,
           createdAt: DateTime.now().subtract(Duration(days: 10)),
           tags: ['свадьба', 'фото', 'декор'],
           category: 'Фотосессии',
           budget: 50000,
-          type: 'image',
+          type: IdeaType.photo,
         ),
-        const EnhancedIdea(
+        EnhancedIdea(
           id: 'idea2',
           title: 'Видео-идея для корпоративного мероприятия',
           description:
@@ -445,22 +451,24 @@ class MockData {
           media: [
             IdeaMedia(
               id: 'idea_media2_1',
-              type: 'video',
+              type: IdeaMediaType.video,
               url: 'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
-              thumbnail: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400',
+              width: 1920,
+              height: 1080,
+              thumbnailUrl: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400',
             ),
           ],
-          likes: 90,
-          comments: 10,
-          shares: 3,
+          likesCount: 90,
+          commentsCount: 10,
+          sharesCount: 3,
           isLiked: true,
           createdAt: DateTime.now().subtract(Duration(days: 15)),
           tags: ['корпоратив', 'видео', 'тимбилдинг'],
           category: 'Видеосъемка',
           budget: 100000,
-          type: 'video',
+          type: IdeaType.video,
         ),
-        const EnhancedIdea(
+        EnhancedIdea(
           id: 'idea3',
           title: 'Оформление дня рождения в стиле "Гавайская вечеринка"',
           description:
@@ -471,24 +479,28 @@ class MockData {
           media: [
             IdeaMedia(
               id: 'idea_media3_1',
-              type: 'image',
+              type: IdeaMediaType.image,
               url: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
+              width: 400,
+              height: 300,
             ),
             IdeaMedia(
               id: 'idea_media3_2',
-              type: 'image',
+              type: IdeaMediaType.image,
               url: 'https://images.unsplash.com/photo-1465495976277-4387d4b0e4a6?w=400',
+              width: 400,
+              height: 300,
             ),
           ],
-          likes: 150,
-          comments: 20,
-          shares: 7,
+          likesCount: 150,
+          commentsCount: 20,
+          sharesCount: 7,
           isSaved: true,
           createdAt: DateTime.now().subtract(Duration(days: 7)),
           tags: ['день рождения', 'декор', 'гавайи'],
           category: 'Декор',
           budget: 70000,
-          type: 'image',
+          type: IdeaType.photo,
         ),
       ];
 }

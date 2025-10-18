@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../models/specialist.dart';
+import '../models/price_range.dart';
 
 /// Карточка ведущего для отображения в списке
 class HostCard extends StatelessWidget {
@@ -125,7 +126,7 @@ class HostCard extends StatelessWidget {
                         const SizedBox(width: 2),
                         Expanded(
                           child: Text(
-                            specialist.city,
+                            specialist.city ?? '',
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                               fontSize: isMobile ? 10 : 12,

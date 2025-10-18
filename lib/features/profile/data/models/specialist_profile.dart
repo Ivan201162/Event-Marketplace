@@ -39,7 +39,7 @@ class SpecialistProfileForm {
         hourlyRate: (map['hourlyRate'] ?? 0.0).toDouble(),
         servicesWithPrices: Map<String, double>.from(
           (map['servicesWithPrices'] ?? {}).map(
-            (key, value) => MapEntry(key, (value ?? 0.0).toDouble()),
+            (dynamic key, dynamic value) => MapEntry(key.toString(), (value ?? 0.0).toDouble()),
           ),
         ),
         contacts: Map<String, String>.from(map['contacts'] ?? {}),

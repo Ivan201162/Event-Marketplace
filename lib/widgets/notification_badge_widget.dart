@@ -15,8 +15,8 @@ class NotificationBadgeWidget extends StatelessWidget {
   final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) => StreamBuilder<int>(
-        stream: NotificationService.getUnreadCount(userId),
+  Widget build(BuildContext context) => FutureBuilder<int>(
+        future: NotificationService.getUnreadCount(userId),
         builder: (context, snapshot) {
           final unreadCount = snapshot.data ?? 0;
 

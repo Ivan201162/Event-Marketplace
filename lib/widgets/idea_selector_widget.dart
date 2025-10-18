@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/event_idea.dart';
+import '../models/event_idea_category.dart';
+import '../models/idea.dart';
 import '../services/event_ideas_service.dart';
 import '../widgets/idea_card.dart';
 
@@ -238,7 +240,7 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
                           children: [
                             Expanded(
                               child: Image.network(
-                                idea.imageUrl,
+                                idea.imageUrl ?? '',
                                 fit: BoxFit.cover,
                                 width: double.infinity,
                                 errorBuilder: (context, error, stackTrace) => Container(
@@ -307,10 +309,11 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
           return Stack(
             children: [
               IdeaCard(
-                idea: idea,
+                idea: _convertEventIdeaToIdea(idea),
                 onTap: () => _toggleIdeaSelection(idea),
                 onLike: () {}, // Заглушка
-                onFavorite: () {}, // Заглушка
+                onSave: () {}, // Заглушка
+                onShare: () {}, // Заглушка
               ),
               if (isSelected)
                 Positioned(
@@ -462,4 +465,30 @@ class IdeaSelectorDialog extends StatelessWidget {
           ),
         ),
       );
+
+  /// Конвертирует EventIdea в Idea для совместимости
+  Idea _convertEventIdeaToIdea(EventIdea eventIdea) {
+    return Idea(
+      id: eventIdea.id,
+      title: eventIdea.title,
+      description: eventIdea.description,
+      imageUrl: eventIdea.imageUrl ?? (eventIdea.images.isNotEmpty ? eventIdea.images.first : null),
+      videoUrl: eventIdea.mediaUrl,
+      category: eventIdea.category ?? '',
+      authorId: eventIdea.authorId,
+      authorName: eventIdea.authorName,
+      authorAvatar: eventIdea.authorAvatar,
+      createdAt: eventIdea.createdAt,
+      likesCount: eventIdea.likesCount ?? eventIdea.likes,
+      savesCount: eventIdea.savesCount ?? 0,
+      sharesCount: eventIdea.sharesCount ?? eventIdea.shares,
+      commentCount: eventIdea.commentsCount ?? eventIdea.comments,
+      viewsCount: eventIdea.views,
+      commentsCount: eventIdea.commentsCount ?? eventIdea.comments,
+      likedBy: const [],
+      savedBy: const [],
+      tags: eventIdea.tags,
+      metadata: eventIdea.metadata,
+    );
+  }
 }

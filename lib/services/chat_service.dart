@@ -1,18 +1,29 @@
-import 'dart:async';
+﻿import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/chat.dart';
+import 'package:flutter/foundation.dart';
 
-/// Сервис для работы с чатами
+/// РЎРµСЂРІРёСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ С‡Р°С‚Р°РјРё
 class ChatService {
   factory ChatService() => _instance;
   ChatService._internal();
@@ -24,11 +35,11 @@ class ChatService {
   final String _messagesCollection = 'messages';
   final String _chatsCollection = 'chats';
 
-  // Кэш для локального хранения
+  // РљСЌС€ РґР»СЏ Р»РѕРєР°Р»СЊРЅРѕРіРѕ С…СЂР°РЅРµРЅРёСЏ
   static const String _cacheKey = 'chat_cache';
   static const int _maxCachedMessages = 20;
 
-  /// Получить сообщения чата
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃРѕРѕР±С‰РµРЅРёСЏ С‡Р°С‚Р°
   Stream<List<ChatMessage>> getChatMessages(String chatId) => _firestore
       .collection(_messagesCollection)
       .where('chatId', isEqualTo: chatId)
@@ -36,7 +47,7 @@ class ChatService {
       .snapshots()
       .map((snapshot) => snapshot.docs.map(ChatMessage.fromDocument).toList());
 
-  /// Отправить текстовое сообщение
+  /// РћС‚РїСЂР°РІРёС‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ
   Future<String?> sendTextMessage({
     required String chatId,
     required String senderId,
@@ -48,7 +59,7 @@ class ChatService {
         id: '',
         chatId: chatId,
         senderId: senderId,
-        senderName: senderName ?? 'Пользователь',
+        senderName: senderName ?? 'РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ',
         type: MessageType.text,
         content: text,
         status: MessageStatus.sent,
@@ -58,23 +69,23 @@ class ChatService {
 
       final docRef = await _firestore.collection(_messagesCollection).add(message.toMap());
 
-      // Обновляем последнее сообщение в чате
+      // РћР±РЅРѕРІР»СЏРµРј РїРѕСЃР»РµРґРЅРµРµ СЃРѕРѕР±С‰РµРЅРёРµ РІ С‡Р°С‚Рµ
       await _updateLastMessage(chatId, message);
 
-      // Отправляем уведомление
+      // РћС‚РїСЂР°РІР»СЏРµРј СѓРІРµРґРѕРјР»РµРЅРёРµ
       await _sendMessageNotification(chatId, senderId, text);
 
-      // Сохраняем в кэш
+      // РЎРѕС…СЂР°РЅСЏРµРј РІ РєСЌС€
       await _saveToCache(chatId, message);
 
       return docRef.id;
     } on Exception catch (e) {
-      debugPrint('Ошибка отправки текстового сообщения: $e');
+      debugPrint('РћС€РёР±РєР° РѕС‚РїСЂР°РІРєРё С‚РµРєСЃС‚РѕРІРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёСЏ: $e');
       return null;
     }
   }
 
-  /// Отправить изображение
+  /// РћС‚РїСЂР°РІРёС‚СЊ РёР·РѕР±СЂР°Р¶РµРЅРёРµ
   Future<String?> sendImageMessage({
     required String chatId,
     required String senderId,
@@ -90,7 +101,7 @@ class ChatService {
 
       if (image == null) return null;
 
-      // Загружаем изображение в Storage
+      // Р—Р°РіСЂСѓР¶Р°РµРј РёР·РѕР±СЂР°Р¶РµРЅРёРµ РІ Storage
       final imageUrl = await _uploadFile(image, 'images');
       if (imageUrl == null) return null;
 
@@ -98,7 +109,7 @@ class ChatService {
         id: '',
         chatId: chatId,
         senderId: senderId,
-        senderName: senderName ?? 'Пользователь',
+        senderName: senderName ?? 'РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ',
         type: MessageType.image,
         content: imageUrl,
         status: MessageStatus.sent,
@@ -109,12 +120,12 @@ class ChatService {
       final docRef = await _firestore.collection(_messagesCollection).add(message.toMap());
       return docRef.id;
     } on Exception catch (e) {
-      debugPrint('Ошибка отправки изображения: $e');
+      debugPrint('РћС€РёР±РєР° РѕС‚РїСЂР°РІРєРё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ: $e');
       return null;
     }
   }
 
-  /// Отправить видео
+  /// РћС‚РїСЂР°РІРёС‚СЊ РІРёРґРµРѕ
   Future<String?> sendVideoMessage({
     required String chatId,
     required String senderId,
@@ -128,7 +139,7 @@ class ChatService {
 
       if (video == null) return null;
 
-      // Загружаем видео в Storage
+      // Р—Р°РіСЂСѓР¶Р°РµРј РІРёРґРµРѕ РІ Storage
       final videoUrl = await _uploadFile(video, 'videos');
       if (videoUrl == null) return null;
 
@@ -136,7 +147,7 @@ class ChatService {
         id: '',
         chatId: chatId,
         senderId: senderId,
-        senderName: senderName ?? 'Пользователь',
+        senderName: senderName ?? 'РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ',
         type: MessageType.video,
         content: videoUrl,
         fileName: video.path.split('/').last,
@@ -148,20 +159,20 @@ class ChatService {
 
       final docRef = await _firestore.collection(_messagesCollection).add(message.toMap());
 
-      // Обновляем последнее сообщение в чате
+      // РћР±РЅРѕРІР»СЏРµРј РїРѕСЃР»РµРґРЅРµРµ СЃРѕРѕР±С‰РµРЅРёРµ РІ С‡Р°С‚Рµ
       await _updateLastMessage(chatId, message);
 
-      // Отправляем уведомление
-      await _sendMessageNotification(chatId, senderId, 'Видео');
+      // РћС‚РїСЂР°РІР»СЏРµРј СѓРІРµРґРѕРјР»РµРЅРёРµ
+      await _sendMessageNotification(chatId, senderId, 'Р’РёРґРµРѕ');
 
       return docRef.id;
     } on Exception catch (e) {
-      debugPrint('Ошибка отправки видео: $e');
+      debugPrint('РћС€РёР±РєР° РѕС‚РїСЂР°РІРєРё РІРёРґРµРѕ: $e');
       return null;
     }
   }
 
-  /// Отправить аудио сообщение
+  /// РћС‚РїСЂР°РІРёС‚СЊ Р°СѓРґРёРѕ СЃРѕРѕР±С‰РµРЅРёРµ
   Future<String?> sendAudioMessage({
     required String chatId,
     required String senderId,
@@ -170,7 +181,7 @@ class ChatService {
     int? duration,
   }) async {
     try {
-      // Загружаем аудио в Storage
+      // Р—Р°РіСЂСѓР¶Р°РµРј Р°СѓРґРёРѕ РІ Storage
       final audioUrl = await _uploadFile(audioFile, 'audio');
       if (audioUrl == null) return null;
 
@@ -178,7 +189,7 @@ class ChatService {
         id: '',
         chatId: chatId,
         senderId: senderId,
-        senderName: senderName ?? 'Пользователь',
+        senderName: senderName ?? 'РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ',
         type: MessageType.audio,
         content: audioUrl,
         fileName: audioFile.path.split('/').last,
@@ -191,20 +202,20 @@ class ChatService {
 
       final docRef = await _firestore.collection(_messagesCollection).add(message.toMap());
 
-      // Обновляем последнее сообщение в чате
+      // РћР±РЅРѕРІР»СЏРµРј РїРѕСЃР»РµРґРЅРµРµ СЃРѕРѕР±С‰РµРЅРёРµ РІ С‡Р°С‚Рµ
       await _updateLastMessage(chatId, message);
 
-      // Отправляем уведомление
-      await _sendMessageNotification(chatId, senderId, 'Аудио сообщение');
+      // РћС‚РїСЂР°РІР»СЏРµРј СѓРІРµРґРѕРјР»РµРЅРёРµ
+      await _sendMessageNotification(chatId, senderId, 'РђСѓРґРёРѕ СЃРѕРѕР±С‰РµРЅРёРµ');
 
       return docRef.id;
     } on Exception catch (e) {
-      debugPrint('Ошибка отправки аудио: $e');
+      debugPrint('РћС€РёР±РєР° РѕС‚РїСЂР°РІРєРё Р°СѓРґРёРѕ: $e');
       return null;
     }
   }
 
-  /// Отправить документ
+  /// РћС‚РїСЂР°РІРёС‚СЊ РґРѕРєСѓРјРµРЅС‚
   Future<String?> sendDocumentMessage({
     required String chatId,
     required String senderId,
@@ -212,7 +223,7 @@ class ChatService {
     String? senderName,
   }) async {
     try {
-      // Загружаем документ в Storage
+      // Р—Р°РіСЂСѓР¶Р°РµРј РґРѕРєСѓРјРµРЅС‚ РІ Storage
       final fileUrl = await _uploadFile(file, 'documents');
       if (fileUrl == null) return null;
 
@@ -220,7 +231,7 @@ class ChatService {
         id: '',
         chatId: chatId,
         senderId: senderId,
-        senderName: senderName ?? 'Пользователь',
+        senderName: senderName ?? 'РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ',
         type: MessageType.document,
         content: fileUrl,
         fileName: file.path.split('/').last,
@@ -232,12 +243,12 @@ class ChatService {
       final docRef = await _firestore.collection(_messagesCollection).add(message.toMap());
       return docRef.id;
     } on Exception catch (e) {
-      debugPrint('Ошибка отправки документа: $e');
+      debugPrint('РћС€РёР±РєР° РѕС‚РїСЂР°РІРєРё РґРѕРєСѓРјРµРЅС‚Р°: $e');
       return null;
     }
   }
 
-  /// Загрузить файл в Storage
+  /// Р—Р°РіСЂСѓР·РёС‚СЊ С„Р°Р№Р» РІ Storage
   Future<String?> _uploadFile(file, String folder) async {
     try {
       final fileName = '${DateTime.now().millisecondsSinceEpoch}_${file.path.split('/').last}';
@@ -249,21 +260,21 @@ class ChatService {
       } else if (file is File) {
         uploadTask = ref.putFile(file);
       } else {
-        throw Exception('Неподдерживаемый тип файла');
+        throw Exception('РќРµРїРѕРґРґРµСЂР¶РёРІР°РµРјС‹Р№ С‚РёРї С„Р°Р№Р»Р°');
       }
 
       final snapshot = await uploadTask;
       return await snapshot.ref.getDownloadURL();
     } on Exception catch (e) {
-      debugPrint('Ошибка загрузки файла: $e');
+      debugPrint('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё С„Р°Р№Р»Р°: $e');
       return null;
     }
   }
 
-  /// Создать или получить чат между пользователями
+  /// РЎРѕР·РґР°С‚СЊ РёР»Рё РїРѕР»СѓС‡РёС‚СЊ С‡Р°С‚ РјРµР¶РґСѓ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРјРё
   Future<String?> getOrCreateChat(String userId1, String userId2) async {
     try {
-      // Ищем существующий чат
+      // РС‰РµРј СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёР№ С‡Р°С‚
       final existingChat = await _firestore
           .collection(_chatsCollection)
           .where('participants', arrayContains: userId1)
@@ -278,7 +289,7 @@ class ChatService {
         }
       }
 
-      // Создаем новый чат
+      // РЎРѕР·РґР°РµРј РЅРѕРІС‹Р№ С‡Р°С‚
       final chatData = {
         'participants': [userId1, userId2],
         'createdAt': FieldValue.serverTimestamp(),
@@ -289,12 +300,12 @@ class ChatService {
       final docRef = await _firestore.collection(_chatsCollection).add(chatData);
       return docRef.id;
     } on Exception catch (e) {
-      debugPrint('Ошибка создания/получения чата: $e');
+      debugPrint('РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ/РїРѕР»СѓС‡РµРЅРёСЏ С‡Р°С‚Р°: $e');
       return null;
     }
   }
 
-  /// Получить список чатов пользователя
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє С‡Р°С‚РѕРІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Stream<List<Map<String, dynamic>>> getUserChats(String userId) => _firestore
       .collection(_chatsCollection)
       .where('participants', arrayContains: userId)
@@ -310,7 +321,7 @@ class ChatService {
         }).toList(),
       );
 
-  /// Отметить сообщения как прочитанные
+  /// РћС‚РјРµС‚РёС‚СЊ СЃРѕРѕР±С‰РµРЅРёСЏ РєР°Рє РїСЂРѕС‡РёС‚Р°РЅРЅС‹Рµ
   Future<void> markMessagesAsRead(String chatId, String userId) async {
     try {
       final batch = _firestore.batch();
@@ -331,22 +342,22 @@ class ChatService {
 
       await batch.commit();
     } on Exception catch (e) {
-      debugPrint('Ошибка отметки сообщений как прочитанных: $e');
+      debugPrint('РћС€РёР±РєР° РѕС‚РјРµС‚РєРё СЃРѕРѕР±С‰РµРЅРёР№ РєР°Рє РїСЂРѕС‡РёС‚Р°РЅРЅС‹С…: $e');
     }
   }
 
-  /// Удалить сообщение
+  /// РЈРґР°Р»РёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ
   Future<bool> deleteMessage(String messageId) async {
     try {
       await _firestore.collection(_messagesCollection).doc(messageId).delete();
       return true;
     } on Exception catch (e) {
-      debugPrint('Ошибка удаления сообщения: $e');
+      debugPrint('РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ СЃРѕРѕР±С‰РµРЅРёСЏ: $e');
       return false;
     }
   }
 
-  /// Редактировать сообщение
+  /// Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ
   Future<bool> editMessage(String messageId, String newText) async {
     try {
       await _firestore.collection(_messagesCollection).doc(messageId).update({
@@ -356,12 +367,12 @@ class ChatService {
       });
       return true;
     } on Exception catch (e) {
-      debugPrint('Ошибка редактирования сообщения: $e');
+      debugPrint('РћС€РёР±РєР° СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ СЃРѕРѕР±С‰РµРЅРёСЏ: $e');
       return false;
     }
   }
 
-  /// Получить количество непрочитанных сообщений
+  /// РџРѕР»СѓС‡РёС‚СЊ РєРѕР»РёС‡РµСЃС‚РІРѕ РЅРµРїСЂРѕС‡РёС‚Р°РЅРЅС‹С… СЃРѕРѕР±С‰РµРЅРёР№
   Stream<int> getUnreadMessagesCount(String userId) => _firestore
       .collection(_messagesCollection)
       .where('receiverId', isEqualTo: userId)
@@ -369,7 +380,7 @@ class ChatService {
       .snapshots()
       .map((snapshot) => snapshot.docs.length);
 
-  /// Поиск сообщений
+  /// РџРѕРёСЃРє СЃРѕРѕР±С‰РµРЅРёР№
   Future<List<ChatMessage>> searchMessages(String chatId, String query) async {
     try {
       final snapshot = await _firestore
@@ -381,12 +392,12 @@ class ChatService {
 
       return snapshot.docs.map(ChatMessage.fromDocument).toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка поиска сообщений: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕРёСЃРєР° СЃРѕРѕР±С‰РµРЅРёР№: $e');
       return [];
     }
   }
 
-  /// Обновить последнее сообщение в чате
+  /// РћР±РЅРѕРІРёС‚СЊ РїРѕСЃР»РµРґРЅРµРµ СЃРѕРѕР±С‰РµРЅРёРµ РІ С‡Р°С‚Рµ
   Future<void> _updateLastMessage(String chatId, ChatMessage message) async {
     try {
       await _firestore.collection(_chatsCollection).doc(chatId).update({
@@ -399,18 +410,18 @@ class ChatService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка обновления последнего сообщения: $e');
+      debugPrint('РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ РїРѕСЃР»РµРґРЅРµРіРѕ СЃРѕРѕР±С‰РµРЅРёСЏ: $e');
     }
   }
 
-  /// Отправить уведомление о новом сообщении
+  /// РћС‚РїСЂР°РІРёС‚СЊ СѓРІРµРґРѕРјР»РµРЅРёРµ Рѕ РЅРѕРІРѕРј СЃРѕРѕР±С‰РµРЅРёРё
   Future<void> _sendMessageNotification(
     String chatId,
     String senderId,
     String messageContent,
   ) async {
     try {
-      // Получаем информацию о чате
+      // РџРѕР»СѓС‡Р°РµРј РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ С‡Р°С‚Рµ
       final chatDoc = await _firestore.collection(_chatsCollection).doc(chatId).get();
       if (!chatDoc.exists) return;
 
@@ -418,28 +429,28 @@ class ChatService {
       final participantsData = chatData['participants'] as List<dynamic>? ?? [];
       final participants = List<String>.from(participantsData);
 
-      // Находим получателя (не отправителя)
+      // РќР°С…РѕРґРёРј РїРѕР»СѓС‡Р°С‚РµР»СЏ (РЅРµ РѕС‚РїСЂР°РІРёС‚РµР»СЏ)
       final receiverId = participants.firstWhere(
         (id) => id != senderId,
         orElse: () => participants.first,
       );
 
-      // Отправляем уведомление (заглушка)
+      // РћС‚РїСЂР°РІР»СЏРµРј СѓРІРµРґРѕРјР»РµРЅРёРµ (Р·Р°РіР»СѓС€РєР°)
       debugPrint(
-        'Отправка уведомления пользователю $receiverId: Новое сообщение',
+        'РћС‚РїСЂР°РІРєР° СѓРІРµРґРѕРјР»РµРЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ $receiverId: РќРѕРІРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ',
       );
     } on Exception catch (e) {
-      debugPrint('Ошибка отправки уведомления: $e');
+      debugPrint('РћС€РёР±РєР° РѕС‚РїСЂР°РІРєРё СѓРІРµРґРѕРјР»РµРЅРёСЏ: $e');
     }
   }
 
-  /// Сохранить сообщение в локальный кэш
+  /// РЎРѕС…СЂР°РЅРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РІ Р»РѕРєР°Р»СЊРЅС‹Р№ РєСЌС€
   Future<void> _saveToCache(String chatId, ChatMessage message) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final cacheKey = '${_cacheKey}_$chatId';
 
-      // Получаем существующий кэш
+      // РџРѕР»СѓС‡Р°РµРј СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёР№ РєСЌС€
       final cachedData = prefs.getString(cacheKey);
       var messages = <Map<String, dynamic>>[];
 
@@ -450,22 +461,22 @@ class ChatService {
         }
       }
 
-      // Добавляем новое сообщение
+      // Р”РѕР±Р°РІР»СЏРµРј РЅРѕРІРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ
       messages.add(message.toMap());
 
-      // Ограничиваем количество кэшированных сообщений
+      // РћРіСЂР°РЅРёС‡РёРІР°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ РєСЌС€РёСЂРѕРІР°РЅРЅС‹С… СЃРѕРѕР±С‰РµРЅРёР№
       if (messages.length > _maxCachedMessages) {
         messages = messages.sublist(messages.length - _maxCachedMessages);
       }
 
-      // Сохраняем обновленный кэш
+      // РЎРѕС…СЂР°РЅСЏРµРј РѕР±РЅРѕРІР»РµРЅРЅС‹Р№ РєСЌС€
       await prefs.setString(cacheKey, json.encode(messages));
     } on Exception catch (e) {
-      debugPrint('Ошибка сохранения в кэш: $e');
+      debugPrint('РћС€РёР±РєР° СЃРѕС…СЂР°РЅРµРЅРёСЏ РІ РєСЌС€: $e');
     }
   }
 
-  /// Получить кэшированные сообщения
+  /// РџРѕР»СѓС‡РёС‚СЊ РєСЌС€РёСЂРѕРІР°РЅРЅС‹Рµ СЃРѕРѕР±С‰РµРЅРёСЏ
   Future<List<ChatMessage>> getCachedMessages(String chatId) async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -483,22 +494,22 @@ class ChatService {
           )
           .toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения кэша: $e');
+      debugPrint('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ РєСЌС€Р°: $e');
       return [];
     }
   }
 
-  /// Выбрать файл для отправки
+  /// Р’С‹Р±СЂР°С‚СЊ С„Р°Р№Р» РґР»СЏ РѕС‚РїСЂР°РІРєРё
   Future<String?> pickAndSendFile({
     required String chatId,
     required String senderId,
     String? senderName,
   }) async {
     try {
-      // Запрашиваем разрешение на доступ к файлам
+      // Р—Р°РїСЂР°С€РёРІР°РµРј СЂР°Р·СЂРµС€РµРЅРёРµ РЅР° РґРѕСЃС‚СѓРї Рє С„Р°Р№Р»Р°Рј
       final permission = await Permission.storage.request();
       if (!permission.isGranted) {
-        debugPrint('Нет разрешения на доступ к файлам');
+        debugPrint('РќРµС‚ СЂР°Р·СЂРµС€РµРЅРёСЏ РЅР° РґРѕСЃС‚СѓРї Рє С„Р°Р№Р»Р°Рј');
         return null;
       }
 
@@ -509,7 +520,7 @@ class ChatService {
         final fileName = result.files.first.name;
         final fileSize = result.files.first.size;
 
-        // Определяем тип файла
+        // РћРїСЂРµРґРµР»СЏРµРј С‚РёРї С„Р°Р№Р»Р°
         MessageType messageType;
         if (fileName.toLowerCase().endsWith('.jpg') ||
             fileName.toLowerCase().endsWith('.jpeg') ||
@@ -528,7 +539,7 @@ class ChatService {
           messageType = MessageType.document;
         }
 
-        // Загружаем файл в Storage
+        // Р—Р°РіСЂСѓР¶Р°РµРј С„Р°Р№Р» РІ Storage
         final fileUrl = await _uploadFile(file, 'documents');
         if (fileUrl == null) return null;
 
@@ -536,7 +547,7 @@ class ChatService {
           id: '',
           chatId: chatId,
           senderId: senderId,
-          senderName: senderName ?? 'Пользователь',
+          senderName: senderName ?? 'РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ',
           type: messageType,
           content: fileUrl,
           fileUrl: fileUrl,
@@ -549,29 +560,29 @@ class ChatService {
 
         final docRef = await _firestore.collection(_messagesCollection).add(message.toMap());
 
-        // Обновляем последнее сообщение в чате
+        // РћР±РЅРѕРІР»СЏРµРј РїРѕСЃР»РµРґРЅРµРµ СЃРѕРѕР±С‰РµРЅРёРµ РІ С‡Р°С‚Рµ
         await _updateLastMessage(chatId, message);
 
-        // Отправляем уведомление
+        // РћС‚РїСЂР°РІР»СЏРµРј СѓРІРµРґРѕРјР»РµРЅРёРµ
         await _sendMessageNotification(chatId, senderId, fileName);
 
         return docRef.id;
       }
       return null;
     } on Exception catch (e) {
-      debugPrint('Ошибка выбора и отправки файла: $e');
+      debugPrint('РћС€РёР±РєР° РІС‹Р±РѕСЂР° Рё РѕС‚РїСЂР°РІРєРё С„Р°Р№Р»Р°: $e');
       return null;
     }
   }
 
-  /// Получить количество непрочитанных сообщений для пользователя
+  /// РџРѕР»СѓС‡РёС‚СЊ РєРѕР»РёС‡РµСЃС‚РІРѕ РЅРµРїСЂРѕС‡РёС‚Р°РЅРЅС‹С… СЃРѕРѕР±С‰РµРЅРёР№ РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Stream<int> getUnreadMessagesCountForUser(String userId) => _firestore
           .collection(_messagesCollection)
           .where('senderId', isNotEqualTo: userId)
           .where('readBy', arrayContains: userId)
           .snapshots()
           .map((snapshot) {
-        // Подсчитываем сообщения, которые не прочитаны текущим пользователем
+        // РџРѕРґСЃС‡РёС‚С‹РІР°РµРј СЃРѕРѕР±С‰РµРЅРёСЏ, РєРѕС‚РѕСЂС‹Рµ РЅРµ РїСЂРѕС‡РёС‚Р°РЅС‹ С‚РµРєСѓС‰РёРј РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј
         var count = 0;
         for (final doc in snapshot.docs) {
           final data = doc.data();
@@ -584,7 +595,7 @@ class ChatService {
         return count;
       });
 
-  /// Получить чаты пользователя как Stream
+  /// РџРѕР»СѓС‡РёС‚СЊ С‡Р°С‚С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РєР°Рє Stream
   Stream<List<Chat>> getUserChatsStream(String userId) {
     try {
       return _firestore
@@ -594,12 +605,12 @@ class ChatService {
           .snapshots()
           .map((snapshot) => snapshot.docs.map(Chat.fromDocument).toList());
     } on Exception {
-      // Возвращаем тестовые данные в случае ошибки
+      // Р’РѕР·РІСЂР°С‰Р°РµРј С‚РµСЃС‚РѕРІС‹Рµ РґР°РЅРЅС‹Рµ РІ СЃР»СѓС‡Р°Рµ РѕС€РёР±РєРё
       return Stream.value([]);
     }
   }
 
-  /// Создать новый чат
+  /// РЎРѕР·РґР°С‚СЊ РЅРѕРІС‹Р№ С‡Р°С‚
   Future<String> createChat({
     required List<String> participants,
     required Map<String, String> participantNames,
@@ -622,11 +633,11 @@ class ChatService {
       final docRef = await _firestore.collection(_chatsCollection).add(chat.toMap());
       return docRef.id;
     } on Exception catch (e) {
-      throw Exception('Ошибка создания чата: $e');
+      throw Exception('РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ С‡Р°С‚Р°: $e');
     }
   }
 
-  /// Обновить чат
+  /// РћР±РЅРѕРІРёС‚СЊ С‡Р°С‚
   Future<void> updateChat(String chatId, Map<String, dynamic> updates) async {
     try {
       await _firestore.collection(_chatsCollection).doc(chatId).update({
@@ -634,14 +645,14 @@ class ChatService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } on Exception catch (e) {
-      throw Exception('Ошибка обновления чата: $e');
+      throw Exception('РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ С‡Р°С‚Р°: $e');
     }
   }
 
-  /// Удалить чат
+  /// РЈРґР°Р»РёС‚СЊ С‡Р°С‚
   Future<void> deleteChat(String chatId) async {
     try {
-      // Удаляем все сообщения чата
+      // РЈРґР°Р»СЏРµРј РІСЃРµ СЃРѕРѕР±С‰РµРЅРёСЏ С‡Р°С‚Р°
       final messagesSnapshot =
           await _firestore.collection(_messagesCollection).where('chatId', isEqualTo: chatId).get();
 
@@ -650,15 +661,15 @@ class ChatService {
         batch.delete(doc.reference);
       }
 
-      // Удаляем сам чат
+      // РЈРґР°Р»СЏРµРј СЃР°Рј С‡Р°С‚
       batch.delete(_firestore.collection(_chatsCollection).doc(chatId));
       await batch.commit();
     } on Exception catch (e) {
-      throw Exception('Ошибка удаления чата: $e');
+      throw Exception('РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ С‡Р°С‚Р°: $e');
     }
   }
 
-  /// Тестовые данные для чатов
+  /// РўРµСЃС‚РѕРІС‹Рµ РґР°РЅРЅС‹Рµ РґР»СЏ С‡Р°С‚РѕРІ
   List<Chat> _getTestChats(String userId) {
     final now = DateTime.now();
     return [
@@ -669,13 +680,13 @@ class ChatService {
         name: '',
         participants: [userId, 'user2'],
         participantNames: {
-          userId: 'Вы',
-          'user2': 'Анна Петрова',
+          userId: 'Р’С‹',
+          'user2': 'РђРЅРЅР° РџРµС‚СЂРѕРІР°',
         },
         participantAvatars: {
           'user2': 'https://placehold.co/100x100/4CAF50/white?text=AP',
         },
-        lastMessageContent: 'Спасибо за отличную работу!',
+        lastMessageContent: 'РЎРїР°СЃРёР±Рѕ Р·Р° РѕС‚Р»РёС‡РЅСѓСЋ СЂР°Р±РѕС‚Сѓ!',
         lastMessageTime: now.subtract(const Duration(minutes: 30)),
         createdAt: now.subtract(const Duration(days: 2)),
         updatedAt: now.subtract(const Duration(minutes: 30)),
@@ -687,13 +698,13 @@ class ChatService {
         name: '',
         participants: [userId, 'user3'],
         participantNames: {
-          userId: 'Вы',
-          'user3': 'Михаил Соколов',
+          userId: 'Р’С‹',
+          'user3': 'РњРёС…Р°РёР» РЎРѕРєРѕР»РѕРІ',
         },
         participantAvatars: {
           'user3': 'https://placehold.co/100x100/2196F3/white?text=MS',
         },
-        lastMessageContent: 'Когда можем встретиться?',
+        lastMessageContent: 'РљРѕРіРґР° РјРѕР¶РµРј РІСЃС‚СЂРµС‚РёС‚СЊСЃСЏ?',
         lastMessageTime: now.subtract(const Duration(hours: 2)),
         unreadCount: 2,
         createdAt: now.subtract(const Duration(days: 1)),
@@ -706,13 +717,13 @@ class ChatService {
         name: '',
         participants: [userId, 'user4'],
         participantNames: {
-          userId: 'Вы',
-          'user4': 'Елена Козлова',
+          userId: 'Р’С‹',
+          'user4': 'Р•Р»РµРЅР° РљРѕР·Р»РѕРІР°',
         },
         participantAvatars: {
           'user4': 'https://placehold.co/100x100/FF9800/white?text=EK',
         },
-        lastMessageContent: 'Отправлю фото завтра',
+        lastMessageContent: 'РћС‚РїСЂР°РІР»СЋ С„РѕС‚Рѕ Р·Р°РІС‚СЂР°',
         lastMessageTime: now.subtract(const Duration(days: 1)),
         unreadCount: 1,
         createdAt: now.subtract(const Duration(days: 3)),
@@ -721,3 +732,4 @@ class ChatService {
     ];
   }
 }
+

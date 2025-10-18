@@ -1,9 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
+﻿import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter/foundation.dart';
 
-/// Экран загрузки с анимацией и инициализацией
+/// Р­РєСЂР°РЅ Р·Р°РіСЂСѓР·РєРё СЃ Р°РЅРёРјР°С†РёРµР№ Рё РёРЅРёС†РёР°Р»РёР·Р°С†РёРµР№
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
@@ -19,28 +23,33 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
   late Animation<double> _progressAnimation;
 
   double _progress = 0;
-  String _statusText = 'Инициализация...';
+  String _statusText = 'РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ...';
   bool _showRetryButton = false;
 
   @override
   void initState() {
     super.initState();
+    debugPrint('рџ•ђ [${DateTime.now()}] SplashScreen.initState() called');
     _initializeAnimations();
     _initializeAppWithTimeout();
   }
 
   Future<void> _initializeAppWithTimeout() async {
-    // Устанавливаем таймаут в 10 секунд
+    debugPrint('рџ•ђ [${DateTime.now()}] SplashScreen._initializeAppWithTimeout() called');
+    
+    // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј С‚Р°Р№РјР°СѓС‚ РІ 10 СЃРµРєСѓРЅРґ
     final timeout = Future.delayed(const Duration(seconds: 10));
     final initialization = _initializeApp();
 
     try {
       await Future.any([initialization, timeout]);
+      debugPrint('вњ… [${DateTime.now()}] SplashScreen initialization completed');
     } catch (e) {
-      // Если произошла ошибка или таймаут
+      debugPrint('вќЊ [${DateTime.now()}] SplashScreen timeout or error: $e');
+      // Р•СЃР»Рё РїСЂРѕРёР·РѕС€Р»Р° РѕС€РёР±РєР° РёР»Рё С‚Р°Р№РјР°СѓС‚
       if (mounted) {
         setState(() {
-          _statusText = 'Загрузка занимает больше времени, чем ожидалось';
+          _statusText = 'Р—Р°РіСЂСѓР·РєР° Р·Р°РЅРёРјР°РµС‚ Р±РѕР»СЊС€Рµ РІСЂРµРјРµРЅРё, С‡РµРј РѕР¶РёРґР°Р»РѕСЃСЊ';
           _showRetryButton = true;
         });
       }
@@ -93,25 +102,25 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
 
   Future<void> _initializeApp() async {
     try {
-      // Упрощенная инициализация для диагностики
+      // РЈРїСЂРѕС‰РµРЅРЅР°СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РґР»СЏ РґРёР°РіРЅРѕСЃС‚РёРєРё
       setState(() {
-        _statusText = 'Загрузка приложения...';
+        _statusText = 'Р—Р°РіСЂСѓР·РєР° РїСЂРёР»РѕР¶РµРЅРёСЏ...';
       });
       await _updateProgress(0.3);
 
-      // Проверка авторизации
+      // РџСЂРѕРІРµСЂРєР° Р°РІС‚РѕСЂРёР·Р°С†РёРё
       setState(() {
-        _statusText = 'Проверка авторизации...';
+        _statusText = 'РџСЂРѕРІРµСЂРєР° Р°РІС‚РѕСЂРёР·Р°С†РёРё...';
       });
       await _updateProgress(0.7);
 
-      // Проверяем состояние аутентификации
+      // РџСЂРѕРІРµСЂСЏРµРј СЃРѕСЃС‚РѕСЏРЅРёРµ Р°СѓС‚РµРЅС‚РёС„РёРєР°С†РёРё
       final user = FirebaseAuth.instance.currentUser;
       await _updateProgress(0.9);
 
-      // Завершение
+      // Р—Р°РІРµСЂС€РµРЅРёРµ
       setState(() {
-        _statusText = 'Готово!';
+        _statusText = 'Р“РѕС‚РѕРІРѕ!';
       });
       await _updateProgress(1);
 
@@ -121,12 +130,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
         _navigateBasedOnAuth(user);
       }
     } on Exception catch (e) {
-      debugPrint('🚨 SplashScreen error: $e');
+      debugPrint('рџљЁ SplashScreen error: $e');
       setState(() {
-        _statusText = 'Ошибка инициализации: $e';
+        _statusText = 'РћС€РёР±РєР° РёРЅРёС†РёР°Р»РёР·Р°С†РёРё: $e';
       });
 
-      // В случае ошибки переходим к экрану авторизации
+      // Р’ СЃР»СѓС‡Р°Рµ РѕС€РёР±РєРё РїРµСЂРµС…РѕРґРёРј Рє СЌРєСЂР°РЅСѓ Р°РІС‚РѕСЂРёР·Р°С†РёРё
       await Future.delayed(const Duration(seconds: 2));
       if (mounted) {
         _navigateToAuthScreen();
@@ -143,19 +152,23 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
 
   Future<void> _preloadData() async {
     try {
-      // Здесь можно добавить предзагрузку критически важных данных
+      // Р—РґРµСЃСЊ РјРѕР¶РЅРѕ РґРѕР±Р°РІРёС‚СЊ РїСЂРµРґР·Р°РіСЂСѓР·РєСѓ РєСЂРёС‚РёС‡РµСЃРєРё РІР°Р¶РЅС‹С… РґР°РЅРЅС‹С…
       await Future.delayed(const Duration(milliseconds: 300));
     } on Exception {
-      // Игнорируем ошибки предзагрузки
+      // РРіРЅРѕСЂРёСЂСѓРµРј РѕС€РёР±РєРё РїСЂРµРґР·Р°РіСЂСѓР·РєРё
     }
   }
 
   void _navigateBasedOnAuth(User? user) {
+    debugPrint('рџ•ђ [${DateTime.now()}] SplashScreen._navigateBasedOnAuth() called, user: ${user?.uid ?? 'null'}');
+    
     if (user != null) {
-      // Пользователь авторизован - переходим на главный экран
+      // РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ Р°РІС‚РѕСЂРёР·РѕРІР°РЅ - РїРµСЂРµС…РѕРґРёРј РЅР° РіР»Р°РІРЅС‹Р№ СЌРєСЂР°РЅ
+      debugPrint('рџ•ђ [${DateTime.now()}] Navigating to /main (user authenticated)');
       context.go('/main');
     } else {
-      // Пользователь не авторизован - переходим на экран авторизации
+      // РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ Р°РІС‚РѕСЂРёР·РѕРІР°РЅ - РїРµСЂРµС…РѕРґРёРј РЅР° СЌРєСЂР°РЅ Р°РІС‚РѕСЂРёР·Р°С†РёРё
+      debugPrint('рџ•ђ [${DateTime.now()}] Navigating to /auth (user not authenticated)');
       context.go('/auth');
     }
   }
@@ -177,6 +190,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('рџ•ђ [${DateTime.now()}] SplashScreen.build() called');
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -185,9 +199,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Диагностический текст
+            // Р”РёР°РіРЅРѕСЃС‚РёС‡РµСЃРєРёР№ С‚РµРєСЃС‚
             const Text(
-              '✅ App started successfully',
+              'вњ… App started successfully',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
@@ -211,7 +225,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
               ),
             ),
             const SizedBox(height: 20),
-            // Простой прогресс-бар
+            // РџСЂРѕСЃС‚РѕР№ РїСЂРѕРіСЂРµСЃСЃ-Р±Р°СЂ
             Container(
               width: 200,
               height: 4,
@@ -231,17 +245,17 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
               ),
             ),
             const SizedBox(height: 20),
-            // Кнопка для принудительного перехода
+            // РљРЅРѕРїРєР° РґР»СЏ РїСЂРёРЅСѓРґРёС‚РµР»СЊРЅРѕРіРѕ РїРµСЂРµС…РѕРґР°
             ElevatedButton(
               onPressed: () {
-                debugPrint('🚀 Manual navigation to auth screen');
+                debugPrint('рџљЂ Manual navigation to auth screen');
                 _navigateToAuthScreen();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 foregroundColor: Colors.blue,
               ),
-              child: const Text('Перейти к авторизации'),
+              child: const Text('РџРµСЂРµР№С‚Рё Рє Р°РІС‚РѕСЂРёР·Р°С†РёРё'),
             ),
           ],
         ),
@@ -250,7 +264,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
   }
 }
 
-/// Провайдер для состояния сплэш-экрана (мигрирован с StateNotifierProvider)
+/// РџСЂРѕРІР°Р№РґРµСЂ РґР»СЏ СЃРѕСЃС‚РѕСЏРЅРёСЏ СЃРїР»СЌС€-СЌРєСЂР°РЅР° (РјРёРіСЂРёСЂРѕРІР°РЅ СЃ StateNotifierProvider)
 final splashStateProvider =
     NotifierProvider<SplashStateNotifier, SplashState>(SplashStateNotifier.new);
 
@@ -258,7 +272,7 @@ class SplashState {
   const SplashState({
     this.isInitialized = false,
     this.progress = 0.0,
-    this.statusText = 'Инициализация...',
+    this.statusText = 'РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ...',
     this.error,
   });
 
@@ -301,3 +315,4 @@ class SplashStateNotifier extends Notifier<SplashState> {
     state = state.copyWith(error: error);
   }
 }
+

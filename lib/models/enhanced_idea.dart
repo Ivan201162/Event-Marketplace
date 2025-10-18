@@ -30,6 +30,7 @@ class EnhancedIdea {
     this.updatedAt,
     this.metadata = const {},
     this.authorName,
+    this.authorAvatar,
     this.isLiked = false,
     this.isSaved = false,
   });
@@ -82,6 +83,7 @@ class EnhancedIdea {
             : null,
         metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
         authorName: map['authorName'] as String?,
+        authorAvatar: map['authorAvatar'] as String?,
         isLiked: (map['isLiked'] as bool?) ?? false,
         isSaved: (map['isSaved'] as bool?) ?? false,
       );
@@ -173,6 +175,9 @@ class EnhancedIdea {
   /// Имя автора
   final String? authorName;
 
+  /// Аватар автора
+  final String? authorAvatar;
+
   /// Лайкнул ли текущий пользователь
   final bool isLiked;
 
@@ -210,6 +215,7 @@ class EnhancedIdea {
         'updatedAt': updatedAt?.millisecondsSinceEpoch,
         'metadata': metadata,
         'authorName': authorName,
+        'authorAvatar': authorAvatar,
         'isLiked': isLiked,
         'isSaved': isSaved,
       };
@@ -245,6 +251,7 @@ class EnhancedIdea {
     DateTime? updatedAt,
     Map<String, dynamic>? metadata,
     String? authorName,
+    String? authorAvatar,
     bool? isLiked,
     bool? isSaved,
   }) =>
@@ -278,6 +285,7 @@ class EnhancedIdea {
         updatedAt: updatedAt ?? this.updatedAt,
         metadata: metadata ?? this.metadata,
         authorName: authorName ?? this.authorName,
+        authorAvatar: authorAvatar ?? this.authorAvatar,
         isLiked: isLiked ?? this.isLiked,
         isSaved: isSaved ?? this.isSaved,
       );
@@ -429,6 +437,9 @@ class IdeaMedia {
   final String? caption;
   final String? altText;
   final Map<String, dynamic> metadata;
+
+  /// Алиас для thumbnailUrl
+  String? get thumbnail => thumbnailUrl;
 
   Map<String, dynamic> toMap() => {
         'id': id,

@@ -107,6 +107,56 @@ class ChatMessage {
         'metadata': metadata,
       };
 
+  /// Преобразовать в Map для JSON сериализации (без Timestamp)
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'chatId': chatId,
+        'senderId': senderId,
+        'senderName': senderName,
+        'content': content,
+        'type': type.name,
+        'timestamp': timestamp.toIso8601String(),
+        'status': status.name,
+        'replyTo': replyTo,
+        'mediaUrl': mediaUrl,
+        'thumbnailUrl': thumbnailUrl,
+        'fileName': fileName,
+        'fileSize': fileSize,
+        'duration': duration,
+        'location': location,
+        'metadata': metadata,
+      };
+
+  /// Создать сообщение из JSON
+  factory ChatMessage.fromJson(Map<String, dynamic> json) => ChatMessage(
+        id: json['id'] as String? ?? '',
+        chatId: json['chatId'] as String? ?? '',
+        senderId: json['senderId'] as String? ?? '',
+        senderName: json['senderName'] as String? ?? '',
+        content: json['content'] as String? ?? '',
+        type: MessageType.values.firstWhere(
+          (e) => e.name == json['type'],
+          orElse: () => MessageType.text,
+        ),
+        timestamp: json['timestamp'] != null
+            ? DateTime.parse(json['timestamp'] as String)
+            : DateTime.now(),
+        status: MessageStatus.values.firstWhere(
+          (e) => e.name == json['status'],
+          orElse: () => MessageStatus.sent,
+        ),
+        replyTo: json['replyTo'] as String?,
+        mediaUrl: json['mediaUrl'] as String?,
+        thumbnailUrl: json['thumbnailUrl'] as String?,
+        fileName: json['fileName'] as String?,
+        fileSize: json['fileSize'] as int?,
+        duration: json['duration'] as int?,
+        location: json['location'] != null 
+            ? Map<String, double>.from(json['location']) 
+            : null,
+        metadata: Map<String, dynamic>.from(json['metadata'] ?? {}),
+      );
+
   /// Создать копию с изменениями
   ChatMessage copyWith({
     String? id,

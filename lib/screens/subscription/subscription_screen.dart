@@ -1,10 +1,16 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../config/payment_config.dart';
+import 'package:flutter/foundation.dart';
 import '../../models/subscription.dart';
+import 'package:flutter/foundation.dart';
 import '../../services/payment_service.dart';
+import 'package:flutter/foundation.dart';
 import '../../widgets/subscription/subscription_plan_card.dart';
+import 'package:flutter/foundation.dart';
 
 class SubscriptionScreen extends ConsumerStatefulWidget {
   const SubscriptionScreen({
@@ -32,7 +38,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: const Text('Мой тариф'),
+          title: const Text('РњРѕР№ С‚Р°СЂРёС„'),
           backgroundColor: Colors.blue,
           foregroundColor: Colors.white,
         ),
@@ -69,7 +75,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
                     ),
                     SizedBox(height: 12),
                     Text(
-                      'Выберите подписку',
+                      'Р’С‹Р±РµСЂРёС‚Рµ РїРѕРґРїРёСЃРєСѓ',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 24,
@@ -78,7 +84,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      'Получите доступ к расширенному функционалу',
+                      'РџРѕР»СѓС‡РёС‚Рµ РґРѕСЃС‚СѓРї Рє СЂР°СЃС€РёСЂРµРЅРЅРѕРјСѓ С„СѓРЅРєС†РёРѕРЅР°Р»Сѓ',
                       style: TextStyle(
                         color: Colors.white70,
                         fontSize: 16,
@@ -92,7 +98,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
 
               // Subscription Plans
               const Text(
-                'Доступные тарифы:',
+                'Р”РѕСЃС‚СѓРїРЅС‹Рµ С‚Р°СЂРёС„С‹:',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -159,8 +165,8 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
                         ? const CircularProgressIndicator(color: Colors.white)
                         : Text(
                             _selectedPlan == SubscriptionPlan.standard
-                                ? 'Активировать бесплатный тариф'
-                                : 'Оплатить ${PaymentConfig.subscriptionPlans[_selectedPlan.toString().split('.').last]} ₽/мес',
+                                ? 'РђРєС‚РёРІРёСЂРѕРІР°С‚СЊ Р±РµСЃРїР»Р°С‚РЅС‹Р№ С‚Р°СЂРёС„'
+                                : 'РћРїР»Р°С‚РёС‚СЊ ${PaymentConfig.subscriptionPlans[_selectedPlan.toString().split('.').last]} в‚Ѕ/РјРµСЃ',
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -187,7 +193,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
                       ),
                     ),
                     child: const Text(
-                      'Отменить подписку',
+                      'РћС‚РјРµРЅРёС‚СЊ РїРѕРґРїРёСЃРєСѓ',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -200,8 +206,8 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
 
               // Terms
               Text(
-                'Подписка продлевается автоматически. '
-                'Вы можете отменить её в любое время в настройках.',
+                'РџРѕРґРїРёСЃРєР° РїСЂРѕРґР»РµРІР°РµС‚СЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё. '
+                'Р’С‹ РјРѕР¶РµС‚Рµ РѕС‚РјРµРЅРёС‚СЊ РµС‘ РІ Р»СЋР±РѕРµ РІСЂРµРјСЏ РІ РЅР°СЃС‚СЂРѕР№РєР°С….',
                 style: TextStyle(
                   color: Colors.grey[600],
                   fontSize: 12,
@@ -239,7 +245,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
               ),
               const SizedBox(width: 8),
               Text(
-                'Текущий тариф: ${_getPlanName(subscription.plan)}',
+                'РўРµРєСѓС‰РёР№ С‚Р°СЂРёС„: ${_getPlanName(subscription.plan)}',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -250,7 +256,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            isExpired ? 'Подписка истекла' : 'Осталось дней: $daysRemaining',
+            isExpired ? 'РџРѕРґРїРёСЃРєР° РёСЃС‚РµРєР»Р°' : 'РћСЃС‚Р°Р»РѕСЃСЊ РґРЅРµР№: $daysRemaining',
             style: TextStyle(
               color: Colors.grey[600],
               fontSize: 14,
@@ -259,7 +265,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
           if (!isExpired) ...[
             const SizedBox(height: 4),
             Text(
-              'Следующее списание: ${_formatDate(subscription.expiresAt)}',
+              'РЎР»РµРґСѓСЋС‰РµРµ СЃРїРёСЃР°РЅРёРµ: ${_formatDate(subscription.expiresAt)}',
               style: TextStyle(
                 color: Colors.grey[600],
                 fontSize: 14,
@@ -329,19 +335,19 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Отменить подписку'),
+        title: const Text('РћС‚РјРµРЅРёС‚СЊ РїРѕРґРїРёСЃРєСѓ'),
         content: const Text(
-          'Вы уверены, что хотите отменить подписку? '
-          'Доступ к премиум-функциям будет прекращен в конце текущего периода.',
+          'Р’С‹ СѓРІРµСЂРµРЅС‹, С‡С‚Рѕ С…РѕС‚РёС‚Рµ РѕС‚РјРµРЅРёС‚СЊ РїРѕРґРїРёСЃРєСѓ? '
+          'Р”РѕСЃС‚СѓРї Рє РїСЂРµРјРёСѓРј-С„СѓРЅРєС†РёСЏРј Р±СѓРґРµС‚ РїСЂРµРєСЂР°С‰РµРЅ РІ РєРѕРЅС†Рµ С‚РµРєСѓС‰РµРіРѕ РїРµСЂРёРѕРґР°.',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Нет'),
+            child: const Text('РќРµС‚'),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Да, отменить'),
+            child: const Text('Р”Р°, РѕС‚РјРµРЅРёС‚СЊ'),
           ),
         ],
       ),
@@ -352,7 +358,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
       // For now, just show a success message
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Подписка отменена'),
+          content: Text('РџРѕРґРїРёСЃРєР° РѕС‚РјРµРЅРµРЅР°'),
           backgroundColor: Colors.green,
         ),
       );
@@ -367,16 +373,16 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
           children: [
             Icon(Icons.check_circle, color: Colors.green),
             SizedBox(width: 8),
-            Text('Успешно!'),
+            Text('РЈСЃРїРµС€РЅРѕ!'),
           ],
         ),
         content: Text(
-          'Подписка ${_getPlanName(_selectedPlan!)} успешно активирована!',
+          'РџРѕРґРїРёСЃРєР° ${_getPlanName(_selectedPlan!)} СѓСЃРїРµС€РЅРѕ Р°РєС‚РёРІРёСЂРѕРІР°РЅР°!',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Отлично'),
+            child: const Text('РћС‚Р»РёС‡РЅРѕ'),
           ),
         ],
       ),
@@ -391,20 +397,21 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
           children: [
             Icon(Icons.error, color: Colors.red),
             SizedBox(width: 8),
-            Text('Ошибка'),
+            Text('РћС€РёР±РєР°'),
           ],
         ),
         content: const Text(
-          'Произошла ошибка при обработке подписки. '
-          'Попробуйте еще раз или обратитесь в поддержку.',
+          'РџСЂРѕРёР·РѕС€Р»Р° РѕС€РёР±РєР° РїСЂРё РѕР±СЂР°Р±РѕС‚РєРµ РїРѕРґРїРёСЃРєРё. '
+          'РџРѕРїСЂРѕР±СѓР№С‚Рµ РµС‰Рµ СЂР°Р· РёР»Рё РѕР±СЂР°С‚РёС‚РµСЃСЊ РІ РїРѕРґРґРµСЂР¶РєСѓ.',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Понятно'),
+            child: const Text('РџРѕРЅСЏС‚РЅРѕ'),
           ),
         ],
       ),
     );
   }
 }
+

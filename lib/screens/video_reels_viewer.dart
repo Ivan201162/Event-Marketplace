@@ -1,12 +1,20 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart';
 import 'package:video_player/video_player.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/event_idea.dart';
+import 'package:flutter/foundation.dart';
 import '../providers/auth_providers.dart';
+import 'package:flutter/foundation.dart';
 import '../services/event_ideas_service.dart';
+import 'package:flutter/foundation.dart';
 import 'idea_detail_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'share_idea_screen.dart';
+import 'package:flutter/foundation.dart';
 
 class VideoReelsViewer extends ConsumerStatefulWidget {
   const VideoReelsViewer({super.key, this.initialIdea});
@@ -71,7 +79,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
       });
 
       if (_videos.isNotEmpty) {
-        // Найти индекс начального видео
+        // РќР°Р№С‚Рё РёРЅРґРµРєСЃ РЅР°С‡Р°Р»СЊРЅРѕРіРѕ РІРёРґРµРѕ
         if (widget.initialIdea != null) {
           final initialIndex = _videos.indexWhere(
             (video) => video.id == widget.initialIdea!.id,
@@ -88,7 +96,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
         _isLoading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка загрузки видео: $e')),
+        SnackBar(content: Text('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё РІРёРґРµРѕ: $e')),
       );
     }
   }
@@ -109,7 +117,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
 
       setState(() {});
     } on Exception catch (e) {
-      debugPrint('Ошибка инициализации видео: $e');
+      debugPrint('РћС€РёР±РєР° РёРЅРёС†РёР°Р»РёР·Р°С†РёРё РІРёРґРµРѕ: $e');
     }
   }
 
@@ -135,7 +143,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
             : _videos.isEmpty
                 ? const Center(
                     child: Text(
-                      'Нет видео для просмотра',
+                      'РќРµС‚ РІРёРґРµРѕ РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°',
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                   )
@@ -162,7 +170,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
   Widget _buildVideoPage(EventIdea video) => Stack(
         fit: StackFit.expand,
         children: [
-          // Видео
+          // Р’РёРґРµРѕ
           if (_currentController != null && _currentController!.value.isInitialized)
             GestureDetector(
               onTap: _togglePlayPause,
@@ -183,7 +191,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
               ),
             ),
 
-          // Информация о видео
+          // РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РІРёРґРµРѕ
           Positioned(
             bottom: 0,
             left: 0,
@@ -204,7 +212,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Заголовок
+                  // Р—Р°РіРѕР»РѕРІРѕРє
                   Text(
                     video.title,
                     style: const TextStyle(
@@ -217,7 +225,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
                   ),
                   const SizedBox(height: 8),
 
-                  // Описание
+                  // РћРїРёСЃР°РЅРёРµ
                   if (video.description.isNotEmpty) ...[
                     Text(
                       video.description,
@@ -231,7 +239,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
                     const SizedBox(height: 8),
                   ],
 
-                  // Автор
+                  // РђРІС‚РѕСЂ
                   Row(
                     children: [
                       CircleAvatar(
@@ -248,7 +256,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        video.authorName ?? 'Неизвестный',
+                        video.authorName ?? 'РќРµРёР·РІРµСЃС‚РЅС‹Р№',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 14,
@@ -270,7 +278,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
             ),
           ),
 
-          // Кнопки действий справа
+          // РљРЅРѕРїРєРё РґРµР№СЃС‚РІРёР№ СЃРїСЂР°РІР°
           Positioned(
             bottom: 100,
             right: 16,
@@ -307,7 +315,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
             ),
           ),
 
-          // Кнопка воспроизведения/паузы в центре
+          // РљРЅРѕРїРєР° РІРѕСЃРїСЂРѕРёР·РІРµРґРµРЅРёСЏ/РїР°СѓР·С‹ РІ С†РµРЅС‚СЂРµ
           if (!_isPlaying)
             Center(
               child: GestureDetector(
@@ -327,7 +335,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
               ),
             ),
 
-          // Кнопка закрытия
+          // РљРЅРѕРїРєР° Р·Р°РєСЂС‹С‚РёСЏ
           Positioned(
             top: MediaQuery.of(context).padding.top + 16,
             right: 16,
@@ -348,7 +356,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
             ),
           ),
 
-          // Индикатор прогресса
+          // РРЅРґРёРєР°С‚РѕСЂ РїСЂРѕРіСЂРµСЃСЃР°
           if (_currentController != null && _currentController!.value.isInitialized)
             Positioned(
               bottom: 0,
@@ -435,13 +443,14 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
     final difference = now.difference(date);
 
     if (difference.inDays > 0) {
-      return '${difference.inDays}д назад';
+      return '${difference.inDays}Рґ РЅР°Р·Р°Рґ';
     } else if (difference.inHours > 0) {
-      return '${difference.inHours}ч назад';
+      return '${difference.inHours}С‡ РЅР°Р·Р°Рґ';
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}м назад';
+      return '${difference.inMinutes}Рј РЅР°Р·Р°Рґ';
     } else {
-      return 'только что';
+      return 'С‚РѕР»СЊРєРѕ С‡С‚Рѕ';
     }
   }
 }
+

@@ -153,16 +153,7 @@ class PerformanceOptimizations {
         name: name,
       );
 
-  /// Оптимизация состояния
-  static StateNotifierProvider<T, U> optimizeStateNotifier<T extends StateNotifier<U>, U>({
-    required T Function() create,
-    required U initial,
-    String? name,
-  }) =>
-      StateNotifierProvider<T, U>(
-        (ref) => create(),
-        name: name,
-      );
+  /// Оптимизация состояния (удалено - неиспользуемый код)
 
   /// Оптимизация кэширования
   static Widget optimizeCache({

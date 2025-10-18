@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../auth/providers/auth_provider.dart';
-import '../data/models/review.dart';
+// import '../../auth/providers/auth_provider.dart'; // Не существует
+// import '../data/models/review.dart'; // Не существует
 import '../data/repositories/review_repository.dart';
 import 'add_review_screen.dart';
 
 /// Экран отзывов специалиста
-class SpecialistReviewsScreen extends StatefulWidget {
-  const SpecialistReviewsScreen({
+class SpecialistdynamicsScreen extends StatefulWidget {
+  const SpecialistdynamicsScreen({
     super.key,
     required this.specialistId,
     required this.specialistName,
@@ -21,17 +21,17 @@ class SpecialistReviewsScreen extends StatefulWidget {
   final int reviewsCount;
 
   @override
-  State<SpecialistReviewsScreen> createState() => _SpecialistReviewsScreenState();
+  State<SpecialistdynamicsScreen> createState() => _SpecialistdynamicsScreenState();
 }
 
-class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
-  final ReviewRepository _reviewRepository = ReviewRepository();
-  late Stream<List<Review>> _reviewsStream;
+class _SpecialistdynamicsScreenState extends State<SpecialistdynamicsScreen> {
+  final dynamicRepository _reviewRepository = dynamicRepository();
+  late Stream<List<dynamic>> _reviewsStream;
 
   @override
   void initState() {
     super.initState();
-    _reviewsStream = _reviewRepository.getReviewsBySpecialistStream(widget.specialistId);
+    _reviewsStream = _reviewRepository.getdynamicsBySpecialistStream(widget.specialistId);
   }
 
   @override
@@ -49,7 +49,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
 
             // Список отзывов
             Expanded(
-              child: StreamBuilder<List<Review>>(
+              child: StreamBuilder<List<dynamic>>(
                 stream: _reviewsStream,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -118,13 +118,13 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
                     onRefresh: () async {
                       setState(() {
                         _reviewsStream =
-                            _reviewRepository.getReviewsBySpecialistStream(widget.specialistId);
+                            _reviewRepository.getdynamicsBySpecialistStream(widget.specialistId);
                       });
                     },
                     child: ListView.builder(
                       padding: const EdgeInsets.all(16),
                       itemCount: reviews.length,
-                      itemBuilder: (context, index) => _buildReviewCard(reviews[index]),
+                      itemBuilder: (context, index) => _builddynamicCard(reviews[index]),
                     ),
                   );
                 },
@@ -175,7 +175,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
 
             // Количество отзывов
             Text(
-              '${widget.reviewsCount} ${_getReviewsCountText(widget.reviewsCount)}',
+              '${widget.reviewsCount} ${_getdynamicsCountText(widget.reviewsCount)}',
               style: const TextStyle(
                 fontSize: 16,
                 color: Colors.white70,
@@ -185,18 +185,18 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
             const SizedBox(height: 16),
 
             // Кнопка "Оставить отзыв"
-            Consumer<AuthProvider>(
+            Consumer<dynamic>(
               builder: (context, authProvider, child) {
                 if (authProvider.user == null) {
                   return const SizedBox.shrink();
                 }
 
                 return FutureBuilder<bool>(
-                  future: _canLeaveReview(authProvider.user!.uid),
+                  future: _canLeavedynamic(authProvider.user!.uid),
                   builder: (context, snapshot) {
                     if (snapshot.data ?? false) {
                       return ElevatedButton.icon(
-                        onPressed: _navigateToAddReview,
+                        onPressed: _navigateToAdddynamic,
                         icon: const Icon(Icons.rate_review),
                         label: const Text('Оставить отзыв'),
                         style: ElevatedButton.styleFrom(
@@ -219,7 +219,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
       );
 
   /// Карточка отзыва
-  Widget _buildReviewCard(Review review) => Card(
+  Widget _builddynamicCard(dynamic review) => Card(
         margin: const EdgeInsets.only(bottom: 16),
         elevation: 2,
         shape: RoundedRectangleBorder(
@@ -324,7 +324,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
       );
 
   /// Проверить, может ли пользователь оставить отзыв
-  Future<bool> _canLeaveReview(String customerId) async {
+  Future<bool> _canLeavedynamic(String customerId) async {
     // Здесь нужно проверить, есть ли у пользователя завершенные заказы
     // с этим специалистом, для которых еще нет отзыва
     // Пока возвращаем true для демонстрации
@@ -332,11 +332,11 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
   }
 
   /// Переход к экрану добавления отзыва
-  void _navigateToAddReview() {
+  void _navigateToAdddynamic() {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (context) => AddReviewScreen(
+        builder: (context) => AdddynamicScreen(
           specialistId: widget.specialistId,
           specialistName: widget.specialistName,
         ),
@@ -344,7 +344,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
     ).then((_) {
       // Обновляем список отзывов после добавления
       setState(() {
-        _reviewsStream = _reviewRepository.getReviewsBySpecialistStream(widget.specialistId);
+        _reviewsStream = _reviewRepository.getdynamicsBySpecialistStream(widget.specialistId);
       });
     });
   }
@@ -368,7 +368,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
   }
 
   /// Получить правильную форму слова "отзыв"
-  String _getReviewsCountText(int count) {
+  String _getdynamicsCountText(int count) {
     if (count % 10 == 1 && count % 100 != 11) {
       return 'отзыв';
     } else if ([2, 3, 4].contains(count % 10) && ![12, 13, 14].contains(count % 100)) {

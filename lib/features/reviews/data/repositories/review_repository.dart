@@ -1,21 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/review.dart';
+// import '../models/review.dart'; // Не существует
 
 /// Репозиторий для работы с отзывами
-class ReviewRepository {
+class dynamicRepository {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   /// Добавить отзыв
-  Future<void> addReview(Review review) async {
+  Future<void> adddynamic(dynamic review) async {
     try {
       // Проверяем, что отзыв валиден
-      if (!Review.isValidRating(review.rating)) {
+      if (!dynamic.isValidRating(review.rating)) {
         throw Exception(
           'Некорректный рейтинг. Допустимы значения от 1.0 до 5.0 с шагом 0.5',
         );
       }
 
-      if (!Review.isValidComment(review.comment)) {
+      if (!dynamic.isValidComment(review.comment)) {
         throw Exception('Комментарий должен содержать минимум 10 символов');
       }
 
@@ -31,13 +31,13 @@ class ReviewRepository {
       }
 
       // Проверяем, что отзыв еще не существует для этого заказа
-      final existingReview = await _db
+      final existingdynamic = await _db
           .collection('reviews')
           .where('bookingId', isEqualTo: review.bookingId)
           .limit(1)
           .get();
 
-      if (existingReview.docs.isNotEmpty) {
+      if (existingdynamic.docs.isNotEmpty) {
         throw Exception('Отзыв для этого заказа уже существует');
       }
 
@@ -49,7 +49,7 @@ class ReviewRepository {
   }
 
   /// Редактировать отзыв
-  Future<void> editReview(
+  Future<void> editdynamic(
     String reviewId, {
     double? rating,
     String? comment,
@@ -60,7 +60,7 @@ class ReviewRepository {
         throw Exception('Отзыв не найден');
       }
 
-      final review = Review.fromDocument(reviewDoc);
+      final review = dynamic.fromDocument(reviewDoc);
 
       // Проверяем, что отзыв можно редактировать
       if (!review.canEdit()) {
@@ -68,13 +68,13 @@ class ReviewRepository {
       }
 
       // Валидация новых данных
-      if (rating != null && !Review.isValidRating(rating)) {
+      if (rating != null && !dynamic.isValidRating(rating)) {
         throw Exception(
           'Некорректный рейтинг. Допустимы значения от 1.0 до 5.0 с шагом 0.5',
         );
       }
 
-      if (comment != null && !Review.isValidComment(comment)) {
+      if (comment != null && !dynamic.isValidComment(comment)) {
         throw Exception('Комментарий должен содержать минимум 10 символов');
       }
 
@@ -99,7 +99,7 @@ class ReviewRepository {
   }
 
   /// Получить отзывы по специалисту
-  Future<List<Review>> getReviewsBySpecialist(String specialistId) async {
+  Future<List<dynamic>> getdynamicsBySpecialist(String specialistId) async {
     try {
       final querySnapshot = await _db
           .collection('reviews')
@@ -108,25 +108,25 @@ class ReviewRepository {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return querySnapshot.docs.map(Review.fromDocument).toList();
+      return querySnapshot.docs.map(dynamic.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка при получении отзывов: $e');
     }
   }
 
   /// Получить отзывы по специалисту (стрим)
-  Stream<List<Review>> getReviewsBySpecialistStream(String specialistId) => _db
+  Stream<List<dynamic>> getdynamicsBySpecialistStream(String specialistId) => _db
       .collection('reviews')
       .where('specialistId', isEqualTo: specialistId)
       .where('reported', isEqualTo: false) // Исключаем жалобы
       .orderBy('createdAt', descending: true)
       .snapshots()
       .map(
-        (snapshot) => snapshot.docs.map(Review.fromDocument).toList(),
+        (snapshot) => snapshot.docs.map(dynamic.fromDocument).toList(),
       );
 
   /// Получить отзывы по заказчику
-  Future<List<Review>> getReviewsByCustomer(String customerId) async {
+  Future<List<dynamic>> getdynamicsByCustomer(String customerId) async {
     try {
       final querySnapshot = await _db
           .collection('reviews')
@@ -134,14 +134,14 @@ class ReviewRepository {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return querySnapshot.docs.map(Review.fromDocument).toList();
+      return querySnapshot.docs.map(dynamic.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка при получении отзывов заказчика: $e');
     }
   }
 
   /// Проверить, может ли пользователь оставить отзыв
-  Future<bool> canLeaveReview({
+  Future<bool> canLeavedynamic({
     required String bookingId,
     required String customerId,
   }) async {
@@ -158,17 +158,17 @@ class ReviewRepository {
       }
 
       // Проверяем, что отзыв еще не существует
-      final existingReview =
+      final existingdynamic =
           await _db.collection('reviews').where('bookingId', isEqualTo: bookingId).limit(1).get();
 
-      return existingReview.docs.isEmpty;
+      return existingdynamic.docs.isEmpty;
     } catch (e) {
       return false;
     }
   }
 
   /// Получить отзыв по ID заказа
-  Future<Review?> getReviewByBookingId(String bookingId) async {
+  Future<dynamic?> getdynamicByBookingId(String bookingId) async {
     try {
       final querySnapshot =
           await _db.collection('reviews').where('bookingId', isEqualTo: bookingId).limit(1).get();
@@ -177,14 +177,14 @@ class ReviewRepository {
         return null;
       }
 
-      return Review.fromDocument(querySnapshot.docs.first);
+      return dynamic.fromDocument(querySnapshot.docs.first);
     } catch (e) {
       return null;
     }
   }
 
   /// Пожаловаться на отзыв
-  Future<void> reportReview(String reviewId, String reason) async {
+  Future<void> reportdynamic(String reviewId, String reason) async {
     try {
       await _db.collection('reviews').doc(reviewId).update({
         'reported': true,
@@ -197,7 +197,7 @@ class ReviewRepository {
   }
 
   /// Получить статистику отзывов специалиста
-  Future<Map<String, dynamic>> getSpecialistReviewStats(
+  Future<Map<String, dynamic>> getSpecialistdynamicStats(
     String specialistId,
   ) async {
     try {
@@ -215,7 +215,7 @@ class ReviewRepository {
         };
       }
 
-      final reviews = querySnapshot.docs.map(Review.fromDocument).toList();
+      final reviews = querySnapshot.docs.map(dynamic.fromDocument).toList();
 
       final totalRating = reviews.fold<double>(0, (sum, review) => sum + review.rating);
       final avgRating = totalRating / reviews.length;
@@ -237,13 +237,13 @@ class ReviewRepository {
   }
 
   /// Получить отзыв по ID
-  Future<Review?> getReviewById(String reviewId) async {
+  Future<dynamic?> getdynamicById(String reviewId) async {
     try {
       final doc = await _db.collection('reviews').doc(reviewId).get();
       if (!doc.exists) {
         return null;
       }
-      return Review.fromDocument(doc);
+      return dynamic.fromDocument(doc);
     } catch (e) {
       return null;
     }

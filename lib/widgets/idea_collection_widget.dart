@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/idea.dart';
+import '../models/enhanced_idea.dart';
 
 /// Виджет коллекции идей
 class IdeaCollectionWidget extends StatelessWidget {
@@ -100,7 +100,7 @@ class IdeaCollectionWidget extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      '${collection.ideaIds.length} идей',
+                      '${collection.ideas.length} идей',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey[600],
@@ -108,7 +108,7 @@ class IdeaCollectionWidget extends StatelessWidget {
                     ),
                     const Spacer(),
                     Text(
-                      _formatDate(collection.updatedAt),
+                      _formatDate(collection.updatedAt ?? collection.createdAt),
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey[600],
@@ -214,7 +214,7 @@ class IdeaCollectionListTile extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  '${collection.ideaIds.length} идей',
+                  '${collection.ideas.length} идей',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey[600],
@@ -238,7 +238,7 @@ class IdeaCollectionListTile extends StatelessWidget {
                 ],
                 const Spacer(),
                 Text(
-                  _formatDate(collection.updatedAt),
+                  _formatDate(collection.updatedAt ?? collection.createdAt),
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey[600],
@@ -396,7 +396,7 @@ class IdeaCollectionGridTile extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      '${collection.ideaIds.length}',
+                      '${collection.ideas.length}',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey[600],

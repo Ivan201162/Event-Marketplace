@@ -5,6 +5,7 @@ import '../core/navigation/app_navigator.dart';
 import '../providers/bookings_provider.dart';
 import '../services/booking_service.dart';
 import '../services/firebase_auth_service.dart';
+import '../models/user.dart';
 import 'booking_details_screen.dart';
 import 'chat_screen.dart';
 
@@ -35,8 +36,6 @@ class _BookingsScreenFullState extends ConsumerState<BookingsScreenFull>
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = _authService.currentUser;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Заявки'),
@@ -55,12 +54,26 @@ class _BookingsScreenFullState extends ConsumerState<BookingsScreenFull>
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _MyBookingsTab(customerId: currentUser.uid),
-          _IncomingBookingsTab(specialistId: currentUser.uid),
-        ],
+      body: FutureBuilder<AppUser?>(
+        future: _authService.currentUser,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          
+          final currentUser = snapshot.data;
+          if (currentUser == null) {
+            return const Center(child: Text('Пользователь не авторизован'));
+          }
+
+          return TabBarView(
+            controller: _tabController,
+            children: [
+              _MyBookingsTab(customerId: currentUser.uid),
+              _IncomingBookingsTab(specialistId: currentUser.uid),
+            ],
+          );
+        },
       ),
     );
   }
@@ -136,9 +149,7 @@ class _MyBookingsTab extends ConsumerWidget {
       context,
       MaterialPageRoute<void>(
         builder: (context) => ChatScreen(
-          chatId: '${booking['customerId'] ?? ''}_${booking['specialistId'] ?? ''}',
-          otherParticipantId: booking['specialistId'] ?? '',
-          otherParticipantName: booking['specialistName'] ?? 'Специалист',
+          chatId: 'chat_${booking['customerId']}_${booking['specialistId']}',
         ),
       ),
     );
@@ -224,9 +235,7 @@ class _IncomingBookingsTab extends ConsumerWidget {
       context,
       MaterialPageRoute<void>(
         builder: (context) => ChatScreen(
-          chatId: '${booking['customerId'] ?? ''}_${booking['specialistId'] ?? ''}',
-          otherParticipantId: booking['customerId'] ?? '',
-          otherParticipantName: booking['customerName'] ?? 'Заказчик',
+          chatId: 'chat_${booking['customerId']}_${booking['specialistId']}',
         ),
       ),
     );

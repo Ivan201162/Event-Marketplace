@@ -31,11 +31,11 @@ class LocalDataSeeder {
         'city': 'Москва',
         'phone': '+7 (999) 123-45-67',
       },
-      'specialists': MockData.specialists.map((s) => s.toJson()).toList(),
-      'events': MockData.events.map((e) => e.toJson()).toList(),
-      'reviews': MockData.reviews.map((r) => r.toJson()).toList(),
-      'feedPosts': MockData.feedPosts.map((p) => p.toJson()).toList(),
-      'ideas': MockData.ideas.map((i) => i.toJson()).toList(),
+      'specialists': MockData.specialists.map((s) => s.toMap()).toList(),
+      'events': MockData.events.map((e) => e.toMap()).toList(),
+      'reviews': MockData.reviews.map((r) => r.toMap()).toList(),
+      'feedPosts': MockData.feedPosts.map((p) => p.toMap()).toList(),
+      'ideas': MockData.ideas.map((i) => i.toMap()).toList(),
       'requests': [
         {
           'id': 'req_1',

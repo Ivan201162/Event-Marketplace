@@ -1,14 +1,18 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 import '../models/review.dart';
+import 'package:flutter/foundation.dart';
 
-/// Сервис для работы с отзывами и рейтингами
+/// РЎРµСЂРІРёСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РѕС‚Р·С‹РІР°РјРё Рё СЂРµР№С‚РёРЅРіР°РјРё
 class ReviewsService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
 
-  /// Добавить отзыв
+  /// Р”РѕР±Р°РІРёС‚СЊ РѕС‚Р·С‹РІ
   Future<String> addReview({
     required String specialistId,
     required String customerId,
@@ -22,17 +26,17 @@ class ReviewsService {
     String? specialistName,
   }) async {
     try {
-      // Валидация
+      // Р’Р°Р»РёРґР°С†РёСЏ
       if (text.length < 20) {
-        throw Exception('Отзыв должен содержать минимум 20 символов');
+        throw Exception('РћС‚Р·С‹РІ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РјРёРЅРёРјСѓРј 20 СЃРёРјРІРѕР»РѕРІ');
       }
       if (rating < 1 || rating > 5) {
-        throw Exception('Рейтинг должен быть от 1 до 5');
+        throw Exception('Р РµР№С‚РёРЅРі РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РѕС‚ 1 РґРѕ 5');
       }
 
-      // Создаем отзыв
+      // РЎРѕР·РґР°РµРј РѕС‚Р·С‹РІ
       final review = Review(
-        id: '', // Будет установлен Firestore
+        id: '', // Р‘СѓРґРµС‚ СѓСЃС‚Р°РЅРѕРІР»РµРЅ Firestore
         specialistId: specialistId,
         customerId: customerId,
         customerName: customerName,
@@ -48,13 +52,13 @@ class ReviewsService {
         metadata: {},
       );
 
-      // Добавляем в Firestore
+      // Р”РѕР±Р°РІР»СЏРµРј РІ Firestore
       final docRef = await _firestore.collection('reviews').add(review.toMap());
 
-      // Обновляем рейтинг специалиста
+      // РћР±РЅРѕРІР»СЏРµРј СЂРµР№С‚РёРЅРі СЃРїРµС†РёР°Р»РёСЃС‚Р°
       await _updateSpecialistRating(specialistId);
 
-      // Логируем событие
+      // Р›РѕРіРёСЂСѓРµРј СЃРѕР±С‹С‚РёРµ
       await _analytics.logEvent(
         name: 'add_review',
         parameters: {
@@ -67,11 +71,11 @@ class ReviewsService {
 
       return docRef.id;
     } catch (e) {
-      throw Exception('Ошибка при добавлении отзыва: $e');
+      throw Exception('РћС€РёР±РєР° РїСЂРё РґРѕР±Р°РІР»РµРЅРёРё РѕС‚Р·С‹РІР°: $e');
     }
   }
 
-  /// Получить отзывы специалиста
+  /// РџРѕР»СѓС‡РёС‚СЊ РѕС‚Р·С‹РІС‹ СЃРїРµС†РёР°Р»РёСЃС‚Р°
   Future<List<Review>> getSpecialistReviews(
     String specialistId, {
     int limit = 20,
@@ -85,7 +89,7 @@ class ReviewsService {
           .where('specialistId', isEqualTo: specialistId)
           .where('isDeleted', isEqualTo: false);
 
-      // Применяем фильтры
+      // РџСЂРёРјРµРЅСЏРµРј С„РёР»СЊС‚СЂС‹
       if (filter != null) {
         if (filter.minRating != null) {
           query = query.where('rating', isGreaterThanOrEqualTo: filter.minRating);
@@ -95,7 +99,7 @@ class ReviewsService {
         }
       }
 
-      // Применяем сортировку
+      // РџСЂРёРјРµРЅСЏРµРј СЃРѕСЂС‚РёСЂРѕРІРєСѓ
       switch (sortType) {
         case ReviewSortType.newest:
           query = query.orderBy('date', descending: true);
@@ -114,7 +118,7 @@ class ReviewsService {
           break;
       }
 
-      // Пагинация
+      // РџР°РіРёРЅР°С†РёСЏ
       if (lastDocument != null) {
         query = query.startAfterDocument(lastDocument);
       }
@@ -124,11 +128,11 @@ class ReviewsService {
       final snapshot = await query.get();
       return snapshot.docs.map(Review.fromDocument).toList();
     } catch (e) {
-      throw Exception('Ошибка при получении отзывов: $e');
+      throw Exception('РћС€РёР±РєР° РїСЂРё РїРѕР»СѓС‡РµРЅРёРё РѕС‚Р·С‹РІРѕРІ: $e');
     }
   }
 
-  /// Редактировать отзыв
+  /// Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РѕС‚Р·С‹РІ
   Future<void> editReview({
     required String reviewId,
     required String text,
@@ -140,26 +144,26 @@ class ReviewsService {
       final reviewDoc = await reviewRef.get();
 
       if (!reviewDoc.exists) {
-        throw Exception('Отзыв не найден');
+        throw Exception('РћС‚Р·С‹РІ РЅРµ РЅР°Р№РґРµРЅ');
       }
 
       final review = Review.fromDocument(reviewDoc);
 
-      // Проверяем, что прошло не более 24 часов
+      // РџСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ РїСЂРѕС€Р»Рѕ РЅРµ Р±РѕР»РµРµ 24 С‡Р°СЃРѕРІ
       final hoursSinceCreation = DateTime.now().difference(review.date).inHours;
       if (hoursSinceCreation > 24) {
-        throw Exception('Отзыв можно редактировать только в течение 24 часов');
+        throw Exception('РћС‚Р·С‹РІ РјРѕР¶РЅРѕ СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ С‚РѕР»СЊРєРѕ РІ С‚РµС‡РµРЅРёРµ 24 С‡Р°СЃРѕРІ');
       }
 
-      // Валидация
+      // Р’Р°Р»РёРґР°С†РёСЏ
       if (text.length < 20) {
-        throw Exception('Отзыв должен содержать минимум 20 символов');
+        throw Exception('РћС‚Р·С‹РІ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РјРёРЅРёРјСѓРј 20 СЃРёРјРІРѕР»РѕРІ');
       }
       if (rating != null && (rating < 1 || rating > 5)) {
-        throw Exception('Рейтинг должен быть от 1 до 5');
+        throw Exception('Р РµР№С‚РёРЅРі РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РѕС‚ 1 РґРѕ 5');
       }
 
-      // Обновляем отзыв
+      // РћР±РЅРѕРІР»СЏРµРј РѕС‚Р·С‹РІ
       await reviewRef.update({
         'text': text,
         if (rating != null) 'rating': rating,
@@ -168,10 +172,10 @@ class ReviewsService {
         'isEdited': true,
       });
 
-      // Обновляем рейтинг специалиста
+      // РћР±РЅРѕРІР»СЏРµРј СЂРµР№С‚РёРЅРі СЃРїРµС†РёР°Р»РёСЃС‚Р°
       await _updateSpecialistRating(review.specialistId);
 
-      // Логируем событие
+      // Р›РѕРіРёСЂСѓРµРј СЃРѕР±С‹С‚РёРµ
       await _analytics.logEvent(
         name: 'edit_review',
         parameters: {
@@ -181,38 +185,38 @@ class ReviewsService {
         },
       );
     } catch (e) {
-      throw Exception('Ошибка при редактировании отзыва: $e');
+      throw Exception('РћС€РёР±РєР° РїСЂРё СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРё РѕС‚Р·С‹РІР°: $e');
     }
   }
 
-  /// Удалить отзыв
+  /// РЈРґР°Р»РёС‚СЊ РѕС‚Р·С‹РІ
   Future<void> deleteReview(String reviewId) async {
     try {
       final reviewRef = _firestore.collection('reviews').doc(reviewId);
       final reviewDoc = await reviewRef.get();
 
       if (!reviewDoc.exists) {
-        throw Exception('Отзыв не найден');
+        throw Exception('РћС‚Р·С‹РІ РЅРµ РЅР°Р№РґРµРЅ');
       }
 
       final review = Review.fromDocument(reviewDoc);
 
-      // Проверяем, что прошло не более 24 часов
+      // РџСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ РїСЂРѕС€Р»Рѕ РЅРµ Р±РѕР»РµРµ 24 С‡Р°СЃРѕРІ
       final hoursSinceCreation = DateTime.now().difference(review.date).inHours;
       if (hoursSinceCreation > 24) {
-        throw Exception('Отзыв можно удалить только в течение 24 часов');
+        throw Exception('РћС‚Р·С‹РІ РјРѕР¶РЅРѕ СѓРґР°Р»РёС‚СЊ С‚РѕР»СЊРєРѕ РІ С‚РµС‡РµРЅРёРµ 24 С‡Р°СЃРѕРІ');
       }
 
-      // Помечаем как удаленный
+      // РџРѕРјРµС‡Р°РµРј РєР°Рє СѓРґР°Р»РµРЅРЅС‹Р№
       await reviewRef.update({
         'isDeleted': true,
         'deletedAt': FieldValue.serverTimestamp(),
       });
 
-      // Обновляем рейтинг специалиста
+      // РћР±РЅРѕРІР»СЏРµРј СЂРµР№С‚РёРЅРі СЃРїРµС†РёР°Р»РёСЃС‚Р°
       await _updateSpecialistRating(review.specialistId);
 
-      // Логируем событие
+      // Р›РѕРіРёСЂСѓРµРј СЃРѕР±С‹С‚РёРµ
       await _analytics.logEvent(
         name: 'delete_review',
         parameters: {
@@ -222,11 +226,11 @@ class ReviewsService {
         },
       );
     } catch (e) {
-      throw Exception('Ошибка при удалении отзыва: $e');
+      throw Exception('РћС€РёР±РєР° РїСЂРё СѓРґР°Р»РµРЅРёРё РѕС‚Р·С‹РІР°: $e');
     }
   }
 
-  /// Поставить лайк отзыву
+  /// РџРѕСЃС‚Р°РІРёС‚СЊ Р»Р°Р№Рє РѕС‚Р·С‹РІСѓ
   Future<void> likeReview(
     String reviewId,
     String userId,
@@ -239,13 +243,13 @@ class ReviewsService {
       final likeDoc = await likeRef.get();
 
       if (likeDoc.exists) {
-        // Убираем лайк
+        // РЈР±РёСЂР°РµРј Р»Р°Р№Рє
         await likeRef.delete();
         await _firestore.collection('reviews').doc(reviewId).update({
           'likes': FieldValue.increment(-1),
         });
       } else {
-        // Ставим лайк
+        // РЎС‚Р°РІРёРј Р»Р°Р№Рє
         await likeRef.set(
           ReviewLike(
             userId: userId,
@@ -258,7 +262,7 @@ class ReviewsService {
         });
       }
 
-      // Логируем событие
+      // Р›РѕРіРёСЂСѓРµРј СЃРѕР±С‹С‚РёРµ
       await _analytics.logEvent(
         name: 'like_review',
         parameters: {
@@ -267,11 +271,11 @@ class ReviewsService {
         },
       );
     } catch (e) {
-      throw Exception('Ошибка при лайке отзыва: $e');
+      throw Exception('РћС€РёР±РєР° РїСЂРё Р»Р°Р№РєРµ РѕС‚Р·С‹РІР°: $e');
     }
   }
 
-  /// Ответить на отзыв
+  /// РћС‚РІРµС‚РёС‚СЊ РЅР° РѕС‚Р·С‹РІ
   Future<void> respondToReview({
     required String reviewId,
     required String authorId,
@@ -283,7 +287,7 @@ class ReviewsService {
       final reviewDoc = await reviewRef.get();
 
       if (!reviewDoc.exists) {
-        throw Exception('Отзыв не найден');
+        throw Exception('РћС‚Р·С‹РІ РЅРµ РЅР°Р№РґРµРЅ');
       }
 
       final response = ReviewResponse(
@@ -293,12 +297,12 @@ class ReviewsService {
         date: DateTime.now(),
       );
 
-      // Добавляем ответ
+      // Р”РѕР±Р°РІР»СЏРµРј РѕС‚РІРµС‚
       await reviewRef.update({
         'responses': FieldValue.arrayUnion([response.toMap()]),
       });
 
-      // Логируем событие
+      // Р›РѕРіРёСЂСѓРµРј СЃРѕР±С‹С‚РёРµ
       await _analytics.logEvent(
         name: 'respond_review',
         parameters: {
@@ -307,11 +311,11 @@ class ReviewsService {
         },
       );
     } catch (e) {
-      throw Exception('Ошибка при ответе на отзыв: $e');
+      throw Exception('РћС€РёР±РєР° РїСЂРё РѕС‚РІРµС‚Рµ РЅР° РѕС‚Р·С‹РІ: $e');
     }
   }
 
-  /// Пожаловаться на отзыв
+  /// РџРѕР¶Р°Р»РѕРІР°С‚СЊСЃСЏ РЅР° РѕС‚Р·С‹РІ
   Future<void> reportReview({
     required String reviewId,
     required String reporterId,
@@ -330,16 +334,16 @@ class ReviewsService {
         date: DateTime.now(),
       );
 
-      // Добавляем жалобу
+      // Р”РѕР±Р°РІР»СЏРµРј Р¶Р°Р»РѕР±Сѓ
       await _firestore.collection('review_reports').add(report.toMap());
 
-      // Увеличиваем счетчик жалоб
+      // РЈРІРµР»РёС‡РёРІР°РµРј СЃС‡РµС‚С‡РёРє Р¶Р°Р»РѕР±
       await _firestore.collection('reviews').doc(reviewId).update({
         'reportCount': FieldValue.increment(1),
         'isReported': true,
       });
 
-      // Логируем событие
+      // Р›РѕРіРёСЂСѓРµРј СЃРѕР±С‹С‚РёРµ
       await _analytics.logEvent(
         name: 'report_review',
         parameters: {
@@ -349,11 +353,11 @@ class ReviewsService {
         },
       );
     } catch (e) {
-      throw Exception('Ошибка при жалобе на отзыв: $e');
+      throw Exception('РћС€РёР±РєР° РїСЂРё Р¶Р°Р»РѕР±Рµ РЅР° РѕС‚Р·С‹РІ: $e');
     }
   }
 
-  /// Получить репутацию специалиста
+  /// РџРѕР»СѓС‡РёС‚СЊ СЂРµРїСѓС‚Р°С†РёСЋ СЃРїРµС†РёР°Р»РёСЃС‚Р°
   Future<SpecialistReputation> getSpecialistReputation(
     String specialistId,
   ) async {
@@ -363,7 +367,7 @@ class ReviewsService {
       if (doc.exists) {
         return SpecialistReputation.fromMap(doc.data()!);
       } else {
-        // Создаем новую запись репутации
+        // РЎРѕР·РґР°РµРј РЅРѕРІСѓСЋ Р·Р°РїРёСЃСЊ СЂРµРїСѓС‚Р°С†РёРё
         return SpecialistReputation(
           specialistId: specialistId,
           ratingAverage: 0,
@@ -376,14 +380,14 @@ class ReviewsService {
         );
       }
     } catch (e) {
-      throw Exception('Ошибка при получении репутации: $e');
+      throw Exception('РћС€РёР±РєР° РїСЂРё РїРѕР»СѓС‡РµРЅРёРё СЂРµРїСѓС‚Р°С†РёРё: $e');
     }
   }
 
-  /// Обновить рейтинг специалиста
+  /// РћР±РЅРѕРІРёС‚СЊ СЂРµР№С‚РёРЅРі СЃРїРµС†РёР°Р»РёСЃС‚Р°
   Future<void> _updateSpecialistRating(String specialistId) async {
     try {
-      // Получаем все отзывы специалиста
+      // РџРѕР»СѓС‡Р°РµРј РІСЃРµ РѕС‚Р·С‹РІС‹ СЃРїРµС†РёР°Р»РёСЃС‚Р°
       final reviewsSnapshot = await _firestore
           .collection('reviews')
           .where('specialistId', isEqualTo: specialistId)
@@ -396,7 +400,7 @@ class ReviewsService {
 
       final reviews = reviewsSnapshot.docs.map(Review.fromDocument).toList();
 
-      // Рассчитываем статистику
+      // Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј СЃС‚Р°С‚РёСЃС‚РёРєСѓ
       final totalReviews = reviews.length;
       final totalRating = reviews.fold(0, (sum, review) => sum + review.rating);
       final averageRating = totalRating / totalReviews;
@@ -411,7 +415,7 @@ class ReviewsService {
 
       final status = SpecialistReputation.getReputationStatus(reputationScore);
 
-      // Обновляем статистику
+      // РћР±РЅРѕРІР»СЏРµРј СЃС‚Р°С‚РёСЃС‚РёРєСѓ
       final reputation = SpecialistReputation(
         specialistId: specialistId,
         ratingAverage: averageRating,
@@ -428,7 +432,7 @@ class ReviewsService {
           .doc(specialistId)
           .set(reputation.toMap(), SetOptions(merge: true));
 
-      // Обновляем рейтинг в профиле специалиста
+      // РћР±РЅРѕРІР»СЏРµРј СЂРµР№С‚РёРЅРі РІ РїСЂРѕС„РёР»Рµ СЃРїРµС†РёР°Р»РёСЃС‚Р°
       await _firestore.collection('specialists').doc(specialistId).update({
         'rating': averageRating,
         'reviewCount': totalReviews,
@@ -436,17 +440,17 @@ class ReviewsService {
         'reputationStatus': status.value,
       });
     } catch (e) {
-      debugPrint('Ошибка при обновлении рейтинга: $e');
+      debugPrint('РћС€РёР±РєР° РїСЂРё РѕР±РЅРѕРІР»РµРЅРёРё СЂРµР№С‚РёРЅРіР°: $e');
     }
   }
 
-  /// Сохранить фильтры отзывов
+  /// РЎРѕС…СЂР°РЅРёС‚СЊ С„РёР»СЊС‚СЂС‹ РѕС‚Р·С‹РІРѕРІ
   Future<void> saveReviewFilters(ReviewFilter filter) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('review_filters', filter.toJson());
   }
 
-  /// Загрузить фильтры отзывов
+  /// Р—Р°РіСЂСѓР·РёС‚СЊ С„РёР»СЊС‚СЂС‹ РѕС‚Р·С‹РІРѕРІ
   Future<ReviewFilter?> loadReviewFilters() async {
     final prefs = await SharedPreferences.getInstance();
     final filtersJson = prefs.getString('review_filters');
@@ -456,13 +460,13 @@ class ReviewsService {
     return null;
   }
 
-  /// Сохранить тип сортировки отзывов
+  /// РЎРѕС…СЂР°РЅРёС‚СЊ С‚РёРї СЃРѕСЂС‚РёСЂРѕРІРєРё РѕС‚Р·С‹РІРѕРІ
   Future<void> saveReviewSortType(ReviewSortType sortType) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('review_sort_type', sortType.name);
   }
 
-  /// Загрузить тип сортировки отзывов
+  /// Р—Р°РіСЂСѓР·РёС‚СЊ С‚РёРї СЃРѕСЂС‚РёСЂРѕРІРєРё РѕС‚Р·С‹РІРѕРІ
   Future<ReviewSortType> loadReviewSortType() async {
     final prefs = await SharedPreferences.getInstance();
     final sortTypeName = prefs.getString('review_sort_type');
@@ -476,20 +480,20 @@ class ReviewsService {
   }
 }
 
-/// Типы сортировки отзывов
+/// РўРёРїС‹ СЃРѕСЂС‚РёСЂРѕРІРєРё РѕС‚Р·С‹РІРѕРІ
 enum ReviewSortType {
-  newest('newest', 'Сначала новые'),
-  oldest('oldest', 'Сначала старые'),
-  highest('highest', 'Сначала лучшие'),
-  lowest('lowest', 'Сначала худшие'),
-  mostLiked('most_liked', 'Больше лайков');
+  newest('newest', 'РЎРЅР°С‡Р°Р»Р° РЅРѕРІС‹Рµ'),
+  oldest('oldest', 'РЎРЅР°С‡Р°Р»Р° СЃС‚Р°СЂС‹Рµ'),
+  highest('highest', 'РЎРЅР°С‡Р°Р»Р° Р»СѓС‡С€РёРµ'),
+  lowest('lowest', 'РЎРЅР°С‡Р°Р»Р° С…СѓРґС€РёРµ'),
+  mostLiked('most_liked', 'Р‘РѕР»СЊС€Рµ Р»Р°Р№РєРѕРІ');
 
   const ReviewSortType(this.value, this.displayName);
   final String value;
   final String displayName;
 }
 
-/// Фильтр отзывов
+/// Р¤РёР»СЊС‚СЂ РѕС‚Р·С‹РІРѕРІ
 class ReviewFilter {
   const ReviewFilter({
     this.minRating,
@@ -499,7 +503,7 @@ class ReviewFilter {
   });
 
   factory ReviewFilter.fromJson(String json) {
-    // Простая реализация парсинга JSON
+    // РџСЂРѕСЃС‚Р°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ РїР°СЂСЃРёРЅРіР° JSON
     final hasPhotos = json.contains('"hasPhotos": true');
     final minRatingMatch = RegExp(r'"minRating": (\d+(?:\.\d+)?)').firstMatch(json);
     final minRating = minRatingMatch != null ? double.tryParse(minRatingMatch.group(1)!) : null;
@@ -523,3 +527,4 @@ class ReviewFilter {
     }
     ''';
 }
+

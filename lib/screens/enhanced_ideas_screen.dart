@@ -286,7 +286,7 @@ class _PhotoIdeaCard extends ConsumerWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      idea.authorName,
+                      idea.authorName ?? 'Неизвестный автор',
                       style: TextStyle(
                         color: Colors.grey[600],
                         fontSize: 12,
@@ -415,7 +415,7 @@ class _VideoIdeaCard extends ConsumerWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    idea.authorName,
+                    idea.authorName ?? 'Неизвестный автор',
                     style: const TextStyle(
                       color: Colors.white70,
                       fontSize: 14,

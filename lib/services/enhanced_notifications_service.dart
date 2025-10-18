@@ -1,18 +1,22 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/enhanced_notification.dart';
+import 'package:flutter/foundation.dart';
 
-/// Сервис для работы с расширенными уведомлениями
+/// РЎРµСЂРІРёСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ СЂР°СЃС€РёСЂРµРЅРЅС‹РјРё СѓРІРµРґРѕРјР»РµРЅРёСЏРјРё
 class EnhancedNotificationsService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
 
-  /// Инициализация сервиса уведомлений
+  /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃРµСЂРІРёСЃР° СѓРІРµРґРѕРјР»РµРЅРёР№
   Future<void> initialize() async {
-    // Инициализация локальных уведомлений
+    // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ Р»РѕРєР°Р»СЊРЅС‹С… СѓРІРµРґРѕРјР»РµРЅРёР№
     const initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
 
     const initializationSettingsIOS = DarwinInitializationSettings();
@@ -27,14 +31,14 @@ class EnhancedNotificationsService {
       onDidReceiveNotificationResponse: _onNotificationTapped,
     );
 
-    // Запрос разрешений
+    // Р—Р°РїСЂРѕСЃ СЂР°Р·СЂРµС€РµРЅРёР№
     await _requestPermissions();
 
-    // Настройка обработчиков сообщений
+    // РќР°СЃС‚СЂРѕР№РєР° РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРІ СЃРѕРѕР±С‰РµРЅРёР№
     _setupMessageHandlers();
   }
 
-  /// Запрос разрешений на уведомления
+  /// Р—Р°РїСЂРѕСЃ СЂР°Р·СЂРµС€РµРЅРёР№ РЅР° СѓРІРµРґРѕРјР»РµРЅРёСЏ
   Future<void> _requestPermissions() async {
     // Android
     await _localNotifications
@@ -54,49 +58,49 @@ class EnhancedNotificationsService {
     final settings = await _messaging.requestPermission();
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      debugPrint('Уведомления разрешены');
+      debugPrint('РЈРІРµРґРѕРјР»РµРЅРёСЏ СЂР°Р·СЂРµС€РµРЅС‹');
     } else {
-      debugPrint('Уведомления не разрешены');
+      debugPrint('РЈРІРµРґРѕРјР»РµРЅРёСЏ РЅРµ СЂР°Р·СЂРµС€РµРЅС‹');
     }
   }
 
-  /// Настройка обработчиков сообщений
+  /// РќР°СЃС‚СЂРѕР№РєР° РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРІ СЃРѕРѕР±С‰РµРЅРёР№
   void _setupMessageHandlers() {
-    // Обработка сообщений в фоне
+    // РћР±СЂР°Р±РѕС‚РєР° СЃРѕРѕР±С‰РµРЅРёР№ РІ С„РѕРЅРµ
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-    // Обработка сообщений в foreground
+    // РћР±СЂР°Р±РѕС‚РєР° СЃРѕРѕР±С‰РµРЅРёР№ РІ foreground
     FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
 
-    // Обработка нажатий на уведомления
+    // РћР±СЂР°Р±РѕС‚РєР° РЅР°Р¶Р°С‚РёР№ РЅР° СѓРІРµРґРѕРјР»РµРЅРёСЏ
     FirebaseMessaging.onMessageOpenedApp.listen(_handleNotificationTap);
   }
 
-  /// Обработка нажатия на уведомление
+  /// РћР±СЂР°Р±РѕС‚РєР° РЅР°Р¶Р°С‚РёСЏ РЅР° СѓРІРµРґРѕРјР»РµРЅРёРµ
   void _onNotificationTapped(NotificationResponse response) {
-    // TODO: Обработка нажатия на локальное уведомление
-    debugPrint('Нажато на уведомление: ${response.payload}');
+    // TODO: РћР±СЂР°Р±РѕС‚РєР° РЅР°Р¶Р°С‚РёСЏ РЅР° Р»РѕРєР°Р»СЊРЅРѕРµ СѓРІРµРґРѕРјР»РµРЅРёРµ
+    debugPrint('РќР°Р¶Р°С‚Рѕ РЅР° СѓРІРµРґРѕРјР»РµРЅРёРµ: ${response.payload}');
   }
 
-  /// Обработка сообщения в foreground
+  /// РћР±СЂР°Р±РѕС‚РєР° СЃРѕРѕР±С‰РµРЅРёСЏ РІ foreground
   void _handleForegroundMessage(RemoteMessage message) {
-    debugPrint('Получено сообщение в foreground: ${message.messageId}');
+    debugPrint('РџРѕР»СѓС‡РµРЅРѕ СЃРѕРѕР±С‰РµРЅРёРµ РІ foreground: ${message.messageId}');
 
-    // Показать локальное уведомление
+    // РџРѕРєР°Р·Р°С‚СЊ Р»РѕРєР°Р»СЊРЅРѕРµ СѓРІРµРґРѕРјР»РµРЅРёРµ
     _showLocalNotification(
-      title: message.notification?.title ?? 'Новое уведомление',
+      title: message.notification?.title ?? 'РќРѕРІРѕРµ СѓРІРµРґРѕРјР»РµРЅРёРµ',
       body: message.notification?.body ?? '',
       payload: message.data.toString(),
     );
   }
 
-  /// Обработка нажатия на уведомление
+  /// РћР±СЂР°Р±РѕС‚РєР° РЅР°Р¶Р°С‚РёСЏ РЅР° СѓРІРµРґРѕРјР»РµРЅРёРµ
   void _handleNotificationTap(RemoteMessage message) {
-    debugPrint('Нажато на уведомление: ${message.messageId}');
-    // TODO: Навигация к соответствующему экрану
+    debugPrint('РќР°Р¶Р°С‚Рѕ РЅР° СѓРІРµРґРѕРјР»РµРЅРёРµ: ${message.messageId}');
+    // TODO: РќР°РІРёРіР°С†РёСЏ Рє СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРјСѓ СЌРєСЂР°РЅСѓ
   }
 
-  /// Показать локальное уведомление
+  /// РџРѕРєР°Р·Р°С‚СЊ Р»РѕРєР°Р»СЊРЅРѕРµ СѓРІРµРґРѕРјР»РµРЅРёРµ
   Future<void> _showLocalNotification({
     required String title,
     required String body,
@@ -105,7 +109,7 @@ class EnhancedNotificationsService {
     const androidDetails = AndroidNotificationDetails(
       'event_marketplace',
       'Event Marketplace',
-      channelDescription: 'Уведомления Event Marketplace',
+      channelDescription: 'РЈРІРµРґРѕРјР»РµРЅРёСЏ Event Marketplace',
       importance: Importance.high,
       priority: Priority.high,
     );
@@ -130,7 +134,7 @@ class EnhancedNotificationsService {
     );
   }
 
-  /// Получить уведомления пользователя
+  /// РџРѕР»СѓС‡РёС‚СЊ СѓРІРµРґРѕРјР»РµРЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<List<EnhancedNotification>> getNotifications({
     required String userId,
     int limit = 50,
@@ -162,11 +166,11 @@ class EnhancedNotificationsService {
 
       return notifications;
     } catch (e) {
-      throw Exception('Ошибка загрузки уведомлений: $e');
+      throw Exception('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё СѓРІРµРґРѕРјР»РµРЅРёР№: $e');
     }
   }
 
-  /// Получить непрочитанные уведомления
+  /// РџРѕР»СѓС‡РёС‚СЊ РЅРµРїСЂРѕС‡РёС‚Р°РЅРЅС‹Рµ СѓРІРµРґРѕРјР»РµРЅРёСЏ
   Future<List<EnhancedNotification>> getUnreadNotifications({
     required String userId,
     int limit = 20,
@@ -190,11 +194,11 @@ class EnhancedNotificationsService {
 
       return notifications;
     } catch (e) {
-      throw Exception('Ошибка загрузки непрочитанных уведомлений: $e');
+      throw Exception('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё РЅРµРїСЂРѕС‡РёС‚Р°РЅРЅС‹С… СѓРІРµРґРѕРјР»РµРЅРёР№: $e');
     }
   }
 
-  /// Получить уведомление по ID
+  /// РџРѕР»СѓС‡РёС‚СЊ СѓРІРµРґРѕРјР»РµРЅРёРµ РїРѕ ID
   Future<EnhancedNotification?> getNotificationById(
     String notificationId,
   ) async {
@@ -209,11 +213,11 @@ class EnhancedNotificationsService {
       }
       return null;
     } catch (e) {
-      throw Exception('Ошибка загрузки уведомления: $e');
+      throw Exception('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё СѓРІРµРґРѕРјР»РµРЅРёСЏ: $e');
     }
   }
 
-  /// Создать уведомление
+  /// РЎРѕР·РґР°С‚СЊ СѓРІРµРґРѕРјР»РµРЅРёРµ
   Future<EnhancedNotification> createNotification({
     required String userId,
     required String title,
@@ -253,19 +257,19 @@ class EnhancedNotificationsService {
 
       await _firestore.collection('notifications').doc(notificationId).set(notification.toMap());
 
-      // Отправить push-уведомление
+      // РћС‚РїСЂР°РІРёС‚СЊ push-СѓРІРµРґРѕРјР»РµРЅРёРµ
       await _sendPushNotification(notification);
 
       return notification;
     } catch (e) {
-      throw Exception('Ошибка создания уведомления: $e');
+      throw Exception('РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ СѓРІРµРґРѕРјР»РµРЅРёСЏ: $e');
     }
   }
 
-  /// Отправить push-уведомление
+  /// РћС‚РїСЂР°РІРёС‚СЊ push-СѓРІРµРґРѕРјР»РµРЅРёРµ
   Future<void> _sendPushNotification(EnhancedNotification notification) async {
     try {
-      // Получить FCM токен пользователя
+      // РџРѕР»СѓС‡РёС‚СЊ FCM С‚РѕРєРµРЅ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
       final userDoc = await _firestore.collection('users').doc(notification.userId).get();
 
       if (userDoc.exists) {
@@ -273,7 +277,7 @@ class EnhancedNotificationsService {
         final fcmToken = userData['fcmToken'] as String?;
 
         if (fcmToken != null) {
-          // Отправить уведомление через FCM
+          // РћС‚РїСЂР°РІРёС‚СЊ СѓРІРµРґРѕРјР»РµРЅРёРµ С‡РµСЂРµР· FCM
           await _messaging.sendMessage(
             to: fcmToken,
             data: {
@@ -290,11 +294,11 @@ class EnhancedNotificationsService {
         }
       }
     } catch (e) {
-      debugPrint('Ошибка отправки push-уведомления: $e');
+      debugPrint('РћС€РёР±РєР° РѕС‚РїСЂР°РІРєРё push-СѓРІРµРґРѕРјР»РµРЅРёСЏ: $e');
     }
   }
 
-  /// Отметить уведомление как прочитанное
+  /// РћС‚РјРµС‚РёС‚СЊ СѓРІРµРґРѕРјР»РµРЅРёРµ РєР°Рє РїСЂРѕС‡РёС‚Р°РЅРЅРѕРµ
   Future<void> markAsRead(String notificationId) async {
     try {
       await _firestore.collection('notifications').doc(notificationId).update({
@@ -302,11 +306,11 @@ class EnhancedNotificationsService {
         'readAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      throw Exception('Ошибка отметки уведомления как прочитанного: $e');
+      throw Exception('РћС€РёР±РєР° РѕС‚РјРµС‚РєРё СѓРІРµРґРѕРјР»РµРЅРёСЏ РєР°Рє РїСЂРѕС‡РёС‚Р°РЅРЅРѕРіРѕ: $e');
     }
   }
 
-  /// Отметить все уведомления как прочитанные
+  /// РћС‚РјРµС‚РёС‚СЊ РІСЃРµ СѓРІРµРґРѕРјР»РµРЅРёСЏ РєР°Рє РїСЂРѕС‡РёС‚Р°РЅРЅС‹Рµ
   Future<void> markAllAsRead(String userId) async {
     try {
       final QuerySnapshot snapshot = await _firestore
@@ -326,11 +330,11 @@ class EnhancedNotificationsService {
 
       await batch.commit();
     } catch (e) {
-      throw Exception('Ошибка отметки всех уведомлений как прочитанных: $e');
+      throw Exception('РћС€РёР±РєР° РѕС‚РјРµС‚РєРё РІСЃРµС… СѓРІРµРґРѕРјР»РµРЅРёР№ РєР°Рє РїСЂРѕС‡РёС‚Р°РЅРЅС‹С…: $e');
     }
   }
 
-  /// Архивировать уведомление
+  /// РђСЂС…РёРІРёСЂРѕРІР°С‚СЊ СѓРІРµРґРѕРјР»РµРЅРёРµ
   Future<void> archiveNotification(String notificationId) async {
     try {
       await _firestore.collection('notifications').doc(notificationId).update({
@@ -338,20 +342,20 @@ class EnhancedNotificationsService {
         'archivedAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      throw Exception('Ошибка архивирования уведомления: $e');
+      throw Exception('РћС€РёР±РєР° Р°СЂС…РёРІРёСЂРѕРІР°РЅРёСЏ СѓРІРµРґРѕРјР»РµРЅРёСЏ: $e');
     }
   }
 
-  /// Удалить уведомление
+  /// РЈРґР°Р»РёС‚СЊ СѓРІРµРґРѕРјР»РµРЅРёРµ
   Future<void> deleteNotification(String notificationId) async {
     try {
       await _firestore.collection('notifications').doc(notificationId).delete();
     } catch (e) {
-      throw Exception('Ошибка удаления уведомления: $e');
+      throw Exception('РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ СѓРІРµРґРѕРјР»РµРЅРёСЏ: $e');
     }
   }
 
-  /// Очистить все уведомления
+  /// РћС‡РёСЃС‚РёС‚СЊ РІСЃРµ СѓРІРµРґРѕРјР»РµРЅРёСЏ
   Future<void> clearAllNotifications(String userId) async {
     try {
       final QuerySnapshot snapshot =
@@ -365,11 +369,11 @@ class EnhancedNotificationsService {
 
       await batch.commit();
     } catch (e) {
-      throw Exception('Ошибка очистки всех уведомлений: $e');
+      throw Exception('РћС€РёР±РєР° РѕС‡РёСЃС‚РєРё РІСЃРµС… СѓРІРµРґРѕРјР»РµРЅРёР№: $e');
     }
   }
 
-  /// Получить статистику уведомлений
+  /// РџРѕР»СѓС‡РёС‚СЊ СЃС‚Р°С‚РёСЃС‚РёРєСѓ СѓРІРµРґРѕРјР»РµРЅРёР№
   Future<NotificationStats> getNotificationStats(String userId) async {
     try {
       final QuerySnapshot snapshot =
@@ -405,38 +409,38 @@ class EnhancedNotificationsService {
         byPriority: byPriority,
       );
     } catch (e) {
-      throw Exception('Ошибка получения статистики уведомлений: $e');
+      throw Exception('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЃС‚Р°С‚РёСЃС‚РёРєРё СѓРІРµРґРѕРјР»РµРЅРёР№: $e');
     }
   }
 
-  /// Подписаться на топик
+  /// РџРѕРґРїРёСЃР°С‚СЊСЃСЏ РЅР° С‚РѕРїРёРє
   Future<void> subscribeToTopic(String topic) async {
     try {
       await _messaging.subscribeToTopic(topic);
     } catch (e) {
-      throw Exception('Ошибка подписки на топик: $e');
+      throw Exception('РћС€РёР±РєР° РїРѕРґРїРёСЃРєРё РЅР° С‚РѕРїРёРє: $e');
     }
   }
 
-  /// Отписаться от топика
+  /// РћС‚РїРёСЃР°С‚СЊСЃСЏ РѕС‚ С‚РѕРїРёРєР°
   Future<void> unsubscribeFromTopic(String topic) async {
     try {
       await _messaging.unsubscribeFromTopic(topic);
     } catch (e) {
-      throw Exception('Ошибка отписки от топика: $e');
+      throw Exception('РћС€РёР±РєР° РѕС‚РїРёСЃРєРё РѕС‚ С‚РѕРїРёРєР°: $e');
     }
   }
 
-  /// Получить FCM токен
+  /// РџРѕР»СѓС‡РёС‚СЊ FCM С‚РѕРєРµРЅ
   Future<String?> getFCMToken() async {
     try {
       return await _messaging.getToken();
     } catch (e) {
-      throw Exception('Ошибка получения FCM токена: $e');
+      throw Exception('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ FCM С‚РѕРєРµРЅР°: $e');
     }
   }
 
-  /// Сохранить FCM токен пользователя
+  /// РЎРѕС…СЂР°РЅРёС‚СЊ FCM С‚РѕРєРµРЅ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<void> saveFCMToken(String userId, String token) async {
     try {
       await _firestore.collection('users').doc(userId).update({
@@ -444,13 +448,14 @@ class EnhancedNotificationsService {
         'lastTokenUpdate': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      throw Exception('Ошибка сохранения FCM токена: $e');
+      throw Exception('РћС€РёР±РєР° СЃРѕС…СЂР°РЅРµРЅРёСЏ FCM С‚РѕРєРµРЅР°: $e');
     }
   }
 }
 
-/// Обработчик сообщений в фоне
+/// РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕРѕР±С‰РµРЅРёР№ РІ С„РѕРЅРµ
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  debugPrint('Обработка сообщения в фоне: ${message.messageId}');
-  // TODO: Обработка сообщения в фоне
+  debugPrint('РћР±СЂР°Р±РѕС‚РєР° СЃРѕРѕР±С‰РµРЅРёСЏ РІ С„РѕРЅРµ: ${message.messageId}');
+  // TODO: РћР±СЂР°Р±РѕС‚РєР° СЃРѕРѕР±С‰РµРЅРёСЏ РІ С„РѕРЅРµ
 }
+

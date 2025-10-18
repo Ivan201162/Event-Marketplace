@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../bookings/data/models/booking.dart';
-import '../specialists/data/models/specialist.dart';
+// import '../bookings/data/models/booking.dart'; // Не существует
+// import '../specialists/data/models/specialist.dart'; // Не существует
 
 /// Сервис рекомендаций специалистов
 class RecommendationService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   /// Получить рекомендации для заказчика
-  Future<List<Specialist>> getRecommendations({
+  Future<List<dynamic>> getRecommendations({
     required String customerId,
     String? city,
     double? budget,
@@ -48,7 +48,7 @@ class RecommendationService {
   }
 
   /// Получить похожих специалистов
-  Future<List<Specialist>> getSimilarSpecialists({
+  Future<List<dynamic>> getSimilardynamics({
     required String specialistId,
     int limit = 5,
   }) async {
@@ -59,10 +59,10 @@ class RecommendationService {
         return [];
       }
 
-      final specialist = Specialist.fromDocument(specialistDoc);
+      final specialist = dynamic.fromDocument(specialistDoc);
 
       // Ищем специалистов с похожими характеристиками
-      final similarSpecialists = await _db
+      final similardynamics = await _db
           .collection('specialists')
           .where('category', isEqualTo: specialist.category)
           .where('isAvailable', isEqualTo: true)
@@ -70,8 +70,8 @@ class RecommendationService {
           .limit(limit + 1) // +1 чтобы исключить самого специалиста
           .get();
 
-      final specialists = similarSpecialists.docs
-          .map(Specialist.fromDocument)
+      final specialists = similardynamics.docs
+          .map(dynamic.fromDocument)
           .where((s) => s.id != specialistId) // Исключаем самого специалиста
           .toList();
 
@@ -90,7 +90,7 @@ class RecommendationService {
   }
 
   /// Получить топ специалистов по городу
-  Future<List<Specialist>> getTopSpecialistsByCity({
+  Future<List<dynamic>> getTopdynamicsByCity({
     required String city,
     String? category,
     int limit = 10,
@@ -109,14 +109,14 @@ class RecommendationService {
 
       final snapshot = await query.limit(limit).get();
 
-      return snapshot.docs.map(Specialist.fromDocument).toList();
+      return snapshot.docs.map(dynamic.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения топ специалистов: $e');
     }
   }
 
   /// Получить рекомендации по бюджету
-  Future<List<Specialist>> getRecommendationsByBudget({
+  Future<List<dynamic>> getRecommendationsByBudget({
     required double budget,
     String? city,
     String? category,
@@ -141,7 +141,7 @@ class RecommendationService {
 
       final snapshot = await query.limit(limit).get();
 
-      return snapshot.docs.map(Specialist.fromDocument).toList();
+      return snapshot.docs.map(dynamic.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения рекомендаций по бюджету: $e');
     }
@@ -165,11 +165,11 @@ class RecommendationService {
           'category': null,
           'budget': null,
           'avgPrice': 0.0,
-          'preferredSpecialists': <String>[],
+          'preferreddynamics': <String>[],
         };
       }
 
-      final bookings = bookingsSnapshot.docs.map(Booking.fromDocument).toList();
+      final bookings = bookingsSnapshot.docs.map(dynamic.fromDocument).toList();
 
       // Анализируем предпочтения
       final cities = <String, int>{};
@@ -181,7 +181,7 @@ class RecommendationService {
         // Получаем данные специалиста
         final specialistDoc = await _db.collection('specialists').doc(booking.specialistId).get();
         if (specialistDoc.exists) {
-          final specialist = Specialist.fromDocument(specialistDoc);
+          final specialist = dynamic.fromDocument(specialistDoc);
 
           // Город
           if (specialist.city != null) {
@@ -209,7 +209,7 @@ class RecommendationService {
 
       final avgPrice = prices.isNotEmpty ? prices.reduce((a, b) => a + b) / prices.length : 0.0;
 
-      final preferredSpecialists = specialistIds.entries
+      final preferreddynamics = specialistIds.entries
           .where(
             (entry) => entry.value > 1,
           ) // Специалисты, которых выбирали больше 1 раза
@@ -221,7 +221,7 @@ class RecommendationService {
         'category': preferredCategory,
         'budget': avgPrice,
         'avgPrice': avgPrice,
-        'preferredSpecialists': preferredSpecialists,
+        'preferreddynamics': preferreddynamics,
         'bookingHistory': bookings.length,
       };
     } catch (e) {
@@ -230,13 +230,13 @@ class RecommendationService {
         'category': null,
         'budget': null,
         'avgPrice': 0.0,
-        'preferredSpecialists': <String>[],
+        'preferreddynamics': <String>[],
       };
     }
   }
 
   /// Получить базовые рекомендации
-  Future<List<Specialist>> _getBaseRecommendations({
+  Future<List<dynamic>> _getBaseRecommendations({
     String? city,
     String? category,
     double? budget,
@@ -267,12 +267,12 @@ class RecommendationService {
 
     final snapshot = await query.limit(limit).get();
 
-    return snapshot.docs.map(Specialist.fromDocument).toList();
+    return snapshot.docs.map(dynamic.fromDocument).toList();
   }
 
   /// Применить алгоритмы рекомендаций
-  Future<List<Specialist>> _applyRecommendationAlgorithms(
-    List<Specialist> specialists,
+  Future<List<dynamic>> _applyRecommendationAlgorithms(
+    List<dynamic> specialists,
     Map<String, dynamic> userPreferences,
     String customerId,
   ) async {
@@ -291,8 +291,8 @@ class RecommendationService {
   }
 
   /// Content-based фильтрация
-  List<Specialist> _applyContentBasedFiltering(
-    List<Specialist> specialists,
+  List<dynamic> _applyContentBasedFiltering(
+    List<dynamic> specialists,
     Map<String, dynamic> userPreferences,
   ) =>
       specialists.where((specialist) {
@@ -310,8 +310,8 @@ class RecommendationService {
       }).toList();
 
   /// Collaborative filtering
-  Future<List<Specialist>> _applyCollaborativeFiltering(
-    List<Specialist> specialists,
+  Future<List<dynamic>> _applyCollaborativeFiltering(
+    List<dynamic> specialists,
     String customerId,
   ) async {
     try {
@@ -323,25 +323,25 @@ class RecommendationService {
       }
 
       // Получаем специалистов, которых выбирали похожие пользователи
-      final recommendedSpecialistIds = <String, int>{};
+      final recommendeddynamicIds = <String, int>{};
 
       for (final userId in similarUsers) {
-        final userBookings = await _db
+        final userdynamics = await _db
             .collection('bookings')
             .where('customerId', isEqualTo: userId)
             .where('status', isEqualTo: 'completed')
             .get();
 
-        for (final doc in userBookings.docs) {
-          final booking = Booking.fromDocument(doc);
-          recommendedSpecialistIds[booking.specialistId] =
-              (recommendedSpecialistIds[booking.specialistId] ?? 0) + 1;
+        for (final doc in userdynamics.docs) {
+          final booking = dynamic.fromDocument(doc);
+          recommendeddynamicIds[booking.specialistId] =
+              (recommendeddynamicIds[booking.specialistId] ?? 0) + 1;
         }
       }
 
       // Усиливаем рейтинг специалистов, которых выбирали похожие пользователи
       for (final specialist in specialists) {
-        final boost = recommendedSpecialistIds[specialist.id] ?? 0;
+        final boost = recommendeddynamicIds[specialist.id] ?? 0;
         if (boost > 0) {
           // Добавляем метаданные для сортировки
           specialist.metadata?['collaborativeBoost'] = boost;
@@ -377,7 +377,7 @@ class RecommendationService {
       final userSimilarities = <String, int>{};
 
       for (final doc in otherUsers.docs) {
-        final booking = Booking.fromDocument(doc);
+        final booking = dynamic.fromDocument(doc);
         if (booking.customerId == customerId) continue;
 
         final otherPreferences = await _getUserPreferences(booking.customerId);
@@ -407,20 +407,20 @@ class RecommendationService {
   }
 
   /// Усиление по популярности
-  List<Specialist> _applyPopularityBoost(List<Specialist> specialists) =>
+  List<dynamic> _applyPopularityBoost(List<dynamic> specialists) =>
       specialists.map((specialist) {
         // Усиливаем специалистов с высоким рейтингом и большим количеством отзывов
         var popularityBoost = 0;
 
-        if (specialist.avgRating >= 4.5) {
+        if ((specialist.avgRating ?? 0.0) >= 4.5) {
           popularityBoost += 0.2;
         }
 
-        if (specialist.reviewsCount >= 10) {
+        if ((specialist.reviewsCount ?? 0) >= 10) {
           popularityBoost += 0.1;
         }
 
-        if (specialist.isVerified) {
+        if (specialist.isVerified == true) {
           popularityBoost += 0.1;
         }
 
@@ -432,16 +432,16 @@ class RecommendationService {
 
   /// Вычислить релевантность специалиста
   double _calculateRelevanceScore(
-    Specialist specialist,
+    dynamic specialist,
     Map<String, dynamic> preferences,
   ) {
-    var score = 0;
+    var score = 0.0;
 
     // Базовый рейтинг
-    score += specialist.avgRating * 0.3;
+    score += (specialist.avgRating ?? 0.0) * 0.3;
 
     // Количество отзывов (нормализованное)
-    score += (specialist.reviewsCount / 100.0).clamp(0.0, 1.0) * 0.2;
+    score += ((specialist.reviewsCount ?? 0) / 100.0).clamp(0.0, 1.0) * 0.2;
 
     // Соответствие предпочтениям
     if (preferences['city'] == specialist.city) {
@@ -473,7 +473,7 @@ class RecommendationService {
 
   /// Получить объяснение рекомендации
   String getRecommendationExplanation(
-    Specialist specialist,
+    dynamic specialist,
     Map<String, dynamic> preferences,
   ) {
     final reasons = <String>[];

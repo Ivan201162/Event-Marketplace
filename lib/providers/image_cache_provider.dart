@@ -1,37 +1,39 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart';
 
-/// Провайдер для управления кэшем изображений
+/// РџСЂРѕРІР°Р№РґРµСЂ РґР»СЏ СѓРїСЂР°РІР»РµРЅРёСЏ РєСЌС€РµРј РёР·РѕР±СЂР°Р¶РµРЅРёР№
 final imageCacheProvider = Provider<ImageCacheManager>((ref) => ImageCacheManager());
 
-/// Менеджер кэша изображений
+/// РњРµРЅРµРґР¶РµСЂ РєСЌС€Р° РёР·РѕР±СЂР°Р¶РµРЅРёР№
 class ImageCacheManager {
-  static const int _maxCacheSize = 100; // Максимальное количество изображений в кэше
+  static const int _maxCacheSize = 100; // РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РёР·РѕР±СЂР°Р¶РµРЅРёР№ РІ РєСЌС€Рµ
   static const int _maxCacheBytes = 50 * 1024 * 1024; // 50MB
 
-  /// Инициализация кэша изображений
+  /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РєСЌС€Р° РёР·РѕР±СЂР°Р¶РµРЅРёР№
   void initializeCache() {
-    // Настройка кэша изображений
+    // РќР°СЃС‚СЂРѕР№РєР° РєСЌС€Р° РёР·РѕР±СЂР°Р¶РµРЅРёР№
     PaintingBinding.instance.imageCache.maximumSize = _maxCacheSize;
     PaintingBinding.instance.imageCache.maximumSizeBytes = _maxCacheBytes;
 
-    // Предварительная загрузка часто используемых изображений
+    // РџСЂРµРґРІР°СЂРёС‚РµР»СЊРЅР°СЏ Р·Р°РіСЂСѓР·РєР° С‡Р°СЃС‚Рѕ РёСЃРїРѕР»СЊР·СѓРµРјС‹С… РёР·РѕР±СЂР°Р¶РµРЅРёР№
     _preloadCommonImages();
   }
 
-  /// Предварительная загрузка общих изображений
+  /// РџСЂРµРґРІР°СЂРёС‚РµР»СЊРЅР°СЏ Р·Р°РіСЂСѓР·РєР° РѕР±С‰РёС… РёР·РѕР±СЂР°Р¶РµРЅРёР№
   void _preloadCommonImages() {
-    // Здесь можно добавить предварительную загрузку
-    // часто используемых изображений (логотипы, иконки и т.д.)
+    // Р—РґРµСЃСЊ РјРѕР¶РЅРѕ РґРѕР±Р°РІРёС‚СЊ РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅСѓСЋ Р·Р°РіСЂСѓР·РєСѓ
+    // С‡Р°СЃС‚Рѕ РёСЃРїРѕР»СЊР·СѓРµРјС‹С… РёР·РѕР±СЂР°Р¶РµРЅРёР№ (Р»РѕРіРѕС‚РёРїС‹, РёРєРѕРЅРєРё Рё С‚.Рґ.)
   }
 
-  /// Очистка кэша изображений
+  /// РћС‡РёСЃС‚РєР° РєСЌС€Р° РёР·РѕР±СЂР°Р¶РµРЅРёР№
   void clearCache() {
     PaintingBinding.instance.imageCache.clear();
     PaintingBinding.instance.imageCache.clearLiveImages();
   }
 
-  /// Очистка кэша при нехватке памяти
+  /// РћС‡РёСЃС‚РєР° РєСЌС€Р° РїСЂРё РЅРµС…РІР°С‚РєРµ РїР°РјСЏС‚Рё
   void clearCacheIfNeeded() {
     final imageCache = PaintingBinding.instance.imageCache;
     if (imageCache.currentSizeBytes > _maxCacheBytes * 0.8) {
@@ -39,7 +41,7 @@ class ImageCacheManager {
     }
   }
 
-  /// Получение информации о кэше
+  /// РџРѕР»СѓС‡РµРЅРёРµ РёРЅС„РѕСЂРјР°С†РёРё Рѕ РєСЌС€Рµ
   Map<String, dynamic> getCacheInfo() {
     final imageCache = PaintingBinding.instance.imageCache;
     return {
@@ -51,41 +53,42 @@ class ImageCacheManager {
   }
 }
 
-/// Провайдер для предварительной загрузки изображений
+/// РџСЂРѕРІР°Р№РґРµСЂ РґР»СЏ РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅРѕР№ Р·Р°РіСЂСѓР·РєРё РёР·РѕР±СЂР°Р¶РµРЅРёР№
 final imagePreloadProvider = FutureProvider.family<void, String>((ref, imageUrl) async {
   try {
-    // Инициализируем кэш
+    // РРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј РєСЌС€
     ref.read(imageCacheProvider).initializeCache();
 
-    // Предварительная загрузка изображения
-    // Примечание: precacheImage требует BuildContext, который недоступен в провайдере
-    // Вместо этого мы просто инициализируем кэш
+    // РџСЂРµРґРІР°СЂРёС‚РµР»СЊРЅР°СЏ Р·Р°РіСЂСѓР·РєР° РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
+    // РџСЂРёРјРµС‡Р°РЅРёРµ: precacheImage С‚СЂРµР±СѓРµС‚ BuildContext, РєРѕС‚РѕСЂС‹Р№ РЅРµРґРѕСЃС‚СѓРїРµРЅ РІ РїСЂРѕРІР°Р№РґРµСЂРµ
+    // Р’РјРµСЃС‚Рѕ СЌС‚РѕРіРѕ РјС‹ РїСЂРѕСЃС‚Рѕ РёРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј РєСЌС€
     debugPrint('Image cache initialized for: $imageUrl');
   } on Exception catch (e) {
-    // Игнорируем ошибки предварительной загрузки
+    // РРіРЅРѕСЂРёСЂСѓРµРј РѕС€РёР±РєРё РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅРѕР№ Р·Р°РіСЂСѓР·РєРё
     debugPrint('Failed to initialize cache for image: $imageUrl, error: $e');
   }
 });
 
-/// Провайдер для управления памятью
+/// РџСЂРѕРІР°Р№РґРµСЂ РґР»СЏ СѓРїСЂР°РІР»РµРЅРёСЏ РїР°РјСЏС‚СЊСЋ
 final memoryManagerProvider = Provider<MemoryManager>((ref) => MemoryManager());
 
-/// Менеджер памяти
+/// РњРµРЅРµРґР¶РµСЂ РїР°РјСЏС‚Рё
 class MemoryManager {
-  /// Проверка использования памяти и очистка при необходимости
+  /// РџСЂРѕРІРµСЂРєР° РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РїР°РјСЏС‚Рё Рё РѕС‡РёСЃС‚РєР° РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё
   void checkMemoryUsage() {
     final imageCache = PaintingBinding.instance.imageCache;
 
-    // Если кэш изображений занимает больше 80% от максимального размера
+    // Р•СЃР»Рё РєСЌС€ РёР·РѕР±СЂР°Р¶РµРЅРёР№ Р·Р°РЅРёРјР°РµС‚ Р±РѕР»СЊС€Рµ 80% РѕС‚ РјР°РєСЃРёРјР°Р»СЊРЅРѕРіРѕ СЂР°Р·РјРµСЂР°
     if (imageCache.currentSizeBytes > imageCache.maximumSizeBytes * 0.8) {
-      // Очищаем старые изображения
+      // РћС‡РёС‰Р°РµРј СЃС‚Р°СЂС‹Рµ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
       imageCache.clearLiveImages();
     }
   }
 
-  /// Принудительная очистка памяти
+  /// РџСЂРёРЅСѓРґРёС‚РµР»СЊРЅР°СЏ РѕС‡РёСЃС‚РєР° РїР°РјСЏС‚Рё
   void forceCleanup() {
     PaintingBinding.instance.imageCache.clear();
     PaintingBinding.instance.imageCache.clearLiveImages();
   }
 }
+

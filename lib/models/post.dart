@@ -58,6 +58,34 @@ class Post {
         'metadata': metadata,
       };
 
+  /// Преобразовать в Map для JSON сериализации (без Timestamp)
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'specialistId': specialistId,
+        'text': text,
+        'mediaUrls': mediaUrls,
+        'createdAt': createdAt.toIso8601String(),
+        'likesCount': likesCount,
+        'commentsCount': commentsCount,
+        'likedBy': likedBy,
+        'metadata': metadata,
+      };
+
+  /// Создать пост из JSON
+  factory Post.fromJson(Map<String, dynamic> json) => Post(
+        id: json['id'] as String? ?? '',
+        specialistId: json['specialistId'] as String? ?? '',
+        text: json['text'] as String?,
+        mediaUrls: List<String>.from(json['mediaUrls'] ?? []),
+        createdAt: json['createdAt'] != null
+            ? DateTime.parse(json['createdAt'] as String)
+            : DateTime.now(),
+        likesCount: json['likesCount'] as int? ?? 0,
+        commentsCount: json['commentsCount'] as int? ?? 0,
+        likedBy: List<String>.from(json['likedBy'] ?? []),
+        metadata: json['metadata'] as Map<String, dynamic>?,
+      );
+
   /// Копировать с изменениями
   Post copyWith({
     String? id,

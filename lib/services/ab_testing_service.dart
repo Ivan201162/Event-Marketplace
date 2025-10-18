@@ -1,17 +1,21 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/ab_testing.dart';
+import 'package:flutter/foundation.dart';
 
 class ABTestingService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Uuid _uuid = const Uuid();
 
-  /// Получение варианта A/B теста для пользователя
+  /// РџРѕР»СѓС‡РµРЅРёРµ РІР°СЂРёР°РЅС‚Р° A/B С‚РµСЃС‚Р° РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<String> getVariantForUser(String userId, String testName) async {
     try {
-      // Проверяем, есть ли уже назначенный вариант для пользователя
+      // РџСЂРѕРІРµСЂСЏРµРј, РµСЃС‚СЊ Р»Рё СѓР¶Рµ РЅР°Р·РЅР°С‡РµРЅРЅС‹Р№ РІР°СЂРёР°РЅС‚ РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
       final QuerySnapshot existingVariant = await _firestore
           .collection('ab_test_assignments')
           .where('userId', isEqualTo: userId)
@@ -25,11 +29,11 @@ class ABTestingService {
         return assignment.variant;
       }
 
-      // Получаем активный тест
+      // РџРѕР»СѓС‡Р°РµРј Р°РєС‚РёРІРЅС‹Р№ С‚РµСЃС‚
       final DocumentSnapshot testDoc = await _firestore.collection('ab_tests').doc(testName).get();
 
       if (!testDoc.exists) {
-        return 'control'; // Возвращаем контрольный вариант по умолчанию
+        return 'control'; // Р’РѕР·РІСЂР°С‰Р°РµРј РєРѕРЅС‚СЂРѕР»СЊРЅС‹Р№ РІР°СЂРёР°РЅС‚ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
       }
 
       final ABTest test = ABTest.fromMap(testDoc.data() as Map<String, dynamic>);
@@ -38,10 +42,10 @@ class ABTestingService {
         return 'control';
       }
 
-      // Назначаем вариант на основе алгоритма (например, хеш от userId)
+      // РќР°Р·РЅР°С‡Р°РµРј РІР°СЂРёР°РЅС‚ РЅР° РѕСЃРЅРѕРІРµ Р°Р»РіРѕСЂРёС‚РјР° (РЅР°РїСЂРёРјРµСЂ, С…РµС€ РѕС‚ userId)
       final String variant = _assignVariant(userId, test);
 
-      // Сохраняем назначение
+      // РЎРѕС…СЂР°РЅСЏРµРј РЅР°Р·РЅР°С‡РµРЅРёРµ
       final ABTestAssignment assignment = ABTestAssignment(
         id: _uuid.v4(),
         userId: userId,
@@ -61,7 +65,7 @@ class ABTestingService {
     }
   }
 
-  /// Назначение варианта на основе хеша
+  /// РќР°Р·РЅР°С‡РµРЅРёРµ РІР°СЂРёР°РЅС‚Р° РЅР° РѕСЃРЅРѕРІРµ С…РµС€Р°
   String _assignVariant(String userId, ABTest test) {
     final int hash = userId.hashCode.abs();
     final int bucket = hash % 100; // 0-99
@@ -77,11 +81,11 @@ class ABTestingService {
     return 'control'; // Fallback
   }
 
-  /// Логирование события для A/B теста
+  /// Р›РѕРіРёСЂРѕРІР°РЅРёРµ СЃРѕР±С‹С‚РёСЏ РґР»СЏ A/B С‚РµСЃС‚Р°
   Future<void> logEvent(
       String userId, String testName, String eventName, Map<String, dynamic>? eventData) async {
     try {
-      // Получаем назначенный вариант
+      // РџРѕР»СѓС‡Р°РµРј РЅР°Р·РЅР°С‡РµРЅРЅС‹Р№ РІР°СЂРёР°РЅС‚
       final String variant = await getVariantForUser(userId, testName);
 
       final ABTestEvent event = ABTestEvent(
@@ -103,7 +107,7 @@ class ABTestingService {
     }
   }
 
-  /// Создание A/B теста
+  /// РЎРѕР·РґР°РЅРёРµ A/B С‚РµСЃС‚Р°
   Future<String> createABTest({
     required String name,
     required String description,
@@ -138,7 +142,7 @@ class ABTestingService {
     }
   }
 
-  /// Активация A/B теста
+  /// РђРєС‚РёРІР°С†РёСЏ A/B С‚РµСЃС‚Р°
   Future<void> activateABTest(String testId) async {
     try {
       await _firestore.collection('ab_tests').doc(testId).update({
@@ -153,7 +157,7 @@ class ABTestingService {
     }
   }
 
-  /// Деактивация A/B теста
+  /// Р”РµР°РєС‚РёРІР°С†РёСЏ A/B С‚РµСЃС‚Р°
   Future<void> deactivateABTest(String testId) async {
     try {
       await _firestore.collection('ab_tests').doc(testId).update({
@@ -168,10 +172,10 @@ class ABTestingService {
     }
   }
 
-  /// Получение результатов A/B теста
+  /// РџРѕР»СѓС‡РµРЅРёРµ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ A/B С‚РµСЃС‚Р°
   Future<ABTestResults> getABTestResults(String testId) async {
     try {
-      // Получаем информацию о тесте
+      // РџРѕР»СѓС‡Р°РµРј РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ С‚РµСЃС‚Рµ
       final DocumentSnapshot testDoc = await _firestore.collection('ab_tests').doc(testId).get();
 
       if (!testDoc.exists) {
@@ -180,30 +184,30 @@ class ABTestingService {
 
       final ABTest test = ABTest.fromMap(testDoc.data() as Map<String, dynamic>);
 
-      // Получаем назначения пользователей
+      // РџРѕР»СѓС‡Р°РµРј РЅР°Р·РЅР°С‡РµРЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
       final QuerySnapshot assignmentsSnapshot = await _firestore
           .collection('ab_test_assignments')
           .where('testName', isEqualTo: test.name)
           .get();
 
-      // Получаем события
+      // РџРѕР»СѓС‡Р°РµРј СЃРѕР±С‹С‚РёСЏ
       final QuerySnapshot eventsSnapshot = await _firestore
           .collection('ab_test_events')
           .where('testName', isEqualTo: test.name)
           .get();
 
-      // Анализируем данные
+      // РђРЅР°Р»РёР·РёСЂСѓРµРј РґР°РЅРЅС‹Рµ
       final Map<String, int> variantUsers = {};
       final Map<String, Map<String, int>> variantEvents = {};
 
-      // Подсчитываем пользователей по вариантам
+      // РџРѕРґСЃС‡РёС‚С‹РІР°РµРј РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ РїРѕ РІР°СЂРёР°РЅС‚Р°Рј
       for (final doc in assignmentsSnapshot.docs) {
         final ABTestAssignment assignment =
             ABTestAssignment.fromMap(doc.data() as Map<String, dynamic>);
         variantUsers[assignment.variant] = (variantUsers[assignment.variant] ?? 0) + 1;
       }
 
-      // Подсчитываем события по вариантам
+      // РџРѕРґСЃС‡РёС‚С‹РІР°РµРј СЃРѕР±С‹С‚РёСЏ РїРѕ РІР°СЂРёР°РЅС‚Р°Рј
       for (final doc in eventsSnapshot.docs) {
         final ABTestEvent event = ABTestEvent.fromMap(doc.data() as Map<String, dynamic>);
         if (variantEvents[event.variant] == null) {
@@ -213,7 +217,7 @@ class ABTestingService {
             (variantEvents[event.variant]![event.eventName] ?? 0) + 1;
       }
 
-      // Создаем результаты
+      // РЎРѕР·РґР°РµРј СЂРµР·СѓР»СЊС‚Р°С‚С‹
       final List<VariantResult> variantResults = [];
       for (final variant in test.variants) {
         final int userCount = variantUsers[variant.name] ?? 0;
@@ -245,7 +249,7 @@ class ABTestingService {
     }
   }
 
-  /// Получение всех активных A/B тестов
+  /// РџРѕР»СѓС‡РµРЅРёРµ РІСЃРµС… Р°РєС‚РёРІРЅС‹С… A/B С‚РµСЃС‚РѕРІ
   Future<List<ABTest>> getActiveABTests() async {
     try {
       final QuerySnapshot snapshot =
@@ -260,7 +264,7 @@ class ABTestingService {
     }
   }
 
-  /// Проверка, участвует ли пользователь в тесте
+  /// РџСЂРѕРІРµСЂРєР°, СѓС‡Р°СЃС‚РІСѓРµС‚ Р»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РІ С‚РµСЃС‚Рµ
   Future<bool> isUserInTest(String userId, String testName) async {
     try {
       final QuerySnapshot snapshot = await _firestore
@@ -277,7 +281,7 @@ class ABTestingService {
     }
   }
 
-  /// Получение всех тестов пользователя
+  /// РџРѕР»СѓС‡РµРЅРёРµ РІСЃРµС… С‚РµСЃС‚РѕРІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   Future<List<ABTestAssignment>> getUserTestAssignments(String userId) async {
     try {
       final QuerySnapshot snapshot = await _firestore
@@ -295,17 +299,17 @@ class ABTestingService {
     }
   }
 
-  /// Создание предустановленных A/B тестов для монетизации
+  /// РЎРѕР·РґР°РЅРёРµ РїСЂРµРґСѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹С… A/B С‚РµСЃС‚РѕРІ РґР»СЏ РјРѕРЅРµС‚РёР·Р°С†РёРё
   Future<void> createMonetizationABTests() async {
     try {
-      // Тест тарифных планов
+      // РўРµСЃС‚ С‚Р°СЂРёС„РЅС‹С… РїР»Р°РЅРѕРІ
       await createABTest(
         name: 'subscription_pricing_test',
-        description: 'Тест различных цен на подписки',
+        description: 'РўРµСЃС‚ СЂР°Р·Р»РёС‡РЅС‹С… С†РµРЅ РЅР° РїРѕРґРїРёСЃРєРё',
         variants: [
           ABTestVariant(
             name: 'control',
-            description: 'Текущие цены',
+            description: 'РўРµРєСѓС‰РёРµ С†РµРЅС‹',
             trafficPercentage: 50,
             config: {
               'premium_price': 499.0,
@@ -314,7 +318,7 @@ class ABTestingService {
           ),
           ABTestVariant(
             name: 'discounted',
-            description: 'Скидка 20%',
+            description: 'РЎРєРёРґРєР° 20%',
             trafficPercentage: 50,
             config: {
               'premium_price': 399.0,
@@ -327,14 +331,14 @@ class ABTestingService {
         targetAudience: 'all_users',
       );
 
-      // Тест промо-кампаний
+      // РўРµСЃС‚ РїСЂРѕРјРѕ-РєР°РјРїР°РЅРёР№
       await createABTest(
         name: 'promotion_placement_test',
-        description: 'Тест размещения промо-объявлений',
+        description: 'РўРµСЃС‚ СЂР°Р·РјРµС‰РµРЅРёСЏ РїСЂРѕРјРѕ-РѕР±СЉСЏРІР»РµРЅРёР№',
         variants: [
           ABTestVariant(
             name: 'control',
-            description: 'Стандартное размещение',
+            description: 'РЎС‚Р°РЅРґР°СЂС‚РЅРѕРµ СЂР°Р·РјРµС‰РµРЅРёРµ',
             trafficPercentage: 50,
             config: {
               'placement': 'top',
@@ -343,7 +347,7 @@ class ABTestingService {
           ),
           ABTestVariant(
             name: 'aggressive',
-            description: 'Агрессивное размещение',
+            description: 'РђРіСЂРµСЃСЃРёРІРЅРѕРµ СЂР°Р·РјРµС‰РµРЅРёРµ',
             trafficPercentage: 50,
             config: {
               'placement': 'multiple',
@@ -356,14 +360,14 @@ class ABTestingService {
         targetAudience: 'premium_users',
       );
 
-      // Тест реферальной программы
+      // РўРµСЃС‚ СЂРµС„РµСЂР°Р»СЊРЅРѕР№ РїСЂРѕРіСЂР°РјРјС‹
       await createABTest(
         name: 'referral_rewards_test',
-        description: 'Тест различных наград за рефералов',
+        description: 'РўРµСЃС‚ СЂР°Р·Р»РёС‡РЅС‹С… РЅР°РіСЂР°Рґ Р·Р° СЂРµС„РµСЂР°Р»РѕРІ',
         variants: [
           ABTestVariant(
             name: 'control',
-            description: 'Стандартные награды',
+            description: 'РЎС‚Р°РЅРґР°СЂС‚РЅС‹Рµ РЅР°РіСЂР°РґС‹',
             trafficPercentage: 50,
             config: {
               'referrer_bonus': 5,
@@ -372,7 +376,7 @@ class ABTestingService {
           ),
           ABTestVariant(
             name: 'enhanced',
-            description: 'Увеличенные награды',
+            description: 'РЈРІРµР»РёС‡РµРЅРЅС‹Рµ РЅР°РіСЂР°РґС‹',
             trafficPercentage: 50,
             config: {
               'referrer_bonus': 7,
@@ -391,3 +395,4 @@ class ABTestingService {
     }
   }
 }
+

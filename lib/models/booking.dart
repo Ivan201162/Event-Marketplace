@@ -318,6 +318,131 @@ class Booking {
         'finalPrice': finalPrice,
       };
 
+  /// Преобразовать в Map для JSON сериализации (без Timestamp)
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'customerId': customerId,
+        'specialistId': specialistId,
+        'eventDate': eventDate.toIso8601String(),
+        'totalPrice': totalPrice,
+        'prepayment': prepayment,
+        'status': status.name,
+        'message': message,
+        'createdAt': createdAt.toIso8601String(),
+        'updatedAt': updatedAt?.toIso8601String(),
+        'eventId': eventId,
+        'eventTitle': eventTitle,
+        'userId': userId,
+        'userName': userName,
+        'userEmail': userEmail,
+        'userPhone': userPhone,
+        'bookingDate': bookingDate?.toIso8601String(),
+        'participantsCount': participantsCount,
+        'notes': notes,
+        'organizerId': organizerId,
+        'organizerName': organizerName,
+        'expiresAt': expiresAt?.toIso8601String(),
+        'specialistName': specialistName,
+        'endDate': endDate?.toIso8601String(),
+        'title': title,
+        'customerName': customerName,
+        'customerPhone': customerPhone,
+        'customerEmail': customerEmail,
+        'description': description,
+        'eventName': eventName,
+        'eventDescription': eventDescription,
+        'eventLocation': eventLocation,
+        'eventType': eventType,
+        'startTime': startTime,
+        'startDate': startDate?.toIso8601String(),
+        'totalAmount': totalAmount,
+        'advanceAmount': advanceAmount,
+        'location': location,
+        'duration': duration?.inSeconds,
+        'specialRequests': specialRequests,
+        'currency': currency,
+        'dueDate': dueDate?.toIso8601String(),
+        'isPrepayment': isPrepayment,
+        'isFinalPayment': isFinalPayment,
+        'prepaymentPaid': prepaymentPaid,
+        'vkPlaylistUrl': vkPlaylistUrl,
+        'discount': discount,
+        'finalPrice': finalPrice,
+      };
+
+  /// Создать бронирование из JSON
+  factory Booking.fromJson(Map<String, dynamic> json) => Booking(
+        id: json['id'] as String? ?? '',
+        customerId: json['customerId'] as String? ?? '',
+        specialistId: json['specialistId'] as String? ?? '',
+        eventDate: json['eventDate'] != null
+            ? DateTime.parse(json['eventDate'] as String)
+            : DateTime.now(),
+        totalPrice: (json['totalPrice'] as num?)?.toDouble() ?? 0.0,
+        prepayment: (json['prepayment'] as num?)?.toDouble() ?? 0.0,
+        status: BookingStatus.values.firstWhere(
+          (e) => e.name == json['status'],
+          orElse: () => BookingStatus.pending,
+        ),
+        message: json['message'] as String? ?? '',
+        createdAt: json['createdAt'] != null
+            ? DateTime.parse(json['createdAt'] as String)
+            : DateTime.now(),
+        updatedAt: json['updatedAt'] != null
+            ? DateTime.parse(json['updatedAt'] as String)
+            : null,
+        eventId: json['eventId'] as String?,
+        eventTitle: json['eventTitle'] as String?,
+        userId: json['userId'] as String?,
+        userName: json['userName'] as String?,
+        userEmail: json['userEmail'] as String?,
+        userPhone: json['userPhone'] as String?,
+        bookingDate: json['bookingDate'] != null
+            ? DateTime.parse(json['bookingDate'] as String)
+            : null,
+        participantsCount: json['participantsCount'] as int?,
+        notes: json['notes'] as String?,
+        organizerId: json['organizerId'] as String?,
+        organizerName: json['organizerName'] as String?,
+        expiresAt: json['expiresAt'] != null
+            ? DateTime.parse(json['expiresAt'] as String)
+            : null,
+        specialistName: json['specialistName'] as String?,
+        endDate: json['endDate'] != null
+            ? DateTime.parse(json['endDate'] as String)
+            : null,
+        title: json['title'] as String?,
+        customerName: json['customerName'] as String?,
+        customerPhone: json['customerPhone'] as String?,
+        customerEmail: json['customerEmail'] as String?,
+        description: json['description'] as String?,
+        eventName: json['eventName'] as String?,
+        eventDescription: json['eventDescription'] as String?,
+        eventLocation: json['eventLocation'] as String?,
+        eventType: json['eventType'] as String?,
+        startTime: json['startTime'] as String?,
+        startDate: json['startDate'] != null
+            ? DateTime.parse(json['startDate'] as String)
+            : null,
+        totalAmount: (json['totalAmount'] as num?)?.toDouble(),
+        advanceAmount: (json['advanceAmount'] as num?)?.toDouble(),
+        location: json['location'] as String?,
+        duration: json['duration'] != null 
+            ? Duration(seconds: json['duration'] as int) 
+            : null,
+        specialRequests: json['specialRequests'] as String?,
+        currency: json['currency'] as String?,
+        dueDate: json['dueDate'] != null
+            ? DateTime.parse(json['dueDate'] as String)
+            : null,
+        isPrepayment: json['isPrepayment'] as bool?,
+        isFinalPayment: json['isFinalPayment'] as bool?,
+        prepaymentPaid: json['prepaymentPaid'] as bool?,
+        vkPlaylistUrl: json['vkPlaylistUrl'] as String?,
+        discount: (json['discount'] as num?)?.toDouble(),
+        finalPrice: (json['finalPrice'] as num?)?.toDouble(),
+      );
+
   /// Создать копию с изменениями
   Booking copyWith({
     String? id,

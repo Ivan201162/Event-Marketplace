@@ -14,21 +14,21 @@ Map<String, dynamic> safeMapFromDynamic(Map<dynamic, dynamic>? data) {
 /// Безопасное преобразование List<dynamic> в List<T>
 List<T> safeListFromDynamic<T>(
   List<dynamic>? data,
-  T Function() converter,
+  T Function(dynamic) converter,
 ) {
   if (data == null) return <T>[];
   return data.map<T>(converter).toList();
 }
 
 /// Безопасное преобразование String из dynamic
-String safeStringFromDynamic(data, [String defaultValue = '']) {
+String safeStringFromDynamic(dynamic data, [String defaultValue = '']) {
   if (data == null) return defaultValue;
   if (data is String) return data;
   return data.toString();
 }
 
 /// Безопасное преобразование bool из dynamic
-bool safeBoolFromDynamic(data, [bool defaultValue = false]) {
+bool safeBoolFromDynamic(dynamic data, [bool defaultValue = false]) {
   if (data == null) return defaultValue;
   if (data is bool) return data;
   if (data is String) {
@@ -38,7 +38,7 @@ bool safeBoolFromDynamic(data, [bool defaultValue = false]) {
 }
 
 /// Безопасное преобразование int из dynamic
-int safeIntFromDynamic(data, [int defaultValue = 0]) {
+int safeIntFromDynamic(dynamic data, [int defaultValue = 0]) {
   if (data == null) return defaultValue;
   if (data is int) return data;
   if (data is double) return data.toInt();
@@ -49,7 +49,7 @@ int safeIntFromDynamic(data, [int defaultValue = 0]) {
 }
 
 /// Безопасное преобразование double из dynamic
-double safeDoubleFromDynamic(data, [double defaultValue = 0.0]) {
+double safeDoubleFromDynamic(dynamic data, [double defaultValue = 0.0]) {
   if (data == null) return defaultValue;
   if (data is double) return data;
   if (data is int) return data.toDouble();
@@ -60,7 +60,7 @@ double safeDoubleFromDynamic(data, [double defaultValue = 0.0]) {
 }
 
 /// Безопасное преобразование DateTime из Timestamp
-DateTime safeDateTimeFromTimestamp(data) {
+DateTime safeDateTimeFromTimestamp(dynamic data) {
   if (data == null) return DateTime.now();
   if (data is Timestamp) return data.toDate();
   if (data is DateTime) return data;
@@ -73,7 +73,7 @@ DateTime safeDateTimeFromTimestamp(data) {
 /// Безопасное преобразование enum из String
 T safeEnumFromString<T extends Enum>(
   List<T> values,
-  data,
+  dynamic data,
   T defaultValue,
 ) {
   if (data == null) return defaultValue;
