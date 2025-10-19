@@ -162,31 +162,29 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
-                    children: [
-                      RadioListTile<bool>(
-                        title: const Text('Индивидуальный специалист'),
-                        subtitle: const Text('Бронирование одного специалиста'),
-                        value: false,
-                        groupValue: _isTeamBooking,
-                        onChanged: (value) {
-                          setState(() {
-                            _isTeamBooking = value!;
+                    child: RadioGroup<bool>(
+                      value: _isTeamBooking,
+                      onChanged: (value) {
+                        setState(() {
+                          _isTeamBooking = value;
+                          if (!value) {
                             _selectedTeamId = null;
-                          });
-                        },
-                      ),
-                      RadioListTile<bool>(
-                        title: const Text('Команда специалистов'),
-                        subtitle: const Text('Бронирование команды специалистов'),
-                        value: true,
-                        groupValue: _isTeamBooking,
-                        onChanged: (value) {
-                          setState(() {
-                            _isTeamBooking = value!;
-                          });
-                        },
-                      ),
-                    ],
+                          }
+                        });
+                      },
+                      children: [
+                        RadioListTile<bool>(
+                          title: const Text('Индивидуальный специалист'),
+                          subtitle: const Text('Бронирование одного специалиста'),
+                          value: false,
+                        ),
+                        RadioListTile<bool>(
+                          title: const Text('Команда специалистов'),
+                          subtitle: const Text('Бронирование команды специалистов'),
+                          value: true,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

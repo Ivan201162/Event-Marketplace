@@ -25,7 +25,7 @@ class ShareService {
       final message = customMessage ?? buildEventShareMessage(event);
       final subject = 'Событие: ${event.title}';
 
-      await Share.share(
+      await SharePlus.instance.share(
         message,
         subject: subject,
       );
@@ -54,7 +54,7 @@ class ShareService {
       final message = customMessage ?? buildProfileShareMessage(user);
       final subject = 'Профиль: ${user.name}';
 
-      await Share.share(
+      await SharePlus.instance.share(
         message,
         subject: subject,
       );
@@ -83,7 +83,7 @@ class ShareService {
       final message = customMessage ?? buildBookingShareMessage(booking);
       final subject = 'Бронирование: ${booking.eventTitle}';
 
-      await Share.share(
+      await SharePlus.instance.share(
         message,
         subject: subject,
       );
@@ -106,7 +106,7 @@ class ShareService {
     try {
       SafeLog.info('ShareService: Sharing text');
 
-      await Share.share(
+      await SharePlus.instance.share(
         text,
         subject: subject,
       );
@@ -135,7 +135,7 @@ class ShareService {
 
       final file = XFile(filePath);
 
-      await Share.shareXFiles(
+      await SharePlus.instance.shareXFiles(
         [file],
         text: text,
         subject: subject,
@@ -165,7 +165,7 @@ class ShareService {
 
       final files = filePaths.map(XFile.new).toList();
 
-      await Share.shareXFiles(
+      await SharePlus.instance.shareXFiles(
         files,
         text: text,
         subject: subject,
@@ -196,7 +196,7 @@ class ShareService {
       final message = _buildLinkShareMessage(url, title, description);
       final subject = title ?? 'Интересная ссылка';
 
-      await Share.share(
+      await SharePlus.instance.share(
         message,
         subject: subject,
       );

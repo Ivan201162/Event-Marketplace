@@ -10,7 +10,7 @@ class MemoryManager {
   static final MemoryManager _instance = MemoryManager._internal();
 
   final Set<ChangeNotifier> _trackedNotifiers = {};
-  final Set<StreamSubscription> _trackedSubscriptions = {};
+  final Set<StreamSubscription<dynamic>> _trackedSubscriptions = {};
   final Set<Timer> _trackedTimers = {};
   final Set<AnimationController> _trackedControllers = {};
 
@@ -20,7 +20,7 @@ class MemoryManager {
   }
 
   /// Отслеживание StreamSubscription
-  void trackSubscription(StreamSubscription subscription) {
+  void trackSubscription(StreamSubscription<dynamic> subscription) {
     _trackedSubscriptions.add(subscription);
   }
 

@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../core/navigation/back_utils.dart';
 import '../../../widgets/form_validators.dart';
 import '../../data/models/specialist_profile.dart';
+import '../../data/models/specialist_profile_form.dart';
 import '../../data/repositories/specialist_profile_repository.dart';
 
 /// Экран редактирования профиля специалиста

@@ -461,20 +461,22 @@ class _EnhancedRegistrationScreenState extends ConsumerState<EnhancedRegistratio
             const SizedBox(height: 24),
 
             // Выбор типа пользователя
-            ...UserType.values.map(
-              (type) => Card(
-                child: RadioListTile<UserType>(
-                  title: Text(_getUserTypeTitle(type)),
-                  subtitle: Text(_getUserTypeDescription(type)),
-                  value: type,
-                  groupValue: _selectedUserType,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedUserType = value!;
-                    });
-                  },
+            RadioGroup<UserType>(
+              value: _selectedUserType,
+              onChanged: (value) {
+                setState(() {
+                  _selectedUserType = value;
+                });
+              },
+              children: UserType.values.map(
+                (type) => Card(
+                  child: RadioListTile<UserType>(
+                    title: Text(_getUserTypeTitle(type)),
+                    subtitle: Text(_getUserTypeDescription(type)),
+                    value: type,
+                  ),
                 ),
-              ),
+              ).toList(),
             ),
           ],
         ),

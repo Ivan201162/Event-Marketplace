@@ -25,7 +25,7 @@ class BoostPlanCard extends StatelessWidget {
               width: isSelected ? 2 : 1,
             ),
             borderRadius: BorderRadius.circular(12),
-            color: isSelected ? Colors.orange.withOpacity(0.05) : Colors.white,
+            color: isSelected ? Colors.orange.withValues(alpha: 0.05) : Colors.white,
           ),
           child: Row(
             children: [

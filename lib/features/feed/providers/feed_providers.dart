@@ -262,8 +262,8 @@ final subscriptionStatsProvider =
 });
 
 /// Провайдер для управления состоянием создания поста
-final createPostStateProvider = StateNotifierProvider<CreatePostNotifier, CreatePostState>(
-  (ref) => CreatePostNotifier(),
+final createPostStateProvider = NotifierProvider<CreatePostNotifier, CreatePostState>(
+  () => CreatePostNotifier(),
 );
 
 /// Состояние создания поста
@@ -302,8 +302,9 @@ class CreatePostState {
 }
 
 /// Notifier для управления состоянием создания поста
-class CreatePostNotifier extends StateNotifier<CreatePostState> {
-  CreatePostNotifier() : super(const CreatePostState());
+class CreatePostNotifier extends Notifier<CreatePostState> {
+  @override
+  CreatePostState build() => const CreatePostState();
 
   void updateDescription(String description) {
     state = state.copyWith(description: description);

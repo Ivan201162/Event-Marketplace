@@ -343,7 +343,9 @@ class CityRegionService {
 
       // Получаем текущее местоположение
       return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+        ),
       );
     } on Exception {
       // Логирование:'Ошибка получения местоположения: $e');

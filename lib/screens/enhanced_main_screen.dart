@@ -87,7 +87,7 @@ class _EnhancedMainScreenState extends ConsumerState<EnhancedMainScreen>
   @override
   Widget build(BuildContext context) => PopScope(
         canPop: false,
-        onPopInvoked: (didPop) {
+        onPopInvokedWithResult: (didPop, result) {
           if (!didPop) {
             _handleSystemBack();
           }

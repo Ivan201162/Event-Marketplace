@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// Модель профиля специалиста
-class SpecialistProfile {
+/// Модель специалиста
+class Specialist {
   final String id;
-  final String userId;
   final String name;
   final String description;
   final List<String> categories;
@@ -13,12 +12,12 @@ class SpecialistProfile {
   final Map<String, dynamic> pricing;
   final List<String> portfolioImages;
   final String? avatarUrl;
+  final bool isAvailable;
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  const SpecialistProfile({
+  const Specialist({
     required this.id,
-    required this.userId,
     required this.name,
     required this.description,
     required this.categories,
@@ -28,15 +27,15 @@ class SpecialistProfile {
     required this.pricing,
     required this.portfolioImages,
     this.avatarUrl,
+    required this.isAvailable,
     required this.createdAt,
     required this.updatedAt,
   });
 
-  factory SpecialistProfile.fromFirestore(DocumentSnapshot doc) {
+  factory Specialist.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    return SpecialistProfile(
+    return Specialist(
       id: doc.id,
-      userId: data['userId'] ?? '',
       name: data['name'] ?? '',
       description: data['description'] ?? '',
       categories: List<String>.from(data['categories'] ?? []),
@@ -46,6 +45,7 @@ class SpecialistProfile {
       pricing: Map<String, dynamic>.from(data['pricing'] ?? {}),
       portfolioImages: List<String>.from(data['portfolioImages'] ?? []),
       avatarUrl: data['avatarUrl'],
+      isAvailable: data['isAvailable'] ?? true,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
     );
@@ -53,7 +53,6 @@ class SpecialistProfile {
 
   Map<String, dynamic> toFirestore() {
     return {
-      'userId': userId,
       'name': name,
       'description': description,
       'categories': categories,
@@ -63,14 +62,14 @@ class SpecialistProfile {
       'pricing': pricing,
       'portfolioImages': portfolioImages,
       'avatarUrl': avatarUrl,
+      'isAvailable': isAvailable,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
     };
   }
 
-  SpecialistProfile copyWith({
+  Specialist copyWith({
     String? id,
-    String? userId,
     String? name,
     String? description,
     List<String>? categories,
@@ -80,12 +79,12 @@ class SpecialistProfile {
     Map<String, dynamic>? pricing,
     List<String>? portfolioImages,
     String? avatarUrl,
+    bool? isAvailable,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
-    return SpecialistProfile(
+    return Specialist(
       id: id ?? this.id,
-      userId: userId ?? this.userId,
       name: name ?? this.name,
       description: description ?? this.description,
       categories: categories ?? this.categories,
@@ -95,6 +94,7 @@ class SpecialistProfile {
       pricing: pricing ?? this.pricing,
       portfolioImages: portfolioImages ?? this.portfolioImages,
       avatarUrl: avatarUrl ?? this.avatarUrl,
+      isAvailable: isAvailable ?? this.isAvailable,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

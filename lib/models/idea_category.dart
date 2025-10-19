@@ -44,7 +44,7 @@ class IdeaCategory {
       'id': id,
       'name': name,
       'description': description,
-      'color': color.value,
+      'color': color.toARGB32(),
       'icon': icon,
       'order': order,
       'isActive': isActive,

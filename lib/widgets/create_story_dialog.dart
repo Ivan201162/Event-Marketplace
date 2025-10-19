@@ -114,45 +114,31 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          Row(
+          RadioGroup<StoryContentType>(
+            value: _selectedType,
+            onChanged: (value) {
+              setState(() {
+                _selectedType = value;
+                _selectedFile = null;
+              });
+            },
             children: [
               Expanded(
                 child: RadioListTile<StoryContentType>(
                   title: const Text('Изображение'),
                   value: StoryContentType.image,
-                  groupValue: _selectedType,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedType = value;
-                      _selectedFile = null;
-                    });
-                  },
                 ),
               ),
               Expanded(
                 child: RadioListTile<StoryContentType>(
                   title: const Text('Видео'),
                   value: StoryContentType.video,
-                  groupValue: _selectedType,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedType = value;
-                      _selectedFile = null;
-                    });
-                  },
                 ),
               ),
               Expanded(
                 child: RadioListTile<StoryContentType>(
                   title: const Text('Текст'),
                   value: StoryContentType.text,
-                  groupValue: _selectedType,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedType = value;
-                      _selectedFile = null;
-                    });
-                  },
                 ),
               ),
             ],
@@ -475,10 +461,10 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
         content: content,
         text: _selectedType == StoryContentType.text ? _textController.text.trim() : null,
         backgroundColor: _selectedType == StoryContentType.text
-            ? '#${_backgroundColor.value.toRadixString(16).substring(2)}'
+            ? '#${_backgroundColor.toARGB32().toRadixString(16).substring(2)}'
             : null,
         textColor: _selectedType == StoryContentType.text
-            ? '#${_textColor.value.toRadixString(16).substring(2)}'
+            ? '#${_textColor.toARGB32().toRadixString(16).substring(2)}'
             : null,
         fontSize: _selectedType == StoryContentType.text ? _fontSize : null,
       );
