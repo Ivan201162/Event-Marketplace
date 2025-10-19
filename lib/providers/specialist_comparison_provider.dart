@@ -3,15 +3,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/specialist.dart';
 import '../models/specialist_comparison.dart';
 
-/// Провайдер для управления сравнением специалистов
+/// Провайдер для управления сравнением специалистов (мигрирован с StateNotifierProvider)
 final specialistComparisonProvider =
-    StateNotifierProvider<SpecialistComparisonNotifier, SpecialistComparison>(
-  (ref) => SpecialistComparisonNotifier(),
+    NotifierProvider<SpecialistComparisonNotifier, SpecialistComparison>(
+  () => SpecialistComparisonNotifier(),
 );
 
-/// Нотификатор для сравнения специалистов
-class SpecialistComparisonNotifier extends StateNotifier<SpecialistComparison> {
-  SpecialistComparisonNotifier() : super(SpecialistComparison.empty());
+/// Нотификатор для сравнения специалистов (мигрирован с StateNotifier)
+class SpecialistComparisonNotifier extends Notifier<SpecialistComparison> {
+  @override
+  SpecialistComparison build() {
+    return SpecialistComparison.empty();
+  }
 
   /// Добавить специалиста для сравнения
   void addSpecialist(Specialist specialist) {

@@ -4,6 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import '../providers/auth_providers.dart';
 import '../providers/local_data_providers.dart';
+import '../widgets/weekly_popular_specialists_widget.dart';
+import '../widgets/search_filters_widget.dart';
+import '../widgets/category_grid_widget.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -14,6 +17,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   final _searchController = TextEditingController();
+  Map<String, dynamic> _currentFilters = {};
 
   @override
   void dispose() {
@@ -50,6 +54,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             _buildUserProfileCard(user),
             const SizedBox(height: 16),
             _buildSearchSection(),
+            const SizedBox(height: 20),
+            _buildWeeklyPopularSpecialistsSection(
+              title: 'Топ-10 недели по России',
+              isCountryWide: true,
+            ),
+            const SizedBox(height: 20),
+            _buildWeeklyPopularSpecialistsSection(
+              title: 'Топ-10 недели по городу ${user?.city ?? ''}',
+              isCountryWide: false,
+            ),
             const SizedBox(height: 20),
             _buildCategoriesSection(),
             const SizedBox(height: 20),
@@ -168,93 +182,95 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 12),
-            TextField(
-              controller: _searchController,
-              decoration: const InputDecoration(
-                hintText: 'Поиск по имени, категории, городу...',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
-              ),
-              onSubmitted: (query) {
-                if (query.isNotEmpty) {
-                  context.push('/search?q=${Uri.encodeComponent(query)}');
-                }
-              },
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: const InputDecoration(
+                      hintText: 'Поиск по имени, категории, городу...',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(),
+                    ),
+                    onSubmitted: (query) {
+                      if (query.isNotEmpty) {
+                        context.push('/search?q=${Uri.encodeComponent(query)}');
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) => FractionallySizedBox(
+                        heightFactor: 0.8,
+                        child: SearchFiltersWidget(
+                          initialFilters: _currentFilters,
+                          onApplyFilters: _applyFilters,
+                        ),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.filter_list),
+                  label: const Text('Фильтры'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
       );
 
-  Widget _buildCategoriesSection() {
-    final categories = [
-      {'name': 'Ведущие', 'icon': '🎤', 'color': Colors.blue},
-      {'name': 'DJ', 'icon': '🎵', 'color': Colors.purple},
-      {'name': 'Фотографы', 'icon': '📸', 'color': Colors.orange},
-      {'name': 'Видеографы', 'icon': '🎬', 'color': Colors.red},
-      {'name': 'Декораторы', 'icon': '🎨', 'color': Colors.green},
-      {'name': 'Аниматоры', 'icon': '🎭', 'color': Colors.teal},
-    ];
+  void _applyFilters(Map<String, dynamic> filters) {
+    setState(() {
+      _currentFilters = filters;
+    });
+    // Здесь можно применить логику поиска с новыми фильтрами
+    debugPrint('Применены фильтры: $_currentFilters');
+  }
 
+  Widget _buildCategoriesSection() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Категории',
+            'Популярные категории',
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 12),
-          SizedBox(
-            height: 100,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: categories.length,
-              itemBuilder: (context, index) {
-                final category = categories[index];
-                return GestureDetector(
-                  onTap: () {
-                    context.push(
-                      '/search?category=${Uri.encodeComponent(category['name']! as String)}',
-                    );
-                  },
-                  child: Container(
-                    width: 80,
-                    margin: const EdgeInsets.only(right: 12),
-                    decoration: BoxDecoration(
-                      color: (category['color']! as Color).withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: (category['color']! as Color).withOpacity(0.3),
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          category['icon']! as String,
-                          style: const TextStyle(fontSize: 24),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          category['name']! as String,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
+          const CategoryGridWidget(),
         ],
       ),
     );
   }
+
+  Widget _buildWeeklyPopularSpecialistsSection({
+    required String title,
+    required bool isCountryWide,
+  }) =>
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 12),
+            const WeeklyPopularSpecialistsWidget(),
+          ],
+        ),
+      );
 
   Widget _buildQuickActionsSection() => Container(
         padding: const EdgeInsets.symmetric(horizontal: 16),

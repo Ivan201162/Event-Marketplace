@@ -1,48 +1,50 @@
-/// Модель ценового диапазона
 class PriceRange {
+  final double min;
+  final double max;
+  final String currency;
+
   const PriceRange({
-    required this.minPrice,
-    required this.maxPrice,
+    required this.min,
+    required this.max,
+    this.currency = 'RUB',
   });
 
-  /// Создать из Map
-  factory PriceRange.fromMap(Map<String, dynamic> data) => PriceRange(
-        minPrice: (data['minPrice'] as num? ?? 0.0).toDouble(),
-        maxPrice: (data['maxPrice'] as num? ?? 0.0).toDouble(),
-      );
+  factory PriceRange.fromMap(Map<String, dynamic> map) {
+    return PriceRange(
+      min: (map['min'] as num?)?.toDouble() ?? 0.0,
+      max: (map['max'] as num?)?.toDouble() ?? 0.0,
+      currency: map['currency']?.toString() ?? 'RUB',
+    );
+  }
 
-  final double minPrice;
-  final double maxPrice;
+  Map<String, dynamic> toMap() {
+    return {
+      'min': min,
+      'max': max,
+      'currency': currency,
+    };
+  }
 
-  /// Преобразовать в Map
-  Map<String, dynamic> toMap() => {
-        'minPrice': minPrice,
-        'maxPrice': maxPrice,
-      };
+  bool contains(double price) {
+    return price >= min && price <= max;
+  }
 
-  /// Проверить, находится ли цена в диапазоне
-  bool contains(double price) => price >= minPrice && price <= maxPrice;
-
-  /// Получить среднюю цену
-  double get averagePrice => (minPrice + maxPrice) / 2;
-
-  /// Получить отформатированную строку диапазона
-  String get formattedRange {
-    if (minPrice == maxPrice) {
-      return '${minPrice.toInt()} ₽';
+  String get displayText {
+    if (min == max) {
+      return '${min.toStringAsFixed(0)} $currency';
     }
-    return '${minPrice.toInt()} - ${maxPrice.toInt()} ₽';
+    return '${min.toStringAsFixed(0)} - ${max.toStringAsFixed(0)} $currency';
   }
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is PriceRange && other.minPrice == minPrice && other.maxPrice == maxPrice;
+  PriceRange copyWith({
+    double? min,
+    double? max,
+    String? currency,
+  }) {
+    return PriceRange(
+      min: min ?? this.min,
+      max: max ?? this.max,
+      currency: currency ?? this.currency,
+    );
   }
-
-  @override
-  int get hashCode => minPrice.hashCode ^ maxPrice.hashCode;
-
-  @override
-  String toString() => 'PriceRange(min: $minPrice, max: $maxPrice)';
 }

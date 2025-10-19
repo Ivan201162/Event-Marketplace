@@ -10,6 +10,7 @@ import 'customer_profile_screen.dart';
 import 'enhanced_feed_screen.dart';
 import 'enhanced_ideas_screen.dart';
 import 'home_screen.dart';
+import 'monetization/monetization_hub_screen.dart';
 
 /// Главный экран с навигацией
 class MainNavigationScreen extends ConsumerStatefulWidget {
@@ -56,6 +57,12 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
       activeIcon: Icons.lightbulb,
       label: 'Идеи',
       screen: EnhancedIdeasScreen(),
+    ),
+    const NavigationItem(
+      icon: Icons.attach_money_outlined,
+      activeIcon: Icons.attach_money,
+      label: 'Монетизация',
+      screen: MonetizationHubScreen(),
     ),
   ];
 
@@ -174,6 +181,14 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
           tooltip: 'Добавить идею',
           onPressed: () {
             Navigator.pushNamed(context, '/add-idea');
+          },
+        );
+      case 5: // Монетизация
+        return ModernFAB(
+          icon: Icons.payment,
+          tooltip: 'Платежи',
+          onPressed: () {
+            // TODO: Реализовать платежи
           },
         );
       default:

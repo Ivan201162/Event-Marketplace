@@ -47,9 +47,9 @@ final canAddSpecialistProvider = FutureProvider.family<bool, Map<String, String>
   );
 });
 
-/// Провайдер состояния создания команды
-final teamCreationProvider = StateNotifierProvider<TeamCreationNotifier, TeamCreationState>(
-  (ref) => TeamCreationNotifier(ref.watch(teamServiceProvider)),
+/// Провайдер состояния создания команды (мигрирован с StateNotifierProvider)
+final teamCreationProvider = NotifierProvider<TeamCreationNotifier, TeamCreationState>(
+  () => TeamCreationNotifier(),
 );
 
 /// Состояние создания команды
@@ -76,11 +76,14 @@ class TeamCreationState {
       );
 }
 
-/// Нотификатор для создания команды
-class TeamCreationNotifier extends StateNotifier<TeamCreationState> {
-  TeamCreationNotifier(this._teamService) : super(const TeamCreationState());
+/// Нотификатор для создания команды (мигрирован с StateNotifier)
+class TeamCreationNotifier extends Notifier<TeamCreationState> {
+  @override
+  TeamCreationState build() {
+    return const TeamCreationState();
+  }
 
-  final TeamService _teamService;
+  TeamService get _teamService => ref.read(teamServiceProvider);
 
   Future<void> createTeam({
     required String organizerId,
@@ -123,9 +126,9 @@ class TeamCreationNotifier extends StateNotifier<TeamCreationState> {
   }
 }
 
-/// Провайдер состояния управления командой
-final teamManagementProvider = StateNotifierProvider<TeamManagementNotifier, TeamManagementState>(
-  (ref) => TeamManagementNotifier(ref.watch(teamServiceProvider)),
+/// Провайдер состояния управления командой (мигрирован с StateNotifierProvider)
+final teamManagementProvider = NotifierProvider<TeamManagementNotifier, TeamManagementState>(
+  () => TeamManagementNotifier(),
 );
 
 /// Состояние управления командой
@@ -152,11 +155,14 @@ class TeamManagementState {
       );
 }
 
-/// Нотификатор для управления командой
-class TeamManagementNotifier extends StateNotifier<TeamManagementState> {
-  TeamManagementNotifier(this._teamService) : super(const TeamManagementState());
+/// Нотификатор для управления командой (мигрирован с StateNotifier)
+class TeamManagementNotifier extends Notifier<TeamManagementState> {
+  @override
+  TeamManagementState build() {
+    return const TeamManagementState();
+  }
 
-  final TeamService _teamService;
+  TeamService get _teamService => ref.read(teamServiceProvider);
 
   Future<void> addSpecialistToTeam({
     required String teamId,

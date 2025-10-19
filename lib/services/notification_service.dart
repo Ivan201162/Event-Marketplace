@@ -3,7 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import '../models/advertisement.dart';
-import '../models/app_notification.dart';
+import '../core/notifications/app_notification.dart';
 import '../models/promotion_boost.dart';
 import '../models/subscription_plan.dart';
 import '../models/transaction.dart' as transaction_model;

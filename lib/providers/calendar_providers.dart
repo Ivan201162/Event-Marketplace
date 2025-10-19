@@ -58,17 +58,19 @@ final availableTimeSlotsProvider =
   );
 });
 
-/// Провайдер для управления занятыми датами
-final busyDatesManagerProvider = StateNotifierProvider<BusyDatesManager, AsyncValue<void>>((ref) {
-  final calendarService = ref.watch(calendarServiceProvider);
-  return BusyDatesManager(calendarService);
+/// Провайдер для управления занятыми датами (мигрирован с StateNotifierProvider)
+final busyDatesManagerProvider = NotifierProvider<BusyDatesManager, AsyncValue<void>>(() {
+  return BusyDatesManager();
 });
 
-/// Менеджер для управления занятыми датами
-class BusyDatesManager extends StateNotifier<AsyncValue<void>> {
-  BusyDatesManager(this._calendarService) : super(const AsyncValue.data(null));
+/// Менеджер для управления занятыми датами (мигрирован с StateNotifier)
+class BusyDatesManager extends Notifier<AsyncValue<void>> {
+  @override
+  AsyncValue<void> build() {
+    return const AsyncValue.data(null);
+  }
 
-  final CalendarService _calendarService;
+  CalendarService get _calendarService => ref.read(calendarServiceProvider);
 
   /// Пометить дату как занятую
   Future<void> markDateBusy(String specialistId, DateTime date) async {

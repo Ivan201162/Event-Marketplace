@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class EventIdeaCategory {
+class IdeaCategory {
   final String id;
   final String name;
   final String description;
@@ -11,7 +11,7 @@ class EventIdeaCategory {
   final DateTime createdAt;
   final DateTime? updatedAt;
 
-  const EventIdeaCategory({
+  const IdeaCategory({
     required this.id,
     required this.name,
     required this.description,
@@ -23,8 +23,8 @@ class EventIdeaCategory {
     this.updatedAt,
   });
 
-  factory EventIdeaCategory.fromMap(Map<String, dynamic> map) {
-    return EventIdeaCategory(
+  factory IdeaCategory.fromMap(Map<String, dynamic> map) {
+    return IdeaCategory(
       id: map['id']?.toString() ?? '',
       name: map['name']?.toString() ?? '',
       description: map['description']?.toString() ?? '',
@@ -53,7 +53,7 @@ class EventIdeaCategory {
     };
   }
 
-  EventIdeaCategory copyWith({
+  IdeaCategory copyWith({
     String? id,
     String? name,
     String? description,
@@ -64,7 +64,7 @@ class EventIdeaCategory {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
-    return EventIdeaCategory(
+    return IdeaCategory(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,

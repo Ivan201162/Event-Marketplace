@@ -3,16 +3,17 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i5;
+import 'dart:async' as _i3;
 
-import 'package:cloud_firestore/cloud_firestore.dart' as _i7;
-import 'package:event_marketplace_app/models/post.dart' as _i2;
-import 'package:event_marketplace_app/models/specialist.dart' as _i6;
-import 'package:event_marketplace_app/models/story.dart' as _i3;
-import 'package:event_marketplace_app/services/post_service.dart' as _i8;
-import 'package:event_marketplace_app/services/specialist_service.dart' as _i4;
+import 'package:cloud_firestore/cloud_firestore.dart' as _i5;
+import 'package:event_marketplace_app/models/post.dart' as _i7;
+import 'package:event_marketplace_app/models/specialist.dart' as _i4;
+import 'package:event_marketplace_app/models/story.dart' as _i10;
+import 'package:event_marketplace_app/services/post_service.dart' as _i6;
+import 'package:event_marketplace_app/services/specialist_service.dart' as _i2;
 import 'package:event_marketplace_app/services/story_service.dart' as _i9;
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:mockito/src/dummies.dart' as _i8;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -27,83 +28,65 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
-// ignore_for_file: invalid_use_of_internal_member
-
-class _FakePost_0 extends _i1.SmartFake implements _i2.Post {
-  _FakePost_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeStory_1 extends _i1.SmartFake implements _i3.Story {
-  _FakeStory_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
 
 /// A class which mocks [SpecialistService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSpecialistService extends _i1.Mock implements _i4.SpecialistService {
+class MockSpecialistService extends _i1.Mock implements _i2.SpecialistService {
   MockSpecialistService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<List<_i6.Specialist>> getAllSpecialists() => (super.noSuchMethod(
+  _i3.Future<List<_i4.Specialist>> getAllSpecialists({bool? useCache = true}) =>
+      (super.noSuchMethod(
         Invocation.method(
           #getAllSpecialists,
           [],
+          {#useCache: useCache},
         ),
-        returnValue: _i5.Future<List<_i6.Specialist>>.value(<_i6.Specialist>[]),
-      ) as _i5.Future<List<_i6.Specialist>>);
+        returnValue: _i3.Future<List<_i4.Specialist>>.value(<_i4.Specialist>[]),
+      ) as _i3.Future<List<_i4.Specialist>>);
 
   @override
-  _i5.Stream<List<_i6.Specialist>> getAllSpecialistsStream() =>
+  _i3.Stream<List<_i4.Specialist>> getAllSpecialistsStream() =>
       (super.noSuchMethod(
         Invocation.method(
           #getAllSpecialistsStream,
           [],
         ),
-        returnValue: _i5.Stream<List<_i6.Specialist>>.empty(),
-      ) as _i5.Stream<List<_i6.Specialist>>);
+        returnValue: _i3.Stream<List<_i4.Specialist>>.empty(),
+      ) as _i3.Stream<List<_i4.Specialist>>);
 
   @override
-  _i5.Future<List<String>> getCities() => (super.noSuchMethod(
+  _i3.Future<List<String>> getCities() => (super.noSuchMethod(
         Invocation.method(
           #getCities,
           [],
         ),
-        returnValue: _i5.Future<List<String>>.value(<String>[]),
-      ) as _i5.Future<List<String>>);
+        returnValue: _i3.Future<List<String>>.value(<String>[]),
+      ) as _i3.Future<List<String>>);
 
   @override
-  _i5.Future<_i6.Specialist?> getSpecialistById(String? id) =>
+  _i3.Future<_i4.Specialist?> getSpecialistById(String? id) =>
       (super.noSuchMethod(
         Invocation.method(
           #getSpecialistById,
           [id],
         ),
-        returnValue: _i5.Future<_i6.Specialist?>.value(),
-      ) as _i5.Future<_i6.Specialist?>);
+        returnValue: _i3.Future<_i4.Specialist?>.value(),
+      ) as _i3.Future<_i4.Specialist?>);
 
   @override
-  _i5.Future<List<_i6.Specialist>> searchSpecialists({
+  _i3.Future<List<_i4.Specialist>> searchSpecialists({
     String? query,
-    _i6.SpecialistCategory? category,
+    _i4.SpecialistCategory? category,
     double? minPrice,
     double? maxPrice,
     double? minRating,
     String? location,
     List<String>? availableDates,
+    bool? useDebounce = true,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -117,44 +100,45 @@ class MockSpecialistService extends _i1.Mock implements _i4.SpecialistService {
             #minRating: minRating,
             #location: location,
             #availableDates: availableDates,
+            #useDebounce: useDebounce,
           },
         ),
-        returnValue: _i5.Future<List<_i6.Specialist>>.value(<_i6.Specialist>[]),
-      ) as _i5.Future<List<_i6.Specialist>>);
+        returnValue: _i3.Future<List<_i4.Specialist>>.value(<_i4.Specialist>[]),
+      ) as _i3.Future<List<_i4.Specialist>>);
 
   @override
-  _i5.Future<List<_i6.Specialist>> getSpecialistsByCategory(
-          _i6.SpecialistCategory? category) =>
+  _i3.Future<List<_i4.Specialist>> getSpecialistsByCategory(
+          _i4.SpecialistCategory? category) =>
       (super.noSuchMethod(
         Invocation.method(
           #getSpecialistsByCategory,
           [category],
         ),
-        returnValue: _i5.Future<List<_i6.Specialist>>.value(<_i6.Specialist>[]),
-      ) as _i5.Future<List<_i6.Specialist>>);
+        returnValue: _i3.Future<List<_i4.Specialist>>.value(<_i4.Specialist>[]),
+      ) as _i3.Future<List<_i4.Specialist>>);
 
   @override
-  _i5.Future<List<_i6.Specialist>> getRecommendedSpecialists(String? userId) =>
+  _i3.Future<List<_i4.Specialist>> getRecommendedSpecialists(String? userId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getRecommendedSpecialists,
           [userId],
         ),
-        returnValue: _i5.Future<List<_i6.Specialist>>.value(<_i6.Specialist>[]),
-      ) as _i5.Future<List<_i6.Specialist>>);
+        returnValue: _i3.Future<List<_i4.Specialist>>.value(<_i4.Specialist>[]),
+      ) as _i3.Future<List<_i4.Specialist>>);
 
   @override
-  _i5.Future<String?> createSpecialist(_i6.Specialist? specialist) =>
+  _i3.Future<String?> createSpecialist(_i4.Specialist? specialist) =>
       (super.noSuchMethod(
         Invocation.method(
           #createSpecialist,
           [specialist],
         ),
-        returnValue: _i5.Future<String?>.value(),
-      ) as _i5.Future<String?>);
+        returnValue: _i3.Future<String?>.value(),
+      ) as _i3.Future<String?>);
 
   @override
-  _i5.Future<bool> updateSpecialist(
+  _i3.Future<bool> updateSpecialist(
     String? id,
     Map<String, dynamic>? updates,
   ) =>
@@ -166,23 +150,23 @@ class MockSpecialistService extends _i1.Mock implements _i4.SpecialistService {
             updates,
           ],
         ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
+        returnValue: _i3.Future<bool>.value(false),
+      ) as _i3.Future<bool>);
 
   @override
-  _i5.Future<bool> deleteSpecialist(String? id) => (super.noSuchMethod(
+  _i3.Future<bool> deleteSpecialist(String? id) => (super.noSuchMethod(
         Invocation.method(
           #deleteSpecialist,
           [id],
         ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
+        returnValue: _i3.Future<bool>.value(false),
+      ) as _i3.Future<bool>);
 
   @override
-  _i5.Future<List<_i6.Specialist>> getSpecialistsPaginated({
+  _i3.Future<List<_i4.Specialist>> getSpecialistsPaginated({
     int? limit = 20,
-    _i7.DocumentSnapshot<Object?>? lastDocument,
-    _i6.SpecialistCategory? category,
+    _i5.DocumentSnapshot<Object?>? lastDocument,
+    _i4.SpecialistCategory? category,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -194,11 +178,11 @@ class MockSpecialistService extends _i1.Mock implements _i4.SpecialistService {
             #category: category,
           },
         ),
-        returnValue: _i5.Future<List<_i6.Specialist>>.value(<_i6.Specialist>[]),
-      ) as _i5.Future<List<_i6.Specialist>>);
+        returnValue: _i3.Future<List<_i4.Specialist>>.value(<_i4.Specialist>[]),
+      ) as _i3.Future<List<_i4.Specialist>>);
 
   @override
-  _i5.Future<List<_i6.Specialist>> filterSpecialists({
+  _i3.Future<List<_i4.Specialist>> filterSpecialists({
     double? minPrice,
     double? maxPrice,
     double? minRating,
@@ -215,166 +199,202 @@ class MockSpecialistService extends _i1.Mock implements _i4.SpecialistService {
             #date: date,
           },
         ),
-        returnValue: _i5.Future<List<_i6.Specialist>>.value(<_i6.Specialist>[]),
-      ) as _i5.Future<List<_i6.Specialist>>);
+        returnValue: _i3.Future<List<_i4.Specialist>>.value(<_i4.Specialist>[]),
+      ) as _i3.Future<List<_i4.Specialist>>);
 
   @override
-  _i5.Future<Map<String, dynamic>> getSpecialistsStats() => (super.noSuchMethod(
+  _i3.Future<Map<String, dynamic>> getSpecialistsStats() => (super.noSuchMethod(
         Invocation.method(
           #getSpecialistsStats,
           [],
         ),
         returnValue:
-            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
-      ) as _i5.Future<Map<String, dynamic>>);
+            _i3.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i3.Future<Map<String, dynamic>>);
+
+  @override
+  _i3.Stream<List<Map<String, dynamic>>> getSpecialistFeed(
+          String? specialistId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getSpecialistFeed,
+          [specialistId],
+        ),
+        returnValue: _i3.Stream<List<Map<String, dynamic>>>.empty(),
+      ) as _i3.Stream<List<Map<String, dynamic>>>);
+
+  @override
+  _i3.Stream<_i4.Specialist?> getSpecialistStream(String? specialistId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getSpecialistStream,
+          [specialistId],
+        ),
+        returnValue: _i3.Stream<_i4.Specialist?>.empty(),
+      ) as _i3.Stream<_i4.Specialist?>);
+
+  @override
+  _i3.Stream<_i4.Specialist?> getSpecialistByUserIdStream(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getSpecialistByUserIdStream,
+          [userId],
+        ),
+        returnValue: _i3.Stream<_i4.Specialist?>.empty(),
+      ) as _i3.Stream<_i4.Specialist?>);
+
+  @override
+  _i3.Future<List<_i4.Specialist>> getTopSpecialists({int? limit = 10}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getTopSpecialists,
+          [],
+          {#limit: limit},
+        ),
+        returnValue: _i3.Future<List<_i4.Specialist>>.value(<_i4.Specialist>[]),
+      ) as _i3.Future<List<_i4.Specialist>>);
+
+  @override
+  _i3.Future<List<_i4.Specialist>> getWeeklyLeaders({int? limit = 10}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getWeeklyLeaders,
+          [],
+          {#limit: limit},
+        ),
+        returnValue: _i3.Future<List<_i4.Specialist>>.value(<_i4.Specialist>[]),
+      ) as _i3.Future<List<_i4.Specialist>>);
+
+  @override
+  _i3.Stream<List<_i4.Specialist>> searchSpecialistsStream(
+          Map<String, dynamic>? filters) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #searchSpecialistsStream,
+          [filters],
+        ),
+        returnValue: _i3.Stream<List<_i4.Specialist>>.empty(),
+      ) as _i3.Stream<List<_i4.Specialist>>);
+
+  @override
+  _i3.Future<bool> isSpecialistAvailableOnDate(
+    String? specialistId,
+    DateTime? date,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #isSpecialistAvailableOnDate,
+          [
+            specialistId,
+            date,
+          ],
+        ),
+        returnValue: _i3.Future<bool>.value(false),
+      ) as _i3.Future<bool>);
+
+  @override
+  _i3.Future<List<Map<String, dynamic>>> getAvailableTimeSlots(
+    String? specialistId,
+    DateTime? date,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAvailableTimeSlots,
+          [
+            specialistId,
+            date,
+          ],
+        ),
+        returnValue: _i3.Future<List<Map<String, dynamic>>>.value(
+            <Map<String, dynamic>>[]),
+      ) as _i3.Future<List<Map<String, dynamic>>>);
 }
 
 /// A class which mocks [PostService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockPostService extends _i1.Mock implements _i8.PostService {
+class MockPostService extends _i1.Mock implements _i6.PostService {
   MockPostService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<List<_i2.Post>> getSpecialistPosts(String? specialistId) =>
+  _i3.Future<List<_i7.Post>> getPostsBySpecialist(String? specialistId) =>
       (super.noSuchMethod(
         Invocation.method(
-          #getSpecialistPosts,
+          #getPostsBySpecialist,
           [specialistId],
         ),
-        returnValue: _i5.Future<List<_i2.Post>>.value(<_i2.Post>[]),
-      ) as _i5.Future<List<_i2.Post>>);
+        returnValue: _i3.Future<List<_i7.Post>>.value(<_i7.Post>[]),
+      ) as _i3.Future<List<_i7.Post>>);
 
   @override
-  _i5.Stream<List<_i2.Post>> getSpecialistPostsStream(String? specialistId) =>
-      (super.noSuchMethod(
+  _i3.Future<List<_i7.Post>> getAllPosts() => (super.noSuchMethod(
         Invocation.method(
-          #getSpecialistPostsStream,
-          [specialistId],
+          #getAllPosts,
+          [],
         ),
-        returnValue: _i5.Stream<List<_i2.Post>>.empty(),
-      ) as _i5.Stream<List<_i2.Post>>);
+        returnValue: _i3.Future<List<_i7.Post>>.value(<_i7.Post>[]),
+      ) as _i3.Future<List<_i7.Post>>);
 
   @override
-  _i5.Future<_i2.Post> createPost({
-    required String? specialistId,
-    String? text,
-    required List<String>? mediaUrls,
-    Map<String, dynamic>? metadata,
-  }) =>
-      (super.noSuchMethod(
+  _i3.Future<String> createPost(_i7.Post? post) => (super.noSuchMethod(
         Invocation.method(
           #createPost,
-          [],
-          {
-            #specialistId: specialistId,
-            #text: text,
-            #mediaUrls: mediaUrls,
-            #metadata: metadata,
-          },
+          [post],
         ),
-        returnValue: _i5.Future<_i2.Post>.value(_FakePost_0(
+        returnValue: _i3.Future<String>.value(_i8.dummyValue<String>(
           this,
           Invocation.method(
             #createPost,
-            [],
-            {
-              #specialistId: specialistId,
-              #text: text,
-              #mediaUrls: mediaUrls,
-              #metadata: metadata,
-            },
+            [post],
           ),
         )),
-      ) as _i5.Future<_i2.Post>);
+      ) as _i3.Future<String>);
 
   @override
-  _i5.Future<void> updatePost(
-    String? postId, {
-    String? text,
-    List<String>? mediaUrls,
-    Map<String, dynamic>? metadata,
-  }) =>
+  _i3.Future<void> updatePost(
+    String? postId,
+    Map<String, dynamic>? updates,
+  ) =>
       (super.noSuchMethod(
         Invocation.method(
           #updatePost,
-          [postId],
-          {
-            #text: text,
-            #mediaUrls: mediaUrls,
-            #metadata: metadata,
-          },
+          [
+            postId,
+            updates,
+          ],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i5.Future<void> deletePost(String? postId) => (super.noSuchMethod(
+  _i3.Future<void> deletePost(String? postId) => (super.noSuchMethod(
         Invocation.method(
           #deletePost,
           [postId],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i5.Future<void> toggleLike(
+  _i3.Future<void> likePost(
     String? postId,
     String? userId,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
-          #toggleLike,
+          #likePost,
           [
             postId,
             userId,
           ],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
-
-  @override
-  _i5.Future<bool> isPostLiked(
-    String? postId,
-    String? userId,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #isPostLiked,
-          [
-            postId,
-            userId,
-          ],
-        ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
-
-  @override
-  _i5.Future<List<_i2.Post>> getFeedPosts({int? limit = 20}) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getFeedPosts,
-          [],
-          {#limit: limit},
-        ),
-        returnValue: _i5.Future<List<_i2.Post>>.value(<_i2.Post>[]),
-      ) as _i5.Future<List<_i2.Post>>);
-
-  @override
-  _i5.Stream<List<_i2.Post>> getFeedStream({int? limit = 20}) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getFeedStream,
-          [],
-          {#limit: limit},
-        ),
-        returnValue: _i5.Stream<List<_i2.Post>>.empty(),
-      ) as _i5.Stream<List<_i2.Post>>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 }
 
 /// A class which mocks [StoryService].
@@ -386,70 +406,68 @@ class MockStoryService extends _i1.Mock implements _i9.StoryService {
   }
 
   @override
-  _i5.Future<List<_i3.Story>> getSpecialistStories(String? specialistId) =>
+  _i3.Future<List<_i10.Story>> getStoriesBySpecialist(String? specialistId) =>
       (super.noSuchMethod(
         Invocation.method(
-          #getSpecialistStories,
+          #getStoriesBySpecialist,
           [specialistId],
         ),
-        returnValue: _i5.Future<List<_i3.Story>>.value(<_i3.Story>[]),
-      ) as _i5.Future<List<_i3.Story>>);
+        returnValue: _i3.Future<List<_i10.Story>>.value(<_i10.Story>[]),
+      ) as _i3.Future<List<_i10.Story>>);
 
   @override
-  _i5.Stream<List<_i3.Story>> getSpecialistStoriesStream(
-          String? specialistId) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getSpecialistStoriesStream,
-          [specialistId],
-        ),
-        returnValue: _i5.Stream<List<_i3.Story>>.empty(),
-      ) as _i5.Stream<List<_i3.Story>>);
-
-  @override
-  _i5.Future<List<_i3.Story>> getAllActiveStories() => (super.noSuchMethod(
+  _i3.Future<List<_i10.Story>> getAllActiveStories() => (super.noSuchMethod(
         Invocation.method(
           #getAllActiveStories,
           [],
         ),
-        returnValue: _i5.Future<List<_i3.Story>>.value(<_i3.Story>[]),
-      ) as _i5.Future<List<_i3.Story>>);
+        returnValue: _i3.Future<List<_i10.Story>>.value(<_i10.Story>[]),
+      ) as _i3.Future<List<_i10.Story>>);
 
   @override
-  _i5.Future<_i3.Story> createStory({
-    required String? specialistId,
-    required String? mediaUrl,
-    String? text,
-    Map<String, dynamic>? metadata,
-  }) =>
-      (super.noSuchMethod(
+  _i3.Future<String> createStory(_i10.Story? story) => (super.noSuchMethod(
         Invocation.method(
           #createStory,
-          [],
-          {
-            #specialistId: specialistId,
-            #mediaUrl: mediaUrl,
-            #text: text,
-            #metadata: metadata,
-          },
+          [story],
         ),
-        returnValue: _i5.Future<_i3.Story>.value(_FakeStory_1(
+        returnValue: _i3.Future<String>.value(_i8.dummyValue<String>(
           this,
           Invocation.method(
             #createStory,
-            [],
-            {
-              #specialistId: specialistId,
-              #mediaUrl: mediaUrl,
-              #text: text,
-              #metadata: metadata,
-            },
+            [story],
           ),
         )),
-      ) as _i5.Future<_i3.Story>);
+      ) as _i3.Future<String>);
 
   @override
-  _i5.Future<void> markStoryAsViewed(
+  _i3.Future<void> updateStory(
+    String? storyId,
+    Map<String, dynamic>? updates,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #updateStory,
+          [
+            storyId,
+            updates,
+          ],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> deleteStory(String? storyId) => (super.noSuchMethod(
+        Invocation.method(
+          #deleteStory,
+          [storyId],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> markStoryAsViewed(
     String? storyId,
     String? userId,
   ) =>
@@ -461,93 +479,32 @@ class MockStoryService extends _i1.Mock implements _i9.StoryService {
             userId,
           ],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i5.Future<void> deleteStory(String? storyId) => (super.noSuchMethod(
+  _i3.Future<void> cleanupExpiredStories() => (super.noSuchMethod(
         Invocation.method(
-          #deleteStory,
-          [storyId],
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
-
-  @override
-  _i5.Future<void> deleteExpiredStories() => (super.noSuchMethod(
-        Invocation.method(
-          #deleteExpiredStories,
+          #cleanupExpiredStories,
           [],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i5.Future<Map<String, int>> getStoryStats(String? specialistId) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getStoryStats,
-          [specialistId],
-        ),
-        returnValue: _i5.Future<Map<String, int>>.value(<String, int>{}),
-      ) as _i5.Future<Map<String, int>>);
-
-  @override
-  _i5.Future<bool> hasViewedStory(
-    String? storyId,
-    String? userId,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #hasViewedStory,
-          [
-            storyId,
-            userId,
-          ],
-        ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
-
-  @override
-  _i5.Future<List<_i3.Story>> getAllStories() => (super.noSuchMethod(
-        Invocation.method(
-          #getAllStories,
-          [],
-        ),
-        returnValue: _i5.Future<List<_i3.Story>>.value(<_i3.Story>[]),
-      ) as _i5.Future<List<_i3.Story>>);
-
-  @override
-  _i5.Future<List<_i3.Story>> getUserStories(String? userId) =>
+  _i3.Future<List<_i10.Story>> getUserStories(String? userId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getUserStories,
           [userId],
         ),
-        returnValue: _i5.Future<List<_i3.Story>>.value(<_i3.Story>[]),
-      ) as _i5.Future<List<_i3.Story>>);
+        returnValue: _i3.Future<List<_i10.Story>>.value(<_i10.Story>[]),
+      ) as _i3.Future<List<_i10.Story>>);
 
   @override
-  _i5.Future<bool> hasViewed(
-    String? storyId,
-    String? userId,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #hasViewed,
-          [
-            storyId,
-            userId,
-          ],
-        ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
-
-  @override
-  _i5.Future<void> likeStory(
+  _i3.Future<void> likeStory(
     String? storyId,
     String? userId,
   ) =>
@@ -559,7 +516,7 @@ class MockStoryService extends _i1.Mock implements _i9.StoryService {
             userId,
           ],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 }

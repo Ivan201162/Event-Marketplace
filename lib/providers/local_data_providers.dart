@@ -42,3 +42,9 @@ final localIdeasProvider = FutureProvider<List<Map<String, dynamic>>>((ref) asyn
   final data = await LocalDataSeeder.loadLocalData();
   return (data?['ideas'] as List<dynamic>?)?.cast<Map<String, dynamic>>() ?? [];
 });
+
+/// Провайдер для получения списка локальных категорий
+final localCategoriesProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
+  final data = await LocalDataSeeder.loadLocalData();
+  return (data?['categories'] as List<dynamic>?)?.cast<Map<String, dynamic>>() ?? [];
+});

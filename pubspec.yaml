@@ -17,7 +17,7 @@ dependencies:
   # State Management
   flutter_riverpod: ^3.0.3
   qr_flutter: ^4.1.0
-  riverpod_annotation: ^3.0.1
+  riverpod_annotation: ^3.0.3
   
   # Firebase
   firebase_core: ^4.1.1
@@ -27,7 +27,7 @@ dependencies:
   firebase_messaging: ^16.0.2
   
   # UI & Navigation
-  go_router: ^16.2.4
+  go_router: ^16.2.5
   
   # Local Storage
   shared_preferences: ^2.1.1
@@ -57,7 +57,7 @@ dependencies:
   rxdart: ^0.28.0
   
   # Notifications
-  flutter_local_notifications: ^19.4.2
+  flutter_local_notifications: ^19.5.0
   
   # Security
   flutter_secure_storage: ^10.0.0-beta.4
@@ -137,7 +137,7 @@ dev_dependencies:
     sdk: flutter
   mockito: ^5.5.0
   patrol: ^3.7.0
-  riverpod_generator: ^3.0.1
+  riverpod_generator: ^3.0.3
   # golden_toolkit: ^0.15.0  # Discontinued package removed
 
   cloud_firestore_platform_interface: any

@@ -5,10 +5,10 @@ import '../models/specialist_filters_simple.dart';
 import '../models/specialist_sorting.dart';
 import '../services/mock_data_service.dart';
 
-/// Провайдер для состояния сортировки специалистов
+/// Провайдер для состояния сортировки специалистов (мигрирован с StateNotifierProvider)
 final specialistSortingProvider =
-    StateNotifierProvider<SpecialistSortingNotifier, SpecialistSorting>(
-  (ref) => SpecialistSortingNotifier(),
+    NotifierProvider<SpecialistSortingNotifier, SpecialistSorting>(
+  () => SpecialistSortingNotifier(),
 );
 
 /// Провайдер для отсортированных специалистов
@@ -44,9 +44,12 @@ class SortParams {
   int get hashCode => Object.hash(categoryId, filters, sorting);
 }
 
-/// Notifier для управления сортировкой специалистов
-class SpecialistSortingNotifier extends StateNotifier<SpecialistSorting> {
-  SpecialistSortingNotifier() : super(const SpecialistSorting());
+/// Notifier для управления сортировкой специалистов (мигрирован с StateNotifier)
+class SpecialistSortingNotifier extends Notifier<SpecialistSorting> {
+  @override
+  SpecialistSorting build() {
+    return const SpecialistSorting();
+  }
 
   /// Установить сортировку
   void setSorting(SpecialistSortOption sortOption) {

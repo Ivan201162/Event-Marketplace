@@ -36,6 +36,18 @@ class LocalDataSeeder {
       'reviews': MockData.reviews.map((r) => r.toJson()).toList(),
       'feedPosts': MockData.feedPosts.map((p) => p.toJson()).toList(),
       'ideas': MockData.ideas.map((i) => i.toJson()).toList(),
+      'categories': [
+        {'id': 'cat_1', 'name': 'Ведущие', 'icon': 'mic', 'color': 0xFF2196F3},
+        {'id': 'cat_2', 'name': 'DJ', 'icon': 'headset', 'color': 0xFF9C27B0},
+        {'id': 'cat_3', 'name': 'Фотографы', 'icon': 'camera_alt', 'color': 0xFFFF9800},
+        {'id': 'cat_4', 'name': 'Видеографы', 'icon': 'videocam', 'color': 0xFFF44336},
+        {'id': 'cat_5', 'name': 'Декораторы', 'icon': 'palette', 'color': 0xFF4CAF50},
+        {'id': 'cat_6', 'name': 'Аниматоры', 'icon': 'sentiment_very_satisfied', 'color': 0xFF009688},
+        {'id': 'cat_7', 'name': 'Организатор мероприятий', 'icon': 'event', 'color': 0xFF3F51B5},
+        {'id': 'cat_8', 'name': 'Музыканты', 'icon': 'music_note', 'color': 0xFFE91E63},
+        {'id': 'cat_9', 'name': 'Танцоры', 'icon': 'dance', 'color': 0xFF795548},
+        {'id': 'cat_10', 'name': 'Кейтеринг', 'icon': 'restaurant', 'color': 0xFF607D8B},
+      ],
       'requests': [
         {
           'id': 'req_1',

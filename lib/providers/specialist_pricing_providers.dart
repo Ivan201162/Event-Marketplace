@@ -6,11 +6,10 @@ import '../services/specialist_pricing_service.dart';
 final specialistPricingServiceProvider =
     Provider<SpecialistPricingService>((ref) => SpecialistPricingService());
 
-/// Провайдер состояния цен специалиста
+/// Провайдер состояния цен специалиста (мигрирован с StateNotifierProvider)
 final specialistPricingProvider =
-    StateNotifierProvider<SpecialistPricingNotifier, SpecialistPricingState>((ref) {
-  final service = ref.watch(specialistPricingServiceProvider);
-  return SpecialistPricingNotifier(service);
+    NotifierProvider<SpecialistPricingNotifier, SpecialistPricingState>(() {
+  return SpecialistPricingNotifier();
 });
 
 /// Состояние цен специалиста
@@ -45,11 +44,14 @@ class SpecialistPricingState {
       );
 }
 
-/// StateNotifier для управления ценами специалиста
-class SpecialistPricingNotifier extends StateNotifier<SpecialistPricingState> {
-  SpecialistPricingNotifier(this._service) : super(const SpecialistPricingState());
+/// Notifier для управления ценами специалиста (мигрирован с StateNotifier)
+class SpecialistPricingNotifier extends Notifier<SpecialistPricingState> {
+  @override
+  SpecialistPricingState build() {
+    return const SpecialistPricingState();
+  }
 
-  final SpecialistPricingService _service;
+  SpecialistPricingService get _service => ref.read(specialistPricingServiceProvider);
 
   /// Загрузить статистику цен специалиста
   Future<void> loadSpecialistPricingStats(String specialistId) async {

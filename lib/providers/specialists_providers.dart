@@ -113,8 +113,8 @@ final specialistsProvider = FutureProvider.family<List<Specialist>, String>(
   (ref, category) async => MockDataService.getSpecialistsByCategory(category),
 );
 
-/// Провайдер для пагинированной загрузки специалистов
-final paginatedSpecialistsProvider = StateNotifierProvider.family<
+/// Провайдер для пагинированной загрузки специалистов (мигрирован с StateNotifierProvider)
+final paginatedSpecialistsProvider = NotifierProvider.family<
     PaginatedSpecialistsNotifier,
     AsyncValue<List<Specialist>>,
     String>((ref, category) => PaginatedSpecialistsNotifier(category));
@@ -186,12 +186,15 @@ Future<List<Specialist>> _loadSpecialistsByCategory(String category) async {
   }
 }
 
-/// Notifier для пагинированной загрузки специалистов
-class PaginatedSpecialistsNotifier extends StateNotifier<AsyncValue<List<Specialist>>> {
-  PaginatedSpecialistsNotifier(this.category) : super(const AsyncValue.loading()) {
+/// Notifier для пагинированной загрузки специалистов (мигрирован с StateNotifier)
+class PaginatedSpecialistsNotifier extends Notifier<AsyncValue<List<Specialist>>> {
+  @override
+  AsyncValue<List<Specialist>> build() {
     loadSpecialists();
+    return const AsyncValue.loading();
   }
-  final String category;
+  
+  String get category => ref.argument;
 
   static const int _pageSize = 8;
   DocumentSnapshot? _lastDocument;

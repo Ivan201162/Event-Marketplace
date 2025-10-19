@@ -43,9 +43,12 @@ final searchSpecialistsProvider = FutureProvider.family<List<UserProfile>, Strin
   (ref, query) async => UserProfileService.searchSpecialists(query),
 );
 
-/// Провайдер для управления состоянием профиля
-class UserProfileNotifier extends StateNotifier<AsyncValue<UserProfile?>> {
-  UserProfileNotifier() : super(const AsyncValue.loading());
+/// Провайдер для управления состоянием профиля (мигрирован с StateNotifier)
+class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
+  @override
+  AsyncValue<UserProfile?> build() {
+    return const AsyncValue.loading();
+  }
 
   /// Загрузить профиль пользователя
   Future<void> loadProfile(String userId) async {
@@ -115,13 +118,16 @@ class UserProfileNotifier extends StateNotifier<AsyncValue<UserProfile?>> {
 
 /// Провайдер для UserProfileNotifier
 final userProfileNotifierProvider =
-    StateNotifierProvider<UserProfileNotifier, AsyncValue<UserProfile?>>(
-  (ref) => UserProfileNotifier(),
+    NotifierProvider<UserProfileNotifier, AsyncValue<UserProfile?>>(
+  UserProfileNotifier.new,
 );
 
-/// Провайдер для управления постами
-class UserPostsNotifier extends StateNotifier<AsyncValue<List<UserPost>>> {
-  UserPostsNotifier() : super(const AsyncValue.loading());
+/// Провайдер для управления постами (мигрирован с StateNotifier)
+class UserPostsNotifier extends Notifier<AsyncValue<List<UserPost>>> {
+  @override
+  AsyncValue<List<UserPost>> build() {
+    return const AsyncValue.loading();
+  }
 
   /// Загрузить посты пользователя
   void loadPosts(String userId) {
@@ -182,13 +188,16 @@ class UserPostsNotifier extends StateNotifier<AsyncValue<List<UserPost>>> {
 
 /// Провайдер для UserPostsNotifier
 final userPostsNotifierProvider =
-    StateNotifierProvider<UserPostsNotifier, AsyncValue<List<UserPost>>>(
-  (ref) => UserPostsNotifier(),
+    NotifierProvider<UserPostsNotifier, AsyncValue<List<UserPost>>>(
+  UserPostsNotifier.new,
 );
 
-/// Провайдер для управления сторис
-class UserStoriesNotifier extends StateNotifier<AsyncValue<List<UserStory>>> {
-  UserStoriesNotifier() : super(const AsyncValue.loading());
+/// Провайдер для управления сторис (мигрирован с StateNotifier)
+class UserStoriesNotifier extends Notifier<AsyncValue<List<UserStory>>> {
+  @override
+  AsyncValue<List<UserStory>> build() {
+    return const AsyncValue.loading();
+  }
 
   /// Создать сторис
   Future<void> createStory(UserStory story) async {
@@ -237,13 +246,16 @@ class UserStoriesNotifier extends StateNotifier<AsyncValue<List<UserStory>>> {
 
 /// Провайдер для UserStoriesNotifier
 final userStoriesNotifierProvider =
-    StateNotifierProvider<UserStoriesNotifier, AsyncValue<List<UserStory>>>(
-  (ref) => UserStoriesNotifier(),
+    NotifierProvider<UserStoriesNotifier, AsyncValue<List<UserStory>>>(
+  UserStoriesNotifier.new,
 );
 
-/// Провайдер для управления отзывами
-class ReviewsNotifier extends StateNotifier<AsyncValue<List<UserReview>>> {
-  ReviewsNotifier() : super(const AsyncValue.loading());
+/// Провайдер для управления отзывами (мигрирован с StateNotifier)
+class ReviewsNotifier extends Notifier<AsyncValue<List<UserReview>>> {
+  @override
+  AsyncValue<List<UserReview>> build() {
+    return const AsyncValue.loading();
+  }
 
   /// Создать отзыв
   Future<void> createReview(UserReview review) async {
@@ -261,6 +273,6 @@ class ReviewsNotifier extends StateNotifier<AsyncValue<List<UserReview>>> {
 
 /// Провайдер для ReviewsNotifier
 final reviewsNotifierProvider =
-    StateNotifierProvider<ReviewsNotifier, AsyncValue<List<UserReview>>>(
-  (ref) => ReviewsNotifier(),
+    NotifierProvider<ReviewsNotifier, AsyncValue<List<UserReview>>>(
+  ReviewsNotifier.new,
 );

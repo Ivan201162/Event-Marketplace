@@ -1,15 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/recommendation_interaction.dart';
 
-/// Провайдер для управления взаимодействиями с рекомендациями
+/// Провайдер для управления взаимодействиями с рекомендациями (мигрирован с StateNotifierProvider)
 final recommendationInteractionProvider =
-    StateNotifierProvider<RecommendationInteractionNotifier, List<RecommendationInteraction>>(
-  (ref) => RecommendationInteractionNotifier(),
+    NotifierProvider<RecommendationInteractionNotifier, List<RecommendationInteraction>>(
+  () => RecommendationInteractionNotifier(),
 );
 
-/// Нотификатор для взаимодействий с рекомендациями
-class RecommendationInteractionNotifier extends StateNotifier<List<RecommendationInteraction>> {
-  RecommendationInteractionNotifier() : super([]);
+/// Нотификатор для взаимодействий с рекомендациями (мигрирован с StateNotifier)
+class RecommendationInteractionNotifier extends Notifier<List<RecommendationInteraction>> {
+  @override
+  List<RecommendationInteraction> build() {
+    return [];
+  }
 
   /// Записать взаимодействие
   void recordInteraction(RecommendationInteraction interaction) {

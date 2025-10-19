@@ -136,10 +136,12 @@ List<Idea> _getTestIdeas() => [
       ),
     ];
 
-/// Провайдер для управления идеями
-class IdeasNotifier extends StateNotifier<AsyncValue<List<Idea>>> {
-  IdeasNotifier() : super(const AsyncValue.loading()) {
+/// Провайдер для управления идеями (мигрирован с StateNotifier)
+class IdeasNotifier extends Notifier<AsyncValue<List<Idea>>> {
+  @override
+  AsyncValue<List<Idea>> build() {
     _loadIdeas();
+    return const AsyncValue.loading();
   }
 
   void _loadIdeas() {
@@ -238,6 +240,6 @@ class IdeasNotifier extends StateNotifier<AsyncValue<List<Idea>>> {
   }
 }
 
-final ideasNotifierProvider = StateNotifierProvider<IdeasNotifier, AsyncValue<List<Idea>>>(
-  (ref) => IdeasNotifier(),
+final ideasNotifierProvider = NotifierProvider<IdeasNotifier, AsyncValue<List<Idea>>>(
+  IdeasNotifier.new,
 );

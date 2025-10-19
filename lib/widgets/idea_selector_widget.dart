@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/event_idea.dart';
+import '../models/event_idea_category.dart';
 import '../services/event_ideas_service.dart';
 import '../widgets/idea_card.dart';
 

@@ -34,17 +34,20 @@ class PortfolioUploadState {
       );
 }
 
-/// Провайдер состояния загрузки портфолио
+/// Провайдер состояния загрузки портфолио (мигрирован с StateNotifierProvider)
 final portfolioUploadStateProvider =
-    StateNotifierProvider<PortfolioUploadNotifier, PortfolioUploadState>(
-  (ref) => PortfolioUploadNotifier(ref.read(portfolioServiceProvider)),
+    NotifierProvider<PortfolioUploadNotifier, PortfolioUploadState>(
+  () => PortfolioUploadNotifier(),
 );
 
-/// Нотификатор для загрузки портфолио
-class PortfolioUploadNotifier extends StateNotifier<PortfolioUploadState> {
-  PortfolioUploadNotifier(this._portfolioService) : super(const PortfolioUploadState());
+/// Нотификатор для загрузки портфолио (мигрирован с StateNotifier)
+class PortfolioUploadNotifier extends Notifier<PortfolioUploadState> {
+  @override
+  PortfolioUploadState build() {
+    return const PortfolioUploadState();
+  }
 
-  final PortfolioService _portfolioService;
+  PortfolioService get _portfolioService => ref.read(portfolioServiceProvider);
 
   /// Загрузить изображение
   Future<void> uploadImage({

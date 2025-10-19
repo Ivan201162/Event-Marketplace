@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/advertisement.dart';
 import '../../models/promotion_boost.dart';
 import '../../models/subscription_plan.dart';
-import '../../providers/auth_provider.dart';
+import '../../providers/auth_providers.dart';
 import '../../services/advertisement_service.dart';
 import '../../services/promotion_service.dart';
 import '../../services/subscription_service.dart';
@@ -15,14 +15,14 @@ import 'my_subscriptions_screen.dart';
 import 'promotion_packages_screen.dart';
 import 'subscription_plans_screen.dart';
 
-class MonetizationHubScreen extends StatefulWidget {
+class MonetizationHubScreen extends ConsumerStatefulWidget {
   const MonetizationHubScreen({super.key});
 
   @override
-  State<MonetizationHubScreen> createState() => _MonetizationHubScreenState();
+  ConsumerState<MonetizationHubScreen> createState() => _MonetizationHubScreenState();
 }
 
-class _MonetizationHubScreenState extends State<MonetizationHubScreen>
+class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   final SubscriptionService _subscriptionService = SubscriptionService();
@@ -47,23 +47,29 @@ class _MonetizationHubScreenState extends State<MonetizationHubScreen>
   }
 
   Future<void> _loadUserData() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final userId = authProvider.currentUser?['id'];
+    final currentUserAsync = ref.read(currentUserProvider);
+    currentUserAsync.whenData((user) async {
+      if (user != null) {
+        try {
+          final subscription = await _subscriptionService.getActiveSubscription(user.id);
+          final promotions = await _promotionService.getActivePromotions(user.id);
+          final advertisements = await _advertisementService.getActiveAdvertisements(
+            type: AdType.banner,
+            limit: 5,
+          );
 
-    if (userId != null) {
-      final subscription = await _subscriptionService.getActiveSubscription(userId);
-      final promotions = await _promotionService.getActivePromotions(userId);
-      final advertisements = await _advertisementService.getActiveAdvertisements(
-        type: AdType.banner,
-        limit: 5,
-      );
-
-      setState(() {
-        _activeSubscription = subscription;
-        _activePromotions = promotions;
-        _activeAdvertisements = advertisements;
-      });
-    }
+          if (mounted) {
+            setState(() {
+              _activeSubscription = subscription;
+              _activePromotions = promotions;
+              _activeAdvertisements = advertisements;
+            });
+          }
+        } catch (e) {
+          debugPrint('Error loading user data: $e');
+        }
+      }
+    });
   }
 
   @override

@@ -84,14 +84,14 @@ final createReviewProvider = FutureProvider.family<void, CreateReviewParams>((re
 /// Провайдер для сервиса отзывов
 final reviewServiceProvider = Provider<ReviewService>((ref) => ReviewService());
 
-/// Провайдер для состояния формы отзыва
-final reviewFormProvider = StateNotifierProvider<ReviewFormNotifier, ReviewFormState>(
-  (ref) => ReviewFormNotifier(ref.read(reviewServiceProvider)),
+/// Провайдер для состояния формы отзыва (мигрирован с StateNotifierProvider)
+final reviewFormProvider = NotifierProvider<ReviewFormNotifier, ReviewFormState>(
+  () => ReviewFormNotifier(),
 );
 
-/// Провайдер для состояния отзывов
-final reviewStateProvider = StateNotifierProvider<ReviewStateNotifier, ReviewState>(
-  (ref) => ReviewStateNotifier(ref.read(reviewServiceProvider)),
+/// Провайдер для состояния отзывов (мигрирован с StateNotifierProvider)
+final reviewStateProvider = NotifierProvider<ReviewStateNotifier, ReviewState>(
+  () => ReviewStateNotifier(),
 );
 
 /// Состояние формы отзыва
@@ -144,11 +144,14 @@ class ReviewFormState {
       );
 }
 
-/// Нотификатор для формы отзыва
-class ReviewFormNotifier extends StateNotifier<ReviewFormState> {
-  ReviewFormNotifier(this._reviewService) : super(const ReviewFormState());
+/// Нотификатор для формы отзыва (мигрирован с StateNotifier)
+class ReviewFormNotifier extends Notifier<ReviewFormState> {
+  @override
+  ReviewFormState build() {
+    return const ReviewFormState();
+  }
 
-  final ReviewService _reviewService;
+  ReviewService get _reviewService => ref.read(reviewServiceProvider);
 
   void updateRating(int rating) {
     state = state.copyWith(rating: rating);
@@ -253,11 +256,14 @@ class ReviewState {
       );
 }
 
-/// Нотификатор для состояния отзывов
-class ReviewStateNotifier extends StateNotifier<ReviewState> {
-  ReviewStateNotifier(this._reviewService) : super(const ReviewState());
+/// Нотификатор для состояния отзывов (мигрирован с StateNotifier)
+class ReviewStateNotifier extends Notifier<ReviewState> {
+  @override
+  ReviewState build() {
+    return const ReviewState();
+  }
 
-  final ReviewService _reviewService;
+  ReviewService get _reviewService => ref.read(reviewServiceProvider);
 
   Future<void> loadReviews(String specialistId) async {
     state = state.copyWith(isLoading: true);

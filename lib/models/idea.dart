@@ -77,6 +77,14 @@ class Idea {
   final List<String> tags;
   final Map<String, dynamic>? metadata;
 
+  // Дополнительные поля для совместимости
+  List<String> get images => imageUrl != null ? [imageUrl!] : [];
+  String? get authorPhotoUrl => authorAvatar;
+  int get viewsCount => 0;
+  int get commentsCount => commentCount;
+  String? get categoryColor => null;
+  String? get categoryIcon => null;
+
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
         'title': title,

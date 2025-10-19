@@ -13,18 +13,16 @@ final citiesProvider = FutureProvider<List<CityRegion>>((ref) async {
   return service.getCities();
 });
 
-/// Провайдер для получения городов с фильтрами
+/// Провайдер для получения городов с фильтрами (мигрирован с StateNotifierProvider)
 final filteredCitiesProvider =
-    StateNotifierProvider<FilteredCitiesNotifier, AsyncValue<List<CityRegion>>>((ref) {
-  final service = ref.read(cityRegionServiceProvider);
-  return FilteredCitiesNotifier(service);
+    NotifierProvider<FilteredCitiesNotifier, AsyncValue<List<CityRegion>>>(() {
+  return FilteredCitiesNotifier();
 });
 
-/// Провайдер для поиска городов по названию
+/// Провайдер для поиска городов по названию (мигрирован с StateNotifierProvider)
 final citySearchProvider =
-    StateNotifierProvider<CitySearchNotifier, AsyncValue<List<CityRegion>>>((ref) {
-  final service = ref.read(cityRegionServiceProvider);
-  return CitySearchNotifier(service);
+    NotifierProvider<CitySearchNotifier, AsyncValue<List<CityRegion>>>(() {
+  return CitySearchNotifier();
 });
 
 /// Провайдер для получения популярных городов
@@ -45,11 +43,10 @@ final currentLocationProvider = FutureProvider<Position?>((ref) async {
   return service.getCurrentLocation();
 });
 
-/// Провайдер для получения ближайших городов
+/// Провайдер для получения ближайших городов (мигрирован с StateNotifierProvider)
 final nearbyCitiesProvider =
-    StateNotifierProvider<NearbyCitiesNotifier, AsyncValue<List<CityRegion>>>((ref) {
-  final service = ref.read(cityRegionServiceProvider);
-  return NearbyCitiesNotifier(service);
+    NotifierProvider<NearbyCitiesNotifier, AsyncValue<List<CityRegion>>>(() {
+  return NearbyCitiesNotifier();
 });
 
 /// Провайдер для выбранного города
@@ -70,13 +67,15 @@ final citiesInitializationProvider = FutureProvider<bool>((ref) async {
   }
 });
 
-/// Нотификатор для фильтрованных городов
-class FilteredCitiesNotifier extends StateNotifier<AsyncValue<List<CityRegion>>> {
-  FilteredCitiesNotifier(this._service) : super(const AsyncValue.loading()) {
+/// Нотификатор для фильтрованных городов (мигрирован с StateNotifier)
+class FilteredCitiesNotifier extends Notifier<AsyncValue<List<CityRegion>>> {
+  @override
+  AsyncValue<List<CityRegion>> build() {
     loadCities();
+    return const AsyncValue.loading();
   }
 
-  final CityRegionService _service;
+  CityRegionService get _service => ref.read(cityRegionServiceProvider);
   CitySearchFilters _filters = const CitySearchFilters();
 
   /// Загрузить города с текущими фильтрами
@@ -136,11 +135,14 @@ class FilteredCitiesNotifier extends StateNotifier<AsyncValue<List<CityRegion>>>
   CitySearchFilters get filters => _filters;
 }
 
-/// Нотификатор для поиска городов
-class CitySearchNotifier extends StateNotifier<AsyncValue<List<CityRegion>>> {
-  CitySearchNotifier(this._service) : super(const AsyncValue.data([]));
+/// Нотификатор для поиска городов (мигрирован с StateNotifier)
+class CitySearchNotifier extends Notifier<AsyncValue<List<CityRegion>>> {
+  @override
+  AsyncValue<List<CityRegion>> build() {
+    return const AsyncValue.data([]);
+  }
 
-  final CityRegionService _service;
+  CityRegionService get _service => ref.read(cityRegionServiceProvider);
 
   /// Поиск городов по названию
   Future<void> searchCities(String query) async {
@@ -164,11 +166,14 @@ class CitySearchNotifier extends StateNotifier<AsyncValue<List<CityRegion>>> {
   }
 }
 
-/// Нотификатор для ближайших городов
-class NearbyCitiesNotifier extends StateNotifier<AsyncValue<List<CityRegion>>> {
-  NearbyCitiesNotifier(this._service) : super(const AsyncValue.data([]));
+/// Нотификатор для ближайших городов (мигрирован с StateNotifier)
+class NearbyCitiesNotifier extends Notifier<AsyncValue<List<CityRegion>>> {
+  @override
+  AsyncValue<List<CityRegion>> build() {
+    return const AsyncValue.data([]);
+  }
 
-  final CityRegionService _service;
+  CityRegionService get _service => ref.read(cityRegionServiceProvider);
 
   /// Получить ближайшие города к координатам
   Future<void> getNearbyCities({

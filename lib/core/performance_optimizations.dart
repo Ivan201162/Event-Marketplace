@@ -154,13 +154,13 @@ class PerformanceOptimizations {
       );
 
   /// Оптимизация состояния
-  static StateNotifierProvider<T, U> optimizeStateNotifier<T extends StateNotifier<U>, U>({
+  static NotifierProvider<T, U> optimizeStateNotifier<T extends Notifier<U>, U>({
     required T Function() create,
     required U initial,
     String? name,
   }) =>
-      StateNotifierProvider<T, U>(
-        (ref) => create(),
+      NotifierProvider<T, U>(
+        create,
         name: name,
       );
 

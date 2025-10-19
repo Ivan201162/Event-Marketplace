@@ -105,10 +105,12 @@ List<FeedPost> _getTestFeedPosts() => [
       ),
     ];
 
-/// Провайдер для управления лентой
-class FeedNotifier extends StateNotifier<AsyncValue<List<FeedPost>>> {
-  FeedNotifier() : super(const AsyncValue.loading()) {
+/// Провайдер для управления лентой (мигрирован с StateNotifier)
+class FeedNotifier extends Notifier<AsyncValue<List<FeedPost>>> {
+  @override
+  AsyncValue<List<FeedPost>> build() {
     _loadFeed();
+    return const AsyncValue.loading();
   }
 
   void _loadFeed() {
@@ -217,6 +219,6 @@ class FeedNotifier extends StateNotifier<AsyncValue<List<FeedPost>>> {
   }
 }
 
-final feedNotifierProvider = StateNotifierProvider<FeedNotifier, AsyncValue<List<FeedPost>>>(
-  (ref) => FeedNotifier(),
+final feedNotifierProvider = NotifierProvider<FeedNotifier, AsyncValue<List<FeedPost>>>(
+  FeedNotifier.new,
 );

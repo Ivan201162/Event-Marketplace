@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-// import '../models/specialist.dart'; // Unused import removed
 import '../providers/local_data_providers.dart';
-import 'specialist_badges_widget.dart';
 
 /// Виджет "Популярные специалисты недели"
 class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
@@ -14,239 +12,241 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final popularSpecialistsAsync = ref.watch(localSpecialistsProvider);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                '⭐ Популярные специалисты недели',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              TextButton(
-                onPressed: () => context.push('/search?sort=popularity'),
-                child: const Text('Все'),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 200,
-          child: popularSpecialistsAsync.when(
-            data: (specialists) {
-              if (specialists.isEmpty) {
-                return const Center(
-                  child: Text('Популярные специалисты не найдены'),
-                );
-              }
+    return popularSpecialistsAsync.when(
+      data: (specialists) {
+        if (specialists.isEmpty) {
+          return _buildEmptyState();
+        }
 
-              return ListView.builder(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemCount: specialists.length,
-                itemBuilder: (context, index) {
-                  final specialist = specialists[index];
-                  return _buildSpecialistCard(context, specialist);
-                },
-              );
+        // Берем топ-10 специалистов
+        final topSpecialists = specialists.take(10).toList();
+
+        return SizedBox(
+          height: 200,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: topSpecialists.length,
+            itemBuilder: (context, index) {
+              final specialist = topSpecialists[index];
+              return _buildSpecialistCard(context, specialist, index + 1);
             },
-            loading: () => const Center(
-              child: CircularProgressIndicator(),
-            ),
-            error: (error, stack) => Center(
-              child: Text('Ошибка загрузки: $error'),
-            ),
           ),
-        ),
-      ],
+        );
+      },
+      loading: () => _buildLoadingState(),
+      error: (error, stack) => _buildErrorState(error.toString()),
     );
   }
 
-  Widget _buildSpecialistCard(
-    BuildContext context,
-    Map<String, dynamic> specialist,
-  ) {
-    final name = specialist['name'] as String? ?? 'Без имени';
-    final category = specialist['category'] as String? ?? 'Не указано';
-    final rating = (specialist['rating'] as num?)?.toDouble() ?? 0.0;
-    final price = (specialist['price'] as num?)?.toInt() ?? 0;
-    final avatarUrl = specialist['avatarUrl'] as String?;
-    final city = specialist['city'] as String? ?? 'Город не указан';
-    final reviewsCount = (specialist['reviewsCount'] as int?) ?? 0;
-    final isOnline = specialist['isOnline'] as bool? ?? false;
-
-    final badges = SpecialistBadge.fromSpecialistData(specialist);
-
+  Widget _buildSpecialistCard(BuildContext context, Map<String, dynamic> specialist, int rank) {
     return Container(
       width: 160,
       margin: const EdgeInsets.only(right: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Аватар с онлайн статусом
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                child: Container(
-                  height: 80,
-                  width: double.infinity,
-                  color: Colors.grey[200],
-                  child: avatarUrl != null
-                      ? Image.network(
-                          avatarUrl,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              _buildAvatarPlaceholder(name),
-                        )
-                      : _buildAvatarPlaceholder(name),
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: InkWell(
+          onTap: () => context.push('/specialist/${specialist['id']}'),
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Ранг и аватар
+                Row(
+                  children: [
+                    Container(
+                      width: 24,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        color: _getRankColor(rank),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '$rank',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Spacer(),
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundImage: specialist['photoUrl'] != null
+                          ? NetworkImage(specialist['photoUrl'])
+                          : null,
+                      child: specialist['photoUrl'] == null
+                          ? const Icon(Icons.person, size: 20)
+                          : null,
+                    ),
+                  ],
                 ),
-              ),
-              if (isOnline)
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: Container(
-                    width: 12,
-                    height: 12,
-                    decoration: const BoxDecoration(
-                      color: Colors.green,
-                      shape: BoxShape.circle,
-                    ),
+                const SizedBox(height: 8),
+                
+                // Имя
+                Text(
+                  specialist['name'] ?? 'Специалист',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-            ],
-          ),
-
-          // Информация о специалисте
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                const SizedBox(height: 4),
+                
+                // Категория
+                Text(
+                  specialist['category'] ?? 'Категория',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 12,
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    category,
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 12,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    city,
-                    style: TextStyle(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                
+                // Город
+                Row(
+                  children: [
+                    Icon(
+                      Icons.location_on,
+                      size: 12,
                       color: Colors.grey[500],
-                      fontSize: 11,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const Spacer(),
-
-                  // Рейтинг и цена
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.star,
-                        size: 12,
-                        color: Colors.amber[600],
-                      ),
-                      const SizedBox(width: 2),
-                      Text(
-                        rating.toStringAsFixed(1),
-                        style: const TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '($reviewsCount)',
+                    const SizedBox(width: 2),
+                    Expanded(
+                      child: Text(
+                        specialist['city'] ?? 'Город',
                         style: TextStyle(
+                          color: Colors.grey[500],
                           fontSize: 10,
-                          color: Colors.grey[600],
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    'от $price ₽',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+                const Spacer(),
+                
+                // Рейтинг
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.star,
+                      size: 14,
+                      color: Colors.amber,
+                    ),
+                    const SizedBox(width: 2),
+                    Text(
+                      '${specialist['rating'] ?? 0.0}',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-
-          // Бейджи
-          if (badges.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-              child: SpecialistBadgesWidget(
-                badges: badges,
-                size: 12,
-                showText: false,
-              ),
-            ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _buildAvatarPlaceholder(String name) {
-    final initials = name.isNotEmpty
-        ? name.split(' ').map((word) => word.isNotEmpty ? word[0] : '').take(2).join().toUpperCase()
-        : '?';
+  Color _getRankColor(int rank) {
+    switch (rank) {
+      case 1:
+        return Colors.amber;
+      case 2:
+        return Colors.grey[400]!;
+      case 3:
+        return Colors.orange[300]!;
+      default:
+        return Colors.blue;
+    }
+  }
 
+  Widget _buildEmptyState() {
     return Container(
-      color: Colors.blue[100],
+      height: 200,
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.people_outline,
+              size: 48,
+              color: Colors.grey,
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Нет данных о специалистах',
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingState() {
+    return Container(
+      height: 200,
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+  Widget _buildErrorState(String error) {
+    return Container(
+      height: 200,
+      decoration: BoxDecoration(
+        color: Colors.red[50],
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: Center(
-        child: Text(
-          initials,
-          style: TextStyle(
-            color: Colors.blue[800],
-            fontWeight: FontWeight.bold,
-            fontSize: 24,
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.error_outline,
+              size: 48,
+              color: Colors.red,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Ошибка загрузки',
+              style: TextStyle(
+                color: Colors.red[700],
+                fontSize: 14,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
-
-// Провайдер уже определен в local_data_providers.dart

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/idea.dart';
+import '../models/idea_category.dart';
 
 class IdeaFiltersWidget extends StatefulWidget {
   const IdeaFiltersWidget({

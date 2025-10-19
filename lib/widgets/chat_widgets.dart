@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../models/chat.dart';
 import '../models/notification.dart';
 import '../providers/chat_providers.dart';
+import '../core/notifications/app_notification.dart';
 
 /// Виджет списка чатов
 class ChatListWidget extends ConsumerWidget {

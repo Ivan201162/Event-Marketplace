@@ -54,19 +54,20 @@ final specialistPaymentStatsProvider =
   return firestoreService.getSpecialistPaymentStats(specialistId);
 });
 
-/// Провайдер для управления платежами
-final paymentManagerProvider = StateNotifierProvider<PaymentManager, AsyncValue<void>>((ref) {
-  final paymentService = ref.watch(paymentServiceProvider);
-  final firestoreService = ref.watch(firestoreServiceProvider);
-  return PaymentManager(paymentService, firestoreService);
+/// Провайдер для управления платежами (мигрирован с StateNotifierProvider)
+final paymentManagerProvider = NotifierProvider<PaymentManager, AsyncValue<void>>(() {
+  return PaymentManager();
 });
 
-/// Менеджер для управления платежами
-class PaymentManager extends StateNotifier<AsyncValue<void>> {
-  PaymentManager(this._paymentService, this._firestoreService) : super(const AsyncValue.data(null));
+/// Менеджер для управления платежами (мигрирован с StateNotifier)
+class PaymentManager extends Notifier<AsyncValue<void>> {
+  @override
+  AsyncValue<void> build() {
+    return const AsyncValue.data(null);
+  }
 
-  final PaymentService _paymentService;
-  final FirestoreService _firestoreService;
+  PaymentService get _paymentService => ref.read(paymentServiceProvider);
+  FirestoreService get _firestoreService => ref.read(firestoreServiceProvider);
 
   /// Создать платеж
   Future<String?> createPayment({
@@ -81,7 +82,7 @@ class PaymentManager extends StateNotifier<AsyncValue<void>> {
     String? specialistName,
     String? bookingTitle,
   }) async {
-    state = const AsyncValue.loading();
+    state = const AsyncValue<void>.loading();
 
     try {
       final paymentId = await _paymentService.createPayment(
@@ -100,7 +101,7 @@ class PaymentManager extends StateNotifier<AsyncValue<void>> {
       state = const AsyncValue.data(null);
       return paymentId;
     } catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace);
+      state = AsyncValue<void>.error(error, stackTrace);
       return null;
     }
   }
@@ -111,7 +112,7 @@ class PaymentManager extends StateNotifier<AsyncValue<void>> {
     String? transactionId,
     String? receiptUrl,
   }) async {
-    state = const AsyncValue.loading();
+    state = const AsyncValue<void>.loading();
 
     try {
       final success = await _paymentService.markAsPaid(
@@ -124,14 +125,14 @@ class PaymentManager extends StateNotifier<AsyncValue<void>> {
         state = const AsyncValue.data(null);
         return true;
       } else {
-        state = const AsyncValue.error(
+        state = AsyncValue<void>.error(
           'Не удалось обновить статус платежа',
           StackTrace.current,
         );
         return false;
       }
     } catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace);
+      state = AsyncValue<void>.error(error, stackTrace);
       return false;
     }
   }
@@ -141,7 +142,7 @@ class PaymentManager extends StateNotifier<AsyncValue<void>> {
     required String paymentId,
     String? reason,
   }) async {
-    state = const AsyncValue.loading();
+    state = const AsyncValue<void>.loading();
 
     try {
       final success = await _paymentService.markAsFailed(
@@ -153,14 +154,14 @@ class PaymentManager extends StateNotifier<AsyncValue<void>> {
         state = const AsyncValue.data(null);
         return true;
       } else {
-        state = const AsyncValue.error(
+        state = AsyncValue<void>.error(
           'Не удалось обновить статус платежа',
           StackTrace.current,
         );
         return false;
       }
     } catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace);
+      state = AsyncValue<void>.error(error, stackTrace);
       return false;
     }
   }
@@ -170,7 +171,7 @@ class PaymentManager extends StateNotifier<AsyncValue<void>> {
     required String paymentId,
     String? reason,
   }) async {
-    state = const AsyncValue.loading();
+    state = const AsyncValue<void>.loading();
 
     try {
       final success = await _paymentService.cancelPayment(
@@ -182,14 +183,14 @@ class PaymentManager extends StateNotifier<AsyncValue<void>> {
         state = const AsyncValue.data(null);
         return true;
       } else {
-        state = const AsyncValue.error(
+        state = AsyncValue<void>.error(
           'Не удалось отменить платеж',
           StackTrace.current,
         );
         return false;
       }
     } catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace);
+      state = AsyncValue<void>.error(error, stackTrace);
       return false;
     }
   }
@@ -200,7 +201,7 @@ class PaymentManager extends StateNotifier<AsyncValue<void>> {
     double? refundAmount,
     String? reason,
   }) async {
-    state = const AsyncValue.loading();
+    state = const AsyncValue<void>.loading();
 
     try {
       final success = await _paymentService.refundPayment(
@@ -213,14 +214,14 @@ class PaymentManager extends StateNotifier<AsyncValue<void>> {
         state = const AsyncValue.data(null);
         return true;
       } else {
-        state = const AsyncValue.error(
+        state = AsyncValue<void>.error(
           'Не удалось вернуть платеж',
           StackTrace.current,
         );
         return false;
       }
     } catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace);
+      state = AsyncValue<void>.error(error, stackTrace);
       return false;
     }
   }
@@ -236,7 +237,7 @@ class PaymentManager extends StateNotifier<AsyncValue<void>> {
     String? specialistName,
     String? bookingTitle,
   }) async {
-    state = const AsyncValue.loading();
+    state = const AsyncValue<void>.loading();
 
     try {
       final paymentId = await _paymentService.createPrepaymentForBooking(
@@ -254,14 +255,14 @@ class PaymentManager extends StateNotifier<AsyncValue<void>> {
         state = const AsyncValue.data(null);
         return paymentId;
       } else {
-        state = const AsyncValue.error(
+        state = AsyncValue<void>.error(
           'Не удалось создать предоплату',
           StackTrace.current,
         );
         return null;
       }
     } catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace);
+      state = AsyncValue<void>.error(error, stackTrace);
       return null;
     }
   }
