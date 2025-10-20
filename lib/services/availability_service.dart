@@ -34,7 +34,7 @@ class AvailabilityService {
       final querySnapshot = await query.orderBy('date').get();
       return querySnapshot.docs.map(AvailabilityCalendar.fromDocument).toList();
     } on Exception catch (e) {
-      print('Ошибка получения календаря доступности: $e');
+      debugPrint('Ошибка получения календаря доступности: $e');
       return [];
     }
   }
@@ -85,7 +85,7 @@ class AvailabilityService {
 
       return true;
     } on Exception catch (e) {
-      print('Ошибка добавления занятой даты: $e');
+      debugPrint('Ошибка добавления занятой даты: $e');
       return false;
     }
   }
@@ -126,7 +126,7 @@ class AvailabilityService {
 
       return true;
     } on Exception catch (e) {
-      print('Ошибка добавления временного слота: $e');
+      debugPrint('Ошибка добавления временного слота: $e');
       return false;
     }
   }
@@ -163,7 +163,7 @@ class AvailabilityService {
 
       return true;
     } on Exception catch (e) {
-      print('Ошибка блокировки временного слота: $e');
+      debugPrint('Ошибка блокировки временного слота: $e');
       return false;
     }
   }
@@ -198,7 +198,7 @@ class AvailabilityService {
 
       return true;
     } on Exception catch (e) {
-      print('Ошибка разблокировки временного слота: $e');
+      debugPrint('Ошибка разблокировки временного слота: $e');
       return false;
     }
   }
@@ -210,7 +210,7 @@ class AvailabilityService {
       await _firestore.collection(_collectionName).doc(calendarId).delete();
       return true;
     } on Exception catch (e) {
-      print('Ошибка удаления занятой даты: $e');
+      debugPrint('Ошибка удаления занятой даты: $e');
       return false;
     }
   }
@@ -230,7 +230,7 @@ class AvailabilityService {
       final calendar = AvailabilityCalendar.fromDocument(doc);
       return calendar.isAvailableAt(dateTime);
     } on Exception catch (e) {
-      print('Ошибка проверки доступности: $e');
+      debugPrint('Ошибка проверки доступности: $e');
       return false;
     }
   }
@@ -252,7 +252,7 @@ class AvailabilityService {
       final calendar = AvailabilityCalendar.fromDocument(doc);
       return calendar.getAvailableSlots(date);
     } on Exception catch (e) {
-      print('Ошибка получения доступных слотов: $e');
+      debugPrint('Ошибка получения доступных слотов: $e');
       return [];
     }
   }
@@ -305,7 +305,7 @@ class AvailabilityService {
       await batch.commit();
       return true;
     } on Exception catch (e) {
-      print('Ошибка массового добавления занятых дат: $e');
+      debugPrint('Ошибка массового добавления занятых дат: $e');
       return false;
     }
   }

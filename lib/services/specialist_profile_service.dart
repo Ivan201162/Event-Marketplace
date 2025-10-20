@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 import '../models/portfolio_item.dart';
 import '../models/profile_statistics.dart';
@@ -37,7 +36,7 @@ class SpecialistProfileService {
         pinnedPosts: (data['pinnedPosts'] as int?) ?? 0,
       );
     } catch (e) {
-      debugPrint('Ошибка получения статистики профиля: $e');
+      debugdebugPrint('Ошибка получения статистики профиля: $e');
       return _getDefaultStatistics();
     }
   }
@@ -60,7 +59,7 @@ class SpecialistProfileService {
         });
       }).toList();
     } catch (e) {
-      debugPrint('Ошибка получения портфолио: $e');
+      debugdebugPrint('Ошибка получения портфолио: $e');
       return _getTestPortfolio();
     }
   }
@@ -74,7 +73,7 @@ class SpecialistProfileService {
           .collection('portfolio')
           .add(item.toMap());
     } catch (e) {
-      debugPrint('Ошибка добавления элемента портфолио: $e');
+      debugdebugPrint('Ошибка добавления элемента портфолио: $e');
       rethrow;
     }
   }
@@ -93,7 +92,7 @@ class SpecialistProfileService {
           .doc(itemId)
           .update(item.toMap());
     } catch (e) {
-      debugPrint('Ошибка обновления элемента портфолио: $e');
+      debugdebugPrint('Ошибка обновления элемента портфолио: $e');
       rethrow;
     }
   }
@@ -108,7 +107,7 @@ class SpecialistProfileService {
           .doc(itemId)
           .delete();
     } catch (e) {
-      debugPrint('Ошибка удаления элемента портфолио: $e');
+      debugdebugPrint('Ошибка удаления элемента портфолио: $e');
       rethrow;
     }
   }
@@ -130,7 +129,7 @@ class SpecialistProfileService {
         });
       }).toList();
     } catch (e) {
-      debugPrint('Ошибка получения социальных ссылок: $e');
+      debugdebugPrint('Ошибка получения социальных ссылок: $e');
       return _getTestSocialLinks();
     }
   }
@@ -144,7 +143,7 @@ class SpecialistProfileService {
           .collection('socialLinks')
           .add(link.toMap());
     } catch (e) {
-      debugPrint('Ошибка добавления социальной ссылки: $e');
+      debugdebugPrint('Ошибка добавления социальной ссылки: $e');
       rethrow;
     }
   }
@@ -163,7 +162,7 @@ class SpecialistProfileService {
           .doc(linkId)
           .update(link.toMap());
     } catch (e) {
-      debugPrint('Ошибка обновления социальной ссылки: $e');
+      debugdebugPrint('Ошибка обновления социальной ссылки: $e');
       rethrow;
     }
   }
@@ -178,7 +177,7 @@ class SpecialistProfileService {
           .doc(linkId)
           .delete();
     } catch (e) {
-      debugPrint('Ошибка удаления социальной ссылки: $e');
+      debugdebugPrint('Ошибка удаления социальной ссылки: $e');
       rethrow;
     }
   }
@@ -191,7 +190,7 @@ class SpecialistProfileService {
         'lastActive': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      debugPrint('Ошибка обновления онлайн статуса: $e');
+      debugdebugPrint('Ошибка обновления онлайн статуса: $e');
       rethrow;
     }
   }
@@ -215,7 +214,7 @@ class SpecialistProfileService {
           )
           .toList();
     } catch (e) {
-      debugPrint('Ошибка получения закреплённых постов: $e');
+      debugdebugPrint('Ошибка получения закреплённых постов: $e');
       return [];
     }
   }
@@ -228,7 +227,7 @@ class SpecialistProfileService {
         'pinnedAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      debugPrint('Ошибка закрепления поста: $e');
+      debugdebugPrint('Ошибка закрепления поста: $e');
       rethrow;
     }
   }
@@ -247,7 +246,7 @@ class SpecialistProfileService {
         await doc.reference.delete();
       }
     } catch (e) {
-      debugPrint('Ошибка открепления поста: $e');
+      debugdebugPrint('Ошибка открепления поста: $e');
       rethrow;
     }
   }
@@ -276,7 +275,7 @@ class SpecialistProfileService {
           )
           .toList();
     } catch (e) {
-      debugPrint('Ошибка получения календаря занятости: $e');
+      debugdebugPrint('Ошибка получения календаря занятости: $e');
       return [];
     }
   }
@@ -301,7 +300,7 @@ class SpecialistProfileService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      debugPrint('Ошибка обновления доступности: $e');
+      debugdebugPrint('Ошибка обновления доступности: $e');
       rethrow;
     }
   }

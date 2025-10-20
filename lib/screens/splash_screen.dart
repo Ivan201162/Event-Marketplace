@@ -121,7 +121,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
         _navigateBasedOnAuth(user);
       }
     } on Exception catch (e) {
-      debugPrint('🚨 SplashScreen error: $e');
+      debugdebugPrint('🚨 SplashScreen error: $e');
       setState(() {
         _statusText = 'Ошибка инициализации: $e';
       });
@@ -234,7 +234,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
             // Кнопка для принудительного перехода
             ElevatedButton(
               onPressed: () {
-                debugPrint('🚀 Manual navigation to auth screen');
+                debugdebugPrint('🚀 Manual navigation to auth screen');
                 _navigateToAuthScreen();
               },
               style: ElevatedButton.styleFrom(

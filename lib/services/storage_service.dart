@@ -5,9 +5,19 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../utils/storage_guard.dart';
+
 /// Сервис для работы с файловым хранилищем
 class StorageService {
-  final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseStorage? _storage = getStorage();
+
+  FirebaseStorage get _s {
+    final storage = _storage;
+    if (storage == null) {
+      throw Exception('Firebase Storage is not available on web.');
+    }
+    return storage;
+  }
 
   /// Загрузить PDF договора в Firebase Storage
   Future<String> uploadContractPdf(
@@ -15,7 +25,7 @@ class StorageService {
     Uint8List pdfBytes,
   ) async {
     try {
-      final ref = _storage.ref().child('contracts').child('$contractId.pdf');
+      final ref = _s.ref().child('contracts').child('$contractId.pdf');
 
       final uploadTask = ref.putData(
         pdfBytes,
@@ -112,7 +122,7 @@ class StorageService {
   /// Загрузить PDF счета в Firebase Storage
   Future<String> uploadInvoicePdf(String invoiceId, Uint8List pdfBytes) async {
     try {
-      final ref = _storage.ref().child('invoices').child('$invoiceId.pdf');
+      final ref = _s.ref().child('invoices').child('$invoiceId.pdf');
 
       final uploadTask = ref.putData(
         pdfBytes,
@@ -158,7 +168,7 @@ class StorageService {
       final file = File('${downloadsDir.path}/$fileName');
 
       // Скачиваем файл
-      final ref = _storage.refFromURL(downloadUrl);
+      final ref = _s.refFromURL(downloadUrl);
       final data = await ref.getData();
 
       if (data != null) {
@@ -174,7 +184,7 @@ class StorageService {
   /// Получить URL файла по пути
   Future<String> getFileUrl(String path) async {
     try {
-      final ref = _storage.ref().child(path);
+      final ref = _s.ref().child(path);
       return await ref.getDownloadURL();
     } on Exception catch (e) {
       throw Exception('Ошибка получения URL файла: $e');
@@ -184,7 +194,7 @@ class StorageService {
   /// Удалить файл из Firebase Storage
   Future<void> deleteFile(String path) async {
     try {
-      final ref = _storage.ref().child(path);
+      final ref = _s.ref().child(path);
       await ref.delete();
     } on Exception catch (e) {
       throw Exception('Ошибка удаления файла: $e');
@@ -194,7 +204,7 @@ class StorageService {
   /// Получить список файлов в папке
   Future<List<Reference>> listFiles(String path) async {
     try {
-      final ref = _storage.ref().child(path);
+      final ref = _s.ref().child(path);
       final result = await ref.listAll();
       return result.items;
     } on Exception catch (e) {
@@ -219,7 +229,7 @@ class StorageService {
     String fileName,
   ) async {
     try {
-      final ref = _storage.ref().child(path).child(fileName);
+      final ref = _s.ref().child(path).child(fileName);
 
       final uploadTask = ref.putData(
         imageBytes,
@@ -249,7 +259,7 @@ class StorageService {
     String contentType,
   ) async {
     try {
-      final ref = _storage.ref().child(path).child(fileName);
+      final ref = _s.ref().child(path).child(fileName);
 
       final uploadTask = ref.putData(
         documentBytes,
@@ -294,7 +304,7 @@ class StorageService {
 
   /// Получить прогресс загрузки
   Stream<TaskSnapshot> getUploadProgress(String path) {
-    final ref = _storage.ref().child(path);
+    final ref = _s.ref().child(path);
     return ref.putData(Uint8List(0)).snapshotEvents;
   }
 }

@@ -108,13 +108,13 @@ class ContentManagementService {
       await _startMediaProcessing(mediaContent);
 
       if (kDebugMode) {
-        print('Media uploaded: $title');
+        debugPrint('Media uploaded: $title');
       }
 
       return mediaId;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки медиа: $e');
+        debugPrint('Ошибка загрузки медиа: $e');
       }
       rethrow;
     }
@@ -172,13 +172,13 @@ class ContentManagementService {
       await _startMediaProcessing(mediaContent);
 
       if (kDebugMode) {
-        print('Media uploaded from bytes: $title');
+        debugPrint('Media uploaded from bytes: $title');
       }
 
       return mediaId;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки медиа из байтов: $e');
+        debugPrint('Ошибка загрузки медиа из байтов: $e');
       }
       rethrow;
     }
@@ -233,7 +233,7 @@ class ContentManagementService {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка запуска обработки медиа: $e');
+        debugPrint('Ошибка запуска обработки медиа: $e');
       }
 
       // Помечаем как ошибку
@@ -268,7 +268,7 @@ class ContentManagementService {
       await _processMedia(processing);
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка создания задачи обработки: $e');
+        debugPrint('Ошибка создания задачи обработки: $e');
       }
     }
   }
@@ -337,7 +337,7 @@ class ContentManagementService {
       await _checkProcessingCompletion(processing.mediaId);
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка обработки медиа: $e');
+        debugPrint('Ошибка обработки медиа: $e');
       }
 
       // Обновляем статус на "ошибка"
@@ -387,7 +387,7 @@ class ContentManagementService {
       return null;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка генерации миниатюры: $e');
+        debugPrint('Ошибка генерации миниатюры: $e');
       }
       return null;
     }
@@ -401,7 +401,7 @@ class ContentManagementService {
       return imageUrl; // Временная заглушка
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка создания миниатюры изображения: $e');
+        debugPrint('Ошибка создания миниатюры изображения: $e');
       }
       rethrow;
     }
@@ -422,7 +422,7 @@ class ContentManagementService {
       return mediaContent.url; // Временная заглушка
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка изменения размера изображения: $e');
+        debugPrint('Ошибка изменения размера изображения: $e');
       }
       return null;
     }
@@ -440,7 +440,7 @@ class ContentManagementService {
       return mediaContent.url; // Временная заглушка
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка сжатия медиа: $e');
+        debugPrint('Ошибка сжатия медиа: $e');
       }
       return null;
     }
@@ -458,7 +458,7 @@ class ContentManagementService {
       return mediaContent.url; // Временная заглушка
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка добавления водяного знака: $e');
+        debugPrint('Ошибка добавления водяного знака: $e');
       }
       return null;
     }
@@ -476,7 +476,7 @@ class ContentManagementService {
       return mediaContent.url; // Временная заглушка
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка применения фильтра: $e');
+        debugPrint('Ошибка применения фильтра: $e');
       }
       return null;
     }
@@ -494,7 +494,7 @@ class ContentManagementService {
       return mediaContent.url; // Временная заглушка
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка обрезки изображения: $e');
+        debugPrint('Ошибка обрезки изображения: $e');
       }
       return null;
     }
@@ -512,7 +512,7 @@ class ContentManagementService {
       return mediaContent.url; // Временная заглушка
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка поворота изображения: $e');
+        debugPrint('Ошибка поворота изображения: $e');
       }
       return null;
     }
@@ -528,7 +528,7 @@ class ContentManagementService {
       return mediaContent.url; // Временная заглушка
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка конвертации медиа: $e');
+        debugPrint('Ошибка конвертации медиа: $e');
       }
       return null;
     }
@@ -558,7 +558,7 @@ class ContentManagementService {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка проверки завершения обработки: $e');
+        debugPrint('Ошибка проверки завершения обработки: $e');
       }
     }
   }
@@ -577,11 +577,11 @@ class ContentManagementService {
       );
 
       if (kDebugMode) {
-        print('Media processing completed: $mediaId');
+        debugPrint('Media processing completed: $mediaId');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка завершения обработки медиа: $e');
+        debugPrint('Ошибка завершения обработки медиа: $e');
       }
     }
   }
@@ -619,13 +619,13 @@ class ContentManagementService {
       _galleryCache[galleryId] = gallery;
 
       if (kDebugMode) {
-        print('Gallery created: $name');
+        debugPrint('Gallery created: $name');
       }
 
       return galleryId;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка создания галереи: $e');
+        debugPrint('Ошибка создания галереи: $e');
       }
       rethrow;
     }
@@ -656,11 +656,11 @@ class ContentManagementService {
       );
 
       if (kDebugMode) {
-        print('Media added to gallery: $mediaId -> $galleryId');
+        debugPrint('Media added to gallery: $mediaId -> $galleryId');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка добавления медиа в галерею: $e');
+        debugPrint('Ошибка добавления медиа в галерею: $e');
       }
       rethrow;
     }
@@ -687,11 +687,11 @@ class ContentManagementService {
       );
 
       if (kDebugMode) {
-        print('Media removed from gallery: $mediaId <- $galleryId');
+        debugPrint('Media removed from gallery: $mediaId <- $galleryId');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка удаления медиа из галереи: $e');
+        debugPrint('Ошибка удаления медиа из галереи: $e');
       }
       rethrow;
     }
@@ -715,7 +715,7 @@ class ContentManagementService {
       return snapshot.docs.map(MediaContent.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения медиа по специалисту: $e');
+        debugPrint('Ошибка получения медиа по специалисту: $e');
       }
       return [];
     }
@@ -735,7 +735,7 @@ class ContentManagementService {
       return snapshot.docs.map(ContentGallery.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения галерей по специалисту: $e');
+        debugPrint('Ошибка получения галерей по специалисту: $e');
       }
       return [];
     }
@@ -760,11 +760,11 @@ class ContentManagementService {
       _mediaCache.remove(mediaId);
 
       if (kDebugMode) {
-        print('Media deleted: $mediaId');
+        debugPrint('Media deleted: $mediaId');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка удаления медиа: $e');
+        debugPrint('Ошибка удаления медиа: $e');
       }
       rethrow;
     }
@@ -785,11 +785,11 @@ class ContentManagementService {
       _galleryCache.remove(galleryId);
 
       if (kDebugMode) {
-        print('Gallery deleted: $galleryId');
+        debugPrint('Gallery deleted: $galleryId');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка удаления галереи: $e');
+        debugPrint('Ошибка удаления галереи: $e');
       }
       rethrow;
     }
@@ -851,11 +851,11 @@ class ContentManagementService {
       }
 
       if (kDebugMode) {
-        print('Loaded ${_mediaCache.length} media items');
+        debugPrint('Loaded ${_mediaCache.length} media items');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки кэша медиа: $e');
+        debugPrint('Ошибка загрузки кэша медиа: $e');
       }
     }
   }
@@ -871,11 +871,11 @@ class ContentManagementService {
       }
 
       if (kDebugMode) {
-        print('Loaded ${_galleryCache.length} galleries');
+        debugPrint('Loaded ${_galleryCache.length} galleries');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки кэша галерей: $e');
+        debugPrint('Ошибка загрузки кэша галерей: $e');
       }
     }
   }
@@ -891,11 +891,11 @@ class ContentManagementService {
       }
 
       if (kDebugMode) {
-        print('Loaded ${_processingCache.length} processing tasks');
+        debugPrint('Loaded ${_processingCache.length} processing tasks');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки кэша обработки: $e');
+        debugPrint('Ошибка загрузки кэша обработки: $e');
       }
     }
   }

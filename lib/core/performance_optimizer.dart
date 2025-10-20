@@ -185,7 +185,7 @@ class PerformanceOptimizer {
 
   /// Оптимизация Firebase запросов
   dynamic optimizeFirebaseQuery(
-    query, {
+    dynamic query, {
     int? limit,
     bool useCache = true,
   }) {

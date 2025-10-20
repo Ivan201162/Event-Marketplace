@@ -114,10 +114,9 @@ final specialistsProvider = FutureProvider.family<List<Specialist>, String>(
 );
 
 /// Провайдер для пагинированной загрузки специалистов (мигрирован с StateNotifierProvider)
-final paginatedSpecialistsProvider = NotifierProvider.family<
-    PaginatedSpecialistsNotifier,
-    AsyncValue<List<Specialist>>,
-    String>((ref, category) => PaginatedSpecialistsNotifier(category));
+final paginatedSpecialistsProvider =
+    NotifierProvider.family<PaginatedSpecialistsNotifier, AsyncValue<List<Specialist>>, String>(
+        (ref, category) => PaginatedSpecialistsNotifier(category));
 
 /// Провайдер для получения уникальных городов специалистов по категории
 final specialistCitiesProvider = FutureProvider.family<List<String>, String>((ref, category) async {
@@ -193,7 +192,7 @@ class PaginatedSpecialistsNotifier extends Notifier<AsyncValue<List<Specialist>>
     loadSpecialists();
     return const AsyncValue.loading();
   }
-  
+
   String get category => ref.argument;
 
   static const int _pageSize = 8;
@@ -305,7 +304,7 @@ class PaginatedSpecialistsNotifier extends Notifier<AsyncValue<List<Specialist>>
     if (filters.searchQuery != null && filters.searchQuery!.isNotEmpty) {
       final query = filters.searchQuery!.toLowerCase();
       final fullName = '${specialist.firstName ?? ''} ${specialist.lastName ?? ''}'.toLowerCase();
-      final city = specialist.city?.toLowerCase() ?? '';
+      final city = specialist.city.toLowerCase() ?? '';
 
       if (!fullName.contains(query) && !city.contains(query)) {
         return false;

@@ -25,7 +25,7 @@ class TypingService {
         'lastActivity': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
-      print('Ошибка начала индикации печатания: $e');
+      debugPrint('Ошибка начала индикации печатания: $e');
     }
   }
 
@@ -42,7 +42,7 @@ class TypingService {
           .doc(userId)
           .delete();
     } catch (e) {
-      print('Ошибка остановки индикации печатания: $e');
+      debugPrint('Ошибка остановки индикации печатания: $e');
     }
   }
 
@@ -68,7 +68,7 @@ class TypingService {
         'lastActivity': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
-      print('Ошибка обновления активности печатания: $e');
+      debugPrint('Ошибка обновления активности печатания: $e');
     }
   }
 
@@ -89,7 +89,7 @@ class TypingService {
       }
       await batch.commit();
     } catch (e) {
-      print('Ошибка очистки старых индикаторов печатания: $e');
+      debugPrint('Ошибка очистки старых индикаторов печатания: $e');
     }
   }
 

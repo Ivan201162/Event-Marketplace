@@ -58,15 +58,19 @@ class MediaUploadState {
       );
 }
 
-/// Провайдер состояния загрузки медиафайлов
-final mediaUploadStateProvider = StateNotifierProvider<MediaUploadNotifier, MediaUploadState>(
-  (ref) => MediaUploadNotifier(ref.read(mediaServiceProvider)),
+/// Провайдер состояния загрузки медиафайлов (мигрирован с StateNotifierProvider)
+final mediaUploadStateProvider = NotifierProvider<MediaUploadNotifier, MediaUploadState>(
+  () => MediaUploadNotifier(),
 );
 
-/// Нотификатор для управления загрузкой медиафайлов
-class MediaUploadNotifier extends StateNotifier<MediaUploadState> {
-  MediaUploadNotifier(this._mediaService) : super(const MediaUploadState());
-  final MediaService _mediaService;
+/// Нотификатор для управления загрузкой медиафайлов (мигрирован с StateNotifier)
+class MediaUploadNotifier extends Notifier<MediaUploadState> {
+  @override
+  MediaUploadState build() {
+    return const MediaUploadState();
+  }
+
+  MediaService get _mediaService => ref.read(mediaServiceProvider);
 
   /// Загрузить фото из галереи
   Future<void> uploadPhotoFromGallery({

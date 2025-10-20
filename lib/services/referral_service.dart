@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/referral_system.dart';
@@ -39,10 +38,10 @@ class ReferralService {
 
       await _firestore.collection('referral_codes').doc(id).set(referralCode.toMap());
 
-      debugPrint('INFO: [ReferralService] Created referral code: $code for user: $userId');
+      debugdebugPrint('INFO: [ReferralService] Created referral code: $code for user: $userId');
       return referralCode;
     } catch (e) {
-      debugPrint('ERROR: [ReferralService] Failed to create referral code: $e');
+      debugdebugPrint('ERROR: [ReferralService] Failed to create referral code: $e');
       rethrow;
     }
   }
@@ -62,7 +61,7 @@ class ReferralService {
       }
       return null;
     } catch (e) {
-      debugPrint('ERROR: [ReferralService] Failed to get user referral code: $e');
+      debugdebugPrint('ERROR: [ReferralService] Failed to get user referral code: $e');
       return null;
     }
   }
@@ -118,10 +117,10 @@ class ReferralService {
         'usageCount': FieldValue.increment(1),
       });
 
-      debugPrint('INFO: [ReferralService] Referral created: $referralId');
+      debugdebugPrint('INFO: [ReferralService] Referral created: $referralId');
       return referral;
     } catch (e) {
-      debugPrint('ERROR: [ReferralService] Failed to use referral code: $e');
+      debugdebugPrint('ERROR: [ReferralService] Failed to use referral code: $e');
       rethrow;
     }
   }
@@ -150,9 +149,9 @@ class ReferralService {
       // Начисляем бонусы
       await _applyReferralBonuses(referral);
 
-      debugPrint('INFO: [ReferralService] Referral completed: $referralId');
+      debugdebugPrint('INFO: [ReferralService] Referral completed: $referralId');
     } catch (e) {
-      debugPrint('ERROR: [ReferralService] Failed to complete referral: $e');
+      debugdebugPrint('ERROR: [ReferralService] Failed to complete referral: $e');
       rethrow;
     }
   }
@@ -199,9 +198,9 @@ class ReferralService {
       await _updateReferralStats(referral.referrerId);
       await _updateReferralStats(referral.referredId);
 
-      debugPrint('INFO: [ReferralService] Bonuses applied for referral: ${referral.id}');
+      debugdebugPrint('INFO: [ReferralService] Bonuses applied for referral: ${referral.id}');
     } catch (e) {
-      debugPrint('ERROR: [ReferralService] Failed to apply referral bonuses: $e');
+      debugdebugPrint('ERROR: [ReferralService] Failed to apply referral bonuses: $e');
       rethrow;
     }
   }
@@ -251,9 +250,9 @@ class ReferralService {
 
       await _firestore.collection('referral_stats').doc(userId).set(stats.toMap());
 
-      debugPrint('INFO: [ReferralService] Stats updated for user: $userId');
+      debugdebugPrint('INFO: [ReferralService] Stats updated for user: $userId');
     } catch (e) {
-      debugPrint('ERROR: [ReferralService] Failed to update referral stats: $e');
+      debugdebugPrint('ERROR: [ReferralService] Failed to update referral stats: $e');
     }
   }
 
@@ -267,7 +266,7 @@ class ReferralService {
       }
       return null;
     } catch (e) {
-      debugPrint('ERROR: [ReferralService] Failed to get user referral stats: $e');
+      debugdebugPrint('ERROR: [ReferralService] Failed to get user referral stats: $e');
       return null;
     }
   }
@@ -287,7 +286,7 @@ class ReferralService {
           .where((reward) => reward.canBeUsed)
           .toList();
     } catch (e) {
-      debugPrint('ERROR: [ReferralService] Failed to get user active rewards: $e');
+      debugdebugPrint('ERROR: [ReferralService] Failed to get user active rewards: $e');
       return [];
     }
   }
@@ -300,9 +299,9 @@ class ReferralService {
         'usedAt': FieldValue.serverTimestamp(),
       });
 
-      debugPrint('INFO: [ReferralService] Reward used: $rewardId');
+      debugdebugPrint('INFO: [ReferralService] Reward used: $rewardId');
     } catch (e) {
-      debugPrint('ERROR: [ReferralService] Failed to use reward: $e');
+      debugdebugPrint('ERROR: [ReferralService] Failed to use reward: $e');
       rethrow;
     }
   }
@@ -320,7 +319,7 @@ class ReferralService {
           .map((doc) => Referral.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      debugPrint('ERROR: [ReferralService] Failed to get user referrals: $e');
+      debugdebugPrint('ERROR: [ReferralService] Failed to get user referrals: $e');
       return [];
     }
   }
@@ -374,7 +373,7 @@ class ReferralService {
 
       return achievements;
     } catch (e) {
-      debugPrint('ERROR: [ReferralService] Failed to check referral levels: $e');
+      debugdebugPrint('ERROR: [ReferralService] Failed to check referral levels: $e');
       return [];
     }
   }

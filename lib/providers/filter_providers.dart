@@ -4,10 +4,9 @@ import '../models/price_range.dart';
 import '../models/specialist_filters_simple.dart';
 import '../services/mock_data_service.dart';
 
-/// Провайдер для состояния фильтров специалистов
-final specialistFiltersProvider =
-    StateNotifierProvider<SpecialistFiltersNotifier, SpecialistFilters>(
-  (ref) => SpecialistFiltersNotifier(),
+/// Провайдер для состояния фильтров специалистов (мигрирован с StateNotifierProvider)
+final specialistFiltersProvider = NotifierProvider<SpecialistFiltersNotifier, SpecialistFilters>(
+  () => SpecialistFiltersNotifier(),
 );
 
 /// Провайдер для отфильтрованных специалистов
@@ -37,9 +36,12 @@ class FilterParams {
   int get hashCode => Object.hash(categoryId, filters);
 }
 
-/// Notifier для управления фильтрами специалистов
-class SpecialistFiltersNotifier extends StateNotifier<SpecialistFilters> {
-  SpecialistFiltersNotifier() : super(const SpecialistFilters());
+/// Notifier для управления фильтрами специалистов (мигрирован с StateNotifier)
+class SpecialistFiltersNotifier extends Notifier<SpecialistFilters> {
+  @override
+  SpecialistFilters build() {
+    return const SpecialistFilters();
+  }
 
   /// Обновить фильтры
   void updateFilters(SpecialistFilters newFilters) {

@@ -38,11 +38,13 @@ class FeedComment {
       userAvatar: map['userAvatar']?.toString(),
       content: map['content']?.toString() ?? '',
       createdAt: DateTime.tryParse(map['createdAt']?.toString() ?? '') ?? DateTime.now(),
-      updatedAt: map['updatedAt'] != null 
-          ? DateTime.tryParse(map['updatedAt']?.toString() ?? '') 
-          : null,
+      updatedAt:
+          map['updatedAt'] != null ? DateTime.tryParse(map['updatedAt']?.toString() ?? '') : null,
       likes: (map['likes'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-      replies: (map['replies'] as List<dynamic>?)?.map((e) => FeedComment.fromMap(e as Map<String, dynamic>)).toList() ?? [],
+      replies: (map['replies'] as List<dynamic>?)
+              ?.map((e) => FeedComment.fromMap(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       parentCommentId: map['parentCommentId']?.toString(),
       isEdited: map['isEdited'] as bool? ?? false,
       metadata: map['metadata'] as Map<String, dynamic>?,

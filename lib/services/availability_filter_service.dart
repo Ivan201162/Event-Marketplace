@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 
 import '../core/feature_flags.dart';
 import '../models/booking.dart';
@@ -216,7 +215,7 @@ class AvailabilityFilterService {
         end,
       );
     } catch (e) {
-      debugPrint('Error getting specialist availability: $e');
+      debugdebugPrint('Error getting specialist availability: $e');
       return _createMockAvailability(specialistId);
     }
   }
@@ -263,7 +262,7 @@ class AvailabilityFilterService {
 
       return availabilityList;
     } catch (e) {
-      debugPrint('Error getting available specialists: $e');
+      debugdebugPrint('Error getting available specialists: $e');
       return _createMockSpecialistsList();
     }
   }
@@ -312,7 +311,7 @@ class AvailabilityFilterService {
 
       return busyDates;
     } catch (e) {
-      debugPrint('Error getting busy dates: $e');
+      debugdebugPrint('Error getting busy dates: $e');
       return _createMockBusyDates();
     }
   }
@@ -378,7 +377,7 @@ class AvailabilityFilterService {
         duration ?? const Duration(hours: 1),
       );
     } catch (e) {
-      debugPrint('Error getting available time slots: $e');
+      debugdebugPrint('Error getting available time slots: $e');
       return _createMockTimeSlots(date);
     }
   }

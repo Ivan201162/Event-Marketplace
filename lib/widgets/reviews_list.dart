@@ -1,339 +1,329 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shimmer/shimmer.dart';
 
-import '../models/user_profile.dart';
-import '../providers/user_profile_provider.dart';
+/// Widget for displaying specialist reviews
+class ReviewsList extends ConsumerStatefulWidget {
+  final String specialistId;
+  final VoidCallback onWriteReview;
 
-/// Виджет для отображения списка отзывов специалиста
-class ReviewsList extends ConsumerWidget {
   const ReviewsList({
     super.key,
     required this.specialistId,
+    required this.onWriteReview,
   });
-  final String specialistId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final reviewsAsync = ref.watch(specialistReviewsProvider(specialistId));
+  ConsumerState<ReviewsList> createState() => _ReviewsListState();
+}
 
-    return reviewsAsync.when(
-      data: (reviews) => _buildReviewsList(context, reviews),
-      loading: _buildLoadingList,
-      error: (error, stack) => _buildErrorWidget(context, error.toString()),
-    );
-  }
+class _ReviewsListState extends ConsumerState<ReviewsList> {
+  @override
+  Widget build(BuildContext context) {
+    // Mock reviews data - in real app this would come from a provider
+    final reviews = _getMockReviews();
 
-  Widget _buildReviewsList(BuildContext context, List<UserReview> reviews) {
-    if (reviews.isEmpty) {
-      return _buildEmptyState(context);
-    }
-
-    return RefreshIndicator(
-      onRefresh: () async {
-        // TODO(developer): Обновить отзывы
-      },
-      child: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: reviews.length,
-        itemBuilder: (context, index) {
-          final review = reviews[index];
-          return _buildReviewItem(context, review);
-        },
-      ),
-    );
-  }
-
-  Widget _buildReviewItem(BuildContext context, UserReview review) => Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.1),
-              spreadRadius: 1,
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Заголовок отзыва
-            Row(
-              children: [
-                // Аватар заказчика
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.grey[200],
-                  backgroundImage: review.customerAvatarUrl != null
-                      ? CachedNetworkImageProvider(review.customerAvatarUrl!)
-                      : null,
-                  child:
-                      review.customerAvatarUrl == null ? const Icon(Icons.person, size: 20) : null,
-                ),
-                const SizedBox(width: 12),
-                // Информация о заказчике
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        review.customerName,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                      Text(
-                        _formatTimestamp(review.timestamp),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.grey[600],
-                            ),
-                      ),
-                    ],
-                  ),
-                ),
-                // Рейтинг
-                _buildRatingStars(review.rating),
-              ],
-            ),
-            const SizedBox(height: 12),
-            // Текст отзыва
-            if (review.comment.isNotEmpty)
-              Text(
-                review.comment,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            // Кнопка "Полезно"
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                TextButton.icon(
-                  onPressed: () => _markAsHelpful(context, review.id),
-                  icon: const Icon(Icons.thumb_up_outlined, size: 16),
-                  label: const Text('Полезно'),
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    minimumSize: Size.zero,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                TextButton.icon(
-                  onPressed: () => _reportReview(context, review.id),
-                  icon: const Icon(Icons.flag_outlined, size: 16),
-                  label: const Text('Пожаловаться'),
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    minimumSize: Size.zero,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildRatingStars(double rating) => Row(
-        children: List.generate(
-          5,
-          (index) => Icon(
-            index < rating ? Icons.star : Icons.star_border,
-            color: Colors.amber,
-            size: 20,
-          ),
-        ),
-      );
-
-  Widget _buildLoadingList() => ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: 5,
-        itemBuilder: (context, index) => Container(
-          margin: const EdgeInsets.only(bottom: 16),
+    return Column(
+      children: [
+        // Header with write review button
+        Padding(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withValues(alpha: 0.1),
-                spreadRadius: 1,
-                blurRadius: 4,
-                offset: const Offset(0, 2),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Отзывы (${reviews.length})',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              ElevatedButton.icon(
+                onPressed: widget.onWriteReview,
+                icon: const Icon(Icons.edit, size: 16),
+                label: const Text('Написать отзыв'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                ),
               ),
             ],
           ),
-          child: Shimmer.fromColors(
-            baseColor: Colors.grey[300]!,
-            highlightColor: Colors.grey[100]!,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 120,
-                            height: 16,
-                            color: Colors.white,
-                          ),
-                          const SizedBox(height: 4),
-                          Container(
-                            width: 80,
-                            height: 12,
-                            color: Colors.white,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: 100,
-                      height: 20,
-                      color: Colors.white,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Container(
-                  width: double.infinity,
-                  height: 16,
-                  color: Colors.white,
-                ),
-                const SizedBox(height: 4),
-                Container(
-                  width: 200,
-                  height: 16,
-                  color: Colors.white,
-                ),
-              ],
-            ),
-          ),
         ),
-      );
-
-  Widget _buildEmptyState(BuildContext context) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.star_outline,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Пока нет отзывов',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: Colors.grey[600],
-                  ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Когда клиенты оставят отзывы,\nони появятся здесь',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[500],
-                  ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+        
+        // Reviews list
+        Expanded(
+          child: reviews.isEmpty
+              ? _buildEmptyState()
+              : ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: reviews.length,
+                  itemBuilder: (context, index) {
+                    final review = reviews[index];
+                    return _buildReviewCard(review);
+                  },
+                ),
         ),
-      );
-
-  Widget _buildErrorWidget(BuildContext context, String error) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Ошибка загрузки отзывов',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: Colors.grey[600],
-                  ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[500],
-                  ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      );
-
-  String _formatTimestamp(DateTime timestamp) {
-    final now = DateTime.now();
-    final difference = now.difference(timestamp);
-
-    if (difference.inDays < 1) {
-      return 'Сегодня';
-    } else if (difference.inDays < 7) {
-      return '${difference.inDays} дн. назад';
-    } else if (difference.inDays < 30) {
-      final weeks = (difference.inDays / 7).floor();
-      return '$weeks нед. назад';
-    } else if (difference.inDays < 365) {
-      final months = (difference.inDays / 30).floor();
-      return '$months мес. назад';
-    } else {
-      final years = (difference.inDays / 365).floor();
-      return '$years г. назад';
-    }
-  }
-
-  void _markAsHelpful(BuildContext context, String reviewId) {
-    // TODO(developer): Реализовать отметку отзыва как полезного
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Отзыв отмечен как полезный')),
+      ],
     );
   }
 
-  void _reportReview(BuildContext context, String reviewId) {
-    // TODO(developer): Реализовать жалобу на отзыв
-    showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Пожаловаться на отзыв'),
-        content: const Text('Выберите причину жалобы:'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
+  Widget _buildEmptyState() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.rate_review_outlined, size: 80, color: Colors.grey),
+          SizedBox(height: 16),
+          Text(
+            'Пока нет отзывов',
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.grey,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Жалоба отправлена')),
-              );
-            },
-            child: const Text('Отправить'),
+          SizedBox(height: 8),
+          Text(
+            'Будьте первым, кто оставит отзыв!',
+            style: TextStyle(color: Colors.grey),
           ),
         ],
       ),
     );
   }
+
+  Widget _buildReviewCard(ReviewData review) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header with user info and rating
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 20,
+                  backgroundImage: review.userAvatarUrl != null
+                      ? NetworkImage(review.userAvatarUrl!)
+                      : null,
+                  child: review.userAvatarUrl == null
+                      ? Text(review.userName.substring(0, 1))
+                      : null,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        review.userName,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        _formatDate(review.date),
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                _buildRatingStars(review.rating),
+              ],
+            ),
+            
+            const SizedBox(height: 12),
+            
+            // Review text
+            Text(
+              review.text,
+              style: const TextStyle(fontSize: 14),
+            ),
+            
+            if (review.images.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              _buildReviewImages(review.images),
+            ],
+            
+            const SizedBox(height: 12),
+            
+            // Actions
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    review.isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
+                    color: review.isLiked ? Colors.blue : Colors.grey,
+                    size: 20,
+                  ),
+                  onPressed: () {
+                    // TODO: Toggle like
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Лайк пока не реализован')),
+                    );
+                  },
+                ),
+                Text(
+                  '${review.likesCount}',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 12,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                IconButton(
+                  icon: const Icon(Icons.reply, size: 20),
+                  onPressed: () {
+                    // TODO: Reply to review
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Ответ на отзыв пока не реализован')),
+                    );
+                  },
+                ),
+                const Text(
+                  'Ответить',
+                  style: TextStyle(fontSize: 12),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRatingStars(int rating) {
+    return Row(
+      children: List.generate(5, (index) {
+        return Icon(
+          index < rating ? Icons.star : Icons.star_border,
+          color: Colors.orange,
+          size: 16,
+        );
+      }),
+    );
+  }
+
+  Widget _buildReviewImages(List<String> images) {
+    return SizedBox(
+      height: 80,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: images.length,
+        itemBuilder: (context, index) {
+          return Container(
+            margin: const EdgeInsets.only(right: 8),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(
+                images[index],
+                width: 80,
+                height: 80,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  width: 80,
+                  height: 80,
+                  color: Colors.grey[300],
+                  child: const Icon(Icons.broken_image),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+    
+    if (difference.inDays == 0) {
+      return 'Сегодня';
+    } else if (difference.inDays == 1) {
+      return 'Вчера';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays} дн. назад';
+    } else {
+      return '${date.day}.${date.month}.${date.year}';
+    }
+  }
+
+  List<ReviewData> _getMockReviews() {
+    return [
+      ReviewData(
+        id: '1',
+        userId: 'user1',
+        userName: 'Анна Петрова',
+        specialistId: widget.specialistId,
+        rating: 5,
+        text: 'Отличный специалист! Очень профессионально подошел к организации нашего мероприятия. Все прошло идеально, гости были в восторге. Рекомендую!',
+        date: DateTime.now().subtract(const Duration(days: 2)),
+        likesCount: 3,
+        isLiked: false,
+        images: [],
+      ),
+      ReviewData(
+        id: '2',
+        userId: 'user2',
+        userName: 'Михаил Иванов',
+        specialistId: widget.specialistId,
+        rating: 4,
+        text: 'Хорошая работа, но были небольшие задержки. В целом доволен результатом.',
+        date: DateTime.now().subtract(const Duration(days: 5)),
+        likesCount: 1,
+        isLiked: true,
+        images: [],
+      ),
+      ReviewData(
+        id: '3',
+        userId: 'user3',
+        userName: 'Елена Смирнова',
+        specialistId: widget.specialistId,
+        rating: 5,
+        text: 'Потрясающий профессионал! Организовал свадьбу моей мечты. Каждая деталь была продумана до мелочей. Спасибо большое!',
+        date: DateTime.now().subtract(const Duration(days: 10)),
+        likesCount: 7,
+        isLiked: false,
+        images: [
+          'https://picsum.photos/200/200?random=1',
+          'https://picsum.photos/200/200?random=2',
+        ],
+      ),
+    ];
+  }
+}
+
+/// Data class for review information
+class ReviewData {
+  final String id;
+  final String userId;
+  final String userName;
+  final String? userAvatarUrl;
+  final String specialistId;
+  final int rating;
+  final String text;
+  final DateTime date;
+  final int likesCount;
+  final bool isLiked;
+  final List<String> images;
+
+  ReviewData({
+    required this.id,
+    required this.userId,
+    required this.userName,
+    this.userAvatarUrl,
+    required this.specialistId,
+    required this.rating,
+    required this.text,
+    required this.date,
+    required this.likesCount,
+    required this.isLiked,
+    required this.images,
+  });
 }

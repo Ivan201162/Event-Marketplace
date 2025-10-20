@@ -15,10 +15,10 @@ class NotificationBadgeWidget extends StatelessWidget {
   final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) => StreamBuilder<int>(
-        stream: NotificationService.getUnreadCount(userId),
-        builder: (context, snapshot) {
-          final unreadCount = snapshot.data ?? 0;
+  Widget build(BuildContext context) => FutureBuilder<int>(
+        future: NotificationService.getUnreadCount(userId),
+        builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+          final int unreadCount = snapshot.data ?? 0;
 
           return GestureDetector(
             onTap: onTap,

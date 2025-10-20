@@ -1,263 +1,302 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+
 import '../models/booking.dart';
 
-/// Сервис для работы с заявками и бронированиями
+/// Service for managing bookings
 class BookingService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// Создать новую заявку
-  Future<String> createBooking({
-    required String customerId,
-    required String specialistId,
-    required DateTime eventDate,
-    required double totalPrice,
-    required double prepayment,
-    String message = '',
-    String? title,
-    String? location,
-    String? eventTime,
-    String? customerName,
-    String? customerPhone,
-    String? customerEmail,
-    String? specialistName,
-  }) async {
+  /// Get bookings for a specialist
+  Future<List<Booking>> getSpecialistBookings(String specialistId) async {
     try {
-      final bookingData = {
-        'customerId': customerId,
-        'specialistId': specialistId,
-        'eventDate': Timestamp.fromDate(eventDate),
-        'totalPrice': totalPrice,
-        'prepayment': prepayment,
-        'status': BookingStatus.pending.name,
-        'message': message,
-        'title': title,
-        'location': location,
-        'eventTime': eventTime,
-        'customerName': customerName,
-        'customerPhone': customerPhone,
-        'customerEmail': customerEmail,
-        'specialistName': specialistName,
-        'createdAt': Timestamp.fromDate(DateTime.now()),
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      };
-
-      final docRef = await _firestore.collection('bookings').add(bookingData);
-      return docRef.id;
-    } on Exception catch (e) {
-      throw Exception('Ошибка создания заявки: $e');
-    }
-  }
-
-  /// Обновить статус заявки
-  Future<void> updateBookingStatus(
-    String bookingId,
-    String newStatus,
-  ) async {
-    try {
-      await _firestore.collection('bookings').doc(bookingId).update({
-        'status': newStatus,
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      });
-    } on Exception catch (e) {
-      throw Exception('Ошибка обновления статуса заявки: $e');
-    }
-  }
-
-  /// Обновить заявку
-  Future<void> updateBooking(
-    String bookingId,
-    Map<String, dynamic> updates,
-  ) async {
-    try {
-      updates['updatedAt'] = Timestamp.fromDate(DateTime.now());
-      await _firestore.collection('bookings').doc(bookingId).update(updates);
-    } on Exception catch (e) {
-      throw Exception('Ошибка обновления заявки: $e');
-    }
-  }
-
-  /// Получить заявку по ID
-  Future<Booking?> getBooking(String bookingId) async {
-    try {
-      final doc = await _firestore.collection('bookings').doc(bookingId).get();
-      if (doc.exists) {
-        return Booking.fromDocument(doc);
-      }
-      return null;
-    } on Exception catch (e) {
-      throw Exception('Ошибка получения заявки: $e');
-    }
-  }
-
-  /// Получить заявки заказчика
-  Stream<List<Booking>> getCustomerBookings(String customerId) => _firestore
-      .collection('bookings')
-      .where('customerId', isEqualTo: customerId)
-      .orderBy('createdAt', descending: true)
-      .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map(Booking.fromDocument).toList(),
-      );
-
-  /// Получить заявки специалиста
-  Stream<List<Booking>> getSpecialistBookings(String specialistId) => _firestore
-      .collection('bookings')
-      .where('specialistId', isEqualTo: specialistId)
-      .orderBy('createdAt', descending: true)
-      .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map(Booking.fromDocument).toList(),
-      );
-
-  /// Получить заявки по статусу
-  Stream<List<Booking>> getBookingsByStatus(BookingStatus status) => _firestore
-      .collection('bookings')
-      .where('status', isEqualTo: status.name)
-      .orderBy('createdAt', descending: true)
-      .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map(Booking.fromDocument).toList(),
-      );
-
-  /// Получить заявки заказчика по статусу
-  Stream<List<Booking>> getCustomerBookingsByStatus(
-    String customerId,
-    BookingStatus status,
-  ) =>
-      _firestore
-          .collection('bookings')
-          .where('customerId', isEqualTo: customerId)
-          .where('status', isEqualTo: status.name)
-          .orderBy('createdAt', descending: true)
-          .snapshots()
-          .map(
-            (snapshot) => snapshot.docs.map(Booking.fromDocument).toList(),
-          );
-
-  /// Получить заявки специалиста по статусу
-  Stream<List<Booking>> getSpecialistBookingsByStatus(
-    String specialistId,
-    BookingStatus status,
-  ) =>
-      _firestore
+      final querySnapshot = await _firestore
           .collection('bookings')
           .where('specialistId', isEqualTo: specialistId)
-          .where('status', isEqualTo: status.name)
-          .orderBy('createdAt', descending: true)
-          .snapshots()
-          .map(
-            (snapshot) => snapshot.docs.map(Booking.fromDocument).toList(),
-          );
+          .orderBy('date', descending: false)
+          .get();
 
-  /// Удалить заявку
-  Future<void> deleteBooking(String bookingId) async {
-    try {
-      await _firestore.collection('bookings').doc(bookingId).delete();
-    } on Exception catch (e) {
-      throw Exception('Ошибка удаления заявки: $e');
+      return querySnapshot.docs
+          .map((doc) => Booking.fromFirestore(doc))
+          .toList();
+    } catch (e) {
+      debugPrint('Error getting specialist bookings: $e');
+      return [];
     }
   }
 
-  /// Подтвердить заявку
-  Future<void> confirmBooking(String bookingId) async {
-    await updateBookingStatus(bookingId, 'Подтверждено');
-  }
-
-  /// Отклонить заявку
-  Future<void> rejectBooking(String bookingId) async {
-    await updateBookingStatus(bookingId, 'Отклонено');
-  }
-
-  /// Отменить заявку
-  Future<void> cancelBooking(String bookingId) async {
-    await updateBookingStatus(bookingId, 'Отменено');
-  }
-
-  /// Завершить заявку
-  Future<void> completeBooking(String bookingId) async {
-    await updateBookingStatus(bookingId, 'Завершено');
-  }
-
-  /// Получить статистику заявок для пользователя
-  Future<Map<String, int>> getBookingStats(
-    String userId, {
-    bool isSpecialist = false,
-  }) async {
+  /// Get bookings for a client
+  Future<List<Booking>> getClientBookings(String clientId) async {
     try {
-      final field = isSpecialist ? 'specialistId' : 'customerId';
-      final snapshot =
-          await _firestore.collection('bookings').where(field, isEqualTo: userId).get();
+      final querySnapshot = await _firestore
+          .collection('bookings')
+          .where('clientId', isEqualTo: clientId)
+          .orderBy('date', descending: false)
+          .get();
+
+      return querySnapshot.docs
+          .map((doc) => Booking.fromFirestore(doc))
+          .toList();
+    } catch (e) {
+      debugPrint('Error getting client bookings: $e');
+      return [];
+    }
+  }
+
+  /// Get bookings by status
+  Future<List<Booking>> getBookingsByStatus(BookingStatus status) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('bookings')
+          .where('status', isEqualTo: status.name)
+          .orderBy('date', descending: false)
+          .get();
+
+      return querySnapshot.docs
+          .map((doc) => Booking.fromFirestore(doc))
+          .toList();
+    } catch (e) {
+      debugPrint('Error getting bookings by status: $e');
+      return [];
+    }
+  }
+
+  /// Get booking by ID
+  Future<Booking?> getBookingById(String bookingId) async {
+    try {
+      final doc = await _firestore
+          .collection('bookings')
+          .doc(bookingId)
+          .get();
+
+      if (doc.exists) {
+        return Booking.fromFirestore(doc);
+      }
+      return null;
+    } catch (e) {
+      debugPrint('Error getting booking by ID: $e');
+      return null;
+    }
+  }
+
+  /// Create a new booking
+  Future<String?> createBooking(Booking booking) async {
+    try {
+      final docRef = await _firestore
+          .collection('bookings')
+          .add(booking.toFirestore());
+
+      debugPrint('Booking created with ID: ${docRef.id}');
+      return docRef.id;
+    } catch (e) {
+      debugPrint('Error creating booking: $e');
+      return null;
+    }
+  }
+
+  /// Update booking status
+  Future<bool> updateBookingStatus(String bookingId, BookingStatus status) async {
+    try {
+      await _firestore
+          .collection('bookings')
+          .doc(bookingId)
+          .update({
+        'status': status.name,
+        'updatedAt': Timestamp.now(),
+      });
+
+      debugPrint('Booking status updated to: ${status.name}');
+      return true;
+    } catch (e) {
+      debugPrint('Error updating booking status: $e');
+      return false;
+    }
+  }
+
+  /// Update booking
+  Future<bool> updateBooking(Booking booking) async {
+    try {
+      await _firestore
+          .collection('bookings')
+          .doc(booking.id)
+          .update(booking.toFirestore());
+
+      debugPrint('Booking updated: ${booking.id}');
+      return true;
+    } catch (e) {
+      debugPrint('Error updating booking: $e');
+      return false;
+    }
+  }
+
+  /// Delete booking
+  Future<bool> deleteBooking(String bookingId) async {
+    try {
+      await _firestore
+          .collection('bookings')
+          .doc(bookingId)
+          .delete();
+
+      debugPrint('Booking deleted: $bookingId');
+      return true;
+    } catch (e) {
+      debugPrint('Error deleting booking: $e');
+      return false;
+    }
+  }
+
+  /// Get bookings stream for specialist
+  Stream<List<Booking>> getSpecialistBookingsStream(String specialistId) {
+    return _firestore
+        .collection('bookings')
+        .where('specialistId', isEqualTo: specialistId)
+        .orderBy('date', descending: false)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Booking.fromFirestore(doc))
+            .toList());
+  }
+
+  /// Get bookings stream for client
+  Stream<List<Booking>> getClientBookingsStream(String clientId) {
+    return _firestore
+        .collection('bookings')
+        .where('clientId', isEqualTo: clientId)
+        .orderBy('date', descending: false)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Booking.fromFirestore(doc))
+            .toList());
+  }
+
+  /// Get bookings stream by status
+  Stream<List<Booking>> getBookingsByStatusStream(BookingStatus status) {
+    return _firestore
+        .collection('bookings')
+        .where('status', isEqualTo: status.name)
+        .orderBy('date', descending: false)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Booking.fromFirestore(doc))
+            .toList());
+  }
+
+  /// Get booking statistics
+  Future<Map<String, int>> getBookingStats(String specialistId) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('bookings')
+          .where('specialistId', isEqualTo: specialistId)
+          .get();
 
       final stats = <String, int>{
         'total': 0,
         'pending': 0,
         'confirmed': 0,
-        'rejected': 0,
         'completed': 0,
         'cancelled': 0,
       };
 
-      for (final doc in snapshot.docs) {
+      for (final doc in querySnapshot.docs) {
         final data = doc.data();
-        final status = data['status'] as String?;
-
+        final status = data['status'] as String;
+        
         stats['total'] = (stats['total'] ?? 0) + 1;
-        if (status != null && stats.containsKey(status)) {
-          stats[status] = (stats[status] ?? 0) + 1;
-        }
+        stats[status] = (stats[status] ?? 0) + 1;
       }
 
       return stats;
-    } on Exception catch (e) {
-      throw Exception('Ошибка получения статистики заявок: $e');
+    } catch (e) {
+      debugPrint('Error getting booking stats: $e');
+      return {};
     }
   }
 
-  /// Проверить, есть ли конфликтующие заявки
-  Future<bool> hasBookingConflict(
+  /// Check if time slot is available
+  Future<bool> isTimeSlotAvailable(
     String specialistId,
-    DateTime eventDate,
+    DateTime date,
+    String time,
+    int duration,
   ) async {
     try {
-      final snapshot = await _firestore
+      final startTime = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        int.parse(time.split(':')[0]),
+        int.parse(time.split(':')[1]),
+      );
+
+      final endTime = startTime.add(Duration(hours: duration));
+
+      final querySnapshot = await _firestore
           .collection('bookings')
           .where('specialistId', isEqualTo: specialistId)
-          .where('eventDate', isEqualTo: Timestamp.fromDate(eventDate))
-          .where(
-        'status',
-        whereIn: [
-          BookingStatus.pending.name,
-          BookingStatus.confirmed.name,
-        ],
-      ).get();
+          .where('date', isEqualTo: Timestamp.fromDate(date))
+          .where('status', whereIn: [
+            BookingStatus.pending.name,
+            BookingStatus.confirmed.name,
+            BookingStatus.inProgress.name,
+          ])
+          .get();
 
-      return snapshot.docs.isNotEmpty;
-    } on Exception catch (e) {
-      throw Exception('Ошибка проверки конфликтов заявок: $e');
+      for (final doc in querySnapshot.docs) {
+        final data = doc.data();
+        final bookingTime = data['time'] as String;
+        final bookingDuration = data['duration'] as int;
+
+        final bookingStartTime = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          int.parse(bookingTime.split(':')[0]),
+          int.parse(bookingTime.split(':')[1]),
+        );
+
+        final bookingEndTime = bookingStartTime.add(Duration(hours: bookingDuration));
+
+        // Check for overlap
+        if (startTime.isBefore(bookingEndTime) && endTime.isAfter(bookingStartTime)) {
+          return false;
+        }
+      }
+
+      return true;
+    } catch (e) {
+      debugPrint('Error checking time slot availability: $e');
+      return false;
     }
   }
 
-  /// Получить заявки в определенном диапазоне дат
-  Stream<List<Booking>> getBookingsInDateRange(
-    String userId,
-    DateTime startDate,
-    DateTime endDate, {
-    bool isSpecialist = false,
-  }) {
-    final field = isSpecialist ? 'specialistId' : 'customerId';
+  /// Get available time slots for a date
+  Future<List<String>> getAvailableTimeSlots(
+    String specialistId,
+    DateTime date,
+  ) async {
+    try {
+      final availableSlots = <String>[];
+      final workingHours = <int>[9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
 
-    return _firestore
-        .collection('bookings')
-        .where(field, isEqualTo: userId)
-        .where(
-          'eventDate',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
-        )
-        .where('eventDate', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
-        .orderBy('eventDate')
-        .snapshots()
-        .map(
-          (snapshot) => snapshot.docs.map(Booking.fromDocument).toList(),
+      for (final hour in workingHours) {
+        final timeSlot = '${hour.toString().padLeft(2, '0')}:00';
+        
+        final isAvailable = await isTimeSlotAvailable(
+          specialistId,
+          date,
+          timeSlot,
+          1,
         );
+
+        if (isAvailable) {
+          availableSlots.add(timeSlot);
+        }
+      }
+
+      return availableSlots;
+    } catch (e) {
+      debugPrint('Error getting available time slots: $e');
+      return [];
+    }
   }
 }

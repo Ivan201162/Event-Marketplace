@@ -197,13 +197,13 @@ class _CreateTestSpecialistButtonState extends ConsumerState<CreateTestSpecialis
         reviewCount: 127,
         createdAt: now.subtract(const Duration(days: 365)),
         updatedAt: now,
-        contacts: {
+        contacts: const {
           'Телефон': '+7 (999) 123-45-67',
           'Email': 'anna.photographer@example.com',
           'Instagram': '@anna_photographer',
           'VK': 'vk.com/anna_photographer',
         },
-        servicesWithPrices: {
+        servicesWithPrices: const {
           'Свадебная фотосессия': 50000.0,
           'Портретная фотосессия': 15000.0,
           'Семейная фотосессия': 20000.0,
@@ -239,13 +239,13 @@ class _CreateTestSpecialistButtonState extends ConsumerState<CreateTestSpecialis
         reviewCount: 89,
         createdAt: now.subtract(const Duration(days: 200)),
         updatedAt: now,
-        contacts: {
+        contacts: const {
           'Телефон': '+7 (812) 555-12-34',
           'Email': 'max.videographer@example.com',
           'Instagram': '@max_videographer',
           'Telegram': '@max_video',
         },
-        servicesWithPrices: {
+        servicesWithPrices: const {
           'Свадебное видео': 80000.0,
           'Корпоративное видео': 60000.0,
           'Промо-ролик': 40000.0,
@@ -276,13 +276,13 @@ class _CreateTestSpecialistButtonState extends ConsumerState<CreateTestSpecialis
         reviewCount: 156,
         createdAt: now.subtract(const Duration(days: 500)),
         updatedAt: now,
-        contacts: {
+        contacts: const {
           'Телефон': '+7 (495) 123-45-67',
           'Email': 'dj.alexey@example.com',
           'Instagram': '@dj_alexey',
           'VK': 'vk.com/dj_alexey',
         },
-        servicesWithPrices: {
+        servicesWithPrices: const {
           'Свадебный DJ': 40000.0,
           'Корпоративный DJ': 35000.0,
           'День рождения': 25000.0,
@@ -313,13 +313,13 @@ class _CreateTestSpecialistButtonState extends ConsumerState<CreateTestSpecialis
         reviewCount: 203,
         createdAt: now.subtract(const Duration(days: 800)),
         updatedAt: now,
-        contacts: {
+        contacts: const {
           'Телефон': '+7 (495) 987-65-43',
           'Email': 'host.dmitry@example.com',
           'Instagram': '@host_dmitry',
           'VK': 'vk.com/host_dmitry',
         },
-        servicesWithPrices: {
+        servicesWithPrices: const {
           'Свадебный ведущий': 60000.0,
           'Корпоративный ведущий': 50000.0,
           'Детский праздник': 30000.0,
@@ -350,11 +350,11 @@ class _CreateTestSpecialistButtonState extends ConsumerState<CreateTestSpecialis
             'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
         createdAt: now,
         updatedAt: now,
-        contacts: {
+        contacts: const {
           'Телефон': '+7 (999) 000-00-00',
           'Email': 'test@example.com',
         },
-        servicesWithPrices: {
+        servicesWithPrices: const {
           'Тестовая услуга': 5000.0,
         },
       );

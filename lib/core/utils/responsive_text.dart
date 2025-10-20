@@ -26,18 +26,19 @@ class ResponsiveText extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final responsiveFontSize = fontSize ?? _getResponsiveFontSize(screenWidth);
-    
+
     return Text(
       text,
       style: style?.copyWith(
-        fontSize: responsiveFontSize,
-        fontWeight: fontWeight,
-        color: color,
-      ) ?? TextStyle(
-        fontSize: responsiveFontSize,
-        fontWeight: fontWeight,
-        color: color,
-      ),
+            fontSize: responsiveFontSize,
+            fontWeight: fontWeight,
+            color: color,
+          ) ??
+          TextStyle(
+            fontSize: responsiveFontSize,
+            fontWeight: fontWeight,
+            color: color,
+          ),
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,

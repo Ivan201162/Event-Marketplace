@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/revenue_analytics.dart';
@@ -38,10 +37,10 @@ class RevenueAnalyticsService {
       // Обновляем агрегированную статистику
       await _updateAggregatedStats(stats);
 
-      debugPrint(
+      debugdebugPrint(
           'INFO: [RevenueAnalyticsService] Revenue recorded: $amount $currency from $sourceType');
     } catch (e) {
-      debugPrint('ERROR: [RevenueAnalyticsService] Failed to record revenue: $e');
+      debugdebugPrint('ERROR: [RevenueAnalyticsService] Failed to record revenue: $e');
     }
   }
 
@@ -77,7 +76,7 @@ class RevenueAnalyticsService {
         'lastUpdated': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
     } catch (e) {
-      debugPrint('ERROR: [RevenueAnalyticsService] Failed to update aggregated stats: $e');
+      debugdebugPrint('ERROR: [RevenueAnalyticsService] Failed to update aggregated stats: $e');
     }
   }
 
@@ -187,10 +186,10 @@ class RevenueAnalyticsService {
           .doc('${period.toString().split('.').last}_${_getDateKey(now)}')
           .set(dashboard.toMap());
 
-      debugPrint('INFO: [RevenueAnalyticsService] Revenue dashboard generated for $period');
+      debugdebugPrint('INFO: [RevenueAnalyticsService] Revenue dashboard generated for $period');
       return dashboard;
     } catch (e) {
-      debugPrint('ERROR: [RevenueAnalyticsService] Failed to get revenue dashboard: $e');
+      debugdebugPrint('ERROR: [RevenueAnalyticsService] Failed to get revenue dashboard: $e');
       rethrow;
     }
   }
@@ -227,7 +226,7 @@ class RevenueAnalyticsService {
 
       return dailyRevenue;
     } catch (e) {
-      debugPrint('ERROR: [RevenueAnalyticsService] Failed to get daily revenue: $e');
+      debugdebugPrint('ERROR: [RevenueAnalyticsService] Failed to get daily revenue: $e');
       return [];
     }
   }
@@ -266,7 +265,7 @@ class RevenueAnalyticsService {
 
       return monthlyRevenue;
     } catch (e) {
-      debugPrint('ERROR: [RevenueAnalyticsService] Failed to get monthly revenue: $e');
+      debugdebugPrint('ERROR: [RevenueAnalyticsService] Failed to get monthly revenue: $e');
       return [];
     }
   }
@@ -287,7 +286,7 @@ class RevenueAnalyticsService {
 
       return totalLtv / usersSnapshot.docs.length;
     } catch (e) {
-      debugPrint('ERROR: [RevenueAnalyticsService] Failed to calculate LTV: $e');
+      debugdebugPrint('ERROR: [RevenueAnalyticsService] Failed to calculate LTV: $e');
       return 0.0;
     }
   }
@@ -320,7 +319,7 @@ class RevenueAnalyticsService {
 
       return totalAcquisitions > 0 ? totalAcquisitionCost / totalAcquisitions : 0.0;
     } catch (e) {
-      debugPrint('ERROR: [RevenueAnalyticsService] Failed to calculate CAC: $e');
+      debugdebugPrint('ERROR: [RevenueAnalyticsService] Failed to calculate CAC: $e');
       return 0.0;
     }
   }
@@ -355,7 +354,7 @@ class RevenueAnalyticsService {
 
       return totalUsers > 0 ? (convertedUsers / totalUsers) * 100 : 0.0;
     } catch (e) {
-      debugPrint('ERROR: [RevenueAnalyticsService] Failed to calculate conversion rate: $e');
+      debugdebugPrint('ERROR: [RevenueAnalyticsService] Failed to calculate conversion rate: $e');
       return 0.0;
     }
   }
@@ -414,9 +413,9 @@ class RevenueAnalyticsService {
 
       await _firestore.collection('user_lifetime_values').doc(userId).set(ltv.toMap());
 
-      debugPrint('INFO: [RevenueAnalyticsService] User LTV updated: $userId');
+      debugdebugPrint('INFO: [RevenueAnalyticsService] User LTV updated: $userId');
     } catch (e) {
-      debugPrint('ERROR: [RevenueAnalyticsService] Failed to update user LTV: $e');
+      debugdebugPrint('ERROR: [RevenueAnalyticsService] Failed to update user LTV: $e');
     }
   }
 
@@ -491,10 +490,10 @@ class RevenueAnalyticsService {
 
       await _firestore.collection('conversion_funnels').doc(funnel.id).set(funnel.toMap());
 
-      debugPrint('INFO: [RevenueAnalyticsService] Conversion funnel created: ${funnel.id}');
+      debugdebugPrint('INFO: [RevenueAnalyticsService] Conversion funnel created: ${funnel.id}');
       return funnel.id;
     } catch (e) {
-      debugPrint('ERROR: [RevenueAnalyticsService] Failed to create conversion funnel: $e');
+      debugdebugPrint('ERROR: [RevenueAnalyticsService] Failed to create conversion funnel: $e');
       rethrow;
     }
   }
@@ -520,10 +519,10 @@ class RevenueAnalyticsService {
 
       await _firestore.collection('revenue_forecasts').doc(forecast.id).set(forecast.toMap());
 
-      debugPrint('INFO: [RevenueAnalyticsService] Revenue forecast created: ${forecast.id}');
+      debugdebugPrint('INFO: [RevenueAnalyticsService] Revenue forecast created: ${forecast.id}');
       return forecast.id;
     } catch (e) {
-      debugPrint('ERROR: [RevenueAnalyticsService] Failed to create revenue forecast: $e');
+      debugdebugPrint('ERROR: [RevenueAnalyticsService] Failed to create revenue forecast: $e');
       rethrow;
     }
   }

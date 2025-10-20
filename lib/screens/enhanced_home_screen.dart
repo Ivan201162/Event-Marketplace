@@ -696,11 +696,11 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                       margin: const EdgeInsets.only(right: 12),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? (category['color'] as Color).withOpacity(0.2)
-                            : (category['color'] as Color).withOpacity(0.1),
+                            ? (category['color'] as Color).withValues(alpha: 0.2)
+                            : (category['color'] as Color).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: (category['color'] as Color).withOpacity(0.3),
+                          color: (category['color'] as Color).withValues(alpha: 0.3),
                         ),
                       ),
                       child: Column(
@@ -796,7 +796,7 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
         List<Specialist> citySpecialists = specialists;
         if (userCity != null && userCity.isNotEmpty) {
           citySpecialists = specialists
-              .where((s) => s.city?.toLowerCase().contains(userCity.toLowerCase()) == true)
+              .where((s) => s.city.toLowerCase().contains(userCity.toLowerCase()) == true)
               .toList();
         }
 
@@ -988,7 +988,7 @@ class _SpecialistCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -1014,7 +1014,7 @@ class _SpecialistCard extends StatelessWidget {
                         )
                       : null,
                   color: specialist.avatar == null
-                      ? Theme.of(context).primaryColor.withOpacity(0.1)
+                      ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
                       : null,
                 ),
                 child: specialist.avatar == null
@@ -1182,9 +1182,9 @@ class _InterestingCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: color.withOpacity(0.3)),
+            border: Border.all(color: color.withValues(alpha: 0.3)),
           ),
           child: Column(
             children: [

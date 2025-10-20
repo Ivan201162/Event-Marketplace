@@ -1,162 +1,319 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/post.dart';
 
-/// Сервис для работы с постами
+/// Service for managing posts
 class PostService {
-  factory PostService() => _instance;
-  PostService._internal();
-  static final PostService _instance = PostService._internal();
-
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final String _collection = 'posts';
+  final FirebaseStorage? _storage = kIsWeb ? null : FirebaseStorage.instance;
+  static const String _collection = 'posts';
 
-  /// Получить посты специалиста
-  Future<List<Post>> getPostsBySpecialist(String specialistId) async {
+  /// Get all posts with pagination
+  Future<List<Post>> getPosts({int limit = 20, DocumentSnapshot? lastDocument}) async {
     try {
-      final snapshot = await _firestore
+      Query query = _firestore
           .collection(_collection)
-          .where('specialistId', isEqualTo: specialistId)
           .orderBy('createdAt', descending: true)
-          .get();
+          .limit(limit);
 
-      return snapshot.docs.map(Post.fromDocument).toList();
+      if (lastDocument != null) {
+        query = query.startAfterDocument(lastDocument);
+      }
+
+      final snapshot = await query.get();
+      return snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
     } catch (e) {
-      // Возвращаем тестовые данные в случае ошибки
-      return _getTestPosts(specialistId);
+      debugPrint('Error getting posts: $e');
+      return [];
     }
   }
 
-  /// Получить все посты
-  Future<List<Post>> getAllPosts() async {
+  /// Get posts by user
+  Future<List<Post>> getPostsByUser(String userId, {int limit = 20}) async {
     try {
       final snapshot = await _firestore
           .collection(_collection)
+          .where('authorId', isEqualTo: userId)
           .orderBy('createdAt', descending: true)
-          .limit(50)
+          .limit(limit)
           .get();
 
-      return snapshot.docs.map(Post.fromDocument).toList();
+      return snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
     } catch (e) {
-      // Возвращаем тестовые данные в случае ошибки
-      return _getTestPosts('test_specialist');
+      debugPrint('Error getting posts by user: $e');
+      return [];
     }
   }
 
-  /// Создать пост
-  Future<String> createPost(Post post) async {
+  /// Get posts by tags
+  Future<List<Post>> getPostsByTags(List<String> tags, {int limit = 20}) async {
     try {
-      final docRef = await _firestore.collection(_collection).add(post.toMap());
+      final snapshot = await _firestore
+          .collection(_collection)
+          .where('tags', arrayContainsAny: tags)
+          .orderBy('createdAt', descending: true)
+          .limit(limit)
+          .get();
+
+      return snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
+    } catch (e) {
+      debugPrint('Error getting posts by tags: $e');
+      return [];
+    }
+  }
+
+  /// Create a new post
+  Future<String?> createPost({
+    required String authorId,
+    String? text,
+    String? mediaUrl,
+    MediaType? mediaType,
+    List<String>? tags,
+    String? location,
+    String? authorName,
+    String? authorAvatarUrl,
+  }) async {
+    try {
+      final post = Post(
+        id: '', // Will be set by Firestore
+        authorId: authorId,
+        text: text,
+        mediaUrl: mediaUrl,
+        mediaType: mediaType,
+        tags: tags ?? [],
+        location: location,
+        authorName: authorName,
+        authorAvatarUrl: authorAvatarUrl,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      final docRef = await _firestore.collection(_collection).add(post.toFirestore());
       return docRef.id;
     } catch (e) {
-      throw Exception('Ошибка создания поста: $e');
+      debugPrint('Error creating post: $e');
+      return null;
     }
   }
 
-  /// Обновить пост
-  Future<void> updatePost(String postId, Map<String, dynamic> updates) async {
+  /// Update a post
+  Future<bool> updatePost(String postId, Map<String, dynamic> updates) async {
     try {
-      await _firestore.collection(_collection).doc(postId).update(updates);
+      await _firestore.collection(_collection).doc(postId).update({
+        ...updates,
+        'updatedAt': DateTime.now(),
+      });
+      return true;
     } catch (e) {
-      throw Exception('Ошибка обновления поста: $e');
+      debugPrint('Error updating post: $e');
+      return false;
     }
   }
 
-  /// Удалить пост
-  Future<void> deletePost(String postId) async {
+  /// Delete a post
+  Future<bool> deletePost(String postId) async {
     try {
       await _firestore.collection(_collection).doc(postId).delete();
+      return true;
     } catch (e) {
-      throw Exception('Ошибка удаления поста: $e');
+      debugPrint('Error deleting post: $e');
+      return false;
     }
   }
 
-  /// Лайкнуть пост
-  Future<void> likePost(String postId, String userId) async {
+  /// Like a post
+  Future<bool> likePost(String postId, String userId) async {
     try {
-      final postRef = _firestore.collection(_collection).doc(postId);
-      await _firestore.runTransaction((transaction) async {
-        final snapshot = await transaction.get(postRef);
-        if (!snapshot.exists) return;
-
-        final post = Post.fromDocument(snapshot);
-        final likedBy = List<String>.from(post.likedBy);
-
-        if (likedBy.contains(userId)) {
-          likedBy.remove(userId);
-        } else {
-          likedBy.add(userId);
-        }
-
-        transaction.update(postRef, {
-          'likedBy': likedBy,
-          'likesCount': likedBy.length,
-        });
+      await _firestore.collection(_collection).doc(postId).update({
+        'likedBy': FieldValue.arrayUnion([userId]),
+        'likesCount': FieldValue.increment(1),
+        'updatedAt': DateTime.now(),
       });
+      return true;
     } catch (e) {
-      throw Exception('Ошибка лайка поста: $e');
+      debugPrint('Error liking post: $e');
+      return false;
     }
   }
 
-  /// Тестовые данные
-  List<Post> _getTestPosts(String specialistId) => [
-        Post(
-          id: '1',
-          specialistId: specialistId,
-          text: 'Отличная свадебная фотосессия в парке! 🌸',
-          mediaUrls: [
-            'https://placehold.co/400x400/FF6B6B/white?text=Wedding+1',
-          ],
-          createdAt: DateTime.now().subtract(const Duration(days: 1)),
-          likesCount: 42,
-          commentsCount: 8,
-          likedBy: ['user1', 'user2', 'user3'],
-        ),
-        Post(
-          id: '2',
-          specialistId: specialistId,
-          text: 'Портретная съёмка в студии с профессиональным освещением',
-          mediaUrls: [
-            'https://placehold.co/400x400/4ECDC4/white?text=Portrait+1',
-          ],
-          createdAt: DateTime.now().subtract(const Duration(days: 3)),
-          likesCount: 28,
-          commentsCount: 5,
-          likedBy: ['user1', 'user4'],
-        ),
-        Post(
-          id: '3',
-          specialistId: specialistId,
-          text: 'Семейная фотосессия на природе. Счастье в каждом кадре! ❤️',
-          mediaUrls: [
-            'https://placehold.co/400x400/45B7D1/white?text=Family+1',
-          ],
-          createdAt: DateTime.now().subtract(const Duration(days: 5)),
-          likesCount: 67,
-          commentsCount: 12,
-          likedBy: ['user2', 'user3', 'user5'],
-        ),
-        Post(
-          id: '4',
-          specialistId: specialistId,
-          text: 'Корпоративная съёмка для IT-компании',
-          mediaUrls: [
-            'https://placehold.co/400x400/96CEB4/white?text=Corporate+1',
-          ],
-          createdAt: DateTime.now().subtract(const Duration(days: 7)),
-          likesCount: 15,
-          commentsCount: 3,
-          likedBy: ['user1'],
-        ),
-        Post(
-          id: '5',
-          specialistId: specialistId,
-          text: 'Детская фотосессия в студии. Такие милые малыши! 👶',
-          mediaUrls: ['https://placehold.co/400x400/FFEAA7/white?text=Kids+1'],
-          createdAt: DateTime.now().subtract(const Duration(days: 10)),
-          likesCount: 89,
-          commentsCount: 18,
-          likedBy: ['user1', 'user2', 'user3', 'user4', 'user5'],
-        ),
-      ];
+  /// Unlike a post
+  Future<bool> unlikePost(String postId, String userId) async {
+    try {
+      await _firestore.collection(_collection).doc(postId).update({
+        'likedBy': FieldValue.arrayRemove([userId]),
+        'likesCount': FieldValue.increment(-1),
+        'updatedAt': DateTime.now(),
+      });
+      return true;
+    } catch (e) {
+      debugPrint('Error unliking post: $e');
+      return false;
+    }
+  }
+
+  /// Get post by ID
+  Future<Post?> getPostById(String postId) async {
+    try {
+      final doc = await _firestore.collection(_collection).doc(postId).get();
+      if (doc.exists) {
+        return Post.fromFirestore(doc);
+      }
+      return null;
+    } catch (e) {
+      debugPrint('Error getting post by ID: $e');
+      return null;
+    }
+  }
+
+  /// Upload media file
+  Future<String?> uploadMedia(String filePath, String fileName) async {
+    if (_storage == null) {
+      debugPrint('Firebase Storage not available on web');
+      return null;
+    }
+    try {
+      final ref = _storage.ref().child('posts/$fileName');
+      final uploadTask = await ref.putFile(filePath as dynamic); // In real app, use File
+      final downloadUrl = await uploadTask.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      debugPrint('Error uploading media: $e');
+      return null;
+    }
+  }
+
+  /// Get popular posts (by likes)
+  Future<List<Post>> getPopularPosts({int limit = 10}) async {
+    try {
+      final snapshot = await _firestore
+          .collection(_collection)
+          .orderBy('likesCount', descending: true)
+          .orderBy('createdAt', descending: true)
+          .limit(limit)
+          .get();
+
+      return snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
+    } catch (e) {
+      debugPrint('Error getting popular posts: $e');
+      return [];
+    }
+  }
+
+  /// Get trending posts (by recent likes)
+  Future<List<Post>> getTrendingPosts({int limit = 10}) async {
+    try {
+      // Get posts from last 7 days with most likes
+      final weekAgo = DateTime.now().subtract(const Duration(days: 7));
+      
+      final snapshot = await _firestore
+          .collection(_collection)
+          .where('createdAt', isGreaterThan: Timestamp.fromDate(weekAgo))
+          .orderBy('createdAt', descending: true)
+          .orderBy('likesCount', descending: true)
+          .limit(limit)
+          .get();
+
+      return snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
+    } catch (e) {
+      debugPrint('Error getting trending posts: $e');
+      return [];
+    }
+  }
+
+  /// Search posts
+  Future<List<Post>> searchPosts(String query, {int limit = 20}) async {
+    try {
+      // Note: This is a simple text search. For better search, consider using Algolia or similar
+      final snapshot = await _firestore
+          .collection(_collection)
+          .orderBy('createdAt', descending: true)
+          .limit(limit)
+          .get();
+
+      final posts = snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
+      
+      // Filter posts that contain the query in text or tags
+      return posts.where((post) {
+        final searchQuery = query.toLowerCase();
+        return (post.text?.toLowerCase().contains(searchQuery) ?? false) ||
+               post.tags.any((tag) => tag.toLowerCase().contains(searchQuery));
+      }).toList();
+    } catch (e) {
+      debugPrint('Error searching posts: $e');
+      return [];
+    }
+  }
+
+  /// Stream of posts (for real-time updates)
+  Stream<List<Post>> getPostsStream({int limit = 20}) {
+    return _firestore
+        .collection(_collection)
+        .orderBy('createdAt', descending: true)
+        .limit(limit)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Post.fromFirestore(doc))
+            .toList());
+  }
+
+  /// Stream of posts by user
+  Stream<List<Post>> getPostsByUserStream(String userId, {int limit = 20}) {
+    return _firestore
+        .collection(_collection)
+        .where('authorId', isEqualTo: userId)
+        .orderBy('createdAt', descending: true)
+        .limit(limit)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Post.fromFirestore(doc))
+            .toList());
+  }
+
+  /// Get post statistics
+  Future<Map<String, int>> getPostStats(String postId) async {
+    try {
+      final doc = await _firestore.collection(_collection).doc(postId).get();
+      if (doc.exists) {
+        final data = doc.data()!;
+        return {
+          'likes': data['likesCount'] ?? 0,
+          'comments': data['commentsCount'] ?? 0,
+        };
+      }
+      return {'likes': 0, 'comments': 0};
+    } catch (e) {
+      debugPrint('Error getting post stats: $e');
+      return {'likes': 0, 'comments': 0};
+    }
+  }
+
+  /// Increment comment count
+  Future<bool> incrementCommentCount(String postId) async {
+    try {
+      await _firestore.collection(_collection).doc(postId).update({
+        'commentsCount': FieldValue.increment(1),
+        'updatedAt': DateTime.now(),
+      });
+      return true;
+    } catch (e) {
+      debugPrint('Error incrementing comment count: $e');
+      return false;
+    }
+  }
+
+  /// Decrement comment count
+  Future<bool> decrementCommentCount(String postId) async {
+    try {
+      await _firestore.collection(_collection).doc(postId).update({
+        'commentsCount': FieldValue.increment(-1),
+        'updatedAt': DateTime.now(),
+      });
+      return true;
+    } catch (e) {
+      debugPrint('Error decrementing comment count: $e');
+      return false;
+    }
+  }
 }

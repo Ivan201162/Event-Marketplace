@@ -322,7 +322,7 @@ class AnniversaryService {
         }
       }
     } on Exception catch (e) {
-      print('Ошибка создания напоминаний для годовщины: $e');
+      debugPrint('Ошибка создания напоминаний для годовщины: $e');
     }
   }
 
@@ -335,7 +335,7 @@ class AnniversaryService {
       // Создаем новые напоминания
       await _createAnniversaryReminders(anniversary);
     } on Exception catch (e) {
-      print('Ошибка обновления напоминаний для годовщины: $e');
+      debugPrint('Ошибка обновления напоминаний для годовщины: $e');
     }
   }
 
@@ -357,7 +357,7 @@ class AnniversaryService {
         await _reminderService.deleteReminder(doc.id);
       }
     } on Exception catch (e) {
-      print('Ошибка удаления напоминаний для годовщины: $e');
+      debugPrint('Ошибка удаления напоминаний для годовщины: $e');
     }
   }
 

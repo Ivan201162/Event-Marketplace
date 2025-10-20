@@ -30,7 +30,7 @@ class AutomaticRecommendationService {
 
       return recommendations;
     } on Exception catch (e) {
-      print('Ошибка получения автоматических рекомендаций: $e');
+      debugPrint('Ошибка получения автоматических рекомендаций: $e');
       return [];
     }
   }
@@ -75,7 +75,7 @@ class AutomaticRecommendationService {
 
       return recommendations.take(6).toList();
     } on Exception catch (e) {
-      print('Ошибка получения рекомендаций для категории: $e');
+      debugPrint('Ошибка получения рекомендаций для категории: $e');
       return [];
     }
   }
@@ -88,7 +88,7 @@ class AutomaticRecommendationService {
         'shownAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      print('Ошибка сохранения статуса рекомендации: $e');
+      debugPrint('Ошибка сохранения статуса рекомендации: $e');
     }
   }
 
@@ -100,7 +100,7 @@ class AutomaticRecommendationService {
         'acceptedAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      print('Ошибка сохранения статуса принятия рекомендации: $e');
+      debugPrint('Ошибка сохранения статуса принятия рекомендации: $e');
     }
   }
 
@@ -119,7 +119,7 @@ class AutomaticRecommendationService {
           specialists.add(Specialist.fromDocument(doc));
         }
       } on Exception catch (e) {
-        print('Ошибка получения специалиста $id: $e');
+        debugPrint('Ошибка получения специалиста $id: $e');
       }
     }
 
@@ -276,7 +276,7 @@ class AutomaticRecommendationService {
 
       return specialists;
     } on Exception catch (e) {
-      print('Ошибка получения специалистов по категории: $e');
+      debugPrint('Ошибка получения специалистов по категории: $e');
       return [];
     }
   }

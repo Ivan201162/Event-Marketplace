@@ -1,87 +1,81 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/event_idea.dart';
-import '../services/ideas_service.dart';
+import '../models/idea.dart';
+import '../services/idea_service.dart';
 
-/// Провайдер сервиса идей
-final ideasServiceProvider = Provider<IdeasService>((ref) => IdeasService());
-
-/// Провайдер для получения публичных идей
-final publicIdeasProvider = FutureProvider<List<EventIdea>>((ref) {
-  final ideasService = ref.watch(ideasServiceProvider);
-  return ideasService.getPublicIdeas();
+/// Idea service provider
+final ideaServiceProvider = Provider<IdeaService>((ref) {
+  return IdeaService();
 });
 
-/// Провайдер для получения идей по автору
-final ideasByAuthorProvider = FutureProvider.family<List<EventIdea>, String>((ref, authorId) {
-  final ideasService = ref.watch(ideasServiceProvider);
-  return ideasService.getIdeasByAuthor(authorId);
+/// All ideas provider
+final ideasProvider = FutureProvider<List<Idea>>((ref) async {
+  final service = ref.read(ideaServiceProvider);
+  return await service.getIdeas();
 });
 
-/// Провайдер для получения сохраненных идей пользователя
-final savedIdeasProvider = FutureProvider.family<List<EventIdea>, String>((ref, userId) {
-  final ideasService = ref.watch(ideasServiceProvider);
-  return ideasService.getSavedIdeas(userId);
+/// Popular ideas provider
+final popularIdeasProvider = FutureProvider<List<Idea>>((ref) async {
+  final service = ref.read(ideaServiceProvider);
+  return await service.getPopularIdeas();
 });
 
-/// Провайдер для получения популярных идей
-final popularIdeasProvider = FutureProvider<List<EventIdea>>((ref) {
-  final ideasService = ref.watch(ideasServiceProvider);
-  return ideasService.getPopularIdeas();
+/// Trending ideas provider
+final trendingIdeasProvider = FutureProvider<List<Idea>>((ref) async {
+  final service = ref.read(ideaServiceProvider);
+  return await service.getTrendingIdeas();
 });
 
-/// Провайдер для получения последних идей
-final recentIdeasProvider = FutureProvider<List<EventIdea>>((ref) {
-  final ideasService = ref.watch(ideasServiceProvider);
-  return ideasService.getRecentIdeas();
+/// Ideas by category provider
+final ideasByCategoryProvider = FutureProvider.family<List<Idea>, String>((ref, category) async {
+  final service = ref.read(ideaServiceProvider);
+  return await service.getIdeasByCategory(category);
 });
 
-/// Провайдер для проверки лайка идеи
-final isIdeaLikedProvider = FutureProvider.family<bool, IdeaLikeParams>((ref, params) {
-  final ideasService = ref.watch(ideasServiceProvider);
-  return ideasService.isIdeaLiked(params.ideaId, params.userId);
+/// Ideas by tags provider
+final ideasByTagsProvider = FutureProvider.family<List<Idea>, List<String>>((ref, tags) async {
+  final service = ref.read(ideaServiceProvider);
+  return await service.getIdeasByTags(tags);
 });
 
-/// Провайдер для проверки сохранения идеи
-final isIdeaSavedProvider = FutureProvider.family<bool, IdeaSaveParams>((ref, params) {
-  final ideasService = ref.watch(ideasServiceProvider);
-  return ideasService.isIdeaSaved(params.ideaId, params.userId);
+/// Ideas by difficulty provider
+final ideasByDifficultyProvider = FutureProvider.family<List<Idea>, String>((ref, difficulty) async {
+  final service = ref.read(ideaServiceProvider);
+  return await service.getIdeasByDifficulty(difficulty);
 });
 
-/// Параметры для проверки лайка
-class IdeaLikeParams {
-  IdeaLikeParams({
-    required this.ideaId,
-    required this.userId,
-  });
-  final String ideaId;
-  final String userId;
+/// Idea by ID provider
+final ideaByIdProvider = FutureProvider.family<Idea?, String>((ref, ideaId) async {
+  final service = ref.read(ideaServiceProvider);
+  return await service.getIdeaById(ideaId);
+});
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is IdeaLikeParams && other.ideaId == ideaId && other.userId == userId;
-  }
+/// Stream of ideas provider
+final ideasStreamProvider = StreamProvider<List<Idea>>((ref) {
+  final service = ref.read(ideaServiceProvider);
+  return service.getIdeasStream();
+});
 
-  @override
-  int get hashCode => ideaId.hashCode ^ userId.hashCode;
-}
+/// Stream of ideas by category provider
+final ideasByCategoryStreamProvider = StreamProvider.family<List<Idea>, String>((ref, category) {
+  final service = ref.read(ideaServiceProvider);
+  return service.getIdeasByCategoryStream(category);
+});
 
-/// Параметры для проверки сохранения
-class IdeaSaveParams {
-  IdeaSaveParams({
-    required this.ideaId,
-    required this.userId,
-  });
-  final String ideaId;
-  final String userId;
+/// Search ideas provider
+final searchIdeasProvider = FutureProvider.family<List<Idea>, String>((ref, query) async {
+  final service = ref.read(ideaServiceProvider);
+  return await service.searchIdeas(query);
+});
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is IdeaSaveParams && other.ideaId == ideaId && other.userId == userId;
-  }
+/// Available categories provider
+final ideaCategoriesProvider = FutureProvider<List<String>>((ref) async {
+  final service = ref.read(ideaServiceProvider);
+  return await service.getCategories();
+});
 
-  @override
-  int get hashCode => ideaId.hashCode ^ userId.hashCode;
-}
+/// Available tags provider
+final ideaTagsProvider = FutureProvider<List<String>>((ref) async {
+  final service = ref.read(ideaServiceProvider);
+  return await service.getTags();
+});

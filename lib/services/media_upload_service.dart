@@ -255,7 +255,7 @@ class MediaUploadService {
       // В реальном приложении здесь должна быть логика создания миниатюры
       return null;
     } catch (e) {
-      print('Ошибка создания превью: $e');
+      debugPrint('Ошибка создания превью: $e');
       return null;
     }
   }
@@ -281,7 +281,7 @@ class MediaUploadService {
       final ref = _storage.ref().child(storagePath);
       await ref.delete();
     } catch (e) {
-      print('Ошибка удаления файла: $e');
+      debugPrint('Ошибка удаления файла: $e');
     }
   }
 

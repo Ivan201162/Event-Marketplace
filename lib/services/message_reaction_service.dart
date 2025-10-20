@@ -52,7 +52,7 @@ class MessageReactionService {
 
       return true;
     } catch (e) {
-      print('Ошибка добавления реакции: $e');
+      debugPrint('Ошибка добавления реакции: $e');
       return false;
     }
   }
@@ -87,7 +87,7 @@ class MessageReactionService {
 
       return true;
     } catch (e) {
-      print('Ошибка удаления реакции: $e');
+      debugPrint('Ошибка удаления реакции: $e');
       return false;
     }
   }
@@ -138,7 +138,7 @@ class MessageReactionService {
 
       return true;
     } catch (e) {
-      print('Ошибка переключения реакции: $e');
+      debugPrint('Ошибка переключения реакции: $e');
       return false;
     }
   }
@@ -157,7 +157,7 @@ class MessageReactionService {
 
       return reactions;
     } catch (e) {
-      print('Ошибка получения реакций: $e');
+      debugPrint('Ошибка получения реакций: $e');
       return [];
     }
   }
@@ -184,7 +184,7 @@ class MessageReactionService {
 
       return reactionStats;
     } catch (e) {
-      print('Ошибка получения статистики реакций: $e');
+      debugPrint('Ошибка получения статистики реакций: $e');
       return {};
     }
   }
@@ -212,7 +212,7 @@ class MessageReactionService {
 
       return userReactionStats;
     } catch (e) {
-      print('Ошибка получения статистики пользователя: $e');
+      debugPrint('Ошибка получения статистики пользователя: $e');
       return {};
     }
   }

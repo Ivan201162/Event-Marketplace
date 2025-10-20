@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../../models/advertisement.dart';
 import '../../models/promotion_boost.dart';
 import '../../models/subscription_plan.dart';
-import '../../providers/auth_provider.dart';
 import '../../services/advertisement_service.dart';
 import '../../services/payment_service.dart';
 import '../../services/promotion_service.dart';
@@ -154,7 +153,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, color: color, size: 24),
@@ -265,7 +264,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(icon, color: color, size: 24),
@@ -366,7 +365,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(icon, color: color, size: 24),

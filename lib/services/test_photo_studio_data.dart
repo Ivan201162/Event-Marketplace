@@ -273,12 +273,12 @@ class TestPhotoStudioData {
       // Добавляем каждую фотостудию
       for (final photoStudio in testPhotoStudios) {
         await _photoStudioService.createPhotoStudio(photoStudio);
-        print('Добавлена фотостудия: ${photoStudio.name}');
+        debugPrint('Добавлена фотостудия: ${photoStudio.name}');
       }
 
-      print('✅ Создано ${testPhotoStudios.length} тестовых фотостудий');
+      debugPrint('✅ Создано ${testPhotoStudios.length} тестовых фотостудий');
     } catch (e) {
-      print('❌ Ошибка создания тестовых фотостудий: $e');
+      debugPrint('❌ Ошибка создания тестовых фотостудий: $e');
     }
   }
 
@@ -289,12 +289,12 @@ class TestPhotoStudioData {
 
       for (final photoStudio in photoStudios) {
         await _photoStudioService.deletePhotoStudio(photoStudio.id);
-        print('Удалена фотостудия: ${photoStudio.name}');
+        debugPrint('Удалена фотостудия: ${photoStudio.name}');
       }
 
-      print('✅ Очищены все тестовые фотостудии');
+      debugPrint('✅ Очищены все тестовые фотостудии');
     } catch (e) {
-      print('❌ Ошибка очистки тестовых фотостудий: $e');
+      debugPrint('❌ Ошибка очистки тестовых фотостудий: $e');
     }
   }
 
@@ -304,7 +304,7 @@ class TestPhotoStudioData {
       final photoStudios = await _photoStudioService.getPhotoStudios();
       return photoStudios.length;
     } catch (e) {
-      print('❌ Ошибка получения количества фотостудий: $e');
+      debugPrint('❌ Ошибка получения количества фотостудий: $e');
       return 0;
     }
   }

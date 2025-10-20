@@ -221,7 +221,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isExpired ? Colors.red.withOpacity(0.1) : Colors.green.withOpacity(0.1),
+        color: isExpired ? Colors.red.withValues(alpha: 0.1) : Colors.green.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isExpired ? Colors.red : Colors.green,

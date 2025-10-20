@@ -24,11 +24,11 @@ void main() {
         reviewCount: 100,
         createdAt: now,
         updatedAt: now,
-        contacts: {
+        contacts: const {
           'phone': '+7 (999) 123-45-67',
           'email': 'test@example.com',
         },
-        servicesWithPrices: {
+        servicesWithPrices: const {
           'Service 1': 5000.0,
           'Service 2': 10000.0,
         },
@@ -130,11 +130,11 @@ void main() {
         reviewCount: 100,
         createdAt: now,
         updatedAt: now,
-        contacts: {
+        contacts: const {
           'phone': '+7 (999) 123-45-67',
           'email': 'test@example.com',
         },
-        servicesWithPrices: {
+        servicesWithPrices: const {
           'Service 1': 5000.0,
           'Service 2': 10000.0,
         },
@@ -245,8 +245,8 @@ void main() {
         price: 0,
         createdAt: now,
         updatedAt: now,
-        contacts: {},
-        servicesWithPrices: {},
+        contacts: const {},
+        servicesWithPrices: const {},
       );
 
       final map = specialist.toMap();

@@ -262,7 +262,7 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
             onPressed: onPressed,
             icon: Icon(icon, color: Colors.white),
             style: IconButton.styleFrom(
-              backgroundColor: Colors.white.withOpacity(0.2),
+              backgroundColor: Colors.white.withValues(alpha: 0.2),
             ),
           ),
           const SizedBox(height: 4),

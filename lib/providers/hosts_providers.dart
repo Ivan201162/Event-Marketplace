@@ -84,16 +84,16 @@ final hostsProvider = FutureProvider.family<List<Specialist>, HostFilters>(
   (ref, filters) async => _loadHostsWithFilters(filters),
 );
 
-/// Провайдер для пагинированной загрузки ведущих
+/// Провайдер для пагинированной загрузки ведущих (мигрирован с StateNotifierProvider)
 final paginatedHostsProvider =
-    StateNotifierProvider<PaginatedHostsNotifier, AsyncValue<List<Specialist>>>(
-  (ref) => PaginatedHostsNotifier(),
+    NotifierProvider<PaginatedHostsNotifier, AsyncValue<List<Specialist>>>(
+  () => PaginatedHostsNotifier(),
 );
 
-/// Провайдер для получения mock-данных ведущих (для тестирования)
+/// Провайдер для получения mock-данных ведущих (для тестирования) (мигрирован с StateNotifierProvider)
 final mockPaginatedHostsProvider =
-    StateNotifierProvider<MockPaginatedHostsNotifier, AsyncValue<List<Specialist>>>(
-        (ref) => MockPaginatedHostsNotifier());
+    NotifierProvider<MockPaginatedHostsNotifier, AsyncValue<List<Specialist>>>(
+        () => MockPaginatedHostsNotifier());
 
 /// Провайдер для получения уникальных городов ведущих
 final hostCitiesProvider = FutureProvider<List<String>>((ref) async {
@@ -210,10 +210,12 @@ bool _matchesFilters(Specialist specialist, HostFilters filters) {
   return true;
 }
 
-/// Notifier для пагинированной загрузки ведущих
-class PaginatedHostsNotifier extends StateNotifier<AsyncValue<List<Specialist>>> {
-  PaginatedHostsNotifier() : super(const AsyncValue.loading()) {
+/// Notifier для пагинированной загрузки ведущих (мигрирован с StateNotifier)
+class PaginatedHostsNotifier extends Notifier<AsyncValue<List<Specialist>>> {
+  @override
+  AsyncValue<List<Specialist>> build() {
     loadHosts();
+    return const AsyncValue.loading();
   }
 
   static const int _pageSize = 20;
@@ -341,7 +343,7 @@ List<Specialist> _generateMockHosts() {
       phone: '+7 (999) ${100 + index}-${10 + index}-${20 + index}',
       city: city,
       category: 'Ведущие',
-      subcategories: ['Свадьбы', 'Корпоративы', 'Дни рождения'],
+      subcategories: const ['Свадьбы', 'Корпоративы', 'Дни рождения'],
       priceRange: PriceRange(
         minPrice: minPrice.toDouble(),
         maxPrice: maxPrice.toDouble(),
@@ -360,10 +362,12 @@ List<Specialist> _generateMockHosts() {
   });
 }
 
-/// Notifier для пагинированной загрузки mock-данных ведущих
-class MockPaginatedHostsNotifier extends StateNotifier<AsyncValue<List<Specialist>>> {
-  MockPaginatedHostsNotifier() : super(const AsyncValue.loading()) {
+/// Notifier для пагинированной загрузки mock-данных ведущих (мигрирован с StateNotifier)
+class MockPaginatedHostsNotifier extends Notifier<AsyncValue<List<Specialist>>> {
+  @override
+  AsyncValue<List<Specialist>> build() {
     loadHosts();
+    return const AsyncValue.loading();
   }
 
   static const int _pageSize = 6;

@@ -1,228 +1,137 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/booking.dart';
 import '../services/booking_service.dart';
 
-/// Провайдер сервиса бронирований
-final bookingServiceProvider = Provider<BookingService>((ref) => BookingService());
-
-/// Провайдер для формы бронирования
-final bookingFormProvider = NotifierProvider<BookingFormNotifier, BookingFormState>(
-  BookingFormNotifier.new,
-);
-
-/// Состояние формы бронирования
-class BookingFormState {
-  const BookingFormState({
-    this.isLoading = false,
-    this.errorMessage,
-  });
-  final bool isLoading;
-  final String? errorMessage;
-
-  BookingFormState copyWith({
-    bool? isLoading,
-    String? errorMessage,
-  }) =>
-      BookingFormState(
-        isLoading: isLoading ?? this.isLoading,
-        errorMessage: errorMessage ?? this.errorMessage,
-      );
-}
-
-/// Нотификатор для формы бронирования
-class BookingFormNotifier extends Notifier<BookingFormState> {
-  @override
-  BookingFormState build() => const BookingFormState();
-
-  void setLoading(bool isLoading) {
-    state = state.copyWith(isLoading: isLoading);
-  }
-
-  void setError(String? errorMessage) {
-    state = state.copyWith(errorMessage: errorMessage);
-  }
-
-  void clearError() {
-    state = state.copyWith();
-  }
-}
-
-/// Провайдер бронирований пользователя
-final userBookingsProvider = StreamProvider.family<List<Booking>, String>((ref, userId) {
-  final bookingService = ref.watch(bookingServiceProvider);
-  return bookingService.getUserBookings(userId);
+/// Booking service provider
+final bookingServiceProvider = Provider<BookingService>((ref) {
+  return BookingService();
 });
 
-/// Провайдер бронирований для события
-final eventBookingsProvider = StreamProvider.family<List<Booking>, String>((ref, eventId) {
-  final bookingService = ref.watch(bookingServiceProvider);
-  return bookingService.getEventBookings(eventId);
+/// Specialist bookings provider
+final specialistBookingsProvider = FutureProvider.family<List<Booking>, String>((ref, specialistId) async {
+  final bookingService = ref.read(bookingServiceProvider);
+  return bookingService.getSpecialistBookings(specialistId);
 });
 
-/// Провайдер бронирования по ID
-final bookingByIdProvider = FutureProvider.family<Booking?, String>((ref, bookingId) {
-  final bookingService = ref.watch(bookingServiceProvider);
+/// Client bookings provider
+final clientBookingsProvider = FutureProvider.family<List<Booking>, String>((ref, clientId) async {
+  final bookingService = ref.read(bookingServiceProvider);
+  return bookingService.getClientBookings(clientId);
+});
+
+/// Bookings by status provider
+final bookingsByStatusProvider = FutureProvider.family<List<Booking>, BookingStatus>((ref, status) async {
+  final bookingService = ref.read(bookingServiceProvider);
+  return bookingService.getBookingsByStatus(status);
+});
+
+/// Booking by ID provider
+final bookingByIdProvider = FutureProvider.family<Booking?, String>((ref, bookingId) async {
+  final bookingService = ref.read(bookingServiceProvider);
   return bookingService.getBookingById(bookingId);
 });
 
-/// Провайдер проверки, забронировал ли пользователь событие
-final hasUserBookedEventProvider =
-    FutureProvider.family<bool, ({String userId, String eventId})>((ref, params) {
-  final bookingService = ref.watch(bookingServiceProvider);
-  return bookingService.hasUserBookedEvent(params.userId, params.eventId);
+/// Specialist bookings stream provider
+final specialistBookingsStreamProvider = StreamProvider.family<List<Booking>, String>((ref, specialistId) {
+  final bookingService = ref.read(bookingServiceProvider);
+  return bookingService.getSpecialistBookingsStream(specialistId);
 });
 
-/// Провайдер статистики бронирований пользователя
-final userBookingStatsProvider = FutureProvider.family<Map<String, int>, String>((ref, userId) {
-  final bookingService = ref.watch(bookingServiceProvider);
-  return bookingService.getUserBookingStats(userId);
+/// Client bookings stream provider
+final clientBookingsStreamProvider = StreamProvider.family<List<Booking>, String>((ref, clientId) {
+  final bookingService = ref.read(bookingServiceProvider);
+  return bookingService.getClientBookingsStream(clientId);
 });
 
-/// Провайдер статистики бронирований для события
-final eventBookingStatsProvider = FutureProvider.family<Map<String, int>, String>((ref, eventId) {
-  final bookingService = ref.watch(bookingServiceProvider);
-  return bookingService.getEventBookingStats(eventId);
+/// Bookings by status stream provider
+final bookingsByStatusStreamProvider = StreamProvider.family<List<Booking>, BookingStatus>((ref, status) {
+  final bookingService = ref.read(bookingServiceProvider);
+  return bookingService.getBookingsByStatusStream(status);
 });
 
-/// Провайдер для управления состоянием создания бронирования
-final createBookingProvider = NotifierProvider<CreateBookingNotifier, CreateBookingState>(
-  CreateBookingNotifier.new,
-);
+/// Booking statistics provider
+final bookingStatsProvider = FutureProvider.family<Map<String, int>, String>((ref, specialistId) async {
+  final bookingService = ref.read(bookingServiceProvider);
+  return bookingService.getBookingStats(specialistId);
+});
 
-/// Состояние создания бронирования
-class CreateBookingState {
-  const CreateBookingState({
-    this.participantsCount = 1,
-    this.notes,
-    this.userEmail,
-    this.userPhone,
-    this.isLoading = false,
-    this.errorMessage,
-  });
-  final int participantsCount;
-  final String? notes;
-  final String? userEmail;
-  final String? userPhone;
-  final bool isLoading;
-  final String? errorMessage;
+/// Available time slots provider
+final availableTimeSlotsProvider = FutureProvider.family<List<String>, Map<String, dynamic>>((ref, params) async {
+  final bookingService = ref.read(bookingServiceProvider);
+  final specialistId = params['specialistId'] as String;
+  final date = params['date'] as DateTime;
+  return bookingService.getAvailableTimeSlots(specialistId, date);
+});
 
-  CreateBookingState copyWith({
-    int? participantsCount,
-    String? notes,
-    String? userEmail,
-    String? userPhone,
-    bool? isLoading,
-    String? errorMessage,
-  }) =>
-      CreateBookingState(
-        participantsCount: participantsCount ?? this.participantsCount,
-        notes: notes ?? this.notes,
-        userEmail: userEmail ?? this.userEmail,
-        userPhone: userPhone ?? this.userPhone,
-        isLoading: isLoading ?? this.isLoading,
-        errorMessage: errorMessage,
-      );
-}
+/// Time slot availability provider
+final timeSlotAvailabilityProvider = FutureProvider.family<bool, Map<String, dynamic>>((ref, params) async {
+  final bookingService = ref.read(bookingServiceProvider);
+  final specialistId = params['specialistId'] as String;
+  final date = params['date'] as DateTime;
+  final time = params['time'] as String;
+  final duration = params['duration'] as int;
+  return bookingService.isTimeSlotAvailable(specialistId, date, time, duration);
+});
 
-/// Нотификатор для создания бронирования
-class CreateBookingNotifier extends Notifier<CreateBookingState> {
-  late final BookingService _bookingService;
+/// Pending bookings count provider
+final pendingBookingsCountProvider = FutureProvider.family<int, String>((ref, specialistId) async {
+  final bookingService = ref.read(bookingServiceProvider);
+  final bookings = await bookingService.getBookingsByStatus(BookingStatus.pending);
+  return bookings.length;
+});
 
-  @override
-  CreateBookingState build() {
-    _bookingService = ref.read(bookingServiceProvider);
-    return const CreateBookingState();
-  }
+/// Pending bookings count stream provider
+final pendingBookingsCountStreamProvider = StreamProvider.family<int, String>((ref, specialistId) {
+  final bookingService = ref.read(bookingServiceProvider);
+  return bookingService.getBookingsByStatusStream(BookingStatus.pending)
+      .map((bookings) => bookings.where((b) => b.specialistId == specialistId).length);
+});
 
-  /// Обновить количество участников
-  void updateParticipantsCount(int count) {
-    state = state.copyWith(participantsCount: count);
-  }
+/// Today's bookings provider
+final todaysBookingsProvider = FutureProvider.family<List<Booking>, String>((ref, specialistId) async {
+  final bookingService = ref.read(bookingServiceProvider);
+  final today = DateTime.now();
+  final bookings = await bookingService.getSpecialistBookings(specialistId);
+  return bookings.where((booking) {
+    final bookingDate = booking.date;
+    return bookingDate.year == today.year &&
+           bookingDate.month == today.month &&
+           bookingDate.day == today.day;
+  }).toList();
+});
 
-  /// Обновить заметки
-  void updateNotes(String? notes) {
-    state = state.copyWith(notes: notes);
-  }
+/// Today's bookings stream provider
+final todaysBookingsStreamProvider = StreamProvider.family<List<Booking>, String>((ref, specialistId) {
+  final bookingService = ref.read(bookingServiceProvider);
+  final today = DateTime.now();
+  return bookingService.getSpecialistBookingsStream(specialistId)
+      .map((bookings) => bookings.where((booking) {
+        final bookingDate = booking.date;
+        return bookingDate.year == today.year &&
+               bookingDate.month == today.month &&
+               bookingDate.day == today.day;
+      }).toList());
+});
 
-  /// Обновить email пользователя
-  void updateUserEmail(String? email) {
-    state = state.copyWith(userEmail: email);
-  }
+/// Upcoming bookings provider
+final upcomingBookingsProvider = FutureProvider.family<List<Booking>, String>((ref, specialistId) async {
+  final bookingService = ref.read(bookingServiceProvider);
+  final now = DateTime.now();
+  final bookings = await bookingService.getSpecialistBookings(specialistId);
+  return bookings.where((booking) {
+    return booking.date.isAfter(now) && 
+           (booking.status == BookingStatus.confirmed || booking.status == BookingStatus.pending);
+  }).toList();
+});
 
-  /// Обновить телефон пользователя
-  void updateUserPhone(String? phone) {
-    state = state.copyWith(userPhone: phone);
-  }
-
-  /// Создать бронирование
-  Future<String?> createBooking({
-    required String eventId,
-    required String eventTitle,
-    required String userId,
-    required String userName,
-    required DateTime eventDate,
-    required double eventPrice,
-    required String organizerId,
-    required String organizerName,
-  }) async {
-    if (state.participantsCount <= 0) {
-      state = state.copyWith(
-        errorMessage: 'Количество участников должно быть больше 0',
-      );
-      return null;
-    }
-
-    state = state.copyWith(isLoading: true);
-
-    try {
-      final booking = Booking(
-        id: '', // Будет установлен при создании
-        eventId: eventId,
-        eventTitle: eventTitle,
-        userId: userId,
-        userName: userName,
-        userEmail: state.userEmail,
-        userPhone: state.userPhone,
-        status: BookingStatus.pending,
-        bookingDate: DateTime.now(),
-        eventDate: eventDate,
-        participantsCount: state.participantsCount,
-        totalPrice: eventPrice * state.participantsCount,
-        notes: state.notes,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        organizerId: organizerId,
-        organizerName: organizerName,
-      );
-
-      final bookingId = await _bookingService.createBooking(
-        customerId: booking.customerId,
-        specialistId: booking.specialistId,
-        eventDate: booking.eventDate,
-        totalPrice: booking.totalPrice,
-        prepayment: booking.prepayment,
-        message: booking.message,
-        title: booking.title,
-        location: booking.location,
-      );
-      state = state.copyWith(isLoading: false);
-      return bookingId;
-    } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: e.toString(),
-      );
-      return null;
-    }
-  }
-
-  /// Сбросить форму
-  void reset() {
-    state = const CreateBookingState();
-  }
-
-  /// Очистить ошибку
-  void clearError() {
-    state = state.copyWith();
-  }
-}
+/// Upcoming bookings stream provider
+final upcomingBookingsStreamProvider = StreamProvider.family<List<Booking>, String>((ref, specialistId) {
+  final bookingService = ref.read(bookingServiceProvider);
+  final now = DateTime.now();
+  return bookingService.getSpecialistBookingsStream(specialistId)
+      .map((bookings) => bookings.where((booking) {
+        return booking.date.isAfter(now) && 
+               (booking.status == BookingStatus.confirmed || booking.status == BookingStatus.pending);
+      }).toList());
+});

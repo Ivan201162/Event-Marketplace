@@ -20,10 +20,10 @@ class NotificationBadge extends StatelessWidget {
       return child;
     }
 
-    return StreamBuilder<int>(
-      stream: NotificationService.getUnreadCount(currentUserId),
-      builder: (context, snapshot) {
-        final unreadCount = snapshot.data ?? 0;
+    return FutureBuilder<int>(
+      future: NotificationService.getUnreadCount(currentUserId),
+      builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+        final int unreadCount = snapshot.data ?? 0;
 
         if (unreadCount == 0) {
           return child;

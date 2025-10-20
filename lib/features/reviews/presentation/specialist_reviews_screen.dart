@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../auth/providers/auth_provider.dart';
 import '../data/models/review.dart';
 import '../data/repositories/review_repository.dart';
 import 'add_review_screen.dart';

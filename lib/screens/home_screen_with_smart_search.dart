@@ -272,9 +272,9 @@ class _HomeScreenWithSmartSearchState extends ConsumerState<HomeScreenWithSmartS
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: color.withOpacity(0.3)),
+            border: Border.all(color: color.withValues(alpha: 0.3)),
           ),
           child: Column(
             children: [
@@ -296,7 +296,7 @@ class _HomeScreenWithSmartSearchState extends ConsumerState<HomeScreenWithSmartS
               Text(
                 subtitle,
                 style: TextStyle(
-                  color: color.withOpacity(0.8),
+                  color: color.withValues(alpha: 0.8),
                   fontSize: 12,
                 ),
                 textAlign: TextAlign.center,

@@ -35,13 +35,13 @@ class VersionManagementService {
       await _loadStatisticsCache();
 
       if (kDebugMode) {
-        print('Version management service initialized');
-        print('Current version: $_currentVersion ($_currentBuildNumber)');
-        print('Platform: $_currentPlatform');
+        debugPrint('Version management service initialized');
+        debugPrint('Current version: $_currentVersion ($_currentBuildNumber)');
+        debugPrint('Platform: $_currentPlatform');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка инициализации сервиса управления версиями: $e');
+        debugPrint('Ошибка инициализации сервиса управления версиями: $e');
       }
     }
   }
@@ -55,7 +55,7 @@ class VersionManagementService {
       _currentPlatform = Platform.operatingSystem;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки информации о пакете: $e');
+        debugPrint('Ошибка загрузки информации о пакете: $e');
       }
     }
   }
@@ -90,7 +90,7 @@ class VersionManagementService {
       return null;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка проверки обновлений: $e');
+        debugPrint('Ошибка проверки обновлений: $e');
       }
       return null;
     }
@@ -121,7 +121,7 @@ class VersionManagementService {
       return false; // Версии одинаковые
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка сравнения версий: $e');
+        debugPrint('Ошибка сравнения версий: $e');
       }
       return false;
     }
@@ -171,13 +171,13 @@ class VersionManagementService {
       _versionsCache[versionId] = appVersion;
 
       if (kDebugMode) {
-        print('Version created: $version ($buildNumber) for $platform');
+        debugPrint('Version created: $version ($buildNumber) for $platform');
       }
 
       return versionId;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка создания версии: $e');
+        debugPrint('Ошибка создания версии: $e');
       }
       rethrow;
     }
@@ -193,11 +193,11 @@ class VersionManagementService {
       _versionsCache[versionId] = updatedVersion;
 
       if (kDebugMode) {
-        print('Version updated: ${updatedVersion.version}');
+        debugPrint('Version updated: ${updatedVersion.version}');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка обновления версии: $e');
+        debugPrint('Ошибка обновления версии: $e');
       }
       rethrow;
     }
@@ -234,11 +234,11 @@ class VersionManagementService {
       _versionsCache[versionId] = version.copyWith(isAvailable: true);
 
       if (kDebugMode) {
-        print('Version activated: ${version.version}');
+        debugPrint('Version activated: ${version.version}');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка активации версии: $e');
+        debugPrint('Ошибка активации версии: $e');
       }
       rethrow;
     }
@@ -274,13 +274,13 @@ class VersionManagementService {
       _updatesCache[updateId] = appUpdate;
 
       if (kDebugMode) {
-        print('Update started: $_currentVersion -> $targetVersion');
+        debugPrint('Update started: $_currentVersion -> $targetVersion');
       }
 
       return updateId;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка начала обновления: $e');
+        debugPrint('Ошибка начала обновления: $e');
       }
       rethrow;
     }
@@ -311,11 +311,11 @@ class VersionManagementService {
       _updatesCache[updateId] = updatedUpdate;
 
       if (kDebugMode) {
-        print('Update progress: $updateId - ${(progress * 100).toInt()}%');
+        debugPrint('Update progress: $updateId - ${(progress * 100).toInt()}%');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка обновления прогресса: $e');
+        debugPrint('Ошибка обновления прогресса: $e');
       }
     }
   }
@@ -348,13 +348,13 @@ class VersionManagementService {
       _updatesCache[updateId] = updatedUpdate;
 
       if (kDebugMode) {
-        print(
+        debugPrint(
           'Update completed: $updateId - ${success ? 'success' : 'failed'}',
         );
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка завершения обновления: $e');
+        debugPrint('Ошибка завершения обновления: $e');
       }
     }
   }
@@ -416,11 +416,11 @@ class VersionManagementService {
       _statisticsCache[key] = statistics;
 
       if (kDebugMode) {
-        print('Version statistics updated: $version ($platform)');
+        debugPrint('Version statistics updated: $version ($platform)');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка обновления статистики версии: $e');
+        debugPrint('Ошибка обновления статистики версии: $e');
       }
     }
   }
@@ -460,11 +460,11 @@ class VersionManagementService {
       }
 
       if (kDebugMode) {
-        print('Loaded ${_versionsCache.length} versions');
+        debugPrint('Loaded ${_versionsCache.length} versions');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки кэша версий: $e');
+        debugPrint('Ошибка загрузки кэша версий: $e');
       }
     }
   }
@@ -480,11 +480,11 @@ class VersionManagementService {
       }
 
       if (kDebugMode) {
-        print('Loaded ${_updatesCache.length} updates');
+        debugPrint('Loaded ${_updatesCache.length} updates');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки кэша обновлений: $e');
+        debugPrint('Ошибка загрузки кэша обновлений: $e');
       }
     }
   }
@@ -501,11 +501,11 @@ class VersionManagementService {
       }
 
       if (kDebugMode) {
-        print('Loaded ${_statisticsCache.length} statistics');
+        debugPrint('Loaded ${_statisticsCache.length} statistics');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки кэша статистики: $e');
+        debugPrint('Ошибка загрузки кэша статистики: $e');
       }
     }
   }

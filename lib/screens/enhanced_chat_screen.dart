@@ -456,7 +456,7 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
 
   void _sendTextMessage(String text) {
     // TODO: Реализовать отправку текстового сообщения
-    debugPrint('Отправка текстового сообщения: $text');
+    debugdebugPrint('Отправка текстового сообщения: $text');
   }
 
   void _sendMediaMessage(
@@ -464,17 +464,17 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
     String? caption,
   }) {
     // TODO: Реализовать отправку медиа сообщения
-    debugPrint('Отправка медиа сообщения: ${attachments.length} файлов');
+    debugdebugPrint('Отправка медиа сообщения: ${attachments.length} файлов');
   }
 
   void _sendVoiceMessage(MessageAttachment voiceAttachment) {
     // TODO: Реализовать отправку голосового сообщения
-    debugPrint('Отправка голосового сообщения');
+    debugdebugPrint('Отправка голосового сообщения');
   }
 
   void _sendDocumentMessage(List<MessageAttachment> documents) {
     // TODO: Реализовать отправку документов
-    debugPrint('Отправка документов: ${documents.length} файлов');
+    debugdebugPrint('Отправка документов: ${documents.length} файлов');
   }
 
   void _replyToMessage(EnhancedMessage message) {
@@ -496,12 +496,12 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
 
   void _forwardMessage(EnhancedMessage message) {
     // TODO: Реализовать пересылку сообщения
-    debugPrint('Пересылка сообщения: ${message.id}');
+    debugdebugPrint('Пересылка сообщения: ${message.id}');
   }
 
   void _editMessage(EnhancedMessage message) {
     // TODO: Реализовать редактирование сообщения
-    debugPrint('Редактирование сообщения: ${message.id}');
+    debugdebugPrint('Редактирование сообщения: ${message.id}');
   }
 
   void _deleteMessage(EnhancedMessage message) {
@@ -529,12 +529,12 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
 
   void _reactToMessage(EnhancedMessage message, String emoji) {
     // TODO: Реализовать реакцию на сообщение
-    debugPrint('Реакция на сообщение: $emoji');
+    debugdebugPrint('Реакция на сообщение: $emoji');
   }
 
   void _copyMessage(EnhancedMessage message) {
     // TODO: Реализовать копирование сообщения
-    debugPrint('Копирование сообщения');
+    debugdebugPrint('Копирование сообщения');
   }
 
   void _onTypingChanged(bool isTyping) {
@@ -545,36 +545,36 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
 
   void _startVideoCall() {
     // TODO: Реализовать видеозвонок
-    debugPrint('Начало видеозвонка');
+    debugdebugPrint('Начало видеозвонка');
   }
 
   void _startVoiceCall() {
     // TODO: Реализовать голосовой звонок
-    debugPrint('Начало голосового звонка');
+    debugdebugPrint('Начало голосового звонка');
   }
 
   void _searchMessages() {
     // TODO: Реализовать поиск по сообщениям
-    debugPrint('Поиск по сообщениям');
+    debugdebugPrint('Поиск по сообщениям');
   }
 
   void _showMediaFiles() {
     // TODO: Реализовать показ медиафайлов
-    debugPrint('Показ медиафайлов');
+    debugdebugPrint('Показ медиафайлов');
   }
 
   void _showChatSettings() {
     // TODO: Реализовать настройки чата
-    debugPrint('Настройки чата');
+    debugdebugPrint('Настройки чата');
   }
 
   void _pinChat() {
     // TODO: Реализовать закрепление чата
-    debugPrint('Закрепление чата');
+    debugdebugPrint('Закрепление чата');
   }
 
   void _muteChat() {
     // TODO: Реализовать заглушение чата
-    debugPrint('Заглушение чата');
+    debugdebugPrint('Заглушение чата');
   }
 }

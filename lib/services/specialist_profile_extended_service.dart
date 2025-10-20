@@ -25,7 +25,7 @@ class SpecialistProfileExtendedService {
 
       return SpecialistProfileExtended.fromDocument(doc.docs.first);
     } catch (e) {
-      print('Error getting extended specialist profile: $e');
+      debugPrint('Error getting extended specialist profile: $e');
       return null;
     }
   }
@@ -56,7 +56,7 @@ class SpecialistProfileExtendedService {
 
       return extendedProfile.copyWith(id: docRef.id);
     } catch (e) {
-      print('Error creating extended specialist profile: $e');
+      debugPrint('Error creating extended specialist profile: $e');
       return null;
     }
   }
@@ -69,7 +69,7 @@ class SpecialistProfileExtendedService {
           .doc(profile.id)
           .update(profile.copyWith(lastUpdated: DateTime.now()).toMap());
     } catch (e) {
-      print('Error updating extended specialist profile: $e');
+      debugPrint('Error updating extended specialist profile: $e');
     }
   }
 
@@ -104,7 +104,7 @@ class SpecialistProfileExtendedService {
 
       return faqItem;
     } catch (e) {
-      print('Error adding FAQ item: $e');
+      debugPrint('Error adding FAQ item: $e');
       return null;
     }
   }
@@ -129,7 +129,7 @@ class SpecialistProfileExtendedService {
       final updatedProfile = profile.copyWith(faqItems: updatedFAQItems);
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
-      print('Error updating FAQ item: $e');
+      debugPrint('Error updating FAQ item: $e');
     }
   }
 
@@ -144,7 +144,7 @@ class SpecialistProfileExtendedService {
       final updatedProfile = profile.copyWith(faqItems: updatedFAQItems);
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
-      print('Error removing FAQ item: $e');
+      debugPrint('Error removing FAQ item: $e');
     }
   }
 
@@ -185,7 +185,7 @@ class SpecialistProfileExtendedService {
 
       return video;
     } catch (e) {
-      print('Error adding portfolio video: $e');
+      debugPrint('Error adding portfolio video: $e');
       return null;
     }
   }
@@ -210,7 +210,7 @@ class SpecialistProfileExtendedService {
       final updatedProfile = profile.copyWith(portfolioVideos: updatedVideos);
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
-      print('Error updating portfolio video: $e');
+      debugPrint('Error updating portfolio video: $e');
     }
   }
 
@@ -225,7 +225,7 @@ class SpecialistProfileExtendedService {
       final updatedProfile = profile.copyWith(portfolioVideos: updatedVideos);
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
-      print('Error removing portfolio video: $e');
+      debugPrint('Error removing portfolio video: $e');
     }
   }
 
@@ -245,7 +245,7 @@ class SpecialistProfileExtendedService {
 
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
-      print('Error adding certification: $e');
+      debugPrint('Error adding certification: $e');
     }
   }
 
@@ -264,7 +264,7 @@ class SpecialistProfileExtendedService {
       final updatedProfile = profile.copyWith(certifications: updatedCertifications);
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
-      print('Error removing certification: $e');
+      debugPrint('Error removing certification: $e');
     }
   }
 
@@ -281,7 +281,7 @@ class SpecialistProfileExtendedService {
 
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
-      print('Error adding award: $e');
+      debugPrint('Error adding award: $e');
     }
   }
 
@@ -296,7 +296,7 @@ class SpecialistProfileExtendedService {
       final updatedProfile = profile.copyWith(awards: updatedAwards);
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
-      print('Error removing award: $e');
+      debugPrint('Error removing award: $e');
     }
   }
 
@@ -311,7 +311,7 @@ class SpecialistProfileExtendedService {
 
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
-      print('Error adding testimonial: $e');
+      debugPrint('Error adding testimonial: $e');
     }
   }
 
@@ -329,7 +329,7 @@ class SpecialistProfileExtendedService {
       final updatedProfile = profile.copyWith(testimonials: updatedTestimonials);
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
-      print('Error removing testimonial: $e');
+      debugPrint('Error removing testimonial: $e');
     }
   }
 
@@ -347,7 +347,7 @@ class SpecialistProfileExtendedService {
           .toList()
         ..sort((a, b) => a.order.compareTo(b.order));
     } catch (e) {
-      print('Error getting FAQ by category: $e');
+      debugPrint('Error getting FAQ by category: $e');
       return [];
     }
   }
@@ -361,7 +361,7 @@ class SpecialistProfileExtendedService {
       return profile.portfolioVideos.where((video) => video.isPublic).toList()
         ..sort((a, b) => b.uploadedAt.compareTo(a.uploadedAt));
     } catch (e) {
-      print('Error getting public videos: $e');
+      debugPrint('Error getting public videos: $e');
       return [];
     }
   }
@@ -382,7 +382,7 @@ class SpecialistProfileExtendedService {
           )
           .toList();
     } catch (e) {
-      print('Error searching FAQ: $e');
+      debugPrint('Error searching FAQ: $e');
       return [];
     }
   }
@@ -406,7 +406,7 @@ class SpecialistProfileExtendedService {
           )
           .toList();
     } catch (e) {
-      print('Error searching videos: $e');
+      debugPrint('Error searching videos: $e');
       return [];
     }
   }
@@ -430,7 +430,7 @@ class SpecialistProfileExtendedService {
         lastActivity: profile.lastUpdated,
       );
     } catch (e) {
-      print('Error getting specialist profile stats: $e');
+      debugPrint('Error getting specialist profile stats: $e');
       return SpecialistProfileStats.empty();
     }
   }

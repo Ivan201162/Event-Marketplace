@@ -246,7 +246,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
         'can_receive_messages': true,
       });
     } catch (e) {
-      print('Ошибка создания профиля: $e');
+      debugPrint('Ошибка создания профиля: $e');
     }
   }
 

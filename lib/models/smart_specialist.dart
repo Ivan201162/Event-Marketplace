@@ -664,10 +664,8 @@ class SmartSpecialist {
     keywords.addAll(specialist.services.map((s) => s.toLowerCase()));
 
     // Добавляем город
-    if (specialist.city != null) {
-      keywords.add(specialist.city!.toLowerCase());
-    }
-
+    keywords.add(specialist.city.toLowerCase());
+  
     // Добавляем оборудование
     keywords.addAll(specialist.equipment.map((e) => e.toLowerCase()));
 
@@ -708,10 +706,8 @@ class SmartSpecialist {
     tags.addAll(specialist.subcategories);
     tags.addAll(specialist.services);
 
-    if (specialist.city != null) {
-      tags.add(specialist.city!);
-    }
-
+    tags.add(specialist.city);
+  
     return tags;
   }
 

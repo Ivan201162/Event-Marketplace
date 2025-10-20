@@ -1,95 +1,119 @@
-class IdeaCollection {
-  final String id;
-  final String name;
-  final String description;
-  final String? coverImage;
-  final List<String> ideaIds;
-  final String userId;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
-  final bool isPublic;
-  final int likesCount;
-  final int viewsCount;
-  final Map<String, dynamic>? metadata;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// Модель коллекции идей
+class IdeaCollection {
   const IdeaCollection({
     required this.id,
-    required this.name,
-    required this.description,
-    this.coverImage,
-    this.ideaIds = const [],
     required this.userId,
+    required this.name,
+    this.description,
+    this.coverImageUrl,
+    this.ideas = const [],
+    this.isPublic = false,
+    this.likes = 0,
+    this.isLiked = false,
     required this.createdAt,
     this.updatedAt,
-    this.isPublic = false,
-    this.likesCount = 0,
-    this.viewsCount = 0,
-    this.metadata,
   });
 
-  factory IdeaCollection.fromMap(Map<String, dynamic> map) {
+  final String id;
+  final String userId;
+  final String name;
+  final String? description;
+  final String? coverImageUrl;
+  final List<String> ideas; // ID идей в коллекции
+  final bool isPublic;
+  final int likes;
+  final bool isLiked;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
+
+  /// Создать из Map
+  factory IdeaCollection.fromMap(Map<String, dynamic> data) {
     return IdeaCollection(
-      id: map['id']?.toString() ?? '',
-      name: map['name']?.toString() ?? '',
-      description: map['description']?.toString() ?? '',
-      coverImage: map['coverImage']?.toString(),
-      ideaIds: (map['ideaIds'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-      userId: map['userId']?.toString() ?? '',
-      createdAt: DateTime.tryParse(map['createdAt']?.toString() ?? '') ?? DateTime.now(),
-      updatedAt: map['updatedAt'] != null 
-          ? DateTime.tryParse(map['updatedAt']?.toString() ?? '') 
+      id: data['id'] as String? ?? '',
+      userId: data['userId'] as String? ?? '',
+      name: data['name'] as String? ?? '',
+      description: data['description'] as String?,
+      coverImageUrl: data['coverImageUrl'] as String?,
+      ideas: List<String>.from(data['ideas'] ?? []),
+      isPublic: data['isPublic'] as bool? ?? false,
+      likes: data['likes'] as int? ?? 0,
+      isLiked: data['isLiked'] as bool? ?? false,
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] is Timestamp
+              ? (data['createdAt'] as Timestamp).toDate()
+              : DateTime.parse(data['createdAt'].toString()))
+          : DateTime.now(),
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] is Timestamp
+              ? (data['updatedAt'] as Timestamp).toDate()
+              : DateTime.tryParse(data['updatedAt'].toString()))
           : null,
-      isPublic: map['isPublic'] as bool? ?? false,
-      likesCount: map['likesCount'] as int? ?? 0,
-      viewsCount: map['viewsCount'] as int? ?? 0,
-      metadata: map['metadata'] as Map<String, dynamic>?,
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'coverImage': coverImage,
-      'ideaIds': ideaIds,
-      'userId': userId,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt?.toIso8601String(),
-      'isPublic': isPublic,
-      'likesCount': likesCount,
-      'viewsCount': viewsCount,
-      'metadata': metadata,
-    };
+  /// Создать из документа Firestore
+  factory IdeaCollection.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>?;
+    if (data == null) {
+      throw Exception('Document data is null');
+    }
+
+    return IdeaCollection.fromMap({
+      'id': doc.id,
+      ...data,
+    });
   }
 
+  /// Преобразовать в Map для Firestore
+  Map<String, dynamic> toMap() => {
+        'userId': userId,
+        'name': name,
+        'description': description,
+        'coverImageUrl': coverImageUrl,
+        'ideas': ideas,
+        'isPublic': isPublic,
+        'likes': likes,
+        'isLiked': isLiked,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+      };
+
+  /// Копировать с изменениями
   IdeaCollection copyWith({
     String? id,
+    String? userId,
     String? name,
     String? description,
-    String? coverImage,
-    List<String>? ideaIds,
-    String? userId,
+    String? coverImageUrl,
+    List<String>? ideas,
+    bool? isPublic,
+    int? likes,
+    bool? isLiked,
     DateTime? createdAt,
     DateTime? updatedAt,
-    bool? isPublic,
-    int? likesCount,
-    int? viewsCount,
-    Map<String, dynamic>? metadata,
-  }) {
-    return IdeaCollection(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      coverImage: coverImage ?? this.coverImage,
-      ideaIds: ideaIds ?? this.ideaIds,
-      userId: userId ?? this.userId,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      isPublic: isPublic ?? this.isPublic,
-      likesCount: likesCount ?? this.likesCount,
-      viewsCount: viewsCount ?? this.viewsCount,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      IdeaCollection(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        coverImageUrl: coverImageUrl ?? this.coverImageUrl,
+        ideas: ideas ?? this.ideas,
+        isPublic: isPublic ?? this.isPublic,
+        likes: likes ?? this.likes,
+        isLiked: isLiked ?? this.isLiked,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
+
+  /// Получить количество идей в коллекции
+  int get ideasCount => ideas.length;
+
+  /// Проверить, пуста ли коллекция
+  bool get isEmpty => ideas.isEmpty;
+
+  /// Проверить, содержит ли коллекция указанную идею
+  bool containsIdea(String ideaId) => ideas.contains(ideaId);
 }

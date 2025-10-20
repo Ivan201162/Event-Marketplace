@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 
 import '../core/feature_flags.dart';
 import '../models/feature_request.dart';
@@ -53,7 +52,7 @@ class FeatureRequestService {
 
       return docRef.id;
     } on Exception catch (e) {
-      debugPrint('Error creating feature request: $e');
+      debugdebugPrint('Error creating feature request: $e');
       throw Exception('Ошибка создания предложения: $e');
     }
   }
@@ -158,7 +157,7 @@ class FeatureRequestService {
         ...doc.data()!,
       });
     } on Exception catch (e) {
-      debugPrint('Error getting feature request: $e');
+      debugdebugPrint('Error getting feature request: $e');
       return null;
     }
   }
@@ -178,7 +177,7 @@ class FeatureRequestService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      debugPrint('Error updating feature request: $e');
+      debugdebugPrint('Error updating feature request: $e');
       throw Exception('Ошибка обновления предложения: $e');
     }
   }
@@ -192,7 +191,7 @@ class FeatureRequestService {
     try {
       await _firestore.collection('feature_requests').doc(requestId).delete();
     } on Exception catch (e) {
-      debugPrint('Error deleting feature request: $e');
+      debugdebugPrint('Error deleting feature request: $e');
       throw Exception('Ошибка удаления предложения: $e');
     }
   }
@@ -230,7 +229,7 @@ class FeatureRequestService {
         });
       });
     } on Exception catch (e) {
-      debugPrint('Error voting for feature request: $e');
+      debugdebugPrint('Error voting for feature request: $e');
       throw Exception('Ошибка голосования: $e');
     }
   }
@@ -268,7 +267,7 @@ class FeatureRequestService {
         });
       });
     } on Exception catch (e) {
-      debugPrint('Error unvoting for feature request: $e');
+      debugdebugPrint('Error unvoting for feature request: $e');
       throw Exception('Ошибка отзыва голоса: $e');
     }
   }
@@ -303,7 +302,7 @@ class FeatureRequestService {
 
       await _firestore.collection('feature_requests').doc(requestId).update(updates);
     } on Exception catch (e) {
-      debugPrint('Error updating feature request status: $e');
+      debugdebugPrint('Error updating feature request status: $e');
       throw Exception('Ошибка обновления статуса: $e');
     }
   }
@@ -328,7 +327,7 @@ class FeatureRequestService {
 
       return _calculateStats(requests);
     } on Exception catch (e) {
-      debugPrint('Error getting feature request stats: $e');
+      debugdebugPrint('Error getting feature request stats: $e');
       return _createMockStats();
     }
   }
@@ -372,7 +371,7 @@ class FeatureRequestService {
           )
           .toList();
     } on Exception catch (e) {
-      debugPrint('Error searching feature requests: $e');
+      debugdebugPrint('Error searching feature requests: $e');
       return [];
     }
   }

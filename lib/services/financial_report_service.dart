@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import '../models/payment.dart';
 
 /// Сервис для генерации финансовых отчетов
@@ -58,7 +57,7 @@ class FinancialReportService {
         generatedAt: DateTime.now(),
       );
     } on Exception catch (e) {
-      debugPrint('Error generating customer payment report: $e');
+      debugdebugPrint('Error generating customer payment report: $e');
       throw Exception('Ошибка генерации отчета по платежам: $e');
     }
   }
@@ -130,7 +129,7 @@ class FinancialReportService {
         generatedAt: DateTime.now(),
       );
     } on Exception catch (e) {
-      debugPrint('Error generating specialist income report: $e');
+      debugdebugPrint('Error generating specialist income report: $e');
       throw Exception('Ошибка генерации отчета по доходам: $e');
     }
   }
@@ -221,7 +220,7 @@ class FinancialReportService {
       final querySnapshot = await query.get();
       return querySnapshot.docs.map(Payment.fromDocument).toList();
     } on Exception catch (e) {
-      debugPrint('Error getting transaction history: $e');
+      debugdebugPrint('Error getting transaction history: $e');
       throw Exception('Ошибка получения истории транзакций: $e');
     }
   }
@@ -244,7 +243,7 @@ class FinancialReportService {
 
       return _groupPaymentsByMonth(payments);
     } on Exception catch (e) {
-      debugPrint('Error getting monthly stats: $e');
+      debugdebugPrint('Error getting monthly stats: $e');
       return {};
     }
   }

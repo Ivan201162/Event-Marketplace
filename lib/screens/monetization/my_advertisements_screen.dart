@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/advertisement.dart';
-import '../../providers/auth_provider.dart';
 import '../../services/advertisement_service.dart';
 
 class MyAdvertisementsScreen extends StatefulWidget {
@@ -139,7 +138,7 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: _getStatusColor(advertisement.status).withOpacity(0.1),
+                    color: _getStatusColor(advertisement.status).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -319,7 +318,7 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: _getStatusColor(status).withOpacity(0.1),
+        color: _getStatusColor(status).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: _getStatusColor(status)),
       ),

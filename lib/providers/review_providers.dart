@@ -1,354 +1,177 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/review.dart';
 import '../services/review_service.dart';
 
-/// Теги для отзывов
-class ReviewTags {
-  static const List<String> commonTags = [
-    'Качество работы',
-    'Пунктуальность',
-    'Коммуникация',
-    'Профессионализм',
-    'Цена/качество',
-    'Креативность',
-    'Организация',
-    'Гибкость',
-    'Техническое оснащение',
-    'Атмосфера',
-  ];
-
-  /// Получить теги по рейтингу
-  static List<String> getTagsByRating(int rating) {
-    switch (rating) {
-      case 5:
-        return ['Отлично', 'Превосходно', 'Рекомендую'];
-      case 4:
-        return ['Хорошо', 'Качественно', 'Доволен'];
-      case 3:
-        return ['Нормально', 'Удовлетворительно'];
-      case 2:
-        return ['Плохо', 'Не рекомендую'];
-      case 1:
-        return ['Ужасно', 'Очень плохо'];
-      default:
-        return commonTags;
-    }
-  }
-}
-
-/// Провайдер для получения отзывов специалиста
-final specialistReviewsProvider = StreamProvider.family<List<Review>, String>(
-  (ref, specialistId) => FirebaseFirestore.instance
-      .collection('reviews')
-      .where('specialistId', isEqualTo: specialistId)
-      .orderBy('createdAt', descending: true)
-      .snapshots()
-      .map((snapshot) => snapshot.docs.map(Review.fromDocument).toList()),
-);
-
-/// Провайдер для получения статистики отзывов специалиста
-final specialistReviewStatsProvider =
-    FutureProvider.family<SpecialistReviewStats, String>((ref, specialistId) async {
-  final reviews = await ref.read(specialistReviewsProvider(specialistId).future);
-  return SpecialistReviewStats.fromReviews(reviews);
+/// Review service provider
+final reviewServiceProvider = Provider<ReviewService>((ref) {
+  return ReviewService();
 });
 
-/// Провайдер для получения отзывов заказчика
-final customerReviewsProvider = StreamProvider.family<List<Review>, String>(
-  (ref, customerId) => FirebaseFirestore.instance
-      .collection('reviews')
-      .where('customerId', isEqualTo: customerId)
-      .orderBy('createdAt', descending: true)
-      .snapshots()
-      .map((snapshot) => snapshot.docs.map(Review.fromDocument).toList()),
-);
-
-/// Провайдер для создания отзыва
-final createReviewProvider = FutureProvider.family<void, CreateReviewParams>((ref, params) async {
-  final review = Review(
-    id: '',
-    specialistId: params.specialistId,
-    customerId: params.customerId,
-    customerName: params.customerName,
-    rating: params.rating,
-    comment: params.comment,
-    serviceTags: params.serviceTags,
-    createdAt: DateTime.now(),
-  );
-
-  await FirebaseFirestore.instance.collection('reviews').add(review.toMap());
+/// Specialist reviews provider
+final specialistReviewsProvider = FutureProvider.family<List<Review>, String>((ref, specialistId) async {
+  final reviewService = ref.read(reviewServiceProvider);
+  return reviewService.getSpecialistReviews(specialistId);
 });
 
-/// Провайдер для сервиса отзывов
-final reviewServiceProvider = Provider<ReviewService>((ref) => ReviewService());
+/// Client reviews provider
+final clientReviewsProvider = FutureProvider.family<List<Review>, String>((ref, clientId) async {
+  final reviewService = ref.read(reviewServiceProvider);
+  return reviewService.getClientReviews(clientId);
+});
 
-/// Провайдер для состояния формы отзыва (мигрирован с StateNotifierProvider)
-final reviewFormProvider = NotifierProvider<ReviewFormNotifier, ReviewFormState>(
-  () => ReviewFormNotifier(),
-);
+/// Reviews by rating provider
+final reviewsByRatingProvider = FutureProvider.family<List<Review>, int>((ref, rating) async {
+  final reviewService = ref.read(reviewServiceProvider);
+  return reviewService.getReviewsByRating(rating);
+});
 
-/// Провайдер для состояния отзывов (мигрирован с StateNotifierProvider)
-final reviewStateProvider = NotifierProvider<ReviewStateNotifier, ReviewState>(
-  () => ReviewStateNotifier(),
-);
+/// Review by ID provider
+final reviewByIdProvider = FutureProvider.family<Review?, String>((ref, reviewId) async {
+  final reviewService = ref.read(reviewServiceProvider);
+  return reviewService.getReviewById(reviewId);
+});
 
-/// Состояние формы отзыва
-class ReviewFormState {
-  const ReviewFormState({
-    this.rating = 0,
-    this.comment = '',
-    this.serviceTags = const [],
-    this.selectedTags = const [],
-    this.isLoading = false,
-    this.error,
-    this.title = '',
-    this.isPublic = true,
-    this.isSubmitting = false,
-  });
+/// Specialist reviews stream provider
+final specialistReviewsStreamProvider = StreamProvider.family<List<Review>, String>((ref, specialistId) {
+  final reviewService = ref.read(reviewServiceProvider);
+  return reviewService.getSpecialistReviewsStream(specialistId);
+});
 
-  final int rating;
-  final String comment;
-  final List<String> serviceTags;
-  final List<String> selectedTags;
-  final bool isLoading;
-  final String? error;
-  final String title;
-  final bool isPublic;
-  final bool isSubmitting;
+/// Client reviews stream provider
+final clientReviewsStreamProvider = StreamProvider.family<List<Review>, String>((ref, clientId) {
+  final reviewService = ref.read(reviewServiceProvider);
+  return reviewService.getClientReviewsStream(clientId);
+});
 
-  String? get errorMessage => error;
+/// Reviews by rating stream provider
+final reviewsByRatingStreamProvider = StreamProvider.family<List<Review>, int>((ref, rating) {
+  final reviewService = ref.read(reviewServiceProvider);
+  return reviewService.getReviewsByRatingStream(rating);
+});
 
-  ReviewFormState copyWith({
-    int? rating,
-    String? comment,
-    List<String>? serviceTags,
-    List<String>? selectedTags,
-    bool? isLoading,
-    String? error,
-    String? title,
-    bool? isPublic,
-    bool? isSubmitting,
-  }) =>
-      ReviewFormState(
-        rating: rating ?? this.rating,
-        comment: comment ?? this.comment,
-        serviceTags: serviceTags ?? this.serviceTags,
-        selectedTags: selectedTags ?? this.selectedTags,
-        isLoading: isLoading ?? this.isLoading,
-        error: error ?? this.error,
-        title: title ?? this.title,
-        isPublic: isPublic ?? this.isPublic,
-        isSubmitting: isSubmitting ?? this.isSubmitting,
-      );
-}
+/// Specialist review statistics provider
+final specialistReviewStatsProvider = FutureProvider.family<Map<String, dynamic>, String>((ref, specialistId) async {
+  final reviewService = ref.read(reviewServiceProvider);
+  return reviewService.getSpecialistReviewStats(specialistId);
+});
 
-/// Нотификатор для формы отзыва (мигрирован с StateNotifier)
-class ReviewFormNotifier extends Notifier<ReviewFormState> {
-  @override
-  ReviewFormState build() {
-    return const ReviewFormState();
+/// Recent reviews provider
+final recentReviewsProvider = FutureProvider.family<List<Review>, int>((ref, limit) async {
+  final reviewService = ref.read(reviewServiceProvider);
+  return reviewService.getRecentReviews(limit: limit);
+});
+
+/// Top rated specialists provider
+final topRatedSpecialistsProvider = FutureProvider.family<List<Map<String, dynamic>>, int>((ref, limit) async {
+  final reviewService = ref.read(reviewServiceProvider);
+  return reviewService.getTopRatedSpecialists(limit: limit);
+});
+
+/// Can client review specialist provider
+final canClientReviewProvider = FutureProvider.family<bool, Map<String, String>>((ref, params) async {
+  final reviewService = ref.read(reviewServiceProvider);
+  final clientId = params['clientId']!;
+  final specialistId = params['specialistId']!;
+  return reviewService.canClientReviewSpecialist(clientId, specialistId);
+});
+
+/// Review statistics provider
+final reviewStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+  final reviewService = ref.read(reviewServiceProvider);
+  
+  // Get overall statistics
+  final recentReviews = await reviewService.getRecentReviews(limit: 100);
+  final topSpecialists = await reviewService.getTopRatedSpecialists();
+  
+  final totalReviews = recentReviews.length;
+  final averageRating = recentReviews.isNotEmpty 
+      ? recentReviews.fold(0.0, (sum, review) => sum + review.rating) / recentReviews.length
+      : 0.0;
+  
+  final ratingDistribution = <int, int>{1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
+  for (final review in recentReviews) {
+    ratingDistribution[review.rating] = (ratingDistribution[review.rating] ?? 0) + 1;
   }
+  
+  return {
+    'totalReviews': totalReviews,
+    'averageRating': averageRating,
+    'ratingDistribution': ratingDistribution,
+    'topSpecialists': topSpecialists,
+  };
+});
 
-  ReviewService get _reviewService => ref.read(reviewServiceProvider);
+/// Reviews with images provider
+final reviewsWithImagesProvider = FutureProvider.family<List<Review>, String>((ref, specialistId) async {
+  final reviewService = ref.read(reviewServiceProvider);
+  final reviews = await reviewService.getSpecialistReviews(specialistId);
+  return reviews.where((review) => review.hasImages).toList();
+});
 
-  void updateRating(int rating) {
-    state = state.copyWith(rating: rating);
-  }
+/// Reviews with images stream provider
+final reviewsWithImagesStreamProvider = StreamProvider.family<List<Review>, String>((ref, specialistId) {
+  final reviewService = ref.read(reviewServiceProvider);
+  return reviewService.getSpecialistReviewsStream(specialistId)
+      .map((reviews) => reviews.where((review) => review.hasImages).toList());
+});
 
-  void updateComment(String comment) {
-    state = state.copyWith(comment: comment);
-  }
+/// High rating reviews provider (4+ stars)
+final highRatingReviewsProvider = FutureProvider.family<List<Review>, String>((ref, specialistId) async {
+  final reviewService = ref.read(reviewServiceProvider);
+  final reviews = await reviewService.getSpecialistReviews(specialistId);
+  return reviews.where((review) => review.rating >= 4).toList();
+});
 
-  void updateServiceTags(List<String> tags) {
-    state = state.copyWith(serviceTags: tags);
-  }
+/// High rating reviews stream provider
+final highRatingReviewsStreamProvider = StreamProvider.family<List<Review>, String>((ref, specialistId) {
+  final reviewService = ref.read(reviewServiceProvider);
+  return reviewService.getSpecialistReviewsStream(specialistId)
+      .map((reviews) => reviews.where((review) => review.rating >= 4).toList());
+});
 
-  void updateSelectedTags(List<String> tags) {
-    state = state.copyWith(selectedTags: tags);
-  }
+/// Low rating reviews provider (1-2 stars)
+final lowRatingReviewsProvider = FutureProvider.family<List<Review>, String>((ref, specialistId) async {
+  final reviewService = ref.read(reviewServiceProvider);
+  final reviews = await reviewService.getSpecialistReviews(specialistId);
+  return reviews.where((review) => review.rating <= 2).toList();
+});
 
-  void updateTitle(String title) {
-    state = state.copyWith(title: title);
-  }
+/// Low rating reviews stream provider
+final lowRatingReviewsStreamProvider = StreamProvider.family<List<Review>, String>((ref, specialistId) {
+  final reviewService = ref.read(reviewServiceProvider);
+  return reviewService.getSpecialistReviewsStream(specialistId)
+      .map((reviews) => reviews.where((review) => review.rating <= 2).toList());
+});
 
-  void setRating(int rating) {
-    state = state.copyWith(rating: rating);
-  }
+/// Reviews count provider
+final reviewsCountProvider = FutureProvider.family<int, String>((ref, specialistId) async {
+  final reviewService = ref.read(reviewServiceProvider);
+  final reviews = await reviewService.getSpecialistReviews(specialistId);
+  return reviews.length;
+});
 
-  void addTag(String tag) {
-    final tags = List<String>.from(state.serviceTags);
-    if (!tags.contains(tag)) {
-      tags.add(tag);
-      state = state.copyWith(serviceTags: tags);
-    }
-  }
+/// Reviews count stream provider
+final reviewsCountStreamProvider = StreamProvider.family<int, String>((ref, specialistId) {
+  final reviewService = ref.read(reviewServiceProvider);
+  return reviewService.getSpecialistReviewsStream(specialistId)
+      .map((reviews) => reviews.length);
+});
 
-  void removeTag(String tag) {
-    final tags = List<String>.from(state.serviceTags);
-    tags.remove(tag);
-    state = state.copyWith(serviceTags: tags);
-  }
+/// Average rating provider
+final averageRatingProvider = FutureProvider.family<double, String>((ref, specialistId) async {
+  final reviewService = ref.read(reviewServiceProvider);
+  final stats = await reviewService.getSpecialistReviewStats(specialistId);
+  return stats['averageRating'] as double;
+});
 
-  void togglePublic() {
-    state = state.copyWith(isPublic: !state.isPublic);
-  }
-
-  void startSubmitting() {
-    state = state.copyWith(isSubmitting: true);
-  }
-
-  void finishSubmitting() {
-    state = state.copyWith(isSubmitting: false);
-  }
-
-  void setError(String error) {
-    state = state.copyWith(error: error);
-  }
-
-  bool get isValid => state.rating > 0 && state.comment.isNotEmpty;
-
-  Future<void> submitReview(
-    String specialistId,
-    String customerId,
-    String customerName,
-  ) async {
-    state = state.copyWith(isLoading: true);
-
-    try {
-      await _reviewService.createReview(
-        specialistId: specialistId,
-        customerId: customerId,
-        customerName: customerName,
-        rating: state.rating,
-        comment: state.comment,
-        serviceTags: state.serviceTags,
-      );
-      state = state.copyWith(isLoading: false);
-    } on Exception catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
-    }
-  }
-}
-
-/// Состояние отзывов
-class ReviewState {
-  const ReviewState({
-    this.reviews = const [],
-    this.isLoading = false,
-    this.error,
-  });
-
-  final List<Review> reviews;
-  final bool isLoading;
-  final String? error;
-
-  ReviewState copyWith({
-    List<Review>? reviews,
-    bool? isLoading,
-    String? error,
-  }) =>
-      ReviewState(
-        reviews: reviews ?? this.reviews,
-        isLoading: isLoading ?? this.isLoading,
-        error: error ?? this.error,
-      );
-}
-
-/// Нотификатор для состояния отзывов (мигрирован с StateNotifier)
-class ReviewStateNotifier extends Notifier<ReviewState> {
-  @override
-  ReviewState build() {
-    return const ReviewState();
-  }
-
-  ReviewService get _reviewService => ref.read(reviewServiceProvider);
-
-  Future<void> loadReviews(String specialistId) async {
-    state = state.copyWith(isLoading: true);
-
-    try {
-      final reviews = await _reviewService.getReviews(specialistId);
-      state = state.copyWith(reviews: reviews, isLoading: false);
-    } on Exception catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
-    }
-  }
-
-  Future<void> createReview(Review review) async {
-    state = state.copyWith(isLoading: true);
-
-    try {
-      await _reviewService.createReview(
-        specialistId: review.specialistId,
-        customerId: review.customerId,
-        customerName: review.customerName,
-        rating: review.rating,
-        comment: review.comment,
-        serviceTags: review.serviceTags,
-      );
-      state = state.copyWith(isLoading: false);
-    } on Exception catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
-    }
-  }
-}
-
-/// Параметры для создания отзыва
-class CreateReviewParams {
-  const CreateReviewParams({
-    required this.specialistId,
-    required this.customerId,
-    required this.customerName,
-    required this.rating,
-    required this.comment,
-    this.serviceTags = const [],
-  });
-
-  final String specialistId;
-  final String customerId;
-  final String customerName;
-  final int rating;
-  final String comment;
-  final List<String> serviceTags;
-}
-
-/// Статистика отзывов специалиста
-class SpecialistReviewStats {
-  const SpecialistReviewStats({
-    required this.averageRating,
-    required this.totalReviews,
-    required this.ratingDistribution,
-  });
-
-  factory SpecialistReviewStats.fromReviews(List<Review> reviews) {
-    if (reviews.isEmpty) {
-      return const SpecialistReviewStats(
-        averageRating: 0,
-        totalReviews: 0,
-        ratingDistribution: {},
-      );
-    }
-
-    // Вычисляем средний рейтинг
-    final totalRating = reviews.fold<int>(0, (sum, review) => sum + review.rating);
-    final averageRating = totalRating / reviews.length;
-
-    // Подсчитываем распределение по звездам
-    final ratingDistribution = <int, int>{};
-    for (final review in reviews) {
-      ratingDistribution[review.rating] = (ratingDistribution[review.rating] ?? 0) + 1;
-    }
-
-    return SpecialistReviewStats(
-      averageRating: averageRating,
-      totalReviews: reviews.length,
-      ratingDistribution: ratingDistribution,
-    );
-  }
-
-  final double averageRating;
-  final int totalReviews;
-  final Map<int, int> ratingDistribution;
-}
+/// Average rating stream provider
+final averageRatingStreamProvider = StreamProvider.family<double, String>((ref, specialistId) {
+  final reviewService = ref.read(reviewServiceProvider);
+  return reviewService.getSpecialistReviewsStream(specialistId)
+      .map((reviews) {
+        if (reviews.isEmpty) return 0.0;
+        final totalRating = reviews.fold(0, (sum, review) => sum + review.rating);
+        return totalRating / reviews.length;
+      });
+});

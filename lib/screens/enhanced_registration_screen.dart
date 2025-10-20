@@ -468,15 +468,17 @@ class _EnhancedRegistrationScreenState extends ConsumerState<EnhancedRegistratio
                   _selectedUserType = value;
                 });
               },
-              children: UserType.values.map(
-                (type) => Card(
-                  child: RadioListTile<UserType>(
-                    title: Text(_getUserTypeTitle(type)),
-                    subtitle: Text(_getUserTypeDescription(type)),
-                    value: type,
-                  ),
-                ),
-              ).toList(),
+              children: UserType.values
+                  .map(
+                    (type) => Card(
+                      child: RadioListTile<UserType>(
+                        title: Text(_getUserTypeTitle(type)),
+                        subtitle: Text(_getUserTypeDescription(type)),
+                        value: type,
+                      ),
+                    ),
+                  )
+                  .toList(),
             ),
           ],
         ),

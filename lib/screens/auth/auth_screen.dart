@@ -48,8 +48,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     try {
       final authService = ref.read(authServiceProvider);
       await authService.signInWithEmailAndPassword(
-        _emailController.text.trim(),
-        _passwordController.text,
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
       );
 
       if (mounted) {
@@ -89,18 +89,26 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
     try {
       final authService = ref.read(authServiceProvider);
-      await authService.createUserWithEmailAndPassword(
-        _emailController.text.trim(),
-        _passwordController.text,
-        _nameController.text.trim(),
+      await authService.signUpWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+        name: _nameController.text.trim(),
       );
 
       if (mounted) {
         context.go('/main');
       }
     } on FirebaseAuthException catch (e) {
+      final String errorMessage = _getErrorMessage(e.code);
+      
+      // Если email уже используется с Google, предлагаем войти через Google
+      if (e.code == 'email-already-in-use-google') {
+        _showGoogleSignInDialog();
+        return;
+      }
+      
       setState(() {
-        _errorMessage = _getErrorMessage(e.code);
+        _errorMessage = errorMessage;
       });
     } catch (e) {
       setState(() {
@@ -130,7 +138,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
     try {
       final authService = ref.read(authServiceProvider);
-      await authService.signInWithPhoneNumber(_phoneController.text.trim());
+      await authService.signInWithPhoneNumber(phoneNumber: _phoneController.text.trim());
 
       if (mounted) {
         // Переходим на экран подтверждения SMS
@@ -156,7 +164,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     }
   }
 
-  Future<void> _signInAnonymously() async {
+  Future<void> _signInWithGoogle() async {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -164,40 +172,14 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
     try {
       final authService = ref.read(authServiceProvider);
-      await authService.signInAnonymously();
+      await authService.signInWithGoogle();
 
       if (mounted) {
         context.go('/main');
       }
     } catch (e) {
       setState(() {
-        _errorMessage = 'Произошла ошибка: $e';
-      });
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
-  }
-
-  Future<void> _signInWithTestAccount() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      final authService = ref.read(authServiceProvider);
-      await authService.signInWithEmailAndPassword('test@event.ru', '123456');
-
-      if (mounted) {
-        context.go('/main');
-      }
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'Произошла ошибка: $e';
+        _errorMessage = 'Ошибка входа через Google: ${e.toString()}';
       });
     } finally {
       if (mounted) {
@@ -215,18 +197,49 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       case 'wrong-password':
         return 'Неверный пароль';
       case 'email-already-in-use':
-        return 'Email уже используется';
+        return 'Этот email уже используется. Попробуйте войти или восстановить пароль.';
+      case 'email-already-in-use-google':
+        return 'Этот email уже используется с Google. Войти через Google?';
+      case 'email-already-in-use-phone':
+        return 'Этот email уже используется с номером телефона. Попробуйте войти или восстановить пароль.';
       case 'weak-password':
-        return 'Пароль слишком слабый';
+        return 'Пароль должен содержать минимум 6 символов';
       case 'invalid-email':
         return 'Неверный формат email';
       case 'user-disabled':
         return 'Аккаунт заблокирован';
       case 'too-many-requests':
         return 'Слишком много попыток. Попробуйте позже';
+      case 'google-account':
+        return 'Этот email зарегистрирован через Google. Войдите через Google или используйте другой email.';
+      case 'phone-account':
+        return 'Этот email зарегистрирован через номер телефона. Войдите через телефон или используйте другой email.';
       default:
         return 'Произошла ошибка: $errorCode';
     }
+  }
+
+  void _showGoogleSignInDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Email уже используется'),
+        content: const Text('Этот email уже зарегистрирован через Google. Хотите войти через Google?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _signInWithGoogle();
+            },
+            child: const Text('Войти через Google'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -375,6 +388,17 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         )
                       : const Text('Войти'),
                 ),
+
+                const SizedBox(height: 16),
+
+                // Ссылка "Забыли пароль?"
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () => context.go('/forgot-password'),
+                    child: const Text('Забыли пароль?'),
+                  ),
+                ),
               ] else ...[
                 // Поля для регистрации
                 TextField(
@@ -477,22 +501,22 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
               const SizedBox(height: 16),
 
-              // Гостевой вход
-              OutlinedButton.icon(
-                onPressed: _isLoading ? null : _signInAnonymously,
-                icon: const Icon(Icons.person_outline),
-                label: const Text('Войти как гость'),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+              // Google Sign-In button
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: _isLoading ? null : _signInWithGoogle,
+                  icon: Image.asset(
+                    'assets/icons/google_logo.png',
+                    height: 24.0,
+                    width: 24.0,
+                    errorBuilder: (context, error, stackTrace) => const Icon(Icons.login),
+                  ),
+                  label: const Text('Войти через Google'),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
                 ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Тестовый аккаунт
-              TextButton(
-                onPressed: _isLoading ? null : _signInWithTestAccount,
-                child: const Text('Войти с тестовым аккаунтом'),
               ),
 
               const SizedBox(height: 40),

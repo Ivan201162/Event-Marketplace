@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../models/event_idea.dart';
 import '../models/event_idea_category.dart';
 
 /// Виджет фильтрации идей по категориям
@@ -44,8 +43,8 @@ class IdeaFilterChip extends StatelessWidget {
           ),
 
           // Категории
-          ...EventIdeaCategory.values.map((category) {
-            final isSelected = selectedCategory == category;
+          ...EventIdeaCategory.values.map((EventIdeaCategory category) {
+            final bool isSelected = selectedCategory == category;
 
             return Padding(
               padding: const EdgeInsets.only(right: 8),

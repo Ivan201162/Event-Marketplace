@@ -280,8 +280,8 @@ class _PinchZoomWidgetState extends State<PinchZoomWidget> {
         onScaleEnd: _onScaleEnd,
         child: Transform(
           transform: Matrix4.identity()
-            ..translateByDouble(_offset.dx, _offset.dy)
-            ..scaleByDouble(_scale),
+            ..translate(_offset.dx, _offset.dy)
+            ..scale(_scale),
           child: widget.child,
         ),
       );
@@ -408,7 +408,7 @@ class _DraggableWidgetState extends State<DraggableWidget> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        transform: _isDragging ? (Matrix4.identity()..scaleByDouble(1.05)) : Matrix4.identity(),
+        transform: _isDragging ? (Matrix4.identity()..scale(1.05)) : Matrix4.identity(),
         child: widget.child,
       ),
     );

@@ -141,7 +141,7 @@ void main() {
         text: 'Хорошая работа!',
         date: DateTime.now(),
         bookingId: 'booking_2',
-        metadata: {'reported': true},
+        metadata: const {'reported': true},
       );
 
       expect(reportableReview.canReport(), true);

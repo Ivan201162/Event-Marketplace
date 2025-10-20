@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SearchFiltersWidget extends StatefulWidget {
-  final Map<String, dynamic> initialFilters;
-  final Function(Map<String, dynamic>) onApplyFilters;
+import '../models/search_filters.dart';
+import '../providers/specialist_providers.dart';
+
+/// Widget for search filters
+class SearchFiltersWidget extends ConsumerStatefulWidget {
+  final SearchFilters initialFilters;
+  final Function(SearchFilters) onApplyFilters;
 
   const SearchFiltersWidget({
     super.key,
@@ -11,296 +16,345 @@ class SearchFiltersWidget extends StatefulWidget {
   });
 
   @override
-  State<SearchFiltersWidget> createState() => _SearchFiltersWidgetState();
+  ConsumerState<SearchFiltersWidget> createState() => _SearchFiltersWidgetState();
 }
 
-class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
-  String _selectedCity = '';
-  String _selectedCategory = '';
-  RangeValues _priceRange = const RangeValues(0, 100000);
-  String _selectedType = 'Физлицо';
-  String _selectedSort = 'Рейтинг';
-
-  final TextEditingController _minPriceController = TextEditingController();
-  final TextEditingController _maxPriceController = TextEditingController();
-
-  final List<String> _cities = [
-    'Москва',
-    'Санкт-Петербург',
-    'Казань',
-    'Екатеринбург',
-    'Новосибирск',
-    'Нижний Новгород',
-    'Самара',
-    'Омск',
-    'Ростов-на-Дону',
-    'Уфа',
-  ];
-
-  final List<String> _categories = [
-    'Ведущие',
-    'DJ',
-    'Фотографы',
-    'Видеографы',
-    'Декораторы',
-    'Аниматоры',
-    'Организатор мероприятий',
-    'Музыканты',
-    'Танцоры',
-    'Кейтеринг',
-  ];
-
-  final List<String> _types = [
-    'Физлицо',
-    'Самозанятый',
-    'ИП',
-    'Студия(агентство)',
-  ];
-
-  final List<String> _sortOptions = [
-    'Рейтинг',
-    'Цена',
-    'Популярность',
-    'Дата регистрации',
-  ];
+class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
+  late SearchFilters _currentFilters;
 
   @override
   void initState() {
     super.initState();
-    _selectedCity = widget.initialFilters['city'] ?? '';
-    _selectedCategory = widget.initialFilters['category'] ?? '';
-    _priceRange = widget.initialFilters['priceRange'] ?? const RangeValues(0, 100000);
-    _selectedType = widget.initialFilters['type'] ?? 'Физлицо';
-    _selectedSort = widget.initialFilters['sort'] ?? 'Рейтинг';
-
-    _minPriceController.text = _priceRange.start.round().toString();
-    _maxPriceController.text = _priceRange.end.round().toString();
-  }
-
-  @override
-  void dispose() {
-    _minPriceController.dispose();
-    _maxPriceController.dispose();
-    super.dispose();
-  }
-
-  void _resetFilters() {
-    setState(() {
-      _selectedCity = '';
-      _selectedCategory = '';
-      _priceRange = const RangeValues(0, 100000);
-      _selectedType = 'Физлицо';
-      _selectedSort = 'Рейтинг';
-      _minPriceController.text = '0';
-      _maxPriceController.text = '100000';
-    });
-  }
-
-  void _applyFilters() {
-    widget.onApplyFilters({
-      'city': _selectedCity,
-      'category': _selectedCategory,
-      'priceRange': _priceRange,
-      'type': _selectedType,
-      'sort': _selectedSort,
-    });
-    Navigator.of(context).pop();
+    _currentFilters = widget.initialFilters;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Фильтры поиска',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const SizedBox(height: 20),
-          Expanded(
-            child: ListView(
-              children: [
-                // Город
-                Text(
-                  'Город',
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                const SizedBox(height: 8),
-                DropdownButtonFormField<String>(
-                  initialValue: _selectedCity.isEmpty ? null : _selectedCity,
-                  decoration: const InputDecoration(
-                    hintText: 'Выберите город',
-                    border: OutlineInputBorder(),
-                  ),
-                  items: _cities
-                      .map((city) => DropdownMenuItem(value: city, child: Text(city)))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedCity = value ?? '';
-                    });
-                  },
-                ),
-                const SizedBox(height: 20),
+    final specializationsAsync = ref.watch(specializationsProvider);
+    final citiesAsync = ref.watch(citiesProvider);
+    final servicesAsync = ref.watch(servicesProvider);
 
-                // Категория
-                Text(
-                  'Категория',
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                const SizedBox(height: 8),
-                DropdownButtonFormField<String>(
-                  initialValue: _selectedCategory.isEmpty ? null : _selectedCategory,
-                  decoration: const InputDecoration(
-                    hintText: 'Выберите категорию',
-                    border: OutlineInputBorder(),
-                  ),
-                  items: _categories
-                      .map((category) =>
-                          DropdownMenuItem(value: category, child: Text(category)))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedCategory = value ?? '';
-                    });
-                  },
-                ),
-                const SizedBox(height: 20),
-
-                // Цена от/до
-                Text(
-                  'Цена от/до',
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _minPriceController,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: 'От',
-                          border: OutlineInputBorder(),
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            _priceRange = RangeValues(
-                              double.tryParse(value) ?? 0,
-                              _priceRange.end,
-                            );
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: TextField(
-                        controller: _maxPriceController,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: 'До',
-                          border: OutlineInputBorder(),
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            _priceRange = RangeValues(
-                              _priceRange.start,
-                              double.tryParse(value) ?? 100000,
-                            );
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                RangeSlider(
-                  values: _priceRange,
-                  min: 0,
-                  max: 100000,
-                  divisions: 100,
-                  labels: RangeLabels(
-                    _priceRange.start.round().toString(),
-                    _priceRange.end.round().toString(),
-                  ),
-                  onChanged: (values) {
-                    setState(() {
-                      _priceRange = values;
-                      _minPriceController.text = values.start.round().toString();
-                      _maxPriceController.text = values.end.round().toString();
-                    });
-                  },
-                ),
-                const SizedBox(height: 20),
-
-                // Тип
-                Text(
-                  'Тип',
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                const SizedBox(height: 8),
-                DropdownButtonFormField<String>(
-                  initialValue: _selectedType,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                  ),
-                  items: _types
-                      .map((type) => DropdownMenuItem(value: type, child: Text(type)))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedType = value ?? 'Физлицо';
-                    });
-                  },
-                ),
-                const SizedBox(height: 20),
-
-                // Сортировка
-                Text(
-                  'Сортировка',
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                const SizedBox(height: 8),
-                DropdownButtonFormField<String>(
-                  initialValue: _selectedSort,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                  ),
-                  items: _sortOptions
-                      .map((sort) => DropdownMenuItem(value: sort, child: Text(sort)))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedSort = value ?? 'Рейтинг';
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: _resetFilters,
-                  child: const Text('Сбросить'),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: _applyFilters,
-                  child: const Text('Применить'),
-                ),
-              ),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Фильтры поиска'),
+        actions: [
+          TextButton(
+            onPressed: _resetFilters,
+            child: const Text('Сбросить'),
           ),
         ],
       ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // City filter
+            _buildSectionTitle('Город'),
+            citiesAsync.when(
+              data: (cities) => _buildCityFilter(cities),
+              loading: () => const CircularProgressIndicator(),
+              error: (_, __) => const Text('Ошибка загрузки городов'),
+            ),
+            const SizedBox(height: 20),
+
+            // Specialization filter
+            _buildSectionTitle('Специализация'),
+            specializationsAsync.when(
+              data: (specializations) => _buildSpecializationFilter(specializations),
+              loading: () => const CircularProgressIndicator(),
+              error: (_, __) => const Text('Ошибка загрузки специализаций'),
+            ),
+            const SizedBox(height: 20),
+
+            // Rating filter
+            _buildSectionTitle('Минимальный рейтинг'),
+            _buildRatingFilter(),
+            const SizedBox(height: 20),
+
+            // Price range filter
+            _buildSectionTitle('Цена за час'),
+            _buildPriceRangeFilter(),
+            const SizedBox(height: 20),
+
+            // Services filter
+            _buildSectionTitle('Услуги'),
+            servicesAsync.when(
+              data: (services) => _buildServicesFilter(services),
+              loading: () => const CircularProgressIndicator(),
+              error: (_, __) => const Text('Ошибка загрузки услуг'),
+            ),
+            const SizedBox(height: 20),
+
+            // Availability filter
+            _buildSectionTitle('Доступность'),
+            _buildAvailabilityFilter(),
+            const SizedBox(height: 20),
+
+            // Sort options
+            _buildSectionTitle('Сортировка'),
+            _buildSortFilter(),
+            const SizedBox(height: 40),
+
+            // Apply button
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  widget.onApplyFilters(_currentFilters);
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  textStyle: const TextStyle(fontSize: 18),
+                ),
+                child: const Text('Применить фильтры'),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Text(
+        title,
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+      ),
+    );
+  }
+
+  Widget _buildCityFilter(List<String> cities) {
+    return DropdownButtonFormField<String>(
+      initialValue: _currentFilters.city,
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(),
+        labelText: 'Выберите город',
+      ),
+      items: [
+        const DropdownMenuItem(
+          child: Text('Любой город'),
+        ),
+        ...cities.map((city) => DropdownMenuItem(
+              value: city,
+              child: Text(city),
+            )),
+      ],
+      onChanged: (value) {
+        setState(() {
+          _currentFilters = _currentFilters.copyWith(city: value);
+        });
+      },
+    );
+  }
+
+  Widget _buildSpecializationFilter(List<String> specializations) {
+    return DropdownButtonFormField<String>(
+      initialValue: _currentFilters.specialization,
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(),
+        labelText: 'Выберите специализацию',
+      ),
+      items: [
+        const DropdownMenuItem(
+          child: Text('Любая специализация'),
+        ),
+        ...specializations.map((specialization) => DropdownMenuItem(
+              value: specialization,
+              child: Text(specialization),
+            )),
+      ],
+      onChanged: (value) {
+        setState(() {
+          _currentFilters = _currentFilters.copyWith(specialization: value);
+        });
+      },
+    );
+  }
+
+  Widget _buildRatingFilter() {
+    return Column(
+      children: [
+        Slider(
+          value: _currentFilters.minRating ?? 0.0,
+          max: 5,
+          divisions: 10,
+          label: (_currentFilters.minRating ?? 0.0).toStringAsFixed(1),
+          onChanged: (value) {
+            setState(() {
+              _currentFilters = _currentFilters.copyWith(
+                minRating: value == 0 ? null : value,
+              );
+            });
+          },
+        ),
+        Text(
+          'Минимальный рейтинг: ${(_currentFilters.minRating ?? 0.0).toStringAsFixed(1)}',
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPriceRangeFilter() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                initialValue: _currentFilters.minPrice?.toString() ?? '',
+                decoration: const InputDecoration(
+                  labelText: 'От (₽)',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  final price = int.tryParse(value);
+                  setState(() {
+                    _currentFilters = _currentFilters.copyWith(
+                      minPrice: price,
+                    );
+                  });
+                },
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: TextFormField(
+                initialValue: _currentFilters.maxPrice?.toString() ?? '',
+                decoration: const InputDecoration(
+                  labelText: 'До (₽)',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  final price = int.tryParse(value);
+                  setState(() {
+                    _currentFilters = _currentFilters.copyWith(
+                      maxPrice: price,
+                    );
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildServicesFilter(List<String> services) {
+    return Column(
+      children: services.take(10).map((service) => CheckboxListTile(
+        title: Text(service),
+        value: _currentFilters.services?.contains(service) ?? false,
+        onChanged: (value) {
+          setState(() {
+            final currentServices = _currentFilters.services ?? [];
+            if (value == true) {
+              _currentFilters = _currentFilters.copyWith(
+                services: [...currentServices, service],
+              );
+            } else {
+              _currentFilters = _currentFilters.copyWith(
+                services: currentServices.where((s) => s != service).toList(),
+              );
+            }
+          });
+        },
+      )).toList(),
+    );
+  }
+
+  Widget _buildAvailabilityFilter() {
+    return Column(
+      children: [
+        RadioListTile<bool?>(
+          title: const Text('Любая'),
+          value: null,
+          groupValue: _currentFilters.isAvailable,
+          onChanged: (value) {
+            setState(() {
+              _currentFilters = _currentFilters.copyWith(isAvailable: value);
+            });
+          },
+        ),
+        RadioListTile<bool?>(
+          title: const Text('Только доступные'),
+          value: true,
+          groupValue: _currentFilters.isAvailable,
+          onChanged: (value) {
+            setState(() {
+              _currentFilters = _currentFilters.copyWith(isAvailable: value);
+            });
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSortFilter() {
+    return Column(
+      children: [
+        DropdownButtonFormField<String>(
+          initialValue: _currentFilters.sortBy ?? 'rating',
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            labelText: 'Сортировать по',
+          ),
+          items: const [
+            DropdownMenuItem(value: 'rating', child: Text('Рейтингу')),
+            DropdownMenuItem(value: 'price', child: Text('Цене')),
+            DropdownMenuItem(value: 'experience', child: Text('Опыту')),
+            DropdownMenuItem(value: 'name', child: Text('Имени')),
+          ],
+          onChanged: (value) {
+            setState(() {
+              _currentFilters = _currentFilters.copyWith(sortBy: value);
+            });
+          },
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: RadioListTile<bool>(
+                title: const Text('По возрастанию'),
+                value: true,
+                groupValue: _currentFilters.sortAscending,
+                onChanged: (value) {
+                  setState(() {
+                    _currentFilters = _currentFilters.copyWith(sortAscending: value);
+                  });
+                },
+              ),
+            ),
+            Expanded(
+              child: RadioListTile<bool>(
+                title: const Text('По убыванию'),
+                value: false,
+                groupValue: _currentFilters.sortAscending,
+                onChanged: (value) {
+                  setState(() {
+                    _currentFilters = _currentFilters.copyWith(sortAscending: value);
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  void _resetFilters() {
+    setState(() {
+      _currentFilters = SearchFilters.empty();
+    });
   }
 }

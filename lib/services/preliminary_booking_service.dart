@@ -154,7 +154,7 @@ class PreliminaryBookingService {
         await _contractService.generateContract(bookingDocRef.id);
       } catch (e) {
         // Логируем ошибку, но не прерываем процесс
-        print('Ошибка автоматической генерации договора: $e');
+        debugPrint('Ошибка автоматической генерации договора: $e');
       }
 
       return booking.copyWith(id: bookingDocRef.id);

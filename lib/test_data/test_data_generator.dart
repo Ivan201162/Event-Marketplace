@@ -351,7 +351,6 @@ class TestDataGenerator {
         hourlyRate: _generateHourlyRate(category, experience),
         location: city,
         serviceAreas: [city],
-        languages: ['Русский'],
         equipment: _generateEquipment(category),
         services: _generateServices(category),
         portfolioImages: _generatePortfolioImages(),

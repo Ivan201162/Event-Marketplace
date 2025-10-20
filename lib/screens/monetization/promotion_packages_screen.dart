@@ -98,7 +98,7 @@ class _PromotionPackagesScreenState extends State<PromotionPackagesScreen> {
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: _getTypeColor(package.type).withOpacity(0.1),
+                  color: _getTypeColor(package.type).withValues(alpha: 0.1),
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(12),
                     topRight: Radius.circular(12),

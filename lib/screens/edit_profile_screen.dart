@@ -195,7 +195,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             children: [
               CircleAvatar(
                 radius: 60,
-                backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                 backgroundImage: _selectedAvatar != null
                     ? FileImage(_selectedAvatar!)
                     : (widget.initialProfile?.avatarUrl != null

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -44,7 +43,7 @@ class CacheService {
         DateTime.now().millisecondsSinceEpoch,
       );
     } on Exception catch (e) {
-      debugPrint('Ошибка кэширования специалистов: $e');
+      debugdebugPrint('Ошибка кэширования специалистов: $e');
     }
   }
 
@@ -56,7 +55,7 @@ class CacheService {
         return List<Map<String, dynamic>>.from(data);
       }
     } on Exception catch (e) {
-      debugPrint('Ошибка получения кэшированных специалистов: $e');
+      debugdebugPrint('Ошибка получения кэшированных специалистов: $e');
     }
     return null;
   }
@@ -70,7 +69,7 @@ class CacheService {
         return DateTime.now().difference(lastUpdateTime) < maxAge;
       }
     } on Exception catch (e) {
-      debugPrint('Ошибка проверки актуальности кэша: $e');
+      debugdebugPrint('Ошибка проверки актуальности кэша: $e');
     }
     return false;
   }
@@ -84,7 +83,7 @@ class CacheService {
         DateTime.now().millisecondsSinceEpoch,
       );
     } on Exception catch (e) {
-      debugPrint('Ошибка кэширования постов: $e');
+      debugdebugPrint('Ошибка кэширования постов: $e');
     }
   }
 
@@ -96,7 +95,7 @@ class CacheService {
         return List<Map<String, dynamic>>.from(data);
       }
     } on Exception catch (e) {
-      debugPrint('Ошибка получения кэшированных постов: $e');
+      debugdebugPrint('Ошибка получения кэшированных постов: $e');
     }
     return null;
   }
@@ -110,7 +109,7 @@ class CacheService {
         DateTime.now().millisecondsSinceEpoch,
       );
     } on Exception catch (e) {
-      debugPrint('Ошибка кэширования идей: $e');
+      debugdebugPrint('Ошибка кэширования идей: $e');
     }
   }
 
@@ -122,7 +121,7 @@ class CacheService {
         return List<Map<String, dynamic>>.from(data);
       }
     } on Exception catch (e) {
-      debugPrint('Ошибка получения кэшированных идей: $e');
+      debugdebugPrint('Ошибка получения кэшированных идей: $e');
     }
     return null;
   }
@@ -136,7 +135,7 @@ class CacheService {
         DateTime.now().millisecondsSinceEpoch,
       );
     } on Exception catch (e) {
-      debugPrint('Ошибка кэширования историй: $e');
+      debugdebugPrint('Ошибка кэширования историй: $e');
     }
   }
 
@@ -148,7 +147,7 @@ class CacheService {
         return List<Map<String, dynamic>>.from(data);
       }
     } on Exception catch (e) {
-      debugPrint('Ошибка получения кэшированных историй: $e');
+      debugdebugPrint('Ошибка получения кэшированных историй: $e');
     }
     return null;
   }
@@ -161,7 +160,7 @@ class CacheService {
     try {
       await _userDataCache.put(userId, userData);
     } on Exception catch (e) {
-      debugPrint('Ошибка кэширования пользовательских данных: $e');
+      debugdebugPrint('Ошибка кэширования пользовательских данных: $e');
     }
   }
 
@@ -173,7 +172,7 @@ class CacheService {
         return Map<String, dynamic>.from(data);
       }
     } on Exception catch (e) {
-      debugPrint('Ошибка получения кэшированных пользовательских данных: $e');
+      debugdebugPrint('Ошибка получения кэшированных пользовательских данных: $e');
     }
     return null;
   }
@@ -183,7 +182,7 @@ class CacheService {
     try {
       await _imageCacheManager.getSingleFile(imageUrl);
     } on Exception catch (e) {
-      debugPrint('Ошибка предзагрузки изображения: $e');
+      debugdebugPrint('Ошибка предзагрузки изображения: $e');
     }
   }
 
@@ -194,7 +193,7 @@ class CacheService {
         imageUrls.map(_imageCacheManager.getSingleFile),
       );
     } on Exception catch (e) {
-      debugPrint('Ошибка предзагрузки изображений: $e');
+      debugdebugPrint('Ошибка предзагрузки изображений: $e');
     }
   }
 
@@ -203,7 +202,7 @@ class CacheService {
     try {
       await _imageCacheManager.emptyCache();
     } on Exception catch (e) {
-      debugPrint('Ошибка очистки кэша изображений: $e');
+      debugdebugPrint('Ошибка очистки кэша изображений: $e');
     }
   }
 
@@ -217,7 +216,7 @@ class CacheService {
       await _userDataCache.clear();
       await _imageCacheManager.emptyCache();
     } on Exception catch (e) {
-      debugPrint('Ошибка очистки кэшей: $e');
+      debugdebugPrint('Ошибка очистки кэшей: $e');
     }
   }
 
@@ -232,7 +231,7 @@ class CacheService {
       totalSize += _userDataCache.length;
       return totalSize;
     } on Exception catch (e) {
-      debugPrint('Ошибка получения размера кэша: $e');
+      debugdebugPrint('Ошибка получения размера кэша: $e');
       return 0;
     }
   }
@@ -246,7 +245,7 @@ class CacheService {
       await _storiesCache.close();
       await _userDataCache.close();
     } on Exception catch (e) {
-      debugPrint('Ошибка закрытия кэшей: $e');
+      debugdebugPrint('Ошибка закрытия кэшей: $e');
     }
   }
 }

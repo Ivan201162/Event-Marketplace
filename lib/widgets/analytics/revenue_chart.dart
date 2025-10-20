@@ -98,8 +98,7 @@ class RevenueChart extends StatelessWidget {
               barWidth: 3,
               isStrokeCapRound: true,
               dotData: FlDotData(
-                getDotPainter: (spot, percent, barData, index) =>
-                    FlDotCirclePainter(
+                getDotPainter: (spot, percent, barData, index) => FlDotCirclePainter(
                   radius: 4,
                   color: Colors.blue,
                   strokeWidth: 2,

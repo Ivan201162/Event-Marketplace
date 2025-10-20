@@ -89,7 +89,7 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
                   ],
                 ),
                 const SizedBox(height: 8),
-                
+
                 // Имя
                 Text(
                   specialist['name'] ?? 'Специалист',
@@ -101,7 +101,7 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
-                
+
                 // Категория
                 Text(
                   specialist['category'] ?? 'Категория',
@@ -113,7 +113,7 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
-                
+
                 // Город
                 Row(
                   children: [
@@ -137,7 +137,7 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
                   ],
                 ),
                 const Spacer(),
-                
+
                 // Рейтинг
                 Row(
                   children: [

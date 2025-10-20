@@ -469,7 +469,7 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
               Text('Дата: ${_formatDate(booking.bookingDate)}'),
               Text('Участники: ${booking.participantsCount}'),
               Text('Цена: ${booking.totalPrice} ₽'),
-              if (booking.notes != null) Text('Заметки: ${booking.notes}'),
+              Text('Заметки: ${booking.notes}'),
             ],
           ),
         ),

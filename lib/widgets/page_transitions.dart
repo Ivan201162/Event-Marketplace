@@ -194,7 +194,7 @@ class PageTransitions {
         builder: (context, child) => Transform(
           alignment: Alignment.center,
           transform: Matrix4.identity()
-            ..scaleByDouble(animation.value)
+            ..scale(animation.value)
             ..rotateZ(animation.value * 0.1),
           child: FadeTransition(
             opacity: animation,

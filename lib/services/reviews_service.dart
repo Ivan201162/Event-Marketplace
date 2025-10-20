@@ -40,12 +40,12 @@ class ReviewsService {
         text: text,
         date: DateTime.now(),
         photos: photos,
-        responses: [],
+        responses: const [],
         bookingId: bookingId,
         eventTitle: eventTitle,
         customerAvatar: customerAvatar,
         specialistName: specialistName,
-        metadata: {},
+        metadata: const {},
       );
 
       // Добавляем в Firestore
@@ -436,7 +436,7 @@ class ReviewsService {
         'reputationStatus': status.value,
       });
     } catch (e) {
-      debugPrint('Ошибка при обновлении рейтинга: $e');
+      debugdebugPrint('Ошибка при обновлении рейтинга: $e');
     }
   }
 

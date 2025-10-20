@@ -65,11 +65,11 @@ class MonitoringService {
       _isInitialized = true;
 
       if (kDebugMode) {
-        print('Monitoring service initialized');
+        debugPrint('Monitoring service initialized');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка инициализации сервиса мониторинга: $e');
+        debugPrint('Ошибка инициализации сервиса мониторинга: $e');
       }
     }
   }
@@ -102,7 +102,7 @@ class MonitoringService {
       await _collectErrorMetrics(now);
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка сбора метрик: $e');
+        debugPrint('Ошибка сбора метрик: $e');
       }
     }
   }
@@ -137,7 +137,7 @@ class MonitoringService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка сбора метрик памяти: $e');
+        debugPrint('Ошибка сбора метрик памяти: $e');
       }
     }
   }
@@ -160,7 +160,7 @@ class MonitoringService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка сбора метрик CPU: $e');
+        debugPrint('Ошибка сбора метрик CPU: $e');
       }
     }
   }
@@ -195,7 +195,7 @@ class MonitoringService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка сбора метрик сети: $e');
+        debugPrint('Ошибка сбора метрик сети: $e');
       }
     }
   }
@@ -230,7 +230,7 @@ class MonitoringService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка сбора метрик БД: $e');
+        debugPrint('Ошибка сбора метрик БД: $e');
       }
     }
   }
@@ -277,7 +277,7 @@ class MonitoringService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка сбора метрик пользователей: $e');
+        debugPrint('Ошибка сбора метрик пользователей: $e');
       }
     }
   }
@@ -312,7 +312,7 @@ class MonitoringService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка сбора метрик ошибок: $e');
+        debugPrint('Ошибка сбора метрик ошибок: $e');
       }
     }
   }
@@ -354,7 +354,7 @@ class MonitoringService {
       _metricsController.add(metric);
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка записи метрики: $e');
+        debugPrint('Ошибка записи метрики: $e');
       }
     }
   }
@@ -377,7 +377,7 @@ class MonitoringService {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка проверки алертов: $e');
+        debugPrint('Ошибка проверки алертов: $e');
       }
     }
   }
@@ -434,11 +434,11 @@ class MonitoringService {
       await _sendAlertNotifications(updatedAlert);
 
       if (kDebugMode) {
-        print('Alert triggered: ${alert.name}');
+        debugPrint('Alert triggered: ${alert.name}');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка срабатывания алерта: $e');
+        debugPrint('Ошибка срабатывания алерта: $e');
       }
     }
   }
@@ -462,11 +462,11 @@ class MonitoringService {
       _alertsController.add(updatedAlert);
 
       if (kDebugMode) {
-        print('Alert resolved: ${alert.name}');
+        debugPrint('Alert resolved: ${alert.name}');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка решения алерта: $e');
+        debugPrint('Ошибка решения алерта: $e');
       }
     }
   }
@@ -481,7 +481,7 @@ class MonitoringService {
       // - Slack/Discord уведомления
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка отправки уведомлений об алерте: $e');
+        debugPrint('Ошибка отправки уведомлений об алерте: $e');
       }
     }
   }
@@ -522,13 +522,13 @@ class MonitoringService {
       _alertsCache[alertId] = alert;
 
       if (kDebugMode) {
-        print('Alert created: $name');
+        debugPrint('Alert created: $name');
       }
 
       return alertId;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка создания алерта: $e');
+        debugPrint('Ошибка создания алерта: $e');
       }
       rethrow;
     }
@@ -567,13 +567,13 @@ class MonitoringService {
       _dashboardsCache[dashboardId] = dashboard;
 
       if (kDebugMode) {
-        print('Dashboard created: $name');
+        debugPrint('Dashboard created: $name');
       }
 
       return dashboardId;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка создания дашборда: $e');
+        debugPrint('Ошибка создания дашборда: $e');
       }
       rethrow;
     }
@@ -632,11 +632,11 @@ class MonitoringService {
       }
 
       if (kDebugMode) {
-        print('Loaded ${_metricsCache.length} metrics');
+        debugPrint('Loaded ${_metricsCache.length} metrics');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки кэша метрик: $e');
+        debugPrint('Ошибка загрузки кэша метрик: $e');
       }
     }
   }
@@ -652,11 +652,11 @@ class MonitoringService {
       }
 
       if (kDebugMode) {
-        print('Loaded ${_alertsCache.length} alerts');
+        debugPrint('Loaded ${_alertsCache.length} alerts');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки кэша алертов: $e');
+        debugPrint('Ошибка загрузки кэша алертов: $e');
       }
     }
   }
@@ -672,11 +672,11 @@ class MonitoringService {
       }
 
       if (kDebugMode) {
-        print('Loaded ${_dashboardsCache.length} dashboards');
+        debugPrint('Loaded ${_dashboardsCache.length} dashboards');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки кэша дашбордов: $e');
+        debugPrint('Ошибка загрузки кэша дашбордов: $e');
       }
     }
   }
@@ -711,7 +711,7 @@ class MonitoringService {
       await _firestore.collection('monitoring_errors').add(errorData);
     } catch (e) {
       if (kDebugMode) {
-        print('Error recording error: $e');
+        debugPrint('Error recording error: $e');
       }
     }
   }
@@ -734,7 +734,7 @@ class MonitoringService {
       await _firestore.collection('user_actions').add(actionData);
     } catch (e) {
       if (kDebugMode) {
-        print('Error logging user action: $e');
+        debugPrint('Error logging user action: $e');
       }
     }
   }
@@ -743,7 +743,7 @@ class MonitoringService {
   void startTrace(String name) {
     // Implementation for starting trace
     if (kDebugMode) {
-      print('Starting trace: $name');
+      debugPrint('Starting trace: $name');
     }
   }
 
@@ -751,7 +751,7 @@ class MonitoringService {
   void stopTrace(String name) {
     // Implementation for stopping trace
     if (kDebugMode) {
-      print('Stopping trace: $name');
+      debugPrint('Stopping trace: $name');
     }
   }
 
@@ -779,7 +779,7 @@ class MonitoringService {
   void setUserId(String userId) {
     // Implementation for setting user ID
     if (kDebugMode) {
-      print('Setting user ID: $userId');
+      debugPrint('Setting user ID: $userId');
     }
   }
 
@@ -790,7 +790,7 @@ class MonitoringService {
     _dashboardsCache.clear();
 
     if (kDebugMode) {
-      print('Monitoring data cleared');
+      debugPrint('Monitoring data cleared');
     }
   }
 

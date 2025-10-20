@@ -227,16 +227,16 @@ class _InterestingCardState extends State<_InterestingCard> with SingleTickerPro
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: widget.color.withOpacity(_isHovered ? 0.15 : 0.1),
+                  color: widget.color.withValues(alpha: _isHovered ? 0.15 : 0.1),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: widget.color.withOpacity(_isHovered ? 0.4 : 0.3),
+                    color: widget.color.withValues(alpha: _isHovered ? 0.4 : 0.3),
                     width: _isHovered ? 2 : 1,
                   ),
                   boxShadow: _isHovered
                       ? [
                           BoxShadow(
-                            color: widget.color.withOpacity(0.3),
+                            color: widget.color.withValues(alpha: 0.3),
                             blurRadius: 8,
                             offset: const Offset(0, 4),
                           ),

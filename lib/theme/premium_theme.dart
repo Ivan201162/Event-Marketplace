@@ -131,7 +131,7 @@ class PremiumTheme {
         cardTheme: CardThemeData(
           color: cardBackground,
           elevation: 4,
-          shadowColor: Colors.black.withOpacity(0.3),
+          shadowColor: Colors.black.withValues(alpha: 0.3),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -143,7 +143,7 @@ class PremiumTheme {
             backgroundColor: primaryGold,
             foregroundColor: darkBackground,
             elevation: 2,
-            shadowColor: primaryGold.withOpacity(0.3),
+            shadowColor: primaryGold.withValues(alpha: 0.3),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -276,7 +276,7 @@ class PremiumTheme {
         chipTheme: ChipThemeData(
           backgroundColor: secondaryElements,
           selectedColor: primaryGold,
-          disabledColor: secondaryElements.withOpacity(0.5),
+          disabledColor: secondaryElements.withValues(alpha: 0.5),
           labelStyle: const TextStyle(
             color: whiteText,
           ),

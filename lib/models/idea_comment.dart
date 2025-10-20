@@ -7,127 +7,126 @@ class IdeaComment {
     required this.ideaId,
     required this.userId,
     required this.userName,
-    required this.userAvatar,
-    required this.content,
+    required this.text,
+    this.parentId,
+    this.replies = const [],
+    this.likes = 0,
+    this.isLiked = false,
     required this.createdAt,
     this.updatedAt,
-    this.likes = 0,
-    this.replies = const [],
-    this.parentCommentId,
-    this.isEdited = false,
-    this.isDeleted = false,
-    this.authorName,
-    this.authorAvatar,
-    this.likesCount,
+    this.deletedAt,
   });
-
-  /// Создать из Map (Firestore)
-  factory IdeaComment.fromMap(Map<String, dynamic> map) => IdeaComment(
-        id: map['id'] as String,
-        ideaId: map['ideaId'] as String,
-        userId: map['userId'] as String,
-        userName: map['userName'] as String,
-        userAvatar: map['userAvatar'] as String?,
-        content: map['content'] as String,
-        createdAt: (map['createdAt'] as Timestamp).toDate(),
-        updatedAt: map['updatedAt'] != null ? (map['updatedAt'] as Timestamp).toDate() : null,
-        likes: (map['likes'] ?? 0) as int,
-        replies: List<String>.from((map['replies'] ?? <String>[]) as List),
-        parentCommentId: map['parentCommentId'] as String?,
-        isEdited: (map['isEdited'] ?? false) as bool,
-        isDeleted: (map['isDeleted'] ?? false) as bool,
-        authorName: map['authorName'] as String?,
-        authorAvatar: map['authorAvatar'] as String?,
-        likesCount: (map['likesCount'] ?? 0) as int?,
-      );
 
   final String id;
   final String ideaId;
   final String userId;
   final String userName;
-  final String? userAvatar;
-  final String content;
+  final String text;
+  final String? parentId;
+  final List<IdeaComment> replies;
+  final int likes;
+  final bool isLiked;
   final DateTime createdAt;
   final DateTime? updatedAt;
-  final int likes;
-  final List<String> replies; // ID ответов
-  final String? parentCommentId; // ID родительского комментария
-  final bool isEdited;
-  final bool isDeleted;
-  final String? authorName;
-  final String? authorAvatar;
-  final int? likesCount;
+  final DateTime? deletedAt;
 
-  /// Преобразовать в Map (Firestore)
+  /// Создать из Map
+  factory IdeaComment.fromMap(Map<String, dynamic> data) {
+    return IdeaComment(
+      id: data['id'] as String? ?? '',
+      ideaId: data['ideaId'] as String? ?? '',
+      userId: data['userId'] as String? ?? '',
+      userName: data['userName'] as String? ?? '',
+      text: data['text'] as String? ?? '',
+      parentId: data['parentId'] as String?,
+      replies: (data['replies'] as List<dynamic>?)
+              ?.map((e) => IdeaComment.fromMap(Map<String, dynamic>.from(e)))
+              .toList() ??
+          [],
+      likes: data['likes'] as int? ?? 0,
+      isLiked: data['isLiked'] as bool? ?? false,
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] is Timestamp
+              ? (data['createdAt'] as Timestamp).toDate()
+              : DateTime.parse(data['createdAt'].toString()))
+          : DateTime.now(),
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] is Timestamp
+              ? (data['updatedAt'] as Timestamp).toDate()
+              : DateTime.tryParse(data['updatedAt'].toString()))
+          : null,
+      deletedAt: data['deletedAt'] != null
+          ? (data['deletedAt'] is Timestamp
+              ? (data['deletedAt'] as Timestamp).toDate()
+              : DateTime.tryParse(data['deletedAt'].toString()))
+          : null,
+    );
+  }
+
+  /// Создать из документа Firestore
+  factory IdeaComment.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>?;
+    if (data == null) {
+      throw Exception('Document data is null');
+    }
+
+    return IdeaComment.fromMap({
+      'id': doc.id,
+      ...data,
+    });
+  }
+
+  /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'id': id,
         'ideaId': ideaId,
         'userId': userId,
         'userName': userName,
-        'userAvatar': userAvatar,
-        'content': content,
+        'text': text,
+        'parentId': parentId,
+        'replies': replies.map((e) => e.toMap()).toList(),
+        'likes': likes,
+        'isLiked': isLiked,
         'createdAt': Timestamp.fromDate(createdAt),
         'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-        'likes': likes,
-        'replies': replies,
-        'parentCommentId': parentCommentId,
-        'isEdited': isEdited,
-        'isDeleted': isDeleted,
-        'authorName': authorName,
-        'authorAvatar': authorAvatar,
-        'likesCount': likesCount,
+        'deletedAt': deletedAt != null ? Timestamp.fromDate(deletedAt!) : null,
       };
 
-  /// Создать копию с изменениями
+  /// Копировать с изменениями
   IdeaComment copyWith({
     String? id,
     String? ideaId,
     String? userId,
     String? userName,
-    String? userAvatar,
-    String? content,
+    String? text,
+    String? parentId,
+    List<IdeaComment>? replies,
+    int? likes,
+    bool? isLiked,
     DateTime? createdAt,
     DateTime? updatedAt,
-    int? likes,
-    List<String>? replies,
-    String? parentCommentId,
-    bool? isEdited,
-    bool? isDeleted,
-    String? authorName,
-    String? authorAvatar,
-    int? likesCount,
+    DateTime? deletedAt,
   }) =>
       IdeaComment(
         id: id ?? this.id,
         ideaId: ideaId ?? this.ideaId,
         userId: userId ?? this.userId,
         userName: userName ?? this.userName,
-        userAvatar: userAvatar ?? this.userAvatar,
-        content: content ?? this.content,
+        text: text ?? this.text,
+        parentId: parentId ?? this.parentId,
+        replies: replies ?? this.replies,
+        likes: likes ?? this.likes,
+        isLiked: isLiked ?? this.isLiked,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
-        likes: likes ?? this.likes,
-        replies: replies ?? this.replies,
-        parentCommentId: parentCommentId ?? this.parentCommentId,
-        isEdited: isEdited ?? this.isEdited,
-        isDeleted: isDeleted ?? this.isDeleted,
-        authorName: authorName ?? this.authorName,
-        authorAvatar: authorAvatar ?? this.authorAvatar,
-        likesCount: likesCount ?? this.likesCount,
+        deletedAt: deletedAt ?? this.deletedAt,
       );
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-    return other is IdeaComment && other.id == id;
-  }
+  /// Проверить, является ли комментарий удаленным
+  bool get isDeleted => deletedAt != null;
 
-  @override
-  int get hashCode => id.hashCode;
+  /// Проверить, является ли комментарий ответом
+  bool get isReply => parentId != null;
 
-  @override
-  String toString() =>
-      'IdeaComment(id: $id, ideaId: $ideaId, userId: $userId, content: ${content.substring(0, content.length > 20 ? 20 : content.length)}...)';
+  /// Получить количество ответов
+  int get repliesCount => replies.length;
 }

@@ -50,7 +50,7 @@ class ReviewExtendedService {
       await reviewRef.set(review.toMap());
       return reviewRef.id;
     } catch (e) {
-      print('Ошибка создания отзыва: $e');
+      debugPrint('Ошибка создания отзыва: $e');
       return null;
     }
   }
@@ -154,7 +154,7 @@ class ReviewExtendedService {
       }
       return null;
     } catch (e) {
-      print('Ошибка получения отзыва: $e');
+      debugPrint('Ошибка получения отзыва: $e');
       return null;
     }
   }
@@ -165,7 +165,7 @@ class ReviewExtendedService {
       await _firestore.collection('reviews_extended').doc(review.id).update(review.toMap());
       return true;
     } catch (e) {
-      print('Ошибка обновления отзыва: $e');
+      debugPrint('Ошибка обновления отзыва: $e');
       return false;
     }
   }
@@ -176,7 +176,7 @@ class ReviewExtendedService {
       await _firestore.collection('reviews_extended').doc(reviewId).delete();
       return true;
     } catch (e) {
-      print('Ошибка удаления отзыва: $e');
+      debugPrint('Ошибка удаления отзыва: $e');
       return false;
     }
   }
@@ -216,7 +216,7 @@ class ReviewExtendedService {
 
       return await updateReview(updatedReview);
     } catch (e) {
-      print('Ошибка добавления лайка: $e');
+      debugPrint('Ошибка добавления лайка: $e');
       return false;
     }
   }
@@ -238,7 +238,7 @@ class ReviewExtendedService {
 
       return await updateReview(updatedReview);
     } catch (e) {
-      print('Ошибка удаления лайка: $e');
+      debugPrint('Ошибка удаления лайка: $e');
       return false;
     }
   }
@@ -260,7 +260,7 @@ class ReviewExtendedService {
 
       return await updateReview(updatedReview);
     } catch (e) {
-      print('Ошибка добавления медиа: $e');
+      debugPrint('Ошибка добавления медиа: $e');
       return false;
     }
   }
@@ -279,7 +279,7 @@ class ReviewExtendedService {
 
       return await updateReview(updatedReview);
     } catch (e) {
-      print('Ошибка удаления медиа: $e');
+      debugPrint('Ошибка удаления медиа: $e');
       return false;
     }
   }
@@ -303,7 +303,7 @@ class ReviewExtendedService {
         fileSize: await File(imageFile.path).length(),
       );
     } catch (e) {
-      print('Ошибка загрузки фото: $e');
+      debugPrint('Ошибка загрузки фото: $e');
       return null;
     }
   }
@@ -345,7 +345,7 @@ class ReviewExtendedService {
         duration: await _getVideoDuration(videoFile.path),
       );
     } catch (e) {
-      print('Ошибка загрузки видео: $e');
+      debugPrint('Ошибка загрузки видео: $e');
       return null;
     }
   }
@@ -356,7 +356,7 @@ class ReviewExtendedService {
       // TODO(developer): Реализовать получение длительности видео
       return null;
     } catch (e) {
-      print('Ошибка получения длительности видео: $e');
+      debugPrint('Ошибка получения длительности видео: $e');
       return null;
     }
   }
@@ -371,7 +371,7 @@ class ReviewExtendedService {
       );
       return images.take(maxImages).toList();
     } catch (e) {
-      print('Ошибка выбора фото: $e');
+      debugPrint('Ошибка выбора фото: $e');
       return [];
     }
   }
@@ -384,7 +384,7 @@ class ReviewExtendedService {
         maxDuration: const Duration(minutes: 5),
       );
     } catch (e) {
-      print('Ошибка выбора видео: $e');
+      debugPrint('Ошибка выбора видео: $e');
       return null;
     }
   }
@@ -399,7 +399,7 @@ class ReviewExtendedService {
         imageQuality: 85,
       );
     } catch (e) {
-      print('Ошибка съемки фото: $e');
+      debugPrint('Ошибка съемки фото: $e');
       return null;
     }
   }
@@ -412,7 +412,7 @@ class ReviewExtendedService {
         maxDuration: const Duration(minutes: 5),
       );
     } catch (e) {
-      print('Ошибка съемки видео: $e');
+      debugPrint('Ошибка съемки видео: $e');
       return null;
     }
   }
@@ -499,7 +499,7 @@ class ReviewExtendedService {
         categoryRatings: averageCategoryRatings,
       );
     } catch (e) {
-      print('Ошибка получения статистики отзывов: $e');
+      debugPrint('Ошибка получения статистики отзывов: $e');
       return SpecialistReviewStats.empty();
     }
   }
@@ -521,7 +521,7 @@ class ReviewExtendedService {
 
       await updateReview(updatedReview);
     } catch (e) {
-      print('Ошибка увеличения счетчика просмотров: $e');
+      debugPrint('Ошибка увеличения счетчика просмотров: $e');
     }
   }
 
@@ -542,7 +542,7 @@ class ReviewExtendedService {
 
       await updateReview(updatedReview);
     } catch (e) {
-      print('Ошибка увеличения счетчика репостов: $e');
+      debugPrint('Ошибка увеличения счетчика репостов: $e');
     }
   }
 
@@ -578,7 +578,7 @@ class ReviewExtendedService {
 
       return await updateReview(updatedReview);
     } catch (e) {
-      print('Ошибка жалобы на отзыв: $e');
+      debugPrint('Ошибка жалобы на отзыв: $e');
       return false;
     }
   }
@@ -608,7 +608,7 @@ class ReviewExtendedService {
 
       return await updateReview(updatedReview);
     } catch (e) {
-      print('Ошибка модерации отзыва: $e');
+      debugPrint('Ошибка модерации отзыва: $e');
       return false;
     }
   }

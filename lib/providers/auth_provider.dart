@@ -13,8 +13,7 @@ class AuthState {
   final bool isLoading;
 
   /// Для совместимости с существующим кодом
-  Map<String, dynamic>? get currentUser => 
-      currentUserId != null ? {'id': currentUserId} : null;
+  Map<String, dynamic>? get currentUser => currentUserId != null ? {'id': currentUserId} : null;
 
   AuthState copyWith({
     String? currentUserId,
@@ -58,7 +57,6 @@ class AuthNotifier extends Notifier<AuthState> {
     await Future.delayed(const Duration(milliseconds: 500));
 
     state = state.copyWith(
-      currentUserId: null,
       isAuthenticated: false,
       isLoading: false,
     );

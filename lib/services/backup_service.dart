@@ -53,7 +53,7 @@ class BackupService {
       return backupId;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка создания бэкапа: $e');
+        debugPrint('Ошибка создания бэкапа: $e');
       }
       rethrow;
     }
@@ -82,7 +82,7 @@ class BackupService {
           totalDocuments += collectionData.length;
         } catch (e) {
           if (kDebugMode) {
-            print('Ошибка экспорта коллекции $collectionName: $e');
+            debugPrint('Ошибка экспорта коллекции $collectionName: $e');
           }
         }
       }
@@ -138,7 +138,7 @@ class BackupService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка создания файла бэкапа: $e');
+        debugPrint('Ошибка создания файла бэкапа: $e');
       }
 
       // Обновляем статус на "ошибка"
@@ -180,7 +180,7 @@ class BackupService {
       return documents;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка экспорта коллекции $collectionName: $e');
+        debugPrint('Ошибка экспорта коллекции $collectionName: $e');
       }
       return [];
     }
@@ -213,7 +213,7 @@ class BackupService {
       await _firestore.collection('backups').doc(backupId).update(updateData);
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка обновления статуса бэкапа: $e');
+        debugPrint('Ошибка обновления статуса бэкапа: $e');
       }
     }
   }
@@ -243,7 +243,7 @@ class BackupService {
       return snapshot.docs.map(Backup.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения списка бэкапов: $e');
+        debugPrint('Ошибка получения списка бэкапов: $e');
       }
       return [];
     }
@@ -259,7 +259,7 @@ class BackupService {
       return null;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения бэкапа: $e');
+        debugPrint('Ошибка получения бэкапа: $e');
       }
       return null;
     }
@@ -277,7 +277,7 @@ class BackupService {
       return backup.fileUrl!;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка скачивания бэкапа: $e');
+        debugPrint('Ошибка скачивания бэкапа: $e');
       }
       rethrow;
     }
@@ -317,7 +317,7 @@ class BackupService {
       return restoreId;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка создания восстановления: $e');
+        debugPrint('Ошибка создания восстановления: $e');
       }
       rethrow;
     }
@@ -351,7 +351,7 @@ class BackupService {
       await _updateRestoreStatus(restoreId, RestoreStatus.completed);
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка восстановления из бэкапа: $e');
+        debugPrint('Ошибка восстановления из бэкапа: $e');
       }
 
       // Обновляем статус на "ошибка"
@@ -371,7 +371,7 @@ class BackupService {
       return {};
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка скачивания и парсинга бэкапа: $e');
+        debugPrint('Ошибка скачивания и парсинга бэкапа: $e');
       }
       rethrow;
     }
@@ -401,7 +401,7 @@ class BackupService {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка импорта данных бэкапа: $e');
+        debugPrint('Ошибка импорта данных бэкапа: $e');
       }
       rethrow;
     }
@@ -439,7 +439,7 @@ class BackupService {
       await batch.commit();
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка импорта коллекции $collectionName: $e');
+        debugPrint('Ошибка импорта коллекции $collectionName: $e');
       }
       rethrow;
     }
@@ -466,7 +466,7 @@ class BackupService {
       await _firestore.collection('restores').doc(restoreId).update(updateData);
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка обновления статуса восстановления: $e');
+        debugPrint('Ошибка обновления статуса восстановления: $e');
       }
     }
   }
@@ -496,7 +496,7 @@ class BackupService {
       return snapshot.docs.map(Restore.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения списка восстановлений: $e');
+        debugPrint('Ошибка получения списка восстановлений: $e');
       }
       return [];
     }
@@ -551,7 +551,7 @@ class BackupService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения статистики бэкапов: $e');
+        debugPrint('Ошибка получения статистики бэкапов: $e');
       }
       return BackupStatistics(
         totalBackups: 0,
@@ -616,7 +616,7 @@ class BackupService {
           await ref.delete();
         } catch (e) {
           if (kDebugMode) {
-            print('Ошибка удаления файла бэкапа: $e');
+            debugPrint('Ошибка удаления файла бэкапа: $e');
           }
         }
       }
@@ -625,7 +625,7 @@ class BackupService {
       await _firestore.collection('backups').doc(backupId).delete();
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка удаления бэкапа: $e');
+        debugPrint('Ошибка удаления бэкапа: $e');
       }
       rethrow;
     }
@@ -646,7 +646,7 @@ class BackupService {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка очистки старых бэкапов: $e');
+        debugPrint('Ошибка очистки старых бэкапов: $e');
       }
     }
   }

@@ -139,19 +139,19 @@ class _AnimatedCategoriesState extends State<AnimatedCategories> with TickerProv
         margin: const EdgeInsets.only(right: 12),
         decoration: BoxDecoration(
           color: isSelected
-              ? (category['color'] as Color).withOpacity(0.2)
-              : (category['color'] as Color).withOpacity(0.1),
+              ? (category['color'] as Color).withValues(alpha: 0.2)
+              : (category['color'] as Color).withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: (category['color'] as Color).withOpacity(
-              isSelected ? 0.5 : 0.3,
+            color: (category['color'] as Color).withValues(
+              alpha: isSelected ? 0.5 : 0.3,
             ),
             width: isSelected ? 2 : 1,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: (category['color'] as Color).withOpacity(0.3),
+                    color: (category['color'] as Color).withValues(alpha: 0.3),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
                   ),

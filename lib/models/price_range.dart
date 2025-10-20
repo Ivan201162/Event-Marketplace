@@ -36,6 +36,17 @@ class PriceRange {
     return '${min.toStringAsFixed(0)} - ${max.toStringAsFixed(0)} $currency';
   }
 
+  String get formattedRange {
+    if (min == max) {
+      return '${min.toStringAsFixed(0)} $currency';
+    }
+    return '${min.toStringAsFixed(0)} - ${max.toStringAsFixed(0)} $currency';
+  }
+
+  // Геттеры для совместимости с существующим кодом
+  double get minPrice => min;
+  double get maxPrice => max;
+
   PriceRange copyWith({
     double? min,
     double? max,

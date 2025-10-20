@@ -27,11 +27,11 @@ class IntegrationService {
       await _startActiveIntegrations();
 
       if (kDebugMode) {
-        print('Integration service initialized');
+        debugPrint('Integration service initialized');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка инициализации сервиса интеграций: $e');
+        debugPrint('Ошибка инициализации сервиса интеграций: $e');
       }
     }
   }
@@ -74,13 +74,13 @@ class IntegrationService {
       _integrations[integrationId] = integration;
 
       if (kDebugMode) {
-        print('Integration created: $name');
+        debugPrint('Integration created: $name');
       }
 
       return integrationId;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка создания интеграции: $e');
+        debugPrint('Ошибка создания интеграции: $e');
       }
       rethrow;
     }
@@ -115,11 +115,11 @@ class IntegrationService {
       await _startIntegrationSync(integrationId);
 
       if (kDebugMode) {
-        print('Integration activated: ${integration.name}');
+        debugPrint('Integration activated: ${integration.name}');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка активации интеграции: $e');
+        debugPrint('Ошибка активации интеграции: $e');
       }
       rethrow;
     }
@@ -146,11 +146,11 @@ class IntegrationService {
       );
 
       if (kDebugMode) {
-        print('Integration deactivated: ${integration.name}');
+        debugPrint('Integration deactivated: ${integration.name}');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка деактивации интеграции: $e');
+        debugPrint('Ошибка деактивации интеграции: $e');
       }
       rethrow;
     }
@@ -242,11 +242,11 @@ class IntegrationService {
       _syncTimers[integrationId] = timer;
 
       if (kDebugMode) {
-        print('Sync started for integration: ${integration.name}');
+        debugPrint('Sync started for integration: ${integration.name}');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка запуска синхронизации: $e');
+        debugPrint('Ошибка запуска синхронизации: $e');
       }
     }
   }
@@ -313,11 +313,11 @@ class IntegrationService {
       }
 
       if (kDebugMode) {
-        print('Sync completed for integration: ${integration.name}');
+        debugPrint('Sync completed for integration: ${integration.name}');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка синхронизации: $e');
+        debugPrint('Ошибка синхронизации: $e');
       }
 
       // Обновляем ошибку
@@ -377,7 +377,7 @@ class IntegrationService {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка синхронизации API: $e');
+        debugPrint('Ошибка синхронизации API: $e');
       }
       rethrow;
     }
@@ -403,7 +403,7 @@ class IntegrationService {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка обработки ответа API: $e');
+        debugPrint('Ошибка обработки ответа API: $e');
       }
       rethrow;
     }
@@ -457,7 +457,7 @@ class IntegrationService {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка обработки JSON данных: $e');
+        debugPrint('Ошибка обработки JSON данных: $e');
       }
       rethrow;
     }
@@ -500,7 +500,7 @@ class IntegrationService {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка отправки данных: $e');
+        debugPrint('Ошибка отправки данных: $e');
       }
       rethrow;
     }
@@ -510,7 +510,7 @@ class IntegrationService {
   Future<void> _syncSftpData(ExternalIntegration integration) async {
     // TODO(developer): Реализовать SFTP синхронизацию
     if (kDebugMode) {
-      print('SFTP sync not implemented yet');
+      debugPrint('SFTP sync not implemented yet');
     }
   }
 
@@ -518,7 +518,7 @@ class IntegrationService {
   Future<void> _syncEmailData(ExternalIntegration integration) async {
     // TODO(developer): Реализовать Email синхронизацию
     if (kDebugMode) {
-      print('Email sync not implemented yet');
+      debugPrint('Email sync not implemented yet');
     }
   }
 
@@ -526,7 +526,7 @@ class IntegrationService {
   Future<void> _syncSmsData(ExternalIntegration integration) async {
     // TODO(developer): Реализовать SMS синхронизацию
     if (kDebugMode) {
-      print('SMS sync not implemented yet');
+      debugPrint('SMS sync not implemented yet');
     }
   }
 
@@ -534,7 +534,7 @@ class IntegrationService {
   Future<void> _syncPaymentData(ExternalIntegration integration) async {
     // TODO(developer): Реализовать синхронизацию платежей
     if (kDebugMode) {
-      print('Payment sync not implemented yet');
+      debugPrint('Payment sync not implemented yet');
     }
   }
 
@@ -542,7 +542,7 @@ class IntegrationService {
   Future<void> _syncCalendarData(ExternalIntegration integration) async {
     // TODO(developer): Реализовать синхронизацию календаря
     if (kDebugMode) {
-      print('Calendar sync not implemented yet');
+      debugPrint('Calendar sync not implemented yet');
     }
   }
 
@@ -550,7 +550,7 @@ class IntegrationService {
   Future<void> _syncSocialData(ExternalIntegration integration) async {
     // TODO(developer): Реализовать синхронизацию социальных сетей
     if (kDebugMode) {
-      print('Social sync not implemented yet');
+      debugPrint('Social sync not implemented yet');
     }
   }
 
@@ -558,7 +558,7 @@ class IntegrationService {
   Future<void> _syncAnalyticsData(ExternalIntegration integration) async {
     // TODO(developer): Реализовать синхронизацию аналитики
     if (kDebugMode) {
-      print('Analytics sync not implemented yet');
+      debugPrint('Analytics sync not implemented yet');
     }
   }
 
@@ -566,7 +566,7 @@ class IntegrationService {
   Future<void> _syncCrmData(ExternalIntegration integration) async {
     // TODO(developer): Реализовать синхронизацию CRM
     if (kDebugMode) {
-      print('CRM sync not implemented yet');
+      debugPrint('CRM sync not implemented yet');
     }
   }
 
@@ -574,7 +574,7 @@ class IntegrationService {
   Future<void> _syncErpData(ExternalIntegration integration) async {
     // TODO(developer): Реализовать синхронизацию ERP
     if (kDebugMode) {
-      print('ERP sync not implemented yet');
+      debugPrint('ERP sync not implemented yet');
     }
   }
 
@@ -582,7 +582,7 @@ class IntegrationService {
   Future<void> _syncOtherData(ExternalIntegration integration) async {
     // TODO(developer): Реализовать пользовательскую синхронизацию
     if (kDebugMode) {
-      print('Other sync not implemented yet');
+      debugPrint('Other sync not implemented yet');
     }
   }
 
@@ -597,11 +597,11 @@ class IntegrationService {
       }
 
       if (kDebugMode) {
-        print('Loaded ${_integrations.length} integrations');
+        debugPrint('Loaded ${_integrations.length} integrations');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки интеграций: $e');
+        debugPrint('Ошибка загрузки интеграций: $e');
       }
     }
   }
@@ -616,7 +616,7 @@ class IntegrationService {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка запуска активных интеграций: $e');
+        debugPrint('Ошибка запуска активных интеграций: $e');
       }
     }
   }
@@ -649,11 +649,11 @@ class IntegrationService {
       _integrations[integrationId] = updatedIntegration;
 
       if (kDebugMode) {
-        print('Integration updated: ${updatedIntegration.name}');
+        debugPrint('Integration updated: ${updatedIntegration.name}');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка обновления интеграции: $e');
+        debugPrint('Ошибка обновления интеграции: $e');
       }
       rethrow;
     }
@@ -675,11 +675,11 @@ class IntegrationService {
       _integrations.remove(integrationId);
 
       if (kDebugMode) {
-        print('Integration deleted: ${integration.name}');
+        debugPrint('Integration deleted: ${integration.name}');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка удаления интеграции: $e');
+        debugPrint('Ошибка удаления интеграции: $e');
       }
       rethrow;
     }
@@ -691,7 +691,7 @@ class IntegrationService {
       await _performSync(integrationId);
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка ручной синхронизации: $e');
+        debugPrint('Ошибка ручной синхронизации: $e');
       }
       rethrow;
     }
@@ -713,7 +713,7 @@ class IntegrationService {
       return snapshot.docs.map(DataSync.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения истории синхронизации: $e');
+        debugPrint('Ошибка получения истории синхронизации: $e');
       }
       return [];
     }
@@ -895,7 +895,7 @@ class IntegrationService {
       // Заглушка для открытия URL
       // В реальном приложении здесь будет использоваться url_launcher
       if (kDebugMode) {
-        print('Opening URL: $url');
+        debugPrint('Opening URL: $url');
       }
     } catch (e) {
       throw Exception('Ошибка открытия URL: $e');
@@ -926,9 +926,9 @@ class IntegrationService {
       // Заглушка для шаринга контента
       // В реальном приложении здесь будет использоваться share_plus
       if (kDebugMode) {
-        print('Sharing content: $content');
-        if (subject != null) print('Subject: $subject');
-        if (title != null) print('Title: $title');
+        debugPrint('Sharing content: $content');
+        if (subject != null) debugPrint('Subject: $subject');
+        if (title != null) debugPrint('Title: $title');
       }
     } catch (e) {
       throw Exception('Ошибка шаринга контента: $e');

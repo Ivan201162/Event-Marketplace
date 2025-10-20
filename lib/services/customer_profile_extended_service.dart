@@ -26,7 +26,7 @@ class CustomerProfileExtendedService {
 
       return CustomerProfileExtended.fromDocument(doc.docs.first);
     } catch (e) {
-      print('Error getting extended profile: $e');
+      debugPrint('Error getting extended profile: $e');
       return null;
     }
   }
@@ -93,7 +93,7 @@ class CustomerProfileExtendedService {
 
       return extendedProfile.copyWith(id: docRef.id);
     } catch (e) {
-      print('Error creating extended profile: $e');
+      debugPrint('Error creating extended profile: $e');
       return null;
     }
   }
@@ -106,7 +106,7 @@ class CustomerProfileExtendedService {
           .doc(profile.id)
           .update(profile.copyWith(lastUpdated: DateTime.now()).toMap());
     } catch (e) {
-      print('Error updating extended profile: $e');
+      debugPrint('Error updating extended profile: $e');
     }
   }
 
@@ -148,7 +148,7 @@ class CustomerProfileExtendedService {
 
       return photo;
     } catch (e) {
-      print('Error adding inspiration photo: $e');
+      debugPrint('Error adding inspiration photo: $e');
       return null;
     }
   }
@@ -170,7 +170,7 @@ class CustomerProfileExtendedService {
         final ref = _storage.refFromURL(photoToRemove.url);
         await ref.delete();
       } catch (e) {
-        print('Error deleting photo from storage: $e');
+        debugPrint('Error deleting photo from storage: $e');
       }
 
       // Удаляем из профиля
@@ -180,7 +180,7 @@ class CustomerProfileExtendedService {
       final updatedProfile = profile.copyWith(inspirationPhotos: updatedPhotos);
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
-      print('Error removing inspiration photo: $e');
+      debugPrint('Error removing inspiration photo: $e');
     }
   }
 
@@ -217,7 +217,7 @@ class CustomerProfileExtendedService {
 
       return note;
     } catch (e) {
-      print('Error adding note: $e');
+      debugPrint('Error adding note: $e');
       return null;
     }
   }
@@ -238,7 +238,7 @@ class CustomerProfileExtendedService {
       final updatedProfile = profile.copyWith(notes: updatedNotes);
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
-      print('Error updating note: $e');
+      debugPrint('Error updating note: $e');
     }
   }
 
@@ -253,7 +253,7 @@ class CustomerProfileExtendedService {
       final updatedProfile = profile.copyWith(notes: updatedNotes);
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
-      print('Error removing note: $e');
+      debugPrint('Error removing note: $e');
     }
   }
 
@@ -270,7 +270,7 @@ class CustomerProfileExtendedService {
 
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
-      print('Error adding to favorites: $e');
+      debugPrint('Error adding to favorites: $e');
     }
   }
 
@@ -286,7 +286,7 @@ class CustomerProfileExtendedService {
       final updatedProfile = profile.copyWith(favoriteSpecialists: updatedFavorites);
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
-      print('Error removing from favorites: $e');
+      debugPrint('Error removing from favorites: $e');
     }
   }
 
@@ -303,7 +303,7 @@ class CustomerProfileExtendedService {
 
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
-      print('Error saving event: $e');
+      debugPrint('Error saving event: $e');
     }
   }
 
@@ -318,7 +318,7 @@ class CustomerProfileExtendedService {
       final updatedProfile = profile.copyWith(savedEvents: updatedSavedEvents);
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
-      print('Error unsaving event: $e');
+      debugPrint('Error unsaving event: $e');
     }
   }
 
@@ -344,7 +344,7 @@ class CustomerProfileExtendedService {
       );
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
-      print('Error updating preferences: $e');
+      debugPrint('Error updating preferences: $e');
     }
   }
 
@@ -356,7 +356,7 @@ class CustomerProfileExtendedService {
 
       return profile.getNotesByTag(tag);
     } catch (e) {
-      print('Error getting notes by tag: $e');
+      debugPrint('Error getting notes by tag: $e');
       return [];
     }
   }
@@ -372,7 +372,7 @@ class CustomerProfileExtendedService {
 
       return profile.getPhotosByTag(tag);
     } catch (e) {
-      print('Error getting photos by tag: $e');
+      debugPrint('Error getting photos by tag: $e');
       return [];
     }
   }
@@ -393,7 +393,7 @@ class CustomerProfileExtendedService {
           )
           .toList();
     } catch (e) {
-      print('Error searching notes: $e');
+      debugPrint('Error searching notes: $e');
       return [];
     }
   }
@@ -416,7 +416,7 @@ class CustomerProfileExtendedService {
           )
           .toList();
     } catch (e) {
-      print('Error searching photos: $e');
+      debugPrint('Error searching photos: $e');
       return [];
     }
   }
@@ -440,7 +440,7 @@ class CustomerProfileExtendedService {
         lastActivity: profile.lastUpdated,
       );
     } catch (e) {
-      print('Error getting profile stats: $e');
+      debugPrint('Error getting profile stats: $e');
       return CustomerProfileStats.empty();
     }
   }

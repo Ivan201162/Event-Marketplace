@@ -109,7 +109,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
 
       setState(() {});
     } on Exception catch (e) {
-      debugPrint('Ошибка инициализации видео: $e');
+      debugdebugPrint('Ошибка инициализации видео: $e');
     }
   }
 
@@ -195,7 +195,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    Colors.black.withOpacity(0.7),
+                    Colors.black.withValues(alpha: 0.7),
                   ],
                 ),
               ),

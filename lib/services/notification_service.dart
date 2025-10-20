@@ -1,397 +1,362 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
-import '../models/advertisement.dart';
-import '../core/notifications/app_notification.dart';
-import '../models/promotion_boost.dart';
-import '../models/subscription_plan.dart';
-import '../models/transaction.dart' as transaction_model;
+import '../models/notification.dart';
 
+/// Service for managing notifications
 class NotificationService {
-  static final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static const String _collection = 'notifications';
 
-  /// Инициализация сервиса уведомлений
-  static Future<void> initialize() async {
+  /// Get user's notifications
+  Future<List<AppNotification>> getUserNotifications(String userId, {int limit = 50}) async {
     try {
-      // Запрос разрешений на уведомления
-      final NotificationSettings settings = await _messaging.requestPermission();
+      final snapshot = await _firestore
+          .collection(_collection)
+          .where('userId', isEqualTo: userId)
+          .orderBy('createdAt', descending: true)
+          .limit(limit)
+          .get();
 
-      debugPrint('INFO: [NotificationService] Permission status: ${settings.authorizationStatus}');
-
-      // Получение FCM токена
-      final String? token = await _messaging.getToken();
-      if (token != null) {
-        debugPrint('INFO: [NotificationService] FCM Token: $token');
-        await _saveFCMToken(token);
-      }
-
-      // Обработка уведомлений в фоне
-      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-      // Обработка уведомлений в foreground
-      FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
-
-      // Обработка нажатий на уведомления
-      FirebaseMessaging.onMessageOpenedApp.listen(_handleNotificationTap);
-
-      debugPrint('INFO: [NotificationService] Initialized successfully');
+      return snapshot.docs.map((doc) => AppNotification.fromFirestore(doc)).toList();
     } catch (e) {
-      debugPrint('ERROR: [NotificationService] Initialization failed: $e');
+      debugPrint('Error getting user notifications: $e');
+      return [];
     }
   }
 
-  /// Сохранение FCM токена пользователя
-  static Future<void> _saveFCMToken(String token) async {
+  /// Get unread notifications
+  Future<List<AppNotification>> getUnreadNotifications(String userId, {int limit = 20}) async {
     try {
-      // Здесь нужно получить ID текущего пользователя
-      // Для демонстрации используем фиксированный ID
-      const String userId = 'current_user_id'; // TODO: Получить из AuthService
+      final snapshot = await _firestore
+          .collection(_collection)
+          .where('userId', isEqualTo: userId)
+          .where('read', isEqualTo: false)
+          .orderBy('createdAt', descending: true)
+          .limit(limit)
+          .get();
 
-      await _firestore.collection('user_tokens').doc(userId).set({
-        'token': token,
-        'updatedAt': FieldValue.serverTimestamp(),
-        'platform': 'android', // или 'ios'
-      });
+      return snapshot.docs.map((doc) => AppNotification.fromFirestore(doc)).toList();
     } catch (e) {
-      debugPrint('ERROR: [NotificationService] Failed to save FCM token: $e');
+      debugPrint('Error getting unread notifications: $e');
+      return [];
     }
   }
 
-  /// Обработка уведомлений в фоне
-  static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-    debugPrint('INFO: [NotificationService] Background message: ${message.messageId}');
-    debugPrint('INFO: [NotificationService] Data: ${message.data}');
-  }
+  /// Get notifications by type
+  Future<List<AppNotification>> getNotificationsByType(String userId, NotificationType type, {int limit = 20}) async {
+    try {
+      final snapshot = await _firestore
+          .collection(_collection)
+          .where('userId', isEqualTo: userId)
+          .where('type', isEqualTo: type.toString().split('.').last)
+          .orderBy('createdAt', descending: true)
+          .limit(limit)
+          .get();
 
-  /// Обработка уведомлений в foreground
-  static void _handleForegroundMessage(RemoteMessage message) {
-    debugPrint('INFO: [NotificationService] Foreground message: ${message.messageId}');
-    debugPrint('INFO: [NotificationService] Title: ${message.notification?.title}');
-    debugPrint('INFO: [NotificationService] Body: ${message.notification?.body}');
-    debugPrint('INFO: [NotificationService] Data: ${message.data}');
-
-    // Здесь можно показать in-app уведомление
-    _showInAppNotification(message);
-  }
-
-  /// Обработка нажатий на уведомления
-  static void _handleNotificationTap(RemoteMessage message) {
-    debugPrint('INFO: [NotificationService] Notification tapped: ${message.messageId}');
-    debugPrint('INFO: [NotificationService] Data: ${message.data}');
-
-    // Навигация на соответствующий экран
-    _navigateFromNotification(message.data);
-  }
-
-  /// Показ in-app уведомления
-  static void _showInAppNotification(RemoteMessage message) {
-    // TODO: Реализовать показ in-app уведомления
-    // Можно использовать Overlay или SnackBar
-  }
-
-  /// Навигация на основе данных уведомления
-  static void _navigateFromNotification(Map<String, dynamic> data) {
-    // TODO: Реализовать навигацию на основе типа уведомления
-    final String? type = data['type'];
-    final String? id = data['id'];
-
-    switch (type) {
-      case 'subscription':
-        // Навигация к подпискам
-        break;
-      case 'promotion':
-        // Навигация к продвижениям
-        break;
-      case 'advertisement':
-        // Навигация к рекламе
-        break;
-      case 'payment':
-        // Навигация к транзакциям
-        break;
+      return snapshot.docs.map((doc) => AppNotification.fromFirestore(doc)).toList();
+    } catch (e) {
+      debugPrint('Error getting notifications by type: $e');
+      return [];
     }
   }
 
-  /// Отправка уведомления о успешной оплате
-  static Future<void> sendPaymentSuccessNotification({
+  /// Create notification
+  Future<String?> createNotification({
     required String userId,
-    required transaction_model.Transaction transaction,
+    required NotificationType type,
+    required String title,
+    required String body,
+    String? data,
+    String? imageUrl,
+    String? actionUrl,
+    String? senderId,
+    String? senderName,
+    String? senderAvatarUrl,
   }) async {
     try {
-      final AppNotification notification = AppNotification(
-        id: 'payment_success_${transaction.id}',
+      final notification = AppNotification(
+        id: '', // Will be set by Firestore
         userId: userId,
-        type: NotificationType.payment.toString(),
-        title: 'Платеж успешно обработан',
-        body:
-            'Ваш платеж на сумму ${transaction.amount} ${transaction.currency} успешно обработан.',
-        data: {
-          'transactionId': transaction.id,
-          'amount': transaction.amount,
-          'currency': transaction.currency,
-          'type': transaction.type.toString(),
-        },
-        isRead: false,
-        createdAt: DateTime.now(),
-      );
-
-      await _createNotification(notification);
-      await _sendPushNotification(
-        userId: userId,
-        title: notification.title,
-        body: notification.body,
-        data: notification.data,
-      );
-    } catch (e) {
-      debugPrint('ERROR: [NotificationService] Failed to send payment success notification: $e');
-    }
-  }
-
-  /// Отправка уведомления о активации подписки
-  static Future<void> sendSubscriptionActivatedNotification({
-    required String userId,
-    required UserSubscription subscription,
-  }) async {
-    try {
-      final AppNotification notification = AppNotification(
-        id: 'subscription_activated_${subscription.id}',
-        userId: userId,
-        type: NotificationType.subscription.toString(),
-        title: 'Подписка активирована',
-        body:
-            'Ваша подписка успешно активирована и действует до ${subscription.endDate.toLocal().toString().split(' ')[0]}.',
-        data: {
-          'subscriptionId': subscription.id,
-          'planId': subscription.planId,
-          'endDate': subscription.endDate.toIso8601String(),
-        },
-        isRead: false,
-        createdAt: DateTime.now(),
-      );
-
-      await _createNotification(notification);
-      await _sendPushNotification(
-        userId: userId,
-        title: notification.title,
-        body: notification.body,
-        data: notification.data,
-      );
-    } catch (e) {
-      debugPrint(
-          'ERROR: [NotificationService] Failed to send subscription activated notification: $e');
-    }
-  }
-
-  /// Отправка уведомления о истечении подписки
-  static Future<void> sendSubscriptionExpiringNotification({
-    required String userId,
-    required UserSubscription subscription,
-    required int daysLeft,
-  }) async {
-    try {
-      final AppNotification notification = AppNotification(
-        id: 'subscription_expiring_${subscription.id}',
-        userId: userId,
-        type: NotificationType.subscription.toString(),
-        title: 'Подписка истекает',
-        body:
-            'Ваша подписка истекает через $daysLeft ${_getDaysText(daysLeft)}. Продлите её, чтобы сохранить доступ к премиум-функциям.',
-        data: {
-          'subscriptionId': subscription.id,
-          'planId': subscription.planId,
-          'daysLeft': daysLeft,
-          'endDate': subscription.endDate.toIso8601String(),
-        },
-        isRead: false,
-        createdAt: DateTime.now(),
-      );
-
-      await _createNotification(notification);
-      await _sendPushNotification(
-        userId: userId,
-        title: notification.title,
-        body: notification.body,
-        data: notification.data,
-      );
-    } catch (e) {
-      debugPrint(
-          'ERROR: [NotificationService] Failed to send subscription expiring notification: $e');
-    }
-  }
-
-  /// Отправка уведомления о активации продвижения
-  static Future<void> sendPromotionActivatedNotification({
-    required String userId,
-    required PromotionBoost promotion,
-  }) async {
-    try {
-      final AppNotification notification = AppNotification(
-        id: 'promotion_activated_${promotion.id}',
-        userId: userId,
-        type: NotificationType.promotion.toString(),
-        title: 'Продвижение активировано',
-        body:
-            'Ваше продвижение успешно активировано и будет действовать до ${promotion.endDate.toLocal().toString().split(' ')[0]}.',
-        data: {
-          'promotionId': promotion.id,
-          'targetType': promotion.type.toString(),
-          'priorityLevel': promotion.priorityLevel,
-          'endDate': promotion.endDate.toIso8601String(),
-        },
-        isRead: false,
-        createdAt: DateTime.now(),
-      );
-
-      await _createNotification(notification);
-      await _sendPushNotification(
-        userId: userId,
-        title: notification.title,
-        body: notification.body,
-        data: notification.data,
-      );
-    } catch (e) {
-      debugPrint(
-          'ERROR: [NotificationService] Failed to send promotion activated notification: $e');
-    }
-  }
-
-  /// Отправка уведомления о модерации рекламы
-  static Future<void> sendAdvertisementModerationNotification({
-    required String userId,
-    required Advertisement advertisement,
-    required AdStatus status,
-  }) async {
-    try {
-      String title;
-      String message;
-
-      switch (status) {
-        case AdStatus.active:
-          title = 'Реклама одобрена';
-          message =
-              'Ваша реклама "${advertisement.title}" одобрена и теперь показывается пользователям.';
-          break;
-        case AdStatus.rejected:
-          title = 'Реклама отклонена';
-          message =
-              'Ваша реклама "${advertisement.title}" была отклонена модератором. Проверьте соответствие правилам платформы.';
-          break;
-        default:
-          title = 'Статус рекламы изменен';
-          message =
-              'Статус вашей рекламы "${advertisement.title}" изменен на ${status.toString().split('.').last}.';
-      }
-
-      final AppNotification notification = AppNotification(
-        id: 'advertisement_moderation_${advertisement.id}',
-        userId: userId,
-        type: NotificationType.advertisement.toString(),
+        type: type,
         title: title,
-        body: message,
-        data: {
-          'advertisementId': advertisement.id,
-          'title': advertisement.title,
-          'status': status.toString(),
-          'type': advertisement.type.toString(),
-        },
-        isRead: false,
+        body: body,
+        data: data,
+        imageUrl: imageUrl,
+        actionUrl: actionUrl,
+        senderId: senderId,
+        senderName: senderName,
+        senderAvatarUrl: senderAvatarUrl,
         createdAt: DateTime.now(),
       );
 
-      await _createNotification(notification);
-      await _sendPushNotification(
-        userId: userId,
-        title: notification.title,
-        body: notification.body,
-        data: notification.data,
-      );
+      final docRef = await _firestore.collection(_collection).add(notification.toFirestore());
+      return docRef.id;
     } catch (e) {
-      debugPrint(
-          'ERROR: [NotificationService] Failed to send advertisement moderation notification: $e');
+      debugPrint('Error creating notification: $e');
+      return null;
     }
   }
 
-  /// Создание уведомления в Firestore
-  static Future<void> _createNotification(AppNotification notification) async {
+  /// Mark notification as read
+  Future<bool> markAsRead(String notificationId) async {
     try {
-      await _firestore.collection('notifications').doc(notification.id).set(notification.toMap());
+      await _firestore.collection(_collection).doc(notificationId).update({
+        'read': true,
+      });
+      return true;
     } catch (e) {
-      debugPrint('ERROR: [NotificationService] Failed to create notification: $e');
+      debugPrint('Error marking notification as read: $e');
+      return false;
     }
   }
 
-  /// Отправка push уведомления через FCM
-  static Future<void> _sendPushNotification({
+  /// Mark all notifications as read
+  Future<bool> markAllAsRead(String userId) async {
+    try {
+      final batch = _firestore.batch();
+      final snapshot = await _firestore
+          .collection(_collection)
+          .where('userId', isEqualTo: userId)
+          .where('read', isEqualTo: false)
+          .get();
+
+      for (final doc in snapshot.docs) {
+        batch.update(doc.reference, {'read': true});
+      }
+
+      await batch.commit();
+      return true;
+    } catch (e) {
+      debugPrint('Error marking all notifications as read: $e');
+      return false;
+    }
+  }
+
+  /// Delete notification
+  Future<bool> deleteNotification(String notificationId) async {
+    try {
+      await _firestore.collection(_collection).doc(notificationId).delete();
+      return true;
+    } catch (e) {
+      debugPrint('Error deleting notification: $e');
+      return false;
+    }
+  }
+
+  /// Delete all notifications
+  Future<bool> deleteAllNotifications(String userId) async {
+    try {
+      final batch = _firestore.batch();
+      final snapshot = await _firestore
+          .collection(_collection)
+          .where('userId', isEqualTo: userId)
+          .get();
+
+      for (final doc in snapshot.docs) {
+        batch.delete(doc.reference);
+      }
+
+      await batch.commit();
+      return true;
+    } catch (e) {
+      debugPrint('Error deleting all notifications: $e');
+      return false;
+    }
+  }
+
+  /// Get notification by ID
+  Future<AppNotification?> getNotificationById(String notificationId) async {
+    try {
+      final doc = await _firestore.collection(_collection).doc(notificationId).get();
+      if (doc.exists) {
+        return AppNotification.fromFirestore(doc);
+      }
+      return null;
+    } catch (e) {
+      debugPrint('Error getting notification by ID: $e');
+      return null;
+    }
+  }
+
+  /// Get unread count
+  Future<int> getUnreadCount(String userId) async {
+    try {
+      final snapshot = await _firestore
+          .collection(_collection)
+          .where('userId', isEqualTo: userId)
+          .where('read', isEqualTo: false)
+          .get();
+
+      return snapshot.docs.length;
+    } catch (e) {
+      debugPrint('Error getting unread count: $e');
+      return 0;
+    }
+  }
+
+  /// Create request notification
+  Future<String?> createRequestNotification({
+    required String userId,
+    required String fromUserName,
+    required String category,
+    required String city,
+    required int budget,
+    String? fromUserAvatarUrl,
+  }) async {
+    return createNotification(
+      userId: userId,
+      type: NotificationType.request,
+      title: 'Новая заявка',
+      body: '$fromUserName отправил заявку на $category в $city ($budget₽)',
+      senderName: fromUserName,
+      senderAvatarUrl: fromUserAvatarUrl,
+      actionUrl: '/requests',
+    );
+  }
+
+  /// Create message notification
+  Future<String?> createMessageNotification({
+    required String userId,
+    required String fromUserName,
+    required String messageText,
+    String? fromUserAvatarUrl,
+    String? chatId,
+  }) async {
+    return createNotification(
+      userId: userId,
+      type: NotificationType.message,
+      title: 'Новое сообщение от $fromUserName',
+      body: messageText.length > 50 ? '${messageText.substring(0, 50)}...' : messageText,
+      senderName: fromUserName,
+      senderAvatarUrl: fromUserAvatarUrl,
+      actionUrl: chatId != null ? '/chat/$chatId' : '/chats',
+    );
+  }
+
+  /// Create like notification
+  Future<String?> createLikeNotification({
+    required String userId,
+    required String fromUserName,
+    required String postType, // 'post' or 'idea'
+    String? fromUserAvatarUrl,
+    String? postId,
+  }) async {
+    return createNotification(
+      userId: userId,
+      type: NotificationType.like,
+      title: 'Новый лайк',
+      body: '$fromUserName поставил лайк вашему $postType',
+      senderName: fromUserName,
+      senderAvatarUrl: fromUserAvatarUrl,
+      actionUrl: postId != null ? '/$postType/$postId' : '/feed',
+    );
+  }
+
+  /// Create comment notification
+  Future<String?> createCommentNotification({
+    required String userId,
+    required String fromUserName,
+    required String commentText,
+    required String postType, // 'post' or 'idea'
+    String? fromUserAvatarUrl,
+    String? postId,
+  }) async {
+    return createNotification(
+      userId: userId,
+      type: NotificationType.comment,
+      title: 'Новый комментарий',
+      body: '$fromUserName прокомментировал ваш $postType',
+      senderName: fromUserName,
+      senderAvatarUrl: fromUserAvatarUrl,
+      actionUrl: postId != null ? '/$postType/$postId' : '/feed',
+    );
+  }
+
+  /// Create system notification
+  Future<String?> createSystemNotification({
     required String userId,
     required String title,
     required String body,
-    required Map<String, dynamic> data,
+    String? actionUrl,
   }) async {
-    try {
-      // Получаем FCM токен пользователя
-      final DocumentSnapshot tokenDoc =
-          await _firestore.collection('user_tokens').doc(userId).get();
-
-      if (!tokenDoc.exists) {
-        debugPrint('WARNING: [NotificationService] No FCM token found for user $userId');
-        return;
-      }
-
-      final Map<String, dynamic>? data = tokenDoc.data() as Map<String, dynamic>?;
-      final String? token = data?['token'] as String?;
-      if (token == null) {
-        debugPrint('WARNING: [NotificationService] Invalid FCM token for user $userId');
-        return;
-      }
-
-      // Отправляем уведомление через Cloud Functions
-      // В реальном приложении это должно быть реализовано через Cloud Functions
-      debugPrint('INFO: [NotificationService] Would send push notification to token: $token');
-      debugPrint('INFO: [NotificationService] Title: $title');
-      debugPrint('INFO: [NotificationService] Body: $body');
-      debugPrint('INFO: [NotificationService] Data: $data');
-    } catch (e) {
-      debugPrint('ERROR: [NotificationService] Failed to send push notification: $e');
-    }
+    return createNotification(
+      userId: userId,
+      type: NotificationType.system,
+      title: title,
+      body: body,
+      actionUrl: actionUrl,
+    );
   }
 
-  /// Получение уведомлений пользователя
-  static Stream<List<AppNotification>> getUserNotifications(String userId) {
+  /// Create reminder notification
+  Future<String?> createReminderNotification({
+    required String userId,
+    required String title,
+    required String body,
+    String? actionUrl,
+  }) async {
+    return createNotification(
+      userId: userId,
+      type: NotificationType.reminder,
+      title: title,
+      body: body,
+      actionUrl: actionUrl,
+    );
+  }
+
+  /// Create promotion notification
+  Future<String?> createPromotionNotification({
+    required String userId,
+    required String title,
+    required String body,
+    String? imageUrl,
+    String? actionUrl,
+  }) async {
+    return createNotification(
+      userId: userId,
+      type: NotificationType.promotion,
+      title: title,
+      body: body,
+      imageUrl: imageUrl,
+      actionUrl: actionUrl,
+    );
+  }
+
+  /// Stream of user's notifications
+  Stream<List<AppNotification>> getUserNotificationsStream(String userId, {int limit = 50}) {
     return _firestore
-        .collection('notifications')
+        .collection(_collection)
         .where('userId', isEqualTo: userId)
         .orderBy('createdAt', descending: true)
+        .limit(limit)
         .snapshots()
-        .map(
-            (snapshot) => snapshot.docs.map((doc) => AppNotification.fromMap(doc.data())).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => AppNotification.fromFirestore(doc))
+            .toList());
   }
 
-  /// Отметка уведомления как прочитанного
-  static Future<void> markNotificationAsRead(String notificationId) async {
-    try {
-      await _firestore.collection('notifications').doc(notificationId).update({
-        'isRead': true,
-        'readAt': FieldValue.serverTimestamp(),
-      });
-    } catch (e) {
-      debugPrint('ERROR: [NotificationService] Failed to mark notification as read: $e');
-    }
+  /// Stream of unread notifications
+  Stream<List<AppNotification>> getUnreadNotificationsStream(String userId, {int limit = 20}) {
+    return _firestore
+        .collection(_collection)
+        .where('userId', isEqualTo: userId)
+        .where('read', isEqualTo: false)
+        .orderBy('createdAt', descending: true)
+        .limit(limit)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => AppNotification.fromFirestore(doc))
+            .toList());
   }
 
-  /// Удаление уведомления
-  static Future<void> deleteNotification(String notificationId) async {
-    try {
-      await _firestore.collection('notifications').doc(notificationId).delete();
-    } catch (e) {
-      debugPrint('ERROR: [NotificationService] Failed to delete notification: $e');
-    }
-  }
-
-  /// Вспомогательный метод для склонения слова "день"
-  static String _getDaysText(int days) {
-    if (days == 1) return 'день';
-    if (days >= 2 && days <= 4) return 'дня';
-    return 'дней';
+  /// Stream of unread count
+  Stream<int> getUnreadCountStream(String userId) {
+    return _firestore
+        .collection(_collection)
+        .where('userId', isEqualTo: userId)
+        .where('read', isEqualTo: false)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
   }
 }

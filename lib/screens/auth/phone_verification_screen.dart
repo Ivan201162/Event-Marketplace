@@ -44,7 +44,7 @@ class _PhoneVerificationScreenState extends ConsumerState<PhoneVerificationScree
 
     try {
       final authService = ref.read(authServiceProvider);
-      await authService.signInWithPhoneNumber(widget.phoneNumber);
+      await authService.signInWithPhoneNumber(phoneNumber: widget.phoneNumber);
 
       setState(() {
         _isLoading = false;
@@ -93,7 +93,7 @@ class _PhoneVerificationScreenState extends ConsumerState<PhoneVerificationScree
 
     try {
       final authService = ref.read(authServiceProvider);
-      await authService.confirmPhoneCode(_codeController.text.trim());
+      await authService.verifyPhoneCode(_codeController.text.trim());
 
       if (mounted) {
         // Успешная верификация - переходим в приложение

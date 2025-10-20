@@ -276,18 +276,20 @@ final searchStreamProvider =
   return service.searchSpecialistsStream(filters: filters);
 });
 
-/// Провайдер для быстрого поиска (без фильтров)
+/// Провайдер для быстрого поиска (без фильтров) (мигрирован с StateNotifierProvider)
 final quickSearchProvider =
-    StateNotifierProvider<QuickSearchNotifier, AsyncValue<List<AdvancedSearchResult>>>((ref) {
-  final service = ref.read(advancedSearchServiceProvider);
-  return QuickSearchNotifier(service);
+    NotifierProvider<QuickSearchNotifier, AsyncValue<List<AdvancedSearchResult>>>(() {
+  return QuickSearchNotifier();
 });
 
-/// Нотификатор для быстрого поиска
-class QuickSearchNotifier extends StateNotifier<AsyncValue<List<AdvancedSearchResult>>> {
-  QuickSearchNotifier(this._service) : super(const AsyncValue.data([]));
+/// Нотификатор для быстрого поиска (мигрирован с StateNotifier)
+class QuickSearchNotifier extends Notifier<AsyncValue<List<AdvancedSearchResult>>> {
+  @override
+  AsyncValue<List<AdvancedSearchResult>> build() {
+    return const AsyncValue.data([]);
+  }
 
-  final AdvancedSpecialistSearchService _service;
+  AdvancedSpecialistSearchService get _service => ref.read(advancedSearchServiceProvider);
 
   /// Быстрый поиск по запросу
   Future<void> quickSearch(String query, {CityRegion? city}) async {

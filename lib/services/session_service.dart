@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../models/user.dart';
@@ -17,9 +16,9 @@ class SessionService {
       final userJson = jsonEncode(user.toMap());
       await _storage.write(key: _userKey, value: userJson);
       await _storage.write(key: _isLoggedInKey, value: 'true');
-      debugPrint('Пользователь сохранен в локальном хранилище');
+      debugdebugPrint('Пользователь сохранен в локальном хранилище');
     } on Exception catch (e) {
-      debugPrint('Ошибка сохранения пользователя: $e');
+      debugdebugPrint('Ошибка сохранения пользователя: $e');
     }
   }
 
@@ -32,7 +31,7 @@ class SessionService {
         return AppUser.fromMap(userMap);
       }
     } on Exception catch (e) {
-      debugPrint('Ошибка получения пользователя: $e');
+      debugdebugPrint('Ошибка получения пользователя: $e');
     }
     return null;
   }
@@ -43,7 +42,7 @@ class SessionService {
       final isLoggedIn = await _storage.read(key: _isLoggedInKey);
       return isLoggedIn == 'true';
     } on Exception catch (e) {
-      debugPrint('Ошибка проверки авторизации: $e');
+      debugdebugPrint('Ошибка проверки авторизации: $e');
       return false;
     }
   }
@@ -53,9 +52,9 @@ class SessionService {
     try {
       await _storage.delete(key: _userKey);
       await _storage.delete(key: _isLoggedInKey);
-      debugPrint('Сессия очищена');
+      debugdebugPrint('Сессия очищена');
     } on Exception catch (e) {
-      debugPrint('Ошибка очистки сессии: $e');
+      debugdebugPrint('Ошибка очистки сессии: $e');
     }
   }
 
@@ -63,9 +62,9 @@ class SessionService {
   static Future<void> saveUserId(String uid) async {
     try {
       await _storage.write(key: 'user_uid', value: uid);
-      debugPrint('UID пользователя сохранен: $uid');
+      debugdebugPrint('UID пользователя сохранен: $uid');
     } on Exception catch (e) {
-      debugPrint('Ошибка сохранения UID: $e');
+      debugdebugPrint('Ошибка сохранения UID: $e');
     }
   }
 
@@ -74,7 +73,7 @@ class SessionService {
     try {
       return await _storage.read(key: 'user_uid');
     } on Exception catch (e) {
-      debugPrint('Ошибка получения UID: $e');
+      debugdebugPrint('Ошибка получения UID: $e');
       return null;
     }
   }

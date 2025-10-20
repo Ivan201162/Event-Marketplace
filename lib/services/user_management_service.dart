@@ -28,11 +28,11 @@ class UserManagementService {
       await _loadPermissionsCache();
 
       if (kDebugMode) {
-        print('User management service initialized');
+        debugPrint('User management service initialized');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка инициализации сервиса управления пользователями: $e');
+        debugPrint('Ошибка инициализации сервиса управления пользователями: $e');
       }
     }
   }
@@ -77,13 +77,13 @@ class UserManagementService {
       );
 
       if (kDebugMode) {
-        print('User created: $email');
+        debugPrint('User created: $email');
       }
 
       return userId;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка создания пользователя: $e');
+        debugPrint('Ошибка создания пользователя: $e');
       }
       rethrow;
     }
@@ -118,11 +118,11 @@ class UserManagementService {
       );
 
       if (kDebugMode) {
-        print('User updated: ${updatedUser.email}');
+        debugPrint('User updated: ${updatedUser.email}');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка обновления пользователя: $e');
+        debugPrint('Ошибка обновления пользователя: $e');
       }
       rethrow;
     }
@@ -149,11 +149,11 @@ class UserManagementService {
       await updateUser(userId, updatedUser);
 
       if (kDebugMode) {
-        print('User role changed: ${user.email} -> $newRole');
+        debugPrint('User role changed: ${user.email} -> $newRole');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка изменения роли пользователя: $e');
+        debugPrint('Ошибка изменения роли пользователя: $e');
       }
       rethrow;
     }
@@ -180,11 +180,11 @@ class UserManagementService {
       await updateUser(userId, updatedUser);
 
       if (kDebugMode) {
-        print('User status changed: ${user.email} -> $newStatus');
+        debugPrint('User status changed: ${user.email} -> $newStatus');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка изменения статуса пользователя: $e');
+        debugPrint('Ошибка изменения статуса пользователя: $e');
       }
       rethrow;
     }
@@ -213,11 +213,11 @@ class UserManagementService {
       }
 
       if (kDebugMode) {
-        print('User blocked: $userId, reason: $reason');
+        debugPrint('User blocked: $userId, reason: $reason');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка блокировки пользователя: $e');
+        debugPrint('Ошибка блокировки пользователя: $e');
       }
       rethrow;
     }
@@ -248,11 +248,11 @@ class UserManagementService {
       }
 
       if (kDebugMode) {
-        print('User unblocked: $userId');
+        debugPrint('User unblocked: $userId');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка разблокировки пользователя: $e');
+        debugPrint('Ошибка разблокировки пользователя: $e');
       }
       rethrow;
     }
@@ -284,11 +284,11 @@ class UserManagementService {
       await updateUser(userId, updatedUser);
 
       if (kDebugMode) {
-        print('Permission added to user: $userId -> $permission');
+        debugPrint('Permission added to user: $userId -> $permission');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка добавления разрешения пользователю: $e');
+        debugPrint('Ошибка добавления разрешения пользователю: $e');
       }
       rethrow;
     }
@@ -320,11 +320,11 @@ class UserManagementService {
       await updateUser(userId, updatedUser);
 
       if (kDebugMode) {
-        print('Permission removed from user: $userId -> $permission');
+        debugPrint('Permission removed from user: $userId -> $permission');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка удаления разрешения у пользователя: $e');
+        debugPrint('Ошибка удаления разрешения у пользователя: $e');
       }
       rethrow;
     }
@@ -364,13 +364,13 @@ class UserManagementService {
       );
 
       if (kDebugMode) {
-        print('Role created: $name');
+        debugPrint('Role created: $name');
       }
 
       return roleId;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка создания роли: $e');
+        debugPrint('Ошибка создания роли: $e');
       }
       rethrow;
     }
@@ -405,11 +405,11 @@ class UserManagementService {
       );
 
       if (kDebugMode) {
-        print('Role updated: ${updatedRole.name}');
+        debugPrint('Role updated: ${updatedRole.name}');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка обновления роли: $e');
+        debugPrint('Ошибка обновления роли: $e');
       }
       rethrow;
     }
@@ -449,11 +449,11 @@ class UserManagementService {
       );
 
       if (kDebugMode) {
-        print('Role deleted: ${role.name}');
+        debugPrint('Role deleted: ${role.name}');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка удаления роли: $e');
+        debugPrint('Ошибка удаления роли: $e');
       }
       rethrow;
     }
@@ -493,13 +493,13 @@ class UserManagementService {
       );
 
       if (kDebugMode) {
-        print('Permission created: $name');
+        debugPrint('Permission created: $name');
       }
 
       return permissionId;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка создания разрешения: $e');
+        debugPrint('Ошибка создания разрешения: $e');
       }
       rethrow;
     }
@@ -558,7 +558,7 @@ class UserManagementService {
       return snapshot.docs.map(UserAction.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения действий пользователя: $e');
+        debugPrint('Ошибка получения действий пользователя: $e');
       }
       return [];
     }
@@ -612,7 +612,7 @@ class UserManagementService {
       await _firestore.collection('userActions').doc(actionId).set(userAction.toMap());
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка логирования действия пользователя: $e');
+        debugPrint('Ошибка логирования действия пользователя: $e');
       }
     }
   }
@@ -692,11 +692,11 @@ class UserManagementService {
       }
 
       if (kDebugMode) {
-        print('Loaded ${_usersCache.length} users');
+        debugPrint('Loaded ${_usersCache.length} users');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки кэша пользователей: $e');
+        debugPrint('Ошибка загрузки кэша пользователей: $e');
       }
     }
   }
@@ -712,11 +712,11 @@ class UserManagementService {
       }
 
       if (kDebugMode) {
-        print('Loaded ${_rolesCache.length} roles');
+        debugPrint('Loaded ${_rolesCache.length} roles');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки кэша ролей: $e');
+        debugPrint('Ошибка загрузки кэша ролей: $e');
       }
     }
   }
@@ -732,11 +732,11 @@ class UserManagementService {
       }
 
       if (kDebugMode) {
-        print('Loaded ${_permissionsCache.length} permissions');
+        debugPrint('Loaded ${_permissionsCache.length} permissions');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки кэша разрешений: $e');
+        debugPrint('Ошибка загрузки кэша разрешений: $e');
       }
     }
   }

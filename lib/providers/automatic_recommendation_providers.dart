@@ -7,11 +7,10 @@ final automaticRecommendationServiceProvider = Provider<AutomaticRecommendationS
   (ref) => AutomaticRecommendationService(),
 );
 
-/// Провайдер состояния автоматических рекомендаций
+/// Провайдер состояния автоматических рекомендаций (мигрирован с StateNotifierProvider)
 final automaticRecommendationsProvider =
-    StateNotifierProvider<AutomaticRecommendationsNotifier, AutomaticRecommendationsState>((ref) {
-  final service = ref.watch(automaticRecommendationServiceProvider);
-  return AutomaticRecommendationsNotifier(service);
+    NotifierProvider<AutomaticRecommendationsNotifier, AutomaticRecommendationsState>(() {
+  return AutomaticRecommendationsNotifier();
 });
 
 /// Состояние автоматических рекомендаций
@@ -42,11 +41,14 @@ class AutomaticRecommendationsState {
       );
 }
 
-/// StateNotifier для управления автоматическими рекомендациями
-class AutomaticRecommendationsNotifier extends StateNotifier<AutomaticRecommendationsState> {
-  AutomaticRecommendationsNotifier(this._service) : super(const AutomaticRecommendationsState());
+/// Notifier для управления автоматическими рекомендациями (мигрирован с StateNotifier)
+class AutomaticRecommendationsNotifier extends Notifier<AutomaticRecommendationsState> {
+  @override
+  AutomaticRecommendationsState build() {
+    return const AutomaticRecommendationsState();
+  }
 
-  final AutomaticRecommendationService _service;
+  AutomaticRecommendationService get _service => ref.read(automaticRecommendationServiceProvider);
 
   /// Загрузить рекомендации для выбранных специалистов
   Future<void> loadRecommendations({

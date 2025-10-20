@@ -31,7 +31,7 @@ class SpecialistPricingService {
 
       return averagePrice;
     } on Exception catch (e) {
-      print('Ошибка получения среднего прайса специалиста: $e');
+      debugPrint('Ошибка получения среднего прайса специалиста: $e');
       return 0.0;
     }
   }
@@ -62,7 +62,7 @@ class SpecialistPricingService {
 
       return averagePrice;
     } on Exception catch (e) {
-      print('Ошибка получения среднего прайса по категории: $e');
+      debugPrint('Ошибка получения среднего прайса по категории: $e');
       return 0.0;
     }
   }
@@ -105,7 +105,7 @@ class SpecialistPricingService {
         lastUpdated: DateTime.now(),
       );
     } on Exception catch (e) {
-      print('Ошибка получения статистики цен специалиста: $e');
+      debugPrint('Ошибка получения статистики цен специалиста: $e');
       return SpecialistPricingStats.empty();
     }
   }
@@ -122,7 +122,7 @@ class SpecialistPricingService {
         });
       }
     } on Exception catch (e) {
-      print('Ошибка обновления среднего прайса специалиста: $e');
+      debugPrint('Ошибка обновления среднего прайса специалиста: $e');
     }
   }
 
@@ -175,7 +175,7 @@ class SpecialistPricingService {
 
       return history.take(12).toList(); // Последние 12 месяцев
     } on Exception catch (e) {
-      print('Ошибка получения истории цен специалиста: $e');
+      debugPrint('Ошибка получения истории цен специалиста: $e');
       return [];
     }
   }

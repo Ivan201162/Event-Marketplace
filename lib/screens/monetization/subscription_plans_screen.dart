@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/subscription_plan.dart';
-import '../../providers/auth_provider.dart';
 import '../../services/subscription_service.dart';
 import 'payment_screen.dart';
 
@@ -192,7 +191,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: _getPlanColor(plan.tier).withOpacity(0.1),
+                  color: _getPlanColor(plan.tier).withValues(alpha: 0.1),
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(12),
                     topRight: Radius.circular(12),

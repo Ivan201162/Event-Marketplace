@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -22,7 +21,7 @@ class AppReviewService {
       final inAppReview = InAppReview.instance;
       return await inAppReview.isAvailable();
     } catch (e) {
-      debugPrint('Ошибка проверки доступности in-app review: $e');
+      debugdebugPrint('Ошибка проверки доступности in-app review: $e');
       return false;
     }
   }
@@ -41,7 +40,7 @@ class AppReviewService {
         await openStoreListing();
       }
     } catch (e) {
-      debugPrint('Ошибка запроса отзыва: $e');
+      debugdebugPrint('Ошибка запроса отзыва: $e');
     }
   }
 
@@ -53,7 +52,7 @@ class AppReviewService {
       await _updateLastReviewRequest();
       await _incrementReviewCount();
     } catch (e) {
-      debugPrint('Ошибка открытия страницы в магазине: $e');
+      debugdebugPrint('Ошибка открытия страницы в магазине: $e');
     }
   }
 
@@ -81,7 +80,7 @@ class AppReviewService {
 
       return true;
     } catch (e) {
-      debugPrint('Ошибка проверки необходимости показа отзыва: $e');
+      debugdebugPrint('Ошибка проверки необходимости показа отзыва: $e');
       return false;
     }
   }
@@ -93,7 +92,7 @@ class AppReviewService {
       final currentCount = prefs.getInt(_appLaunchCountKey) ?? 0;
       await prefs.setInt(_appLaunchCountKey, currentCount + 1);
     } catch (e) {
-      debugPrint('Ошибка увеличения счетчика запусков: $e');
+      debugdebugPrint('Ошибка увеличения счетчика запусков: $e');
     }
   }
 
@@ -107,7 +106,7 @@ class AppReviewService {
         DateTime.now().millisecondsSinceEpoch,
       );
     } catch (e) {
-      debugPrint('Ошибка отметки использования функции: $e');
+      debugdebugPrint('Ошибка отметки использования функции: $e');
     }
   }
 
@@ -117,7 +116,7 @@ class AppReviewService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(_isReviewDismissedKey, true);
     } catch (e) {
-      debugPrint('Ошибка отклонения запроса на отзыв: $e');
+      debugdebugPrint('Ошибка отклонения запроса на отзыв: $e');
     }
   }
 
@@ -129,7 +128,7 @@ class AppReviewService {
       await prefs.remove(_lastReviewRequestKey);
       await prefs.remove(_reviewCountKey);
     } catch (e) {
-      debugPrint('Ошибка сброса состояния отзыва: $e');
+      debugdebugPrint('Ошибка сброса состояния отзыва: $e');
     }
   }
 
@@ -155,7 +154,7 @@ class AppReviewService {
             lastFeatureTime != null ? DateTime.fromMillisecondsSinceEpoch(lastFeatureTime) : null,
       );
     } catch (e) {
-      debugPrint('Ошибка получения статистики отзывов: $e');
+      debugdebugPrint('Ошибка получения статистики отзывов: $e');
       return const ReviewStats(
         appLaunchCount: 0,
         reviewRequestCount: 0,
@@ -171,7 +170,7 @@ class AppReviewService {
       final timestamp = prefs.getInt(_lastReviewRequestKey);
       return timestamp != null ? DateTime.fromMillisecondsSinceEpoch(timestamp) : null;
     } catch (e) {
-      debugPrint('Ошибка получения времени последнего запроса: $e');
+      debugdebugPrint('Ошибка получения времени последнего запроса: $e');
       return null;
     }
   }
@@ -185,7 +184,7 @@ class AppReviewService {
         DateTime.now().millisecondsSinceEpoch,
       );
     } catch (e) {
-      debugPrint('Ошибка обновления времени запроса: $e');
+      debugdebugPrint('Ошибка обновления времени запроса: $e');
     }
   }
 
@@ -195,7 +194,7 @@ class AppReviewService {
       final prefs = await SharedPreferences.getInstance();
       return prefs.getInt(_reviewCountKey) ?? 0;
     } catch (e) {
-      debugPrint('Ошибка получения количества запросов: $e');
+      debugdebugPrint('Ошибка получения количества запросов: $e');
       return 0;
     }
   }
@@ -207,7 +206,7 @@ class AppReviewService {
       final currentCount = prefs.getInt(_reviewCountKey) ?? 0;
       await prefs.setInt(_reviewCountKey, currentCount + 1);
     } catch (e) {
-      debugPrint('Ошибка увеличения счетчика запросов: $e');
+      debugdebugPrint('Ошибка увеличения счетчика запросов: $e');
     }
   }
 
@@ -217,7 +216,7 @@ class AppReviewService {
       final prefs = await SharedPreferences.getInstance();
       return prefs.getBool(_isReviewDismissedKey) ?? false;
     } catch (e) {
-      debugPrint('Ошибка проверки отклонения отзыва: $e');
+      debugdebugPrint('Ошибка проверки отклонения отзыва: $e');
       return false;
     }
   }
@@ -228,7 +227,7 @@ class AppReviewService {
       final prefs = await SharedPreferences.getInstance();
       return prefs.getInt(_appLaunchCountKey) ?? 0;
     } catch (e) {
-      debugPrint('Ошибка получения количества запусков: $e');
+      debugdebugPrint('Ошибка получения количества запусков: $e');
       return 0;
     }
   }
@@ -250,7 +249,7 @@ class AppReviewService {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       }
     } catch (e) {
-      debugPrint('Ошибка открытия страницы отзывов в браузере: $e');
+      debugdebugPrint('Ошибка открытия страницы отзывов в браузере: $e');
     }
   }
 
@@ -278,7 +277,7 @@ class AppReviewService {
 
       return ReviewTiming.notYet;
     } catch (e) {
-      debugPrint('Ошибка получения рекомендуемого времени: $e');
+      debugdebugPrint('Ошибка получения рекомендуемого времени: $e');
       return ReviewTiming.notYet;
     }
   }

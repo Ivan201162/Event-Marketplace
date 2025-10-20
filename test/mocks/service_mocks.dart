@@ -32,7 +32,7 @@ final mockPosts = <Post>[
     id: 'post_1',
     specialistId: 'specialist_1',
     text: 'Тестовый пост',
-    mediaUrls: ['https://example.com/image1.jpg'],
+    mediaUrls: const ['https://example.com/image1.jpg'],
     likesCount: 10,
     commentsCount: 5,
     createdAt: DateTime.now(),

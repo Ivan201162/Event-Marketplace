@@ -58,11 +58,6 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
 
                   const SizedBox(height: 16),
 
-                  // Кнопка входа как гость
-                  if (!_isSignUpMode) ...[
-                    _buildGuestButton(context),
-                    const SizedBox(height: 16),
-                  ],
 
                   // Дополнительные действия
                   _buildAdditionalActions(context),
@@ -188,54 +183,33 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 8),
-          Column(
-            children: [
+          RadioGroup<UserRole>(
+            value: _selectedRole,
+            onChanged: (value) {
+              if (value != null) {
+                setState(() {
+                  _selectedRole = value;
+                });
+              }
+            },
+            children: const [
               Row(
                 children: [
                   Expanded(
                     child: RadioListTile<UserRole>(
-                      title: const Text('Заказчик'),
-                      subtitle: const Text('Ищу специалистов'),
+                      title: Text('Заказчик'),
+                      subtitle: Text('Ищу специалистов'),
                       value: UserRole.customer,
-                      groupValue: _selectedRole,
-                      onChanged: (value) {
-                        if (value != null) {
-                          setState(() {
-                            _selectedRole = value;
-                          });
-                        }
-                      },
                     ),
                   ),
                   Expanded(
                     child: RadioListTile<UserRole>(
-                      title: const Text('Специалист'),
-                      subtitle: const Text('Предоставляю услуги'),
+                      title: Text('Специалист'),
+                      subtitle: Text('Предоставляю услуги'),
                       value: UserRole.specialist,
-                      groupValue: _selectedRole,
-                      onChanged: (value) {
-                        if (value != null) {
-                          setState(() {
-                            _selectedRole = value;
-                          });
-                        }
-                      },
                     ),
                   ),
                 ],
-              ),
-              RadioListTile<UserRole>(
-                title: const Text('Организатор'),
-                subtitle: const Text('Организую мероприятия'),
-                value: UserRole.organizer,
-                groupValue: _selectedRole,
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      _selectedRole = value;
-                    });
-                  }
-                },
               ),
             ],
           ),
@@ -305,18 +279,6 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               ),
       );
 
-  /// Кнопка входа как гость
-  Widget _buildGuestButton(BuildContext context) => OutlinedButton.icon(
-        onPressed: _isLoading ? null : _handleGuestSignIn,
-        icon: const Icon(Icons.person_outline),
-        label: const Text('Войти как гость'),
-        style: OutlinedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-      );
 
   /// Дополнительные действия
   Widget _buildAdditionalActions(BuildContext context) => Column(
@@ -548,8 +510,9 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
     }
   }
 
-  /// Обработка входа как гость
-  Future<void> _handleGuestSignIn() async {
+
+  /// Обработка входа через Google
+  Future<void> _handleGoogleSignIn() async {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -557,12 +520,12 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
 
     try {
       final authService = ref.read(authServiceProvider);
-      final user = await authService.signInAsGuest();
+      await authService.signInWithGoogle();
 
-      if (user != null && mounted) {
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Добро пожаловать, гость!'),
+            content: Text('Добро пожаловать!'),
             backgroundColor: Colors.green,
           ),
         );
@@ -570,7 +533,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       }
     } catch (e) {
       setState(() {
-        _errorMessage = e.toString();
+        _errorMessage = 'Ошибка входа через Google: ${e.toString()}';
       });
     } finally {
       if (mounted) {
@@ -579,13 +542,6 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
         });
       }
     }
-  }
-
-  /// Обработка входа через Google (временно отключено)
-  Future<void> _handleGoogleSignIn() async {
-    setState(() {
-      _errorMessage = 'Вход через Google временно отключен';
-    });
   }
 
   /// Обработка входа через ВКонтакте (временно отключено)

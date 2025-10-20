@@ -5,11 +5,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 import '../models/user.dart';
 import '../models/user_profile.dart';
+import '../utils/storage_guard.dart';
 
 /// Сервис для работы с профилями пользователей
 class UserProfileService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  static final FirebaseStorage _storage = FirebaseStorage.instance;
+  static final FirebaseStorage? _storage = getStorage();
 
   // Коллекции
   static const String _profilesCollection = 'user_profiles';

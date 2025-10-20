@@ -96,7 +96,7 @@ class CollectionService {
       final docRef = await _firestore.collection('idea_collections').add(collection.toMap());
       return docRef.id;
     } catch (e) {
-      debugPrint('Error creating collection: $e');
+      debugdebugPrint('Error creating collection: $e');
       throw Exception('Ошибка создания коллекции: $e');
     }
   }
@@ -116,7 +116,7 @@ class CollectionService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      debugPrint('Error updating collection: $e');
+      debugdebugPrint('Error updating collection: $e');
       throw Exception('Ошибка обновления коллекции: $e');
     }
   }
@@ -130,7 +130,7 @@ class CollectionService {
     try {
       await _firestore.collection('idea_collections').doc(collectionId).delete();
     } catch (e) {
-      debugPrint('Error deleting collection: $e');
+      debugdebugPrint('Error deleting collection: $e');
       throw Exception('Ошибка удаления коллекции: $e');
     }
   }
@@ -171,7 +171,7 @@ class CollectionService {
         });
       });
     } catch (e) {
-      debugPrint('Error toggling follow: $e');
+      debugdebugPrint('Error toggling follow: $e');
       throw Exception('Ошибка изменения подписки: $e');
     }
   }
@@ -232,7 +232,7 @@ class CollectionService {
         }
       });
     } catch (e) {
-      debugPrint('Error adding idea to collection: $e');
+      debugdebugPrint('Error adding idea to collection: $e');
       throw Exception('Ошибка добавления идеи в коллекцию: $e');
     }
   }
@@ -288,7 +288,7 @@ class CollectionService {
         }
       });
     } catch (e) {
-      debugPrint('Error removing idea from collection: $e');
+      debugdebugPrint('Error removing idea from collection: $e');
       throw Exception('Ошибка удаления идеи из коллекции: $e');
     }
   }
@@ -310,7 +310,7 @@ class CollectionService {
         ...doc.data()!,
       });
     } catch (e) {
-      debugPrint('Error getting collection: $e');
+      debugdebugPrint('Error getting collection: $e');
       return null;
     }
   }

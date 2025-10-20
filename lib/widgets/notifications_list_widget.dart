@@ -19,7 +19,7 @@ class NotificationsListWidget extends StatefulWidget {
 
 class _NotificationsListWidgetState extends State<NotificationsListWidget> {
   @override
-  Widget build(BuildContext context) => StreamBuilder<List<Map<String, dynamic>>>(
+  Widget build(BuildContext context) => StreamBuilder<List<AppNotification>>(
         stream: NotificationService.getUserNotifications(widget.userId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

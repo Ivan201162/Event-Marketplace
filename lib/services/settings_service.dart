@@ -30,11 +30,11 @@ class SettingsService {
       await _loadLocalSettings();
 
       if (kDebugMode) {
-        print('Settings service initialized');
+        debugPrint('Settings service initialized');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка инициализации сервиса настроек: $e');
+        debugPrint('Ошибка инициализации сервиса настроек: $e');
       }
     }
   }
@@ -60,7 +60,7 @@ class SettingsService {
       return defaultValue;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения настройки $key: $e');
+        debugPrint('Ошибка получения настройки $key: $e');
       }
       return defaultValue;
     }
@@ -125,11 +125,11 @@ class SettingsService {
       }
 
       if (kDebugMode) {
-        print('Setting updated: $key = $value');
+        debugPrint('Setting updated: $key = $value');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка установки настройки $key: $e');
+        debugPrint('Ошибка установки настройки $key: $e');
       }
       rethrow;
     }
@@ -162,11 +162,11 @@ class SettingsService {
       }
 
       if (kDebugMode) {
-        print('Setting removed: $key');
+        debugPrint('Setting removed: $key');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка удаления настройки $key: $e');
+        debugPrint('Ошибка удаления настройки $key: $e');
       }
       rethrow;
     }
@@ -194,7 +194,7 @@ class SettingsService {
       return settings;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения настроек по категории $category: $e');
+        debugPrint('Ошибка получения настроек по категории $category: $e');
       }
       return [];
     }
@@ -221,7 +221,7 @@ class SettingsService {
       return settings;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения публичных настроек: $e');
+        debugPrint('Ошибка получения публичных настроек: $e');
       }
       return [];
     }
@@ -256,13 +256,13 @@ class SettingsService {
       _configurationsCache[configId] = configuration;
 
       if (kDebugMode) {
-        print('Configuration created: $name');
+        debugPrint('Configuration created: $name');
       }
 
       return configId;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка создания конфигурации: $e');
+        debugPrint('Ошибка создания конфигурации: $e');
       }
       rethrow;
     }
@@ -314,11 +314,11 @@ class SettingsService {
       );
 
       if (kDebugMode) {
-        print('Configuration activated: $configId');
+        debugPrint('Configuration activated: $configId');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка активации конфигурации: $e');
+        debugPrint('Ошибка активации конфигурации: $e');
       }
       rethrow;
     }
@@ -349,7 +349,7 @@ class SettingsService {
       return snapshot.docs.map(SettingsHistory.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения истории настроек: $e');
+        debugPrint('Ошибка получения истории настроек: $e');
       }
       return [];
     }
@@ -378,7 +378,7 @@ class SettingsService {
       return export;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка экспорта настроек: $e');
+        debugPrint('Ошибка экспорта настроек: $e');
       }
       return {};
     }
@@ -418,11 +418,11 @@ class SettingsService {
       }
 
       if (kDebugMode) {
-        print('Settings imported: ${settings.length} settings');
+        debugPrint('Settings imported: ${settings.length} settings');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка импорта настроек: $e');
+        debugPrint('Ошибка импорта настроек: $e');
       }
       rethrow;
     }
@@ -448,11 +448,11 @@ class SettingsService {
       }
 
       if (kDebugMode) {
-        print('Settings reset to defaults');
+        debugPrint('Settings reset to defaults');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка сброса настроек: $e');
+        debugPrint('Ошибка сброса настроек: $e');
       }
       rethrow;
     }
@@ -500,7 +500,7 @@ class SettingsService {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка сохранения локальной настройки: $e');
+        debugPrint('Ошибка сохранения локальной настройки: $e');
       }
     }
   }
@@ -512,7 +512,7 @@ class SettingsService {
       await _prefs!.remove('setting_$key');
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка удаления локальной настройки: $e');
+        debugPrint('Ошибка удаления локальной настройки: $e');
       }
     }
   }
@@ -542,7 +542,7 @@ class SettingsService {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки локальных настроек: $e');
+        debugPrint('Ошибка загрузки локальных настроек: $e');
       }
     }
   }
@@ -572,7 +572,7 @@ class SettingsService {
       await _firestore.collection('settingsHistory').doc(historyId).set(history.toMap());
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка логирования изменения настройки: $e');
+        debugPrint('Ошибка логирования изменения настройки: $e');
       }
     }
   }
@@ -588,11 +588,11 @@ class SettingsService {
       }
 
       if (kDebugMode) {
-        print('Loaded ${_settingsCache.length} settings');
+        debugPrint('Loaded ${_settingsCache.length} settings');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки кэша настроек: $e');
+        debugPrint('Ошибка загрузки кэша настроек: $e');
       }
     }
   }
@@ -608,11 +608,11 @@ class SettingsService {
       }
 
       if (kDebugMode) {
-        print('Loaded ${_configurationsCache.length} configurations');
+        debugPrint('Loaded ${_configurationsCache.length} configurations');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки кэша конфигураций: $e');
+        debugPrint('Ошибка загрузки кэша конфигураций: $e');
       }
     }
   }

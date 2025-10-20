@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/partnership_program.dart';
@@ -64,10 +63,10 @@ class PartnershipService {
       // Создаем начальную статистику
       await _createPartnerStats(partnerId);
 
-      debugPrint('INFO: [PartnershipService] Partner created: $partnerId');
+      debugdebugPrint('INFO: [PartnershipService] Partner created: $partnerId');
       return partnerId;
     } catch (e) {
-      debugPrint('ERROR: [PartnershipService] Failed to create partner: $e');
+      debugdebugPrint('ERROR: [PartnershipService] Failed to create partner: $e');
       rethrow;
     }
   }
@@ -115,7 +114,7 @@ class PartnershipService {
           .doc('${partnerId}_${_getCurrentPeriod()}')
           .set(stats.toMap());
     } catch (e) {
-      debugPrint('ERROR: [PartnershipService] Failed to create partner stats: $e');
+      debugdebugPrint('ERROR: [PartnershipService] Failed to create partner stats: $e');
     }
   }
 
@@ -133,9 +132,9 @@ class PartnershipService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugPrint('INFO: [PartnershipService] Partner activated: $partnerId');
+      debugdebugPrint('INFO: [PartnershipService] Partner activated: $partnerId');
     } catch (e) {
-      debugPrint('ERROR: [PartnershipService] Failed to activate partner: $e');
+      debugdebugPrint('ERROR: [PartnershipService] Failed to activate partner: $e');
       rethrow;
     }
   }
@@ -149,9 +148,9 @@ class PartnershipService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugPrint('INFO: [PartnershipService] Partner suspended: $partnerId');
+      debugdebugPrint('INFO: [PartnershipService] Partner suspended: $partnerId');
     } catch (e) {
-      debugPrint('ERROR: [PartnershipService] Failed to suspend partner: $e');
+      debugdebugPrint('ERROR: [PartnershipService] Failed to suspend partner: $e');
       rethrow;
     }
   }
@@ -174,7 +173,8 @@ class PartnershipService {
           .get();
 
       if (partnerSnapshot.docs.isEmpty) {
-        debugPrint('WARNING: [PartnershipService] Partner not found or inactive: $partnerCode');
+        debugdebugPrint(
+            'WARNING: [PartnershipService] Partner not found or inactive: $partnerCode');
         return;
       }
 
@@ -211,10 +211,10 @@ class PartnershipService {
       // Обновляем статистику партнёра
       await _updatePartnerStats(partner.id, amount, commissionAmount);
 
-      debugPrint(
+      debugdebugPrint(
           'INFO: [PartnershipService] User registered via partner: $userId -> ${partner.id}');
     } catch (e) {
-      debugPrint('ERROR: [PartnershipService] Failed to register user via partner: $e');
+      debugdebugPrint('ERROR: [PartnershipService] Failed to register user via partner: $e');
     }
   }
 
@@ -257,9 +257,9 @@ class PartnershipService {
         'updatedAt': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
 
-      debugPrint('INFO: [PartnershipService] Partner stats updated: $partnerId');
+      debugdebugPrint('INFO: [PartnershipService] Partner stats updated: $partnerId');
     } catch (e) {
-      debugPrint('ERROR: [PartnershipService] Failed to update partner stats: $e');
+      debugdebugPrint('ERROR: [PartnershipService] Failed to update partner stats: $e');
     }
   }
 
@@ -278,7 +278,7 @@ class PartnershipService {
       }
       return null;
     } catch (e) {
-      debugPrint('ERROR: [PartnershipService] Failed to get partner by code: $e');
+      debugdebugPrint('ERROR: [PartnershipService] Failed to get partner by code: $e');
       return null;
     }
   }
@@ -296,7 +296,7 @@ class PartnershipService {
       }
       return null;
     } catch (e) {
-      debugPrint('ERROR: [PartnershipService] Failed to get partner stats: $e');
+      debugdebugPrint('ERROR: [PartnershipService] Failed to get partner stats: $e');
       return null;
     }
   }
@@ -327,7 +327,7 @@ class PartnershipService {
           .map((doc) => PartnerTransaction.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      debugPrint('ERROR: [PartnershipService] Failed to get partner transactions: $e');
+      debugdebugPrint('ERROR: [PartnershipService] Failed to get partner transactions: $e');
       return [];
     }
   }
@@ -377,10 +377,10 @@ class PartnershipService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugPrint('INFO: [PartnershipService] Partner payment created: ${payment.id}');
+      debugdebugPrint('INFO: [PartnershipService] Partner payment created: ${payment.id}');
       return payment.id;
     } catch (e) {
-      debugPrint('ERROR: [PartnershipService] Failed to create partner payment: $e');
+      debugdebugPrint('ERROR: [PartnershipService] Failed to create partner payment: $e');
       rethrow;
     }
   }
@@ -394,9 +394,9 @@ class PartnershipService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugPrint('INFO: [PartnershipService] Partner payment confirmed: $paymentId');
+      debugdebugPrint('INFO: [PartnershipService] Partner payment confirmed: $paymentId');
     } catch (e) {
-      debugPrint('ERROR: [PartnershipService] Failed to confirm partner payment: $e');
+      debugdebugPrint('ERROR: [PartnershipService] Failed to confirm partner payment: $e');
       rethrow;
     }
   }
@@ -427,7 +427,7 @@ class PartnershipService {
           .map((doc) => PartnerPayment.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      debugPrint('ERROR: [PartnershipService] Failed to get partner payments: $e');
+      debugdebugPrint('ERROR: [PartnershipService] Failed to get partner payments: $e');
       return [];
     }
   }
@@ -454,7 +454,7 @@ class PartnershipService {
           .map((doc) => Partner.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      debugPrint('ERROR: [PartnershipService] Failed to get all partners: $e');
+      debugdebugPrint('ERROR: [PartnershipService] Failed to get all partners: $e');
       return [];
     }
   }
@@ -468,9 +468,9 @@ class PartnershipService {
 
       await _firestore.collection('partners').doc(partner.id).set(updatedPartner.toMap());
 
-      debugPrint('INFO: [PartnershipService] Partner updated: ${partner.id}');
+      debugdebugPrint('INFO: [PartnershipService] Partner updated: ${partner.id}');
     } catch (e) {
-      debugPrint('ERROR: [PartnershipService] Failed to update partner: $e');
+      debugdebugPrint('ERROR: [PartnershipService] Failed to update partner: $e');
       rethrow;
     }
   }
@@ -523,7 +523,7 @@ class PartnershipService {
             totalTransactions > 0 ? totalCommissions / totalTransactions : 0.0,
       };
     } catch (e) {
-      debugPrint('ERROR: [PartnershipService] Failed to get partnership program stats: $e');
+      debugdebugPrint('ERROR: [PartnershipService] Failed to get partnership program stats: $e');
       return {};
     }
   }

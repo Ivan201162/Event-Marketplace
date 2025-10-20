@@ -104,10 +104,10 @@ final categoryRecommendationsProvider =
       .getRecommendationsByCategories(userId, categoryPreferences);
 });
 
-/// Провайдер для управления состоянием рекомендаций
+/// Провайдер для управления состоянием рекомендаций (мигрирован с StateNotifierProvider)
 final recommendationStateProvider =
-    StateNotifierProvider<RecommendationStateNotifier, RecommendationState>(
-  (ref) => RecommendationStateNotifier(ref.watch(recommendationServiceProvider)),
+    NotifierProvider<RecommendationStateNotifier, RecommendationState>(
+  () => RecommendationStateNotifier(),
 );
 
 /// Состояние рекомендаций
@@ -134,11 +134,14 @@ class RecommendationState {
       );
 }
 
-/// StateNotifier для управления состоянием рекомендаций
-class RecommendationStateNotifier extends StateNotifier<RecommendationState> {
-  RecommendationStateNotifier(this._service) : super(const RecommendationState());
+/// Notifier для управления состоянием рекомендаций (мигрирован с StateNotifier)
+class RecommendationStateNotifier extends Notifier<RecommendationState> {
+  @override
+  RecommendationState build() {
+    return const RecommendationState();
+  }
 
-  final RecommendationService _service;
+  RecommendationService get _service => ref.read(recommendationServiceProvider);
 
   /// Обновить рекомендации
   Future<void> refreshRecommendations(String userId) async {

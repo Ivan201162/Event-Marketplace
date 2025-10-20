@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class YooKassaPaymentService {
@@ -68,7 +67,7 @@ class YooKassaPaymentService {
         );
       }
     } catch (e) {
-      debugPrint('YooKassa payment creation error: $e');
+      debugdebugPrint('YooKassa payment creation error: $e');
       throw Exception('Ошибка создания платежа YooKassa: $e');
     }
   }
@@ -94,7 +93,7 @@ class YooKassaPaymentService {
         );
       }
     } catch (e) {
-      debugPrint('YooKassa payment status error: $e');
+      debugdebugPrint('YooKassa payment status error: $e');
       throw Exception('Ошибка получения статуса платежа YooKassa: $e');
     }
   }
@@ -124,7 +123,7 @@ class YooKassaPaymentService {
         );
       }
     } catch (e) {
-      debugPrint('YooKassa payment capture error: $e');
+      debugdebugPrint('YooKassa payment capture error: $e');
       throw Exception('Ошибка подтверждения платежа YooKassa: $e');
     }
   }
@@ -145,7 +144,7 @@ class YooKassaPaymentService {
         );
       }
     } catch (e) {
-      debugPrint('YooKassa payment cancel error: $e');
+      debugdebugPrint('YooKassa payment cancel error: $e');
       throw Exception('Ошибка отмены платежа YooKassa: $e');
     }
   }
@@ -184,7 +183,7 @@ class YooKassaPaymentService {
         );
       }
     } catch (e) {
-      debugPrint('YooKassa refund creation error: $e');
+      debugdebugPrint('YooKassa refund creation error: $e');
       throw Exception('Ошибка создания возврата YooKassa: $e');
     }
   }
@@ -198,7 +197,7 @@ class YooKassaPaymentService {
           webhookData.containsKey('event') &&
           webhookData.containsKey('object');
     } catch (e) {
-      debugPrint('YooKassa webhook validation error: $e');
+      debugdebugPrint('YooKassa webhook validation error: $e');
       return false;
     }
   }

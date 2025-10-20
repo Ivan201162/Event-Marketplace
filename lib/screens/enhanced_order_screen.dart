@@ -252,7 +252,7 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 2),
             ),
@@ -312,7 +312,7 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 2),
             ),
@@ -363,7 +363,7 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 2),
             ),
@@ -415,7 +415,7 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -515,9 +515,9 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
       Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: color.withOpacity(0.3)),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
         child: Column(
           children: [
@@ -546,10 +546,10 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
   Widget _buildStatusCard(String title, String value, String color) => Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Color(int.parse(color.replaceFirst('#', '0xFF'))).withOpacity(0.1),
+          color: Color(int.parse(color.replaceFirst('#', '0xFF'))).withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: Color(int.parse(color.replaceFirst('#', '0xFF'))).withOpacity(0.3),
+            color: Color(int.parse(color.replaceFirst('#', '0xFF'))).withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -621,12 +621,12 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
 
   void _editOrder() {
     // TODO: Реализовать редактирование заявки
-    debugPrint('Редактирование заявки');
+    debugdebugPrint('Редактирование заявки');
   }
 
   void _shareOrder() {
     // TODO: Реализовать шаринг заявки
-    debugPrint('Шаринг заявки');
+    debugdebugPrint('Шаринг заявки');
   }
 
   void _cancelOrder() {
@@ -654,31 +654,31 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
 
   void _acceptOrder() {
     // TODO: Реализовать принятие заявки
-    debugPrint('Принятие заявки');
+    debugdebugPrint('Принятие заявки');
   }
 
   void _startOrder() {
     // TODO: Реализовать начало работы
-    debugPrint('Начало работы');
+    debugdebugPrint('Начало работы');
   }
 
   void _completeOrder() {
     // TODO: Реализовать завершение заявки
-    debugPrint('Завершение заявки');
+    debugdebugPrint('Завершение заявки');
   }
 
   void _contactUser() {
     // TODO: Реализовать переход к чату
-    debugPrint('Переход к чату');
+    debugdebugPrint('Переход к чату');
   }
 
   void _addComment(String text, bool isInternal) {
     // TODO: Реализовать добавление комментария
-    debugPrint('Добавление комментария: $text (внутренний: $isInternal)');
+    debugdebugPrint('Добавление комментария: $text (внутренний: $isInternal)');
   }
 
   void _addAttachment(OrderAttachment attachment) {
     // TODO: Реализовать добавление вложения
-    debugPrint('Добавление вложения: ${attachment.name}');
+    debugdebugPrint('Добавление вложения: ${attachment.name}');
   }
 }

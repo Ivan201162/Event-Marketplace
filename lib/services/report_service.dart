@@ -47,7 +47,7 @@ class ReportService {
       return reportId;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка создания отчета: $e');
+        debugPrint('Ошибка создания отчета: $e');
       }
       rethrow;
     }
@@ -92,7 +92,7 @@ class ReportService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка создания отчета по шаблону: $e');
+        debugPrint('Ошибка создания отчета по шаблону: $e');
       }
       rethrow;
     }
@@ -155,7 +155,7 @@ class ReportService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка генерации отчета: $e');
+        debugPrint('Ошибка генерации отчета: $e');
       }
 
       // Обновляем статус на "ошибка"
@@ -191,7 +191,7 @@ class ReportService {
       await _firestore.collection('reports').doc(reportId).update(updateData);
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка обновления статуса отчета: $e');
+        debugPrint('Ошибка обновления статуса отчета: $e');
       }
     }
   }
@@ -280,7 +280,7 @@ class ReportService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка генерации отчета по бронированиям: $e');
+        debugPrint('Ошибка генерации отчета по бронированиям: $e');
       }
       rethrow;
     }
@@ -351,7 +351,7 @@ class ReportService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка генерации отчета по платежам: $e');
+        debugPrint('Ошибка генерации отчета по платежам: $e');
       }
       rethrow;
     }
@@ -420,7 +420,7 @@ class ReportService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка генерации отчета по пользователям: $e');
+        debugPrint('Ошибка генерации отчета по пользователям: $e');
       }
       rethrow;
     }
@@ -491,7 +491,7 @@ class ReportService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка генерации отчета по специалистам: $e');
+        debugPrint('Ошибка генерации отчета по специалистам: $e');
       }
       rethrow;
     }
@@ -553,7 +553,7 @@ class ReportService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка генерации отчета по аналитике: $e');
+        debugPrint('Ошибка генерации отчета по аналитике: $e');
       }
       rethrow;
     }
@@ -642,7 +642,7 @@ class ReportService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка генерации отчета по уведомлениям: $e');
+        debugPrint('Ошибка генерации отчета по уведомлениям: $e');
       }
       rethrow;
     }
@@ -722,7 +722,7 @@ class ReportService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка генерации отчета по ошибкам: $e');
+        debugPrint('Ошибка генерации отчета по ошибкам: $e');
       }
       rethrow;
     }
@@ -746,7 +746,7 @@ class ReportService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка генерации отчета по производительности: $e');
+        debugPrint('Ошибка генерации отчета по производительности: $e');
       }
       rethrow;
     }
@@ -768,7 +768,7 @@ class ReportService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка генерации пользовательского отчета: $e');
+        debugPrint('Ошибка генерации пользовательского отчета: $e');
       }
       rethrow;
     }
@@ -796,7 +796,7 @@ class ReportService {
       return 'https://storage.googleapis.com/reports/$reportId.csv';
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка генерации файла отчета: $e');
+        debugPrint('Ошибка генерации файла отчета: $e');
       }
       rethrow;
     }
@@ -812,7 +812,7 @@ class ReportService {
       return null;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения отчета: $e');
+        debugPrint('Ошибка получения отчета: $e');
       }
       return null;
     }
@@ -828,7 +828,7 @@ class ReportService {
       return null;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения данных отчета: $e');
+        debugPrint('Ошибка получения данных отчета: $e');
       }
       return null;
     }
@@ -859,7 +859,7 @@ class ReportService {
       return snapshot.docs.map(Report.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения списка отчетов: $e');
+        debugPrint('Ошибка получения списка отчетов: $e');
       }
       return [];
     }
@@ -877,7 +877,7 @@ class ReportService {
       return snapshot.docs.map(ReportTemplate.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения шаблонов отчетов: $e');
+        debugPrint('Ошибка получения шаблонов отчетов: $e');
       }
       return [];
     }
@@ -892,7 +892,7 @@ class ReportService {
       ]);
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка удаления отчета: $e');
+        debugPrint('Ошибка удаления отчета: $e');
       }
       rethrow;
     }
@@ -917,7 +917,7 @@ class ReportService {
       await batch.commit();
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка очистки старых отчетов: $e');
+        debugPrint('Ошибка очистки старых отчетов: $e');
       }
     }
   }

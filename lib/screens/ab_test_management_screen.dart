@@ -707,7 +707,7 @@ class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen>
           statistics.add(stats);
         } catch (e) {
           if (kDebugMode) {
-            print('Ошибка загрузки статистики для теста ${test.id}: $e');
+            debugPrint('Ошибка загрузки статистики для теста ${test.id}: $e');
           }
         }
       }
@@ -715,7 +715,7 @@ class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen>
       return statistics;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки статистики: $e');
+        debugPrint('Ошибка загрузки статистики: $e');
       }
       return [];
     }

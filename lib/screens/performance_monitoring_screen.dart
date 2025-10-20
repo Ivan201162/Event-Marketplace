@@ -721,7 +721,7 @@ class _PerformanceMonitoringScreenState extends ConsumerState<PerformanceMonitor
       });
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки текущих метрик: $e');
+        debugPrint('Ошибка загрузки текущих метрик: $e');
       }
     }
   }
@@ -783,7 +783,7 @@ class _PerformanceMonitoringScreenState extends ConsumerState<PerformanceMonitor
       return statistics;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки статистики: $e');
+        debugPrint('Ошибка загрузки статистики: $e');
       }
       return [];
     }

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 class GrowthMechanicsService {
@@ -60,9 +59,10 @@ class GrowthMechanicsService {
         await _sendLevelUpNotification(userId, newLevel, newTotalExperience);
       }
 
-      debugPrint('INFO: [GrowthMechanicsService] Experience added: $experience to user $userId');
+      debugdebugPrint(
+          'INFO: [GrowthMechanicsService] Experience added: $experience to user $userId');
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to add experience: $e');
+      debugdebugPrint('ERROR: [GrowthMechanicsService] Failed to add experience: $e');
     }
   }
 
@@ -124,9 +124,9 @@ class GrowthMechanicsService {
 
       await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
-      debugPrint('INFO: [GrowthMechanicsService] Level up notification sent to user $userId');
+      debugdebugPrint('INFO: [GrowthMechanicsService] Level up notification sent to user $userId');
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to send level up notification: $e');
+      debugdebugPrint('ERROR: [GrowthMechanicsService] Failed to send level up notification: $e');
     }
   }
 
@@ -158,7 +158,7 @@ class GrowthMechanicsService {
         }
       }
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to check achievements: $e');
+      debugdebugPrint('ERROR: [GrowthMechanicsService] Failed to check achievements: $e');
     }
   }
 
@@ -212,7 +212,7 @@ class GrowthMechanicsService {
           return false;
       }
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to check achievement condition: $e');
+      debugdebugPrint('ERROR: [GrowthMechanicsService] Failed to check achievement condition: $e');
       return false;
     }
   }
@@ -247,10 +247,10 @@ class GrowthMechanicsService {
       // Отправляем уведомление
       await _sendAchievementNotification(userId, achievement);
 
-      debugPrint(
+      debugdebugPrint(
           'INFO: [GrowthMechanicsService] Achievement awarded: ${achievement['name']} to user $userId');
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to award achievement: $e');
+      debugdebugPrint('ERROR: [GrowthMechanicsService] Failed to award achievement: $e');
     }
   }
 
@@ -279,7 +279,7 @@ class GrowthMechanicsService {
           break;
       }
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to give achievement reward: $e');
+      debugdebugPrint('ERROR: [GrowthMechanicsService] Failed to give achievement reward: $e');
     }
   }
 
@@ -305,7 +305,8 @@ class GrowthMechanicsService {
 
       await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to send achievement notification: $e');
+      debugdebugPrint(
+          'ERROR: [GrowthMechanicsService] Failed to send achievement notification: $e');
     }
   }
 
@@ -341,10 +342,10 @@ class GrowthMechanicsService {
 
       await _firestore.collection('challenges').doc(challenge['id']).set(challenge);
 
-      debugPrint('INFO: [GrowthMechanicsService] Challenge created: ${challenge['id']}');
+      debugdebugPrint('INFO: [GrowthMechanicsService] Challenge created: ${challenge['id']}');
       return challenge['id'];
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to create challenge: $e');
+      debugdebugPrint('ERROR: [GrowthMechanicsService] Failed to create challenge: $e');
       rethrow;
     }
   }
@@ -387,9 +388,9 @@ class GrowthMechanicsService {
         'participants': FieldValue.increment(1),
       });
 
-      debugPrint('INFO: [GrowthMechanicsService] User $userId joined challenge $challengeId');
+      debugdebugPrint('INFO: [GrowthMechanicsService] User $userId joined challenge $challengeId');
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to join challenge: $e');
+      debugdebugPrint('ERROR: [GrowthMechanicsService] Failed to join challenge: $e');
       rethrow;
     }
   }
@@ -417,9 +418,9 @@ class GrowthMechanicsService {
       // Проверяем, выполнен ли челлендж
       await _checkChallengeCompletion(userId, challengeId);
 
-      debugPrint('INFO: [GrowthMechanicsService] Challenge progress updated for user $userId');
+      debugdebugPrint('INFO: [GrowthMechanicsService] Challenge progress updated for user $userId');
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to update challenge progress: $e');
+      debugdebugPrint('ERROR: [GrowthMechanicsService] Failed to update challenge progress: $e');
     }
   }
 
@@ -452,7 +453,7 @@ class GrowthMechanicsService {
         await _completeChallenge(userId, challengeId, challenge, userChallenge);
       }
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to check challenge completion: $e');
+      debugdebugPrint('ERROR: [GrowthMechanicsService] Failed to check challenge completion: $e');
     }
   }
 
@@ -475,7 +476,7 @@ class GrowthMechanicsService {
 
       return true;
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to check challenge conditions: $e');
+      debugdebugPrint('ERROR: [GrowthMechanicsService] Failed to check challenge conditions: $e');
       return false;
     }
   }
@@ -505,10 +506,10 @@ class GrowthMechanicsService {
       // Отправляем уведомление
       await _sendChallengeCompletionNotification(userId, challenge);
 
-      debugPrint(
+      debugdebugPrint(
           'INFO: [GrowthMechanicsService] Challenge completed: $challengeId by user $userId');
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to complete challenge: $e');
+      debugdebugPrint('ERROR: [GrowthMechanicsService] Failed to complete challenge: $e');
     }
   }
 
@@ -537,7 +538,7 @@ class GrowthMechanicsService {
         }
       }
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to give challenge reward: $e');
+      debugdebugPrint('ERROR: [GrowthMechanicsService] Failed to give challenge reward: $e');
     }
   }
 
@@ -564,7 +565,7 @@ class GrowthMechanicsService {
 
       await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
     } catch (e) {
-      debugPrint(
+      debugdebugPrint(
           'ERROR: [GrowthMechanicsService] Failed to send challenge completion notification: $e');
     }
   }
@@ -646,12 +647,12 @@ class GrowthMechanicsService {
   /// Вспомогательные методы для наград
   Future<void> _addPremiumDays(String userId, int days) async {
     // Логика добавления премиум дней
-    debugPrint('INFO: [GrowthMechanicsService] Added $days premium days to user $userId');
+    debugdebugPrint('INFO: [GrowthMechanicsService] Added $days premium days to user $userId');
   }
 
   Future<void> _addDiscount(String userId, double discount) async {
     // Логика добавления скидки
-    debugPrint('INFO: [GrowthMechanicsService] Added $discount discount to user $userId');
+    debugdebugPrint('INFO: [GrowthMechanicsService] Added $discount discount to user $userId');
   }
 
   Future<void> _awardBadge(String userId, String badgeId) async {
@@ -675,9 +676,10 @@ class GrowthMechanicsService {
 
       await _firestore.collection('user_badges').doc(userBadge['id']).set(userBadge);
 
-      debugPrint('INFO: [GrowthMechanicsService] Badge awarded: ${badge['name']} to user $userId');
+      debugdebugPrint(
+          'INFO: [GrowthMechanicsService] Badge awarded: ${badge['name']} to user $userId');
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to award badge: $e');
+      debugdebugPrint('ERROR: [GrowthMechanicsService] Failed to award badge: $e');
     }
   }
 }

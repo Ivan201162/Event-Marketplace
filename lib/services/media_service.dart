@@ -9,6 +9,7 @@ import 'package:uuid/uuid.dart';
 import '../core/feature_flags.dart';
 import '../core/safe_log.dart';
 import '../models/media_item.dart';
+import '../utils/storage_guard.dart';
 import 'upload_service.dart';
 
 /// Сервис для работы с медиафайлами в профиле специалиста
@@ -17,7 +18,7 @@ class MediaService {
   static const String _storagePath = 'specialist_media';
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseStorage? _storage = getStorage();
   final UploadService _uploadService = UploadService();
   final ImagePicker _imagePicker = ImagePicker();
   final Uuid _uuid = const Uuid();

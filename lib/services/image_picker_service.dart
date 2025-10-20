@@ -11,7 +11,7 @@ class ImagePicker {
     int? imageQuality,
   }) async {
     if (kDebugMode) {
-      print('ImagePicker.pickImage not implemented - using mock');
+      debugPrint('ImagePicker.pickImage not implemented - using mock');
     }
     // Возвращаем null для заглушки
     return null;
@@ -23,7 +23,7 @@ class ImagePicker {
     int? imageQuality,
   }) async {
     if (kDebugMode) {
-      print('ImagePicker.pickMultiImage not implemented - using mock');
+      debugPrint('ImagePicker.pickMultiImage not implemented - using mock');
     }
     return [];
   }

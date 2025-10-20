@@ -226,36 +226,28 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 8),
-          Row(
-            children: [
+          RadioGroup<UserRole>(
+            value: _selectedRole,
+            onChanged: (value) {
+              if (value != null) {
+                setState(() {
+                  _selectedRole = value;
+                });
+              }
+            },
+            children: const [
               Expanded(
                 child: RadioListTile<UserRole>(
-                  title: const Text('Заказчик'),
-                  subtitle: const Text('Ищу специалистов'),
+                  title: Text('Заказчик'),
+                  subtitle: Text('Ищу специалистов'),
                   value: UserRole.customer,
-                  groupValue: _selectedRole,
-                  onChanged: (value) {
-                    if (value != null) {
-                      setState(() {
-                        _selectedRole = value;
-                      });
-                    }
-                  },
                 ),
               ),
               Expanded(
                 child: RadioListTile<UserRole>(
-                  title: const Text('Специалист'),
-                  subtitle: const Text('Предоставляю услуги'),
+                  title: Text('Специалист'),
+                  subtitle: Text('Предоставляю услуги'),
                   value: UserRole.specialist,
-                  groupValue: _selectedRole,
-                  onChanged: (value) {
-                    if (value != null) {
-                      setState(() {
-                        _selectedRole = value;
-                      });
-                    }
-                  },
                 ),
               ),
             ],
@@ -276,45 +268,49 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             style: TextStyle(fontSize: 12, color: Colors.grey),
           ),
           const SizedBox(height: 12),
-          ...TaxType.values.map(
-            (taxType) => Card(
-              margin: const EdgeInsets.only(bottom: 8),
-              child: RadioListTile<TaxType>(
-                title: Row(
-                  children: [
-                    Text(taxType.icon, style: const TextStyle(fontSize: 20)),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+          RadioGroup<TaxType>(
+            value: _selectedTaxType,
+            onChanged: (value) {
+              if (value != null) {
+                setState(() {
+                  _selectedTaxType = value;
+                });
+              }
+            },
+            children: TaxType.values
+                .map(
+                  (taxType) => Card(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    child: RadioListTile<TaxType>(
+                      title: Row(
                         children: [
-                          Text(
-                            taxType.displayName,
-                            style: const TextStyle(fontWeight: FontWeight.w500),
-                          ),
-                          Text(
-                            taxType.description,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
+                          Text(taxType.icon, style: const TextStyle(fontSize: 20)),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  taxType.displayName,
+                                  style: const TextStyle(fontWeight: FontWeight.w500),
+                                ),
+                                Text(
+                                  taxType.description,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
                       ),
+                      value: taxType,
                     ),
-                  ],
-                ),
-                value: taxType,
-                groupValue: _selectedTaxType,
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      _selectedTaxType = value;
-                    });
-                  }
-                },
-              ),
-            ),
+                  ),
+                )
+                .toList(),
           ),
         ],
       );

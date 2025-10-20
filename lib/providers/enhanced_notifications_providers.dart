@@ -43,12 +43,10 @@ final notificationStatsProvider =
   return service.getNotificationStats(userId);
 });
 
-/// Провайдер состояния создания уведомления
+/// Провайдер состояния создания уведомления (мигрирован с StateNotifierProvider)
 final createNotificationStateProvider =
-    StateNotifierProvider<CreateNotificationStateNotifier, CreateNotificationState>(
-  (ref) => CreateNotificationStateNotifier(
-    ref.read(enhancedNotificationsServiceProvider),
-  ),
+    NotifierProvider<CreateNotificationStateNotifier, CreateNotificationState>(
+  () => CreateNotificationStateNotifier(),
 );
 
 /// Состояние создания уведомления
@@ -75,11 +73,14 @@ class CreateNotificationState {
       );
 }
 
-/// Нотификатор состояния создания уведомления
-class CreateNotificationStateNotifier extends StateNotifier<CreateNotificationState> {
-  CreateNotificationStateNotifier(this._service) : super(const CreateNotificationState());
+/// Нотификатор состояния создания уведомления (мигрирован с StateNotifier)
+class CreateNotificationStateNotifier extends Notifier<CreateNotificationState> {
+  @override
+  CreateNotificationState build() {
+    return const CreateNotificationState();
+  }
 
-  final EnhancedNotificationsService _service;
+  EnhancedNotificationsService get _service => ref.read(enhancedNotificationsServiceProvider);
 
   Future<void> createNotification({
     required String userId,
@@ -129,13 +130,10 @@ class CreateNotificationStateNotifier extends StateNotifier<CreateNotificationSt
   }
 }
 
-/// Провайдер состояния уведомлений
+/// Провайдер состояния уведомлений (мигрирован с StateNotifierProvider)
 final notificationStateProvider =
-    StateNotifierProvider.family<NotificationStateNotifier, NotificationState, String>(
-  (ref, notificationId) => NotificationStateNotifier(
-    ref.read(enhancedNotificationsServiceProvider),
-    notificationId,
-  ),
+    NotifierProvider.family<NotificationStateNotifier, NotificationState, String>(
+  (ref, notificationId) => NotificationStateNotifier(notificationId),
 );
 
 /// Состояние уведомления
@@ -162,12 +160,17 @@ class NotificationState {
       );
 }
 
-/// Нотификатор состояния уведомления
-class NotificationStateNotifier extends StateNotifier<NotificationState> {
-  NotificationStateNotifier(this._service, this._notificationId) : super(const NotificationState());
+/// Нотификатор состояния уведомления (мигрирован с StateNotifier)
+class NotificationStateNotifier extends Notifier<NotificationState> {
+  NotificationStateNotifier(this._notificationId);
 
-  final EnhancedNotificationsService _service;
+  @override
+  NotificationState build() {
+    return const NotificationState();
+  }
+
   final String _notificationId;
+  EnhancedNotificationsService get _service => ref.read(enhancedNotificationsServiceProvider);
 
   Future<void> markAsRead() async {
     state = state.copyWith(isLoading: true);
@@ -219,10 +222,10 @@ class NotificationStateNotifier extends StateNotifier<NotificationState> {
   }
 }
 
-/// Провайдер настроек уведомлений
+/// Провайдер настроек уведомлений (мигрирован с StateNotifierProvider)
 final notificationSettingsProvider =
-    StateNotifierProvider<NotificationSettingsNotifier, NotificationSettings>(
-  (ref) => NotificationSettingsNotifier(),
+    NotifierProvider<NotificationSettingsNotifier, NotificationSettings>(
+  () => NotificationSettingsNotifier(),
 );
 
 /// Настройки уведомлений
@@ -331,9 +334,12 @@ class QuietHours {
       );
 }
 
-/// Нотификатор настроек уведомлений
-class NotificationSettingsNotifier extends StateNotifier<NotificationSettings> {
-  NotificationSettingsNotifier() : super(const NotificationSettings());
+/// Нотификатор настроек уведомлений (мигрирован с StateNotifier)
+class NotificationSettingsNotifier extends Notifier<NotificationSettings> {
+  @override
+  NotificationSettings build() {
+    return const NotificationSettings();
+  }
 
   void toggleEnabled() {
     state = state.copyWith(enabled: !state.enabled);

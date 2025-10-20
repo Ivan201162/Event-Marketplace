@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 
 import '../config/payment_config.dart';
 import '../models/promotion_boost.dart';
@@ -11,7 +10,7 @@ class FirestoreTestDataService {
   /// Инициализация всех тестовых данных
   static Future<void> initializeTestData() async {
     try {
-      debugPrint('INFO: [firestore_test_data] Начинаем инициализацию тестовых данных');
+      debugdebugPrint('INFO: [firestore_test_data] Начинаем инициализацию тестовых данных');
 
       await Future.wait([
         _createSubscriptionPlans(),
@@ -21,16 +20,16 @@ class FirestoreTestDataService {
         _createTestTransactions(),
       ]);
 
-      debugPrint('INFO: [firestore_test_data] Тестовые данные успешно созданы');
+      debugdebugPrint('INFO: [firestore_test_data] Тестовые данные успешно созданы');
     } catch (e) {
-      debugPrint('ERROR: [firestore_test_data] Ошибка создания тестовых данных: $e');
+      debugdebugPrint('ERROR: [firestore_test_data] Ошибка создания тестовых данных: $e');
       rethrow;
     }
   }
 
   /// Создание планов подписки
   static Future<void> _createSubscriptionPlans() async {
-    debugPrint('INFO: [firestore_test_data] Создание планов подписки');
+    debugdebugPrint('INFO: [firestore_test_data] Создание планов подписки');
 
     final batch = _firestore.batch();
 
@@ -56,12 +55,12 @@ class FirestoreTestDataService {
     }
 
     await batch.commit();
-    debugPrint('INFO: [firestore_test_data] Планы подписки созданы');
+    debugdebugPrint('INFO: [firestore_test_data] Планы подписки созданы');
   }
 
   /// Создание пакетов продвижения
   static Future<void> _createPromotionPackages() async {
-    debugPrint('INFO: [firestore_test_data] Создание пакетов продвижения');
+    debugdebugPrint('INFO: [firestore_test_data] Создание пакетов продвижения');
 
     final batch = _firestore.batch();
 
@@ -88,12 +87,12 @@ class FirestoreTestDataService {
     }
 
     await batch.commit();
-    debugPrint('INFO: [firestore_test_data] Пакеты продвижения созданы');
+    debugdebugPrint('INFO: [firestore_test_data] Пакеты продвижения созданы');
   }
 
   /// Создание тестовых пользователей
   static Future<void> _createTestUsers() async {
-    debugPrint('INFO: [firestore_test_data] Создание тестовых пользователей');
+    debugdebugPrint('INFO: [firestore_test_data] Создание тестовых пользователей');
 
     final testUsers = [
       {
@@ -151,12 +150,12 @@ class FirestoreTestDataService {
     }
 
     await batch.commit();
-    debugPrint('INFO: [firestore_test_data] Тестовые пользователи созданы');
+    debugdebugPrint('INFO: [firestore_test_data] Тестовые пользователи созданы');
   }
 
   /// Создание тестовых рекламных объявлений
   static Future<void> _createTestAdvertisements() async {
-    debugPrint('INFO: [firestore_test_data] Создание тестовых рекламных объявлений');
+    debugdebugPrint('INFO: [firestore_test_data] Создание тестовых рекламных объявлений');
 
     final testAds = [
       {
@@ -219,12 +218,12 @@ class FirestoreTestDataService {
     }
 
     await batch.commit();
-    debugPrint('INFO: [firestore_test_data] Тестовые рекламные объявления созданы');
+    debugdebugPrint('INFO: [firestore_test_data] Тестовые рекламные объявления созданы');
   }
 
   /// Создание тестовых транзакций
   static Future<void> _createTestTransactions() async {
-    debugPrint('INFO: [firestore_test_data] Создание тестовых транзакций');
+    debugdebugPrint('INFO: [firestore_test_data] Создание тестовых транзакций');
 
     final testTransactions = [
       {
@@ -268,12 +267,12 @@ class FirestoreTestDataService {
     }
 
     await batch.commit();
-    debugPrint('INFO: [firestore_test_data] Тестовые транзакции созданы');
+    debugdebugPrint('INFO: [firestore_test_data] Тестовые транзакции созданы');
   }
 
   /// Создание тестовых подписок
   static Future<void> createTestSubscriptions() async {
-    debugPrint('INFO: [firestore_test_data] Создание тестовых подписок');
+    debugdebugPrint('INFO: [firestore_test_data] Создание тестовых подписок');
 
     final testSubscriptions = [
       {
@@ -304,12 +303,12 @@ class FirestoreTestDataService {
     }
 
     await batch.commit();
-    debugPrint('INFO: [firestore_test_data] Тестовые подписки созданы');
+    debugdebugPrint('INFO: [firestore_test_data] Тестовые подписки созданы');
   }
 
   /// Создание тестовых продвижений
   static Future<void> createTestPromotions() async {
-    debugPrint('INFO: [firestore_test_data] Создание тестовых продвижений');
+    debugdebugPrint('INFO: [firestore_test_data] Создание тестовых продвижений');
 
     final testPromotions = [
       {
@@ -346,13 +345,13 @@ class FirestoreTestDataService {
     }
 
     await batch.commit();
-    debugPrint('INFO: [firestore_test_data] Тестовые продвижения созданы');
+    debugdebugPrint('INFO: [firestore_test_data] Тестовые продвижения созданы');
   }
 
   /// Очистка всех тестовых данных
   static Future<void> clearTestData() async {
     try {
-      debugPrint('INFO: [firestore_test_data] Очистка тестовых данных');
+      debugdebugPrint('INFO: [firestore_test_data] Очистка тестовых данных');
 
       final collections = [
         'subscription_plans',
@@ -375,9 +374,9 @@ class FirestoreTestDataService {
         await batch.commit();
       }
 
-      debugPrint('INFO: [firestore_test_data] Тестовые данные очищены');
+      debugdebugPrint('INFO: [firestore_test_data] Тестовые данные очищены');
     } catch (e) {
-      debugPrint('ERROR: [firestore_test_data] Ошибка очистки тестовых данных: $e');
+      debugdebugPrint('ERROR: [firestore_test_data] Ошибка очистки тестовых данных: $e');
       rethrow;
     }
   }

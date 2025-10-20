@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/specialist.dart';
 import '../models/specialist_team.dart';
-import '../providers/specialist_providers.dart';
 import '../services/team_service.dart';
 
 /// Экран управления командой специалистов

@@ -1,439 +1,588 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/review.dart';
-import '../../providers/auth_provider.dart';
-import '../../services/reviews_service.dart';
-import 'widgets/add_review_bottom_sheet.dart';
-import 'widgets/review_card.dart';
-import 'widgets/review_filters_bottom_sheet.dart';
+import '../../providers/auth_providers.dart';
+import '../../providers/review_providers.dart';
+import '../../widgets/review_card.dart';
 
-class ReviewsScreen extends StatefulWidget {
+/// Screen for viewing reviews
+class ReviewsScreen extends ConsumerStatefulWidget {
+  final String specialistId;
+  final String specialistName;
+
   const ReviewsScreen({
     super.key,
     required this.specialistId,
     required this.specialistName,
   });
-  final String specialistId;
-  final String specialistName;
 
   @override
-  State<ReviewsScreen> createState() => _ReviewsScreenState();
+  ConsumerState<ReviewsScreen> createState() => _ReviewsScreenState();
 }
 
-class _ReviewsScreenState extends State<ReviewsScreen> {
-  final ReviewsService _reviewsService = ReviewsService();
-  final ScrollController _scrollController = ScrollController();
-
-  List<Review> _reviews = [];
-  bool _isLoading = false;
-  bool _hasMore = true;
-  DocumentSnapshot? _lastDocument;
-  ReviewSortType _sortType = ReviewSortType.newest;
-  ReviewFilter? _filter;
+class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  String _sortBy = 'newest';
+  int _filterRating = 0; // 0 = all, 1-5 = specific rating
 
   @override
   void initState() {
     super.initState();
-    _loadReviews();
-    _loadFilters();
-    _scrollController.addListener(_onScroll);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    _tabController.dispose();
     super.dispose();
   }
 
-  void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
-      _loadMoreReviews();
-    }
-  }
-
-  Future<void> _loadFilters() async {
-    final sortType = await _reviewsService.loadReviewSortType();
-    final filter = await _reviewsService.loadReviewFilters();
-
-    setState(() {
-      _sortType = sortType;
-      _filter = filter;
-    });
-  }
-
-  Future<void> _loadReviews({bool refresh = false}) async {
-    if (_isLoading) return;
-
-    setState(() {
-      _isLoading = true;
-      if (refresh) {
-        _reviews.clear();
-        _lastDocument = null;
-        _hasMore = true;
-      }
-    });
-
-    try {
-      final reviews = await _reviewsService.getSpecialistReviews(
-        widget.specialistId,
-        lastDocument: _lastDocument,
-        sortType: _sortType,
-        filter: _filter,
-      );
-
-      setState(() {
-        if (refresh) {
-          _reviews = reviews;
-        } else {
-          _reviews.addAll(reviews);
-        }
-        _hasMore = reviews.length == 20;
-        if (reviews.isNotEmpty) {
-          _lastDocument = reviews.last as DocumentSnapshot?;
-        }
-      });
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка загрузки отзывов: $e')),
-        );
-      }
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
-  Future<void> _loadMoreReviews() async {
-    if (!_hasMore || _isLoading) return;
-    await _loadReviews();
-  }
-
-  Future<void> _onSortChanged(ReviewSortType sortType) async {
-    setState(() {
-      _sortType = sortType;
-    });
-    await _reviewsService.saveReviewSortType(sortType);
-    await _loadReviews(refresh: true);
-  }
-
-  Future<void> _onFilterChanged(ReviewFilter filter) async {
-    setState(() {
-      _filter = filter;
-    });
-    await _reviewsService.saveReviewFilters(filter);
-    await _loadReviews(refresh: true);
-  }
-
-  Future<void> _onReviewAdded() async {
-    await _loadReviews(refresh: true);
-  }
-
-  Future<void> _onReviewLiked(String reviewId) async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final currentUser = authProvider.currentUser;
-
-    if (currentUser != null) {
-      try {
-        await _reviewsService.likeReview(
-          reviewId,
-          currentUser.uid,
-          currentUser.displayName ?? 'Пользователь',
-        );
-
-        // Обновляем локально
-        setState(() {
-          final index = _reviews.indexWhere((r) => r.id == reviewId);
-          if (index != -1) {
-            final review = _reviews[index];
-            _reviews[index] = review.copyWith(
-              likes: review.likes + 1,
-            );
-          }
-        });
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Ошибка при лайке: $e')),
-          );
-        }
-      }
-    }
-  }
-
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: Text('Отзывы о ${widget.specialistName}'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.filter_list),
-              onPressed: _showFiltersBottomSheet,
-            ),
-            IconButton(
-              icon: const Icon(Icons.sort),
-              onPressed: _showSortBottomSheet,
-            ),
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Отзывы - ${widget.specialistName}'),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(text: 'Все отзывы'),
+            Tab(text: 'С фото'),
+            Tab(text: 'Статистика'),
           ],
         ),
-        body: Column(
-          children: [
-            // Статистика отзывов
-            _buildReviewsStats(),
-
-            // Список отзывов
-            Expanded(
-              child: RefreshIndicator(
-                onRefresh: () => _loadReviews(refresh: true),
-                child: _reviews.isEmpty && !_isLoading
-                    ? _buildEmptyState()
-                    : ListView.builder(
-                        controller: _scrollController,
-                        padding: const EdgeInsets.all(16),
-                        itemCount: _reviews.length + (_hasMore ? 1 : 0),
-                        itemBuilder: (context, index) {
-                          if (index == _reviews.length) {
-                            return const Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(16),
-                                child: CircularProgressIndicator(),
-                              ),
-                            );
-                          }
-
-                          final review = _reviews[index];
-                          return ReviewCard(
-                            review: review,
-                            onLike: () => _onReviewLiked(review.id),
-                            onReport: () => _showReportDialog(review),
-                          );
-                        },
-                      ),
-              ),
-            ),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _showAddReviewBottomSheet,
-          child: const Icon(Icons.add),
-        ),
-      );
-
-  Widget _buildReviewsStats() {
-    if (_reviews.isEmpty) return const SizedBox.shrink();
-
-    final totalReviews = _reviews.length;
-    final averageRating = _reviews.fold(0, (sum, review) => sum + review.rating) / totalReviews;
-    final ratingDistribution = <int, int>{};
-
-    for (final review in _reviews) {
-      final rating = review.rating.round();
-      ratingDistribution[rating] = (ratingDistribution[rating] ?? 0) + 1;
-    }
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.filter_list),
+            onPressed: _showFilterDialog,
+          ),
+          IconButton(
+            icon: const Icon(Icons.sort),
+            onPressed: _showSortDialog,
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: TabBarView(
+        controller: _tabController,
         children: [
-          Row(
+          _buildAllReviewsTab(),
+          _buildReviewsWithPhotosTab(),
+          _buildStatisticsTab(),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _writeReview,
+        child: const Icon(Icons.edit),
+      ),
+    );
+  }
+
+  Widget _buildAllReviewsTab() {
+    final reviewsAsync = ref.watch(specialistReviewsStreamProvider(widget.specialistId));
+
+    return reviewsAsync.when(
+      data: (reviews) {
+        final filteredReviews = _filterAndSortReviews(reviews);
+        
+        if (filteredReviews.isEmpty) {
+          return _buildEmptyState();
+        }
+
+        return RefreshIndicator(
+          onRefresh: () async {
+            ref.invalidate(specialistReviewsStreamProvider(widget.specialistId));
+          },
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: filteredReviews.length,
+            itemBuilder: (context, index) {
+              final review = filteredReviews[index];
+              return ReviewCard(
+                review: review,
+                onTap: () => _showReviewDetails(review),
+                onLike: () => _toggleLike(review),
+                onReply: () => _replyToReview(review),
+              );
+            },
+          ),
+        );
+      },
+      loading: () => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      error: (error, stack) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 80, color: Colors.red),
+            const SizedBox(height: 16),
+            Text(
+              'Ошибка загрузки отзывов',
+              style: TextStyle(fontSize: 18, color: Colors.red[700]),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              error.toString(),
+              style: const TextStyle(color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                ref.invalidate(specialistReviewsStreamProvider(widget.specialistId));
+              },
+              child: const Text('Повторить'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildReviewsWithPhotosTab() {
+    final reviewsAsync = ref.watch(reviewsWithImagesStreamProvider(widget.specialistId));
+
+    return reviewsAsync.when(
+      data: (reviews) {
+        if (reviews.isEmpty) {
+          return const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.photo_library_outlined, size: 80, color: Colors.grey),
+                SizedBox(height: 16),
+                Text(
+                  'Нет отзывов с фото',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Отзывы с фотографиями будут отображаться здесь',
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return RefreshIndicator(
+          onRefresh: () async {
+            ref.invalidate(reviewsWithImagesStreamProvider(widget.specialistId));
+          },
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: reviews.length,
+            itemBuilder: (context, index) {
+              final review = reviews[index];
+              return ReviewCard(
+                review: review,
+                onTap: () => _showReviewDetails(review),
+                onLike: () => _toggleLike(review),
+                onReply: () => _replyToReview(review),
+              );
+            },
+          ),
+        );
+      },
+      loading: () => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      error: (error, stack) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 80, color: Colors.red),
+            const SizedBox(height: 16),
+            Text(
+              'Ошибка загрузки отзывов',
+              style: TextStyle(fontSize: 18, color: Colors.red[700]),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              error.toString(),
+              style: const TextStyle(color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                ref.invalidate(reviewsWithImagesStreamProvider(widget.specialistId));
+              },
+              child: const Text('Повторить'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatisticsTab() {
+    final statsAsync = ref.watch(specialistReviewStatsProvider(widget.specialistId));
+
+    return statsAsync.when(
+      data: (stats) {
+        final totalReviews = stats['totalReviews'] as int;
+        final averageRating = stats['averageRating'] as double;
+        final ratingDistribution = stats['ratingDistribution'] as Map<int, int>;
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Средняя оценка: ${averageRating.toStringAsFixed(1)}',
-                style: Theme.of(context).textTheme.titleMedium,
+              // Overall rating
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      Text(
+                        averageRating.toStringAsFixed(1),
+                        style: const TextStyle(
+                          fontSize: 48,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(5, (index) {
+                          return Icon(
+                            index < averageRating.floor()
+                                ? Icons.star
+                                : Icons.star_border,
+                            color: Colors.orange,
+                            size: 24,
+                          );
+                        }),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'На основе $totalReviews отзывов',
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              const SizedBox(width: 8),
-              ...List.generate(
-                5,
-                (index) => Icon(
-                  index < averageRating ? Icons.star : Icons.star_border,
-                  color: Colors.amber,
-                  size: 20,
+              
+              const SizedBox(height: 16),
+              
+              // Rating distribution
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Распределение оценок',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      ...List.generate(5, (index) {
+                        final rating = 5 - index;
+                        final count = ratingDistribution[rating] ?? 0;
+                        final percentage = totalReviews > 0 ? (count / totalReviews * 100) : 0.0;
+                        
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: Row(
+                            children: [
+                              Text(
+                                '$rating',
+                                style: const TextStyle(fontWeight: FontWeight.w500),
+                                textAlign: TextAlign.center,
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(width: 8),
+                              const Icon(Icons.star, color: Colors.orange, size: 16),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: LinearProgressIndicator(
+                                  value: percentage / 100,
+                                  backgroundColor: Colors.grey[300],
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    _getRatingColor(rating),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              SizedBox(
+                                width: 40,
+                                child: Text(
+                                  '$count',
+                                  style: const TextStyle(fontSize: 12),
+                                  textAlign: TextAlign.right,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            'Всего отзывов: $totalReviews',
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          const SizedBox(height: 8),
-          // Распределение рейтингов
-          ...ratingDistribution.entries.map((entry) {
-            final percentage = (entry.value / totalReviews) * 100;
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-              child: Row(
-                children: [
-                  Text('${entry.key}★'),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: LinearProgressIndicator(
-                      value: percentage / 100,
-                      backgroundColor: Colors.grey[300],
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text('${entry.value}'),
-                ],
-              ),
-            );
-          }),
-        ],
+        );
+      },
+      loading: () => const Center(
+        child: CircularProgressIndicator(),
       ),
-    );
-  }
-
-  Widget _buildEmptyState() => Center(
+      error: (error, stack) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.rate_review_outlined,
-              size: 64,
-              color: Colors.grey[400],
-            ),
+            const Icon(Icons.error_outline, size: 80, color: Colors.red),
             const SizedBox(height: 16),
             Text(
-              'Пока нет отзывов',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+              'Ошибка загрузки статистики',
+              style: TextStyle(fontSize: 18, color: Colors.red[700]),
             ),
             const SizedBox(height: 8),
             Text(
-              'Станьте первым, кто оставит отзыв!',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[500],
-                  ),
-            ),
-          ],
-        ),
-      );
-
-  void _showFiltersBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => ReviewFiltersBottomSheet(
-        currentFilter: _filter,
-        onFilterChanged: _onFilterChanged,
-      ),
-    );
-  }
-
-  void _showSortBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => _buildSortBottomSheet(),
-    );
-  }
-
-  Widget _buildSortBottomSheet() => Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Сортировка отзывов',
-              style: Theme.of(context).textTheme.titleLarge,
+              error.toString(),
+              style: const TextStyle(color: Colors.grey),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ...ReviewSortType.values.map(
-              (sortType) => ListTile(
-                title: Text(sortType.displayName),
-                leading: Radio<ReviewSortType>(
-                  value: sortType,
-                  groupValue: _sortType,
-                  onChanged: (value) {
-                    if (value != null) {
-                      Navigator.pop(context);
-                      _onSortChanged(value);
-                    }
-                  },
-                ),
-              ),
+            ElevatedButton(
+              onPressed: () {
+                ref.invalidate(specialistReviewStatsProvider(widget.specialistId));
+              },
+              child: const Text('Повторить'),
             ),
           ],
         ),
-      );
-
-  void _showAddReviewBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => AddReviewBottomSheet(
-        specialistId: widget.specialistId,
-        specialistName: widget.specialistName,
-        onReviewAdded: _onReviewAdded,
       ),
     );
   }
 
-  void _showReportDialog(Review review) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Пожаловаться на отзыв'),
-        content: const Text('Выберите причину жалобы:'),
-        actions: [
-          ...ReviewReportReason.values.map(
-            (reason) => TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                _reportReview(review, reason);
-              },
-              child: Text(reason.displayName),
+  Widget _buildEmptyState() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.rate_review_outlined, size: 80, color: Colors.grey),
+          SizedBox(height: 16),
+          Text(
+            'Пока нет отзывов',
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.grey,
+              fontWeight: FontWeight.w500,
             ),
           ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
+          SizedBox(height: 8),
+          Text(
+            'Будьте первым, кто оставит отзыв!',
+            style: TextStyle(color: Colors.grey),
           ),
         ],
       ),
     );
   }
 
-  Future<void> _reportReview(Review review, ReviewReportReason reason) async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final currentUser = authProvider.currentUser;
+  List<Review> _filterAndSortReviews(List<Review> reviews) {
+    var filteredReviews = reviews;
 
-    if (currentUser != null) {
-      try {
-        await _reviewsService.reportReview(
-          reviewId: review.id,
-          reporterId: currentUser.uid,
-          reporterName: currentUser.displayName ?? 'Пользователь',
-          reason: reason,
-        );
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Жалоба отправлена')),
-          );
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Ошибка при отправке жалобы: $e')),
-          );
-        }
-      }
+    // Filter by rating
+    if (_filterRating > 0) {
+      filteredReviews = filteredReviews.where((review) => review.rating == _filterRating).toList();
     }
+
+    // Sort reviews
+    switch (_sortBy) {
+      case 'newest':
+        filteredReviews.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        break;
+      case 'oldest':
+        filteredReviews.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+        break;
+      case 'highest':
+        filteredReviews.sort((a, b) => b.rating.compareTo(a.rating));
+        break;
+      case 'lowest':
+        filteredReviews.sort((a, b) => a.rating.compareTo(b.rating));
+        break;
+      case 'most_liked':
+        filteredReviews.sort((a, b) => b.likesCount.compareTo(a.likesCount));
+        break;
+    }
+
+    return filteredReviews;
+  }
+
+  void _showFilterDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Фильтр по рейтингу'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RadioListTile<int>(
+              title: const Text('Все отзывы'),
+              value: 0,
+              groupValue: _filterRating,
+              onChanged: (value) {
+                setState(() {
+                  _filterRating = value!;
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+            ...List.generate(5, (index) {
+              final rating = index + 1;
+              return RadioListTile<int>(
+                title: Row(
+                  children: [
+                    ...List.generate(5, (starIndex) {
+                      return Icon(
+                        starIndex < rating ? Icons.star : Icons.star_border,
+                        color: Colors.orange,
+                        size: 16,
+                      );
+                    }),
+                    const SizedBox(width: 8),
+                    Text('$rating звезд'),
+                  ],
+                ),
+                value: rating,
+                groupValue: _filterRating,
+                onChanged: (value) {
+                  setState(() {
+                    _filterRating = value!;
+                  });
+                  Navigator.of(context).pop();
+                },
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showSortDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Сортировка'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RadioListTile<String>(
+              title: const Text('Сначала новые'),
+              value: 'newest',
+              groupValue: _sortBy,
+              onChanged: (value) {
+                setState(() {
+                  _sortBy = value!;
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+            RadioListTile<String>(
+              title: const Text('Сначала старые'),
+              value: 'oldest',
+              groupValue: _sortBy,
+              onChanged: (value) {
+                setState(() {
+                  _sortBy = value!;
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+            RadioListTile<String>(
+              title: const Text('Высокий рейтинг'),
+              value: 'highest',
+              groupValue: _sortBy,
+              onChanged: (value) {
+                setState(() {
+                  _sortBy = value!;
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+            RadioListTile<String>(
+              title: const Text('Низкий рейтинг'),
+              value: 'lowest',
+              groupValue: _sortBy,
+              onChanged: (value) {
+                setState(() {
+                  _sortBy = value!;
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+            RadioListTile<String>(
+              title: const Text('Больше лайков'),
+              value: 'most_liked',
+              groupValue: _sortBy,
+              onChanged: (value) {
+                setState(() {
+                  _sortBy = value!;
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _writeReview() {
+    // TODO: Navigate to write review screen
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Написание отзыва пока не реализовано')),
+    );
+  }
+
+  void _showReviewDetails(Review review) {
+    // TODO: Show review details
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Отзыв: ${review.text}')),
+    );
+  }
+
+  void _toggleLike(Review review) {
+    final currentUser = ref.read(currentUserProvider).value;
+    if (currentUser == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Войдите в аккаунт для лайков')),
+      );
+      return;
+    }
+
+    final reviewService = ref.read(reviewServiceProvider);
+    reviewService.toggleReviewLike(review.id, currentUser.uid);
+  }
+
+  void _replyToReview(Review review) {
+    // TODO: Reply to review
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Ответ на отзыв пока не реализован')),
+    );
+  }
+
+  Color _getRatingColor(int rating) {
+    if (rating >= 4) return Colors.green;
+    if (rating >= 3) return Colors.orange;
+    return Colors.red;
   }
 }

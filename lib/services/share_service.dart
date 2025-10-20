@@ -368,7 +368,7 @@ class ShareService {
     buffer.writeln('📅 ${_formatDate(booking.eventDate)}');
     buffer.writeln('👥 Участников: ${booking.participantsCount}');
 
-    if (booking.notes != null && booking.notes!.isNotEmpty) {
+    if (booking.notes.isNotEmpty) {
       buffer.writeln();
       buffer.writeln('📝 Примечания: ${booking.notes}');
     }

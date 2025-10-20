@@ -1,96 +1,189 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 
-/// Модель поста специалиста
-class Post {
+/// Media type for posts
+enum MediaType {
+  image,
+  video,
+  text,
+}
+
+/// Post model for feed
+class Post extends Equatable {
+  final String id;
+  final String authorId;
+  final String? text;
+  final String? mediaUrl;
+  final MediaType? mediaType;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final int likesCount;
+  final int commentsCount;
+  final List<String> likedBy;
+  final String? authorName;
+  final String? authorAvatarUrl;
+  final List<String> tags;
+  final bool isPinned;
+  final String? location;
+
   const Post({
     required this.id,
-    required this.specialistId,
+    required this.authorId,
     this.text,
-    required this.mediaUrls,
+    this.mediaUrl,
+    this.mediaType,
     required this.createdAt,
+    required this.updatedAt,
     this.likesCount = 0,
     this.commentsCount = 0,
     this.likedBy = const [],
-    this.metadata,
+    this.authorName,
+    this.authorAvatarUrl,
+    this.tags = const [],
+    this.isPinned = false,
+    this.location,
   });
 
-  /// Создать пост из документа Firestore
-  factory Post.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data()! as Map<String, dynamic>;
-    return Post.fromMap(data, doc.id);
+  /// Create Post from Firestore document
+  factory Post.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return Post(
+      id: doc.id,
+      authorId: data['authorId'] ?? '',
+      text: data['text'],
+      mediaUrl: data['mediaUrl'],
+      mediaType: data['mediaType'] != null
+          ? MediaType.values.firstWhere(
+              (e) => e.toString().split('.').last == data['mediaType'],
+              orElse: () => MediaType.text,
+            )
+          : null,
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      likesCount: data['likesCount'] ?? 0,
+      commentsCount: data['commentsCount'] ?? 0,
+      likedBy: List<String>.from(data['likedBy'] ?? []),
+      authorName: data['authorName'],
+      authorAvatarUrl: data['authorAvatarUrl'],
+      tags: List<String>.from(data['tags'] ?? []),
+      isPinned: data['isPinned'] ?? false,
+      location: data['location'],
+    );
   }
 
-  /// Создать пост из Map
-  factory Post.fromMap(Map<String, dynamic> data, [String? id]) => Post(
-        id: id ?? data['id'] ?? '',
-        specialistId: data['specialistId'] ?? '',
-        text: data['text'],
-        mediaUrls: List<String>.from(data['mediaUrls'] ?? []),
-        createdAt: data['createdAt'] != null
-            ? (data['createdAt'] is Timestamp
-                ? (data['createdAt'] as Timestamp).toDate()
-                : DateTime.parse(data['createdAt'].toString()))
-            : DateTime.now(),
-        likesCount: data['likesCount'] as int? ?? 0,
-        commentsCount: data['commentsCount'] as int? ?? 0,
-        likedBy: List<String>.from(data['likedBy'] ?? []),
-        metadata: data['metadata'],
-      );
-  final String id;
-  final String specialistId;
-  final String? text;
-  final List<String> mediaUrls; // фото/видео
-  final DateTime createdAt;
-  final int likesCount;
-  final int commentsCount;
-  final List<String> likedBy; // список ID пользователей, которые лайкнули
-  final Map<String, dynamic>? metadata;
+  /// Convert Post to Firestore document
+  Map<String, dynamic> toFirestore() {
+    return {
+      'authorId': authorId,
+      'text': text,
+      'mediaUrl': mediaUrl,
+      'mediaType': mediaType?.toString().split('.').last,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': Timestamp.fromDate(updatedAt),
+      'likesCount': likesCount,
+      'commentsCount': commentsCount,
+      'likedBy': likedBy,
+      'authorName': authorName,
+      'authorAvatarUrl': authorAvatarUrl,
+      'tags': tags,
+      'isPinned': isPinned,
+      'location': location,
+    };
+  }
 
-  /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() => {
-        'specialistId': specialistId,
-        'text': text,
-        'mediaUrls': mediaUrls,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'likesCount': likesCount,
-        'commentsCount': commentsCount,
-        'likedBy': likedBy,
-        'metadata': metadata,
-      };
-
-  /// Копировать с изменениями
+  /// Create a copy with updated fields
   Post copyWith({
     String? id,
-    String? specialistId,
+    String? authorId,
     String? text,
-    List<String>? mediaUrls,
+    String? mediaUrl,
+    MediaType? mediaType,
     DateTime? createdAt,
+    DateTime? updatedAt,
     int? likesCount,
     int? commentsCount,
     List<String>? likedBy,
-    Map<String, dynamic>? metadata,
-  }) =>
-      Post(
-        id: id ?? this.id,
-        specialistId: specialistId ?? this.specialistId,
-        text: text ?? this.text,
-        mediaUrls: mediaUrls ?? this.mediaUrls,
-        createdAt: createdAt ?? this.createdAt,
-        likesCount: likesCount ?? this.likesCount,
-        commentsCount: commentsCount ?? this.commentsCount,
-        likedBy: likedBy ?? this.likedBy,
-        metadata: metadata ?? this.metadata,
-      );
+    String? authorName,
+    String? authorAvatarUrl,
+    List<String>? tags,
+    bool? isPinned,
+    String? location,
+  }) {
+    return Post(
+      id: id ?? this.id,
+      authorId: authorId ?? this.authorId,
+      text: text ?? this.text,
+      mediaUrl: mediaUrl ?? this.mediaUrl,
+      mediaType: mediaType ?? this.mediaType,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      likesCount: likesCount ?? this.likesCount,
+      commentsCount: commentsCount ?? this.commentsCount,
+      likedBy: likedBy ?? this.likedBy,
+      authorName: authorName ?? this.authorName,
+      authorAvatarUrl: authorAvatarUrl ?? this.authorAvatarUrl,
+      tags: tags ?? this.tags,
+      isPinned: isPinned ?? this.isPinned,
+      location: location ?? this.location,
+    );
+  }
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Post && other.id == id;
+  /// Check if post has media
+  bool get hasMedia => mediaUrl != null && mediaUrl!.isNotEmpty;
+
+  /// Check if post is liked by user
+  bool isLikedBy(String userId) => likedBy.contains(userId);
+
+  /// Get formatted time ago string
+  String get timeAgo {
+    final now = DateTime.now();
+    final difference = now.difference(createdAt);
+
+    if (difference.inDays > 0) {
+      return '${difference.inDays}д назад';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours}ч назад';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes}м назад';
+    } else {
+      return 'только что';
+    }
+  }
+
+  /// Get media type icon
+  String get mediaTypeIcon {
+    switch (mediaType) {
+      case MediaType.image:
+        return '🖼️';
+      case MediaType.video:
+        return '🎥';
+      case MediaType.text:
+      case null:
+        return '📝';
+    }
   }
 
   @override
-  int get hashCode => id.hashCode;
+  List<Object?> get props => [
+        id,
+        authorId,
+        text,
+        mediaUrl,
+        mediaType,
+        createdAt,
+        updatedAt,
+        likesCount,
+        commentsCount,
+        likedBy,
+        authorName,
+        authorAvatarUrl,
+        tags,
+        isPinned,
+        location,
+      ];
 
   @override
-  String toString() => 'Post(id: $id, specialistId: $specialistId, text: $text)';
+  String toString() {
+    return 'Post(id: $id, authorId: $authorId, text: ${text?.substring(0, text!.length > 50 ? 50 : text!.length)}...)';
+  }
 }

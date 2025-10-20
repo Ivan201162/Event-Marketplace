@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 
 /// Сервис для создания тестовых данных в Firestore
 class FirestoreSeederService {
@@ -12,11 +11,11 @@ class FirestoreSeederService {
   /// Создание тестовых данных
   Future<bool> seedTestData() async {
     try {
-      debugPrint('🌱 Начинаем создание тестовых данных...');
+      debugdebugPrint('🌱 Начинаем создание тестовых данных...');
       final now = DateTime.now();
 
       // Users (2 клиента, 2 специалиста)
-      debugPrint('👥 Создание пользователей...');
+      debugdebugPrint('👥 Создание пользователей...');
       final users = [
         {
           'id': 'u_customer_1',
@@ -59,11 +58,11 @@ class FirestoreSeederService {
           },
           SetOptions(merge: true),
         );
-        debugPrint('  ✅ Пользователь ${u['name']} создан');
+        debugdebugPrint('  ✅ Пользователь ${u['name']} создан');
       }
 
       // Ideas (фото + видео)
-      debugPrint('💡 Создание идей...');
+      debugdebugPrint('💡 Создание идей...');
       final ideas = List.generate(
         6,
         (i) => {
@@ -93,7 +92,7 @@ class FirestoreSeederService {
       for (var i = 0; i < ideas.length; i++) {
         final idea = ideas[i];
         final ref = await _firestore.collection('ideas').add(idea);
-        debugPrint('  ✅ Идея ${idea['title']} создана с ID: ${ref.id}');
+        debugdebugPrint('  ✅ Идея ${idea['title']} создана с ID: ${ref.id}');
 
         // Добавляем комментарий к каждой идее
         await ref.collection('comments').add({
@@ -106,11 +105,11 @@ class FirestoreSeederService {
           'likesCount': 0,
           'likedBy': <String>[],
         });
-        debugPrint('    💬 Комментарий добавлен');
+        debugdebugPrint('    💬 Комментарий добавлен');
       }
 
       // Chats (один чат и пару сообщений)
-      debugPrint('💬 Создание чатов...');
+      debugdebugPrint('💬 Создание чатов...');
       final chatRef = _firestore.collection('chats').doc('c_demo_1');
       await chatRef.set({
         'members': ['u_customer_1', 'u_spec_1'],
@@ -118,7 +117,7 @@ class FirestoreSeederService {
         'updatedAt': FieldValue.serverTimestamp(),
         'createdAt': FieldValue.serverTimestamp(),
       });
-      debugPrint('  ✅ Чат c_demo_1 создан');
+      debugdebugPrint('  ✅ Чат c_demo_1 создан');
 
       // Сообщения в чате
       await chatRef.collection('messages').add({
@@ -136,10 +135,10 @@ class FirestoreSeederService {
         'text': 'Добрый день, чем могу помочь?',
         'sentAt': FieldValue.serverTimestamp(),
       });
-      debugPrint('  💬 2 сообщения добавлены в чат');
+      debugdebugPrint('  💬 2 сообщения добавлены в чат');
 
       // Bookings (2 заявки)
-      debugPrint('📋 Создание заявок...');
+      debugdebugPrint('📋 Создание заявок...');
       await _firestore.collection('bookings').add({
         'customerId': 'u_customer_1',
         'customerName': 'Иван Петров',
@@ -156,7 +155,7 @@ class FirestoreSeederService {
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
       });
-      debugPrint('  ✅ Заявка #1 создана (Свадьба)');
+      debugdebugPrint('  ✅ Заявка #1 создана (Свадьба)');
 
       await _firestore.collection('bookings').add({
         'customerId': 'u_customer_2',
@@ -174,10 +173,10 @@ class FirestoreSeederService {
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
       });
-      debugPrint('  ✅ Заявка #2 создана (День рождения)');
+      debugdebugPrint('  ✅ Заявка #2 создана (День рождения)');
 
       // Specialists (дополнительные данные для специалистов)
-      debugPrint('👨‍💼 Создание профилей специалистов...');
+      debugdebugPrint('👨‍💼 Создание профилей специалистов...');
       await _firestore.collection('specialists').doc('u_spec_1').set(
         {
           'userId': 'u_spec_1',
@@ -229,19 +228,19 @@ class FirestoreSeederService {
         },
         SetOptions(merge: true),
       );
-      debugPrint('  ✅ Профили специалистов созданы');
+      debugdebugPrint('  ✅ Профили специалистов созданы');
 
-      debugPrint('✅ Seeder: тестовые данные успешно созданы');
-      debugPrint('📊 Создано:');
-      debugPrint('  - 4 пользователя');
-      debugPrint('  - 6 идей с комментариями');
-      debugPrint('  - 1 чат с 2 сообщениями');
-      debugPrint('  - 2 заявки');
-      debugPrint('  - 2 профиля специалистов');
+      debugdebugPrint('✅ Seeder: тестовые данные успешно созданы');
+      debugdebugPrint('📊 Создано:');
+      debugdebugPrint('  - 4 пользователя');
+      debugdebugPrint('  - 6 идей с комментариями');
+      debugdebugPrint('  - 1 чат с 2 сообщениями');
+      debugdebugPrint('  - 2 заявки');
+      debugdebugPrint('  - 2 профиля специалистов');
 
       return true;
     } catch (e) {
-      debugPrint('❌ Ошибка при создании тестовых данных: $e');
+      debugdebugPrint('❌ Ошибка при создании тестовых данных: $e');
       return false;
     }
   }
@@ -257,7 +256,7 @@ class FirestoreSeederService {
           chatsSnapshot.docs.isNotEmpty ||
           bookingsSnapshot.docs.isNotEmpty;
     } catch (e) {
-      debugPrint('Ошибка проверки тестовых данных: $e');
+      debugdebugPrint('Ошибка проверки тестовых данных: $e');
       return false;
     }
   }

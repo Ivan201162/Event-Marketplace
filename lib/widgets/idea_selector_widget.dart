@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/event_idea.dart';
 import '../models/event_idea_category.dart';
 import '../services/event_ideas_service.dart';
-import '../widgets/idea_card.dart';
 
 /// Виджет для выбора идей при создании заявки
 class IdeaSelectorWidget extends ConsumerStatefulWidget {
@@ -69,7 +68,7 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
               (tag) => tag.toLowerCase().contains(_searchQuery.toLowerCase()),
             );
 
-        final matchesCategory = _selectedCategory == null || idea.category == _selectedCategory;
+        final matchesCategory = _selectedCategory == null || idea.category == _selectedCategory!.id;
 
         return matchesSearch && matchesCategory;
       }).toList();
@@ -167,7 +166,7 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: EventIdeaCategory.values.length + 1,
-              itemBuilder: (context, index) {
+              itemBuilder: (BuildContext context, int index) {
                 if (index == 0) {
                   return Padding(
                     padding: const EdgeInsets.only(right: 8),
@@ -184,14 +183,14 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
                   );
                 }
 
-                final category = EventIdeaCategory.values[index - 1];
+                final EventIdeaCategory category = EventIdeaCategory.values[index - 1];
                 return Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: FilterChip(
                     label: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(category.emoji),
+                        Text(category.icon),
                         const SizedBox(width: 4),
                         Text(category.displayName),
                       ],
@@ -226,8 +225,8 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: _selectedIdeas.length,
-              itemBuilder: (context, index) {
-                final idea = _selectedIdeas[index];
+              itemBuilder: (BuildContext context, int index) {
+                final EventIdea idea = _selectedIdeas[index];
                 return Container(
                   width: 100,
                   margin: const EdgeInsets.only(right: 8),
@@ -239,7 +238,7 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
                           children: [
                             Expanded(
                               child: Image.network(
-                                idea.imageUrl,
+                                idea.imageUrl ?? '',
                                 fit: BoxFit.cover,
                                 width: double.infinity,
                                 errorBuilder: (context, error, stackTrace) => Container(
@@ -300,19 +299,14 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
           mainAxisSpacing: 12,
         ),
         itemCount: _filteredIdeas.length,
-        itemBuilder: (context, index) {
-          final idea = _filteredIdeas[index];
-          final isSelected = _selectedIdeas.contains(idea);
-          final canSelect = _selectedIdeas.length < widget.maxSelections || isSelected;
+        itemBuilder: (BuildContext context, int index) {
+          final EventIdea idea = _filteredIdeas[index];
+          final bool isSelected = _selectedIdeas.contains(idea);
+          final bool canSelect = _selectedIdeas.length < widget.maxSelections || isSelected;
 
           return Stack(
             children: [
-              IdeaCard(
-                idea: idea,
-                onTap: () => _toggleIdeaSelection(idea),
-                onLike: () {}, // Заглушка
-                onFavorite: () {}, // Заглушка
-              ),
+              _buildEventIdeaCard(idea, () => _toggleIdeaSelection(idea)),
               if (isSelected)
                 Positioned(
                   top: 8,
@@ -385,6 +379,65 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
         content: Text(message),
         backgroundColor: Theme.of(context).colorScheme.error,
         behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  Widget _buildEventIdeaCard(EventIdea idea, VoidCallback onTap) {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Изображение
+            if (idea.imageUrl.isNotEmpty)
+              AspectRatio(
+                aspectRatio: 16 / 9,
+                child: CachedNetworkImage(
+                  imageUrl: idea.imageUrl,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(
+                    color: Colors.grey[200],
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: Colors.grey[200],
+                    child: const Icon(Icons.error),
+                  ),
+                ),
+              ),
+            // Контент
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    idea.title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    idea.description,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

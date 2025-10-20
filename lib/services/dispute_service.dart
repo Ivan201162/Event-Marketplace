@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/payment_models.dart';
@@ -54,10 +53,10 @@ class DisputeService {
         PaymentStatus.disputed,
       );
 
-      debugPrint('Dispute created: $disputeId');
+      debugdebugPrint('Dispute created: $disputeId');
       return dispute;
     } catch (e) {
-      debugPrint('Error creating dispute: $e');
+      debugdebugPrint('Error creating dispute: $e');
       throw Exception('Ошибка создания спора: $e');
     }
   }
@@ -100,9 +99,9 @@ class DisputeService {
         }
       }
 
-      debugPrint('Dispute status updated: $disputeId to $status');
+      debugdebugPrint('Dispute status updated: $disputeId to $status');
     } catch (e) {
-      debugPrint('Error updating dispute status: $e');
+      debugdebugPrint('Error updating dispute status: $e');
       throw Exception('Ошибка обновления статуса спора: $e');
     }
   }
@@ -137,9 +136,9 @@ class DisputeService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
 
-      debugPrint('Dispute comment added: $commentId');
+      debugdebugPrint('Dispute comment added: $commentId');
     } catch (e) {
-      debugPrint('Error adding dispute comment: $e');
+      debugdebugPrint('Error adding dispute comment: $e');
       throw Exception('Ошибка добавления комментария к спору: $e');
     }
   }
@@ -151,7 +150,7 @@ class DisputeService {
       if (!doc.exists) return null;
       return Dispute.fromMap(doc.data()!);
     } catch (e) {
-      debugPrint('Error getting dispute: $e');
+      debugdebugPrint('Error getting dispute: $e');
       return null;
     }
   }
@@ -167,7 +166,7 @@ class DisputeService {
 
       return snapshot.docs.map((doc) => Dispute.fromMap(doc.data())).toList();
     } catch (e) {
-      debugPrint('Error getting payment disputes: $e');
+      debugdebugPrint('Error getting payment disputes: $e');
       return [];
     }
   }
@@ -183,7 +182,7 @@ class DisputeService {
 
       return snapshot.docs.map((doc) => Dispute.fromMap(doc.data())).toList();
     } catch (e) {
-      debugPrint('Error getting user disputes: $e');
+      debugdebugPrint('Error getting user disputes: $e');
       return [];
     }
   }
@@ -199,7 +198,7 @@ class DisputeService {
 
       return snapshot.docs.map((doc) => Dispute.fromMap(doc.data())).toList();
     } catch (e) {
-      debugPrint('Error getting open disputes: $e');
+      debugdebugPrint('Error getting open disputes: $e');
       return [];
     }
   }
@@ -216,7 +215,7 @@ class DisputeService {
 
       return snapshot.docs.map((doc) => DisputeComment.fromMap(doc.data())).toList();
     } catch (e) {
-      debugPrint('Error getting dispute comments: $e');
+      debugdebugPrint('Error getting dispute comments: $e');
       return [];
     }
   }
@@ -231,9 +230,9 @@ class DisputeService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
 
-      debugPrint('Dispute escalated: $disputeId');
+      debugdebugPrint('Dispute escalated: $disputeId');
     } catch (e) {
-      debugPrint('Error escalating dispute: $e');
+      debugdebugPrint('Error escalating dispute: $e');
       throw Exception('Ошибка эскалации спора: $e');
     }
   }
@@ -310,7 +309,7 @@ class DisputeService {
         averageResolutionTime: _calculateAverageResolutionTime(disputes),
       );
     } catch (e) {
-      debugPrint('Error getting dispute statistics: $e');
+      debugdebugPrint('Error getting dispute statistics: $e');
       return DisputeStatistics(
         totalDisputes: 0,
         openDisputes: 0,

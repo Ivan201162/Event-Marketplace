@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import '../models/enhanced_order.dart';
 
 /// Сервис для работы с улучшенными заявками
@@ -29,7 +28,7 @@ class EnhancedOrdersService {
           )
           .toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения заявок пользователя: $e');
+      debugdebugPrint('Ошибка получения заявок пользователя: $e');
       return [];
     }
   }
@@ -57,7 +56,7 @@ class EnhancedOrdersService {
           )
           .toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения заявок специалиста: $e');
+      debugdebugPrint('Ошибка получения заявок специалиста: $e');
       return [];
     }
   }
@@ -82,7 +81,7 @@ class EnhancedOrdersService {
 
       return docRef.id;
     } on Exception catch (e) {
-      debugPrint('Ошибка создания заявки: $e');
+      debugdebugPrint('Ошибка создания заявки: $e');
       rethrow;
     }
   }
@@ -95,7 +94,7 @@ class EnhancedOrdersService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка обновления заявки: $e');
+      debugdebugPrint('Ошибка обновления заявки: $e');
       rethrow;
     }
   }
@@ -121,7 +120,7 @@ class EnhancedOrdersService {
         ),
       );
     } on Exception catch (e) {
-      debugPrint('Ошибка принятия заявки: $e');
+      debugdebugPrint('Ошибка принятия заявки: $e');
       rethrow;
     }
   }
@@ -147,7 +146,7 @@ class EnhancedOrdersService {
         ),
       );
     } on Exception catch (e) {
-      debugPrint('Ошибка начала работы над заявкой: $e');
+      debugdebugPrint('Ошибка начала работы над заявкой: $e');
       rethrow;
     }
   }
@@ -174,7 +173,7 @@ class EnhancedOrdersService {
         ),
       );
     } on Exception catch (e) {
-      debugPrint('Ошибка завершения заявки: $e');
+      debugdebugPrint('Ошибка завершения заявки: $e');
       rethrow;
     }
   }
@@ -202,7 +201,7 @@ class EnhancedOrdersService {
         ),
       );
     } on Exception catch (e) {
-      debugPrint('Ошибка отмены заявки: $e');
+      debugdebugPrint('Ошибка отмены заявки: $e');
       rethrow;
     }
   }
@@ -229,7 +228,7 @@ class EnhancedOrdersService {
         ),
       );
     } on Exception catch (e) {
-      debugPrint('Ошибка добавления комментария: $e');
+      debugdebugPrint('Ошибка добавления комментария: $e');
       rethrow;
     }
   }
@@ -242,7 +241,7 @@ class EnhancedOrdersService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка добавления вложения: $e');
+      debugdebugPrint('Ошибка добавления вложения: $e');
       rethrow;
     }
   }
@@ -257,7 +256,7 @@ class EnhancedOrdersService {
         'timeline': FieldValue.arrayUnion([event.toMap()]),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка добавления события в таймлайн: $e');
+      debugdebugPrint('Ошибка добавления события в таймлайн: $e');
     }
   }
 
@@ -275,7 +274,7 @@ class EnhancedOrdersService {
           )
           .toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения шаблонов заявок: $e');
+      debugdebugPrint('Ошибка получения шаблонов заявок: $e');
       return [];
     }
   }
@@ -320,7 +319,7 @@ class EnhancedOrdersService {
 
       return await createOrder(order);
     } on Exception catch (e) {
-      debugPrint('Ошибка создания заявки из шаблона: $e');
+      debugdebugPrint('Ошибка создания заявки из шаблона: $e');
       rethrow;
     }
   }
@@ -336,7 +335,7 @@ class EnhancedOrdersService {
         'status': 'pending',
       };
     } on Exception catch (e) {
-      debugPrint('Ошибка подготовки оплаты: $e');
+      debugdebugPrint('Ошибка подготовки оплаты: $e');
       rethrow;
     }
   }

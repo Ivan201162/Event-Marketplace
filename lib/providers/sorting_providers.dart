@@ -6,8 +6,7 @@ import '../models/specialist_sorting.dart';
 import '../services/mock_data_service.dart';
 
 /// Провайдер для состояния сортировки специалистов (мигрирован с StateNotifierProvider)
-final specialistSortingProvider =
-    NotifierProvider<SpecialistSortingNotifier, SpecialistSorting>(
+final specialistSortingProvider = NotifierProvider<SpecialistSortingNotifier, SpecialistSorting>(
   () => SpecialistSortingNotifier(),
 );
 

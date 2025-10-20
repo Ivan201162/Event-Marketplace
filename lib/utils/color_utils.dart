@@ -41,6 +41,11 @@ class ColorUtils {
     }
   }
 
+  /// Получить цвет для категории (принимает Color)
+  static Color getCategoryColorFromColor(Color color) {
+    return color;
+  }
+
   /// Получить иконку категории
   static IconData getCategoryIcon(String category) {
     switch (category.toLowerCase()) {

@@ -52,7 +52,7 @@ class OrganizerChatService {
 
       return chatId;
     } on Exception catch (e) {
-      print('Ошибка создания чата с организатором: $e');
+      debugPrint('Ошибка создания чата с организатором: $e');
       rethrow;
     }
   }
@@ -68,7 +68,7 @@ class OrganizerChatService {
 
       return querySnapshot.docs.map(OrganizerChat.fromDocument).toList();
     } on Exception catch (e) {
-      print('Ошибка получения чатов заказчика: $e');
+      debugPrint('Ошибка получения чатов заказчика: $e');
       return [];
     }
   }
@@ -84,7 +84,7 @@ class OrganizerChatService {
 
       return querySnapshot.docs.map(OrganizerChat.fromDocument).toList();
     } on Exception catch (e) {
-      print('Ошибка получения чатов организатора: $e');
+      debugPrint('Ошибка получения чатов организатора: $e');
       return [];
     }
   }
@@ -118,7 +118,7 @@ class OrganizerChatService {
       }
       return null;
     } on Exception catch (e) {
-      print('Ошибка получения чата: $e');
+      debugPrint('Ошибка получения чата: $e');
       return null;
     }
   }
@@ -167,7 +167,7 @@ class OrganizerChatService {
         'unreadCount': senderType == 'customer' ? FieldValue.increment(1) : 0,
       });
     } on Exception catch (e) {
-      print('Ошибка отправки сообщения: $e');
+      debugPrint('Ошибка отправки сообщения: $e');
       rethrow;
     }
   }
@@ -204,7 +204,7 @@ class OrganizerChatService {
         metadata: proposal.toMap(),
       );
     } on Exception catch (e) {
-      print('Ошибка предложения специалиста: $e');
+      debugPrint('Ошибка предложения специалиста: $e');
       rethrow;
     }
   }
@@ -228,7 +228,7 @@ class OrganizerChatService {
         metadata: {'specialistId': specialistId},
       );
     } on Exception catch (e) {
-      print('Ошибка отклонения специалиста: $e');
+      debugPrint('Ошибка отклонения специалиста: $e');
       rethrow;
     }
   }
@@ -252,7 +252,7 @@ class OrganizerChatService {
         metadata: {'specialistId': specialistId, 'action': 'accept'},
       );
     } on Exception catch (e) {
-      print('Ошибка принятия специалиста: $e');
+      debugPrint('Ошибка принятия специалиста: $e');
       rethrow;
     }
   }
@@ -287,7 +287,7 @@ class OrganizerChatService {
         'unreadCount': 0,
       });
     } on Exception catch (e) {
-      print('Ошибка отметки сообщений как прочитанных: $e');
+      debugPrint('Ошибка отметки сообщений как прочитанных: $e');
     }
   }
 
@@ -302,7 +302,7 @@ class OrganizerChatService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } on Exception catch (e) {
-      print('Ошибка обновления статуса чата: $e');
+      debugPrint('Ошибка обновления статуса чата: $e');
       rethrow;
     }
   }
@@ -318,7 +318,7 @@ class OrganizerChatService {
 
       return querySnapshot.docs.map((doc) => OrganizerMessage.fromMap(doc.data())).toList();
     } on Exception catch (e) {
-      print('Ошибка получения сообщений чата: $e');
+      debugPrint('Ошибка получения сообщений чата: $e');
       return [];
     }
   }
@@ -350,7 +350,7 @@ class OrganizerChatService {
 
       await batch.commit();
     } on Exception catch (e) {
-      print('Ошибка удаления чата: $e');
+      debugPrint('Ошибка удаления чата: $e');
       rethrow;
     }
   }
@@ -367,7 +367,7 @@ class OrganizerChatService {
 
       return querySnapshot.docs.length;
     } on Exception catch (e) {
-      print('Ошибка получения количества непрочитанных чатов: $e');
+      debugPrint('Ошибка получения количества непрочитанных чатов: $e');
       return 0;
     }
   }

@@ -4,9 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import '../providers/auth_providers.dart';
 import '../providers/local_data_providers.dart';
-import '../widgets/weekly_popular_specialists_widget.dart';
-import '../widgets/search_filters_widget.dart';
 import '../widgets/category_grid_widget.dart';
+import '../widgets/search_filters_widget.dart';
+import '../widgets/weekly_popular_specialists_widget.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -79,7 +79,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           gradient: LinearGradient(
             colors: [
               Theme.of(context).primaryColor,
-              Theme.of(context).primaryColor.withOpacity(0.8),
+              Theme.of(context).primaryColor.withValues(alpha: 0.8),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -87,7 +87,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Theme.of(context).primaryColor.withOpacity(0.3),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),
@@ -231,7 +231,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       _currentFilters = filters;
     });
     // Здесь можно применить логику поиска с новыми фильтрами
-    debugPrint('Применены фильтры: $_currentFilters');
+    debugdebugPrint('Применены фильтры: $_currentFilters');
   }
 
   Widget _buildCategoriesSection() {
@@ -318,9 +318,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: color.withOpacity(0.3)),
+            border: Border.all(color: color.withValues(alpha: 0.3)),
           ),
           child: Column(
             children: [

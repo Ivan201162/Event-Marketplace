@@ -22,38 +22,38 @@ class DevSeedService {
       // Проверяем, не были ли уже созданы тестовые данные
       final existingData = await _checkExistingTestData();
       if (existingData) {
-        print('Тестовые данные уже существуют. Пропускаем сидинг.');
+        debugPrint('Тестовые данные уже существуют. Пропускаем сидинг.');
         return;
       }
 
-      print('Начинаем создание тестовых данных...');
+      debugPrint('Начинаем создание тестовых данных...');
 
       // Создаем специалистов
       final specialistIds = await _createTestSpecialists();
-      print('Создано ${specialistIds.length} специалистов');
+      debugPrint('Создано ${specialistIds.length} специалистов');
 
       // Создаем посты
       await _createTestPosts(specialistIds);
-      print('Созданы тестовые посты');
+      debugPrint('Созданы тестовые посты');
 
       // Создаем сторис
       await _createTestStories(specialistIds);
-      print('Созданы тестовые сторис');
+      debugPrint('Созданы тестовые сторис');
 
       // Создаем отзывы
       await _createTestReviews(specialistIds);
-      print('Созданы тестовые отзывы');
+      debugPrint('Созданы тестовые отзывы');
 
       // Создаем бронирования
       await _createTestBookings(specialistIds);
-      print('Созданы тестовые бронирования');
+      debugPrint('Созданы тестовые бронирования');
 
       // Добавляем метку о создании тестовых данных
       await _markDataAsSeeded();
 
-      print('✅ Тестовые данные успешно созданы!');
+      debugPrint('✅ Тестовые данные успешно созданы!');
     } catch (e) {
-      print('❌ Ошибка создания тестовых данных: $e');
+      debugPrint('❌ Ошибка создания тестовых данных: $e');
       rethrow;
     }
   }
@@ -125,13 +125,13 @@ class DevSeedService {
       reviewCount: 127,
       createdAt: now.subtract(const Duration(days: 365)),
       updatedAt: now,
-      contacts: {
+      contacts: const {
         'Телефон': '+7 (999) 123-45-67',
         'Email': 'anna.photographer@example.com',
         'Instagram': '@anna_photographer',
         'VK': 'vk.com/anna_photographer',
       },
-      servicesWithPrices: {
+      servicesWithPrices: const {
         'Свадебная фотосессия': 50000.0,
         'Портретная фотосессия': 15000.0,
         'Семейная фотосессия': 20000.0,
@@ -165,13 +165,13 @@ class DevSeedService {
       reviewCount: 89,
       createdAt: now.subtract(const Duration(days: 200)),
       updatedAt: now,
-      contacts: {
+      contacts: const {
         'Телефон': '+7 (812) 555-12-34',
         'Email': 'max.videographer@example.com',
         'Instagram': '@max_videographer',
         'Telegram': '@max_video',
       },
-      servicesWithPrices: {
+      servicesWithPrices: const {
         'Свадебное видео': 80000.0,
         'Корпоративное видео': 60000.0,
         'Промо-ролик': 40000.0,
@@ -204,13 +204,13 @@ class DevSeedService {
       reviewCount: 156,
       createdAt: now.subtract(const Duration(days: 500)),
       updatedAt: now,
-      contacts: {
+      contacts: const {
         'Телефон': '+7 (495) 123-45-67',
         'Email': 'dj.alexey@example.com',
         'Instagram': '@dj_alexey',
         'VK': 'vk.com/dj_alexey',
       },
-      servicesWithPrices: {
+      servicesWithPrices: const {
         'Свадебный DJ': 40000.0,
         'Корпоративный DJ': 35000.0,
         'День рождения': 25000.0,
@@ -244,13 +244,13 @@ class DevSeedService {
       reviewCount: 203,
       createdAt: now.subtract(const Duration(days: 800)),
       updatedAt: now,
-      contacts: {
+      contacts: const {
         'Телефон': '+7 (495) 987-65-43',
         'Email': 'host.dmitry@example.com',
         'Instagram': '@host_dmitry',
         'VK': 'vk.com/host_dmitry',
       },
-      servicesWithPrices: {
+      servicesWithPrices: const {
         'Свадебный ведущий': 60000.0,
         'Корпоративный ведущий': 50000.0,
         'Детский праздник': 30000.0,
@@ -284,12 +284,12 @@ class DevSeedService {
       reviewCount: 94,
       createdAt: now.subtract(const Duration(days: 300)),
       updatedAt: now,
-      contacts: {
+      contacts: const {
         'Телефон': '+7 (495) 111-22-33',
         'Email': 'elena.decorator@example.com',
         'Instagram': '@elena_decorator',
       },
-      servicesWithPrices: {
+      servicesWithPrices: const {
         'Свадебное оформление': 80000.0,
         'Корпоративное оформление': 60000.0,
         'Детский праздник': 30000.0,
@@ -322,12 +322,12 @@ class DevSeedService {
       reviewCount: 167,
       createdAt: now.subtract(const Duration(days: 600)),
       updatedAt: now,
-      contacts: {
+      contacts: const {
         'Телефон': '+7 (495) 444-55-66',
         'Email': 'melody.ensemble@example.com',
         'Instagram': '@melody_ensemble',
       },
-      servicesWithPrices: {
+      servicesWithPrices: const {
         'Свадебная музыка': 100000.0,
         'Корпоративная музыка': 80000.0,
         'День рождения': 60000.0,
@@ -359,12 +359,12 @@ class DevSeedService {
       reviewCount: 234,
       createdAt: now.subtract(const Duration(days: 1000)),
       updatedAt: now,
-      contacts: {
+      contacts: const {
         'Телефон': '+7 (495) 777-88-99',
         'Email': 'catering.vkus@example.com',
         'Instagram': '@catering_vkus',
       },
-      servicesWithPrices: {
+      servicesWithPrices: const {
         'Свадебный банкет': 150000.0,
         'Корпоративный обед': 80000.0,
         'Фуршет': 60000.0,
@@ -397,12 +397,12 @@ class DevSeedService {
       reviewCount: 78,
       createdAt: now.subtract(const Duration(days: 150)),
       updatedAt: now,
-      contacts: {
+      contacts: const {
         'Телефон': '+7 (495) 333-44-55',
         'Email': 'animator.maria@example.com',
         'Instagram': '@animator_maria',
       },
-      servicesWithPrices: {
+      servicesWithPrices: const {
         'Детский день рождения': 25000.0,
         'Новогодний праздник': 30000.0,
         'Выпускной': 35000.0,
@@ -434,12 +434,12 @@ class DevSeedService {
       reviewCount: 112,
       createdAt: now.subtract(const Duration(days: 400)),
       updatedAt: now,
-      contacts: {
+      contacts: const {
         'Телефон': '+7 (495) 222-33-44',
         'Email': 'florist.olga@example.com',
         'Instagram': '@florist_olga',
       },
-      servicesWithPrices: {
+      servicesWithPrices: const {
         'Свадебный букет': 15000.0,
         'Цветочное оформление': 50000.0,
         'Букет на день рождения': 5000.0,
@@ -472,12 +472,12 @@ class DevSeedService {
       reviewCount: 145,
       createdAt: now.subtract(const Duration(days: 350)),
       updatedAt: now,
-      contacts: {
+      contacts: const {
         'Телефон': '+7 (495) 666-77-88',
         'Email': 'makeup.kate@example.com',
         'Instagram': '@makeup_kate',
       },
-      servicesWithPrices: {
+      servicesWithPrices: const {
         'Свадебный макияж': 15000.0,
         'Макияж для фотосессии': 8000.0,
         'Вечерний макияж': 6000.0,
@@ -702,7 +702,7 @@ class DevSeedService {
     }
 
     try {
-      print('Начинаем очистку тестовых данных...');
+      debugPrint('Начинаем очистку тестовых данных...');
 
       // Удаляем тестовых специалистов
       final specialistsQuery = await _firestore
@@ -757,9 +757,9 @@ class DevSeedService {
       await _firestore.collection('system').doc('seeded_data').delete();
 
       await batch.commit();
-      print('✅ Тестовые данные успешно очищены!');
+      debugPrint('✅ Тестовые данные успешно очищены!');
     } catch (e) {
-      print('❌ Ошибка очистки тестовых данных: $e');
+      debugPrint('❌ Ошибка очистки тестовых данных: $e');
       rethrow;
     }
   }

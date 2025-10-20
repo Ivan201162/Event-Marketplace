@@ -504,7 +504,7 @@ class PaymentExtendedService {
       // Временная заглушка
       return 'https://example.com/receipts/${DateTime.now().millisecondsSinceEpoch}.pdf';
     } on Exception catch (e) {
-      debugPrint('Ошибка загрузки квитанции: $e');
+      debugdebugPrint('Ошибка загрузки квитанции: $e');
       rethrow;
     }
   }
@@ -522,7 +522,7 @@ class PaymentExtendedService {
       // Временная заглушка
       return 'https://example.com/invoices/${DateTime.now().millisecondsSinceEpoch}.pdf';
     } on Exception catch (e) {
-      debugPrint('Ошибка загрузки счёта: $e');
+      debugdebugPrint('Ошибка загрузки счёта: $e');
       rethrow;
     }
   }

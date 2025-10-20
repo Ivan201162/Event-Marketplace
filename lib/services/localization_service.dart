@@ -63,7 +63,7 @@ class LocalizationService {
         );
       }
     } catch (e) {
-      print('Ошибка загрузки настроек локализации: $e');
+      debugPrint('Ошибка загрузки настроек локализации: $e');
       _settings = LocalizationSettings(
         currentLanguage: 'ru',
         lastUpdated: DateTime.now(),
@@ -78,7 +78,7 @@ class LocalizationService {
       final settingsJson = jsonEncode(_settings!.toMap());
       await prefs.setString(_settingsKey, settingsJson);
     } catch (e) {
-      print('Ошибка сохранения настроек локализации: $e');
+      debugPrint('Ошибка сохранения настроек локализации: $e');
     }
   }
 
@@ -98,7 +98,7 @@ class LocalizationService {
         }
       }
     } catch (e) {
-      print('Ошибка загрузки локализаций: $e');
+      debugPrint('Ошибка загрузки локализаций: $e');
     }
   }
 
@@ -122,7 +122,7 @@ class LocalizationService {
         translations: translations,
       );
     } catch (e) {
-      print('Ошибка загрузки локализации $languageCode: $e');
+      debugPrint('Ошибка загрузки локализации $languageCode: $e');
       return _getDefaultLocalization(languageCode);
     }
   }
@@ -134,7 +134,7 @@ class LocalizationService {
       // Пока используем встроенные переводы
       return _getBuiltInTranslations(languageCode);
     } catch (e) {
-      print('Ошибка загрузки переводов для $languageCode: $e');
+      debugPrint('Ошибка загрузки переводов для $languageCode: $e');
       return {};
     }
   }
@@ -447,7 +447,7 @@ class LocalizationService {
       );
       await _saveSettings();
     } catch (e) {
-      print('Ошибка установки языка: $e');
+      debugPrint('Ошибка установки языка: $e');
     }
   }
 
@@ -479,7 +479,7 @@ class LocalizationService {
       await _saveSettings();
       await setLanguage(newSettings.currentLanguage);
     } catch (e) {
-      print('Ошибка обновления настроек локализации: $e');
+      debugPrint('Ошибка обновления настроек локализации: $e');
     }
   }
 
@@ -513,7 +513,7 @@ class LocalizationService {
         lastUpdated: DateTime.now(),
       );
     } catch (e) {
-      print('Ошибка получения статистики локализации: $e');
+      debugPrint('Ошибка получения статистики локализации: $e');
       return LocalizationStats(
         language: languageCode,
         totalKeys: 0,
@@ -543,7 +543,7 @@ class LocalizationService {
       _localizations.clear();
       await _loadLocalizations();
     } catch (e) {
-      print('Ошибка очистки кэша локализации: $e');
+      debugPrint('Ошибка очистки кэша локализации: $e');
     }
   }
 
@@ -561,7 +561,7 @@ class LocalizationService {
         'exported_at': DateTime.now().toIso8601String(),
       };
     } catch (e) {
-      print('Ошибка экспорта переводов: $e');
+      debugPrint('Ошибка экспорта переводов: $e');
       return {};
     }
   }
@@ -592,7 +592,7 @@ class LocalizationService {
         _currentLocalization = localization;
       }
     } catch (e) {
-      print('Ошибка импорта переводов: $e');
+      debugPrint('Ошибка импорта переводов: $e');
     }
   }
 }

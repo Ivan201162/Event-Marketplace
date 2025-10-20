@@ -3,202 +3,350 @@ import 'package:flutter/material.dart';
 
 import '../models/idea.dart';
 
-/// Карточка идеи
-class IdeaCard extends StatefulWidget {
+/// Widget for displaying an idea card
+class IdeaCard extends StatelessWidget {
+  final Idea idea;
+  final VoidCallback? onTap;
+  final VoidCallback? onLike;
+  final VoidCallback? onShare;
+  final bool showActions;
+
   const IdeaCard({
     super.key,
     required this.idea,
-    required this.onTap,
-    required this.onLike,
-    required this.onSave,
-    required this.onShare,
+    this.onTap,
+    this.onLike,
+    this.onShare,
+    this.showActions = true,
   });
 
-  final Idea idea;
-  final VoidCallback onTap;
-  final VoidCallback onLike;
-  final VoidCallback onSave;
-  final VoidCallback onShare;
-
   @override
-  State<IdeaCard> createState() => _IdeaCardState();
-}
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header with category and difficulty
+              _buildHeader(),
+              const SizedBox(height: 12),
 
-class _IdeaCardState extends State<IdeaCard> with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
-  bool _isLiked = false;
-  bool _isSaved = false;
+              // Title
+              Text(
+                idea.title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 8),
 
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 200),
-      vsync: this,
-    );
-    _scaleAnimation = Tween<double>(
-      begin: 1,
-      end: 1.05,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInOut,
+              // Description
+              Text(
+                idea.shortDesc,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                ),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 12),
+
+              // Media content
+              if (idea.hasMedia) ...[
+                _buildMediaContent(context),
+                const SizedBox(height: 12),
+              ],
+
+              // Tags
+              if (idea.tags.isNotEmpty) ...[
+                _buildTags(),
+                const SizedBox(height: 12),
+              ],
+
+              // Meta info
+              _buildMetaInfo(),
+              const SizedBox(height: 12),
+
+              // Actions
+              if (showActions) ...[
+                _buildActions(context),
+                const SizedBox(height: 8),
+              ],
+
+              // Stats
+              _buildStats(),
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => AnimatedBuilder(
-        animation: _scaleAnimation,
-        builder: (context, child) => Transform.scale(
-          scale: _scaleAnimation.value,
-          child: GestureDetector(
-            onTap: widget.onTap,
-            onTapDown: (_) => _animationController.forward(),
-            onTapUp: (_) => _animationController.reverse(),
-            onTapCancel: () => _animationController.reverse(),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Изображение идеи
-                  _buildIdeaImage(),
-
-                  // Контент карточки
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Заголовок
-                          Text(
-                            widget.idea.title,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 4),
-
-                          // Описание
-                          Expanded(
-                            child: Text(
-                              widget.idea.description,
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 12,
-                              ),
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-
-                          const SizedBox(height: 8),
-
-                          // Действия
-                          _buildActions(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+  Widget _buildHeader() {
+    return Row(
+      children: [
+        // Category icon
+        if (idea.category != null) ...[
+          Text(
+            idea.categoryIcon,
+            style: const TextStyle(fontSize: 20),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              idea.category!,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[600],
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
-        ),
-      );
-
-  Widget _buildIdeaImage() => Container(
-        height: 120,
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-        ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-          child: widget.idea.imageUrl != null
-              ? CachedNetworkImage(
-                  imageUrl: widget.idea.imageUrl!,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Container(
-                    color: Colors.grey[300],
-                    child: const Center(child: CircularProgressIndicator()),
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    color: Colors.grey[300],
-                    child: const Icon(Icons.lightbulb_outline),
-                  ),
-                )
-              : Container(
-                  color: Colors.grey[300],
-                  child: const Icon(Icons.lightbulb_outline, size: 40),
-                ),
-        ),
-      );
-
-  Widget _buildActions() => Row(
-        children: [
-          _buildActionButton(
-            icon: _isLiked ? Icons.favorite : Icons.favorite_border,
-            color: _isLiked ? Colors.red : Colors.grey,
-            onTap: _toggleLike,
-          ),
-          const SizedBox(width: 8),
-          _buildActionButton(
-            icon: _isSaved ? Icons.bookmark : Icons.bookmark_border,
-            color: _isSaved ? Colors.blue : Colors.grey,
-            onTap: _toggleSave,
-          ),
-          const Spacer(),
-          _buildActionButton(
-            icon: Icons.share,
-            onTap: widget.onShare,
-          ),
         ],
-      );
+        const Spacer(),
+        // Difficulty badge
+        if (idea.difficulty != null)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: _getDifficultyColor(idea.difficulty!).withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: _getDifficultyColor(idea.difficulty!).withOpacity(0.3),
+              ),
+            ),
+            child: Text(
+              idea.difficultyText,
+              style: TextStyle(
+                color: _getDifficultyColor(idea.difficulty!),
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildMediaContent(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: CachedNetworkImage(
+        imageUrl: idea.mediaUrl!,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: 150,
+        placeholder: (context, url) => Container(
+          height: 150,
+          color: Colors.grey[200],
+          child: const Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+        errorWidget: (context, url, error) => Container(
+          height: 150,
+          color: Colors.grey[200],
+          child: const Center(
+            child: Icon(Icons.error, color: Colors.grey),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTags() {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 4,
+      children: idea.tags.map((tag) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.orange[50],
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.orange[200]!),
+          ),
+          child: Text(
+            '#$tag',
+            style: TextStyle(
+              color: Colors.orange[700],
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildMetaInfo() {
+    return Row(
+      children: [
+        // Duration
+        if (idea.estimatedDuration != null) ...[
+          Icon(
+            Icons.access_time,
+            size: 16,
+            color: Colors.grey[600],
+          ),
+          const SizedBox(width: 4),
+          Text(
+            idea.formattedDuration,
+            style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: 12,
+            ),
+          ),
+          const SizedBox(width: 16),
+        ],
+        // Author
+        if (idea.authorName != null) ...[
+          Icon(
+            Icons.person,
+            size: 16,
+            color: Colors.grey[600],
+          ),
+          const SizedBox(width: 4),
+          Text(
+            idea.authorName!,
+            style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: 12,
+            ),
+          ),
+          const SizedBox(width: 16),
+        ],
+        // Time ago
+        Icon(
+          Icons.schedule,
+          size: 16,
+          color: Colors.grey[600],
+        ),
+        const SizedBox(width: 4),
+        Text(
+          idea.timeAgo,
+          style: TextStyle(
+            color: Colors.grey[600],
+            fontSize: 12,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActions(BuildContext context) {
+    return Row(
+      children: [
+        _buildActionButton(
+          icon: idea.likesCount > 0 ? Icons.favorite : Icons.favorite_border,
+          color: idea.likesCount > 0 ? Colors.red : Colors.grey[600],
+          label: idea.likesCount > 0 ? '${idea.likesCount}' : 'Лайк',
+          onTap: onLike,
+        ),
+        const SizedBox(width: 24),
+        _buildActionButton(
+          icon: Icons.visibility,
+          color: Colors.grey[600],
+          label: idea.viewsCount > 0 ? '${idea.viewsCount}' : 'Просмотр',
+        ),
+        const SizedBox(width: 24),
+        _buildActionButton(
+          icon: Icons.share_outlined,
+          color: Colors.grey[600],
+          label: 'Поделиться',
+          onTap: onShare,
+        ),
+      ],
+    );
+  }
 
   Widget _buildActionButton({
     required IconData icon,
-    Color? color,
-    required VoidCallback onTap,
-  }) =>
-      GestureDetector(
-        onTap: onTap,
-        child: Icon(
-          icon,
-          color: color ?? Colors.grey[600],
-          size: 16,
+    required Color? color,
+    required String label,
+    VoidCallback? onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: color, size: 20),
+            const SizedBox(width: 4),
+            Text(
+              label,
+              style: TextStyle(
+                color: color,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
         ),
-      );
-
-  void _toggleLike() {
-    setState(() => _isLiked = !_isLiked);
-    widget.onLike();
+      ),
+    );
   }
 
-  void _toggleSave() {
-    setState(() => _isSaved = !_isSaved);
-    widget.onSave();
+  Widget _buildStats() {
+    return Row(
+      children: [
+        if (idea.likesCount > 0) ...[
+          Text(
+            '${idea.likesCount} ${_getLikesText(idea.likesCount)}',
+            style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: 12,
+            ),
+          ),
+          const SizedBox(width: 16),
+        ],
+        if (idea.viewsCount > 0) ...[
+          Text(
+            '${idea.viewsCount} ${_getViewsText(idea.viewsCount)}',
+            style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Color _getDifficultyColor(String difficulty) {
+    switch (difficulty) {
+      case 'easy':
+        return Colors.green;
+      case 'medium':
+        return Colors.orange;
+      case 'hard':
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  String _getLikesText(int count) {
+    if (count == 1) return 'лайк';
+    if (count >= 2 && count <= 4) return 'лайка';
+    return 'лайков';
+  }
+
+  String _getViewsText(int count) {
+    if (count == 1) return 'просмотр';
+    if (count >= 2 && count <= 4) return 'просмотра';
+    return 'просмотров';
   }
 }

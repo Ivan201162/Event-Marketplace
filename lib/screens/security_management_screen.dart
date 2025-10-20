@@ -955,7 +955,7 @@ class _SecurityManagementScreenState extends ConsumerState<SecurityManagementScr
       });
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки событий аудита: $e');
+        debugPrint('Ошибка загрузки событий аудита: $e');
       }
     }
   }
@@ -968,7 +968,7 @@ class _SecurityManagementScreenState extends ConsumerState<SecurityManagementScr
       });
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки политик: $e');
+        debugPrint('Ошибка загрузки политик: $e');
       }
     }
   }
@@ -981,7 +981,7 @@ class _SecurityManagementScreenState extends ConsumerState<SecurityManagementScr
       });
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки статистики: $e');
+        debugPrint('Ошибка загрузки статистики: $e');
       }
     }
   }

@@ -146,8 +146,8 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                theme.primaryColor.withOpacity(0.8),
-                theme.colorScheme.secondary.withOpacity(0.6),
+                theme.primaryColor.withValues(alpha: 0.8),
+                theme.colorScheme.secondary.withValues(alpha: 0.6),
               ],
             ),
           ),
@@ -158,7 +158,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
                 end: Alignment.bottomCenter,
                 colors: [
                   Colors.transparent,
-                  Colors.black.withOpacity(0.7),
+                  Colors.black.withValues(alpha: 0.7),
                 ],
               ),
             ),
@@ -212,7 +212,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
               Text(
                 city,
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.7),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
               ),
           ],
@@ -252,7 +252,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
           Text(
             label,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -345,7 +345,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
         child: TabBar(
           controller: _tabController,
           labelColor: theme.primaryColor,
-          unselectedLabelColor: theme.colorScheme.onSurface.withOpacity(0.6),
+          unselectedLabelColor: theme.colorScheme.onSurface.withValues(alpha: 0.6),
           indicatorColor: theme.primaryColor,
           tabs: const [
             Tab(text: 'Заявки'),
@@ -378,7 +378,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
           Icon(
             Icons.assignment,
             size: 64,
-            color: theme.colorScheme.onSurface.withOpacity(0.5),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
           Text(
@@ -389,7 +389,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
           Text(
             'Здесь будут отображаться заявки',
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -407,7 +407,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
           Icon(
             Icons.star,
             size: 64,
-            color: theme.colorScheme.onSurface.withOpacity(0.5),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
           Text(
@@ -418,7 +418,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
           Text(
             'Здесь будут отображаться отзывы',
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -436,7 +436,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
           Icon(
             Icons.photo_library,
             size: 64,
-            color: theme.colorScheme.onSurface.withOpacity(0.5),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
           Text(
@@ -447,7 +447,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
           Text(
             'Здесь будет отображаться портфолио',
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
         ],

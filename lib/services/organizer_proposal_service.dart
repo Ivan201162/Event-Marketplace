@@ -11,7 +11,7 @@ class OrganizerProposalService {
       final docRef = await _firestore.collection('organizer_proposals').add(proposal.toMap());
       return docRef.id;
     } catch (e) {
-      print('Ошибка создания предложения: $e');
+      debugPrint('Ошибка создания предложения: $e');
       throw Exception('Ошибка создания предложения: $e');
     }
   }
@@ -26,7 +26,7 @@ class OrganizerProposalService {
       }
       return null;
     } catch (e) {
-      print('Ошибка получения предложения: $e');
+      debugPrint('Ошибка получения предложения: $e');
       return null;
     }
   }
@@ -56,7 +56,7 @@ class OrganizerProposalService {
       final querySnapshot = await query.get();
       return querySnapshot.docs.map(OrganizerProposal.fromDocument).toList();
     } catch (e) {
-      print('Ошибка получения предложений организатора: $e');
+      debugPrint('Ошибка получения предложений организатора: $e');
       return [];
     }
   }
@@ -86,7 +86,7 @@ class OrganizerProposalService {
       final querySnapshot = await query.get();
       return querySnapshot.docs.map(OrganizerProposal.fromDocument).toList();
     } catch (e) {
-      print('Ошибка получения предложений заказчика: $e');
+      debugPrint('Ошибка получения предложений заказчика: $e');
       return [];
     }
   }
@@ -109,7 +109,7 @@ class OrganizerProposalService {
       final querySnapshot = await query.get();
       return querySnapshot.docs.map(OrganizerProposal.fromDocument).toList();
     } catch (e) {
-      print('Ошибка получения предложений по событию: $e');
+      debugPrint('Ошибка получения предложений по событию: $e');
       return [];
     }
   }
@@ -123,7 +123,7 @@ class OrganizerProposalService {
           .doc(proposal.id)
           .update(updatedProposal.toMap());
     } catch (e) {
-      print('Ошибка обновления предложения: $e');
+      debugPrint('Ошибка обновления предложения: $e');
       throw Exception('Ошибка обновления предложения: $e');
     }
   }
@@ -141,7 +141,7 @@ class OrganizerProposalService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
-      print('Ошибка принятия предложения: $e');
+      debugPrint('Ошибка принятия предложения: $e');
       throw Exception('Ошибка принятия предложения: $e');
     }
   }
@@ -159,7 +159,7 @@ class OrganizerProposalService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
-      print('Ошибка отклонения предложения: $e');
+      debugPrint('Ошибка отклонения предложения: $e');
       throw Exception('Ошибка отклонения предложения: $e');
     }
   }
@@ -172,7 +172,7 @@ class OrganizerProposalService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
-      print('Ошибка отмены предложения: $e');
+      debugPrint('Ошибка отмены предложения: $e');
       throw Exception('Ошибка отмены предложения: $e');
     }
   }
@@ -185,7 +185,7 @@ class OrganizerProposalService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
-      print('Ошибка завершения предложения: $e');
+      debugPrint('Ошибка завершения предложения: $e');
       throw Exception('Ошибка завершения предложения: $e');
     }
   }
@@ -195,7 +195,7 @@ class OrganizerProposalService {
     try {
       await _firestore.collection('organizer_proposals').doc(proposalId).delete();
     } catch (e) {
-      print('Ошибка удаления предложения: $e');
+      debugPrint('Ошибка удаления предложения: $e');
       throw Exception('Ошибка удаления предложения: $e');
     }
   }
@@ -220,7 +220,7 @@ class OrganizerProposalService {
 
       return stats;
     } catch (e) {
-      print('Ошибка получения статистики предложений: $e');
+      debugPrint('Ошибка получения статистики предложений: $e');
       return {};
     }
   }
@@ -245,7 +245,7 @@ class OrganizerProposalService {
 
       return stats;
     } catch (e) {
-      print('Ошибка получения статистики предложений: $e');
+      debugPrint('Ошибка получения статистики предложений: $e');
       return {};
     }
   }
@@ -281,7 +281,7 @@ class OrganizerProposalService {
           )
           .toList();
     } catch (e) {
-      print('Ошибка поиска предложений: $e');
+      debugPrint('Ошибка поиска предложений: $e');
       return [];
     }
   }
@@ -310,7 +310,7 @@ class OrganizerProposalService {
       final querySnapshot = await query.get();
       return querySnapshot.docs.map(OrganizerProposal.fromDocument).toList();
     } catch (e) {
-      print('Ошибка получения активных предложений: $e');
+      debugPrint('Ошибка получения активных предложений: $e');
       return [];
     }
   }
@@ -339,7 +339,7 @@ class OrganizerProposalService {
       final querySnapshot = await query.get();
       return querySnapshot.docs.map(OrganizerProposal.fromDocument).toList();
     } catch (e) {
-      print('Ошибка получения принятых предложений: $e');
+      debugPrint('Ошибка получения принятых предложений: $e');
       return [];
     }
   }

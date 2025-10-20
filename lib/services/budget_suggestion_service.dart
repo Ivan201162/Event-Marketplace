@@ -344,11 +344,11 @@ class BudgetSuggestionService {
             },
           );
         } catch (e) {
-          print('Ошибка отправки уведомления на токен $token: $e');
+          debugPrint('Ошибка отправки уведомления на токен $token: $e');
         }
       }
     } catch (e) {
-      print('Ошибка отправки уведомления о предложении по бюджету: $e');
+      debugPrint('Ошибка отправки уведомления о предложении по бюджету: $e');
     }
   }
 
@@ -389,11 +389,11 @@ class BudgetSuggestionService {
             },
           );
         } catch (e) {
-          print('Ошибка отправки уведомления на токен $token: $e');
+          debugPrint('Ошибка отправки уведомления на токен $token: $e');
         }
       }
     } catch (e) {
-      print(
+      debugPrint(
         'Ошибка отправки уведомления о принятии предложения по бюджету: $e',
       );
     }
@@ -436,11 +436,11 @@ class BudgetSuggestionService {
             },
           );
         } catch (e) {
-          print('Ошибка отправки уведомления на токен $token: $e');
+          debugPrint('Ошибка отправки уведомления на токен $token: $e');
         }
       }
     } catch (e) {
-      print(
+      debugPrint(
         'Ошибка отправки уведомления об отклонении предложения по бюджету: $e',
       );
     }
@@ -460,7 +460,7 @@ class BudgetSuggestionService {
         'timestamp': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
-      print('Ошибка логирования действия с предложением по бюджету: $e');
+      debugPrint('Ошибка логирования действия с предложением по бюджету: $e');
     }
   }
 

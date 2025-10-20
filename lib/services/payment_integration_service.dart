@@ -60,10 +60,10 @@ class PaymentIntegrationService {
       // Update booking with payment information
       await _updateBookingPayment(bookingId, payment.id, type);
 
-      debugPrint('Booking payment created: ${payment.id}');
+      debugdebugPrint('Booking payment created: ${payment.id}');
       return payment;
     } catch (e) {
-      debugPrint('Error creating booking payment: $e');
+      debugdebugPrint('Error creating booking payment: $e');
       throw Exception('Ошибка создания платежа для бронирования: $e');
     }
   }
@@ -82,9 +82,9 @@ class PaymentIntegrationService {
       // Update booking status based on payment type
       await _updateBookingStatus(payment.bookingId, payment.type);
 
-      debugPrint('Booking payment processed: $paymentId');
+      debugdebugPrint('Booking payment processed: $paymentId');
     } catch (e) {
-      debugPrint('Error processing booking payment: $e');
+      debugdebugPrint('Error processing booking payment: $e');
       throw Exception('Ошибка обработки платежа бронирования: $e');
     }
   }
@@ -106,9 +106,9 @@ class PaymentIntegrationService {
       // Send notifications
       await _sendPaymentNotifications(payment);
 
-      debugPrint('Booking payment completed: $paymentId');
+      debugdebugPrint('Booking payment completed: $paymentId');
     } catch (e) {
-      debugPrint('Error completing booking payment: $e');
+      debugdebugPrint('Error completing booking payment: $e');
       throw Exception('Ошибка завершения платежа бронирования: $e');
     }
   }
@@ -131,9 +131,9 @@ class PaymentIntegrationService {
         isCancelled: true,
       );
 
-      debugPrint('Booking payment cancelled: $paymentId');
+      debugdebugPrint('Booking payment cancelled: $paymentId');
     } catch (e) {
-      debugPrint('Error cancelling booking payment: $e');
+      debugdebugPrint('Error cancelling booking payment: $e');
       throw Exception('Ошибка отмены платежа бронирования: $e');
     }
   }
@@ -149,7 +149,7 @@ class PaymentIntegrationService {
 
       return snapshot.docs.map((doc) => Payment.fromMap(doc.data())).toList();
     } catch (e) {
-      debugPrint('Error getting booking payments: $e');
+      debugdebugPrint('Error getting booking payments: $e');
       return [];
     }
   }
@@ -206,7 +206,7 @@ class PaymentIntegrationService {
         isFullyPaid: remainingAmount <= 0,
       );
     } catch (e) {
-      debugPrint('Error getting booking payment summary: $e');
+      debugdebugPrint('Error getting booking payment summary: $e');
       throw Exception('Ошибка получения сводки платежей бронирования: $e');
     }
   }
@@ -236,10 +236,10 @@ class PaymentIntegrationService {
 
       await _firestore.collection('contracts').doc(contract.id).set(contract.toMap());
 
-      debugPrint('Booking contract created: ${contract.id}');
+      debugdebugPrint('Booking contract created: ${contract.id}');
       return contract;
     } catch (e) {
-      debugPrint('Error creating booking contract: $e');
+      debugdebugPrint('Error creating booking contract: $e');
       throw Exception('Ошибка создания договора бронирования: $e');
     }
   }
@@ -255,9 +255,9 @@ class PaymentIntegrationService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
 
-      debugPrint('Contract status updated: $contractId to $status');
+      debugdebugPrint('Contract status updated: $contractId to $status');
     } catch (e) {
-      debugPrint('Error updating contract status: $e');
+      debugdebugPrint('Error updating contract status: $e');
       throw Exception('Ошибка обновления статуса договора: $e');
     }
   }
@@ -269,7 +269,7 @@ class PaymentIntegrationService {
       if (!doc.exists) return null;
       return Contract.fromMap(doc.data()!);
     } catch (e) {
-      debugPrint('Error getting contract: $e');
+      debugdebugPrint('Error getting contract: $e');
       return null;
     }
   }
@@ -286,7 +286,7 @@ class PaymentIntegrationService {
       if (snapshot.docs.isEmpty) return null;
       return Contract.fromMap(snapshot.docs.first.data());
     } catch (e) {
-      debugPrint('Error getting booking contract: $e');
+      debugdebugPrint('Error getting booking contract: $e');
       return null;
     }
   }
@@ -298,7 +298,7 @@ class PaymentIntegrationService {
       if (!doc.exists) return null;
       return Booking.fromMap(doc.data()!);
     } catch (e) {
-      debugPrint('Error getting booking: $e');
+      debugdebugPrint('Error getting booking: $e');
       return null;
     }
   }
@@ -333,7 +333,7 @@ class PaymentIntegrationService {
 
       return TaxStatus.individual;
     } catch (e) {
-      debugPrint('Error getting specialist tax status: $e');
+      debugdebugPrint('Error getting specialist tax status: $e');
       return TaxStatus.individual;
     }
   }
@@ -362,7 +362,7 @@ class PaymentIntegrationService {
 
       await _firestore.collection('bookings').doc(bookingId).update(updateData);
     } catch (e) {
-      debugPrint('Error updating booking payment: $e');
+      debugdebugPrint('Error updating booking payment: $e');
     }
   }
 
@@ -394,7 +394,7 @@ class PaymentIntegrationService {
 
       await _firestore.collection('bookings').doc(bookingId).update(updateData);
     } catch (e) {
-      debugPrint('Error updating booking status: $e');
+      debugdebugPrint('Error updating booking status: $e');
     }
   }
 
@@ -422,7 +422,7 @@ class PaymentIntegrationService {
         'read': false,
       });
     } catch (e) {
-      debugPrint('Error sending payment notifications: $e');
+      debugdebugPrint('Error sending payment notifications: $e');
     }
   }
 }

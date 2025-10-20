@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import '../models/enhanced_chat.dart';
 import '../models/enhanced_message.dart';
 
@@ -25,7 +24,7 @@ class EnhancedChatsService {
           )
           .toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения чатов пользователя: $e');
+      debugdebugPrint('Ошибка получения чатов пользователя: $e');
       return [];
     }
   }
@@ -59,7 +58,7 @@ class EnhancedChatsService {
           )
           .toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения сообщений чата: $e');
+      debugdebugPrint('Ошибка получения сообщений чата: $e');
       return [];
     }
   }
@@ -88,7 +87,7 @@ class EnhancedChatsService {
 
       return docRef.id;
     } on Exception catch (e) {
-      debugPrint('Ошибка отправки сообщения: $e');
+      debugdebugPrint('Ошибка отправки сообщения: $e');
       rethrow;
     }
   }
@@ -200,7 +199,7 @@ class EnhancedChatsService {
 
       return await sendMessage(forwardedMessage);
     } on Exception catch (e) {
-      debugPrint('Ошибка пересылки сообщения: $e');
+      debugdebugPrint('Ошибка пересылки сообщения: $e');
       rethrow;
     }
   }
@@ -222,7 +221,7 @@ class EnhancedChatsService {
         'editedAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка редактирования сообщения: $e');
+      debugdebugPrint('Ошибка редактирования сообщения: $e');
       rethrow;
     }
   }
@@ -240,7 +239,7 @@ class EnhancedChatsService {
         'text': 'Сообщение удалено',
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка удаления сообщения: $e');
+      debugdebugPrint('Ошибка удаления сообщения: $e');
       rethrow;
     }
   }
@@ -262,7 +261,7 @@ class EnhancedChatsService {
         'reactions.$emoji': FieldValue.arrayUnion([userId]),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка добавления реакции: $e');
+      debugdebugPrint('Ошибка добавления реакции: $e');
       rethrow;
     }
   }
@@ -284,7 +283,7 @@ class EnhancedChatsService {
         'reactions.$emoji': FieldValue.arrayRemove([userId]),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка удаления реакции: $e');
+      debugdebugPrint('Ошибка удаления реакции: $e');
       rethrow;
     }
   }
@@ -310,7 +309,7 @@ class EnhancedChatsService {
 
       await batch.commit();
     } on Exception catch (e) {
-      debugPrint('Ошибка отметки сообщений как прочитанных: $e');
+      debugdebugPrint('Ошибка отметки сообщений как прочитанных: $e');
       rethrow;
     }
   }
@@ -321,7 +320,7 @@ class EnhancedChatsService {
       final docRef = await _firestore.collection('chats').add(chat.toMap());
       return docRef.id;
     } on Exception catch (e) {
-      debugPrint('Ошибка создания чата: $e');
+      debugdebugPrint('Ошибка создания чата: $e');
       rethrow;
     }
   }
@@ -368,7 +367,7 @@ class EnhancedChatsService {
 
       return await createChat(chat);
     } on Exception catch (e) {
-      debugPrint('Ошибка создания личного чата: $e');
+      debugdebugPrint('Ошибка создания личного чата: $e');
       rethrow;
     }
   }
@@ -409,7 +408,7 @@ class EnhancedChatsService {
 
       return await createChat(chat);
     } on Exception catch (e) {
-      debugPrint('Ошибка создания группового чата: $e');
+      debugdebugPrint('Ошибка создания группового чата: $e');
       rethrow;
     }
   }
@@ -422,7 +421,7 @@ class EnhancedChatsService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка закрепления чата: $e');
+      debugdebugPrint('Ошибка закрепления чата: $e');
       rethrow;
     }
   }
@@ -435,7 +434,7 @@ class EnhancedChatsService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка открепления чата: $e');
+      debugdebugPrint('Ошибка открепления чата: $e');
       rethrow;
     }
   }
@@ -448,7 +447,7 @@ class EnhancedChatsService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка заглушения чата: $e');
+      debugdebugPrint('Ошибка заглушения чата: $e');
       rethrow;
     }
   }
@@ -461,7 +460,7 @@ class EnhancedChatsService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка разглушения чата: $e');
+      debugdebugPrint('Ошибка разглушения чата: $e');
       rethrow;
     }
   }
@@ -474,7 +473,7 @@ class EnhancedChatsService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка архивирования чата: $e');
+      debugdebugPrint('Ошибка архивирования чата: $e');
       rethrow;
     }
   }
@@ -487,7 +486,7 @@ class EnhancedChatsService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка разархивирования чата: $e');
+      debugdebugPrint('Ошибка разархивирования чата: $e');
       rethrow;
     }
   }
@@ -515,7 +514,7 @@ class EnhancedChatsService {
         return nameMatch || lastMessageMatch;
       }).toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка поиска по чатам: $e');
+      debugdebugPrint('Ошибка поиска по чатам: $e');
       return [];
     }
   }
@@ -543,7 +542,7 @@ class EnhancedChatsService {
           )
           .toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка поиска по сообщениям: $e');
+      debugdebugPrint('Ошибка поиска по сообщениям: $e');
       return [];
     }
   }

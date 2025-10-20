@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../core/utils/utils.dart';
+import '../core/utils/type_utils.dart';
 
 /// Модель для аудита действий пользователей
 class AuditLog {

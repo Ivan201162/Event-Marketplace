@@ -64,13 +64,13 @@ class BookingCardWidget extends StatelessWidget {
                 const SizedBox(height: 8),
 
                 // Информация о специалисте
-                if (booking.specialistName != null && booking.specialistName!.isNotEmpty)
+                if (booking.specialistName.isNotEmpty)
                   Row(
                     children: [
                       const Icon(Icons.person, size: 16, color: Colors.grey),
                       const SizedBox(width: 4),
                       Text(
-                        booking.specialistName!,
+                        booking.specialistName,
                         style: const TextStyle(
                           fontSize: 14,
                           color: Colors.grey,

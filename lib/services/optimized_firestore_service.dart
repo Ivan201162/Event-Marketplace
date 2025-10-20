@@ -36,7 +36,7 @@ class OptimizedFirestoreService {
 
       return doc;
     } catch (e) {
-      print('Error getting document: $e');
+      debugPrint('Error getting document: $e');
       return null;
     }
   }
@@ -92,7 +92,7 @@ class OptimizedFirestoreService {
 
       return snapshot;
     } catch (e) {
-      print('Error getting collection: $e');
+      debugPrint('Error getting collection: $e');
       rethrow;
     }
   }
@@ -138,7 +138,7 @@ class OptimizedFirestoreService {
 
       return docRef.id;
     } catch (e) {
-      print('Error creating document: $e');
+      debugPrint('Error creating document: $e');
       return null;
     }
   }
@@ -157,7 +157,7 @@ class OptimizedFirestoreService {
 
       return true;
     } catch (e) {
-      print('Error updating document: $e');
+      debugPrint('Error updating document: $e');
       return false;
     }
   }
@@ -175,7 +175,7 @@ class OptimizedFirestoreService {
 
       return true;
     } catch (e) {
-      print('Error deleting document: $e');
+      debugPrint('Error deleting document: $e');
       return false;
     }
   }

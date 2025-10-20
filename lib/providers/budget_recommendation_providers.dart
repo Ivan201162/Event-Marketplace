@@ -7,11 +7,10 @@ final budgetRecommendationServiceProvider = Provider<BudgetRecommendationService
   (ref) => BudgetRecommendationService(),
 );
 
-/// Провайдер состояния рекомендаций по бюджету
+/// Провайдер состояния рекомендаций по бюджету (мигрирован с StateNotifierProvider)
 final budgetRecommendationsProvider =
-    StateNotifierProvider<BudgetRecommendationsNotifier, BudgetRecommendationsState>((ref) {
-  final service = ref.watch(budgetRecommendationServiceProvider);
-  return BudgetRecommendationsNotifier(service);
+    NotifierProvider<BudgetRecommendationsNotifier, BudgetRecommendationsState>(() {
+  return BudgetRecommendationsNotifier();
 });
 
 /// Состояние рекомендаций по бюджету
@@ -42,11 +41,14 @@ class BudgetRecommendationsState {
       );
 }
 
-/// StateNotifier для управления рекомендациями по бюджету
-class BudgetRecommendationsNotifier extends StateNotifier<BudgetRecommendationsState> {
-  BudgetRecommendationsNotifier(this._service) : super(const BudgetRecommendationsState());
+/// Notifier для управления рекомендациями по бюджету (мигрирован с StateNotifier)
+class BudgetRecommendationsNotifier extends Notifier<BudgetRecommendationsState> {
+  @override
+  BudgetRecommendationsState build() {
+    return const BudgetRecommendationsState();
+  }
 
-  final BudgetRecommendationService _service;
+  BudgetRecommendationService get _service => ref.read(budgetRecommendationServiceProvider);
 
   /// Загрузить рекомендации по бюджету
   Future<void> loadBudgetRecommendations({

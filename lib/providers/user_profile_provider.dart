@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../models/user_profile.dart';
 import '../services/user_profile_service.dart';
@@ -117,8 +116,7 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
 }
 
 /// Провайдер для UserProfileNotifier
-final userProfileNotifierProvider =
-    NotifierProvider<UserProfileNotifier, AsyncValue<UserProfile?>>(
+final userProfileNotifierProvider = NotifierProvider<UserProfileNotifier, AsyncValue<UserProfile?>>(
   UserProfileNotifier.new,
 );
 
@@ -187,8 +185,7 @@ class UserPostsNotifier extends Notifier<AsyncValue<List<UserPost>>> {
 }
 
 /// Провайдер для UserPostsNotifier
-final userPostsNotifierProvider =
-    NotifierProvider<UserPostsNotifier, AsyncValue<List<UserPost>>>(
+final userPostsNotifierProvider = NotifierProvider<UserPostsNotifier, AsyncValue<List<UserPost>>>(
   UserPostsNotifier.new,
 );
 
@@ -272,7 +269,6 @@ class ReviewsNotifier extends Notifier<AsyncValue<List<UserReview>>> {
 }
 
 /// Провайдер для ReviewsNotifier
-final reviewsNotifierProvider =
-    NotifierProvider<ReviewsNotifier, AsyncValue<List<UserReview>>>(
+final reviewsNotifierProvider = NotifierProvider<ReviewsNotifier, AsyncValue<List<UserReview>>>(
   ReviewsNotifier.new,
 );

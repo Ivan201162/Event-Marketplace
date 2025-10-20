@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/event.dart';
 import '../models/review.dart';
 import '../providers/auth_providers.dart';
-import '../providers/booking_providers.dart';
 import '../providers/event_providers.dart';
 import '../providers/favorites_providers.dart';
 import '../services/review_service.dart';

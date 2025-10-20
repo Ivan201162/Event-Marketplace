@@ -84,7 +84,7 @@ class MockDataService {
               (specialist.firstName?.toLowerCase().contains(lowerQuery) ?? false) ||
               (specialist.lastName?.toLowerCase().contains(lowerQuery) ?? false) ||
               (specialist.description?.toLowerCase().contains(lowerQuery) ?? false) ||
-              (specialist.city?.toLowerCase().contains(lowerQuery) ?? false),
+              (specialist.city.toLowerCase().contains(lowerQuery) ?? false),
         )
         .toList();
   }
@@ -177,7 +177,7 @@ class MockDataService {
     if (filters.searchQuery != null && filters.searchQuery!.isNotEmpty) {
       final query = filters.searchQuery!.toLowerCase();
       final fullName = '${specialist.firstName} ${specialist.lastName}'.toLowerCase();
-      final city = specialist.city?.toLowerCase() ?? '';
+      final city = specialist.city.toLowerCase() ?? '';
       final description = specialist.description?.toLowerCase() ?? '';
 
       if (!fullName.contains(query) && !city.contains(query) && !description.contains(query)) {

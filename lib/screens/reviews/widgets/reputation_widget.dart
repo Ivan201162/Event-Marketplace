@@ -16,7 +16,7 @@ class ReputationWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),
@@ -53,10 +53,10 @@ class ReputationWidget extends StatelessWidget {
   Widget _buildReputationStatus() => Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: _getStatusColor().withOpacity(0.1),
+          color: _getStatusColor().withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: _getStatusColor().withOpacity(0.3),
+            color: _getStatusColor().withValues(alpha: 0.3),
           ),
         ),
         child: Row(
@@ -228,7 +228,7 @@ class ReputationWidget extends StatelessWidget {
         const SizedBox(height: 4),
         LinearProgressIndicator(
           value: percentage / 100,
-          backgroundColor: color.withOpacity(0.2),
+          backgroundColor: color.withValues(alpha: 0.2),
           valueColor: AlwaysStoppedAnimation<Color>(color),
         ),
       ],
@@ -295,7 +295,7 @@ class CompactReputationWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
-              color: _getStatusColor().withOpacity(0.1),
+              color: _getStatusColor().withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(

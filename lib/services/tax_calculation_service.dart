@@ -28,7 +28,7 @@ class TaxCalculationService {
         calculatedAt: DateTime.now(),
       );
     } catch (e) {
-      debugPrint('Error calculating tax: $e');
+      debugdebugPrint('Error calculating tax: $e');
       throw Exception('Ошибка расчета налогов: $e');
     }
   }
@@ -94,7 +94,7 @@ class TaxCalculationService {
 
       return calculations;
     } catch (e) {
-      debugPrint('Error calculating taxes for payments: $e');
+      debugdebugPrint('Error calculating taxes for payments: $e');
       throw Exception('Ошибка расчета налогов для платежей: $e');
     }
   }
@@ -129,7 +129,7 @@ class TaxCalculationService {
         'calculationsCount': calculations.length,
       };
     } catch (e) {
-      debugPrint('Error getting tax statistics: $e');
+      debugdebugPrint('Error getting tax statistics: $e');
       throw Exception('Ошибка получения статистики по налогам: $e');
     }
   }

@@ -40,7 +40,7 @@ class MediaStorageService {
 
       return uploadedFiles;
     } catch (e) {
-      print('Ошибка загрузки медиафайлов: $e');
+      debugPrint('Ошибка загрузки медиафайлов: $e');
       rethrow;
     }
   }
@@ -80,7 +80,7 @@ class MediaStorageService {
 
       return mediaFile.copyWith(id: docRef.id);
     } catch (e) {
-      print('Ошибка загрузки файла: $e');
+      debugPrint('Ошибка загрузки файла: $e');
       rethrow;
     }
   }
@@ -96,7 +96,7 @@ class MediaStorageService {
 
       return snapshot.docs.map(MediaFile.fromDocument).toList();
     } catch (e) {
-      print('Ошибка получения медиафайлов: $e');
+      debugPrint('Ошибка получения медиафайлов: $e');
       return [];
     }
   }
@@ -112,7 +112,7 @@ class MediaStorageService {
 
       return snapshot.docs.map(MediaFile.fromDocument).toList();
     } catch (e) {
-      print('Ошибка получения медиафайлов специалиста: $e');
+      debugPrint('Ошибка получения медиафайлов специалиста: $e');
       return [];
     }
   }
@@ -142,7 +142,7 @@ class MediaStorageService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      print('Ошибка создания записи о загрузке: $e');
+      debugPrint('Ошибка создания записи о загрузке: $e');
     }
   }
 
@@ -162,7 +162,7 @@ class MediaStorageService {
       // Удаляем запись из Firestore
       await _firestore.collection('media_files').doc(mediaFileId).delete();
     } catch (e) {
-      print('Ошибка удаления медиафайла: $e');
+      debugPrint('Ошибка удаления медиафайла: $e');
       rethrow;
     }
   }
@@ -191,7 +191,7 @@ class MediaStorageService {
         lastUpdated: DateTime.now(),
       );
     } catch (e) {
-      print('Ошибка получения статистики медиафайлов: $e');
+      debugPrint('Ошибка получения статистики медиафайлов: $e');
       return MediaStats.empty();
     }
   }
@@ -213,7 +213,7 @@ class MediaStorageService {
 
       return downloadUrl;
     } catch (e) {
-      print('Ошибка создания ссылки для скачивания: $e');
+      debugPrint('Ошибка создания ссылки для скачивания: $e');
       rethrow;
     }
   }

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 
 import '../models/specialist.dart';
 
@@ -20,7 +19,7 @@ class FavoritesService {
         'createdAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      debugPrint('Ошибка добавления в избранное: $e');
+      debugdebugPrint('Ошибка добавления в избранное: $e');
       throw Exception('Не удалось добавить в избранное');
     }
   }
@@ -33,7 +32,7 @@ class FavoritesService {
     try {
       await _firestore.collection(_collectionName).doc('${userId}_$specialistId').delete();
     } catch (e) {
-      debugPrint('Ошибка удаления из избранного: $e');
+      debugdebugPrint('Ошибка удаления из избранного: $e');
       throw Exception('Не удалось удалить из избранного');
     }
   }
@@ -47,7 +46,7 @@ class FavoritesService {
       final doc = await _firestore.collection(_collectionName).doc('${userId}_$specialistId').get();
       return doc.exists;
     } catch (e) {
-      debugPrint('Ошибка проверки избранного: $e');
+      debugdebugPrint('Ошибка проверки избранного: $e');
       return false;
     }
   }
@@ -72,7 +71,7 @@ class FavoritesService {
 
       return specialistsSnapshot.docs.map(Specialist.fromDocument).toList();
     } catch (e) {
-      debugPrint('Ошибка получения избранных специалистов: $e');
+      debugdebugPrint('Ошибка получения избранных специалистов: $e');
       return [];
     }
   }
@@ -105,7 +104,7 @@ class FavoritesService {
           await _firestore.collection(_collectionName).where('userId', isEqualTo: userId).get();
       return snapshot.docs.length;
     } catch (e) {
-      debugPrint('Ошибка получения количества избранных: $e');
+      debugdebugPrint('Ошибка получения количества избранных: $e');
       return 0;
     }
   }
@@ -135,7 +134,7 @@ class FavoritesService {
         return true;
       }
     } catch (e) {
-      debugPrint('Ошибка переключения избранного: $e');
+      debugdebugPrint('Ошибка переключения избранного: $e');
       throw Exception('Не удалось изменить статус избранного');
     }
   }

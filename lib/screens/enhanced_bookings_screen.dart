@@ -406,7 +406,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
             (booking) =>
                 (booking.title?.toLowerCase().contains(searchLower) ?? false) ||
                 (booking.customerName?.toLowerCase().contains(searchLower) ?? false) ||
-                (booking.specialistName?.toLowerCase().contains(searchLower) ?? false) ||
+                (booking.specialistName.toLowerCase().contains(searchLower) ?? false) ||
                 (booking.message.toLowerCase().contains(searchLower)),
           )
           .toList();

@@ -90,6 +90,55 @@ class LocaleNotifier extends Notifier<Locale> {
 
   /// Проверить, является ли текущий язык казахским
   bool get isKazakh => state.languageCode == 'kk';
+
+  /// Получить флаг локали
+  String getLocaleFlag(String languageCode) {
+    switch (languageCode) {
+      case 'ru':
+        return '🇷🇺';
+      case 'en':
+        return '🇺🇸';
+      case 'kk':
+        return '🇰🇿';
+      default:
+        return '🇷🇺';
+    }
+  }
+
+  /// Получить название локали
+  String getLocaleName(String languageCode) {
+    switch (languageCode) {
+      case 'ru':
+        return 'Русский';
+      case 'en':
+        return 'English';
+      case 'kk':
+        return 'Қазақша';
+      default:
+        return 'Русский';
+    }
+  }
+
+  /// Получить список поддерживаемых локалей
+  List<Locale> get supportedLocales => const [
+        Locale('ru'),
+        Locale('en'),
+        Locale('kk'),
+      ];
+
+  /// Переключить локаль
+  Locale get toggleLocale {
+    switch (state.languageCode) {
+      case 'ru':
+        return const Locale('en');
+      case 'en':
+        return const Locale('kk');
+      case 'kk':
+        return const Locale('ru');
+      default:
+        return const Locale('ru');
+    }
+  }
 }
 
 /// Провайдер для управления локализацией (мигрирован с StateNotifierProvider)

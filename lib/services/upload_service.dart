@@ -9,6 +9,7 @@ import 'package:uuid/uuid.dart';
 
 import '../core/feature_flags.dart';
 import '../core/safe_log.dart';
+import '../utils/storage_guard.dart';
 
 /// Типы файлов для загрузки
 enum FileType {
@@ -121,7 +122,7 @@ class UploadService {
     'gz',
   ];
 
-  final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseStorage? _storage = getStorage();
   final ImagePicker _imagePicker = ImagePicker();
   final Uuid _uuid = const Uuid();
 

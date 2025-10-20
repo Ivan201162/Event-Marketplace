@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class TinkoffPaymentService {
@@ -62,7 +61,7 @@ class TinkoffPaymentService {
         );
       }
     } catch (e) {
-      debugPrint('Tinkoff payment creation error: $e');
+      debugdebugPrint('Tinkoff payment creation error: $e');
       throw Exception('Ошибка создания платежа Tinkoff: $e');
     }
   }
@@ -95,7 +94,7 @@ class TinkoffPaymentService {
         );
       }
     } catch (e) {
-      debugPrint('Tinkoff payment status error: $e');
+      debugdebugPrint('Tinkoff payment status error: $e');
       throw Exception('Ошибка получения статуса платежа Tinkoff: $e');
     }
   }
@@ -126,7 +125,7 @@ class TinkoffPaymentService {
         );
       }
     } catch (e) {
-      debugPrint('Tinkoff payment confirm error: $e');
+      debugdebugPrint('Tinkoff payment confirm error: $e');
       throw Exception('Ошибка подтверждения платежа Tinkoff: $e');
     }
   }
@@ -156,7 +155,7 @@ class TinkoffPaymentService {
         );
       }
     } catch (e) {
-      debugPrint('Tinkoff payment cancel error: $e');
+      debugdebugPrint('Tinkoff payment cancel error: $e');
       throw Exception('Ошибка отмены платежа Tinkoff: $e');
     }
   }
@@ -195,7 +194,7 @@ class TinkoffPaymentService {
         );
       }
     } catch (e) {
-      debugPrint('Tinkoff refund creation error: $e');
+      debugdebugPrint('Tinkoff refund creation error: $e');
       throw Exception('Ошибка создания возврата Tinkoff: $e');
     }
   }
@@ -264,7 +263,7 @@ class TinkoffPaymentService {
           webhookData.containsKey('Status') &&
           webhookData.containsKey('PaymentId');
     } catch (e) {
-      debugPrint('Tinkoff webhook validation error: $e');
+      debugdebugPrint('Tinkoff webhook validation error: $e');
       return false;
     }
   }

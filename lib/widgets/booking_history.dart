@@ -113,8 +113,8 @@ class BookingHistory extends ConsumerWidget {
                   radius: 20,
                   backgroundColor: Colors.blue.shade100,
                   child: Text(
-                    (booking.specialistName?.isNotEmpty ?? false)
-                        ? booking.specialistName!.substring(0, 1).toUpperCase()
+                    (booking.specialistName.isNotEmpty ?? false)
+                        ? booking.specialistName.substring(0, 1).toUpperCase()
                         : 'С',
                     style: TextStyle(
                       color: Colors.blue.shade700,

@@ -302,7 +302,7 @@ class PaymentDialog extends ConsumerStatefulWidget {
 }
 
 class _PaymentDialogState extends ConsumerState<PaymentDialog> {
-  String _selectedPaymentMethod = 'card';
+  final String _selectedPaymentMethod = 'card';
 
   @override
   Widget build(BuildContext context) {
@@ -351,8 +351,8 @@ class _PaymentDialogState extends ConsumerState<PaymentDialog> {
             // },
           ),
           RadioListTile<String>(
-            title: const Text('СБП'),
-            subtitle: const Text('Система быстрых платежей'),
+            title: Text('СБП'),
+            subtitle: Text('Система быстрых платежей'),
             value: 'sbp',
             // groupValue: _selectedPaymentMethod,
             // onChanged: (value) {
@@ -360,8 +360,8 @@ class _PaymentDialogState extends ConsumerState<PaymentDialog> {
             // },
           ),
           RadioListTile<String>(
-            title: const Text('Электронные деньги'),
-            subtitle: const Text('ЮMoney, QIWI, WebMoney'),
+            title: Text('Электронные деньги'),
+            subtitle: Text('ЮMoney, QIWI, WebMoney'),
             value: 'ewallet',
             // groupValue: _selectedPaymentMethod,
             // onChanged: (value) {

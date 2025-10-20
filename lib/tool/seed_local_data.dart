@@ -42,7 +42,12 @@ class LocalDataSeeder {
         {'id': 'cat_3', 'name': 'Фотографы', 'icon': 'camera_alt', 'color': 0xFFFF9800},
         {'id': 'cat_4', 'name': 'Видеографы', 'icon': 'videocam', 'color': 0xFFF44336},
         {'id': 'cat_5', 'name': 'Декораторы', 'icon': 'palette', 'color': 0xFF4CAF50},
-        {'id': 'cat_6', 'name': 'Аниматоры', 'icon': 'sentiment_very_satisfied', 'color': 0xFF009688},
+        {
+          'id': 'cat_6',
+          'name': 'Аниматоры',
+          'icon': 'sentiment_very_satisfied',
+          'color': 0xFF009688
+        },
         {'id': 'cat_7', 'name': 'Организатор мероприятий', 'icon': 'event', 'color': 0xFF3F51B5},
         {'id': 'cat_8', 'name': 'Музыканты', 'icon': 'music_note', 'color': 0xFFE91E63},
         {'id': 'cat_9', 'name': 'Танцоры', 'icon': 'dance', 'color': 0xFF795548},

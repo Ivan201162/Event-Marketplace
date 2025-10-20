@@ -233,25 +233,25 @@ class _EditReviewScreenState extends ConsumerState<EditReviewScreen> {
                     ),
               ),
               const SizedBox(height: 12),
-              if (widget.review.specialistName != null) ...[
-                Row(
-                  children: [
-                    Icon(
-                      Icons.person,
-                      size: 16,
-                      color: Colors.grey[600],
+              ...[
+              Row(
+                children: [
+                  Icon(
+                    Icons.person,
+                    size: 16,
+                    color: Colors.grey[600],
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Специалист: ${widget.review.specialistName}',
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'Специалист: ${widget.review.specialistName}',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-              ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+            ],
               if (widget.review.eventTitle != null) ...[
                 Row(
                   children: [

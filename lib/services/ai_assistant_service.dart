@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import '../models/smart_specialist.dart';
 import '../models/specialist.dart';
 import 'smart_search_service.dart';
@@ -566,7 +565,7 @@ class AIAssistantService {
         );
       }
     } on Exception catch (e) {
-      debugPrint('Ошибка генерации рекомендаций: $e');
+      debugdebugPrint('Ошибка генерации рекомендаций: $e');
       return AIMessage(
         id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
         text: 'Произошла ошибка при поиске специалистов. Попробуйте еще раз.',

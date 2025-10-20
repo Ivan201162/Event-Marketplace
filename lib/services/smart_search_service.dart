@@ -129,7 +129,7 @@ class SmartSearchService {
         }
       }
     } on Exception catch (e) {
-      debugPrint('Ошибка получения подсказок: $e');
+      debugdebugPrint('Ошибка получения подсказок: $e');
     }
 
     return suggestions.take(10).toList();
@@ -249,7 +249,7 @@ class SmartSearchService {
 
       return specialists;
     } on Exception catch (e) {
-      debugPrint('Ошибка поиска специалистов: $e');
+      debugdebugPrint('Ошибка поиска специалистов: $e');
       return [];
     }
   }
@@ -269,7 +269,7 @@ class SmartSearchService {
         return data;
       }).toList();
     } on Exception catch (e) {
-      debugPrint('Ошибка получения популярных специалистов: $e');
+      debugdebugPrint('Ошибка получения популярных специалистов: $e');
       return [];
     }
   }
@@ -278,9 +278,9 @@ class SmartSearchService {
   Future<void> saveSearchFilters(Map<String, dynamic> filters) async {
     try {
       // TODO(developer): Реализовать сохранение фильтров в SharedPreferences
-      debugPrint('Сохранение фильтров: $filters');
+      debugdebugPrint('Сохранение фильтров: $filters');
     } on Exception catch (e) {
-      debugPrint('Ошибка сохранения фильтров: $e');
+      debugdebugPrint('Ошибка сохранения фильтров: $e');
     }
   }
 
@@ -290,7 +290,7 @@ class SmartSearchService {
       // TODO(developer): Реализовать загрузку фильтров из SharedPreferences
       return {};
     } on Exception catch (e) {
-      debugPrint('Ошибка загрузки фильтров: $e');
+      debugdebugPrint('Ошибка загрузки фильтров: $e');
       return {};
     }
   }
@@ -313,12 +313,14 @@ class SmartSearchService {
 
       // Получаем текущую позицию
       _currentPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+        ),
       );
 
       return _currentPosition;
     } catch (e) {
-      debugPrint('Ошибка получения геолокации: $e');
+      debugdebugPrint('Ошибка получения геолокации: $e');
       return null;
     }
   }
@@ -361,7 +363,7 @@ class SmartSearchService {
       _currentCity = closestCity;
       return closestCity;
     } catch (e) {
-      debugPrint('Ошибка определения города: $e');
+      debugdebugPrint('Ошибка определения города: $e');
       return null;
     }
   }
@@ -390,7 +392,7 @@ class SmartSearchService {
 
       return cities.toList()..sort();
     } catch (e) {
-      debugPrint('Ошибка получения городов: $e');
+      debugdebugPrint('Ошибка получения городов: $e');
       return [
         'Москва',
         'Санкт-Петербург',
@@ -421,7 +423,7 @@ class SmartSearchService {
 
       return categories.toList()..sort();
     } catch (e) {
-      debugPrint('Ошибка получения категорий: $e');
+      debugdebugPrint('Ошибка получения категорий: $e');
       return [
         'Ведущие',
         'DJ',
@@ -485,7 +487,7 @@ class SmartSearchService {
 
       return specialists;
     } catch (e) {
-      debugPrint('Ошибка получения популярных специалистов: $e');
+      debugdebugPrint('Ошибка получения популярных специалистов: $e');
       return _getTestWeeklyPopularSpecialists();
     }
   }

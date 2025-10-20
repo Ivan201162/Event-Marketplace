@@ -6,10 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../models/chat.dart';
-import '../models/notification.dart';
-import '../providers/chat_providers.dart';
 import '../core/notifications/app_notification.dart';
+import '../models/chat.dart';
+import '../providers/chat_providers.dart';
 
 /// Виджет списка чатов
 class ChatListWidget extends ConsumerWidget {

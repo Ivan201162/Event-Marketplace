@@ -1,207 +1,146 @@
-/// Фильтры для поиска специалистов
-class SpecialistSearchFilters {
-  const SpecialistSearchFilters({
-    this.categories = const [],
-    this.services = const [],
-    this.locations = const [],
-    this.minRating = 0.0,
-    this.maxRating = 5.0,
-    this.minPrice = 0,
-    this.maxPrice = 100000,
-    this.availableFrom,
-    this.availableTo,
-    this.isAvailableNow = false,
-    this.hasPortfolio = false,
-    this.isVerified = false,
-    this.hasReviews = false,
-    this.searchQuery = '',
-    this.sortBy = SearchSortBy.relevance,
+import 'package:equatable/equatable.dart';
+
+/// Search filters for specialists
+class SearchFilters extends Equatable {
+  final String? query;
+  final String? city;
+  final String? specialization;
+  final double? minRating;
+  final int? minPrice;
+  final int? maxPrice;
+  final bool? isAvailable;
+  final List<String>? services;
+  final String? sortBy; // 'rating', 'price', 'name', 'experience'
+  final bool? sortAscending;
+
+  const SearchFilters({
+    this.query,
+    this.city,
+    this.specialization,
+    this.minRating,
+    this.minPrice,
+    this.maxPrice,
+    this.isAvailable,
+    this.services,
+    this.sortBy,
+    this.sortAscending,
   });
 
-  factory SpecialistSearchFilters.fromJson(Map<String, dynamic> json) => SpecialistSearchFilters(
-        categories: (json['categories'] as List<dynamic>?)?.cast<String>() ?? [],
-        services: (json['services'] as List<dynamic>?)?.cast<String>() ?? [],
-        locations: (json['locations'] as List<dynamic>?)?.cast<String>() ?? [],
-        minRating: (json['minRating'] as num?)?.toDouble() ?? 0.0,
-        maxRating: (json['maxRating'] as num?)?.toDouble() ?? 5.0,
-        minPrice: json['minPrice'] as int? ?? 0,
-        maxPrice: json['maxPrice'] as int? ?? 100000,
-        availableFrom:
-            json['availableFrom'] != null ? DateTime.parse(json['availableFrom'] as String) : null,
-        availableTo:
-            json['availableTo'] != null ? DateTime.parse(json['availableTo'] as String) : null,
-        isAvailableNow: json['isAvailableNow'] as bool? ?? false,
-        hasPortfolio: json['hasPortfolio'] as bool? ?? false,
-        isVerified: json['isVerified'] as bool? ?? false,
-        hasReviews: json['hasReviews'] as bool? ?? false,
-        searchQuery: json['searchQuery'] as String? ?? '',
-        sortBy: SearchSortBy.values.firstWhere(
-          (e) => e.name == json['sortBy'],
-          orElse: () => SearchSortBy.relevance,
-        ),
-      );
+  /// Create empty filters
+  factory SearchFilters.empty() {
+    return const SearchFilters();
+  }
 
-  final List<String> categories;
-  final List<String> services;
-  final List<String> locations;
-  final double minRating;
-  final double maxRating;
-  final int minPrice;
-  final int maxPrice;
-  final DateTime? availableFrom;
-  final DateTime? availableTo;
-  final bool isAvailableNow;
-  final bool hasPortfolio;
-  final bool isVerified;
-  final bool hasReviews;
-  final String searchQuery;
-  final SearchSortBy sortBy;
+  /// Create filters from map
+  factory SearchFilters.fromMap(Map<String, dynamic> map) {
+    return SearchFilters(
+      query: map['query'] as String?,
+      city: map['city'] as String?,
+      specialization: map['specialization'] as String?,
+      minRating: map['minRating'] as double?,
+      minPrice: map['minPrice'] as int?,
+      maxPrice: map['maxPrice'] as int?,
+      isAvailable: map['isAvailable'] as bool?,
+      services: map['services'] != null ? List<String>.from(map['services']) : null,
+      sortBy: map['sortBy'] as String?,
+      sortAscending: map['sortAscending'] as bool?,
+    );
+  }
 
-  Map<String, dynamic> toJson() => {
-        'categories': categories,
-        'services': services,
-        'locations': locations,
+  /// Convert to map
+  Map<String, dynamic> toMap() {
+    return {
+      'query': query,
+      'city': city,
+      'specialization': specialization,
         'minRating': minRating,
-        'maxRating': maxRating,
         'minPrice': minPrice,
         'maxPrice': maxPrice,
-        'availableFrom': availableFrom?.toIso8601String(),
-        'availableTo': availableTo?.toIso8601String(),
-        'isAvailableNow': isAvailableNow,
-        'hasPortfolio': hasPortfolio,
-        'isVerified': isVerified,
-        'hasReviews': hasReviews,
-        'searchQuery': searchQuery,
-        'sortBy': sortBy.name,
-      };
-}
+      'isAvailable': isAvailable,
+      'services': services,
+      'sortBy': sortBy,
+      'sortAscending': sortAscending,
+    };
+  }
 
-/// Варианты сортировки
-enum SearchSortBy {
-  relevance,
-  rating,
-  priceAsc,
-  priceDesc,
-  distance,
-  availability,
-  reviewsCount,
-}
+  /// Create a copy with updated fields
+  SearchFilters copyWith({
+    String? query,
+    String? city,
+    String? specialization,
+    double? minRating,
+    int? minPrice,
+    int? maxPrice,
+    bool? isAvailable,
+    List<String>? services,
+    String? sortBy,
+    bool? sortAscending,
+  }) {
+    return SearchFilters(
+      query: query ?? this.query,
+      city: city ?? this.city,
+      specialization: specialization ?? this.specialization,
+      minRating: minRating ?? this.minRating,
+      minPrice: minPrice ?? this.minPrice,
+      maxPrice: maxPrice ?? this.maxPrice,
+      isAvailable: isAvailable ?? this.isAvailable,
+      services: services ?? this.services,
+      sortBy: sortBy ?? this.sortBy,
+      sortAscending: sortAscending ?? this.sortAscending,
+    );
+  }
 
-/// Результат поиска специалистов
-class SpecialistSearchResult {
-  const SpecialistSearchResult({
-    required this.specialistId,
-    required this.name,
-    required this.avatar,
-    required this.rating,
-    required this.reviewCount,
-    required this.priceFrom,
-    required this.categories,
-    required this.services,
-    required this.location,
-    required this.isAvailable,
-    required this.isVerified,
-    required this.hasPortfolio,
-    this.nextAvailableDate,
-    this.distance,
-  });
+  /// Check if filters are empty
+  bool get isEmpty {
+    return query == null &&
+        city == null &&
+        specialization == null &&
+        minRating == null &&
+        minPrice == null &&
+        maxPrice == null &&
+        isAvailable == null &&
+        (services == null || services!.isEmpty) &&
+        sortBy == null;
+  }
 
-  factory SpecialistSearchResult.fromJson(Map<String, dynamic> json) => SpecialistSearchResult(
-        specialistId: json['specialistId'] as String,
-        name: json['name'] as String,
-        avatar: json['avatar'] as String,
-        rating: (json['rating'] as num).toDouble(),
-        reviewCount: json['reviewCount'] as int,
-        priceFrom: json['priceFrom'] as int,
-        categories: (json['categories'] as List<dynamic>).cast<String>(),
-        services: (json['services'] as List<dynamic>).cast<String>(),
-        location: json['location'] as String,
-        isAvailable: json['isAvailable'] as bool,
-        isVerified: json['isVerified'] as bool,
-        hasPortfolio: json['hasPortfolio'] as bool,
-        nextAvailableDate: json['nextAvailableDate'] != null
-            ? DateTime.parse(json['nextAvailableDate'] as String)
-            : null,
-        distance: (json['distance'] as num?)?.toDouble(),
-      );
+  /// Check if filters have any values
+  bool get isNotEmpty => !isEmpty;
 
-  final String specialistId;
-  final String name;
-  final String avatar;
-  final double rating;
-  final int reviewCount;
-  final int priceFrom;
-  final List<String> categories;
-  final List<String> services;
-  final String location;
-  final bool isAvailable;
-  final bool isVerified;
-  final bool hasPortfolio;
-  final DateTime? nextAvailableDate;
-  final double? distance;
+  /// Get active filters count
+  int get activeFiltersCount {
+    int count = 0;
+    if (query != null && query!.isNotEmpty) count++;
+    if (city != null) count++;
+    if (specialization != null) count++;
+    if (minRating != null) count++;
+    if (minPrice != null) count++;
+    if (maxPrice != null) count++;
+    if (isAvailable != null) count++;
+    if (services != null && services!.isNotEmpty) count++;
+    return count;
+  }
 
-  Map<String, dynamic> toJson() => {
-        'specialistId': specialistId,
-        'name': name,
-        'avatar': avatar,
-        'rating': rating,
-        'reviewCount': reviewCount,
-        'priceFrom': priceFrom,
-        'categories': categories,
-        'services': services,
-        'location': location,
-        'isAvailable': isAvailable,
-        'isVerified': isVerified,
-        'hasPortfolio': hasPortfolio,
-        'nextAvailableDate': nextAvailableDate?.toIso8601String(),
-        'distance': distance,
-      };
-}
+  /// Clear all filters
+  SearchFilters clear() {
+    return const SearchFilters();
+  }
 
-/// Состояние поиска
-class SearchState {
-  const SearchState({
-    this.results = const [],
-    this.isLoading = false,
-    this.hasMore = false,
-    this.error = '',
-    this.filters = const SpecialistSearchFilters(),
-    this.totalCount = 0,
-  });
+  @override
+  List<Object?> get props => [
+        query,
+        city,
+        specialization,
+        minRating,
+        minPrice,
+        maxPrice,
+        isAvailable,
+        services,
+        sortBy,
+        sortAscending,
+      ];
 
-  factory SearchState.fromJson(Map<String, dynamic> json) => SearchState(
-        results: (json['results'] as List<dynamic>?)
-                ?.map(
-                  (e) => SpecialistSearchResult.fromJson(
-                    e as Map<String, dynamic>,
-                  ),
-                )
-                .toList() ??
-            [],
-        isLoading: json['isLoading'] as bool? ?? false,
-        hasMore: json['hasMore'] as bool? ?? false,
-        error: json['error'] as String? ?? '',
-        filters: json['filters'] != null
-            ? SpecialistSearchFilters.fromJson(
-                json['filters'] as Map<String, dynamic>,
-              )
-            : const SpecialistSearchFilters(),
-        totalCount: json['totalCount'] as int? ?? 0,
-      );
-
-  final List<SpecialistSearchResult> results;
-  final bool isLoading;
-  final bool hasMore;
-  final String error;
-  final SpecialistSearchFilters filters;
-  final int totalCount;
-
-  Map<String, dynamic> toJson() => {
-        'results': results.map((e) => e.toJson()).toList(),
-        'isLoading': isLoading,
-        'hasMore': hasMore,
-        'error': error,
-        'filters': filters.toJson(),
-        'totalCount': totalCount,
-      };
+  @override
+  String toString() {
+    return 'SearchFilters(query: $query, city: $city, specialization: $specialization, minRating: $minRating, minPrice: $minPrice, maxPrice: $maxPrice, isAvailable: $isAvailable, services: $services, sortBy: $sortBy, sortAscending: $sortAscending)';
+  }
 }

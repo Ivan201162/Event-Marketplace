@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/advertisement.dart';
-import '../../providers/auth_provider.dart';
 import '../../services/advertisement_service.dart';
 
 class CreateAdvertisementScreen extends StatefulWidget {

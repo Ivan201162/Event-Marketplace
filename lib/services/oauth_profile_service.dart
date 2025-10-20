@@ -48,7 +48,7 @@ class OAuthProfileService {
 
       return newProfile;
     } catch (e) {
-      print('Ошибка обработки OAuth пользователя: $e');
+      debugPrint('Ошибка обработки OAuth пользователя: $e');
       return null;
     }
   }
@@ -115,7 +115,7 @@ class OAuthProfileService {
       }
       return null;
     } catch (e) {
-      print('Ошибка получения профиля: $e');
+      debugPrint('Ошибка получения профиля: $e');
       return null;
     }
   }
@@ -158,7 +158,7 @@ class OAuthProfileService {
 
       return AppUser.fromMap(userData);
     } catch (e) {
-      print('Ошибка создания профиля: $e');
+      debugPrint('Ошибка создания профиля: $e');
       rethrow;
     }
   }
@@ -195,7 +195,7 @@ class OAuthProfileService {
 
       return query.docs.isNotEmpty;
     } catch (e) {
-      print('Ошибка проверки username: $e');
+      debugPrint('Ошибка проверки username: $e');
       return false;
     }
   }
@@ -206,7 +206,7 @@ class OAuthProfileService {
       updates['updatedAt'] = FieldValue.serverTimestamp();
       await _firestore.collection('users').doc(userId).update(updates);
     } catch (e) {
-      print('Ошибка обновления профиля: $e');
+      debugPrint('Ошибка обновления профиля: $e');
       rethrow;
     }
   }
@@ -225,7 +225,7 @@ class OAuthProfileService {
       }
       return null;
     } catch (e) {
-      print('Ошибка получения профиля по username: $e');
+      debugPrint('Ошибка получения профиля по username: $e');
       return null;
     }
   }

@@ -1,180 +1,248 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 
-/// Модель идеи
-class Idea {
+/// Idea model for creative event ideas
+class Idea extends Equatable {
+  final String id;
+  final String title;
+  final String shortDesc;
+  final String? mediaUrl;
+  final List<String> tags;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String? authorId;
+  final String? authorName;
+  final int likesCount;
+  final int viewsCount;
+  final List<String> likedBy;
+  final String? category;
+  final String? difficulty; // 'easy', 'medium', 'hard'
+  final int? estimatedDuration; // in minutes
+  final List<String> requiredMaterials;
+  final String? detailedDescription;
+
   const Idea({
     required this.id,
     required this.title,
-    required this.description,
-    this.imageUrl,
-    this.videoUrl,
-    required this.category,
-    required this.authorId,
-    this.authorName,
-    this.authorAvatar,
-    required this.createdAt,
-    this.likesCount = 0,
-    this.savesCount = 0,
-    this.sharesCount = 0,
-    this.commentCount = 0,
-    this.likedBy = const [],
-    this.savedBy = const [],
+    required this.shortDesc,
+    this.mediaUrl,
     this.tags = const [],
-    this.metadata,
+    required this.createdAt,
+    required this.updatedAt,
+    this.authorId,
+    this.authorName,
+    this.likesCount = 0,
+    this.viewsCount = 0,
+    this.likedBy = const [],
+    this.category,
+    this.difficulty,
+    this.estimatedDuration,
+    this.requiredMaterials = const [],
+    this.detailedDescription,
   });
 
-  /// Создать идею из документа Firestore
-  factory Idea.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data()! as Map<String, dynamic>;
-    return Idea.fromMap(data, doc.id);
+  /// Create Idea from Firestore document
+  factory Idea.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return Idea(
+      id: doc.id,
+      title: data['title'] ?? '',
+      shortDesc: data['shortDesc'] ?? '',
+      mediaUrl: data['mediaUrl'],
+      tags: List<String>.from(data['tags'] ?? []),
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      authorId: data['authorId'],
+      authorName: data['authorName'],
+      likesCount: data['likesCount'] ?? 0,
+      viewsCount: data['viewsCount'] ?? 0,
+      likedBy: List<String>.from(data['likedBy'] ?? []),
+      category: data['category'],
+      difficulty: data['difficulty'],
+      estimatedDuration: data['estimatedDuration'],
+      requiredMaterials: List<String>.from(data['requiredMaterials'] ?? []),
+      detailedDescription: data['detailedDescription'],
+    );
   }
 
-  /// Создать идею из документа Firestore (алиас для совместимости)
-  factory Idea.fromFirestore(DocumentSnapshot doc) => Idea.fromDocument(doc);
+  /// Convert Idea to Firestore document
+  Map<String, dynamic> toFirestore() {
+    return {
+      'title': title,
+      'shortDesc': shortDesc,
+      'mediaUrl': mediaUrl,
+      'tags': tags,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': Timestamp.fromDate(updatedAt),
+      'authorId': authorId,
+      'authorName': authorName,
+      'likesCount': likesCount,
+      'viewsCount': viewsCount,
+      'likedBy': likedBy,
+      'category': category,
+      'difficulty': difficulty,
+      'estimatedDuration': estimatedDuration,
+      'requiredMaterials': requiredMaterials,
+      'detailedDescription': detailedDescription,
+    };
+  }
 
-  /// Создать идею из Map
-  factory Idea.fromMap(Map<String, dynamic> data, [String? id]) => Idea(
-        id: id ?? data['id'] ?? '',
-        title: data['title'] ?? '',
-        description: data['description'] ?? '',
-        imageUrl: data['imageUrl'],
-        videoUrl: data['videoUrl'],
-        category: data['category'] ?? '',
-        authorId: data['authorId'] ?? '',
-        authorName: data['authorName'],
-        authorAvatar: data['authorAvatar'],
-        createdAt: data['createdAt'] != null
-            ? (data['createdAt'] is Timestamp
-                ? (data['createdAt'] as Timestamp).toDate()
-                : DateTime.parse(data['createdAt'].toString()))
-            : DateTime.now(),
-        likesCount: data['likesCount'] as int? ?? 0,
-        savesCount: data['savesCount'] as int? ?? 0,
-        sharesCount: data['sharesCount'] as int? ?? 0,
-        commentCount: data['commentCount'] as int? ?? 0,
-        likedBy: List<String>.from(data['likedBy'] ?? []),
-        savedBy: List<String>.from(data['savedBy'] ?? []),
-        tags: List<String>.from(data['tags'] ?? []),
-        metadata: data['metadata'],
-      );
-
-  final String id;
-  final String title;
-  final String description;
-  final String? imageUrl;
-  final String? videoUrl;
-  final String category;
-  final String authorId;
-  final String? authorName;
-  final String? authorAvatar;
-  final DateTime createdAt;
-  final int likesCount;
-  final int savesCount;
-  final int sharesCount;
-  final int commentCount;
-  final List<String> likedBy;
-  final List<String> savedBy;
-  final List<String> tags;
-  final Map<String, dynamic>? metadata;
-
-  // Дополнительные поля для совместимости
-  List<String> get images => imageUrl != null ? [imageUrl!] : [];
-  String? get authorPhotoUrl => authorAvatar;
-  int get viewsCount => 0;
-  int get commentsCount => commentCount;
-  String? get categoryColor => null;
-  String? get categoryIcon => null;
-
-  /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() => {
-        'title': title,
-        'description': description,
-        'imageUrl': imageUrl,
-        'videoUrl': videoUrl,
-        'category': category,
-        'authorId': authorId,
-        'authorName': authorName,
-        'authorAvatar': authorAvatar,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'likesCount': likesCount,
-        'savesCount': savesCount,
-        'sharesCount': sharesCount,
-        'commentCount': commentCount,
-        'likedBy': likedBy,
-        'savedBy': savedBy,
-        'tags': tags,
-        'metadata': metadata,
-      };
-
-  /// Копировать с изменениями
+  /// Create a copy with updated fields
   Idea copyWith({
     String? id,
     String? title,
-    String? description,
-    String? imageUrl,
-    String? videoUrl,
-    String? category,
+    String? shortDesc,
+    String? mediaUrl,
+    List<String>? tags,
+    DateTime? createdAt,
+    DateTime? updatedAt,
     String? authorId,
     String? authorName,
-    String? authorAvatar,
-    DateTime? createdAt,
     int? likesCount,
-    int? savesCount,
-    int? sharesCount,
-    int? commentCount,
+    int? viewsCount,
     List<String>? likedBy,
-    List<String>? savedBy,
-    List<String>? tags,
-    Map<String, dynamic>? metadata,
-  }) =>
-      Idea(
-        id: id ?? this.id,
-        title: title ?? this.title,
-        description: description ?? this.description,
-        imageUrl: imageUrl ?? this.imageUrl,
-        videoUrl: videoUrl ?? this.videoUrl,
-        category: category ?? this.category,
-        authorId: authorId ?? this.authorId,
-        authorName: authorName ?? this.authorName,
-        authorAvatar: authorAvatar ?? this.authorAvatar,
-        createdAt: createdAt ?? this.createdAt,
-        likesCount: likesCount ?? this.likesCount,
-        savesCount: savesCount ?? this.savesCount,
-        sharesCount: sharesCount ?? this.sharesCount,
-        commentCount: commentCount ?? this.commentCount,
-        likedBy: likedBy ?? this.likedBy,
-        savedBy: savedBy ?? this.savedBy,
-        tags: tags ?? this.tags,
-        metadata: metadata ?? this.metadata,
-      );
+    String? category,
+    String? difficulty,
+    int? estimatedDuration,
+    List<String>? requiredMaterials,
+    String? detailedDescription,
+  }) {
+    return Idea(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      shortDesc: shortDesc ?? this.shortDesc,
+      mediaUrl: mediaUrl ?? this.mediaUrl,
+      tags: tags ?? this.tags,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      authorId: authorId ?? this.authorId,
+      authorName: authorName ?? this.authorName,
+      likesCount: likesCount ?? this.likesCount,
+      viewsCount: viewsCount ?? this.viewsCount,
+      likedBy: likedBy ?? this.likedBy,
+      category: category ?? this.category,
+      difficulty: difficulty ?? this.difficulty,
+      estimatedDuration: estimatedDuration ?? this.estimatedDuration,
+      requiredMaterials: requiredMaterials ?? this.requiredMaterials,
+      detailedDescription: detailedDescription ?? this.detailedDescription,
+    );
+  }
 
-  /// Проверить, является ли идея видео
-  bool get isVideo => videoUrl != null;
+  /// Check if idea has media
+  bool get hasMedia => mediaUrl != null && mediaUrl!.isNotEmpty;
 
-  /// Проверить, является ли идея изображением
-  bool get isImage => imageUrl != null;
+  /// Check if idea is liked by user
+  bool isLikedBy(String userId) => likedBy.contains(userId);
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Idea && other.id == id;
+  /// Get formatted time ago string
+  String get timeAgo {
+    final now = DateTime.now();
+    final difference = now.difference(createdAt);
+
+    if (difference.inDays > 0) {
+      return '${difference.inDays}д назад';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours}ч назад';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes}м назад';
+    } else {
+      return 'только что';
+    }
+  }
+
+  /// Get difficulty color
+  String get difficultyColor {
+    switch (difficulty) {
+      case 'easy':
+        return 'green';
+      case 'medium':
+        return 'orange';
+      case 'hard':
+        return 'red';
+      default:
+        return 'grey';
+    }
+  }
+
+  /// Get difficulty text
+  String get difficultyText {
+    switch (difficulty) {
+      case 'easy':
+        return 'Легко';
+      case 'medium':
+        return 'Средне';
+      case 'hard':
+        return 'Сложно';
+      default:
+        return 'Не указано';
+    }
+  }
+
+  /// Get formatted duration
+  String get formattedDuration {
+    if (estimatedDuration == null) return 'Не указано';
+    
+    final hours = estimatedDuration! ~/ 60;
+    final minutes = estimatedDuration! % 60;
+    
+    if (hours > 0 && minutes > 0) {
+      return '$hoursч $minutesм';
+    } else if (hours > 0) {
+      return '$hoursч';
+    } else {
+      return '$minutesм';
+    }
+  }
+
+  /// Get category icon
+  String get categoryIcon {
+    switch (category?.toLowerCase()) {
+      case 'день рождения':
+        return '🎂';
+      case 'свадьба':
+        return '💒';
+      case 'корпоратив':
+        return '🏢';
+      case 'детский праздник':
+        return '🎈';
+      case 'выпускной':
+        return '🎓';
+      case 'новый год':
+        return '🎄';
+      case 'хэллоуин':
+        return '🎃';
+      case '8 марта':
+        return '🌸';
+      case '23 февраля':
+        return '🎖️';
+      default:
+        return '💡';
+    }
   }
 
   @override
-  int get hashCode => id.hashCode;
-
-  /// Получить количество лайков
-  int get likeCount => likesCount;
-
-  /// Получить количество комментариев
-  int get commentCountValue => 0; // TODO(developer): Добавить поле для комментариев
-
-  /// Проверить, лайкнута ли идея (для совместимости)
-  bool get isLiked => false; // TODO(developer): Передавать userId
-
-  /// Проверить, сохранена ли идея (для совместимости)
-  bool get isSaved => false; // TODO(developer): Передавать userId
+  List<Object?> get props => [
+        id,
+        title,
+        shortDesc,
+        mediaUrl,
+        tags,
+        createdAt,
+        updatedAt,
+        authorId,
+        authorName,
+        likesCount,
+        viewsCount,
+        likedBy,
+        category,
+        difficulty,
+        estimatedDuration,
+        requiredMaterials,
+        detailedDescription,
+      ];
 
   @override
-  String toString() => 'Idea(id: $id, title: $title, category: $category)';
+  String toString() {
+    return 'Idea(id: $id, title: $title, category: $category)';
+  }
 }

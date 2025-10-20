@@ -99,14 +99,14 @@ class LoggerService {
 
     // В debug режиме также выводим в консоль
     if (kDebugMode) {
-      print(logMessage);
+      debugdebugPrint(logMessage);
       if (data != null && data.isNotEmpty) {
-        print('Data: $data');
+        debugdebugPrint('Data: $data');
       }
       if (error != null) {
-        print('Error: $error');
+        debugdebugPrint('Error: $error');
         if (stackTrace != null) {
-          print('Stack trace: $stackTrace');
+          debugdebugPrint('Stack trace: $stackTrace');
         }
       }
     }

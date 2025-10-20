@@ -37,7 +37,7 @@ class SpecialistDiscountService {
 
       return docRef.id;
     } on Exception catch (e) {
-      print('Ошибка предложения скидки: $e');
+      debugPrint('Ошибка предложения скидки: $e');
       rethrow;
     }
   }
@@ -56,7 +56,7 @@ class SpecialistDiscountService {
 
       return snapshot.docs.map(SpecialistDiscount.fromDocument).toList();
     } on Exception catch (e) {
-      print('Ошибка получения скидок для заказа: $e');
+      debugPrint('Ошибка получения скидок для заказа: $e');
       return [];
     }
   }
@@ -77,7 +77,7 @@ class SpecialistDiscountService {
 
       return snapshot.docs.map(SpecialistDiscount.fromDocument).toList();
     } on Exception catch (e) {
-      print('Ошибка получения активных скидок специалиста: $e');
+      debugPrint('Ошибка получения активных скидок специалиста: $e');
       return [];
     }
   }
@@ -99,7 +99,7 @@ class SpecialistDiscountService {
         await _updateBookingWithDiscount(discount);
       }
     } on Exception catch (e) {
-      print('Ошибка принятия скидки: $e');
+      debugPrint('Ошибка принятия скидки: $e');
       rethrow;
     }
   }
@@ -113,7 +113,7 @@ class SpecialistDiscountService {
         'isActive': false,
       });
     } on Exception catch (e) {
-      print('Ошибка отклонения скидки: $e');
+      debugPrint('Ошибка отклонения скидки: $e');
       rethrow;
     }
   }
@@ -127,7 +127,7 @@ class SpecialistDiscountService {
         'isActive': false,
       });
     } on Exception catch (e) {
-      print('Ошибка отмены скидки: $e');
+      debugPrint('Ошибка отмены скидки: $e');
       rethrow;
     }
   }
@@ -167,7 +167,7 @@ class SpecialistDiscountService {
         lastUpdated: DateTime.now(),
       );
     } on Exception catch (e) {
-      print('Ошибка получения статистики скидок: $e');
+      debugPrint('Ошибка получения статистики скидок: $e');
       return SpecialistDiscountStats.empty();
     }
   }
@@ -186,7 +186,7 @@ class SpecialistDiscountService {
 
       return existingDiscount.docs.isEmpty;
     } on Exception catch (e) {
-      print('Ошибка проверки возможности предложения скидки: $e');
+      debugPrint('Ошибка проверки возможности предложения скидки: $e');
       return false;
     }
   }
@@ -220,7 +220,7 @@ class SpecialistDiscountService {
         'isRead': false,
       });
     } on Exception catch (e) {
-      print('Ошибка отправки уведомления о скидке: $e');
+      debugPrint('Ошибка отправки уведомления о скидке: $e');
     }
   }
 
@@ -245,7 +245,7 @@ class SpecialistDiscountService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      print('Ошибка обновления заказа со скидкой: $e');
+      debugPrint('Ошибка обновления заказа со скидкой: $e');
     }
   }
 }

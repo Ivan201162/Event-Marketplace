@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
@@ -468,7 +467,7 @@ class EnhancedFeedService {
         thumbnailUrl: thumbnailUrl,
       );
     } catch (e) {
-      debugPrint('Ошибка загрузки медиафайла: $e');
+      debugdebugPrint('Ошибка загрузки медиафайла: $e');
       return null;
     }
   }
@@ -479,7 +478,7 @@ class EnhancedFeedService {
       final ref = _storage.refFromURL(url);
       await ref.delete();
     } catch (e) {
-      debugPrint('Ошибка удаления медиафайла: $e');
+      debugdebugPrint('Ошибка удаления медиафайла: $e');
     }
   }
 

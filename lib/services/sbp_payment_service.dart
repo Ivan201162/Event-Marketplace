@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class SBPPaymentService {
@@ -44,7 +43,7 @@ class SBPPaymentService {
         );
       }
     } catch (e) {
-      debugPrint('SBP payment creation error: $e');
+      debugdebugPrint('SBP payment creation error: $e');
       throw Exception('Ошибка создания платежа СБП: $e');
     }
   }
@@ -68,7 +67,7 @@ class SBPPaymentService {
         );
       }
     } catch (e) {
-      debugPrint('SBP payment status error: $e');
+      debugdebugPrint('SBP payment status error: $e');
       throw Exception('Ошибка получения статуса платежа СБП: $e');
     }
   }
@@ -94,7 +93,7 @@ class SBPPaymentService {
           callbackData.containsKey('status') &&
           callbackData.containsKey('amount');
     } catch (e) {
-      debugPrint('SBP callback validation error: $e');
+      debugdebugPrint('SBP callback validation error: $e');
       return false;
     }
   }

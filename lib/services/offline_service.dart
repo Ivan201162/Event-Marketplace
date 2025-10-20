@@ -20,7 +20,7 @@ class OfflineService {
       final connectivityResult = await Connectivity().checkConnectivity();
       return connectivityResult != ConnectivityResult.none;
     } catch (e) {
-      debugPrint('Ошибка проверки подключения: $e');
+      debugdebugPrint('Ошибка проверки подключения: $e');
       return false;
     }
   }
@@ -76,9 +76,9 @@ class OfflineService {
       final jsonString = jsonEncode(data);
       await file.writeAsString(jsonString);
 
-      debugPrint('Данные сохранены в кэш: $key');
+      debugdebugPrint('Данные сохранены в кэш: $key');
     } catch (e) {
-      debugPrint('Ошибка сохранения в кэш: $e');
+      debugdebugPrint('Ошибка сохранения в кэш: $e');
     }
   }
 
@@ -100,10 +100,10 @@ class OfflineService {
       final jsonString = await file.readAsString();
       final data = jsonDecode(jsonString) as Map<String, dynamic>;
 
-      debugPrint('Данные загружены из кэша: $key');
+      debugdebugPrint('Данные загружены из кэша: $key');
       return data;
     } catch (e) {
-      debugPrint('Ошибка загрузки из кэша: $e');
+      debugdebugPrint('Ошибка загрузки из кэша: $e');
       return null;
     }
   }
@@ -121,10 +121,10 @@ class OfflineService {
       final file = File(path.join(cacheDir.path, '$key.json'));
       if (await file.exists()) {
         await file.delete();
-        debugPrint('Данные удалены из кэша: $key');
+        debugdebugPrint('Данные удалены из кэша: $key');
       }
     } catch (e) {
-      debugPrint('Ошибка удаления из кэша: $e');
+      debugdebugPrint('Ошибка удаления из кэша: $e');
     }
   }
 
@@ -136,10 +136,10 @@ class OfflineService {
 
       if (await cacheDir.exists()) {
         await cacheDir.delete(recursive: true);
-        debugPrint('Кэш очищен');
+        debugdebugPrint('Кэш очищен');
       }
     } catch (e) {
-      debugPrint('Ошибка очистки кэша: $e');
+      debugdebugPrint('Ошибка очистки кэша: $e');
     }
   }
 
@@ -162,7 +162,7 @@ class OfflineService {
 
       return totalSize;
     } catch (e) {
-      debugPrint('Ошибка получения размера кэша: $e');
+      debugdebugPrint('Ошибка получения размера кэша: $e');
       return 0;
     }
   }
@@ -188,7 +188,7 @@ class OfflineService {
 
       return keys;
     } catch (e) {
-      debugPrint('Ошибка получения ключей кэша: $e');
+      debugdebugPrint('Ошибка получения ключей кэша: $e');
       return [];
     }
   }
@@ -212,7 +212,7 @@ class OfflineService {
 
       return true;
     } catch (e) {
-      debugPrint('Ошибка проверки актуальности кэша: $e');
+      debugdebugPrint('Ошибка проверки актуальности кэша: $e');
       return true;
     }
   }
@@ -222,20 +222,20 @@ class OfflineService {
     try {
       final isOnline = await OfflineService.isOnline();
       if (!isOnline) {
-        debugPrint('Нет подключения к интернету для синхронизации');
+        debugdebugPrint('Нет подключения к интернету для синхронизации');
         return;
       }
 
       // TODO(developer): Реализовать синхронизацию с сервером
-      debugPrint('Синхронизация данных...');
+      debugdebugPrint('Синхронизация данных...');
 
       // Обновляем время последней синхронизации
       await updateLastSyncTime();
       await updateCacheVersion();
 
-      debugPrint('Синхронизация завершена');
+      debugdebugPrint('Синхронизация завершена');
     } catch (e) {
-      debugPrint('Ошибка синхронизации: $e');
+      debugdebugPrint('Ошибка синхронизации: $e');
     }
   }
 

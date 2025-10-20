@@ -267,11 +267,11 @@ class DiscountService {
             },
           );
         } catch (e) {
-          print('Ошибка отправки уведомления на токен $token: $e');
+          debugPrint('Ошибка отправки уведомления на токен $token: $e');
         }
       }
     } catch (e) {
-      print('Ошибка отправки уведомления о скидке: $e');
+      debugPrint('Ошибка отправки уведомления о скидке: $e');
     }
   }
 
@@ -311,11 +311,11 @@ class DiscountService {
             },
           );
         } catch (e) {
-          print('Ошибка отправки уведомления на токен $token: $e');
+          debugPrint('Ошибка отправки уведомления на токен $token: $e');
         }
       }
     } catch (e) {
-      print('Ошибка отправки уведомления о принятии скидки: $e');
+      debugPrint('Ошибка отправки уведомления о принятии скидки: $e');
     }
   }
 
@@ -354,11 +354,11 @@ class DiscountService {
             },
           );
         } catch (e) {
-          print('Ошибка отправки уведомления на токен $token: $e');
+          debugPrint('Ошибка отправки уведомления на токен $token: $e');
         }
       }
     } catch (e) {
-      print('Ошибка отправки уведомления об отклонении скидки: $e');
+      debugPrint('Ошибка отправки уведомления об отклонении скидки: $e');
     }
   }
 
@@ -379,7 +379,7 @@ class DiscountService {
         'timestamp': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
-      print('Ошибка логирования предложения скидки: $e');
+      debugPrint('Ошибка логирования предложения скидки: $e');
     }
   }
 
@@ -398,7 +398,7 @@ class DiscountService {
         'timestamp': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
-      print('Ошибка логирования принятия скидки: $e');
+      debugPrint('Ошибка логирования принятия скидки: $e');
     }
   }
 
@@ -417,7 +417,7 @@ class DiscountService {
         'timestamp': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
-      print('Ошибка логирования отклонения скидки: $e');
+      debugPrint('Ошибка логирования отклонения скидки: $e');
     }
   }
 }

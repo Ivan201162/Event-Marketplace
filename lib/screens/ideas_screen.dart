@@ -136,8 +136,7 @@ class IdeasScreen extends ConsumerWidget {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    borderRadius:
-                        const BorderRadius.vertical(top: Radius.circular(12)),
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
                     image: idea.imageUrl != null
                         ? DecorationImage(
                             image: NetworkImage(idea.imageUrl!),
@@ -169,9 +168,7 @@ class IdeasScreen extends ConsumerWidget {
                                     shape: BoxShape.circle,
                                   ),
                                   child: Icon(
-                                    idea.isSaved
-                                        ? Icons.bookmark
-                                        : Icons.bookmark_border,
+                                    idea.isSaved ? Icons.bookmark : Icons.bookmark_border,
                                     color: Colors.white,
                                     size: 20,
                                   ),
@@ -219,13 +216,11 @@ class IdeasScreen extends ConsumerWidget {
                         children: [
                           // Аватар автора
                           GestureDetector(
-                            onTap: () =>
-                                context.push('/profile/${idea.authorId}'),
+                            onTap: () => context.push('/profile/${idea.authorId}'),
                             child: CircleAvatar(
                               radius: 12,
-                              backgroundColor: Theme.of(context)
-                                  .primaryColor
-                                  .withValues(alpha: 0.1),
+                              backgroundColor:
+                                  Theme.of(context).primaryColor.withValues(alpha: 0.1),
                               backgroundImage: idea.authorAvatar != null
                                   ? NetworkImage(idea.authorAvatar!)
                                   : null,
@@ -238,8 +233,7 @@ class IdeasScreen extends ConsumerWidget {
                           // Имя автора
                           Expanded(
                             child: GestureDetector(
-                              onTap: () =>
-                                  context.push('/profile/${idea.authorId}'),
+                              onTap: () => context.push('/profile/${idea.authorId}'),
                               child: Text(
                                 idea.authorName ?? 'Неизвестный автор',
                                 style: TextStyle(
@@ -257,12 +251,8 @@ class IdeasScreen extends ConsumerWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
-                                  idea.isLiked
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
-                                  color: idea.isLiked
-                                      ? Colors.red
-                                      : Colors.grey[600],
+                                  idea.isLiked ? Icons.favorite : Icons.favorite_border,
+                                  color: idea.isLiked ? Colors.red : Colors.grey[600],
                                   size: 16,
                                 ),
                                 if (idea.likeCount > 0) ...[
@@ -346,14 +336,10 @@ class IdeasScreen extends ConsumerWidget {
                 children: [
                   CircleAvatar(
                     radius: 16,
-                    backgroundColor:
-                        Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                    backgroundImage: idea.authorAvatar != null
-                        ? NetworkImage(idea.authorAvatar!)
-                        : null,
-                    child: idea.authorAvatar == null
-                        ? const Icon(Icons.person, size: 16)
-                        : null,
+                    backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                    backgroundImage:
+                        idea.authorAvatar != null ? NetworkImage(idea.authorAvatar!) : null,
+                    child: idea.authorAvatar == null ? const Icon(Icons.person, size: 16) : null,
                   ),
                   const SizedBox(width: 8),
                   Text(

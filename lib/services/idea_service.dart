@@ -1,347 +1,371 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/idea.dart';
 
-/// Сервис для работы с идеями
+/// Service for managing ideas
 class IdeaService {
-  factory IdeaService() => _instance;
-  IdeaService._internal();
-  static final IdeaService _instance = IdeaService._internal();
-
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final String _collection = 'ideas';
+  final FirebaseStorage? _storage = kIsWeb ? null : FirebaseStorage.instance;
+  static const String _collection = 'ideas';
 
-  /// Получить все идеи
-  Future<List<Idea>> getAllIdeas() async {
+  /// Get all ideas with pagination
+  Future<List<Idea>> getIdeas({int limit = 20, DocumentSnapshot? lastDocument}) async {
     try {
-      final snapshot = await _firestore
+      Query query = _firestore
           .collection(_collection)
           .orderBy('createdAt', descending: true)
-          .limit(50)
-          .get();
+          .limit(limit);
 
-      return snapshot.docs.map(Idea.fromDocument).toList();
-    } on Exception {
-      // Возвращаем тестовые данные в случае ошибки
-      return _getTestIdeas();
+      if (lastDocument != null) {
+        query = query.startAfterDocument(lastDocument);
+      }
+
+      final snapshot = await query.get();
+      return snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList();
+    } catch (e) {
+      debugPrint('Error getting ideas: $e');
+      return [];
     }
   }
 
-  /// Получить идеи по категории
-  Future<List<Idea>> getIdeasByCategory(String category) async {
+  /// Get ideas by category
+  Future<List<Idea>> getIdeasByCategory(String category, {int limit = 20}) async {
     try {
       final snapshot = await _firestore
           .collection(_collection)
           .where('category', isEqualTo: category)
           .orderBy('createdAt', descending: true)
+          .limit(limit)
           .get();
 
-      return snapshot.docs.map(Idea.fromDocument).toList();
-    } on Exception {
-      // Возвращаем тестовые данные в случае ошибки
-      return _getTestIdeas().where((idea) => idea.category == category).toList();
+      return snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList();
+    } catch (e) {
+      debugPrint('Error getting ideas by category: $e');
+      return [];
     }
   }
 
-  /// Получить идеи автора
-  Future<List<Idea>> getIdeasByAuthor(String authorId) async {
+  /// Get ideas by tags
+  Future<List<Idea>> getIdeasByTags(List<String> tags, {int limit = 20}) async {
     try {
       final snapshot = await _firestore
           .collection(_collection)
-          .where('authorId', isEqualTo: authorId)
+          .where('tags', arrayContainsAny: tags)
           .orderBy('createdAt', descending: true)
+          .limit(limit)
           .get();
 
-      return snapshot.docs.map(Idea.fromDocument).toList();
-    } on Exception {
-      // Возвращаем тестовые данные в случае ошибки
-      return _getTestIdeas().where((idea) => idea.authorId == authorId).toList();
+      return snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList();
+    } catch (e) {
+      debugPrint('Error getting ideas by tags: $e');
+      return [];
     }
   }
 
-  /// Получить популярные идеи
-  Future<List<Idea>> getTrendingIdeas() async {
+  /// Get ideas by difficulty
+  Future<List<Idea>> getIdeasByDifficulty(String difficulty, {int limit = 20}) async {
+    try {
+      final snapshot = await _firestore
+          .collection(_collection)
+          .where('difficulty', isEqualTo: difficulty)
+          .orderBy('createdAt', descending: true)
+          .limit(limit)
+          .get();
+
+      return snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList();
+    } catch (e) {
+      debugPrint('Error getting ideas by difficulty: $e');
+      return [];
+    }
+  }
+
+  /// Get popular ideas (by likes)
+  Future<List<Idea>> getPopularIdeas({int limit = 10}) async {
     try {
       final snapshot = await _firestore
           .collection(_collection)
           .orderBy('likesCount', descending: true)
           .orderBy('createdAt', descending: true)
-          .limit(20)
+          .limit(limit)
           .get();
 
-      return snapshot.docs.map(Idea.fromDocument).toList();
-    } on Exception {
-      // Возвращаем тестовые данные в случае ошибки
-      return _getTestIdeas()..sort((a, b) => b.likesCount.compareTo(a.likesCount));
+      return snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList();
+    } catch (e) {
+      debugPrint('Error getting popular ideas: $e');
+      return [];
     }
   }
 
-  /// Создать идею
-  Future<String> createIdea(Idea idea) async {
+  /// Get trending ideas (by recent views)
+  Future<List<Idea>> getTrendingIdeas({int limit = 10}) async {
     try {
-      final docRef = await _firestore.collection(_collection).add(idea.toMap());
+      final snapshot = await _firestore
+          .collection(_collection)
+          .orderBy('viewsCount', descending: true)
+          .orderBy('createdAt', descending: true)
+          .limit(limit)
+          .get();
+
+      return snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList();
+    } catch (e) {
+      debugPrint('Error getting trending ideas: $e');
+      return [];
+    }
+  }
+
+  /// Create a new idea
+  Future<String?> createIdea({
+    required String title,
+    required String shortDesc,
+    String? mediaUrl,
+    List<String>? tags,
+    String? authorId,
+    String? authorName,
+    String? category,
+    String? difficulty,
+    int? estimatedDuration,
+    List<String>? requiredMaterials,
+    String? detailedDescription,
+  }) async {
+    try {
+      final idea = Idea(
+        id: '', // Will be set by Firestore
+        title: title,
+        shortDesc: shortDesc,
+        mediaUrl: mediaUrl,
+        tags: tags ?? [],
+        authorId: authorId,
+        authorName: authorName,
+        category: category,
+        difficulty: difficulty,
+        estimatedDuration: estimatedDuration,
+        requiredMaterials: requiredMaterials ?? [],
+        detailedDescription: detailedDescription,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      final docRef = await _firestore.collection(_collection).add(idea.toFirestore());
       return docRef.id;
-    } on Exception catch (e) {
-      throw Exception('Ошибка создания идеи: $e');
+    } catch (e) {
+      debugPrint('Error creating idea: $e');
+      return null;
     }
   }
 
-  /// Обновить идею
-  Future<void> updateIdea(String ideaId, Map<String, dynamic> updates) async {
+  /// Update an idea
+  Future<bool> updateIdea(String ideaId, Map<String, dynamic> updates) async {
     try {
-      await _firestore.collection(_collection).doc(ideaId).update(updates);
-    } on Exception catch (e) {
-      throw Exception('Ошибка обновления идеи: $e');
+      await _firestore.collection(_collection).doc(ideaId).update({
+        ...updates,
+        'updatedAt': DateTime.now(),
+      });
+      return true;
+    } catch (e) {
+      debugPrint('Error updating idea: $e');
+      return false;
     }
   }
 
-  /// Удалить идею
-  Future<void> deleteIdea(String ideaId) async {
+  /// Delete an idea
+  Future<bool> deleteIdea(String ideaId) async {
     try {
       await _firestore.collection(_collection).doc(ideaId).delete();
-    } on Exception catch (e) {
-      throw Exception('Ошибка удаления идеи: $e');
+      return true;
+    } catch (e) {
+      debugPrint('Error deleting idea: $e');
+      return false;
     }
   }
 
-  /// Лайкнуть идею
-  Future<void> likeIdea(String ideaId, String userId) async {
+  /// Like an idea
+  Future<bool> likeIdea(String ideaId, String userId) async {
     try {
-      final ideaRef = _firestore.collection(_collection).doc(ideaId);
-      await _firestore.runTransaction((transaction) async {
-        final snapshot = await transaction.get(ideaRef);
-        if (!snapshot.exists) return;
-
-        final idea = Idea.fromDocument(snapshot);
-        final likedBy = List<String>.from(idea.likedBy);
-
-        if (likedBy.contains(userId)) {
-          likedBy.remove(userId);
-        } else {
-          likedBy.add(userId);
-        }
-
-        transaction.update(ideaRef, {
-          'likedBy': likedBy,
-          'likesCount': likedBy.length,
-        });
+      await _firestore.collection(_collection).doc(ideaId).update({
+        'likedBy': FieldValue.arrayUnion([userId]),
+        'likesCount': FieldValue.increment(1),
+        'updatedAt': DateTime.now(),
       });
-    } on Exception catch (e) {
-      throw Exception('Ошибка лайка идеи: $e');
+      return true;
+    } catch (e) {
+      debugPrint('Error liking idea: $e');
+      return false;
     }
   }
 
-  /// Сохранить идею
-  Future<void> saveIdea(String ideaId, String userId) async {
+  /// Unlike an idea
+  Future<bool> unlikeIdea(String ideaId, String userId) async {
     try {
-      final ideaRef = _firestore.collection(_collection).doc(ideaId);
-      await _firestore.runTransaction((transaction) async {
-        final snapshot = await transaction.get(ideaRef);
-        if (!snapshot.exists) return;
-
-        final idea = Idea.fromDocument(snapshot);
-        final savedBy = List<String>.from(idea.savedBy);
-
-        if (savedBy.contains(userId)) {
-          savedBy.remove(userId);
-        } else {
-          savedBy.add(userId);
-        }
-
-        transaction.update(ideaRef, {
-          'savedBy': savedBy,
-          'savesCount': savedBy.length,
-        });
+      await _firestore.collection(_collection).doc(ideaId).update({
+        'likedBy': FieldValue.arrayRemove([userId]),
+        'likesCount': FieldValue.increment(-1),
+        'updatedAt': DateTime.now(),
       });
-    } on Exception catch (e) {
-      throw Exception('Ошибка сохранения идеи: $e');
+      return true;
+    } catch (e) {
+      debugPrint('Error unliking idea: $e');
+      return false;
     }
   }
 
-  /// Поделиться идеей
-  Future<void> shareIdea(String ideaId) async {
+  /// Increment view count
+  Future<bool> incrementViewCount(String ideaId) async {
     try {
-      final ideaRef = _firestore.collection(_collection).doc(ideaId);
-      await _firestore.runTransaction((transaction) async {
-        final snapshot = await transaction.get(ideaRef);
-        if (!snapshot.exists) return;
-
-        final idea = Idea.fromDocument(snapshot);
-        transaction.update(ideaRef, {
-          'sharesCount': idea.sharesCount + 1,
-        });
+      await _firestore.collection(_collection).doc(ideaId).update({
+        'viewsCount': FieldValue.increment(1),
+        'updatedAt': DateTime.now(),
       });
-    } on Exception catch (e) {
-      throw Exception('Ошибка репоста идеи: $e');
+      return true;
+    } catch (e) {
+      debugPrint('Error incrementing view count: $e');
+      return false;
     }
   }
 
-  /// Поиск идей
-  Future<List<Idea>> searchIdeas(String query) async {
+  /// Get idea by ID
+  Future<Idea?> getIdeaById(String ideaId) async {
     try {
-      // Простой поиск по заголовку и описанию
-      final titleSnapshot = await _firestore
-          .collection(_collection)
-          .where('title', isGreaterThanOrEqualTo: query)
-          .where('title', isLessThan: '${query}z')
-          .get();
-
-      final descriptionSnapshot = await _firestore
-          .collection(_collection)
-          .where('description', isGreaterThanOrEqualTo: query)
-          .where('description', isLessThan: '${query}z')
-          .get();
-
-      final ideas = <Idea>[];
-      ideas.addAll(titleSnapshot.docs.map(Idea.fromDocument));
-      ideas.addAll(descriptionSnapshot.docs.map(Idea.fromDocument));
-
-      // Убираем дубликаты
-      final uniqueIdeas = <String, Idea>{};
-      for (final idea in ideas) {
-        uniqueIdeas[idea.id] = idea;
+      final doc = await _firestore.collection(_collection).doc(ideaId).get();
+      if (doc.exists) {
+        return Idea.fromFirestore(doc);
       }
-
-      return uniqueIdeas.values.toList();
-    } on Exception {
-      // Возвращаем тестовые данные в случае ошибки
-      return _getTestIdeas()
-          .where(
-            (idea) =>
-                idea.title.toLowerCase().contains(query.toLowerCase()) ||
-                idea.description.toLowerCase().contains(query.toLowerCase()),
-          )
-          .toList();
+      return null;
+    } catch (e) {
+      debugPrint('Error getting idea by ID: $e');
+      return null;
     }
   }
 
-  /// Тестовые данные
-  List<Idea> _getTestIdeas() {
-    final now = DateTime.now();
-    return [
-      Idea(
-        id: '1',
-        title: 'Свадебная фотосессия в парке',
-        description:
-            'Романтическая фотосессия молодоженов среди цветущих деревьев. Идеально для весенних свадеб.',
-        imageUrl: 'https://placehold.co/400x300/FF6B6B/white?text=Wedding+Photo',
-        category: 'Свадьбы',
-        authorId: 'specialist1',
-        authorName: 'Анна Петрова',
-        authorAvatar: 'https://placehold.co/100x100/4CAF50/white?text=AP',
-        createdAt: now.subtract(const Duration(days: 1)),
-        likesCount: 42,
-        savesCount: 15,
-        sharesCount: 8,
-        tags: ['свадьба', 'фотосессия', 'парк', 'романтика'],
-      ),
-      Idea(
-        id: '2',
-        title: 'Корпоративный тимбилдинг',
-        description:
-            'Активные игры и квесты для сплочения команды. Отличный способ улучшить командную работу.',
-        imageUrl: 'https://placehold.co/400x300/4ECDC4/white?text=Team+Building',
-        category: 'Корпоративы',
-        authorId: 'specialist2',
-        authorName: 'Михаил Соколов',
-        authorAvatar: 'https://placehold.co/100x100/2196F3/white?text=MS',
-        createdAt: now.subtract(const Duration(days: 2)),
-        likesCount: 28,
-        savesCount: 12,
-        sharesCount: 5,
-        tags: ['корпоратив', 'тимбилдинг', 'команда', 'активность'],
-      ),
-      Idea(
-        id: '3',
-        title: 'Детский день рождения в стиле пиратов',
-        description: 'Приключенческая вечеринка с поиском сокровищ, костюмами и пиратскими играми.',
-        imageUrl: 'https://placehold.co/400x300/45B7D1/white?text=Pirate+Party',
-        category: 'Детские праздники',
-        authorId: 'specialist3',
-        authorName: 'Елена Козлова',
-        authorAvatar: 'https://placehold.co/100x100/FF9800/white?text=EK',
-        createdAt: now.subtract(const Duration(days: 3)),
-        likesCount: 67,
-        savesCount: 23,
-        sharesCount: 12,
-        tags: ['дети', 'день рождения', 'пираты', 'приключения'],
-      ),
-      Idea(
-        id: '4',
-        title: 'Портретная съемка в студии',
-        description: 'Профессиональная портретная съемка с качественным освещением и реквизитом.',
-        imageUrl: 'https://placehold.co/400x300/96CEB4/white?text=Portrait',
-        category: 'Фотосессии',
-        authorId: 'specialist1',
-        authorName: 'Анна Петрова',
-        authorAvatar: 'https://placehold.co/100x100/4CAF50/white?text=AP',
-        createdAt: now.subtract(const Duration(days: 4)),
-        likesCount: 35,
-        savesCount: 18,
-        sharesCount: 7,
-        tags: ['портрет', 'студия', 'профессиональная съемка'],
-      ),
-      Idea(
-        id: '5',
-        title: 'Видеосъемка свадебного танца',
-        description: 'Кинематографическая съемка первого танца молодоженов с красивыми ракурсами.',
-        imageUrl: 'https://placehold.co/400x300/FFEAA7/white?text=Wedding+Dance',
-        category: 'Видеосъемка',
-        authorId: 'specialist4',
-        authorName: 'Дмитрий Волков',
-        authorAvatar: 'https://placehold.co/100x100/9C27B0/white?text=DV',
-        createdAt: now.subtract(const Duration(days: 5)),
-        likesCount: 89,
-        savesCount: 31,
-        sharesCount: 15,
-        tags: ['видео', 'свадьба', 'танец', 'кинематограф'],
-      ),
-      Idea(
-        id: '6',
-        title: 'Тематическая вечеринка в стиле 80-х',
-        description: 'Ретро-вечеринка с музыкой, костюмами и атмосферой 1980-х годов.',
-        imageUrl: 'https://placehold.co/400x300/FF7675/white?text=80s+Party',
-        category: 'Дни рождения',
-        authorId: 'specialist2',
-        authorName: 'Михаил Соколов',
-        authorAvatar: 'https://placehold.co/100x100/2196F3/white?text=MS',
-        createdAt: now.subtract(const Duration(days: 6)),
-        likesCount: 54,
-        savesCount: 19,
-        sharesCount: 9,
-        tags: ['80-е', 'ретро', 'вечеринка', 'музыка'],
-      ),
-      Idea(
-        id: '7',
-        title: 'Семейная фотосессия на природе',
-        description:
-            'Теплые семейные фотографии на фоне осеннего леса. Идеально для семейных альбомов.',
-        imageUrl: 'https://placehold.co/400x300/74B9FF/white?text=Family+Photo',
-        category: 'Фотосессии',
-        authorId: 'specialist3',
-        authorName: 'Елена Козлова',
-        authorAvatar: 'https://placehold.co/100x100/FF9800/white?text=EK',
-        createdAt: now.subtract(const Duration(days: 7)),
-        likesCount: 76,
-        savesCount: 27,
-        sharesCount: 11,
-        tags: ['семья', 'природа', 'осень', 'тепло'],
-      ),
-      Idea(
-        id: '8',
-        title: 'Корпоративная новогодняя вечеринка',
-        description: 'Праздничное мероприятие с конкурсами, подарками и новогодней атмосферой.',
-        imageUrl: 'https://placehold.co/400x300/00B894/white?text=New+Year+Party',
-        category: 'Корпоративы',
-        authorId: 'specialist4',
-        authorName: 'Дмитрий Волков',
-        authorAvatar: 'https://placehold.co/100x100/9C27B0/white?text=DV',
-        createdAt: now.subtract(const Duration(days: 8)),
-        likesCount: 43,
-        savesCount: 16,
-        sharesCount: 6,
-        tags: ['новый год', 'корпоратив', 'праздник', 'подарки'],
-      ),
-    ];
+  /// Search ideas
+  Future<List<Idea>> searchIdeas(String query, {int limit = 20}) async {
+    try {
+      final snapshot = await _firestore
+          .collection(_collection)
+          .orderBy('createdAt', descending: true)
+          .limit(limit)
+          .get();
+
+      final ideas = snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList();
+      
+      // Filter ideas that contain the query in title, description, or tags
+      return ideas.where((idea) {
+        final searchQuery = query.toLowerCase();
+        return idea.title.toLowerCase().contains(searchQuery) ||
+               idea.shortDesc.toLowerCase().contains(searchQuery) ||
+               idea.tags.any((tag) => tag.toLowerCase().contains(searchQuery)) ||
+               (idea.category?.toLowerCase().contains(searchQuery) ?? false);
+      }).toList();
+    } catch (e) {
+      debugPrint('Error searching ideas: $e');
+      return [];
+    }
+  }
+
+  /// Get available categories
+  Future<List<String>> getCategories() async {
+    try {
+      final snapshot = await _firestore.collection(_collection).get();
+      final categories = <String>{};
+      
+      for (final doc in snapshot.docs) {
+        final data = doc.data();
+        final category = data['category'] as String?;
+        if (category != null && category.isNotEmpty) {
+          categories.add(category);
+        }
+      }
+      
+      return categories.toList()..sort();
+    } catch (e) {
+      debugPrint('Error getting categories: $e');
+      return [];
+    }
+  }
+
+  /// Get available tags
+  Future<List<String>> getTags() async {
+    try {
+      final snapshot = await _firestore.collection(_collection).get();
+      final tags = <String>{};
+      
+      for (final doc in snapshot.docs) {
+        final data = doc.data();
+        final ideaTags = data['tags'] as List<dynamic>?;
+        if (ideaTags != null) {
+          for (final tag in ideaTags) {
+            if (tag is String && tag.isNotEmpty) {
+              tags.add(tag);
+            }
+          }
+        }
+      }
+      
+      return tags.toList()..sort();
+    } catch (e) {
+      debugPrint('Error getting tags: $e');
+      return [];
+    }
+  }
+
+  /// Upload media file
+  Future<String?> uploadMedia(String filePath, String fileName) async {
+    if (_storage == null) {
+      debugPrint('Firebase Storage not available on web');
+      return null;
+    }
+    try {
+      final ref = _storage.ref().child('ideas/$fileName');
+      final uploadTask = await ref.putFile(filePath as dynamic); // In real app, use File
+      final downloadUrl = await uploadTask.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      debugPrint('Error uploading media: $e');
+      return null;
+    }
+  }
+
+  /// Stream of ideas (for real-time updates)
+  Stream<List<Idea>> getIdeasStream({int limit = 20}) {
+    return _firestore
+        .collection(_collection)
+        .orderBy('createdAt', descending: true)
+        .limit(limit)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Idea.fromFirestore(doc))
+            .toList());
+  }
+
+  /// Stream of ideas by category
+  Stream<List<Idea>> getIdeasByCategoryStream(String category, {int limit = 20}) {
+    return _firestore
+        .collection(_collection)
+        .where('category', isEqualTo: category)
+        .orderBy('createdAt', descending: true)
+        .limit(limit)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Idea.fromFirestore(doc))
+            .toList());
+  }
+
+  /// Get idea statistics
+  Future<Map<String, int>> getIdeaStats(String ideaId) async {
+    try {
+      final doc = await _firestore.collection(_collection).doc(ideaId).get();
+      if (doc.exists) {
+        final data = doc.data()!;
+        return {
+          'likes': data['likesCount'] ?? 0,
+          'views': data['viewsCount'] ?? 0,
+        };
+      }
+      return {'likes': 0, 'views': 0};
+    } catch (e) {
+      debugPrint('Error getting idea stats: $e');
+      return {'likes': 0, 'views': 0};
+    }
   }
 }

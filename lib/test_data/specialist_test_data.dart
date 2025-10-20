@@ -45,25 +45,25 @@ class SpecialistTestData {
         reviewCount: 127,
         city: 'Москва',
         location: 'Москва, Центральный округ',
-        services: [
+        services: const [
           'Свадебная фотосъемка',
           'Портретная фотосъемка',
           'Семейная фотосъемка',
           'Корпоративная фотосъемка',
         ],
-        equipment: [
+        equipment: const [
           'Canon EOS R5',
           'Canon EF 24-70mm f/2.8L',
           'Canon EF 85mm f/1.4L',
           'Студийное освещение',
         ],
-        languages: ['Русский', 'Английский'],
+        languages: const ['Русский', 'Английский'],
         isVerified: true,
         isOnline: true,
         createdAt: now.subtract(const Duration(days: 30)),
         updatedAt: now,
         priceRange: const PriceRange(minPrice: 3000, maxPrice: 8000),
-        avgPriceByService: {
+        avgPriceByService: const {
           'Свадебная фотосъемка': 15000,
           'Портретная фотосъемка': 5000,
           'Семейная фотосъемка': 8000,
@@ -98,17 +98,16 @@ class SpecialistTestData {
         reviewCount: 89,
         city: 'Санкт-Петербург',
         location: 'Санкт-Петербург, Центральный район',
-        services: [
+        services: const [
           'Репортажная фотосъемка',
           'Событийная фотосъемка',
           'Уличная фотография',
         ],
-        equipment: [
+        equipment: const [
           'Sony A7R IV',
           'Sony FE 24-70mm f/2.8 GM',
           'Sony FE 70-200mm f/2.8 GM',
         ],
-        languages: ['Русский'],
         isVerified: true,
         isOnline: false,
         createdAt: now.subtract(const Duration(days: 25)),
@@ -143,19 +142,19 @@ class SpecialistTestData {
         reviewCount: 156,
         city: 'Москва',
         location: 'Москва, Северный округ',
-        services: [
+        services: const [
           'Свадебная видеосъемка',
           'Корпоративные видео',
           'Промо-ролики',
           'Монтаж видео',
         ],
-        equipment: [
+        equipment: const [
           'Sony FX6',
           'Canon C70',
           'DJI Ronin 4D',
           'Профессиональное освещение',
         ],
-        languages: ['Русский', 'Английский', 'Французский'],
+        languages: const ['Русский', 'Английский', 'Французский'],
         isVerified: true,
         isOnline: true,
         createdAt: now.subtract(const Duration(days: 45)),
@@ -192,19 +191,19 @@ class SpecialistTestData {
         reviewCount: 203,
         city: 'Москва',
         location: 'Москва, Восточный округ',
-        services: [
+        services: const [
           'Свадебные вечеринки',
           'Корпоративные мероприятия',
           'Частные вечеринки',
           'Клубные выступления',
         ],
-        equipment: [
+        equipment: const [
           'Pioneer DJM-900NXS2',
           'Pioneer CDJ-2000NXS2',
           'JBL EON615',
           'Профессиональная звуковая система',
         ],
-        languages: ['Русский', 'Английский'],
+        languages: const ['Русский', 'Английский'],
         isVerified: true,
         isOnline: true,
         createdAt: now.subtract(const Duration(days: 60)),
@@ -228,18 +227,18 @@ class SpecialistTestData {
         reviewCount: 134,
         city: 'Санкт-Петербург',
         location: 'Санкт-Петербург, Василеостровский район',
-        services: [
+        services: const [
           'Свадебные церемонии',
           'Корпоративные мероприятия',
           'Дни рождения',
           'Юбилеи',
         ],
-        equipment: [
+        equipment: const [
           'Микрофонная система',
           'Музыкальное оборудование',
           'Декорации',
         ],
-        languages: ['Русский', 'Английский'],
+        languages: const ['Русский', 'Английский'],
         isVerified: true,
         isOnline: false,
         createdAt: now.subtract(const Duration(days: 20)),
@@ -262,18 +261,17 @@ class SpecialistTestData {
         reviewCount: 98,
         city: 'Москва',
         location: 'Москва, Южный округ',
-        services: [
+        services: const [
           'Свадебные декорации',
           'Цветочные композиции',
           'Корпоративные мероприятия',
           'Частные вечеринки',
         ],
-        equipment: [
+        equipment: const [
           'Цветы и растения',
           'Декоративные материалы',
           'Инструменты для флористики',
         ],
-        languages: ['Русский'],
         isVerified: true,
         isOnline: true,
         createdAt: now.subtract(const Duration(days: 35)),
@@ -297,18 +295,18 @@ class SpecialistTestData {
         reviewCount: 76,
         city: 'Москва',
         location: 'Москва, Западный округ',
-        services: [
+        services: const [
           'Живая музыка',
           'Вокальные выступления',
           'Аккомпанемент',
           'Музыкальное оформление',
         ],
-        equipment: [
+        equipment: const [
           'Цифровое пианино',
           'Микрофонная система',
           'Звуковое оборудование',
         ],
-        languages: ['Русский', 'Английский'],
+        languages: const ['Русский', 'Английский'],
         isVerified: true,
         isOnline: false,
         createdAt: now.subtract(const Duration(days: 15)),
@@ -331,18 +329,18 @@ class SpecialistTestData {
         reviewCount: 245,
         city: 'Москва',
         location: 'Москва, Северо-Восточный округ',
-        services: [
+        services: const [
           'Свадебные банкеты',
           'Корпоративные мероприятия',
           'Фуршеты',
           'Детские праздники',
         ],
-        equipment: [
+        equipment: const [
           'Кухонное оборудование',
           'Посуда',
           'Сервировочные принадлежности',
         ],
-        languages: ['Русский', 'Английский'],
+        languages: const ['Русский', 'Английский'],
         isVerified: true,
         isOnline: true,
         createdAt: now.subtract(const Duration(days: 90)),
@@ -366,18 +364,17 @@ class SpecialistTestData {
         reviewCount: 67,
         city: 'Санкт-Петербург',
         location: 'Санкт-Петербург, Приморский район',
-        services: [
+        services: const [
           'Детские праздники',
           'Анимационные программы',
           'Мастер-классы',
           'Игровые программы',
         ],
-        equipment: [
+        equipment: const [
           'Костюмы персонажей',
           'Реквизит для игр',
           'Музыкальное оборудование',
         ],
-        languages: ['Русский'],
         isOnline: true,
         createdAt: now.subtract(const Duration(days: 10)),
         updatedAt: now,
@@ -400,18 +397,18 @@ class SpecialistTestData {
         reviewCount: 89,
         city: 'Москва',
         location: 'Москва, Юго-Западный округ',
-        services: [
+        services: const [
           'Свадебные букеты',
           'Цветочные композиции',
           'Декорации из цветов',
           'Корпоративные заказы',
         ],
-        equipment: [
+        equipment: const [
           'Свежие цветы',
           'Флористические инструменты',
           'Декоративные материалы',
         ],
-        languages: ['Русский', 'Французский'],
+        languages: const ['Русский', 'Французский'],
         isVerified: true,
         isOnline: false,
         createdAt: now.subtract(const Duration(days: 40)),
@@ -435,17 +432,17 @@ class SpecialistTestData {
         reviewCount: 45,
         city: 'Казань',
         location: 'Казань, Центр',
-        services: [
+        services: const [
           'Портретная фотосъемка',
           'Студийная съемка',
           'Уличная фотография',
         ],
-        equipment: [
+        equipment: const [
           'Canon EOS 6D',
           'Canon EF 50mm f/1.4',
           'Студийное освещение',
         ],
-        languages: ['Русский', 'Татарский'],
+        languages: const ['Русский', 'Татарский'],
         isOnline: true,
         createdAt: now.subtract(const Duration(days: 5)),
         updatedAt: now,
@@ -466,17 +463,16 @@ class SpecialistTestData {
         reviewCount: 52,
         city: 'Екатеринбург',
         location: 'Екатеринбург, Центр',
-        services: [
+        services: const [
           'Клубные выступления',
           'Частные вечеринки',
           'Корпоративные мероприятия',
         ],
-        equipment: [
+        equipment: const [
           'Pioneer DDJ-1000',
           'JBL EON615',
           'Профессиональные наушники',
         ],
-        languages: ['Русский'],
         isOnline: false,
         createdAt: now.subtract(const Duration(days: 8)),
         updatedAt: now,
@@ -497,18 +493,17 @@ class SpecialistTestData {
         reviewCount: 112,
         city: 'Новосибирск',
         location: 'Новосибирск, Центральный район',
-        services: [
+        services: const [
           'Свадебные церемонии',
           'Дни рождения',
           'Юбилеи',
           'Корпоративы',
         ],
-        equipment: [
+        equipment: const [
           'Микрофонная система',
           'Музыкальное оборудование',
           'Игровой реквизит',
         ],
-        languages: ['Русский'],
         isVerified: true,
         isOnline: true,
         createdAt: now.subtract(const Duration(days: 50)),

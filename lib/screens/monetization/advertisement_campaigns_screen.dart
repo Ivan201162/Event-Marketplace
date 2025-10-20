@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/advertisement.dart';
-import '../../providers/auth_provider.dart';
 import '../../services/advertisement_service.dart';
 import 'create_advertisement_screen.dart';
 
@@ -152,8 +151,8 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: campaign.isActive
-                        ? Colors.green.withOpacity(0.1)
-                        : Colors.grey.withOpacity(0.1),
+                        ? Colors.green.withValues(alpha: 0.1)
+                        : Colors.grey.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -310,7 +309,7 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: color),
       ),

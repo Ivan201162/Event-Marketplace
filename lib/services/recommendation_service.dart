@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 
-import '../models/specialist.dart';
 import '../models/user_activity.dart';
 import '../services/specialist_service.dart';
 
@@ -34,7 +32,7 @@ class RecommendationService {
         'metadata': metadata,
       });
     } catch (e) {
-      debugPrint('Ошибка записи активности: $e');
+      debugdebugPrint('Ошибка записи активности: $e');
     }
   }
 
@@ -53,7 +51,7 @@ class RecommendationService {
 
       return querySnapshot.docs.map(UserActivity.fromFirestore).toList();
     } catch (e) {
-      debugPrint('Ошибка получения активности пользователя: $e');
+      debugdebugPrint('Ошибка получения активности пользователя: $e');
       return [];
     }
   }
@@ -77,7 +75,7 @@ class RecommendationService {
 
       return recommendations;
     } catch (e) {
-      debugPrint('Ошибка получения рекомендаций: $e');
+      debugdebugPrint('Ошибка получения рекомендаций: $e');
       return _getPopularSpecialists(userId);
     }
   }
@@ -256,7 +254,7 @@ class RecommendationService {
           )
           .toList();
     } catch (e) {
-      debugPrint('Ошибка получения популярных специалистов: $e');
+      debugdebugPrint('Ошибка получения популярных специалистов: $e');
       return [];
     }
   }
@@ -286,7 +284,7 @@ class RecommendationService {
 
       await batch.commit();
     } catch (e) {
-      debugPrint('Ошибка сохранения рекомендаций: $e');
+      debugdebugPrint('Ошибка сохранения рекомендаций: $e');
     }
   }
 
@@ -301,7 +299,7 @@ class RecommendationService {
 
       return querySnapshot.docs.map(Recommendation.fromFirestore).toList();
     } catch (e) {
-      debugPrint('Ошибка получения сохраненных рекомендаций: $e');
+      debugdebugPrint('Ошибка получения сохраненных рекомендаций: $e');
       return [];
     }
   }
@@ -322,10 +320,10 @@ class RecommendationService {
 
       if (querySnapshot.docs.isNotEmpty) {
         await batch.commit();
-        debugPrint('Удалено ${querySnapshot.docs.length} старых рекомендаций');
+        debugdebugPrint('Удалено ${querySnapshot.docs.length} старых рекомендаций');
       }
     } catch (e) {
-      debugPrint('Ошибка очистки старых рекомендаций: $e');
+      debugdebugPrint('Ошибка очистки старых рекомендаций: $e');
     }
   }
 
@@ -364,7 +362,7 @@ class RecommendationService {
         'lastActivity': activities.isNotEmpty ? activities.first.timestamp : null,
       };
     } catch (e) {
-      debugPrint('Ошибка получения статистики активности: $e');
+      debugdebugPrint('Ошибка получения статистики активности: $e');
       return {};
     }
   }

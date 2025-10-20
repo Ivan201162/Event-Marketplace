@@ -20,8 +20,7 @@ final filteredCitiesProvider =
 });
 
 /// Провайдер для поиска городов по названию (мигрирован с StateNotifierProvider)
-final citySearchProvider =
-    NotifierProvider<CitySearchNotifier, AsyncValue<List<CityRegion>>>(() {
+final citySearchProvider = NotifierProvider<CitySearchNotifier, AsyncValue<List<CityRegion>>>(() {
   return CitySearchNotifier();
 });
 

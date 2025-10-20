@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/subscription_plan.dart';
-import '../../providers/auth_provider.dart';
 import '../../services/subscription_service.dart';
 
 class MySubscriptionsScreen extends StatefulWidget {
@@ -132,7 +131,7 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: _getStatusColor(subscription.status).withOpacity(0.1),
+                    color: _getStatusColor(subscription.status).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -285,7 +284,7 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: _getStatusColor(status).withOpacity(0.1),
+        color: _getStatusColor(status).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: _getStatusColor(status)),
       ),

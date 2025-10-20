@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 class GrowthNotificationsService {
@@ -28,9 +27,11 @@ class GrowthNotificationsService {
 
       await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
-      debugPrint('INFO: [GrowthNotificationsService] Referral notification sent to user $userId');
+      debugdebugPrint(
+          'INFO: [GrowthNotificationsService] Referral notification sent to user $userId');
     } catch (e) {
-      debugPrint('ERROR: [GrowthNotificationsService] Failed to send referral notification: $e');
+      debugdebugPrint(
+          'ERROR: [GrowthNotificationsService] Failed to send referral notification: $e');
     }
   }
 
@@ -38,7 +39,7 @@ class GrowthNotificationsService {
   Future<void> sendReferralBonusNotification(
       String userId, String bonusType, Map<String, dynamic> bonusData) async {
     try {
-      final String title = 'Бонус получен!';
+      const String title = 'Бонус получен!';
       String message = '';
 
       switch (bonusType) {
@@ -82,10 +83,10 @@ class GrowthNotificationsService {
 
       await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
-      debugPrint(
+      debugdebugPrint(
           'INFO: [GrowthNotificationsService] Referral bonus notification sent to user $userId');
     } catch (e) {
-      debugPrint(
+      debugdebugPrint(
           'ERROR: [GrowthNotificationsService] Failed to send referral bonus notification: $e');
     }
   }
@@ -118,10 +119,10 @@ class GrowthNotificationsService {
 
       await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
-      debugPrint(
+      debugdebugPrint(
           'INFO: [GrowthNotificationsService] Price change notification sent to user $userId');
     } catch (e) {
-      debugPrint(
+      debugdebugPrint(
           'ERROR: [GrowthNotificationsService] Failed to send price change notification: $e');
     }
   }
@@ -149,10 +150,10 @@ class GrowthNotificationsService {
 
       await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
-      debugPrint(
+      debugdebugPrint(
           'INFO: [GrowthNotificationsService] Partner commission notification sent to user $userId');
     } catch (e) {
-      debugPrint(
+      debugdebugPrint(
           'ERROR: [GrowthNotificationsService] Failed to send partner commission notification: $e');
     }
   }
@@ -177,10 +178,10 @@ class GrowthNotificationsService {
 
       await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
-      debugPrint(
+      debugdebugPrint(
           'INFO: [GrowthNotificationsService] New ad offer notification sent to user $userId');
     } catch (e) {
-      debugPrint(
+      debugdebugPrint(
           'ERROR: [GrowthNotificationsService] Failed to send new ad offer notification: $e');
     }
   }
@@ -207,9 +208,11 @@ class GrowthNotificationsService {
 
       await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
-      debugPrint('INFO: [GrowthNotificationsService] Promotion notification sent to user $userId');
+      debugdebugPrint(
+          'INFO: [GrowthNotificationsService] Promotion notification sent to user $userId');
     } catch (e) {
-      debugPrint('ERROR: [GrowthNotificationsService] Failed to send promotion notification: $e');
+      debugdebugPrint(
+          'ERROR: [GrowthNotificationsService] Failed to send promotion notification: $e');
     }
   }
 
@@ -237,9 +240,11 @@ class GrowthNotificationsService {
 
       await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
-      debugPrint('INFO: [GrowthNotificationsService] Receipt notification sent to user $userId');
+      debugdebugPrint(
+          'INFO: [GrowthNotificationsService] Receipt notification sent to user $userId');
     } catch (e) {
-      debugPrint('ERROR: [GrowthNotificationsService] Failed to send receipt notification: $e');
+      debugdebugPrint(
+          'ERROR: [GrowthNotificationsService] Failed to send receipt notification: $e');
     }
   }
 
@@ -266,10 +271,10 @@ class GrowthNotificationsService {
 
       await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
-      debugPrint(
+      debugdebugPrint(
           'INFO: [GrowthNotificationsService] New challenge notification sent to user $userId');
     } catch (e) {
-      debugPrint(
+      debugdebugPrint(
           'ERROR: [GrowthNotificationsService] Failed to send new challenge notification: $e');
     }
   }
@@ -297,10 +302,10 @@ class GrowthNotificationsService {
 
       await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
-      debugPrint(
+      debugdebugPrint(
           'INFO: [GrowthNotificationsService] Challenge progress notification sent to user $userId');
     } catch (e) {
-      debugPrint(
+      debugdebugPrint(
           'ERROR: [GrowthNotificationsService] Failed to send challenge progress notification: $e');
     }
   }
@@ -329,10 +334,10 @@ class GrowthNotificationsService {
 
       await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
-      debugPrint(
+      debugdebugPrint(
           'INFO: [GrowthNotificationsService] New achievement notification sent to user $userId');
     } catch (e) {
-      debugPrint(
+      debugdebugPrint(
           'ERROR: [GrowthNotificationsService] Failed to send new achievement notification: $e');
     }
   }
@@ -360,9 +365,11 @@ class GrowthNotificationsService {
 
       await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
-      debugPrint('INFO: [GrowthNotificationsService] New badge notification sent to user $userId');
+      debugdebugPrint(
+          'INFO: [GrowthNotificationsService] New badge notification sent to user $userId');
     } catch (e) {
-      debugPrint('ERROR: [GrowthNotificationsService] Failed to send new badge notification: $e');
+      debugdebugPrint(
+          'ERROR: [GrowthNotificationsService] Failed to send new badge notification: $e');
     }
   }
 
@@ -389,9 +396,11 @@ class GrowthNotificationsService {
 
       await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
-      debugPrint('INFO: [GrowthNotificationsService] AB test notification sent to user $userId');
+      debugdebugPrint(
+          'INFO: [GrowthNotificationsService] AB test notification sent to user $userId');
     } catch (e) {
-      debugPrint('ERROR: [GrowthNotificationsService] Failed to send AB test notification: $e');
+      debugdebugPrint(
+          'ERROR: [GrowthNotificationsService] Failed to send AB test notification: $e');
     }
   }
 
@@ -417,10 +426,10 @@ class GrowthNotificationsService {
 
       await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
-      debugPrint(
+      debugdebugPrint(
           'INFO: [GrowthNotificationsService] Seasonal promotion notification sent to user $userId');
     } catch (e) {
-      debugPrint(
+      debugdebugPrint(
           'ERROR: [GrowthNotificationsService] Failed to send seasonal promotion notification: $e');
     }
   }
@@ -447,10 +456,10 @@ class GrowthNotificationsService {
 
       await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
 
-      debugPrint(
+      debugdebugPrint(
           'INFO: [GrowthNotificationsService] Holiday promotion notification sent to user $userId');
     } catch (e) {
-      debugPrint(
+      debugdebugPrint(
           'ERROR: [GrowthNotificationsService] Failed to send holiday promotion notification: $e');
     }
   }
@@ -475,9 +484,11 @@ class GrowthNotificationsService {
         'readAt': FieldValue.serverTimestamp(),
       });
 
-      debugPrint('INFO: [GrowthNotificationsService] Notification $notificationId marked as read');
+      debugdebugPrint(
+          'INFO: [GrowthNotificationsService] Notification $notificationId marked as read');
     } catch (e) {
-      debugPrint('ERROR: [GrowthNotificationsService] Failed to mark notification as read: $e');
+      debugdebugPrint(
+          'ERROR: [GrowthNotificationsService] Failed to mark notification as read: $e');
     }
   }
 
@@ -499,10 +510,10 @@ class GrowthNotificationsService {
       }
 
       await batch.commit();
-      debugPrint(
+      debugdebugPrint(
           'INFO: [GrowthNotificationsService] All notifications marked as read for user $userId');
     } catch (e) {
-      debugPrint(
+      debugdebugPrint(
           'ERROR: [GrowthNotificationsService] Failed to mark all notifications as read: $e');
     }
   }
@@ -511,9 +522,9 @@ class GrowthNotificationsService {
   Future<void> deleteNotification(String notificationId) async {
     try {
       await _firestore.collection('growth_notifications').doc(notificationId).delete();
-      debugPrint('INFO: [GrowthNotificationsService] Notification $notificationId deleted');
+      debugdebugPrint('INFO: [GrowthNotificationsService] Notification $notificationId deleted');
     } catch (e) {
-      debugPrint('ERROR: [GrowthNotificationsService] Failed to delete notification: $e');
+      debugdebugPrint('ERROR: [GrowthNotificationsService] Failed to delete notification: $e');
     }
   }
 

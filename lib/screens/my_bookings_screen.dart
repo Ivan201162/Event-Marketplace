@@ -161,7 +161,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
         'customerPhone': '+7 (999) 123-45-67',
       });
     } on Exception catch (e) {
-      debugPrint('Ошибка создания тестовых заявок: $e');
+      debugdebugPrint('Ошибка создания тестовых заявок: $e');
     }
   }
 

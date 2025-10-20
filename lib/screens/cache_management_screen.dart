@@ -772,7 +772,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
       setState(() {});
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки статистики: $e');
+        debugPrint('Ошибка загрузки статистики: $e');
       }
     }
   }
@@ -782,7 +782,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
       return _cacheService.getAllKeys();
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения ключей кэша: $e');
+        debugPrint('Ошибка получения ключей кэша: $e');
       }
       return [];
     }

@@ -20,7 +20,7 @@ class MockData {
           rating: 4.8,
           reviewCount: 127,
           avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
-          portfolio: [
+          portfolio: const [
             'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
             'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
             'https://images.unsplash.com/photo-1465495976277-4387d4b0e4a6?w=400',
@@ -28,7 +28,7 @@ class MockData {
           description:
               'Профессиональный фотограф с 5-летним опытом. Специализируюсь на свадебной и портретной фотографии.',
           location: 'Москва',
-          specialties: ['Свадьбы', 'Портреты', 'Семейные фотосессии'],
+          specialties: const ['Свадьбы', 'Портреты', 'Семейные фотосессии'],
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
@@ -44,7 +44,7 @@ class MockData {
           rating: 4.9,
           reviewCount: 98,
           avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
-          portfolio: [
+          portfolio: const [
             'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
             'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
             'https://images.unsplash.com/photo-1465495976277-4387d4b0e4a6?w=400',
@@ -52,7 +52,7 @@ class MockData {
           description:
               'Опытный видеограф для создания незабываемых моментов. Снимаю свадьбы, корпоративы, рекламные ролики.',
           location: 'Санкт-Петербург',
-          specialties: ['Свадебные фильмы', 'Корпоративы', 'Промо-ролики'],
+          specialties: const ['Свадебные фильмы', 'Корпоративы', 'Промо-ролики'],
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
@@ -68,7 +68,7 @@ class MockData {
           rating: 4.7,
           reviewCount: 150,
           avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150',
-          portfolio: [
+          portfolio: const [
             'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
             'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
             'https://images.unsplash.com/photo-1465495976277-4387d4b0e4a6?w=400',
@@ -76,7 +76,7 @@ class MockData {
           description:
               'Профессиональная ведущая мероприятий любого формата. Создаю атмосферу праздника и веселья.',
           location: 'Алматы',
-          specialties: ['Свадьбы', 'Дни рождения', 'Корпоративы'],
+          specialties: const ['Свадьбы', 'Дни рождения', 'Корпоративы'],
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
@@ -92,7 +92,7 @@ class MockData {
           rating: 4.6,
           reviewCount: 80,
           avatar: 'https://images.unsplash.com/photo-1507003211169-e69fe1c5a39f?w=150',
-          portfolio: [
+          portfolio: const [
             'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
             'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
             'https://images.unsplash.com/photo-1465495976277-4387d4b0e4a6?w=400',
@@ -100,7 +100,7 @@ class MockData {
           description:
               'Опытный DJ с большим выбором музыки для любого мероприятия. Создам идеальный плейлист для вашего праздника.',
           location: 'Астана',
-          specialties: ['Свадьбы', 'Корпоративы', 'Клубы'],
+          specialties: const ['Свадьбы', 'Корпоративы', 'Клубы'],
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
@@ -116,7 +116,7 @@ class MockData {
           rating: 4.7,
           reviewCount: 110,
           avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
-          portfolio: [
+          portfolio: const [
             'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
             'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
             'https://images.unsplash.com/photo-1465495976277-4387d4b0e4a6?w=400',
@@ -124,7 +124,7 @@ class MockData {
           description:
               'Креативный декоратор для создания уникальной атмосферы. Оформление свадеб, юбилеев, детских праздников.',
           location: 'Караганда',
-          specialties: [
+          specialties: const [
             'Свадебный декор',
             'Оформление мероприятий',
             'Флористика',
@@ -218,7 +218,7 @@ class MockData {
           rating: 5,
           text: 'Отличный фотограф! Снимки получились просто потрясающие. Рекомендую всем!',
           date: DateTime.now().subtract(const Duration(days: 5)),
-          serviceTags: ['Фотосъемка', 'Свадьба'],
+          serviceTags: const ['Фотосъемка', 'Свадьба'],
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
@@ -230,7 +230,7 @@ class MockData {
           rating: 4,
           text: 'Качественная работа, но немного задержался с монтажом. В целом доволен.',
           date: DateTime.now().subtract(const Duration(days: 10)),
-          serviceTags: ['Видеосъемка', 'Корпоратив'],
+          serviceTags: const ['Видеосъемка', 'Корпоратив'],
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
@@ -242,7 +242,7 @@ class MockData {
           rating: 5,
           text: 'Отличный DJ! Музыка была на высоте, все гости танцевали до утра.',
           date: DateTime.now().subtract(const Duration(days: 7)),
-          serviceTags: ['Ведущий', 'День рождения'],
+          serviceTags: const ['Ведущий', 'День рождения'],
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
@@ -254,7 +254,7 @@ class MockData {
           rating: 4,
           text: 'Профессиональный ведущий, хорошо организовал мероприятие.',
           date: DateTime.now().subtract(const Duration(days: 12)),
-          serviceTags: ['DJ', 'Клуб'],
+          serviceTags: const ['DJ', 'Клуб'],
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
@@ -266,7 +266,7 @@ class MockData {
           rating: 5,
           text: 'Потрясающее оформление! Все было именно так, как мы хотели.',
           date: DateTime.now().subtract(const Duration(days: 3)),
-          serviceTags: ['Декоратор', 'Юбилей'],
+          serviceTags: const ['Декоратор', 'Юбилей'],
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),

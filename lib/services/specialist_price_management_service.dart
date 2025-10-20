@@ -16,7 +16,7 @@ class SpecialistPriceManagementService {
 
       return snapshot.docs.map(ServicePrice.fromDocument).toList();
     } catch (e) {
-      print('Ошибка получения цен специалиста: $e');
+      debugPrint('Ошибка получения цен специалиста: $e');
       return [];
     }
   }
@@ -51,7 +51,7 @@ class SpecialistPriceManagementService {
 
       return docRef.id;
     } catch (e) {
-      print('Ошибка добавления цены услуги: $e');
+      debugPrint('Ошибка добавления цены услуги: $e');
       rethrow;
     }
   }
@@ -84,7 +84,7 @@ class SpecialistPriceManagementService {
         await _updateSpecialistLastPriceUpdate(specialistId);
       }
     } catch (e) {
-      print('Ошибка обновления цены услуги: $e');
+      debugPrint('Ошибка обновления цены услуги: $e');
       rethrow;
     }
   }
@@ -105,7 +105,7 @@ class SpecialistPriceManagementService {
         await _updateSpecialistLastPriceUpdate(specialistId);
       }
     } catch (e) {
-      print('Ошибка удаления цены услуги: $e');
+      debugPrint('Ошибка удаления цены услуги: $e');
       rethrow;
     }
   }
@@ -118,7 +118,7 @@ class SpecialistPriceManagementService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      print('Ошибка изменения статуса цены услуги: $e');
+      debugPrint('Ошибка изменения статуса цены услуги: $e');
       rethrow;
     }
   }
@@ -142,7 +142,7 @@ class SpecialistPriceManagementService {
       // Напоминаем раз в месяц (30 дней)
       return difference.inDays >= 30;
     } catch (e) {
-      print('Ошибка проверки напоминания об обновлении цен: $e');
+      debugPrint('Ошибка проверки напоминания об обновлении цен: $e');
       return false;
     }
   }
@@ -159,7 +159,7 @@ class SpecialistPriceManagementService {
 
       return snapshot.docs.map(ServicePriceTemplate.fromDocument).toList();
     } catch (e) {
-      print('Ошибка получения шаблонов цен: $e');
+      debugPrint('Ошибка получения шаблонов цен: $e');
       return [];
     }
   }
@@ -190,7 +190,7 @@ class SpecialistPriceManagementService {
         );
       }
     } catch (e) {
-      print('Ошибка применения шаблона цен: $e');
+      debugPrint('Ошибка применения шаблона цен: $e');
       rethrow;
     }
   }
@@ -204,7 +204,7 @@ class SpecialistPriceManagementService {
         'lastPriceUpdateAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      print('Ошибка обновления времени последнего обновления цен: $e');
+      debugPrint('Ошибка обновления времени последнего обновления цен: $e');
     }
   }
 }

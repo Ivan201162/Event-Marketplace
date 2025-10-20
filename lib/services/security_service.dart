@@ -34,11 +34,11 @@ class SecurityService {
       await _loadEncryptionKeys();
 
       if (kDebugMode) {
-        print('Security service initialized');
+        debugPrint('Security service initialized');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка инициализации сервиса безопасности: $e');
+        debugPrint('Ошибка инициализации сервиса безопасности: $e');
       }
     }
   }
@@ -81,11 +81,11 @@ class SecurityService {
       await _checkSecurityPolicies(audit);
 
       if (kDebugMode) {
-        print('Security event logged: $eventType - $description');
+        debugPrint('Security event logged: $eventType - $description');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка записи события аудита: $e');
+        debugPrint('Ошибка записи события аудита: $e');
       }
     }
   }
@@ -103,7 +103,7 @@ class SecurityService {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка проверки политик безопасности: $e');
+        debugPrint('Ошибка проверки политик безопасности: $e');
       }
     }
   }
@@ -159,7 +159,7 @@ class SecurityService {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка применения политики: $e');
+        debugPrint('Ошибка применения политики: $e');
       }
     }
   }
@@ -185,7 +185,7 @@ class SecurityService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка блокировки пользователя: $e');
+        debugPrint('Ошибка блокировки пользователя: $e');
       }
     }
   }
@@ -198,11 +198,11 @@ class SecurityService {
     try {
       // TODO(developer): Интеграция с системой уведомлений
       if (kDebugMode) {
-        print('Security alert: ${policy.name} - ${audit.description}');
+        debugPrint('Security alert: ${policy.name} - ${audit.description}');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка отправки алерта безопасности: $e');
+        debugPrint('Ошибка отправки алерта безопасности: $e');
       }
     }
   }
@@ -220,13 +220,13 @@ class SecurityService {
 
       // TODO(developer): Реализовать rate limiting
       if (kDebugMode) {
-        print(
+        debugPrint(
           'Rate limit applied to user $userId: $limit requests per ${window.inMinutes} minutes',
         );
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка применения rate limit: $e');
+        debugPrint('Ошибка применения rate limit: $e');
       }
     }
   }
@@ -259,7 +259,7 @@ class SecurityService {
       return base64.encode(result);
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка шифрования: $e');
+        debugPrint('Ошибка шифрования: $e');
       }
       rethrow;
     }
@@ -291,7 +291,7 @@ class SecurityService {
       return utf8.decode(decrypted);
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка расшифровки: $e');
+        debugPrint('Ошибка расшифровки: $e');
       }
       rethrow;
     }
@@ -323,7 +323,7 @@ class SecurityService {
       return digest.toString();
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка генерации хеша: $e');
+        debugPrint('Ошибка генерации хеша: $e');
       }
       rethrow;
     }
@@ -376,11 +376,11 @@ class SecurityService {
       }
 
       if (kDebugMode) {
-        print('Loaded ${_policies.length} security policies');
+        debugPrint('Loaded ${_policies.length} security policies');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки политик безопасности: $e');
+        debugPrint('Ошибка загрузки политик безопасности: $e');
       }
     }
   }
@@ -399,11 +399,11 @@ class SecurityService {
       }
 
       if (kDebugMode) {
-        print('Loaded ${_encryptionKeys.length} encryption keys');
+        debugPrint('Loaded ${_encryptionKeys.length} encryption keys');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка загрузки ключей шифрования: $e');
+        debugPrint('Ошибка загрузки ключей шифрования: $e');
       }
     }
   }
@@ -447,7 +447,7 @@ class SecurityService {
       return snapshot.docs.map(SecurityAudit.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения событий аудита: $e');
+        debugPrint('Ошибка получения событий аудита: $e');
       }
       return [];
     }
@@ -460,7 +460,7 @@ class SecurityService {
       return SecurityStatistics.fromEvents(audits);
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения статистики безопасности: $e');
+        debugPrint('Ошибка получения статистики безопасности: $e');
       }
       return SecurityStatistics.fromEvents([]);
     }
@@ -507,7 +507,7 @@ class SecurityService {
       return policyId;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка создания политики безопасности: $e');
+        debugPrint('Ошибка создания политики безопасности: $e');
       }
       rethrow;
     }
@@ -534,7 +534,7 @@ class SecurityService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка обновления политики безопасности: $e');
+        debugPrint('Ошибка обновления политики безопасности: $e');
       }
       rethrow;
     }
@@ -557,7 +557,7 @@ class SecurityService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка удаления политики безопасности: $e');
+        debugPrint('Ошибка удаления политики безопасности: $e');
       }
       rethrow;
     }
@@ -601,7 +601,7 @@ class SecurityService {
       return keyId;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка создания ключа шифрования: $e');
+        debugPrint('Ошибка создания ключа шифрования: $e');
       }
       rethrow;
     }
@@ -689,7 +689,7 @@ class SecurityService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка очистки старых событий аудита: $e');
+        debugPrint('Ошибка очистки старых событий аудита: $e');
       }
     }
   }
@@ -805,7 +805,7 @@ class SecurityService {
     try {
       // Заглушка для установки PIN-кода
       if (kDebugMode) {
-        print('PIN code set: ${pinCode.length} digits');
+        debugPrint('PIN code set: ${pinCode.length} digits');
       }
     } catch (e) {
       throw Exception('Ошибка установки PIN-кода: $e');
@@ -817,7 +817,7 @@ class SecurityService {
     try {
       // Заглушка для удаления PIN-кода
       if (kDebugMode) {
-        print('PIN code removed');
+        debugPrint('PIN code removed');
       }
     } catch (e) {
       throw Exception('Ошибка удаления PIN-кода: $e');
@@ -894,7 +894,7 @@ class SecurityService {
     try {
       // Заглушка для обновления настроек безопасности
       if (kDebugMode) {
-        print('Security settings updated: $settings');
+        debugPrint('Security settings updated: $settings');
       }
     } catch (e) {
       throw Exception('Ошибка обновления настроек безопасности: $e');
@@ -906,7 +906,7 @@ class SecurityService {
     try {
       // Заглушка для блокировки устройства
       if (kDebugMode) {
-        print('Device blocked: $deviceId');
+        debugPrint('Device blocked: $deviceId');
       }
     } catch (e) {
       throw Exception('Ошибка блокировки устройства: $e');
@@ -918,7 +918,7 @@ class SecurityService {
     try {
       // Заглушка для разблокировки устройства
       if (kDebugMode) {
-        print('Device unblocked: $deviceId');
+        debugPrint('Device unblocked: $deviceId');
       }
     } catch (e) {
       throw Exception('Ошибка разблокировки устройства: $e');
@@ -930,7 +930,7 @@ class SecurityService {
     try {
       // Заглушка для доверенного устройства
       if (kDebugMode) {
-        print('Device trusted: $deviceId');
+        debugPrint('Device trusted: $deviceId');
       }
     } catch (e) {
       throw Exception('Ошибка доверенного устройства: $e');
@@ -962,7 +962,7 @@ class SecurityService {
       // Заглушка для очистки всех безопасных данных
       _encryptionKeys.clear();
       if (kDebugMode) {
-        print('All secure data cleared');
+        debugPrint('All secure data cleared');
       }
     } catch (e) {
       throw Exception('Ошибка очистки безопасных данных: $e');
@@ -1003,7 +1003,7 @@ class SecurityService {
       return true;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка включения 2FA: $e');
+        debugPrint('Ошибка включения 2FA: $e');
       }
       return false;
     }
@@ -1026,7 +1026,7 @@ class SecurityService {
       return true;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка отключения 2FA: $e');
+        debugPrint('Ошибка отключения 2FA: $e');
       }
       return false;
     }
@@ -1080,11 +1080,11 @@ class SecurityService {
       );
 
       if (kDebugMode) {
-        print('User session logged: $action for user $userId');
+        debugPrint('User session logged: $action for user $userId');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка логирования сессии: $e');
+        debugPrint('Ошибка логирования сессии: $e');
       }
     }
   }
@@ -1128,7 +1128,7 @@ class SecurityService {
           .toList();
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения логов сессий: $e');
+        debugPrint('Ошибка получения логов сессий: $e');
       }
       return [];
     }
@@ -1165,11 +1165,11 @@ class SecurityService {
       );
 
       if (kDebugMode) {
-        print('All sessions terminated for user $userId');
+        debugPrint('All sessions terminated for user $userId');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка завершения сессий: $e');
+        debugPrint('Ошибка завершения сессий: $e');
       }
     }
   }

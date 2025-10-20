@@ -49,11 +49,12 @@ final unreadNotificationsCountProvider = StreamProvider<int>((ref) {
   );
 });
 
-/// Провайдер для управления уведомлениями
-class NotificationNotifier
-    extends StateNotifier<AsyncValue<List<app_notification.AppNotification>>> {
-  NotificationNotifier() : super(const AsyncValue.loading()) {
+/// Провайдер для управления уведомлениями (мигрирован с StateNotifier)
+class NotificationNotifier extends Notifier<AsyncValue<List<app_notification.AppNotification>>> {
+  @override
+  AsyncValue<List<app_notification.AppNotification>> build() {
     _loadNotifications();
+    return const AsyncValue.loading();
   }
 
   void _loadNotifications() {
@@ -135,8 +136,8 @@ class NotificationNotifier
 }
 
 final notificationNotifierProvider =
-    StateNotifierProvider<NotificationNotifier, AsyncValue<List<app_notification.AppNotification>>>(
-  (ref) => NotificationNotifier(),
+    NotifierProvider<NotificationNotifier, AsyncValue<List<app_notification.AppNotification>>>(
+  () => NotificationNotifier(),
 );
 
 /// Временный класс для совместимости с DocumentSnapshot

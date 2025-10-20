@@ -63,12 +63,12 @@ class SearchSortingNotifier extends Notifier<sorting_utils.SpecialistSorting> {
     state = newSorting;
   }
 
-  void setSortBy(sorting_utils.SortBy sortBy) {
-    state = state.copyWith(sortBy: sortBy);
+  void setSortOption(sorting_utils.SpecialistSortOption sortOption) {
+    state = state.copyWith(sortOption: sortOption);
   }
 
-  void setSortOrder(sorting_utils.SortOrder sortOrder) {
-    state = state.copyWith(sortOrder: sortOrder);
+  void setAscending(bool isAscending) {
+    state = state.copyWith(isAscending: isAscending);
   }
 }
 
@@ -131,8 +131,8 @@ List<Specialist> _applyFilters(
     if (searchQuery.isNotEmpty) {
       final query = searchQuery.toLowerCase();
       final matchesName = specialist.name.toLowerCase().contains(query);
-      final matchesCategory = specialist.category.toLowerCase().contains(query);
-      final matchesDescription = specialist.description.toLowerCase().contains(query);
+      final matchesCategory = specialist.category.name.toLowerCase().contains(query);
+      final matchesDescription = (specialist.description ?? '').toLowerCase().contains(query);
 
       if (!matchesName && !matchesCategory && !matchesDescription) {
         return false;
@@ -140,23 +140,25 @@ List<Specialist> _applyFilters(
     }
 
     // Фильтр по цене
-    if (filters.minPrice != null && specialist.pricePerHour < filters.minPrice!) {
+    final pricePerHour = specialist.pricePerHour ?? specialist.hourlyRate;
+    if (filters.minPrice != null && pricePerHour < filters.minPrice!) {
       return false;
     }
-    if (filters.maxPrice != null && specialist.pricePerHour > filters.maxPrice!) {
+    if (filters.maxPrice != null && pricePerHour > filters.maxPrice!) {
       return false;
     }
 
     // Фильтр по местоположению
     if (filters.location != null && filters.location!.isNotEmpty) {
-      if (!specialist.location.toLowerCase().contains(filters.location!.toLowerCase())) {
+      final location = (specialist.location ?? '').toLowerCase();
+      if (!location.contains(filters.location!.toLowerCase())) {
         return false;
       }
     }
 
     // Фильтр по категории
     if (filters.category != null && filters.category!.isNotEmpty) {
-      if (specialist.category != filters.category) {
+      if (specialist.category.name != filters.category) {
         return false;
       }
     }
@@ -218,7 +220,8 @@ final popularCategoriesProvider = Provider<List<String>>((ref) {
       final categoryCount = <String, int>{};
 
       for (final specialist in specialists) {
-        categoryCount[specialist.category] = (categoryCount[specialist.category] ?? 0) + 1;
+        final key = specialist.category.name;
+        categoryCount[key] = (categoryCount[key] ?? 0) + 1;
       }
 
       final sortedCategories = categoryCount.entries.toList()
@@ -241,7 +244,9 @@ final priceRangeProvider = Provider<PriceRange>((ref) {
         return const PriceRange(min: 0, max: 1000);
       }
 
-      final prices = specialists.map((s) => s.pricePerHour).toList();
+      final prices = specialists
+          .map((s) => s.pricePerHour ?? s.hourlyRate)
+          .toList();
       prices.sort();
 
       return PriceRange(
@@ -270,8 +275,8 @@ final searchSettingsProvider = Provider<Map<String, dynamic>>((ref) {
       'isAvailable': filters.isAvailable,
     },
     'sorting': {
-      'sortBy': sorting.sortBy.toString(),
-      'sortOrder': sorting.sortOrder.toString(),
+      'sortOption': sorting.sortOption.toString(),
+      'isAscending': sorting.isAscending,
     },
     'searchQuery': searchQuery,
   };

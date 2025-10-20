@@ -25,9 +25,9 @@ class ReminderService {
       // Инициализация локальных уведомлений
       await _initializeLocalNotifications();
 
-      print('ReminderService initialized successfully');
+      debugPrint('ReminderService initialized successfully');
     } on Exception catch (e) {
-      print('Error initializing ReminderService: $e');
+      debugPrint('Error initializing ReminderService: $e');
     }
   }
 
@@ -49,7 +49,7 @@ class ReminderService {
 
   /// Обработка нажатия на уведомление
   void _onNotificationTapped(NotificationResponse response) {
-    print('Reminder notification tapped: ${response.payload}');
+    debugPrint('Reminder notification tapped: ${response.payload}');
     // Здесь можно добавить навигацию к событию
   }
 
@@ -83,9 +83,9 @@ class ReminderService {
       // Сохранение информации о напоминаниях в Firestore
       await _saveReminderInfo(bookingId, eventDateTime, customerId);
 
-      print('Event reminders scheduled for booking: $bookingId');
+      debugPrint('Event reminders scheduled for booking: $bookingId');
     } on Exception catch (e) {
-      print('Error scheduling event reminder: $e');
+      debugPrint('Error scheduling event reminder: $e');
     }
   }
 
@@ -99,7 +99,7 @@ class ReminderService {
   }) async {
     // Проверяем, что время в будущем
     if (scheduledTime.isBefore(DateTime.now())) {
-      print('Cannot schedule reminder in the past: $scheduledTime');
+      debugPrint('Cannot schedule reminder in the past: $scheduledTime');
       return;
     }
 
@@ -153,7 +153,7 @@ class ReminderService {
         'createdAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      print('Error saving reminder info: $e');
+      debugPrint('Error saving reminder info: $e');
     }
   }
 
@@ -167,9 +167,9 @@ class ReminderService {
       // Удаляем информацию из Firestore
       await _firestore.collection('reminders').doc(bookingId).delete();
 
-      print('Event reminders cancelled for booking: $bookingId');
+      debugPrint('Event reminders cancelled for booking: $bookingId');
     } on Exception catch (e) {
-      print('Error cancelling event reminders: $e');
+      debugPrint('Error cancelling event reminders: $e');
     }
   }
 
@@ -197,9 +197,9 @@ class ReminderService {
       }
       await batch.commit();
 
-      print('All user reminders cancelled');
+      debugPrint('All user reminders cancelled');
     } on Exception catch (e) {
-      print('Error cancelling all user reminders: $e');
+      debugPrint('Error cancelling all user reminders: $e');
     }
   }
 
@@ -220,7 +220,7 @@ class ReminderService {
         };
       }).toList();
     } on Exception catch (e) {
-      print('Error getting active reminders: $e');
+      debugPrint('Error getting active reminders: $e');
       return [];
     }
   }
@@ -247,7 +247,7 @@ class ReminderService {
       payload: 'test_1hour',
     );
 
-    print('Test reminders scheduled');
+    debugPrint('Test reminders scheduled');
   }
 
   /// Форматирование времени
@@ -261,6 +261,6 @@ class ReminderService {
   /// Очистка всех напоминаний
   Future<void> clearAllReminders() async {
     await _localNotifications.cancelAll();
-    print('All reminders cleared');
+    debugPrint('All reminders cleared');
   }
 }

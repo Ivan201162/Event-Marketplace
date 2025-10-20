@@ -15,7 +15,7 @@ class SupabaseService {
 
       return Profile.fromJson(response);
     } catch (e) {
-      print('Error getting profile: $e');
+      debugPrint('Error getting profile: $e');
       return null;
     }
   }
@@ -27,7 +27,7 @@ class SupabaseService {
 
       return Profile.fromJson(response);
     } catch (e) {
-      print('Error getting profile by username: $e');
+      debugPrint('Error getting profile by username: $e');
       return null;
     }
   }
@@ -45,7 +45,7 @@ class SupabaseService {
 
       return (response as List).map((json) => WeeklyLeader.fromJson(json)).toList();
     } catch (e) {
-      print('Error getting weekly leaders: $e');
+      debugPrint('Error getting weekly leaders: $e');
       return [];
     }
   }
@@ -62,7 +62,7 @@ class SupabaseService {
 
       return response != null;
     } catch (e) {
-      print('Error checking follow status: $e');
+      debugPrint('Error checking follow status: $e');
       return false;
     }
   }
@@ -80,7 +80,7 @@ class SupabaseService {
 
       return true;
     } catch (e) {
-      print('Error following user: $e');
+      debugPrint('Error following user: $e');
       return false;
     }
   }
@@ -99,7 +99,7 @@ class SupabaseService {
 
       return true;
     } catch (e) {
-      print('Error unfollowing user: $e');
+      debugPrint('Error unfollowing user: $e');
       return false;
     }
   }
@@ -111,7 +111,7 @@ class SupabaseService {
 
       return response.length;
     } catch (e) {
-      print('Error getting followers count: $e');
+      debugPrint('Error getting followers count: $e');
       return 0;
     }
   }
@@ -123,7 +123,7 @@ class SupabaseService {
 
       return response.length;
     } catch (e) {
-      print('Error getting following count: $e');
+      debugPrint('Error getting following count: $e');
       return 0;
     }
   }
@@ -141,7 +141,7 @@ class SupabaseService {
 
       return response.toString();
     } catch (e) {
-      print('Error getting or creating chat: $e');
+      debugPrint('Error getting or creating chat: $e');
       return null;
     }
   }
@@ -197,7 +197,7 @@ class SupabaseService {
 
       return chats;
     } catch (e) {
-      print('Error getting chats list: $e');
+      debugPrint('Error getting chats list: $e');
       return [];
     }
   }
@@ -215,7 +215,7 @@ class SupabaseService {
 
       return (response as List).map((json) => Message.fromJson(json)).toList();
     } catch (e) {
-      print('Error getting chat messages: $e');
+      debugPrint('Error getting chat messages: $e');
       return [];
     }
   }
@@ -239,7 +239,7 @@ class SupabaseService {
 
       return true;
     } catch (e) {
-      print('Error sending message: $e');
+      debugPrint('Error sending message: $e');
       return false;
     }
   }
@@ -252,7 +252,7 @@ class SupabaseService {
 
       return (response as List).map((json) => Profile.fromJson(json['profiles'])).toList();
     } catch (e) {
-      print('Error getting followers: $e');
+      debugPrint('Error getting followers: $e');
       return [];
     }
   }
@@ -265,7 +265,7 @@ class SupabaseService {
 
       return (response as List).map((json) => Profile.fromJson(json['profiles'])).toList();
     } catch (e) {
-      print('Error getting following: $e');
+      debugPrint('Error getting following: $e');
       return [];
     }
   }
@@ -281,7 +281,7 @@ class SupabaseService {
 
       return (response as List).map((json) => Profile.fromJson(json)).toList();
     } catch (e) {
-      print('Error searching users: $e');
+      debugPrint('Error searching users: $e');
       return [];
     }
   }
@@ -341,7 +341,7 @@ class SupabaseService {
 
       return (response as List).map((json) => Idea.fromJson(json)).toList();
     } catch (e) {
-      print('Error getting ideas: $e');
+      debugPrint('Error getting ideas: $e');
       return [];
     }
   }
@@ -371,7 +371,7 @@ class SupabaseService {
 
       return Idea.fromJson(response);
     } catch (e) {
-      print('Error creating idea: $e');
+      debugPrint('Error creating idea: $e');
       return null;
     }
   }
@@ -389,7 +389,7 @@ class SupabaseService {
 
       return true;
     } catch (e) {
-      print('Error liking idea: $e');
+      debugPrint('Error liking idea: $e');
       return false;
     }
   }
@@ -404,7 +404,7 @@ class SupabaseService {
 
       return true;
     } catch (e) {
-      print('Error unliking idea: $e');
+      debugPrint('Error unliking idea: $e');
       return false;
     }
   }
@@ -424,7 +424,7 @@ class SupabaseService {
 
       return response != null;
     } catch (e) {
-      print('Error checking idea like: $e');
+      debugPrint('Error checking idea like: $e');
       return false;
     }
   }
@@ -456,7 +456,7 @@ class SupabaseService {
 
       return (response as List).map((json) => Request.fromJson(json)).toList();
     } catch (e) {
-      print('Error getting user requests: $e');
+      debugPrint('Error getting user requests: $e');
       return [];
     }
   }
@@ -490,7 +490,7 @@ class SupabaseService {
 
       return Request.fromJson(response);
     } catch (e) {
-      print('Error creating request: $e');
+      debugPrint('Error creating request: $e');
       return null;
     }
   }
@@ -502,7 +502,7 @@ class SupabaseService {
 
       return true;
     } catch (e) {
-      print('Error updating request status: $e');
+      debugPrint('Error updating request status: $e');
       return false;
     }
   }
@@ -517,7 +517,7 @@ class SupabaseService {
 
       return true;
     } catch (e) {
-      print('Error assigning request: $e');
+      debugPrint('Error assigning request: $e');
       return false;
     }
   }
@@ -549,7 +549,7 @@ class SupabaseService {
 
       return true;
     } catch (e) {
-      print('Error updating profile: $e');
+      debugPrint('Error updating profile: $e');
       return false;
     }
   }
@@ -569,7 +569,7 @@ class SupabaseService {
 
       return publicUrl;
     } catch (e) {
-      print('Error uploading avatar: $e');
+      debugPrint('Error uploading avatar: $e');
       return null;
     }
   }

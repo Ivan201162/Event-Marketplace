@@ -61,13 +61,13 @@ class ABTestService {
       await _firestore.collection('abTests').doc(testId).set(test.toMap());
 
       if (kDebugMode) {
-        print('A/B тест создан: $name');
+        debugPrint('A/B тест создан: $name');
       }
 
       return testId;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка создания A/B теста: $e');
+        debugPrint('Ошибка создания A/B теста: $e');
       }
       rethrow;
     }
@@ -91,11 +91,11 @@ class ABTestService {
       });
 
       if (kDebugMode) {
-        print('A/B тест запущен: ${test.name}');
+        debugPrint('A/B тест запущен: ${test.name}');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка запуска A/B теста: $e');
+        debugPrint('Ошибка запуска A/B теста: $e');
       }
       rethrow;
     }
@@ -111,11 +111,11 @@ class ABTestService {
       });
 
       if (kDebugMode) {
-        print('A/B тест остановлен: $testId');
+        debugPrint('A/B тест остановлен: $testId');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка остановки A/B теста: $e');
+        debugPrint('Ошибка остановки A/B теста: $e');
       }
       rethrow;
     }
@@ -131,7 +131,7 @@ class ABTestService {
       return null;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения A/B теста: $e');
+        debugPrint('Ошибка получения A/B теста: $e');
       }
       return null;
     }
@@ -158,7 +158,7 @@ class ABTestService {
       return snapshot.docs.map(ABTest.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения списка A/B тестов: $e');
+        debugPrint('Ошибка получения списка A/B тестов: $e');
       }
       return [];
     }
@@ -217,7 +217,7 @@ class ABTestService {
       return variant;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения варианта для пользователя: $e');
+        debugPrint('Ошибка получения варианта для пользователя: $e');
       }
       return null;
     }
@@ -289,7 +289,7 @@ class ABTestService {
       await _firestore.collection('abTestParticipations').add(participation.toMap());
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка записи участия в A/B тесте: $e');
+        debugPrint('Ошибка записи участия в A/B тесте: $e');
       }
     }
   }
@@ -313,7 +313,7 @@ class ABTestService {
       return null;
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения участия пользователя: $e');
+        debugPrint('Ошибка получения участия пользователя: $e');
       }
       return null;
     }
@@ -342,11 +342,11 @@ class ABTestService {
       });
 
       if (kDebugMode) {
-        print('Конверсия записана: $testId, $userId, $eventName');
+        debugPrint('Конверсия записана: $testId, $userId, $eventName');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка записи конверсии: $e');
+        debugPrint('Ошибка записи конверсии: $e');
       }
     }
   }
@@ -390,7 +390,7 @@ class ABTestService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения статистики A/B теста: $e');
+        debugPrint('Ошибка получения статистики A/B теста: $e');
       }
       rethrow;
     }
@@ -409,7 +409,7 @@ class ABTestService {
       return snapshot.docs.map(ABTestParticipation.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения участий в тесте: $e');
+        debugPrint('Ошибка получения участий в тесте: $e');
       }
       return [];
     }
@@ -505,11 +505,11 @@ class ABTestService {
       });
 
       if (kDebugMode) {
-        print('A/B тест обновлен: ${updatedTest.name}');
+        debugPrint('A/B тест обновлен: ${updatedTest.name}');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка обновления A/B теста: $e');
+        debugPrint('Ошибка обновления A/B теста: $e');
       }
       rethrow;
     }
@@ -532,11 +532,11 @@ class ABTestService {
       await batch.commit();
 
       if (kDebugMode) {
-        print('A/B тест удален: $testId');
+        debugPrint('A/B тест удален: $testId');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка удаления A/B теста: $e');
+        debugPrint('Ошибка удаления A/B теста: $e');
       }
       rethrow;
     }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../models/idea.dart';
 import '../models/idea_category.dart';
 
 class IdeaFiltersWidget extends StatefulWidget {
@@ -12,7 +11,7 @@ class IdeaFiltersWidget extends StatefulWidget {
   });
   final IdeaCategory? selectedCategory;
   final List<String> selectedTags;
-  final Function(IdeaCategory?, List<String>) onFiltersChanged;
+  final void Function(IdeaCategory?, List<String>) onFiltersChanged;
 
   @override
   State<IdeaFiltersWidget> createState() => _IdeaFiltersWidgetState();
@@ -87,13 +86,13 @@ class _IdeaFiltersWidgetState extends State<IdeaFiltersWidget> {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: IdeaCategory.values.map((category) {
-              final isSelected = _selectedCategory == category;
+            children: IdeaCategory.values.map((IdeaCategory category) {
+              final bool isSelected = _selectedCategory == category;
               return FilterChip(
                 label: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(category.emoji),
+                    Text(category.icon),
                     const SizedBox(width: 4),
                     Text(category.displayName),
                   ],
@@ -126,8 +125,8 @@ class _IdeaFiltersWidgetState extends State<IdeaFiltersWidget> {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: _popularTags.map((tag) {
-              final isSelected = _selectedTags.contains(tag);
+            children: _popularTags.map((String tag) {
+              final bool isSelected = _selectedTags.contains(tag);
               return FilterChip(
                 label: Text(tag),
                 selected: isSelected,
@@ -236,7 +235,7 @@ class ActiveFiltersWidget extends StatelessWidget {
   });
   final IdeaCategory? selectedCategory;
   final List<String> selectedTags;
-  final Function(IdeaCategory?, List<String>) onFiltersChanged;
+  final void Function(IdeaCategory?, List<String>) onFiltersChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -253,11 +252,11 @@ class ActiveFiltersWidget extends StatelessWidget {
           if (selectedCategory != null)
             _buildFilterChip(
               context,
-              label: '${selectedCategory!.emoji} ${selectedCategory!.displayName}',
+              label: '${selectedCategory!.icon} ${selectedCategory!.displayName}',
               onRemove: () => onFiltersChanged(null, selectedTags),
             ),
           ...selectedTags.map(
-            (tag) => _buildFilterChip(
+            (String tag) => _buildFilterChip(
               context,
               label: tag,
               onRemove: () {

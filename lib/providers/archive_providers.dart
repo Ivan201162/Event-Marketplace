@@ -46,15 +46,19 @@ class ArchiveUploadState {
       );
 }
 
-/// Провайдер состояния загрузки архива
-final archiveUploadStateProvider = StateNotifierProvider<ArchiveUploadNotifier, ArchiveUploadState>(
-  (ref) => ArchiveUploadNotifier(ref.read(archiveServiceProvider)),
+/// Провайдер состояния загрузки архива (мигрирован с StateNotifierProvider)
+final archiveUploadStateProvider = NotifierProvider<ArchiveUploadNotifier, ArchiveUploadState>(
+  () => ArchiveUploadNotifier(),
 );
 
-/// Нотификатор для управления загрузкой архивов
-class ArchiveUploadNotifier extends StateNotifier<ArchiveUploadState> {
-  ArchiveUploadNotifier(this._archiveService) : super(const ArchiveUploadState());
-  final ArchiveService _archiveService;
+/// Нотификатор для управления загрузкой архивов (мигрирован с StateNotifier)
+class ArchiveUploadNotifier extends Notifier<ArchiveUploadState> {
+  @override
+  ArchiveUploadState build() {
+    return const ArchiveUploadState();
+  }
+
+  ArchiveService get _archiveService => ref.read(archiveServiceProvider);
 
   /// Загрузить архив из галереи
   Future<void> uploadArchiveFromGallery({

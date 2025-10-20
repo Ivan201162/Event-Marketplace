@@ -24,7 +24,7 @@ class _UploadMediaDialogState extends ConsumerState<UploadMediaDialog> {
   final _tagsController = TextEditingController();
 
   XFile? _selectedFile;
-  GalleryItemType? _selectedType = GalleryItemType.image;
+  final GalleryItemType _selectedType = GalleryItemType.image;
   bool _isFeatured = false;
   bool _isUploading = false;
   String? _error;
@@ -108,19 +108,19 @@ class _UploadMediaDialogState extends ConsumerState<UploadMediaDialog> {
         ],
       );
 
-  Widget _buildMediaTypeSelector() => Column(
+  Widget _buildMediaTypeSelector() => const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Тип медиа',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Row(
             children: [
               Expanded(
                 child: RadioListTile<GalleryItemType>(
-                  title: const Text('Изображение'),
+                  title: Text('Изображение'),
                   value: GalleryItemType.image,
                   // groupValue: _selectedType,
                   // onChanged: (value) {
@@ -133,7 +133,7 @@ class _UploadMediaDialogState extends ConsumerState<UploadMediaDialog> {
               ),
               Expanded(
                 child: RadioListTile<GalleryItemType>(
-                  title: const Text('Видео'),
+                  title: Text('Видео'),
                   value: GalleryItemType.video,
                   // groupValue: _selectedType,
                   // onChanged: (value) {

@@ -1,427 +1,217 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/payment.dart';
-import '../services/firestore_service.dart';
+import '../models/transaction.dart';
 import '../services/payment_service.dart';
 
-/// Провайдер для сервиса платежей
-final paymentServiceProvider = Provider<PaymentService>((ref) => PaymentService());
-
-/// Провайдер для FirestoreService
-final firestoreServiceProvider = Provider<FirestoreService>((ref) => FirestoreService());
-
-/// Провайдер для получения платежей пользователя
-final userPaymentsProvider = StreamProvider.family<List<Payment>, String>((ref, userId) {
-  final firestoreService = ref.watch(firestoreServiceProvider);
-  return firestoreService.paymentsByUserStream(userId);
+/// Payment service provider
+final paymentServiceProvider = Provider<PaymentService>((ref) {
+  return PaymentService();
 });
 
-/// Провайдер для получения платежей специалиста
-final specialistPaymentsProvider =
-    StreamProvider.family<List<Payment>, String>((ref, specialistId) {
-  final firestoreService = ref.watch(firestoreServiceProvider);
-  return firestoreService.paymentsBySpecialistStream(specialistId);
+/// User payments provider
+final userPaymentsProvider = FutureProvider.family<List<Payment>, String>((ref, userId) async {
+  final paymentService = ref.read(paymentServiceProvider);
+  return paymentService.getUserPayments(userId);
 });
 
-/// Провайдер для получения платежей по бронированию
-final bookingPaymentsProvider = StreamProvider.family<List<Payment>, String>((ref, bookingId) {
-  final firestoreService = ref.watch(firestoreServiceProvider);
-  return firestoreService.paymentsByBookingStream(bookingId);
+/// Specialist payments provider
+final specialistPaymentsProvider = FutureProvider.family<List<Payment>, String>((ref, specialistId) async {
+  final paymentService = ref.read(paymentServiceProvider);
+  return paymentService.getSpecialistPayments(specialistId);
 });
 
-/// Провайдер для получения платежа по ID
+/// Payment by ID provider
 final paymentByIdProvider = FutureProvider.family<Payment?, String>((ref, paymentId) async {
-  final firestoreService = ref.watch(firestoreServiceProvider);
-  return firestoreService.getPaymentById(paymentId);
+  final paymentService = ref.read(paymentServiceProvider);
+  return paymentService.getPaymentById(paymentId);
 });
 
-/// Провайдер для проверки оплаты предоплаты
-final prepaymentStatusProvider = FutureProvider.family<bool, String>((ref, bookingId) async {
-  final firestoreService = ref.watch(firestoreServiceProvider);
-  return firestoreService.isPrepaymentPaid(bookingId);
+/// User transactions provider
+final userTransactionsProvider = FutureProvider.family<List<Transaction>, String>((ref, userId) async {
+  final paymentService = ref.read(paymentServiceProvider);
+  return paymentService.getUserTransactions(userId);
 });
 
-/// Провайдер для статистики платежей пользователя
-final userPaymentStatsProvider = FutureProvider.family<PaymentStats, String>((ref, userId) async {
-  final firestoreService = ref.watch(firestoreServiceProvider);
-  return firestoreService.getUserPaymentStats(userId);
+/// User balance provider
+final userBalanceProvider = FutureProvider.family<int, String>((ref, userId) async {
+  final paymentService = ref.read(paymentServiceProvider);
+  return paymentService.getUserBalance(userId);
 });
 
-/// Провайдер для статистики платежей специалиста
-final specialistPaymentStatsProvider =
-    FutureProvider.family<PaymentStats, String>((ref, specialistId) async {
-  final firestoreService = ref.watch(firestoreServiceProvider);
-  return firestoreService.getSpecialistPaymentStats(specialistId);
+/// Payment statistics provider
+final paymentStatsProvider = FutureProvider.family<Map<String, dynamic>, String>((ref, userId) async {
+  final paymentService = ref.read(paymentServiceProvider);
+  return paymentService.getPaymentStats(userId);
 });
 
-/// Провайдер для управления платежами (мигрирован с StateNotifierProvider)
-final paymentManagerProvider = NotifierProvider<PaymentManager, AsyncValue<void>>(() {
-  return PaymentManager();
+/// User payments stream provider
+final userPaymentsStreamProvider = StreamProvider.family<List<Payment>, String>((ref, userId) {
+  final paymentService = ref.read(paymentServiceProvider);
+  return paymentService.getUserPaymentsStream(userId);
 });
 
-/// Менеджер для управления платежами (мигрирован с StateNotifier)
-class PaymentManager extends Notifier<AsyncValue<void>> {
-  @override
-  AsyncValue<void> build() {
-    return const AsyncValue.data(null);
-  }
-
-  PaymentService get _paymentService => ref.read(paymentServiceProvider);
-  FirestoreService get _firestoreService => ref.read(firestoreServiceProvider);
-
-  /// Создать платеж
-  Future<String?> createPayment({
-    required String bookingId,
-    required String customerId,
-    required String specialistId,
-    required double amount,
-    required PaymentType type,
-    PaymentMethod method = PaymentMethod.card,
-    String? description,
-    String? customerName,
-    String? specialistName,
-    String? bookingTitle,
-  }) async {
-    state = const AsyncValue<void>.loading();
-
-    try {
-      final paymentId = await _paymentService.createPayment(
-        bookingId: bookingId,
-        customerId: customerId,
-        specialistId: specialistId,
-        amount: amount,
-        type: type,
-        method: method,
-        description: description,
-        customerName: customerName,
-        specialistName: specialistName,
-        bookingTitle: bookingTitle,
-      );
-
-      state = const AsyncValue.data(null);
-      return paymentId;
-    } catch (error, stackTrace) {
-      state = AsyncValue<void>.error(error, stackTrace);
-      return null;
-    }
-  }
-
-  /// Пометить платеж как оплаченный
-  Future<bool> markAsPaid({
-    required String paymentId,
-    String? transactionId,
-    String? receiptUrl,
-  }) async {
-    state = const AsyncValue<void>.loading();
-
-    try {
-      final success = await _paymentService.markAsPaid(
-        paymentId: paymentId,
-        transactionId: transactionId,
-        receiptUrl: receiptUrl,
-      );
-
-      if (success) {
-        state = const AsyncValue.data(null);
-        return true;
-      } else {
-        state = AsyncValue<void>.error(
-          'Не удалось обновить статус платежа',
-          StackTrace.current,
-        );
-        return false;
-      }
-    } catch (error, stackTrace) {
-      state = AsyncValue<void>.error(error, stackTrace);
-      return false;
-    }
-  }
-
-  /// Пометить платеж как неудачный
-  Future<bool> markAsFailed({
-    required String paymentId,
-    String? reason,
-  }) async {
-    state = const AsyncValue<void>.loading();
-
-    try {
-      final success = await _paymentService.markAsFailed(
-        paymentId: paymentId,
-        reason: reason,
-      );
-
-      if (success) {
-        state = const AsyncValue.data(null);
-        return true;
-      } else {
-        state = AsyncValue<void>.error(
-          'Не удалось обновить статус платежа',
-          StackTrace.current,
-        );
-        return false;
-      }
-    } catch (error, stackTrace) {
-      state = AsyncValue<void>.error(error, stackTrace);
-      return false;
-    }
-  }
-
-  /// Отменить платеж
-  Future<bool> cancelPayment({
-    required String paymentId,
-    String? reason,
-  }) async {
-    state = const AsyncValue<void>.loading();
-
-    try {
-      final success = await _paymentService.cancelPayment(
-        paymentId: paymentId,
-        reason: reason,
-      );
-
-      if (success) {
-        state = const AsyncValue.data(null);
-        return true;
-      } else {
-        state = AsyncValue<void>.error(
-          'Не удалось отменить платеж',
-          StackTrace.current,
-        );
-        return false;
-      }
-    } catch (error, stackTrace) {
-      state = AsyncValue<void>.error(error, stackTrace);
-      return false;
-    }
-  }
-
-  /// Возврат платежа
-  Future<bool> refundPayment({
-    required String paymentId,
-    double? refundAmount,
-    String? reason,
-  }) async {
-    state = const AsyncValue<void>.loading();
-
-    try {
-      final success = await _paymentService.refundPayment(
-        paymentId: paymentId,
-        refundAmount: refundAmount,
-        reason: reason,
-      );
-
-      if (success) {
-        state = const AsyncValue.data(null);
-        return true;
-      } else {
-        state = AsyncValue<void>.error(
-          'Не удалось вернуть платеж',
-          StackTrace.current,
-        );
-        return false;
-      }
-    } catch (error, stackTrace) {
-      state = AsyncValue<void>.error(error, stackTrace);
-      return false;
-    }
-  }
-
-  /// Создать предоплату для бронирования
-  Future<String?> createPrepaymentForBooking({
-    required String bookingId,
-    required String customerId,
-    required String specialistId,
-    required double totalAmount,
-    double prepaymentPercentage = 0.3,
-    String? customerName,
-    String? specialistName,
-    String? bookingTitle,
-  }) async {
-    state = const AsyncValue<void>.loading();
-
-    try {
-      final paymentId = await _paymentService.createPrepaymentForBooking(
-        bookingId: bookingId,
-        customerId: customerId,
-        specialistId: specialistId,
-        totalAmount: totalAmount,
-        prepaymentPercentage: prepaymentPercentage,
-        customerName: customerName,
-        specialistName: specialistName,
-        bookingTitle: bookingTitle,
-      );
-
-      if (paymentId != null) {
-        state = const AsyncValue.data(null);
-        return paymentId;
-      } else {
-        state = AsyncValue<void>.error(
-          'Не удалось создать предоплату',
-          StackTrace.current,
-        );
-        return null;
-      }
-    } catch (error, stackTrace) {
-      state = AsyncValue<void>.error(error, stackTrace);
-      return null;
-    }
-  }
-}
-
-/// Провайдер для получения платежей с фильтрацией
-final filteredPaymentsProvider = StreamProvider.family<List<Payment>, PaymentFilter>((ref, filter) {
-  final firestoreService = ref.watch(firestoreServiceProvider);
-
-  if (filter.userId != null) {
-    return firestoreService.paymentsByUserStream(filter.userId!);
-  } else if (filter.specialistId != null) {
-    return firestoreService.paymentsBySpecialistStream(filter.specialistId!);
-  } else if (filter.bookingId != null) {
-    return firestoreService.paymentsByBookingStream(filter.bookingId!);
-  }
-
-  return Stream.value([]);
+/// User transactions stream provider
+final userTransactionsStreamProvider = StreamProvider.family<List<Transaction>, String>((ref, userId) {
+  final paymentService = ref.read(paymentServiceProvider);
+  return paymentService.getUserTransactionsStream(userId);
 });
 
-/// Фильтр для платежей
-class PaymentFilter {
-  const PaymentFilter({
-    this.userId,
-    this.specialistId,
-    this.bookingId,
-    this.status,
-    this.type,
-    this.method,
-    this.startDate,
-    this.endDate,
-  });
-
-  final String? userId;
-  final String? specialistId;
-  final String? bookingId;
-  final PaymentStatus? status;
-  final PaymentType? type;
-  final PaymentMethod? method;
-  final DateTime? startDate;
-  final DateTime? endDate;
-
-  /// Копировать с изменениями
-  PaymentFilter copyWith({
-    String? userId,
-    String? specialistId,
-    String? bookingId,
-    PaymentStatus? status,
-    PaymentType? type,
-    PaymentMethod? method,
-    DateTime? startDate,
-    DateTime? endDate,
-  }) =>
-      PaymentFilter(
-        userId: userId ?? this.userId,
-        specialistId: specialistId ?? this.specialistId,
-        bookingId: bookingId ?? this.bookingId,
-        status: status ?? this.status,
-        type: type ?? this.type,
-        method: method ?? this.method,
-        startDate: startDate ?? this.startDate,
-        endDate: endDate ?? this.endDate,
-      );
-
-  /// Проверить, применены ли фильтры
-  bool get hasFilters =>
-      userId != null ||
-      specialistId != null ||
-      bookingId != null ||
-      status != null ||
-      type != null ||
-      method != null ||
-      startDate != null ||
-      endDate != null;
-
-  /// Сбросить все фильтры
-  PaymentFilter clear() => const PaymentFilter();
-}
-
-/// Провайдер для получения платежей по статусу
-final paymentsByStatusProvider =
-    StreamProvider.family<List<Payment>, Map<String, dynamic>>((ref, params) {
-  final firestoreService = ref.watch(firestoreServiceProvider);
-  final userId = params['userId'] as String?;
-  final specialistId = params['specialistId'] as String?;
-  final status = params['status'] as PaymentStatus?;
-
-  if (userId != null) {
-    return firestoreService.paymentsByUserStream(userId).map((payments) {
-      if (status != null) {
-        return payments.where((payment) => payment.status == status).toList();
-      }
-      return payments;
-    });
-  } else if (specialistId != null) {
-    return firestoreService.paymentsBySpecialistStream(specialistId).map((payments) {
-      if (status != null) {
-        return payments.where((payment) => payment.status == status).toList();
-      }
-      return payments;
-    });
-  }
-
-  return Stream.value([]);
+/// Recent payments provider
+final recentPaymentsProvider = FutureProvider.family<List<Payment>, String>((ref, userId) async {
+  final paymentService = ref.read(paymentServiceProvider);
+  final payments = await paymentService.getUserPayments(userId);
+  return payments.take(10).toList();
 });
 
-/// Провайдер для получения платежей по типу
-final paymentsByTypeProvider =
-    StreamProvider.family<List<Payment>, Map<String, dynamic>>((ref, params) {
-  final firestoreService = ref.watch(firestoreServiceProvider);
-  final userId = params['userId'] as String?;
-  final specialistId = params['specialistId'] as String?;
-  final type = params['type'] as PaymentType?;
-
-  if (userId != null) {
-    return firestoreService.paymentsByUserStream(userId).map((payments) {
-      if (type != null) {
-        return payments.where((payment) => payment.type == type).toList();
-      }
-      return payments;
-    });
-  } else if (specialistId != null) {
-    return firestoreService.paymentsBySpecialistStream(specialistId).map((payments) {
-      if (type != null) {
-        return payments.where((payment) => payment.type == type).toList();
-      }
-      return payments;
-    });
-  }
-
-  return Stream.value([]);
+/// Recent transactions provider
+final recentTransactionsProvider = FutureProvider.family<List<Transaction>, String>((ref, userId) async {
+  final paymentService = ref.read(paymentServiceProvider);
+  final transactions = await paymentService.getUserTransactions(userId);
+  return transactions.take(20).toList();
 });
 
-/// Провайдер для получения ожидающих платежей
-final pendingPaymentsProvider = StreamProvider.family<List<Payment>, String>(
-  (ref, userId) => ref.watch(
-    paymentsByStatusProvider({
-      'userId': userId,
-      'status': PaymentStatus.pending,
-    }),
-  ),
-);
+/// Successful payments provider
+final successfulPaymentsProvider = FutureProvider.family<List<Payment>, String>((ref, userId) async {
+  final paymentService = ref.read(paymentServiceProvider);
+  final payments = await paymentService.getUserPayments(userId);
+  return payments.where((payment) => payment.isSuccessful).toList();
+});
 
-/// Провайдер для получения завершенных платежей
-final completedPaymentsProvider = StreamProvider.family<List<Payment>, String>(
-  (ref, userId) => ref.watch(
-    paymentsByStatusProvider({
-      'userId': userId,
-      'status': PaymentStatus.completed,
-    }),
-  ),
-);
+/// Failed payments provider
+final failedPaymentsProvider = FutureProvider.family<List<Payment>, String>((ref, userId) async {
+  final paymentService = ref.read(paymentServiceProvider);
+  final payments = await paymentService.getUserPayments(userId);
+  return payments.where((payment) => payment.isFailed).toList();
+});
 
-/// Провайдер для получения предоплат
-final prepaymentsProvider = StreamProvider.family<List<Payment>, String>(
-  (ref, userId) => ref.watch(
-    paymentsByTypeProvider({
-      'userId': userId,
-      'type': PaymentType.prepayment,
-    }),
-  ),
-);
+/// Pending payments provider
+final pendingPaymentsProvider = FutureProvider.family<List<Payment>, String>((ref, userId) async {
+  final paymentService = ref.read(paymentServiceProvider);
+  final payments = await paymentService.getUserPayments(userId);
+  return payments.where((payment) => payment.isPending).toList();
+});
+
+/// Income transactions provider
+final incomeTransactionsProvider = FutureProvider.family<List<Transaction>, String>((ref, userId) async {
+  final paymentService = ref.read(paymentServiceProvider);
+  final transactions = await paymentService.getUserTransactions(userId);
+  return transactions.where((transaction) => transaction.isIncome).toList();
+});
+
+/// Expense transactions provider
+final expenseTransactionsProvider = FutureProvider.family<List<Transaction>, String>((ref, userId) async {
+  final paymentService = ref.read(paymentServiceProvider);
+  final transactions = await paymentService.getUserTransactions(userId);
+  return transactions.where((transaction) => transaction.isExpense).toList();
+});
+
+/// Monthly income provider
+final monthlyIncomeProvider = FutureProvider.family<int, String>((ref, userId) async {
+  final paymentService = ref.read(paymentServiceProvider);
+  final transactions = await paymentService.getUserTransactions(userId);
+  
+  final now = DateTime.now();
+  final startOfMonth = DateTime(now.year, now.month);
+  
+  final monthlyTransactions = transactions.where((transaction) {
+    return transaction.isIncome && transaction.createdAt.isAfter(startOfMonth);
+  }).toList();
+  
+  return monthlyTransactions.fold(0, (sum, transaction) => sum + transaction.amount);
+});
+
+/// Monthly expense provider
+final monthlyExpenseProvider = FutureProvider.family<int, String>((ref, userId) async {
+  final paymentService = ref.read(paymentServiceProvider);
+  final transactions = await paymentService.getUserTransactions(userId);
+  
+  final now = DateTime.now();
+  final startOfMonth = DateTime(now.year, now.month);
+  
+  final monthlyTransactions = transactions.where((transaction) {
+    return transaction.isExpense && transaction.createdAt.isAfter(startOfMonth);
+  }).toList();
+  
+  return monthlyTransactions.fold(0, (sum, transaction) => sum + transaction.amount);
+});
+
+/// Total income provider
+final totalIncomeProvider = FutureProvider.family<int, String>((ref, userId) async {
+  final paymentService = ref.read(paymentServiceProvider);
+  final transactions = await paymentService.getUserTransactions(userId);
+  
+  final incomeTransactions = transactions.where((transaction) => transaction.isIncome).toList();
+  return incomeTransactions.fold(0, (sum, transaction) => sum + transaction.amount);
+});
+
+/// Total expense provider
+final totalExpenseProvider = FutureProvider.family<int, String>((ref, userId) async {
+  final paymentService = ref.read(paymentServiceProvider);
+  final transactions = await paymentService.getUserTransactions(userId);
+  
+  final expenseTransactions = transactions.where((transaction) => transaction.isExpense).toList();
+  return expenseTransactions.fold(0, (sum, transaction) => sum + transaction.amount);
+});
+
+/// Payment methods provider
+final paymentMethodsProvider = Provider<List<PaymentMethod>>((ref) {
+  return PaymentMethod.values;
+});
+
+/// Payment types provider
+final paymentTypesProvider = Provider<List<PaymentType>>((ref) {
+  return PaymentType.values;
+});
+
+/// Transaction types provider
+final transactionTypesProvider = Provider<List<TransactionType>>((ref) {
+  return TransactionType.values;
+});
+
+/// Payment statuses provider
+final paymentStatusesProvider = Provider<List<PaymentStatus>>((ref) {
+  return PaymentStatus.values;
+});
+
+/// Today's transactions provider
+final todaysTransactionsProvider = FutureProvider.family<List<Transaction>, String>((ref, userId) async {
+  final paymentService = ref.read(paymentServiceProvider);
+  final transactions = await paymentService.getUserTransactions(userId);
+  
+  final today = DateTime.now();
+  final startOfDay = DateTime(today.year, today.month, today.day);
+  final endOfDay = startOfDay.add(const Duration(days: 1));
+  
+  return transactions.where((transaction) {
+    return transaction.createdAt.isAfter(startOfDay) && 
+           transaction.createdAt.isBefore(endOfDay);
+  }).toList();
+});
+
+/// This week's transactions provider
+final thisWeekTransactionsProvider = FutureProvider.family<List<Transaction>, String>((ref, userId) async {
+  final paymentService = ref.read(paymentServiceProvider);
+  final transactions = await paymentService.getUserTransactions(userId);
+  
+  final now = DateTime.now();
+  final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+  final startOfWeekDay = DateTime(startOfWeek.year, startOfWeek.month, startOfWeek.day);
+  
+  return transactions.where((transaction) {
+    return transaction.createdAt.isAfter(startOfWeekDay);
+  }).toList();
+});
+
+/// This month's transactions provider
+final thisMonthTransactionsProvider = FutureProvider.family<List<Transaction>, String>((ref, userId) async {
+  final paymentService = ref.read(paymentServiceProvider);
+  final transactions = await paymentService.getUserTransactions(userId);
+  
+  final now = DateTime.now();
+  final startOfMonth = DateTime(now.year, now.month);
+  
+  return transactions.where((transaction) {
+    return transaction.createdAt.isAfter(startOfMonth);
+  }).toList();
+});

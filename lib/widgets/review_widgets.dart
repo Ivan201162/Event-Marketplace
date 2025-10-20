@@ -424,7 +424,7 @@ class ReviewFormWidget extends ConsumerStatefulWidget {
 class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
   @override
   Widget build(BuildContext context) {
-    final formState = ref.watch(reviewFormProvider) as ReviewFormState;
+    final formState = ref.watch(reviewFormProvider);
 
     return Card(
       elevation: 4,
@@ -628,9 +628,9 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
         specialistId: widget.specialistId,
         customerId: 'current_user_id',
         customerName: 'Current User',
-        rating: (ref.read(reviewFormProvider) as ReviewFormState).rating.toDouble(),
-        text: (ref.read(reviewFormProvider) as ReviewFormState).comment,
-        serviceTags: [],
+        rating: (ref.read(reviewFormProvider)).rating.toDouble(),
+        text: (ref.read(reviewFormProvider)).comment,
+        serviceTags: const [],
         date: DateTime.now(),
       );
 

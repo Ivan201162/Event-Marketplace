@@ -30,7 +30,7 @@ class SpecialistProfileRepository {
           .where('userId', isEqualTo: userId)
           .limit(1)
           .get();
-      
+
       if (query.docs.isNotEmpty) {
         return SpecialistProfile.fromFirestore(query.docs.first);
       }
@@ -84,7 +84,7 @@ class SpecialistProfileRepository {
           .orderBy('rating', descending: true)
           .limit(50)
           .get();
-      
+
       return query.docs.map((doc) => SpecialistProfile.fromFirestore(doc)).toList();
     } catch (e) {
       debugPrint('Error getting profiles by categories: $e');
@@ -101,7 +101,7 @@ class SpecialistProfileRepository {
           .orderBy('reviewCount', descending: true)
           .limit(limit)
           .get();
-      
+
       return query.docs.map((doc) => SpecialistProfile.fromFirestore(doc)).toList();
     } catch (e) {
       debugPrint('Error getting top specialists: $e');

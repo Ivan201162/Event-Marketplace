@@ -480,7 +480,7 @@ class StudioRecommendationService {
       // Уведомление студии (если есть владелец)
       // TODO(developer): Добавить поле ownerId в PhotoStudio
     } catch (e) {
-      print('Ошибка отправки уведомлений о двойном бронировании: $e');
+      debugPrint('Ошибка отправки уведомлений о двойном бронировании: $e');
     }
   }
 
@@ -513,11 +513,11 @@ class StudioRecommendationService {
             notification: notification,
           );
         } catch (e) {
-          print('Ошибка отправки уведомления на токен $token: $e');
+          debugPrint('Ошибка отправки уведомления на токен $token: $e');
         }
       }
     } catch (e) {
-      print('Ошибка отправки уведомления пользователю: $e');
+      debugPrint('Ошибка отправки уведомления пользователю: $e');
     }
   }
 
@@ -535,7 +535,7 @@ class StudioRecommendationService {
         'timestamp': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
-      print('Ошибка логирования действия с рекомендацией: $e');
+      debugPrint('Ошибка логирования действия с рекомендацией: $e');
     }
   }
 
@@ -553,7 +553,7 @@ class StudioRecommendationService {
         'timestamp': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
-      print('Ошибка логирования действия с двойным бронированием: $e');
+      debugPrint('Ошибка логирования действия с двойным бронированием: $e');
     }
   }
 }

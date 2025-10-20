@@ -28,7 +28,7 @@ class BudgetRecommendationService {
 
       return recommendations;
     } on Exception catch (e) {
-      print('Ошибка получения рекомендаций по бюджету: $e');
+      debugPrint('Ошибка получения рекомендаций по бюджету: $e');
       return [];
     }
   }
@@ -51,7 +51,7 @@ class BudgetRecommendationService {
       final specialist = Specialist.fromDocument(snapshot.docs.first);
       return specialist.price;
     } on Exception catch (e) {
-      print('Ошибка получения минимальной цены для категории: $e');
+      debugPrint('Ошибка получения минимальной цены для категории: $e');
       return 0.0;
     }
   }
@@ -78,7 +78,7 @@ class BudgetRecommendationService {
       );
       return totalPrice / specialists.length;
     } on Exception catch (e) {
-      print('Ошибка получения средней цены для категории: $e');
+      debugPrint('Ошибка получения средней цены для категории: $e');
       return 0.0;
     }
   }
@@ -91,7 +91,7 @@ class BudgetRecommendationService {
         'shownAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      print('Ошибка сохранения статуса рекомендации по бюджету: $e');
+      debugPrint('Ошибка сохранения статуса рекомендации по бюджету: $e');
     }
   }
 
@@ -110,7 +110,7 @@ class BudgetRecommendationService {
           specialists.add(Specialist.fromDocument(doc));
         }
       } on Exception catch (e) {
-        print('Ошибка получения специалиста $id: $e');
+        debugPrint('Ошибка получения специалиста $id: $e');
       }
     }
 

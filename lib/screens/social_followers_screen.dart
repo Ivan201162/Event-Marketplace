@@ -119,7 +119,7 @@ class _SocialFollowersScreenState extends ConsumerState<SocialFollowersScreen> {
             Icon(
               Icons.people_outline,
               size: 64,
-              color: Theme.of(context).primaryColor.withOpacity(0.5),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
             Text(

@@ -1,10 +1,12 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
+
 import '../models/gallery_item.dart';
+import '../utils/storage_guard.dart';
 
 /// Сервис для работы с галереей специалиста
 class GalleryService {
@@ -13,7 +15,7 @@ class GalleryService {
   static final GalleryService _instance = GalleryService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseStorage? _storage = getStorage();
   final ImagePicker _imagePicker = ImagePicker();
 
   /// Загрузить изображение в галерею
@@ -31,7 +33,11 @@ class GalleryService {
       final storagePath = 'gallery/$specialistId/images/$fileName';
 
       // Загружаем файл в Firebase Storage
-      final ref = _storage.ref().child(storagePath);
+      final storage = _storage;
+      if (storage == null) {
+        throw Exception('Firebase Storage is not available on web.');
+      }
+      final ref = storage.ref().child(storagePath);
       final uploadTask = ref.putFile(File(imageFile.path));
       final snapshot = await uploadTask;
       final downloadUrl = await snapshot.ref.getDownloadURL();
@@ -52,10 +58,10 @@ class GalleryService {
 
       final docRef = await _firestore.collection('gallery').add(galleryItem.toMap());
 
-      debugPrint('Image uploaded to gallery: ${docRef.id}');
+      debugdebugPrint('Image uploaded to gallery: ${docRef.id}');
       return docRef.id;
     } catch (e) {
-      debugPrint('Error uploading image: $e');
+      debugdebugPrint('Error uploading image: $e');
       throw Exception('Ошибка загрузки изображения: $e');
     }
   }
@@ -75,7 +81,11 @@ class GalleryService {
       final storagePath = 'gallery/$specialistId/videos/$fileName';
 
       // Загружаем видео в Firebase Storage
-      final ref = _storage.ref().child(storagePath);
+      final storage = _storage;
+      if (storage == null) {
+        throw Exception('Firebase Storage is not available on web.');
+      }
+      final ref = storage.ref().child(storagePath);
       final uploadTask = ref.putFile(File(videoFile.path));
       final snapshot = await uploadTask;
       final downloadUrl = await snapshot.ref.getDownloadURL();
@@ -85,8 +95,9 @@ class GalleryService {
       String? thumbnailUrl;
 
       if (thumbnailPath != null) {
-        final thumbnailRef =
-            _storage.ref().child('gallery/$specialistId/thumbnails/${fileName}_thumb.jpg');
+        final thumbnailRef = storage
+            .ref()
+            .child('gallery/$specialistId/thumbnails/${fileName}_thumb.jpg');
         final thumbnailUploadTask = thumbnailRef.putFile(File(thumbnailPath));
         final thumbnailSnapshot = await thumbnailUploadTask;
         thumbnailUrl = await thumbnailSnapshot.ref.getDownloadURL();
@@ -118,10 +129,10 @@ class GalleryService {
 
       final docRef = await _firestore.collection('gallery').add(galleryItem.toMap());
 
-      debugPrint('Video uploaded to gallery: ${docRef.id}');
+      debugdebugPrint('Video uploaded to gallery: ${docRef.id}');
       return docRef.id;
     } catch (e) {
-      debugPrint('Error uploading video: $e');
+      debugdebugPrint('Error uploading video: $e');
       throw Exception('Ошибка загрузки видео: $e');
     }
   }
@@ -147,7 +158,7 @@ class GalleryService {
 
       return querySnapshot.docs.map(GalleryItem.fromDocument).toList();
     } catch (e) {
-      debugPrint('Error getting specialist gallery: $e');
+      debugdebugPrint('Error getting specialist gallery: $e');
       throw Exception('Ошибка получения галереи: $e');
     }
   }
@@ -178,9 +189,9 @@ class GalleryService {
 
       await _firestore.collection('gallery').doc(itemId).update(updateData);
 
-      debugPrint('Gallery item updated: $itemId');
+      debugdebugPrint('Gallery item updated: $itemId');
     } catch (e) {
-      debugPrint('Error updating gallery item: $e');
+      debugdebugPrint('Error updating gallery item: $e');
       throw Exception('Ошибка обновления элемента галереи: $e');
     }
   }
@@ -198,21 +209,26 @@ class GalleryService {
 
       // Удаляем файлы из Storage
       try {
-        await _storage.refFromURL(item.url).delete();
+        final storage = _storage;
+        if (storage != null) {
+          await storage.refFromURL(item.url).delete();
+        }
         if (item.thumbnailUrl != item.url) {
-          await _storage.refFromURL(item.thumbnailUrl).delete();
+          if (storage != null) {
+            await storage.refFromURL(item.thumbnailUrl).delete();
+          }
         }
       } catch (e) {
-        debugPrint('Error deleting files from storage: $e');
+        debugdebugPrint('Error deleting files from storage: $e');
         // Продолжаем удаление записи даже если файлы не удалились
       }
 
       // Удаляем запись из Firestore
       await _firestore.collection('gallery').doc(itemId).delete();
 
-      debugPrint('Gallery item deleted: $itemId');
+      debugdebugPrint('Gallery item deleted: $itemId');
     } catch (e) {
-      debugPrint('Error deleting gallery item: $e');
+      debugdebugPrint('Error deleting gallery item: $e');
       throw Exception('Ошибка удаления элемента галереи: $e');
     }
   }
@@ -225,7 +241,7 @@ class GalleryService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
-      debugPrint('Error incrementing view count: $e');
+      debugdebugPrint('Error incrementing view count: $e');
       // Не выбрасываем исключение, так как это не критично
     }
   }
@@ -238,7 +254,7 @@ class GalleryService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
-      debugPrint('Error incrementing like count: $e');
+      debugdebugPrint('Error incrementing like count: $e');
       throw Exception('Ошибка добавления лайка: $e');
     }
   }
@@ -251,7 +267,7 @@ class GalleryService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
-      debugPrint('Error decrementing like count: $e');
+      debugdebugPrint('Error decrementing like count: $e');
       throw Exception('Ошибка удаления лайка: $e');
     }
   }
@@ -268,7 +284,7 @@ class GalleryService {
       );
       return thumbnailPath;
     } catch (e) {
-      debugPrint('Error generating video thumbnail: $e');
+      debugdebugPrint('Error generating video thumbnail: $e');
       return null;
     }
   }
@@ -289,7 +305,7 @@ class GalleryService {
         'fileSize': fileSize,
       };
     } catch (e) {
-      debugPrint('Error getting video info: $e');
+      debugdebugPrint('Error getting video info: $e');
       return {
         'duration': null,
         'width': null,
@@ -309,7 +325,7 @@ class GalleryService {
         imageQuality: 85,
       );
     } catch (e) {
-      debugPrint('Error picking image: $e');
+      debugdebugPrint('Error picking image: $e');
       return null;
     }
   }
@@ -324,7 +340,7 @@ class GalleryService {
         imageQuality: 85,
       );
     } catch (e) {
-      debugPrint('Error taking photo: $e');
+      debugdebugPrint('Error taking photo: $e');
       return null;
     }
   }
@@ -337,7 +353,7 @@ class GalleryService {
         maxDuration: const Duration(minutes: 5),
       );
     } catch (e) {
-      debugPrint('Error picking video: $e');
+      debugdebugPrint('Error picking video: $e');
       return null;
     }
   }
@@ -350,7 +366,7 @@ class GalleryService {
         maxDuration: const Duration(minutes: 5),
       );
     } catch (e) {
-      debugPrint('Error recording video: $e');
+      debugdebugPrint('Error recording video: $e');
       return null;
     }
   }

@@ -15,10 +15,9 @@ const anniversaryServiceProvider = AnniversaryServiceProvider._();
 
 /// Провайдер сервиса годовщин
 
-final class AnniversaryServiceProvider extends $FunctionalProvider<
-    AnniversaryService,
-    AnniversaryService,
-    AnniversaryService> with $Provider<AnniversaryService> {
+final class AnniversaryServiceProvider
+    extends $FunctionalProvider<AnniversaryService, AnniversaryService, AnniversaryService>
+    with $Provider<AnniversaryService> {
   /// Провайдер сервиса годовщин
   const AnniversaryServiceProvider._()
       : super(
@@ -36,8 +35,7 @@ final class AnniversaryServiceProvider extends $FunctionalProvider<
 
   @$internal
   @override
-  $ProviderElement<AnniversaryService> $createElement(
-          $ProviderPointer pointer) =>
+  $ProviderElement<AnniversaryService> $createElement($ProviderPointer pointer) =>
       $ProviderElement(pointer);
 
   @override
@@ -54,8 +52,7 @@ final class AnniversaryServiceProvider extends $FunctionalProvider<
   }
 }
 
-String _$anniversaryServiceHash() =>
-    r'c4a7c62bc754e4d09ace669e62dcca753250aae6';
+String _$anniversaryServiceHash() => r'c4a7c62bc754e4d09ace669e62dcca753250aae6';
 
 /// Провайдер информации о годовщине пользователя
 
@@ -65,16 +62,11 @@ const userAnniversaryInfoProvider = UserAnniversaryInfoFamily._();
 /// Провайдер информации о годовщине пользователя
 
 final class UserAnniversaryInfoProvider extends $FunctionalProvider<
-        AsyncValue<Map<String, dynamic>>,
-        Map<String, dynamic>,
-        FutureOr<Map<String, dynamic>>>
-    with
-        $FutureModifier<Map<String, dynamic>>,
-        $FutureProvider<Map<String, dynamic>> {
+        AsyncValue<Map<String, dynamic>>, Map<String, dynamic>, FutureOr<Map<String, dynamic>>>
+    with $FutureModifier<Map<String, dynamic>>, $FutureProvider<Map<String, dynamic>> {
   /// Провайдер информации о годовщине пользователя
   const UserAnniversaryInfoProvider._(
-      {required UserAnniversaryInfoFamily super.from,
-      required String super.argument})
+      {required UserAnniversaryInfoFamily super.from, required String super.argument})
       : super(
           retry: null,
           name: r'userAnniversaryInfoProvider',
@@ -95,8 +87,7 @@ final class UserAnniversaryInfoProvider extends $FunctionalProvider<
 
   @$internal
   @override
-  $FutureProviderElement<Map<String, dynamic>> $createElement(
-          $ProviderPointer pointer) =>
+  $FutureProviderElement<Map<String, dynamic>> $createElement($ProviderPointer pointer) =>
       $FutureProviderElement(pointer);
 
   @override
@@ -119,8 +110,7 @@ final class UserAnniversaryInfoProvider extends $FunctionalProvider<
   }
 }
 
-String _$userAnniversaryInfoHash() =>
-    r'630eaedc887cf3bab9af4469eef4ecce90bf948e';
+String _$userAnniversaryInfoHash() => r'630eaedc887cf3bab9af4469eef4ecce90bf948e';
 
 /// Провайдер информации о годовщине пользователя
 
@@ -174,8 +164,7 @@ final class AnniversarySettingsNotifierProvider
   AnniversarySettingsNotifier create() => AnniversarySettingsNotifier();
 }
 
-String _$anniversarySettingsNotifierHash() =>
-    r'f1ba5c10f4d215b14709cea3ec17fd90a8a5126a';
+String _$anniversarySettingsNotifierHash() => r'f1ba5c10f4d215b14709cea3ec17fd90a8a5126a';
 
 /// Провайдер для обновления настроек годовщин
 
@@ -186,11 +175,8 @@ abstract class _$AnniversarySettingsNotifier extends $AsyncNotifier<void> {
   void runBuild() {
     build();
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<AsyncValue<void>, void>,
-        AsyncValue<void>,
-        Object?,
-        Object?>;
+    final element = ref.element as $ClassProviderElement<AnyNotifier<AsyncValue<void>, void>,
+        AsyncValue<void>, Object?, Object?>;
     element.handleValue(ref, null);
   }
 }
@@ -202,13 +188,12 @@ const upcomingAnniversariesProvider = UpcomingAnniversariesFamily._();
 
 /// Провайдер пользователей с годовщинами в ближайшие дни
 
-final class UpcomingAnniversariesProvider extends $FunctionalProvider<
-        AsyncValue<List<AppUser>>, List<AppUser>, FutureOr<List<AppUser>>>
+final class UpcomingAnniversariesProvider
+    extends $FunctionalProvider<AsyncValue<List<AppUser>>, List<AppUser>, FutureOr<List<AppUser>>>
     with $FutureModifier<List<AppUser>>, $FutureProvider<List<AppUser>> {
   /// Провайдер пользователей с годовщинами в ближайшие дни
   const UpcomingAnniversariesProvider._(
-      {required UpcomingAnniversariesFamily super.from,
-      required int super.argument})
+      {required UpcomingAnniversariesFamily super.from, required int super.argument})
       : super(
           retry: null,
           name: r'upcomingAnniversariesProvider',
@@ -229,8 +214,7 @@ final class UpcomingAnniversariesProvider extends $FunctionalProvider<
 
   @$internal
   @override
-  $FutureProviderElement<List<AppUser>> $createElement(
-          $ProviderPointer pointer) =>
+  $FutureProviderElement<List<AppUser>> $createElement($ProviderPointer pointer) =>
       $FutureProviderElement(pointer);
 
   @override
@@ -253,8 +237,7 @@ final class UpcomingAnniversariesProvider extends $FunctionalProvider<
   }
 }
 
-String _$upcomingAnniversariesHash() =>
-    r'b189262e778937705c6c31e81f9bf9dcaba1679c';
+String _$upcomingAnniversariesHash() => r'b189262e778937705c6c31e81f9bf9dcaba1679c';
 
 /// Провайдер пользователей с годовщинами в ближайшие дни
 

@@ -14,7 +14,7 @@ Map<String, dynamic> safeMapFromDynamic(Map<dynamic, dynamic>? data) {
 /// Безопасное преобразование List<dynamic> в List<T>
 List<T> safeListFromDynamic<T>(
   List<dynamic>? data,
-  T Function() converter,
+  T Function(dynamic) converter,
 ) {
   if (data == null) return <T>[];
   return data.map<T>(converter).toList();

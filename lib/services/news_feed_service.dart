@@ -33,7 +33,7 @@ class NewsFeedService {
 
       return newsItems;
     } on Exception catch (e) {
-      print('Ошибка получения ленты новостей: $e');
+      debugPrint('Ошибка получения ленты новостей: $e');
       return [];
     }
   }
@@ -58,7 +58,7 @@ class NewsFeedService {
       final snapshot = await query.get();
       return snapshot.docs.map(NewsItem.fromDocument).toList();
     } on Exception catch (e) {
-      print('Ошибка получения новостей специалиста: $e');
+      debugPrint('Ошибка получения новостей специалиста: $e');
       return [];
     }
   }
@@ -98,7 +98,7 @@ class NewsFeedService {
 
       return newsItem.copyWith(id: docRef.id);
     } on Exception catch (e) {
-      print('Ошибка создания новости: $e');
+      debugPrint('Ошибка создания новости: $e');
       rethrow;
     }
   }
@@ -125,7 +125,7 @@ class NewsFeedService {
 
       await _firestore.collection('news_items').doc(newsItemId).update(updateData);
     } on Exception catch (e) {
-      print('Ошибка обновления новости: $e');
+      debugPrint('Ошибка обновления новости: $e');
       rethrow;
     }
   }
@@ -135,7 +135,7 @@ class NewsFeedService {
     try {
       await _firestore.collection('news_items').doc(newsItemId).delete();
     } on Exception catch (e) {
-      print('Ошибка удаления новости: $e');
+      debugPrint('Ошибка удаления новости: $e');
       rethrow;
     }
   }
@@ -166,7 +166,7 @@ class NewsFeedService {
 
       await batch.commit();
     } on Exception catch (e) {
-      print('Ошибка лайка новости: $e');
+      debugPrint('Ошибка лайка новости: $e');
       rethrow;
     }
   }
@@ -192,7 +192,7 @@ class NewsFeedService {
 
       await batch.commit();
     } on Exception catch (e) {
-      print('Ошибка удаления лайка: $e');
+      debugPrint('Ошибка удаления лайка: $e');
       rethrow;
     }
   }
@@ -205,7 +205,7 @@ class NewsFeedService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      print('Ошибка шаринга новости: $e');
+      debugPrint('Ошибка шаринга новости: $e');
       rethrow;
     }
   }
@@ -225,7 +225,7 @@ class NewsFeedService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      print('Ошибка отметки просмотра: $e');
+      debugPrint('Ошибка отметки просмотра: $e');
     }
   }
 
@@ -238,7 +238,7 @@ class NewsFeedService {
         'subscribedAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      print('Ошибка подписки на специалиста: $e');
+      debugPrint('Ошибка подписки на специалиста: $e');
       rethrow;
     }
   }
@@ -251,7 +251,7 @@ class NewsFeedService {
     try {
       await _firestore.collection('subscriptions').doc('${userId}_$specialistId').delete();
     } on Exception catch (e) {
-      print('Ошибка отписки от специалиста: $e');
+      debugPrint('Ошибка отписки от специалиста: $e');
       rethrow;
     }
   }
@@ -264,7 +264,7 @@ class NewsFeedService {
 
       return snapshot.docs.map((doc) => doc.data()['specialistId'] as String).toList();
     } on Exception catch (e) {
-      print('Ошибка получения подписок: $e');
+      debugPrint('Ошибка получения подписок: $e');
       return [];
     }
   }
@@ -279,7 +279,7 @@ class NewsFeedService {
 
       return doc.exists;
     } on Exception catch (e) {
-      print('Ошибка проверки подписки: $e');
+      debugPrint('Ошибка проверки подписки: $e');
       return false;
     }
   }
@@ -317,7 +317,7 @@ class NewsFeedService {
         lastUpdated: DateTime.now(),
       );
     } on Exception catch (e) {
-      print('Ошибка получения статистики новостей: $e');
+      debugPrint('Ошибка получения статистики новостей: $e');
       return NewsStats.empty();
     }
   }
@@ -369,7 +369,7 @@ class NewsFeedService {
         );
       }
     } on Exception catch (e) {
-      print('Ошибка создания тестовых новостей: $e');
+      debugPrint('Ошибка создания тестовых новостей: $e');
     }
   }
 }

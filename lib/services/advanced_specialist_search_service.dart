@@ -57,13 +57,13 @@ class AdvancedSpecialistSearchService {
       final searchTime = endTime.difference(startTime).inMilliseconds;
 
       // Обновляем время поиска в результатах (для отладки)
-      print(
+      debugPrint(
         'Поиск завершен за $searchTimeмс, найдено ${results.length} результатов',
       );
 
       return results;
     } catch (e) {
-      print('Ошибка расширенного поиска специалистов: $e');
+      debugPrint('Ошибка расширенного поиска специалистов: $e');
       return [];
     }
   }
@@ -108,7 +108,7 @@ class AdvancedSpecialistSearchService {
         yield results;
       }
     } catch (e) {
-      print('Ошибка потока поиска специалистов: $e');
+      debugPrint('Ошибка потока поиска специалистов: $e');
       yield [];
     }
   }
@@ -333,7 +333,7 @@ class AdvancedSpecialistSearchService {
         experienceScore: experienceScore,
       );
     } catch (e) {
-      print('Ошибка создания результата поиска: $e');
+      debugPrint('Ошибка создания результата поиска: $e');
       return null;
     }
   }
@@ -569,7 +569,7 @@ class AdvancedSpecialistSearchService {
 
       return sortedCategories.take(limit).map((entry) => entry.key).toList();
     } catch (e) {
-      print('Ошибка получения популярных категорий: $e');
+      debugPrint('Ошибка получения популярных категорий: $e');
       return [];
     }
   }
@@ -604,7 +604,7 @@ class AdvancedSpecialistSearchService {
         'searchCities': searchCities.length,
       };
     } catch (e) {
-      print('Ошибка получения статистики поиска: $e');
+      debugPrint('Ошибка получения статистики поиска: $e');
       return {
         'totalSpecialists': 0,
         'avgRating': 0.0,

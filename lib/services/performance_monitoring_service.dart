@@ -34,11 +34,11 @@ class PerformanceMonitoringService {
       _startMonitoring();
 
       if (kDebugMode) {
-        print('Performance monitoring initialized');
+        debugPrint('Performance monitoring initialized');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка инициализации мониторинга производительности: $e');
+        debugPrint('Ошибка инициализации мониторинга производительности: $e');
       }
     }
   }
@@ -79,7 +79,7 @@ class PerformanceMonitoringService {
       await _checkAlerts();
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка сбора метрик: $e');
+        debugPrint('Ошибка сбора метрик: $e');
       }
     }
   }
@@ -134,7 +134,7 @@ class PerformanceMonitoringService {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка сбора метрик памяти: $e');
+        debugPrint('Ошибка сбора метрик памяти: $e');
       }
     }
   }
@@ -158,7 +158,7 @@ class PerformanceMonitoringService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка сбора метрик CPU: $e');
+        debugPrint('Ошибка сбора метрик CPU: $e');
       }
     }
   }
@@ -182,7 +182,7 @@ class PerformanceMonitoringService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка сбора метрик сети: $e');
+        debugPrint('Ошибка сбора метрик сети: $e');
       }
     }
   }
@@ -206,7 +206,7 @@ class PerformanceMonitoringService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка сбора метрик базы данных: $e');
+        debugPrint('Ошибка сбора метрик базы данных: $e');
       }
     }
   }
@@ -230,7 +230,7 @@ class PerformanceMonitoringService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка сбора метрик UI: $e');
+        debugPrint('Ошибка сбора метрик UI: $e');
       }
     }
   }
@@ -267,11 +267,11 @@ class PerformanceMonitoringService {
       _currentMetrics[name] = value;
 
       if (kDebugMode) {
-        print('Performance metric recorded: $name = ${metric.formattedValue}');
+        debugPrint('Performance metric recorded: $name = ${metric.formattedValue}');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка записи метрики: $e');
+        debugPrint('Ошибка записи метрики: $e');
       }
     }
   }
@@ -291,7 +291,7 @@ class PerformanceMonitoringService {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка проверки алертов: $e');
+        debugPrint('Ошибка проверки алертов: $e');
       }
     }
   }
@@ -344,11 +344,11 @@ class PerformanceMonitoringService {
       _activeAlerts.add(alert);
 
       if (kDebugMode) {
-        print('Performance alert created: $message');
+        debugPrint('Performance alert created: $message');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка создания алерта: $e');
+        debugPrint('Ошибка создания алерта: $e');
       }
     }
   }
@@ -501,7 +501,7 @@ class PerformanceMonitoringService {
       return snapshot.docs.map(PerformanceMetric.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения метрик: $e');
+        debugPrint('Ошибка получения метрик: $e');
       }
       return [];
     }
@@ -528,7 +528,7 @@ class PerformanceMonitoringService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения статистики метрики: $e');
+        debugPrint('Ошибка получения статистики метрики: $e');
       }
       return PerformanceStatistics.fromMetrics(metricName, 'general', []);
     }
@@ -546,7 +546,7 @@ class PerformanceMonitoringService {
       return snapshot.docs.map(PerformanceAlert.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка получения активных алертов: $e');
+        debugPrint('Ошибка получения активных алертов: $e');
       }
       return [];
     }
@@ -563,7 +563,7 @@ class PerformanceMonitoringService {
       _activeAlerts.removeWhere((alert) => alert.id == alertId);
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка решения алерта: $e');
+        debugPrint('Ошибка решения алерта: $e');
       }
     }
   }
@@ -589,7 +589,7 @@ class PerformanceMonitoringService {
       await batch.commit();
     } catch (e) {
       if (kDebugMode) {
-        print('Ошибка очистки старых метрик: $e');
+        debugPrint('Ошибка очистки старых метрик: $e');
       }
     }
   }

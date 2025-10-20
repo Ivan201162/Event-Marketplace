@@ -55,7 +55,7 @@ class ImageOptimizationService {
 
       return Uint8List.fromList(compressedBytes);
     } catch (e) {
-      debugPrint('Ошибка сжатия изображения: $e');
+      debugdebugPrint('Ошибка сжатия изображения: $e');
       return imageBytes; // Возвращаем оригинал в случае ошибки
     }
   }
@@ -82,7 +82,7 @@ class ImageOptimizationService {
       }
       return Size(image.width.toDouble(), image.height.toDouble());
     } catch (e) {
-      debugPrint('Ошибка получения размера изображения: $e');
+      debugdebugPrint('Ошибка получения размера изображения: $e');
       return const Size(0, 0);
     }
   }
@@ -105,7 +105,7 @@ class ImageOptimizationService {
 
       return file.path;
     } catch (e) {
-      debugPrint('Ошибка сохранения изображения: $e');
+      debugdebugPrint('Ошибка сохранения изображения: $e');
       rethrow;
     }
   }
@@ -119,7 +119,7 @@ class ImageOptimizationService {
       }
       return null;
     } catch (e) {
-      debugPrint('Ошибка загрузки изображения: $e');
+      debugdebugPrint('Ошибка загрузки изображения: $e');
       return null;
     }
   }
@@ -132,7 +132,7 @@ class ImageOptimizationService {
         await file.delete();
       }
     } catch (e) {
-      debugPrint('Ошибка удаления изображения: $e');
+      debugdebugPrint('Ошибка удаления изображения: $e');
     }
   }
 
@@ -146,7 +146,7 @@ class ImageOptimizationService {
         await imagesDir.delete(recursive: true);
       }
     } catch (e) {
-      debugPrint('Ошибка очистки кэша изображений: $e');
+      debugdebugPrint('Ошибка очистки кэша изображений: $e');
     }
   }
 
@@ -169,7 +169,7 @@ class ImageOptimizationService {
 
       return totalSize;
     } catch (e) {
-      debugPrint('Ошибка получения размера кэша: $e');
+      debugdebugPrint('Ошибка получения размера кэша: $e');
       return 0;
     }
   }
@@ -290,7 +290,7 @@ class _OptimizedImageState extends State<OptimizedImage> {
         });
       }
     } catch (e) {
-      debugPrint('Ошибка загрузки изображения: $e');
+      debugdebugPrint('Ошибка загрузки изображения: $e');
       if (mounted) {
         setState(() {
           _hasError = true;
@@ -305,7 +305,7 @@ class _OptimizedImageState extends State<OptimizedImage> {
       final fileName = _getCacheFileName();
       return await ImageOptimizationService.loadImageLocally(fileName);
     } catch (e) {
-      debugPrint('Ошибка получения кэшированного изображения: $e');
+      debugdebugPrint('Ошибка получения кэшированного изображения: $e');
       return null;
     }
   }
@@ -315,7 +315,7 @@ class _OptimizedImageState extends State<OptimizedImage> {
       final fileName = _getCacheFileName();
       await ImageOptimizationService.saveImageLocally(imageBytes, fileName);
     } catch (e) {
-      debugPrint('Ошибка кэширования изображения: $e');
+      debugdebugPrint('Ошибка кэширования изображения: $e');
     }
   }
 
@@ -338,7 +338,7 @@ class _OptimizedImageState extends State<OptimizedImage> {
       }
       return null;
     } catch (e) {
-      debugPrint('Ошибка загрузки изображения по URL: $e');
+      debugdebugPrint('Ошибка загрузки изображения по URL: $e');
       return null;
     }
   }

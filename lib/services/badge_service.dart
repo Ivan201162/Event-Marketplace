@@ -19,7 +19,7 @@ class BadgeService {
 
       return querySnapshot.docs.map(Badge.fromDocument).toList();
     } catch (e) {
-      print('Error getting user badges: $e');
+      debugPrint('Error getting user badges: $e');
       return [];
     }
   }
@@ -36,7 +36,7 @@ class BadgeService {
       // Проверяем бейджи для специалиста
       await _checkSpecialistBookingBadges(specialistId);
     } catch (e) {
-      print('Error checking booking badges: $e');
+      debugPrint('Error checking booking badges: $e');
     }
   }
 
@@ -53,7 +53,7 @@ class BadgeService {
       // Проверяем бейджи для специалиста
       await _checkSpecialistReviewBadges(specialistId, rating);
     } catch (e) {
-      print('Error checking review badges: $e');
+      debugPrint('Error checking review badges: $e');
     }
   }
 
@@ -211,9 +211,9 @@ class BadgeService {
 
       await _db.collection('badges').add(badge.toMap());
 
-      print('Badge awarded: ${badgeType.name} to user $userId');
+      debugPrint('Badge awarded: ${badgeType.name} to user $userId');
     } catch (e) {
-      print('Error awarding badge: $e');
+      debugPrint('Error awarding badge: $e');
     }
   }
 
@@ -237,7 +237,7 @@ class BadgeService {
         recentBadges: badges.recent.take(5).toList(),
       );
     } catch (e) {
-      print('Error getting badge stats: $e');
+      debugPrint('Error getting badge stats: $e');
       return BadgeStats.empty;
     }
   }
@@ -281,13 +281,13 @@ class BadgeService {
             );
           }
         } catch (e) {
-          print('Error getting user info for leaderboard: $e');
+          debugPrint('Error getting user info for leaderboard: $e');
         }
       }
 
       return leaderboard;
     } catch (e) {
-      print('Error getting badge leaderboard: $e');
+      debugPrint('Error getting badge leaderboard: $e');
       return [];
     }
   }
@@ -299,7 +299,7 @@ class BadgeService {
         'isVisible': isVisible,
       });
     } catch (e) {
-      print('Error toggling badge visibility: $e');
+      debugPrint('Error toggling badge visibility: $e');
     }
   }
 }

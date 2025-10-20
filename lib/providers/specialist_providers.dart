@@ -1,214 +1,135 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../models/search_filters.dart';
 import '../models/specialist.dart';
-import '../models/specialist_filters.dart';
 import '../services/specialist_service.dart';
 
-/// Провайдер сервиса специалистов
-final specialistServiceProvider = Provider<SpecialistService>((ref) => SpecialistService());
-
-/// Провайдер для ленты специалиста
-final specialistFeedProvider =
-    StreamProvider.family<List<Map<String, dynamic>>, String>((ref, specialistId) {
-  final specialistService = ref.watch(specialistServiceProvider);
-  return specialistService.getSpecialistFeed(specialistId);
+/// Specialist service provider
+final specialistServiceProvider = Provider<SpecialistService>((ref) {
+  return SpecialistService();
 });
 
-/// Провайдер всех специалистов
-final allSpecialistsProvider = StreamProvider<List<Specialist>>((ref) {
-  final specialistService = ref.watch(specialistServiceProvider);
-  return specialistService.getAllSpecialistsStream();
+/// All specialists provider
+final specialistsProvider = FutureProvider<List<Specialist>>((ref) async {
+  final service = ref.read(specialistServiceProvider);
+  return await service.getAllSpecialists();
 });
 
-/// Провайдер специалиста по ID
-final specialistProvider = StreamProvider.family<Specialist?, String>((ref, specialistId) {
-  final specialistService = ref.watch(specialistServiceProvider);
-  return specialistService.getSpecialistStream(specialistId);
+/// Top specialists provider (by rating)
+final topSpecialistsProvider = FutureProvider<List<Specialist>>((ref) async {
+  final service = ref.read(specialistServiceProvider);
+  return await service.getTopSpecialists();
 });
 
-/// Провайдер специалиста по ID пользователя
-final specialistByUserIdProvider = StreamProvider.family<Specialist?, String>((ref, userId) {
-  final specialistService = ref.watch(specialistServiceProvider);
-  return specialistService.getSpecialistByUserIdStream(userId);
+/// Top specialists by Russia provider
+final topSpecialistsRuProvider = FutureProvider<List<Specialist>>((ref) async {
+  final service = ref.read(specialistServiceProvider);
+  return await service.getTopSpecialists();
 });
 
-/// Провайдер топ специалистов
-final topSpecialistsProvider = FutureProvider<List<Specialist>>((ref) {
-  final specialistService = ref.watch(specialistServiceProvider);
-  return specialistService.getTopSpecialists();
+/// Top specialists by city provider
+final topSpecialistsCityProvider = FutureProvider.family<List<Specialist>, String>((ref, city) async {
+  final service = ref.read(specialistServiceProvider);
+  return await service.getTopSpecialistsByCity(city);
 });
 
-/// Провайдер лидеров недели
-final weeklyLeadersProvider = FutureProvider<List<Specialist>>((ref) {
-  final specialistService = ref.watch(specialistServiceProvider);
-  return specialistService.getWeeklyLeaders();
+/// Specialists by city provider
+final specialistsByCityProvider = FutureProvider.family<List<Specialist>, String>((ref, city) async {
+  final service = ref.read(specialistServiceProvider);
+  return await service.getSpecialistsByCity(city);
 });
 
-/// Провайдер специалистов по категории
-final specialistsByCategoryProvider =
-    FutureProvider.family<List<Specialist>, SpecialistCategory>((ref, category) {
-  final specialistService = ref.watch(specialistServiceProvider);
-  return specialistService.getSpecialistsByCategory(category);
+/// Specialists by specialization provider
+final specialistsBySpecializationProvider = FutureProvider.family<List<Specialist>, String>((ref, specialization) async {
+  final service = ref.read(specialistServiceProvider);
+  return await service.getSpecialistsBySpecialization(specialization);
 });
 
-/// Провайдер фильтров специалистов
-final specialistFiltersProvider = Provider<SpecialistFiltersNotifier>((ref) {
-  return SpecialistFiltersNotifier();
+/// Search filters provider
+final searchFiltersProvider = StateProvider<SearchFilters>((ref) {
+  return SearchFilters.empty();
 });
 
-/// Провайдер поиска специалистов
-final specialistSearchProvider =
-    StreamProvider.family<List<Specialist>, Map<String, dynamic>>((ref, filters) {
-  final specialistService = ref.watch(specialistServiceProvider);
-  return specialistService.searchSpecialistsStream(filters);
+/// Search results provider
+final searchResultsProvider = FutureProvider.family<List<Specialist>, SearchFilters>((ref, filters) async {
+  final service = ref.read(specialistServiceProvider);
+  return await service.searchSpecialists(filters);
 });
 
-/// Провайдер доступности специалиста
-final specialistAvailabilityProvider =
-    FutureProvider.family<bool, Map<String, dynamic>>((ref, params) {
-  final specialistService = ref.watch(specialistServiceProvider);
-  return specialistService.isSpecialistAvailableOnDate(
-    params['specialistId'] as String,
-    params['date'] as DateTime,
+/// Available specializations provider
+final specializationsProvider = FutureProvider<List<String>>((ref) async {
+  final service = ref.read(specialistServiceProvider);
+  return await service.getSpecializations();
+});
+
+/// Available cities provider
+final citiesProvider = FutureProvider<List<String>>((ref) async {
+  final service = ref.read(specialistServiceProvider);
+  return await service.getCities();
+});
+
+/// Available services provider
+final servicesProvider = FutureProvider<List<String>>((ref) async {
+  final service = ref.read(specialistServiceProvider);
+  return await service.getServices();
+});
+
+/// Specialist by ID provider
+final specialistByIdProvider = FutureProvider.family<Specialist?, String>((ref, id) async {
+  final service = ref.read(specialistServiceProvider);
+  return await service.getSpecialistById(id);
+});
+
+/// Stream of all specialists provider
+final specialistsStreamProvider = StreamProvider<List<Specialist>>((ref) {
+  final service = ref.read(specialistServiceProvider);
+  return service.getSpecialistsStream();
+});
+
+/// Stream of specialists by city provider
+final specialistsByCityStreamProvider = StreamProvider.family<List<Specialist>, String>((ref, city) {
+  final service = ref.read(specialistServiceProvider);
+  return service.getSpecialistsByCityStream(city);
+});
+
+/// Popular specializations provider (most used)
+final popularSpecializationsProvider = FutureProvider<List<String>>((ref) async {
+  final specialistsAsync = ref.watch(specialistsProvider);
+  return specialistsAsync.when(
+    data: (specialists) {
+      final specializationCount = <String, int>{};
+      for (final specialist in specialists) {
+        specializationCount[specialist.specialization] = 
+            (specializationCount[specialist.specialization] ?? 0) + 1;
+      }
+      
+      final sortedSpecializations = specializationCount.entries.toList()
+        ..sort((a, b) => b.value.compareTo(a.value));
+      
+      return sortedSpecializations.take(8).map((e) => e.key).toList();
+    },
+    loading: () => [],
+    error: (_, __) => [],
   );
 });
 
-/// Провайдер временных слотов
-final timeSlotsProvider =
-    FutureProvider.family<List<Map<String, dynamic>>, Map<String, dynamic>>((ref, params) {
-  final specialistService = ref.watch(specialistServiceProvider);
-  return specialistService.getAvailableTimeSlots(
-    params['specialistId'] as String,
-    params['date'] as DateTime,
+/// Popular cities provider (most used)
+final popularCitiesProvider = FutureProvider<List<String>>((ref) async {
+  final specialistsAsync = ref.watch(specialistsProvider);
+  return specialistsAsync.when(
+    data: (specialists) {
+      final cityCount = <String, int>{};
+      for (final specialist in specialists) {
+        cityCount[specialist.city] = 
+            (cityCount[specialist.city] ?? 0) + 1;
+      }
+      
+      final sortedCities = cityCount.entries.toList()
+        ..sort((a, b) => b.value.compareTo(a.value));
+      
+      return sortedCities.take(10).map((e) => e.key).toList();
+    },
+    loading: () => [],
+    error: (_, __) => [],
   );
 });
-
-/// Notifier для фильтров специалистов
-class SpecialistFiltersNotifier extends ChangeNotifier {
-  SpecialistFilters _filters = const SpecialistFilters();
-
-  SpecialistFilters get filters => _filters;
-
-  void updateFilters(SpecialistFilters filters) {
-    _filters = filters;
-    notifyListeners();
-  }
-
-  void clearFilters() {
-    _filters = const SpecialistFilters();
-    notifyListeners();
-  }
-
-  void setCategory(SpecialistCategory? category) {
-    _filters = _filters.copyWith(category: category);
-    notifyListeners();
-  }
-
-  void setCity(String? city) {
-    _filters = _filters.copyWith(city: city);
-    notifyListeners();
-  }
-
-  void setPriceRange(double? minPrice, double? maxPrice) {
-    _filters = _filters.copyWith(
-      minPrice: minPrice,
-      maxPrice: maxPrice,
-    );
-    notifyListeners();
-  }
-
-  void setRating(double? minRating) {
-    _filters = _filters.copyWith(minRating: minRating);
-    notifyListeners();
-  }
-
-  void setSortBy(SpecialistSortOption? sortBy) {
-    _filters = _filters.copyWith(sortBy: sortBy);
-    notifyListeners();
-  }
-}
-
-/// Провайдер состояния поиска
-final specialistSearchStateProvider = Provider<SpecialistSearchNotifier>((ref) {
-  return SpecialistSearchNotifier();
-});
-
-/// Состояние поиска специалистов
-class SpecialistSearchState {
-  const SpecialistSearchState({
-    this.query = '',
-    this.isSearching = false,
-    this.results = const [],
-    this.currentFilters = const SpecialistFilters(),
-    this.hasActiveFilters = false,
-  });
-
-  final String query;
-  final bool isSearching;
-  final List<Specialist> results;
-  final SpecialistFilters currentFilters;
-  final bool hasActiveFilters;
-
-  SpecialistSearchState copyWith({
-    String? query,
-    bool? isSearching,
-    List<Specialist>? results,
-    SpecialistFilters? currentFilters,
-    bool? hasActiveFilters,
-  }) {
-    return SpecialistSearchState(
-      query: query ?? this.query,
-      isSearching: isSearching ?? this.isSearching,
-      results: results ?? this.results,
-      currentFilters: currentFilters ?? this.currentFilters,
-      hasActiveFilters: hasActiveFilters ?? this.hasActiveFilters,
-    );
-  }
-}
-
-/// Notifier для поиска специалистов
-class SpecialistSearchNotifier extends ChangeNotifier {
-  SpecialistSearchState _state = const SpecialistSearchState();
-
-  SpecialistSearchState get state => _state;
-
-  void startSearch(String query, SpecialistFilters filters) {
-    _state = _state.copyWith(
-      query: query,
-      isSearching: true,
-      currentFilters: filters,
-      hasActiveFilters: _hasActiveFilters(filters),
-    );
-    notifyListeners();
-  }
-
-  void updateResults(List<Specialist> results) {
-    _state = _state.copyWith(
-      results: results,
-      isSearching: false,
-    );
-    notifyListeners();
-  }
-
-  void updateFilters(SpecialistFilters filters) {
-    _state = _state.copyWith(
-      currentFilters: filters,
-      hasActiveFilters: _hasActiveFilters(filters),
-    );
-    notifyListeners();
-  }
-
-  void clearSearch() {
-    _state = const SpecialistSearchState();
-    notifyListeners();
-  }
-
-  bool _hasActiveFilters(SpecialistFilters filters) {
-    return filters.category != null ||
-        filters.city != null ||
-        filters.minPrice != null ||
-        filters.maxPrice != null ||
-        filters.minRating != null;
-  }
-}

@@ -44,7 +44,7 @@ class PortfolioService {
 
       return portfolioItem;
     } on Exception catch (e) {
-      print('Ошибка загрузки изображения: $e');
+      debugPrint('Ошибка загрузки изображения: $e');
       return null;
     }
   }
@@ -81,7 +81,7 @@ class PortfolioService {
 
       return portfolioItem;
     } on Exception catch (e) {
-      print('Ошибка загрузки видео: $e');
+      debugPrint('Ошибка загрузки видео: $e');
       return null;
     }
   }
@@ -122,7 +122,7 @@ class PortfolioService {
 
       return portfolioItem;
     } on Exception catch (e) {
-      print('Ошибка загрузки документа: $e');
+      debugPrint('Ошибка загрузки документа: $e');
       return null;
     }
   }
@@ -153,7 +153,7 @@ class PortfolioService {
         }
       });
     } on Exception catch (e) {
-      print('Ошибка сохранения элемента портфолио: $e');
+      debugPrint('Ошибка сохранения элемента портфолио: $e');
       throw Exception('Не удалось сохранить элемент портфолио');
     }
   }
@@ -182,7 +182,7 @@ class PortfolioService {
         }
       });
     } on Exception catch (e) {
-      print('Ошибка удаления элемента портфолио: $e');
+      debugPrint('Ошибка удаления элемента портфолио: $e');
       throw Exception('Не удалось удалить элемент портфолио');
     }
   }
@@ -217,7 +217,7 @@ class PortfolioService {
         }
       });
     } on Exception catch (e) {
-      print('Ошибка обновления элемента портфолио: $e');
+      debugPrint('Ошибка обновления элемента портфолио: $e');
       throw Exception('Не удалось обновить элемент портфолио');
     }
   }
@@ -241,7 +241,7 @@ class PortfolioService {
 
       return [];
     } on Exception catch (e) {
-      print('Ошибка получения портфолио: $e');
+      debugPrint('Ошибка получения портфолио: $e');
       return [];
     }
   }
@@ -253,7 +253,7 @@ class PortfolioService {
       final image = await picker.pickImage(source: ImageSource.gallery);
       return image != null ? File(image.path) : null;
     } on Exception catch (e) {
-      print('Ошибка выбора изображения: $e');
+      debugPrint('Ошибка выбора изображения: $e');
       return null;
     }
   }
@@ -265,7 +265,7 @@ class PortfolioService {
       final image = await picker.pickImage(source: ImageSource.camera);
       return image != null ? File(image.path) : null;
     } on Exception catch (e) {
-      print('Ошибка съемки фото: $e');
+      debugPrint('Ошибка съемки фото: $e');
       return null;
     }
   }
@@ -277,7 +277,7 @@ class PortfolioService {
       final video = await picker.pickVideo(source: ImageSource.gallery);
       return video != null ? File(video.path) : null;
     } on Exception catch (e) {
-      print('Ошибка выбора видео: $e');
+      debugPrint('Ошибка выбора видео: $e');
       return null;
     }
   }
@@ -296,7 +296,7 @@ class PortfolioService {
 
       return null;
     } on Exception catch (e) {
-      print('Ошибка выбора файла: $e');
+      debugPrint('Ошибка выбора файла: $e');
       return null;
     }
   }

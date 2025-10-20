@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 
 import '../models/event.dart';
 import '../models/group_chat.dart';
@@ -57,10 +56,10 @@ class GroupChatService {
 
       final docRef = await _firestore.collection('group_chats').add(chatData);
 
-      debugPrint('Created group chat for event: ${event.title}');
+      debugdebugPrint('Created group chat for event: ${event.title}');
       return docRef.id;
     } catch (e) {
-      debugPrint('Error creating group chat: $e');
+      debugdebugPrint('Error creating group chat: $e');
       throw Exception('Ошибка создания группового чата: $e');
     }
   }
@@ -76,9 +75,9 @@ class GroupChatService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugPrint('Added participant ${participant.userName} to chat $chatId');
+      debugdebugPrint('Added participant ${participant.userName} to chat $chatId');
     } catch (e) {
-      debugPrint('Error adding participant to chat: $e');
+      debugdebugPrint('Error adding participant to chat: $e');
       throw Exception('Ошибка добавления участника в чат: $e');
     }
   }
@@ -102,9 +101,9 @@ class GroupChatService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugPrint('Removed participant $userId from chat $chatId');
+      debugdebugPrint('Removed participant $userId from chat $chatId');
     } catch (e) {
-      debugPrint('Error removing participant from chat: $e');
+      debugdebugPrint('Error removing participant from chat: $e');
       throw Exception('Ошибка удаления участника из чата: $e');
     }
   }
@@ -129,10 +128,10 @@ class GroupChatService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugPrint('Sent message to chat $chatId');
+      debugdebugPrint('Sent message to chat $chatId');
       return messageRef.id;
     } catch (e) {
-      debugPrint('Error sending message: $e');
+      debugdebugPrint('Error sending message: $e');
       throw Exception('Ошибка отправки сообщения: $e');
     }
   }
@@ -169,7 +168,7 @@ class GroupChatService {
         ...doc.data()!,
       });
     } catch (e) {
-      debugPrint('Error getting group chat: $e');
+      debugdebugPrint('Error getting group chat: $e');
       return null;
     }
   }
@@ -193,7 +192,7 @@ class GroupChatService {
         ...doc.data(),
       });
     } catch (e) {
-      debugPrint('Error getting group chat by event ID: $e');
+      debugdebugPrint('Error getting group chat by event ID: $e');
       return null;
     }
   }
@@ -238,9 +237,9 @@ class GroupChatService {
       );
 
       await addParticipantToChat(chatId, guest);
-      debugPrint('Added guest $guestName to chat $chatId');
+      debugdebugPrint('Added guest $guestName to chat $chatId');
     } catch (e) {
-      debugPrint('Error adding guest to chat: $e');
+      debugdebugPrint('Error adding guest to chat: $e');
       throw Exception('Ошибка добавления гостя в чат: $e');
     }
   }
@@ -271,7 +270,7 @@ class GroupChatService {
 
       return await sendMessage(chatId, message);
     } catch (e) {
-      debugPrint('Error uploading file to chat: $e');
+      debugdebugPrint('Error uploading file to chat: $e');
       throw Exception('Ошибка загрузки файла в чат: $e');
     }
   }
@@ -298,7 +297,7 @@ class GroupChatService {
 
       return await sendMessage(chatId, message);
     } catch (e) {
-      debugPrint('Error sending guest greeting: $e');
+      debugdebugPrint('Error sending guest greeting: $e');
       throw Exception('Ошибка отправки поздравления: $e');
     }
   }
@@ -314,9 +313,9 @@ class GroupChatService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugPrint('Updated chat settings for $chatId');
+      debugdebugPrint('Updated chat settings for $chatId');
     } catch (e) {
-      debugPrint('Error updating chat settings: $e');
+      debugdebugPrint('Error updating chat settings: $e');
       throw Exception('Ошибка обновления настроек чата: $e');
     }
   }
@@ -329,9 +328,9 @@ class GroupChatService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugPrint('Closed group chat $chatId');
+      debugdebugPrint('Closed group chat $chatId');
     } catch (e) {
-      debugPrint('Error closing group chat: $e');
+      debugdebugPrint('Error closing group chat: $e');
       throw Exception('Ошибка закрытия группового чата: $e');
     }
   }
@@ -364,7 +363,7 @@ class GroupChatService {
         'lastActivity': messages.isNotEmpty ? messages.first.data()['createdAt'] : null,
       };
     } catch (e) {
-      debugPrint('Error getting chat stats: $e');
+      debugdebugPrint('Error getting chat stats: $e');
       return {};
     }
   }

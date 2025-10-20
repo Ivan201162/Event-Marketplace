@@ -1,551 +1,422 @@
-import 'dart:convert';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_stripe/flutter_stripe.dart';
 
-import '../config/payment_config.dart';
-import '../models/advertisement.dart';
-import '../models/promotion_boost.dart';
-import '../models/subscription_plan.dart';
+import '../models/payment.dart';
 import '../models/transaction.dart';
 
-enum PaymentProvider {
-  stripe,
-  yookassa,
-  cloudPayments,
-  tinkoffPay,
-}
-
-enum PaymentMethod {
-  card,
-  applePay,
-  googlePay,
-  yooMoney,
-  qiwi,
-  webmoney,
-}
-
-class PaymentResult {
-  final bool success;
-  final String? transactionId;
-  final String? externalTransactionId;
-  final String? errorMessage;
-  final Map<String, dynamic>? metadata;
-
-  PaymentResult({
-    required this.success,
-    this.transactionId,
-    this.externalTransactionId,
-    this.errorMessage,
-    this.metadata,
-  });
-}
-
+/// Service for managing payments
 class PaymentService {
-  static final PaymentService _instance = PaymentService._internal();
-  factory PaymentService() => _instance;
-  PaymentService._internal();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  final String _baseUrl = 'https://api.stripe.com/v1';
-  final String _yookassaUrl = 'https://api.yookassa.ru/v3';
-
-  /// Создание платежа для подписки
-  Future<PaymentResult> createSubscriptionPayment({
-    required String userId,
-    required SubscriptionPlan plan,
-    required PaymentMethod paymentMethod,
-    PaymentProvider provider = PaymentProvider.stripe,
-  }) async {
-    try {
-      debugPrint('INFO: [payment_service] Создание платежа для подписки ${plan.name}');
-
-      final amount = (plan.price * 100).round(); // Конвертируем в копейки
-
-      switch (provider) {
-        case PaymentProvider.stripe:
-          return await _createStripePayment(
-            amount: amount,
-            currency: PaymentConfig.defaultCurrency.toLowerCase(),
-            description: 'Подписка ${plan.name}',
-            metadata: {
-              'type': 'subscription',
-              'planId': plan.id,
-              'userId': userId,
-              'durationDays': plan.durationDays.toString(),
-            },
-          );
-        case PaymentProvider.yookassa:
-          return await _createYooKassaPayment(
-            amount: amount,
-            currency: PaymentConfig.defaultCurrency,
-            description: 'Подписка ${plan.name}',
-            metadata: {
-              'type': 'subscription',
-              'planId': plan.id,
-              'userId': userId,
-              'durationDays': plan.durationDays.toString(),
-            },
-          );
-        default:
-          throw Exception('Неподдерживаемый провайдер платежей');
-      }
-    } catch (e) {
-      debugPrint('ERROR: [payment_service] Ошибка создания платежа подписки: $e');
-      return PaymentResult(
-        success: false,
-        errorMessage: e.toString(),
-      );
-    }
-  }
-
-  /// Создание платежа для продвижения
-  Future<PaymentResult> createPromotionPayment({
-    required String userId,
-    required PromotionPackage package,
-    required PaymentMethod paymentMethod,
-    PaymentProvider provider = PaymentProvider.stripe,
-  }) async {
-    try {
-      debugPrint('INFO: [payment_service] Создание платежа для продвижения ${package.name}');
-
-      final amount = (package.price * 100).round();
-
-      switch (provider) {
-        case PaymentProvider.stripe:
-          return await _createStripePayment(
-            amount: amount,
-            currency: PaymentConfig.defaultCurrency.toLowerCase(),
-            description: 'Продвижение ${package.name}',
-            metadata: {
-              'type': 'promotion',
-              'packageId': package.id,
-              'userId': userId,
-              'durationDays': package.durationDays.toString(),
-              'priorityLevel': package.priorityLevel.toString(),
-            },
-          );
-        case PaymentProvider.yookassa:
-          return await _createYooKassaPayment(
-            amount: amount,
-            currency: PaymentConfig.defaultCurrency,
-            description: 'Продвижение ${package.name}',
-            metadata: {
-              'type': 'promotion',
-              'packageId': package.id,
-              'userId': userId,
-              'durationDays': package.durationDays.toString(),
-              'priorityLevel': package.priorityLevel.toString(),
-            },
-          );
-        default:
-          throw Exception('Неподдерживаемый провайдер платежей');
-      }
-    } catch (e) {
-      debugPrint('ERROR: [payment_service] Ошибка создания платежа продвижения: $e');
-      return PaymentResult(
-        success: false,
-        errorMessage: e.toString(),
-      );
-    }
-  }
-
-  /// Создание платежа для рекламы
-  Future<PaymentResult> createAdvertisementPayment({
-    required String userId,
-    required Advertisement ad,
-    required PaymentMethod paymentMethod,
-    PaymentProvider provider = PaymentProvider.stripe,
-  }) async {
-    try {
-      debugPrint('INFO: [payment_service] Создание платежа для рекламы');
-
-      final amount = (ad.price * 100).round();
-
-      switch (provider) {
-        case PaymentProvider.stripe:
-          return await _createStripePayment(
-            amount: amount,
-            currency: PaymentConfig.defaultCurrency.toLowerCase(),
-            description: 'Реклама ${ad.title ?? 'Без названия'}',
-            metadata: {
-              'type': 'advertisement',
-              'adId': ad.id,
-              'userId': userId,
-              'adType': ad.type.toString(),
-              'placement': ad.placement.toString(),
-            },
-          );
-        case PaymentProvider.yookassa:
-          return await _createYooKassaPayment(
-            amount: amount,
-            currency: PaymentConfig.defaultCurrency,
-            description: 'Реклама ${ad.title ?? 'Без названия'}',
-            metadata: {
-              'type': 'advertisement',
-              'adId': ad.id,
-              'userId': userId,
-              'adType': ad.type.toString(),
-              'placement': ad.placement.toString(),
-            },
-          );
-        default:
-          throw Exception('Неподдерживаемый провайдер платежей');
-      }
-    } catch (e) {
-      debugPrint('ERROR: [payment_service] Ошибка создания платежа рекламы: $e');
-      return PaymentResult(
-        success: false,
-        errorMessage: e.toString(),
-      );
-    }
-  }
-
-  /// Создание платежа через Stripe
-  Future<PaymentResult> _createStripePayment({
+  /// Create payment intent for Stripe
+  Future<PaymentIntent?> createPaymentIntent({
     required int amount,
     required String currency,
     required String description,
-    required Map<String, dynamic> metadata,
+    Map<String, dynamic>? metadata,
   }) async {
     try {
-      final headers = {
-        'Authorization': 'Bearer ${PaymentConfig.stripeSecretKey}',
-        'Content-Type': 'application/x-www-form-urlencoded',
-      };
-
-      final body = {
-        'amount': amount.toString(),
-        'currency': currency,
-        'description': description,
-        'metadata': metadata.map((key, value) => MapEntry(key, value.toString())),
-      };
-
-      final response = await http.post(
-        Uri.parse('$_baseUrl/payment_intents'),
-        headers: headers,
-        body: body,
+      // In real app, this would call your backend API
+      // For now, we'll create a mock payment intent
+      final paymentIntent = await Stripe.instance.createPaymentIntent(
+        amount: amount,
+        currency: currency,
+        description: description,
+        metadata: metadata ?? {},
       );
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        return PaymentResult(
-          success: true,
-          externalTransactionId: data['id'],
-          metadata: data,
-        );
-      } else {
-        final error = json.decode(response.body);
-        return PaymentResult(
-          success: false,
-          errorMessage: error['error']?['message'] ?? 'Ошибка платежа',
-        );
-      }
+      debugPrint('Payment intent created: ${paymentIntent.id}');
+      return paymentIntent;
     } catch (e) {
-      return PaymentResult(
-        success: false,
-        errorMessage: 'Ошибка соединения с Stripe: $e',
-      );
+      debugPrint('Error creating payment intent: $e');
+      return null;
     }
   }
 
-  /// Создание платежа через YooKassa
-  Future<PaymentResult> _createYooKassaPayment({
+  /// Process payment
+  Future<Payment?> processPayment({
+    required String userId,
+    required String paymentIntentId,
+    required PaymentType type,
+    required PaymentMethod method,
     required int amount,
-    required String currency,
     required String description,
-    required Map<String, dynamic> metadata,
+    String? specialistId,
+    String? bookingId,
+    Map<String, dynamic>? metadata,
   }) async {
     try {
-      final headers = {
-        'Authorization':
-            'Basic ${base64Encode(utf8.encode('${PaymentConfig.yookassaShopId}:${PaymentConfig.yookassaSecretKey}'))}',
-        'Content-Type': 'application/json',
-        'Idempotence-Key': DateTime.now().millisecondsSinceEpoch.toString(),
-      };
-
-      final body = {
-        'amount': {
-          'value': (amount / 100).toStringAsFixed(2),
-          'currency': currency,
-        },
-        'confirmation': {
-          'type': 'redirect',
-          'return_url': 'https://eventmarketplace.app/payment/success',
-        },
-        'description': description,
-        'metadata': metadata,
-      };
-
-      final response = await http.post(
-        Uri.parse('$_yookassaUrl/payments'),
-        headers: headers,
-        body: json.encode(body),
+      // Create payment record
+      final payment = Payment(
+        id: '', // Will be set by Firestore
+        userId: userId,
+        specialistId: specialistId,
+        bookingId: bookingId,
+        type: type,
+        method: method,
+        status: PaymentStatus.processing,
+        amount: amount,
+        commission: _calculateCommission(amount, type),
+        currency: 'RUB',
+        description: description,
+        metadata: metadata,
+        stripePaymentIntentId: paymentIntentId,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        return PaymentResult(
-          success: true,
-          externalTransactionId: data['id'],
-          metadata: data,
+      // Save to Firestore
+      final docRef = await _firestore
+          .collection('payments')
+          .add(payment.toFirestore());
+
+      final paymentId = docRef.id;
+      debugPrint('Payment created with ID: $paymentId');
+
+      // Confirm payment with Stripe
+      try {
+        await Stripe.instance.confirmPayment(
+          paymentIntentId,
+          const PaymentMethodParams.card(
+            paymentMethodData: PaymentMethodData(
+              billingDetails: BillingDetails(),
+            ),
+          ),
         );
-      } else {
-        final error = json.decode(response.body);
-        return PaymentResult(
-          success: false,
-          errorMessage: error['description'] ?? 'Ошибка платежа',
+
+        // Update payment status to completed
+        await _updatePaymentStatus(
+          paymentId,
+          PaymentStatus.completed,
+          completedAt: DateTime.now(),
         );
+
+        // Create transaction record
+        await _createTransaction(
+          userId: userId,
+          specialistId: specialistId,
+          paymentId: paymentId,
+          bookingId: bookingId,
+          type: TransactionType.expense,
+          amount: amount,
+          description: description,
+        );
+
+        // If this is a booking payment, create income transaction for specialist
+        if (specialistId != null && type == PaymentType.booking) {
+          final netAmount = amount - payment.commission;
+          await _createTransaction(
+            userId: specialistId,
+            paymentId: paymentId,
+            bookingId: bookingId,
+            type: TransactionType.income,
+            amount: netAmount,
+            description: 'Доход от бронирования',
+          );
+        }
+
+        return payment.copyWith(
+          id: paymentId,
+          status: PaymentStatus.completed,
+          completedAt: DateTime.now(),
+        );
+      } catch (e) {
+        // Update payment status to failed
+        await _updatePaymentStatus(
+          paymentId,
+          PaymentStatus.failed,
+          failureReason: e.toString(),
+          failedAt: DateTime.now(),
+        );
+
+        debugPrint('Payment failed: $e');
+        return null;
       }
     } catch (e) {
-      return PaymentResult(
-        success: false,
-        errorMessage: 'Ошибка соединения с YooKassa: $e',
-      );
+      debugPrint('Error processing payment: $e');
+      return null;
     }
   }
 
-  /// Подтверждение платежа
-  Future<PaymentResult> confirmPayment({
-    required String externalTransactionId,
-    required PaymentProvider provider,
-  }) async {
+  /// Get user payments
+  Future<List<Payment>> getUserPayments(String userId) async {
     try {
-      debugPrint('INFO: [payment_service] Подтверждение платежа $externalTransactionId');
+      final querySnapshot = await _firestore
+          .collection('payments')
+          .where('userId', isEqualTo: userId)
+          .orderBy('createdAt', descending: true)
+          .get();
 
-      switch (provider) {
-        case PaymentProvider.stripe:
-          return await _confirmStripePayment(externalTransactionId);
-        case PaymentProvider.yookassa:
-          return await _confirmYooKassaPayment(externalTransactionId);
-        default:
-          throw Exception('Неподдерживаемый провайдер платежей');
-      }
+      return querySnapshot.docs
+          .map((doc) => Payment.fromFirestore(doc))
+          .toList();
     } catch (e) {
-      debugPrint('ERROR: [payment_service] Ошибка подтверждения платежа: $e');
-      return PaymentResult(
-        success: false,
-        errorMessage: e.toString(),
-      );
+      debugPrint('Error getting user payments: $e');
+      return [];
     }
   }
 
-  /// Подтверждение платежа Stripe
-  Future<PaymentResult> _confirmStripePayment(String paymentIntentId) async {
+  /// Get specialist payments
+  Future<List<Payment>> getSpecialistPayments(String specialistId) async {
     try {
-      final headers = {
-        'Authorization': 'Bearer ${PaymentConfig.stripeSecretKey}',
-      };
+      final querySnapshot = await _firestore
+          .collection('payments')
+          .where('specialistId', isEqualTo: specialistId)
+          .orderBy('createdAt', descending: true)
+          .get();
 
-      final response = await http.get(
-        Uri.parse('$_baseUrl/payment_intents/$paymentIntentId'),
-        headers: headers,
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final status = data['status'];
-
-        return PaymentResult(
-          success: status == 'succeeded',
-          externalTransactionId: paymentIntentId,
-          metadata: data,
-        );
-      } else {
-        return PaymentResult(
-          success: false,
-          errorMessage: 'Ошибка получения статуса платежа',
-        );
-      }
+      return querySnapshot.docs
+          .map((doc) => Payment.fromFirestore(doc))
+          .toList();
     } catch (e) {
-      return PaymentResult(
-        success: false,
-        errorMessage: 'Ошибка соединения с Stripe: $e',
-      );
+      debugPrint('Error getting specialist payments: $e');
+      return [];
     }
   }
 
-  /// Подтверждение платежа YooKassa
-  Future<PaymentResult> _confirmYooKassaPayment(String paymentId) async {
+  /// Get payment by ID
+  Future<Payment?> getPaymentById(String paymentId) async {
     try {
-      final headers = {
-        'Authorization':
-            'Basic ${base64Encode(utf8.encode('${PaymentConfig.yookassaShopId}:${PaymentConfig.yookassaSecretKey}'))}',
-      };
+      final doc = await _firestore
+          .collection('payments')
+          .doc(paymentId)
+          .get();
 
-      final response = await http.get(
-        Uri.parse('$_yookassaUrl/payments/$paymentId'),
-        headers: headers,
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final status = data['status'];
-
-        return PaymentResult(
-          success: status == 'succeeded',
-          externalTransactionId: paymentId,
-          metadata: data,
-        );
-      } else {
-        return PaymentResult(
-          success: false,
-          errorMessage: 'Ошибка получения статуса платежа',
-        );
+      if (doc.exists) {
+        return Payment.fromFirestore(doc);
       }
+      return null;
     } catch (e) {
-      return PaymentResult(
-        success: false,
-        errorMessage: 'Ошибка соединения с YooKassa: $e',
-      );
+      debugPrint('Error getting payment by ID: $e');
+      return null;
     }
   }
 
-  /// Возврат средств
-  Future<PaymentResult> refundPayment({
-    required String externalTransactionId,
-    required double amount,
-    required PaymentProvider provider,
-    String? reason,
-  }) async {
+  /// Refund payment
+  Future<bool> refundPayment(String paymentId, {int? amount}) async {
     try {
-      debugPrint('INFO: [payment_service] Возврат средств $externalTransactionId');
-
-      switch (provider) {
-        case PaymentProvider.stripe:
-          return await _refundStripePayment(externalTransactionId, amount, reason);
-        case PaymentProvider.yookassa:
-          return await _refundYooKassaPayment(externalTransactionId, amount, reason);
-        default:
-          throw Exception('Неподдерживаемый провайдер платежей');
+      final payment = await getPaymentById(paymentId);
+      if (payment == null || !payment.canBeRefunded) {
+        return false;
       }
-    } catch (e) {
-      debugPrint('ERROR: [payment_service] Ошибка возврата средств: $e');
-      return PaymentResult(
-        success: false,
-        errorMessage: e.toString(),
+
+      final refundAmount = amount ?? payment.amount;
+
+      // In real app, this would call Stripe refund API
+      // For now, we'll just update the status
+      await _updatePaymentStatus(
+        paymentId,
+        PaymentStatus.refunded,
+        updatedAt: DateTime.now(),
       );
+
+      // Create refund transaction
+      await _createTransaction(
+        userId: payment.userId,
+        paymentId: paymentId,
+        bookingId: payment.bookingId,
+        type: TransactionType.refund,
+        amount: refundAmount,
+        description: 'Возврат средств',
+      );
+
+      debugPrint('Payment refunded: $paymentId');
+      return true;
+    } catch (e) {
+      debugPrint('Error refunding payment: $e');
+      return false;
     }
   }
 
-  /// Возврат средств через Stripe
-  Future<PaymentResult> _refundStripePayment(
-      String paymentIntentId, double amount, String? reason) async {
-    try {
-      final headers = {
-        'Authorization': 'Bearer ${PaymentConfig.stripeSecretKey}',
-        'Content-Type': 'application/x-www-form-urlencoded',
-      };
-
-      final body = {
-        'payment_intent': paymentIntentId,
-        'amount': (amount * 100).round().toString(),
-        if (reason != null) 'reason': reason,
-      };
-
-      final response = await http.post(
-        Uri.parse('$_baseUrl/refunds'),
-        headers: headers,
-        body: body,
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        return PaymentResult(
-          success: true,
-          externalTransactionId: data['id'],
-          metadata: data,
-        );
-      } else {
-        final error = json.decode(response.body);
-        return PaymentResult(
-          success: false,
-          errorMessage: error['error']?['message'] ?? 'Ошибка возврата',
-        );
-      }
-    } catch (e) {
-      return PaymentResult(
-        success: false,
-        errorMessage: 'Ошибка соединения с Stripe: $e',
-      );
-    }
-  }
-
-  /// Возврат средств через YooKassa
-  Future<PaymentResult> _refundYooKassaPayment(
-      String paymentId, double amount, String? reason) async {
-    try {
-      final headers = {
-        'Authorization':
-            'Basic ${base64Encode(utf8.encode('${PaymentConfig.yookassaShopId}:${PaymentConfig.yookassaSecretKey}'))}',
-        'Content-Type': 'application/json',
-        'Idempotence-Key': DateTime.now().millisecondsSinceEpoch.toString(),
-      };
-
-      final body = {
-        'amount': {
-          'value': amount.toStringAsFixed(2),
-          'currency': PaymentConfig.defaultCurrency,
-        },
-        if (reason != null) 'description': reason,
-      };
-
-      final response = await http.post(
-        Uri.parse('$_yookassaUrl/refunds'),
-        headers: headers,
-        body: json.encode(body),
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        return PaymentResult(
-          success: true,
-          externalTransactionId: data['id'],
-          metadata: data,
-        );
-      } else {
-        final error = json.decode(response.body);
-        return PaymentResult(
-          success: false,
-          errorMessage: error['description'] ?? 'Ошибка возврата',
-        );
-      }
-    } catch (e) {
-      return PaymentResult(
-        success: false,
-        errorMessage: 'Ошибка соединения с YooKassa: $e',
-      );
-    }
-  }
-
-  /// Получение истории транзакций пользователя
+  /// Get user transactions
   Future<List<Transaction>> getUserTransactions(String userId) async {
     try {
-      // Здесь должна быть интеграция с вашей базой данных
-      // Возвращаем пустой список для примера
-      return [];
+      final querySnapshot = await _firestore
+          .collection('transactions')
+          .where('userId', isEqualTo: userId)
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      return querySnapshot.docs
+          .map((doc) => Transaction.fromFirestore(doc))
+          .toList();
     } catch (e) {
-      debugPrint('ERROR: [payment_service] Ошибка получения истории транзакций: $e');
+      debugPrint('Error getting user transactions: $e');
       return [];
     }
   }
 
-  /// Проверка статуса платежа
-  Future<TransactionStatus> getPaymentStatus(
-      String externalTransactionId, PaymentProvider provider) async {
+  /// Get user balance
+  Future<int> getUserBalance(String userId) async {
     try {
-      final result = await confirmPayment(
-        externalTransactionId: externalTransactionId,
-        provider: provider,
+      final transactions = await getUserTransactions(userId);
+      
+      int balance = 0;
+      for (final transaction in transactions) {
+        if (transaction.isIncome) {
+          balance += transaction.amount;
+        } else {
+          balance -= transaction.amount;
+        }
+      }
+
+      return balance;
+    } catch (e) {
+      debugPrint('Error getting user balance: $e');
+      return 0;
+    }
+  }
+
+  /// Get payment statistics
+  Future<Map<String, dynamic>> getPaymentStats(String userId) async {
+    try {
+      final payments = await getUserPayments(userId);
+      final transactions = await getUserTransactions(userId);
+
+      final totalPayments = payments.length;
+      final successfulPayments = payments.where((p) => p.isSuccessful).length;
+      final totalAmount = payments.where((p) => p.isSuccessful).fold(0, (sum, p) => sum + p.amount);
+      final totalCommission = payments.where((p) => p.isSuccessful).fold(0, (sum, p) => sum + p.commission);
+
+      final incomeTransactions = transactions.where((t) => t.isIncome).toList();
+      final expenseTransactions = transactions.where((t) => t.isExpense).toList();
+
+      final totalIncome = incomeTransactions.fold(0, (sum, t) => sum + t.amount);
+      final totalExpense = expenseTransactions.fold(0, (sum, t) => sum + t.amount);
+
+      return {
+        'totalPayments': totalPayments,
+        'successfulPayments': successfulPayments,
+        'totalAmount': totalAmount,
+        'totalCommission': totalCommission,
+        'totalIncome': totalIncome,
+        'totalExpense': totalExpense,
+        'balance': totalIncome - totalExpense,
+      };
+    } catch (e) {
+      debugPrint('Error getting payment stats: $e');
+      return {};
+    }
+  }
+
+  /// Update payment status
+  Future<bool> _updatePaymentStatus(
+    String paymentId,
+    PaymentStatus status, {
+    String? failureReason,
+    DateTime? completedAt,
+    DateTime? failedAt,
+  }) async {
+    try {
+      final updateData = <String, dynamic>{
+        'status': status.name,
+        'updatedAt': Timestamp.now(),
+      };
+
+      if (failureReason != null) {
+        updateData['failureReason'] = failureReason;
+      }
+      if (completedAt != null) {
+        updateData['completedAt'] = Timestamp.fromDate(completedAt);
+      }
+      if (failedAt != null) {
+        updateData['failedAt'] = Timestamp.fromDate(failedAt);
+      }
+
+      await _firestore
+          .collection('payments')
+          .doc(paymentId)
+          .update(updateData);
+
+      return true;
+    } catch (e) {
+      debugPrint('Error updating payment status: $e');
+      return false;
+    }
+  }
+
+  /// Create transaction record
+  Future<void> _createTransaction({
+    required String userId,
+    String? specialistId,
+    String? paymentId,
+    String? bookingId,
+    required TransactionType type,
+    required int amount,
+    required String description,
+    String? category,
+    Map<String, dynamic>? metadata,
+  }) async {
+    try {
+      final transaction = Transaction(
+        id: '', // Will be set by Firestore
+        userId: userId,
+        specialistId: specialistId,
+        paymentId: paymentId,
+        bookingId: bookingId,
+        type: type,
+        amount: amount,
+        currency: 'RUB',
+        description: description,
+        category: category,
+        metadata: metadata,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
 
-      if (result.success) {
-        return TransactionStatus.success;
-      } else {
-        return TransactionStatus.failed;
-      }
+      await _firestore
+          .collection('transactions')
+          .add(transaction.toFirestore());
+
+      debugPrint('Transaction created for user: $userId');
     } catch (e) {
-      debugPrint('ERROR: [payment_service] Ошибка проверки статуса платежа: $e');
-      return TransactionStatus.failed;
+      debugPrint('Error creating transaction: $e');
     }
+  }
+
+  /// Calculate commission
+  int _calculateCommission(int amount, PaymentType type) {
+    switch (type) {
+      case PaymentType.booking:
+        // 10% commission for bookings
+        return (amount * 0.1).round();
+      case PaymentType.commission:
+        return 0; // No commission on commission payments
+      case PaymentType.refund:
+        return 0; // No commission on refunds
+      case PaymentType.payout:
+        return 0; // No commission on payouts
+      case PaymentType.subscription:
+        // 5% commission for subscriptions
+        return (amount * 0.05).round();
+      case PaymentType.premium:
+        // 15% commission for premium features
+        return (amount * 0.15).round();
+    }
+  }
+
+  /// Get payments stream for user
+  Stream<List<Payment>> getUserPaymentsStream(String userId) {
+    return _firestore
+        .collection('payments')
+        .where('userId', isEqualTo: userId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Payment.fromFirestore(doc))
+            .toList());
+  }
+
+  /// Get transactions stream for user
+  Stream<List<Transaction>> getUserTransactionsStream(String userId) {
+    return _firestore
+        .collection('transactions')
+        .where('userId', isEqualTo: userId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Transaction.fromFirestore(doc))
+            .toList());
   }
 }

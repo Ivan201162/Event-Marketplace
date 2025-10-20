@@ -7,7 +7,7 @@ class TestDataGenerator {
   /// Генерация всех тестовых данных
   static Future<void> generateAllTestData() async {
     try {
-      debugPrint('🚀 Начинаем генерацию тестовых данных...');
+      debugdebugPrint('🚀 Начинаем генерацию тестовых данных...');
 
       // Очистка существующих данных
       await _clearTestData();
@@ -30,9 +30,9 @@ class TestDataGenerator {
       // Генерация заявок
       await _generateRequests();
 
-      debugPrint('✅ Все тестовые данные успешно сгенерированы!');
+      debugdebugPrint('✅ Все тестовые данные успешно сгенерированы!');
     } on Exception catch (e) {
-      debugPrint('❌ Ошибка генерации тестовых данных: $e');
+      debugdebugPrint('❌ Ошибка генерации тестовых данных: $e');
     }
   }
 
@@ -58,9 +58,9 @@ class TestDataGenerator {
         }
 
         await batch.commit();
-        debugPrint('🧹 Очищена коллекция: $collection');
+        debugdebugPrint('🧹 Очищена коллекция: $collection');
       } on Exception catch (e) {
-        debugPrint('⚠️ Ошибка очистки коллекции $collection: $e');
+        debugdebugPrint('⚠️ Ошибка очистки коллекции $collection: $e');
       }
     }
   }
@@ -159,7 +159,7 @@ class TestDataGenerator {
       }
     }
 
-    debugPrint('👥 Создано ${users.length} пользователей и специалистов');
+    debugdebugPrint('👥 Создано ${users.length} пользователей и специалистов');
   }
 
   /// Генерация постов ленты
@@ -235,7 +235,7 @@ class TestDataGenerator {
       });
     }
 
-    debugPrint('📱 Создано ${posts.length} постов в ленте');
+    debugdebugPrint('📱 Создано ${posts.length} постов в ленте');
   }
 
   /// Генерация идей
@@ -314,7 +314,7 @@ class TestDataGenerator {
       });
     }
 
-    debugPrint('💡 Создано ${ideas.length} идей');
+    debugdebugPrint('💡 Создано ${ideas.length} идей');
   }
 
   /// Генерация уведомлений
@@ -369,7 +369,7 @@ class TestDataGenerator {
       });
     }
 
-    debugPrint('🔔 Создано ${notifications.length} уведомлений');
+    debugdebugPrint('🔔 Создано ${notifications.length} уведомлений');
   }
 
   /// Генерация чатов
@@ -401,7 +401,7 @@ class TestDataGenerator {
       });
     }
 
-    debugPrint('💬 Создано ${chats.length} чатов');
+    debugdebugPrint('💬 Создано ${chats.length} чатов');
   }
 
   /// Генерация заявок
@@ -440,6 +440,6 @@ class TestDataGenerator {
       });
     }
 
-    debugPrint('📋 Создано ${requests.length} заявок');
+    debugdebugPrint('📋 Создано ${requests.length} заявок');
   }
 }

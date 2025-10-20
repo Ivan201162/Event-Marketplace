@@ -29,9 +29,8 @@ class SpecialistCard extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage: specialist.avatarUrl != null
-                        ? NetworkImage(specialist.avatarUrl!)
-                        : null,
+                    backgroundImage:
+                        specialist.avatarUrl != null ? NetworkImage(specialist.avatarUrl!) : null,
                     child: specialist.avatarUrl == null
                         ? Text(specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : '?')
                         : null,

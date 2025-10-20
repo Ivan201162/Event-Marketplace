@@ -175,7 +175,7 @@ class IcsExportService {
 
       await SharePlus.instance.share(
         ShareParams(
-          files: [filePath],
+          files: [XFile(filePath)],
           subject: subject ?? 'Календарное событие',
           text: 'Экспорт календарного события',
         ),
@@ -259,7 +259,7 @@ class IcsExportService {
       ..writeln('Участников: ${booking.participantsCount}')
       ..writeln('Цена: ${booking.totalPrice} руб.');
 
-    if (booking.notes != null && booking.notes!.isNotEmpty) {
+    if (booking.notes.isNotEmpty) {
       buffer
         ..writeln()
         ..writeln('Примечания: ${booking.notes}');
@@ -350,7 +350,7 @@ class IcsExportService {
     );
     buffer.writeln('SUMMARY:${booking.eventTitle}');
     buffer.writeln('DESCRIPTION:${_buildBookingDescription(booking)}');
-    if (booking.notes != null && booking.notes!.isNotEmpty) {
+    if (booking.notes.isNotEmpty) {
       buffer.writeln('LOCATION:${booking.notes}');
     }
     buffer.writeln('STATUS:${_getBookingStatusText(booking.status)}');
@@ -412,7 +412,7 @@ class IcsExportService {
       );
       buffer.writeln('SUMMARY:${booking.eventTitle}');
       buffer.writeln('DESCRIPTION:${_buildBookingDescription(booking)}');
-      if (booking.notes != null && booking.notes!.isNotEmpty) {
+      if (booking.notes.isNotEmpty) {
         buffer.writeln('LOCATION:${booking.notes}');
       }
       buffer.writeln('STATUS:${_getBookingStatusText(booking.status)}');

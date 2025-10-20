@@ -160,7 +160,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
           side: BorderSide(
-            color: Theme.of(context).dividerColor.withOpacity(0.1),
+            color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
           ),
         ),
         child: InkWell(
@@ -170,7 +170,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              color: notification.isRead ? null : Theme.of(context).primaryColor.withOpacity(0.05),
+              color: notification.isRead
+                  ? null
+                  : Theme.of(context).primaryColor.withValues(alpha: 0.05),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,7 +209,11 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
                       Text(
                         notification.body,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.7),
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.color
+                                  ?.withValues(alpha: 0.7),
                             ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -216,7 +222,11 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
                       Text(
                         _formatDateTime(notification.createdAt),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.5),
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.color
+                                  ?.withValues(alpha: 0.5),
                               fontSize: 11,
                             ),
                       ),
@@ -259,7 +269,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Icon(

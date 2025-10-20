@@ -243,7 +243,7 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
                       imageUrl: _profile!.avatarUrl!,
                       fit: BoxFit.cover,
                       placeholder: (context, url) => Container(
-                        color: Theme.of(context).primaryColor.withOpacity(0.1),
+                        color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                         child: Icon(
                           Icons.person,
                           color: Theme.of(context).primaryColor,
@@ -251,7 +251,7 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
                         ),
                       ),
                       errorWidget: (context, url, error) => Container(
-                        color: Theme.of(context).primaryColor.withOpacity(0.1),
+                        color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                         child: Icon(
                           Icons.person,
                           color: Theme.of(context).primaryColor,
@@ -260,7 +260,7 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
                       ),
                     )
                   : Container(
-                      color: Theme.of(context).primaryColor.withOpacity(0.1),
+                      color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                       child: Icon(
                         Icons.person,
                         color: Theme.of(context).primaryColor,
@@ -398,10 +398,10 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor.withOpacity(0.1),
+                    color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: Theme.of(context).primaryColor.withOpacity(0.3),
+                      color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
                     ),
                   ),
                   child: Text(

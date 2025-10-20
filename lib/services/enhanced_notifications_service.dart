@@ -54,9 +54,9 @@ class EnhancedNotificationsService {
     final settings = await _messaging.requestPermission();
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      debugPrint('Уведомления разрешены');
+      debugdebugPrint('Уведомления разрешены');
     } else {
-      debugPrint('Уведомления не разрешены');
+      debugdebugPrint('Уведомления не разрешены');
     }
   }
 
@@ -75,12 +75,12 @@ class EnhancedNotificationsService {
   /// Обработка нажатия на уведомление
   void _onNotificationTapped(NotificationResponse response) {
     // TODO: Обработка нажатия на локальное уведомление
-    debugPrint('Нажато на уведомление: ${response.payload}');
+    debugdebugPrint('Нажато на уведомление: ${response.payload}');
   }
 
   /// Обработка сообщения в foreground
   void _handleForegroundMessage(RemoteMessage message) {
-    debugPrint('Получено сообщение в foreground: ${message.messageId}');
+    debugdebugPrint('Получено сообщение в foreground: ${message.messageId}');
 
     // Показать локальное уведомление
     _showLocalNotification(
@@ -92,7 +92,7 @@ class EnhancedNotificationsService {
 
   /// Обработка нажатия на уведомление
   void _handleNotificationTap(RemoteMessage message) {
-    debugPrint('Нажато на уведомление: ${message.messageId}');
+    debugdebugPrint('Нажато на уведомление: ${message.messageId}');
     // TODO: Навигация к соответствующему экрану
   }
 
@@ -290,7 +290,7 @@ class EnhancedNotificationsService {
         }
       }
     } catch (e) {
-      debugPrint('Ошибка отправки push-уведомления: $e');
+      debugdebugPrint('Ошибка отправки push-уведомления: $e');
     }
   }
 
@@ -451,6 +451,6 @@ class EnhancedNotificationsService {
 
 /// Обработчик сообщений в фоне
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  debugPrint('Обработка сообщения в фоне: ${message.messageId}');
+  debugdebugPrint('Обработка сообщения в фоне: ${message.messageId}');
   // TODO: Обработка сообщения в фоне
 }

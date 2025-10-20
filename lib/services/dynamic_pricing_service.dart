@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/dynamic_pricing.dart';
@@ -19,7 +18,7 @@ class DynamicPricingService {
       // Получаем правила ценообразования
       final PricingRule? rule = await _getPricingRule(serviceType);
       if (rule == null) {
-        debugPrint('WARNING: [DynamicPricingService] No pricing rule found for $serviceType');
+        debugdebugPrint('WARNING: [DynamicPricingService] No pricing rule found for $serviceType');
         return 0.0;
       }
 
@@ -66,11 +65,11 @@ class DynamicPricingService {
         userId: additionalFactors?['userId'],
       );
 
-      debugPrint(
+      debugdebugPrint(
           'INFO: [DynamicPricingService] Price calculated: $finalPrice for $serviceType in $region');
       return finalPrice;
     } catch (e) {
-      debugPrint('ERROR: [DynamicPricingService] Failed to get current price: $e');
+      debugdebugPrint('ERROR: [DynamicPricingService] Failed to get current price: $e');
       return 0.0;
     }
   }
@@ -90,7 +89,7 @@ class DynamicPricingService {
       }
       return null;
     } catch (e) {
-      debugPrint('ERROR: [DynamicPricingService] Failed to get pricing rule: $e');
+      debugdebugPrint('ERROR: [DynamicPricingService] Failed to get pricing rule: $e');
       return null;
     }
   }
@@ -111,7 +110,7 @@ class DynamicPricingService {
       }
       return null;
     } catch (e) {
-      debugPrint('ERROR: [DynamicPricingService] Failed to get demand metrics: $e');
+      debugdebugPrint('ERROR: [DynamicPricingService] Failed to get demand metrics: $e');
       return null;
     }
   }
@@ -131,7 +130,7 @@ class DynamicPricingService {
       }
       return null;
     } catch (e) {
-      debugPrint('ERROR: [DynamicPricingService] Failed to get regional pricing: $e');
+      debugdebugPrint('ERROR: [DynamicPricingService] Failed to get regional pricing: $e');
       return null;
     }
   }
@@ -280,7 +279,7 @@ class DynamicPricingService {
 
       await _firestore.collection('pricing_history').doc(history.id).set(history.toMap());
     } catch (e) {
-      debugPrint('ERROR: [DynamicPricingService] Failed to save pricing history: $e');
+      debugdebugPrint('ERROR: [DynamicPricingService] Failed to save pricing history: $e');
     }
   }
 
@@ -305,10 +304,10 @@ class DynamicPricingService {
 
       await _firestore.collection('demand_metrics').doc(metrics.id).set(metrics.toMap());
 
-      debugPrint(
+      debugdebugPrint(
           'INFO: [DynamicPricingService] Demand metrics updated for $serviceType in $region');
     } catch (e) {
-      debugPrint('ERROR: [DynamicPricingService] Failed to update demand metrics: $e');
+      debugdebugPrint('ERROR: [DynamicPricingService] Failed to update demand metrics: $e');
     }
   }
 
@@ -317,9 +316,9 @@ class DynamicPricingService {
     try {
       await _firestore.collection('pricing_rules').doc(rule.id).set(rule.toMap());
 
-      debugPrint('INFO: [DynamicPricingService] Pricing rule created: ${rule.id}');
+      debugdebugPrint('INFO: [DynamicPricingService] Pricing rule created: ${rule.id}');
     } catch (e) {
-      debugPrint('ERROR: [DynamicPricingService] Failed to create pricing rule: $e');
+      debugdebugPrint('ERROR: [DynamicPricingService] Failed to create pricing rule: $e');
       rethrow;
     }
   }
@@ -352,7 +351,7 @@ class DynamicPricingService {
           .map((doc) => PricingHistory.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      debugPrint('ERROR: [DynamicPricingService] Failed to get pricing history: $e');
+      debugdebugPrint('ERROR: [DynamicPricingService] Failed to get pricing history: $e');
       return [];
     }
   }
@@ -403,7 +402,7 @@ class DynamicPricingService {
         'priceChangePercent': history.isNotEmpty ? history.first.priceChangePercent : 0.0,
       };
     } catch (e) {
-      debugPrint('ERROR: [DynamicPricingService] Failed to get pricing stats: $e');
+      debugdebugPrint('ERROR: [DynamicPricingService] Failed to get pricing stats: $e');
       return {};
     }
   }

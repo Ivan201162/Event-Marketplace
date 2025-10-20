@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../data/models/up_user.dart';
 import '../data/repositories/user_repository.dart';
@@ -114,7 +115,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen> with Ticker
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withValues(alpha: 0.1),
                           blurRadius: 10,
                           offset: const Offset(0, 4),
                         ),
@@ -138,7 +139,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen> with Ticker
                   Text(
                     'Найдите идеального специалиста для вашего мероприятия',
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                     textAlign: TextAlign.center,
                   ),
@@ -157,11 +158,11 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen> with Ticker
             controller: _tabController,
             indicatorColor: Theme.of(context).colorScheme.primary,
             labelColor: Theme.of(context).colorScheme.primary,
-            unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+            unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
             tabs: const [
               Tab(text: 'Email'),
               Tab(text: 'Телефон'),
-              Tab(text: 'Гость'),
+              Tab(text: 'Google'),
             ],
           ),
         ),
@@ -174,7 +175,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen> with Ticker
           children: [
             _buildEmailAuth(),
             _buildPhoneAuth(),
-            _buildGuestAuth(),
+            _buildGoogleAuth(),
           ],
         ),
       );
@@ -337,46 +338,6 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen> with Ticker
                       child: const Text('Изменить номер'),
                     ),
                   ],
-                  const SizedBox(height: 24),
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.info_outline,
-                              color: Theme.of(context).colorScheme.primary,
-                              size: 20,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              'Тестовый режим',
-                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                    color: Theme.of(context).colorScheme.primary,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Для тестирования используйте номер +79998887766 и код 1111',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -384,7 +345,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen> with Ticker
         ),
       );
 
-  Widget _buildGuestAuth() => FadeTransition(
+  Widget _buildGoogleAuth() => FadeTransition(
         opacity: _fadeAnimation,
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -402,7 +363,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen> with Ticker
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withValues(alpha: 0.1),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
@@ -410,34 +371,48 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen> with Ticker
                 ),
                 child: Column(
                   children: [
-                    Icon(
-                      Icons.person_outline,
-                      size: 64,
-                      color: Theme.of(context).colorScheme.primary,
+                    Container(
+                      width: 64,
+                      height: 64,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.grey[300]!),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'G',
+                          style: TextStyle(
+                            color: Color(0xFF4285F4),
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'Войти как гость',
+                      'Войти через Google',
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Вы сможете просматривать каталог специалистов и создавать заявки без регистрации',
+                      'Быстрый и безопасный вход с помощью вашего Google аккаунта',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                           ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 24),
                     FilledButton(
-                      onPressed: _isLoading ? null : _signInAsGuest,
+                      onPressed: _isLoading ? null : _signInWithGoogle,
                       child: _isLoading
                           ? const SizedBox(
                               height: 20,
                               width: 20,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
-                          : const Text('Продолжить как гость'),
+                          : const Text('Войти через Google'),
                     ),
                   ],
                 ),
@@ -446,7 +421,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen> with Ticker
               Text(
                 'Войдя в приложение, вы соглашаетесь с нашими условиями использования и политикой конфиденциальности',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                 textAlign: TextAlign.center,
               ),
@@ -633,32 +608,52 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen> with Ticker
     }
   }
 
-  Future<void> _signInAsGuest() async {
+  Future<void> _signInWithGoogle() async {
     setState(() {
       _isLoading = true;
     });
 
     try {
-      final userCredential = await FirebaseAuth.instance.signInAnonymously();
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) {
+        return; // User cancelled
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
 
       if (userCredential.user != null) {
-        // Создаем документ гостя
+        // Создаем/обновляем документ пользователя
         final user = UpUser.fromFirebaseUser(
           userCredential.user!.uid,
-          'guest@example.com',
-          displayName: 'Гость',
-          role: 'guest',
+          userCredential.user!.email ?? '',
+          displayName: userCredential.user!.displayName,
+          photoURL: userCredential.user!.photoURL,
         );
         await UserRepository().ensureUserDoc(user);
 
-        // Логируем успешный вход как гость
-        await AnalyticsService().logLogin(method: 'guest');
+        // Логируем успешный вход через Google
+        await AnalyticsService().logLogin(method: 'google');
       }
     } on FirebaseAuthException catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Ошибка входа: ${e.message}'),
+            content: Text('Ошибка входа через Google: ${e.message}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Ошибка входа через Google: $e'),
             backgroundColor: Colors.red,
           ),
         );

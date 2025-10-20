@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../auth/providers/auth_provider.dart';
 import '../../specialists/data/models/specialist.dart';
 import '../../specialists/presentation/specialist_card.dart';
 import '../recommendation_service.dart';

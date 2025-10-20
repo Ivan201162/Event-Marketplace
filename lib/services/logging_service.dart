@@ -54,9 +54,9 @@ class LoggingService {
         await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
       }
 
-      debugPrint('LoggingService initialized successfully');
+      debugdebugPrint('LoggingService initialized successfully');
     } catch (e) {
-      debugPrint('Error initializing LoggingService: $e');
+      debugdebugPrint('Error initializing LoggingService: $e');
     }
   }
 
@@ -104,9 +104,9 @@ class LoggingService {
 
     // В debug режиме выводим дополнительную информацию
     if (kDebugMode) {
-      debugPrint('[$timestamp] [$levelName] $logTag: $message');
+      debugdebugPrint('[$timestamp] [$levelName] $logTag: $message');
       if (extra != null) {
-        debugPrint('Extra data: $extra');
+        debugdebugPrint('Extra data: $extra');
       }
     }
   }
@@ -374,7 +374,7 @@ class LoggingService {
   /// Очистить все логи
   static Future<void> clearLogs() async {
     // В реальном приложении здесь можно очистить локальные логи
-    debugPrint('Logs cleared');
+    debugdebugPrint('Logs cleared');
   }
 
   /// Экспортировать логи
