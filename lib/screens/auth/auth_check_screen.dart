@@ -66,7 +66,7 @@ class _AuthCheckScreenState extends ConsumerState<AuthCheckScreen> {
     if (_hasNavigated) return;
     _hasNavigated = true;
     _timeoutTimer?.cancel();
-    
+
     if (mounted) {
       context.go('/main');
     }
@@ -76,7 +76,7 @@ class _AuthCheckScreenState extends ConsumerState<AuthCheckScreen> {
     if (_hasNavigated) return;
     _hasNavigated = true;
     _timeoutTimer?.cancel();
-    
+
     if (mounted) {
       context.go('/login');
     }
@@ -107,7 +107,7 @@ class _AuthCheckScreenState extends ConsumerState<AuthCheckScreen> {
                 color: Colors.white,
               ),
               SizedBox(height: 24),
-              
+
               // App name
               Text(
                 'Event Marketplace',
@@ -118,7 +118,7 @@ class _AuthCheckScreenState extends ConsumerState<AuthCheckScreen> {
                 ),
               ),
               SizedBox(height: 8),
-              
+
               Text(
                 'Проверка авторизации...',
                 style: TextStyle(
@@ -127,7 +127,7 @@ class _AuthCheckScreenState extends ConsumerState<AuthCheckScreen> {
                 ),
               ),
               SizedBox(height: 32),
-              
+
               // Loading indicator
               CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),

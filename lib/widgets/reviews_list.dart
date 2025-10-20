@@ -48,7 +48,7 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
             ],
           ),
         ),
-        
+
         // Reviews list
         Expanded(
           child: reviews.isEmpty
@@ -104,12 +104,10 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
               children: [
                 CircleAvatar(
                   radius: 20,
-                  backgroundImage: review.userAvatarUrl != null
-                      ? NetworkImage(review.userAvatarUrl!)
-                      : null,
-                  child: review.userAvatarUrl == null
-                      ? Text(review.userName.substring(0, 1))
-                      : null,
+                  backgroundImage:
+                      review.userAvatarUrl != null ? NetworkImage(review.userAvatarUrl!) : null,
+                  child:
+                      review.userAvatarUrl == null ? Text(review.userName.substring(0, 1)) : null,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -136,22 +134,22 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
                 _buildRatingStars(review.rating),
               ],
             ),
-            
+
             const SizedBox(height: 12),
-            
+
             // Review text
             Text(
               review.text,
               style: const TextStyle(fontSize: 14),
             ),
-            
+
             if (review.images.isNotEmpty) ...[
               const SizedBox(height: 12),
               _buildReviewImages(review.images),
             ],
-            
+
             const SizedBox(height: 12),
-            
+
             // Actions
             Row(
               children: [
@@ -242,7 +240,7 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays == 0) {
       return 'Сегодня';
     } else if (difference.inDays == 1) {
@@ -262,7 +260,8 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
         userName: 'Анна Петрова',
         specialistId: widget.specialistId,
         rating: 5,
-        text: 'Отличный специалист! Очень профессионально подошел к организации нашего мероприятия. Все прошло идеально, гости были в восторге. Рекомендую!',
+        text:
+            'Отличный специалист! Очень профессионально подошел к организации нашего мероприятия. Все прошло идеально, гости были в восторге. Рекомендую!',
         date: DateTime.now().subtract(const Duration(days: 2)),
         likesCount: 3,
         isLiked: false,
@@ -286,7 +285,8 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
         userName: 'Елена Смирнова',
         specialistId: widget.specialistId,
         rating: 5,
-        text: 'Потрясающий профессионал! Организовал свадьбу моей мечты. Каждая деталь была продумана до мелочей. Спасибо большое!',
+        text:
+            'Потрясающий профессионал! Организовал свадьбу моей мечты. Каждая деталь была продумана до мелочей. Спасибо большое!',
         date: DateTime.now().subtract(const Duration(days: 10)),
         likesCount: 7,
         isLiked: false,

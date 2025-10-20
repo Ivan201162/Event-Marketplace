@@ -39,7 +39,8 @@ final ideasByTagsProvider = FutureProvider.family<List<Idea>, List<String>>((ref
 });
 
 /// Ideas by difficulty provider
-final ideasByDifficultyProvider = FutureProvider.family<List<Idea>, String>((ref, difficulty) async {
+final ideasByDifficultyProvider =
+    FutureProvider.family<List<Idea>, String>((ref, difficulty) async {
   final service = ref.read(ideaServiceProvider);
   return await service.getIdeasByDifficulty(difficulty);
 });

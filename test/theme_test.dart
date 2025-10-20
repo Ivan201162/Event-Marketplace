@@ -78,8 +78,7 @@ void main() {
       expect(theme.brightness, equals(Brightness.dark));
     });
 
-    testWidgets('should have correct color scheme in light theme',
-        (tester) async {
+    testWidgets('should have correct color scheme in light theme', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -101,8 +100,7 @@ void main() {
       expect(colorScheme.surface, isNotNull);
     });
 
-    testWidgets('should have correct color scheme in dark theme',
-        (tester) async {
+    testWidgets('should have correct color scheme in dark theme', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(

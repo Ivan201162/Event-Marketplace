@@ -411,7 +411,8 @@ class ReviewStats {
   Map<int, String> get formattedRatingDistribution {
     final distribution = <int, String>{};
     for (final int rating in ratingDistribution.keys) {
-      distribution[rating] = '${ratingDistribution[rating]} (${((ratingDistribution[rating]! / totalReviews) * 100).toStringAsFixed(0)}%)';
+      distribution[rating] =
+          '${ratingDistribution[rating]} (${((ratingDistribution[rating]! / totalReviews) * 100).toStringAsFixed(0)}%)';
     }
     return distribution;
   }

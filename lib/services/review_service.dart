@@ -18,9 +18,7 @@ class ReviewService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => Review.fromFirestore(doc))
-          .toList();
+      return querySnapshot.docs.map((doc) => Review.fromFirestore(doc)).toList();
     } catch (e) {
       debugPrint('Error getting specialist reviews: $e');
       return [];
@@ -36,9 +34,7 @@ class ReviewService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => Review.fromFirestore(doc))
-          .toList();
+      return querySnapshot.docs.map((doc) => Review.fromFirestore(doc)).toList();
     } catch (e) {
       debugPrint('Error getting client reviews: $e');
       return [];
@@ -54,9 +50,7 @@ class ReviewService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => Review.fromFirestore(doc))
-          .toList();
+      return querySnapshot.docs.map((doc) => Review.fromFirestore(doc)).toList();
     } catch (e) {
       debugPrint('Error getting reviews by rating: $e');
       return [];
@@ -66,10 +60,7 @@ class ReviewService {
   /// Get review by ID
   Future<Review?> getReviewById(String reviewId) async {
     try {
-      final doc = await _firestore
-          .collection('reviews')
-          .doc(reviewId)
-          .get();
+      final doc = await _firestore.collection('reviews').doc(reviewId).get();
 
       if (doc.exists) {
         return Review.fromFirestore(doc);
@@ -84,9 +75,7 @@ class ReviewService {
   /// Create a new review
   Future<String?> createReview(Review review) async {
     try {
-      final docRef = await _firestore
-          .collection('reviews')
-          .add(review.toFirestore());
+      final docRef = await _firestore.collection('reviews').add(review.toFirestore());
 
       // Update specialist rating
       await _updateSpecialistRating(review.specialistId);
@@ -102,10 +91,7 @@ class ReviewService {
   /// Update review
   Future<bool> updateReview(Review review) async {
     try {
-      await _firestore
-          .collection('reviews')
-          .doc(review.id)
-          .update(review.toFirestore());
+      await _firestore.collection('reviews').doc(review.id).update(review.toFirestore());
 
       // Update specialist rating
       await _updateSpecialistRating(review.specialistId);
@@ -124,10 +110,7 @@ class ReviewService {
       final review = await getReviewById(reviewId);
       if (review == null) return false;
 
-      await _firestore
-          .collection('reviews')
-          .doc(reviewId)
-          .delete();
+      await _firestore.collection('reviews').doc(reviewId).delete();
 
       // Update specialist rating
       await _updateSpecialistRating(review.specialistId);
@@ -148,17 +131,14 @@ class ReviewService {
 
       final isLiked = review.isLikedBy(userId);
       final newLikedBy = List<String>.from(review.likedBy);
-      
+
       if (isLiked) {
         newLikedBy.remove(userId);
       } else {
         newLikedBy.add(userId);
       }
 
-      await _firestore
-          .collection('reviews')
-          .doc(reviewId)
-          .update({
+      await _firestore.collection('reviews').doc(reviewId).update({
         'likedBy': newLikedBy,
         'likesCount': newLikedBy.length,
         'updatedAt': Timestamp.now(),
@@ -196,9 +176,7 @@ class ReviewService {
         .where('specialistId', isEqualTo: specialistId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Review.fromFirestore(doc))
-            .toList());
+        .map((snapshot) => snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList());
   }
 
   /// Get reviews stream for client
@@ -208,9 +186,7 @@ class ReviewService {
         .where('clientId', isEqualTo: clientId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Review.fromFirestore(doc))
-            .toList());
+        .map((snapshot) => snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList());
   }
 
   /// Get reviews stream by rating
@@ -220,9 +196,7 @@ class ReviewService {
         .where('rating', isEqualTo: rating)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Review.fromFirestore(doc))
-            .toList());
+        .map((snapshot) => snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList());
   }
 
   /// Get review statistics for specialist
@@ -241,9 +215,7 @@ class ReviewService {
         };
       }
 
-      final reviews = querySnapshot.docs
-          .map((doc) => Review.fromFirestore(doc))
-          .toList();
+      final reviews = querySnapshot.docs.map((doc) => Review.fromFirestore(doc)).toList();
 
       final totalReviews = reviews.length;
       final totalRating = reviews.fold(0, (sum, review) => sum + review.rating);
@@ -273,11 +245,8 @@ class ReviewService {
   Future<void> _updateSpecialistRating(String specialistId) async {
     try {
       final stats = await getSpecialistReviewStats(specialistId);
-      
-      await _firestore
-          .collection('specialists')
-          .doc(specialistId)
-          .update({
+
+      await _firestore.collection('specialists').doc(specialistId).update({
         'rating': stats['averageRating'],
         'reviewsCount': stats['totalReviews'],
         'updatedAt': Timestamp.now(),
@@ -327,9 +296,7 @@ class ReviewService {
           .limit(limit)
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => Review.fromFirestore(doc))
-          .toList();
+      return querySnapshot.docs.map((doc) => Review.fromFirestore(doc)).toList();
     } catch (e) {
       debugPrint('Error getting recent reviews: $e');
       return [];
@@ -348,11 +315,11 @@ class ReviewService {
 
       return querySnapshot.docs
           .map((doc) => {
-            'id': doc.id,
-            'name': doc.data()['name'] ?? '',
-            'rating': doc.data()['rating'] ?? 0.0,
-            'reviewsCount': doc.data()['reviewsCount'] ?? 0,
-          })
+                'id': doc.id,
+                'name': doc.data()['name'] ?? '',
+                'rating': doc.data()['rating'] ?? 0.0,
+                'reviewsCount': doc.data()['reviewsCount'] ?? 0,
+              })
           .toList();
     } catch (e) {
       debugPrint('Error getting top rated specialists: $e');

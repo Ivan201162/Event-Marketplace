@@ -17,7 +17,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final _nameController = TextEditingController();
   final _cityController = TextEditingController();
   final _statusController = TextEditingController();
-  
+
   UserType _selectedType = UserType.physical;
   bool _isLoading = false;
 
@@ -58,7 +58,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         status: _statusController.text.trim().isEmpty ? null : _statusController.text.trim(),
         type: _selectedType,
       );
-      
+
       if (mounted) {
         context.go('/main');
       }
@@ -71,7 +71,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   void _showError(String message) {
     if (!mounted) return;
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -137,7 +137,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             child: Column(
               children: [
                 const Spacer(),
-                
+
                 // Welcome text
                 const Text(
                   'Добро пожаловать!',
@@ -155,9 +155,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     color: Colors.white70,
                   ),
                 ),
-                
+
                 const Spacer(),
-                
+
                 // Onboarding form
                 Container(
                   padding: const EdgeInsets.all(24),
@@ -184,7 +184,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // City field
                       TextField(
                         controller: _cityController,
@@ -201,7 +201,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         onTap: _showCityPicker,
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // Status field
                       TextField(
                         controller: _statusController,
@@ -213,7 +213,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // User type selection
                       const Text(
                         'Тип аккаунта',
@@ -224,18 +224,18 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       ),
                       const SizedBox(height: 8),
                       ...UserType.values.map((type) => RadioListTile<UserType>(
-                        title: Text(type.displayName),
-                        value: type,
-                        groupValue: _selectedType,
-                        onChanged: (value) {
-                          if (value != null) {
-                            setState(() => _selectedType = value);
-                          }
-                        },
-                      )),
-                      
+                            title: Text(type.displayName),
+                            value: type,
+                            groupValue: _selectedType,
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() => _selectedType = value);
+                              }
+                            },
+                          )),
+
                       const SizedBox(height: 24),
-                      
+
                       // Complete button
                       SizedBox(
                         width: double.infinity,
@@ -254,7 +254,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     ],
                   ),
                 ),
-                
+
                 const Spacer(),
               ],
             ),

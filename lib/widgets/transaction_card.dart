@@ -45,8 +45,8 @@ class TransactionCard extends StatelessWidget {
                     Text(
                       transaction.description,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                            fontWeight: FontWeight.w600,
+                          ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -100,15 +100,15 @@ class TransactionCard extends StatelessWidget {
                         Text(
                           transaction.formattedDate,
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey[600],
-                          ),
+                                color: Colors.grey[600],
+                              ),
                         ),
                         const Spacer(),
                         Text(
                           transaction.formattedTime,
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey[600],
-                          ),
+                                color: Colors.grey[600],
+                              ),
                         ),
                       ],
                     ),
@@ -123,16 +123,16 @@ class TransactionCard extends StatelessWidget {
                   Text(
                     transaction.formattedAmount,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: _getTypeColor(transaction.type),
-                      fontWeight: FontWeight.bold,
-                    ),
+                          color: _getTypeColor(transaction.type),
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     transaction.formattedAbsoluteAmount,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                          color: Colors.grey[600],
+                        ),
                   ),
                 ],
               ),

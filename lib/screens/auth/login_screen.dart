@@ -18,7 +18,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _passwordController = TextEditingController();
   final _phoneController = TextEditingController();
   final _nameController = TextEditingController();
-  
+
   bool _isSignUp = false;
   bool _isPhoneAuth = false;
   bool _isLoading = false;
@@ -48,7 +48,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
-      
+
       if (mounted) {
         context.go('/main');
       }
@@ -61,8 +61,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _signUpWithEmail() async {
-    if (_emailController.text.isEmpty || 
-        _passwordController.text.isEmpty || 
+    if (_emailController.text.isEmpty ||
+        _passwordController.text.isEmpty ||
         _nameController.text.isEmpty) {
       _showError('Заполните все поля');
       return;
@@ -83,19 +83,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         password: _passwordController.text,
         name: _nameController.text.trim(),
       );
-      
+
       if (mounted) {
         context.go('/onboarding');
       }
     } on FirebaseAuthException catch (e) {
       final String errorMessage = _getErrorMessage(e.code);
-      
+
       // Если email уже используется с Google, предлагаем войти через Google
       if (e.code == 'email-already-in-use-google') {
         _showGoogleSignInDialog();
         return;
       }
-      
+
       _showError(errorMessage);
     } catch (e) {
       _showError('Ошибка регистрации: ${e.toString()}');
@@ -155,7 +155,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   void _showPhoneCodeDialog() {
     final codeController = TextEditingController();
-    
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -180,16 +180,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ElevatedButton(
             onPressed: () async {
               if (codeController.text.isEmpty || _verificationId == null) return;
-              
+
               setState(() => _isLoading = true);
-              
+
               try {
                 final authService = ref.read(authServiceProvider);
                 await authService.verifyPhoneCode(
                   verificationId: _verificationId!,
                   code: codeController.text.trim(),
                 );
-                
+
                 if (mounted) {
                   Navigator.pop(context);
                   context.go('/main');
@@ -209,7 +209,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   void _showError(String message) {
     if (!mounted) return;
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -252,7 +252,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Email уже используется'),
-        content: const Text('Этот email уже зарегистрирован через Google. Хотите войти через Google?'),
+        content:
+            const Text('Этот email уже зарегистрирован через Google. Хотите войти через Google?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -290,7 +291,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Column(
               children: [
                 const Spacer(),
-                
+
                 // App logo and title
                 const Icon(
                   Icons.event,
@@ -315,9 +316,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     color: Colors.white70,
                   ),
                 ),
-                
+
                 const Spacer(),
-                
+
                 // Auth form
                 Container(
                   padding: const EdgeInsets.all(24),
@@ -360,9 +361,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 24),
-                      
+
                       // Name field (only for sign up)
                       if (_isSignUp) ...[
                         TextField(
@@ -375,7 +376,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                         const SizedBox(height: 16),
                       ],
-                      
+
                       // Email field
                       TextField(
                         controller: _emailController,
@@ -387,7 +388,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // Password field
                       TextField(
                         controller: _passwordController,
@@ -399,12 +400,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 24),
-                      
+
                       // Email auth button
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: _isLoading ? null : (_isSignUp ? _signUpWithEmail : _signInWithEmail),
+                          onPressed:
+                              _isLoading ? null : (_isSignUp ? _signUpWithEmail : _signInWithEmail),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue,
                             foregroundColor: Colors.white,
@@ -415,9 +417,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               : Text(_isSignUp ? 'Зарегистрироваться' : 'Войти'),
                         ),
                       ),
-                      
+
                       const SizedBox(height: 16),
-                      
+
                       // Forgot password link (only for sign in)
                       if (!_isSignUp) ...[
                         Align(
@@ -429,7 +431,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                         const SizedBox(height: 8),
                       ],
-                      
+
                       // Divider
                       const Row(
                         children: [
@@ -441,9 +443,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           Expanded(child: Divider()),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 16),
-                      
+
                       // Phone auth button
                       SizedBox(
                         width: double.infinity,
@@ -453,9 +455,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           label: const Text('Войти по телефону'),
                         ),
                       ),
-                      
+
                       const SizedBox(height: 12),
-                      
+
                       // Google Sign-In button
                       SizedBox(
                         width: double.infinity,
@@ -468,7 +470,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ],
                   ),
                 ),
-                
+
                 const Spacer(),
               ],
             ),

@@ -27,7 +27,7 @@ class _ProfileEditDialogState extends State<ProfileEditDialog> {
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.currentValue);
-    
+
     // Parse user type if field is 'type'
     if (widget.field == 'type') {
       _selectedUserType = UserType.values.firstWhere(
@@ -80,7 +80,7 @@ class _ProfileEditDialogState extends State<ProfileEditDialog> {
     if (widget.field == 'type') {
       return _buildUserTypeSelector();
     }
-    
+
     return TextField(
       controller: _controller,
       decoration: InputDecoration(
@@ -125,13 +125,13 @@ class _ProfileEditDialogState extends State<ProfileEditDialog> {
 
   void _save() {
     String newValue;
-    
+
     if (widget.field == 'type') {
       newValue = _selectedUserType?.name ?? widget.currentValue;
     } else {
       newValue = _controller.text.trim();
     }
-    
+
     if (newValue.isNotEmpty && newValue != widget.currentValue) {
       widget.onSave(newValue);
       Navigator.of(context).pop();

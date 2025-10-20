@@ -13,9 +13,7 @@ class PushNotificationService {
   Future<void> initialize() async {
     try {
       // Request permission
-      final settings = await _messaging.requestPermission(
-        
-      );
+      final settings = await _messaging.requestPermission();
 
       debugPrint('Push notification permission: ${settings.authorizationStatus}');
 
@@ -89,9 +87,8 @@ class PushNotificationService {
       );
 
       // Save to Firestore
-      final docRef = await _firestore
-          .collection('push_notifications')
-          .add(notification.toFirestore());
+      final docRef =
+          await _firestore.collection('push_notifications').add(notification.toFirestore());
 
       final notificationId = docRef.id;
       debugPrint('Push notification created with ID: $notificationId');
@@ -112,10 +109,7 @@ class PushNotificationService {
 
       // Update delivery status
       if (success) {
-        await _firestore
-            .collection('push_notifications')
-            .doc(notificationId)
-            .update({
+        await _firestore.collection('push_notifications').doc(notificationId).update({
           'delivered': true,
           'deliveredAt': Timestamp.now(),
         });
@@ -177,9 +171,7 @@ class PushNotificationService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => PushNotification.fromFirestore(doc))
-          .toList();
+      return querySnapshot.docs.map((doc) => PushNotification.fromFirestore(doc)).toList();
     } catch (e) {
       debugPrint('Error getting user notifications: $e');
       return [];
@@ -205,10 +197,7 @@ class PushNotificationService {
   /// Mark notification as read
   Future<bool> markAsRead(String notificationId) async {
     try {
-      await _firestore
-          .collection('push_notifications')
-          .doc(notificationId)
-          .update({
+      await _firestore.collection('push_notifications').doc(notificationId).update({
         'read': true,
         'readAt': Timestamp.now(),
       });
@@ -248,10 +237,7 @@ class PushNotificationService {
   /// Delete notification
   Future<bool> deleteNotification(String notificationId) async {
     try {
-      await _firestore
-          .collection('push_notifications')
-          .doc(notificationId)
-          .delete();
+      await _firestore.collection('push_notifications').doc(notificationId).delete();
 
       return true;
     } catch (e) {
@@ -288,9 +274,8 @@ class PushNotificationService {
         .where('userId', isEqualTo: userId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => PushNotification.fromFirestore(doc))
-            .toList());
+        .map(
+            (snapshot) => snapshot.docs.map((doc) => PushNotification.fromFirestore(doc)).toList());
   }
 
   /// Get unread count stream
@@ -365,7 +350,8 @@ class PushNotificationService {
     return sendNotification(
       userId: userId,
       title: 'Новое бронирование',
-      body: '$specialistName подтвердил бронирование "$serviceName" на ${_formatDateTime(bookingTime)}',
+      body:
+          '$specialistName подтвердил бронирование "$serviceName" на ${_formatDateTime(bookingTime)}',
       type: PushNotificationType.booking,
       priority: PushNotificationPriority.high,
       data: {

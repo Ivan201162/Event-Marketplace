@@ -36,10 +36,8 @@ void main() {
       mockQuery = MockQuery<Map<String, dynamic>>();
       mockQuerySnapshot = MockQuerySnapshot<Map<String, dynamic>>();
 
-      when(mockFirestore.collection('reviews'))
-          .thenReturn(mockReviewsCollection);
-      when(mockFirestore.collection('bookings'))
-          .thenReturn(mockBookingsCollection);
+      when(mockFirestore.collection('reviews')).thenReturn(mockReviewsCollection);
+      when(mockFirestore.collection('bookings')).thenReturn(mockBookingsCollection);
       when(mockReviewsCollection.doc(any)).thenReturn(mockDocumentRef);
       when(mockBookingsCollection.doc(any)).thenReturn(mockDocumentRef);
 
@@ -66,8 +64,7 @@ void main() {
           'status': 'completed',
           'customerId': 'customer_1',
         });
-        when(mockDocumentRef.get())
-            .thenAnswer((_) async => mockDocumentSnapshot);
+        when(mockDocumentRef.get()).thenAnswer((_) async => mockDocumentSnapshot);
 
         when(mockQuerySnapshot.docs).thenReturn([]);
         when(mockQuery.get()).thenAnswer((_) async => mockQuerySnapshot);
@@ -153,8 +150,7 @@ void main() {
           'status': 'pending', // Не завершенный заказ
           'customerId': 'customer_1',
         });
-        when(mockDocumentRef.get())
-            .thenAnswer((_) async => mockDocumentSnapshot);
+        when(mockDocumentRef.get()).thenAnswer((_) async => mockDocumentSnapshot);
 
         // Act & Assert
         expect(
@@ -187,12 +183,10 @@ void main() {
           'status': 'completed',
           'customerId': 'customer_1',
         });
-        when(mockDocumentRef.get())
-            .thenAnswer((_) async => mockDocumentSnapshot);
+        when(mockDocumentRef.get()).thenAnswer((_) async => mockDocumentSnapshot);
 
         // Существующий отзыв
-        final existingReviewDoc =
-            MockQueryDocumentSnapshot<Map<String, dynamic>>();
+        final existingReviewDoc = MockQueryDocumentSnapshot<Map<String, dynamic>>();
         when(existingReviewDoc.id).thenReturn('existing_review');
         when(mockQuerySnapshot.docs).thenReturn([existingReviewDoc]);
         when(mockQuery.get()).thenAnswer((_) async => mockQuerySnapshot);
@@ -225,8 +219,7 @@ void main() {
           'customerId': 'customer_1',
           'edited': false,
         });
-        when(mockDocumentRef.get())
-            .thenAnswer((_) async => mockDocumentSnapshot);
+        when(mockDocumentRef.get()).thenAnswer((_) async => mockDocumentSnapshot);
         when(mockDocumentRef.update(any)).thenAnswer((_) async {});
 
         // Act
@@ -245,8 +238,7 @@ void main() {
         const reviewId = 'non_existent_review';
 
         when(mockDocumentSnapshot.exists).thenReturn(false);
-        when(mockDocumentRef.get())
-            .thenAnswer((_) async => mockDocumentSnapshot);
+        when(mockDocumentRef.get()).thenAnswer((_) async => mockDocumentSnapshot);
 
         // Act & Assert
         expect(
@@ -270,8 +262,7 @@ void main() {
           'customerId': 'customer_1',
           'edited': true, // Уже отредактирован
         });
-        when(mockDocumentRef.get())
-            .thenAnswer((_) async => mockDocumentSnapshot);
+        when(mockDocumentRef.get()).thenAnswer((_) async => mockDocumentSnapshot);
 
         // Act & Assert
         expect(
@@ -330,8 +321,7 @@ void main() {
           'status': 'completed',
           'customerId': customerId,
         });
-        when(mockDocumentRef.get())
-            .thenAnswer((_) async => mockDocumentSnapshot);
+        when(mockDocumentRef.get()).thenAnswer((_) async => mockDocumentSnapshot);
 
         when(mockQuerySnapshot.docs).thenReturn([]);
         when(mockQuery.get()).thenAnswer((_) async => mockQuerySnapshot);
@@ -358,8 +348,7 @@ void main() {
           'status': 'pending',
           'customerId': customerId,
         });
-        when(mockDocumentRef.get())
-            .thenAnswer((_) async => mockDocumentSnapshot);
+        when(mockDocumentRef.get()).thenAnswer((_) async => mockDocumentSnapshot);
 
         // Act
         final canLeave = await repository.canLeaveReview(
@@ -381,12 +370,10 @@ void main() {
           'status': 'completed',
           'customerId': customerId,
         });
-        when(mockDocumentRef.get())
-            .thenAnswer((_) async => mockDocumentSnapshot);
+        when(mockDocumentRef.get()).thenAnswer((_) async => mockDocumentSnapshot);
 
         // Существующий отзыв
-        final existingReviewDoc =
-            MockQueryDocumentSnapshot<Map<String, dynamic>>();
+        final existingReviewDoc = MockQueryDocumentSnapshot<Map<String, dynamic>>();
         when(mockQuerySnapshot.docs).thenReturn([existingReviewDoc]);
         when(mockQuery.get()).thenAnswer((_) async => mockQuerySnapshot);
         when(mockReviewsCollection.where(any, isEqualTo: anyNamed('isEqualTo')))

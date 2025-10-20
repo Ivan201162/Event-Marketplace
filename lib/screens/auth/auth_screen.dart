@@ -100,13 +100,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       }
     } on FirebaseAuthException catch (e) {
       final String errorMessage = _getErrorMessage(e.code);
-      
+
       // Если email уже используется с Google, предлагаем войти через Google
       if (e.code == 'email-already-in-use-google') {
         _showGoogleSignInDialog();
         return;
       }
-      
+
       setState(() {
         _errorMessage = errorMessage;
       });
@@ -224,7 +224,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Email уже используется'),
-        content: const Text('Этот email уже зарегистрирован через Google. Хотите войти через Google?'),
+        content:
+            const Text('Этот email уже зарегистрирован через Google. Хотите войти через Google?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

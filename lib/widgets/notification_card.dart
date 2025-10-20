@@ -53,8 +53,8 @@ class NotificationCard extends StatelessWidget {
                           child: Text(
                             notification.title,
                             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: notification.read ? FontWeight.w500 : FontWeight.w600,
-                            ),
+                                  fontWeight: notification.read ? FontWeight.w500 : FontWeight.w600,
+                                ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -74,8 +74,8 @@ class NotificationCard extends StatelessWidget {
                     Text(
                       notification.body,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey[600],
-                      ),
+                            color: Colors.grey[600],
+                          ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -127,15 +127,15 @@ class NotificationCard extends StatelessWidget {
                         Text(
                           notification.formattedDate,
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey[600],
-                          ),
+                                color: Colors.grey[600],
+                              ),
                         ),
                         const Spacer(),
                         Text(
                           notification.formattedTime,
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey[600],
-                          ),
+                                color: Colors.grey[600],
+                              ),
                         ),
                       ],
                     ),
@@ -153,8 +153,8 @@ class NotificationCard extends StatelessWidget {
                           Text(
                             'От: ${notification.senderName}',
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.grey[600],
-                            ),
+                                  color: Colors.grey[600],
+                                ),
                           ),
                         ],
                       ),

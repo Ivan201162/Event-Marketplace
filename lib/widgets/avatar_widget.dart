@@ -77,12 +77,12 @@ class AvatarWidget extends StatelessWidget {
 
   String _getInitials(String name) {
     if (name.isEmpty) return '?';
-    
+
     final words = name.trim().split(' ');
     if (words.length == 1) {
       return words[0].substring(0, 1).toUpperCase();
     }
-    
+
     return (words[0].substring(0, 1) + words[1].substring(0, 1)).toUpperCase();
   }
 
@@ -97,7 +97,7 @@ class AvatarWidget extends StatelessWidget {
       Colors.indigo,
       Colors.pink,
     ];
-    
+
     final hash = name.hashCode;
     return colors[hash.abs() % colors.length];
   }

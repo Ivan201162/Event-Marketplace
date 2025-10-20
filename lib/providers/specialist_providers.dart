@@ -28,19 +28,22 @@ final topSpecialistsRuProvider = FutureProvider<List<Specialist>>((ref) async {
 });
 
 /// Top specialists by city provider
-final topSpecialistsCityProvider = FutureProvider.family<List<Specialist>, String>((ref, city) async {
+final topSpecialistsCityProvider =
+    FutureProvider.family<List<Specialist>, String>((ref, city) async {
   final service = ref.read(specialistServiceProvider);
   return await service.getTopSpecialistsByCity(city);
 });
 
 /// Specialists by city provider
-final specialistsByCityProvider = FutureProvider.family<List<Specialist>, String>((ref, city) async {
+final specialistsByCityProvider =
+    FutureProvider.family<List<Specialist>, String>((ref, city) async {
   final service = ref.read(specialistServiceProvider);
   return await service.getSpecialistsByCity(city);
 });
 
 /// Specialists by specialization provider
-final specialistsBySpecializationProvider = FutureProvider.family<List<Specialist>, String>((ref, specialization) async {
+final specialistsBySpecializationProvider =
+    FutureProvider.family<List<Specialist>, String>((ref, specialization) async {
   final service = ref.read(specialistServiceProvider);
   return await service.getSpecialistsBySpecialization(specialization);
 });
@@ -51,7 +54,8 @@ final searchFiltersProvider = StateProvider<SearchFilters>((ref) {
 });
 
 /// Search results provider
-final searchResultsProvider = FutureProvider.family<List<Specialist>, SearchFilters>((ref, filters) async {
+final searchResultsProvider =
+    FutureProvider.family<List<Specialist>, SearchFilters>((ref, filters) async {
   final service = ref.read(specialistServiceProvider);
   return await service.searchSpecialists(filters);
 });
@@ -87,7 +91,8 @@ final specialistsStreamProvider = StreamProvider<List<Specialist>>((ref) {
 });
 
 /// Stream of specialists by city provider
-final specialistsByCityStreamProvider = StreamProvider.family<List<Specialist>, String>((ref, city) {
+final specialistsByCityStreamProvider =
+    StreamProvider.family<List<Specialist>, String>((ref, city) {
   final service = ref.read(specialistServiceProvider);
   return service.getSpecialistsByCityStream(city);
 });
@@ -99,13 +104,13 @@ final popularSpecializationsProvider = FutureProvider<List<String>>((ref) async 
     data: (specialists) {
       final specializationCount = <String, int>{};
       for (final specialist in specialists) {
-        specializationCount[specialist.specialization] = 
+        specializationCount[specialist.specialization] =
             (specializationCount[specialist.specialization] ?? 0) + 1;
       }
-      
+
       final sortedSpecializations = specializationCount.entries.toList()
         ..sort((a, b) => b.value.compareTo(a.value));
-      
+
       return sortedSpecializations.take(8).map((e) => e.key).toList();
     },
     loading: () => [],
@@ -120,13 +125,11 @@ final popularCitiesProvider = FutureProvider<List<String>>((ref) async {
     data: (specialists) {
       final cityCount = <String, int>{};
       for (final specialist in specialists) {
-        cityCount[specialist.city] = 
-            (cityCount[specialist.city] ?? 0) + 1;
+        cityCount[specialist.city] = (cityCount[specialist.city] ?? 0) + 1;
       }
-      
-      final sortedCities = cityCount.entries.toList()
-        ..sort((a, b) => b.value.compareTo(a.value));
-      
+
+      final sortedCities = cityCount.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
+
       return sortedCities.take(10).map((e) => e.key).toList();
     },
     loading: () => [],

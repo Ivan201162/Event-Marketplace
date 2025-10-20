@@ -665,7 +665,7 @@ class SmartSpecialist {
 
     // Добавляем город
     keywords.add(specialist.city.toLowerCase());
-  
+
     // Добавляем оборудование
     keywords.addAll(specialist.equipment.map((e) => e.toLowerCase()));
 
@@ -707,7 +707,7 @@ class SmartSpecialist {
     tags.addAll(specialist.services);
 
     tags.add(specialist.city);
-  
+
     return tags;
   }
 

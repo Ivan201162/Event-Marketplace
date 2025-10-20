@@ -87,7 +87,7 @@ class Payment extends Equatable {
   /// Create Payment from Firestore document
   factory Payment.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return Payment(
       id: doc.id,
       userId: data['userId'] ?? '',
@@ -115,12 +115,8 @@ class Payment extends Equatable {
       failureReason: data['failureReason'],
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      completedAt: data['completedAt'] != null 
-          ? (data['completedAt'] as Timestamp).toDate() 
-          : null,
-      failedAt: data['failedAt'] != null 
-          ? (data['failedAt'] as Timestamp).toDate() 
-          : null,
+      completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
+      failedAt: data['failedAt'] != null ? (data['failedAt'] as Timestamp).toDate() : null,
     );
   }
 
@@ -256,7 +252,7 @@ class Payment extends Equatable {
   String get formattedDuration {
     final dur = duration;
     if (dur == null) return 'В процессе';
-    
+
     if (dur.inSeconds < 60) {
       return '${dur.inSeconds} сек';
     } else if (dur.inMinutes < 60) {

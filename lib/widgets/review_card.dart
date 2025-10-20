@@ -67,23 +67,23 @@ class ReviewCard extends StatelessWidget {
                   _buildRatingStars(),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Review text
               Text(
                 review.text,
                 style: const TextStyle(fontSize: 14),
               ),
-              
+
               // Images
               if (review.hasImages) ...[
                 const SizedBox(height: 12),
                 _buildImagesGrid(),
               ],
-              
+
               const SizedBox(height: 12),
-              
+
               // Actions
               Row(
                 children: [

@@ -58,7 +58,6 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
 
                   const SizedBox(height: 16),
 
-
                   // Дополнительные действия
                   _buildAdditionalActions(context),
                 ],
@@ -278,7 +277,6 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
                 style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
       );
-
 
   /// Дополнительные действия
   Widget _buildAdditionalActions(BuildContext context) => Column(
@@ -509,7 +507,6 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       }
     }
   }
-
 
   /// Обработка входа через Google
   Future<void> _handleGoogleSignIn() async {

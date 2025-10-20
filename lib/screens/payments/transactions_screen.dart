@@ -232,8 +232,8 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen>
             Text(
               'За этот месяц',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 12),
             Row(
@@ -270,8 +270,8 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen>
             Text(
               'Всего',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 12),
             Row(
@@ -312,7 +312,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen>
   Widget _buildBalanceCard(int balance) {
     final rubles = balance / 100;
     final isPositive = balance >= 0;
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -321,16 +321,16 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen>
             Text(
               'Текущий баланс',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: Colors.grey[600],
-              ),
+                    color: Colors.grey[600],
+                  ),
             ),
             const SizedBox(height: 8),
             Text(
               '${rubles.toStringAsFixed(2)} ₽',
               style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                color: isPositive ? Colors.green : Colors.red,
-                fontWeight: FontWeight.bold,
-              ),
+                    color: isPositive ? Colors.green : Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 8),
             Container(
@@ -355,7 +355,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen>
 
   Widget _buildStatCard(String title, int amount, Color color, IconData icon) {
     final rubles = amount / 100;
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -366,17 +366,17 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen>
             Text(
               title,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
-              ),
+                    color: Colors.grey[600],
+                  ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 4),
             Text(
               '${rubles.toStringAsFixed(2)} ₽',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: color,
-                fontWeight: FontWeight.bold,
-              ),
+                    color: color,
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
           ],
         ),
@@ -395,8 +395,8 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen>
             Text(
               'Загрузка баланса...',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
-              ),
+                    color: Colors.grey[600],
+                  ),
             ),
           ],
         ),
@@ -415,8 +415,8 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen>
             Text(
               'Загрузка...',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey[600],
-              ),
+                    color: Colors.grey[600],
+                  ),
             ),
           ],
         ),
@@ -435,8 +435,8 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen>
             Text(
               'Ошибка загрузки',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.red,
-              ),
+                    color: Colors.red,
+                  ),
             ),
           ],
         ),
@@ -455,8 +455,8 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen>
             Text(
               'Ошибка',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.red,
-              ),
+                    color: Colors.red,
+                  ),
             ),
           ],
         ),
@@ -483,8 +483,8 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen>
           Text(
             subtitle,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey,
-            ),
+                  color: Colors.grey,
+                ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -504,8 +504,8 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen>
           Text(
             error.toString(),
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Colors.grey,
-            ),
+                  color: Colors.grey,
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
@@ -590,8 +590,8 @@ class TransactionDetailsSheet extends StatelessWidget {
                           Text(
                             transaction.type.displayName,
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey[600],
-                            ),
+                                  color: Colors.grey[600],
+                                ),
                           ),
                         ],
                       ),
@@ -602,15 +602,15 @@ class TransactionDetailsSheet extends StatelessWidget {
                         Text(
                           transaction.formattedAmount,
                           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            color: _getTypeColor(transaction.type),
-                            fontWeight: FontWeight.bold,
-                          ),
+                                color: _getTypeColor(transaction.type),
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
                         Text(
                           transaction.formattedDate,
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey[600],
-                          ),
+                                color: Colors.grey[600],
+                              ),
                         ),
                       ],
                     ),
@@ -630,8 +630,7 @@ class TransactionDetailsSheet extends StatelessWidget {
                     _buildDetailRow('Дата', transaction.formattedDateTime),
                     if (transaction.category != null)
                       _buildDetailRow('Категория', transaction.category!),
-                    if (transaction.notes != null)
-                      _buildDetailRow('Заметки', transaction.notes!),
+                    if (transaction.notes != null) _buildDetailRow('Заметки', transaction.notes!),
                     if (transaction.referenceId != null)
                       _buildDetailRow('Ссылка', transaction.referenceId!),
                   ],

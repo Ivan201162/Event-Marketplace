@@ -9,8 +9,7 @@ import 'dart:typed_data' as _i6;
 import 'package:event_marketplace_app/models/chat.dart' as _i4;
 import 'package:event_marketplace_app/models/chat_message.dart' as _i5;
 import 'package:event_marketplace_app/services/chat_service.dart' as _i2;
-import 'package:event_marketplace_app/services/media_upload_service.dart'
-    as _i8;
+import 'package:event_marketplace_app/services/media_upload_service.dart' as _i8;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i7;
 
@@ -38,8 +37,7 @@ class MockChatService extends _i1.Mock implements _i2.ChatService {
   }
 
   @override
-  _i3.Future<List<_i4.Chat>> getUserChats(String? userId) =>
-      (super.noSuchMethod(
+  _i3.Future<List<_i4.Chat>> getUserChats(String? userId) => (super.noSuchMethod(
         Invocation.method(
           #getUserChats,
           [userId],
@@ -57,8 +55,7 @@ class MockChatService extends _i1.Mock implements _i2.ChatService {
       ) as _i3.Stream<_i4.Chat?>);
 
   @override
-  _i3.Stream<List<_i5.ChatMessage>> getChatMessages(String? chatId) =>
-      (super.noSuchMethod(
+  _i3.Stream<List<_i5.ChatMessage>> getChatMessages(String? chatId) => (super.noSuchMethod(
         Invocation.method(
           #getChatMessages,
           [chatId],
@@ -176,8 +173,7 @@ class MockChatService extends _i1.Mock implements _i2.ChatService {
       ) as _i3.Future<void>);
 
   @override
-  _i3.Future<String> createChat(Map<String, dynamic>? chatData) =>
-      (super.noSuchMethod(
+  _i3.Future<String> createChat(Map<String, dynamic>? chatData) => (super.noSuchMethod(
         Invocation.method(
           #createChat,
           [chatData],
@@ -376,8 +372,7 @@ class MockChatService extends _i1.Mock implements _i2.ChatService {
       ) as _i3.Future<void>);
 
   @override
-  _i3.Stream<int> getUnreadMessagesCountStream(String? userId) =>
-      (super.noSuchMethod(
+  _i3.Stream<int> getUnreadMessagesCountStream(String? userId) => (super.noSuchMethod(
         Invocation.method(
           #getUnreadMessagesCountStream,
           [userId],

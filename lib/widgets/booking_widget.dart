@@ -47,7 +47,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          
+
           // Header
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -94,9 +94,9 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
               ],
             ),
           ),
-          
+
           const Divider(),
-          
+
           // Content
           Expanded(
             child: SingleChildScrollView(
@@ -106,36 +106,36 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
                 children: [
                   // Service selection
                   _buildServiceSelection(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Date selection
                   _buildDateSelection(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Time selection
                   _buildTimeSelection(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Duration selection
                   _buildDurationSelection(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Notes
                   _buildNotesSection(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Price calculation
                   _buildPriceCalculation(),
                 ],
               ),
             ),
           ),
-          
+
           // Bottom bar
           Container(
             padding: const EdgeInsets.all(16),
@@ -200,15 +200,15 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
         const SizedBox(height: 12),
         if (widget.specialist.services.isNotEmpty)
           ...widget.specialist.services.map((service) => RadioListTile<String>(
-            title: Text(service),
-            value: service,
-            groupValue: _selectedService,
-            onChanged: (value) {
-              setState(() {
-                _selectedService = value;
-              });
-            },
-          ))
+                title: Text(service),
+                value: service,
+                groupValue: _selectedService,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedService = value;
+                  });
+                },
+              ))
         else
           const Card(
             child: Padding(
@@ -373,7 +373,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
 
   Widget _buildPriceCalculation() {
     final totalPrice = _calculateTotalPrice();
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -430,7 +430,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 30)),
     );
-    
+
     if (date != null) {
       setState(() {
         _selectedDate = date;
@@ -443,7 +443,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
       context: context,
       initialTime: const TimeOfDay(hour: 10, minute: 0),
     );
-    
+
     if (time != null) {
       setState(() {
         _selectedTime = time;
@@ -456,9 +456,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
   }
 
   bool _canBook() {
-    return _selectedDate != null && 
-           _selectedTime != null && 
-           _selectedService != null;
+    return _selectedDate != null && _selectedTime != null && _selectedService != null;
   }
 
   void _confirmBooking() {

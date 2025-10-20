@@ -51,9 +51,8 @@ class Chat extends Equatable {
       id: doc.id,
       members: List<String>.from(data['members'] ?? []),
       lastMessage: data['lastMessage'],
-      lastMessageTime: data['lastMessageTime'] != null
-          ? (data['lastMessageTime'] as Timestamp).toDate()
-          : null,
+      lastMessageTime:
+          data['lastMessageTime'] != null ? (data['lastMessageTime'] as Timestamp).toDate() : null,
       lastMessageSenderId: data['lastMessageSenderId'],
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
@@ -126,13 +125,13 @@ class Chat extends Equatable {
     if (isGroup && name != null) {
       return name!;
     }
-    
+
     // For direct messages, show the other person's name
     final otherMembers = members.where((id) => id != currentUserId).toList();
     if (otherMembers.isNotEmpty) {
       return memberNames[otherMembers.first] ?? 'Неизвестный пользователь';
     }
-    
+
     return 'Чат';
   }
 
@@ -141,13 +140,13 @@ class Chat extends Equatable {
     if (isGroup && imageUrl != null) {
       return imageUrl;
     }
-    
+
     // For direct messages, show the other person's avatar
     final otherMembers = members.where((id) => id != currentUserId).toList();
     if (otherMembers.isNotEmpty) {
       return memberAvatars[otherMembers.first];
     }
-    
+
     return null;
   }
 
@@ -159,7 +158,7 @@ class Chat extends Equatable {
   /// Get formatted last message time
   String get formattedLastMessageTime {
     if (lastMessageTime == null) return '';
-    
+
     final now = DateTime.now();
     final difference = now.difference(lastMessageTime!);
 
@@ -336,7 +335,7 @@ class Message extends Equatable {
   /// Get formatted file size
   String get formattedFileSize {
     if (fileSize == null) return '';
-    
+
     if (fileSize! < 1024) {
       return '${fileSize!} Б';
     } else if (fileSize! < 1024 * 1024) {

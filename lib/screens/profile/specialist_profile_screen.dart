@@ -12,7 +12,7 @@ import '../../widgets/reviews_list.dart';
 /// Specialist profile screen with portfolio and booking
 class SpecialistProfileScreen extends ConsumerStatefulWidget {
   final String specialistId;
-  
+
   const SpecialistProfileScreen({
     super.key,
     required this.specialistId,
@@ -139,7 +139,7 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
                 color: Colors.grey[300],
                 child: const Icon(Icons.person, size: 100),
               ),
-            
+
             // Gradient overlay
             Container(
               decoration: BoxDecoration(
@@ -153,7 +153,7 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
                 ),
               ),
             ),
-            
+
             // Profile info
             Positioned(
               bottom: 16,
@@ -267,20 +267,20 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
         children: [
           // Rating and stats
           _buildRatingCard(specialist),
-          
+
           const SizedBox(height: 16),
-          
+
           // Description
           if (specialist.description != null && specialist.description!.isNotEmpty)
             _buildDescriptionCard(specialist),
-          
+
           const SizedBox(height: 16),
-          
+
           // Experience
           _buildExperienceCard(specialist),
-          
+
           const SizedBox(height: 16),
-          
+
           // Contact info
           _buildContactCard(specialist),
         ],
@@ -325,9 +325,7 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
               fontWeight: FontWeight.bold,
             ),
           ),
-          
           const SizedBox(height: 16),
-          
           if (specialist.services.isNotEmpty)
             ...specialist.services.map((service) => _buildServiceCard(service, specialist))
           else
@@ -361,9 +359,7 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
                 Row(
                   children: List.generate(5, (index) {
                     return Icon(
-                      index < specialist.rating.floor()
-                          ? Icons.star
-                          : Icons.star_border,
+                      index < specialist.rating.floor() ? Icons.star : Icons.star_border,
                       color: Colors.orange,
                       size: 20,
                     );
@@ -464,10 +460,12 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
               const SizedBox(height: 4),
               Wrap(
                 spacing: 8,
-                children: specialist.languages.map((language) => Chip(
-                  label: Text(language),
-                  backgroundColor: Colors.blue.withOpacity(0.1),
-                )).toList(),
+                children: specialist.languages
+                    .map((language) => Chip(
+                          label: Text(language),
+                          backgroundColor: Colors.blue.withOpacity(0.1),
+                        ))
+                    .toList(),
               ),
             ],
           ],
@@ -493,20 +491,20 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
             const SizedBox(height: 12),
             if (specialist.contactInfo.isNotEmpty)
               ...specialist.contactInfo.entries.map((entry) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Row(
-                  children: [
-                    Icon(_getContactIcon(entry.key), size: 20),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        '${_getContactLabel(entry.key)}: ${entry.value}',
-                        style: const TextStyle(fontSize: 16),
-                      ),
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Row(
+                      children: [
+                        Icon(_getContactIcon(entry.key), size: 20),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            '${_getContactLabel(entry.key)}: ${entry.value}',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ))
+                  ))
             else
               const Text('Контактная информация не указана'),
           ],
@@ -578,9 +576,11 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
           ),
           const SizedBox(width: 16),
           ElevatedButton.icon(
-            onPressed: specialist.isAvailable ? () {
-              _showBookingDialog(specialist);
-            } : null,
+            onPressed: specialist.isAvailable
+                ? () {
+                    _showBookingDialog(specialist);
+                  }
+                : null,
             icon: const Icon(Icons.calendar_today),
             label: const Text('Забронировать'),
             style: ElevatedButton.styleFrom(

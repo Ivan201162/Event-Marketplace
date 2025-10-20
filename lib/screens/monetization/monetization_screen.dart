@@ -26,15 +26,15 @@ class MonetizationScreen extends StatelessWidget {
             // Current plan section
             _buildCurrentPlanSection(context),
             const SizedBox(height: 24),
-            
+
             // Available plans section
             _buildAvailablePlansSection(context),
             const SizedBox(height: 24),
-            
+
             // Features comparison
             _buildFeaturesComparison(context),
             const SizedBox(height: 24),
-            
+
             // FAQ section
             _buildFAQSection(context),
           ],
@@ -261,24 +261,24 @@ class MonetizationScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 ...(plan['features'] as List<String>).map((feature) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.check_circle,
-                        color: plan['color'] as Color,
-                        size: 20,
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.check_circle,
+                            color: plan['color'] as Color,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              feature,
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          feature,
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                      ),
-                    ],
-                  ),
-                )),
+                    )),
               ],
             ),
           ),
@@ -322,7 +322,8 @@ class MonetizationScreen extends StatelessWidget {
                     ),
                     Padding(
                       padding: EdgeInsets.all(8),
-                      child: Text('Профессиональный', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child:
+                          Text('Профессиональный', style: TextStyle(fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),
@@ -424,7 +425,8 @@ class MonetizationScreen extends StatelessWidget {
       },
       {
         'question': 'Что происходит после отмены?',
-        'answer': 'После отмены подписки вы сохраняете доступ к функциям до конца оплаченного периода.',
+        'answer':
+            'После отмены подписки вы сохраняете доступ к функциям до конца оплаченного периода.',
       },
       {
         'question': 'Есть ли пробный период?',
@@ -432,15 +434,17 @@ class MonetizationScreen extends StatelessWidget {
       },
     ];
 
-    return faqs.map((faq) => ExpansionTile(
-      title: Text(faq['question'] as String),
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Text(faq['answer'] as String),
-        ),
-      ],
-    )).toList();
+    return faqs
+        .map((faq) => ExpansionTile(
+              title: Text(faq['question'] as String),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(faq['answer'] as String),
+                ),
+              ],
+            ))
+        .toList();
   }
 
   void _showPurchaseDialog(BuildContext context, Map<String, dynamic> plan) {
@@ -457,15 +461,15 @@ class MonetizationScreen extends StatelessWidget {
             const Text('Включено:'),
             const SizedBox(height: 8),
             ...(plan['features'] as List<String>).map((feature) => Padding(
-              padding: const EdgeInsets.only(bottom: 4),
-              child: Row(
-                children: [
-                  const Icon(Icons.check, color: Colors.green, size: 16),
-                  const SizedBox(width: 8),
-                  Expanded(child: Text(feature)),
-                ],
-              ),
-            )),
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.check, color: Colors.green, size: 16),
+                      const SizedBox(width: 8),
+                      Expanded(child: Text(feature)),
+                    ],
+                  ),
+                )),
           ],
         ),
         actions: [

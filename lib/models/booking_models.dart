@@ -109,17 +109,14 @@ class Booking {
               ? (data['time'] as Timestamp).toDate()
               : DateTime.parse(data['time'].toString()))
           : DateTime.now(),
-      duration: data['duration'] != null
-          ? Duration(milliseconds: data['duration'] as int)
-          : null,
+      duration: data['duration'] != null ? Duration(milliseconds: data['duration'] as int) : null,
       price: (data['price'] as num?)?.toDouble(),
       currency: data['currency'] as String? ?? 'RUB',
       description: data['description'] as String?,
       notes: data['notes'] as String?,
       location: data['location'] as String?,
-      contactInfo: data['contactInfo'] != null
-          ? Map<String, dynamic>.from(data['contactInfo'])
-          : null,
+      contactInfo:
+          data['contactInfo'] != null ? Map<String, dynamic>.from(data['contactInfo']) : null,
       specialRequests: data['specialRequests'] as String?,
       reminders: (data['reminders'] as List<dynamic>?)
               ?.map((e) => e is Timestamp ? e.toDate() : DateTime.parse(e.toString()))

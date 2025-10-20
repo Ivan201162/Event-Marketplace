@@ -148,7 +148,7 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              
+
               // Idea details
               Expanded(
                 child: SingleChildScrollView(
@@ -198,9 +198,7 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
                           ),
                         ],
                       ),
-                      
                       const SizedBox(height: 24),
-                      
                       const Text(
                         'Детали идеи',
                         style: TextStyle(
@@ -209,12 +207,10 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
                         ),
                       ),
                       const SizedBox(height: 12),
-                      
                       Text(
                         idea.detailedDescription ?? 'Подробное описание пока не добавлено.',
                         style: const TextStyle(fontSize: 16),
                       ),
-                      
                       if (idea.requiredMaterials.isNotEmpty) ...[
                         const SizedBox(height: 24),
                         const Text(
@@ -228,13 +224,14 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
                         Wrap(
                           spacing: 8,
                           runSpacing: 8,
-                          children: idea.requiredMaterials.map((material) => Chip(
-                            label: Text(material),
-                            backgroundColor: Colors.blue.withOpacity(0.1),
-                          )).toList(),
+                          children: idea.requiredMaterials
+                              .map((material) => Chip(
+                                    label: Text(material),
+                                    backgroundColor: Colors.blue.withOpacity(0.1),
+                                  ))
+                              .toList(),
                         ),
                       ],
-                      
                       if (idea.tags.isNotEmpty) ...[
                         const SizedBox(height: 24),
                         const Text(
@@ -248,15 +245,15 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
                         Wrap(
                           spacing: 8,
                           runSpacing: 8,
-                          children: idea.tags.map((tag) => Chip(
-                            label: Text('#$tag'),
-                            backgroundColor: Colors.orange.withOpacity(0.1),
-                          )).toList(),
+                          children: idea.tags
+                              .map((tag) => Chip(
+                                    label: Text('#$tag'),
+                                    backgroundColor: Colors.orange.withOpacity(0.1),
+                                  ))
+                              .toList(),
                         ),
                       ],
-                      
                       const SizedBox(height: 24),
-                      
                       Row(
                         children: [
                           if (idea.difficulty != null) ...[
@@ -313,7 +310,7 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
                   ),
                 ),
               ),
-              
+
               // Action buttons
               Container(
                 padding: const EdgeInsets.all(16),

@@ -244,9 +244,7 @@ final priceRangeProvider = Provider<PriceRange>((ref) {
         return const PriceRange(min: 0, max: 1000);
       }
 
-      final prices = specialists
-          .map((s) => s.pricePerHour ?? s.hourlyRate)
-          .toList();
+      final prices = specialists.map((s) => s.pricePerHour ?? s.hourlyRate).toList();
       prices.sort();
 
       return PriceRange(

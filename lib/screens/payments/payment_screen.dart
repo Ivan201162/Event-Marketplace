@@ -93,8 +93,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                   Text(
                     'Детали услуги',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                   const SizedBox(height: 12),
                   Row(
@@ -117,8 +117,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                       Text(
                         'Специалист ID: ${widget.specialistId}',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[600],
-                        ),
+                              color: Colors.grey[600],
+                            ),
                       ),
                     ],
                   ),
@@ -137,8 +137,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                   Text(
                     'Сумма к оплате',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                   const SizedBox(height: 12),
                   Row(
@@ -151,8 +151,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                       Text(
                         '${(widget.amount / 100).toStringAsFixed(2)} ₽',
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                              fontWeight: FontWeight.w600,
+                            ),
                       ),
                     ],
                   ),
@@ -163,14 +163,14 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                       Text(
                         'Комиссия платформы (10%):',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[600],
-                        ),
+                              color: Colors.grey[600],
+                            ),
                       ),
                       Text(
                         '${(widget.amount * 0.1 / 100).toStringAsFixed(2)} ₽',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[600],
-                        ),
+                              color: Colors.grey[600],
+                            ),
                       ),
                     ],
                   ),
@@ -181,15 +181,15 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                       Text(
                         'Итого к оплате:',
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       Text(
                         '${(widget.amount / 100).toStringAsFixed(2)} ₽',
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
-                        ),
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                            ),
                       ),
                     ],
                   ),
@@ -208,21 +208,23 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                   Text(
                     'Способ оплаты',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                   const SizedBox(height: 12),
                   ...PaymentMethod.values.map((method) => RadioListTile<PaymentMethod>(
-                    title: Text(method.displayName),
-                    subtitle: _getPaymentMethodSubtitle(method),
-                    value: method,
-                    groupValue: _selectedMethod,
-                    onChanged: _isProcessing ? null : (value) {
-                      setState(() {
-                        _selectedMethod = value!;
-                      });
-                    },
-                  )),
+                        title: Text(method.displayName),
+                        subtitle: _getPaymentMethodSubtitle(method),
+                        value: method,
+                        groupValue: _selectedMethod,
+                        onChanged: _isProcessing
+                            ? null
+                            : (value) {
+                                setState(() {
+                                  _selectedMethod = value!;
+                                });
+                              },
+                      )),
                 ],
               ),
             ),

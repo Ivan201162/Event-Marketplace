@@ -73,9 +73,9 @@ class BookingCard extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Date and time
               Row(
                 children: [
@@ -94,9 +94,9 @@ class BookingCard extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Duration and price
               Row(
                 children: [
@@ -117,7 +117,7 @@ class BookingCard extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               if (booking.notes.isNotEmpty) ...[
                 const SizedBox(height: 12),
                 Container(
@@ -137,9 +137,9 @@ class BookingCard extends StatelessWidget {
                   ),
                 ),
               ],
-              
+
               const SizedBox(height: 12),
-              
+
               // Action buttons
               Row(
                 children: [

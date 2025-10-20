@@ -119,9 +119,7 @@ class Idea {
       videos: List<String>.from(data['videos'] ?? []),
       attachments: List<String>.from(data['attachments'] ?? []),
       budget: (data['budget'] as num?)?.toDouble(),
-      duration: data['duration'] != null
-          ? Duration(milliseconds: data['duration'] as int)
-          : null,
+      duration: data['duration'] != null ? Duration(milliseconds: data['duration'] as int) : null,
       difficulty: data['difficulty'] as int?,
       materials: List<String>.from(data['materials'] ?? []),
       tools: List<String>.from(data['tools'] ?? []),

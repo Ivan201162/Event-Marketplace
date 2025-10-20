@@ -12,14 +12,10 @@ class SpecialistService {
   /// Get all specialists
   Future<List<Specialist>> getAllSpecialists() async {
     try {
-      final snapshot = await _firestore
-          .collection(_collection)
-          .orderBy('rating', descending: true)
-          .get();
+      final snapshot =
+          await _firestore.collection(_collection).orderBy('rating', descending: true).get();
 
-      return snapshot.docs
-          .map((doc) => Specialist.fromFirestore(doc))
-          .toList();
+      return snapshot.docs.map((doc) => Specialist.fromFirestore(doc)).toList();
     } catch (e) {
       debugPrint('Error getting all specialists: $e');
       return [];
@@ -35,9 +31,7 @@ class SpecialistService {
           .orderBy('rating', descending: true)
           .get();
 
-      return snapshot.docs
-          .map((doc) => Specialist.fromFirestore(doc))
-          .toList();
+      return snapshot.docs.map((doc) => Specialist.fromFirestore(doc)).toList();
     } catch (e) {
       debugPrint('Error getting specialists by city: $e');
       return [];
@@ -53,9 +47,7 @@ class SpecialistService {
           .orderBy('rating', descending: true)
           .get();
 
-      return snapshot.docs
-          .map((doc) => Specialist.fromFirestore(doc))
-          .toList();
+      return snapshot.docs.map((doc) => Specialist.fromFirestore(doc)).toList();
     } catch (e) {
       debugPrint('Error getting specialists by specialization: $e');
       return [];
@@ -72,9 +64,7 @@ class SpecialistService {
           .limit(limit)
           .get();
 
-      return snapshot.docs
-          .map((doc) => Specialist.fromFirestore(doc))
-          .toList();
+      return snapshot.docs.map((doc) => Specialist.fromFirestore(doc)).toList();
     } catch (e) {
       debugPrint('Error getting top specialists: $e');
       return [];
@@ -92,9 +82,7 @@ class SpecialistService {
           .limit(limit)
           .get();
 
-      return snapshot.docs
-          .map((doc) => Specialist.fromFirestore(doc))
-          .toList();
+      return snapshot.docs.map((doc) => Specialist.fromFirestore(doc)).toList();
     } catch (e) {
       debugPrint('Error getting top specialists by city: $e');
       return [];
@@ -155,9 +143,8 @@ class SpecialistService {
       }
 
       final snapshot = await query.get();
-      List<Specialist> specialists = snapshot.docs
-          .map((doc) => Specialist.fromFirestore(doc))
-          .toList();
+      List<Specialist> specialists =
+          snapshot.docs.map((doc) => Specialist.fromFirestore(doc)).toList();
 
       // Apply text search filter (client-side for now)
       if (filters.query != null && filters.query!.isNotEmpty) {
@@ -173,7 +160,7 @@ class SpecialistService {
       // Apply services filter (client-side)
       if (filters.services != null && filters.services!.isNotEmpty) {
         specialists = specialists.where((specialist) {
-          return filters.services!.any((service) => 
+          return filters.services!.any((service) =>
               specialist.services.any((s) => s.toLowerCase().contains(service.toLowerCase())));
         }).toList();
       }
@@ -202,9 +189,7 @@ class SpecialistService {
   /// Get available specializations
   Future<List<String>> getSpecializations() async {
     try {
-      final snapshot = await _firestore
-          .collection(_collection)
-          .get();
+      final snapshot = await _firestore.collection(_collection).get();
 
       final specializations = <String>{};
       for (final doc in snapshot.docs) {
@@ -225,9 +210,7 @@ class SpecialistService {
   /// Get available cities
   Future<List<String>> getCities() async {
     try {
-      final snapshot = await _firestore
-          .collection(_collection)
-          .get();
+      final snapshot = await _firestore.collection(_collection).get();
 
       final cities = <String>{};
       for (final doc in snapshot.docs) {
@@ -248,9 +231,7 @@ class SpecialistService {
   /// Get available services
   Future<List<String>> getServices() async {
     try {
-      final snapshot = await _firestore
-          .collection(_collection)
-          .get();
+      final snapshot = await _firestore.collection(_collection).get();
 
       final services = <String>{};
       for (final doc in snapshot.docs) {
@@ -278,9 +259,7 @@ class SpecialistService {
         .collection(_collection)
         .orderBy('rating', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Specialist.fromFirestore(doc))
-            .toList());
+        .map((snapshot) => snapshot.docs.map((doc) => Specialist.fromFirestore(doc)).toList());
   }
 
   /// Stream of specialists by city
@@ -290,8 +269,6 @@ class SpecialistService {
         .where('city', isEqualTo: city)
         .orderBy('rating', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Specialist.fromFirestore(doc))
-            .toList());
+        .map((snapshot) => snapshot.docs.map((doc) => Specialist.fromFirestore(doc)).toList());
   }
 }

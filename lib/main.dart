@@ -6,11 +6,11 @@ import 'core/bootstrap.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   try {
     // Initialize app with bootstrap
     await Bootstrap.initialize();
-    
+
     debugPrint('🚀 Starting EventMarketplaceApp...');
     runApp(
       const ProviderScope(
@@ -20,7 +20,7 @@ void main() async {
   } catch (e, stackTrace) {
     debugPrint('❌ Failed to initialize app: $e');
     debugPrint('Stack trace: $stackTrace');
-    
+
     // Show error screen
     runApp(
       MaterialApp(
@@ -71,7 +71,7 @@ class EventMarketplaceApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
-    
+
     return MaterialApp.router(
       title: 'Event Marketplace',
       theme: ThemeData(

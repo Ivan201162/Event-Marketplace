@@ -378,8 +378,18 @@ class RequestCard extends StatelessWidget {
 
   String _formatDate(DateTime date) {
     final months = [
-      'янв', 'фев', 'мар', 'апр', 'май', 'июн',
-      'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'
+      'янв',
+      'фев',
+      'мар',
+      'апр',
+      'май',
+      'июн',
+      'июл',
+      'авг',
+      'сен',
+      'окт',
+      'ноя',
+      'дек'
     ];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }

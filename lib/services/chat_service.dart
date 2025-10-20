@@ -103,7 +103,8 @@ class ChatService {
   }
 
   /// Get messages for a chat
-  Future<List<Message>> getChatMessages(String chatId, {int limit = 50, DocumentSnapshot? lastDocument}) async {
+  Future<List<Message>> getChatMessages(String chatId,
+      {int limit = 50, DocumentSnapshot? lastDocument}) async {
     try {
       Query query = _firestore
           .collection(_messagesCollection)
@@ -149,7 +150,7 @@ class ChatService {
       );
 
       final docRef = await _firestore.collection(_messagesCollection).add(message.toFirestore());
-      
+
       // Update chat with last message info
       await _firestore.collection(_chatsCollection).doc(chatId).update({
         'lastMessage': text,
@@ -194,7 +195,7 @@ class ChatService {
       );
 
       final docRef = await _firestore.collection(_messagesCollection).add(message.toFirestore());
-      
+
       // Update chat with last message info
       final lastMessageText = text ?? _getMediaMessageText(type);
       await _firestore.collection(_chatsCollection).doc(chatId).update({
@@ -266,7 +267,8 @@ class ChatService {
   }
 
   /// Add member to group chat
-  Future<bool> addMemberToChat(String chatId, String userId, String userName, String? userAvatarUrl) async {
+  Future<bool> addMemberToChat(
+      String chatId, String userId, String userName, String? userAvatarUrl) async {
     try {
       await _firestore.collection(_chatsCollection).doc(chatId).update({
         'members': FieldValue.arrayUnion([userId]),
@@ -329,7 +331,7 @@ class ChatService {
         final chat = Chat.fromFirestore(doc);
         totalUnread += chat.getUnreadCount(userId);
       }
-      
+
       return totalUnread;
     } catch (e) {
       debugPrint('Error getting unread messages count: $e');
@@ -345,9 +347,7 @@ class ChatService {
         .orderBy('updatedAt', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Chat.fromFirestore(doc))
-            .toList());
+        .map((snapshot) => snapshot.docs.map((doc) => Chat.fromFirestore(doc)).toList());
   }
 
   /// Stream of chat messages
@@ -358,9 +358,7 @@ class ChatService {
         .orderBy('createdAt', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Message.fromFirestore(doc))
-            .toList());
+        .map((snapshot) => snapshot.docs.map((doc) => Message.fromFirestore(doc)).toList());
   }
 
   /// Stream of unread messages count

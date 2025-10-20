@@ -85,9 +85,8 @@ class Request extends Equatable {
       location: data['location'],
       requirements: List<String>.from(data['requirements'] ?? []),
       notes: data['notes'],
-      responseDate: data['responseDate'] != null
-          ? (data['responseDate'] as Timestamp).toDate()
-          : null,
+      responseDate:
+          data['responseDate'] != null ? (data['responseDate'] as Timestamp).toDate() : null,
     );
   }
 

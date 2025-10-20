@@ -13,10 +13,8 @@ class PostService {
   /// Get all posts with pagination
   Future<List<Post>> getPosts({int limit = 20, DocumentSnapshot? lastDocument}) async {
     try {
-      Query query = _firestore
-          .collection(_collection)
-          .orderBy('createdAt', descending: true)
-          .limit(limit);
+      Query query =
+          _firestore.collection(_collection).orderBy('createdAt', descending: true).limit(limit);
 
       if (lastDocument != null) {
         query = query.startAfterDocument(lastDocument);
@@ -206,7 +204,7 @@ class PostService {
     try {
       // Get posts from last 7 days with most likes
       final weekAgo = DateTime.now().subtract(const Duration(days: 7));
-      
+
       final snapshot = await _firestore
           .collection(_collection)
           .where('createdAt', isGreaterThan: Timestamp.fromDate(weekAgo))
@@ -233,12 +231,12 @@ class PostService {
           .get();
 
       final posts = snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
-      
+
       // Filter posts that contain the query in text or tags
       return posts.where((post) {
         final searchQuery = query.toLowerCase();
         return (post.text?.toLowerCase().contains(searchQuery) ?? false) ||
-               post.tags.any((tag) => tag.toLowerCase().contains(searchQuery));
+            post.tags.any((tag) => tag.toLowerCase().contains(searchQuery));
       }).toList();
     } catch (e) {
       debugPrint('Error searching posts: $e');
@@ -253,9 +251,7 @@ class PostService {
         .orderBy('createdAt', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Post.fromFirestore(doc))
-            .toList());
+        .map((snapshot) => snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList());
   }
 
   /// Stream of posts by user
@@ -266,9 +262,7 @@ class PostService {
         .orderBy('createdAt', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Post.fromFirestore(doc))
-            .toList());
+        .map((snapshot) => snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList());
   }
 
   /// Get post statistics

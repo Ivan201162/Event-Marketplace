@@ -59,7 +59,7 @@ class Booking extends Equatable {
   /// Create Booking from Firestore document
   factory Booking.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return Booking(
       id: doc.id,
       specialistId: data['specialistId'] ?? '',

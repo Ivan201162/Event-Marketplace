@@ -95,9 +95,8 @@ class GalleryService {
       String? thumbnailUrl;
 
       if (thumbnailPath != null) {
-        final thumbnailRef = storage
-            .ref()
-            .child('gallery/$specialistId/thumbnails/${fileName}_thumb.jpg');
+        final thumbnailRef =
+            storage.ref().child('gallery/$specialistId/thumbnails/${fileName}_thumb.jpg');
         final thumbnailUploadTask = thumbnailRef.putFile(File(thumbnailPath));
         final thumbnailSnapshot = await thumbnailUploadTask;
         thumbnailUrl = await thumbnailSnapshot.ref.getDownloadURL();

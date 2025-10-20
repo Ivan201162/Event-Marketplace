@@ -38,8 +38,7 @@ void main() {
       );
     });
 
-    testWidgets('should display specialist information correctly',
-        (tester) async {
+    testWidgets('should display specialist information correctly', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -86,8 +85,7 @@ void main() {
       expect(find.byIcon(Icons.star), findsWidgets);
     });
 
-    testWidgets('should display verification badge for verified specialist',
-        (tester) async {
+    testWidgets('should display verification badge for verified specialist', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -106,9 +104,7 @@ void main() {
       expect(find.text('✓'), findsOneWidget);
     });
 
-    testWidgets(
-        'should not display verification badge for unverified specialist',
-        (tester) async {
+    testWidgets('should not display verification badge for unverified specialist', (tester) async {
       // Arrange
       final unverifiedSpecialist = testSpecialist!.copyWith(isVerified: false);
 
@@ -150,11 +146,9 @@ void main() {
       expect(find.byIcon(Icons.check_circle), findsOneWidget);
     });
 
-    testWidgets('should display unavailable status for unavailable specialist',
-        (tester) async {
+    testWidgets('should display unavailable status for unavailable specialist', (tester) async {
       // Arrange
-      final unavailableSpecialist =
-          testSpecialist!.copyWith(isAvailable: false);
+      final unavailableSpecialist = testSpecialist!.copyWith(isAvailable: false);
 
       // Act
       await tester.pumpWidget(
@@ -240,8 +234,7 @@ void main() {
       expect(find.text('6000 - 36000 ₽'), findsOneWidget);
     });
 
-    testWidgets('should display hourly rate when no min/max booking hours',
-        (tester) async {
+    testWidgets('should display hourly rate when no min/max booking hours', (tester) async {
       // Arrange
       final specialistWithoutHours = testSpecialist!.copyWith();
 

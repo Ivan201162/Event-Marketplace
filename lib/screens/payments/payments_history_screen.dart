@@ -218,8 +218,8 @@ class _PaymentsHistoryScreenState extends ConsumerState<PaymentsHistoryScreen>
           Text(
             subtitle,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey,
-            ),
+                  color: Colors.grey,
+                ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -239,8 +239,8 @@ class _PaymentsHistoryScreenState extends ConsumerState<PaymentsHistoryScreen>
           Text(
             error.toString(),
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Colors.grey,
-            ),
+                  color: Colors.grey,
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
@@ -319,9 +319,9 @@ class PaymentDetailsSheet extends StatelessWidget {
                           Text(
                             payment.formattedAmount,
                             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                              color: _getStatusColor(payment.status),
-                              fontWeight: FontWeight.bold,
-                            ),
+                                  color: _getStatusColor(payment.status),
+                                  fontWeight: FontWeight.bold,
+                                ),
                           ),
                         ],
                       ),

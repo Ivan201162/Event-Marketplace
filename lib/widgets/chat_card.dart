@@ -123,9 +123,7 @@ class ChatCard extends StatelessWidget {
         CircleAvatar(
           radius: 24,
           backgroundColor: Colors.grey[200],
-          backgroundImage: avatarUrl != null
-              ? CachedNetworkImageProvider(avatarUrl)
-              : null,
+          backgroundImage: avatarUrl != null ? CachedNetworkImageProvider(avatarUrl) : null,
           child: avatarUrl == null
               ? Icon(
                   isGroup ? Icons.group : Icons.person,

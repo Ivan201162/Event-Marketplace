@@ -93,7 +93,7 @@ class PortfolioGrid extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               // Overlay with index
               Positioned(
                 top: 8,
@@ -114,7 +114,7 @@ class PortfolioGrid extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               // Hover effect
               Positioned.fill(
                 child: Container(

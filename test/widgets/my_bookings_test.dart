@@ -71,8 +71,7 @@ void main() {
       expect(find.byIcon(Icons.filter_list), findsOneWidget);
     });
 
-    testWidgets('should show filter dialog when filter button tapped',
-        (tester) async {
+    testWidgets('should show filter dialog when filter button tapped', (tester) async {
       // Arrange
       await tester.pumpWidget(
         const ProviderScope(
@@ -96,8 +95,7 @@ void main() {
       expect(find.text('Отклонены'), findsOneWidget);
     });
 
-    testWidgets('should show booking details when booking card tapped',
-        (tester) async {
+    testWidgets('should show booking details when booking card tapped', (tester) async {
       // Arrange
       await tester.pumpWidget(
         const ProviderScope(
@@ -120,8 +118,7 @@ void main() {
       }
     });
 
-    testWidgets('should show cancel dialog when cancel button tapped',
-        (tester) async {
+    testWidgets('should show cancel dialog when cancel button tapped', (tester) async {
       // Arrange
       await tester.pumpWidget(
         const ProviderScope(
@@ -150,8 +147,7 @@ void main() {
       }
     });
 
-    testWidgets('should show payment dialog when payment button tapped',
-        (tester) async {
+    testWidgets('should show payment dialog when payment button tapped', (tester) async {
       // Arrange
       await tester.pumpWidget(
         const ProviderScope(
@@ -206,8 +202,7 @@ void main() {
       expect(find.text('Мои заявки'), findsOneWidget);
     });
 
-    testWidgets('should display specialist information correctly',
-        (tester) async {
+    testWidgets('should display specialist information correctly', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         const ProviderScope(
@@ -461,8 +456,7 @@ void main() {
       expect(find.text('Мои заявки'), findsOneWidget);
     });
 
-    testWidgets('should display payment transaction ID correctly',
-        (tester) async {
+    testWidgets('should display payment transaction ID correctly', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         const ProviderScope(
@@ -478,8 +472,7 @@ void main() {
       expect(find.text('Мои заявки'), findsOneWidget);
     });
 
-    testWidgets('should display payment creation date correctly',
-        (tester) async {
+    testWidgets('should display payment creation date correctly', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         const ProviderScope(

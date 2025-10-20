@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
-
 /// Transaction type enum
 enum TransactionType {
   income('Доход'),
@@ -54,7 +53,7 @@ class Transaction extends Equatable {
   /// Create Transaction from Firestore document
   factory Transaction.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return Transaction(
       id: doc.id,
       userId: data['userId'] ?? '',
@@ -193,7 +192,7 @@ class Transaction extends Equatable {
   String get formattedDate {
     final now = DateTime.now();
     final difference = now.difference(createdAt);
-    
+
     if (difference.inDays == 0) {
       return 'Сегодня';
     } else if (difference.inDays == 1) {

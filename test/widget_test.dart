@@ -7,16 +7,14 @@ void main() {
   group('Event Marketplace App Tests', () {
     testWidgets('App should start without crashing', (tester) async {
       // Build our app and trigger a frame.
-      await tester
-          .pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
+      await tester.pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
 
       // Verify that the app starts without crashing
       expect(find.byType(MaterialApp), findsOneWidget);
     });
 
     testWidgets('Navigation should work correctly', (tester) async {
-      await tester
-          .pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
+      await tester.pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
 
       // Wait for the app to load
       await tester.pumpAndSettle();
@@ -28,8 +26,7 @@ void main() {
 
   group('Back Button Tests', () {
     testWidgets('Back button should work correctly', (tester) async {
-      await tester
-          .pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
+      await tester.pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
 
       // Wait for the app to load
       await tester.pumpAndSettle();
@@ -42,8 +39,7 @@ void main() {
 
   group('Profile Tests', () {
     testWidgets('Specialist profile should display correctly', (tester) async {
-      await tester
-          .pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
+      await tester.pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
 
       // Wait for the app to load
       await tester.pumpAndSettle();
@@ -53,8 +49,7 @@ void main() {
     });
 
     testWidgets('Customer profile should display correctly', (tester) async {
-      await tester
-          .pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
+      await tester.pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
 
       // Wait for the app to load
       await tester.pumpAndSettle();
@@ -66,8 +61,7 @@ void main() {
 
   group('Reviews Tests', () {
     testWidgets('Review system should work correctly', (tester) async {
-      await tester
-          .pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
+      await tester.pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
 
       // Wait for the app to load
       await tester.pumpAndSettle();

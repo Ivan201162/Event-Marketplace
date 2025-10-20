@@ -9,7 +9,7 @@ import '../../widgets/profile_edit_dialog.dart';
 /// User profile screen with editing capabilities
 class UserProfileScreen extends ConsumerStatefulWidget {
   final String? userId;
-  
+
   const UserProfileScreen({
     super.key,
     this.userId,
@@ -69,19 +69,19 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
               children: [
                 // Profile Header
                 _buildProfileHeader(user),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Profile Info
                 _buildProfileInfo(user),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Statistics
                 _buildStatistics(user),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Actions
                 if (isOwnProfile) _buildActions(),
               ],
@@ -169,9 +169,9 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                 ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Name and Status
           Text(
             user.name,
@@ -181,9 +181,9 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
               color: Colors.white,
             ),
           ),
-          
+
           const SizedBox(height: 8),
-          
+
           Text(
             user.city,
             style: const TextStyle(
@@ -191,9 +191,9 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
               color: Colors.white70,
             ),
           ),
-          
+
           const SizedBox(height: 8),
-          
+
           // User Type Badge
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -228,36 +228,30 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            
             const SizedBox(height: 16),
-            
             _buildInfoRow(
               icon: Icons.person,
               label: 'Имя',
               value: user.name,
               onTap: _isEditing ? () => _editField('name', user.name) : null,
             ),
-            
             _buildInfoRow(
               icon: Icons.location_city,
               label: 'Город',
               value: user.city,
               onTap: _isEditing ? () => _editField('city', user.city) : null,
             ),
-            
             _buildInfoRow(
               icon: Icons.category,
               label: 'Тип',
               value: user.type.displayName,
               onTap: _isEditing ? () => _editField('type', user.type.name) : null,
             ),
-            
             _buildInfoRow(
               icon: Icons.calendar_today,
               label: 'Дата регистрации',
               value: _formatDate(user.createdAt),
             ),
-            
             if (user.status != null)
               _buildInfoRow(
                 icon: Icons.info,
@@ -337,9 +331,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            
             const SizedBox(height: 16),
-            
             Row(
               children: [
                 Expanded(
@@ -412,9 +404,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            
             const SizedBox(height: 16),
-            
             _buildActionButton(
               icon: Icons.favorite,
               label: 'Избранные специалисты',
@@ -425,7 +415,6 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                 );
               },
             ),
-            
             _buildActionButton(
               icon: Icons.history,
               label: 'История заказов',
@@ -436,7 +425,6 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                 );
               },
             ),
-            
             _buildActionButton(
               icon: Icons.payment,
               label: 'Способы оплаты',
@@ -447,7 +435,6 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                 );
               },
             ),
-            
             _buildActionButton(
               icon: Icons.help,
               label: 'Помощь и поддержка',

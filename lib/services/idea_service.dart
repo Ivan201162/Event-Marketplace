@@ -13,10 +13,8 @@ class IdeaService {
   /// Get all ideas with pagination
   Future<List<Idea>> getIdeas({int limit = 20, DocumentSnapshot? lastDocument}) async {
     try {
-      Query query = _firestore
-          .collection(_collection)
-          .orderBy('createdAt', descending: true)
-          .limit(limit);
+      Query query =
+          _firestore.collection(_collection).orderBy('createdAt', descending: true).limit(limit);
 
       if (lastDocument != null) {
         query = query.startAfterDocument(lastDocument);
@@ -248,14 +246,14 @@ class IdeaService {
           .get();
 
       final ideas = snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList();
-      
+
       // Filter ideas that contain the query in title, description, or tags
       return ideas.where((idea) {
         final searchQuery = query.toLowerCase();
         return idea.title.toLowerCase().contains(searchQuery) ||
-               idea.shortDesc.toLowerCase().contains(searchQuery) ||
-               idea.tags.any((tag) => tag.toLowerCase().contains(searchQuery)) ||
-               (idea.category?.toLowerCase().contains(searchQuery) ?? false);
+            idea.shortDesc.toLowerCase().contains(searchQuery) ||
+            idea.tags.any((tag) => tag.toLowerCase().contains(searchQuery)) ||
+            (idea.category?.toLowerCase().contains(searchQuery) ?? false);
       }).toList();
     } catch (e) {
       debugPrint('Error searching ideas: $e');
@@ -268,7 +266,7 @@ class IdeaService {
     try {
       final snapshot = await _firestore.collection(_collection).get();
       final categories = <String>{};
-      
+
       for (final doc in snapshot.docs) {
         final data = doc.data();
         final category = data['category'] as String?;
@@ -276,7 +274,7 @@ class IdeaService {
           categories.add(category);
         }
       }
-      
+
       return categories.toList()..sort();
     } catch (e) {
       debugPrint('Error getting categories: $e');
@@ -289,7 +287,7 @@ class IdeaService {
     try {
       final snapshot = await _firestore.collection(_collection).get();
       final tags = <String>{};
-      
+
       for (final doc in snapshot.docs) {
         final data = doc.data();
         final ideaTags = data['tags'] as List<dynamic>?;
@@ -301,7 +299,7 @@ class IdeaService {
           }
         }
       }
-      
+
       return tags.toList()..sort();
     } catch (e) {
       debugPrint('Error getting tags: $e');
@@ -333,9 +331,7 @@ class IdeaService {
         .orderBy('createdAt', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Idea.fromFirestore(doc))
-            .toList());
+        .map((snapshot) => snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList());
   }
 
   /// Stream of ideas by category
@@ -346,9 +342,7 @@ class IdeaService {
         .orderBy('createdAt', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Idea.fromFirestore(doc))
-            .toList());
+        .map((snapshot) => snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList());
   }
 
   /// Get idea statistics

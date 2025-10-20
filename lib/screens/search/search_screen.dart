@@ -30,7 +30,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     final newFilters = currentFilters.copyWith(
       query: _searchController.text.trim().isEmpty ? null : _searchController.text.trim(),
     );
-    
+
     ref.read(searchFiltersProvider.notifier).state = newFilters;
     setState(() => _isSearching = true);
   }

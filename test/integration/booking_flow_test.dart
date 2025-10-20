@@ -7,8 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Booking Flow Integration Tests', () {
-    testWidgets('Complete booking flow from search to confirmation',
-        (tester) async {
+    testWidgets('Complete booking flow from search to confirmation', (tester) async {
       // Запускаем приложение
       await tester.pumpWidget(
         const ProviderScope(

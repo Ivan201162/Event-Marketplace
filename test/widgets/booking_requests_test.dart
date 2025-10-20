@@ -58,8 +58,7 @@ void main() {
       expect(find.text('Повторить'), findsOneWidget);
     });
 
-    testWidgets('should display booking requests when available',
-        (tester) async {
+    testWidgets('should display booking requests when available', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         const ProviderScope(
@@ -91,8 +90,7 @@ void main() {
       expect(find.byIcon(Icons.filter_list), findsOneWidget);
     });
 
-    testWidgets('should show filter dialog when filter button tapped',
-        (tester) async {
+    testWidgets('should show filter dialog when filter button tapped', (tester) async {
       // Arrange
       await tester.pumpWidget(
         const ProviderScope(
@@ -116,8 +114,7 @@ void main() {
       expect(find.text('Отклонены'), findsOneWidget);
     });
 
-    testWidgets('should show booking details when booking card tapped',
-        (tester) async {
+    testWidgets('should show booking details when booking card tapped', (tester) async {
       // Arrange
       await tester.pumpWidget(
         const ProviderScope(
@@ -140,8 +137,7 @@ void main() {
       }
     });
 
-    testWidgets('should show confirm dialog when confirm button tapped',
-        (tester) async {
+    testWidgets('should show confirm dialog when confirm button tapped', (tester) async {
       // Arrange
       await tester.pumpWidget(
         const ProviderScope(
@@ -170,8 +166,7 @@ void main() {
       }
     });
 
-    testWidgets('should show reject dialog when reject button tapped',
-        (tester) async {
+    testWidgets('should show reject dialog when reject button tapped', (tester) async {
       // Arrange
       await tester.pumpWidget(
         const ProviderScope(
@@ -232,8 +227,7 @@ void main() {
       expect(find.text('Заявки на бронирование'), findsOneWidget);
     });
 
-    testWidgets('should display customer information correctly',
-        (tester) async {
+    testWidgets('should display customer information correctly', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         const ProviderScope(
@@ -297,8 +291,7 @@ void main() {
       expect(find.text('Заявки на бронирование'), findsOneWidget);
     });
 
-    testWidgets('should handle booking status updates correctly',
-        (tester) async {
+    testWidgets('should handle booking status updates correctly', (tester) async {
       // Arrange
       await tester.pumpWidget(
         const ProviderScope(

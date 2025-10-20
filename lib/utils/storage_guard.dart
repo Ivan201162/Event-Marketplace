@@ -13,4 +13,3 @@ T? withStorage<T>(T Function(FirebaseStorage storage) action) {
   if (storage == null) return null;
   return action(storage);
 }
-

@@ -147,8 +147,7 @@ void main() {
       });
 
       test('should validate portfolio descriptions', () {
-        const validDescription =
-            'This is a detailed description of the work performed.';
+        const validDescription = 'This is a detailed description of the work performed.';
         const invalidDescription = 'Short';
 
         expect(_isValidPortfolioDescription(validDescription), isTrue);
@@ -419,8 +418,7 @@ bool _isValidPortfolioImage(String? imageUrl) {
   if (imageUrl == null || imageUrl.isEmpty) return false;
 
   final validExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-  final hasValidExtension =
-      validExtensions.any((ext) => imageUrl.toLowerCase().endsWith(ext));
+  final hasValidExtension = validExtensions.any((ext) => imageUrl.toLowerCase().endsWith(ext));
 
   return imageUrl.startsWith('http') && hasValidExtension;
 }
@@ -430,10 +428,8 @@ bool _isValidPortfolioVideo(String? videoUrl) {
   if (videoUrl == null || videoUrl.isEmpty) return false;
 
   final validExtensions = ['.mp4', '.mov', '.avi', '.webm'];
-  final hasValidExtension =
-      validExtensions.any((ext) => videoUrl.toLowerCase().endsWith(ext));
-  final isYouTubeUrl =
-      videoUrl.contains('youtube.com') || videoUrl.contains('youtu.be');
+  final hasValidExtension = validExtensions.any((ext) => videoUrl.toLowerCase().endsWith(ext));
+  final isYouTubeUrl = videoUrl.contains('youtube.com') || videoUrl.contains('youtu.be');
 
   return (videoUrl.startsWith('http') && hasValidExtension) || isYouTubeUrl;
 }
@@ -493,8 +489,7 @@ bool _isValidRatingValue(int? rating) {
 /// Helper function to check review submission timing
 bool _canSubmitReview(DateTime? bookingDate, DateTime? serviceDate) {
   if (bookingDate == null || serviceDate == null) return false;
-  return bookingDate.isAfter(serviceDate) &&
-      DateTime.now().difference(serviceDate).inDays <= 30;
+  return bookingDate.isAfter(serviceDate) && DateTime.now().difference(serviceDate).inDays <= 30;
 }
 
 /// Helper function to check service area
@@ -508,8 +503,7 @@ bool _isWithinServiceArea(
 }
 
 /// Helper function to calculate travel fee
-double _calculateTravelFee(double distance, double baseRate) =>
-    distance * baseRate;
+double _calculateTravelFee(double distance, double baseRate) => distance * baseRate;
 
 /// Helper function to calculate commission
 double _calculateCommission(double servicePrice, double commissionRate) =>

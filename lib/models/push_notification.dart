@@ -74,7 +74,7 @@ class PushNotification extends Equatable {
   /// Create PushNotification from Firestore document
   factory PushNotification.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return PushNotification(
       id: doc.id,
       userId: data['userId'] ?? '',
@@ -97,18 +97,10 @@ class PushNotification extends Equatable {
       read: data['read'] ?? false,
       delivered: data['delivered'] ?? false,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      readAt: data['readAt'] != null 
-          ? (data['readAt'] as Timestamp).toDate() 
-          : null,
-      deliveredAt: data['deliveredAt'] != null 
-          ? (data['deliveredAt'] as Timestamp).toDate() 
-          : null,
-      scheduledAt: data['scheduledAt'] != null 
-          ? (data['scheduledAt'] as Timestamp).toDate() 
-          : null,
-      expiresAt: data['expiresAt'] != null 
-          ? (data['expiresAt'] as Timestamp).toDate() 
-          : null,
+      readAt: data['readAt'] != null ? (data['readAt'] as Timestamp).toDate() : null,
+      deliveredAt: data['deliveredAt'] != null ? (data['deliveredAt'] as Timestamp).toDate() : null,
+      scheduledAt: data['scheduledAt'] != null ? (data['scheduledAt'] as Timestamp).toDate() : null,
+      expiresAt: data['expiresAt'] != null ? (data['expiresAt'] as Timestamp).toDate() : null,
     );
   }
 
@@ -221,7 +213,7 @@ class PushNotification extends Equatable {
   String get formattedDate {
     final now = DateTime.now();
     final difference = now.difference(createdAt);
-    
+
     if (difference.inDays == 0) {
       return 'Сегодня';
     } else if (difference.inDays == 1) {

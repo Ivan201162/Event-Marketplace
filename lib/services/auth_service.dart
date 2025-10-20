@@ -11,18 +11,15 @@ import '../models/app_user.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  
+
   /// Stream of current user
   Stream<AppUser?> get currentUserStream {
     return _auth.authStateChanges().asyncMap((User? firebaseUser) async {
       if (firebaseUser == null) return null;
-      
+
       try {
-        final userDoc = await _firestore
-            .collection('users')
-            .doc(firebaseUser.uid)
-            .get();
-            
+        final userDoc = await _firestore.collection('users').doc(firebaseUser.uid).get();
+
         if (userDoc.exists) {
           return AppUser.fromFirestore(userDoc);
         } else {
@@ -35,18 +32,15 @@ class AuthService {
       }
     });
   }
-  
+
   /// Get current user
   Future<AppUser?> get currentUser async {
     final firebaseUser = _auth.currentUser;
     if (firebaseUser == null) return null;
-    
+
     try {
-      final userDoc = await _firestore
-          .collection('users')
-          .doc(firebaseUser.uid)
-          .get();
-          
+      final userDoc = await _firestore.collection('users').doc(firebaseUser.uid).get();
+
       if (userDoc.exists) {
         return AppUser.fromFirestore(userDoc);
       } else {
@@ -57,7 +51,7 @@ class AuthService {
       return null;
     }
   }
-  
+
   /// Sign in with email and password
   Future<AppUser?> signInWithEmailAndPassword({
     required String email,
@@ -68,7 +62,7 @@ class AuthService {
         email: email,
         password: password,
       );
-      
+
       if (credential.user != null) {
         return await currentUser;
       }
@@ -81,7 +75,7 @@ class AuthService {
       rethrow;
     }
   }
-  
+
   /// Check if email is already registered
   Future<bool> isEmailRegistered(String email) async {
     try {
@@ -112,7 +106,7 @@ class AuthService {
     try {
       // Предварительная проверка существования email
       final signInMethods = await getSignInMethodsForEmail(email);
-      
+
       if (signInMethods.isNotEmpty) {
         // Email уже зарегистрирован
         if (signInMethods.contains('google.com')) {
@@ -123,7 +117,8 @@ class AuthService {
         } else if (signInMethods.contains('phone')) {
           throw FirebaseAuthException(
             code: 'email-already-in-use-phone',
-            message: 'Этот email уже используется с номером телефона. Попробуйте войти или восстановить пароль.',
+            message:
+                'Этот email уже используется с номером телефона. Попробуйте войти или восстановить пароль.',
           );
         } else {
           throw FirebaseAuthException(
@@ -153,11 +148,11 @@ class AuthService {
         email: email,
         password: password,
       );
-      
+
       if (credential.user != null) {
         // Update display name
         await credential.user!.updateDisplayName(name);
-        
+
         // Create user document
         return await _createUserDocument(credential.user!, name: name);
       }
@@ -170,7 +165,7 @@ class AuthService {
       rethrow;
     }
   }
-  
+
   /// Sign in with phone number
   Future<void> signInWithPhoneNumber({
     required String phoneNumber,
@@ -198,7 +193,7 @@ class AuthService {
       onError(e.toString());
     }
   }
-  
+
   /// Verify phone code
   Future<AppUser?> verifyPhoneCode({
     required String verificationId,
@@ -209,9 +204,9 @@ class AuthService {
         verificationId: verificationId,
         smsCode: code,
       );
-      
+
       final userCredential = await _auth.signInWithCredential(credential);
-      
+
       if (userCredential.user != null) {
         return await currentUser;
       }
@@ -224,8 +219,6 @@ class AuthService {
       rethrow;
     }
   }
-  
-
 
   /// Sign in with Google
   Future<AppUser?> signInWithGoogle() async {
@@ -281,7 +274,7 @@ class AuthService {
       rethrow;
     }
   }
-  
+
   /// Update user profile
   Future<void> updateUserProfile({
     String? name,
@@ -292,23 +285,20 @@ class AuthService {
   }) async {
     final user = _auth.currentUser;
     if (user == null) throw Exception('No authenticated user');
-    
+
     try {
       final updateData = <String, dynamic>{
         'updatedAt': Timestamp.now(),
       };
-      
+
       if (name != null) updateData['name'] = name;
       if (city != null) updateData['city'] = city;
       if (status != null) updateData['status'] = status;
       if (avatarUrl != null) updateData['avatarUrl'] = avatarUrl;
       if (type != null) updateData['type'] = type.name;
-      
-      await _firestore
-          .collection('users')
-          .doc(user.uid)
-          .update(updateData);
-          
+
+      await _firestore.collection('users').doc(user.uid).update(updateData);
+
       // Update Firebase Auth display name if name changed
       if (name != null && user.displayName != name) {
         await user.updateDisplayName(name);
@@ -318,17 +308,14 @@ class AuthService {
       rethrow;
     }
   }
-  
+
   /// Set user online status
   Future<void> setUserOnlineStatus(bool isOnline) async {
     final user = _auth.currentUser;
     if (user == null) return;
-    
+
     try {
-      await _firestore
-          .collection('users')
-          .doc(user.uid)
-          .update({
+      await _firestore.collection('users').doc(user.uid).update({
         'isOnline': isOnline,
         'updatedAt': Timestamp.now(),
       });
@@ -336,7 +323,7 @@ class AuthService {
       debugPrint('Error setting online status: $e');
     }
   }
-  
+
   /// Send password reset email
   Future<void> sendPasswordReset(String email) async {
     try {
@@ -350,19 +337,21 @@ class AuthService {
 
       // Проверяем, существует ли email
       final signInMethods = await getSignInMethodsForEmail(email);
-      
+
       if (signInMethods.isEmpty) {
         throw FirebaseAuthException(
           code: 'user-not-found',
-          message: 'Пользователь с таким email не найден. Проверьте правильность email или зарегистрируйтесь.',
+          message:
+              'Пользователь с таким email не найден. Проверьте правильность email или зарегистрируйтесь.',
         );
       }
-      
+
       // Проверяем, не зарегистрирован ли через Google
       if (signInMethods.contains('google.com')) {
         throw FirebaseAuthException(
           code: 'google-account',
-          message: 'Этот email зарегистрирован через Google. Войдите через Google или используйте другой email.',
+          message:
+              'Этот email зарегистрирован через Google. Войдите через Google или используйте другой email.',
         );
       }
 
@@ -370,10 +359,11 @@ class AuthService {
       if (signInMethods.contains('phone')) {
         throw FirebaseAuthException(
           code: 'phone-account',
-          message: 'Этот email зарегистрирован через номер телефона. Войдите через телефон или используйте другой email.',
+          message:
+              'Этот email зарегистрирован через номер телефона. Войдите через телефон или используйте другой email.',
         );
       }
-      
+
       await _auth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
       debugPrint('Error sending password reset: ${e.code} - ${e.message}');
@@ -399,7 +389,7 @@ class AuthService {
       rethrow;
     }
   }
-  
+
   /// Create user document in Firestore
   Future<AppUser> _createUserDocument(
     User firebaseUser, {
@@ -416,13 +406,10 @@ class AuthService {
       updatedAt: now,
       type: isGuest ? UserType.physical : UserType.physical,
     );
-    
+
     try {
-      await _firestore
-          .collection('users')
-          .doc(firebaseUser.uid)
-          .set(user.toFirestore());
-          
+      await _firestore.collection('users').doc(firebaseUser.uid).set(user.toFirestore());
+
       return user;
     } catch (e) {
       debugPrint('Error creating user document: $e');

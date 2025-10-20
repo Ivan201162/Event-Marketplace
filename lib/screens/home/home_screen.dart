@@ -42,21 +42,22 @@ class HomeScreen extends ConsumerWidget {
                 // User profile card
                 _buildUserProfileCard(context, user),
                 const SizedBox(height: 24),
-                
+
                 // Search section
                 _buildSearchSection(context),
                 const SizedBox(height: 24),
-                
+
                 // Categories section
                 _buildCategoriesSection(context, ref),
                 const SizedBox(height: 24),
-                
+
                 // Top specialists section
                 _buildTopSpecialistsSection(context, ref, 'Топ-10 недели по России', true),
                 const SizedBox(height: 24),
-                _buildTopSpecialistsSection(context, ref, 'Топ-10 недели по городу ${user.city ?? ''}', false),
+                _buildTopSpecialistsSection(
+                    context, ref, 'Топ-10 недели по городу ${user.city ?? ''}', false),
                 const SizedBox(height: 24),
-                
+
                 // Quick actions
                 _buildQuickActions(context),
               ],
@@ -81,12 +82,8 @@ class HomeScreen extends ConsumerWidget {
           children: [
             CircleAvatar(
               radius: 30,
-              backgroundImage: user.avatarUrl != null
-                  ? NetworkImage(user.avatarUrl!)
-                  : null,
-              child: user.avatarUrl == null
-                  ? const Icon(Icons.person, size: 30)
-                  : null,
+              backgroundImage: user.avatarUrl != null ? NetworkImage(user.avatarUrl!) : null,
+              child: user.avatarUrl == null ? const Icon(Icons.person, size: 30) : null,
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -137,7 +134,7 @@ class HomeScreen extends ConsumerWidget {
 
   Widget _buildSearchSection(BuildContext context) {
     final TextEditingController searchController = TextEditingController();
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -211,7 +208,7 @@ class HomeScreen extends ConsumerWidget {
                 final specialization = specializations[index];
                 final iconData = _getSpecializationIcon(specialization);
                 final color = _getSpecializationColor(specialization);
-                
+
                 return GestureDetector(
                   onTap: () {
                     context.push('/search?specialization=${Uri.encodeComponent(specialization)}');
@@ -325,10 +322,12 @@ class HomeScreen extends ConsumerWidget {
     }
   }
 
-  Widget _buildTopSpecialistsSection(BuildContext context, WidgetRef ref, String title, bool isCountryWide) {
-    final specialistsAsync = isCountryWide 
+  Widget _buildTopSpecialistsSection(
+      BuildContext context, WidgetRef ref, String title, bool isCountryWide) {
+    final specialistsAsync = isCountryWide
         ? ref.watch(topSpecialistsRuProvider)
-        : ref.watch(topSpecialistsCityProvider(ref.watch(currentUserProvider).value?.city ?? 'Москва'));
+        : ref.watch(
+            topSpecialistsCityProvider(ref.watch(currentUserProvider).value?.city ?? 'Москва'));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

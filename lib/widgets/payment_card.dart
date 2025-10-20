@@ -48,15 +48,15 @@ class PaymentCard extends StatelessWidget {
                         Text(
                           payment.description,
                           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                                fontWeight: FontWeight.w600,
+                              ),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           payment.type.displayName,
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey[600],
-                          ),
+                                color: Colors.grey[600],
+                              ),
                         ),
                       ],
                     ),
@@ -67,9 +67,9 @@ class PaymentCard extends StatelessWidget {
                       Text(
                         payment.formattedAmount,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: _getStatusColor(payment.status),
-                          fontWeight: FontWeight.bold,
-                        ),
+                              color: _getStatusColor(payment.status),
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       const SizedBox(height: 2),
                       Container(
@@ -104,8 +104,8 @@ class PaymentCard extends StatelessWidget {
                   Text(
                     payment.method.displayName,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                          color: Colors.grey[600],
+                        ),
                   ),
                   const Spacer(),
                   Icon(
@@ -117,8 +117,8 @@ class PaymentCard extends StatelessWidget {
                   Text(
                     _formatDateTime(payment.createdAt),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                          color: Colors.grey[600],
+                        ),
                   ),
                 ],
               ),
@@ -174,8 +174,8 @@ class PaymentCard extends StatelessWidget {
                     Text(
                       'Обработано за ${payment.formattedDuration}',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[600],
-                      ),
+                            color: Colors.grey[600],
+                          ),
                     ),
                   ],
                 ),

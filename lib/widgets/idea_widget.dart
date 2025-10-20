@@ -425,7 +425,8 @@ class IdeaListTile extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: ColorUtils.getCategoryColorFromColor(idea.categoryColor is Color ? idea.categoryColor as Color : Colors.grey)
+                    color: ColorUtils.getCategoryColorFromColor(
+                            idea.categoryColor is Color ? idea.categoryColor as Color : Colors.grey)
                         .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),

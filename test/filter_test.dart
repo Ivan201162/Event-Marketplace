@@ -86,9 +86,7 @@ void main() {
       // В реальном тесте нужно будет использовать моки
 
       // Тестируем фильтр по минимальной цене 4000
-      final filtered = testSpecialists
-          .where((specialist) => specialist.price >= 4000)
-          .toList();
+      final filtered = testSpecialists.where((specialist) => specialist.price >= 4000).toList();
 
       expect(filtered.length, 2);
       expect(filtered.every((s) => s.price >= 4000), true);
@@ -96,9 +94,7 @@ void main() {
 
     test('Фильтр по максимальной цене', () async {
       // Тестируем фильтр по максимальной цене 3500
-      final filtered = testSpecialists
-          .where((specialist) => specialist.price <= 3500)
-          .toList();
+      final filtered = testSpecialists.where((specialist) => specialist.price <= 3500).toList();
 
       expect(filtered.length, 1);
       expect(filtered.first.price, 3000);
@@ -106,9 +102,7 @@ void main() {
 
     test('Фильтр по минимальному рейтингу', () async {
       // Тестируем фильтр по минимальному рейтингу 4.5
-      final filtered = testSpecialists
-          .where((specialist) => specialist.rating >= 4.5)
-          .toList();
+      final filtered = testSpecialists.where((specialist) => specialist.rating >= 4.5).toList();
 
       expect(filtered.length, 2);
       expect(filtered.every((s) => s.rating >= 4.5), true);
@@ -121,8 +115,7 @@ void main() {
       final filtered = testSpecialists
           .where(
             (specialist) =>
-                !specialist.isDateBusy(testDate) &&
-                specialist.isAvailableOnDate(testDate),
+                !specialist.isDateBusy(testDate) && specialist.isAvailableOnDate(testDate),
           )
           .toList();
 
@@ -133,8 +126,7 @@ void main() {
       // Тестируем комбинированный фильтр
       final filtered = testSpecialists
           .where(
-            (specialist) =>
-                specialist.price >= 4000 && specialist.rating >= 4.5,
+            (specialist) => specialist.price >= 4000 && specialist.rating >= 4.5,
           )
           .toList();
 
@@ -146,9 +138,8 @@ void main() {
       final busyDate = DateTime.now().add(const Duration(days: 4));
 
       // Тестируем фильтр по занятым датам
-      final filtered = testSpecialists
-          .where((specialist) => !specialist.isDateBusy(busyDate))
-          .toList();
+      final filtered =
+          testSpecialists.where((specialist) => !specialist.isDateBusy(busyDate)).toList();
 
       expect(
         filtered.length,

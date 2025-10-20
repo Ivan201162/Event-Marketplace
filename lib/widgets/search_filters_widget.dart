@@ -250,24 +250,27 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
 
   Widget _buildServicesFilter(List<String> services) {
     return Column(
-      children: services.take(10).map((service) => CheckboxListTile(
-        title: Text(service),
-        value: _currentFilters.services?.contains(service) ?? false,
-        onChanged: (value) {
-          setState(() {
-            final currentServices = _currentFilters.services ?? [];
-            if (value == true) {
-              _currentFilters = _currentFilters.copyWith(
-                services: [...currentServices, service],
-              );
-            } else {
-              _currentFilters = _currentFilters.copyWith(
-                services: currentServices.where((s) => s != service).toList(),
-              );
-            }
-          });
-        },
-      )).toList(),
+      children: services
+          .take(10)
+          .map((service) => CheckboxListTile(
+                title: Text(service),
+                value: _currentFilters.services?.contains(service) ?? false,
+                onChanged: (value) {
+                  setState(() {
+                    final currentServices = _currentFilters.services ?? [];
+                    if (value == true) {
+                      _currentFilters = _currentFilters.copyWith(
+                        services: [...currentServices, service],
+                      );
+                    } else {
+                      _currentFilters = _currentFilters.copyWith(
+                        services: currentServices.where((s) => s != service).toList(),
+                      );
+                    }
+                  });
+                },
+              ))
+          .toList(),
     );
   }
 

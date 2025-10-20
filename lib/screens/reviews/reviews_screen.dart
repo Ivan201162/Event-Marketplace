@@ -21,8 +21,7 @@ class ReviewsScreen extends ConsumerStatefulWidget {
   ConsumerState<ReviewsScreen> createState() => _ReviewsScreenState();
 }
 
-class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
-    with SingleTickerProviderStateMixin {
+class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   String _sortBy = 'newest';
   int _filterRating = 0; // 0 = all, 1-5 = specific rating
@@ -84,7 +83,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
     return reviewsAsync.when(
       data: (reviews) {
         final filteredReviews = _filterAndSortReviews(reviews);
-        
+
         if (filteredReviews.isEmpty) {
           return _buildEmptyState();
         }
@@ -253,9 +252,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(5, (index) {
                           return Icon(
-                            index < averageRating.floor()
-                                ? Icons.star
-                                : Icons.star_border,
+                            index < averageRating.floor() ? Icons.star : Icons.star_border,
                             color: Colors.orange,
                             size: 24,
                           );
@@ -273,9 +270,9 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Rating distribution
               Card(
                 child: Padding(
@@ -295,7 +292,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                         final rating = 5 - index;
                         final count = ratingDistribution[rating] ?? 0;
                         final percentage = totalReviews > 0 ? (count / totalReviews * 100) : 0.0;
-                        
+
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 4),
                           child: Row(

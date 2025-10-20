@@ -78,9 +78,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 const SizedBox(height: 8),
 
                 Text(
-                  _emailSent
-                      ? 'Проверьте вашу почту'
-                      : 'Введите email для восстановления пароля',
+                  _emailSent ? 'Проверьте вашу почту' : 'Введите email для восстановления пароля',
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: Colors.grey[600],
                   ),

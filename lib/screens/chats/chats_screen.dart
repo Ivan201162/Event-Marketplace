@@ -110,7 +110,7 @@ class ChatsScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              
+
               // Chat header
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -150,9 +150,9 @@ class ChatsScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              
+
               const Divider(),
-              
+
               // Messages
               Expanded(
                 child: ListView.builder(
@@ -184,7 +184,7 @@ class ChatsScreen extends StatelessWidget {
                   },
                 ),
               ),
-              
+
               // Message input
               Container(
                 padding: const EdgeInsets.all(16),

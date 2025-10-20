@@ -16,9 +16,7 @@ class BookingService {
           .orderBy('date', descending: false)
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => Booking.fromFirestore(doc))
-          .toList();
+      return querySnapshot.docs.map((doc) => Booking.fromFirestore(doc)).toList();
     } catch (e) {
       debugPrint('Error getting specialist bookings: $e');
       return [];
@@ -34,9 +32,7 @@ class BookingService {
           .orderBy('date', descending: false)
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => Booking.fromFirestore(doc))
-          .toList();
+      return querySnapshot.docs.map((doc) => Booking.fromFirestore(doc)).toList();
     } catch (e) {
       debugPrint('Error getting client bookings: $e');
       return [];
@@ -52,9 +48,7 @@ class BookingService {
           .orderBy('date', descending: false)
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => Booking.fromFirestore(doc))
-          .toList();
+      return querySnapshot.docs.map((doc) => Booking.fromFirestore(doc)).toList();
     } catch (e) {
       debugPrint('Error getting bookings by status: $e');
       return [];
@@ -64,10 +58,7 @@ class BookingService {
   /// Get booking by ID
   Future<Booking?> getBookingById(String bookingId) async {
     try {
-      final doc = await _firestore
-          .collection('bookings')
-          .doc(bookingId)
-          .get();
+      final doc = await _firestore.collection('bookings').doc(bookingId).get();
 
       if (doc.exists) {
         return Booking.fromFirestore(doc);
@@ -82,9 +73,7 @@ class BookingService {
   /// Create a new booking
   Future<String?> createBooking(Booking booking) async {
     try {
-      final docRef = await _firestore
-          .collection('bookings')
-          .add(booking.toFirestore());
+      final docRef = await _firestore.collection('bookings').add(booking.toFirestore());
 
       debugPrint('Booking created with ID: ${docRef.id}');
       return docRef.id;
@@ -97,10 +86,7 @@ class BookingService {
   /// Update booking status
   Future<bool> updateBookingStatus(String bookingId, BookingStatus status) async {
     try {
-      await _firestore
-          .collection('bookings')
-          .doc(bookingId)
-          .update({
+      await _firestore.collection('bookings').doc(bookingId).update({
         'status': status.name,
         'updatedAt': Timestamp.now(),
       });
@@ -116,10 +102,7 @@ class BookingService {
   /// Update booking
   Future<bool> updateBooking(Booking booking) async {
     try {
-      await _firestore
-          .collection('bookings')
-          .doc(booking.id)
-          .update(booking.toFirestore());
+      await _firestore.collection('bookings').doc(booking.id).update(booking.toFirestore());
 
       debugPrint('Booking updated: ${booking.id}');
       return true;
@@ -132,10 +115,7 @@ class BookingService {
   /// Delete booking
   Future<bool> deleteBooking(String bookingId) async {
     try {
-      await _firestore
-          .collection('bookings')
-          .doc(bookingId)
-          .delete();
+      await _firestore.collection('bookings').doc(bookingId).delete();
 
       debugPrint('Booking deleted: $bookingId');
       return true;
@@ -152,9 +132,7 @@ class BookingService {
         .where('specialistId', isEqualTo: specialistId)
         .orderBy('date', descending: false)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Booking.fromFirestore(doc))
-            .toList());
+        .map((snapshot) => snapshot.docs.map((doc) => Booking.fromFirestore(doc)).toList());
   }
 
   /// Get bookings stream for client
@@ -164,9 +142,7 @@ class BookingService {
         .where('clientId', isEqualTo: clientId)
         .orderBy('date', descending: false)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Booking.fromFirestore(doc))
-            .toList());
+        .map((snapshot) => snapshot.docs.map((doc) => Booking.fromFirestore(doc)).toList());
   }
 
   /// Get bookings stream by status
@@ -176,9 +152,7 @@ class BookingService {
         .where('status', isEqualTo: status.name)
         .orderBy('date', descending: false)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Booking.fromFirestore(doc))
-            .toList());
+        .map((snapshot) => snapshot.docs.map((doc) => Booking.fromFirestore(doc)).toList());
   }
 
   /// Get booking statistics
@@ -200,7 +174,7 @@ class BookingService {
       for (final doc in querySnapshot.docs) {
         final data = doc.data();
         final status = data['status'] as String;
-        
+
         stats['total'] = (stats['total'] ?? 0) + 1;
         stats[status] = (stats[status] ?? 0) + 1;
       }
@@ -235,11 +209,10 @@ class BookingService {
           .where('specialistId', isEqualTo: specialistId)
           .where('date', isEqualTo: Timestamp.fromDate(date))
           .where('status', whereIn: [
-            BookingStatus.pending.name,
-            BookingStatus.confirmed.name,
-            BookingStatus.inProgress.name,
-          ])
-          .get();
+        BookingStatus.pending.name,
+        BookingStatus.confirmed.name,
+        BookingStatus.inProgress.name,
+      ]).get();
 
       for (final doc in querySnapshot.docs) {
         final data = doc.data();
@@ -280,7 +253,7 @@ class BookingService {
 
       for (final hour in workingHours) {
         final timeSlot = '${hour.toString().padLeft(2, '0')}:00';
-        
+
         final isAvailable = await isTimeSlotAvailable(
           specialistId,
           date,

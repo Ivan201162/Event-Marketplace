@@ -40,12 +40,10 @@ class SpecialistCard extends StatelessWidget {
                     backgroundImage: specialist.avatarUrl != null
                         ? CachedNetworkImageProvider(specialist.avatarUrl!)
                         : null,
-                    child: specialist.avatarUrl == null
-                        ? const Icon(Icons.person, size: 30)
-                        : null,
+                    child: specialist.avatarUrl == null ? const Icon(Icons.person, size: 30) : null,
                   ),
                   const SizedBox(width: 12),
-                  
+
                   // Basic info
                   Expanded(
                     child: Column(
@@ -87,7 +85,7 @@ class SpecialistCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  
+
                   // Rating and price
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -122,7 +120,7 @@ class SpecialistCard extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               // Description (if showFullInfo)
               if (showFullInfo && specialist.description != null) ...[
                 const SizedBox(height: 12),
@@ -136,24 +134,27 @@ class SpecialistCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
-              
+
               // Services (if showFullInfo)
               if (showFullInfo && specialist.services.isNotEmpty) ...[
                 const SizedBox(height: 12),
                 Wrap(
                   spacing: 8,
                   runSpacing: 4,
-                  children: specialist.services.take(3).map((service) => Chip(
-                    label: Text(
-                      service,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                    backgroundColor: Colors.blue.withOpacity(0.1),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  )).toList(),
+                  children: specialist.services
+                      .take(3)
+                      .map((service) => Chip(
+                            label: Text(
+                              service,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                            backgroundColor: Colors.blue.withOpacity(0.1),
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ))
+                      .toList(),
                 ),
               ],
-              
+
               // Portfolio preview
               if (specialist.hasPortfolio) ...[
                 const SizedBox(height: 12),
@@ -190,7 +191,7 @@ class SpecialistCard extends StatelessWidget {
                   ),
                 ),
               ],
-              
+
               // Footer with stats
               const SizedBox(height: 12),
               Row(

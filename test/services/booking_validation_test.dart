@@ -248,8 +248,7 @@ bool _isValidBookingTime(DateTime? time) {
 
 /// Helper function to validate booking duration
 bool _isValidBookingDuration(DateTime startTime, DateTime endTime) {
-  return endTime.isAfter(startTime) &&
-      endTime.difference(startTime).inHours <= 8; // Max 8 hours
+  return endTime.isAfter(startTime) && endTime.difference(startTime).inHours <= 8; // Max 8 hours
 }
 
 /// Helper function to check service availability
@@ -264,8 +263,7 @@ bool _isWithinCapacity(String serviceId, int requested, int maxCapacity) =>
     requested > 0 && requested <= maxCapacity;
 
 /// Helper function to calculate service price
-double _calculateServicePrice(double basePrice, int duration) =>
-    basePrice * duration;
+double _calculateServicePrice(double basePrice, int duration) => basePrice * duration;
 
 /// Helper function to check customer eligibility
 bool _isCustomerEligible(String? customerId, String? serviceId) {
@@ -276,8 +274,7 @@ bool _isCustomerEligible(String? customerId, String? serviceId) {
 }
 
 /// Helper function to validate age
-bool _isAgeValid(int age, int minAge, int maxAge) =>
-    age >= minAge && age <= maxAge;
+bool _isAgeValid(int age, int minAge, int maxAge) => age >= minAge && age <= maxAge;
 
 /// Helper function to validate location
 bool _isLocationValid(
@@ -297,8 +294,7 @@ bool _isPaymentAmountValid(
 ) {
   if (servicePrice < 0 || paymentAmount < 0) return false;
   final expectedAmount = servicePrice - discount;
-  return (paymentAmount - expectedAmount).abs() <
-      0.01; // Allow small rounding errors
+  return (paymentAmount - expectedAmount).abs() < 0.01; // Allow small rounding errors
 }
 
 /// Helper function to apply discount

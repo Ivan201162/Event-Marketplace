@@ -40,7 +40,7 @@ class Review extends Equatable {
   /// Create Review from Firestore document
   factory Review.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return Review(
       id: doc.id,
       specialistId: data['specialistId'] ?? '',
@@ -121,7 +121,7 @@ class Review extends Equatable {
   String get formattedDate {
     final now = DateTime.now();
     final difference = now.difference(createdAt);
-    
+
     if (difference.inDays == 0) {
       return 'Сегодня';
     } else if (difference.inDays == 1) {

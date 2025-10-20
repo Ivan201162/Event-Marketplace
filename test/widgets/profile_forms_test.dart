@@ -7,8 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Profile Forms Widget Tests', () {
-    testWidgets('EditSpecialistProfileScreen should render correctly',
-        (tester) async {
+    testWidgets('EditSpecialistProfileScreen should render correctly', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -30,8 +29,7 @@ void main() {
       expect(find.text('Создать профиль'), findsOneWidget);
     });
 
-    testWidgets('EditCustomerProfileScreen should render correctly',
-        (tester) async {
+    testWidgets('EditCustomerProfileScreen should render correctly', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -52,8 +50,7 @@ void main() {
       expect(find.text('Создать профиль'), findsOneWidget);
     });
 
-    testWidgets('Specialist profile form validation should work correctly',
-        (tester) async {
+    testWidgets('Specialist profile form validation should work correctly', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -79,8 +76,7 @@ void main() {
       expect(find.text('Телефон обязателен'), findsOneWidget);
     });
 
-    testWidgets('Customer profile form validation should work correctly',
-        (tester) async {
+    testWidgets('Customer profile form validation should work correctly', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -106,8 +102,7 @@ void main() {
       expect(find.text('Телефон обязателен'), findsOneWidget);
     });
 
-    testWidgets('Specialist profile form should accept valid input',
-        (tester) async {
+    testWidgets('Specialist profile form should accept valid input', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -151,8 +146,7 @@ void main() {
       expect(saveButton, findsOneWidget);
     });
 
-    testWidgets('Customer profile form should accept valid input',
-        (tester) async {
+    testWidgets('Customer profile form should accept valid input', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -218,8 +212,7 @@ void main() {
       expect(FormValidators.positiveNumber('123'), isNull);
     });
 
-    testWidgets('Specialist profile categories should be selectable',
-        (tester) async {
+    testWidgets('Specialist profile categories should be selectable', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -244,15 +237,12 @@ void main() {
 
       // Проверяем, что категория выбрана
       final photographerChip = find.byWidgetPredicate(
-        (widget) =>
-            widget is FilterChip &&
-            widget.label.toString().contains('Фотограф'),
+        (widget) => widget is FilterChip && widget.label.toString().contains('Фотограф'),
       );
       expect(photographerChip, findsOneWidget);
     });
 
-    testWidgets('Contact fields should be addable and removable',
-        (tester) async {
+    testWidgets('Contact fields should be addable and removable', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(

@@ -25,33 +25,33 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: 'auth-check',
         builder: (context, state) => const AuthCheckScreen(),
       ),
-      
+
       // Auth routes
       GoRoute(
         path: '/login',
         name: 'login',
         builder: (context, state) => const LoginScreen(),
       ),
-      
+
       GoRoute(
         path: '/forgot-password',
         name: 'forgot-password',
         builder: (context, state) => const ForgotPasswordScreen(),
       ),
-      
+
       GoRoute(
         path: '/onboarding',
         name: 'onboarding',
         builder: (context, state) => const OnboardingScreen(),
       ),
-      
+
       // Search route
       GoRoute(
         path: '/search',
         name: 'search',
         builder: (context, state) => const SearchScreen(),
       ),
-      
+
       // Main app routes
       GoRoute(
         path: '/main',
@@ -68,7 +68,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     errorBuilder: (context, state) {
       debugPrint('🚨 Router error for path: ${state.uri.path}');
       debugPrint('Error: ${state.error}');
-      
+
       // Fallback to main navigation screen
       return const MainNavigationScreen();
     },

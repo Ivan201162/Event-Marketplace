@@ -44,7 +44,8 @@ class NotificationService {
   }
 
   /// Get notifications by type
-  Future<List<AppNotification>> getNotificationsByType(String userId, NotificationType type, {int limit = 20}) async {
+  Future<List<AppNotification>> getNotificationsByType(String userId, NotificationType type,
+      {int limit = 20}) async {
     try {
       final snapshot = await _firestore
           .collection(_collection)
@@ -148,10 +149,8 @@ class NotificationService {
   Future<bool> deleteAllNotifications(String userId) async {
     try {
       final batch = _firestore.batch();
-      final snapshot = await _firestore
-          .collection(_collection)
-          .where('userId', isEqualTo: userId)
-          .get();
+      final snapshot =
+          await _firestore.collection(_collection).where('userId', isEqualTo: userId).get();
 
       for (final doc in snapshot.docs) {
         batch.delete(doc.reference);
@@ -331,9 +330,7 @@ class NotificationService {
         .orderBy('createdAt', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => AppNotification.fromFirestore(doc))
-            .toList());
+        .map((snapshot) => snapshot.docs.map((doc) => AppNotification.fromFirestore(doc)).toList());
   }
 
   /// Stream of unread notifications
@@ -345,9 +342,7 @@ class NotificationService {
         .orderBy('createdAt', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => AppNotification.fromFirestore(doc))
-            .toList());
+        .map((snapshot) => snapshot.docs.map((doc) => AppNotification.fromFirestore(doc)).toList());
   }
 
   /// Stream of unread count

@@ -49,8 +49,7 @@ class MockSpecialistService extends _i1.Mock implements _i2.SpecialistService {
       ) as _i3.Future<List<_i4.Specialist>>);
 
   @override
-  _i3.Stream<List<_i4.Specialist>> getAllSpecialistsStream() =>
-      (super.noSuchMethod(
+  _i3.Stream<List<_i4.Specialist>> getAllSpecialistsStream() => (super.noSuchMethod(
         Invocation.method(
           #getAllSpecialistsStream,
           [],
@@ -68,8 +67,7 @@ class MockSpecialistService extends _i1.Mock implements _i2.SpecialistService {
       ) as _i3.Future<List<String>>);
 
   @override
-  _i3.Future<_i4.Specialist?> getSpecialistById(String? id) =>
-      (super.noSuchMethod(
+  _i3.Future<_i4.Specialist?> getSpecialistById(String? id) => (super.noSuchMethod(
         Invocation.method(
           #getSpecialistById,
           [id],
@@ -107,8 +105,7 @@ class MockSpecialistService extends _i1.Mock implements _i2.SpecialistService {
       ) as _i3.Future<List<_i4.Specialist>>);
 
   @override
-  _i3.Future<List<_i4.Specialist>> getSpecialistsByCategory(
-          _i4.SpecialistCategory? category) =>
+  _i3.Future<List<_i4.Specialist>> getSpecialistsByCategory(_i4.SpecialistCategory? category) =>
       (super.noSuchMethod(
         Invocation.method(
           #getSpecialistsByCategory,
@@ -118,8 +115,7 @@ class MockSpecialistService extends _i1.Mock implements _i2.SpecialistService {
       ) as _i3.Future<List<_i4.Specialist>>);
 
   @override
-  _i3.Future<List<_i4.Specialist>> getRecommendedSpecialists(String? userId) =>
-      (super.noSuchMethod(
+  _i3.Future<List<_i4.Specialist>> getRecommendedSpecialists(String? userId) => (super.noSuchMethod(
         Invocation.method(
           #getRecommendedSpecialists,
           [userId],
@@ -128,8 +124,7 @@ class MockSpecialistService extends _i1.Mock implements _i2.SpecialistService {
       ) as _i3.Future<List<_i4.Specialist>>);
 
   @override
-  _i3.Future<String?> createSpecialist(_i4.Specialist? specialist) =>
-      (super.noSuchMethod(
+  _i3.Future<String?> createSpecialist(_i4.Specialist? specialist) => (super.noSuchMethod(
         Invocation.method(
           #createSpecialist,
           [specialist],
@@ -208,13 +203,11 @@ class MockSpecialistService extends _i1.Mock implements _i2.SpecialistService {
           #getSpecialistsStats,
           [],
         ),
-        returnValue:
-            _i3.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+        returnValue: _i3.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
       ) as _i3.Future<Map<String, dynamic>>);
 
   @override
-  _i3.Stream<List<Map<String, dynamic>>> getSpecialistFeed(
-          String? specialistId) =>
+  _i3.Stream<List<Map<String, dynamic>>> getSpecialistFeed(String? specialistId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getSpecialistFeed,
@@ -224,8 +217,7 @@ class MockSpecialistService extends _i1.Mock implements _i2.SpecialistService {
       ) as _i3.Stream<List<Map<String, dynamic>>>);
 
   @override
-  _i3.Stream<_i4.Specialist?> getSpecialistStream(String? specialistId) =>
-      (super.noSuchMethod(
+  _i3.Stream<_i4.Specialist?> getSpecialistStream(String? specialistId) => (super.noSuchMethod(
         Invocation.method(
           #getSpecialistStream,
           [specialistId],
@@ -234,8 +226,7 @@ class MockSpecialistService extends _i1.Mock implements _i2.SpecialistService {
       ) as _i3.Stream<_i4.Specialist?>);
 
   @override
-  _i3.Stream<_i4.Specialist?> getSpecialistByUserIdStream(String? userId) =>
-      (super.noSuchMethod(
+  _i3.Stream<_i4.Specialist?> getSpecialistByUserIdStream(String? userId) => (super.noSuchMethod(
         Invocation.method(
           #getSpecialistByUserIdStream,
           [userId],
@@ -244,8 +235,7 @@ class MockSpecialistService extends _i1.Mock implements _i2.SpecialistService {
       ) as _i3.Stream<_i4.Specialist?>);
 
   @override
-  _i3.Future<List<_i4.Specialist>> getTopSpecialists({int? limit = 10}) =>
-      (super.noSuchMethod(
+  _i3.Future<List<_i4.Specialist>> getTopSpecialists({int? limit = 10}) => (super.noSuchMethod(
         Invocation.method(
           #getTopSpecialists,
           [],
@@ -255,8 +245,7 @@ class MockSpecialistService extends _i1.Mock implements _i2.SpecialistService {
       ) as _i3.Future<List<_i4.Specialist>>);
 
   @override
-  _i3.Future<List<_i4.Specialist>> getWeeklyLeaders({int? limit = 10}) =>
-      (super.noSuchMethod(
+  _i3.Future<List<_i4.Specialist>> getWeeklyLeaders({int? limit = 10}) => (super.noSuchMethod(
         Invocation.method(
           #getWeeklyLeaders,
           [],
@@ -266,8 +255,7 @@ class MockSpecialistService extends _i1.Mock implements _i2.SpecialistService {
       ) as _i3.Future<List<_i4.Specialist>>);
 
   @override
-  _i3.Stream<List<_i4.Specialist>> searchSpecialistsStream(
-          Map<String, dynamic>? filters) =>
+  _i3.Stream<List<_i4.Specialist>> searchSpecialistsStream(Map<String, dynamic>? filters) =>
       (super.noSuchMethod(
         Invocation.method(
           #searchSpecialistsStream,
@@ -305,8 +293,7 @@ class MockSpecialistService extends _i1.Mock implements _i2.SpecialistService {
             date,
           ],
         ),
-        returnValue: _i3.Future<List<Map<String, dynamic>>>.value(
-            <Map<String, dynamic>>[]),
+        returnValue: _i3.Future<List<Map<String, dynamic>>>.value(<Map<String, dynamic>>[]),
       ) as _i3.Future<List<Map<String, dynamic>>>);
 }
 
@@ -319,8 +306,7 @@ class MockPostService extends _i1.Mock implements _i6.PostService {
   }
 
   @override
-  _i3.Future<List<_i7.Post>> getPostsBySpecialist(String? specialistId) =>
-      (super.noSuchMethod(
+  _i3.Future<List<_i7.Post>> getPostsBySpecialist(String? specialistId) => (super.noSuchMethod(
         Invocation.method(
           #getPostsBySpecialist,
           [specialistId],
@@ -406,8 +392,7 @@ class MockStoryService extends _i1.Mock implements _i9.StoryService {
   }
 
   @override
-  _i3.Future<List<_i10.Story>> getStoriesBySpecialist(String? specialistId) =>
-      (super.noSuchMethod(
+  _i3.Future<List<_i10.Story>> getStoriesBySpecialist(String? specialistId) => (super.noSuchMethod(
         Invocation.method(
           #getStoriesBySpecialist,
           [specialistId],
@@ -494,8 +479,7 @@ class MockStoryService extends _i1.Mock implements _i9.StoryService {
       ) as _i3.Future<void>);
 
   @override
-  _i3.Future<List<_i10.Story>> getUserStories(String? userId) =>
-      (super.noSuchMethod(
+  _i3.Future<List<_i10.Story>> getUserStories(String? userId) => (super.noSuchMethod(
         Invocation.method(
           #getUserStories,
           [userId],

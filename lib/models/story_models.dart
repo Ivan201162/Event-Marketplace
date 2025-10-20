@@ -68,9 +68,7 @@ class Story {
       description: data['description'] as String?,
       mediaUrl: data['mediaUrl'] as String?,
       thumbnailUrl: data['thumbnailUrl'] as String?,
-      duration: data['duration'] != null
-          ? Duration(milliseconds: data['duration'] as int)
-          : null,
+      duration: data['duration'] != null ? Duration(milliseconds: data['duration'] as int) : null,
       text: data['text'] as String?,
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       views: data['views'] as int? ?? 0,
@@ -341,9 +339,7 @@ class StoryView {
               ? (data['viewedAt'] as Timestamp).toDate()
               : DateTime.parse(data['viewedAt'].toString()))
           : DateTime.now(),
-      duration: data['duration'] != null
-          ? Duration(milliseconds: data['duration'] as int)
-          : null,
+      duration: data['duration'] != null ? Duration(milliseconds: data['duration'] as int) : null,
       isCompleted: data['isCompleted'] as bool? ?? false,
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
@@ -442,9 +438,7 @@ class CreateStory {
       description: data['description'] as String?,
       mediaUrl: data['mediaUrl'] as String?,
       thumbnailUrl: data['thumbnailUrl'] as String?,
-      duration: data['duration'] != null
-          ? Duration(milliseconds: data['duration'] as int)
-          : null,
+      duration: data['duration'] != null ? Duration(milliseconds: data['duration'] as int) : null,
       text: data['text'] as String?,
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       expiresAt: data['expiresAt'] != null

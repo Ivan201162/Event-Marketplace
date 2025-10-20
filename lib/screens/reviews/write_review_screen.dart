@@ -72,24 +72,24 @@ class _WriteReviewScreenState extends ConsumerState<WriteReviewScreen> {
                 children: [
                   // Specialist info
                   _buildSpecialistInfo(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Rating section
                   _buildRatingSection(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Review text
                   _buildReviewTextSection(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Images section
                   _buildImagesSection(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Guidelines
                   _buildGuidelines(),
                 ],
@@ -344,7 +344,7 @@ class _WriteReviewScreenState extends ConsumerState<WriteReviewScreen> {
                     ),
                   );
                 }
-                
+
                 return Container(
                   width: 100,
                   margin: EdgeInsets.only(right: index < _images.length - 1 ? 8 : 0),

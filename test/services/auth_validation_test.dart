@@ -268,12 +268,10 @@ bool _isTokenValid(DateTime tokenCreated, Duration lifetime) =>
     DateTime.now().difference(tokenCreated) < lifetime;
 
 /// Helper function to check booking permissions
-bool _canBookServices(String role) =>
-    ['customer', 'organizer', 'admin'].contains(role);
+bool _canBookServices(String role) => ['customer', 'organizer', 'admin'].contains(role);
 
 /// Helper function to check event creation permissions
-bool _canCreateEvents(String role) =>
-    ['specialist', 'organizer', 'admin'].contains(role);
+bool _canCreateEvents(String role) => ['specialist', 'organizer', 'admin'].contains(role);
 
 /// Helper function to check user management permissions
 bool _canManageUsers(String role) => role == 'admin';

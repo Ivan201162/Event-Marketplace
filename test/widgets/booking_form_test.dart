@@ -286,8 +286,7 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('should show error state when specialist not found',
-        (tester) async {
+    testWidgets('should show error state when specialist not found', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         const ProviderScope(

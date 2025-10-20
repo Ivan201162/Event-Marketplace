@@ -273,8 +273,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
               Text(
                 'По типам',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               const SizedBox(height: 12),
               ..._buildTypeStats(stats['notificationsByType'] ?? {}),
@@ -283,8 +283,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
               Text(
                 'По приоритету',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               const SizedBox(height: 12),
               ..._buildPriorityStats(stats['notificationsByPriority'] ?? {}),
@@ -308,17 +308,17 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
             Text(
               title,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
-              ),
+                    color: Colors.grey[600],
+                  ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 4),
             Text(
               count.toString(),
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                color: color,
-                fontWeight: FontWeight.bold,
-              ),
+                    color: color,
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
           ],
         ),
@@ -340,8 +340,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
           trailing: Text(
             count.toString(),
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
           ),
         ),
       );
@@ -362,8 +362,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
           trailing: Text(
             count.toString(),
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
           ),
         ),
       );
@@ -389,8 +389,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
           Text(
             subtitle,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey,
-            ),
+                  color: Colors.grey,
+                ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -410,8 +410,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
           Text(
             error.toString(),
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Colors.grey,
-            ),
+                  color: Colors.grey,
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
@@ -437,7 +437,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
   Future<void> _markAsRead(String notificationId) async {
     final service = ref.read(pushNotificationServiceProvider);
     final success = await service.markAsRead(notificationId);
-    
+
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Уведомление отмечено как прочитанное')),
@@ -451,7 +451,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
 
     final service = ref.read(pushNotificationServiceProvider);
     final success = await service.markAllAsRead(currentUser.id);
-    
+
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Все уведомления отмечены как прочитанные')),
@@ -462,7 +462,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
   Future<void> _deleteNotification(String notificationId) async {
     final service = ref.read(pushNotificationServiceProvider);
     final success = await service.deleteNotification(notificationId);
-    
+
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Уведомление удалено')),
@@ -579,8 +579,8 @@ class NotificationDetailsSheet extends StatelessWidget {
                           Text(
                             notification.type.displayName,
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey[600],
-                            ),
+                                  color: Colors.grey[600],
+                                ),
                           ),
                         ],
                       ),

@@ -181,10 +181,10 @@ class Idea extends Equatable {
   /// Get formatted duration
   String get formattedDuration {
     if (estimatedDuration == null) return 'Не указано';
-    
+
     final hours = estimatedDuration! ~/ 60;
     final minutes = estimatedDuration! % 60;
-    
+
     if (hours > 0 && minutes > 0) {
       return '$hoursч $minutesм';
     } else if (hours > 0) {

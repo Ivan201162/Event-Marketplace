@@ -42,7 +42,8 @@ void main() {
     });
 
     test('transliterateNameToUsername - длинное имя', () {
-      final result = TransliterateUtils.transliterateNameToUsername('ОченьДлинноеИмяКотороеПревышаетЛимит');
+      final result =
+          TransliterateUtils.transliterateNameToUsername('ОченьДлинноеИмяКотороеПревышаетЛимит');
       expect(result, matches(RegExp(r'^[a-z_]{1,15}_\d{4}$')));
     });
 
@@ -75,7 +76,7 @@ void main() {
         // Небольшая задержка для обеспечения уникальности timestamp
         await Future.delayed(const Duration(milliseconds: 1));
       }
-      
+
       // Проверяем, что все результаты разные
       final uniqueResults = results.toSet();
       expect(uniqueResults.length, equals(results.length));

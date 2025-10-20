@@ -126,7 +126,7 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
     return bookingsAsync.when(
       data: (allBookings) {
         final bookings = allBookings.where((booking) => booking.status == status).toList();
-        
+
         if (bookings.isEmpty) {
           return _buildEmptyState(status);
         }
@@ -262,18 +262,18 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
               ),
             ),
             ...BookingStatus.values.map((status) => ListTile(
-              title: Text(status.displayName),
-              leading: Radio<BookingStatus>(
-                value: status,
-                groupValue: _selectedStatus,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedStatus = value!;
-                  });
-                  Navigator.of(context).pop();
-                },
-              ),
-            )),
+                  title: Text(status.displayName),
+                  leading: Radio<BookingStatus>(
+                    value: status,
+                    groupValue: _selectedStatus,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedStatus = value!;
+                      });
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                )),
           ],
         ),
       ),
@@ -307,7 +307,7 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              
+
               // Booking details
               Expanded(
                 child: SingleChildScrollView(
@@ -357,15 +357,15 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
                           ),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 24),
-                      
+
                       // Details
                       _buildDetailRow('Дата', booking.formattedDate),
                       _buildDetailRow('Время', booking.formattedTime),
                       _buildDetailRow('Длительность', booking.formattedDuration),
                       _buildDetailRow('Стоимость', booking.formattedPrice),
-                      
+
                       if (booking.notes.isNotEmpty) ...[
                         const SizedBox(height: 16),
                         const Text(
@@ -378,7 +378,7 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
                         const SizedBox(height: 8),
                         Text(booking.notes),
                       ],
-                      
+
                       if (booking.location != null) ...[
                         const SizedBox(height: 16),
                         _buildDetailRow('Место проведения', booking.location!),
@@ -387,7 +387,7 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
                   ),
                 ),
               ),
-              
+
               // Action buttons
               Container(
                 padding: const EdgeInsets.all(16),
@@ -480,7 +480,7 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
 
   void _updateBookingStatus(Booking booking, BookingStatus newStatus) {
     final bookingService = ref.read(bookingServiceProvider);
-    
+
     bookingService.updateBookingStatus(booking.id, newStatus).then((success) {
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
