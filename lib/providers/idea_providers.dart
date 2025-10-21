@@ -9,7 +9,7 @@ final ideaServiceProvider = Provider<IdeaService>((ref) => IdeaService());
 
 /// Провайдер для получения идей с фильтром
 final ideasProvider = StreamProvider.family<List<Idea>, IdeaFilter>(
-  (ref, filter) => ref.watch(ideaServiceProvider).getIdeas(filter),
+  (ref, filter) => ref.watch(ideaServiceProvider).getIdeasStream(),
 );
 
 /// Провайдер для получения идеи по ID

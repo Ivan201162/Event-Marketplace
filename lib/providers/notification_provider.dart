@@ -127,7 +127,7 @@ class NotificationNotifier extends Notifier<AsyncValue<List<app_notification.App
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        await NotificationService.deleteNotification(user.uid, notificationId);
+        await NotificationService.deleteNotification(notificationId);
       }
     } on Exception catch (e) {
       debugPrint('Ошибка при удалении уведомления: $e');

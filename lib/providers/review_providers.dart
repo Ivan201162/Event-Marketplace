@@ -164,7 +164,7 @@ class ReviewStateNotifier extends Notifier<ReviewState> {
   Future<void> updateReview(String reviewId, Map<String, dynamic> updates) async {
     try {
       final service = ref.read(reviewServiceProvider);
-      await service.updateReview(reviewId, updates);
+      await service.updateReview(reviewId, updates['rating'] ?? 0, updates['comment'] ?? '');
       // Reload reviews
       final currentReviews = state.reviews;
       final specialistId = currentReviews.isNotEmpty ? currentReviews.first.specialistId : '';
