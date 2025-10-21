@@ -13,7 +13,7 @@ class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _selectedCategory = 'Все';
   double _priceRange = 5000;
-  final double _ratingFilter = 4;
+  // final double _ratingFilter = 4; // Unused field
 
   final List<String> _categories = [
     'Все',
@@ -250,7 +250,7 @@ class _SearchScreenState extends State<SearchScreen> {
   );
 
   void _showSpecialistDetails(Map<String, dynamic> specialist) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (context) => DraggableScrollableSheet(

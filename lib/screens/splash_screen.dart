@@ -14,13 +14,13 @@ class SplashScreen extends ConsumerStatefulWidget {
 class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProviderStateMixin {
   late AnimationController _logoController;
   late AnimationController _progressController;
-  late Animation<double> _logoScaleAnimation;
-  late Animation<double> _logoFadeAnimation;
-  late Animation<double> _progressAnimation;
+  // late Animation<double> _logoScaleAnimation; // Unused
+  // late Animation<double> _logoFadeAnimation; // Unused
+  // late Animation<double> _progressAnimation; // Unused
 
   double _progress = 0;
   String _statusText = 'Инициализация...';
-  bool _showRetryButton = false;
+  // bool _showRetryButton = false; // Unused
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
 
   Future<void> _initializeAppWithTimeout() async {
     // Устанавливаем таймаут в 10 секунд
-    final timeout = Future.delayed(const Duration(seconds: 10));
+    final timeout = Future<void>.delayed(const Duration(seconds: 10));
     final initialization = _initializeApp();
 
     try {
@@ -41,7 +41,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
       if (mounted) {
         setState(() {
           _statusText = 'Загрузка занимает больше времени, чем ожидалось';
-          _showRetryButton = true;
+          // _showRetryButton = true; // Unused
         });
       }
     }
@@ -58,20 +58,20 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
       vsync: this,
     );
 
-    _logoScaleAnimation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(parent: _logoController, curve: Curves.elasticOut));
+    // _logoScaleAnimation = Tween<double>( // Unused
+    //   begin: 0,
+    //   end: 1,
+    // ).animate(CurvedAnimation(parent: _logoController, curve: Curves.elasticOut));
 
-    _logoFadeAnimation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(parent: _logoController, curve: Curves.easeInOut));
+    // _logoFadeAnimation = Tween<double>( // Unused
+    //   begin: 0,
+    //   end: 1,
+    // ).animate(CurvedAnimation(parent: _logoController, curve: Curves.easeInOut));
 
-    _progressAnimation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(parent: _progressController, curve: Curves.easeInOut));
+    // _progressAnimation = Tween<double>( // Unused
+    //   begin: 0,
+    //   end: 1,
+    // ).animate(CurvedAnimation(parent: _progressController, curve: Curves.easeInOut));
 
     _logoController.forward();
   }
@@ -100,7 +100,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
       });
       await _updateProgress(1);
 
-      await Future.delayed(const Duration(milliseconds: 500));
+      await Future<void>.delayed(const Duration(milliseconds: 500));
 
       if (mounted) {
         _navigateBasedOnAuth(user);
@@ -112,7 +112,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
       });
 
       // В случае ошибки переходим к экрану авторизации
-      await Future.delayed(const Duration(seconds: 2));
+      await Future<void>.delayed(const Duration(seconds: 2));
       if (mounted) {
         _navigateToAuthScreen();
       }
@@ -123,17 +123,17 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
     setState(() {
       _progress = progress;
     });
-    await Future.delayed(const Duration(milliseconds: 200));
+    await Future<void>.delayed(const Duration(milliseconds: 200));
   }
 
-  Future<void> _preloadData() async {
-    try {
-      // Здесь можно добавить предзагрузку критически важных данных
-      await Future.delayed(const Duration(milliseconds: 300));
-    } on Exception {
-      // Игнорируем ошибки предзагрузки
-    }
-  }
+  // Future<void> _preloadData() async { // Unused method
+  //   try {
+  //     // Здесь можно добавить предзагрузку критически важных данных
+  //     await Future<void>.delayed(const Duration(milliseconds: 300));
+  //   } on Exception {
+  //     // Игнорируем ошибки предзагрузки
+  //   }
+  // }
 
   void _navigateBasedOnAuth(User? user) {
     if (user != null) {
@@ -145,9 +145,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
     }
   }
 
-  void _navigateToMainScreen() {
-    context.go('/main');
-  }
+  // void _navigateToMainScreen() { // Unused method
+  //   context.go('/main');
+  // }
 
   void _navigateToAuthScreen() {
     context.go('/auth');
@@ -162,7 +162,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    // final theme = Theme.of(context); // Unused variable
 
     return Scaffold(
       backgroundColor: Colors.blue,
