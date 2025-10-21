@@ -231,7 +231,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       _currentFilters = filters;
     });
     // Здесь можно применить логику поиска с новыми фильтрами
-    debugdebugPrint('Применены фильтры: $_currentFilters');
+    debugPrint('Применены фильтры: $_currentFilters');
   }
 
   Widget _buildCategoriesSection() {

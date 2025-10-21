@@ -11,18 +11,18 @@ class CalendarSyncService {
   /// Экспорт события в Google Calendar
   Future<bool> exportToGoogleCalendar(Event event) async {
     if (!FeatureFlags.calendarSyncEnabled) {
-      debugdebugPrint('Calendar sync is disabled');
+      debugPrint('Calendar sync is disabled');
       return false;
     }
 
     try {
       // TODO(developer): Реальная интеграция с Google Calendar API
       // Пока что возвращаем mock результат
-      debugdebugPrint('Exporting to Google Calendar: ${event.title}');
+      debugPrint('Exporting to Google Calendar: ${event.title}');
       await Future.delayed(const Duration(seconds: 1));
       return true;
     } on Exception catch (e) {
-      debugdebugPrint('Error exporting to Google Calendar: $e');
+      debugPrint('Error exporting to Google Calendar: $e');
       return false;
     }
   }
@@ -30,18 +30,18 @@ class CalendarSyncService {
   /// Экспорт события в Outlook Calendar
   Future<bool> exportToOutlookCalendar(Event event) async {
     if (!FeatureFlags.calendarSyncEnabled) {
-      debugdebugPrint('Calendar sync is disabled');
+      debugPrint('Calendar sync is disabled');
       return false;
     }
 
     try {
       // TODO(developer): Реальная интеграция с Outlook Calendar API
       // Пока что возвращаем mock результат
-      debugdebugPrint('Exporting to Outlook Calendar: ${event.title}');
+      debugPrint('Exporting to Outlook Calendar: ${event.title}');
       await Future.delayed(const Duration(seconds: 1));
       return true;
     } on Exception catch (e) {
-      debugdebugPrint('Error exporting to Outlook Calendar: $e');
+      debugPrint('Error exporting to Outlook Calendar: $e');
       return false;
     }
   }
@@ -49,7 +49,7 @@ class CalendarSyncService {
   /// Экспорт бронирования в календарь
   Future<bool> exportBookingToCalendar(Booking booking) async {
     if (!FeatureFlags.calendarSyncEnabled) {
-      debugdebugPrint('Calendar sync is disabled');
+      debugPrint('Calendar sync is disabled');
       return false;
     }
 
@@ -80,7 +80,7 @@ class CalendarSyncService {
 
       return googleResult || outlookResult;
     } on Exception catch (e) {
-      debugdebugPrint('Error exporting booking to calendar: $e');
+      debugPrint('Error exporting booking to calendar: $e');
       return false;
     }
   }
@@ -88,18 +88,18 @@ class CalendarSyncService {
   /// Импорт событий из Google Calendar
   Future<List<Event>> importFromGoogleCalendar() async {
     if (!FeatureFlags.calendarSyncEnabled) {
-      debugdebugPrint('Calendar sync is disabled');
+      debugPrint('Calendar sync is disabled');
       return [];
     }
 
     try {
       // TODO(developer): Реальная интеграция с Google Calendar API
       // Пока что возвращаем пустой список
-      debugdebugPrint('Importing from Google Calendar');
+      debugPrint('Importing from Google Calendar');
       await Future.delayed(const Duration(seconds: 1));
       return [];
     } on Exception catch (e) {
-      debugdebugPrint('Error importing from Google Calendar: $e');
+      debugPrint('Error importing from Google Calendar: $e');
       return [];
     }
   }
@@ -107,18 +107,18 @@ class CalendarSyncService {
   /// Импорт событий из Outlook Calendar
   Future<List<Event>> importFromOutlookCalendar() async {
     if (!FeatureFlags.calendarSyncEnabled) {
-      debugdebugPrint('Calendar sync is disabled');
+      debugPrint('Calendar sync is disabled');
       return [];
     }
 
     try {
       // TODO(developer): Реальная интеграция с Outlook Calendar API
       // Пока что возвращаем пустой список
-      debugdebugPrint('Importing from Outlook Calendar');
+      debugPrint('Importing from Outlook Calendar');
       await Future.delayed(const Duration(seconds: 1));
       return [];
     } on Exception catch (e) {
-      debugdebugPrint('Error importing from Outlook Calendar: $e');
+      debugPrint('Error importing from Outlook Calendar: $e');
       return [];
     }
   }
@@ -131,7 +131,7 @@ class CalendarSyncService {
       results['google'] = await _syncGoogleCalendar();
       results['outlook'] = await _syncOutlookCalendar();
     } on Exception catch (e) {
-      debugdebugPrint('Error syncing calendars: $e');
+      debugPrint('Error syncing calendars: $e');
     }
 
     return results;
@@ -141,11 +141,11 @@ class CalendarSyncService {
   Future<bool> _syncGoogleCalendar() async {
     try {
       // TODO(developer): Реальная синхронизация
-      debugdebugPrint('Syncing with Google Calendar');
+      debugPrint('Syncing with Google Calendar');
       await Future.delayed(const Duration(seconds: 2));
       return true;
     } on Exception catch (e) {
-      debugdebugPrint('Error syncing with Google Calendar: $e');
+      debugPrint('Error syncing with Google Calendar: $e');
       return false;
     }
   }
@@ -154,11 +154,11 @@ class CalendarSyncService {
   Future<bool> _syncOutlookCalendar() async {
     try {
       // TODO(developer): Реальная синхронизация
-      debugdebugPrint('Syncing with Outlook Calendar');
+      debugPrint('Syncing with Outlook Calendar');
       await Future.delayed(const Duration(seconds: 2));
       return true;
     } on Exception catch (e) {
-      debugdebugPrint('Error syncing with Outlook Calendar: $e');
+      debugPrint('Error syncing with Outlook Calendar: $e');
       return false;
     }
   }

@@ -208,6 +208,32 @@ class IdeaService {
     }
   }
 
+  /// Save idea to user's favorites
+  Future<bool> saveIdea(String ideaId, String userId) async {
+    try {
+      await _firestore.collection('user_favorites').doc('${userId}_$ideaId').set({
+        'userId': userId,
+        'ideaId': ideaId,
+        'savedAt': DateTime.now(),
+      });
+      return true;
+    } catch (e) {
+      debugPrint('Error saving idea: $e');
+      return false;
+    }
+  }
+
+  /// Remove idea from user's favorites
+  Future<bool> unsaveIdea(String ideaId, String userId) async {
+    try {
+      await _firestore.collection('user_favorites').doc('${userId}_$ideaId').delete();
+      return true;
+    } catch (e) {
+      debugPrint('Error unsaving idea: $e');
+      return false;
+    }
+  }
+
   /// Increment view count
   Future<bool> incrementViewCount(String ideaId) async {
     try {

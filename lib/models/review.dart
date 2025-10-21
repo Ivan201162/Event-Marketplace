@@ -5,58 +5,72 @@ import 'package:equatable/equatable.dart';
 class Review extends Equatable {
   final String id;
   final String specialistId;
-  final String specialistName;
   final String clientId;
   final String clientName;
-  final String? clientAvatarUrl;
+  final String specialistName;
   final int rating;
-  final String text;
-  final List<String> images;
+  final String? comment;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final int likesCount;
+  final List<String> images;
   final List<String> likedBy;
-  final String? bookingId;
-  final Map<String, dynamic>? metadata;
+  final int likesCount;
+  final String? title;
+  final bool hasComment;
+  final List<String> tags;
+  final bool isVerified;
+  final bool isPublic;
+  final List<String> serviceTags;
+  final List<String> photos;
+  final List<Map<String, dynamic>> responses;
 
   const Review({
     required this.id,
     required this.specialistId,
-    required this.specialistName,
     required this.clientId,
     required this.clientName,
-    this.clientAvatarUrl,
+    required this.specialistName,
     required this.rating,
-    required this.text,
-    required this.images,
+    this.comment,
     required this.createdAt,
     required this.updatedAt,
-    required this.likesCount,
-    required this.likedBy,
-    this.bookingId,
-    this.metadata,
+    this.images = const [],
+    this.likedBy = const [],
+    this.likesCount = 0,
+    this.title,
+    this.hasComment = false,
+    this.tags = const [],
+    this.isVerified = false,
+    this.isPublic = true,
+    this.serviceTags = const [],
+    this.photos = const [],
+    this.responses = const [],
   });
 
   /// Create Review from Firestore document
   factory Review.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-
     return Review(
       id: doc.id,
       specialistId: data['specialistId'] ?? '',
-      specialistName: data['specialistName'] ?? '',
       clientId: data['clientId'] ?? '',
       clientName: data['clientName'] ?? '',
-      clientAvatarUrl: data['clientAvatarUrl'],
+      specialistName: data['specialistName'] ?? '',
       rating: data['rating'] ?? 0,
-      text: data['text'] ?? '',
-      images: List<String>.from(data['images'] ?? []),
+      comment: data['comment'],
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      likesCount: data['likesCount'] ?? 0,
+      images: List<String>.from(data['images'] ?? []),
       likedBy: List<String>.from(data['likedBy'] ?? []),
-      bookingId: data['bookingId'],
-      metadata: data['metadata'],
+      likesCount: data['likesCount'] ?? 0,
+      title: data['title'],
+      hasComment: data['hasComment'] ?? false,
+      tags: List<String>.from(data['tags'] ?? []),
+      isVerified: data['isVerified'] ?? false,
+      isPublic: data['isPublic'] ?? true,
+      serviceTags: List<String>.from(data['serviceTags'] ?? []),
+      photos: List<String>.from(data['photos'] ?? []),
+      responses: List<Map<String, dynamic>>.from(data['responses'] ?? []),
     );
   }
 
@@ -64,138 +78,212 @@ class Review extends Equatable {
   Map<String, dynamic> toFirestore() {
     return {
       'specialistId': specialistId,
-      'specialistName': specialistName,
       'clientId': clientId,
       'clientName': clientName,
-      'clientAvatarUrl': clientAvatarUrl,
+      'specialistName': specialistName,
       'rating': rating,
-      'text': text,
-      'images': images,
+      'comment': comment,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
-      'likesCount': likesCount,
+      'images': images,
       'likedBy': likedBy,
-      'bookingId': bookingId,
-      'metadata': metadata,
+      'likesCount': likesCount,
+      'title': title,
+      'hasComment': hasComment,
+      'tags': tags,
+      'isVerified': isVerified,
+      'isPublic': isPublic,
+      'serviceTags': serviceTags,
+      'photos': photos,
+      'responses': responses,
     };
   }
 
-  /// Create a copy of Review with updated fields
+  /// Create a copy with updated fields
   Review copyWith({
     String? id,
     String? specialistId,
-    String? specialistName,
     String? clientId,
     String? clientName,
-    String? clientAvatarUrl,
+    String? specialistName,
     int? rating,
-    String? text,
-    List<String>? images,
+    String? comment,
     DateTime? createdAt,
     DateTime? updatedAt,
-    int? likesCount,
+    List<String>? images,
     List<String>? likedBy,
-    String? bookingId,
-    Map<String, dynamic>? metadata,
+    int? likesCount,
+    String? title,
+    bool? hasComment,
+    List<String>? tags,
+    bool? isVerified,
+    bool? isPublic,
+    List<String>? serviceTags,
+    List<String>? photos,
+    List<Map<String, dynamic>>? responses,
   }) {
     return Review(
       id: id ?? this.id,
       specialistId: specialistId ?? this.specialistId,
-      specialistName: specialistName ?? this.specialistName,
       clientId: clientId ?? this.clientId,
       clientName: clientName ?? this.clientName,
-      clientAvatarUrl: clientAvatarUrl ?? this.clientAvatarUrl,
+      specialistName: specialistName ?? this.specialistName,
       rating: rating ?? this.rating,
-      text: text ?? this.text,
-      images: images ?? this.images,
+      comment: comment ?? this.comment,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      likesCount: likesCount ?? this.likesCount,
+      images: images ?? this.images,
       likedBy: likedBy ?? this.likedBy,
-      bookingId: bookingId ?? this.bookingId,
-      metadata: metadata ?? this.metadata,
+      likesCount: likesCount ?? this.likesCount,
+      title: title ?? this.title,
+      hasComment: hasComment ?? this.hasComment,
+      tags: tags ?? this.tags,
+      isVerified: isVerified ?? this.isVerified,
+      isPublic: isPublic ?? this.isPublic,
+      serviceTags: serviceTags ?? this.serviceTags,
+      photos: photos ?? this.photos,
+      responses: responses ?? this.responses,
     );
   }
 
-  /// Get formatted date string
-  String get formattedDate {
+  /// Get rating stars string
+  String get ratingStars => '⭐' * rating;
+
+  /// Get time ago string
+  String get timeAgo {
     final now = DateTime.now();
     final difference = now.difference(createdAt);
 
-    if (difference.inDays == 0) {
-      return 'Сегодня';
-    } else if (difference.inDays == 1) {
-      return 'Вчера';
-    } else if (difference.inDays < 7) {
-      return '${difference.inDays} дн. назад';
-    } else if (difference.inDays < 30) {
-      final weeks = (difference.inDays / 7).floor();
-      return '$weeks нед. назад';
-    } else if (difference.inDays < 365) {
-      final months = (difference.inDays / 30).floor();
-      return '$months мес. назад';
+    if (difference.inDays > 0) {
+      return '${difference.inDays}д назад';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours}ч назад';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes}м назад';
     } else {
-      return '${createdAt.day}.${createdAt.month}.${createdAt.year}';
-    }
-  }
-
-  /// Get rating stars
-  List<bool> get ratingStars {
-    return List.generate(5, (index) => index < rating);
-  }
-
-  /// Check if review is liked by user
-  bool isLikedBy(String userId) {
-    return likedBy.contains(userId);
-  }
-
-  /// Get rating color
-  String get ratingColor {
-    if (rating >= 4) return 'green';
-    if (rating >= 3) return 'orange';
-    return 'red';
-  }
-
-  /// Get rating text
-  String get ratingText {
-    switch (rating) {
-      case 5:
-        return 'Отлично';
-      case 4:
-        return 'Хорошо';
-      case 3:
-        return 'Удовлетворительно';
-      case 2:
-        return 'Плохо';
-      case 1:
-        return 'Очень плохо';
-      default:
-        return 'Без оценки';
+      return 'только что';
     }
   }
 
   /// Check if review has images
-  bool get hasImages => images.isNotEmpty;
+  bool get hasImages => images.isNotEmpty || photos.isNotEmpty;
 
-  /// Get first image URL
-  String? get firstImageUrl => images.isNotEmpty ? images.first : null;
+  /// Get first image
+  String? get firstImage {
+    if (images.isNotEmpty) return images.first;
+    if (photos.isNotEmpty) return photos.first;
+    return null;
+  }
 
   @override
   List<Object?> get props => [
         id,
         specialistId,
-        specialistName,
         clientId,
         clientName,
-        clientAvatarUrl,
+        specialistName,
         rating,
-        text,
-        images,
+        comment,
         createdAt,
         updatedAt,
-        likesCount,
+        images,
         likedBy,
-        bookingId,
-        metadata,
+        likesCount,
+        title,
+        hasComment,
+        tags,
+        isVerified,
+        isPublic,
+        serviceTags,
+        photos,
+        responses,
       ];
+
+  @override
+  String toString() {
+    return 'Review(id: $id, specialistId: $specialistId, clientId: $clientId, rating: $rating)';
+  }
+}
+
+/// Review stats model
+class ReviewStats extends Equatable {
+  final double averageRating;
+  final int totalReviews;
+  final Map<int, int> ratingDistribution;
+  final int verifiedReviews;
+  final int recentReviews;
+
+  const ReviewStats({
+    required this.averageRating,
+    required this.totalReviews,
+    required this.ratingDistribution,
+    required this.verifiedReviews,
+    required this.recentReviews,
+  });
+
+  /// Get rating percentage for specific rating
+  double getRatingPercentage(int rating) {
+    if (totalReviews == 0) return 0.0;
+    return (ratingDistribution[rating] ?? 0) / totalReviews * 100;
+  }
+
+  /// Get formatted average rating
+  String get formattedAverageRating => averageRating.toStringAsFixed(1);
+
+  @override
+  List<Object?> get props => [
+        averageRating,
+        totalReviews,
+        ratingDistribution,
+        verifiedReviews,
+        recentReviews,
+      ];
+
+  @override
+  String toString() {
+    return 'ReviewStats(averageRating: $averageRating, totalReviews: $totalReviews)';
+  }
+}
+
+/// Specialist review stats model
+class SpecialistReviewStats extends Equatable {
+  final String specialistId;
+  final double averageRating;
+  final int totalReviews;
+  final Map<int, int> ratingDistribution;
+  final List<String> topTags;
+  final Map<String, int> serviceRatings;
+
+  const SpecialistReviewStats({
+    required this.specialistId,
+    required this.averageRating,
+    required this.totalReviews,
+    required this.ratingDistribution,
+    required this.topTags,
+    required this.serviceRatings,
+  });
+
+  /// Get rating percentage for specific rating
+  double getRatingPercentage(int rating) {
+    if (totalReviews == 0) return 0.0;
+    return (ratingDistribution[rating] ?? 0) / totalReviews * 100;
+  }
+
+  /// Get formatted average rating
+  String get formattedAverageRating => averageRating.toStringAsFixed(1);
+
+  @override
+  List<Object?> get props => [
+        specialistId,
+        averageRating,
+        totalReviews,
+        ratingDistribution,
+        topTags,
+        serviceRatings,
+      ];
+
+  @override
+  String toString() {
+    return 'SpecialistReviewStats(specialistId: $specialistId, averageRating: $averageRating, totalReviews: $totalReviews)';
+  }
 }

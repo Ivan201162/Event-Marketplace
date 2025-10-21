@@ -3,12 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../models/booking.dart';
-import '../models/customer.dart';
+import '../models/app_user.dart';
 import '../models/specialist.dart';
 import '../services/booking_service.dart';
 import '../services/customer_service.dart';
 import '../services/specialist_service.dart';
-import '../widgets/anniversary_widget.dart';
 import '../widgets/back_button_handler.dart';
 import '../widgets/booking_card_widget.dart';
 import '../widgets/specialist_card_widget.dart';
@@ -28,7 +27,7 @@ class _CustomerProfileExtendedScreenState extends ConsumerState<CustomerProfileE
   final BookingService _bookingService = BookingService();
   final SpecialistService _specialistService = SpecialistService();
 
-  Customer? _customer;
+  AppUser? _customer;
   List<Booking> _bookings = [];
   List<Specialist> _favoriteSpecialists = [];
   bool _isLoading = true;
@@ -53,13 +52,13 @@ class _CustomerProfileExtendedScreenState extends ConsumerState<CustomerProfileE
       // TODO(developer): Получить реальный customerId из AuthService
       const customerId = 'current_customer_id';
 
-      final results = await Future.wait([
+      final results = await Future.wait<dynamic>([
         _customerService.getCustomerById(customerId),
-        _bookingService.getUserBookings(customerId),
+        _bookingService.getClientBookings(customerId),
         _customerService.getFavoriteSpecialists(customerId),
       ]);
 
-      final customer = results[0] as Customer?;
+      final customer = results[0] as AppUser?;
       final bookings = results[1] as List<Booking>;
       final favoriteIds = results[2] as List<String>;
 
@@ -103,7 +102,7 @@ class _CustomerProfileExtendedScreenState extends ConsumerState<CustomerProfileE
           // Удаляем из избранного
           _customer = _customer!.copyWith(
             favoriteSpecialists:
-                _customer!.favoriteSpecialists.where((id) => id != specialistId).toList(),
+                _customer!.favoriteSpecialists.where((String id) => id != specialistId).toList(),
           );
           _favoriteSpecialists.removeWhere((s) => s.id == specialistId);
         } else {
@@ -114,30 +113,39 @@ class _CustomerProfileExtendedScreenState extends ConsumerState<CustomerProfileE
               specialistId,
             ],
           );
-          // Загружаем данные специалиста
-          final specialist = await _specialistService.getSpecialistById(specialistId);
-          if (specialist != null) {
-            _favoriteSpecialists.add(specialist);
-          }
         }
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            _customer!.favoriteSpecialists.contains(specialistId)
-                ? 'Добавлено в избранное'
-                : 'Удалено из избранного',
+      // Загружаем данные специалиста если добавляем в избранное
+      if (!_customer!.favoriteSpecialists.contains(specialistId)) {
+        final specialist = await _specialistService.getSpecialistById(specialistId);
+        if (specialist != null) {
+          setState(() {
+            _favoriteSpecialists.add(specialist);
+          });
+        }
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              _customer!.favoriteSpecialists.contains(specialistId)
+                  ? 'Добавлено в избранное'
+                  : 'Удалено из избранного',
+            ),
           ),
-        ),
-      );
+        );
+      }
     } on Exception catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Ошибка: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -240,31 +248,14 @@ class _CustomerProfileExtendedScreenState extends ConsumerState<CustomerProfileE
             ),
             const SizedBox(height: 4),
             Text(
-              _customer!.maritalStatus.displayName,
+              'Не указано',
               style: const TextStyle(
                 fontSize: 16,
                 color: Colors.white70,
               ),
             ),
 
-            // Годовщина
-            if (_customer!.weddingDate != null) ...[
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Text(
-                  'Годовщина: ${_customer!.yearsMarried} лет',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            ],
+            // TODO: Добавить годовщины
 
             const SizedBox(height: 16),
 
@@ -276,7 +267,7 @@ class _CustomerProfileExtendedScreenState extends ConsumerState<CustomerProfileE
                 _buildStatItem('Избранное', '${_favoriteSpecialists.length}'),
                 _buildStatItem(
                   'Годовщины',
-                  '${_customer!.anniversaries.length}',
+                  '0',
                 ),
               ],
             ),
@@ -456,29 +447,8 @@ class _CustomerProfileExtendedScreenState extends ConsumerState<CustomerProfileE
             ),
             const SizedBox(height: 16),
 
-            // Годовщина свадьбы
-            if (_customer!.weddingDate != null)
-              AnniversaryWidget(
-                title: 'Годовщина свадьбы',
-                date: _customer!.weddingDate!,
-                partnerName: _customer!.partnerName,
-                yearsMarried: _customer!.yearsMarried ?? 0,
-              ),
-
-            // Дополнительные годовщины
-            if (_customer!.anniversaries.isNotEmpty)
-              ..._customer!.anniversaries.map(
-                (anniversary) => AnniversaryWidget(
-                  title: anniversary['title'] ?? 'Годовщина',
-                  date: anniversary['date'] is DateTime
-                      ? anniversary['date'] as DateTime
-                      : DateTime.parse(anniversary['date'].toString()),
-                  description: anniversary['description'],
-                ),
-              ),
-
-            if (_customer!.weddingDate == null && _customer!.anniversaries.isEmpty)
-              const Center(
+            // TODO: Добавить годовщины когда будет реализована модель
+            const Center(
                 child: Column(
                   children: [
                     Icon(Icons.cake, size: 64, color: Colors.grey),

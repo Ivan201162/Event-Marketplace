@@ -29,10 +29,10 @@ class MarketingAdminService {
         metadata: {'planName': plan.name, 'price': plan.price},
       );
 
-      debugdebugPrint('INFO: [MarketingAdminService] Subscription plan created: ${plan.name}');
+      debugPrint('INFO: [MarketingAdminService] Subscription plan created: ${plan.name}');
       return true;
     } catch (e) {
-      debugdebugPrint('ERROR: [MarketingAdminService] Failed to create subscription plan: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to create subscription plan: $e');
       await _adminService.logAdminAction(
         adminId: adminId,
         adminEmail: adminEmail,
@@ -69,10 +69,10 @@ class MarketingAdminService {
         metadata: updates,
       );
 
-      debugdebugPrint('INFO: [MarketingAdminService] Subscription plan updated: $planId');
+      debugPrint('INFO: [MarketingAdminService] Subscription plan updated: $planId');
       return true;
     } catch (e) {
-      debugdebugPrint('ERROR: [MarketingAdminService] Failed to update subscription plan: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to update subscription plan: $e');
       return false;
     }
   }
@@ -96,10 +96,10 @@ class MarketingAdminService {
         metadata: {'campaignName': campaign.name, 'type': campaign.type.name},
       );
 
-      debugdebugPrint('INFO: [MarketingAdminService] Marketing campaign created: ${campaign.name}');
+      debugPrint('INFO: [MarketingAdminService] Marketing campaign created: ${campaign.name}');
       return true;
     } catch (e) {
-      debugdebugPrint('ERROR: [MarketingAdminService] Failed to create marketing campaign: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to create marketing campaign: $e');
       return false;
     }
   }
@@ -126,10 +126,10 @@ class MarketingAdminService {
         metadata: updates,
       );
 
-      debugdebugPrint('INFO: [MarketingAdminService] Marketing campaign updated: $campaignId');
+      debugPrint('INFO: [MarketingAdminService] Marketing campaign updated: $campaignId');
       return true;
     } catch (e) {
-      debugdebugPrint('ERROR: [MarketingAdminService] Failed to update marketing campaign: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to update marketing campaign: $e');
       return false;
     }
   }
@@ -156,10 +156,10 @@ class MarketingAdminService {
         metadata: {'newsletterTitle': newsletter.title, 'type': newsletter.type.name},
       );
 
-      debugdebugPrint('INFO: [MarketingAdminService] Newsletter created: ${newsletter.title}');
+      debugPrint('INFO: [MarketingAdminService] Newsletter created: ${newsletter.title}');
       return true;
     } catch (e) {
-      debugdebugPrint('ERROR: [MarketingAdminService] Failed to create newsletter: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to create newsletter: $e');
       return false;
     }
   }
@@ -185,10 +185,10 @@ class MarketingAdminService {
         description: 'Sent newsletter: $newsletterId',
       );
 
-      debugdebugPrint('INFO: [MarketingAdminService] Newsletter sent: $newsletterId');
+      debugPrint('INFO: [MarketingAdminService] Newsletter sent: $newsletterId');
       return true;
     } catch (e) {
-      debugdebugPrint('ERROR: [MarketingAdminService] Failed to send newsletter: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to send newsletter: $e');
       return false;
     }
   }
@@ -236,7 +236,7 @@ class MarketingAdminService {
 
       return stats;
     } catch (e) {
-      debugdebugPrint('ERROR: [MarketingAdminService] Failed to get referral stats: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to get referral stats: $e');
       return {};
     }
   }
@@ -285,7 +285,7 @@ class MarketingAdminService {
 
       return stats;
     } catch (e) {
-      debugdebugPrint('ERROR: [MarketingAdminService] Failed to get partner stats: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to get partner stats: $e');
       return {};
     }
   }
@@ -313,7 +313,7 @@ class MarketingAdminService {
           .map((doc) => FinancialAnalytics.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      debugdebugPrint('ERROR: [MarketingAdminService] Failed to get financial analytics: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to get financial analytics: $e');
       return [];
     }
   }
@@ -350,10 +350,10 @@ class MarketingAdminService {
         metadata: {'segmentName': segment.name, 'userCount': userCount},
       );
 
-      debugdebugPrint('INFO: [MarketingAdminService] User segment created: ${segment.name}');
+      debugPrint('INFO: [MarketingAdminService] User segment created: ${segment.name}');
       return true;
     } catch (e) {
-      debugdebugPrint('ERROR: [MarketingAdminService] Failed to create user segment: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to create user segment: $e');
       return false;
     }
   }
@@ -381,7 +381,7 @@ class MarketingAdminService {
       final snapshot = await query.get();
       return snapshot.docs.length;
     } catch (e) {
-      debugdebugPrint('ERROR: [MarketingAdminService] Failed to count users in segment: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to count users in segment: $e');
       return 0;
     }
   }
@@ -439,11 +439,11 @@ class MarketingAdminService {
         description: 'Changed campaign status to ${newStatus.name}',
       );
 
-      debugdebugPrint(
+      debugPrint(
           'INFO: [MarketingAdminService] Campaign status changed: $campaignId to ${newStatus.name}');
       return true;
     } catch (e) {
-      debugdebugPrint('ERROR: [MarketingAdminService] Failed to toggle campaign status: $e');
+      debugPrint('ERROR: [MarketingAdminService] Failed to toggle campaign status: $e');
       return false;
     }
   }

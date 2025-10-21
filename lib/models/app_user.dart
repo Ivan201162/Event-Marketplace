@@ -27,6 +27,7 @@ class AppUser extends Equatable {
   final DateTime updatedAt;
   final bool isOnline;
   final Map<String, dynamic>? preferences;
+  final List<String> favoriteSpecialists;
 
   const AppUser({
     required this.uid,
@@ -42,6 +43,7 @@ class AppUser extends Equatable {
     required this.updatedAt,
     this.isOnline = false,
     this.preferences,
+    this.favoriteSpecialists = const [],
   });
 
   /// Create AppUser from Firestore document
@@ -64,6 +66,7 @@ class AppUser extends Equatable {
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       isOnline: data['isOnline'] ?? false,
       preferences: data['preferences'] as Map<String, dynamic>?,
+      favoriteSpecialists: List<String>.from(data['favoriteSpecialists'] ?? []),
     );
   }
 
@@ -82,6 +85,7 @@ class AppUser extends Equatable {
       'updatedAt': Timestamp.fromDate(updatedAt),
       'isOnline': isOnline,
       'preferences': preferences,
+      'favoriteSpecialists': favoriteSpecialists,
     };
   }
 
@@ -100,6 +104,7 @@ class AppUser extends Equatable {
     DateTime? updatedAt,
     bool? isOnline,
     Map<String, dynamic>? preferences,
+    List<String>? favoriteSpecialists,
   }) {
     return AppUser(
       uid: uid ?? this.uid,
@@ -115,6 +120,7 @@ class AppUser extends Equatable {
       updatedAt: updatedAt ?? this.updatedAt,
       isOnline: isOnline ?? this.isOnline,
       preferences: preferences ?? this.preferences,
+      favoriteSpecialists: favoriteSpecialists ?? this.favoriteSpecialists,
     );
   }
 
@@ -141,6 +147,7 @@ class AppUser extends Equatable {
         updatedAt,
         isOnline,
         preferences,
+        favoriteSpecialists,
       ];
 
   @override

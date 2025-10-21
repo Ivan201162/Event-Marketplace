@@ -22,7 +22,7 @@ class TestNotificationsService {
           await _firestore.collection('notifications').where('userId', isEqualTo: userId).get();
 
       if (existingNotifications.docs.isNotEmpty) {
-        debugdebugPrint(
+        debugPrint(
           'Тестовые уведомления уже существуют для пользователя $userId',
         );
         return;
@@ -117,11 +117,11 @@ class TestNotificationsService {
       }
       await batch.commit();
 
-      debugdebugPrint(
+      debugPrint(
         'Создано ${testNotifications.length} тестовых уведомлений для пользователя $userId',
       );
     } catch (e) {
-      debugdebugPrint('Ошибка создания тестовых уведомлений: $e');
+      debugPrint('Ошибка создания тестовых уведомлений: $e');
     }
   }
 
@@ -136,11 +136,11 @@ class TestNotificationsService {
         await createTestNotifications(userId);
       }
 
-      debugdebugPrint(
+      debugPrint(
         'Созданы тестовые уведомления для ${usersSnapshot.docs.length} пользователей',
       );
     } catch (e) {
-      debugdebugPrint(
+      debugPrint(
         'Ошибка создания тестовых уведомлений для всех пользователей: $e',
       );
     }
@@ -157,9 +157,9 @@ class TestNotificationsService {
       }
 
       await batch.commit();
-      debugdebugPrint('Очищены все тестовые уведомления');
+      debugPrint('Очищены все тестовые уведомления');
     } catch (e) {
-      debugdebugPrint('Ошибка очистки тестовых уведомлений: $e');
+      debugPrint('Ошибка очистки тестовых уведомлений: $e');
     }
   }
 
@@ -175,9 +175,9 @@ class TestNotificationsService {
       }
 
       await batch.commit();
-      debugdebugPrint('Очищены тестовые уведомления для пользователя $userId');
+      debugPrint('Очищены тестовые уведомления для пользователя $userId');
     } catch (e) {
-      debugdebugPrint('Ошибка очистки тестовых уведомлений для пользователя: $e');
+      debugPrint('Ошибка очистки тестовых уведомлений для пользователя: $e');
     }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/common_types.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -10,6 +11,12 @@ void main() {
         id: 'test_id',
         userId: 'test_user_id',
         name: 'Test Specialist',
+        specialization: 'Photography',
+        city: 'Moscow',
+        rating: 4.5,
+        pricePerHour: 3000,
+        createdAt: now,
+        updatedAt: now,
         description: 'Test description',
         bio: 'Test bio',
         category: SpecialistCategory.photographer,
@@ -20,10 +27,7 @@ void main() {
         location: 'Test Location',
         imageUrl: 'https://example.com/image.jpg',
         isVerified: true,
-        rating: 4.5,
         reviewCount: 100,
-        createdAt: now,
-        updatedAt: now,
         contacts: const {
           'phone': '+7 (999) 123-45-67',
           'email': 'test@example.com',
@@ -116,6 +120,12 @@ void main() {
         id: 'test_id',
         userId: 'test_user_id',
         name: 'Test Specialist',
+        specialization: 'Photography',
+        city: 'Moscow',
+        rating: 4.5,
+        pricePerHour: 3000,
+        createdAt: now,
+        updatedAt: now,
         description: 'Test description',
         bio: 'Test bio',
         category: SpecialistCategory.photographer,
@@ -126,10 +136,7 @@ void main() {
         location: 'Test Location',
         imageUrl: 'https://example.com/image.jpg',
         isVerified: true,
-        rating: 4.5,
         reviewCount: 100,
-        createdAt: now,
-        updatedAt: now,
         contacts: const {
           'phone': '+7 (999) 123-45-67',
           'email': 'test@example.com',
@@ -213,13 +220,17 @@ void main() {
         id: 'test_id',
         userId: 'test_user_id',
         name: 'Test Specialist',
+        specialization: 'Photography',
+        city: 'Moscow',
+        rating: 0.0,
+        pricePerHour: 0,
+        createdAt: now,
+        updatedAt: now,
         category: SpecialistCategory.photographer,
         experienceLevel: ExperienceLevel.beginner,
         yearsOfExperience: 0,
         hourlyRate: 0,
         price: 0,
-        createdAt: now,
-        updatedAt: now,
       );
 
       final map = specialist.toMap();
@@ -238,13 +249,17 @@ void main() {
         id: 'test_id',
         userId: 'test_user_id',
         name: 'Test Specialist',
+        specialization: 'Photography',
+        city: 'Moscow',
+        rating: 0.0,
+        pricePerHour: 0,
+        createdAt: now,
+        updatedAt: now,
         category: SpecialistCategory.photographer,
         experienceLevel: ExperienceLevel.beginner,
         yearsOfExperience: 0,
         hourlyRate: 0,
         price: 0,
-        createdAt: now,
-        updatedAt: now,
         contacts: const {},
         servicesWithPrices: const {},
       );

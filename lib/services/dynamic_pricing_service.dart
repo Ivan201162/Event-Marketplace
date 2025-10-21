@@ -18,7 +18,7 @@ class DynamicPricingService {
       // Получаем правила ценообразования
       final PricingRule? rule = await _getPricingRule(serviceType);
       if (rule == null) {
-        debugdebugPrint('WARNING: [DynamicPricingService] No pricing rule found for $serviceType');
+        debugPrint('WARNING: [DynamicPricingService] No pricing rule found for $serviceType');
         return 0.0;
       }
 
@@ -65,11 +65,11 @@ class DynamicPricingService {
         userId: additionalFactors?['userId'],
       );
 
-      debugdebugPrint(
+      debugPrint(
           'INFO: [DynamicPricingService] Price calculated: $finalPrice for $serviceType in $region');
       return finalPrice;
     } catch (e) {
-      debugdebugPrint('ERROR: [DynamicPricingService] Failed to get current price: $e');
+      debugPrint('ERROR: [DynamicPricingService] Failed to get current price: $e');
       return 0.0;
     }
   }
@@ -89,7 +89,7 @@ class DynamicPricingService {
       }
       return null;
     } catch (e) {
-      debugdebugPrint('ERROR: [DynamicPricingService] Failed to get pricing rule: $e');
+      debugPrint('ERROR: [DynamicPricingService] Failed to get pricing rule: $e');
       return null;
     }
   }
@@ -110,7 +110,7 @@ class DynamicPricingService {
       }
       return null;
     } catch (e) {
-      debugdebugPrint('ERROR: [DynamicPricingService] Failed to get demand metrics: $e');
+      debugPrint('ERROR: [DynamicPricingService] Failed to get demand metrics: $e');
       return null;
     }
   }
@@ -130,7 +130,7 @@ class DynamicPricingService {
       }
       return null;
     } catch (e) {
-      debugdebugPrint('ERROR: [DynamicPricingService] Failed to get regional pricing: $e');
+      debugPrint('ERROR: [DynamicPricingService] Failed to get regional pricing: $e');
       return null;
     }
   }
@@ -279,7 +279,7 @@ class DynamicPricingService {
 
       await _firestore.collection('pricing_history').doc(history.id).set(history.toMap());
     } catch (e) {
-      debugdebugPrint('ERROR: [DynamicPricingService] Failed to save pricing history: $e');
+      debugPrint('ERROR: [DynamicPricingService] Failed to save pricing history: $e');
     }
   }
 
@@ -304,10 +304,10 @@ class DynamicPricingService {
 
       await _firestore.collection('demand_metrics').doc(metrics.id).set(metrics.toMap());
 
-      debugdebugPrint(
+      debugPrint(
           'INFO: [DynamicPricingService] Demand metrics updated for $serviceType in $region');
     } catch (e) {
-      debugdebugPrint('ERROR: [DynamicPricingService] Failed to update demand metrics: $e');
+      debugPrint('ERROR: [DynamicPricingService] Failed to update demand metrics: $e');
     }
   }
 
@@ -316,9 +316,9 @@ class DynamicPricingService {
     try {
       await _firestore.collection('pricing_rules').doc(rule.id).set(rule.toMap());
 
-      debugdebugPrint('INFO: [DynamicPricingService] Pricing rule created: ${rule.id}');
+      debugPrint('INFO: [DynamicPricingService] Pricing rule created: ${rule.id}');
     } catch (e) {
-      debugdebugPrint('ERROR: [DynamicPricingService] Failed to create pricing rule: $e');
+      debugPrint('ERROR: [DynamicPricingService] Failed to create pricing rule: $e');
       rethrow;
     }
   }
@@ -351,7 +351,7 @@ class DynamicPricingService {
           .map((doc) => PricingHistory.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      debugdebugPrint('ERROR: [DynamicPricingService] Failed to get pricing history: $e');
+      debugPrint('ERROR: [DynamicPricingService] Failed to get pricing history: $e');
       return [];
     }
   }
@@ -402,7 +402,7 @@ class DynamicPricingService {
         'priceChangePercent': history.isNotEmpty ? history.first.priceChangePercent : 0.0,
       };
     } catch (e) {
-      debugdebugPrint('ERROR: [DynamicPricingService] Failed to get pricing stats: $e');
+      debugPrint('ERROR: [DynamicPricingService] Failed to get pricing stats: $e');
       return {};
     }
   }

@@ -21,7 +21,7 @@ class HomeScreen extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
             onPressed: () {
-              // TODO: Navigate to notifications
+              context.push('/notifications');
             },
           ),
         ],
@@ -123,7 +123,7 @@ class HomeScreen extends ConsumerWidget {
             IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () {
-                // TODO: Navigate to profile edit
+                context.push('/profile/edit');
               },
             ),
           ],
@@ -164,7 +164,7 @@ class HomeScreen extends ConsumerWidget {
               ),
               onSubmitted: (query) {
                 if (query.isNotEmpty) {
-                  context.push('/search');
+                  context.push('/search?query=${Uri.encodeComponent(query)}');
                 }
               },
             ),
@@ -324,10 +324,11 @@ class HomeScreen extends ConsumerWidget {
 
   Widget _buildTopSpecialistsSection(
       BuildContext context, WidgetRef ref, String title, bool isCountryWide) {
+    final currentUser = ref.watch(currentUserProvider).value;
     final specialistsAsync = isCountryWide
         ? ref.watch(topSpecialistsRuProvider)
         : ref.watch(
-            topSpecialistsCityProvider(ref.watch(currentUserProvider).value?.city ?? 'Москва'));
+            topSpecialistsCityProvider(currentUser?.city ?? 'Москва'));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -407,7 +408,7 @@ class HomeScreen extends ConsumerWidget {
             Expanded(
               child: ElevatedButton.icon(
                 onPressed: () {
-                  // TODO: Navigate to create request
+                  context.push('/requests/create');
                 },
                 icon: const Icon(Icons.add),
                 label: const Text('Создать заявку'),
@@ -417,7 +418,7 @@ class HomeScreen extends ConsumerWidget {
             Expanded(
               child: OutlinedButton.icon(
                 onPressed: () {
-                  // TODO: Navigate to create post
+                  context.push('/posts/create');
                 },
                 icon: const Icon(Icons.post_add),
                 label: const Text('Создать пост'),

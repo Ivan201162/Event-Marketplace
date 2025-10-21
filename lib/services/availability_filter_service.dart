@@ -215,7 +215,7 @@ class AvailabilityFilterService {
         end,
       );
     } catch (e) {
-      debugdebugPrint('Error getting specialist availability: $e');
+      debugPrint('Error getting specialist availability: $e');
       return _createMockAvailability(specialistId);
     }
   }
@@ -262,7 +262,7 @@ class AvailabilityFilterService {
 
       return availabilityList;
     } catch (e) {
-      debugdebugPrint('Error getting available specialists: $e');
+      debugPrint('Error getting available specialists: $e');
       return _createMockSpecialistsList();
     }
   }
@@ -311,7 +311,7 @@ class AvailabilityFilterService {
 
       return busyDates;
     } catch (e) {
-      debugdebugPrint('Error getting busy dates: $e');
+      debugPrint('Error getting busy dates: $e');
       return _createMockBusyDates();
     }
   }
@@ -377,7 +377,7 @@ class AvailabilityFilterService {
         duration ?? const Duration(hours: 1),
       );
     } catch (e) {
-      debugdebugPrint('Error getting available time slots: $e');
+      debugPrint('Error getting available time slots: $e');
       return _createMockTimeSlots(date);
     }
   }

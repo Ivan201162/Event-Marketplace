@@ -61,10 +61,10 @@ class EventMediaService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugdebugPrint('Uploaded media to event $eventId: $fileName');
+      debugPrint('Uploaded media to event $eventId: $fileName');
       return docRef.id;
     } catch (e) {
-      debugdebugPrint('Error uploading media: $e');
+      debugPrint('Error uploading media: $e');
       throw Exception('Ошибка загрузки медиафайла: $e');
     }
   }
@@ -206,9 +206,9 @@ class EventMediaService {
         }
       });
 
-      debugdebugPrint('Toggled like for media $mediaId');
+      debugPrint('Toggled like for media $mediaId');
     } catch (e) {
-      debugdebugPrint('Error liking media: $e');
+      debugPrint('Error liking media: $e');
       throw Exception('Ошибка лайка медиафайла: $e');
     }
   }
@@ -225,9 +225,9 @@ class EventMediaService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugdebugPrint('Added tags to media $mediaId');
+      debugPrint('Added tags to media $mediaId');
     } catch (e) {
-      debugdebugPrint('Error adding tags to media: $e');
+      debugPrint('Error adding tags to media: $e');
       throw Exception('Ошибка добавления тегов: $e');
     }
   }
@@ -244,9 +244,9 @@ class EventMediaService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugdebugPrint('Removed tags from media $mediaId');
+      debugPrint('Removed tags from media $mediaId');
     } catch (e) {
-      debugdebugPrint('Error removing tags from media: $e');
+      debugPrint('Error removing tags from media: $e');
       throw Exception('Ошибка удаления тегов: $e');
     }
   }
@@ -263,9 +263,9 @@ class EventMediaService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugdebugPrint('Set media $mediaId featured: $isFeatured');
+      debugPrint('Set media $mediaId featured: $isFeatured');
     } catch (e) {
-      debugdebugPrint('Error setting media featured: $e');
+      debugPrint('Error setting media featured: $e');
       throw Exception('Ошибка изменения статуса медиафайла: $e');
     }
   }
@@ -282,9 +282,9 @@ class EventMediaService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugdebugPrint('Set media $mediaId public: $isPublic');
+      debugPrint('Set media $mediaId public: $isPublic');
     } catch (e) {
-      debugdebugPrint('Error setting media public: $e');
+      debugPrint('Error setting media public: $e');
       throw Exception('Ошибка изменения публичности медиафайла: $e');
     }
   }
@@ -297,9 +297,9 @@ class EventMediaService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugdebugPrint('Deleted media $mediaId');
+      debugPrint('Deleted media $mediaId');
     } catch (e) {
-      debugdebugPrint('Error deleting media: $e');
+      debugPrint('Error deleting media: $e');
       throw Exception('Ошибка удаления медиафайла: $e');
     }
   }
@@ -347,7 +347,7 @@ class EventMediaService {
             : null,
       };
     } catch (e) {
-      debugdebugPrint('Error getting media stats: $e');
+      debugPrint('Error getting media stats: $e');
       return {};
     }
   }
@@ -399,7 +399,7 @@ class EventMediaService {
 
       return sortedTags.take(10).map((e) => e.key).toList();
     } catch (e) {
-      debugdebugPrint('Error getting popular tags: $e');
+      debugPrint('Error getting popular tags: $e');
       return [];
     }
   }

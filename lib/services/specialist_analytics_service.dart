@@ -178,7 +178,7 @@ class SpecialistAnalyticsService {
         ...doc.data()!,
       });
     } on Exception catch (e) {
-      debugdebugPrint('Error getting specialist analytics: $e');
+      debugPrint('Error getting specialist analytics: $e');
       return null;
     }
   }
@@ -232,7 +232,7 @@ class SpecialistAnalyticsService {
 
       return analytics;
     } on Exception catch (e) {
-      debugdebugPrint('Error generating analytics: $e');
+      debugPrint('Error generating analytics: $e');
       throw Exception('Ошибка генерации аналитики: $e');
     }
   }
@@ -389,9 +389,9 @@ class SpecialistAnalyticsService {
       final analytics = await _generateAnalytics(specialistId);
       await _firestore.collection('specialist_analytics').doc(specialistId).set(analytics.toMap());
 
-      debugdebugPrint('Updated analytics for specialist $specialistId');
+      debugPrint('Updated analytics for specialist $specialistId');
     } on Exception catch (e) {
-      debugdebugPrint('Error updating specialist analytics: $e');
+      debugPrint('Error updating specialist analytics: $e');
       throw Exception('Ошибка обновления аналитики: $e');
     }
   }
@@ -425,7 +425,7 @@ class SpecialistAnalyticsService {
           )
           .toList();
     } on Exception catch (e) {
-      debugdebugPrint('Error getting top specialists: $e');
+      debugPrint('Error getting top specialists: $e');
       return [];
     }
   }
@@ -453,7 +453,7 @@ class SpecialistAnalyticsService {
           )
           .toList();
     } on Exception catch (e) {
-      debugdebugPrint('Error getting top specialists by rating: $e');
+      debugPrint('Error getting top specialists by rating: $e');
       return [];
     }
   }
@@ -498,7 +498,7 @@ class SpecialistAnalyticsService {
             ratings.isNotEmpty ? ratings.reduce((a, b) => a + b) / ratings.length : 0.0,
       };
     } on Exception catch (e) {
-      debugdebugPrint('Error getting comparative analytics: $e');
+      debugPrint('Error getting comparative analytics: $e');
       return {};
     }
   }
@@ -546,7 +546,7 @@ class SpecialistAnalyticsService {
 
       return monthlyIncome;
     } on Exception catch (e) {
-      debugdebugPrint('Error getting monthly income stats: $e');
+      debugPrint('Error getting monthly income stats: $e');
       return {};
     }
   }
@@ -580,7 +580,7 @@ class SpecialistAnalyticsService {
 
       return monthlyBookings;
     } on Exception catch (e) {
-      debugdebugPrint('Error getting monthly bookings stats: $e');
+      debugPrint('Error getting monthly bookings stats: $e');
       return {};
     }
   }
@@ -623,7 +623,7 @@ class SpecialistAnalyticsService {
 
       return monthlyAverageRating;
     } on Exception catch (e) {
-      debugdebugPrint('Error getting monthly rating stats: $e');
+      debugPrint('Error getting monthly rating stats: $e');
       return {};
     }
   }

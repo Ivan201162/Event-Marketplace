@@ -6,259 +6,360 @@ part of 'anniversary_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-// GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, type=warning
-/// Провайдер сервиса годовщин
+String _$anniversaryServiceHash() =>
+    r'c4a7c62bc754e4d09ace669e62dcca753250aae6';
 
+/// Провайдер сервиса годовщин
+///
+/// Copied from [anniversaryService].
 @ProviderFor(anniversaryService)
-const anniversaryServiceProvider = AnniversaryServiceProvider._();
+final anniversaryServiceProvider =
+    AutoDisposeProvider<AnniversaryService>.internal(
+  anniversaryService,
+  name: r'anniversaryServiceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$anniversaryServiceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
 
-/// Провайдер сервиса годовщин
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef AnniversaryServiceRef = AutoDisposeProviderRef<AnniversaryService>;
+String _$userAnniversaryInfoHash() =>
+    r'630eaedc887cf3bab9af4469eef4ecce90bf948e';
 
-final class AnniversaryServiceProvider
-    extends $FunctionalProvider<AnniversaryService, AnniversaryService, AnniversaryService>
-    with $Provider<AnniversaryService> {
-  /// Провайдер сервиса годовщин
-  const AnniversaryServiceProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'anniversaryServiceProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+/// Copied from Dart SDK
+class _SystemHash {
+  _SystemHash._();
 
-  @override
-  String debugGetCreateSourceHash() => _$anniversaryServiceHash();
-
-  @$internal
-  @override
-  $ProviderElement<AnniversaryService> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  AnniversaryService create(Ref ref) {
-    return anniversaryService(ref);
+  static int combine(int hash, int value) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + value);
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
   }
 
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(AnniversaryService value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<AnniversaryService>(value),
-    );
+  static int finish(int hash) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    // ignore: parameter_assignments
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
 }
 
-String _$anniversaryServiceHash() => r'c4a7c62bc754e4d09ace669e62dcca753250aae6';
-
 /// Провайдер информации о годовщине пользователя
-
+///
+/// Copied from [userAnniversaryInfo].
 @ProviderFor(userAnniversaryInfo)
-const userAnniversaryInfoProvider = UserAnniversaryInfoFamily._();
+const userAnniversaryInfoProvider = UserAnniversaryInfoFamily();
 
 /// Провайдер информации о годовщине пользователя
-
-final class UserAnniversaryInfoProvider extends $FunctionalProvider<
-        AsyncValue<Map<String, dynamic>>, Map<String, dynamic>, FutureOr<Map<String, dynamic>>>
-    with $FutureModifier<Map<String, dynamic>>, $FutureProvider<Map<String, dynamic>> {
+///
+/// Copied from [userAnniversaryInfo].
+class UserAnniversaryInfoFamily
+    extends Family<AsyncValue<Map<String, dynamic>>> {
   /// Провайдер информации о годовщине пользователя
-  const UserAnniversaryInfoProvider._(
-      {required UserAnniversaryInfoFamily super.from, required String super.argument})
-      : super(
-          retry: null,
-          name: r'userAnniversaryInfoProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
-
-  @override
-  String debugGetCreateSourceHash() => _$userAnniversaryInfoHash();
-
-  @override
-  String toString() {
-    return r'userAnniversaryInfoProvider'
-        ''
-        '($argument)';
-  }
-
-  @$internal
-  @override
-  $FutureProviderElement<Map<String, dynamic>> $createElement($ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<Map<String, dynamic>> create(Ref ref) {
-    final argument = this.argument as String;
-    return userAnniversaryInfo(
-      ref,
-      argument,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is UserAnniversaryInfoProvider && other.argument == argument;
-  }
-
-  @override
-  int get hashCode {
-    return argument.hashCode;
-  }
-}
-
-String _$userAnniversaryInfoHash() => r'630eaedc887cf3bab9af4469eef4ecce90bf948e';
-
-/// Провайдер информации о годовщине пользователя
-
-final class UserAnniversaryInfoFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<Map<String, dynamic>>, String> {
-  const UserAnniversaryInfoFamily._()
-      : super(
-          retry: null,
-          name: r'userAnniversaryInfoProvider',
-          dependencies: null,
-          $allTransitiveDependencies: null,
-          isAutoDispose: true,
-        );
+  ///
+  /// Copied from [userAnniversaryInfo].
+  const UserAnniversaryInfoFamily();
 
   /// Провайдер информации о годовщине пользователя
-
+  ///
+  /// Copied from [userAnniversaryInfo].
   UserAnniversaryInfoProvider call(
     String userId,
-  ) =>
-      UserAnniversaryInfoProvider._(argument: userId, from: this);
-
-  @override
-  String toString() => r'userAnniversaryInfoProvider';
-}
-
-/// Провайдер для обновления настроек годовщин
-
-@ProviderFor(AnniversarySettingsNotifier)
-const anniversarySettingsProvider = AnniversarySettingsNotifierProvider._();
-
-/// Провайдер для обновления настроек годовщин
-final class AnniversarySettingsNotifierProvider
-    extends $AsyncNotifierProvider<AnniversarySettingsNotifier, void> {
-  /// Провайдер для обновления настроек годовщин
-  const AnniversarySettingsNotifierProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'anniversarySettingsProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
-
-  @override
-  String debugGetCreateSourceHash() => _$anniversarySettingsNotifierHash();
-
-  @$internal
-  @override
-  AnniversarySettingsNotifier create() => AnniversarySettingsNotifier();
-}
-
-String _$anniversarySettingsNotifierHash() => r'f1ba5c10f4d215b14709cea3ec17fd90a8a5126a';
-
-/// Провайдер для обновления настроек годовщин
-
-abstract class _$AnniversarySettingsNotifier extends $AsyncNotifier<void> {
-  FutureOr<void> build();
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    build();
-    final ref = this.ref as $Ref<AsyncValue<void>, void>;
-    final element = ref.element as $ClassProviderElement<AnyNotifier<AsyncValue<void>, void>,
-        AsyncValue<void>, Object?, Object?>;
-    element.handleValue(ref, null);
-  }
-}
-
-/// Провайдер пользователей с годовщинами в ближайшие дни
-
-@ProviderFor(upcomingAnniversaries)
-const upcomingAnniversariesProvider = UpcomingAnniversariesFamily._();
-
-/// Провайдер пользователей с годовщинами в ближайшие дни
-
-final class UpcomingAnniversariesProvider
-    extends $FunctionalProvider<AsyncValue<List<AppUser>>, List<AppUser>, FutureOr<List<AppUser>>>
-    with $FutureModifier<List<AppUser>>, $FutureProvider<List<AppUser>> {
-  /// Провайдер пользователей с годовщинами в ближайшие дни
-  const UpcomingAnniversariesProvider._(
-      {required UpcomingAnniversariesFamily super.from, required int super.argument})
-      : super(
-          retry: null,
-          name: r'upcomingAnniversariesProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
-
-  @override
-  String debugGetCreateSourceHash() => _$upcomingAnniversariesHash();
-
-  @override
-  String toString() {
-    return r'upcomingAnniversariesProvider'
-        ''
-        '($argument)';
-  }
-
-  @$internal
-  @override
-  $FutureProviderElement<List<AppUser>> $createElement($ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<List<AppUser>> create(Ref ref) {
-    final argument = this.argument as int;
-    return upcomingAnniversaries(
-      ref,
-      argument,
+  ) {
+    return UserAnniversaryInfoProvider(
+      userId,
     );
   }
 
   @override
+  UserAnniversaryInfoProvider getProviderOverride(
+    covariant UserAnniversaryInfoProvider provider,
+  ) {
+    return call(
+      provider.userId,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'userAnniversaryInfoProvider';
+}
+
+/// Провайдер информации о годовщине пользователя
+///
+/// Copied from [userAnniversaryInfo].
+class UserAnniversaryInfoProvider
+    extends AutoDisposeFutureProvider<Map<String, dynamic>> {
+  /// Провайдер информации о годовщине пользователя
+  ///
+  /// Copied from [userAnniversaryInfo].
+  UserAnniversaryInfoProvider(
+    String userId,
+  ) : this._internal(
+          (ref) => userAnniversaryInfo(
+            ref as UserAnniversaryInfoRef,
+            userId,
+          ),
+          from: userAnniversaryInfoProvider,
+          name: r'userAnniversaryInfoProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$userAnniversaryInfoHash,
+          dependencies: UserAnniversaryInfoFamily._dependencies,
+          allTransitiveDependencies:
+              UserAnniversaryInfoFamily._allTransitiveDependencies,
+          userId: userId,
+        );
+
+  UserAnniversaryInfoProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.userId,
+  }) : super.internal();
+
+  final String userId;
+
+  @override
+  Override overrideWith(
+    FutureOr<Map<String, dynamic>> Function(UserAnniversaryInfoRef provider)
+        create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: UserAnniversaryInfoProvider._internal(
+        (ref) => create(ref as UserAnniversaryInfoRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        userId: userId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<Map<String, dynamic>> createElement() {
+    return _UserAnniversaryInfoProviderElement(this);
+  }
+
+  @override
   bool operator ==(Object other) {
-    return other is UpcomingAnniversariesProvider && other.argument == argument;
+    return other is UserAnniversaryInfoProvider && other.userId == userId;
   }
 
   @override
   int get hashCode {
-    return argument.hashCode;
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, userId.hashCode);
+
+    return _SystemHash.finish(hash);
   }
 }
 
-String _$upcomingAnniversariesHash() => r'b189262e778937705c6c31e81f9bf9dcaba1679c';
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin UserAnniversaryInfoRef
+    on AutoDisposeFutureProviderRef<Map<String, dynamic>> {
+  /// The parameter `userId` of this provider.
+  String get userId;
+}
 
-/// Провайдер пользователей с годовщинами в ближайшие дни
-
-final class UpcomingAnniversariesFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<List<AppUser>>, int> {
-  const UpcomingAnniversariesFamily._()
-      : super(
-          retry: null,
-          name: r'upcomingAnniversariesProvider',
-          dependencies: null,
-          $allTransitiveDependencies: null,
-          isAutoDispose: true,
-        );
-
-  /// Провайдер пользователей с годовщинами в ближайшие дни
-
-  UpcomingAnniversariesProvider call(
-    int daysAhead,
-  ) =>
-      UpcomingAnniversariesProvider._(argument: daysAhead, from: this);
+class _UserAnniversaryInfoProviderElement
+    extends AutoDisposeFutureProviderElement<Map<String, dynamic>>
+    with UserAnniversaryInfoRef {
+  _UserAnniversaryInfoProviderElement(super.provider);
 
   @override
-  String toString() => r'upcomingAnniversariesProvider';
+  String get userId => (origin as UserAnniversaryInfoProvider).userId;
 }
+
+String _$upcomingAnniversariesHash() =>
+    r'b189262e778937705c6c31e81f9bf9dcaba1679c';
+
+/// Провайдер пользователей с годовщинами в ближайшие дни
+///
+/// Copied from [upcomingAnniversaries].
+@ProviderFor(upcomingAnniversaries)
+const upcomingAnniversariesProvider = UpcomingAnniversariesFamily();
+
+/// Провайдер пользователей с годовщинами в ближайшие дни
+///
+/// Copied from [upcomingAnniversaries].
+class UpcomingAnniversariesFamily extends Family<AsyncValue<List<AppUser>>> {
+  /// Провайдер пользователей с годовщинами в ближайшие дни
+  ///
+  /// Copied from [upcomingAnniversaries].
+  const UpcomingAnniversariesFamily();
+
+  /// Провайдер пользователей с годовщинами в ближайшие дни
+  ///
+  /// Copied from [upcomingAnniversaries].
+  UpcomingAnniversariesProvider call(
+    int daysAhead,
+  ) {
+    return UpcomingAnniversariesProvider(
+      daysAhead,
+    );
+  }
+
+  @override
+  UpcomingAnniversariesProvider getProviderOverride(
+    covariant UpcomingAnniversariesProvider provider,
+  ) {
+    return call(
+      provider.daysAhead,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'upcomingAnniversariesProvider';
+}
+
+/// Провайдер пользователей с годовщинами в ближайшие дни
+///
+/// Copied from [upcomingAnniversaries].
+class UpcomingAnniversariesProvider
+    extends AutoDisposeFutureProvider<List<AppUser>> {
+  /// Провайдер пользователей с годовщинами в ближайшие дни
+  ///
+  /// Copied from [upcomingAnniversaries].
+  UpcomingAnniversariesProvider(
+    int daysAhead,
+  ) : this._internal(
+          (ref) => upcomingAnniversaries(
+            ref as UpcomingAnniversariesRef,
+            daysAhead,
+          ),
+          from: upcomingAnniversariesProvider,
+          name: r'upcomingAnniversariesProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$upcomingAnniversariesHash,
+          dependencies: UpcomingAnniversariesFamily._dependencies,
+          allTransitiveDependencies:
+              UpcomingAnniversariesFamily._allTransitiveDependencies,
+          daysAhead: daysAhead,
+        );
+
+  UpcomingAnniversariesProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.daysAhead,
+  }) : super.internal();
+
+  final int daysAhead;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<AppUser>> Function(UpcomingAnniversariesRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: UpcomingAnniversariesProvider._internal(
+        (ref) => create(ref as UpcomingAnniversariesRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        daysAhead: daysAhead,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<AppUser>> createElement() {
+    return _UpcomingAnniversariesProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is UpcomingAnniversariesProvider &&
+        other.daysAhead == daysAhead;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, daysAhead.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin UpcomingAnniversariesRef on AutoDisposeFutureProviderRef<List<AppUser>> {
+  /// The parameter `daysAhead` of this provider.
+  int get daysAhead;
+}
+
+class _UpcomingAnniversariesProviderElement
+    extends AutoDisposeFutureProviderElement<List<AppUser>>
+    with UpcomingAnniversariesRef {
+  _UpcomingAnniversariesProviderElement(super.provider);
+
+  @override
+  int get daysAhead => (origin as UpcomingAnniversariesProvider).daysAhead;
+}
+
+String _$anniversarySettingsNotifierHash() =>
+    r'f1ba5c10f4d215b14709cea3ec17fd90a8a5126a';
+
+/// Провайдер для обновления настроек годовщин
+///
+/// Copied from [AnniversarySettingsNotifier].
+@ProviderFor(AnniversarySettingsNotifier)
+final anniversarySettingsNotifierProvider = AutoDisposeAsyncNotifierProvider<
+    AnniversarySettingsNotifier, void>.internal(
+  AnniversarySettingsNotifier.new,
+  name: r'anniversarySettingsNotifierProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$anniversarySettingsNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$AnniversarySettingsNotifier = AutoDisposeAsyncNotifier<void>;
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

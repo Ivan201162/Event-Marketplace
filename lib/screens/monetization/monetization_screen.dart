@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 /// Monetization screen with subscription plans
 class MonetizationScreen extends StatelessWidget {
@@ -98,7 +99,7 @@ class MonetizationScreen extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      // TODO: Manage subscription
+                      context.push('/subscription/manage');
                     },
                     child: const Text('Управлять'),
                   ),
@@ -480,12 +481,7 @@ class MonetizationScreen extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              // TODO: Process payment
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Функция оплаты будет реализована позже'),
-                ),
-              );
+              _processPayment(context, plan);
             },
             child: const Text('Подписаться'),
           ),
@@ -510,5 +506,13 @@ class MonetizationScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _processPayment(BuildContext context, Map<String, dynamic> plan) {
+    // Переход к экрану оплаты
+    context.push('/payment/subscription', extra: {
+      'plan': plan,
+      'type': 'subscription',
+    });
   }
 }

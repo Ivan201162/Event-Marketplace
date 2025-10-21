@@ -67,7 +67,7 @@ class YooKassaPaymentService {
         );
       }
     } catch (e) {
-      debugdebugPrint('YooKassa payment creation error: $e');
+      debugPrint('YooKassa payment creation error: $e');
       throw Exception('Ошибка создания платежа YooKassa: $e');
     }
   }
@@ -93,7 +93,7 @@ class YooKassaPaymentService {
         );
       }
     } catch (e) {
-      debugdebugPrint('YooKassa payment status error: $e');
+      debugPrint('YooKassa payment status error: $e');
       throw Exception('Ошибка получения статуса платежа YooKassa: $e');
     }
   }
@@ -123,7 +123,7 @@ class YooKassaPaymentService {
         );
       }
     } catch (e) {
-      debugdebugPrint('YooKassa payment capture error: $e');
+      debugPrint('YooKassa payment capture error: $e');
       throw Exception('Ошибка подтверждения платежа YooKassa: $e');
     }
   }
@@ -144,7 +144,7 @@ class YooKassaPaymentService {
         );
       }
     } catch (e) {
-      debugdebugPrint('YooKassa payment cancel error: $e');
+      debugPrint('YooKassa payment cancel error: $e');
       throw Exception('Ошибка отмены платежа YooKassa: $e');
     }
   }
@@ -183,7 +183,7 @@ class YooKassaPaymentService {
         );
       }
     } catch (e) {
-      debugdebugPrint('YooKassa refund creation error: $e');
+      debugPrint('YooKassa refund creation error: $e');
       throw Exception('Ошибка создания возврата YooKassa: $e');
     }
   }
@@ -197,7 +197,7 @@ class YooKassaPaymentService {
           webhookData.containsKey('event') &&
           webhookData.containsKey('object');
     } catch (e) {
-      debugdebugPrint('YooKassa webhook validation error: $e');
+      debugPrint('YooKassa webhook validation error: $e');
       return false;
     }
   }

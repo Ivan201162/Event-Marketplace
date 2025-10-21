@@ -436,7 +436,7 @@ class ReviewsService {
         'reputationStatus': status.value,
       });
     } catch (e) {
-      debugdebugPrint('Ошибка при обновлении рейтинга: $e');
+      debugPrint('Ошибка при обновлении рейтинга: $e');
     }
   }
 

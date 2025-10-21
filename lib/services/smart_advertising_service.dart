@@ -73,11 +73,11 @@ class SmartAdvertisingService {
         );
       }
 
-      debugdebugPrint(
+      debugPrint(
           'INFO: [SmartAdvertisingService] Found ${relevantAds.length} relevant ads for user $userId');
       return relevantAds;
     } catch (e) {
-      debugdebugPrint('ERROR: [SmartAdvertisingService] Failed to get relevant ads: $e');
+      debugPrint('ERROR: [SmartAdvertisingService] Failed to get relevant ads: $e');
       return [];
     }
   }
@@ -109,9 +109,9 @@ class SmartAdvertisingService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugdebugPrint('INFO: [SmartAdvertisingService] Impression recorded for ad $adId');
+      debugPrint('INFO: [SmartAdvertisingService] Impression recorded for ad $adId');
     } catch (e) {
-      debugdebugPrint('ERROR: [SmartAdvertisingService] Failed to record impression: $e');
+      debugPrint('ERROR: [SmartAdvertisingService] Failed to record impression: $e');
     }
   }
 
@@ -148,9 +148,9 @@ class SmartAdvertisingService {
       // Пересчитываем CTR
       await _updateAdMetrics(adId);
 
-      debugdebugPrint('INFO: [SmartAdvertisingService] Click recorded for ad $adId');
+      debugPrint('INFO: [SmartAdvertisingService] Click recorded for ad $adId');
     } catch (e) {
-      debugdebugPrint('ERROR: [SmartAdvertisingService] Failed to record click: $e');
+      debugPrint('ERROR: [SmartAdvertisingService] Failed to record click: $e');
     }
   }
 
@@ -189,9 +189,9 @@ class SmartAdvertisingService {
       // Пересчитываем метрики
       await _updateAdMetrics(adId);
 
-      debugdebugPrint('INFO: [SmartAdvertisingService] Conversion recorded for ad $adId');
+      debugPrint('INFO: [SmartAdvertisingService] Conversion recorded for ad $adId');
     } catch (e) {
-      debugdebugPrint('ERROR: [SmartAdvertisingService] Failed to record conversion: $e');
+      debugPrint('ERROR: [SmartAdvertisingService] Failed to record conversion: $e');
     }
   }
 
@@ -223,9 +223,9 @@ class SmartAdvertisingService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugdebugPrint('INFO: [SmartAdvertisingService] Metrics updated for ad $adId');
+      debugPrint('INFO: [SmartAdvertisingService] Metrics updated for ad $adId');
     } catch (e) {
-      debugdebugPrint('ERROR: [SmartAdvertisingService] Failed to update ad metrics: $e');
+      debugPrint('ERROR: [SmartAdvertisingService] Failed to update ad metrics: $e');
     }
   }
 
@@ -264,10 +264,10 @@ class SmartAdvertisingService {
 
       await _firestore.collection('smart_advertisements').doc(adId).set(newAd.toMap());
 
-      debugdebugPrint('INFO: [SmartAdvertisingService] Smart ad created: $adId');
+      debugPrint('INFO: [SmartAdvertisingService] Smart ad created: $adId');
       return adId;
     } catch (e) {
-      debugdebugPrint('ERROR: [SmartAdvertisingService] Failed to create smart ad: $e');
+      debugPrint('ERROR: [SmartAdvertisingService] Failed to create smart ad: $e');
       rethrow;
     }
   }
@@ -312,9 +312,9 @@ class SmartAdvertisingService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugdebugPrint('INFO: [SmartAdvertisingService] Ad optimized: $adId');
+      debugPrint('INFO: [SmartAdvertisingService] Ad optimized: $adId');
     } catch (e) {
-      debugdebugPrint('ERROR: [SmartAdvertisingService] Failed to optimize ad: $e');
+      debugPrint('ERROR: [SmartAdvertisingService] Failed to optimize ad: $e');
     }
   }
 
@@ -368,7 +368,7 @@ class SmartAdvertisingService {
         'status': 'analyzed',
       };
     } catch (e) {
-      debugdebugPrint('ERROR: [SmartAdvertisingService] Failed to analyze ad performance: $e');
+      debugPrint('ERROR: [SmartAdvertisingService] Failed to analyze ad performance: $e');
       return {'status': 'error'};
     }
   }
@@ -481,7 +481,7 @@ class SmartAdvertisingService {
         'daysRemaining': ad.endDate.difference(DateTime.now()).inDays,
       };
     } catch (e) {
-      debugdebugPrint('ERROR: [SmartAdvertisingService] Failed to get ad stats: $e');
+      debugPrint('ERROR: [SmartAdvertisingService] Failed to get ad stats: $e');
       return {};
     }
   }
@@ -499,7 +499,7 @@ class SmartAdvertisingService {
           .map((doc) => SmartAdvertisement.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      debugdebugPrint('ERROR: [SmartAdvertisingService] Failed to get user ads: $e');
+      debugPrint('ERROR: [SmartAdvertisingService] Failed to get user ads: $e');
       return [];
     }
   }

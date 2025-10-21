@@ -39,6 +39,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       return;
     }
 
+    // Валидация email
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegex.hasMatch(_emailController.text.trim())) {
+      _showError('Введите корректный email');
+      return;
+    }
+
     setState(() => _isLoading = true);
     ref.read(authLoadingProvider.notifier).state = true;
 
@@ -68,8 +75,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       return;
     }
 
+    // Валидация email
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegex.hasMatch(_emailController.text.trim())) {
+      _showError('Введите корректный email');
+      return;
+    }
+
     if (_passwordController.text.length < 6) {
       _showError('Пароль должен содержать минимум 6 символов');
+      return;
+    }
+
+    if (_nameController.text.trim().length < 2) {
+      _showError('Имя должно содержать минимум 2 символа');
       return;
     }
 
@@ -108,6 +127,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Future<void> _signInWithPhone() async {
     if (_phoneController.text.isEmpty) {
       _showError('Введите номер телефона');
+      return;
+    }
+
+    // Валидация номера телефона
+    final phoneRegex = RegExp(r'^\+?[1-9]\d{1,14}$');
+    if (!phoneRegex.hasMatch(_phoneController.text.replaceAll(RegExp(r'[\s\-\(\)]'), ''))) {
+      _showError('Введите корректный номер телефона');
       return;
     }
 

@@ -55,7 +55,7 @@ class AppUpdateService {
         return updateInfo;
       }
     } catch (e) {
-      debugdebugPrint('Ошибка проверки обновлений: $e');
+      debugPrint('Ошибка проверки обновлений: $e');
     }
 
     return null;
@@ -94,7 +94,7 @@ class AppUpdateService {
         return updateInfo;
       }
     } catch (e) {
-      debugdebugPrint('Ошибка принудительной проверки обновлений: $e');
+      debugPrint('Ошибка принудительной проверки обновлений: $e');
     }
 
     return null;
@@ -112,7 +112,7 @@ class AppUpdateService {
       }
       return false;
     } catch (e) {
-      debugdebugPrint('Ошибка сравнения версий: $e');
+      debugPrint('Ошибка сравнения версий: $e');
       return false;
     }
   }
@@ -128,7 +128,7 @@ class AppUpdateService {
       final timestamp = prefs.getInt(_lastCheckKey);
       return timestamp != null ? DateTime.fromMillisecondsSinceEpoch(timestamp) : null;
     } catch (e) {
-      debugdebugPrint('Ошибка получения времени последней проверки: $e');
+      debugPrint('Ошибка получения времени последней проверки: $e');
       return null;
     }
   }
@@ -139,7 +139,7 @@ class AppUpdateService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setInt(_lastCheckKey, time.millisecondsSinceEpoch);
     } catch (e) {
-      debugdebugPrint('Ошибка обновления времени проверки: $e');
+      debugPrint('Ошибка обновления времени проверки: $e');
     }
   }
 
@@ -149,7 +149,7 @@ class AppUpdateService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_updateInfoKey, jsonEncode(updateInfo.toJson()));
     } catch (e) {
-      debugdebugPrint('Ошибка кэширования информации об обновлении: $e');
+      debugPrint('Ошибка кэширования информации об обновлении: $e');
     }
   }
 
@@ -163,7 +163,7 @@ class AppUpdateService {
         return UpdateInfo.fromJson(data);
       }
     } catch (e) {
-      debugdebugPrint('Ошибка получения кэшированной информации: $e');
+      debugPrint('Ошибка получения кэшированной информации: $e');
     }
     return null;
   }
@@ -174,7 +174,7 @@ class AppUpdateService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_dismissedVersionKey, version);
     } catch (e) {
-      debugdebugPrint('Ошибка отметки версии как отклоненной: $e');
+      debugPrint('Ошибка отметки версии как отклоненной: $e');
     }
   }
 
@@ -185,7 +185,7 @@ class AppUpdateService {
       final dismissed = prefs.getString(_dismissedVersionKey);
       return dismissed == version;
     } catch (e) {
-      debugdebugPrint('Ошибка проверки отклоненной версии: $e');
+      debugPrint('Ошибка проверки отклоненной версии: $e');
       return false;
     }
   }
@@ -198,7 +198,7 @@ class AppUpdateService {
       await prefs.remove(_updateInfoKey);
       await prefs.remove(_dismissedVersionKey);
     } catch (e) {
-      debugdebugPrint('Ошибка очистки кэша обновлений: $e');
+      debugPrint('Ошибка очистки кэша обновлений: $e');
     }
   }
 
@@ -209,7 +209,7 @@ class AppUpdateService {
   static Future<void> openDownloadPage(String? downloadUrl) async {
     if (downloadUrl != null) {
       // TODO(developer): Реализовать открытие страницы загрузки
-      debugdebugPrint('Открытие страницы загрузки: $downloadUrl');
+      debugPrint('Открытие страницы загрузки: $downloadUrl');
     }
   }
 

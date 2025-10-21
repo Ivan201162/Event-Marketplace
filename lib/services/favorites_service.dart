@@ -19,7 +19,7 @@ class FavoritesService {
         'createdAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      debugdebugPrint('Ошибка добавления в избранное: $e');
+      debugPrint('Ошибка добавления в избранное: $e');
       throw Exception('Не удалось добавить в избранное');
     }
   }
@@ -32,7 +32,7 @@ class FavoritesService {
     try {
       await _firestore.collection(_collectionName).doc('${userId}_$specialistId').delete();
     } catch (e) {
-      debugdebugPrint('Ошибка удаления из избранного: $e');
+      debugPrint('Ошибка удаления из избранного: $e');
       throw Exception('Не удалось удалить из избранного');
     }
   }
@@ -46,7 +46,7 @@ class FavoritesService {
       final doc = await _firestore.collection(_collectionName).doc('${userId}_$specialistId').get();
       return doc.exists;
     } catch (e) {
-      debugdebugPrint('Ошибка проверки избранного: $e');
+      debugPrint('Ошибка проверки избранного: $e');
       return false;
     }
   }
@@ -71,7 +71,7 @@ class FavoritesService {
 
       return specialistsSnapshot.docs.map(Specialist.fromDocument).toList();
     } catch (e) {
-      debugdebugPrint('Ошибка получения избранных специалистов: $e');
+      debugPrint('Ошибка получения избранных специалистов: $e');
       return [];
     }
   }
@@ -104,7 +104,7 @@ class FavoritesService {
           await _firestore.collection(_collectionName).where('userId', isEqualTo: userId).get();
       return snapshot.docs.length;
     } catch (e) {
-      debugdebugPrint('Ошибка получения количества избранных: $e');
+      debugPrint('Ошибка получения количества избранных: $e');
       return 0;
     }
   }
@@ -134,7 +134,7 @@ class FavoritesService {
         return true;
       }
     } catch (e) {
-      debugdebugPrint('Ошибка переключения избранного: $e');
+      debugPrint('Ошибка переключения избранного: $e');
       throw Exception('Не удалось изменить статус избранного');
     }
   }

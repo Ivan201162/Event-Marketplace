@@ -29,7 +29,7 @@ class GrowthPackIntegrationService {
   /// Инициализация всех сервисов Growth Pack
   Future<void> initializeGrowthPack() async {
     try {
-      debugdebugPrint('INFO: [GrowthPackIntegrationService] Initializing Growth Pack...');
+      debugPrint('INFO: [GrowthPackIntegrationService] Initializing Growth Pack...');
 
       // Создаем предустановленные данные
       await _createDefaultData();
@@ -40,9 +40,9 @@ class GrowthPackIntegrationService {
       // Создаем автоматические промо-кампании
       await _automatedPromotionsService.createDefaultPromotions();
 
-      debugdebugPrint('INFO: [GrowthPackIntegrationService] Growth Pack initialized successfully');
+      debugPrint('INFO: [GrowthPackIntegrationService] Growth Pack initialized successfully');
     } catch (e) {
-      debugdebugPrint('ERROR: [GrowthPackIntegrationService] Failed to initialize Growth Pack: $e');
+      debugPrint('ERROR: [GrowthPackIntegrationService] Failed to initialize Growth Pack: $e');
     }
   }
 
@@ -64,9 +64,9 @@ class GrowthPackIntegrationService {
       // Создаем правила умной рекламы
       await _createDefaultSmartAdRules();
 
-      debugdebugPrint('INFO: [GrowthPackIntegrationService] Default data created');
+      debugPrint('INFO: [GrowthPackIntegrationService] Default data created');
     } catch (e) {
-      debugdebugPrint('ERROR: [GrowthPackIntegrationService] Failed to create default data: $e');
+      debugPrint('ERROR: [GrowthPackIntegrationService] Failed to create default data: $e');
     }
   }
 
@@ -135,9 +135,9 @@ class GrowthPackIntegrationService {
         await _firestore.collection('achievements').doc(achievement['id']).set(achievement);
       }
 
-      debugdebugPrint('INFO: [GrowthPackIntegrationService] Default achievements created');
+      debugPrint('INFO: [GrowthPackIntegrationService] Default achievements created');
     } catch (e) {
-      debugdebugPrint(
+      debugPrint(
           'ERROR: [GrowthPackIntegrationService] Failed to create default achievements: $e');
     }
   }
@@ -196,9 +196,9 @@ class GrowthPackIntegrationService {
         await _firestore.collection('badges').doc(badge['id']).set(badge);
       }
 
-      debugdebugPrint('INFO: [GrowthPackIntegrationService] Default badges created');
+      debugPrint('INFO: [GrowthPackIntegrationService] Default badges created');
     } catch (e) {
-      debugdebugPrint('ERROR: [GrowthPackIntegrationService] Failed to create default badges: $e');
+      debugPrint('ERROR: [GrowthPackIntegrationService] Failed to create default badges: $e');
     }
   }
 
@@ -260,9 +260,9 @@ class GrowthPackIntegrationService {
         category: 'progress',
       );
 
-      debugdebugPrint('INFO: [GrowthPackIntegrationService] Default challenges created');
+      debugPrint('INFO: [GrowthPackIntegrationService] Default challenges created');
     } catch (e) {
-      debugdebugPrint(
+      debugPrint(
           'ERROR: [GrowthPackIntegrationService] Failed to create default challenges: $e');
     }
   }
@@ -312,9 +312,9 @@ class GrowthPackIntegrationService {
         },
       });
 
-      debugdebugPrint('INFO: [GrowthPackIntegrationService] Default pricing rules created');
+      debugPrint('INFO: [GrowthPackIntegrationService] Default pricing rules created');
     } catch (e) {
-      debugdebugPrint(
+      debugPrint(
           'ERROR: [GrowthPackIntegrationService] Failed to create default pricing rules: $e');
     }
   }
@@ -370,9 +370,9 @@ class GrowthPackIntegrationService {
         },
       });
 
-      debugdebugPrint('INFO: [GrowthPackIntegrationService] Default smart ad rules created');
+      debugPrint('INFO: [GrowthPackIntegrationService] Default smart ad rules created');
     } catch (e) {
-      debugdebugPrint(
+      debugPrint(
           'ERROR: [GrowthPackIntegrationService] Failed to create default smart ad rules: $e');
     }
   }
@@ -381,7 +381,7 @@ class GrowthPackIntegrationService {
   Future<void> handleUserEvent(
       String userId, String eventType, Map<String, dynamic> eventData) async {
     try {
-      debugdebugPrint(
+      debugPrint(
           'INFO: [GrowthPackIntegrationService] Handling user event: $eventType for user $userId');
 
       // Обработка в сервисе геймификации
@@ -396,9 +396,9 @@ class GrowthPackIntegrationService {
       // Добавление опыта за активность
       await _addExperienceForEvent(userId, eventType, eventData);
 
-      debugdebugPrint('INFO: [GrowthPackIntegrationService] User event handled successfully');
+      debugPrint('INFO: [GrowthPackIntegrationService] User event handled successfully');
     } catch (e) {
-      debugdebugPrint('ERROR: [GrowthPackIntegrationService] Failed to handle user event: $e');
+      debugPrint('ERROR: [GrowthPackIntegrationService] Failed to handle user event: $e');
     }
   }
 
@@ -456,7 +456,7 @@ class GrowthPackIntegrationService {
         await _growthMechanicsService.addExperience(userId, experience, reason);
       }
     } catch (e) {
-      debugdebugPrint(
+      debugPrint(
           'ERROR: [GrowthPackIntegrationService] Failed to add experience for event: $e');
     }
   }
@@ -496,7 +496,7 @@ class GrowthPackIntegrationService {
         'isActive': true,
       };
     } catch (e) {
-      debugdebugPrint('ERROR: [GrowthPackIntegrationService] Failed to get user growth stats: $e');
+      debugPrint('ERROR: [GrowthPackIntegrationService] Failed to get user growth stats: $e');
       return {
         'level': 1,
         'experience': 0,
@@ -546,7 +546,7 @@ class GrowthPackIntegrationService {
             : 0.0,
       };
     } catch (e) {
-      debugdebugPrint('ERROR: [GrowthPackIntegrationService] Failed to get admin growth stats: $e');
+      debugPrint('ERROR: [GrowthPackIntegrationService] Failed to get admin growth stats: $e');
       return {
         'totalUsers': 0,
         'totalReferrals': 0,

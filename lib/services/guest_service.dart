@@ -59,7 +59,7 @@ class GuestService {
       final docRef = await _firestore.collection('guests').add(guest.toMap());
       return docRef.id;
     } catch (e) {
-      debugdebugPrint('Error adding guest: $e');
+      debugPrint('Error adding guest: $e');
       throw Exception('Ошибка добавления гостя: $e');
     }
   }
@@ -76,7 +76,7 @@ class GuestService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      debugdebugPrint('Error updating guest status: $e');
+      debugPrint('Error updating guest status: $e');
       throw Exception('Ошибка обновления статуса гостя: $e');
     }
   }
@@ -90,7 +90,7 @@ class GuestService {
     try {
       await _firestore.collection('guests').doc(guestId).delete();
     } catch (e) {
-      debugdebugPrint('Error removing guest: $e');
+      debugPrint('Error removing guest: $e');
       throw Exception('Ошибка удаления гостя: $e');
     }
   }
@@ -112,7 +112,7 @@ class GuestService {
         ...doc.data()!,
       });
     } catch (e) {
-      debugdebugPrint('Error getting guest: $e');
+      debugPrint('Error getting guest: $e');
       return null;
     }
   }
@@ -149,7 +149,7 @@ class GuestService {
 
       return guestAccess.copyWith(id: docRef.id);
     } catch (e) {
-      debugdebugPrint('Error creating guest access: $e');
+      debugPrint('Error creating guest access: $e');
       throw Exception('Ошибка создания гостевого доступа: $e');
     }
   }
@@ -199,7 +199,7 @@ class GuestService {
         ...eventDoc.data()!,
       });
     } catch (e) {
-      debugdebugPrint('Error getting event by access code: $e');
+      debugPrint('Error getting event by access code: $e');
       return null;
     }
   }
@@ -246,7 +246,7 @@ class GuestService {
 
       return true;
     } catch (e) {
-      debugdebugPrint('Error using access code: $e');
+      debugPrint('Error using access code: $e');
       return false;
     }
   }
@@ -313,7 +313,7 @@ class GuestService {
 
       return docRef.id;
     } catch (e) {
-      debugdebugPrint('Error adding guest greeting: $e');
+      debugPrint('Error adding guest greeting: $e');
       throw Exception('Ошибка добавления приветствия: $e');
     }
   }
@@ -353,7 +353,7 @@ class GuestService {
         });
       });
     } catch (e) {
-      debugdebugPrint('Error toggling greeting like: $e');
+      debugPrint('Error toggling greeting like: $e');
       throw Exception('Ошибка изменения лайка: $e');
     }
   }
@@ -389,7 +389,7 @@ class GuestService {
 
       return stats;
     } catch (e) {
-      debugdebugPrint('Error getting guest stats: $e');
+      debugPrint('Error getting guest stats: $e');
       return {};
     }
   }

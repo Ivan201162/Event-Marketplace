@@ -14,9 +14,9 @@ class AnalyticsService {
   static Future<void> initialize() async {
     try {
       await _analytics.setAnalyticsCollectionEnabled(true);
-      debugdebugPrint('INFO: [AnalyticsService] Initialized successfully');
+      debugPrint('INFO: [AnalyticsService] Initialized successfully');
     } catch (e) {
-      debugdebugPrint('ERROR: [AnalyticsService] Initialization failed: $e');
+      debugPrint('ERROR: [AnalyticsService] Initialization failed: $e');
     }
   }
 
@@ -76,9 +76,9 @@ class AnalyticsService {
         },
       );
 
-      debugdebugPrint('INFO: [AnalyticsService] Subscription purchase tracked: ${plan.name}');
+      debugPrint('INFO: [AnalyticsService] Subscription purchase tracked: ${plan.name}');
     } catch (e) {
-      debugdebugPrint('ERROR: [AnalyticsService] Failed to track subscription purchase: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to track subscription purchase: $e');
     }
   }
 
@@ -123,9 +123,9 @@ class AnalyticsService {
         },
       );
 
-      debugdebugPrint('INFO: [AnalyticsService] Promotion purchase tracked: ${promotion.type}');
+      debugPrint('INFO: [AnalyticsService] Promotion purchase tracked: ${promotion.type}');
     } catch (e) {
-      debugdebugPrint('ERROR: [AnalyticsService] Failed to track promotion purchase: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to track promotion purchase: $e');
     }
   }
 
@@ -161,10 +161,10 @@ class AnalyticsService {
         },
       );
 
-      debugdebugPrint(
+      debugPrint(
           'INFO: [AnalyticsService] Advertisement created tracked: ${advertisement.type}');
     } catch (e) {
-      debugdebugPrint('ERROR: [AnalyticsService] Failed to track advertisement created: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to track advertisement created: $e');
     }
   }
 
@@ -202,9 +202,9 @@ class AnalyticsService {
         },
       );
 
-      debugdebugPrint('INFO: [AnalyticsService] Payment success tracked: ${transaction.type}');
+      debugPrint('INFO: [AnalyticsService] Payment success tracked: ${transaction.type}');
     } catch (e) {
-      debugdebugPrint('ERROR: [AnalyticsService] Failed to track payment success: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to track payment success: $e');
     }
   }
 
@@ -245,9 +245,9 @@ class AnalyticsService {
         },
       );
 
-      debugdebugPrint('INFO: [AnalyticsService] Payment failed tracked: ${transaction.type}');
+      debugPrint('INFO: [AnalyticsService] Payment failed tracked: ${transaction.type}');
     } catch (e) {
-      debugdebugPrint('ERROR: [AnalyticsService] Failed to track payment failed: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to track payment failed: $e');
     }
   }
 
@@ -274,9 +274,9 @@ class AnalyticsService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugdebugPrint('INFO: [AnalyticsService] Advertisement view tracked: $advertisementId');
+      debugPrint('INFO: [AnalyticsService] Advertisement view tracked: $advertisementId');
     } catch (e) {
-      debugdebugPrint('ERROR: [AnalyticsService] Failed to track advertisement view: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to track advertisement view: $e');
     }
   }
 
@@ -303,9 +303,9 @@ class AnalyticsService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugdebugPrint('INFO: [AnalyticsService] Advertisement click tracked: $advertisementId');
+      debugPrint('INFO: [AnalyticsService] Advertisement click tracked: $advertisementId');
     } catch (e) {
-      debugdebugPrint('ERROR: [AnalyticsService] Failed to track advertisement click: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to track advertisement click: $e');
     }
   }
 
@@ -321,9 +321,9 @@ class AnalyticsService {
         },
       );
 
-      debugdebugPrint('INFO: [AnalyticsService] Monetization hub view tracked');
+      debugPrint('INFO: [AnalyticsService] Monetization hub view tracked');
     } catch (e) {
-      debugdebugPrint('ERROR: [AnalyticsService] Failed to track monetization hub view: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to track monetization hub view: $e');
     }
   }
 
@@ -339,9 +339,9 @@ class AnalyticsService {
         },
       );
 
-      debugdebugPrint('INFO: [AnalyticsService] Subscription plans view tracked');
+      debugPrint('INFO: [AnalyticsService] Subscription plans view tracked');
     } catch (e) {
-      debugdebugPrint('ERROR: [AnalyticsService] Failed to track subscription plans view: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to track subscription plans view: $e');
     }
   }
 
@@ -357,9 +357,9 @@ class AnalyticsService {
         },
       );
 
-      debugdebugPrint('INFO: [AnalyticsService] Promotion packages view tracked');
+      debugPrint('INFO: [AnalyticsService] Promotion packages view tracked');
     } catch (e) {
-      debugdebugPrint('ERROR: [AnalyticsService] Failed to track promotion packages view: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to track promotion packages view: $e');
     }
   }
 
@@ -375,9 +375,9 @@ class AnalyticsService {
         },
       );
 
-      debugdebugPrint('INFO: [AnalyticsService] Advertisement campaigns view tracked');
+      debugPrint('INFO: [AnalyticsService] Advertisement campaigns view tracked');
     } catch (e) {
-      debugdebugPrint('ERROR: [AnalyticsService] Failed to track advertisement campaigns view: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to track advertisement campaigns view: $e');
     }
   }
 
@@ -396,7 +396,7 @@ class AnalyticsService {
         'platform': 'mobile',
       });
     } catch (e) {
-      debugdebugPrint('ERROR: [AnalyticsService] Failed to save analytics event: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to save analytics event: $e');
     }
   }
 
@@ -437,7 +437,7 @@ class AnalyticsService {
         'advertisementCreates': advertisementCreates,
       };
     } catch (e) {
-      debugdebugPrint('ERROR: [AnalyticsService] Failed to get user analytics: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to get user analytics: $e');
       return {};
     }
   }
@@ -473,7 +473,7 @@ class AnalyticsService {
         'totalRevenue': totalRevenue,
       };
     } catch (e) {
-      debugdebugPrint('ERROR: [AnalyticsService] Failed to get platform analytics: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to get platform analytics: $e');
       return {};
     }
   }
@@ -488,9 +488,9 @@ class AnalyticsService {
           'timestamp': DateTime.now().millisecondsSinceEpoch,
         },
       );
-      debugdebugPrint('INFO: [AnalyticsService] Theme change logged: $themeName');
+      debugPrint('INFO: [AnalyticsService] Theme change logged: $themeName');
     } catch (e) {
-      debugdebugPrint('ERROR: [AnalyticsService] Failed to log theme change: $e');
+      debugPrint('ERROR: [AnalyticsService] Failed to log theme change: $e');
     }
   }
 }

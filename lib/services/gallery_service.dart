@@ -58,10 +58,10 @@ class GalleryService {
 
       final docRef = await _firestore.collection('gallery').add(galleryItem.toMap());
 
-      debugdebugPrint('Image uploaded to gallery: ${docRef.id}');
+      debugPrint('Image uploaded to gallery: ${docRef.id}');
       return docRef.id;
     } catch (e) {
-      debugdebugPrint('Error uploading image: $e');
+      debugPrint('Error uploading image: $e');
       throw Exception('Ошибка загрузки изображения: $e');
     }
   }
@@ -128,10 +128,10 @@ class GalleryService {
 
       final docRef = await _firestore.collection('gallery').add(galleryItem.toMap());
 
-      debugdebugPrint('Video uploaded to gallery: ${docRef.id}');
+      debugPrint('Video uploaded to gallery: ${docRef.id}');
       return docRef.id;
     } catch (e) {
-      debugdebugPrint('Error uploading video: $e');
+      debugPrint('Error uploading video: $e');
       throw Exception('Ошибка загрузки видео: $e');
     }
   }
@@ -157,7 +157,7 @@ class GalleryService {
 
       return querySnapshot.docs.map(GalleryItem.fromDocument).toList();
     } catch (e) {
-      debugdebugPrint('Error getting specialist gallery: $e');
+      debugPrint('Error getting specialist gallery: $e');
       throw Exception('Ошибка получения галереи: $e');
     }
   }
@@ -188,9 +188,9 @@ class GalleryService {
 
       await _firestore.collection('gallery').doc(itemId).update(updateData);
 
-      debugdebugPrint('Gallery item updated: $itemId');
+      debugPrint('Gallery item updated: $itemId');
     } catch (e) {
-      debugdebugPrint('Error updating gallery item: $e');
+      debugPrint('Error updating gallery item: $e');
       throw Exception('Ошибка обновления элемента галереи: $e');
     }
   }
@@ -218,16 +218,16 @@ class GalleryService {
           }
         }
       } catch (e) {
-        debugdebugPrint('Error deleting files from storage: $e');
+        debugPrint('Error deleting files from storage: $e');
         // Продолжаем удаление записи даже если файлы не удалились
       }
 
       // Удаляем запись из Firestore
       await _firestore.collection('gallery').doc(itemId).delete();
 
-      debugdebugPrint('Gallery item deleted: $itemId');
+      debugPrint('Gallery item deleted: $itemId');
     } catch (e) {
-      debugdebugPrint('Error deleting gallery item: $e');
+      debugPrint('Error deleting gallery item: $e');
       throw Exception('Ошибка удаления элемента галереи: $e');
     }
   }
@@ -240,7 +240,7 @@ class GalleryService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
-      debugdebugPrint('Error incrementing view count: $e');
+      debugPrint('Error incrementing view count: $e');
       // Не выбрасываем исключение, так как это не критично
     }
   }
@@ -253,7 +253,7 @@ class GalleryService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
-      debugdebugPrint('Error incrementing like count: $e');
+      debugPrint('Error incrementing like count: $e');
       throw Exception('Ошибка добавления лайка: $e');
     }
   }
@@ -266,7 +266,7 @@ class GalleryService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
-      debugdebugPrint('Error decrementing like count: $e');
+      debugPrint('Error decrementing like count: $e');
       throw Exception('Ошибка удаления лайка: $e');
     }
   }
@@ -283,7 +283,7 @@ class GalleryService {
       );
       return thumbnailPath;
     } catch (e) {
-      debugdebugPrint('Error generating video thumbnail: $e');
+      debugPrint('Error generating video thumbnail: $e');
       return null;
     }
   }
@@ -304,7 +304,7 @@ class GalleryService {
         'fileSize': fileSize,
       };
     } catch (e) {
-      debugdebugPrint('Error getting video info: $e');
+      debugPrint('Error getting video info: $e');
       return {
         'duration': null,
         'width': null,
@@ -324,7 +324,7 @@ class GalleryService {
         imageQuality: 85,
       );
     } catch (e) {
-      debugdebugPrint('Error picking image: $e');
+      debugPrint('Error picking image: $e');
       return null;
     }
   }
@@ -339,7 +339,7 @@ class GalleryService {
         imageQuality: 85,
       );
     } catch (e) {
-      debugdebugPrint('Error taking photo: $e');
+      debugPrint('Error taking photo: $e');
       return null;
     }
   }
@@ -352,7 +352,7 @@ class GalleryService {
         maxDuration: const Duration(minutes: 5),
       );
     } catch (e) {
-      debugdebugPrint('Error picking video: $e');
+      debugPrint('Error picking video: $e');
       return null;
     }
   }
@@ -365,7 +365,7 @@ class GalleryService {
         maxDuration: const Duration(minutes: 5),
       );
     } catch (e) {
-      debugdebugPrint('Error recording video: $e');
+      debugPrint('Error recording video: $e');
       return null;
     }
   }

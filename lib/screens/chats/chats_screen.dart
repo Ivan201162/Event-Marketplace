@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 /// Chats screen with user conversations
 class ChatsScreen extends StatelessWidget {
@@ -13,7 +14,7 @@ class ChatsScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
-              // TODO: Search chats
+              context.push('/chats/search');
             },
           ),
         ],
@@ -74,7 +75,7 @@ class ChatsScreen extends StatelessWidget {
                 ],
               ),
               onTap: () {
-                _showChatDialog(context, index + 1);
+                context.push('/chats/${index + 1}');
               },
             ),
           );
@@ -144,7 +145,7 @@ class ChatsScreen extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.more_vert),
                       onPressed: () {
-                        // TODO: Show chat options
+                        _showChatOptions(context, chatId);
                       },
                     ),
                   ],
@@ -214,7 +215,7 @@ class ChatsScreen extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.send),
                       onPressed: () {
-                        // TODO: Send message
+                        _sendMessage(context, chatId);
                       },
                     ),
                   ],
@@ -224,6 +225,112 @@ class ChatsScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _showChatOptions(BuildContext context, int chatId) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Профиль пользователя'),
+              onTap: () {
+                Navigator.pop(context);
+                context.push('/profile/$chatId');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.notifications_off),
+              title: const Text('Отключить уведомления'),
+              onTap: () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Уведомления отключены')),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.block, color: Colors.red),
+              title: const Text('Заблокировать'),
+              onTap: () {
+                Navigator.pop(context);
+                _showBlockDialog(context, chatId);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.delete, color: Colors.red),
+              title: const Text('Удалить чат'),
+              onTap: () {
+                Navigator.pop(context);
+                _showDeleteDialog(context, chatId);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showBlockDialog(BuildContext context, int chatId) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Заблокировать пользователя'),
+        content: const Text('Вы уверены, что хотите заблокировать этого пользователя?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Пользователь $chatId заблокирован')),
+              );
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Заблокировать'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDeleteDialog(BuildContext context, int chatId) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Удалить чат'),
+        content: const Text('Вы уверены, что хотите удалить этот чат?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Чат $chatId удален')),
+              );
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Удалить'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _sendMessage(BuildContext context, int chatId) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Сообщение отправлено в чат $chatId')),
     );
   }
 }

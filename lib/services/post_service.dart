@@ -45,6 +45,23 @@ class PostService {
     }
   }
 
+  /// Get posts by specialist
+  Future<List<Post>> getPostsBySpecialist(String specialistId, {int limit = 20}) async {
+    try {
+      final snapshot = await _firestore
+          .collection(_collection)
+          .where('authorId', isEqualTo: specialistId)
+          .orderBy('createdAt', descending: true)
+          .limit(limit)
+          .get();
+
+      return snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
+    } catch (e) {
+      debugPrint('Error getting posts by specialist: $e');
+      return [];
+    }
+  }
+
   /// Get posts by tags
   Future<List<Post>> getPostsByTags(List<String> tags, {int limit = 20}) async {
     try {
@@ -147,6 +164,37 @@ class PostService {
       return true;
     } catch (e) {
       debugPrint('Error unliking post: $e');
+      return false;
+    }
+  }
+
+  /// Toggle like on a post
+  Future<bool> toggleLike(String postId, String userId) async {
+    try {
+      final doc = await _firestore.collection(_collection).doc(postId).get();
+      if (!doc.exists) return false;
+
+      final data = doc.data()!;
+      final likedBy = List<String>.from(data['likedBy'] ?? []);
+      
+      if (likedBy.contains(userId)) {
+        // Unlike
+        await _firestore.collection(_collection).doc(postId).update({
+          'likedBy': FieldValue.arrayRemove([userId]),
+          'likesCount': FieldValue.increment(-1),
+          'updatedAt': DateTime.now(),
+        });
+      } else {
+        // Like
+        await _firestore.collection(_collection).doc(postId).update({
+          'likedBy': FieldValue.arrayUnion([userId]),
+          'likesCount': FieldValue.increment(1),
+          'updatedAt': DateTime.now(),
+        });
+      }
+      return true;
+    } catch (e) {
+      debugPrint('Error toggling like: $e');
       return false;
     }
   }

@@ -10,7 +10,7 @@ class OrganizerService {
     try {
       await _firestore.collection('organizer_profiles').doc(profile.id).set(profile.toMap());
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка создания профиля организатора: $e');
+      debugPrint('Ошибка создания профиля организатора: $e');
       throw Exception('Ошибка создания профиля организатора: $e');
     }
   }
@@ -25,7 +25,7 @@ class OrganizerService {
       }
       return null;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка получения профиля организатора: $e');
+      debugPrint('Ошибка получения профиля организатора: $e');
       return null;
     }
   }
@@ -44,7 +44,7 @@ class OrganizerService {
       }
       return null;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка получения профиля организатора по userId: $e');
+      debugPrint('Ошибка получения профиля организатора по userId: $e');
       return null;
     }
   }
@@ -58,7 +58,7 @@ class OrganizerService {
           .doc(profile.id)
           .update(updatedProfile.toMap());
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка обновления профиля организатора: $e');
+      debugPrint('Ошибка обновления профиля организатора: $e');
       throw Exception('Ошибка обновления профиля организатора: $e');
     }
   }
@@ -68,7 +68,7 @@ class OrganizerService {
     try {
       await _firestore.collection('organizer_profiles').doc(organizerId).delete();
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка удаления профиля организатора: $e');
+      debugPrint('Ошибка удаления профиля организатора: $e');
       throw Exception('Ошибка удаления профиля организатора: $e');
     }
   }
@@ -92,7 +92,7 @@ class OrganizerService {
       final querySnapshot = await query.get();
       return querySnapshot.docs.map(OrganizerProfile.fromDocument).toList();
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка получения списка организаторов: $e');
+      debugPrint('Ошибка получения списка организаторов: $e');
       return [];
     }
   }
@@ -118,7 +118,7 @@ class OrganizerService {
       final querySnapshot = await query.get();
       return querySnapshot.docs.map(OrganizerProfile.fromDocument).toList();
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка получения организаторов по категории: $e');
+      debugPrint('Ошибка получения организаторов по категории: $e');
       return [];
     }
   }
@@ -152,7 +152,7 @@ class OrganizerService {
           )
           .toList();
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка поиска организаторов: $e');
+      debugPrint('Ошибка поиска организаторов: $e');
       return [];
     }
   }
@@ -173,7 +173,7 @@ class OrganizerService {
 
       return querySnapshot.docs.map(OrganizerProfile.fromDocument).toList();
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка получения топ организаторов: $e');
+      debugPrint('Ошибка получения топ организаторов: $e');
       return [];
     }
   }
@@ -194,7 +194,7 @@ class OrganizerService {
 
       return querySnapshot.docs.map(OrganizerProfile.fromDocument).toList();
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка получения организаторов по локации: $e');
+      debugPrint('Ошибка получения организаторов по локации: $e');
       return [];
     }
   }
@@ -212,7 +212,7 @@ class OrganizerService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка обновления рейтинга организатора: $e');
+      debugPrint('Ошибка обновления рейтинга организатора: $e');
       throw Exception('Ошибка обновления рейтинга: $e');
     }
   }
@@ -228,7 +228,7 @@ class OrganizerService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка добавления события в портфолио: $e');
+      debugPrint('Ошибка добавления события в портфолио: $e');
       throw Exception('Ошибка добавления события: $e');
     }
   }
@@ -244,7 +244,7 @@ class OrganizerService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка добавления изображения в портфолио: $e');
+      debugPrint('Ошибка добавления изображения в портфолио: $e');
       throw Exception('Ошибка добавления изображения: $e');
     }
   }
@@ -260,7 +260,7 @@ class OrganizerService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка добавления видео в портфолио: $e');
+      debugPrint('Ошибка добавления видео в портфолио: $e');
       throw Exception('Ошибка добавления видео: $e');
     }
   }
@@ -276,7 +276,7 @@ class OrganizerService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка добавления члена команды: $e');
+      debugPrint('Ошибка добавления члена команды: $e');
       throw Exception('Ошибка добавления члена команды: $e');
     }
   }
@@ -292,7 +292,7 @@ class OrganizerService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка удаления члена команды: $e');
+      debugPrint('Ошибка удаления члена команды: $e');
       throw Exception('Ошибка удаления члена команды: $e');
     }
   }
@@ -331,7 +331,7 @@ class OrganizerService {
         'experienceYears': organizer.experienceYears,
       };
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка получения статистики организатора: $e');
+      debugPrint('Ошибка получения статистики организатора: $e');
       return {};
     }
   }
@@ -342,7 +342,7 @@ class OrganizerService {
       final profile = await getOrganizerProfileByUserId(userId);
       return profile != null;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка проверки профиля организатора: $e');
+      debugPrint('Ошибка проверки профиля организатора: $e');
       return false;
     }
   }

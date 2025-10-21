@@ -210,11 +210,11 @@ class SmartSpecialistDataGenerator {
 
       await batch.commit();
 
-      debugdebugPrint(
+      debugPrint(
         '✅ Сгенерировано и сохранено ${specialists.length} тестовых специалистов',
       );
     } catch (e) {
-      debugdebugPrint('❌ Ошибка генерации тестовых данных: $e');
+      debugPrint('❌ Ошибка генерации тестовых данных: $e');
     }
   }
 

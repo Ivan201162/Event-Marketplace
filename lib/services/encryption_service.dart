@@ -74,7 +74,7 @@ class EncryptionService {
         salt: Uint8List(0), // Не используется для простого шифрования
       );
     } catch (e) {
-      debugdebugPrint('Ошибка шифрования: $e');
+      debugPrint('Ошибка шифрования: $e');
       rethrow;
     }
   }
@@ -97,7 +97,7 @@ class EncryptionService {
       final plaintext = cipher.process(encryptedData.ciphertext);
       return utf8.decode(plaintext);
     } catch (e) {
-      debugdebugPrint('Ошибка расшифровки: $e');
+      debugPrint('Ошибка расшифровки: $e');
       rethrow;
     }
   }
@@ -118,7 +118,7 @@ class EncryptionService {
         salt: salt,
       );
     } catch (e) {
-      debugdebugPrint('Ошибка шифрования с паролем: $e');
+      debugPrint('Ошибка шифрования с паролем: $e');
       rethrow;
     }
   }
@@ -138,7 +138,7 @@ class EncryptionService {
 
       return decrypt(data, key);
     } catch (e) {
-      debugdebugPrint('Ошибка расшифровки с паролем: $e');
+      debugPrint('Ошибка расшифровки с паролем: $e');
       rethrow;
     }
   }

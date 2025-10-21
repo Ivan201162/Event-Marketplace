@@ -63,7 +63,7 @@ class PriorityService {
 
       return priority;
     } catch (e) {
-      debugdebugPrint('ERROR: [priority_service] Ошибка получения приоритета пользователя: $e');
+      debugPrint('ERROR: [priority_service] Ошибка получения приоритета пользователя: $e');
       return 0;
     }
   }
@@ -89,7 +89,7 @@ class PriorityService {
 
       return usersWithPriority;
     } catch (e) {
-      debugdebugPrint('ERROR: [priority_service] Ошибка сортировки пользователей: $e');
+      debugPrint('ERROR: [priority_service] Ошибка сортировки пользователей: $e');
       return users;
     }
   }
@@ -102,7 +102,7 @@ class PriorityService {
     int limit = 10,
   }) async {
     try {
-      debugdebugPrint('INFO: [priority_service] Получение топ пользователей');
+      debugPrint('INFO: [priority_service] Получение топ пользователей');
 
       Query query = _firestore.collection('users');
 
@@ -132,7 +132,7 @@ class PriorityService {
 
       return sortedUsers.take(limit).toList();
     } catch (e) {
-      debugdebugPrint('ERROR: [priority_service] Ошибка получения топ пользователей: $e');
+      debugPrint('ERROR: [priority_service] Ошибка получения топ пользователей: $e');
       return [];
     }
   }
@@ -145,7 +145,7 @@ class PriorityService {
     int limit = 5,
   }) async {
     try {
-      debugdebugPrint('INFO: [priority_service] Получение продвинутых пользователей');
+      debugPrint('INFO: [priority_service] Получение продвинутых пользователей');
 
       // Получаем активные продвижения профилей
       final promotions = await _promotionService.getPromotedProfiles(
@@ -173,7 +173,7 @@ class PriorityService {
 
       return promotedUsers;
     } catch (e) {
-      debugdebugPrint('ERROR: [priority_service] Ошибка получения продвинутых пользователей: $e');
+      debugPrint('ERROR: [priority_service] Ошибка получения продвинутых пользователей: $e');
       return [];
     }
   }
@@ -195,7 +195,7 @@ class PriorityService {
         limit: limit,
       );
     } catch (e) {
-      debugdebugPrint('ERROR: [priority_service] Ошибка получения рекламы: $e');
+      debugPrint('ERROR: [priority_service] Ошибка получения рекламы: $e');
       return [];
     }
   }
@@ -209,7 +209,7 @@ class PriorityService {
       final plan = await _subscriptionService.getPlanById(subscription.planId);
       return plan?.tier != SubscriptionTier.free;
     } catch (e) {
-      debugdebugPrint('ERROR: [priority_service] Ошибка проверки премиум статуса: $e');
+      debugPrint('ERROR: [priority_service] Ошибка проверки премиум статуса: $e');
       return false;
     }
   }
@@ -219,7 +219,7 @@ class PriorityService {
     try {
       return await _subscriptionService.getUserSubscriptionTier(userId);
     } catch (e) {
-      debugdebugPrint('ERROR: [priority_service] Ошибка получения уровня подписки: $e');
+      debugPrint('ERROR: [priority_service] Ошибка получения уровня подписки: $e');
       return SubscriptionTier.free;
     }
   }
@@ -229,7 +229,7 @@ class PriorityService {
     try {
       return await _subscriptionService.hasPremiumAccess(userId);
     } catch (e) {
-      debugdebugPrint('ERROR: [priority_service] Ошибка проверки премиум доступа: $e');
+      debugPrint('ERROR: [priority_service] Ошибка проверки премиум доступа: $e');
       return false;
     }
   }
@@ -250,7 +250,7 @@ class PriorityService {
             (advertisementStats['totalRevenue'] as double? ?? 0.0),
       };
     } catch (e) {
-      debugdebugPrint('ERROR: [priority_service] Ошибка получения статистики: $e');
+      debugPrint('ERROR: [priority_service] Ошибка получения статистики: $e');
       return {};
     }
   }
@@ -277,7 +277,7 @@ class PriorityService {
         );
       }
     } catch (e) {
-      debugdebugPrint('ERROR: [priority_service] Ошибка обновления статистики: $e');
+      debugPrint('ERROR: [priority_service] Ошибка обновления статистики: $e');
     }
   }
 
@@ -312,7 +312,7 @@ class PriorityService {
 
       return sortedUsers.take(limit).toList();
     } catch (e) {
-      debugdebugPrint('ERROR: [priority_service] Ошибка получения рекомендаций: $e');
+      debugPrint('ERROR: [priority_service] Ошибка получения рекомендаций: $e');
       return [];
     }
   }

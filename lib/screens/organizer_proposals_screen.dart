@@ -286,7 +286,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
           specialists.add(specialist);
         }
       } on Exception catch (e) {
-        debugdebugPrint('Ошибка загрузки специалиста $id: $e');
+        debugPrint('Ошибка загрузки специалиста $id: $e');
       }
     }
     return specialists;

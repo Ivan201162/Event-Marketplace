@@ -61,7 +61,7 @@ class DJPlaylistService {
 
       return docRef.id;
     } catch (e) {
-      debugdebugPrint('Error uploading media file: $e');
+      debugPrint('Error uploading media file: $e');
       throw Exception('Ошибка загрузки файла: $e');
     }
   }
@@ -124,7 +124,7 @@ class DJPlaylistService {
 
       return docRef.id;
     } catch (e) {
-      debugdebugPrint('Error creating playlist: $e');
+      debugPrint('Error creating playlist: $e');
       throw Exception('Ошибка создания плейлиста: $e');
     }
   }
@@ -203,7 +203,7 @@ class DJPlaylistService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      debugdebugPrint('Error updating playlist: $e');
+      debugPrint('Error updating playlist: $e');
       throw Exception('Ошибка обновления плейлиста: $e');
     }
   }
@@ -217,7 +217,7 @@ class DJPlaylistService {
     try {
       await _firestore.collection('dj_playlists').doc(playlistId).delete();
     } catch (e) {
-      debugdebugPrint('Error deleting playlist: $e');
+      debugPrint('Error deleting playlist: $e');
       throw Exception('Ошибка удаления плейлиста: $e');
     }
   }
@@ -246,7 +246,7 @@ class DJPlaylistService {
         final ref = _storage.refFromURL(mediaFile.filePath);
         await ref.delete();
       } catch (e) {
-        debugdebugPrint('Error deleting file from storage: $e');
+        debugPrint('Error deleting file from storage: $e');
       }
 
       // Удаляем запись из Firestore
@@ -255,7 +255,7 @@ class DJPlaylistService {
       // Удаляем файл из всех плейлистов
       await _removeMediaFileFromPlaylists(mediaFileId);
     } catch (e) {
-      debugdebugPrint('Error deleting media file: $e');
+      debugPrint('Error deleting media file: $e');
       throw Exception('Ошибка удаления файла: $e');
     }
   }
@@ -298,7 +298,7 @@ class DJPlaylistService {
 
       return playlistId;
     } catch (e) {
-      debugdebugPrint('Error importing VK playlist: $e');
+      debugPrint('Error importing VK playlist: $e');
       throw Exception('Ошибка импорта VK плейлиста: $e');
     }
   }
@@ -326,7 +326,7 @@ class DJPlaylistService {
       await file.writeAsBytes(response.bodyBytes);
       return file;
     } catch (e) {
-      debugdebugPrint('Error downloading VK track: $e');
+      debugPrint('Error downloading VK track: $e');
       return null;
     }
   }
@@ -350,7 +350,7 @@ class DJPlaylistService {
           )
           .toList();
     } catch (e) {
-      debugdebugPrint('Error getting media files by IDs: $e');
+      debugPrint('Error getting media files by IDs: $e');
       return [];
     }
   }
@@ -381,7 +381,7 @@ class DJPlaylistService {
 
       await batch.commit();
     } catch (e) {
-      debugdebugPrint('Error removing media file from playlists: $e');
+      debugPrint('Error removing media file from playlists: $e');
     }
   }
 
@@ -547,7 +547,7 @@ class DJPlaylistService {
 
       return stats;
     } catch (e) {
-      debugdebugPrint('Error getting DJ playlist stats: $e');
+      debugPrint('Error getting DJ playlist stats: $e');
       return {};
     }
   }

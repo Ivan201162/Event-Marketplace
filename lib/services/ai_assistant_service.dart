@@ -565,7 +565,7 @@ class AIAssistantService {
         );
       }
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка генерации рекомендаций: $e');
+      debugPrint('Ошибка генерации рекомендаций: $e');
       return AIMessage(
         id: 'ai_${DateTime.now().millisecondsSinceEpoch}',
         text: 'Произошла ошибка при поиске специалистов. Попробуйте еще раз.',

@@ -285,6 +285,8 @@ class IcsExportService {
         return 'Ожидает подтверждения';
       case BookingStatus.confirmed:
         return 'Подтверждено';
+      case BookingStatus.inProgress:
+        return 'В процессе';
       case BookingStatus.cancelled:
         return 'Отменено';
       case BookingStatus.completed:
@@ -344,9 +346,9 @@ class IcsExportService {
     buffer.writeln('PRODID:-//Event Marketplace//Booking Calendar//EN');
     buffer.writeln('BEGIN:VEVENT');
     buffer.writeln('UID:${booking.id}@eventmarketplace.com');
-    buffer.writeln('DTSTART:${_formatDateTime(booking.eventDate)}');
+    buffer.writeln('DTSTART:${_formatDateTime(booking.eventDate ?? booking.date)}');
     buffer.writeln(
-      'DTEND:${_formatDateTime(booking.endDate ?? booking.eventDate.add(const Duration(hours: 2)))}',
+      'DTEND:${_formatDateTime(booking.endDate ?? (booking.eventDate ?? booking.date).add(const Duration(hours: 2)))}',
     );
     buffer.writeln('SUMMARY:${booking.eventTitle}');
     buffer.writeln('DESCRIPTION:${_buildBookingDescription(booking)}');
@@ -406,9 +408,9 @@ class IcsExportService {
     for (final booking in bookings) {
       buffer.writeln('BEGIN:VEVENT');
       buffer.writeln('UID:${booking.id}@eventmarketplace.com');
-      buffer.writeln('DTSTART:${_formatDateTime(booking.eventDate)}');
+      buffer.writeln('DTSTART:${_formatDateTime(booking.eventDate ?? booking.date)}');
       buffer.writeln(
-        'DTEND:${_formatDateTime(booking.endDate ?? booking.eventDate.add(const Duration(hours: 2)))}',
+        'DTEND:${_formatDateTime(booking.endDate ?? (booking.eventDate ?? booking.date).add(const Duration(hours: 2)))}',
       );
       buffer.writeln('SUMMARY:${booking.eventTitle}');
       buffer.writeln('DESCRIPTION:${_buildBookingDescription(booking)}');

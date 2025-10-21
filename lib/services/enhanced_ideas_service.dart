@@ -607,7 +607,7 @@ class EnhancedIdeasService {
         thumbnailUrl: thumbnailUrl,
       );
     } catch (e) {
-      debugdebugPrint('Ошибка загрузки медиафайла: $e');
+      debugPrint('Ошибка загрузки медиафайла: $e');
       return null;
     }
   }
@@ -618,7 +618,7 @@ class EnhancedIdeasService {
       final ref = _storage.refFromURL(url);
       await ref.delete();
     } catch (e) {
-      debugdebugPrint('Ошибка удаления медиафайла: $e');
+      debugPrint('Ошибка удаления медиафайла: $e');
     }
   }
 

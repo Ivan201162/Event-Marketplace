@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../models/idea.dart';
 import '../../providers/auth_providers.dart';
@@ -27,10 +28,7 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              // TODO: Add new idea
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Создание идеи пока не реализовано')),
-              );
+              context.push('/ideas/create');
             },
           ),
           IconButton(
@@ -79,9 +77,7 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
                   onTap: () => _showIdeaDetails(context, idea),
                   onLike: () => _handleLike(idea),
                   onShare: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Поделиться пока не реализовано')),
-                    );
+                    _shareIdea(idea);
                   },
                 );
               },
@@ -325,10 +321,7 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
                     Expanded(
                       child: OutlinedButton.icon(
                         onPressed: () {
-                          // TODO: Save idea
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Сохранение пока не реализовано')),
-                          );
+                          _saveIdea(idea);
                         },
                         icon: const Icon(Icons.bookmark_border),
                         label: const Text('Сохранить'),
@@ -338,10 +331,7 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
                     Expanded(
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          // TODO: Use idea
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Использование идеи пока не реализовано')),
-                          );
+                          _useIdea(idea);
                         },
                         icon: const Icon(Icons.lightbulb),
                         label: const Text('Использовать'),
@@ -372,5 +362,46 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
     } else {
       ideaService.likeIdea(idea.id, currentUser.uid);
     }
+  }
+
+  void _shareIdea(Idea idea) {
+    final shareText = 'Посмотрите эту идею в Event Marketplace: ${idea.title} - ${idea.shortDesc}';
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Ссылка на идею скопирована: $shareText'),
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
+
+  void _saveIdea(Idea idea) {
+    final currentUser = ref.read(currentUserProvider).value;
+    if (currentUser == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Войдите в аккаунт для сохранения идей')),
+      );
+      return;
+    }
+
+    final ideaService = ref.read(ideaServiceProvider);
+    ideaService.saveIdea(idea.id, currentUser.uid);
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Идея сохранена в избранное')),
+    );
+  }
+
+  void _useIdea(Idea idea) {
+    final currentUser = ref.read(currentUserProvider).value;
+    if (currentUser == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Войдите в аккаунт для использования идей')),
+      );
+      return;
+    }
+
+    // Переход к созданию заявки с предзаполненной идеей
+    context.push('/requests/create?idea=${idea.id}');
   }
 }

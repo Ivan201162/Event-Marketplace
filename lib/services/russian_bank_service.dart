@@ -98,7 +98,7 @@ class RussianBankService {
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
       );
     } catch (e) {
-      debugdebugPrint('Error creating SBP payment: $e');
+      debugPrint('Error creating SBP payment: $e');
       throw Exception('Ошибка создания платежа СБП: $e');
     }
   }
@@ -123,7 +123,7 @@ class RussianBankService {
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
       );
     } catch (e) {
-      debugdebugPrint('Error creating YooKassa payment: $e');
+      debugPrint('Error creating YooKassa payment: $e');
       throw Exception('Ошибка создания платежа ЮKassa: $e');
     }
   }
@@ -147,7 +147,7 @@ class RussianBankService {
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
       );
     } catch (e) {
-      debugdebugPrint('Error creating Tinkoff payment: $e');
+      debugPrint('Error creating Tinkoff payment: $e');
       throw Exception('Ошибка создания платежа Тинькофф: $e');
     }
   }
@@ -164,7 +164,7 @@ class RussianBankService {
         status: 'succeeded',
       );
     } catch (e) {
-      debugdebugPrint('Error getting SBP payment status: $e');
+      debugPrint('Error getting SBP payment status: $e');
       throw Exception('Ошибка получения статуса платежа СБП: $e');
     }
   }
@@ -183,7 +183,7 @@ class RussianBankService {
         status: 'succeeded',
       );
     } catch (e) {
-      debugdebugPrint('Error getting YooKassa payment status: $e');
+      debugPrint('Error getting YooKassa payment status: $e');
       throw Exception('Ошибка получения статуса платежа ЮKassa: $e');
     }
   }
@@ -202,7 +202,7 @@ class RussianBankService {
         status: 'CONFIRMED',
       );
     } catch (e) {
-      debugdebugPrint('Error getting Tinkoff payment status: $e');
+      debugPrint('Error getting Tinkoff payment status: $e');
       throw Exception('Ошибка получения статуса платежа Тинькофф: $e');
     }
   }
@@ -224,7 +224,7 @@ class RussianBankService {
         status: 'succeeded',
       );
     } catch (e) {
-      debugdebugPrint('Error processing refund: $e');
+      debugPrint('Error processing refund: $e');
       throw Exception('Ошибка обработки возврата: $e');
     }
   }

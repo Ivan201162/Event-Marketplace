@@ -19,6 +19,136 @@ enum PaymentMethodType {
   other,
 }
 
+/// Информация о платежном методе
+class PaymentMethodInfo {
+  const PaymentMethodInfo({
+    required this.id,
+    required this.userId,
+    required this.type,
+    required this.name,
+    this.cardLast4,
+    this.cardBrand,
+    this.isDefault = false,
+    this.isActive = true,
+    required this.createdAt,
+    this.updatedAt,
+  });
+
+  final String id;
+  final String userId;
+  final PaymentMethodType type;
+  final String name;
+  final String? cardLast4;
+  final String? cardBrand;
+  final bool isDefault;
+  final bool isActive;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
+
+  /// Создать из Map
+  factory PaymentMethodInfo.fromMap(Map<String, dynamic> data) {
+    return PaymentMethodInfo(
+      id: data['id'] as String? ?? '',
+      userId: data['userId'] as String? ?? '',
+      type: _parseType(data['type']),
+      name: data['name'] as String? ?? '',
+      cardLast4: data['cardLast4'] as String?,
+      cardBrand: data['cardBrand'] as String?,
+      isDefault: data['isDefault'] as bool? ?? false,
+      isActive: data['isActive'] as bool? ?? true,
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] is Timestamp
+              ? (data['createdAt'] as Timestamp).toDate()
+              : DateTime.parse(data['createdAt'].toString()))
+          : DateTime.now(),
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] is Timestamp
+              ? (data['updatedAt'] as Timestamp).toDate()
+              : DateTime.tryParse(data['updatedAt'].toString()))
+          : null,
+    );
+  }
+
+  /// Преобразовать в Map для Firestore
+  Map<String, dynamic> toMap() => {
+        'userId': userId,
+        'type': type.name,
+        'name': name,
+        'cardLast4': cardLast4,
+        'cardBrand': cardBrand,
+        'isDefault': isDefault,
+        'isActive': isActive,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+      };
+
+  /// Копировать с изменениями
+  PaymentMethodInfo copyWith({
+    String? id,
+    String? userId,
+    PaymentMethodType? type,
+    String? name,
+    String? cardLast4,
+    String? cardBrand,
+    bool? isDefault,
+    bool? isActive,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) =>
+      PaymentMethodInfo(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        type: type ?? this.type,
+        name: name ?? this.name,
+        cardLast4: cardLast4 ?? this.cardLast4,
+        cardBrand: cardBrand ?? this.cardBrand,
+        isDefault: isDefault ?? this.isDefault,
+        isActive: isActive ?? this.isActive,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
+
+  /// Парсинг типа из строки
+  static PaymentMethodType _parseType(String? type) {
+    switch (type) {
+      case 'card':
+        return PaymentMethodType.card;
+      case 'bankTransfer':
+        return PaymentMethodType.bankTransfer;
+      case 'digitalWallet':
+        return PaymentMethodType.digitalWallet;
+      case 'cash':
+        return PaymentMethodType.cash;
+      case 'other':
+        return PaymentMethodType.other;
+      default:
+        return PaymentMethodType.other;
+    }
+  }
+
+  /// Получить отображаемое название типа
+  String get typeDisplayName {
+    switch (type) {
+      case PaymentMethodType.card:
+        return 'Банковская карта';
+      case PaymentMethodType.bankTransfer:
+        return 'Банковский перевод';
+      case PaymentMethodType.digitalWallet:
+        return 'Электронный кошелек';
+      case PaymentMethodType.cash:
+        return 'Наличные';
+      case PaymentMethodType.other:
+        return 'Другое';
+    }
+  }
+
+  /// Получить маскированный номер карты
+  String get maskedCardNumber {
+    if (cardLast4 == null) return name;
+    return '**** **** **** $cardLast4';
+  }
+}
+
 /// Модель платежного метода
 class PaymentMethod {
   const PaymentMethod({

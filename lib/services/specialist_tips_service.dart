@@ -24,7 +24,7 @@ class SpecialistTipsService {
 
       return querySnapshot.docs.map(SpecialistTip.fromFirestore).toList();
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка получения рекомендаций: $e');
+      debugPrint('Ошибка получения рекомендаций: $e');
       return [];
     }
   }
@@ -54,7 +54,7 @@ class SpecialistTipsService {
 
       return tips;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка генерации рекомендаций: $e');
+      debugPrint('Ошибка генерации рекомендаций: $e');
       return [];
     }
   }
@@ -341,7 +341,7 @@ class SpecialistTipsService {
 
       await _firestore.collection(_statsCollection).doc(userId).set(stats.toFirestore());
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка обновления статистики профиля: $e');
+      debugPrint('Ошибка обновления статистики профиля: $e');
     }
   }
 
@@ -355,7 +355,7 @@ class SpecialistTipsService {
       }
       return null;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка получения статистики профиля: $e');
+      debugPrint('Ошибка получения статистики профиля: $e');
       return null;
     }
   }
@@ -369,7 +369,7 @@ class SpecialistTipsService {
       });
       return true;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка отметки совета как выполненного: $e');
+      debugPrint('Ошибка отметки совета как выполненного: $e');
       return false;
     }
   }
@@ -380,7 +380,7 @@ class SpecialistTipsService {
       await _firestore.collection(_tipsCollection).doc(tipId).delete();
       return true;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка удаления совета: $e');
+      debugPrint('Ошибка удаления совета: $e');
       return false;
     }
   }
@@ -408,7 +408,7 @@ class SpecialistTipsService {
         'highPriorityTips': tips.where((t) => t.priority == TipPriority.high).length,
       };
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка получения статистики рекомендаций: $e');
+      debugPrint('Ошибка получения статистики рекомендаций: $e');
       return {};
     }
   }
@@ -430,14 +430,14 @@ class SpecialistTipsService {
 
       if (querySnapshot.docs.isNotEmpty) {
         await batch.commit();
-        debugdebugPrint(
+        debugPrint(
           'Удалено ${querySnapshot.docs.length} старых выполненных советов',
         );
       }
 
       return querySnapshot.docs.length;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка очистки старых советов: $e');
+      debugPrint('Ошибка очистки старых советов: $e');
       return 0;
     }
   }

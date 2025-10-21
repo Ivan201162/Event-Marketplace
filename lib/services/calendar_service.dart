@@ -25,7 +25,7 @@ class CalendarService {
       await eventRef.set(eventWithId.toMap());
       return eventRef.id;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка создания события: $e');
+      debugPrint('Ошибка создания события: $e');
       return null;
     }
   }
@@ -177,7 +177,7 @@ class CalendarService {
       await _firestore.collection('calendar_events').doc(event.id).update(event.toMap());
       return true;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка обновления события: $e');
+      debugPrint('Ошибка обновления события: $e');
       return false;
     }
   }
@@ -188,7 +188,7 @@ class CalendarService {
       await _firestore.collection('calendar_events').doc(eventId).delete();
       return true;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка удаления события: $e');
+      debugPrint('Ошибка удаления события: $e');
       return false;
     }
   }
@@ -223,7 +223,7 @@ class CalendarService {
       // TODO(developer): Return proper ICS content
       return 'BEGIN:VCALENDAR\nVERSION:2.0\nEND:VCALENDAR';
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка экспорта в ICS: $e');
+      debugPrint('Ошибка экспорта в ICS: $e');
       return null;
     }
   }
@@ -245,7 +245,7 @@ class CalendarService {
         );
       }
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка шаринга событий: $e');
+      debugPrint('Ошибка шаринга событий: $e');
     }
   }
 
@@ -267,7 +267,7 @@ class CalendarService {
         await launchUrl(url, mode: LaunchMode.externalApplication);
       }
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка открытия в Google Calendar: $e');
+      debugPrint('Ошибка открытия в Google Calendar: $e');
     }
   }
 
@@ -288,7 +288,7 @@ class CalendarService {
         await launchUrl(url, mode: LaunchMode.externalApplication);
       }
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка открытия в Outlook Calendar: $e');
+      debugPrint('Ошибка открытия в Outlook Calendar: $e');
     }
   }
 
@@ -296,10 +296,10 @@ class CalendarService {
   Future<bool> syncWithGoogleCalendar(String userId, String accessToken) async {
     try {
       // TODO(developer): Реализовать синхронизацию с Google Calendar API
-      debugdebugPrint('Синхронизация с Google Calendar для пользователя: $userId');
+      debugPrint('Синхронизация с Google Calendar для пользователя: $userId');
       return true;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка синхронизации с Google Calendar: $e');
+      debugPrint('Ошибка синхронизации с Google Calendar: $e');
       return false;
     }
   }
@@ -311,10 +311,10 @@ class CalendarService {
   ) async {
     try {
       // TODO(developer): Реализовать синхронизацию с Outlook Calendar API
-      debugdebugPrint('Синхронизация с Outlook Calendar для пользователя: $userId');
+      debugPrint('Синхронизация с Outlook Calendar для пользователя: $userId');
       return true;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка синхронизации с Outlook Calendar: $e');
+      debugPrint('Ошибка синхронизации с Outlook Calendar: $e');
       return false;
     }
   }
@@ -331,7 +331,7 @@ class CalendarService {
 
       return _calculateStats(events);
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка получения статистики календаря: $e');
+      debugPrint('Ошибка получения статистики календаря: $e');
       return CalendarStats.empty();
     }
   }
@@ -370,7 +370,7 @@ class CalendarService {
 
       return await createEvent(event);
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка создания события из бронирования: $e');
+      debugPrint('Ошибка создания события из бронирования: $e');
       return null;
     }
   }
@@ -384,7 +384,7 @@ class CalendarService {
       });
       return true;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка обновления статуса события: $e');
+      debugPrint('Ошибка обновления статуса события: $e');
       return false;
     }
   }
@@ -520,7 +520,7 @@ class CalendarService {
 
       return querySnapshot.docs.isEmpty;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка проверки доступности даты: $e');
+      debugPrint('Ошибка проверки доступности даты: $e');
       return false;
     }
   }
@@ -554,7 +554,7 @@ class CalendarService {
       }
       return true;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка проверки доступности даты и времени: $e');
+      debugPrint('Ошибка проверки доступности даты и времени: $e');
       return false;
     }
   }
@@ -608,7 +608,7 @@ class CalendarService {
 
       return availableSlots;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка получения доступных слотов: $e');
+      debugPrint('Ошибка получения доступных слотов: $e');
       return [];
     }
   }
@@ -632,7 +632,7 @@ class CalendarService {
 
       return availableDates;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка получения доступных дат: $e');
+      debugPrint('Ошибка получения доступных дат: $e');
       return [];
     }
   }
@@ -668,7 +668,7 @@ class CalendarService {
 
       return events.docs.map(CalendarEvent.fromDocument).toList();
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка получения событий на дату: $e');
+      debugPrint('Ошибка получения событий на дату: $e');
       return [];
     }
   }
@@ -717,7 +717,7 @@ class CalendarService {
       await eventRef.set(eventData);
       return eventRef.id;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка создания события недоступности: $e');
+      debugPrint('Ошибка создания события недоступности: $e');
       return null;
     }
   }
@@ -744,7 +744,7 @@ class CalendarService {
       await eventRef.set(eventData);
       return eventRef.id;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка создания события отпуска: $e');
+      debugPrint('Ошибка создания события отпуска: $e');
       return null;
     }
   }
@@ -777,7 +777,7 @@ class CalendarService {
         await _firestore.collection('calendar_events').add(eventData);
       }
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка добавления тестовых данных: $e');
+      debugPrint('Ошибка добавления тестовых данных: $e');
     }
   }
 
@@ -816,7 +816,7 @@ class CalendarService {
 
       return true;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка пометки даты как занятой: $e');
+      debugPrint('Ошибка пометки даты как занятой: $e');
       return false;
     }
   }
@@ -853,7 +853,7 @@ class CalendarService {
 
       return true;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка пометки даты как свободной: $e');
+      debugPrint('Ошибка пометки даты как свободной: $e');
       return false;
     }
   }
@@ -873,7 +873,7 @@ class CalendarService {
 
       return busyDates;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка получения занятых дат: $e');
+      debugPrint('Ошибка получения занятых дат: $e');
       return [];
     }
   }
@@ -908,7 +908,7 @@ class CalendarService {
 
       return availableDates;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка получения свободных дат: $e');
+      debugPrint('Ошибка получения свободных дат: $e');
       return [];
     }
   }
@@ -946,7 +946,7 @@ class CalendarService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка синхронизации занятых дат: $e');
+      debugPrint('Ошибка синхронизации занятых дат: $e');
     }
   }
 }

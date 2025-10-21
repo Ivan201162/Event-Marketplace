@@ -25,7 +25,7 @@ class SecureStorageService {
       final prefs = await SharedPreferences.getInstance();
       return prefs.getBool(_isEncryptionEnabledKey) ?? false;
     } catch (e) {
-      debugdebugPrint('Ошибка проверки статуса шифрования: $e');
+      debugPrint('Ошибка проверки статуса шифрования: $e');
       return false;
     }
   }
@@ -47,9 +47,9 @@ class SecureStorageService {
         value: base64Encode(key),
       );
 
-      debugdebugPrint('Шифрование включено');
+      debugPrint('Шифрование включено');
     } catch (e) {
-      debugdebugPrint('Ошибка включения шифрования: $e');
+      debugPrint('Ошибка включения шифрования: $e');
       rethrow;
     }
   }
@@ -67,9 +67,9 @@ class SecureStorageService {
       // Удаляем ключ шифрования
       await _secureStorage.delete(key: _encryptionKeyKey);
 
-      debugdebugPrint('Шифрование отключено');
+      debugPrint('Шифрование отключено');
     } catch (e) {
-      debugdebugPrint('Ошибка отключения шифрования: $e');
+      debugPrint('Ошибка отключения шифрования: $e');
       rethrow;
     }
   }
@@ -83,7 +83,7 @@ class SecureStorageService {
       }
       return null;
     } catch (e) {
-      debugdebugPrint('Ошибка получения ключа шифрования: $e');
+      debugPrint('Ошибка получения ключа шифрования: $e');
       return null;
     }
   }
@@ -107,9 +107,9 @@ class SecureStorageService {
         await _secureStorage.write(key: key, value: value);
       }
 
-      debugdebugPrint('Данные сохранены безопасно: $key');
+      debugPrint('Данные сохранены безопасно: $key');
     } catch (e) {
-      debugdebugPrint('Ошибка безопасного сохранения: $e');
+      debugPrint('Ошибка безопасного сохранения: $e');
       rethrow;
     }
   }
@@ -131,7 +131,7 @@ class SecureStorageService {
             return EncryptionService.decrypt(encryptedData, encryptionKey);
           } catch (e) {
             // Если не удалось расшифровать, возвращаем как есть
-            debugdebugPrint('Ошибка расшифровки, возвращаем исходное значение: $e');
+            debugPrint('Ошибка расшифровки, возвращаем исходное значение: $e');
             return value;
           }
         }
@@ -139,7 +139,7 @@ class SecureStorageService {
 
       return value;
     } catch (e) {
-      debugdebugPrint('Ошибка безопасной загрузки: $e');
+      debugPrint('Ошибка безопасной загрузки: $e');
       return null;
     }
   }
@@ -148,9 +148,9 @@ class SecureStorageService {
   static Future<void> deleteSecure(String key) async {
     try {
       await _secureStorage.delete(key: key);
-      debugdebugPrint('Данные удалены безопасно: $key');
+      debugPrint('Данные удалены безопасно: $key');
     } catch (e) {
-      debugdebugPrint('Ошибка безопасного удаления: $e');
+      debugPrint('Ошибка безопасного удаления: $e');
       rethrow;
     }
   }
@@ -159,9 +159,9 @@ class SecureStorageService {
   static Future<void> clearAllSecure() async {
     try {
       await _secureStorage.deleteAll();
-      debugdebugPrint('Все безопасные данные очищены');
+      debugPrint('Все безопасные данные очищены');
     } catch (e) {
-      debugdebugPrint('Ошибка очистки безопасных данных: $e');
+      debugPrint('Ошибка очистки безопасных данных: $e');
       rethrow;
     }
   }
@@ -171,7 +171,7 @@ class SecureStorageService {
     try {
       return await _secureStorage.readAll();
     } catch (e) {
-      debugdebugPrint('Ошибка получения всех безопасных данных: $e');
+      debugPrint('Ошибка получения всех безопасных данных: $e');
       return {};
     }
   }
@@ -187,9 +187,9 @@ class SecureStorageService {
       final encryptedJson = jsonEncode(encryptedData.toJson());
       await _secureStorage.write(key: key, value: encryptedJson);
 
-      debugdebugPrint('Данные сохранены с паролем: $key');
+      debugPrint('Данные сохранены с паролем: $key');
     } catch (e) {
-      debugdebugPrint('Ошибка сохранения с паролем: $e');
+      debugPrint('Ошибка сохранения с паролем: $e');
       rethrow;
     }
   }
@@ -204,7 +204,7 @@ class SecureStorageService {
       final encryptedData = EncryptedDataWithPassword.fromJson(encryptedJson);
       return EncryptionService.decryptWithPassword(encryptedData, password);
     } catch (e) {
-      debugdebugPrint('Ошибка загрузки с паролем: $e');
+      debugPrint('Ошибка загрузки с паролем: $e');
       return null;
     }
   }
@@ -214,7 +214,7 @@ class SecureStorageService {
     try {
       return await _secureStorage.containsKey(key: key);
     } catch (e) {
-      debugdebugPrint('Ошибка проверки существования ключа: $e');
+      debugPrint('Ошибка проверки существования ключа: $e');
       return false;
     }
   }
@@ -226,7 +226,7 @@ class SecureStorageService {
       final timestamp = prefs.getInt(_lastEncryptionUpdateKey);
       return timestamp != null ? DateTime.fromMillisecondsSinceEpoch(timestamp) : null;
     } catch (e) {
-      debugdebugPrint(
+      debugPrint(
         'Ошибка получения времени последнего обновления шифрования: $e',
       );
       return null;
@@ -267,7 +267,7 @@ class SecureStorageService {
 
           await _secureStorage.write(key: entry.key, value: newEncryptedJson);
         } catch (e) {
-          debugdebugPrint('Ошибка перешифровки данных для ключа ${entry.key}: $e');
+          debugPrint('Ошибка перешифровки данных для ключа ${entry.key}: $e');
         }
       }
 
@@ -284,9 +284,9 @@ class SecureStorageService {
         DateTime.now().millisecondsSinceEpoch,
       );
 
-      debugdebugPrint('Ключ шифрования обновлен');
+      debugPrint('Ключ шифрования обновлен');
     } catch (e) {
-      debugdebugPrint('Ошибка обновления ключа шифрования: $e');
+      debugPrint('Ошибка обновления ключа шифрования: $e');
       rethrow;
     }
   }
@@ -306,7 +306,7 @@ class SecureStorageService {
         hasEncryptionKey: await getEncryptionKey() != null,
       );
     } catch (e) {
-      debugdebugPrint('Ошибка получения статистики безопасности: $e');
+      debugPrint('Ошибка получения статистики безопасности: $e');
       return const SecurityStats(
         isEncryptionEnabled: false,
         lastEncryptionUpdate: null,

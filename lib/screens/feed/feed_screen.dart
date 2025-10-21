@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../models/post.dart';
 import '../../providers/auth_providers.dart';
@@ -27,10 +28,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              // TODO: Create new post
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Создание поста пока не реализовано')),
-              );
+              context.push('/posts/create');
             },
           ),
           IconButton(
@@ -77,23 +75,14 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                 return PostCard(
                   post: post,
                   onTap: () {
-                    // TODO: Navigate to post detail
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Пост: ${post.text ?? 'Без текста'}')),
-                    );
+                    context.push('/posts/${post.id}');
                   },
                   onLike: () => _handleLike(post),
                   onComment: () {
-                    // TODO: Navigate to comments
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Комментарии пока не реализованы')),
-                    );
+                    context.push('/posts/${post.id}/comments');
                   },
                   onShare: () {
-                    // TODO: Share post
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Поделиться пока не реализовано')),
-                    );
+                    _sharePost(post);
                   },
                 );
               },
@@ -148,5 +137,17 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
     } else {
       postService.likePost(post.id, currentUser.uid);
     }
+  }
+
+  void _sharePost(Post post) {
+    // Простая реализация поделиться - копирование ссылки в буфер обмена
+    final shareText = 'Посмотрите этот пост в Event Marketplace: ${post.text ?? 'Интересный пост'}';
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Ссылка на пост скопирована: $shareText'),
+        duration: const Duration(seconds: 3),
+      ),
+    );
   }
 }

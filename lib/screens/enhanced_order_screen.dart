@@ -621,12 +621,12 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
 
   void _editOrder() {
     // TODO: Реализовать редактирование заявки
-    debugdebugPrint('Редактирование заявки');
+    debugPrint('Редактирование заявки');
   }
 
   void _shareOrder() {
     // TODO: Реализовать шаринг заявки
-    debugdebugPrint('Шаринг заявки');
+    debugPrint('Шаринг заявки');
   }
 
   void _cancelOrder() {
@@ -654,31 +654,31 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
 
   void _acceptOrder() {
     // TODO: Реализовать принятие заявки
-    debugdebugPrint('Принятие заявки');
+    debugPrint('Принятие заявки');
   }
 
   void _startOrder() {
     // TODO: Реализовать начало работы
-    debugdebugPrint('Начало работы');
+    debugPrint('Начало работы');
   }
 
   void _completeOrder() {
     // TODO: Реализовать завершение заявки
-    debugdebugPrint('Завершение заявки');
+    debugPrint('Завершение заявки');
   }
 
   void _contactUser() {
     // TODO: Реализовать переход к чату
-    debugdebugPrint('Переход к чату');
+    debugPrint('Переход к чату');
   }
 
   void _addComment(String text, bool isInternal) {
     // TODO: Реализовать добавление комментария
-    debugdebugPrint('Добавление комментария: $text (внутренний: $isInternal)');
+    debugPrint('Добавление комментария: $text (внутренний: $isInternal)');
   }
 
   void _addAttachment(OrderAttachment attachment) {
     // TODO: Реализовать добавление вложения
-    debugdebugPrint('Добавление вложения: ${attachment.name}');
+    debugPrint('Добавление вложения: ${attachment.name}');
   }
 }

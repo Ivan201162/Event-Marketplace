@@ -17,7 +17,7 @@ class AdminService {
       }
       return false;
     } catch (e) {
-      debugdebugPrint('ERROR: [AdminService] Failed to check admin status: $e');
+      debugPrint('ERROR: [AdminService] Failed to check admin status: $e');
       return false;
     }
   }
@@ -33,7 +33,7 @@ class AdminService {
       }
       return UserRole.user;
     } catch (e) {
-      debugdebugPrint('ERROR: [AdminService] Failed to get user role: $e');
+      debugPrint('ERROR: [AdminService] Failed to get user role: $e');
       return UserRole.user;
     }
   }
@@ -66,9 +66,9 @@ class AdminService {
       );
 
       await _firestore.collection('admin_logs').doc(log.id).set(log.toMap());
-      debugdebugPrint('INFO: [AdminService] Admin action logged: ${action.name} on $target');
+      debugPrint('INFO: [AdminService] Admin action logged: ${action.name} on $target');
     } catch (e) {
-      debugdebugPrint('ERROR: [AdminService] Failed to log admin action: $e');
+      debugPrint('ERROR: [AdminService] Failed to log admin action: $e');
     }
   }
 
@@ -136,7 +136,7 @@ class AdminService {
 
       return stats;
     } catch (e) {
-      debugdebugPrint('ERROR: [AdminService] Failed to get admin stats: $e');
+      debugPrint('ERROR: [AdminService] Failed to get admin stats: $e');
       return {};
     }
   }
@@ -148,7 +148,7 @@ class AdminService {
 
       return snapshot.docs.map((doc) => doc.data()).toList();
     } catch (e) {
-      debugdebugPrint('ERROR: [AdminService] Failed to get all admins: $e');
+      debugPrint('ERROR: [AdminService] Failed to get all admins: $e');
       return [];
     }
   }
@@ -172,10 +172,10 @@ class AdminService {
         metadata: {'grantedBy': adminId},
       );
 
-      debugdebugPrint('INFO: [AdminService] Admin rights granted to user $userId');
+      debugPrint('INFO: [AdminService] Admin rights granted to user $userId');
       return true;
     } catch (e) {
-      debugdebugPrint('ERROR: [AdminService] Failed to grant admin rights: $e');
+      debugPrint('ERROR: [AdminService] Failed to grant admin rights: $e');
       await logAdminAction(
         adminId: adminId,
         adminEmail: adminEmail,
@@ -209,10 +209,10 @@ class AdminService {
         metadata: {'revokedBy': adminId},
       );
 
-      debugdebugPrint('INFO: [AdminService] Admin rights revoked from user $userId');
+      debugPrint('INFO: [AdminService] Admin rights revoked from user $userId');
       return true;
     } catch (e) {
-      debugdebugPrint('ERROR: [AdminService] Failed to revoke admin rights: $e');
+      debugPrint('ERROR: [AdminService] Failed to revoke admin rights: $e');
       await logAdminAction(
         adminId: adminId,
         adminEmail: adminEmail,
@@ -271,7 +271,7 @@ class AdminService {
 
       return stats;
     } catch (e) {
-      debugdebugPrint('ERROR: [AdminService] Failed to get system stats: $e');
+      debugPrint('ERROR: [AdminService] Failed to get system stats: $e');
       return {};
     }
   }
@@ -322,7 +322,7 @@ class AdminService {
 
       return csv.toString();
     } catch (e) {
-      debugdebugPrint('ERROR: [AdminService] Failed to export data to CSV: $e');
+      debugPrint('ERROR: [AdminService] Failed to export data to CSV: $e');
       return '';
     }
   }

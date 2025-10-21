@@ -1,4 +1,5 @@
 import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/common_types.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -13,15 +14,18 @@ void main() {
           id: 'test_1',
           userId: 'user_1',
           name: 'Тестовый фотограф 1',
+          specialization: 'Photography',
+          city: 'Moscow',
+          rating: 4.8,
+          pricePerHour: 5000,
+          createdAt: now,
+          updatedAt: now,
           category: SpecialistCategory.photographer,
           experienceLevel: ExperienceLevel.expert,
           yearsOfExperience: 5,
           hourlyRate: 5000,
           price: 5000,
-          rating: 4.8,
           reviewCount: 100,
-          createdAt: now,
-          updatedAt: now,
           availableDates: [
             now.add(const Duration(days: 1)),
             now.add(const Duration(days: 2)),
@@ -36,15 +40,18 @@ void main() {
           id: 'test_2',
           userId: 'user_2',
           name: 'Тестовый фотограф 2',
+          specialization: 'Photography',
+          city: 'Moscow',
+          rating: 4.2,
+          pricePerHour: 3000,
+          createdAt: now,
+          updatedAt: now,
           category: SpecialistCategory.photographer,
           experienceLevel: ExperienceLevel.intermediate,
           yearsOfExperience: 3,
           hourlyRate: 3000,
           price: 3000,
-          rating: 4.2,
           reviewCount: 50,
-          createdAt: now,
-          updatedAt: now,
           availableDates: [
             now.add(const Duration(days: 2)),
             now.add(const Duration(days: 4)),
@@ -59,15 +66,18 @@ void main() {
           id: 'test_3',
           userId: 'user_3',
           name: 'Тестовый DJ',
+          specialization: 'DJ',
+          city: 'Moscow',
+          rating: 4.5,
+          pricePerHour: 4000,
+          createdAt: now,
+          updatedAt: now,
           category: SpecialistCategory.dj,
           experienceLevel: ExperienceLevel.advanced,
           yearsOfExperience: 4,
           hourlyRate: 4000,
           price: 4000,
-          rating: 4.5,
           reviewCount: 75,
-          createdAt: now,
-          updatedAt: now,
           availableDates: [
             now.add(const Duration(days: 1)),
             now.add(const Duration(days: 3)),
@@ -86,18 +96,18 @@ void main() {
       // В реальном тесте нужно будет использовать моки
 
       // Тестируем фильтр по минимальной цене 4000
-      final filtered = testSpecialists.where((specialist) => specialist.price >= 4000).toList();
+      final filtered = testSpecialists.where((specialist) => (specialist.price ?? 0) >= 4000).toList();
 
       expect(filtered.length, 2);
-      expect(filtered.every((s) => s.price >= 4000), true);
+      expect(filtered.every((s) => (s.price ?? 0) >= 4000), true);
     });
 
     test('Фильтр по максимальной цене', () async {
       // Тестируем фильтр по максимальной цене 3500
-      final filtered = testSpecialists.where((specialist) => specialist.price <= 3500).toList();
+      final filtered = testSpecialists.where((specialist) => (specialist.price ?? 0) <= 3500).toList();
 
       expect(filtered.length, 1);
-      expect(filtered.first.price, 3000);
+      expect(filtered.first.price, 3000.0);
     });
 
     test('Фильтр по минимальному рейтингу', () async {
@@ -126,12 +136,12 @@ void main() {
       // Тестируем комбинированный фильтр
       final filtered = testSpecialists
           .where(
-            (specialist) => specialist.price >= 4000 && specialist.rating >= 4.5,
+            (specialist) => (specialist.price ?? 0) >= 4000 && specialist.rating >= 4.5,
           )
           .toList();
 
       expect(filtered.length, 2);
-      expect(filtered.every((s) => s.price >= 4000 && s.rating >= 4.5), true);
+      expect(filtered.every((s) => (s.price ?? 0) >= 4000 && s.rating >= 4.5), true);
     });
 
     test('Фильтр по занятым датам', () async {

@@ -64,10 +64,10 @@ class RefundService {
         PaymentStatus.refunded,
       );
 
-      debugdebugPrint('Refund created: $refundId');
+      debugPrint('Refund created: $refundId');
       return refund;
     } catch (e) {
-      debugdebugPrint('Error creating refund: $e');
+      debugPrint('Error creating refund: $e');
       throw Exception('Ошибка создания возврата: $e');
     }
   }
@@ -125,7 +125,7 @@ class RefundService {
           RefundStatus.completed,
           gatewayRefundId: gatewayRefundId,
         );
-        debugdebugPrint('Refund processed successfully: $refundId');
+        debugPrint('Refund processed successfully: $refundId');
       } else {
         await _updateRefundStatus(
           refundId,
@@ -135,7 +135,7 @@ class RefundService {
         throw Exception('Ошибка обработки возврата');
       }
     } catch (e) {
-      debugdebugPrint('Error processing refund: $e');
+      debugPrint('Error processing refund: $e');
       await _updateRefundStatus(
         refundId,
         RefundStatus.failed,
@@ -153,9 +153,9 @@ class RefundService {
         RefundStatus.cancelled,
         failureReason: reason,
       );
-      debugdebugPrint('Refund cancelled: $refundId');
+      debugPrint('Refund cancelled: $refundId');
     } catch (e) {
-      debugdebugPrint('Error cancelling refund: $e');
+      debugPrint('Error cancelling refund: $e');
       throw Exception('Ошибка отмены возврата: $e');
     }
   }
@@ -167,7 +167,7 @@ class RefundService {
       if (!doc.exists) return null;
       return Refund.fromMap(doc.data()!);
     } catch (e) {
-      debugdebugPrint('Error getting refund: $e');
+      debugPrint('Error getting refund: $e');
       return null;
     }
   }
@@ -183,7 +183,7 @@ class RefundService {
 
       return snapshot.docs.map((doc) => Refund.fromMap(doc.data())).toList();
     } catch (e) {
-      debugdebugPrint('Error getting payment refunds: $e');
+      debugPrint('Error getting payment refunds: $e');
       return [];
     }
   }
@@ -199,7 +199,7 @@ class RefundService {
 
       return snapshot.docs.map((doc) => Refund.fromMap(doc.data())).toList();
     } catch (e) {
-      debugdebugPrint('Error getting user refunds: $e');
+      debugPrint('Error getting user refunds: $e');
       return [];
     }
   }
@@ -256,7 +256,7 @@ class RefundService {
       await Future.delayed(const Duration(seconds: 2));
       return true;
     } catch (e) {
-      debugdebugPrint('SBP refund error: $e');
+      debugPrint('SBP refund error: $e');
       return false;
     }
   }
@@ -276,7 +276,7 @@ class RefundService {
 
       return refundResponse.id;
     } catch (e) {
-      debugdebugPrint('YooKassa refund error: $e');
+      debugPrint('YooKassa refund error: $e');
       return null;
     }
   }
@@ -296,7 +296,7 @@ class RefundService {
 
       return true;
     } catch (e) {
-      debugdebugPrint('Tinkoff refund error: $e');
+      debugPrint('Tinkoff refund error: $e');
       return false;
     }
   }
@@ -309,7 +309,7 @@ class RefundService {
       await Future.delayed(const Duration(seconds: 2));
       return true;
     } catch (e) {
-      debugdebugPrint('Card refund error: $e');
+      debugPrint('Card refund error: $e');
       return false;
     }
   }
@@ -322,7 +322,7 @@ class RefundService {
       await Future.delayed(const Duration(seconds: 1));
       return true;
     } catch (e) {
-      debugdebugPrint('Cash refund error: $e');
+      debugPrint('Cash refund error: $e');
       return false;
     }
   }
@@ -338,7 +338,7 @@ class RefundService {
       await Future.delayed(const Duration(seconds: 1));
       return true;
     } catch (e) {
-      debugdebugPrint('Bank transfer refund error: $e');
+      debugPrint('Bank transfer refund error: $e');
       return false;
     }
   }

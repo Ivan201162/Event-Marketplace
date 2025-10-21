@@ -61,7 +61,7 @@ class TinkoffPaymentService {
         );
       }
     } catch (e) {
-      debugdebugPrint('Tinkoff payment creation error: $e');
+      debugPrint('Tinkoff payment creation error: $e');
       throw Exception('Ошибка создания платежа Tinkoff: $e');
     }
   }
@@ -94,7 +94,7 @@ class TinkoffPaymentService {
         );
       }
     } catch (e) {
-      debugdebugPrint('Tinkoff payment status error: $e');
+      debugPrint('Tinkoff payment status error: $e');
       throw Exception('Ошибка получения статуса платежа Tinkoff: $e');
     }
   }
@@ -125,7 +125,7 @@ class TinkoffPaymentService {
         );
       }
     } catch (e) {
-      debugdebugPrint('Tinkoff payment confirm error: $e');
+      debugPrint('Tinkoff payment confirm error: $e');
       throw Exception('Ошибка подтверждения платежа Tinkoff: $e');
     }
   }
@@ -155,7 +155,7 @@ class TinkoffPaymentService {
         );
       }
     } catch (e) {
-      debugdebugPrint('Tinkoff payment cancel error: $e');
+      debugPrint('Tinkoff payment cancel error: $e');
       throw Exception('Ошибка отмены платежа Tinkoff: $e');
     }
   }
@@ -194,7 +194,7 @@ class TinkoffPaymentService {
         );
       }
     } catch (e) {
-      debugdebugPrint('Tinkoff refund creation error: $e');
+      debugPrint('Tinkoff refund creation error: $e');
       throw Exception('Ошибка создания возврата Tinkoff: $e');
     }
   }
@@ -263,7 +263,7 @@ class TinkoffPaymentService {
           webhookData.containsKey('Status') &&
           webhookData.containsKey('PaymentId');
     } catch (e) {
-      debugdebugPrint('Tinkoff webhook validation error: $e');
+      debugPrint('Tinkoff webhook validation error: $e');
       return false;
     }
   }

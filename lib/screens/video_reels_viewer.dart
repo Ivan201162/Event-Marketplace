@@ -109,7 +109,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
 
       setState(() {});
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка инициализации видео: $e');
+      debugPrint('Ошибка инициализации видео: $e');
     }
   }
 

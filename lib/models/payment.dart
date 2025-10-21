@@ -1,43 +1,46 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
-/// Payment status enum
-enum PaymentStatus {
-  pending('Ожидает оплаты'),
-  processing('Обрабатывается'),
-  completed('Завершен'),
-  failed('Неудачный'),
-  cancelled('Отменен'),
-  refunded('Возвращен');
-
-  const PaymentStatus(this.displayName);
-  final String displayName;
-}
-
 /// Payment method enum
 enum PaymentMethod {
-  card('Банковская карта'),
-  applePay('Apple Pay'),
-  googlePay('Google Pay'),
-  yooMoney('ЮMoney'),
-  sberbank('Сбербанк'),
-  tinkoff('Тинькофф');
+  card,
+  bankTransfer,
+  digitalWallet,
+  cryptocurrency,
+  cash,
+  bankTransfer,
+}
 
-  const PaymentMethod(this.displayName);
-  final String displayName;
+/// Payment status enum
+enum PaymentStatus {
+  pending,
+  processing,
+  completed,
+  failed,
+  cancelled,
+  refunded,
+  disputed,
 }
 
 /// Payment type enum
 enum PaymentType {
-  booking('Оплата бронирования'),
-  commission('Комиссия платформы'),
-  refund('Возврат средств'),
-  payout('Выплата специалисту'),
-  subscription('Подписка'),
-  premium('Премиум функции');
+  booking,
+  subscription,
+  deposit,
+  prepayment,
+  finalPayment,
+  fullPayment,
+  penalty,
+  bonus,
+  hold,
+}
 
-  const PaymentType(this.displayName);
-  final String displayName;
+/// Tax status enum
+enum TaxStatus {
+  notCalculated,
+  calculated,
+  paid,
+  exempt,
 }
 
 /// Payment model
@@ -46,77 +49,91 @@ class Payment extends Equatable {
   final String userId;
   final String? specialistId;
   final String? bookingId;
-  final PaymentType type;
+  final double amount;
+  final String currency;
   final PaymentMethod method;
   final PaymentStatus status;
-  final int amount; // in kopecks
-  final int commission; // in kopecks
-  final String currency;
-  final String description;
-  final Map<String, dynamic>? metadata;
-  final String? stripePaymentIntentId;
-  final String? stripeChargeId;
-  final String? failureReason;
+  final PaymentType type;
   final DateTime createdAt;
-  final DateTime updatedAt;
-  final DateTime? completedAt;
-  final DateTime? failedAt;
+  final DateTime? updatedAt;
+  final DateTime? paidAt;
+  final String? transactionId;
+  final String? description;
+  final Map<String, dynamic>? metadata;
+  final String? receiptUrl;
+  final double? fee;
+  final double? taxAmount;
+  final TaxStatus? taxStatus;
+  final String? typeDisplayName;
+  final String? methodDisplayName;
+  final String? taxStatusDisplayName;
+  final bool isCompleted;
 
   const Payment({
     required this.id,
     required this.userId,
     this.specialistId,
     this.bookingId,
-    required this.type,
+    required this.amount,
+    this.currency = 'RUB',
     required this.method,
     required this.status,
-    required this.amount,
-    required this.commission,
-    required this.currency,
-    required this.description,
-    this.metadata,
-    this.stripePaymentIntentId,
-    this.stripeChargeId,
-    this.failureReason,
+    required this.type,
     required this.createdAt,
-    required this.updatedAt,
-    this.completedAt,
-    this.failedAt,
+    this.updatedAt,
+    this.paidAt,
+    this.transactionId,
+    this.description,
+    this.metadata,
+    this.receiptUrl,
+    this.fee,
+    this.taxAmount,
+    this.taxStatus,
+    this.typeDisplayName,
+    this.methodDisplayName,
+    this.taxStatusDisplayName,
+    this.isCompleted = false,
   });
 
   /// Create Payment from Firestore document
   factory Payment.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-
     return Payment(
       id: doc.id,
       userId: data['userId'] ?? '',
       specialistId: data['specialistId'],
       bookingId: data['bookingId'],
-      type: PaymentType.values.firstWhere(
-        (type) => type.name == data['type'],
-        orElse: () => PaymentType.booking,
-      ),
+      amount: (data['amount'] ?? 0.0).toDouble(),
+      currency: data['currency'] ?? 'RUB',
       method: PaymentMethod.values.firstWhere(
-        (method) => method.name == data['method'],
+        (e) => e.name == data['method'],
         orElse: () => PaymentMethod.card,
       ),
       status: PaymentStatus.values.firstWhere(
-        (status) => status.name == data['status'],
+        (e) => e.name == data['status'],
         orElse: () => PaymentStatus.pending,
       ),
-      amount: data['amount'] ?? 0,
-      commission: data['commission'] ?? 0,
-      currency: data['currency'] ?? 'RUB',
-      description: data['description'] ?? '',
-      metadata: data['metadata'],
-      stripePaymentIntentId: data['stripePaymentIntentId'],
-      stripeChargeId: data['stripeChargeId'],
-      failureReason: data['failureReason'],
+      type: PaymentType.values.firstWhere(
+        (e) => e.name == data['type'],
+        orElse: () => PaymentType.booking,
+      ),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
-      failedAt: data['failedAt'] != null ? (data['failedAt'] as Timestamp).toDate() : null,
+      updatedAt: data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : null,
+      paidAt: data['paidAt'] != null ? (data['paidAt'] as Timestamp).toDate() : null,
+      transactionId: data['transactionId'],
+      description: data['description'],
+      metadata: data['metadata'] as Map<String, dynamic>?,
+      receiptUrl: data['receiptUrl'],
+      fee: data['fee']?.toDouble(),
+      taxAmount: data['taxAmount']?.toDouble(),
+      taxStatus: data['taxStatus'] != null ? TaxStatus.values.firstWhere(
+        (e) => e.name == data['taxStatus'],
+        orElse: () => TaxStatus.notCalculated,
+      ) : null,
+      typeDisplayName: data['typeDisplayName'],
+      methodDisplayName: data['methodDisplayName'],
+      taxStatusDisplayName: data['taxStatusDisplayName'],
+      isCompleted: data['isCompleted'] ?? false,
     );
   }
 
@@ -126,139 +143,161 @@ class Payment extends Equatable {
       'userId': userId,
       'specialistId': specialistId,
       'bookingId': bookingId,
-      'type': type.name,
+      'amount': amount,
+      'currency': currency,
       'method': method.name,
       'status': status.name,
-      'amount': amount,
-      'commission': commission,
-      'currency': currency,
+      'type': type.name,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+      'paidAt': paidAt != null ? Timestamp.fromDate(paidAt!) : null,
+      'transactionId': transactionId,
       'description': description,
       'metadata': metadata,
-      'stripePaymentIntentId': stripePaymentIntentId,
-      'stripeChargeId': stripeChargeId,
-      'failureReason': failureReason,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
-      'failedAt': failedAt != null ? Timestamp.fromDate(failedAt!) : null,
+      'receiptUrl': receiptUrl,
+      'fee': fee,
+      'taxAmount': taxAmount,
+      'taxStatus': taxStatus?.name,
+      'typeDisplayName': typeDisplayName,
+      'methodDisplayName': methodDisplayName,
+      'taxStatusDisplayName': taxStatusDisplayName,
+      'isCompleted': isCompleted,
     };
   }
 
-  /// Create a copy of Payment with updated fields
+  /// Create a copy with updated fields
   Payment copyWith({
     String? id,
     String? userId,
     String? specialistId,
     String? bookingId,
-    PaymentType? type,
+    double? amount,
+    String? currency,
     PaymentMethod? method,
     PaymentStatus? status,
-    int? amount,
-    int? commission,
-    String? currency,
-    String? description,
-    Map<String, dynamic>? metadata,
-    String? stripePaymentIntentId,
-    String? stripeChargeId,
-    String? failureReason,
+    PaymentType? type,
     DateTime? createdAt,
     DateTime? updatedAt,
-    DateTime? completedAt,
-    DateTime? failedAt,
+    DateTime? paidAt,
+    String? transactionId,
+    String? description,
+    Map<String, dynamic>? metadata,
+    String? receiptUrl,
+    double? fee,
+    double? taxAmount,
+    TaxStatus? taxStatus,
+    String? typeDisplayName,
+    String? methodDisplayName,
+    String? taxStatusDisplayName,
+    bool? isCompleted,
   }) {
     return Payment(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       specialistId: specialistId ?? this.specialistId,
       bookingId: bookingId ?? this.bookingId,
-      type: type ?? this.type,
+      amount: amount ?? this.amount,
+      currency: currency ?? this.currency,
       method: method ?? this.method,
       status: status ?? this.status,
-      amount: amount ?? this.amount,
-      commission: commission ?? this.commission,
-      currency: currency ?? this.currency,
-      description: description ?? this.description,
-      metadata: metadata ?? this.metadata,
-      stripePaymentIntentId: stripePaymentIntentId ?? this.stripePaymentIntentId,
-      stripeChargeId: stripeChargeId ?? this.stripeChargeId,
-      failureReason: failureReason ?? this.failureReason,
+      type: type ?? this.type,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      completedAt: completedAt ?? this.completedAt,
-      failedAt: failedAt ?? this.failedAt,
+      paidAt: paidAt ?? this.paidAt,
+      transactionId: transactionId ?? this.transactionId,
+      description: description ?? this.description,
+      metadata: metadata ?? this.metadata,
+      receiptUrl: receiptUrl ?? this.receiptUrl,
+      fee: fee ?? this.fee,
+      taxAmount: taxAmount ?? this.taxAmount,
+      taxStatus: taxStatus ?? this.taxStatus,
+      typeDisplayName: typeDisplayName ?? this.typeDisplayName,
+      methodDisplayName: methodDisplayName ?? this.methodDisplayName,
+      taxStatusDisplayName: taxStatusDisplayName ?? this.taxStatusDisplayName,
+      isCompleted: isCompleted ?? this.isCompleted,
     );
   }
 
-  /// Get formatted amount string
-  String get formattedAmount {
-    final rubles = amount / 100;
-    return '${rubles.toStringAsFixed(2)} ₽';
-  }
-
-  /// Get formatted commission string
-  String get formattedCommission {
-    final rubles = commission / 100;
-    return '${rubles.toStringAsFixed(2)} ₽';
-  }
-
-  /// Get net amount (amount - commission)
-  int get netAmount => amount - commission;
-
-  /// Get formatted net amount string
-  String get formattedNetAmount {
-    final rubles = netAmount / 100;
-    return '${rubles.toStringAsFixed(2)} ₽';
-  }
+  /// Get formatted amount
+  String get formattedAmount => '${amount.toStringAsFixed(2)} $currency';
 
   /// Get status color
   String get statusColor {
     switch (status) {
       case PaymentStatus.pending:
-        return 'orange';
+        return '#FFA500';
       case PaymentStatus.processing:
-        return 'blue';
+        return '#2196F3';
       case PaymentStatus.completed:
-        return 'green';
+        return '#4CAF50';
       case PaymentStatus.failed:
-        return 'red';
+        return '#F44336';
       case PaymentStatus.cancelled:
-        return 'grey';
+        return '#9E9E9E';
       case PaymentStatus.refunded:
-        return 'purple';
+        return '#FF9800';
+      case PaymentStatus.disputed:
+        return '#E91E63';
     }
   }
 
-  /// Check if payment is successful
-  bool get isSuccessful => status == PaymentStatus.completed;
-
-  /// Check if payment is pending
-  bool get isPending => status == PaymentStatus.pending || status == PaymentStatus.processing;
-
-  /// Check if payment is failed
-  bool get isFailed => status == PaymentStatus.failed || status == PaymentStatus.cancelled;
-
-  /// Check if payment can be refunded
-  bool get canBeRefunded => status == PaymentStatus.completed;
-
-  /// Get payment duration
-  Duration? get duration {
-    if (completedAt != null) {
-      return completedAt!.difference(createdAt);
+  /// Get status text
+  String get statusText {
+    switch (status) {
+      case PaymentStatus.pending:
+        return 'Ожидает';
+      case PaymentStatus.processing:
+        return 'Обрабатывается';
+      case PaymentStatus.completed:
+        return 'Завершено';
+      case PaymentStatus.failed:
+        return 'Неудачно';
+      case PaymentStatus.cancelled:
+        return 'Отменено';
+      case PaymentStatus.refunded:
+        return 'Возвращено';
+      case PaymentStatus.disputed:
+        return 'Спор';
     }
-    return null;
   }
 
-  /// Get formatted duration
-  String get formattedDuration {
-    final dur = duration;
-    if (dur == null) return 'В процессе';
+  /// Get method icon
+  String get methodIcon {
+    switch (method) {
+      case PaymentMethod.card:
+        return '💳';
+      case PaymentMethod.bankTransfer:
+        return '🏦';
+      case PaymentMethod.digitalWallet:
+        return '📱';
+      case PaymentMethod.cryptocurrency:
+        return '₿';
+      case PaymentMethod.cash:
+        return '💵';
+    }
+  }
 
-    if (dur.inSeconds < 60) {
-      return '${dur.inSeconds} сек';
-    } else if (dur.inMinutes < 60) {
-      return '${dur.inMinutes} мин';
-    } else {
-      return '${dur.inHours} ч ${dur.inMinutes % 60} мин';
+  /// Get type icon
+  String get typeIcon {
+    switch (type) {
+      case PaymentType.booking:
+        return '📅';
+      case PaymentType.subscription:
+        return '🔄';
+      case PaymentType.deposit:
+        return '💰';
+      case PaymentType.prepayment:
+        return '⏰';
+      case PaymentType.finalPayment:
+        return '✅';
+      case PaymentType.fullPayment:
+        return '💯';
+      case PaymentType.penalty:
+        return '⚠️';
+      case PaymentType.bonus:
+        return '🎁';
+      case PaymentType.hold:
+        return '🔒';
     }
   }
 
@@ -268,20 +307,29 @@ class Payment extends Equatable {
         userId,
         specialistId,
         bookingId,
-        type,
+        amount,
+        currency,
         method,
         status,
-        amount,
-        commission,
-        currency,
-        description,
-        metadata,
-        stripePaymentIntentId,
-        stripeChargeId,
-        failureReason,
+        type,
         createdAt,
         updatedAt,
-        completedAt,
-        failedAt,
+        paidAt,
+        transactionId,
+        description,
+        metadata,
+        receiptUrl,
+        fee,
+        taxAmount,
+        taxStatus,
+        typeDisplayName,
+        methodDisplayName,
+        taxStatusDisplayName,
+        isCompleted,
       ];
+
+  @override
+  String toString() {
+    return 'Payment(id: $id, amount: $amount, status: $status, type: $type)';
+  }
 }

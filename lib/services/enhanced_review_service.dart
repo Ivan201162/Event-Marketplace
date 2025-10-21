@@ -92,7 +92,7 @@ class EnhancedReviewService {
 
       return docRef.id;
     } catch (e) {
-      debugdebugPrint('Ошибка создания отзыва: $e');
+      debugPrint('Ошибка создания отзыва: $e');
       throw Exception('Не удалось создать отзыв: $e');
     }
   }
@@ -119,7 +119,7 @@ class EnhancedReviewService {
       final snapshot = await query.get();
       return snapshot.docs.map(Review.fromDocument).toList();
     } catch (e) {
-      debugdebugPrint('Ошибка получения отзывов: $e');
+      debugPrint('Ошибка получения отзывов: $e');
       return [];
     }
   }
@@ -170,7 +170,7 @@ class EnhancedReviewService {
         ratingDistribution: ratingDistribution,
       );
     } catch (e) {
-      debugdebugPrint('Ошибка получения статистики отзывов: $e');
+      debugPrint('Ошибка получения статистики отзывов: $e');
       return const ReviewStats(
         totalReviews: 0,
         averageRating: 0,
@@ -259,7 +259,7 @@ class EnhancedReviewService {
       // Обновляем статистику специалиста
       await _updateSpecialistStats(specialistId);
     } catch (e) {
-      debugdebugPrint('Ошибка обновления отзыва: $e');
+      debugPrint('Ошибка обновления отзыва: $e');
       throw Exception('Не удалось обновить отзыв: $e');
     }
   }
@@ -294,7 +294,7 @@ class EnhancedReviewService {
       // Обновляем статистику специалиста
       await _updateSpecialistStats(specialistId);
     } catch (e) {
-      debugdebugPrint('Ошибка удаления отзыва: $e');
+      debugPrint('Ошибка удаления отзыва: $e');
       throw Exception('Не удалось удалить отзыв: $e');
     }
   }
@@ -319,7 +319,7 @@ class EnhancedReviewService {
 
       return Review.fromDocument(snapshot.docs.first);
     } catch (e) {
-      debugdebugPrint('Ошибка получения отзыва пользователя: $e');
+      debugPrint('Ошибка получения отзыва пользователя: $e');
       return null;
     }
   }
@@ -351,7 +351,7 @@ class EnhancedReviewService {
 
       return bookingsSnapshot.docs.isNotEmpty;
     } catch (e) {
-      debugdebugPrint('Ошибка проверки возможности оставить отзыв: $e');
+      debugPrint('Ошибка проверки возможности оставить отзыв: $e');
       return false;
     }
   }
@@ -367,7 +367,7 @@ class EnhancedReviewService {
         'lastReviewUpdate': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      debugdebugPrint('Ошибка обновления статистики специалиста: $e');
+      debugPrint('Ошибка обновления статистики специалиста: $e');
     }
   }
 
@@ -383,7 +383,7 @@ class EnhancedReviewService {
 
       return snapshot.docs.map(Review.fromDocument).toList();
     } catch (e) {
-      debugdebugPrint('Ошибка получения популярных отзывов: $e');
+      debugPrint('Ошибка получения популярных отзывов: $e');
       return [];
     }
   }

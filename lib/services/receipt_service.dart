@@ -24,7 +24,7 @@ class ReceiptService {
       final ReceiptSettings? settings = await _getUserReceiptSettings(userId);
 
       if (settings != null && !settings.autoGenerate) {
-        debugdebugPrint('INFO: [ReceiptService] Auto-generate disabled for user $userId');
+        debugPrint('INFO: [ReceiptService] Auto-generate disabled for user $userId');
         return '';
       }
 
@@ -49,10 +49,10 @@ class ReceiptService {
       // Генерируем чек
       await _generateReceipt(receipt);
 
-      debugdebugPrint('INFO: [ReceiptService] Receipt created: ${receipt.id}');
+      debugPrint('INFO: [ReceiptService] Receipt created: ${receipt.id}');
       return receipt.id;
     } catch (e) {
-      debugdebugPrint('ERROR: [ReceiptService] Failed to create receipt: $e');
+      debugPrint('ERROR: [ReceiptService] Failed to create receipt: $e');
       rethrow;
     }
   }
@@ -86,9 +86,9 @@ class ReceiptService {
       // Отправляем чек пользователю
       await _sendReceipt(receipt);
 
-      debugdebugPrint('INFO: [ReceiptService] Receipt generated: ${receipt.id}');
+      debugPrint('INFO: [ReceiptService] Receipt generated: ${receipt.id}');
     } catch (e) {
-      debugdebugPrint('ERROR: [ReceiptService] Failed to generate receipt: $e');
+      debugPrint('ERROR: [ReceiptService] Failed to generate receipt: $e');
       await _updateReceiptStatus(receipt.id, ReceiptStatus.failed, e.toString());
     }
   }
@@ -104,7 +104,7 @@ class ReceiptService {
       }
       return null;
     } catch (e) {
-      debugdebugPrint('ERROR: [ReceiptService] Failed to get user receipt settings: $e');
+      debugPrint('ERROR: [ReceiptService] Failed to get user receipt settings: $e');
       return null;
     }
   }
@@ -124,7 +124,7 @@ class ReceiptService {
       }
       return null;
     } catch (e) {
-      debugdebugPrint('ERROR: [ReceiptService] Failed to get receipt template: $e');
+      debugPrint('ERROR: [ReceiptService] Failed to get receipt template: $e');
       return null;
     }
   }
@@ -163,7 +163,7 @@ class ReceiptService {
 
       return receiptData;
     } catch (e) {
-      debugdebugPrint('ERROR: [ReceiptService] Failed to generate receipt data: $e');
+      debugPrint('ERROR: [ReceiptService] Failed to generate receipt data: $e');
       return {};
     }
   }
@@ -179,7 +179,7 @@ class ReceiptService {
       }
       return {};
     } catch (e) {
-      debugdebugPrint('ERROR: [ReceiptService] Failed to get transaction data: $e');
+      debugPrint('ERROR: [ReceiptService] Failed to get transaction data: $e');
       return {};
     }
   }
@@ -194,7 +194,7 @@ class ReceiptService {
       }
       return {};
     } catch (e) {
-      debugdebugPrint('ERROR: [ReceiptService] Failed to get user data: $e');
+      debugPrint('ERROR: [ReceiptService] Failed to get user data: $e');
       return {};
     }
   }
@@ -314,10 +314,10 @@ class ReceiptService {
           .doc(fiscalReceipt.id)
           .set(fiscalReceipt.toMap());
 
-      debugdebugPrint('INFO: [ReceiptService] Fiscal receipt created: ${fiscalReceipt.id}');
+      debugPrint('INFO: [ReceiptService] Fiscal receipt created: ${fiscalReceipt.id}');
       return fiscalReceipt;
     } catch (e) {
-      debugdebugPrint('ERROR: [ReceiptService] Failed to create fiscal receipt: $e');
+      debugPrint('ERROR: [ReceiptService] Failed to create fiscal receipt: $e');
       return null;
     }
   }
@@ -373,9 +373,9 @@ class ReceiptService {
         await _updateReceiptStatus(receipt.id, ReceiptStatus.sent);
       }
 
-      debugdebugPrint('INFO: [ReceiptService] Receipt sent: ${receipt.id}');
+      debugPrint('INFO: [ReceiptService] Receipt sent: ${receipt.id}');
     } catch (e) {
-      debugdebugPrint('ERROR: [ReceiptService] Failed to send receipt: $e');
+      debugPrint('ERROR: [ReceiptService] Failed to send receipt: $e');
       await _updateReceiptStatus(receipt.id, ReceiptStatus.failed, e.toString());
     }
   }
@@ -386,9 +386,9 @@ class ReceiptService {
       // Интеграция с email сервисом
       // В реальном приложении здесь будет вызов API email сервиса
 
-      debugdebugPrint('INFO: [ReceiptService] Receipt sent by email to ${receipt.email}');
+      debugPrint('INFO: [ReceiptService] Receipt sent by email to ${receipt.email}');
     } catch (e) {
-      debugdebugPrint('ERROR: [ReceiptService] Failed to send receipt by email: $e');
+      debugPrint('ERROR: [ReceiptService] Failed to send receipt by email: $e');
       rethrow;
     }
   }
@@ -399,9 +399,9 @@ class ReceiptService {
       // Интеграция с SMS сервисом
       // В реальном приложении здесь будет вызов API SMS сервиса
 
-      debugdebugPrint('INFO: [ReceiptService] Receipt sent by SMS to ${receipt.phone}');
+      debugPrint('INFO: [ReceiptService] Receipt sent by SMS to ${receipt.phone}');
     } catch (e) {
-      debugdebugPrint('ERROR: [ReceiptService] Failed to send receipt by SMS: $e');
+      debugPrint('ERROR: [ReceiptService] Failed to send receipt by SMS: $e');
       rethrow;
     }
   }
@@ -428,7 +428,7 @@ class ReceiptService {
 
       await _firestore.collection('receipts').doc(receiptId).update(updateData);
     } catch (e) {
-      debugdebugPrint('ERROR: [ReceiptService] Failed to update receipt status: $e');
+      debugPrint('ERROR: [ReceiptService] Failed to update receipt status: $e');
     }
   }
 
@@ -445,7 +445,7 @@ class ReceiptService {
           .map((doc) => Receipt.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      debugdebugPrint('ERROR: [ReceiptService] Failed to get user receipts: $e');
+      debugPrint('ERROR: [ReceiptService] Failed to get user receipts: $e');
       return [];
     }
   }
@@ -460,7 +460,7 @@ class ReceiptService {
       }
       return null;
     } catch (e) {
-      debugdebugPrint('ERROR: [ReceiptService] Failed to get receipt: $e');
+      debugPrint('ERROR: [ReceiptService] Failed to get receipt: $e');
       return null;
     }
   }
@@ -470,10 +470,10 @@ class ReceiptService {
     try {
       await _firestore.collection('receipt_settings').doc(settings.userId).set(settings.toMap());
 
-      debugdebugPrint(
+      debugPrint(
           'INFO: [ReceiptService] Receipt settings updated for user ${settings.userId}');
     } catch (e) {
-      debugdebugPrint('ERROR: [ReceiptService] Failed to update receipt settings: $e');
+      debugPrint('ERROR: [ReceiptService] Failed to update receipt settings: $e');
       rethrow;
     }
   }
@@ -497,10 +497,10 @@ class ReceiptService {
 
       await _firestore.collection('receipt_templates').doc(templateId).set(newTemplate.toMap());
 
-      debugdebugPrint('INFO: [ReceiptService] Receipt template created: $templateId');
+      debugPrint('INFO: [ReceiptService] Receipt template created: $templateId');
       return templateId;
     } catch (e) {
-      debugdebugPrint('ERROR: [ReceiptService] Failed to create receipt template: $e');
+      debugPrint('ERROR: [ReceiptService] Failed to create receipt template: $e');
       rethrow;
     }
   }
@@ -514,9 +514,9 @@ class ReceiptService {
       }
 
       await _sendReceipt(receipt);
-      debugdebugPrint('INFO: [ReceiptService] Receipt resent: $receiptId');
+      debugPrint('INFO: [ReceiptService] Receipt resent: $receiptId');
     } catch (e) {
-      debugdebugPrint('ERROR: [ReceiptService] Failed to resend receipt: $e');
+      debugPrint('ERROR: [ReceiptService] Failed to resend receipt: $e');
       rethrow;
     }
   }

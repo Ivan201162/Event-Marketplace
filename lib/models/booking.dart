@@ -34,6 +34,11 @@ class Booking extends Equatable {
   final String? clientPhone;
   final String? clientEmail;
   final Map<String, dynamic>? metadata;
+  final String? eventTitle;
+  final int? participantsCount;
+  final String? organizerName;
+  final DateTime? eventDate;
+  final DateTime? endDate;
 
   const Booking({
     required this.id,
@@ -54,6 +59,11 @@ class Booking extends Equatable {
     this.clientPhone,
     this.clientEmail,
     this.metadata,
+    this.eventTitle,
+    this.participantsCount,
+    this.organizerName,
+    this.eventDate,
+    this.endDate,
   });
 
   /// Create Booking from Firestore document
@@ -82,6 +92,11 @@ class Booking extends Equatable {
       clientPhone: data['clientPhone'],
       clientEmail: data['clientEmail'],
       metadata: data['metadata'],
+      eventTitle: data['eventTitle'],
+      participantsCount: data['participantsCount'],
+      organizerName: data['organizerName'],
+      eventDate: data['eventDate'] != null ? (data['eventDate'] as Timestamp).toDate() : null,
+      endDate: data['endDate'] != null ? (data['endDate'] as Timestamp).toDate() : null,
     );
   }
 
@@ -105,6 +120,11 @@ class Booking extends Equatable {
       'clientPhone': clientPhone,
       'clientEmail': clientEmail,
       'metadata': metadata,
+      'eventTitle': eventTitle,
+      'participantsCount': participantsCount,
+      'organizerName': organizerName,
+      'eventDate': eventDate != null ? Timestamp.fromDate(eventDate!) : null,
+      'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
     };
   }
 
@@ -128,6 +148,11 @@ class Booking extends Equatable {
     String? clientPhone,
     String? clientEmail,
     Map<String, dynamic>? metadata,
+    String? eventTitle,
+    int? participantsCount,
+    String? organizerName,
+    DateTime? eventDate,
+    DateTime? endDate,
   }) {
     return Booking(
       id: id ?? this.id,
@@ -148,6 +173,11 @@ class Booking extends Equatable {
       clientPhone: clientPhone ?? this.clientPhone,
       clientEmail: clientEmail ?? this.clientEmail,
       metadata: metadata ?? this.metadata,
+      eventTitle: eventTitle ?? this.eventTitle,
+      participantsCount: participantsCount ?? this.participantsCount,
+      organizerName: organizerName ?? this.organizerName,
+      eventDate: eventDate ?? this.eventDate,
+      endDate: endDate ?? this.endDate,
     );
   }
 
@@ -231,5 +261,10 @@ class Booking extends Equatable {
         clientPhone,
         clientEmail,
         metadata,
+        eventTitle,
+        participantsCount,
+        organizerName,
+        eventDate,
+        endDate,
       ];
 }

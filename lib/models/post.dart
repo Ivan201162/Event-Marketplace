@@ -25,6 +25,7 @@ class Post extends Equatable {
   final List<String> tags;
   final bool isPinned;
   final String? location;
+  final List<String> mediaUrls;
 
   const Post({
     required this.id,
@@ -42,6 +43,7 @@ class Post extends Equatable {
     this.tags = const [],
     this.isPinned = false,
     this.location,
+    this.mediaUrls = const [],
   });
 
   /// Create Post from Firestore document
@@ -68,6 +70,7 @@ class Post extends Equatable {
       tags: List<String>.from(data['tags'] ?? []),
       isPinned: data['isPinned'] ?? false,
       location: data['location'],
+      mediaUrls: List<String>.from(data['mediaUrls'] ?? []),
     );
   }
 
@@ -88,6 +91,7 @@ class Post extends Equatable {
       'tags': tags,
       'isPinned': isPinned,
       'location': location,
+      'mediaUrls': mediaUrls,
     };
   }
 
@@ -108,6 +112,7 @@ class Post extends Equatable {
     List<String>? tags,
     bool? isPinned,
     String? location,
+    List<String>? mediaUrls,
   }) {
     return Post(
       id: id ?? this.id,
@@ -125,6 +130,7 @@ class Post extends Equatable {
       tags: tags ?? this.tags,
       isPinned: isPinned ?? this.isPinned,
       location: location ?? this.location,
+      mediaUrls: mediaUrls ?? this.mediaUrls,
     );
   }
 
@@ -180,6 +186,7 @@ class Post extends Equatable {
         tags,
         isPinned,
         location,
+        mediaUrls,
       ];
 
   @override

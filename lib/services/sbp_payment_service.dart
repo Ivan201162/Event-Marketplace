@@ -43,7 +43,7 @@ class SBPPaymentService {
         );
       }
     } catch (e) {
-      debugdebugPrint('SBP payment creation error: $e');
+      debugPrint('SBP payment creation error: $e');
       throw Exception('Ошибка создания платежа СБП: $e');
     }
   }
@@ -67,7 +67,7 @@ class SBPPaymentService {
         );
       }
     } catch (e) {
-      debugdebugPrint('SBP payment status error: $e');
+      debugPrint('SBP payment status error: $e');
       throw Exception('Ошибка получения статуса платежа СБП: $e');
     }
   }
@@ -93,7 +93,7 @@ class SBPPaymentService {
           callbackData.containsKey('status') &&
           callbackData.containsKey('amount');
     } catch (e) {
-      debugdebugPrint('SBP callback validation error: $e');
+      debugPrint('SBP callback validation error: $e');
       return false;
     }
   }

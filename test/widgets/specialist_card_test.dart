@@ -1,4 +1,5 @@
 import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/common_types.dart';
 import 'package:event_marketplace_app/widgets/specialist_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,13 +7,19 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('SpecialistCard', () {
-    Specialist? testSpecialist;
+    late Specialist testSpecialist;
 
     setUp(() {
       testSpecialist = Specialist(
         id: 'specialist_1',
         userId: 'user_1',
         name: 'Test Specialist',
+        specialization: 'Photography',
+        city: 'Moscow',
+        rating: 4.5,
+        pricePerHour: 3000,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
         description: 'Test description',
         bio: 'Test bio',
         category: SpecialistCategory.photographer,
@@ -31,10 +38,7 @@ void main() {
           'https://example.com/portfolio2',
         ],
         isVerified: true,
-        rating: 4.8,
         reviewCount: 47,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
       );
     });
 

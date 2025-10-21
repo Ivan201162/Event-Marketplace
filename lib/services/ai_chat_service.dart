@@ -27,7 +27,7 @@ class AiChatService {
 
       return session.id;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка создания сессии чата: $e');
+      debugPrint('Ошибка создания сессии чата: $e');
       return null;
     }
   }
@@ -43,7 +43,7 @@ class AiChatService {
 
       return querySnapshot.docs.map(ChatSession.fromFirestore).toList();
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка получения сессий: $e');
+      debugPrint('Ошибка получения сессий: $e');
       return [];
     }
   }
@@ -59,7 +59,7 @@ class AiChatService {
 
       return querySnapshot.docs.map(ChatMessage.fromFirestore).toList();
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка получения сообщений: $e');
+      debugPrint('Ошибка получения сообщений: $e');
       return [];
     }
   }
@@ -92,7 +92,7 @@ class AiChatService {
 
       return message;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка отправки сообщения: $e');
+      debugPrint('Ошибка отправки сообщения: $e');
       return null;
     }
   }
@@ -138,7 +138,7 @@ class AiChatService {
 
       return aiMessage;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка получения ответа AI: $e');
+      debugPrint('Ошибка получения ответа AI: $e');
       return null;
     }
   }
@@ -347,7 +347,7 @@ class AiChatService {
         'newContext': context,
       };
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка поиска специалистов: $e');
+      debugPrint('Ошибка поиска специалистов: $e');
       return {
         'content': 'Произошла ошибка при поиске специалистов. Попробуйте позже.',
         'type': MessageType.text.value,
@@ -369,7 +369,7 @@ class AiChatService {
         'context': newContext.toJson(),
       });
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка обновления контекста: $e');
+      debugPrint('Ошибка обновления контекста: $e');
     }
   }
 

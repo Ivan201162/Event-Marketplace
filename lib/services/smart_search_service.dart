@@ -129,7 +129,7 @@ class SmartSearchService {
         }
       }
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка получения подсказок: $e');
+      debugPrint('Ошибка получения подсказок: $e');
     }
 
     return suggestions.take(10).toList();
@@ -249,7 +249,7 @@ class SmartSearchService {
 
       return specialists;
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка поиска специалистов: $e');
+      debugPrint('Ошибка поиска специалистов: $e');
       return [];
     }
   }
@@ -269,7 +269,7 @@ class SmartSearchService {
         return data;
       }).toList();
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка получения популярных специалистов: $e');
+      debugPrint('Ошибка получения популярных специалистов: $e');
       return [];
     }
   }
@@ -278,9 +278,9 @@ class SmartSearchService {
   Future<void> saveSearchFilters(Map<String, dynamic> filters) async {
     try {
       // TODO(developer): Реализовать сохранение фильтров в SharedPreferences
-      debugdebugPrint('Сохранение фильтров: $filters');
+      debugPrint('Сохранение фильтров: $filters');
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка сохранения фильтров: $e');
+      debugPrint('Ошибка сохранения фильтров: $e');
     }
   }
 
@@ -290,7 +290,7 @@ class SmartSearchService {
       // TODO(developer): Реализовать загрузку фильтров из SharedPreferences
       return {};
     } on Exception catch (e) {
-      debugdebugPrint('Ошибка загрузки фильтров: $e');
+      debugPrint('Ошибка загрузки фильтров: $e');
       return {};
     }
   }
@@ -320,7 +320,7 @@ class SmartSearchService {
 
       return _currentPosition;
     } catch (e) {
-      debugdebugPrint('Ошибка получения геолокации: $e');
+      debugPrint('Ошибка получения геолокации: $e');
       return null;
     }
   }
@@ -363,7 +363,7 @@ class SmartSearchService {
       _currentCity = closestCity;
       return closestCity;
     } catch (e) {
-      debugdebugPrint('Ошибка определения города: $e');
+      debugPrint('Ошибка определения города: $e');
       return null;
     }
   }
@@ -392,7 +392,7 @@ class SmartSearchService {
 
       return cities.toList()..sort();
     } catch (e) {
-      debugdebugPrint('Ошибка получения городов: $e');
+      debugPrint('Ошибка получения городов: $e');
       return [
         'Москва',
         'Санкт-Петербург',
@@ -423,7 +423,7 @@ class SmartSearchService {
 
       return categories.toList()..sort();
     } catch (e) {
-      debugdebugPrint('Ошибка получения категорий: $e');
+      debugPrint('Ошибка получения категорий: $e');
       return [
         'Ведущие',
         'DJ',
@@ -487,7 +487,7 @@ class SmartSearchService {
 
       return specialists;
     } catch (e) {
-      debugdebugPrint('Ошибка получения популярных специалистов: $e');
+      debugPrint('Ошибка получения популярных специалистов: $e');
       return _getTestWeeklyPopularSpecialists();
     }
   }

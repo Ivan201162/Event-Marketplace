@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 /// Requests screen with user requests
 class RequestsScreen extends StatelessWidget {
@@ -27,6 +28,84 @@ class RequestsScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showCancelDialog(BuildContext context, int requestIndex) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Отменить заявку'),
+      content: const Text('Вы уверены, что хотите отменить эту заявку?'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Нет'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Заявка $requestIndex отменена')),
+            );
+          },
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+          child: const Text('Да, отменить'),
+        ),
+      ],
+    ),
+  );
+}
+
+void _showAcceptDialog(BuildContext context, int requestIndex) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Принять заявку'),
+      content: const Text('Вы хотите принять эту заявку?'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Отмена'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Заявка $requestIndex принята')),
+            );
+          },
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+          child: const Text('Принять'),
+        ),
+      ],
+    ),
+  );
+}
+
+void _showRejectDialog(BuildContext context, int requestIndex) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Отклонить заявку'),
+      content: const Text('Вы уверены, что хотите отклонить эту заявку?'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Отмена'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Заявка $requestIndex отклонена')),
+            );
+          },
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+          child: const Text('Отклонить'),
+        ),
+      ],
+    ),
+  );
 }
 
 class _MyRequestsTab extends StatelessWidget {
@@ -113,7 +192,7 @@ class _MyRequestsTab extends StatelessWidget {
                     Expanded(
                       child: OutlinedButton(
                         onPressed: () {
-                          // TODO: Edit request
+                          context.push('/requests/edit/$index');
                         },
                         child: const Text('Изменить'),
                       ),
@@ -122,7 +201,7 @@ class _MyRequestsTab extends StatelessWidget {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          // TODO: Cancel request
+                          _showCancelDialog(context, index);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,
@@ -225,7 +304,7 @@ class _IncomingRequestsTab extends StatelessWidget {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          // TODO: Accept request
+                          _showAcceptDialog(context, index);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
@@ -237,7 +316,7 @@ class _IncomingRequestsTab extends StatelessWidget {
                     Expanded(
                       child: OutlinedButton(
                         onPressed: () {
-                          // TODO: Reject request
+                          _showRejectDialog(context, index);
                         },
                         child: const Text('Отклонить'),
                       ),

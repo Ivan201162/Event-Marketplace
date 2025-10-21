@@ -51,11 +51,11 @@ class ABTestingService {
 
       await _firestore.collection('ab_test_assignments').doc(assignment.id).set(assignment.toMap());
 
-      debugdebugPrint(
+      debugPrint(
           'INFO: [ABTestingService] Variant $variant assigned to user $userId for test $testName');
       return variant;
     } catch (e) {
-      debugdebugPrint('ERROR: [ABTestingService] Failed to get variant for user: $e');
+      debugPrint('ERROR: [ABTestingService] Failed to get variant for user: $e');
       return 'control';
     }
   }
@@ -95,10 +95,10 @@ class ABTestingService {
 
       await _firestore.collection('ab_test_events').doc(event.id).set(event.toMap());
 
-      debugdebugPrint(
+      debugPrint(
           'INFO: [ABTestingService] Event logged: $eventName for test $testName, variant $variant');
     } catch (e) {
-      debugdebugPrint('ERROR: [ABTestingService] Failed to log event: $e');
+      debugPrint('ERROR: [ABTestingService] Failed to log event: $e');
     }
   }
 
@@ -129,10 +129,10 @@ class ABTestingService {
 
       await _firestore.collection('ab_tests').doc(test.id).set(test.toMap());
 
-      debugdebugPrint('INFO: [ABTestingService] AB test created: ${test.id}');
+      debugPrint('INFO: [ABTestingService] AB test created: ${test.id}');
       return test.id;
     } catch (e) {
-      debugdebugPrint('ERROR: [ABTestingService] Failed to create AB test: $e');
+      debugPrint('ERROR: [ABTestingService] Failed to create AB test: $e');
       rethrow;
     }
   }
@@ -146,9 +146,9 @@ class ABTestingService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugdebugPrint('INFO: [ABTestingService] AB test activated: $testId');
+      debugPrint('INFO: [ABTestingService] AB test activated: $testId');
     } catch (e) {
-      debugdebugPrint('ERROR: [ABTestingService] Failed to activate AB test: $e');
+      debugPrint('ERROR: [ABTestingService] Failed to activate AB test: $e');
     }
   }
 
@@ -161,9 +161,9 @@ class ABTestingService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugdebugPrint('INFO: [ABTestingService] AB test deactivated: $testId');
+      debugPrint('INFO: [ABTestingService] AB test deactivated: $testId');
     } catch (e) {
-      debugdebugPrint('ERROR: [ABTestingService] Failed to deactivate AB test: $e');
+      debugPrint('ERROR: [ABTestingService] Failed to deactivate AB test: $e');
     }
   }
 
@@ -239,7 +239,7 @@ class ABTestingService {
 
       return results;
     } catch (e) {
-      debugdebugPrint('ERROR: [ABTestingService] Failed to get AB test results: $e');
+      debugPrint('ERROR: [ABTestingService] Failed to get AB test results: $e');
       rethrow;
     }
   }
@@ -254,7 +254,7 @@ class ABTestingService {
           .map((doc) => ABTest.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      debugdebugPrint('ERROR: [ABTestingService] Failed to get active AB tests: $e');
+      debugPrint('ERROR: [ABTestingService] Failed to get active AB tests: $e');
       return [];
     }
   }
@@ -271,7 +271,7 @@ class ABTestingService {
 
       return snapshot.docs.isNotEmpty;
     } catch (e) {
-      debugdebugPrint('ERROR: [ABTestingService] Failed to check user test participation: $e');
+      debugPrint('ERROR: [ABTestingService] Failed to check user test participation: $e');
       return false;
     }
   }
@@ -289,7 +289,7 @@ class ABTestingService {
           .map((doc) => ABTestAssignment.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      debugdebugPrint('ERROR: [ABTestingService] Failed to get user test assignments: $e');
+      debugPrint('ERROR: [ABTestingService] Failed to get user test assignments: $e');
       return [];
     }
   }
@@ -384,9 +384,9 @@ class ABTestingService {
         targetAudience: 'all_users',
       );
 
-      debugdebugPrint('INFO: [ABTestingService] Monetization AB tests created');
+      debugPrint('INFO: [ABTestingService] Monetization AB tests created');
     } catch (e) {
-      debugdebugPrint('ERROR: [ABTestingService] Failed to create monetization AB tests: $e');
+      debugPrint('ERROR: [ABTestingService] Failed to create monetization AB tests: $e');
     }
   }
 }

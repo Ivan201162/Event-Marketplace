@@ -1,188 +1,218 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 
-/// Модель уведомления приложения
-class AppNotification {
+/// Notification type enum
+enum NotificationType {
+  message,
+  booking,
+  payment,
+  review,
+  system,
+  promotion,
+  reminder,
+}
+
+/// Notification status enum
+enum NotificationStatus {
+  unread,
+  read,
+  archived,
+}
+
+/// App notification model
+class AppNotification extends Equatable {
+  final String id;
+  final String userId;
+  final String title;
+  final String body;
+  final NotificationType type;
+  final NotificationStatus status;
+  final DateTime createdAt;
+  final DateTime? readAt;
+  final Map<String, dynamic>? data;
+  final String? imageUrl;
+  final String? actionUrl;
+  final String? senderId;
+  final String? senderName;
+  final String? senderAvatarUrl;
+  final bool isImportant;
+  final DateTime? expiresAt;
+
   const AppNotification({
     required this.id,
     required this.userId,
     required this.title,
     required this.body,
     required this.type,
-    required this.data,
-    required this.isRead,
+    required this.status,
     required this.createdAt,
     this.readAt,
+    this.data,
+    this.imageUrl,
+    this.actionUrl,
+    this.senderId,
+    this.senderName,
+    this.senderAvatarUrl,
+    this.isImportant = false,
+    this.expiresAt,
   });
 
-  /// Создать уведомление из Map
-  factory AppNotification.fromMap(Map<String, dynamic> map) => AppNotification(
-        id: map['id'] ?? '',
-        userId: map['userId'] ?? '',
-        title: map['title'] ?? '',
-        body: map['body'] ?? '',
-        type: map['type'] ?? '',
-        data: Map<String, dynamic>.from(map['data'] ?? {}),
-        isRead: map['isRead'] ?? false,
-        createdAt: map['createdAt'] != null
-            ? (map['createdAt'] is Timestamp
-                ? (map['createdAt'] as Timestamp).toDate()
-                : DateTime.parse(map['createdAt'].toString()))
-            : DateTime.now(),
-        readAt: map['readAt'] != null
-            ? (map['readAt'] is Timestamp
-                ? (map['readAt'] as Timestamp).toDate()
-                : DateTime.parse(map['readAt'].toString()))
-            : null,
-      );
-
-  /// Создать уведомление из Firestore документа
+  /// Create AppNotification from Firestore document
   factory AppNotification.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>? ?? {};
-    return AppNotification.fromMap({
-      'id': doc.id,
-      ...data,
-    });
+    final data = doc.data() as Map<String, dynamic>;
+    return AppNotification(
+      id: doc.id,
+      userId: data['userId'] ?? '',
+      title: data['title'] ?? '',
+      body: data['body'] ?? '',
+      type: NotificationType.values.firstWhere(
+        (e) => e.name == data['type'],
+        orElse: () => NotificationType.system,
+      ),
+      status: NotificationStatus.values.firstWhere(
+        (e) => e.name == data['status'],
+        orElse: () => NotificationStatus.unread,
+      ),
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      readAt: data['readAt'] != null ? (data['readAt'] as Timestamp).toDate() : null,
+      data: data['data'] as Map<String, dynamic>?,
+      imageUrl: data['imageUrl'],
+      actionUrl: data['actionUrl'],
+      senderId: data['senderId'],
+      senderName: data['senderName'],
+      senderAvatarUrl: data['senderAvatarUrl'],
+      isImportant: data['isImportant'] ?? false,
+      expiresAt: data['expiresAt'] != null ? (data['expiresAt'] as Timestamp).toDate() : null,
+    );
   }
-  final String id;
-  final String userId;
-  final String title;
-  final String body;
-  final String type;
-  final Map<String, dynamic> data;
-  final bool isRead;
-  final DateTime createdAt;
-  final DateTime? readAt;
 
-  /// Преобразовать в Map
-  Map<String, dynamic> toMap() => {
-        'id': id,
-        'userId': userId,
-        'title': title,
-        'body': body,
-        'type': type,
-        'data': data,
-        'isRead': isRead,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
-      };
+  /// Convert AppNotification to Firestore document
+  Map<String, dynamic> toFirestore() {
+    return {
+      'userId': userId,
+      'title': title,
+      'body': body,
+      'type': type.name,
+      'status': status.name,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
+      'data': data,
+      'imageUrl': imageUrl,
+      'actionUrl': actionUrl,
+      'senderId': senderId,
+      'senderName': senderName,
+      'senderAvatarUrl': senderAvatarUrl,
+      'isImportant': isImportant,
+      'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
+    };
+  }
 
-  /// Создать копию с изменениями
+  /// Create a copy with updated fields
   AppNotification copyWith({
     String? id,
     String? userId,
     String? title,
     String? body,
-    String? type,
-    Map<String, dynamic>? data,
-    bool? isRead,
+    NotificationType? type,
+    NotificationStatus? status,
     DateTime? createdAt,
     DateTime? readAt,
-  }) =>
-      AppNotification(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        title: title ?? this.title,
-        body: body ?? this.body,
-        type: type ?? this.type,
-        data: data ?? this.data,
-        isRead: isRead ?? this.isRead,
-        createdAt: createdAt ?? this.createdAt,
-        readAt: readAt ?? this.readAt,
-      );
-
-  @override
-  String toString() =>
-      'AppNotification(id: $id, userId: $userId, title: $title, body: $body, type: $type, isRead: $isRead, createdAt: $createdAt)';
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is AppNotification &&
-        other.id == id &&
-        other.userId == userId &&
-        other.title == title &&
-        other.body == body &&
-        other.type == type &&
-        other.isRead == isRead &&
-        other.createdAt == createdAt &&
-        other.readAt == readAt;
+    Map<String, dynamic>? data,
+    String? imageUrl,
+    String? actionUrl,
+    String? senderId,
+    String? senderName,
+    String? senderAvatarUrl,
+    bool? isImportant,
+    DateTime? expiresAt,
+  }) {
+    return AppNotification(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      title: title ?? this.title,
+      body: body ?? this.body,
+      type: type ?? this.type,
+      status: status ?? this.status,
+      createdAt: createdAt ?? this.createdAt,
+      readAt: readAt ?? this.readAt,
+      data: data ?? this.data,
+      imageUrl: imageUrl ?? this.imageUrl,
+      actionUrl: actionUrl ?? this.actionUrl,
+      senderId: senderId ?? this.senderId,
+      senderName: senderName ?? this.senderName,
+      senderAvatarUrl: senderAvatarUrl ?? this.senderAvatarUrl,
+      isImportant: isImportant ?? this.isImportant,
+      expiresAt: expiresAt ?? this.expiresAt,
+    );
   }
 
-  @override
-  int get hashCode =>
-      id.hashCode ^
-      userId.hashCode ^
-      title.hashCode ^
-      body.hashCode ^
-      type.hashCode ^
-      isRead.hashCode ^
-      createdAt.hashCode ^
-      readAt.hashCode;
-}
+  /// Check if notification is read
+  bool get isRead => status == NotificationStatus.read;
 
-/// Типы уведомлений
-enum NotificationType {
-  newBooking,
-  bookingConfirmed,
-  bookingRejected,
-  chatMessage,
-  system,
-  discount,
-  payment,
-  subscription,
-  promotion,
-  advertisement,
-}
+  /// Check if notification is expired
+  bool get isExpired {
+    if (expiresAt == null) return false;
+    return DateTime.now().isAfter(expiresAt!);
+  }
 
-/// Расширение для получения отображаемого имени типа уведомления
-extension NotificationTypeExtension on NotificationType {
-  String get displayName {
-    switch (this) {
-      case NotificationType.newBooking:
-        return 'Новая заявка';
-      case NotificationType.bookingConfirmed:
-        return 'Заявка подтверждена';
-      case NotificationType.bookingRejected:
-        return 'Заявка отклонена';
-      case NotificationType.chatMessage:
-        return 'Новое сообщение';
-      case NotificationType.system:
-        return 'Системное уведомление';
-      case NotificationType.discount:
-        return 'Скидка';
-      case NotificationType.payment:
-        return 'Платеж';
-      case NotificationType.subscription:
-        return 'Подписка';
-      case NotificationType.promotion:
-        return 'Продвижение';
-      case NotificationType.advertisement:
-        return 'Реклама';
+  /// Get time ago string
+  String get timeAgo {
+    final now = DateTime.now();
+    final difference = now.difference(createdAt);
+
+    if (difference.inDays > 0) {
+      return '${difference.inDays}д назад';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours}ч назад';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes}м назад';
+    } else {
+      return 'только что';
     }
   }
 
+  /// Get notification icon
   String get icon {
-    switch (this) {
-      case NotificationType.newBooking:
-        return '📋';
-      case NotificationType.bookingConfirmed:
-        return '✅';
-      case NotificationType.bookingRejected:
-        return '❌';
-      case NotificationType.chatMessage:
+    switch (type) {
+      case NotificationType.message:
         return '💬';
-      case NotificationType.system:
-        return '🔔';
-      case NotificationType.discount:
-        return '🎉';
+      case NotificationType.booking:
+        return '📅';
       case NotificationType.payment:
         return '💳';
-      case NotificationType.subscription:
+      case NotificationType.review:
         return '⭐';
+      case NotificationType.system:
+        return '🔔';
       case NotificationType.promotion:
-        return '🚀';
-      case NotificationType.advertisement:
-        return '📢';
+        return '🎉';
+      case NotificationType.reminder:
+        return '⏰';
     }
+  }
+
+  @override
+  List<Object?> get props => [
+        id,
+        userId,
+        title,
+        body,
+        type,
+        status,
+        createdAt,
+        readAt,
+        data,
+        imageUrl,
+        actionUrl,
+        senderId,
+        senderName,
+        senderAvatarUrl,
+        isImportant,
+        expiresAt,
+      ];
+
+  @override
+  String toString() {
+    return 'AppNotification(id: $id, title: $title, type: $type, status: $status)';
   }
 }

@@ -1,3 +1,4 @@
+import 'package:event_marketplace_app/models/common_types.dart';
 import 'package:event_marketplace_app/models/post.dart';
 import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:event_marketplace_app/models/story.dart';
@@ -15,27 +16,31 @@ final mockSpecialist = Specialist(
   id: 'specialist_1',
   userId: 'user_1',
   name: 'Тестовый Специалист',
+  specialization: 'Photography',
+  city: 'Moscow',
+  rating: 4.8,
+  pricePerHour: 5000,
+  createdAt: DateTime.now(),
+  updatedAt: DateTime.now(),
   category: SpecialistCategory.photographer,
   description: 'Опытный фотограф',
   experienceLevel: ExperienceLevel.intermediate,
   yearsOfExperience: 3,
   price: 5000,
   hourlyRate: 5000,
-  rating: 4.8,
   isVerified: true,
-  createdAt: DateTime.now(),
-  updatedAt: DateTime.now(),
 );
 
 final mockPosts = <Post>[
   Post(
     id: 'post_1',
-    specialistId: 'specialist_1',
+    authorId: 'specialist_1',
     text: 'Тестовый пост',
-    mediaUrls: const ['https://example.com/image1.jpg'],
+    mediaUrl: 'https://example.com/image1.jpg',
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
     likesCount: 10,
     commentsCount: 5,
-    createdAt: DateTime.now(),
   ),
 ];
 
