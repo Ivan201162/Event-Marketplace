@@ -392,6 +392,9 @@ class AuthService {
     String? status,
     String? avatarUrl,
     UserType? type,
+    String? bio,
+    double? hourlyRate,
+    String? specialistType,
   }) async {
     final user = _auth.currentUser;
     if (user == null) throw Exception('No authenticated user');
@@ -404,6 +407,9 @@ class AuthService {
       if (status != null) updateData['status'] = status;
       if (avatarUrl != null) updateData['avatarUrl'] = avatarUrl;
       if (type != null) updateData['type'] = type.name;
+      if (bio != null) updateData['bio'] = bio;
+      if (hourlyRate != null) updateData['hourlyRate'] = hourlyRate;
+      if (specialistType != null) updateData['specialistType'] = specialistType;
 
       await _firestore.collection('users').doc(user.uid).update(updateData);
 

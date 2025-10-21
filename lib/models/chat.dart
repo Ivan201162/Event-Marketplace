@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 /// Message type
-enum MessageType { text, image, video, file, system }
+enum MessageType { text, image, video, file, system, audio, document, attachment, location }
 
 /// Chat model
 class Chat extends Equatable {

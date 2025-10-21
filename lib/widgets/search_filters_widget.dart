@@ -253,29 +253,25 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
   }
 
   Widget _buildAvailabilityFilter() {
-    return Column(
-      children: [
-        RadioListTile<bool?>(
+    return SegmentedButton<bool?>(
+      segments: const [
+        ButtonSegment<bool?>(
           value: null,
-          groupValue: _currentFilters.isAvailable,
-          title: const Text('Любая'),
-          onChanged: (value) {
-            setState(() {
-              _currentFilters = _currentFilters.copyWith(isAvailable: value);
-            });
-          },
+          label: Text('Любая'),
+          icon: Icon(Icons.all_inclusive),
         ),
-        RadioListTile<bool?>(
+        ButtonSegment<bool?>(
           value: true,
-          groupValue: _currentFilters.isAvailable,
-          title: const Text('Только доступные'),
-          onChanged: (value) {
-            setState(() {
-              _currentFilters = _currentFilters.copyWith(isAvailable: value);
-            });
-          },
+          label: Text('Доступные'),
+          icon: Icon(Icons.check_circle),
         ),
       ],
+      selected: {_currentFilters.isAvailable},
+      onSelectionChanged: (Set<bool?> selection) {
+        setState(() {
+          _currentFilters = _currentFilters.copyWith(isAvailable: selection.first);
+        });
+      },
     );
   }
 
@@ -301,29 +297,25 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
           },
         ),
         const SizedBox(height: 16),
-        Column(
-          children: [
-            RadioListTile<bool>(
+        SegmentedButton<bool>(
+          segments: const [
+            ButtonSegment<bool>(
               value: true,
-              groupValue: _currentFilters.sortAscending,
-              title: const Text('По возрастанию'),
-              onChanged: (value) {
-                setState(() {
-                  _currentFilters = _currentFilters.copyWith(sortAscending: value);
-                });
-              },
+              label: Text('По возрастанию'),
+              icon: Icon(Icons.arrow_upward),
             ),
-            RadioListTile<bool>(
+            ButtonSegment<bool>(
               value: false,
-              groupValue: _currentFilters.sortAscending,
-              title: const Text('По убыванию'),
-              onChanged: (value) {
-                setState(() {
-                  _currentFilters = _currentFilters.copyWith(sortAscending: value);
-                });
-              },
+              label: Text('По убыванию'),
+              icon: Icon(Icons.arrow_downward),
             ),
           ],
+          selected: {_currentFilters.sortAscending ?? true},
+          onSelectionChanged: (Set<bool> selection) {
+            setState(() {
+              _currentFilters = _currentFilters.copyWith(sortAscending: selection.first);
+            });
+          },
         ),
       ],
     );

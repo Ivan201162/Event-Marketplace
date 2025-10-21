@@ -44,6 +44,9 @@ class AppUser extends Equatable {
   final bool isOnline;
   final Map<String, dynamic>? preferences;
   final List<String> favoriteSpecialists;
+  final String? bio;
+  final double? hourlyRate;
+  final String? specialistType;
 
   const AppUser({
     required this.uid,
@@ -62,6 +65,9 @@ class AppUser extends Equatable {
     this.favoriteSpecialists = const [],
     this.displayName,
     this.photoURL,
+    this.bio,
+    this.hourlyRate,
+    this.specialistType,
   });
 
   /// Create AppUser from Firestore document
@@ -87,6 +93,9 @@ class AppUser extends Equatable {
       isOnline: data['isOnline'] ?? false,
       preferences: data['preferences'] as Map<String, dynamic>?,
       favoriteSpecialists: List<String>.from(data['favoriteSpecialists'] ?? []),
+      bio: data['bio'],
+      hourlyRate: data['hourlyRate']?.toDouble(),
+      specialistType: data['specialistType'],
     );
   }
 
@@ -108,6 +117,9 @@ class AppUser extends Equatable {
       'isOnline': isOnline,
       'preferences': preferences,
       'favoriteSpecialists': favoriteSpecialists,
+      'bio': bio,
+      'hourlyRate': hourlyRate,
+      'specialistType': specialistType,
     };
   }
 
@@ -129,6 +141,9 @@ class AppUser extends Equatable {
     bool? isOnline,
     Map<String, dynamic>? preferences,
     List<String>? favoriteSpecialists,
+    String? bio,
+    double? hourlyRate,
+    String? specialistType,
   }) {
     return AppUser(
       uid: uid ?? this.uid,
@@ -147,6 +162,9 @@ class AppUser extends Equatable {
       isOnline: isOnline ?? this.isOnline,
       preferences: preferences ?? this.preferences,
       favoriteSpecialists: favoriteSpecialists ?? this.favoriteSpecialists,
+      bio: bio ?? this.bio,
+      hourlyRate: hourlyRate ?? this.hourlyRate,
+      specialistType: specialistType ?? this.specialistType,
     );
   }
 
@@ -174,6 +192,9 @@ class AppUser extends Equatable {
     isOnline,
     preferences,
     favoriteSpecialists,
+    bio,
+    hourlyRate,
+    specialistType,
   ];
 
   @override

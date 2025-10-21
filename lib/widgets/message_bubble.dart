@@ -159,16 +159,7 @@ class MessageBubble extends StatelessWidget {
                   color: Colors.white.withValues(alpha: 0.8),
                 ),
               ),
-              if (message.thumbnailUrl != null)
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    message.thumbnailUrl!,
-                    width: 200,
-                    height: 150,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+              // TODO: Add thumbnail support if needed
             ],
           ),
         ),
@@ -213,7 +204,7 @@ class MessageBubble extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                message.fileName ?? message.content,
+                message.fileName ?? (message.text ?? ''),
                 style: TextStyle(
                   color: isFromCurrentUser ? Colors.white : Colors.black87,
                   fontSize: 14,

@@ -22,18 +22,15 @@ class PaymentStatusWidget extends ConsumerWidget {
     final paymentsAsync = ref.watch(bookingPaymentsProvider(bookingId));
 
     return paymentsAsync.when(
-      data: (payments) {
-        if (payments?.isEmpty ?? true) {
+      data: (payment) {
+        if (payment == null) {
           return _buildNoPayments(context);
         }
 
-        final prepayment = payments?.where((p) => p.type == PaymentType.prepayment).firstOrNull;
-        final finalPayment = payments?.where((p) => p.type == PaymentType.finalPayment).firstOrNull;
-
         if (compact) {
-          return _buildCompactStatus(context, prepayment, finalPayment);
+          return _buildCompactStatus(context, payment);
         } else {
-          return _buildDetailedStatus(context, payments, prepayment, finalPayment);
+          return _buildDetailedStatus(context, payment);
         }
       },
       loading: () => _buildLoading(context),
@@ -107,31 +104,17 @@ class PaymentStatusWidget extends ConsumerWidget {
     ),
   );
 
-  Widget _buildCompactStatus(BuildContext context, Payment? prepayment, Payment? finalPayment) {
-    if (prepayment != null) {
-      return _buildPaymentStatusChip(
-        context,
-        prepayment.status,
-        prepayment.type,
-        prepayment.amount,
-      );
-    } else if (finalPayment != null) {
-      return _buildPaymentStatusChip(
-        context,
-        finalPayment.status,
-        finalPayment.type,
-        finalPayment.amount,
-      );
-    }
-
-    return _buildNoPayments(context);
+  Widget _buildCompactStatus(BuildContext context, BookingPayment payment) {
+    return _buildPaymentStatusChip(
+      context,
+      payment.status,
+      payment.amount,
+    );
   }
 
   Widget _buildDetailedStatus(
     BuildContext context,
-    List<Payment> payments,
-    Payment? prepayment,
-    Payment? finalPayment,
+    BookingPayment payment,
   ) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -148,69 +131,65 @@ class PaymentStatusWidget extends ConsumerWidget {
       ),
       const SizedBox(height: 12),
 
-      // Предоплата
-      if (prepayment != null) ...[
-        _buildPaymentCard(context, prepayment),
-        const SizedBox(height: 8),
-      ],
-
-      // Финальный платеж
-      if (finalPayment != null) ...[
-        _buildPaymentCard(context, finalPayment),
-        const SizedBox(height: 8),
-      ],
+      // Информация о платеже
+      _buildPaymentCard(context, payment),
+      const SizedBox(height: 8),
 
       // Общая информация
-      if (showDetails) ...[_buildPaymentSummary(context, payments)],
+      if (showDetails) ...[_buildPaymentSummary(context, payment)],
     ],
   );
 
   Widget _buildPaymentStatusChip(
     BuildContext context,
-    PaymentStatus status,
-    PaymentType type,
+    String status,
     double amount,
   ) {
     Color backgroundColor;
     Color textColor;
     IconData icon;
 
-    switch (status) {
-      case PaymentStatus.pending:
+    switch (status.toLowerCase()) {
+      case 'pending':
         backgroundColor = Colors.orange.withValues(alpha: 0.1);
         textColor = Colors.orange[700]!;
         icon = Icons.schedule;
         break;
-      case PaymentStatus.processing:
+      case 'processing':
         backgroundColor = Colors.blue.withValues(alpha: 0.1);
         textColor = Colors.blue[700]!;
         icon = Icons.hourglass_empty;
         break;
-      case PaymentStatus.completed:
+      case 'paid':
+      case 'completed':
         backgroundColor = Colors.green.withValues(alpha: 0.1);
         textColor = Colors.green[700]!;
         icon = Icons.check_circle;
         break;
-      case PaymentStatus.failed:
+      case 'failed':
         backgroundColor = Colors.red.withValues(alpha: 0.1);
         textColor = Colors.red[700]!;
         icon = Icons.error;
         break;
-      case PaymentStatus.cancelled:
+      case 'cancelled':
         backgroundColor = Colors.grey.withValues(alpha: 0.1);
         textColor = Colors.grey[700]!;
         icon = Icons.cancel;
         break;
-      case PaymentStatus.refunded:
+      case 'refunded':
         backgroundColor = Colors.purple.withValues(alpha: 0.1);
         textColor = Colors.purple[700]!;
         icon = Icons.undo;
         break;
-      case PaymentStatus.disputed:
+      case 'disputed':
         backgroundColor = Colors.red.withValues(alpha: 0.1);
         textColor = Colors.red[700]!;
         icon = Icons.gavel;
         break;
+      default:
+        backgroundColor = Colors.grey.withValues(alpha: 0.1);
+        textColor = Colors.grey[700]!;
+        icon = Icons.help;
     }
 
     return Container(
@@ -226,7 +205,7 @@ class PaymentStatusWidget extends ConsumerWidget {
           Icon(icon, size: 16, color: textColor),
           const SizedBox(width: 4),
           Text(
-            '${type.icon} ${amount.toStringAsFixed(0)} ₽',
+            '${amount.toStringAsFixed(0)} ₽',
             style: TextStyle(fontSize: 12, color: textColor, fontWeight: FontWeight.w500),
           ),
         ],
@@ -234,7 +213,7 @@ class PaymentStatusWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildPaymentCard(BuildContext context, Payment payment) => Card(
+  Widget _buildPaymentCard(BuildContext context, BookingPayment payment) => Card(
     margin: EdgeInsets.zero,
     child: Padding(
       padding: const EdgeInsets.all(12),
@@ -244,14 +223,14 @@ class PaymentStatusWidget extends ConsumerWidget {
           // Заголовок платежа
           Row(
             children: [
-              Icon(payment.type.icon, size: 20),
+              Icon(Icons.payment, size: 20),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      payment.type.displayName,
+                      'Платеж',
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                     ),
                     Text(
@@ -270,7 +249,7 @@ class PaymentStatusWidget extends ConsumerWidget {
           // Дополнительная информация
           ...[
             Text(
-              payment.description ?? 'Платеж',
+              'Платеж',
               style: TextStyle(color: Colors.grey[600], fontSize: 12),
             ),
             const SizedBox(height: 4),
@@ -282,15 +261,15 @@ class PaymentStatusWidget extends ConsumerWidget {
               Icon(Icons.access_time, size: 14, color: Colors.grey[500]),
               const SizedBox(width: 4),
               Text(
-                'Создан: ${_formatDate(payment.createdAt)}',
+                'Создан: ${_formatDate(payment.updatedAt)}',
                 style: TextStyle(color: Colors.grey[500], fontSize: 11),
               ),
-              if (payment.paidAt != null) ...[
+              if (payment.status == 'paid' || payment.status == 'completed') ...[
                 const SizedBox(width: 12),
                 Icon(Icons.check_circle, size: 14, color: Colors.green[500]),
                 const SizedBox(width: 4),
                 Text(
-                  'Оплачен: ${_formatDate(payment.paidAt!)}',
+                  'Оплачен: ${_formatDate(payment.updatedAt)}',
                   style: TextStyle(color: Colors.green[500], fontSize: 11),
                 ),
               ],
@@ -301,38 +280,43 @@ class PaymentStatusWidget extends ConsumerWidget {
     ),
   );
 
-  Widget _buildStatusChip(BuildContext context, PaymentStatus status) {
+  Widget _buildStatusChip(BuildContext context, String status) {
     Color backgroundColor;
     Color textColor;
 
-    switch (status) {
-      case PaymentStatus.pending:
+    switch (status.toLowerCase()) {
+      case 'pending':
         backgroundColor = Colors.orange.withValues(alpha: 0.1);
         textColor = Colors.orange[700]!;
         break;
-      case PaymentStatus.processing:
+      case 'processing':
         backgroundColor = Colors.blue.withValues(alpha: 0.1);
         textColor = Colors.blue[700]!;
         break;
-      case PaymentStatus.completed:
+      case 'paid':
+      case 'completed':
         backgroundColor = Colors.green.withValues(alpha: 0.1);
         textColor = Colors.green[700]!;
         break;
-      case PaymentStatus.failed:
+      case 'failed':
         backgroundColor = Colors.red.withValues(alpha: 0.1);
         textColor = Colors.red[700]!;
         break;
-      case PaymentStatus.cancelled:
+      case 'cancelled':
         backgroundColor = Colors.grey.withValues(alpha: 0.1);
         textColor = Colors.grey[700]!;
         break;
-      case PaymentStatus.refunded:
+      case 'refunded':
         backgroundColor = Colors.purple.withValues(alpha: 0.1);
         textColor = Colors.purple[700]!;
         break;
-      case PaymentStatus.disputed:
+      case 'disputed':
         backgroundColor = Colors.red.withValues(alpha: 0.1);
         textColor = Colors.red[700]!;
+        break;
+      default:
+        backgroundColor = Colors.grey.withValues(alpha: 0.1);
+        textColor = Colors.grey[700]!;
         break;
     }
 
@@ -344,20 +328,17 @@ class PaymentStatusWidget extends ConsumerWidget {
         border: Border.all(color: textColor.withValues(alpha: 0.3)),
       ),
       child: Text(
-        status.displayName,
+        _getStatusDisplayName(status),
         style: TextStyle(fontSize: 10, color: textColor, fontWeight: FontWeight.w500),
       ),
     );
   }
 
-  Widget _buildPaymentSummary(BuildContext context, List<Payment> payments) {
-    final totalAmount = payments.fold<double>(0, (sum, payment) => sum + payment.amount);
-    final completedAmount = payments
-        .where((p) => p.isCompleted)
-        .fold<double>(0, (sum, payment) => sum + payment.amount);
-    final pendingAmount = payments
-        .where((p) => p.isPending)
-        .fold<double>(0, (sum, payment) => sum + payment.amount);
+  Widget _buildPaymentSummary(BuildContext context, BookingPayment payment) {
+    final totalAmount = payment.amount;
+    final isCompleted = payment.status == 'paid' || payment.status == 'completed';
+    final completedAmount = isCompleted ? payment.amount : 0.0;
+    final pendingAmount = isCompleted ? 0.0 : payment.amount;
 
     return Container(
       padding: const EdgeInsets.all(12),
@@ -432,7 +413,7 @@ class PaymentButtonWidget extends ConsumerWidget {
 
     return paymentsAsync.when(
       data: (payments) {
-        final pendingPayment = payments?.where((p) => p.status == PaymentStatus.pending).firstOrNull;
+        final pendingPayment = payments?.status == 'pending' ? payments : null;
 
         if (pendingPayment == null) {
           return const SizedBox.shrink();

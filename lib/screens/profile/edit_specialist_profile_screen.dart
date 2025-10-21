@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-import '../../models/app_user.dart';
 import '../../providers/auth_providers.dart';
-import '../../services/auth_service.dart';
 
 class EditSpecialistProfileScreen extends ConsumerStatefulWidget {
   const EditSpecialistProfileScreen({super.key});
@@ -227,7 +224,7 @@ class _EditSpecialistProfileScreenState extends ConsumerState<EditSpecialistProf
               
               // Тип специалиста
               DropdownButtonFormField<String>(
-                value: _selectedSpecialistType,
+                initialValue: _selectedSpecialistType,
                 decoration: const InputDecoration(
                   labelText: 'Тип специалиста',
                   border: OutlineInputBorder(),

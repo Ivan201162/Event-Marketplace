@@ -83,22 +83,34 @@ class _ProfileEditDialogState extends State<ProfileEditDialog> {
   }
 
   Widget _buildUserTypeSelector() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: UserType.values.map((type) {
-        return RadioListTile<UserType>(
+    return SegmentedButton<UserType>(
+      segments: UserType.values.map((type) {
+        return ButtonSegment<UserType>(
           value: type,
-          groupValue: _selectedUserType,
-          title: Text(type.displayName),
-          subtitle: Text(type.description),
-          onChanged: (value) {
-            setState(() {
-              _selectedUserType = value;
-            });
-          },
+          label: Text(type.displayName),
+          icon: Icon(_getUserTypeIcon(type)),
         );
       }).toList(),
+      selected: _selectedUserType != null ? {_selectedUserType!} : <UserType>{},
+      onSelectionChanged: (Set<UserType> selection) {
+        setState(() {
+          _selectedUserType = selection.isNotEmpty ? selection.first : null;
+        });
+      },
     );
+  }
+
+  IconData _getUserTypeIcon(UserType type) {
+    switch (type) {
+      case UserType.physical:
+        return Icons.person;
+      case UserType.selfEmployed:
+        return Icons.work;
+      case UserType.individual:
+        return Icons.business;
+      case UserType.studio:
+        return Icons.movie;
+    }
   }
 
   String _getFieldHint() {
