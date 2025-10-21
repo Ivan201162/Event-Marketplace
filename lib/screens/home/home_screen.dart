@@ -327,8 +327,7 @@ class HomeScreen extends ConsumerWidget {
     final currentUser = ref.watch(currentUserProvider).value;
     final specialistsAsync = isCountryWide
         ? ref.watch(topSpecialistsRuProvider)
-        : ref.watch(
-            topSpecialistsCityProvider(currentUser?.city ?? 'Москва'));
+        : ref.watch(topSpecialistsCityProvider(currentUser?.city ?? 'Москва'));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

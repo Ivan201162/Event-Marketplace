@@ -186,7 +186,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
               ReviewStats(
                 averageRating: 0,
                 totalReviews: 0,
-                ratingDistribution: {},
+                ratingDistribution: const {},
                 verifiedReviews: 0,
                 helpfulReviews: 0,
                 helpfulPercentage: 0,

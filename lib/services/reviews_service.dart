@@ -40,7 +40,6 @@ class ReviewsService {
         text: text,
         date: DateTime.now(),
         photos: photos,
-        responses: const [],
         bookingId: bookingId,
         eventTitle: eventTitle,
         customerAvatar: customerAvatar,

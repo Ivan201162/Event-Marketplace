@@ -38,12 +38,10 @@ class AutomatedPromotionsService {
 
       await _firestore.collection('automated_promotions').doc(promotion.id).set(promotion.toMap());
 
-      debugPrint(
-          'INFO: [AutomatedPromotionsService] Automated promotion created: ${promotion.id}');
+      debugPrint('INFO: [AutomatedPromotionsService] Automated promotion created: ${promotion.id}');
       return promotion.id;
     } catch (e) {
-      debugPrint(
-          'ERROR: [AutomatedPromotionsService] Failed to create automated promotion: $e');
+      debugPrint('ERROR: [AutomatedPromotionsService] Failed to create automated promotion: $e');
       rethrow;
     }
   }
@@ -57,8 +55,7 @@ class AutomatedPromotionsService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugPrint(
-          'INFO: [AutomatedPromotionsService] Automated promotion activated: $promotionId');
+      debugPrint('INFO: [AutomatedPromotionsService] Automated promotion activated: $promotionId');
     } catch (e) {
       debugPrint('ERROR: [AutomatedPromotionsService] Failed to activate promotion: $e');
     }
@@ -108,8 +105,7 @@ class AutomatedPromotionsService {
         }
       }
     } catch (e) {
-      debugPrint(
-          'ERROR: [AutomatedPromotionsService] Failed to check and execute promotions: $e');
+      debugPrint('ERROR: [AutomatedPromotionsService] Failed to check and execute promotions: $e');
     }
   }
 
@@ -349,8 +345,7 @@ class AutomatedPromotionsService {
 
       debugPrint('INFO: [AutomatedPromotionsService] Default automated promotions created');
     } catch (e) {
-      debugPrint(
-          'ERROR: [AutomatedPromotionsService] Failed to create default promotions: $e');
+      debugPrint('ERROR: [AutomatedPromotionsService] Failed to create default promotions: $e');
     }
   }
 
@@ -442,8 +437,7 @@ class AutomatedPromotionsService {
   Future<void> _sendPromotionNotification(
       String userId, AutomatedPromotion promotion, Map<String, dynamic> notificationData) async {
     // Логика отправки уведомления
-    debugPrint(
-        'INFO: [AutomatedPromotionsService] Sending promotion notification to user $userId');
+    debugPrint('INFO: [AutomatedPromotionsService] Sending promotion notification to user $userId');
   }
 
   Future<void> _applyDiscount(String userId, Map<String, dynamic> discountData) async {
@@ -463,8 +457,7 @@ class AutomatedPromotionsService {
 
   Future<void> _unlockFeature(String userId, String feature) async {
     // Логика разблокировки функции
-    debugPrint(
-        'INFO: [AutomatedPromotionsService] Unlocking feature $feature for user $userId');
+    debugPrint('INFO: [AutomatedPromotionsService] Unlocking feature $feature for user $userId');
   }
 
   Future<void> _sendPromotionEmail(

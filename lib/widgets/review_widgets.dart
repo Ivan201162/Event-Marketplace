@@ -630,7 +630,6 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
         customerName: 'Current User',
         rating: (ref.read(reviewFormProvider)).rating.toDouble(),
         text: (ref.read(reviewFormProvider)).comment,
-        serviceTags: const [],
         date: DateTime.now(),
       );
 

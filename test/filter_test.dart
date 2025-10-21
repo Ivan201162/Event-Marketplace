@@ -1,5 +1,5 @@
-import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:event_marketplace_app/models/common_types.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -96,7 +96,8 @@ void main() {
       // В реальном тесте нужно будет использовать моки
 
       // Тестируем фильтр по минимальной цене 4000
-      final filtered = testSpecialists.where((specialist) => (specialist.price ?? 0) >= 4000).toList();
+      final filtered =
+          testSpecialists.where((specialist) => (specialist.price ?? 0) >= 4000).toList();
 
       expect(filtered.length, 2);
       expect(filtered.every((s) => (s.price ?? 0) >= 4000), true);
@@ -104,7 +105,8 @@ void main() {
 
     test('Фильтр по максимальной цене', () async {
       // Тестируем фильтр по максимальной цене 3500
-      final filtered = testSpecialists.where((specialist) => (specialist.price ?? 0) <= 3500).toList();
+      final filtered =
+          testSpecialists.where((specialist) => (specialist.price ?? 0) <= 3500).toList();
 
       expect(filtered.length, 1);
       expect(filtered.first.price, 3000.0);

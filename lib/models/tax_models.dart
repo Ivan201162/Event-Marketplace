@@ -50,9 +50,7 @@ class TaxCalculation {
               : DateTime.parse(data['calculatedAt'].toString()))
           : DateTime.now(),
       description: data['description'] as String?,
-      metadata: data['metadata'] != null
-          ? Map<String, dynamic>.from(data['metadata'])
-          : null,
+      metadata: data['metadata'] != null ? Map<String, dynamic>.from(data['metadata']) : null,
     );
   }
 
@@ -192,4 +190,3 @@ extension TaxStatusExtension on TaxStatus {
     }
   }
 }
-

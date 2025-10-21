@@ -109,8 +109,7 @@ class SubscriptionService {
     PaymentProvider provider = PaymentProvider.stripe,
   }) async {
     try {
-      debugPrint(
-          'INFO: [subscription_service] Покупка подписки $planId для пользователя $userId');
+      debugPrint('INFO: [subscription_service] Покупка подписки $planId для пользователя $userId');
 
       // Получаем план подписки
       final plan = await getPlanById(planId);

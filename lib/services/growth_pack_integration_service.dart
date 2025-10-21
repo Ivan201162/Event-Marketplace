@@ -137,8 +137,7 @@ class GrowthPackIntegrationService {
 
       debugPrint('INFO: [GrowthPackIntegrationService] Default achievements created');
     } catch (e) {
-      debugPrint(
-          'ERROR: [GrowthPackIntegrationService] Failed to create default achievements: $e');
+      debugPrint('ERROR: [GrowthPackIntegrationService] Failed to create default achievements: $e');
     }
   }
 
@@ -262,8 +261,7 @@ class GrowthPackIntegrationService {
 
       debugPrint('INFO: [GrowthPackIntegrationService] Default challenges created');
     } catch (e) {
-      debugPrint(
-          'ERROR: [GrowthPackIntegrationService] Failed to create default challenges: $e');
+      debugPrint('ERROR: [GrowthPackIntegrationService] Failed to create default challenges: $e');
     }
   }
 
@@ -456,8 +454,7 @@ class GrowthPackIntegrationService {
         await _growthMechanicsService.addExperience(userId, experience, reason);
       }
     } catch (e) {
-      debugPrint(
-          'ERROR: [GrowthPackIntegrationService] Failed to add experience for event: $e');
+      debugPrint('ERROR: [GrowthPackIntegrationService] Failed to add experience for event: $e');
     }
   }
 

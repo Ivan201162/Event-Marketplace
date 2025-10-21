@@ -58,7 +58,6 @@ class PaymentService {
         status: PaymentStatus.processing,
         amount: amount,
         commission: _calculateCommission(amount, type),
-        currency: 'RUB',
         description: description,
         metadata: metadata,
         stripePaymentIntentId: paymentIntentId,

@@ -59,8 +59,7 @@ class GrowthMechanicsService {
         await _sendLevelUpNotification(userId, newLevel, newTotalExperience);
       }
 
-      debugPrint(
-          'INFO: [GrowthMechanicsService] Experience added: $experience to user $userId');
+      debugPrint('INFO: [GrowthMechanicsService] Experience added: $experience to user $userId');
     } catch (e) {
       debugPrint('ERROR: [GrowthMechanicsService] Failed to add experience: $e');
     }
@@ -305,8 +304,7 @@ class GrowthMechanicsService {
 
       await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
     } catch (e) {
-      debugPrint(
-          'ERROR: [GrowthMechanicsService] Failed to send achievement notification: $e');
+      debugPrint('ERROR: [GrowthMechanicsService] Failed to send achievement notification: $e');
     }
   }
 
@@ -676,8 +674,7 @@ class GrowthMechanicsService {
 
       await _firestore.collection('user_badges').doc(userBadge['id']).set(userBadge);
 
-      debugPrint(
-          'INFO: [GrowthMechanicsService] Badge awarded: ${badge['name']} to user $userId');
+      debugPrint('INFO: [GrowthMechanicsService] Badge awarded: ${badge['name']} to user $userId');
     } catch (e) {
       debugPrint('ERROR: [GrowthMechanicsService] Failed to award badge: $e');
     }

@@ -470,8 +470,7 @@ class ReceiptService {
     try {
       await _firestore.collection('receipt_settings').doc(settings.userId).set(settings.toMap());
 
-      debugPrint(
-          'INFO: [ReceiptService] Receipt settings updated for user ${settings.userId}');
+      debugPrint('INFO: [ReceiptService] Receipt settings updated for user ${settings.userId}');
     } catch (e) {
       debugPrint('ERROR: [ReceiptService] Failed to update receipt settings: $e');
       rethrow;

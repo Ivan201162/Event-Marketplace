@@ -173,8 +173,7 @@ class PartnershipService {
           .get();
 
       if (partnerSnapshot.docs.isEmpty) {
-        debugPrint(
-            'WARNING: [PartnershipService] Partner not found or inactive: $partnerCode');
+        debugPrint('WARNING: [PartnershipService] Partner not found or inactive: $partnerCode');
         return;
       }
 

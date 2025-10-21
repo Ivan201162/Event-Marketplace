@@ -22,12 +22,9 @@ void main() {
           customerName: 'Customer 1',
           rating: 5,
           text: 'Great!',
-          images: [],
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
           date: DateTime.now(),
-          likesCount: 0,
-          likedBy: [],
         ),
         Review(
           id: '2',
@@ -39,12 +36,9 @@ void main() {
           customerName: 'Customer 2',
           rating: 4,
           text: 'Good!',
-          images: [],
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
           date: DateTime.now(),
-          likesCount: 0,
-          likedBy: [],
         ),
         Review(
           id: '3',
@@ -56,12 +50,9 @@ void main() {
           customerName: 'Customer 3',
           rating: 3,
           text: 'Average',
-          images: [],
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
           date: DateTime.now(),
-          likesCount: 0,
-          likedBy: [],
         ),
       ];
 
@@ -89,12 +80,9 @@ void main() {
           customerName: 'Customer 1',
           rating: 1,
           text: 'Test',
-          images: [],
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
           date: DateTime.now(),
-          likesCount: 0,
-          likedBy: [],
         ),
         returnsNormally,
       );
@@ -110,12 +98,9 @@ void main() {
           customerName: 'Customer 1',
           rating: 5,
           text: 'Test',
-          images: [],
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
           date: DateTime.now(),
-          likesCount: 0,
-          likedBy: [],
         ),
         returnsNormally,
       );
@@ -134,12 +119,9 @@ void main() {
         customerName: 'Customer 1',
         rating: 5,
         text: 'Test',
-        images: [],
         createdAt: now,
         updatedAt: now,
         date: now,
-        likesCount: 0,
-        likedBy: [],
       );
 
       // Act
@@ -162,12 +144,9 @@ void main() {
         customerName: 'Customer 1',
         rating: 5,
         text: 'Test',
-        images: [],
         createdAt: DateTime.now().subtract(const Duration(hours: 12)),
         updatedAt: DateTime.now().subtract(const Duration(hours: 12)),
         date: DateTime.now().subtract(const Duration(hours: 12)),
-        likesCount: 0,
-        likedBy: [],
       );
 
       final oldReview = Review(
@@ -180,12 +159,9 @@ void main() {
         customerName: 'Customer 1',
         rating: 5,
         text: 'Test',
-        images: [],
         createdAt: DateTime.now().subtract(const Duration(days: 2)),
         updatedAt: DateTime.now().subtract(const Duration(days: 2)),
         date: DateTime.now().subtract(const Duration(days: 2)),
-        likesCount: 0,
-        likedBy: [],
       );
 
       // Act & Assert
@@ -205,12 +181,9 @@ void main() {
         customerName: 'Customer 1',
         rating: 5,
         text: 'Test',
-        images: [],
         createdAt: DateTime.now().subtract(const Duration(hours: 12)),
         updatedAt: DateTime.now().subtract(const Duration(hours: 12)),
         date: DateTime.now().subtract(const Duration(hours: 12)),
-        likesCount: 0,
-        likedBy: [],
       );
 
       final oldReview = Review(
@@ -223,12 +196,9 @@ void main() {
         customerName: 'Customer 1',
         rating: 5,
         text: 'Test',
-        images: [],
         createdAt: DateTime.now().subtract(const Duration(days: 2)),
         updatedAt: DateTime.now().subtract(const Duration(days: 2)),
         date: DateTime.now().subtract(const Duration(days: 2)),
-        likesCount: 0,
-        likedBy: [],
       );
 
       // Act & Assert
@@ -248,12 +218,9 @@ void main() {
         customerName: 'Customer 1',
         rating: 3,
         text: 'Test',
-        images: [],
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
         date: DateTime.now(),
-        likesCount: 0,
-        likedBy: [],
       );
 
       // Act
@@ -275,12 +242,9 @@ void main() {
         customerName: 'Customer 1',
         rating: 5,
         text: 'Test',
-        images: [],
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
         date: DateTime.now(),
-        likesCount: 0,
-        likedBy: [],
       );
 
       final mediumRatingReview = Review(
@@ -293,12 +257,9 @@ void main() {
         customerName: 'Customer 1',
         rating: 3,
         text: 'Test',
-        images: [],
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
         date: DateTime.now(),
-        likesCount: 0,
-        likedBy: [],
       );
 
       final lowRatingReview = Review(
@@ -311,12 +272,9 @@ void main() {
         customerName: 'Customer 1',
         rating: 1,
         text: 'Test',
-        images: [],
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
         date: DateTime.now(),
-        likesCount: 0,
-        likedBy: [],
       );
 
       // Act & Assert

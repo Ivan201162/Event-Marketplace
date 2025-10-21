@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../models/booking.dart';
 import '../models/app_user.dart';
+import '../models/booking.dart';
 import '../models/specialist.dart';
 import '../services/booking_service.dart';
 import '../services/customer_service.dart';
@@ -247,9 +247,9 @@ class _CustomerProfileExtendedScreenState extends ConsumerState<CustomerProfileE
               ),
             ),
             const SizedBox(height: 4),
-            Text(
+            const Text(
               'Не указано',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
                 color: Colors.white70,
               ),
@@ -449,23 +449,23 @@ class _CustomerProfileExtendedScreenState extends ConsumerState<CustomerProfileE
 
             // TODO: Добавить годовщины когда будет реализована модель
             const Center(
-                child: Column(
-                  children: [
-                    Icon(Icons.cake, size: 64, color: Colors.grey),
-                    SizedBox(height: 16),
-                    Text(
-                      'Годовщин пока нет',
-                      style: TextStyle(color: Colors.grey, fontSize: 16),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Добавьте важные даты для напоминаний',
-                      style: TextStyle(color: Colors.grey, fontSize: 12),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
+              child: Column(
+                children: [
+                  Icon(Icons.cake, size: 64, color: Colors.grey),
+                  SizedBox(height: 16),
+                  Text(
+                    'Годовщин пока нет',
+                    style: TextStyle(color: Colors.grey, fontSize: 16),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Добавьте важные даты для напоминаний',
+                    style: TextStyle(color: Colors.grey, fontSize: 12),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
+            ),
           ],
         ),
       );

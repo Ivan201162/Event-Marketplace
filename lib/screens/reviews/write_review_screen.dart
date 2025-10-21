@@ -488,8 +488,6 @@ class _WriteReviewScreenState extends ConsumerState<WriteReviewScreen> {
         images: _images,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        likesCount: 0,
-        likedBy: const [],
         bookingId: widget.bookingId,
       );
 

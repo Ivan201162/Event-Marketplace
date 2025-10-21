@@ -1,5 +1,5 @@
-import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:event_marketplace_app/models/common_types.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:event_marketplace_app/widgets/specialist_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -110,7 +110,7 @@ void main() {
 
     testWidgets('should not display verification badge for unverified specialist', (tester) async {
       // Arrange
-      final unverifiedSpecialist = testSpecialist!.copyWith(isVerified: false);
+      final unverifiedSpecialist = testSpecialist.copyWith(isVerified: false);
 
       // Act
       await tester.pumpWidget(
@@ -152,7 +152,7 @@ void main() {
 
     testWidgets('should display unavailable status for unavailable specialist', (tester) async {
       // Arrange
-      final unavailableSpecialist = testSpecialist!.copyWith(isAvailable: false);
+      final unavailableSpecialist = testSpecialist.copyWith(isAvailable: false);
 
       // Act
       await tester.pumpWidget(
@@ -240,7 +240,7 @@ void main() {
 
     testWidgets('should display hourly rate when no min/max booking hours', (tester) async {
       // Arrange
-      final specialistWithoutHours = testSpecialist!.copyWith();
+      final specialistWithoutHours = testSpecialist.copyWith();
 
       // Act
       await tester.pumpWidget(

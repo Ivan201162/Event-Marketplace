@@ -126,10 +126,12 @@ class Payment extends Equatable {
       receiptUrl: data['receiptUrl'],
       fee: data['fee']?.toDouble(),
       taxAmount: data['taxAmount']?.toDouble(),
-      taxStatus: data['taxStatus'] != null ? TaxStatus.values.firstWhere(
-        (e) => e.name == data['taxStatus'],
-        orElse: () => TaxStatus.notCalculated,
-      ) : null,
+      taxStatus: data['taxStatus'] != null
+          ? TaxStatus.values.firstWhere(
+              (e) => e.name == data['taxStatus'],
+              orElse: () => TaxStatus.notCalculated,
+            )
+          : null,
       typeDisplayName: data['typeDisplayName'],
       methodDisplayName: data['methodDisplayName'],
       taxStatusDisplayName: data['taxStatusDisplayName'],

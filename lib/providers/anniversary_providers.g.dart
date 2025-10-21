@@ -6,20 +6,17 @@ part of 'anniversary_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$anniversaryServiceHash() =>
-    r'c4a7c62bc754e4d09ace669e62dcca753250aae6';
+String _$anniversaryServiceHash() => r'c4a7c62bc754e4d09ace669e62dcca753250aae6';
 
 /// Провайдер сервиса годовщин
 ///
 /// Copied from [anniversaryService].
 @ProviderFor(anniversaryService)
-final anniversaryServiceProvider =
-    AutoDisposeProvider<AnniversaryService>.internal(
+final anniversaryServiceProvider = AutoDisposeProvider<AnniversaryService>.internal(
   anniversaryService,
   name: r'anniversaryServiceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$anniversaryServiceHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$anniversaryServiceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -27,8 +24,7 @@ final anniversaryServiceProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AnniversaryServiceRef = AutoDisposeProviderRef<AnniversaryService>;
-String _$userAnniversaryInfoHash() =>
-    r'630eaedc887cf3bab9af4469eef4ecce90bf948e';
+String _$userAnniversaryInfoHash() => r'630eaedc887cf3bab9af4469eef4ecce90bf948e';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -60,8 +56,7 @@ const userAnniversaryInfoProvider = UserAnniversaryInfoFamily();
 /// Провайдер информации о годовщине пользователя
 ///
 /// Copied from [userAnniversaryInfo].
-class UserAnniversaryInfoFamily
-    extends Family<AsyncValue<Map<String, dynamic>>> {
+class UserAnniversaryInfoFamily extends Family<AsyncValue<Map<String, dynamic>>> {
   /// Провайдер информации о годовщине пользователя
   ///
   /// Copied from [userAnniversaryInfo].
@@ -95,8 +90,7 @@ class UserAnniversaryInfoFamily
   static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies => _allTransitiveDependencies;
 
   @override
   String? get name => r'userAnniversaryInfoProvider';
@@ -105,8 +99,7 @@ class UserAnniversaryInfoFamily
 /// Провайдер информации о годовщине пользователя
 ///
 /// Copied from [userAnniversaryInfo].
-class UserAnniversaryInfoProvider
-    extends AutoDisposeFutureProvider<Map<String, dynamic>> {
+class UserAnniversaryInfoProvider extends AutoDisposeFutureProvider<Map<String, dynamic>> {
   /// Провайдер информации о годовщине пользователя
   ///
   /// Copied from [userAnniversaryInfo].
@@ -120,12 +113,9 @@ class UserAnniversaryInfoProvider
           from: userAnniversaryInfoProvider,
           name: r'userAnniversaryInfoProvider',
           debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$userAnniversaryInfoHash,
+              const bool.fromEnvironment('dart.vm.product') ? null : _$userAnniversaryInfoHash,
           dependencies: UserAnniversaryInfoFamily._dependencies,
-          allTransitiveDependencies:
-              UserAnniversaryInfoFamily._allTransitiveDependencies,
+          allTransitiveDependencies: UserAnniversaryInfoFamily._allTransitiveDependencies,
           userId: userId,
         );
 
@@ -143,8 +133,7 @@ class UserAnniversaryInfoProvider
 
   @override
   Override overrideWith(
-    FutureOr<Map<String, dynamic>> Function(UserAnniversaryInfoRef provider)
-        create,
+    FutureOr<Map<String, dynamic>> Function(UserAnniversaryInfoRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -181,23 +170,20 @@ class UserAnniversaryInfoProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin UserAnniversaryInfoRef
-    on AutoDisposeFutureProviderRef<Map<String, dynamic>> {
+mixin UserAnniversaryInfoRef on AutoDisposeFutureProviderRef<Map<String, dynamic>> {
   /// The parameter `userId` of this provider.
   String get userId;
 }
 
 class _UserAnniversaryInfoProviderElement
-    extends AutoDisposeFutureProviderElement<Map<String, dynamic>>
-    with UserAnniversaryInfoRef {
+    extends AutoDisposeFutureProviderElement<Map<String, dynamic>> with UserAnniversaryInfoRef {
   _UserAnniversaryInfoProviderElement(super.provider);
 
   @override
   String get userId => (origin as UserAnniversaryInfoProvider).userId;
 }
 
-String _$upcomingAnniversariesHash() =>
-    r'b189262e778937705c6c31e81f9bf9dcaba1679c';
+String _$upcomingAnniversariesHash() => r'b189262e778937705c6c31e81f9bf9dcaba1679c';
 
 /// Провайдер пользователей с годовщинами в ближайшие дни
 ///
@@ -242,8 +228,7 @@ class UpcomingAnniversariesFamily extends Family<AsyncValue<List<AppUser>>> {
   static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies => _allTransitiveDependencies;
 
   @override
   String? get name => r'upcomingAnniversariesProvider';
@@ -252,8 +237,7 @@ class UpcomingAnniversariesFamily extends Family<AsyncValue<List<AppUser>>> {
 /// Провайдер пользователей с годовщинами в ближайшие дни
 ///
 /// Copied from [upcomingAnniversaries].
-class UpcomingAnniversariesProvider
-    extends AutoDisposeFutureProvider<List<AppUser>> {
+class UpcomingAnniversariesProvider extends AutoDisposeFutureProvider<List<AppUser>> {
   /// Провайдер пользователей с годовщинами в ближайшие дни
   ///
   /// Copied from [upcomingAnniversaries].
@@ -267,12 +251,9 @@ class UpcomingAnniversariesProvider
           from: upcomingAnniversariesProvider,
           name: r'upcomingAnniversariesProvider',
           debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$upcomingAnniversariesHash,
+              const bool.fromEnvironment('dart.vm.product') ? null : _$upcomingAnniversariesHash,
           dependencies: UpcomingAnniversariesFamily._dependencies,
-          allTransitiveDependencies:
-              UpcomingAnniversariesFamily._allTransitiveDependencies,
+          allTransitiveDependencies: UpcomingAnniversariesFamily._allTransitiveDependencies,
           daysAhead: daysAhead,
         );
 
@@ -313,8 +294,7 @@ class UpcomingAnniversariesProvider
 
   @override
   bool operator ==(Object other) {
-    return other is UpcomingAnniversariesProvider &&
-        other.daysAhead == daysAhead;
+    return other is UpcomingAnniversariesProvider && other.daysAhead == daysAhead;
   }
 
   @override
@@ -333,8 +313,7 @@ mixin UpcomingAnniversariesRef on AutoDisposeFutureProviderRef<List<AppUser>> {
   int get daysAhead;
 }
 
-class _UpcomingAnniversariesProviderElement
-    extends AutoDisposeFutureProviderElement<List<AppUser>>
+class _UpcomingAnniversariesProviderElement extends AutoDisposeFutureProviderElement<List<AppUser>>
     with UpcomingAnniversariesRef {
   _UpcomingAnniversariesProviderElement(super.provider);
 
@@ -342,20 +321,18 @@ class _UpcomingAnniversariesProviderElement
   int get daysAhead => (origin as UpcomingAnniversariesProvider).daysAhead;
 }
 
-String _$anniversarySettingsNotifierHash() =>
-    r'f1ba5c10f4d215b14709cea3ec17fd90a8a5126a';
+String _$anniversarySettingsNotifierHash() => r'f1ba5c10f4d215b14709cea3ec17fd90a8a5126a';
 
 /// Провайдер для обновления настроек годовщин
 ///
 /// Copied from [AnniversarySettingsNotifier].
 @ProviderFor(AnniversarySettingsNotifier)
-final anniversarySettingsNotifierProvider = AutoDisposeAsyncNotifierProvider<
-    AnniversarySettingsNotifier, void>.internal(
+final anniversarySettingsNotifierProvider =
+    AutoDisposeAsyncNotifierProvider<AnniversarySettingsNotifier, void>.internal(
   AnniversarySettingsNotifier.new,
   name: r'anniversarySettingsNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$anniversarySettingsNotifierHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$anniversarySettingsNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

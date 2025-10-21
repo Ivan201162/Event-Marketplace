@@ -161,8 +161,7 @@ class AnalyticsService {
         },
       );
 
-      debugPrint(
-          'INFO: [AnalyticsService] Advertisement created tracked: ${advertisement.type}');
+      debugPrint('INFO: [AnalyticsService] Advertisement created tracked: ${advertisement.type}');
     } catch (e) {
       debugPrint('ERROR: [AnalyticsService] Failed to track advertisement created: $e');
     }

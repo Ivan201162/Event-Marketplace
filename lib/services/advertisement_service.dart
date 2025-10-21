@@ -222,8 +222,7 @@ class AdvertisementService {
     PaymentProvider provider = PaymentProvider.stripe,
   }) async {
     try {
-      debugPrint(
-          'INFO: [advertisement_service] Покупка рекламы $adId для пользователя $userId');
+      debugPrint('INFO: [advertisement_service] Покупка рекламы $adId для пользователя $userId');
 
       // Получаем рекламное объявление
       final doc = await _firestore.collection('advertisements').doc(adId).get();
@@ -458,8 +457,7 @@ class AdvertisementService {
     int limit = 5,
   }) async {
     try {
-      debugPrint(
-          'INFO: [advertisement_service] Получение рекламы для отображения в $placement');
+      debugPrint('INFO: [advertisement_service] Получение рекламы для отображения в $placement');
 
       Query query = _firestore
           .collection('advertisements')
@@ -488,8 +486,7 @@ class AdvertisementService {
               }))
           .toList();
     } catch (e) {
-      debugPrint(
-          'ERROR: [advertisement_service] Ошибка получения рекламы для отображения: $e');
+      debugPrint('ERROR: [advertisement_service] Ошибка получения рекламы для отображения: $e');
       return [];
     }
   }

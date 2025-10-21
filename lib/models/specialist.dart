@@ -125,26 +125,37 @@ class Specialist extends Equatable {
       contacts: data['contacts'] as Map<String, dynamic>?,
       languages: List<String>.from(data['languages'] ?? ['Русский']),
       experience: data['experience'],
-      category: data['category'] != null ? SpecialistCategory.values.firstWhere(
-        (e) => e.name == data['category'],
-        orElse: () => SpecialistCategory.host,
-      ) : null,
-      experienceLevel: data['experienceLevel'] != null ? ExperienceLevel.values.firstWhere(
-        (e) => e.name == data['experienceLevel'],
-        orElse: () => ExperienceLevel.beginner,
-      ) : null,
+      category: data['category'] != null
+          ? SpecialistCategory.values.firstWhere(
+              (e) => e.name == data['category'],
+              orElse: () => SpecialistCategory.host,
+            )
+          : null,
+      experienceLevel: data['experienceLevel'] != null
+          ? ExperienceLevel.values.firstWhere(
+              (e) => e.name == data['experienceLevel'],
+              orElse: () => ExperienceLevel.beginner,
+            )
+          : null,
       yearsOfExperience: data['yearsOfExperience'],
       hourlyRate: data['hourlyRate']?.toDouble(),
       price: data['price']?.toDouble(),
       location: data['location'],
-      subcategories: data['subcategories'] != null ? List<String>.from(data['subcategories']) : null,
+      subcategories:
+          data['subcategories'] != null ? List<String>.from(data['subcategories']) : null,
       minBookingHours: data['minBookingHours'],
       maxBookingHours: data['maxBookingHours'],
       serviceAreas: data['serviceAreas'] != null ? List<String>.from(data['serviceAreas']) : null,
       equipment: data['equipment'] != null ? List<String>.from(data['equipment']) : null,
-      servicesWithPrices: data['servicesWithPrices'] != null ? Map<String, double>.from(data['servicesWithPrices']) : null,
-      availableDates: data['availableDates'] != null ? (data['availableDates'] as List).map((e) => (e as Timestamp).toDate()).toList() : null,
-      busyDates: data['busyDates'] != null ? (data['busyDates'] as List).map((e) => (e as Timestamp).toDate()).toList() : null,
+      servicesWithPrices: data['servicesWithPrices'] != null
+          ? Map<String, double>.from(data['servicesWithPrices'])
+          : null,
+      availableDates: data['availableDates'] != null
+          ? (data['availableDates'] as List).map((e) => (e as Timestamp).toDate()).toList()
+          : null,
+      busyDates: data['busyDates'] != null
+          ? (data['busyDates'] as List).map((e) => (e as Timestamp).toDate()).toList()
+          : null,
       displayName: data['displayName'] ?? data['name'],
       imageUrlValue: data['imageUrlValue'] ?? data['imageUrl'] ?? data['avatarUrl'],
       categoryDisplayName: data['categoryDisplayName'] ?? data['specialization'],
@@ -152,7 +163,9 @@ class Specialist extends Equatable {
       totalReviews: data['totalReviews'] ?? data['reviewCount'] ?? 0,
       totalBookings: data['totalBookings'] ?? data['completedEvents'] ?? 0,
       avgRating: data['avgRating']?.toDouble() ?? data['rating']?.toDouble() ?? 0.0,
-      categories: data['categories'] != null ? List<String>.from(data['categories']) : [data['specialization'] ?? ''],
+      categories: data['categories'] != null
+          ? List<String>.from(data['categories'])
+          : [data['specialization'] ?? ''],
     );
   }
 
@@ -282,25 +295,33 @@ class Specialist extends Equatable {
       contacts: data['contacts'] as Map<String, dynamic>?,
       languages: List<String>.from(data['languages'] ?? ['Русский']),
       experience: data['experience'],
-      category: data['category'] != null ? SpecialistCategory.values.firstWhere(
-        (e) => e.name == data['category'],
-        orElse: () => SpecialistCategory.host,
-      ) : null,
-      experienceLevel: data['experienceLevel'] != null ? ExperienceLevel.values.firstWhere(
-        (e) => e.name == data['experienceLevel'],
-        orElse: () => ExperienceLevel.beginner,
-      ) : null,
+      category: data['category'] != null
+          ? SpecialistCategory.values.firstWhere(
+              (e) => e.name == data['category'],
+              orElse: () => SpecialistCategory.host,
+            )
+          : null,
+      experienceLevel: data['experienceLevel'] != null
+          ? ExperienceLevel.values.firstWhere(
+              (e) => e.name == data['experienceLevel'],
+              orElse: () => ExperienceLevel.beginner,
+            )
+          : null,
       yearsOfExperience: data['yearsOfExperience'],
       hourlyRate: data['hourlyRate']?.toDouble(),
       price: data['price']?.toDouble(),
       location: data['location'],
-      subcategories: data['subcategories'] != null ? List<String>.from(data['subcategories']) : null,
+      subcategories:
+          data['subcategories'] != null ? List<String>.from(data['subcategories']) : null,
       minBookingHours: data['minBookingHours'],
       maxBookingHours: data['maxBookingHours'],
       serviceAreas: data['serviceAreas'] != null ? List<String>.from(data['serviceAreas']) : null,
       equipment: data['equipment'] != null ? List<String>.from(data['equipment']) : null,
-      servicesWithPrices: data['servicesWithPrices'] != null ? Map<String, double>.from(data['servicesWithPrices']) : null,
-      availableDates: data['availableDates'] != null ? List<DateTime>.from(data['availableDates']) : null,
+      servicesWithPrices: data['servicesWithPrices'] != null
+          ? Map<String, double>.from(data['servicesWithPrices'])
+          : null,
+      availableDates:
+          data['availableDates'] != null ? List<DateTime>.from(data['availableDates']) : null,
       busyDates: data['busyDates'] != null ? List<DateTime>.from(data['busyDates']) : null,
       displayName: data['displayName'] ?? data['name'],
       imageUrlValue: data['imageUrlValue'] ?? data['imageUrl'] ?? data['avatarUrl'],
@@ -309,7 +330,9 @@ class Specialist extends Equatable {
       totalReviews: data['totalReviews'] ?? data['reviewCount'] ?? 0,
       totalBookings: data['totalBookings'] ?? data['completedEvents'] ?? 0,
       avgRating: data['avgRating']?.toDouble() ?? data['rating']?.toDouble() ?? 0.0,
-      categories: data['categories'] != null ? List<String>.from(data['categories']) : [data['specialization'] ?? ''],
+      categories: data['categories'] != null
+          ? List<String>.from(data['categories'])
+          : [data['specialization'] ?? ''],
     );
   }
 
@@ -428,21 +451,17 @@ class Specialist extends Equatable {
   /// Check if specialist is available on specific date
   bool isAvailableOnDate(DateTime date) {
     if (availableDates == null) return true;
-    return availableDates!.any((availableDate) => 
-      availableDate.year == date.year && 
-      availableDate.month == date.month && 
-      availableDate.day == date.day
-    );
+    return availableDates!.any((availableDate) =>
+        availableDate.year == date.year &&
+        availableDate.month == date.month &&
+        availableDate.day == date.day);
   }
 
   /// Check if specialist is busy on specific date
   bool isDateBusy(DateTime date) {
     if (busyDates == null) return false;
-    return busyDates!.any((busyDate) => 
-      busyDate.year == date.year && 
-      busyDate.month == date.month && 
-      busyDate.day == date.day
-    );
+    return busyDates!.any((busyDate) =>
+        busyDate.year == date.year && busyDate.month == date.month && busyDate.day == date.day);
   }
 
   @override

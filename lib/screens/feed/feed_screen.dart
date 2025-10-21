@@ -142,7 +142,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
   void _sharePost(Post post) {
     // Простая реализация поделиться - копирование ссылки в буфер обмена
     final shareText = 'Посмотрите этот пост в Event Marketplace: ${post.text ?? 'Интересный пост'}';
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Ссылка на пост скопирована: $shareText'),

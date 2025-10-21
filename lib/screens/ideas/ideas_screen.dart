@@ -366,7 +366,7 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
 
   void _shareIdea(Idea idea) {
     final shareText = 'Посмотрите эту идею в Event Marketplace: ${idea.title} - ${idea.shortDesc}';
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Ссылка на идею скопирована: $shareText'),
@@ -386,7 +386,7 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
 
     final ideaService = ref.read(ideaServiceProvider);
     ideaService.saveIdea(idea.id, currentUser.uid);
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Идея сохранена в избранное')),
     );

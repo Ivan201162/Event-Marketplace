@@ -176,7 +176,7 @@ class PostService {
 
       final data = doc.data()!;
       final likedBy = List<String>.from(data['likedBy'] ?? []);
-      
+
       if (likedBy.contains(userId)) {
         // Unlike
         await _firestore.collection(_collection).doc(postId).update({
