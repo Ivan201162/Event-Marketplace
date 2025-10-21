@@ -16,7 +16,7 @@ class SpecialistServicesScreen extends ConsumerStatefulWidget {
 }
 
 class _SpecialistServicesScreenState extends ConsumerState<SpecialistServicesScreen> {
-  final ServiceTemplateService _templateService = ServiceTemplateService();
+  // final ServiceTemplateService _templateService = ServiceTemplateService(); // Unused field
   final SpecialistServiceService _serviceService = SpecialistServiceService();
 
   @override
