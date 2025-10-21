@@ -5,8 +5,9 @@ import '../models/app_user.dart';
 import '../services/auth_service.dart';
 
 /// Onboarding state notifier
-class OnboardingNotifier extends StateNotifier<bool> {
-  OnboardingNotifier() : super(false);
+class OnboardingNotifier extends Notifier<bool> {
+  @override
+  bool build() => false;
   
   void setOnboardingComplete(bool value) {
     state = value;
@@ -14,8 +15,9 @@ class OnboardingNotifier extends StateNotifier<bool> {
 }
 
 /// Auth loading state notifier
-class AuthLoadingNotifier extends StateNotifier<bool> {
-  AuthLoadingNotifier() : super(false);
+class AuthLoadingNotifier extends Notifier<bool> {
+  @override
+  bool build() => false;
   
   void setLoading(bool value) {
     state = value;
@@ -23,8 +25,9 @@ class AuthLoadingNotifier extends StateNotifier<bool> {
 }
 
 /// Phone verification ID notifier
-class PhoneVerificationIdNotifier extends StateNotifier<String?> {
-  PhoneVerificationIdNotifier() : super(null);
+class PhoneVerificationIdNotifier extends Notifier<String?> {
+  @override
+  String? build() => null;
   
   void setVerificationId(String? value) {
     state = value;
@@ -32,8 +35,9 @@ class PhoneVerificationIdNotifier extends StateNotifier<String?> {
 }
 
 /// Phone auth state notifier
-class PhoneAuthStateNotifier extends StateNotifier<PhoneAuthState> {
-  PhoneAuthStateNotifier() : super(PhoneAuthState.idle);
+class PhoneAuthStateNotifier extends Notifier<PhoneAuthState> {
+  @override
+  PhoneAuthState build() => PhoneAuthState.idle;
   
   void setState(PhoneAuthState value) {
     state = value;
@@ -41,8 +45,9 @@ class PhoneAuthStateNotifier extends StateNotifier<PhoneAuthState> {
 }
 
 /// Phone number notifier
-class PhoneNumberNotifier extends StateNotifier<String?> {
-  PhoneNumberNotifier() : super(null);
+class PhoneNumberNotifier extends Notifier<String?> {
+  @override
+  String? build() => null;
   
   void setPhoneNumber(String? value) {
     state = value;
@@ -50,8 +55,9 @@ class PhoneNumberNotifier extends StateNotifier<String?> {
 }
 
 /// Phone auth timer notifier
-class PhoneAuthTimerNotifier extends StateNotifier<int> {
-  PhoneAuthTimerNotifier() : super(0);
+class PhoneAuthTimerNotifier extends Notifier<int> {
+  @override
+  int build() => 0;
   
   void setTimer(int value) {
     state = value;
@@ -59,8 +65,9 @@ class PhoneAuthTimerNotifier extends StateNotifier<int> {
 }
 
 /// Can resend code notifier
-class CanResendCodeNotifier extends StateNotifier<bool> {
-  CanResendCodeNotifier() : super(false);
+class CanResendCodeNotifier extends Notifier<bool> {
+  @override
+  bool build() => false;
   
   void setCanResend(bool value) {
     state = value;
@@ -109,25 +116,25 @@ final isProfileCompleteProvider = Provider<bool>((ref) {
 });
 
 /// User onboarding state provider
-final onboardingStateProvider = StateNotifierProvider<OnboardingNotifier, bool>((ref) => OnboardingNotifier());
+final onboardingStateProvider = NotifierProvider<OnboardingNotifier, bool>(() => OnboardingNotifier());
 
 /// Auth loading state provider
-final authLoadingProvider = StateNotifierProvider<AuthLoadingNotifier, bool>((ref) => AuthLoadingNotifier());
+final authLoadingProvider = NotifierProvider<AuthLoadingNotifier, bool>(() => AuthLoadingNotifier());
 
 /// Phone verification ID provider
-final phoneVerificationIdProvider = StateNotifierProvider<PhoneVerificationIdNotifier, String?>((ref) => PhoneVerificationIdNotifier());
+final phoneVerificationIdProvider = NotifierProvider<PhoneVerificationIdNotifier, String?>(() => PhoneVerificationIdNotifier());
 
 /// Phone auth state provider
-final phoneAuthStateProvider = StateNotifierProvider<PhoneAuthStateNotifier, PhoneAuthState>((ref) => PhoneAuthStateNotifier());
+final phoneAuthStateProvider = NotifierProvider<PhoneAuthStateNotifier, PhoneAuthState>(() => PhoneAuthStateNotifier());
 
 /// Phone number provider
-final phoneNumberProvider = StateNotifierProvider<PhoneNumberNotifier, String?>((ref) => PhoneNumberNotifier());
+final phoneNumberProvider = NotifierProvider<PhoneNumberNotifier, String?>(() => PhoneNumberNotifier());
 
 /// Phone auth timer provider
-final phoneAuthTimerProvider = StateNotifierProvider<PhoneAuthTimerNotifier, int>((ref) => PhoneAuthTimerNotifier());
+final phoneAuthTimerProvider = NotifierProvider<PhoneAuthTimerNotifier, int>(() => PhoneAuthTimerNotifier());
 
 /// Can resend code provider
-final canResendCodeProvider = StateNotifierProvider<CanResendCodeNotifier, bool>((ref) => CanResendCodeNotifier());
+final canResendCodeProvider = NotifierProvider<CanResendCodeNotifier, bool>(() => CanResendCodeNotifier());
 
 /// Phone auth states
 enum PhoneAuthState {

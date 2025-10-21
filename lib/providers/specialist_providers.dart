@@ -5,8 +5,9 @@ import '../models/specialist.dart';
 import '../services/specialist_service.dart';
 
 /// Search filters notifier
-class SearchFiltersNotifier extends StateNotifier<SearchFilters> {
-  SearchFiltersNotifier() : super(SearchFilters.empty());
+class SearchFiltersNotifier extends Notifier<SearchFilters> {
+  @override
+  SearchFilters build() => SearchFilters.empty();
   
   void updateFilters(SearchFilters filters) {
     state = filters;
@@ -68,7 +69,7 @@ final specialistsBySpecializationProvider = FutureProvider.family<List<Specialis
 });
 
 /// Search filters provider
-final searchFiltersProvider = StateNotifierProvider<SearchFiltersNotifier, SearchFilters>((ref) {
+final searchFiltersProvider = NotifierProvider<SearchFiltersNotifier, SearchFilters>(() {
   return SearchFiltersNotifier();
 });
 

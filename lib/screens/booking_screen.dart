@@ -64,7 +64,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
         _specialist = specialist;
         _isLoading = false;
         if (specialist != null) {
-          _totalPrice = specialist.price * _duration;
+          _totalPrice = (specialist.price ?? 0) * _duration;
           _advanceAmount = _totalPrice * 0.3; // 30% аванс
         }
       });
@@ -83,7 +83,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
   void _calculateTotalPrice() {
     if (_specialist != null) {
       setState(() {
-        _totalPrice = _specialist!.price * _duration;
+        _totalPrice = (_specialist!.price ?? 0) * _duration;
         _advanceAmount = _totalPrice * 0.3;
       });
     }
@@ -157,8 +157,9 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
         _selectedTime!.minute,
       );
 
-      final bookingId = await _bookingService.createBooking(
-        customerId: currentUser.id,
+      final booking = Booking(
+        id: '',
+        customerId: currentUser.uid,
         specialistId: widget.specialistId,
         eventDate: eventDateTime,
         totalPrice: _totalPrice,
@@ -166,8 +167,12 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
         message: _commentController.text,
         title: _eventTitleController.text,
         location: _addressController.text,
-        customerName: currentUser.displayName,
+        customerName: currentUser.displayName ?? '',
+        status: BookingStatus.pending,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
+      final bookingId = await _bookingService.createBooking(booking);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
