@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../models/specialist.dart';
 import '../models/common_types.dart';
+import '../models/specialist.dart';
 
 /// Виджет портфолио специалиста
 class SpecialistPortfolioWidget extends StatelessWidget {

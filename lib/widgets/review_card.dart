@@ -35,7 +35,6 @@ class ReviewCard extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 20,
-                    backgroundImage: null,
                     child: Text(review.clientName.substring(0, 1)),
                   ),
                   const SizedBox(width: 12),

@@ -87,7 +87,7 @@ class ReviewFormNotifier extends Notifier<ReviewFormState> {
   }
 
   void startSubmitting() {
-    state = state.copyWith(isSubmitting: true, errorMessage: null);
+    state = state.copyWith(isSubmitting: true);
   }
 
   void finishSubmitting() {
@@ -139,7 +139,7 @@ class ReviewStateNotifier extends Notifier<ReviewState> {
   ReviewState build() => const ReviewState();
 
   Future<void> loadReviews(String specialistId) async {
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true);
 
     try {
       final service = ref.read(reviewServiceProvider);

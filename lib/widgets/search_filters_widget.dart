@@ -292,7 +292,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
               ),
               onTap: () {
                 setState(() {
-                  _currentFilters = _currentFilters.copyWith(isAvailable: null);
+                  _currentFilters = _currentFilters.copyWith();
                 });
               },
             ),

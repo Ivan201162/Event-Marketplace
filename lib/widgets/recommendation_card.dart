@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../models/common_types.dart';
 import '../models/recommendation.dart';
 import '../models/specialist.dart';
-import '../models/common_types.dart';
 
 /// Карточка рекомендации специалиста
 class RecommendationCard extends StatelessWidget {

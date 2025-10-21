@@ -147,7 +147,7 @@ void main() {
     group('getReviewsBySpecialist', () {
       test('should get reviews by specialist successfully', () async {
         // Arrange
-        final specialistId = 'specialist_1';
+        const specialistId = 'specialist_1';
         final reviewData = {
           'specialistId': specialistId,
           'clientId': 'client_1',
@@ -192,7 +192,7 @@ void main() {
     group('updateReview', () {
       test('should update review successfully', () async {
         // Arrange
-        final reviewId = 'review_1';
+        const reviewId = 'review_1';
         final updates = {'comment': 'Updated comment', 'rating': 5};
 
         when(mockDocumentRef.update(any)).thenAnswer((_) async => {});
@@ -207,7 +207,7 @@ void main() {
 
       test('should handle error when updating review', () async {
         // Arrange
-        final reviewId = 'review_1';
+        const reviewId = 'review_1';
         final updates = {'comment': 'Updated comment'};
 
         when(mockDocumentRef.update(any)).thenThrow(Exception('Database error'));
@@ -223,7 +223,7 @@ void main() {
     group('deleteReview', () {
       test('should delete review successfully', () async {
         // Arrange
-        final reviewId = 'review_1';
+        const reviewId = 'review_1';
 
         when(mockDocumentRef.delete()).thenAnswer((_) async => {});
 
@@ -237,7 +237,7 @@ void main() {
 
       test('should handle error when deleting review', () async {
         // Arrange
-        final reviewId = 'review_1';
+        const reviewId = 'review_1';
 
         when(mockDocumentRef.delete()).thenThrow(Exception('Database error'));
 
@@ -252,7 +252,7 @@ void main() {
     group('getReviewStats', () {
       test('should get review stats successfully', () async {
         // Arrange
-        final specialistId = 'specialist_1';
+        const specialistId = 'specialist_1';
         final reviewData1 = {
           'specialistId': specialistId,
           'clientId': 'client_1',

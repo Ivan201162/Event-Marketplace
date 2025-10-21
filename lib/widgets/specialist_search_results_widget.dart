@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/advanced_search_filters.dart';
-import '../models/specialist.dart';
 import '../models/common_types.dart';
+import '../models/specialist.dart';
 import '../providers/advanced_search_providers.dart';
 
 /// Виджет результатов поиска специалистов

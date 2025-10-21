@@ -16,6 +16,13 @@ class FeedPost {
     required this.isSaved,
     required this.isFollowing,
     required this.createdAt,
+    this.specialistPhotoUrl,
+    this.specialistName,
+    this.content,
+    this.mediaUrls = const [],
+    this.tags = const [],
+    this.shares = 0,
+    this.comments = const [],
   });
 
   /// Создание из Firestore документа
@@ -35,8 +42,16 @@ class FeedPost {
       isSaved: data['isSaved'] ?? false,
       isFollowing: data['isFollowing'] ?? false,
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      specialistPhotoUrl: data['specialistPhotoUrl'],
+      specialistName: data['specialistName'],
+      content: data['content'],
+      mediaUrls: List<String>.from(data['mediaUrls'] ?? []),
+      tags: List<String>.from(data['tags'] ?? []),
+      shares: data['shares'] ?? 0,
+      comments: List<String>.from(data['comments'] ?? []),
     );
   }
+
   final String id;
   final String authorId;
   final String authorName;
@@ -50,6 +65,13 @@ class FeedPost {
   final bool isSaved;
   final bool isFollowing;
   final DateTime createdAt;
+  final String? specialistPhotoUrl;
+  final String? specialistName;
+  final String? content;
+  final List<String> mediaUrls;
+  final List<String> tags;
+  final int shares;
+  final List<String> comments;
 
   /// Преобразование в Map для Firestore
   Map<String, dynamic> toFirestore() => {
@@ -65,6 +87,13 @@ class FeedPost {
         'isSaved': isSaved,
         'isFollowing': isFollowing,
         'createdAt': Timestamp.fromDate(createdAt),
+        'specialistPhotoUrl': specialistPhotoUrl,
+        'specialistName': specialistName,
+        'content': content,
+        'mediaUrls': mediaUrls,
+        'tags': tags,
+        'shares': shares,
+        'comments': comments,
       };
 
   /// Копирование с изменениями
@@ -82,6 +111,13 @@ class FeedPost {
     bool? isSaved,
     bool? isFollowing,
     DateTime? createdAt,
+    String? specialistPhotoUrl,
+    String? specialistName,
+    String? content,
+    List<String>? mediaUrls,
+    List<String>? tags,
+    int? shares,
+    List<String>? comments,
   }) =>
       FeedPost(
         id: id ?? this.id,
@@ -97,5 +133,21 @@ class FeedPost {
         isSaved: isSaved ?? this.isSaved,
         isFollowing: isFollowing ?? this.isFollowing,
         createdAt: createdAt ?? this.createdAt,
+        specialistPhotoUrl: specialistPhotoUrl ?? this.specialistPhotoUrl,
+        specialistName: specialistName ?? this.specialistName,
+        content: content ?? this.content,
+        mediaUrls: mediaUrls ?? this.mediaUrls,
+        tags: tags ?? this.tags,
+        shares: shares ?? this.shares,
+        comments: comments ?? this.comments,
       );
+
+  /// Проверка, лайкнул ли пользователь пост
+  bool isLikedBy(String userId) => isLiked;
+
+  /// Получить количество лайков
+  int get likes => likeCount;
+
+  /// Получить количество комментариев
+  int get comments => commentCount;
 }

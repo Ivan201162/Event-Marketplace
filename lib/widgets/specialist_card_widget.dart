@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../models/specialist.dart';
+
 import '../models/common_types.dart';
+import '../models/specialist.dart';
 
 /// Виджет карточки специалиста
 class SpecialistCardWidget extends StatelessWidget {

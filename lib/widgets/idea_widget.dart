@@ -59,16 +59,12 @@ class IdeaWidget extends StatelessWidget {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: ColorUtils.getCategoryColor(idea.categoryColor is Color
-                                    ? idea.categoryColor as Color
-                                    : Colors.grey)
+                            color: ColorUtils.getCategoryColor(idea.categoryColor)
                                 .withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: ColorUtils.getCategoryColor(
-                                idea.categoryColor is Color
-                                    ? idea.categoryColor as Color
-                                    : Colors.grey,
+                                idea.categoryColor,
                               ).withValues(alpha: 0.3),
                             ),
                           ),
@@ -79,9 +75,7 @@ class IdeaWidget extends StatelessWidget {
                                 ColorUtils.getCategoryIcon(idea.category),
                                 size: 14,
                                 color: ColorUtils.getCategoryColor(
-                                  idea.categoryColor is Color
-                                      ? idea.categoryColor as Color
-                                      : Colors.grey,
+                                  idea.categoryColor,
                                 ),
                               ),
                               const SizedBox(width: 4),
@@ -90,9 +84,7 @@ class IdeaWidget extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: ColorUtils.getCategoryColor(
-                                    idea.categoryColor is Color
-                                        ? idea.categoryColor as Color
-                                        : Colors.grey,
+                                    idea.categoryColor,
                                   ),
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -393,15 +385,12 @@ class IdeaListTile extends StatelessWidget {
                 width: 60,
                 height: 60,
                 decoration: BoxDecoration(
-                  color: ColorUtils.getCategoryColor(
-                          idea.categoryColor is Color ? idea.categoryColor as Color : Colors.grey)
-                      .withValues(alpha: 0.1),
+                  color: ColorUtils.getCategoryColor(idea.categoryColor).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
                   ColorUtils.getCategoryIcon(idea.category),
-                  color: ColorUtils.getCategoryColorFromColor(
-                      idea.categoryColor is Color ? idea.categoryColor as Color : Colors.grey),
+                  color: ColorUtils.getCategoryColorFromColor(idea.categoryColor),
                   size: 24,
                 ),
               ),
@@ -425,8 +414,7 @@ class IdeaListTile extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: ColorUtils.getCategoryColorFromColor(
-                            idea.categoryColor is Color ? idea.categoryColor as Color : Colors.grey)
+                    color: ColorUtils.getCategoryColorFromColor(idea.categoryColor)
                         .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -434,8 +422,7 @@ class IdeaListTile extends StatelessWidget {
                     idea.category,
                     style: TextStyle(
                       fontSize: 10,
-                      color: ColorUtils.getCategoryColorFromColor(
-                          idea.categoryColor is Color ? idea.categoryColor as Color : Colors.grey),
+                      color: ColorUtils.getCategoryColorFromColor(idea.categoryColor),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -556,19 +543,15 @@ class IdeaGridTile extends StatelessWidget {
                         ),
                       )
                     : Container(
-                        color: ColorUtils.getCategoryColor(idea.categoryColor is Color
-                                ? idea.categoryColor as Color
-                                : Colors.grey)
-                            .withValues(alpha: 0.1),
+                        color:
+                            ColorUtils.getCategoryColor(idea.categoryColor).withValues(alpha: 0.1),
                         child: Center(
                           child: Icon(
                             idea.categoryIcon ?? Icons.category,
                             style: TextStyle(
                               fontSize: 32,
                               color: ColorUtils.getCategoryColor(
-                                idea.categoryColor is Color
-                                    ? idea.categoryColor as Color
-                                    : Colors.grey,
+                                idea.categoryColor,
                               ),
                             ),
                           ),
@@ -604,9 +587,7 @@ class IdeaGridTile extends StatelessWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: ColorUtils.getCategoryColor(idea.categoryColor is Color
-                                  ? idea.categoryColor as Color
-                                  : Colors.grey)
+                          color: ColorUtils.getCategoryColor(idea.categoryColor)
                               .withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -614,9 +595,7 @@ class IdeaGridTile extends StatelessWidget {
                           idea.category,
                           style: TextStyle(
                             fontSize: 10,
-                            color: ColorUtils.getCategoryColor(idea.categoryColor is Color
-                                ? idea.categoryColor as Color
-                                : Colors.grey),
+                            color: ColorUtils.getCategoryColor(idea.categoryColor),
                             fontWeight: FontWeight.w500,
                           ),
                         ),

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/post.dart';
 import '../models/feed_comment.dart';
+import '../models/post.dart';
 import '../services/feed_service.dart';
 
 /// Feed service provider

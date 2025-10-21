@@ -494,16 +494,10 @@ class _WriteReviewScreenState extends ConsumerState<WriteReviewScreen> {
       final reviewService = ref.read(reviewServiceProvider);
       final reviewId = await reviewService.createReview(review);
 
-      if (reviewId != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Отзыв отправлен на модерацию')),
-        );
-        context.pop();
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ошибка при отправке отзыва')),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Отзыв отправлен на модерацию')),
+      );
+      context.pop();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Ошибка: $e')),

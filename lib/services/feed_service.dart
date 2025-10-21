@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/post.dart';
 import '../models/feed_comment.dart';
+import '../models/post.dart';
 
 /// Feed service for managing posts and comments
 class FeedService {

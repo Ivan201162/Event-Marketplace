@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../models/specialist_category.dart';
 import '../models/common_types.dart';
 
 // Временное определение для совместимости

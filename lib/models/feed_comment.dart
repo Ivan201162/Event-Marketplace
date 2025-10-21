@@ -9,6 +9,8 @@ class FeedComment extends Equatable {
   final String authorName;
   final String? authorAvatarUrl;
   final String content;
+  final String? userPhotoUrl;
+  final String? userName;
   final DateTime createdAt;
   final DateTime updatedAt;
   final int likesCount;
@@ -29,6 +31,8 @@ class FeedComment extends Equatable {
     this.likedBy = const [],
     this.parentCommentId,
     this.replies = const [],
+    this.userPhotoUrl,
+    this.userName,
   });
 
   /// Create FeedComment from Firestore document
@@ -47,6 +51,8 @@ class FeedComment extends Equatable {
       likedBy: List<String>.from(data['likedBy'] ?? []),
       parentCommentId: data['parentCommentId'],
       replies: List<String>.from(data['replies'] ?? []),
+      userPhotoUrl: data['userPhotoUrl'],
+      userName: data['userName'],
     );
   }
 
@@ -58,6 +64,8 @@ class FeedComment extends Equatable {
       'authorName': authorName,
       'authorAvatarUrl': authorAvatarUrl,
       'content': content,
+      'userPhotoUrl': userPhotoUrl,
+      'userName': userName,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
       'likesCount': likesCount,
@@ -75,6 +83,8 @@ class FeedComment extends Equatable {
     String? authorName,
     String? authorAvatarUrl,
     String? content,
+    String? userPhotoUrl,
+    String? userName,
     DateTime? createdAt,
     DateTime? updatedAt,
     int? likesCount,
@@ -89,6 +99,8 @@ class FeedComment extends Equatable {
       authorName: authorName ?? this.authorName,
       authorAvatarUrl: authorAvatarUrl ?? this.authorAvatarUrl,
       content: content ?? this.content,
+      userPhotoUrl: userPhotoUrl ?? this.userPhotoUrl,
+      userName: userName ?? this.userName,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       likesCount: likesCount ?? this.likesCount,
@@ -125,6 +137,8 @@ class FeedComment extends Equatable {
         authorName,
         authorAvatarUrl,
         content,
+        userPhotoUrl,
+        userName,
         createdAt,
         updatedAt,
         likesCount,

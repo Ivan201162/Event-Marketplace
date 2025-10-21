@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../models/common_types.dart';
 import '../models/specialist.dart';
 import '../models/specialist_comparison.dart';
-import '../models/common_types.dart';
 
 class SpecialistComparisonCard extends StatelessWidget {
   const SpecialistComparisonCard({

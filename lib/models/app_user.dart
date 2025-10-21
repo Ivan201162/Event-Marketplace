@@ -35,6 +35,8 @@ class AppUser extends Equatable {
   final String? city;
   final String? status;
   final String? avatarUrl;
+  final String? displayName;
+  final String? photoURL;
   final int followersCount;
   final UserType type;
   final DateTime createdAt;
@@ -58,6 +60,8 @@ class AppUser extends Equatable {
     this.isOnline = false,
     this.preferences,
     this.favoriteSpecialists = const [],
+    this.displayName,
+    this.photoURL,
   });
 
   /// Create AppUser from Firestore document
@@ -71,6 +75,8 @@ class AppUser extends Equatable {
       city: data['city'],
       status: data['status'],
       avatarUrl: data['avatarUrl'],
+      displayName: data['displayName'],
+      photoURL: data['photoURL'],
       followersCount: data['followersCount'] ?? 0,
       type: UserType.values.firstWhere(
         (type) => type.name == data['type'],
@@ -93,6 +99,8 @@ class AppUser extends Equatable {
       'city': city,
       'status': status,
       'avatarUrl': avatarUrl,
+      'displayName': displayName,
+      'photoURL': photoURL,
       'followersCount': followersCount,
       'type': type.name,
       'createdAt': Timestamp.fromDate(createdAt),
@@ -112,6 +120,8 @@ class AppUser extends Equatable {
     String? city,
     String? status,
     String? avatarUrl,
+    String? displayName,
+    String? photoURL,
     int? followersCount,
     UserType? type,
     DateTime? createdAt,
@@ -128,6 +138,8 @@ class AppUser extends Equatable {
       city: city ?? this.city,
       status: status ?? this.status,
       avatarUrl: avatarUrl ?? this.avatarUrl,
+      displayName: displayName ?? this.displayName,
+      photoURL: photoURL ?? this.photoURL,
       followersCount: followersCount ?? this.followersCount,
       type: type ?? this.type,
       createdAt: createdAt ?? this.createdAt,
@@ -159,6 +171,16 @@ class AppUser extends Equatable {
         type,
         createdAt,
         updatedAt,
+        isOnline,
+        preferences,
+        favoriteSpecialists,
+      ];
+
+  @override
+  String toString() {
+    return 'AppUser(uid: $uid, name: $name, email: $email, city: $city, type: $type)';
+  }
+}
         isOnline,
         preferences,
         favoriteSpecialists,

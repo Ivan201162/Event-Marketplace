@@ -36,17 +36,16 @@ void main() {
         comment: 'Excellent work!',
         createdAt: DateTime(2024, 1, 15),
         updatedAt: DateTime(2024, 1, 16),
-        images: ['image1.jpg', 'image2.jpg'],
-        likedBy: ['user1', 'user2'],
+        images: const ['image1.jpg', 'image2.jpg'],
+        likedBy: const ['user1', 'user2'],
         likesCount: 2,
         title: 'Great service',
         hasComment: true,
-        tags: ['professional', 'friendly'],
+        tags: const ['professional', 'friendly'],
         isVerified: true,
-        isPublic: true,
-        serviceTags: ['photography'],
-        photos: ['photo1.jpg'],
-        responses: [
+        serviceTags: const ['photography'],
+        photos: const ['photo1.jpg'],
+        responses: const [
           {'text': 'Thank you!'}
         ],
       );
@@ -107,7 +106,7 @@ void main() {
         rating: 4,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        images: ['image1.jpg'],
+        images: const ['image1.jpg'],
       );
 
       final reviewWithoutImages = Review(
@@ -135,7 +134,7 @@ void main() {
         rating: 4,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        images: ['image1.jpg', 'image2.jpg'],
+        images: const ['image1.jpg', 'image2.jpg'],
       );
 
       expect(review.firstImage, 'image1.jpg');
@@ -208,7 +207,7 @@ void main() {
 
   group('ReviewStats Model Tests', () {
     test('should create review stats', () {
-      final stats = ReviewStats(
+      const stats = ReviewStats(
         averageRating: 4.5,
         totalReviews: 100,
         ratingDistribution: {1: 5, 2: 10, 3: 20, 4: 35, 5: 30},
@@ -223,7 +222,7 @@ void main() {
     });
 
     test('should calculate rating percentage', () {
-      final stats = ReviewStats(
+      const stats = ReviewStats(
         averageRating: 4.5,
         totalReviews: 100,
         ratingDistribution: {1: 5, 2: 10, 3: 20, 4: 35, 5: 30},
@@ -237,7 +236,7 @@ void main() {
     });
 
     test('should format average rating', () {
-      final stats = ReviewStats(
+      const stats = ReviewStats(
         averageRating: 4.567,
         totalReviews: 100,
         ratingDistribution: {},
@@ -251,7 +250,7 @@ void main() {
 
   group('SpecialistReviewStats Model Tests', () {
     test('should create specialist review stats', () {
-      final stats = SpecialistReviewStats(
+      const stats = SpecialistReviewStats(
         specialistId: 'specialist_1',
         averageRating: 4.8,
         totalReviews: 50,
