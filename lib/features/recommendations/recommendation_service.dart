@@ -59,7 +59,7 @@ class RecommendationService {
         return [];
       }
 
-      final specialist = Specialist.fromDocument(specialistDoc);
+      final specialist = Specialist.fromFirestore(specialistDoc);
 
       // Ищем специалистов с похожими характеристиками
       final similarSpecialists = await _db
@@ -71,16 +71,16 @@ class RecommendationService {
           .get();
 
       final specialists = similarSpecialists.docs
-          .map(Specialist.fromDocument)
+          .map(Specialist.fromFirestore)
           .where((s) => s.id != specialistId) // Исключаем самого специалиста
           .toList();
 
       // Сортируем по рейтингу и цене
       specialists.sort((a, b) {
         // Приоритет: рейтинг, затем цена
-        final ratingComparison = b.avgRating.compareTo(a.avgRating);
+        final ratingComparison = b.rating.compareTo(a.rating);
         if (ratingComparison != 0) return ratingComparison;
-        return a.price.compareTo(b.price);
+        return a.pricePerHour.compareTo(b.pricePerHour);
       });
 
       return specialists.take(limit).toList();
@@ -100,8 +100,8 @@ class RecommendationService {
           .collection('specialists')
           .where('isAvailable', isEqualTo: true)
           .where('isVerified', isEqualTo: true)
-          .orderBy('avgRating', descending: true)
-          .orderBy('reviewsCount', descending: true);
+          .orderBy('rating', descending: true)
+          .orderBy('reviewCount', descending: true);
 
       if (category != null) {
         query = query.where('category', isEqualTo: category);
@@ -109,7 +109,7 @@ class RecommendationService {
 
       final snapshot = await query.limit(limit).get();
 
-      return snapshot.docs.map(Specialist.fromDocument).toList();
+      return snapshot.docs.map(Specialist.fromFirestore).toList();
     } catch (e) {
       throw Exception('Ошибка получения топ специалистов: $e');
     }
@@ -127,9 +127,9 @@ class RecommendationService {
           .collection('specialists')
           .where('isAvailable', isEqualTo: true)
           .where('isVerified', isEqualTo: true)
-          .where('price', isLessThanOrEqualTo: budget)
-          .orderBy('price', descending: true)
-          .orderBy('avgRating', descending: true);
+          .where('pricePerHour', isLessThanOrEqualTo: budget)
+          .orderBy('pricePerHour', descending: true)
+          .orderBy('rating', descending: true);
 
       if (city != null) {
         query = query.where('city', isEqualTo: city);
@@ -141,7 +141,7 @@ class RecommendationService {
 
       final snapshot = await query.limit(limit).get();
 
-      return snapshot.docs.map(Specialist.fromDocument).toList();
+      return snapshot.docs.map(Specialist.fromFirestore).toList();
     } catch (e) {
       throw Exception('Ошибка получения рекомендаций по бюджету: $e');
     }
@@ -181,7 +181,7 @@ class RecommendationService {
         // Получаем данные специалиста
         final specialistDoc = await _db.collection('specialists').doc(booking.specialistId).get();
         if (specialistDoc.exists) {
-          final specialist = Specialist.fromDocument(specialistDoc);
+          final specialist = Specialist.fromFirestore(specialistDoc);
 
           // Город
           if (specialist.city != null) {
@@ -257,13 +257,13 @@ class RecommendationService {
 
     if (budget != null) {
       query = query.where(
-        'price',
+        'pricePerHour',
         isLessThanOrEqualTo: budget * 1.2,
       ); // +20% к бюджету
     }
 
     // Сортируем по рейтингу и количеству отзывов
-    query = query.orderBy('avgRating', descending: true).orderBy('reviewsCount', descending: true);
+    query = query.orderBy('rating', descending: true).orderBy('reviewCount', descending: true);
 
     final snapshot = await query.limit(limit).get();
 
@@ -304,7 +304,7 @@ class RecommendationService {
             specialist.category == userPreferences['category'];
 
         final matchesBudget = userPreferences['budget'] == null ||
-            specialist.price <= userPreferences['budget'] * 1.2;
+            specialist.pricePerHour <= userPreferences['budget'] * 1.2;
 
         return matchesCity && matchesCategory && matchesBudget;
       }).toList();
@@ -454,7 +454,7 @@ class RecommendationService {
 
     // Ценовое соответствие
     if (preferences['budget'] != null) {
-      final priceRatio = specialist.price / preferences['budget'];
+      final priceRatio = specialist.pricePerHour / preferences['budget'];
       if (priceRatio <= 1.0) {
         score += 0.1;
       } else if (priceRatio <= 1.2) {

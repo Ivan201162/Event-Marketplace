@@ -178,8 +178,48 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         context.go('/main');
       }
     } catch (e) {
+      String errorMessage = 'Ошибка входа через Google';
+      
+      if (e is FirebaseAuthException) {
+        switch (e.code) {
+          case 'account-exists-with-different-credential':
+            errorMessage = 'Аккаунт с таким email уже существует с другим способом входа';
+            break;
+          case 'invalid-credential':
+            errorMessage = 'Неверные учетные данные Google';
+            break;
+          case 'operation-not-allowed':
+            errorMessage = 'Вход через Google не разрешен';
+            break;
+          case 'user-disabled':
+            errorMessage = 'Аккаунт заблокирован';
+            break;
+          case 'user-not-found':
+            errorMessage = 'Пользователь не найден';
+            break;
+          case 'wrong-password':
+            errorMessage = 'Неверный пароль';
+            break;
+          case 'invalid-verification-code':
+            errorMessage = 'Неверный код подтверждения';
+            break;
+          case 'invalid-verification-id':
+            errorMessage = 'Неверный ID подтверждения';
+            break;
+          case 'network-request-failed':
+            errorMessage = 'Ошибка сети. Проверьте подключение к интернету';
+            break;
+          default:
+            errorMessage = 'Ошибка Google Sign-In: ${e.message ?? e.code}';
+        }
+      } else if (e.toString().contains('ApiException: 10')) {
+        errorMessage = 'Ошибка конфигурации Google Sign-In. Обратитесь к разработчику';
+      } else {
+        errorMessage = 'Ошибка входа через Google: ${e.toString()}';
+      }
+      
       setState(() {
-        _errorMessage = 'Ошибка входа через Google: ${e.toString()}';
+        _errorMessage = errorMessage;
       });
     } finally {
       if (mounted) {

@@ -172,7 +172,38 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         context.go('/main');
       }
     } catch (e) {
-      _showError('Google вход: ${e.toString()}');
+      String errorMessage = 'Ошибка входа через Google';
+      
+      if (e is FirebaseAuthException) {
+        switch (e.code) {
+          case 'account-exists-with-different-credential':
+            errorMessage = 'Аккаунт с таким email уже существует с другим способом входа';
+            break;
+          case 'invalid-credential':
+            errorMessage = 'Неверные учетные данные Google';
+            break;
+          case 'operation-not-allowed':
+            errorMessage = 'Вход через Google не разрешен';
+            break;
+          case 'user-disabled':
+            errorMessage = 'Аккаунт заблокирован';
+            break;
+          case 'user-not-found':
+            errorMessage = 'Пользователь не найден';
+            break;
+          case 'network-request-failed':
+            errorMessage = 'Ошибка сети. Проверьте подключение к интернету';
+            break;
+          default:
+            errorMessage = 'Ошибка Google Sign-In: ${e.message ?? e.code}';
+        }
+      } else if (e.toString().contains('ApiException: 10')) {
+        errorMessage = 'Ошибка конфигурации Google Sign-In. Обратитесь к разработчику';
+      } else {
+        errorMessage = 'Ошибка входа через Google: ${e.toString()}';
+      }
+      
+      _showError(errorMessage);
     } finally {
       setState(() => _isLoading = false);
       ref.read(authLoadingProvider.notifier).state = false;
@@ -312,40 +343,45 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
         ),
         child: SafeArea(
-          child: Padding(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(24.0),
-            child: Column(
-              children: [
-                const Spacer(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height - 48, // 48 = padding * 2
+              ),
+              child: IntrinsicHeight(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 40),
 
-                // App logo and title
-                const Icon(
-                  Icons.event,
-                  size: 80,
-                  color: Colors.white,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Event Marketplace',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Найди идеального специалиста для своего мероприятия',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white70,
-                  ),
-                ),
+                    // App logo and title
+                    const Icon(
+                      Icons.event,
+                      size: 80,
+                      color: Colors.white,
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Event Marketplace',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Найди идеального специалиста для своего мероприятия',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white70,
+                      ),
+                    ),
 
-                const Spacer(),
+                    const Spacer(),
 
-                // Auth form
+                    // Auth form
                 Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
@@ -495,10 +531,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ],
                   ),
-                ),
+                    ),
 
-                const Spacer(),
-              ],
+                    const SizedBox(height: 40),
+                  ],
+                ),
+              ),
             ),
           ),
         ),

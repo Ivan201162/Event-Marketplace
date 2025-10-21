@@ -232,11 +232,24 @@ class AuthService {
           ..setCustomParameters({'prompt': 'select_account'});
         userCredential = await _auth.signInWithPopup(googleProvider);
       } else {
-        final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+        // Configure Google Sign-In with proper client ID
+        final GoogleSignIn googleSignIn = GoogleSignIn(
+          scopes: ['email', 'profile'],
+        );
+        
+        final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
         if (googleUser == null) {
           throw FirebaseAuthException(code: 'canceled', message: 'Google sign-in canceled');
         }
+        
         final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+        if (googleAuth.accessToken == null || googleAuth.idToken == null) {
+          throw FirebaseAuthException(
+            code: 'invalid-credential', 
+            message: 'Failed to get Google authentication tokens'
+          );
+        }
+        
         final credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
