@@ -207,7 +207,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '${specialist.hourlyRate.toInt()} ₽/ч',
+                '${specialist.hourlyRate?.toInt() ?? 0} ₽/ч',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).colorScheme.primary,

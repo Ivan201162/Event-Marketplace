@@ -513,6 +513,61 @@ class Specialist extends Equatable {
         categories,
       ];
 
+  /// Get formatted price per hour
+  String get formattedPricePerHour => '$pricePerHour ₽/час';
+
+  /// Get display name for category
+  String get categoryDisplayName {
+    switch (category) {
+      case SpecialistCategory.host:
+        return 'Ведущий';
+      case SpecialistCategory.photographer:
+        return 'Фотограф';
+      case SpecialistCategory.animator:
+        return 'Аниматор';
+      case SpecialistCategory.dj:
+        return 'Диджей';
+      case SpecialistCategory.decorator:
+        return 'Оформитель';
+      case SpecialistCategory.catering:
+        return 'Кейтеринг';
+      case SpecialistCategory.cleaning:
+        return 'Клининг';
+      case SpecialistCategory.equipment:
+        return 'Оборудование';
+      case SpecialistCategory.clothing:
+        return 'Одежда';
+      case SpecialistCategory.fireShow:
+        return 'Фаер-шоу';
+      case SpecialistCategory.fireworks:
+        return 'Салюты';
+      case SpecialistCategory.lightShow:
+        return 'Световое шоу';
+      case SpecialistCategory.florist:
+        return 'Флорист';
+      case SpecialistCategory.coverBand:
+        return 'Кавер-группа';
+      case SpecialistCategory.teamBuilding:
+        return 'Тимбилдинг';
+      case SpecialistCategory.videographer:
+        return 'Видеограф';
+      case SpecialistCategory.makeup:
+        return 'Визажист';
+      case SpecialistCategory.musician:
+        return 'Музыкант';
+      case SpecialistCategory.caterer:
+        return 'Кейтеринг';
+      case SpecialistCategory.security:
+        return 'Охрана';
+      case SpecialistCategory.technician:
+        return 'Техник';
+      case SpecialistCategory.other:
+        return 'Другое';
+      case null:
+        return 'Не указано';
+    }
+  }
+
   @override
   String toString() {
     return 'Specialist(id: $id, name: $name, specialization: $specialization, city: $city, rating: $rating)';

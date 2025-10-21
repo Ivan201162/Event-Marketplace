@@ -148,7 +148,7 @@ class SpecialistCard extends StatelessWidget {
                               service,
                               style: const TextStyle(fontSize: 12),
                             ),
-                            backgroundColor: Colors.blue.withOpacity(0.1),
+                            backgroundColor: Colors.blue.withValues(alpha: 0.1),
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ))
                       .toList(),
@@ -217,7 +217,7 @@ class SpecialistCard extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.green.withOpacity(0.1),
+                        color: Colors.green.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Text(
@@ -236,7 +236,7 @@ class SpecialistCard extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.red.withOpacity(0.1),
+                        color: Colors.red.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Text(

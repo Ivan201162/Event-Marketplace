@@ -23,6 +23,17 @@ class Review extends Equatable {
   final List<String> serviceTags;
   final List<String> photos;
   final List<Map<String, dynamic>> responses;
+  final String? text;
+  final String? formattedDate;
+  final String? clientAvatarUrl;
+  final String? date;
+  final String? customerId;
+  final String? customerName;
+  final bool isEdited;
+  final DateTime? editedAt;
+  final String? bookingId;
+  final bool canDelete;
+  final String? ratingColor;
 
   const Review({
     required this.id,
@@ -45,6 +56,17 @@ class Review extends Equatable {
     this.serviceTags = const [],
     this.photos = const [],
     this.responses = const [],
+    this.text,
+    this.formattedDate,
+    this.clientAvatarUrl,
+    this.date,
+    this.customerId,
+    this.customerName,
+    this.isEdited = false,
+    this.editedAt,
+    this.bookingId,
+    this.canDelete = false,
+    this.ratingColor,
   });
 
   /// Create Review from Firestore document
@@ -71,6 +93,17 @@ class Review extends Equatable {
       serviceTags: List<String>.from(data['serviceTags'] ?? []),
       photos: List<String>.from(data['photos'] ?? []),
       responses: List<Map<String, dynamic>>.from(data['responses'] ?? []),
+      text: data['text'] ?? data['comment'],
+      formattedDate: data['formattedDate'],
+      clientAvatarUrl: data['clientAvatarUrl'],
+      date: data['date'],
+      customerId: data['customerId'] ?? data['clientId'],
+      customerName: data['customerName'] ?? data['clientName'],
+      isEdited: data['isEdited'] ?? false,
+      editedAt: data['editedAt'] != null ? (data['editedAt'] as Timestamp).toDate() : null,
+      bookingId: data['bookingId'],
+      canDelete: data['canDelete'] ?? false,
+      ratingColor: data['ratingColor'],
     );
   }
 
@@ -96,6 +129,17 @@ class Review extends Equatable {
       'serviceTags': serviceTags,
       'photos': photos,
       'responses': responses,
+      'text': text,
+      'formattedDate': formattedDate,
+      'clientAvatarUrl': clientAvatarUrl,
+      'date': date,
+      'customerId': customerId,
+      'customerName': customerName,
+      'isEdited': isEdited,
+      'editedAt': editedAt != null ? Timestamp.fromDate(editedAt!) : null,
+      'bookingId': bookingId,
+      'canDelete': canDelete,
+      'ratingColor': ratingColor,
     };
   }
 
@@ -121,6 +165,17 @@ class Review extends Equatable {
     List<String>? serviceTags,
     List<String>? photos,
     List<Map<String, dynamic>>? responses,
+    String? text,
+    String? formattedDate,
+    String? clientAvatarUrl,
+    String? date,
+    String? customerId,
+    String? customerName,
+    bool? isEdited,
+    DateTime? editedAt,
+    String? bookingId,
+    bool? canDelete,
+    String? ratingColor,
   }) {
     return Review(
       id: id ?? this.id,
@@ -143,6 +198,17 @@ class Review extends Equatable {
       serviceTags: serviceTags ?? this.serviceTags,
       photos: photos ?? this.photos,
       responses: responses ?? this.responses,
+      text: text ?? this.text,
+      formattedDate: formattedDate ?? this.formattedDate,
+      clientAvatarUrl: clientAvatarUrl ?? this.clientAvatarUrl,
+      date: date ?? this.date,
+      customerId: customerId ?? this.customerId,
+      customerName: customerName ?? this.customerName,
+      isEdited: isEdited ?? this.isEdited,
+      editedAt: editedAt ?? this.editedAt,
+      bookingId: bookingId ?? this.bookingId,
+      canDelete: canDelete ?? this.canDelete,
+      ratingColor: ratingColor ?? this.ratingColor,
     );
   }
 
@@ -175,6 +241,11 @@ class Review extends Equatable {
     return null;
   }
 
+  /// Get formatted created date
+  String get formattedCreatedAt {
+    return '${createdAt.day}.${createdAt.month}.${createdAt.year}';
+  }
+
   @override
   List<Object?> get props => [
         id,
@@ -197,6 +268,17 @@ class Review extends Equatable {
         serviceTags,
         photos,
         responses,
+        text,
+        formattedDate,
+        clientAvatarUrl,
+        date,
+        customerId,
+        customerName,
+        isEdited,
+        editedAt,
+        bookingId,
+        canDelete,
+        ratingColor,
       ];
 
   @override

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/feed_post.dart';
+import '../models/feed_comment.dart';
 import '../providers/feed_providers.dart';
+import '../providers/feed_service_provider.dart';
 
 /// Виджет поста в ленте
 class FeedPostWidget extends ConsumerWidget {

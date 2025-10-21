@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/payment.dart';
+import '../models/organization_type.dart';
 
 /// Виджет для отображения платежа
 class PaymentCard extends ConsumerWidget {
@@ -31,7 +32,7 @@ class PaymentCard extends ConsumerWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        payment.typeDisplayName,
+                        payment.typeDisplayName ?? payment.displayName,
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

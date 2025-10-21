@@ -10,6 +10,20 @@ enum UserType {
 
   const UserType(this.displayName);
   final String displayName;
+
+  /// Get description for user type
+  String get description {
+    switch (this) {
+      case UserType.physical:
+        return 'Физическое лицо';
+      case UserType.selfEmployed:
+        return 'Самозанятый';
+      case UserType.individual:
+        return 'Индивидуальный предприниматель';
+      case UserType.studio:
+        return 'Студия';
+    }
+  }
 }
 
 /// App user model

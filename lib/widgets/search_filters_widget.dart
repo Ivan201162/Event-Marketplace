@@ -277,31 +277,39 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
   Widget _buildAvailabilityFilter() {
     return Column(
       children: [
-        RadioGroup<bool?>(
-          value: _currentFilters.isAvailable,
-          onChanged: (value) {
-            setState(() {
-              _currentFilters = _currentFilters.copyWith(isAvailable: value);
-            });
-          },
+        Column(
           children: [
-            RadioListTile<bool?>(
+            ListTile(
               title: const Text('Любая'),
-              value: null,
-              groupValue: _currentFilters.isAvailable,
-              onChanged: (value) {
+              leading: Radio<bool?>(
+                value: null,
+                groupValue: _currentFilters.isAvailable,
+                onChanged: (value) {
+                  setState(() {
+                    _currentFilters = _currentFilters.copyWith(isAvailable: value);
+                  });
+                },
+              ),
+              onTap: () {
                 setState(() {
-                  _currentFilters = _currentFilters.copyWith(isAvailable: value);
+                  _currentFilters = _currentFilters.copyWith(isAvailable: null);
                 });
               },
             ),
-            RadioListTile<bool?>(
+            ListTile(
               title: const Text('Только доступные'),
-              value: true,
-              groupValue: _currentFilters.isAvailable,
-              onChanged: (value) {
+              leading: Radio<bool?>(
+                value: true,
+                groupValue: _currentFilters.isAvailable,
+                onChanged: (value) {
+                  setState(() {
+                    _currentFilters = _currentFilters.copyWith(isAvailable: value);
+                  });
+                },
+              ),
+              onTap: () {
                 setState(() {
-                  _currentFilters = _currentFilters.copyWith(isAvailable: value);
+                  _currentFilters = _currentFilters.copyWith(isAvailable: true);
                 });
               },
             ),
@@ -341,23 +349,37 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
             });
           },
           children: [
-            RadioListTile<bool>(
+            ListTile(
               title: const Text('По возрастанию'),
-              value: true,
-              groupValue: _currentFilters.sortAscending,
-              onChanged: (value) {
+              leading: Radio<bool>(
+                value: true,
+                groupValue: _currentFilters.sortAscending,
+                onChanged: (value) {
+                  setState(() {
+                    _currentFilters = _currentFilters.copyWith(sortAscending: value);
+                  });
+                },
+              ),
+              onTap: () {
                 setState(() {
-                  _currentFilters = _currentFilters.copyWith(sortAscending: value);
+                  _currentFilters = _currentFilters.copyWith(sortAscending: true);
                 });
               },
             ),
-            RadioListTile<bool>(
+            ListTile(
               title: const Text('По убыванию'),
-              value: false,
-              groupValue: _currentFilters.sortAscending,
-              onChanged: (value) {
+              leading: Radio<bool>(
+                value: false,
+                groupValue: _currentFilters.sortAscending,
+                onChanged: (value) {
+                  setState(() {
+                    _currentFilters = _currentFilters.copyWith(sortAscending: value);
+                  });
+                },
+              ),
+              onTap: () {
                 setState(() {
-                  _currentFilters = _currentFilters.copyWith(sortAscending: value);
+                  _currentFilters = _currentFilters.copyWith(sortAscending: false);
                 });
               },
             ),

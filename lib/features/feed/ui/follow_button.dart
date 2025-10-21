@@ -172,7 +172,7 @@ class PostFollowButton extends ConsumerWidget {
 
     return currentUser.when(
       data: (user) {
-        if (user == null || user.id == authorId) {
+        if (user == null || user.uid == authorId) {
           return const SizedBox.shrink();
         }
 

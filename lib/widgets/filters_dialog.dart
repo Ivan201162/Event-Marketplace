@@ -181,16 +181,23 @@ class _FiltersDialogState extends State<FiltersDialog> {
                       child: Column(
                         children: _ratings.map((rating) {
                           final isSelected = _selectedRating == rating;
-                          return RadioListTile<String>(
+                          return ListTile(
                             title: Text(rating),
-                            value: rating,
-                            groupValue: _selectedRating,
-                            onChanged: (value) {
+                            leading: Radio<String>(
+                              value: rating,
+                              groupValue: _selectedRating,
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedRating = value;
+                                });
+                              },
+                              activeColor: theme.primaryColor,
+                            ),
+                            onTap: () {
                               setState(() {
-                                _selectedRating = value;
+                                _selectedRating = rating;
                               });
                             },
-                            activeColor: theme.primaryColor,
                             contentPadding: EdgeInsets.zero,
                           );
                         }).toList(),
@@ -206,16 +213,22 @@ class _FiltersDialogState extends State<FiltersDialog> {
                       child: Column(
                         children: _types.map((type) {
                           final isSelected = _selectedType == type;
-                          return RadioListTile<String>(
+                          return ListTile(
                             title: Text(type),
-                            value: type,
-                            groupValue: _selectedType,
-                            onChanged: (value) {
+                            leading: Radio<String>(
+                              value: type,
+                              groupValue: _selectedType,
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedType = value;
+                                });
+                              },
+                            ),
+                            onTap: () {
                               setState(() {
-                                _selectedType = value;
+                                _selectedType = type;
                               });
                             },
-                            activeColor: theme.primaryColor,
                             contentPadding: EdgeInsets.zero,
                           );
                         }).toList(),

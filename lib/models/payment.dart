@@ -8,7 +8,7 @@ enum PaymentMethod {
   digitalWallet,
   cryptocurrency,
   cash,
-  bankTransfer,
+  sbp,
 }
 
 /// Payment status enum
@@ -37,6 +37,14 @@ enum PaymentType {
 
 /// Tax status enum
 enum TaxStatus {
+  none,
+  individual,
+  individualEntrepreneur,
+  selfEmployed,
+  legalEntity,
+  professionalIncome,
+  simplifiedTax,
+  vat,
   notCalculated,
   calculated,
   paid,
@@ -68,6 +76,17 @@ class Payment extends Equatable {
   final String? methodDisplayName;
   final String? taxStatusDisplayName;
   final bool isCompleted;
+  final double? netAmount;
+  final DateTime? completedAt;
+  final bool isPending;
+  final String? failureReason;
+  final String? duration;
+  final String? formattedDuration;
+  final bool isFailed;
+  final String? commission;
+  final String? formattedCommission;
+  final String? formattedNetAmount;
+  final bool isSuccessful;
 
   const Payment({
     required this.id,
@@ -93,6 +112,17 @@ class Payment extends Equatable {
     this.methodDisplayName,
     this.taxStatusDisplayName,
     this.isCompleted = false,
+    this.netAmount,
+    this.completedAt,
+    this.isPending = false,
+    this.failureReason,
+    this.duration,
+    this.formattedDuration,
+    this.isFailed = false,
+    this.commission,
+    this.formattedCommission,
+    this.formattedNetAmount,
+    this.isSuccessful = false,
   });
 
   /// Create Payment from Firestore document
@@ -136,6 +166,17 @@ class Payment extends Equatable {
       methodDisplayName: data['methodDisplayName'],
       taxStatusDisplayName: data['taxStatusDisplayName'],
       isCompleted: data['isCompleted'] ?? false,
+      netAmount: data['netAmount']?.toDouble(),
+      completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
+      isPending: data['isPending'] ?? false,
+      failureReason: data['failureReason'],
+      duration: data['duration'],
+      formattedDuration: data['formattedDuration'],
+      isFailed: data['isFailed'] ?? false,
+      commission: data['commission'],
+      formattedCommission: data['formattedCommission'],
+      formattedNetAmount: data['formattedNetAmount'],
+      isSuccessful: data['isSuccessful'] ?? false,
     );
   }
 
@@ -164,6 +205,17 @@ class Payment extends Equatable {
       'methodDisplayName': methodDisplayName,
       'taxStatusDisplayName': taxStatusDisplayName,
       'isCompleted': isCompleted,
+      'netAmount': netAmount,
+      'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+      'isPending': isPending,
+      'failureReason': failureReason,
+      'duration': duration,
+      'formattedDuration': formattedDuration,
+      'isFailed': isFailed,
+      'commission': commission,
+      'formattedCommission': formattedCommission,
+      'formattedNetAmount': formattedNetAmount,
+      'isSuccessful': isSuccessful,
     };
   }
 
@@ -192,6 +244,17 @@ class Payment extends Equatable {
     String? methodDisplayName,
     String? taxStatusDisplayName,
     bool? isCompleted,
+    double? netAmount,
+    DateTime? completedAt,
+    bool? isPending,
+    String? failureReason,
+    String? duration,
+    String? formattedDuration,
+    bool? isFailed,
+    String? commission,
+    String? formattedCommission,
+    String? formattedNetAmount,
+    bool? isSuccessful,
   }) {
     return Payment(
       id: id ?? this.id,
@@ -217,6 +280,17 @@ class Payment extends Equatable {
       methodDisplayName: methodDisplayName ?? this.methodDisplayName,
       taxStatusDisplayName: taxStatusDisplayName ?? this.taxStatusDisplayName,
       isCompleted: isCompleted ?? this.isCompleted,
+      netAmount: netAmount ?? this.netAmount,
+      completedAt: completedAt ?? this.completedAt,
+      isPending: isPending ?? this.isPending,
+      failureReason: failureReason ?? this.failureReason,
+      duration: duration ?? this.duration,
+      formattedDuration: formattedDuration ?? this.formattedDuration,
+      isFailed: isFailed ?? this.isFailed,
+      commission: commission ?? this.commission,
+      formattedCommission: formattedCommission ?? this.formattedCommission,
+      formattedNetAmount: formattedNetAmount ?? this.formattedNetAmount,
+      isSuccessful: isSuccessful ?? this.isSuccessful,
     );
   }
 
@@ -303,6 +377,30 @@ class Payment extends Equatable {
     }
   }
 
+  /// Get display name for payment type
+  String get displayName {
+    switch (type) {
+      case PaymentType.booking:
+        return 'Бронирование';
+      case PaymentType.subscription:
+        return 'Подписка';
+      case PaymentType.deposit:
+        return 'Депозит';
+      case PaymentType.prepayment:
+        return 'Предоплата';
+      case PaymentType.finalPayment:
+        return 'Финальный платеж';
+      case PaymentType.fullPayment:
+        return 'Полная оплата';
+      case PaymentType.penalty:
+        return 'Штраф';
+      case PaymentType.bonus:
+        return 'Бонус';
+      case PaymentType.hold:
+        return 'Блокировка';
+    }
+  }
+
   @override
   List<Object?> get props => [
         id,
@@ -328,6 +426,17 @@ class Payment extends Equatable {
         methodDisplayName,
         taxStatusDisplayName,
         isCompleted,
+        netAmount,
+        completedAt,
+        isPending,
+        failureReason,
+        duration,
+        formattedDuration,
+        isFailed,
+        commission,
+        formattedCommission,
+        formattedNetAmount,
+        isSuccessful,
       ];
 
   @override

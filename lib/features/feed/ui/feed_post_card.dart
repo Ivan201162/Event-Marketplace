@@ -29,7 +29,7 @@ class FeedPostCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUser = ref.watch(currentUserProvider);
     final isLiked = currentUser.when(
-      data: (user) => user != null && post.likedBy.contains(user.id),
+      data: (user) => user != null && post.likedBy.contains(user.uid),
       loading: () => false,
       error: (_, __) => false,
     );

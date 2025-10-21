@@ -1,103 +1,140 @@
-class FeedComment {
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
+
+/// Feed comment model
+class FeedComment extends Equatable {
   final String id;
   final String postId;
-  final String userId;
-  final String userName;
-  final String? userAvatar;
+  final String authorId;
+  final String authorName;
+  final String? authorAvatarUrl;
   final String content;
   final DateTime createdAt;
-  final DateTime? updatedAt;
-  final List<String> likes;
-  final List<FeedComment> replies;
+  final DateTime updatedAt;
+  final int likesCount;
+  final List<String> likedBy;
   final String? parentCommentId;
-  final bool isEdited;
-  final Map<String, dynamic>? metadata;
+  final List<String> replies;
 
   const FeedComment({
     required this.id,
     required this.postId,
-    required this.userId,
-    required this.userName,
-    this.userAvatar,
+    required this.authorId,
+    required this.authorName,
+    this.authorAvatarUrl,
     required this.content,
     required this.createdAt,
-    this.updatedAt,
-    this.likes = const [],
-    this.replies = const [],
+    required this.updatedAt,
+    this.likesCount = 0,
+    this.likedBy = const [],
     this.parentCommentId,
-    this.isEdited = false,
-    this.metadata,
+    this.replies = const [],
   });
 
-  factory FeedComment.fromMap(Map<String, dynamic> map) {
+  /// Create FeedComment from Firestore document
+  factory FeedComment.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
     return FeedComment(
-      id: map['id']?.toString() ?? '',
-      postId: map['postId']?.toString() ?? '',
-      userId: map['userId']?.toString() ?? '',
-      userName: map['userName']?.toString() ?? '',
-      userAvatar: map['userAvatar']?.toString(),
-      content: map['content']?.toString() ?? '',
-      createdAt: DateTime.tryParse(map['createdAt']?.toString() ?? '') ?? DateTime.now(),
-      updatedAt:
-          map['updatedAt'] != null ? DateTime.tryParse(map['updatedAt']?.toString() ?? '') : null,
-      likes: (map['likes'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-      replies: (map['replies'] as List<dynamic>?)
-              ?.map((e) => FeedComment.fromMap(e as Map<String, dynamic>))
-              .toList() ??
-          [],
-      parentCommentId: map['parentCommentId']?.toString(),
-      isEdited: map['isEdited'] as bool? ?? false,
-      metadata: map['metadata'] as Map<String, dynamic>?,
+      id: doc.id,
+      postId: data['postId'] ?? '',
+      authorId: data['authorId'] ?? '',
+      authorName: data['authorName'] ?? '',
+      authorAvatarUrl: data['authorAvatarUrl'],
+      content: data['content'] ?? '',
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      likesCount: data['likesCount'] ?? 0,
+      likedBy: List<String>.from(data['likedBy'] ?? []),
+      parentCommentId: data['parentCommentId'],
+      replies: List<String>.from(data['replies'] ?? []),
     );
   }
 
-  Map<String, dynamic> toMap() {
+  /// Convert FeedComment to Firestore document
+  Map<String, dynamic> toFirestore() {
     return {
-      'id': id,
       'postId': postId,
-      'userId': userId,
-      'userName': userName,
-      'userAvatar': userAvatar,
+      'authorId': authorId,
+      'authorName': authorName,
+      'authorAvatarUrl': authorAvatarUrl,
       'content': content,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt?.toIso8601String(),
-      'likes': likes,
-      'replies': replies.map((e) => e.toMap()).toList(),
+      'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': Timestamp.fromDate(updatedAt),
+      'likesCount': likesCount,
+      'likedBy': likedBy,
       'parentCommentId': parentCommentId,
-      'isEdited': isEdited,
-      'metadata': metadata,
+      'replies': replies,
     };
   }
 
+  /// Create a copy with updated fields
   FeedComment copyWith({
     String? id,
     String? postId,
-    String? userId,
-    String? userName,
-    String? userAvatar,
+    String? authorId,
+    String? authorName,
+    String? authorAvatarUrl,
     String? content,
     DateTime? createdAt,
     DateTime? updatedAt,
-    List<String>? likes,
-    List<FeedComment>? replies,
+    int? likesCount,
+    List<String>? likedBy,
     String? parentCommentId,
-    bool? isEdited,
-    Map<String, dynamic>? metadata,
+    List<String>? replies,
   }) {
     return FeedComment(
       id: id ?? this.id,
       postId: postId ?? this.postId,
-      userId: userId ?? this.userId,
-      userName: userName ?? this.userName,
-      userAvatar: userAvatar ?? this.userAvatar,
+      authorId: authorId ?? this.authorId,
+      authorName: authorName ?? this.authorName,
+      authorAvatarUrl: authorAvatarUrl ?? this.authorAvatarUrl,
       content: content ?? this.content,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      likes: likes ?? this.likes,
-      replies: replies ?? this.replies,
+      likesCount: likesCount ?? this.likesCount,
+      likedBy: likedBy ?? this.likedBy,
       parentCommentId: parentCommentId ?? this.parentCommentId,
-      isEdited: isEdited ?? this.isEdited,
-      metadata: metadata ?? this.metadata,
+      replies: replies ?? this.replies,
     );
+  }
+
+  /// Check if comment is liked by user
+  bool isLikedBy(String userId) => likedBy.contains(userId);
+
+  /// Get formatted time ago string
+  String get timeAgo {
+    final now = DateTime.now();
+    final difference = now.difference(createdAt);
+
+    if (difference.inDays > 0) {
+      return '${difference.inDays}д назад';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours}ч назад';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes}м назад';
+    } else {
+      return 'только что';
+    }
+  }
+
+  @override
+  List<Object?> get props => [
+        id,
+        postId,
+        authorId,
+        authorName,
+        authorAvatarUrl,
+        content,
+        createdAt,
+        updatedAt,
+        likesCount,
+        likedBy,
+        parentCommentId,
+        replies,
+      ];
+
+  @override
+  String toString() {
+    return 'FeedComment(id: $id, postId: $postId, authorId: $authorId, content: ${content.substring(0, content.length > 50 ? 50 : content.length)}...)';
   }
 }

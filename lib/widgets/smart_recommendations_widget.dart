@@ -377,7 +377,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                     ),
                     const Spacer(),
                     Text(
-                      '${specialist.price.toInt()} ₽',
+                      '${specialist.price?.toInt() ?? 0} ₽',
                       style: theme.textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: theme.colorScheme.primary,

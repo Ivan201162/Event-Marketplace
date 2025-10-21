@@ -26,6 +26,11 @@ class Post extends Equatable {
   final bool isPinned;
   final String? location;
   final List<String> mediaUrls;
+  final String? specialistPhotoUrl;
+  final String? specialistName;
+  final String? content;
+  final int shares;
+  final List<String> comments;
 
   const Post({
     required this.id,
@@ -44,6 +49,11 @@ class Post extends Equatable {
     this.isPinned = false,
     this.location,
     this.mediaUrls = const [],
+    this.specialistPhotoUrl,
+    this.specialistName,
+    this.content,
+    this.shares = 0,
+    this.comments = const [],
   });
 
   /// Create Post from Firestore document
@@ -71,6 +81,11 @@ class Post extends Equatable {
       isPinned: data['isPinned'] ?? false,
       location: data['location'],
       mediaUrls: List<String>.from(data['mediaUrls'] ?? []),
+      specialistPhotoUrl: data['specialistPhotoUrl'],
+      specialistName: data['specialistName'],
+      content: data['content'],
+      shares: data['shares'] ?? 0,
+      comments: List<String>.from(data['comments'] ?? []),
     );
   }
 
@@ -92,6 +107,11 @@ class Post extends Equatable {
       'isPinned': isPinned,
       'location': location,
       'mediaUrls': mediaUrls,
+      'specialistPhotoUrl': specialistPhotoUrl,
+      'specialistName': specialistName,
+      'content': content,
+      'shares': shares,
+      'comments': comments,
     };
   }
 
@@ -113,6 +133,11 @@ class Post extends Equatable {
     bool? isPinned,
     String? location,
     List<String>? mediaUrls,
+    String? specialistPhotoUrl,
+    String? specialistName,
+    String? content,
+    int? shares,
+    List<String>? comments,
   }) {
     return Post(
       id: id ?? this.id,
@@ -131,6 +156,11 @@ class Post extends Equatable {
       isPinned: isPinned ?? this.isPinned,
       location: location ?? this.location,
       mediaUrls: mediaUrls ?? this.mediaUrls,
+      specialistPhotoUrl: specialistPhotoUrl ?? this.specialistPhotoUrl,
+      specialistName: specialistName ?? this.specialistName,
+      content: content ?? this.content,
+      shares: shares ?? this.shares,
+      comments: comments ?? this.comments,
     );
   }
 
@@ -139,6 +169,12 @@ class Post extends Equatable {
 
   /// Check if post is liked by user
   bool isLikedBy(String userId) => likedBy.contains(userId);
+
+  /// Get likes count
+  int get likes => likesCount;
+
+  /// Get comments count
+  int get comments => commentsCount;
 
   /// Get formatted time ago string
   String get timeAgo {
@@ -187,6 +223,11 @@ class Post extends Equatable {
         isPinned,
         location,
         mediaUrls,
+        specialistPhotoUrl,
+        specialistName,
+        content,
+        shares,
+        comments,
       ];
 
   @override

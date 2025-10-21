@@ -1,17 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 
 /// Модель профиля специалиста
-class SpecialistProfile {
+class SpecialistProfile extends Equatable {
   final String id;
   final String userId;
   final String name;
+  final String email;
+  final String phone;
+  final String city;
+  final String category;
   final String description;
-  final List<String> categories;
-  final List<String> skills;
-  final double rating;
-  final int reviewCount;
-  final Map<String, dynamic> pricing;
-  final List<String> portfolioImages;
+  final String experience;
+  final double hourlyRate;
+  final List<String> services;
+  final List<String> portfolio;
+  final bool isAvailable;
   final String? avatarUrl;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -20,83 +24,82 @@ class SpecialistProfile {
     required this.id,
     required this.userId,
     required this.name,
+    required this.email,
+    required this.phone,
+    required this.city,
+    required this.category,
     required this.description,
-    required this.categories,
-    required this.skills,
-    required this.rating,
-    required this.reviewCount,
-    required this.pricing,
-    required this.portfolioImages,
+    required this.experience,
+    required this.hourlyRate,
+    required this.services,
+    required this.portfolio,
+    required this.isAvailable,
     this.avatarUrl,
     required this.createdAt,
     required this.updatedAt,
   });
 
-  factory SpecialistProfile.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+  /// Создать из документа Firestore
+  factory SpecialistProfile.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data()! as Map<String, dynamic>;
     return SpecialistProfile(
       id: doc.id,
       userId: data['userId'] ?? '',
       name: data['name'] ?? '',
+      email: data['email'] ?? '',
+      phone: data['phone'] ?? '',
+      city: data['city'] ?? '',
+      category: data['category'] ?? '',
       description: data['description'] ?? '',
-      categories: List<String>.from(data['categories'] ?? []),
-      skills: List<String>.from(data['skills'] ?? []),
-      rating: (data['rating'] ?? 0.0).toDouble(),
-      reviewCount: data['reviewCount'] ?? 0,
-      pricing: Map<String, dynamic>.from(data['pricing'] ?? {}),
-      portfolioImages: List<String>.from(data['portfolioImages'] ?? []),
+      experience: data['experience'] ?? '',
+      hourlyRate: (data['hourlyRate'] ?? 0.0).toDouble(),
+      services: List<String>.from(data['services'] ?? []),
+      portfolio: List<String>.from(data['portfolio'] ?? []),
+      isAvailable: data['isAvailable'] ?? true,
       avatarUrl: data['avatarUrl'],
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
     );
   }
 
-  Map<String, dynamic> toFirestore() {
+  /// Преобразовать в Map для Firestore
+  Map<String, dynamic> toMap() {
     return {
       'userId': userId,
       'name': name,
+      'email': email,
+      'phone': phone,
+      'city': city,
+      'category': category,
       'description': description,
-      'categories': categories,
-      'skills': skills,
-      'rating': rating,
-      'reviewCount': reviewCount,
-      'pricing': pricing,
-      'portfolioImages': portfolioImages,
+      'experience': experience,
+      'hourlyRate': hourlyRate,
+      'services': services,
+      'portfolio': portfolio,
+      'isAvailable': isAvailable,
       'avatarUrl': avatarUrl,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
     };
   }
 
-  SpecialistProfile copyWith({
-    String? id,
-    String? userId,
-    String? name,
-    String? description,
-    List<String>? categories,
-    List<String>? skills,
-    double? rating,
-    int? reviewCount,
-    Map<String, dynamic>? pricing,
-    List<String>? portfolioImages,
-    String? avatarUrl,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  }) {
-    return SpecialistProfile(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      categories: categories ?? this.categories,
-      skills: skills ?? this.skills,
-      rating: rating ?? this.rating,
-      reviewCount: reviewCount ?? this.reviewCount,
-      pricing: pricing ?? this.pricing,
-      portfolioImages: portfolioImages ?? this.portfolioImages,
-      avatarUrl: avatarUrl ?? this.avatarUrl,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
+  @override
+  List<Object?> get props => [
+        id,
+        userId,
+        name,
+        email,
+        phone,
+        city,
+        category,
+        description,
+        experience,
+        hourlyRate,
+        services,
+        portfolio,
+        isAvailable,
+        avatarUrl,
+        createdAt,
+        updatedAt,
+      ];
 }

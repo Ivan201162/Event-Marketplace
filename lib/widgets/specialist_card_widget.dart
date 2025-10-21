@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/specialist.dart';
+import '../models/common_types.dart';
 
 /// Виджет карточки специалиста
 class SpecialistCardWidget extends StatelessWidget {
@@ -151,11 +152,11 @@ class SpecialistCardWidget extends StatelessWidget {
                     ],
 
                     // Опыт
-                    if (specialist.yearsOfExperience > 0) ...[
+                    if ((specialist.yearsOfExperience ?? 0) > 0) ...[
                       Icon(Icons.work, size: 14, color: Colors.grey.shade600),
                       const SizedBox(width: 4),
                       Text(
-                        '${specialist.yearsOfExperience} лет',
+                        '${specialist.yearsOfExperience ?? 0} лет',
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey.shade600,
@@ -172,7 +173,7 @@ class SpecialistCardWidget extends StatelessWidget {
                   children: [
                     // Цена
                     Text(
-                      '${specialist.price.toInt()}₽/час',
+                      '${specialist.price?.toInt() ?? 0}₽/час',
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,

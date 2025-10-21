@@ -95,14 +95,21 @@ class _ProfileEditDialogState extends State<ProfileEditDialog> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: UserType.values.map((type) {
-        return RadioListTile<UserType>(
+        return ListTile(
           title: Text(type.displayName),
           subtitle: Text(type.description),
-          value: type,
-          groupValue: _selectedUserType,
-          onChanged: (value) {
+          leading: Radio<UserType>(
+            value: type,
+            groupValue: _selectedUserType,
+            onChanged: (value) {
+              setState(() {
+                _selectedUserType = value;
+              });
+            },
+          ),
+          onTap: () {
             setState(() {
-              _selectedUserType = value;
+              _selectedUserType = type;
             });
           },
         );

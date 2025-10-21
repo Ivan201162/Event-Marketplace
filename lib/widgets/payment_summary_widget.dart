@@ -85,15 +85,15 @@ class PaymentSummaryWidget extends StatelessWidget {
                     const SizedBox(height: 8),
                     _buildAmountRow(
                       context,
-                      'Налог (${(payment.taxAmount / payment.amount * 100).toStringAsFixed(1)}%)',
-                      payment.taxAmount,
+                      'Налог (${(payment.taxAmount! / payment.amount * 100).toStringAsFixed(1)}%)',
+                      payment.taxAmount!,
                       isTax: true,
                     ),
                     const SizedBox(height: 8),
                     _buildAmountRow(
                       context,
                       'К получению',
-                      payment.netAmount,
+                      payment.netAmount ?? 0.0,
                       isNet: true,
                     ),
                   ],
@@ -218,6 +218,14 @@ class PaymentSummaryWidget extends StatelessWidget {
         return 'УСН рассчитывается с суммы к получению';
       case TaxStatus.vat:
         return 'НДС рассчитывается с суммы к получению';
+      case TaxStatus.notCalculated:
+        return 'Налоги не рассчитаны';
+      case TaxStatus.calculated:
+        return 'Налоги рассчитаны';
+      case TaxStatus.paid:
+        return 'Налоги уплачены';
+      case TaxStatus.exempt:
+        return 'Освобождение от налогов';
     }
   }
 }

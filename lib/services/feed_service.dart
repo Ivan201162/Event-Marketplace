@@ -1,216 +1,120 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/feed_post.dart';
 
-/// Сервис для работы с лентой новостей
+import '../models/post.dart';
+import '../models/feed_comment.dart';
+
+/// Feed service for managing posts and comments
 class FeedService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// Получить посты ленты
-  Stream<List<FeedPost>> getFeedPosts() =>
-      _firestore.collection('feed_posts').orderBy('createdAt', descending: true).snapshots().map(
-            (snapshot) => snapshot.docs.map(FeedPost.fromDocument).toList(),
-          );
-
-  /// Получить комментарии поста
-  Stream<List<FeedComment>> getPostComments(String postId) => _firestore
-      .collection('feed_posts')
-      .doc(postId)
-      .collection('comments')
-      .orderBy('createdAt', descending: true)
-      .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map(FeedComment.fromDocument).toList(),
-      );
-
-  /// Получить лайки поста
-  Stream<List<String>> getPostLikes(String postId) =>
-      _firestore.collection('feed_posts').doc(postId).snapshots().map(
-            (snapshot) => List<String>.from(snapshot.data()?['likedBy'] ?? []),
-          );
-
-  /// Создать пост
-  Future<String> createPost(FeedPost post) async {
-    try {
-      final docRef = await _firestore.collection('feed_posts').add(post.toMap());
-      return docRef.id;
-    } catch (e) {
-      throw Exception('Ошибка создания поста: $e');
-    }
+  /// Get posts stream
+  Stream<List<Post>> getPostsStream() {
+    return _firestore
+        .collection('posts')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList());
   }
 
-  /// Обновить пост
-  Future<void> updatePost(FeedPost post) async {
-    try {
-      await _firestore.collection('feed_posts').doc(post.id).update(post.toMap());
-    } catch (e) {
-      throw Exception('Ошибка обновления поста: $e');
-    }
+  /// Get post comments stream
+  Stream<List<FeedComment>> getPostComments(String postId) {
+    return _firestore
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .orderBy('createdAt', descending: false)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => FeedComment.fromFirestore(doc)).toList());
   }
 
-  /// Удалить пост
+  /// Create a new post
+  Future<String> createPost(Post post) async {
+    final docRef = await _firestore.collection('posts').add(post.toFirestore());
+    return docRef.id;
+  }
+
+  /// Update a post
+  Future<void> updatePost(String postId, Post post) async {
+    await _firestore.collection('posts').doc(postId).update(post.toFirestore());
+  }
+
+  /// Delete a post
   Future<void> deletePost(String postId) async {
-    try {
-      await _firestore.collection('feed_posts').doc(postId).delete();
-    } catch (e) {
-      throw Exception('Ошибка удаления поста: $e');
-    }
+    await _firestore.collection('posts').doc(postId).delete();
   }
 
-  /// Лайкнуть/убрать лайк с поста
+  /// Like/unlike a post
   Future<void> toggleLike(String postId, String userId) async {
-    try {
-      final postRef = _firestore.collection('feed_posts').doc(postId);
-      final postDoc = await postRef.get();
+    final postRef = _firestore.collection('posts').doc(postId);
 
-      if (!postDoc.exists) {
-        throw Exception('Пост не найден');
-      }
+    await _firestore.runTransaction((transaction) async {
+      final postDoc = await transaction.get(postRef);
+      if (!postDoc.exists) return;
 
-      final postData = postDoc.data();
-      final likedBy = List<String>.from(postData?['likedBy'] ?? []);
-      final isLiked = likedBy.contains(userId);
+      final post = Post.fromFirestore(postDoc);
+      final likedBy = List<String>.from(post.likedBy);
 
-      if (isLiked) {
+      if (likedBy.contains(userId)) {
         likedBy.remove(userId);
       } else {
         likedBy.add(userId);
       }
 
-      await postRef.update({
+      transaction.update(postRef, {
         'likedBy': likedBy,
         'likesCount': likedBy.length,
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
-    } catch (e) {
-      throw Exception('Ошибка изменения лайка: $e');
-    }
+    });
   }
 
-  /// Добавить комментарий
-  Future<String> addComment(FeedComment comment) async {
-    try {
-      final docRef = await _firestore
-          .collection('feed_posts')
-          .doc(comment.postId)
-          .collection('comments')
-          .add(comment.toMap());
+  /// Add a comment to a post
+  Future<String> addComment(String postId, FeedComment comment) async {
+    final docRef = await _firestore
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .add(comment.toFirestore());
 
-      // Обновить количество комментариев в посте
-      await _firestore.collection('feed_posts').doc(comment.postId).update({
-        'commentsCount': FieldValue.increment(1),
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      });
+    // Update post comments count
+    await _firestore.collection('posts').doc(postId).update({
+      'commentsCount': FieldValue.increment(1),
+    });
 
-      return docRef.id;
-    } catch (e) {
-      throw Exception('Ошибка добавления комментария: $e');
-    }
+    return docRef.id;
   }
 
-  /// Удалить комментарий
+  /// Like/unlike a comment
+  Future<void> toggleCommentLike(String postId, String commentId, String userId) async {
+    final commentRef =
+        _firestore.collection('posts').doc(postId).collection('comments').doc(commentId);
+
+    await _firestore.runTransaction((transaction) async {
+      final commentDoc = await transaction.get(commentRef);
+      if (!commentDoc.exists) return;
+
+      final comment = FeedComment.fromFirestore(commentDoc);
+      final likedBy = List<String>.from(comment.likedBy);
+
+      if (likedBy.contains(userId)) {
+        likedBy.remove(userId);
+      } else {
+        likedBy.add(userId);
+      }
+
+      transaction.update(commentRef, {
+        'likedBy': likedBy,
+        'likesCount': likedBy.length,
+      });
+    });
+  }
+
+  /// Delete a comment
   Future<void> deleteComment(String postId, String commentId) async {
-    try {
-      await _firestore
-          .collection('feed_posts')
-          .doc(postId)
-          .collection('comments')
-          .doc(commentId)
-          .delete();
+    await _firestore.collection('posts').doc(postId).collection('comments').doc(commentId).delete();
 
-      // Обновить количество комментариев в посте
-      await _firestore.collection('feed_posts').doc(postId).update({
-        'commentsCount': FieldValue.increment(-1),
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      });
-    } catch (e) {
-      throw Exception('Ошибка удаления комментария: $e');
-    }
+    // Update post comments count
+    await _firestore.collection('posts').doc(postId).update({
+      'commentsCount': FieldValue.increment(-1),
+    });
   }
-
-  /// Лайкнуть/убрать лайк с комментария
-  Future<void> toggleCommentLike(
-    String postId,
-    String commentId,
-    String userId,
-  ) async {
-    try {
-      final commentRef =
-          _firestore.collection('feed_posts').doc(postId).collection('comments').doc(commentId);
-
-      final commentDoc = await commentRef.get();
-
-      if (!commentDoc.exists) {
-        throw Exception('Комментарий не найден');
-      }
-
-      final commentData = commentDoc.data();
-      final likedBy = List<String>.from(commentData?['likedBy'] ?? []);
-      final isLiked = likedBy.contains(userId);
-
-      if (isLiked) {
-        likedBy.remove(userId);
-      } else {
-        likedBy.add(userId);
-      }
-
-      await commentRef.update({
-        'likedBy': likedBy,
-        'likesCount': likedBy.length,
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      });
-    } catch (e) {
-      throw Exception('Ошибка изменения лайка комментария: $e');
-    }
-  }
-
-  /// Лайкнуть пост
-  Future<void> likePost(String postId, String userId) async {
-    try {
-      await _firestore.collection('feed_posts').doc(postId).collection('likes').doc(userId).set({
-        'userId': userId,
-        'createdAt': FieldValue.serverTimestamp(),
-      });
-    } catch (e) {
-      throw Exception('Ошибка лайка поста: $e');
-    }
-  }
-
-  /// Лайкнуть комментарий
-  Future<void> likeComment(String commentId, String userId) async {
-    try {
-      await _firestore
-          .collection('feed_comments')
-          .doc(commentId)
-          .collection('likes')
-          .doc(userId)
-          .set({
-        'userId': userId,
-        'createdAt': FieldValue.serverTimestamp(),
-      });
-    } catch (e) {
-      throw Exception('Ошибка лайка комментария: $e');
-    }
-  }
-
-  /// Поделиться постом
-  Future<void> sharePost(String postId, String userId) async {
-    try {
-      await _firestore.collection('feed_posts').doc(postId).collection('shares').doc(userId).set({
-        'userId': userId,
-        'createdAt': FieldValue.serverTimestamp(),
-      });
-    } catch (e) {
-      throw Exception('Ошибка шаринга поста: $e');
-    }
-  }
-
-  /// Получить ленту специалиста
-  Stream<List<FeedPost>> getSpecialistFeed(String specialistId) => _firestore
-      .collection('feed_posts')
-      .where('authorId', isEqualTo: specialistId)
-      .orderBy('createdAt', descending: true)
-      .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map(FeedPost.fromDocument).toList(),
-      );
 }

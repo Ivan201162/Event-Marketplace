@@ -1,64 +1,83 @@
+import 'package:equatable/equatable.dart';
+
 /// Форма профиля специалиста
-class SpecialistProfileForm {
+class SpecialistProfileForm extends Equatable {
+  final String id;
   final String name;
+  final String email;
+  final String phone;
+  final String city;
+  final String category;
   final String description;
-  final List<String> categories;
-  final List<String> skills;
-  final Map<String, dynamic> pricing;
-  final List<String> portfolioImages;
+  final String experience;
+  final double hourlyRate;
+  final List<String> services;
+  final List<String> portfolio;
+  final bool isAvailable;
   final String? avatarUrl;
 
   const SpecialistProfileForm({
+    required this.id,
     required this.name,
+    required this.email,
+    required this.phone,
+    required this.city,
+    required this.category,
     required this.description,
-    required this.categories,
-    required this.skills,
-    required this.pricing,
-    required this.portfolioImages,
+    required this.experience,
+    required this.hourlyRate,
+    required this.services,
+    required this.portfolio,
+    required this.isAvailable,
     this.avatarUrl,
   });
 
   SpecialistProfileForm copyWith({
+    String? id,
     String? name,
+    String? email,
+    String? phone,
+    String? city,
+    String? category,
     String? description,
-    List<String>? categories,
-    List<String>? skills,
-    Map<String, dynamic>? pricing,
-    List<String>? portfolioImages,
+    String? experience,
+    double? hourlyRate,
+    List<String>? services,
+    List<String>? portfolio,
+    bool? isAvailable,
     String? avatarUrl,
   }) {
     return SpecialistProfileForm(
+      id: id ?? this.id,
       name: name ?? this.name,
+      email: email ?? this.email,
+      phone: phone ?? this.phone,
+      city: city ?? this.city,
+      category: category ?? this.category,
       description: description ?? this.description,
-      categories: categories ?? this.categories,
-      skills: skills ?? this.skills,
-      pricing: pricing ?? this.pricing,
-      portfolioImages: portfolioImages ?? this.portfolioImages,
+      experience: experience ?? this.experience,
+      hourlyRate: hourlyRate ?? this.hourlyRate,
+      services: services ?? this.services,
+      portfolio: portfolio ?? this.portfolio,
+      isAvailable: isAvailable ?? this.isAvailable,
       avatarUrl: avatarUrl ?? this.avatarUrl,
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'description': description,
-      'categories': categories,
-      'skills': skills,
-      'pricing': pricing,
-      'portfolioImages': portfolioImages,
-      'avatarUrl': avatarUrl,
-    };
-  }
-
-  factory SpecialistProfileForm.fromMap(Map<String, dynamic> map) {
-    return SpecialistProfileForm(
-      name: map['name'] ?? '',
-      description: map['description'] ?? '',
-      categories: List<String>.from(map['categories'] ?? []),
-      skills: List<String>.from(map['skills'] ?? []),
-      pricing: Map<String, dynamic>.from(map['pricing'] ?? {}),
-      portfolioImages: List<String>.from(map['portfolioImages'] ?? []),
-      avatarUrl: map['avatarUrl'],
-    );
-  }
+  @override
+  List<Object?> get props => [
+        id,
+        name,
+        email,
+        phone,
+        city,
+        category,
+        description,
+        experience,
+        hourlyRate,
+        services,
+        portfolio,
+        isAvailable,
+        avatarUrl,
+      ];
 }

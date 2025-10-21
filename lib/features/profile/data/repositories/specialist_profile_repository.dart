@@ -1,28 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 
 import '../models/specialist_profile.dart';
 
 /// Репозиторий для работы с профилями специалистов
 class SpecialistProfileRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final String _collection = 'specialist_profiles';
+  static const String _collection = 'specialist_profiles';
 
   /// Получить профиль специалиста по ID
-  Future<SpecialistProfile?> getProfile(String specialistId) async {
+  Future<SpecialistProfile?> getProfileById(String id) async {
     try {
-      final doc = await _firestore.collection(_collection).doc(specialistId).get();
-      if (doc.exists) {
-        return SpecialistProfile.fromFirestore(doc);
-      }
-      return null;
+      final doc = await _firestore.collection(_collection).doc(id).get();
+      if (!doc.exists) return null;
+      return SpecialistProfile.fromDocument(doc);
     } catch (e) {
-      debugPrint('Error getting specialist profile: $e');
-      return null;
+      throw Exception('Ошибка получения профиля: $e');
     }
   }
 
-  /// Получить профиль специалиста по ID пользователя
+  /// Получить профиль специалиста по userId
   Future<SpecialistProfile?> getProfileByUserId(String userId) async {
     try {
       final query = await _firestore
@@ -31,81 +27,80 @@ class SpecialistProfileRepository {
           .limit(1)
           .get();
 
-      if (query.docs.isNotEmpty) {
-        return SpecialistProfile.fromFirestore(query.docs.first);
-      }
-      return null;
+      if (query.docs.isEmpty) return null;
+      return SpecialistProfile.fromDocument(query.docs.first);
     } catch (e) {
-      debugPrint('Error getting specialist profile by user ID: $e');
-      return null;
+      throw Exception('Ошибка получения профиля: $e');
     }
   }
 
-  /// Создать профиль специалиста
-  Future<bool> createProfile(SpecialistProfile profile) async {
+  /// Создать новый профиль специалиста
+  Future<String> createProfile(SpecialistProfile profile) async {
     try {
-      await _firestore.collection(_collection).doc(profile.id).set(profile.toFirestore());
-      return true;
+      final docRef = await _firestore.collection(_collection).add(profile.toMap());
+      return docRef.id;
     } catch (e) {
-      debugPrint('Error creating specialist profile: $e');
-      return false;
+      throw Exception('Ошибка создания профиля: $e');
     }
   }
 
   /// Обновить профиль специалиста
-  Future<bool> updateProfile(String specialistId, Map<String, dynamic> updates) async {
+  Future<void> updateProfile(String id, Map<String, dynamic> updates) async {
     try {
-      updates['updatedAt'] = FieldValue.serverTimestamp();
-      await _firestore.collection(_collection).doc(specialistId).update(updates);
-      return true;
+      await _firestore.collection(_collection).doc(id).update(updates);
     } catch (e) {
-      debugPrint('Error updating specialist profile: $e');
-      return false;
+      throw Exception('Ошибка обновления профиля: $e');
     }
   }
 
   /// Удалить профиль специалиста
-  Future<bool> deleteProfile(String specialistId) async {
+  Future<void> deleteProfile(String id) async {
     try {
-      await _firestore.collection(_collection).doc(specialistId).delete();
-      return true;
+      await _firestore.collection(_collection).doc(id).delete();
     } catch (e) {
-      debugPrint('Error deleting specialist profile: $e');
-      return false;
+      throw Exception('Ошибка удаления профиля: $e');
     }
   }
 
-  /// Получить список профилей специалистов по категориям
-  Future<List<SpecialistProfile>> getProfilesByCategories(List<String> categories) async {
+  /// Получить все профили специалистов
+  Future<List<SpecialistProfile>> getAllProfiles() async {
     try {
-      final query = await _firestore
-          .collection(_collection)
-          .where('categories', arrayContainsAny: categories)
-          .orderBy('rating', descending: true)
-          .limit(50)
-          .get();
+      final query =
+          await _firestore.collection(_collection).orderBy('createdAt', descending: true).get();
 
-      return query.docs.map((doc) => SpecialistProfile.fromFirestore(doc)).toList();
+      return query.docs.map((doc) => SpecialistProfile.fromDocument(doc)).toList();
     } catch (e) {
-      debugPrint('Error getting profiles by categories: $e');
-      return [];
+      throw Exception('Ошибка получения профилей: $e');
     }
   }
 
-  /// Получить топ специалистов
-  Future<List<SpecialistProfile>> getTopSpecialists({int limit = 10}) async {
+  /// Получить профили по категории
+  Future<List<SpecialistProfile>> getProfilesByCategory(String category) async {
     try {
       final query = await _firestore
           .collection(_collection)
-          .orderBy('rating', descending: true)
-          .orderBy('reviewCount', descending: true)
-          .limit(limit)
+          .where('category', isEqualTo: category)
+          .orderBy('createdAt', descending: true)
           .get();
 
-      return query.docs.map((doc) => SpecialistProfile.fromFirestore(doc)).toList();
+      return query.docs.map((doc) => SpecialistProfile.fromDocument(doc)).toList();
     } catch (e) {
-      debugPrint('Error getting top specialists: $e');
-      return [];
+      throw Exception('Ошибка получения профилей по категории: $e');
+    }
+  }
+
+  /// Получить профили по городу
+  Future<List<SpecialistProfile>> getProfilesByCity(String city) async {
+    try {
+      final query = await _firestore
+          .collection(_collection)
+          .where('city', isEqualTo: city)
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      return query.docs.map((doc) => SpecialistProfile.fromDocument(doc)).toList();
+    } catch (e) {
+      throw Exception('Ошибка получения профилей по городу: $e');
     }
   }
 }

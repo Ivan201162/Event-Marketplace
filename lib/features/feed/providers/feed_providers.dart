@@ -75,7 +75,7 @@ final likePostProvider = FutureProvider.family<void, String>((ref, postId) async
   }
 
   try {
-    await feedService.likePost(postId, user.id);
+    await feedService.likePost(postId, user.uid);
   } catch (e) {
     ref.read(feedErrorProvider.notifier).state = e.toString();
     rethrow;
@@ -108,10 +108,10 @@ final createPostProvider = FutureProvider.family<void, Map<String, dynamic>>((re
 
   try {
     await feedService.createPostWithMedia(
-      userId: user.id,
-      userName: user.displayName ?? 'Пользователь',
-      userCity: 'Москва',
-      userAvatar: user.photoURL ?? '',
+      userId: user.uid,
+      userName: user.name,
+      userCity: user.city ?? 'Москва',
+      userAvatar: user.avatarUrl ?? '',
       description: params['description'] as String,
       taggedCategories: params['taggedCategories'] as List<String>,
       type: params['type'] as PostType,
@@ -134,7 +134,7 @@ final deletePostProvider = FutureProvider.family<void, String>((ref, postId) asy
   }
 
   try {
-    await feedService.deletePost(postId, user.id);
+    await feedService.deletePost(postId, user.uid);
   } catch (e) {
     ref.read(feedErrorProvider.notifier).state = e.toString();
     rethrow;
@@ -177,7 +177,7 @@ final uploadMediaProvider =
   }
 
   try {
-    return await feedService.uploadMedia(file, user.id, type);
+    return await feedService.uploadMedia(file, user.uid, type);
   } catch (e) {
     ref.read(feedErrorProvider.notifier).state = e.toString();
     rethrow;
@@ -194,7 +194,7 @@ final subscriptionProvider = StreamProvider<List<String>>((ref) {
       if (user == null) {
         return Stream.value([]);
       }
-      return subscriptionService.getUserFollowingStream(user.id);
+      return subscriptionService.getUserFollowingStream(user.uid);
     },
     loading: () => Stream.value([]),
     error: (_, __) => Stream.value([]),
@@ -212,7 +212,7 @@ final followUserProvider = FutureProvider.family<void, String>((ref, targetUserI
   }
 
   try {
-    await subscriptionService.followUser(user.id, targetUserId);
+    await subscriptionService.followUser(user.uid, targetUserId);
   } catch (e) {
     ref.read(feedErrorProvider.notifier).state = e.toString();
     rethrow;
@@ -230,7 +230,7 @@ final unfollowUserProvider = FutureProvider.family<void, String>((ref, targetUse
   }
 
   try {
-    await subscriptionService.unfollowUser(user.id, targetUserId);
+    await subscriptionService.unfollowUser(user.uid, targetUserId);
   } catch (e) {
     ref.read(feedErrorProvider.notifier).state = e.toString();
     rethrow;
@@ -248,7 +248,7 @@ final isFollowingProvider = FutureProvider.family<bool, String>((ref, targetUser
   }
 
   try {
-    return await subscriptionService.isFollowing(user.id, targetUserId);
+    return await subscriptionService.isFollowing(user.uid, targetUserId);
   } catch (e) {
     return false;
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/recommendation.dart';
 import '../models/specialist.dart';
+import '../models/common_types.dart';
 
 /// Карточка рекомендации специалиста
 class RecommendationCard extends StatelessWidget {
@@ -278,7 +279,7 @@ class RecommendationCard extends StatelessWidget {
       );
 
   Widget _buildCompactPrice(Specialist specialist) => Text(
-        specialist.priceRangeString,
+        specialist.priceRangeString ?? 'Цена не указана',
         style: TextStyle(
           fontSize: 12,
           color: Colors.green[700],
@@ -314,7 +315,7 @@ class RecommendationCard extends StatelessWidget {
           ),
           const SizedBox(width: 4),
           Text(
-            specialist.priceRangeString,
+            specialist.priceRangeString ?? 'Цена не указана',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Colors.green[700],
                   fontWeight: FontWeight.w500,
