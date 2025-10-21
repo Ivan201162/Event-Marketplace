@@ -150,12 +150,12 @@ class PageTransitions {
   }) =>
       AnimatedBuilder(
         animation: animation,
-        builder: (context, child) => Transform(
-          alignment: Alignment.center,
-      transform: Matrix4.identity()
-        ..scale(animation.value, animation.value, animation.value)
-        ..rotateZ(animation.value * 0.1),
-          child: FadeTransition(opacity: animation, child: child),
+        builder: (context, child) => Transform.scale(
+          scale: animation.value,
+          child: Transform.rotate(
+            angle: animation.value * 0.1,
+            child: FadeTransition(opacity: animation, child: child),
+          ),
         ),
         child: child,
       );

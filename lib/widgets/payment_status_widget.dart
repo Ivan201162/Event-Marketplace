@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/payment.dart';
 import '../providers/booking_payments_provider.dart';
 
 /// Виджет для отображения статуса платежа
@@ -334,6 +333,28 @@ class PaymentStatusWidget extends ConsumerWidget {
     );
   }
 
+  String _getStatusDisplayName(String status) {
+    switch (status.toLowerCase()) {
+      case 'pending':
+        return 'Ожидает';
+      case 'processing':
+        return 'Обрабатывается';
+      case 'paid':
+      case 'completed':
+        return 'Оплачен';
+      case 'failed':
+        return 'Ошибка';
+      case 'cancelled':
+        return 'Отменен';
+      case 'refunded':
+        return 'Возврат';
+      case 'disputed':
+        return 'Спор';
+      default:
+        return 'Неизвестно';
+    }
+  }
+
   Widget _buildPaymentSummary(BuildContext context, BookingPayment payment) {
     final totalAmount = payment.amount;
     final isCompleted = payment.status == 'paid' || payment.status == 'completed';
@@ -435,7 +456,7 @@ class PaymentButtonWidget extends ConsumerWidget {
     );
   }
 
-  void _handlePayment(BuildContext context, Payment payment) {
+  void _handlePayment(BuildContext context, BookingPayment payment) {
     // В реальном приложении здесь будет переход к платежному провайдеру
     showDialog<void>(
       context: context,
