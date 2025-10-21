@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../models/booking.dart';
 import '../models/specialist.dart';
 import '../providers/auth_providers.dart';
 import '../services/booking_service.dart';
@@ -159,20 +160,22 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
 
       final booking = Booking(
         id: '',
-        customerId: currentUser.uid,
         specialistId: widget.specialistId,
-        eventDate: eventDateTime,
-        totalPrice: _totalPrice,
-        prepayment: _advancePayment ? _advanceAmount : 0,
-        message: _commentController.text,
-        title: _eventTitleController.text,
-        location: _addressController.text,
-        customerName: currentUser.displayName ?? '',
+        specialistName: _specialist?.name ?? '',
+        clientId: currentUser.uid,
+        clientName: currentUser.displayName ?? '',
+        service: _eventTitleController.text,
+        date: eventDateTime,
+        time: '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}',
+        duration: _duration,
+        totalPrice: _totalPrice.toInt(),
+        notes: _commentController.text,
         status: BookingStatus.pending,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
+        location: _addressController.text,
       );
-      final bookingId = await _bookingService.createBooking(booking);
+      await _bookingService.createBooking(booking);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -276,7 +279,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  _specialist!.category.displayName,
+                  _specialist!.category?.name ?? 'Специалист',
                   style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
                 ),
                 Row(
@@ -293,7 +296,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
             ),
           ),
           Text(
-            '${_specialist!.price.toInt()}₽/час',
+            '${(_specialist!.price ?? 0).toInt()}₽/час',
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green),
           ),
         ],
@@ -450,7 +453,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('$_duration часов × ${_specialist!.price.toInt()}₽'),
+              Text('$_duration часов × ${(_specialist!.price ?? 0).toInt()}₽'),
               Text('${_totalPrice.toInt()}₽'),
             ],
           ),
